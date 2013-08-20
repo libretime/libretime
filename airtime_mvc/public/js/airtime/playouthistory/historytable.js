@@ -39,6 +39,26 @@ var AIRTIME = (function(AIRTIME) {
     
     var sDom = 'l<"dt-process-rel"r><"H"T><"dataTables_scrolling"t><"F"ip>';
     
+    var selectedLogItems = {};
+    
+    function getSelectedLogItems() {
+    	var items = Object.keys(selectedLogItems);
+    	
+    	return items;
+    }
+    
+    function addSelectedLogItem(id) {
+    	selectedLogItems[id] = "";
+    }
+    
+    function removeSelectedLogItem(id) {
+    	delete selectedLogItems[id];
+    }
+    
+    function emptySelectedLogItems() {
+    	selectedLogItems = {};
+    }
+    
     function getFileName(ext){
         var filename = $("#his_date_start").val()+"_"+$("#his_time_start").val()+"m--"+$("#his_date_end").val()+"_"+$("#his_time_end").val()+"m";
         filename = filename.replace(/:/g,"h");
@@ -249,6 +269,11 @@ var AIRTIME = (function(AIRTIME) {
     	
     	$historyContentDiv = $("#history_content");
     	
+    	function redrawTables() {
+    		oTableAgg.fnDraw();
+    		oTableItem.fnDraw();
+    	}
+    	
     	function removeHistoryDialog() {
     		$hisDialogEl.dialog("destroy");
         	$hisDialogEl.remove();
@@ -315,54 +340,6 @@ var AIRTIME = (function(AIRTIME) {
     	$historyContentDiv.find(dateEndId).datepicker(oBaseDatePickerSettings);
     	$historyContentDiv.find(timeEndId).timepicker(oBaseTimePickerSettings);
     	
-    	// 'open' an information row when a row is clicked on
-    	//for create/edit/delete
-    	function openRow(oTable, tr) {
-    		var links = ['url-edit', 'url-delete'],
-    			i, len,
-    			attr, 
-    			name,
-    			$link,
-    			$div;
-    		
-    		$div = $("<div/>");
-    		
-    		for (i = 0, len = links.length; i < len; i++) {
-    			
-    			attr = links[i];
-    			
-    			if (tr.hasAttribute(attr)) {
-    				name = attr.split("-")[1];
-    				
-    				$link = $("<a/>", {
-    	    			"href": tr.getAttribute(attr),
-    	    			"text": $.i18n._(name),
-    	    			"class": "his_"+name
-    	    		});
-    				
-    				$div.append($link);
-    			}
-    		}
-    		
-    		if (oTable.fnIsOpen(tr)) {
-    		    oTable.fnClose(tr);
-    		} 
-    		else {
-    		    oTable.fnOpen(tr, $div, "his_update");
-    		} 
-    	}
-    	
-    	/*
-    	$historyContentDiv.on("click", "#history_table_list tr", function(ev) {
-    		openRow(oTableItem, this);
-        });
-        
-    	
-    	$historyContentDiv.on("click", "#history_table_aggregate tr", function(ev) {
-    		openRow(oTableAgg, this);
-        });
-        */
-    	
     	$("#his_create").click(function(e) {
     		var url = baseUrl+"playouthistory/edit-list-item/format/json"	;
     		
@@ -373,35 +350,6 @@ var AIRTIME = (function(AIRTIME) {
     			makeHistoryDialog(json.dialog);
     			
     		}, "json");
-    	});
-	    	
-    	$historyContentDiv.on("click", "a.his_edit", function(e) {
-    		var url = e.target.href;
-    		
-    		e.preventDefault();
-    		
-    		$.get(url, function(json) {
-    			
-    			makeHistoryDialog(json.dialog);
-    			
-    		}, "json");
-    	});
-    	
-    	$historyContentDiv.on("click", "a.his_delete", function(e) {
-    		var url = e.target.href,
-    			doDelete;
-    		
-    		e.preventDefault();
-    		
-    		doDelete = confirm($.i18n._("Delete this history record?"));
-    		
-    		if (doDelete) {
-    			$.post(url, function(json) {
-    				oTableAgg.fnDraw();
-    				oTableItem.fnDraw();
-        			
-        		}, "json");
-    		}
     	});
     	
     	$('body').on("click", ".his_file_cancel, .his_item_cancel", function(e) {
@@ -425,7 +373,7 @@ var AIRTIME = (function(AIRTIME) {
     			}
     			else {
     				removeHistoryDialog();
-    				oTableAgg.fnDraw();
+    				redrawTables();
     			}
     		    	
     		}, "json");
@@ -453,12 +401,26 @@ var AIRTIME = (function(AIRTIME) {
     			}
     			else {
     				removeHistoryDialog();
-    				oTableItem.fnDraw();
+    				redrawTables();
     			}
     		    	
     		}, "json");
     		
-    	});	
+    	});
+    	
+    	
+    	$historyContentDiv.on("click", ".his_checkbox input", function(e) {
+    		var checked = e.currentTarget.checked,
+    			$tr = $(e.currentTarget).parents("tr"),
+    			id = $tr.data("his-id");
+    		
+    		if (checked) {
+    			addSelectedLogItem(id);
+    		}
+    		else {
+    			removeSelectedLogItem(id);
+    		}
+    	});
     	
     	$historyContentDiv.find("#his_submit").click(function(ev){
     		var fn,
@@ -470,8 +432,16 @@ var AIRTIME = (function(AIRTIME) {
     	    fn.start = oRange.start;
     	    fn.end = oRange.end;
     	    
-    		oTableAgg.fnDraw();
-    		oTableItem.fnDraw();
+    	    redrawTables();
+    	});
+    	
+    	$historyContentDiv.find("#his_trash").click(function(ev){
+    		var items = getSelectedLogItems(),
+    			url = baseUrl+"playouthistory/delete-list-items";
+    		
+    		$.post(url, {ids: items, format: "json"}, function(){
+    			redrawTables();
+    		});
     	});
     	
     	$historyContentDiv.find("#his-tabs").tabs();
@@ -518,6 +488,7 @@ var AIRTIME = (function(AIRTIME) {
                     	if (c) {
                     		$.post(deleteUrl, {format: "json"}, function(json) {
                     			oTableItem.fnDraw();
+                    			oTableAgg.fnDraw();
                     		});
                     	}	
                     };

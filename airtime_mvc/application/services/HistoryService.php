@@ -638,6 +638,7 @@ class Application_Service_HistoryService
 	    	$metadata = array();
 	    	$fields = $template["fields"];
 	    	$required = $this->mandatoryItemFields();
+	    	$phpCasts = $this->getPhpCasts();
 
 	    	for ($i = 0, $len = count($fields); $i < $len; $i++) {
 
@@ -650,14 +651,14 @@ class Application_Service_HistoryService
 	    	    }
 
 	    	    $isFileMd = $field["isFileMd"];
-	    	    $entry = $templateValues[$prefix.$key];
+	    	    $entry = $phpCasts[$field["type"]]($templateValues[$prefix.$key]);
 
 	    	    if ($isFileMd && isset($file)) {
-	    	        Logging::info("adding metadata associated to a file for {$key}");
+	    	        Logging::info("adding metadata associated to a file for {$key} = {$entry}");
 	    	        $md[$key] = $entry;
 	    	    }
 	    	    else {
-	    	    	Logging::info("adding metadata for {$key}");
+	    	    	Logging::info("adding metadata for {$key} = {$entry}");
                     $metadata[$key] = $entry;
 	    	    }
 	    	}
@@ -824,6 +825,25 @@ class Application_Service_HistoryService
 			throw $e;
 		}
 	}
+	
+	/* id is an id in cc_playout_history */
+	public function deletePlayedItems($ids) {
+	
+		$this->con->beginTransaction();
+	
+		try {
+	
+			$records = CcPlayoutHistoryQuery::create()->findPks($ids, $this->con);
+			$records->delete($this->con);
+	
+			$this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+			Logging::info($e);
+			throw $e;
+		}
+	}
 
 
 	//---------------- Following code is for History Templates --------------------------//
@@ -841,6 +861,21 @@ class Application_Service_HistoryService
 	    );
 
 	    return $fields;
+	}
+	
+	private function getPhpCasts() {
+	
+		$fields = array(
+			TEMPLATE_DATE => "strval",
+			TEMPLATE_TIME => "strval",
+			TEMPLATE_DATETIME => "strval",
+			TEMPLATE_STRING => "strval",
+			TEMPLATE_BOOLEAN => "intval", //boolval only exists in php 5.5+ wtf?
+			TEMPLATE_INT => "intval",
+			TEMPLATE_FLOAT => "floatval",
+		);
+	
+		return $fields;
 	}
 
 	private function getSqlTypes() {
