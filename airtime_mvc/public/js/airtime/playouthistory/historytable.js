@@ -130,9 +130,10 @@ var AIRTIME = (function(AIRTIME) {
         	fnRowCallback;
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        	var editUrl = baseUrl+"Playouthistory/edit-file-item/format/json/id/"+aData.file_id;
+        	var editUrl = baseUrl+"playouthistory/edit-file-item/id/"+aData.file_id,
+        		$nRow = $(nRow);
         		
-        	nRow.setAttribute('url-edit', editUrl);
+        	$nRow.data('url-edit', editUrl);
         };
         
         columns = JSON.parse(localStorage.getItem('datatables-historyfile-aoColumns'));
@@ -181,8 +182,8 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        	var editUrl = baseUrl+"playouthistory/edit-list-item/format/json/id/"+aData.history_id,
-        		deleteUrl = baseUrl+"playouthistory/delete-list-item/format/json/id/"+aData.history_id,
+        	var editUrl = baseUrl+"playouthistory/edit-list-item/id/"+aData.history_id,
+        		deleteUrl = baseUrl+"playouthistory/delete-list-item/id/"+aData.history_id,
         		emptyCheckBox = String.fromCharCode(parseInt(2610, 16)),
         		checkedCheckBox = String.fromCharCode(parseInt(2612, 16)),
         		b, 
@@ -192,9 +193,9 @@ var AIRTIME = (function(AIRTIME) {
         	 // add checkbox
             $nRow.find('td.his_checkbox').html("<input type='checkbox' name='cb_"+aData.history_id+"'>");
 	
-            nRow.setAttribute('his-id', aData.history_id);
-        	//nRow.setAttribute('url-edit', editUrl);
-        	//nRow.setAttribute('url-delete', deleteUrl);
+            $nRow.data('his-id', aData.history_id);
+            $nRow.data('url-edit', editUrl);
+            $nRow.data('url-delete', deleteUrl);
         	
         	for (b in booleans) {
             	
@@ -355,6 +356,7 @@ var AIRTIME = (function(AIRTIME) {
     	$historyContentDiv.on("click", "#history_table_list tr", function(ev) {
     		openRow(oTableItem, this);
         });
+        
     	
     	$historyContentDiv.on("click", "#history_table_aggregate tr", function(ev) {
     		openRow(oTableAgg, this);
@@ -476,65 +478,56 @@ var AIRTIME = (function(AIRTIME) {
     	
     	// begin context menu initialization.
         $.contextMenu({
-            selector: '#history_table_list td:not(.library_checkbox)',
+            selector: '#history_content td:not(.his_checkbox)',
             trigger: "left",
             ignoreRightClick: true,
             
             build: function($el, e) {
-                var items, 
+                var items = {}, 
                 	callback, 
-                	$tr,
-                	id;
+                	$tr;
                 
                 $tr = $el.parents("tr");
-                id = $tr.get(0).getAttribute("his-id");
-               
-                function processMenuItems(oItems) {
+                
+                var editUrl = $tr.data("url-edit");
+                var deleteUrl = $tr.data("url-delete");
+                
+                if (editUrl !== undefined) {
+                	
+                	callback = function() {
+                    	$.post(editUrl, {format: "json"}, function(json) {
+                			
+                			makeHistoryDialog(json.dialog);
+                			
+                		}, "json");
+                    };
                     
-                	// define an edit callback.
-                    if (oItems.edit !== undefined) {
-                        
-                        callback = function() {
-                        	$.post(oItems.edit.url, {format: "json"}, function(json) {
-                    			
-                    			makeHistoryDialog(json.dialog);
-                    			
-                    		}, "json");
-                        };
-                        
-                        oItems.edit.callback = callback;
-                    }
-                    
-                    // define a delete callback.
-                    if (oItems.del !== undefined) {
-                        
-                        callback = function() {
-                        	var c = confirm("Delete this entry?");
-                        	
-                        	if (c) {
-                        		$.post(oItems.del.url, {format: "json"}, function(json) {
-                        			oTableItem.fnDraw();
-                        		});
-                        	}	
-                        };
-                        
-                        oItems.del.callback = callback;
-                    }
-                    
-                    items = oItems;
+                    items["edit"] = {
+                    	"name": $.i18n._("Edit"),
+                    	"icon": "edit",
+                    	"callback": callback
+                    };
                 }
                 
-                request = $.ajax({
-                  url: baseUrl+"playouthistory/context-menu",
-                  type: "GET",
-                  data: {id : id, format: "json"},
-                  dataType: "json",
-                  async: false,
-                  success: function(json){
-                      processMenuItems(json.items);
-                  }
-                });
-    
+                if (deleteUrl !== undefined) {
+                	
+                	callback = function() {
+                    	var c = confirm("Delete this entry?");
+                    	
+                    	if (c) {
+                    		$.post(deleteUrl, {format: "json"}, function(json) {
+                    			oTableItem.fnDraw();
+                    		});
+                    	}	
+                    };
+                    
+                    items["del"] = {
+                    	"name": $.i18n._("Delete"),
+                    	"icon": "delete",
+                    	"callback": callback
+                    };
+                }
+                
                 return {
                     items: items
                 };

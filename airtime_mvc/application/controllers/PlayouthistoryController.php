@@ -8,7 +8,6 @@ class PlayouthistoryController extends Zend_Controller_Action
         $ajaxContext
             ->addActionContext('file-history-feed', 'json')
             ->addActionContext('item-history-feed', 'json')
-            ->addActionContext('context-menu', 'json')
             ->addActionContext('edit-file-item', 'json')
             ->addActionContext('create-list-item', 'json')
             ->addActionContext('edit-list-item', 'json')
@@ -81,28 +80,6 @@ class PlayouthistoryController extends Zend_Controller_Action
         $columns = json_encode($historyService->getDatatablesFileSummaryColumns());
         $script.= "localStorage.setItem( 'datatables-historyfile-aoColumns', JSON.stringify($columns) );";
         $this->view->headScript()->appendScript($script);
-    }
-
-    public function contextMenuAction()
-    {
-        $baseUrl = Application_Common_OsPath::getBaseDir();
-        $id = $this->_getParam('id');
-
-        $menu = array();
-
-        $menu["edit"] = array(
-            "name"=> _("Edit"),
-            "icon" => "edit",
-            "url" => $baseUrl."playouthistory/edit-list-item/id/{$id}"
-        );
-
-        $menu["del"] = array(
-            "name"=> _("Delete"),
-            "icon" => "delete",
-            "url" => $baseUrl."playouthistory/delete-list-item/id/{$id}"
-        );
-
-        $this->view->items = $menu;
     }
 
     public function fileHistoryFeedAction()
