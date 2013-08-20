@@ -93,6 +93,36 @@ var AIRTIME = (function(AIRTIME) {
         } );
     }
     
+    function createToolbarButtons ($el) {
+        var $menu = $("<div class='btn-toolbar' />");
+        
+        $menu.append("<div class='btn-group'>" +
+            "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+                $.i18n._("Select")+" <span class='caret'></span>" +
+            "</button>" +
+            "<ul class='dropdown-menu'>" +
+                "<li id='sb-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
+                "<li id='sb-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
+                "<li id='sb-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
+            "</ul>" +
+        "</div>");
+        
+        $menu.append("<div class='btn-group'>" +
+            "<button class='btn btn-small' id='his_create'>" +
+                "<i class='icon-white icon-plus'></i>" +
+                $.i18n._("Create Entry") +
+            "</button>" +
+        "</div>");
+        
+        $menu.append("<div class='btn-group'>" +
+            "<button class='btn btn-small' id='his_trash'>" +
+                "<i class='icon-white icon-trash'></i>" +
+            "</button>" +
+        "</div>");
+                  
+        $el.append($menu);
+    }
+    
     function aggregateHistoryTable() {
         var oTable,
         	$historyTableDiv = $historyContentDiv.find("#history_table_aggregate"),
@@ -134,6 +164,7 @@ var AIRTIME = (function(AIRTIME) {
     function itemHistoryTable() {
         var oTable,
         	$historyTableDiv = $historyContentDiv.find("#history_table_list"),
+        	$toolbar,
         	columns,
         	fnRowCallback,
         	booleans = {},
@@ -157,9 +188,13 @@ var AIRTIME = (function(AIRTIME) {
         		b, 
         		text,
         		$nRow = $(nRow);
+        	
+        	 // add checkbox
+            $nRow.find('td.his_checkbox').html("<input type='checkbox' name='cb_"+aData.history_id+"'>");
 	
-        	nRow.setAttribute('url-edit', editUrl);
-        	nRow.setAttribute('url-delete', deleteUrl);
+            nRow.setAttribute('his-id', aData.history_id);
+        	//nRow.setAttribute('url-edit', editUrl);
+        	//nRow.setAttribute('url-delete', deleteUrl);
         	
         	for (b in booleans) {
             	
@@ -189,6 +224,9 @@ var AIRTIME = (function(AIRTIME) {
             "oTableTools": oTableTools
         });
         oTable.fnSetFilteringDelay(350);
+        
+        $toolbar = $historyTableDiv.parents(".dataTables_wrapper").find(".fg-toolbar:first");
+        createToolbarButtons($toolbar);
        
         return oTable;
     }
@@ -313,6 +351,7 @@ var AIRTIME = (function(AIRTIME) {
     		} 
     	}
     	
+    	/*
     	$historyContentDiv.on("click", "#history_table_list tr", function(ev) {
     		openRow(oTableItem, this);
         });
@@ -320,6 +359,7 @@ var AIRTIME = (function(AIRTIME) {
     	$historyContentDiv.on("click", "#history_table_aggregate tr", function(ev) {
     		openRow(oTableAgg, this);
         });
+        */
     	
     	$("#his_create").click(function(e) {
     		var url = baseUrl+"playouthistory/edit-list-item/format/json"	;
@@ -434,6 +474,72 @@ var AIRTIME = (function(AIRTIME) {
     	
     	$historyContentDiv.find("#his-tabs").tabs();
     	
+    	// begin context menu initialization.
+        $.contextMenu({
+            selector: '#history_table_list td:not(.library_checkbox)',
+            trigger: "left",
+            ignoreRightClick: true,
+            
+            build: function($el, e) {
+                var items, 
+                	callback, 
+                	$tr,
+                	id;
+                
+                $tr = $el.parents("tr");
+                id = $tr.get(0).getAttribute("his-id");
+               
+                function processMenuItems(oItems) {
+                    
+                	// define an edit callback.
+                    if (oItems.edit !== undefined) {
+                        
+                        callback = function() {
+                        	$.post(oItems.edit.url, {format: "json"}, function(json) {
+                    			
+                    			makeHistoryDialog(json.dialog);
+                    			
+                    		}, "json");
+                        };
+                        
+                        oItems.edit.callback = callback;
+                    }
+                    
+                    // define a delete callback.
+                    if (oItems.del !== undefined) {
+                        
+                        callback = function() {
+                        	var c = confirm("Delete this entry?");
+                        	
+                        	if (c) {
+                        		$.post(oItems.del.url, {format: "json"}, function(json) {
+                        			oTableItem.fnDraw();
+                        		});
+                        	}	
+                        };
+                        
+                        oItems.del.callback = callback;
+                    }
+                    
+                    items = oItems;
+                }
+                
+                request = $.ajax({
+                  url: baseUrl+"playouthistory/context-menu",
+                  type: "GET",
+                  data: {id : id, format: "json"},
+                  dataType: "json",
+                  async: false,
+                  success: function(json){
+                      processMenuItems(json.items);
+                  }
+                });
+    
+                return {
+                    items: items
+                };
+            }
+        });
     };
     
 return AIRTIME;

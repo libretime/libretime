@@ -1,57 +1,70 @@
-<div>
-  <?php if (!in_array($this->template_id, $this->configured)): ?>
-  <button id="template_set_default" data-template="<?php echo $this->template_id; ?>">Set Default Template</button>
-  <?php endif; ?>
-  <button id="template_item_save" data-template="<?php echo $this->template_id; ?>">Save</button>
-</div>
+<?php if ($this->template_type == Application_Service_HistoryService::TEMPLATE_TYPE_FILE): ?>
+<h4>Creating File Summary Template</h4>
+<?php else: ?>
+<h4>Creating Log Sheet Template</h4>
+<?php endif; ?>
 
-<div><label>Name<input id="template_name" type="text" value="<?php echo $this->template_name; ?>"></label></div>
+<div class="template_name_wrap">
+  <label>
+    Name
+    <input id="template_name" type="text" value="<?php echo $this->template_name; ?>">
+  </label>
+</div>
 
 <?php $i = 0; ?>
 
 <ul class="template_item_list">
   <?php foreach ($this->template_fields as $field): ?>
-  
-  <li id="<?php echo "field_".$i?>" 
-  	data-id="<?php echo isset($field["id"]) ? $field["id"] : ""; ?>" 
+
+  <li id="<?php echo "field_".$i?>"
+  	data-id="<?php echo isset($field["id"]) ? $field["id"] : ""; ?>"
   	data-name="<?php echo $field["name"]?>"
-  	data-label="<?php echo $field["label"]?>" 
-  	data-type="<?php echo $field["type"]?>" 
+  	data-label="<?php echo $field["label"]?>"
+  	data-type="<?php echo $field["type"]?>"
   	data-filemd="<?php echo var_export($field["isFileMd"], true)?>">
     <span><?php echo $field["label"]?></span>
     <span><?php echo $field["type"]?></span>
     <?php if(!in_array($field["name"], $this->required_fields)): ?>
-    <span class="template_item_remove">Remove</span>
+    <span class="template_item_remove">
+      <i class="icon icon-trash"></i>
+    </span>
     <?php endif; ?>
   </li>
   <?php $i++; ?>
-  
+
   <?php endforeach; ?>
 </ul>
 
+<p>Add more elements:</p>
+
 <ul class="template_file_md">
   <?php foreach ($this->fileMD as $md): ?>
-  
-  <li id="<?php echo "md_".$md["name"]?>" 
-  	data-name="<?php echo $md["name"]?>" 
+
+  <li id="<?php echo "md_".$md["name"]?>"
+  	data-name="<?php echo $md["name"]?>"
   	data-type="<?php echo $md["type"]?>"
   	data-label="<?php echo $md["label"]?>">
   	<?php echo $md["label"] ?>
+  	<a class="field_add" href="#"><i class="icon icon-plus"></i></a>
   </li>
   <?php endforeach; ?>
 </ul>
 
   <?php if ($this->template_type !== Application_Service_HistoryService::TEMPLATE_TYPE_FILE): ?>
   <div class="template_item_add">
-    <div>Add New Field</div>
-    <div>
-      <input type="text">
-      <select>
-        <?php foreach ($this->fields as $field): ?>
-        <option value="<?php echo $field; ?>"><?php echo $field; ?></option>
-        <?php endforeach; ?>
-      </select>
-      <button>Add</button>
-    </div>
+    <input type="text" placeholder="Add New Field">
+    <select>
+      <?php foreach ($this->fields as $field): ?>
+      <option value="<?php echo $field; ?>"><?php echo $field; ?></option>
+      <?php endforeach; ?>
+    </select>
+    <button class="btn"><i class="icon-white icon-plus"></i> Add</button>
+  </div>
   <?php endif; ?>
+
+<div>
+  <?php if (!in_array($this->template_id, $this->configured)): ?>
+  <button id="template_set_default" data-template="<?php echo $this->template_id; ?>" class="btn">Set Default Template</button>
+  <?php endif; ?>
+  <button id="template_item_save" data-template="<?php echo $this->template_id; ?>" class="btn">Save</button>
 </div>

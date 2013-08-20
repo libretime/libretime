@@ -32,7 +32,7 @@ var AIRTIME = (function(AIRTIME) {
     		">" +
     			"<span><%= label %></span>" +
     			"<span><%= type %></span>" +
-    			"<span class='template_item_remove'>Remove</span>" +
+    			"<span class='template_item_remove'><i class='icon icon-trash'></i></span>" +
     		"</li>";
     	
     	var template = (config.required) === true ? templateRequired : templateOptional;
@@ -65,9 +65,9 @@ var AIRTIME = (function(AIRTIME) {
     	$templateList = $(".template_item_list");
     	$fileMDList = $(".template_file_md");
     	
-    	$fileMDList.on("dblclick", "li", function(){
+    	$fileMDList.on("click", "i.icon-plus", function(){
     		
-    		var $li = $(this);
+    		var $li = $(this).parents("li");
 			var config = {
 				name: $li.data("name"), 
 				type: $li.data("type"),

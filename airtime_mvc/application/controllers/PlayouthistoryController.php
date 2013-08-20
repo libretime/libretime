@@ -8,6 +8,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $ajaxContext
             ->addActionContext('file-history-feed', 'json')
             ->addActionContext('item-history-feed', 'json')
+            ->addActionContext('context-menu', 'json')
             ->addActionContext('edit-file-item', 'json')
             ->addActionContext('create-list-item', 'json')
             ->addActionContext('edit-list-item', 'json')
@@ -67,7 +68,9 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'js/datatables/plugin/TableTools-2.1.5/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery-ui-timepicker-addon.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
 
 
         //set datatables columns for display of data.
@@ -78,6 +81,28 @@ class PlayouthistoryController extends Zend_Controller_Action
         $columns = json_encode($historyService->getDatatablesFileSummaryColumns());
         $script.= "localStorage.setItem( 'datatables-historyfile-aoColumns', JSON.stringify($columns) );";
         $this->view->headScript()->appendScript($script);
+    }
+
+    public function contextMenuAction()
+    {
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $id = $this->_getParam('id');
+
+        $menu = array();
+
+        $menu["edit"] = array(
+            "name"=> _("Edit"),
+            "icon" => "edit",
+            "url" => $baseUrl."playouthistory/edit-list-item/id/{$id}"
+        );
+
+        $menu["del"] = array(
+            "name"=> _("Delete"),
+            "icon" => "delete",
+            "url" => $baseUrl."playouthistory/delete-list-item/id/{$id}"
+        );
+
+        $this->view->items = $menu;
     }
 
     public function fileHistoryFeedAction()
@@ -228,6 +253,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$baseUrl = Application_Common_OsPath::getBaseDir();
 
     	$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/template.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+    	$this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
 
     	$historyService = new Application_Service_HistoryService();
     	$this->view->template_list = $historyService->getListItemTemplates();
@@ -241,6 +267,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$baseUrl = Application_Common_OsPath::getBaseDir();
 
     	$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/configuretemplate.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+    	$this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
 
     	try {
 
