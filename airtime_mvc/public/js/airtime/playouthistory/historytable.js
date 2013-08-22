@@ -254,10 +254,7 @@ var AIRTIME = (function(AIRTIME) {
     
     mod.onReady = function() {
     	
-    	var viewport = AIRTIME.utilities.findViewportDimensions(),
-    		widgetHeight = viewport.height - 185,
-    		screenWidth = Math.floor(viewport.width - 110),
-    		oBaseDatePickerSettings,
+    	var oBaseDatePickerSettings,
     		oBaseTimePickerSettings,
     		oTableAgg,
     		oTableItem,
@@ -307,10 +304,6 @@ var AIRTIME = (function(AIRTIME) {
     	$historyContentDiv.on("mouseleave", ".his-timerange .ui-button", function(ev) {
         	$(this).removeClass("ui-state-hover");
         });
-    	
-    	$historyContentDiv
-    		.height(widgetHeight)
-    		.width(screenWidth);
     	
     	oBaseDatePickerSettings = {
     		dateFormat: 'yy-mm-dd',

@@ -1,5 +1,12 @@
 @CHARSET "UTF-8";
 
+#history_content {
+	width: 100%;
+	margin: 0px;
+	height: auto;
+	box-sizing: border-box;
+}
+
 .dataTables_filter input {
 	width: 30%;
 }
