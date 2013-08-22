@@ -18,19 +18,28 @@ var AIRTIME = (function(AIRTIME) {
                          len = this.s.dt.nTFoot === null ? lines-1 : lines-2,
                          plural = (len==1) ? "" : "s";
                      alert(sprintf($.i18n._('Copied %s row%s to the clipboard'), len, plural));
-                 }
+                 },
+                 //set because only the checkbox row is not sortable.
+                 "mColumns": "sortable"
              },
              {
                  "sExtends": "csv",
-                 "fnClick": setFlashFileName
+                 "fnClick": setFlashFileName,
+                 //set because only the checkbox row is not sortable.
+                 "mColumns": "sortable"
              },
              {
                  "sExtends": "pdf",
-                 "fnClick": setFlashFileName
+                 "fnClick": setFlashFileName,
+                 "sPdfOrientation": "landscape",
+                 //set because only the checkbox row is not sortable.
+                 "mColumns": "sortable"
              },
              {
                  "sExtends": "print",
-                 "sInfo" : sprintf($.i18n._("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."), "<h6>", "</h6><p>")
+                 "sInfo" : sprintf($.i18n._("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."), "<h6>", "</h6><p>"),
+                 //set because only the checkbox row is not sortable.
+                 "mColumns": "sortable"
              }
          ]
     };
@@ -78,8 +87,7 @@ var AIRTIME = (function(AIRTIME) {
         
         if (oConfig.sExtends == "pdf") {
             this.fnSetText( oFlash,
-                //"title:"+ this.fnGetTitle(oConfig) +"\n"+
-            	"title: Testing the Title Out\n"+
+                "title:"+ this.fnGetTitle(oConfig) +"\n"+
                 "message:"+ oConfig.sPdfMessage +"\n"+
                 "colWidth:"+ this.fnCalcColRatios(oConfig) +"\n"+
                 "orientation:"+ oConfig.sPdfOrientation +"\n"+
