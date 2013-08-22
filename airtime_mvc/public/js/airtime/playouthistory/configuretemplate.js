@@ -101,9 +101,11 @@ var AIRTIME = (function(AIRTIME) {
     	
     	$templateDiv.on("click", ".template_item_add button", function() {
     		var $div = $(this).parents("div.template_item_add"),
-    			label = $div.find("input").val(),
+    			$input = $div.find("input"),
+    			label = $input.val(),
     			name;
     		
+    		$input.val("");
     		//create a string name that will work for all languages.
     		name = randomString(10);
     		
