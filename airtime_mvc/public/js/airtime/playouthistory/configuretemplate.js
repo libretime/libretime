@@ -43,6 +43,19 @@ var AIRTIME = (function(AIRTIME) {
     	return $li;
     }
     
+    //taken from
+    //http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript
+    function randomString(len, charSet) {
+    	//can only use small letters to avoid DB query problems.
+        charSet = charSet || 'abcdefghijklmnopqrstuvwxyz';
+        var randomString = '';
+        for (var i = 0; i < len; i++) {
+        	var randomPoz = Math.floor(Math.random() * charSet.length);
+        	randomString += charSet.substring(randomPoz,randomPoz+1);
+        }
+        return randomString;
+    }
+    
     function addField(config) {
     	
     	$templateList.append(createTemplateLi(config));
@@ -91,7 +104,7 @@ var AIRTIME = (function(AIRTIME) {
     			name;
     		
     		//create a string name that will work for all languages.
-    		name = Math.random().toString(36).substring(7);
+    		name = randomString(10);
     		
     		var config = {
 				name: name,
