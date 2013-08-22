@@ -89,7 +89,8 @@ var AIRTIME = (function(AIRTIME) {
 				required: false
     		};
 			
-			 addField(config);
+			addField(config);
+			$li.remove();
     	});
     	
     	$templateList.sortable();
