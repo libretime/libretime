@@ -719,6 +719,7 @@ class Application_Service_HistoryService
 	        	$msgs = $form->getMessages();
 	        	Logging::info($msgs);
 
+	        	$json["form"] = $form;
 	        	$json["error"] = $msgs;
 	        }
 
@@ -756,6 +757,7 @@ class Application_Service_HistoryService
 	        	$msgs = $form->getMessages();
 	        	Logging::info($msgs);
 
+	        	$json["form"] = $form;
 	        	$json["error"] = $msgs;
 	        }
 

@@ -163,6 +163,13 @@ class PlayouthistoryController extends Zend_Controller_Action
 
 	        $historyService = new Application_Service_HistoryService();
 	        $json = $historyService->createPlayedItem($params);
+	        
+	        if (isset($json["form"])) {
+	        	$this->view->form = $json["form"];
+	        	$json["form"] = $this->view->render('playouthistory/dialog.phtml');
+	        	 
+	        	unset($this->view->form);
+	        }
 
 	        $this->_helper->json->sendJson($json);
     	}
@@ -213,6 +220,13 @@ class PlayouthistoryController extends Zend_Controller_Action
 
 	    	$historyService = new Application_Service_HistoryService();
 	    	$json = $historyService->editPlayedItem($params);
+	    	
+	    	if (isset($json["form"])) {
+	    		$this->view->form = $json["form"];
+	    		$json["form"] = $this->view->render('playouthistory/dialog.phtml');
+	    		
+	    		unset($this->view->form);
+	    	}
 
 	    	$this->_helper->json->sendJson($json);
     	}
