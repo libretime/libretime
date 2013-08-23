@@ -404,7 +404,7 @@ var AIRTIME = (function(AIRTIME) {
     	$historyContentDiv.find(dateEndId).datepicker(oBaseDatePickerSettings);
     	$historyContentDiv.find(timeEndId).timepicker(oBaseTimePickerSettings);
     	
-    	$("#his_create").click(function(e) {
+    	$historyContentDiv.on("click", "#his_create", function(e) {
     		var url = baseUrl+"playouthistory/edit-list-item/format/json"	;
     		
     		e.preventDefault();
