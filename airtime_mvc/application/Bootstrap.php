@@ -69,12 +69,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
+        $view->headLink()->appendStylesheet($baseUrl.'css/bootstrap.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/redmond/jquery-ui-1.8.8.custom.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/pro_dropdown_3.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/qtip/jquery.qtip.min.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/styles.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/masterpanel.css?'.$CC_CONFIG['airtime_version']);
-        $view->headLink()->appendStylesheet($baseUrl.'css/bootstrap.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/tipsy/jquery.tipsy.css?'.$CC_CONFIG['airtime_version']);
     }
 
@@ -88,14 +88,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view->headScript()->appendFile($baseUrl.'js/libs/jquery-1.8.3.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/libs/jquery-ui-1.8.24.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+        $view->headScript()->appendFile($baseUrl.'js/bootstrap/bootstrap.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
         $view->headScript()->appendFile($baseUrl.'js/libs/underscore-min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'js/libs/jquery.stickyPanel.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/qtip/jquery.qtip.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/jplayer/jquery.jplayer.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/sprintf/sprintf-0.7-beta1.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'js/bootstrap/bootstrap.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/cookie/jquery.cookie.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/i18n/jquery.i18n.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'locale/general-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');

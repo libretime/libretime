@@ -291,11 +291,15 @@ var AIRTIME = (function(AIRTIME) {
     	        title: $.i18n._("Edit History Record"),
     	        modal: false,
     	        open: function( event, ui ) {
+    	        	/*
     	        	$hisDialogEl.find('.datepicker').datetimepicker({
     	        		dateFormat: 'yy-mm-dd',
     	        		timeFormat: 'HH:mm:ss'
     	        	})
     	        	.blur();
+    	        	*/
+    	        	
+    	        	$hisDialogEl.find('.date').datetimepicker();
     	        },
     	        close: function() {
     	        	removeHistoryDialog();

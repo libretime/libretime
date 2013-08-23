@@ -56,22 +56,23 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/ZeroClipboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery-ui-timepicker-addon.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        //$this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery-ui-timepicker-addon.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $offset = date("Z") * -1;
         $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/bootstrap-datetime/bootstrap-datetimepicker.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/historytable.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/bootstrap-datetimepicker.min.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'js/datatables/plugin/TableTools-2.1.5/css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery-ui-timepicker-addon.css?'.$CC_CONFIG['airtime_version']);
+        //$this->view->headLink()->appendStylesheet($baseUrl.'css/jquery-ui-timepicker-addon.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
-
 
         //set datatables columns for display of data.
         $historyService = new Application_Service_HistoryService();
@@ -193,11 +194,11 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$historyService = new Application_Service_HistoryService();
     	$historyService->deletePlayedItem($history_id);
     }
-    
+
     public function deleteListItemsAction()
     {
     	$history_ids = $this->_getParam('ids');
-    
+
     	$historyService = new Application_Service_HistoryService();
     	$historyService->deletePlayedItems($history_ids);
     }
