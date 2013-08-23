@@ -291,15 +291,16 @@ var AIRTIME = (function(AIRTIME) {
     	        title: $.i18n._("Edit History Record"),
     	        modal: false,
     	        open: function( event, ui ) {
-    	        	/*
-    	        	$hisDialogEl.find('.datepicker').datetimepicker({
-    	        		dateFormat: 'yy-mm-dd',
-    	        		timeFormat: 'HH:mm:ss'
-    	        	})
-    	        	.blur();
-    	        	*/
     	        	
     	        	$hisDialogEl.find('.date').datetimepicker();
+    	        	
+    	        	var $startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker');
+    	        	var $endPicker = $hisDialogEl.find('#his_item_ends_datetimepicker');
+    	        	
+    	        	$startPicker.on('changeDate', function(e) {
+	        		  
+	        		  $endPicker.data('datetimepicker').setLocalDate(e.localDate);
+	        		});
     	        },
     	        close: function() {
     	        	removeHistoryDialog();
