@@ -270,13 +270,29 @@ var AIRTIME = (function(AIRTIME) {
     		timeStartId = "#his_time_start",
     		dateEndId = "#his_date_end",
     		timeEndId = "#his_time_end",
-    		$hisDialogEl;
+    		$hisDialogEl,
+    		
+    		tabsInit = [
+    		    {
+    		    	initialized: false,
+    		    	initialize: function() {
+    		    		oTableItem = itemHistoryTable();
+    		    	}
+    		    },
+    		    {
+    		    	initialized: false,
+    		    	initialize: function() {
+    		    		oTableAgg = aggregateHistoryTable();
+    		    	}
+    		    }
+    		];
+    	
     	
     	$historyContentDiv = $("#history_content");
     	
     	function redrawTables() {
-    		oTableAgg.fnDraw();
-    		oTableItem.fnDraw();
+    		oTableAgg && oTableAgg.fnDraw();
+    		oTableItem && oTableItem.fnDraw();
     	}
     	
     	function removeHistoryDialog() {
@@ -340,10 +356,7 @@ var AIRTIME = (function(AIRTIME) {
             hourText: $.i18n._("Hour"),
             minuteText: $.i18n._("Minute")
     	};
-    	
-    	oTableItem = itemHistoryTable();
-    	oTableAgg = aggregateHistoryTable();
-    	
+
     	$historyContentDiv.find(dateStartId).datepicker(oBaseDatePickerSettings);
     	$historyContentDiv.find(timeStartId).timepicker(oBaseTimePickerSettings);
     	$historyContentDiv.find(dateEndId).datepicker(oBaseDatePickerSettings);
@@ -453,7 +466,16 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	});
     	
-    	$historyContentDiv.find("#his-tabs").tabs();
+    	$historyContentDiv.find("#his-tabs").tabs({
+    		show: function( event, ui ) {
+				var tab = tabsInit[ui.index];
+				
+				if (!tab.initialized) {
+					tab.initialize();
+					tab.initialized = true;
+				}
+			}
+    	});
     	
     	// begin context menu initialization.
         $.contextMenu({
@@ -496,8 +518,7 @@ var AIRTIME = (function(AIRTIME) {
                     	
                     	if (c) {
                     		$.post(deleteUrl, {format: "json"}, function(json) {
-                    			oTableItem.fnDraw();
-                    			oTableAgg.fnDraw();
+                    			redrawTables();
                     		});
                     	}	
                     };
