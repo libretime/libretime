@@ -291,8 +291,7 @@ var AIRTIME = (function(AIRTIME) {
     	        title: $.i18n._("Edit History Record"),
     	        modal: false,
     	        open: function( event, ui ) {
-    	        	
-    	        	//icon-time
+
     	        	var $startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker');
     	        	$startPicker.datetimepicker();
     	        	
@@ -302,11 +301,8 @@ var AIRTIME = (function(AIRTIME) {
     	        	});
     	        	
     	        	$startPicker.on('changeDate', function(e) {
-	        		    var end = $endPicker.find("input").val();
-	        		    
-    	        		if (end === "") {
-    	        			$endPicker.data('datetimepicker').setLocalDate(e.localDate);	
-    	        		} 
+
+    	        		$endPicker.data('datetimepicker').setLocalDate(e.localDate);	
 	        		});
     	        },
     	        close: function() {
