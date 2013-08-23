@@ -65,7 +65,40 @@ var AIRTIME = (function(AIRTIME) {
     }
     
     function emptySelectedLogItems() {
+    	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
+			id, $tr, $input;
+		
+		$.each($inputs, function(index, input) {
+			$input = $(input);
+			$input.prop('checked', false);
+		});
     	selectedLogItems = {};
+    }
+    
+    function selectCurrentPage() {
+    	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
+    		id, $tr, $input;
+    	
+    	$.each($inputs, function(index, input) {
+    		$input = $(input);
+    		$input.prop('checked', true);
+    		$tr = $input.parents("tr");
+    		id = $tr.data("his-id");
+    		addSelectedLogItem(id);
+		});
+    }
+    
+    function deselectCurrentPage() {
+    	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
+			id, $tr, $input;
+		
+		$.each($inputs, function(index, input) {
+			$input = $(input);
+			$input.prop('checked', false);
+			$tr = $input.parents("tr");
+			id = $tr.data("his-id");
+			removeSelectedLogItem(id);
+		});
     }
     
     function getFileName(ext){
@@ -129,9 +162,9 @@ var AIRTIME = (function(AIRTIME) {
                 $.i18n._("Select")+" <span class='caret'></span>" +
             "</button>" +
             "<ul class='dropdown-menu'>" +
-                "<li id='sb-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
-                "<li id='sb-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
-                "<li id='sb-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
+                "<li id='his-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
+                "<li id='his-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
+                "<li id='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
             "</ul>" +
         "</div>");
         
@@ -256,7 +289,11 @@ var AIRTIME = (function(AIRTIME) {
         
         $toolbar = $historyTableDiv.parents(".dataTables_wrapper").find(".fg-toolbar:first");
         createToolbarButtons($toolbar);
-       
+        
+        $("#his-select-page").click(selectCurrentPage);
+        $("#his-dselect-page").click(deselectCurrentPage);
+        $("#his-dselect-all").click(emptySelectedLogItems);
+        
         return oTable;
     }
     
@@ -457,7 +494,7 @@ var AIRTIME = (function(AIRTIME) {
     	    redrawTables();
     	});
     	
-    	$historyContentDiv.find("#his_trash").click(function(ev){
+    	$historyContentDiv.on("click", "#his_trash", function(ev){
     		var items = getSelectedLogItems(),
     			url = baseUrl+"playouthistory/delete-list-items";
     		
