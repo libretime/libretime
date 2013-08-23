@@ -292,8 +292,6 @@ var AIRTIME = (function(AIRTIME) {
     	        modal: false,
     	        open: function( event, ui ) {
     	        	
-    	        	//$hisDialogEl.find('.date').datetimepicker();
-    	        	
     	        	//icon-time
     	        	var $startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker');
     	        	$startPicker.datetimepicker();
@@ -304,8 +302,11 @@ var AIRTIME = (function(AIRTIME) {
     	        	});
     	        	
     	        	$startPicker.on('changeDate', function(e) {
-	        		  
-	        		    $endPicker.data('datetimepicker').setLocalDate(e.localDate);
+	        		    var end = $endPicker.find("input").val();
+	        		    
+    	        		if (end === "") {
+    	        			$endPicker.data('datetimepicker').setLocalDate(e.localDate);	
+    	        		} 
 	        		});
     	        },
     	        close: function() {
