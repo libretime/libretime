@@ -56,22 +56,29 @@ var AIRTIME = (function(AIRTIME) {
     	return items;
     }
     
-    function addSelectedLogItem(id) {
+    function addSelectedLogItem($el) {
+    	var id;
+    	
+    	$el.addClass("his-selected");
+    	id = $el.data("his-id");
     	selectedLogItems[id] = "";
     }
     
-    function removeSelectedLogItem(id) {
+    function removeSelectedLogItem($el) {
+    	var id;
+    	
+    	$el.removeClass("his-selected");
+    	id = $el.data("his-id");
     	delete selectedLogItems[id];
     }
     
     function emptySelectedLogItems() {
     	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
 			id, $tr, $input;
+    	
+    	$inputs.prop('checked', false);
+    	$inputs.parents("tr").removeClass("his-selected");
 		
-		$.each($inputs, function(index, input) {
-			$input = $(input);
-			$input.prop('checked', false);
-		});
     	selectedLogItems = {};
     }
     
@@ -83,8 +90,7 @@ var AIRTIME = (function(AIRTIME) {
     		$input = $(input);
     		$input.prop('checked', true);
     		$tr = $input.parents("tr");
-    		id = $tr.data("his-id");
-    		addSelectedLogItem(id);
+    		addSelectedLogItem($tr);
 		});
     }
     
@@ -96,8 +102,7 @@ var AIRTIME = (function(AIRTIME) {
 			$input = $(input);
 			$input.prop('checked', false);
 			$tr = $input.parents("tr");
-			id = $tr.data("his-id");
-			removeSelectedLogItem(id);
+			removeSelectedLogItem($tr);
 		});
     }
     
@@ -470,14 +475,13 @@ var AIRTIME = (function(AIRTIME) {
     	
     	$historyContentDiv.on("click", ".his_checkbox input", function(e) {
     		var checked = e.currentTarget.checked,
-    			$tr = $(e.currentTarget).parents("tr"),
-    			id = $tr.data("his-id");
+    			$tr = $(e.currentTarget).parents("tr");
     		
     		if (checked) {
-    			addSelectedLogItem(id);
+    			addSelectedLogItem($tr);
     		}
     		else {
-    			removeSelectedLogItem(id);
+    			removeSelectedLogItem($tr);
     		}
     	});
     	
