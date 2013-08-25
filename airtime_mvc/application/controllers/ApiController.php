@@ -299,7 +299,7 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function weekInfoAction()
+		public function weekInfoAction()
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi()) {
             // disable the view and the layout
@@ -314,25 +314,47 @@ class ApiController extends Zend_Controller_Action
                 "saturday", "sunday");
 
             $result = array();
-            for ($i=0; $i<7; $i++) {
-                $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
-                $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
-                $utcDayStart = $utcDayEnd;
+            
+            if(isset($_GET['number_of_days'])){ //allows for schedule to be returned for multiple days
+							for ($i=0; $i<$number_of_days; $i++) {
+									$utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
+									$shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
+									$utcDayStart = $utcDayEnd;
 
-                Application_Model_Show::convertToLocalTimeZone($shows,
-                    array("starts", "ends", "start_timestamp",
-                    "end_timestamp"));
+									Application_Model_Show::convertToLocalTimeZone($shows,
+											array("starts", "ends", "start_timestamp",
+											"end_timestamp"));
 
-                $result[$dow[$i]] = $shows;
-            }
+									$result[$i] = $shows;
+							}
+							// XSS exploit prevention
+							for ($i=0; $i<$number_of_days; $i++) {
+									foreach ($result[$i] as &$show) {
+											$show["name"] = htmlspecialchars($show["name"]);
+											$show["url"] = htmlspecialchars($show["url"]);
+									}
+							}
+            }else{
+							for ($i=0; $i<7; $i++) {
+									$utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
+									$shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
+									$utcDayStart = $utcDayEnd;
 
-            // XSS exploit prevention
-            foreach ($dow as $d) {
-                foreach ($result[$d] as &$show) {
-                    $show["name"] = htmlspecialchars($show["name"]);
-                    $show["url"] = htmlspecialchars($show["url"]);
-                }
-            }
+									Application_Model_Show::convertToLocalTimeZone($shows,
+											array("starts", "ends", "start_timestamp",
+											"end_timestamp"));
+
+									$result[$dow[$i]] = $shows;
+							}
+							// XSS exploit prevention
+							foreach ($dow as $d) {
+									foreach ($result[$d] as &$show) {
+											$show["name"] = htmlspecialchars($show["name"]);
+											$show["url"] = htmlspecialchars($show["url"]);
+									}
+							}
+						}
+            
 
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
