@@ -10,6 +10,9 @@ if ($item['type'] == 2) {
     $staticBlock = $bl->isStatic();
     $fileUrl = null;
 }
+else if ($item['type'] == 1) {
+    $fileUrl = null;
+}
 else if ($item['type'] == 0) {
 	$audiofile = Application_Model_StoredFile::RecallById($item['item_id']);
 	$fileUrl = $audiofile->getFileUrl();
@@ -17,12 +20,12 @@ else if ($item['type'] == 0) {
 
 if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
 	$nextAudiofile = Application_Model_StoredFile::RecallById($items[$i+1]['item_id']);
-	$nextFileUrl = $nextAudiofile->getFileUrl();	
+	$nextFileUrl = $nextAudiofile->getFileUrl();
 }
 ?>
     <li class="ui-state-default" id="spl_<?php echo $item["id"] ?>" unqid="<?php echo $item["id"]; ?>">
         <div class="list-item-container">
-        
+
             <?php if ($item['type'] == 0 && $item['exists']):?>
             <div class="big_play" audioFile="<?php echo $item["id"]; ?>" data-mime-type="<?php echo $item["mime"]; ?>">
                 <span class="ui-icon ui-icon-play"></span>
@@ -89,8 +92,8 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             if(($i < count($items) -1) && !($items[$i]['type'] == 2 && $items[$i+1]['type'])):
         ?>
         <div id="crossfade_<?php echo $i ?>-<?php echo $i+1 ?>" class="crossfade clearfix" style="display: none">
-            <?php 
-            
+            <?php
+
             $vars = array(
                 'item1' => $items[$i]['id'],
             	'fadeOut' => $items[$i]['fadeout'],
@@ -100,7 +103,7 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             	'cueOut1' => $items[$i]['cueOutSec'],
                 'item1Url' => $fileUrl
             );
-            
+
             $item2 = array(
             	'item2Url' => $nextFileUrl,
             	'item2' => $items[$i+1]['id'],
@@ -109,12 +112,12 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             	'cueIn2' => $items[$i+1]['cueInSec'],
             	'cueOut2' => $items[$i+1]['cueOutSec']
             );
-            
+
             if (isset($nextFileUrl)) {
             	$vars = $vars + $item2;
             }
-            
-            echo $this->partial('playlist/set-fade.phtml', $vars); 
+
+            echo $this->partial('playlist/set-fade.phtml', $vars);
             ?>
         </div>
         <?php endif; ?>
