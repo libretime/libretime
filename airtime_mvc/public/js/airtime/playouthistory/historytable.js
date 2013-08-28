@@ -73,8 +73,7 @@ var AIRTIME = (function(AIRTIME) {
     }
     
     function emptySelectedLogItems() {
-    	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
-			id, $tr, $input;
+    	var $inputs = $historyContentDiv.find(".his_checkbox").find("input");
     	
     	$inputs.prop('checked', false);
     	$inputs.parents("tr").removeClass("his-selected");
@@ -84,7 +83,8 @@ var AIRTIME = (function(AIRTIME) {
     
     function selectCurrentPage() {
     	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
-    		id, $tr, $input;
+    		$tr, 
+    		$input;
     	
     	$.each($inputs, function(index, input) {
     		$input = $(input);
@@ -96,7 +96,8 @@ var AIRTIME = (function(AIRTIME) {
     
     function deselectCurrentPage() {
     	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
-			id, $tr, $input;
+			$tr, 
+			$input;
 		
 		$.each($inputs, function(index, input) {
 			$input = $(input);
@@ -342,6 +343,21 @@ var AIRTIME = (function(AIRTIME) {
         	$hisDialogEl.remove();
     	}
     	
+    	function initializeDialog() {
+    		var $startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker'),
+    			$endPicker = $hisDialogEl.find('#his_item_ends_datetimepicker');
+    		
+        	$startPicker.datetimepicker();
+
+        	$endPicker.datetimepicker({
+        		showTimeFirst: true
+        	});
+        	
+        	$startPicker.on('changeDate', function(e) {
+        		$endPicker.data('datetimepicker').setLocalDate(e.localDate);	
+    		});
+    	}
+    	
     	function makeHistoryDialog(html) {
     		$hisDialogEl = $(html);
     		
@@ -349,19 +365,7 @@ var AIRTIME = (function(AIRTIME) {
     	        title: $.i18n._("Edit History Record"),
     	        modal: false,
     	        open: function( event, ui ) {
-
-    	        	var $startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker');
-    	        	$startPicker.datetimepicker();
-    	        	
-    	        	var $endPicker = $hisDialogEl.find('#his_item_ends_datetimepicker');
-    	        	$endPicker.datetimepicker({
-    	        		showTimeFirst: true
-    	        	});
-    	        	
-    	        	$startPicker.on('changeDate', function(e) {
-
-    	        		$endPicker.data('datetimepicker').setLocalDate(e.localDate);	
-	        		});
+    	        	initializeDialog();	
     	        },
     	        close: function() {
     	        	removeHistoryDialog();
@@ -459,10 +463,10 @@ var AIRTIME = (function(AIRTIME) {
     				
     		$.post(url, data, function(json) {
     			
-    			//TODO put errors on form.
     			if (json.form !== undefined) {
     				var $newForm = $(json.form);
     				$hisDialogEl.html($newForm.html());
+    				initializeDialog();
     			}
     			else {
     				removeHistoryDialog();
