@@ -426,15 +426,51 @@ class Application_Service_HistoryService
 	public function getShowList($startDT, $endDT)
 	{
 		$user = Application_Model_User::getCurrentUser();
-		
 		$shows = Application_Model_Show::getShows($startDT, $endDT);
 		
-		Loggin::info($shows);
+		Logging::info($startDT->format("Y-m-d H:i:s"));
+		Logging::info($endDT->format("Y-m-d H:i:s"));
 		
+		Logging::info($shows);
+			
 		//need to filter the list to only their shows
 		if ($user->isHost()) {
 			
+			$showIds = array();
+			
+			foreach ($shows as $show) {
+				$showIds[] = $show["show_id"];
+			}
+			
+			$showIds = array_unique($showIds);
+			Logging::info($showIds);
+			
+			$hostRecords = CcShowHostsQuery::create()
+				->filterByDbHost($user->getId())
+				->filterByDbShow($showIds)
+				->find($this->con);
+			
+			$filteredShowIds = array();
+			
+			foreach($hostRecords as $record) {
+				$filteredShowIds[] = $record->getDbShow();
+			}
+			
+			Logging::info($filteredShowIds);
+			
+			$filteredShows = array();
+			
+			foreach($shows as $show) {
+				if (in_array($show["show_id"], $filteredShowIds)) {
+					$filteredShows[] = $show;
+				}
+			}
 		}
+		else {
+			$filteredShows = $shows;
+		}
+		
+		return $filteredShows;
 	}
 
 	public function insertPlayedItem($schedId) {

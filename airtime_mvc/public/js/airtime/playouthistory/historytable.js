@@ -50,6 +50,11 @@ var AIRTIME = (function(AIRTIME) {
     
     var selectedLogItems = {};
     
+    var dateStartId = "#his_date_start",
+		timeStartId = "#his_time_start",
+		dateEndId = "#his_date_end",
+		timeEndId = "#his_time_end";
+    
     function getSelectedLogItems() {
     	var items = Object.keys(selectedLogItems);
     	
@@ -303,16 +308,26 @@ var AIRTIME = (function(AIRTIME) {
         return oTable;
     }
     
+    function showSummaryList() {
+    	var url = baseUrl+"playouthistory/show-history-feed",
+    		oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId),
+    		data = {
+    			format: "json",
+	    		start: oRange.start,
+	    	    end: oRange.end
+	    	};
+    	
+    	$.post(url, data, function() {
+    		var x;
+    	});
+    }
+    
     mod.onReady = function() {
     	
     	var oBaseDatePickerSettings,
     		oBaseTimePickerSettings,
     		oTableAgg,
     		oTableItem,
-    		dateStartId = "#his_date_start",
-    		timeStartId = "#his_time_start",
-    		dateEndId = "#his_date_end",
-    		timeEndId = "#his_time_end",
     		$hisDialogEl,
     		
     		tabsInit = [
@@ -326,6 +341,12 @@ var AIRTIME = (function(AIRTIME) {
     		    	initialized: false,
     		    	initialize: function() {
     		    		oTableAgg = aggregateHistoryTable();
+    		    	}
+    		    },
+    		    {
+    		    	initialized: false,
+    		    	initialize: function() {
+    		    		showSummaryList();
     		    	}
     		    }
     		];
@@ -514,7 +535,9 @@ var AIRTIME = (function(AIRTIME) {
     	
     	$historyContentDiv.find("#his-tabs").tabs({
     		show: function( event, ui ) {
-				var tab = tabsInit[ui.index];
+    			var href = $(ui.tab).attr("href");
+    			var index = href.split('-').pop();
+				var tab = tabsInit[index-1];
 				
 				if (!tab.initialized) {
 					tab.initialize();

@@ -150,8 +150,9 @@ class PlayouthistoryController extends Zend_Controller_Action
     		$endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
     
     		$historyService = new Application_Service_HistoryService();
-    		$r = $historyService->getShowList($startsDT, $endsDT);
-    
+    		$shows = $historyService->getShowList($startsDT, $endsDT);
+    		
+    		$this->_helper->json->sendJson($shows);
     	}
     	catch (Exception $e) {
     		Logging::info($e);
