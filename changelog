@@ -1,3 +1,10 @@
+2.4.1 - August 28th, 2013
+  * Bug Fixes
+    * Playout Engine locking issue
+    * Liquidsoap input harbor blocking scheduled contents
+    * Mono file playout problems
+    * Adding watched folder sometimes causes an exception based on length format
+
 2.4.0 - June 18th, 2013
   * New features
     * Show linking
