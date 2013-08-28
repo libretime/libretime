@@ -42,9 +42,8 @@
 }
 
 #history_template .icon-ok {
-	right: 10px;
+	float: right;
 	margin-left: 10px;
-	position: absolute;
 }
 
 #configure_item_template li span {
