@@ -423,9 +423,18 @@ class Application_Service_HistoryService
 		);
 	}
 	
-	public function getShowList($startDT, $endDT, $opts)
+	public function getShowList($startDT, $endDT)
 	{
+		$user = Application_Model_User::getCurrentUser();
 		
+		$shows = Application_Model_Show::getShows($startDT, $endDT);
+		
+		Loggin::info($shows);
+		
+		//need to filter the list to only their shows
+		if ($user->isHost()) {
+			
+		}
 	}
 
 	public function insertPlayedItem($schedId) {

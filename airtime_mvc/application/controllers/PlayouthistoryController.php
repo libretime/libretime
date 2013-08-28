@@ -8,6 +8,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $ajaxContext
             ->addActionContext('file-history-feed', 'json')
             ->addActionContext('item-history-feed', 'json')
+            ->addActionContext('show-history-feed', 'json')
             ->addActionContext('edit-file-item', 'json')
             ->addActionContext('create-list-item', 'json')
             ->addActionContext('edit-list-item', 'json')
@@ -15,10 +16,6 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->addActionContext('delete-list-items', 'json')
             ->addActionContext('update-list-item', 'json')
             ->addActionContext('update-file-item', 'json')
-            ->addActionContext('create-template', 'json')
-            ->addActionContext('update-template', 'json')
-            ->addActionContext('delete-template', 'json')
-            ->addActionContext('set-template-default', 'json')
             ->initContext();
         }
 
@@ -56,13 +53,11 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/ZeroClipboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        //$this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery-ui-timepicker-addon.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
+        
         $offset = date("Z") * -1;
         $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/bootstrap-datetime/bootstrap-datetimepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        //$this->view->headScript()->appendFile($baseUrl.'js/bootstrap-datetime/bootstrap-datetimepicker.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/historytable.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -72,7 +67,6 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playouthistory.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
-        //$this->view->headLink()->appendStylesheet($baseUrl.'css/jquery-ui-timepicker-addon.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
 
         //set datatables columns for display of data.
@@ -83,6 +77,9 @@ class PlayouthistoryController extends Zend_Controller_Action
         $columns = json_encode($historyService->getDatatablesFileSummaryColumns());
         $script.= "localStorage.setItem( 'datatables-historyfile-aoColumns', JSON.stringify($columns) );";
         $this->view->headScript()->appendScript($script);
+        
+        $user = Application_Model_User::getCurrentUser();
+        $this->view->userType = $user->getType();
     }
 
     public function fileHistoryFeedAction()
@@ -134,6 +131,27 @@ class PlayouthistoryController extends Zend_Controller_Action
 	        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
 	        $this->view->iTotalRecords = $r["iTotalRecords"];
 	        $this->view->history = $r["history"];
+    	}
+    	catch (Exception $e) {
+    		Logging::info($e);
+    		Logging::info($e->getMessage());
+    	}
+    }
+    
+    public function showHistoryFeedAction()
+    {
+    	try {
+    		$request = $this->getRequest();
+    		$current_time = time();
+    		$starts_epoch = $request->getParam("start", $current_time - (60*60*24));
+    		$ends_epoch = $request->getParam("end", $current_time);
+    
+    		$startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
+    		$endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
+    
+    		$historyService = new Application_Service_HistoryService();
+    		$r = $historyService->getShowList($startsDT, $endsDT);
+    
     	}
     	catch (Exception $e) {
     		Logging::info($e);
@@ -246,133 +264,5 @@ class PlayouthistoryController extends Zend_Controller_Action
     	$json = $historyService->editPlayedFile($params);
 
     	$this->_helper->json->sendJson($json);
-    }
-
-    public function templateAction()
-    {
-    	$CC_CONFIG = Config::getConfig();
-    	$baseUrl = Application_Common_OsPath::getBaseDir();
-
-    	$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/template.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-    	$this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
-
-    	$historyService = new Application_Service_HistoryService();
-    	$this->view->template_list = $historyService->getListItemTemplates();
-    	$this->view->template_file = $historyService->getFileTemplates();
-    	$this->view->configured = $historyService->getConfiguredTemplateIds();
-    }
-
-    public function configureTemplateAction() {
-
-    	$CC_CONFIG = Config::getConfig();
-    	$baseUrl = Application_Common_OsPath::getBaseDir();
-
-    	$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/configuretemplate.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-    	$this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
-
-    	try {
-
-	    	$templateId = $this->_getParam('id');
-
-	    	$historyService = new Application_Service_HistoryService();
-	    	$template = $historyService->loadTemplate($templateId);
-
-	    	$templateType = $template["type"];
-	    	$supportedTypes = $historyService->getSupportedTemplateTypes();
-
-	    	if (!in_array($templateType, $supportedTypes)) {
-	    		throw new Exception("Error: $templateType is not supported.");
-	    	}
-
-	    	$getMandatoryFields = "mandatory".ucfirst($templateType)."Fields";
-	        $mandatoryFields = $historyService->$getMandatoryFields();
-
-	        $this->view->template_id = $templateId;
-	        $this->view->template_name = $template["name"];
-	        $this->view->template_fields = $template["fields"];
-	        $this->view->template_type = $templateType;
-	        $this->view->fileMD = $historyService->getFileMetadataTypes();
-	        $this->view->fields = $historyService->getFieldTypes();
-	        $this->view->required_fields = $mandatoryFields;
-	        $this->view->configured = $historyService->getConfiguredTemplateIds();
-        }
-        catch (Exception $e) {
-        	Logging::info("Error?");
-        	Logging::info($e);
-        	Logging::info($e->getMessage());
-
-        	$this->_forward('template', 'playouthistory');
-        }
-    }
-
-    public function createTemplateAction()
-    {
-    	$templateType = $this->_getParam('type', null);
-
-    	$request = $this->getRequest();
-    	$params = $request->getPost();
-
-    	try {
-    		$historyService = new Application_Service_HistoryService();
-    		$supportedTypes = $historyService->getSupportedTemplateTypes();
-
-    		if (!in_array($templateType, $supportedTypes)) {
-    			throw new Exception("Error: $templateType is not supported.");
-    		}
-
-    		$id = $historyService->createTemplate($params);
-
-    		$this->view->url = $this->view->baseUrl("Playouthistory/configure-template/id/{$id}");
-    	}
-    	catch (Exception $e) {
-    		Logging::info($e);
-    		Logging::info($e->getMessage());
-
-    		$this->view->error = $e->getMessage();
-    	}
-    }
-
-    public function setTemplateDefaultAction()
-    {
-    	$templateId = $this->_getParam('id', null);
-
-    	try {
-    		$historyService = new Application_Service_HistoryService();
-    		$historyService->setConfiguredTemplate($templateId);
-    	}
-    	catch (Exception $e) {
-    		Logging::info($e);
-    		Logging::info($e->getMessage());
-    	}
-    }
-
-    public function updateTemplateAction()
-    {
-    	$templateId = $this->_getParam('id', null);
-    	$name = $this->_getParam('name', null);
-    	$fields = $this->_getParam('fields', array());
-
-    	try {
-    		$historyService = new Application_Service_HistoryService();
-    		$historyService->updateItemTemplate($templateId, $name, $fields);
-    	}
-    	catch (Exception $e) {
-    		Logging::info($e);
-    		Logging::info($e->getMessage());
-    	}
-    }
-
-    public function deleteTemplateAction()
-    {
-    	$templateId = $this->_getParam('id');
-
-    	try {
-    		$historyService = new Application_Service_HistoryService();
-    		$historyService->deleteTemplate($templateId);
-    	}
-    	catch (Exception $e) {
-    		Logging::info($e);
-    		Logging::info($e->getMessage());
-    	}
     }
 }

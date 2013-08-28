@@ -123,7 +123,7 @@ var AIRTIME = (function(AIRTIME) {
     	});
     	
     	function updateTemplate(template_id, isDefault) {
-			var url = baseUrl+"Playouthistory/update-template/format/json";
+			var url = baseUrl+"Playouthistorytemplate/update-template/format/json";
 			var data = {};
 			var $lis, $li;
 			var i, len;
@@ -152,7 +152,7 @@ var AIRTIME = (function(AIRTIME) {
     	$templateDiv.on("click", "#template_set_default", function() {
     		var $btn = $(this),
     			template_id = $btn.data("template"),	
-				url = baseUrl+"Playouthistory/set-template-default/format/json";
+				url = baseUrl+"Playouthistorytemplate/set-template-default/format/json";
 				
     		$btn.remove();
 			$.post(url, {id: template_id});

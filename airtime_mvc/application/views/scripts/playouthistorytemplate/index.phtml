@@ -12,19 +12,19 @@
         <?php endif; ?>
         <?php if (in_array($id, $this->configured)): ?>
         <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>" class="template_configured">
-          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistory/configure-template/id/{$id}"); ?>">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
             <?php echo $name; ?>
           </a>
           <i class="icon icon-ok"></i>
         <?php else: ?>
         <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>">
-          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistory/configure-template/id/{$id}"); ?>">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
             <?php echo $name; ?>
           </a>
-          <a class="template_remove" href="<?php echo $this->baseUrl("Playouthistory/delete-template/id/{$id}"); ?>">
+          <a class="template_remove" href="<?php echo $this->baseUrl("Playouthistorytemplate/delete-template/id/{$id}"); ?>">
             <i class="icon icon-trash"></i>
           </a>
-          <a class="template_default" href="<?php echo $this->baseUrl("Playouthistory/set-template-default/id/{$id}"); ?>">
+          <a class="template_default" href="<?php echo $this->baseUrl("Playouthistorytemplate/set-template-default/id/{$id}"); ?>">
             Set Default
           </a>
         <?php endif; ?>
@@ -43,19 +43,19 @@
       <?php foreach ($this->template_file as $id=>$name): ?>
         <?php if (in_array($id, $this->configured)): ?>
         <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>" class="template_configured">
-          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistory/configure-template/id/{$id}"); ?>">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
             <?php echo $name; ?>
           </a>
           <i class="icon icon-ok"></i>
         <?php else: ?>
         <li data-template="<?php echo $id; ?>" data-name="<?php echo $name; ?>">
-          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistory/configure-template/id/{$id}"); ?>">
+          <a class="template_name" href="<?php echo $this->baseUrl("Playouthistorytemplate/configure-template/id/{$id}"); ?>">
             <?php echo $name; ?>
           </a>
-          <a class="template_remove" href="<?php echo $this->baseUrl("Playouthistory/delete-template/id/{$id}"); ?>">
+          <a class="template_remove" href="<?php echo $this->baseUrl("Playouthistorytemplate/delete-template/id/{$id}"); ?>">
             <i class="icon icon-trash"></i>
           </a>
-          <a class="template_default" href="<?php echo $this->baseUrl("Playouthistory/set-template-default/id/{$id}"); ?>">
+          <a class="template_default" href="<?php echo $this->baseUrl("Playouthistorytemplate/set-template-default/id/{$id}"); ?>">
             Set Default
           </a>
         <?php endif; ?>

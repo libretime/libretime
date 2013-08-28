@@ -9,9 +9,9 @@ var AIRTIME = (function(AIRTIME) {
     
     function createItemLi(id, name, configured) {
     	
-    	var editUrl = baseUrl+"Playouthistory/configure-template/id/"+id;
-    	var defaultUrl = baseUrl+"Playouthistory/set-template-default/format/json/id/"+id;
-    	var removeUrl = baseUrl+"Playouthistory/delete-template/format/json/id/"+id;
+    	var editUrl = baseUrl+"Playouthistorytemplate/configure-template/id/"+id;
+    	var defaultUrl = baseUrl+"Playouthistorytemplate/set-template-default/format/json/id/"+id;
+    	var removeUrl = baseUrl+"Playouthistorytemplate/delete-template/format/json/id/"+id;
     	
     	var itemConfigured = 
     		"<li class='template_configured' data-template='<%= id %>' data-name='<%= name %>'>" +
@@ -72,7 +72,7 @@ var AIRTIME = (function(AIRTIME) {
     	
     	function createTemplate(type) {
     		
-    		var createUrl = baseUrl+"Playouthistory/create-template";
+    		var createUrl = baseUrl+"Playouthistorytemplate/create-template";
     		
     		$.post(createUrl, {format: "json", type: type}, function(json) {
     			

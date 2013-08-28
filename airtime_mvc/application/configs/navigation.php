@@ -20,7 +20,7 @@ $pages = array(
         'module'     => 'default',
         'controller' => 'Plupload',
         'action'     => 'index',
-        'resource'   =>    'plupload'
+        'resource'   => 'plupload'
     ),
     array(
         'label'      => _('Library'),
@@ -103,9 +103,9 @@ $pages = array(
 			array(
 				'label'      => _('History Templates'),
 				'module'     => 'default',
-				'controller' => 'playouthistory',
-				'action'     => 'template',
-				'resource'   => 'playouthistory'
+				'controller' => 'playouthistorytemplate',
+				'action'     => 'index',
+				'resource'   => 'playouthistorytemplate'
 			),
 		)
 	),
