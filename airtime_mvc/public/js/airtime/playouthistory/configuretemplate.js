@@ -149,13 +149,13 @@ var AIRTIME = (function(AIRTIME) {
     		updateTemplate(template_id, false);
     	});
     	
-    	$templateDiv.on("click", "#template_set_default", function(){
-    		var template_id = $(this).data("template");	
-			var url = baseUrl+"Playouthistory/set-template-default/format/json";
+    	$templateDiv.on("click", "#template_set_default", function() {
+    		var $btn = $(this),
+    			template_id = $btn.data("template"),	
+				url = baseUrl+"Playouthistory/set-template-default/format/json";
 				
-			$.post(url, {id: template_id}, function(json) {
-				var x;
-			});
+    		$btn.remove();
+			$.post(url, {id: template_id});
     	});
     	
     };
