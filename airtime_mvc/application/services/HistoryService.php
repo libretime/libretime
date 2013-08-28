@@ -422,6 +422,11 @@ class Application_Service_HistoryService
 			"history" => $rows
 		);
 	}
+	
+	public function getShowList($startDT, $endDT, $opts)
+	{
+		
+	}
 
 	public function insertPlayedItem($schedId) {
 
@@ -447,6 +452,7 @@ class Application_Service_HistoryService
 				$history->setDbFileId($fileId);
 				$history->setDbStarts($item->getDbStarts(null));
 				$history->setDbEnds($item->getDbEnds(null));
+				$history->setDbInstanceId($item->getDbInstanceId());
 
 				foreach ($metadata as $key => $val) {
 					$meta = new CcPlayoutHistoryMetaData();

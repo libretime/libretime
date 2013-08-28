@@ -10,11 +10,13 @@
  * @method     CcPlayoutHistoryQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
  * @method     CcPlayoutHistoryQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
  * @method     CcPlayoutHistoryQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
+ * @method     CcPlayoutHistoryQuery orderByDbInstanceId($order = Criteria::ASC) Order by the instance_id column
  *
  * @method     CcPlayoutHistoryQuery groupByDbId() Group by the id column
  * @method     CcPlayoutHistoryQuery groupByDbFileId() Group by the file_id column
  * @method     CcPlayoutHistoryQuery groupByDbStarts() Group by the starts column
  * @method     CcPlayoutHistoryQuery groupByDbEnds() Group by the ends column
+ * @method     CcPlayoutHistoryQuery groupByDbInstanceId() Group by the instance_id column
  *
  * @method     CcPlayoutHistoryQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcPlayoutHistoryQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -23,6 +25,10 @@
  * @method     CcPlayoutHistoryQuery leftJoinCcFiles($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcFiles relation
  * @method     CcPlayoutHistoryQuery rightJoinCcFiles($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcFiles relation
  * @method     CcPlayoutHistoryQuery innerJoinCcFiles($relationAlias = '') Adds a INNER JOIN clause to the query using the CcFiles relation
+ *
+ * @method     CcPlayoutHistoryQuery leftJoinCcShowInstances($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcPlayoutHistoryQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
+ * @method     CcPlayoutHistoryQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
  *
  * @method     CcPlayoutHistoryQuery leftJoinCcPlayoutHistoryMetaData($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcPlayoutHistoryMetaData relation
  * @method     CcPlayoutHistoryQuery rightJoinCcPlayoutHistoryMetaData($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryMetaData relation
@@ -35,11 +41,13 @@
  * @method     CcPlayoutHistory findOneByDbFileId(int $file_id) Return the first CcPlayoutHistory filtered by the file_id column
  * @method     CcPlayoutHistory findOneByDbStarts(string $starts) Return the first CcPlayoutHistory filtered by the starts column
  * @method     CcPlayoutHistory findOneByDbEnds(string $ends) Return the first CcPlayoutHistory filtered by the ends column
+ * @method     CcPlayoutHistory findOneByDbInstanceId(int $instance_id) Return the first CcPlayoutHistory filtered by the instance_id column
  *
  * @method     array findByDbId(int $id) Return CcPlayoutHistory objects filtered by the id column
  * @method     array findByDbFileId(int $file_id) Return CcPlayoutHistory objects filtered by the file_id column
  * @method     array findByDbStarts(string $starts) Return CcPlayoutHistory objects filtered by the starts column
  * @method     array findByDbEnds(string $ends) Return CcPlayoutHistory objects filtered by the ends column
+ * @method     array findByDbInstanceId(int $instance_id) Return CcPlayoutHistory objects filtered by the instance_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -260,6 +268,37 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
 	}
 
 	/**
+	 * Filter the query on the instance_id column
+	 * 
+	 * @param     int|array $dbInstanceId The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlayoutHistoryQuery The current query, for fluid interface
+	 */
+	public function filterByDbInstanceId($dbInstanceId = null, $comparison = null)
+	{
+		if (is_array($dbInstanceId)) {
+			$useMinMax = false;
+			if (isset($dbInstanceId['min'])) {
+				$this->addUsingAlias(CcPlayoutHistoryPeer::INSTANCE_ID, $dbInstanceId['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbInstanceId['max'])) {
+				$this->addUsingAlias(CcPlayoutHistoryPeer::INSTANCE_ID, $dbInstanceId['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
+				$comparison = Criteria::IN;
+			}
+		}
+		return $this->addUsingAlias(CcPlayoutHistoryPeer::INSTANCE_ID, $dbInstanceId, $comparison);
+	}
+
+	/**
 	 * Filter the query by a related CcFiles object
 	 *
 	 * @param     CcFiles $ccFiles  the related object to use as filter
@@ -321,6 +360,70 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
 		return $this
 			->joinCcFiles($relationAlias, $joinType)
 			->useQuery($relationAlias ? $relationAlias : 'CcFiles', 'CcFilesQuery');
+	}
+
+	/**
+	 * Filter the query by a related CcShowInstances object
+	 *
+	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcPlayoutHistoryQuery The current query, for fluid interface
+	 */
+	public function filterByCcShowInstances($ccShowInstances, $comparison = null)
+	{
+		return $this
+			->addUsingAlias(CcPlayoutHistoryPeer::INSTANCE_ID, $ccShowInstances->getDbId(), $comparison);
+	}
+
+	/**
+	 * Adds a JOIN clause to the query using the CcShowInstances relation
+	 * 
+	 * @param     string $relationAlias optional alias for the relation
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcPlayoutHistoryQuery The current query, for fluid interface
+	 */
+	public function joinCcShowInstances($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		$tableMap = $this->getTableMap();
+		$relationMap = $tableMap->getRelation('CcShowInstances');
+		
+		// create a ModelJoin object for this join
+		$join = new ModelJoin();
+		$join->setJoinType($joinType);
+		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+		if ($previousJoin = $this->getPreviousJoin()) {
+			$join->setPreviousJoin($previousJoin);
+		}
+		
+		// add the ModelJoin to the current object
+		if($relationAlias) {
+			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+			$this->addJoinObject($join, $relationAlias);
+		} else {
+			$this->addJoinObject($join, 'CcShowInstances');
+		}
+		
+		return $this;
+	}
+
+	/**
+	 * Use the CcShowInstances relation CcShowInstances object
+	 *
+	 * @see       useQuery()
+	 * 
+	 * @param     string $relationAlias optional alias for the relation,
+	 *                                   to be used as main alias in the secondary query
+	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+	 *
+	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
+	 */
+	public function useCcShowInstancesQuery($relationAlias = '', $joinType = Criteria::LEFT_JOIN)
+	{
+		return $this
+			->joinCcShowInstances($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', 'CcShowInstancesQuery');
 	}
 
 	/**
