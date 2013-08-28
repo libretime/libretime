@@ -113,3 +113,25 @@
    -moz-border-radius: 2px !important;
    border-radius: 2px !important;
 }
+
+.ui-dialog .ui-dialog-content .well .date .add-on {
+	display: inline-block;
+	width: auto;
+	height: 20px;
+	min-width: 16px;
+	padding: 3px 3px 0px 6px;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 20px;
+	text-align: center;
+	text-shadow: 0 1px 0 #ffffff;
+	background-color: #eeeeee;
+	border: 1px solid #ccc;
+	float: left;
+	-webkit-border-radius: 4px 0 0 4px;
+	-moz-border-radius: 4px 0 0 4px;
+	border-radius: 4px 0 0 4px;
+}
+.bootstrap-datetimepicker-widget thead tr:first-child th:hover {
+	background: #5C5C5C !important;
+}
