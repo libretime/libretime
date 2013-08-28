@@ -18,6 +18,7 @@ var AIRTIME = (function(AIRTIME) {
     		  "data-type='<%= type %>' " +
     		  "data-filemd='<%= filemd %>'" +
     		  "data-label='<%= label %>'" +
+    		  "class='<%= (filemd) ? 'field_filemd' : 'field_other'  %>'" +
     		 ">" +
     			"<span><%= label %></span>" +
     			"<span><%= type %></span>" +
@@ -29,6 +30,7 @@ var AIRTIME = (function(AIRTIME) {
     		  "data-type='<%= type %>' " +
     		  "data-filemd='<%= filemd %>'" +
     		  "data-label='<%= label %>'" +
+    		  "class='<%= (filemd) ? 'field_filemd' : 'field_other'  %>'" +
     		">" +
     			"<span><%= label %></span>" +
     			"<span><%= type %></span>" +
