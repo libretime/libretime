@@ -57,7 +57,8 @@ var AIRTIME = (function(AIRTIME) {
     
 		oTableAgg,
 		oTableItem,
-		oTableShow;
+		oTableShow,
+		inShowsTab = false;
     
     function getSelectedLogItems() {
     	var items = Object.keys(selectedLogItems);
@@ -424,6 +425,9 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	navigate: function() {
     		    		delete fnServerData.instance;
+    		    	},
+    		    	always: function() {
+    		    		inShowsTab = false;
     		    	}
     		    },
     		    {
@@ -433,14 +437,21 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	navigate: function() {
     		    		delete fnServerData.instance;
+    		    	},
+    		    	always: function() {
+    		    		inShowsTab = false;
     		    	}
     		    },
     		    {
     		    	initialized: false,
     		    	initialize: function() {
-    		    		showSummaryList();
+    		    		
     		    	},
     		    	navigate: function() {
+    		    		
+    		    	},
+    		    	always: function() {
+    		    		inShowsTab = true;
     		    		showSummaryList();
     		    	}
     		    }
@@ -477,6 +488,10 @@ var AIRTIME = (function(AIRTIME) {
     	
     	function makeHistoryDialog(html) {
     		$hisDialogEl = $(html);
+    		
+    		if (inShowsTab) {
+    			$hisDialogEl.find("#his_choose_instance").remove();
+    		}
     		
     		$hisDialogEl.dialog({	       
     	        title: $.i18n._("Edit History Record"),
@@ -649,6 +664,8 @@ var AIRTIME = (function(AIRTIME) {
 				else {
 					tab.navigate();
 				}
+				
+				tab.always();
 			}
     	});
     	
