@@ -53,7 +53,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/ZeroClipboard.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/TableTools-2.1.5/js/TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         $offset = date("Z") * -1;
         $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -77,7 +77,7 @@ class PlayouthistoryController extends Zend_Controller_Action
         $columns = json_encode($historyService->getDatatablesFileSummaryColumns());
         $script.= "localStorage.setItem( 'datatables-historyfile-aoColumns', JSON.stringify($columns) );";
         $this->view->headScript()->appendScript($script);
-        
+
         $user = Application_Model_User::getCurrentUser();
         $this->view->userType = $user->getType();
     }
@@ -120,12 +120,13 @@ class PlayouthistoryController extends Zend_Controller_Action
 
 	        $starts_epoch = $request->getParam("start", $current_time - (60*60*24));
 	        $ends_epoch = $request->getParam("end", $current_time);
+	        $instance = $request->getParam("instance_id", null);
 
 	        $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
 	        $endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
 	        $historyService = new Application_Service_HistoryService();
-	        $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params);
+	        $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params, $instance);
 
 	        $this->view->sEcho = $r["sEcho"];
 	        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
@@ -137,7 +138,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     		Logging::info($e->getMessage());
     	}
     }
-    
+
     public function showHistoryFeedAction()
     {
     	try {
@@ -145,13 +146,13 @@ class PlayouthistoryController extends Zend_Controller_Action
     		$current_time = time();
     		$starts_epoch = $request->getParam("start", $current_time - (60*60*24));
     		$ends_epoch = $request->getParam("end", $current_time);
-    
+
     		$startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
     		$endsDT = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
-    
+
     		$historyService = new Application_Service_HistoryService();
     		$shows = $historyService->getShowList($startsDT, $endsDT);
-    		
+
     		$this->_helper->json->sendJson($shows);
     	}
     	catch (Exception $e) {
@@ -182,11 +183,11 @@ class PlayouthistoryController extends Zend_Controller_Action
 
 	        $historyService = new Application_Service_HistoryService();
 	        $json = $historyService->createPlayedItem($params);
-	        
+
 	        if (isset($json["form"])) {
 	        	$this->view->form = $json["form"];
 	        	$json["form"] = $this->view->render('playouthistory/dialog.phtml');
-	        	 
+
 	        	unset($this->view->form);
 	        }
 
@@ -239,11 +240,11 @@ class PlayouthistoryController extends Zend_Controller_Action
 
 	    	$historyService = new Application_Service_HistoryService();
 	    	$json = $historyService->editPlayedItem($params);
-	    	
+
 	    	if (isset($json["form"])) {
 	    		$this->view->form = $json["form"];
 	    		$json["form"] = $this->view->render('playouthistory/dialog.phtml');
-	    		
+
 	    		unset($this->view->form);
 	    	}
 

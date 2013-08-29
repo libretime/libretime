@@ -153,6 +153,9 @@ var AIRTIME = (function(AIRTIME) {
 		if (fnServerData.hasOwnProperty("end")) {
 			aoData.push( { name: "end", value: fnServerData.end} );
 		}
+		if (fnServerData.hasOwnProperty("instance")) {
+			aoData.push( { name: "instance_id", value: fnServerData.instance} );
+		}
        
         aoData.push( { name: "format", value: "json"} );
         
@@ -163,6 +166,83 @@ var AIRTIME = (function(AIRTIME) {
             "data": aoData,
             "success": fnCallback
         } );
+    }
+    
+  //config: name, type, filemd, required
+    function createShowAccordSection(config) {
+    	var template,
+    		$el;
+    	
+    	/*
+    	template = 
+    		"<li " +
+    		  "data-instance='<%= instance %>' " +
+    		  "data-starts='<%= starts %>' " +
+    		  "data-ends='<%= ends %>'" +
+    		">" +
+    			"<span><%= name %></span>" +
+    			"<span><%= starts %></span>" +
+    			"<span><%= ends %></span>" +
+    		"</li>";
+    		*/
+    	
+    	template = 
+    		"<h3 " +
+    	      "data-instance='<%= instance %>' " +
+		      "data-starts='<%= starts %>' " +
+		      "data-ends='<%= ends %>'" +
+    	    ">" +
+    	      "<a href='#'>" +
+    	        "<span><%= name %></span>" +
+  			    "<span><%= starts %></span>" +
+  			    "<span><%= ends %></span>" +
+    	      "</a>" +
+    	    "</h3>" +
+    	 "<div>First content panel</div>";
+    	
+    	template = _.template(template);
+    	$el = $(template(config));
+    	
+    	return $el;
+    }
+    
+    function drawShowList(oShows) {
+    	var $showList = $historyContentDiv.find("#history_show_summary"),
+    		i, 
+    		len, 
+    		$accordSection,
+    		show;
+    	
+    	$showList.empty();
+    	
+    	for (i = 0, len = oShows.length; i < len; i++) {
+    		show = oShows[i];
+    		
+    		$accordSection = createShowAccordSection({
+    			instance: show.instance_id,
+    			name: show.name,
+    			starts: show.starts,
+    			ends: show.ends
+    		});
+    		
+    		$showList.append($accordSection);
+    	}
+    	
+    	$showList.accordion({
+    		create: function( event, ui ) {
+    			var $div = $showList.find(".ui-accordion-content-active");
+    		},
+		    change: function( event, ui ) {
+		    	var x;
+		    },
+		    changestart: function( event, ui ) {
+		    	var x;
+		    }
+		});
+    }
+    
+    function drawShowTable() {
+    	
     }
     
     function createToolbarButtons ($el) {
@@ -234,9 +314,9 @@ var AIRTIME = (function(AIRTIME) {
         return oTable;
     }
     
-    function itemHistoryTable() {
+    function itemHistoryTable(id) {
         var oTable,
-        	$historyTableDiv = $historyContentDiv.find("#history_table_list"),
+        	$historyTableDiv = $historyContentDiv.find("#"+id),
         	$toolbar,
         	columns,
         	fnRowCallback,
@@ -317,8 +397,8 @@ var AIRTIME = (function(AIRTIME) {
 	    	    end: oRange.end
 	    	};
     	
-    	$.post(url, data, function() {
-    		var x;
+    	$.post(url, data, function(json) {
+    		drawShowList(json);
     	});
     }
     
@@ -334,7 +414,7 @@ var AIRTIME = (function(AIRTIME) {
     		    {
     		    	initialized: false,
     		    	initialize: function() {
-    		    		oTableItem = itemHistoryTable();
+    		    		oTableItem = itemHistoryTable("history_table_list");
     		    	}
     		    },
     		    {

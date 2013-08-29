@@ -22,7 +22,7 @@ class Application_Service_HistoryService
 	}
 
 	//opts is from datatables.
-	public function getPlayedItemData($startDT, $endDT, $opts)
+	public function getPlayedItemData($startDT, $endDT, $opts, $instanceId=null)
 	{
 		$mainSqlQuery = "";
 		$paramMap = array();
@@ -59,7 +59,7 @@ class Application_Service_HistoryService
 		}
 
 		$historyRange = "(".
-		"SELECT history.starts, history.ends, history.id AS history_id".
+		"SELECT history.starts, history.ends, history.id AS history_id, history.instance_id".
 		" FROM cc_playout_history as history".
 		" WHERE history.starts >= :starts and history.starts < :ends".
 		") AS history_range";
@@ -71,7 +71,12 @@ class Application_Service_HistoryService
 		" ) AS %KEY%".
 		" ) AS %KEY%_filter";
 
-		$mainSelect = array("history_range.starts", "history_range.ends", "history_range.history_id");
+		$mainSelect = array(
+	        "history_range.starts",
+	        "history_range.ends",
+	        "history_range.history_id",
+		    "history_range.instance_id"
+		);
 		$mdFilters = array();
 
 		$numFileMdFields = count($fields_filemd);
@@ -182,6 +187,17 @@ class Application_Service_HistoryService
 		else {
 			$msg = implode(',', $stmt->errorInfo());
 			throw new Exception("Error: $msg");
+		}
+
+		//-----------------------------------------------------------------------
+		//Using the instance_id to filter the data.
+
+		if (isset($instanceId)) {
+
+		    $mainSqlQuery.=
+		    " WHERE history_range.instance_id = :instance";
+
+		    $paramMap["instance"] = $instanceId;
 		}
 
 		//------------------------------------------------------------------------
@@ -422,44 +438,44 @@ class Application_Service_HistoryService
 			"history" => $rows
 		);
 	}
-	
+
 	public function getShowList($startDT, $endDT)
 	{
 		$user = Application_Model_User::getCurrentUser();
 		$shows = Application_Model_Show::getShows($startDT, $endDT);
-		
+
 		Logging::info($startDT->format("Y-m-d H:i:s"));
 		Logging::info($endDT->format("Y-m-d H:i:s"));
-		
+
 		Logging::info($shows);
-			
+
 		//need to filter the list to only their shows
 		if ($user->isHost()) {
-			
+
 			$showIds = array();
-			
+
 			foreach ($shows as $show) {
 				$showIds[] = $show["show_id"];
 			}
-			
+
 			$showIds = array_unique($showIds);
 			Logging::info($showIds);
-			
+
 			$hostRecords = CcShowHostsQuery::create()
 				->filterByDbHost($user->getId())
 				->filterByDbShow($showIds)
 				->find($this->con);
-			
+
 			$filteredShowIds = array();
-			
+
 			foreach($hostRecords as $record) {
 				$filteredShowIds[] = $record->getDbShow();
 			}
-			
+
 			Logging::info($filteredShowIds);
-			
+
 			$filteredShows = array();
-			
+
 			foreach($shows as $show) {
 				if (in_array($show["show_id"], $filteredShowIds)) {
 					$filteredShows[] = $show;
@@ -469,7 +485,7 @@ class Application_Service_HistoryService
 		else {
 			$filteredShows = $shows;
 		}
-		
+
 		return $filteredShows;
 	}
 
@@ -878,17 +894,17 @@ class Application_Service_HistoryService
 			throw $e;
 		}
 	}
-	
+
 	/* id is an id in cc_playout_history */
 	public function deletePlayedItems($ids) {
-	
+
 		$this->con->beginTransaction();
-	
+
 		try {
-	
+
 			$records = CcPlayoutHistoryQuery::create()->findPks($ids, $this->con);
 			$records->delete($this->con);
-	
+
 			$this->con->commit();
 		}
 		catch (Exception $e) {
@@ -915,9 +931,9 @@ class Application_Service_HistoryService
 
 	    return $fields;
 	}
-	
+
 	private function getPhpCasts() {
-	
+
 		$fields = array(
 			TEMPLATE_DATE => "strval",
 			TEMPLATE_TIME => "strval",
@@ -927,7 +943,7 @@ class Application_Service_HistoryService
 			TEMPLATE_INT => "intval",
 			TEMPLATE_FLOAT => "floatval",
 		);
-	
+
 		return $fields;
 	}
 
