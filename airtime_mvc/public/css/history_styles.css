@@ -101,7 +101,8 @@
 }
 
 .ui-dialog form.ui-widget-content dd input {
-	width: 190px;
+	max-width: 210px;
+	width: 90%;
 }
 
 .bootstrap-datetimepicker-widget ul {
@@ -114,7 +115,16 @@
    border-radius: 2px !important;
 }
 
+.ui-dialog-content .well {
+	max-width: 230px;
+}
+.ui-dialog-content .well .date {
+	margin-left: 25px;
+}
+
 .ui-dialog .ui-dialog-content .well .date .add-on {
+	position: absolute;
+	left: 30px;
 	display: inline-block;
 	width: auto;
 	height: 20px;
@@ -180,4 +190,8 @@
 
 .btn [class^="icon-"] {
 	margin-top: 0;
+}
+
+#history_content .ui-tabs .ui-tabs-panel {
+	padding-top: 10px;
 }

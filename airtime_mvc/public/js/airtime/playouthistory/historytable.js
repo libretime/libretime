@@ -450,6 +450,7 @@ var AIRTIME = (function(AIRTIME) {
     	function redrawTables() {
     		oTableAgg && oTableAgg.fnDraw();
     		oTableItem && oTableItem.fnDraw();
+    		oTableShow && oTableShow.fnDraw();
     	}
     	
     	function removeHistoryDialog() {
