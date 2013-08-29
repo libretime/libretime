@@ -221,7 +221,9 @@ var AIRTIME = (function(AIRTIME) {
     		$accordSection,
     		show;
     	
-    	$showList.empty();
+    	$showList
+    		.accordion( "destroy" )
+    		.empty();
     	
     	for (i = 0, len = oShows.length; i < len; i++) {
     		show = oShows[i];
