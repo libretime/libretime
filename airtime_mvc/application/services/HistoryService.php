@@ -279,13 +279,13 @@ class Application_Service_HistoryService
 			}
 		}
 
-		//need to display the results in the station's timezone.
 		foreach ($rows as $index => &$result) {
 
 			foreach ($boolCast as $name) {
 				$result[$name] = (bool) $result[$name];
 			}
 
+			//need to display the results in the station's timezone.
 			$dateTime = new DateTime($result["starts"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
 			$result["starts"] = $dateTime->format("Y-m-d H:i:s");
@@ -485,6 +485,22 @@ class Application_Service_HistoryService
 		}
 		else {
 			$filteredShows = $shows;
+		}
+		
+		$timezoneUTC = new DateTimeZone("UTC");
+		$timezoneLocal = new DateTimeZone($this->timezone);
+		
+		foreach ($filteredShows as &$result) {
+		
+			//need to display the results in the station's timezone.
+			$dateTime = new DateTime($result["starts"], $timezoneUTC);
+			$dateTime->setTimezone($timezoneLocal);
+			$result["starts"] = $dateTime->format("Y-m-d H:i:s");
+		
+			$dateTime = new DateTime($result["ends"], $timezoneUTC);
+			$dateTime->setTimezone($timezoneLocal);
+			$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+			
 		}
 
 		return $filteredShows;
