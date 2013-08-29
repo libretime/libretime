@@ -577,6 +577,13 @@ var AIRTIME = (function(AIRTIME) {
     			url;
     		
     		url = (id === "") ? createUrl : updateUrl;
+    		
+    		if (fnServerData.instance !== undefined) {
+    			data.push({
+    				name: "instance_id",
+    				value: fnServerData.instance
+    			});
+    		}
     				
     		$.post(url, data, function(json) {
     			

@@ -31,6 +31,14 @@
   </dd>
 <?php endforeach;?>
 
+  <dt>
+    <label for="<?php echo $name;?>"><?php echo _("Choose Show Instance") ?></label>
+  </dt>
+  <dd>
+    <select id="his_instance_select"><option value="0"><?php echo "----------" ?><option></select>
+    <button class="btn" type="button" id="his_instance_retrieve"><?php echo _("Find") ?></button>
+  </dd>
+
 <?php foreach ($form->getSubForm('his_item_template') as $index=>$el): ?>
   <?php $name = $el->getName(); ?>
 

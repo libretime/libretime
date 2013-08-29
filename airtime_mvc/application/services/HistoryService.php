@@ -688,7 +688,7 @@ class Application_Service_HistoryService
     	}
 	}
 
-	public function populateTemplateItem($values, $id=null) {
+	public function populateTemplateItem($values, $id=null, $instance_id=null) {
 
 		$this->con->beginTransaction();
 
@@ -701,6 +701,10 @@ class Application_Service_HistoryService
 		    }
 		    else {
 		    	$historyRecord = new CcPlayoutHistory();
+		    }
+		    
+		    if (isset($instance_id)) {
+		    	$historyRecord->setDbInstanceId($instance_id);
 		    }
 
 		    $timezoneUTC = new DateTimeZone("UTC");
@@ -780,12 +784,31 @@ class Application_Service_HistoryService
     		throw $e;
     	}
 	}
+	
+	//start,end timestamp strings in local timezone.
+	public function populateShowInstances($start, $end) {
+		$timezoneLocal = new DateTimeZone($this->timezone);
+		
+		$startDT = new DateTime($start, $timezoneLocal);
+		$endDT = new DateTime($end, $timezoneLocal);
+		
+		$shows = $this->getShowList($startDT, $endDT);
+		
+		$select = array();
+		
+		foreach ($shows as &$show) {
+			$select[$show["instance_id"]] = $show["name"];
+		}
+		
+		return $select;
+	}
 
 	public function createPlayedItem($data) {
 
 		try {
 			$form = $this->makeHistoryItemForm(null);
 			$history_id = $form->getElement("his_item_id");
+			$instance_id = $data["instance_id"];
 			$json = array();
 
 	        if ($form->isValid($data)) {
@@ -795,7 +818,7 @@ class Application_Service_HistoryService
 	        	Logging::info("created list item");
 	        	Logging::info($values);
 
-	        	$this->populateTemplateItem($values);
+	        	$this->populateTemplateItem($values, null, $instance_id);
 	        }
 	        else {
 	        	Logging::info("created list item NOT VALID");
@@ -819,6 +842,7 @@ class Application_Service_HistoryService
 
 		try {
 			$id = $data["his_item_id"];
+			$instance_id = $data["instance_id"];
 			$form = $this->makeHistoryItemForm($id);
 			$history_id = $form->getElement("his_item_id");
 			$history_id->setRequired(true);
@@ -833,7 +857,7 @@ class Application_Service_HistoryService
 	        	Logging::info("edited list item");
 	        	Logging::info($values);
 
-	        	$this->populateTemplateItem($values, $id);
+	        	$this->populateTemplateItem($values, $id, $instance_id);
 	        }
 	        else {
 	        	Logging::info("edited list item NOT VALID");

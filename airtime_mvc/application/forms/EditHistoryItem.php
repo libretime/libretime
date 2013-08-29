@@ -12,6 +12,15 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 			'PrepareElements',
 			array('ViewScript', array('viewScript' => 'form/edit-history-item.phtml'))
 		));
+		
+		/*
+		$instance = new Zend_Form_Element_Select("instance_id");
+		$instance->setLabel(_("Choose Show Instance"));
+		$instance->setMultiOptions(array("0" => "-----------"));
+		$instance->setValue(0);
+		$instance->setDecorators(array('ViewHelper'));
+		$this->addElement($instance);
+		*/
 
 	    $starts = new Zend_Form_Element_Text(self::ID_PREFIX.'starts');
 	    $starts->setValidators(array(
@@ -41,5 +50,11 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	public function createFromTemplate($template, $required) {
 
 		parent::createFromTemplate($template, $required);
+	}
+	
+	public function populateShowInstances($possibleInstances) {
+		
+		$instance = $this->getElement("instance_id");
+		$instance->setMultiOptions($possibleInstances);
 	}
 }
