@@ -30,8 +30,6 @@ class Application_Service_HistoryService
 
 		$start = $startDT->format("Y-m-d H:i:s");
 		$end = $endDT->format("Y-m-d H:i:s");
-		$paramMap["starts"] = $start;
-		$paramMap["ends"] = $end;
 
 		$template = $this->getConfiguredItemTemplate();
 		$fields = $template["fields"];
@@ -58,11 +56,25 @@ class Application_Service_HistoryService
 			}
 		}
 
+		//-----------------------------------------------------------------------
+		//Using the instance_id to filter the data.
+
+
 		$historyRange = "(".
 		"SELECT history.starts, history.ends, history.id AS history_id, history.instance_id".
-		" FROM cc_playout_history as history".
-		" WHERE history.starts >= :starts and history.starts < :ends".
-		") AS history_range";
+		" FROM cc_playout_history as history";
+
+		if (isset($instanceId)) {
+		    $historyRange.= " WHERE history.instance_id = :instance";
+		    $paramMap["instance"] = $instanceId;
+		}
+		else {
+		    $historyRange.= " WHERE history.starts >= :starts and history.starts < :ends";
+		    $paramMap["starts"] = $start;
+		    $paramMap["ends"] = $end;
+		}
+
+		$historyRange.= ") AS history_range";
 
 		$manualMeta = "(".
 		"SELECT %KEY%.value AS %KEY%, %KEY%.history_id".
@@ -174,25 +186,13 @@ class Application_Service_HistoryService
 			" LEFT JOIN {$filter} USING(history_id)";
 		}
 
-
-		//-----------------------------------------------------------------------
-		//Using the instance_id to filter the data.
-
-		if (isset($instanceId)) {
-
-		    $mainSqlQuery.=
-		    " WHERE history_range.instance_id = :instance";
-
-		    $paramMap["instance"] = $instanceId;
-		}
-		
 		//----------------------------------------------------------------------
 		//need to count the total rows to tell Datatables.
 		$stmt = $this->con->prepare($mainSqlQuery);
 		foreach ($paramMap as $param => $v) {
 			$stmt->bindValue($param, $v);
 		}
-		
+
 		if ($stmt->execute()) {
 			$totalRows = $stmt->rowCount();
 		}
@@ -486,21 +486,21 @@ class Application_Service_HistoryService
 		else {
 			$filteredShows = $shows;
 		}
-		
+
 		$timezoneUTC = new DateTimeZone("UTC");
 		$timezoneLocal = new DateTimeZone($this->timezone);
-		
+
 		foreach ($filteredShows as &$result) {
-		
+
 			//need to display the results in the station's timezone.
 			$dateTime = new DateTime($result["starts"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
 			$result["starts"] = $dateTime->format("Y-m-d H:i:s");
-		
+
 			$dateTime = new DateTime($result["ends"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
 			$result["ends"] = $dateTime->format("Y-m-d H:i:s");
-			
+
 		}
 
 		return $filteredShows;
@@ -702,7 +702,7 @@ class Application_Service_HistoryService
 		    else {
 		    	$historyRecord = new CcPlayoutHistory();
 		    }
-		    
+
 		    if (isset($instance_id)) {
 		    	$historyRecord->setDbInstanceId($instance_id);
 		    }
@@ -784,22 +784,22 @@ class Application_Service_HistoryService
     		throw $e;
     	}
 	}
-	
+
 	//start,end timestamp strings in local timezone.
 	public function populateShowInstances($start, $end) {
 		$timezoneLocal = new DateTimeZone($this->timezone);
-		
+
 		$startDT = new DateTime($start, $timezoneLocal);
 		$endDT = new DateTime($end, $timezoneLocal);
-		
+
 		$shows = $this->getShowList($startDT, $endDT);
-		
+
 		$select = array();
-		
+
 		foreach ($shows as &$show) {
 			$select[$show["instance_id"]] = $show["name"];
 		}
-		
+
 		return $select;
 	}
 
