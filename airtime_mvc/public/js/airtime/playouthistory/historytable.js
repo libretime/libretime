@@ -173,19 +173,6 @@ var AIRTIME = (function(AIRTIME) {
     	var template,
     		$el;
     	
-    	/*
-    	template = 
-    		"<li " +
-    		  "data-instance='<%= instance %>' " +
-    		  "data-starts='<%= starts %>' " +
-    		  "data-ends='<%= ends %>'" +
-    		">" +
-    			"<span><%= name %></span>" +
-    			"<span><%= starts %></span>" +
-    			"<span><%= ends %></span>" +
-    		"</li>";
-    		*/
-    	
     	template = 
     		"<h3 " +
     	      "data-instance='<%= instance %>' " +
@@ -204,6 +191,12 @@ var AIRTIME = (function(AIRTIME) {
     	$el = $(template(config));
     	
     	return $el;
+    }
+    
+    //$el is the div in the accordian we should create the table on.
+    function createShowTable($el) {
+    	
+    	oTableShow = itemHistoryTable("history_table_list");
     }
     
     function drawShowList(oShows) {
@@ -408,6 +401,7 @@ var AIRTIME = (function(AIRTIME) {
     		oBaseTimePickerSettings,
     		oTableAgg,
     		oTableItem,
+    		oTableShow,
     		$hisDialogEl,
     		
     		tabsInit = [
