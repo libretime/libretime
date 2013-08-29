@@ -53,7 +53,11 @@ var AIRTIME = (function(AIRTIME) {
     var dateStartId = "#his_date_start",
 		timeStartId = "#his_time_start",
 		dateEndId = "#his_date_end",
-		timeEndId = "#his_time_end";
+		timeEndId = "#his_time_end",
+    
+		oTableAgg,
+		oTableItem,
+		oTableShow;
     
     function getSelectedLogItems() {
     	var items = Object.keys(selectedLogItems);
@@ -168,24 +172,23 @@ var AIRTIME = (function(AIRTIME) {
         } );
     }
     
-  //config: name, type, filemd, required
     function createShowAccordSection(config) {
     	var template,
     		$el;
     	
     	template = 
-    		"<h3 " +
-    	      "data-instance='<%= instance %>' " +
-		      "data-starts='<%= starts %>' " +
-		      "data-ends='<%= ends %>'" +
-    	    ">" +
+    		"<h3>" +
     	      "<a href='#'>" +
     	        "<span><%= name %></span>" +
   			    "<span><%= starts %></span>" +
   			    "<span><%= ends %></span>" +
     	      "</a>" +
     	    "</h3>" +
-    	 "<div>First content panel</div>";
+    	 "<div " +
+    	    "data-instance='<%= instance %>' " +
+	        "data-starts='<%= starts %>' " +
+	        "data-ends='<%= ends %>'" +
+    	 "></div>";
     	
     	template = _.template(template);
     	$el = $(template(config));
@@ -196,7 +199,19 @@ var AIRTIME = (function(AIRTIME) {
     //$el is the div in the accordian we should create the table on.
     function createShowTable($el) {
     	
-    	oTableShow = itemHistoryTable("history_table_list");
+    	var instance = $el.data("instance");
+    	var $table = $("<table/>", {
+			'cellpadding': "0", 
+			'cellspacing': "0", 
+			'class': "datatable",
+			'id': "history_table_show"
+		});
+    	
+    	//assign the retrieval function the show instance id.
+    	fnServerData.instance = instance;
+    	$el.append($table);
+    	$el.css("height", "auto");
+    	oTableShow = itemHistoryTable("history_table_show");
     }
     
     function drawShowList(oShows) {
@@ -224,18 +239,16 @@ var AIRTIME = (function(AIRTIME) {
     	$showList.accordion({
     		create: function( event, ui ) {
     			var $div = $showList.find(".ui-accordion-content-active");
+    			createShowTable($div);
     		},
 		    change: function( event, ui ) {
-		    	var x;
+		    	var $div = $(ui.newContent);
+		    	createShowTable($div);
 		    },
 		    changestart: function( event, ui ) {
-		    	var x;
+		    	$(ui.oldContent).empty();
 		    }
 		});
-    }
-    
-    function drawShowTable() {
-    	
     }
     
     function createToolbarButtons ($el) {
@@ -399,9 +412,6 @@ var AIRTIME = (function(AIRTIME) {
     	
     	var oBaseDatePickerSettings,
     		oBaseTimePickerSettings,
-    		oTableAgg,
-    		oTableItem,
-    		oTableShow,
     		$hisDialogEl,
     		
     		tabsInit = [
@@ -409,17 +419,26 @@ var AIRTIME = (function(AIRTIME) {
     		    	initialized: false,
     		    	initialize: function() {
     		    		oTableItem = itemHistoryTable("history_table_list");
+    		    	},
+    		    	navigate: function() {
+    		    		delete fnServerData.instance;
     		    	}
     		    },
     		    {
     		    	initialized: false,
     		    	initialize: function() {
     		    		oTableAgg = aggregateHistoryTable();
+    		    	},
+    		    	navigate: function() {
+    		    		delete fnServerData.instance;
     		    	}
     		    },
     		    {
     		    	initialized: false,
     		    	initialize: function() {
+    		    		showSummaryList();
+    		    	},
+    		    	navigate: function() {
     		    		showSummaryList();
     		    	}
     		    }
@@ -616,6 +635,9 @@ var AIRTIME = (function(AIRTIME) {
 				if (!tab.initialized) {
 					tab.initialize();
 					tab.initialized = true;
+				}
+				else {
+					tab.navigate();
 				}
 			}
     	});

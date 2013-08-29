@@ -174,20 +174,6 @@ class Application_Service_HistoryService
 			" LEFT JOIN {$filter} USING(history_id)";
 		}
 
-		//----------------------------------------------------------------------
-		//need to count the total rows to tell Datatables.
-		$stmt = $this->con->prepare($mainSqlQuery);
-		foreach ($paramMap as $param => $v) {
-			$stmt->bindValue($param, $v);
-		}
-
-		if ($stmt->execute()) {
-			$totalRows = $stmt->rowCount();
-		}
-		else {
-			$msg = implode(',', $stmt->errorInfo());
-			throw new Exception("Error: $msg");
-		}
 
 		//-----------------------------------------------------------------------
 		//Using the instance_id to filter the data.
@@ -198,6 +184,21 @@ class Application_Service_HistoryService
 		    " WHERE history_range.instance_id = :instance";
 
 		    $paramMap["instance"] = $instanceId;
+		}
+		
+		//----------------------------------------------------------------------
+		//need to count the total rows to tell Datatables.
+		$stmt = $this->con->prepare($mainSqlQuery);
+		foreach ($paramMap as $param => $v) {
+			$stmt->bindValue($param, $v);
+		}
+		
+		if ($stmt->execute()) {
+			$totalRows = $stmt->rowCount();
+		}
+		else {
+			$msg = implode(',', $stmt->errorInfo());
+			throw new Exception("Error: $msg");
 		}
 
 		//------------------------------------------------------------------------
