@@ -857,7 +857,7 @@ class Application_Service_HistoryService
 		try {
 			$form = $this->makeHistoryItemForm(null);
 			$history_id = $form->getElement("his_item_id");
-			$instanceId = $data["instance_id"];
+			$instanceId = isset($data["instance_id"]) ? $data["instance_id"] : null;
 			$json = array();
 
 	        if ($form->isValid($data) && $this->validateHistoryItem($instanceId, $form)) {
@@ -883,7 +883,7 @@ class Application_Service_HistoryService
 
 		try {
 			$id = $data["his_item_id"];
-			$instanceId = $data["instance_id"];
+			$instanceId = isset($data["instance_id"]) ? $data["instance_id"] : null;
 			$form = $this->makeHistoryItemForm($id);
 			$history_id = $form->getElement("his_item_id");
 			$history_id->setRequired(true);

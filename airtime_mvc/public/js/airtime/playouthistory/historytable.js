@@ -604,7 +604,9 @@ var AIRTIME = (function(AIRTIME) {
     			id = data[0].value,
     			createUrl = baseUrl+"Playouthistory/create-list-item/format/json",
     			updateUrl = baseUrl+"Playouthistory/update-list-item/format/json",
-    			url;
+    			url,
+    			$select = $hisDialogEl.find("#his_instance_select"),
+    			instance;
     		
     		url = (id === "") ? createUrl : updateUrl;
     		
@@ -613,6 +615,16 @@ var AIRTIME = (function(AIRTIME) {
     				name: "instance_id",
     				value: fnServerData.instance
     			});
+    		}
+    		else if ($select.length > 0) {
+    			instance = $select.val();
+    			
+    			if (instance > 0) {
+    				data.push({
+        				name: "instance_id",
+        				value: instance
+        			});
+    			}		
     		}
     				
     		$.post(url, data, function(json) {
@@ -645,6 +657,46 @@ var AIRTIME = (function(AIRTIME) {
     		}
     	});
     	
+    	$('body').on("click", "#his_instance_retrieve", function(e) {
+    		var startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker').data('datetimepicker'),
+				endPicker = $hisDialogEl.find('#his_item_ends_datetimepicker').data('datetimepicker'),
+				url = baseUrl+"playouthistory/show-history-feed",
+				startDate = startPicker.getLocalDate(),
+				endDate = endPicker.getLocalDate(),
+				getEpochSeconds = AIRTIME.utilities.fnGetSecondsEpoch,
+				data;
+    		
+    		data = {
+    			start: getEpochSeconds(startDate),
+    			end: getEpochSeconds(endDate),
+    			format: "json"
+    		};
+    		
+    		$.get(url, data, function(json) {
+    			var i,
+    				$select = $('<select/>', {
+    					id: 'his_instance_select'
+    				}),
+    				$option,
+    				show;
+    			
+    			if (json.length > 0) { 				
+    				
+    				for (i = 0; i < json.length; i++) {
+    					show = json[i];
+    					
+    					$option = $('<option/>')
+    						.text(show.name)
+    						.attr('value', show.instance_id);
+    					
+    					$select.append($option);
+    				}
+    			}
+    			
+    			$hisDialogEl.find("#his_instance_select").replaceWith($select);
+    		});
+    	});
+    	
     	$historyContentDiv.find("#his_submit").click(function(ev){
     		var fn,
     			oRange;
@@ -658,7 +710,9 @@ var AIRTIME = (function(AIRTIME) {
     	    if (inShowsTab) {
     	    	showSummaryList();
     	    }
-    	    redrawTables(); 
+    	    else {
+    	    	redrawTables();
+    	    }  
     	});
     	
     	$historyContentDiv.on("click", ".his-select-page", selectCurrentPage);
