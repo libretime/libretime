@@ -180,15 +180,17 @@ var AIRTIME = (function(AIRTIME) {
     	template = 
     		"<h3>" +
     	      "<a href='#'>" +
-    	        "<span><%= name %></span>" +
-  			    "<span><%= starts %></span>" +
-  			    "<span><%= ends %></span>" +
+    	        "<span class='show-title'><%= name %></span>" +
+    	        "<span class='push-right'>" +
+    	          "<span class='show-date'><%= date %></span>" +
+  			      "<span class='show-time'><%= startTime %></span>" +
+  			      "-" +
+  			      "<span class='show-time'><%= endTime %></span>" +
+  			    "</span>" +
     	      "</a>" +
     	    "</h3>" +
     	 "<div " +
     	    "data-instance='<%= instance %>' " +
-	        "data-starts='<%= starts %>' " +
-	        "data-ends='<%= ends %>'" +
     	 "></div>";
     	
     	template = _.template(template);
@@ -220,7 +222,8 @@ var AIRTIME = (function(AIRTIME) {
     		i, 
     		len, 
     		$accordSection,
-    		show;
+    		show,
+    		tmp;
     	
     	$showList
     		.accordion( "destroy" )
@@ -228,12 +231,14 @@ var AIRTIME = (function(AIRTIME) {
     	
     	for (i = 0, len = oShows.length; i < len; i++) {
     		show = oShows[i];
+    		tmp = show.starts.split(" ");
     		
     		$accordSection = createShowAccordSection({
     			instance: show.instance_id,
     			name: show.name,
-    			starts: show.starts,
-    			ends: show.ends
+    			date: tmp[0],
+    			startTime: tmp[1],
+    			endTime: show.ends.split(" ").pop()
     		});
     		
     		$showList.append($accordSection);
