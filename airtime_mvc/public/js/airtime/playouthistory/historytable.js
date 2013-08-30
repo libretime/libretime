@@ -653,7 +653,12 @@ var AIRTIME = (function(AIRTIME) {
     	    fn.start = oRange.start;
     	    fn.end = oRange.end;
     	    
-    	    redrawTables();
+    	    if (inShowsTab) {
+    	    	showSummaryList();
+    	    }
+    	    else {
+    	    	redrawTables();
+    	    }  
     	});
     	
     	$historyContentDiv.on("click", "#his_trash", function(ev){
