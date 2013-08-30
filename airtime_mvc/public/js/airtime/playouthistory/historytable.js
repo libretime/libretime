@@ -91,8 +91,9 @@ var AIRTIME = (function(AIRTIME) {
     	selectedLogItems = {};
     }
     
-    function selectCurrentPage() {
-    	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
+    function selectCurrentPage(e) {
+    	var $ctx = $(e.currentTarget).parents("div.dataTables_wrapper"),
+    		$inputs = $ctx.find(".his_checkbox").find("input"),
     		$tr, 
     		$input;
     	
@@ -104,8 +105,9 @@ var AIRTIME = (function(AIRTIME) {
 		});
     }
     
-    function deselectCurrentPage() {
-    	var $inputs = $historyContentDiv.find(".his_checkbox").find("input"),
+    function deselectCurrentPage(e) {
+    	var $ctx = $(e.currentTarget).parents("div.dataTables_wrapper"),
+    		$inputs = $ctx.find(".his_checkbox").find("input"),
 			$tr, 
 			$input;
 		
@@ -430,7 +432,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	always: function() {
     		    		inShowsTab = false;
-    		    		selectedLogItems = {};
+    		    		emptySelectedLogItems();
     		    	}
     		    },
     		    {
@@ -443,7 +445,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	always: function() {
     		    		inShowsTab = false;
-    		    		selectedLogItems = {};
+    		    		emptySelectedLogItems();
     		    	}
     		    },
     		    {
@@ -457,7 +459,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	always: function() {
     		    		inShowsTab = true;
     		    		showSummaryList();
-    		    		selectedLogItems = {};
+    		    		emptySelectedLogItems();
     		    	}
     		    }
     		];
