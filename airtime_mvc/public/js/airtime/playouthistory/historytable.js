@@ -269,9 +269,9 @@ var AIRTIME = (function(AIRTIME) {
                 $.i18n._("Select")+" <span class='caret'></span>" +
             "</button>" +
             "<ul class='dropdown-menu'>" +
-                "<li id='his-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
-                "<li id='his-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
-                "<li id='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
+                "<li class='his-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
+                "<li class='his-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
+                "<li class='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
             "</ul>" +
         "</div>");
         
@@ -396,11 +396,7 @@ var AIRTIME = (function(AIRTIME) {
         
         $toolbar = $historyTableDiv.parents(".dataTables_wrapper").find(".fg-toolbar:first");
         createToolbarButtons($toolbar);
-        
-        $("#his-select-page").click(selectCurrentPage);
-        $("#his-dselect-page").click(deselectCurrentPage);
-        $("#his-dselect-all").click(emptySelectedLogItems);
-        
+         
         return oTable;
     }
     
@@ -660,6 +656,10 @@ var AIRTIME = (function(AIRTIME) {
     	    	redrawTables();
     	    }  
     	});
+    	
+    	$historyContentDiv.on("click", ".his-select-page", selectCurrentPage);
+    	$historyContentDiv.on("click", ".his-dselect-page", deselectCurrentPage);
+    	$historyContentDiv.on("click", ".his-dselect-all", emptySelectedLogItems);
     	
     	$historyContentDiv.on("click", "#his_trash", function(ev){
     		var items = getSelectedLogItems(),
