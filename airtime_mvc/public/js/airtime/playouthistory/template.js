@@ -16,13 +16,14 @@ var AIRTIME = (function(AIRTIME) {
     	var itemConfigured = 
     		"<li class='template_configured' data-template='<%= id %>' data-name='<%= name %>'>" +
     		    "<a href='<%= editUrl %>' class='template_name'><%= name %></a>" +
+    		    "<i class='icon icon-ok'></i>" +
     		"</li>";
     	
     	var item = 
     		"<li data-template='<%= id %>' data-name='<%= name %>'>" +
     			"<a href='<%= editUrl %>' class='template_name'><%= name %></a>" +
-    			"<a href='<%= defaultUrl %>' class='template_default'>Set Default</a>" +
-    			"<a href='<%= removeUrl %>' class='template_remove'>Remove</a>" +
+    			"<a href='<%= removeUrl %>' class='template_remove'><i class='icon icon-trash'></i></a>" +
+    			"<a href='<%= defaultUrl %>' class='template_default'>Set Default</a>" +	
     		"</li>";
     	
     	var template = (configured) === true ? itemConfigured : item;
