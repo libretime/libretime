@@ -45,7 +45,9 @@
       <label for="<?php echo $name;?>"><?php echo _("Choose Show Instance") ?></label>
     </div>
     <div>
-      <select id="his_instance_select"><option value="0"><?php echo "----------" ?><option></select>
+      <select id="his_instance_select">
+        <option value="0"><?php echo _("No Show") ?></option>
+      </select>
       <button class="btn" type="button" id="his_instance_retrieve"><?php echo _("Find") ?></button>
     </div>
   </dd>
