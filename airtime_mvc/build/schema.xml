@@ -488,7 +488,7 @@
     <foreign-key foreignTable="cc_files" name="cc_playout_history_file_tag_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>
     </foreign-key>
-    <foreign-key foreignTable="cc_show_instances" name="cc_his_item_inst_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="cc_show_instances" name="cc_his_item_inst_fkey" onDelete="SETNULL">
       <reference local="instance_id" foreign="id"/>
     </foreign-key>
   </table>

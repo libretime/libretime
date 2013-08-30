@@ -894,7 +894,7 @@ ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_mount_name_inst_fkey" FOREIGN
 
 ALTER TABLE "cc_playout_history" ADD CONSTRAINT "cc_playout_history_file_tag_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
 
-ALTER TABLE "cc_playout_history" ADD CONSTRAINT "cc_his_item_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE CASCADE;
+ALTER TABLE "cc_playout_history" ADD CONSTRAINT "cc_his_item_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE SET NULL;
 
 ALTER TABLE "cc_playout_history_metadata" ADD CONSTRAINT "cc_playout_history_metadata_entry_fkey" FOREIGN KEY ("history_id") REFERENCES "cc_playout_history" ("id") ON DELETE CASCADE;
 

@@ -52,7 +52,7 @@ class CcPlayoutHistoryTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'SET NULL', null);
     $this->addRelation('CcPlayoutHistoryMetaData', 'CcPlayoutHistoryMetaData', RelationMap::ONE_TO_MANY, array('id' => 'history_id', ), 'CASCADE', null);
 	} // buildRelations()
 
