@@ -254,10 +254,9 @@ var AIRTIME = (function(AIRTIME) {
 		    	var $div = $(ui.newContent);
 		    	$(ui.oldContent).empty();
 		    	createShowTable($div);
-		    },
-		    changestart: function( event, ui ) {
-		    	
+		    	selectedLogItems = {};
 		    }
+		    //changestart: function( event, ui ) {}
 		});
     }
     
@@ -431,6 +430,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	always: function() {
     		    		inShowsTab = false;
+    		    		selectedLogItems = {};
     		    	}
     		    },
     		    {
@@ -443,6 +443,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	always: function() {
     		    		inShowsTab = false;
+    		    		selectedLogItems = {};
     		    	}
     		    },
     		    {
@@ -456,6 +457,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	always: function() {
     		    		inShowsTab = true;
     		    		showSummaryList();
+    		    		selectedLogItems = {};
     		    	}
     		    }
     		];
@@ -665,7 +667,8 @@ var AIRTIME = (function(AIRTIME) {
     		var items = getSelectedLogItems(),
     			url = baseUrl+"playouthistory/delete-list-items";
     		
-    		$.post(url, {ids: items, format: "json"}, function(){
+    		$.post(url, {ids: items, format: "json"}, function() {
+    			selectedLogItems = {};
     			redrawTables();
     		});
     	});
