@@ -505,11 +505,12 @@ SQL;
 
             foreach ($p_items as $ac) {
                 $res = $this->insertPlaylistElement($this->buildEntry($ac, $pos));
-
                 // update is_playlist flag in cc_files to indicate the
                 // file belongs to a playlist or block (in this case a playlist)
-                $db_file = CcFilesQuery::create()->findPk($ac[0], $this->con);
-                $db_file->setDbIsPlaylist(true)->save($this->con);
+                if ($ac[1] == "audioclip") {
+                    $db_file = CcFilesQuery::create()->findPk($ac[0], $this->con);
+                    $db_file->setDbIsPlaylist(true)->save($this->con);
+                }
                 
                 $pos = $pos + 1;
             }

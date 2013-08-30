@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_listener_count' table.
+ * This class defines the structure of the 'cc_mount_name' table.
  *
  *
  *
@@ -14,12 +14,12 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcListenerCountTableMap extends TableMap {
+class CcMountNameTableMap extends TableMap {
 
 	/**
 	 * The (dot-path) name of this class
 	 */
-	const CLASS_NAME = 'airtime.map.CcListenerCountTableMap';
+	const CLASS_NAME = 'airtime.map.CcMountNameTableMap';
 
 	/**
 	 * Initialize the table attributes, columns and validators
@@ -31,17 +31,15 @@ class CcListenerCountTableMap extends TableMap {
 	public function initialize()
 	{
 	  // attributes
-		$this->setName('cc_listener_count');
-		$this->setPhpName('CcListenerCount');
-		$this->setClassname('CcListenerCount');
+		$this->setName('cc_mount_name');
+		$this->setPhpName('CcMountName');
+		$this->setClassname('CcMountName');
 		$this->setPackage('airtime');
 		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_listener_count_id_seq');
+		$this->setPrimaryKeyMethodInfo('cc_mount_name_id_seq');
 		// columns
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addForeignKey('TIMESTAMP_ID', 'DbTimestampId', 'INTEGER', 'cc_timestamp', 'ID', true, null, null);
-		$this->addForeignKey('MOUNT_NAME_ID', 'DbMountNameId', 'INTEGER', 'cc_mount_name', 'ID', true, null, null);
-		$this->addColumn('LISTENER_COUNT', 'DbListenerCount', 'INTEGER', true, null, null);
+		$this->addColumn('MOUNT_NAME', 'DbMountName', 'VARCHAR', true, 255, null);
 		// validators
 	} // initialize()
 
@@ -50,8 +48,7 @@ class CcListenerCountTableMap extends TableMap {
 	 */
 	public function buildRelations()
 	{
-    $this->addRelation('CcTimestamp', 'CcTimestamp', RelationMap::MANY_TO_ONE, array('timestamp_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcMountName', 'CcMountName', RelationMap::MANY_TO_ONE, array('mount_name_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcListenerCount', 'CcListenerCount', RelationMap::ONE_TO_MANY, array('id' => 'mount_name_id', ), 'CASCADE', null);
 	} // buildRelations()
 
-} // CcListenerCountTableMap
+} // CcMountNameTableMap

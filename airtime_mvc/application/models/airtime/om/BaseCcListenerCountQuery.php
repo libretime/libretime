@@ -24,9 +24,9 @@
  * @method     CcListenerCountQuery rightJoinCcTimestamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcTimestamp relation
  * @method     CcListenerCountQuery innerJoinCcTimestamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcTimestamp relation
  *
- * @method     CcListenerCountQuery leftJoinCcTimestamp($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcTimestamp relation
- * @method     CcListenerCountQuery rightJoinCcTimestamp($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcTimestamp relation
- * @method     CcListenerCountQuery innerJoinCcTimestamp($relationAlias = '') Adds a INNER JOIN clause to the query using the CcTimestamp relation
+ * @method     CcListenerCountQuery leftJoinCcMountName($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcMountName relation
+ * @method     CcListenerCountQuery rightJoinCcMountName($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcMountName relation
+ * @method     CcListenerCountQuery innerJoinCcMountName($relationAlias = '') Adds a INNER JOIN clause to the query using the CcMountName relation
  *
  * @method     CcListenerCount findOne(PropelPDO $con = null) Return the first CcListenerCount matching the query
  * @method     CcListenerCount findOneOrCreate(PropelPDO $con = null) Return the first CcListenerCount matching the query, or a new CcListenerCount object populated from the query conditions when no match is found
@@ -324,31 +324,31 @@ abstract class BaseCcListenerCountQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query by a related CcTimestamp object
+	 * Filter the query by a related CcMountName object
 	 *
-	 * @param     CcTimestamp $ccTimestamp  the related object to use as filter
+	 * @param     CcMountName $ccMountName  the related object to use as filter
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcListenerCountQuery The current query, for fluid interface
 	 */
-	public function filterByCcTimestamp($ccTimestamp, $comparison = null)
+	public function filterByCcMountName($ccMountName, $comparison = null)
 	{
 		return $this
-			->addUsingAlias(CcListenerCountPeer::MOUNT_NAME_ID, $ccTimestamp->getDbId(), $comparison);
+			->addUsingAlias(CcListenerCountPeer::MOUNT_NAME_ID, $ccMountName->getDbId(), $comparison);
 	}
 
 	/**
-	 * Adds a JOIN clause to the query using the CcTimestamp relation
+	 * Adds a JOIN clause to the query using the CcMountName relation
 	 * 
 	 * @param     string $relationAlias optional alias for the relation
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
 	 * @return    CcListenerCountQuery The current query, for fluid interface
 	 */
-	public function joinCcTimestamp($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function joinCcMountName($relationAlias = '', $joinType = Criteria::INNER_JOIN)
 	{
 		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcTimestamp');
+		$relationMap = $tableMap->getRelation('CcMountName');
 		
 		// create a ModelJoin object for this join
 		$join = new ModelJoin();
@@ -363,14 +363,14 @@ abstract class BaseCcListenerCountQuery extends ModelCriteria
 			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
 			$this->addJoinObject($join, $relationAlias);
 		} else {
-			$this->addJoinObject($join, 'CcTimestamp');
+			$this->addJoinObject($join, 'CcMountName');
 		}
 		
 		return $this;
 	}
 
 	/**
-	 * Use the CcTimestamp relation CcTimestamp object
+	 * Use the CcMountName relation CcMountName object
 	 *
 	 * @see       useQuery()
 	 * 
@@ -378,13 +378,13 @@ abstract class BaseCcListenerCountQuery extends ModelCriteria
 	 *                                   to be used as main alias in the secondary query
 	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
 	 *
-	 * @return    CcTimestampQuery A secondary query class using the current class as primary query
+	 * @return    CcMountNameQuery A secondary query class using the current class as primary query
 	 */
-	public function useCcTimestampQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
+	public function useCcMountNameQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
 	{
 		return $this
-			->joinCcTimestamp($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcTimestamp', 'CcTimestampQuery');
+			->joinCcMountName($relationAlias, $joinType)
+			->useQuery($relationAlias ? $relationAlias : 'CcMountName', 'CcMountNameQuery');
 	}
 
 	/**
