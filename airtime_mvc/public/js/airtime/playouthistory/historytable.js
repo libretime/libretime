@@ -245,16 +245,18 @@ var AIRTIME = (function(AIRTIME) {
     	}
     	
     	$showList.accordion({
+    		animated: false,
     		create: function( event, ui ) {
     			var $div = $showList.find(".ui-accordion-content-active");
     			createShowTable($div);
     		},
 		    change: function( event, ui ) {
 		    	var $div = $(ui.newContent);
+		    	$(ui.oldContent).empty();
 		    	createShowTable($div);
 		    },
 		    changestart: function( event, ui ) {
-		    	$(ui.oldContent).empty();
+		    	
 		    }
 		});
     }
