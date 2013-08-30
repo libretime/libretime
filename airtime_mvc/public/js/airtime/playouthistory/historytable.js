@@ -429,6 +429,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	navigate: function() {
     		    		delete fnServerData.instance;
+    		    		oTableItem.fnDraw();
     		    	},
     		    	always: function() {
     		    		inShowsTab = false;
@@ -442,6 +443,7 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	navigate: function() {
     		    		delete fnServerData.instance;
+    		    		oTableAgg.fnDraw();
     		    	},
     		    	always: function() {
     		    		inShowsTab = false;
@@ -656,9 +658,7 @@ var AIRTIME = (function(AIRTIME) {
     	    if (inShowsTab) {
     	    	showSummaryList();
     	    }
-    	    else {
-    	    	redrawTables();
-    	    }  
+    	    redrawTables(); 
     	});
     	
     	$historyContentDiv.on("click", ".his-select-page", selectCurrentPage);
