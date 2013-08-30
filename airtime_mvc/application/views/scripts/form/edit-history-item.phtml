@@ -3,6 +3,15 @@
 
 <dl class="zend_form">
 
+  <?php $formErrors = $form->getErrorMessages() ?>
+  <?php if (count($formErrors) > 0) : ?>
+  <ul class='errors'>
+  <?php foreach ($formErrors as $error): ?>
+    <li><?php echo $error; ?></li>
+    <?php endforeach; ?>
+  </ul>
+  <?php endif; ?>
+
  <?php $name = "his_item_id"; ?>
   <dd id="<?php echo $name;?>-element">
     <?php echo $form->getElement($name); ?>

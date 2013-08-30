@@ -202,7 +202,6 @@ class PlayouthistoryController extends Zend_Controller_Action
     public function editListItemAction()
     {
         $id = $this->_getParam('id', null);
-        Logging::info("Id is: $id");
 
         $populate = isset($id) ? true : false;
 

@@ -486,12 +486,18 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	}
     	
-    	function makeHistoryDialog(html) {
-    		$hisDialogEl = $(html);
+    	function processDialogHtml($el) {
     		
     		if (inShowsTab) {
-    			$hisDialogEl.find("#his_choose_instance").remove();
+    			$el.find("#his_choose_instance").remove();
     		}
+    		
+    		return $el
+    	}
+    	
+    	function makeHistoryDialog(html) {
+    		$hisDialogEl = $(html);
+    		$hisDialogEl = processDialogHtml($hisDialogEl);
     		
     		$hisDialogEl.dialog({	       
     	        title: $.i18n._("Edit History Record"),
@@ -604,6 +610,7 @@ var AIRTIME = (function(AIRTIME) {
     			
     			if (json.form !== undefined) {
     				var $newForm = $(json.form);
+    				$newForm = processDialogHtml($newForm);
     				$hisDialogEl.html($newForm.html());
     				initializeDialog();
     			}

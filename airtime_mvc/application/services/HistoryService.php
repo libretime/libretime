@@ -803,31 +803,72 @@ class Application_Service_HistoryService
 		return $select;
 	}
 
+	private function validateHistoryItem($instanceId, $form) {
+
+	    /*
+	    $userService = new Application_Service_UserService();
+	    $currentUser = $userService->getCurrentUser();
+
+	    if (!$currentUser->isAdminOrPM()) {
+	        if (empty($instance_id) ) {
+
+	        }
+	    }
+	    */
+
+	    $valid = true;
+
+	    $recordStartsEl = $form->getElement("his_item_starts");
+	    $recordStarts = $recordStartsEl->getValue();
+	    $recordEndsEl = $form->getElement("his_item_starts");
+	    $recordEnds = $recordEndsEl->getValue();
+
+	    $timezoneLocal = new DateTimeZone($this->timezone);
+
+	    $startDT = new DateTime($recordStarts, $timezoneLocal);
+	    $endDT = new DateTime($recordEnds, $timezoneLocal);
+
+	    if ($recordStarts > $recordEnds) {
+	        $valid = false;
+	        $recordEndsEl->addErrorMessage("End time must be after start time");
+	    }
+
+	    if (isset($instanceId)) {
+
+	        $instance = CcShowInstancesQuery::create()->findPk($instanceId, $this->con);
+	        $inStartsDT = $instance->getDbStarts(null);
+	        $inEndsDT = $instance->getDbEnds(null);
+
+	        if ($startDT < $inStartsDT) {
+	            $valid = false;
+	            $form->addErrorMessage("History item begins before show.");
+	        }
+	        else if ($startDT > $inEndsDT) {
+	            $valid = false;
+	            $form->addErrorMessage("History item begins after show.");
+	        }
+	    }
+
+	    return $valid;
+	}
+
 	public function createPlayedItem($data) {
 
 		try {
 			$form = $this->makeHistoryItemForm(null);
 			$history_id = $form->getElement("his_item_id");
-			$instance_id = $data["instance_id"];
+			$instanceId = $data["instance_id"];
 			$json = array();
 
-	        if ($form->isValid($data)) {
+	        if ($form->isValid($data) && $this->validateHistoryItem($instanceId, $form)) {
+
 	        	$history_id->setIgnore(true);
 	        	$values = $form->getValues();
 
-	        	Logging::info("created list item");
-	        	Logging::info($values);
-
-	        	$this->populateTemplateItem($values, null, $instance_id);
+	        	$this->populateTemplateItem($values, null, $instanceId);
 	        }
 	        else {
-	        	Logging::info("created list item NOT VALID");
-
-	        	$msgs = $form->getMessages();
-	        	Logging::info($msgs);
-
 	        	$json["form"] = $form;
-	        	$json["error"] = $msgs;
 	        }
 
 	        return $json;
@@ -842,31 +883,21 @@ class Application_Service_HistoryService
 
 		try {
 			$id = $data["his_item_id"];
-			$instance_id = $data["instance_id"];
+			$instanceId = $data["instance_id"];
 			$form = $this->makeHistoryItemForm($id);
 			$history_id = $form->getElement("his_item_id");
 			$history_id->setRequired(true);
 
-			Logging::info($data);
 			$json = array();
 
-			if ($form->isValid($data)) {
+			if ($form->isValid($data) && $this->validateHistoryItem($instanceId, $form)) {
+
 			    $history_id->setIgnore(true);
 	        	$values = $form->getValues();
-
-	        	Logging::info("edited list item");
-	        	Logging::info($values);
-
-	        	$this->populateTemplateItem($values, $id, $instance_id);
+	        	$this->populateTemplateItem($values, $id, $instanceId);
 	        }
 	        else {
-	        	Logging::info("edited list item NOT VALID");
-
-	        	$msgs = $form->getMessages();
-	        	Logging::info($msgs);
-
 	        	$json["form"] = $form;
-	        	$json["error"] = $msgs;
 	        }
 
 	        return $json;
@@ -885,22 +916,15 @@ class Application_Service_HistoryService
 	        $history_id = $form->getElement("his_file_id");
 	        $history_id->setRequired(true);
 
-	        Logging::info($data);
 			$json = array();
 
 	        if ($form->isValid($data)) {
 	        	$history_id->setIgnore(true);
 	        	$values = $form->getValues();
 
-	            Logging::info("edited list item");
-	            Logging::info($values);
-
 	            $this->populateTemplateFile($values, $id);
 	        }
 	        else {
-	        	$msgs = $form->getMessages();
-	        	Logging::info($msgs);
-
 	        	$json["error"] = $msgs;
 	        }
 
