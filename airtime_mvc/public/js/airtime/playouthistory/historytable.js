@@ -680,6 +680,12 @@ var AIRTIME = (function(AIRTIME) {
     				$option,
     				show;
     			
+    			$option = $('<option/>')
+					.text($.i18n._("No Show"))
+					.attr('value', 0);
+				
+				$select.append($option);
+    			
     			if (json.length > 0) { 				
     				
     				for (i = 0; i < json.length; i++) {
