@@ -526,10 +526,14 @@ class Application_Service_HistoryService
 				$metadata = array();
 				$metadata["showname"] = $show->getDbName();
 
+				$instanceEnd = $showInstance->getDbEnds(null);
+				$itemEnd = $item->getDbEnds(null);
+				$recordEnd = ($instanceEnd < $itemEnd) ? $instanceEnd : $itemEnd;
+
 				$history = new CcPlayoutHistory();
 				$history->setDbFileId($fileId);
 				$history->setDbStarts($item->getDbStarts(null));
-				$history->setDbEnds($item->getDbEnds(null));
+				$history->setDbEnds($recordEnd);
 				$history->setDbInstanceId($item->getDbInstanceId());
 
 				foreach ($metadata as $key => $val) {
