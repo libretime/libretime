@@ -45,9 +45,14 @@
       <label for="<?php echo $name;?>"><?php echo _("Choose Show Instance") ?></label>
     </div>
     <div>
+      <?php $select = $form->getElement("his_instance_select"); ?>
+      <?php if (isset($select)): ?>
+        <?php echo $select; ?>
+      <?php else: ?>
       <select id="his_instance_select">
         <option value="0"><?php echo _("No Show") ?></option>
       </select>
+      <?php endif; ?>
       <button class="btn" type="button" id="his_instance_retrieve"><?php echo _("Find") ?></button>
     </div>
   </dd>

@@ -564,7 +564,16 @@ class Application_Service_HistoryService
 				$formValues = array();
 
 				$historyRecord = CcPlayoutHistoryQuery::create()->findPk($id, $this->con);
-				$file = $historyRecord->getCcFiles();
+				$file = $historyRecord->getCcFiles($this->con);
+				$instance = $historyRecord->getCcShowInstances($this->con);
+
+				if (isset($instance)) {
+				    $show = $instance->getCcShow($this->con);
+				    $selOpts = array();
+				    $instance_id = $instance->getDbId();
+				    $selOpts[$instance_id] = $show->getDbName();
+				    $form->populateShowInstances($selOpts, $instance_id);
+				}
 
 				if (isset($file)) {
 					$f = Application_Model_StoredFile::createWithFile($file, $this->con);
