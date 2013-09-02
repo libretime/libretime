@@ -46,6 +46,17 @@ class ScheduleController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
+        $this->view->headScript()->appendScript(
+            "var calendarPref = {};\n".
+            "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "calendarPref.timestamp = ".time().";\n".
+            "calendarPref.timezoneOffset = ".date("Z").";\n".
+            "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
+            "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
+            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "var calendarEvents = null;"
+        );
+
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
@@ -98,16 +109,6 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $this->view->addNewShow = true;
-        $this->view->headScript()->appendScript(
-            "var calendarPref = {};\n".
-            "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
-            "calendarPref.timestamp = ".time().";\n".
-            "calendarPref.timezoneOffset = ".date("Z").";\n".
-            "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
-            "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
-            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
-            "var calendarEvents = null;"
-        );
     }
 
     public function eventFeedAction()

@@ -45,11 +45,16 @@ class Application_Service_CalendarService
             if ($this->ccShowInstance->isRecorded()) {
 
                 $ccFile = $this->ccShowInstance->getCcFiles();
-
-                $menu["view_recorded"] = array(
-                    "name" => _("View Recorded File Metadata"),
-                    "icon" => "overview",
-                    "url" => $baseUrl."library/edit-file-md/id/".$ccFile->getDbId());
+                if (!isset($ccFile)) {
+                     $menu["error when recording"] = array (
+                         "name" => _("Record file doesn't exist"),
+                         "icon" => "error");
+                }else {
+                    $menu["view_recorded"] = array(
+                        "name" => _("View Recorded File Metadata"),
+                        "icon" => "overview",
+                        "url" => $baseUrl."library/edit-file-md/id/".$ccFile->getDbId());
+                }
 
                 //recorded show can be uploaded to soundcloud
                 if (Application_Model_Preference::GetUploadToSoundcloudOption()) {

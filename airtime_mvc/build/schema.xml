@@ -454,7 +454,7 @@
       <reference local="instance_id" foreign="id"/>
     </foreign-key>
   </table>
-  <table name="cc_mount_name" phpName="CcTimestamp">
+  <table name="cc_mount_name" phpName="CcMountName">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="mount_name" phpName="DbMountName" type="VARCHAR" required="true" />
   </table>

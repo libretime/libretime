@@ -897,6 +897,7 @@ SQL;
             Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
 
         $previousDate = clone $start;
+
         foreach ($datePeriod as $date) {
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $date, $duration);
@@ -911,6 +912,7 @@ SQL;
                ( is_null($utcLastShowDateTime) ||
                  $utcStartDateTime->format("Y-m-d H:i:s") < $utcLastShowDateTime->format("Y-m-d H:i:s")) ) {
 
+                 $lastCreatedShow = clone $utcStartDateTime;
                 /* There may not always be an instance when editing a show
                  * This will be the case when we are adding a new show day to
                  * a repeating show
@@ -960,11 +962,11 @@ SQL;
          * If $utcStartDateTime is not set then we know zero new shows were
          * created and we shouldn't update the next populate date.
          */
-        if (isset($utcStartDateTime)) {
+        if (isset($lastCreatedShow)) {
            /* Set UTC to local time before setting the next repeat date. If we don't
             * the next repeat date might be scheduled for the following day */
-            $utcStartDateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
-            $nextDate = $utcStartDateTime->add($repeatInterval);
+            $lastCreatedShow->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            $nextDate = $lastCreatedShow->add($repeatInterval);
             $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
         }
     }
@@ -1008,6 +1010,7 @@ SQL;
                ( is_null($utcLastShowDateTime) ||
                  $utcStartDateTime->getTimestamp() < $utcLastShowDateTime->getTimestamp()) ) {
 
+                 $lastCreatedShow = clone $utcStartDateTime;
                 /* There may not always be an instance when editing a show
                  * This will be the case when we are adding a new show day to
                  * a repeating show
