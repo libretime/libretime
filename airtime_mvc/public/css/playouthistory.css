@@ -1,5 +1,12 @@
 @CHARSET "UTF-8";
 
+#history_content {
+	width: 100%;
+	margin: 0px;
+	height: auto;
+	box-sizing: border-box;
+}
+
 .dataTables_filter input {
 	width: 30%;
 }
@@ -26,4 +33,35 @@ div.his-timerange div {
 
 table.dataTable tbody tr {
 	cursor: auto;
+}
+
+.his-selected.even {
+	background-color: rgba(240, 109, 53, 1);
+}
+.his-selected.odd {
+    background-color: rgba(255, 136, 56, 1);
+}
+
+.show-title, .show-time {
+    display:inline-block;
+    font-size:13px;
+}
+.show-title {
+    font-weight: bold;
+    margin: 0 8px;
+}
+
+.show-date {
+    font-size:12px;
+    margin: 0 5px;
+}
+
+.show-time {
+    font-size:12px;
+    margin: 0 5px;
+}
+        
+.push-right {
+    float:right;
+    margin-right:5px;
 }

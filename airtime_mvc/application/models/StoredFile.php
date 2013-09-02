@@ -778,6 +778,18 @@ SQL;
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
+            //taken from Datatables.php, needs to be cleaned up there.
+            if (isset($r['ftype'])) {
+                if ($r['ftype'] == 'playlist') {
+                    $pl = new Application_Model_Playlist($r['id']);
+                    $r['length'] = $pl->getLength();
+                } elseif ($r['ftype'] == "block") {
+                    $bl = new Application_Model_Block($r['id']);
+                    $r['bl_type'] = $bl->isStatic() ? 'static' : 'dynamic';
+                    $r['length']  = $bl->getLength();
+                }
+            }
+
             if ($row['ftype'] === "audioclip") {
 
                 $cuein_formatter = new LengthFormatter($row["cuein"]);
