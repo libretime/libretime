@@ -5,6 +5,8 @@ define("REPEAT_WEEKLY", 0);
 define("REPEAT_BI_WEEKLY", 1);
 define("REPEAT_MONTHLY_MONTHLY", 2);
 define("REPEAT_MONTHLY_WEEKLY", 3);
+define("REPEAT_TRI_WEEKLY", 4);
+define("REPEAT_QUAD_WEEKLY", 5);
 
 class Application_Service_ShowService
 {
@@ -202,6 +204,14 @@ class Application_Service_ShowService
                 case REPEAT_BI_WEEKLY:
                     $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
                         new DateInterval("P14D"), $daysAdded);
+                    break;
+                case REPEAT_TRI_WEEKLY:
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
+                        new DateInterval("P21D"), $daysAdded);
+                    break;
+                case REPEAT_QUAD_WEEKLY:
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
+                        new DateInterval("P28D"), $daysAdded);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
                     $this->createMonthlyRepeatInstances($day, $populateUntil);
