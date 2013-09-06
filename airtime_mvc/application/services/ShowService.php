@@ -169,8 +169,8 @@ class Application_Service_ShowService
     }
 
     /**
-     * 
-     * Receives a cc_show id and determines whether to create a 
+     *
+     * Receives a cc_show id and determines whether to create a
      * single show instance or repeating show instances
      */
     public function delegateInstanceCreation($daysAdded=null, $end=null, $fillInstances=false)
@@ -190,7 +190,7 @@ class Application_Service_ShowService
         /* In case the user is moving forward in the calendar and there are
          * linked shows in the schedule we need to keep track of each cc_show
          * so we know which shows need to be filled with content
-         */ 
+         */
         $ccShows = array();
 
         foreach ($ccShowDays as $day) {
@@ -273,7 +273,7 @@ class Application_Service_ShowService
     }
 
     /**
-     * 
+     *
      * Deletes all the cc_show_days entries for a specific show
      * that is currently being edited. They will get recreated with
      * the new show day specs
@@ -298,12 +298,12 @@ SQL;
 
     /**
      * TODO: This function is messy. Needs refactoring
-     * 
+     *
      * When editing a show we may need to perform some actions to reflect the new specs:
      * - Delete some show instances
      * - Update duration
      * - Update start and end time
-     * 
+     *
      * @param $showData edit show form values in raw form
      * @param $isRecorded value computed from the edit show form
      * @param $repeatType value computed from the edit show form
@@ -342,7 +342,7 @@ SQL;
 
             //if the start date changes, these are the repeat types
             //that require show instance deletion
-            $deleteRepeatTypes = array(REPEAT_BI_WEEKLY, REPEAT_MONTHLY_MONTHLY, 
+            $deleteRepeatTypes = array(REPEAT_BI_WEEKLY, REPEAT_MONTHLY_MONTHLY,
                 REPEAT_MONTHLY_WEEKLY);
 
             if (in_array($this->repeatType, $deleteRepeatTypes) &&
@@ -406,7 +406,7 @@ SQL;
                         $this->deleteInstancesBeforeDate($showData['add_show_start_date'], $showId);
                     }
 
-                    
+
                 }
             }
 
@@ -496,7 +496,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Enter description here ...
      * @param $daysRemoved array of days (days of the week) removed
      *     (days of the week are represented numerically
@@ -708,10 +708,10 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Determines what the show end date should be based on
      * the form data
-     * 
+     *
      * @param $showData add/edit show form data
      * @return DateTime object in user's local timezone
      */
@@ -754,10 +754,10 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Returns the difference in seconds between a show's new and
      * old start time
-     * 
+     *
      * @param $newStartDateTime DateTime object
      * @param $oldStartDateTime DateTime object
      */
@@ -767,9 +767,9 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Updates the start and end time for cc_show_instances
-     * 
+     *
      * @param $showData edit show form data
      */
     private function updateInstanceStartEndTime($diff)
@@ -783,13 +783,13 @@ WHERE show_id = :showId
 SQL;
 
         Application_Common_Database::prepareAndExecute($sql,
-            array(':diff1' => $diff, ':diff2' => $diff, 
+            array(':diff1' => $diff, ':diff2' => $diff,
                 ':showId' => $this->ccShow->getDbId(), ':timestamp' => gmdate("Y-m-d H:i:s")),
             'execute');
     }
 
     /**
-     * 
+     *
      * Enter description here ...
      * @param ccShowDays $showDay
      * @param DateTime $showStartDate user's local time
@@ -826,7 +826,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Sets a single cc_show_instance table row
      * @param $showDay
      * @param $populateUntil
@@ -863,7 +863,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Sets multiple cc_show_instances table rows
      * @param unknown_type $showDay
      * @param unknown_type $populateUntil
@@ -904,7 +904,7 @@ SQL;
             /*
              * Make sure start date is less than populate until date AND
              * last show date is null OR start date is less than last show date
-             * 
+             *
              * (NOTE: We cannot call getTimestamp() to compare the dates because of
              * a PHP 5.3.3 bug with DatePeriod objects - See CC-5159 for more details)
              */
@@ -964,8 +964,9 @@ SQL;
          */
         if (isset($lastCreatedShow)) {
            /* Set UTC to local time before setting the next repeat date. If we don't
-            * the next repeat date might be scheduled for the following day */
-            $lastCreatedShow->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            * the next repeat date might be scheduled for the following day
+            * THIS MUST BE IN THE TIMEZONE THE SHOW WAS CREATED IN */
+            $lastCreatedShow->setTimezone(new DateTimeZone($timezone));
             $nextDate = $lastCreatedShow->add($repeatInterval);
             $this->setNextRepeatingShowDate($nextDate->format("Y-m-d"), $day, $show_id);
         }
@@ -1064,10 +1065,10 @@ SQL;
     }
 
     /**
-     * 
+     *
      * i.e. last thursday of each month
      * i.e. second monday of each month
-     * 
+     *
      * @param string $showStart
      * @param string $timezone user's local timezone
      */
@@ -1112,7 +1113,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Enter description here ...
      * @param $start user's local time
      */
@@ -1182,7 +1183,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Create a DatePeriod object in the user's local time
      * It will get converted to UTC before the show instance gets created
      */
@@ -1203,11 +1204,11 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Attempts to retrieve the cc_show_instance belonging to a cc_show
      * that starts at $starts. We have to pass in the start
      * time in case the show is repeating
-     * 
+     *
      * Returns the instance if one was found (one that is not a recording
      * and modified instance is false (has not been deleted))
      */
@@ -1250,7 +1251,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Sets the fields for a cc_show table row
      * @param $ccShow
      * @param $showData
@@ -1285,7 +1286,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Sets the fields for a cc_show_days table row
      * @param $showData
      * @param $showId
@@ -1367,7 +1368,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Deletes all the cc_show_rebroadcast entries for a specific show
      * that is currently being edited. They will get recreated with
      * the new show specs
@@ -1378,7 +1379,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Sets the fields for a cc_show_rebroadcast table row
      * @param $showData
      * @param $showId
@@ -1417,7 +1418,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Deletes all the cc_show_hosts entries for a specific show
      * that is currently being edited. They will get recreated with
      * the new show specs
@@ -1428,7 +1429,7 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Sets the fields for a cc_show_hosts table row
      * @param $showData
      * @param $showId
@@ -1446,10 +1447,10 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Gets the date and time shows (particularly repeating shows)
      * can be populated until.
-     * 
+     *
      * @return DateTime object
      */
     private static function getPopulateShowUntilDateTIme()
@@ -1464,13 +1465,13 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Enter description here ...
      * @param DateTime $showStart user's local time
      * @param string $duration time interval (h)h:(m)m(:ss)
      * @param string $timezone "Europe/Prague"
      * @param array $offset (days, hours, mins) used for rebroadcast shows
-     * 
+     *
      * @return array of 2 DateTime objects, start/end time of the show in UTC
      */
     private function createUTCStartEndDateTime($showStart, $duration, $offset=null)
@@ -1496,12 +1497,12 @@ SQL;
     }
 
     /**
-     * 
+     *
      * Show instances for repeating shows only get created up
      * until what is visible on the calendar. We need to set the
      * date for when the next repeating show instance should be created
      * as the user browses the calendar further.
-     * 
+     *
      * @param $nextDate
      * @param $showId
      * @param $day
