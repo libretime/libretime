@@ -14,7 +14,8 @@ class Application_Common_Timezone
             'Australia' => DateTimeZone::AUSTRALIA,
             'Europe' => DateTimeZone::EUROPE,
             'Indian' => DateTimeZone::INDIAN,
-            'Pacific' => DateTimeZone::PACIFIC
+            'Pacific' => DateTimeZone::PACIFIC,
+            'UTC' => DateTimeZone::UTC
         );
 
         $tzlist = array();
