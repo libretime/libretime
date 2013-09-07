@@ -206,11 +206,11 @@ class Application_Service_ShowService
                         new DateInterval("P14D"), $daysAdded);
                     break;
                 case REPEAT_TRI_WEEKLY:
-                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_TRI_WEEKLY,
                         new DateInterval("P21D"), $daysAdded);
                     break;
                 case REPEAT_QUAD_WEEKLY:
-                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_BI_WEEKLY,
+                    $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_QUAD_WEEKLY,
                         new DateInterval("P28D"), $daysAdded);
                     break;
                 case REPEAT_MONTHLY_MONTHLY:
@@ -343,7 +343,7 @@ SQL;
 
             //if the start date changes, these are the repeat types
             //that require show instance deletion
-            $deleteRepeatTypes = array(REPEAT_BI_WEEKLY, REPEAT_MONTHLY_MONTHLY, 
+            $deleteRepeatTypes = array(REPEAT_BI_WEEKLY, REPEAT_TRI_WEEKLY, REPEAT_QUAD_WEEKLY, REPEAT_MONTHLY_MONTHLY, 
                 REPEAT_MONTHLY_WEEKLY);
 
             if (in_array($this->repeatType, $deleteRepeatTypes) &&

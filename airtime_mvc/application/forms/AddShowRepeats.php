@@ -18,8 +18,8 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             'multiOptions' => array(
                 "0" => _("weekly"),
                 "1" => _("every 2 weeks"),
-                "3" => _("every 3 weeks"),
-                "4" => _("every 4 weeks"),
+                "4" => _("every 3 weeks"),
+                "5" => _("every 4 weeks"),
                 "2" => _("monthly")
             ),
         ));
