@@ -13,11 +13,11 @@ function showErrorSections() {
 }
 function rebuildStreamURL(ele){
     var div = ele.closest("div")
-    host = div.find("input:[id$=-host]").val()
-    port = div.find("input:[id$=-port]").val()
-    mount = div.find("input:[id$=-mount]").val()
+    host = div.find("input[id$=-host]").val()
+    port = div.find("input[id$=-port]").val()
+    mount = div.find("input[id$=-mount]").val()
     streamurl = ""
-    if(div.find("select:[id$=-output]").val()=="icecast"){
+    if(div.find("select[id$=-output]").val()=="icecast"){
         streamurl = "http://"+host
         if($.trim(port) != ""){
             streamurl += ":"+port
@@ -180,15 +180,15 @@ function setupEventListeners() {
         rebuildStreamURL($(this));
     })
     
-    $("input:[id$=-host], input:[id$=-port], input:[id$=-mount]").keyup(function(){
+    $("input[id$=-host], input[id$=-port], input[id$=-mount]").keyup(function(){
         rebuildStreamURL($(this));
     });
     
-    $("input:[id$=-port]").keypress(function(e){
+    $("input[id$=-port]").keypress(function(e){
         validate($(this),e);
     });
     
-    $("select:[id$=-output]").change(function(){
+    $("select[id$=-output]").change(function(){
         rebuildStreamURL($(this));
     });
     
