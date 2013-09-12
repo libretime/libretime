@@ -14,12 +14,11 @@ fi
 #Check whether version of virtualenv is <= 1.4.8. If so exit install. 
 BAD_VERSION="1.4.8"
 VERSION=$(virtualenv --version)
-NEWEST_VERSION=$(echo -e "$BAD_VERSION\n$VERSION\n'" | sort -t '.' -g | tail -n 1)
+NEWEST_VERSION=$(echo -e "$BAD_VERSION\n$VERSION\n" | sort -t '.' -V | tail -n 1)
 echo -n "Ensuring python-virtualenv version > $BAD_VERSION..."
 if [[ "$NEWEST_VERSION" = "$BAD_VERSION" ]]; then
-    URL="http://apt.sourcefabric.org/pool/main/p/python-virtualenv/python-virtualenv_1.4.9-3_all.deb"
     echo "Failed!"
-    echo "You have version $BAD_VERSION or older installed. Please install package at $URL first and then try installing Airtime again."
+    echo "You have version $BAD_VERSION or older installed. Please upgrade python-virtualenv and install Airtime again."
     exit 1
 else
     echo "Success!"
