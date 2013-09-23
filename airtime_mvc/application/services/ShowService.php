@@ -196,8 +196,8 @@ class Application_Service_ShowService
         foreach ($ccShowDays as $day) {
 
             $this->ccShow = $day->getCcShow();
-            $this->isRecorded = isset($this->isRecorded) ? $this->isRecorded : $this->ccShow->isRecorded();
-            $this->isRebroadcast = isset($this->isRebroadcast) ? $this->isRebroadcast : $this->ccShow->isRebroadcast();
+            $this->isRecorded = $this->ccShow->isRecorded();
+            $this->isRebroadcast = $this->ccShow->isRebroadcast();
 
             if (!isset($ccShows[$day->getDbShowId()])) {
                 $ccShows[$day->getDbShowId()] = $day->getccShow();
