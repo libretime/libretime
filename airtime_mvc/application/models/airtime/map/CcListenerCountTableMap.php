@@ -51,7 +51,7 @@ class CcListenerCountTableMap extends TableMap {
 	public function buildRelations()
 	{
     $this->addRelation('CcTimestamp', 'CcTimestamp', RelationMap::MANY_TO_ONE, array('timestamp_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcTimestamp', 'CcTimestamp', RelationMap::MANY_TO_ONE, array('mount_name_id' => 'id', ), 'CASCADE', null);
+    $this->addRelation('CcMountName', 'CcMountName', RelationMap::MANY_TO_ONE, array('mount_name_id' => 'id', ), 'CASCADE', null);
 	} // buildRelations()
 
 } // CcListenerCountTableMap

@@ -454,7 +454,7 @@
       <reference local="instance_id" foreign="id"/>
     </foreign-key>
   </table>
-  <table name="cc_mount_name" phpName="CcTimestamp">
+  <table name="cc_mount_name" phpName="CcMountName">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="mount_name" phpName="DbMountName" type="VARCHAR" required="true" />
   </table>
@@ -478,5 +478,44 @@
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="locale_code" phpName="DbLocaleCode" type="VARCHAR" size="16" required="true" />
     <column name="locale_lang" phpName="DbLocaleLang" type="VARCHAR" size="128" required="true" />
+  </table>
+  <table name="cc_playout_history" phpName="CcPlayoutHistory">
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false" />
+    <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
+    <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
+    <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="false"/>
+    <foreign-key foreignTable="cc_files" name="cc_playout_history_file_tag_fkey" onDelete="CASCADE">
+      <reference local="file_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="cc_show_instances" name="cc_his_item_inst_fkey" onDelete="SETNULL">
+      <reference local="instance_id" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="cc_playout_history_metadata" phpName="CcPlayoutHistoryMetaData">
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="history_id" phpName="DbHistoryId" type="INTEGER" required="true" />
+    <column name="key" phpName="DbKey" type="VARCHAR" size="128" required="true" />
+    <column name="value" phpName="DbValue" type="VARCHAR" size="128" required="true" />
+    <foreign-key foreignTable="cc_playout_history" name="cc_playout_history_metadata_entry_fkey" onDelete="CASCADE">
+      <reference local="history_id" foreign="id"/>
+    </foreign-key>
+  </table>
+  <table name="cc_playout_history_template" phpName="CcPlayoutHistoryTemplate">
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="name" phpName="DbName" type="VARCHAR" size="128" required="true" />
+    <column name="type" phpName="DbType" type="VARCHAR" size="35" required="true" />
+  </table>
+  <table name="cc_playout_history_template_field" phpName="CcPlayoutHistoryTemplateField">
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="template_id" phpName="DbTemplateId" type="INTEGER" required="true" />
+    <column name="name" phpName="DbName" type="VARCHAR" size="128" required="true" />
+    <column name="label" phpName="DbLabel" type="VARCHAR" size="128" required="true" />
+    <column name="type" phpName="DbType" type="VARCHAR" size="128" required="true" />
+    <column name="is_file_md" phpName="DbIsFileMD" type="BOOLEAN" required="true" defaultValue="false"/>
+    <column name="position" phpName="DbPosition" type="INTEGER" required="true" />
+    <foreign-key foreignTable="cc_playout_history_template" name="cc_playout_history_template_template_fkey" onDelete="CASCADE">
+      <reference local="template_id" foreign="id"/>
+    </foreign-key>
   </table>
 </database>
