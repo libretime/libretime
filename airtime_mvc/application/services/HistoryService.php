@@ -1017,7 +1017,7 @@ class Application_Service_HistoryService
 			TEMPLATE_TIME => "strval",
 			TEMPLATE_DATETIME => "strval",
 			TEMPLATE_STRING => "strval",
-			TEMPLATE_BOOLEAN => "intval", //boolval only exists in php 5.5+ wtf?
+			TEMPLATE_BOOLEAN => "intval", //boolval only exists in php 5.5+
 			TEMPLATE_INT => "intval",
 			TEMPLATE_FLOAT => "floatval",
 		);

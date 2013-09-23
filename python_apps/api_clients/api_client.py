@@ -234,7 +234,7 @@ class AirtimeApiClient(object):
 
     def get_schedule(self):
         # TODO : properly refactor this routine
-        # For now the return type is a little fucked for compatibility reasons
+        # For now the return type is a little messed up for compatibility reasons
         try: return (True, self.services.export_url())
         except: return (False, None)
 

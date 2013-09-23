@@ -1276,7 +1276,7 @@ class Application_Model_Preference
                 return $ds['ColReorder'][$x];
             } else {
                 /*For now we just have this hack for debugging. We should not
-                    rely on this crappy behaviour in case of failure*/
+                    rely on this behaviour in case of failure*/
                 Logging::warn("Index $x does not exist preferences");
                 Logging::warn("Defaulting to identity and printing preferences");
                 Logging::warn($ds);
