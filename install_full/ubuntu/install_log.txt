@@ -1,0 +1,497 @@
+----------------------------------------------------
+ 1. Install Packages
+----------------------------------------------------
+deb http://apt.sourcefabric.org/ precise main
+Hit http://dl.google.com stable Release.gpg
+Hit http://dl.google.com stable Release.gpg
+Hit http://dl.google.com stable Release
+Get:1 http://security.ubuntu.com precise-security Release.gpg [198 B]
+Get:2 http://extras.ubuntu.com precise Release.gpg [72 B]
+Hit http://archive.canonical.com precise Release.gpg
+Hit http://ppa.launchpad.net precise Release.gpg
+Hit http://ppa.launchpad.net precise Release.gpg
+Hit http://ppa.launchpad.net precise Release.gpg
+Hit http://dl.google.com stable Release
+Hit http://dl.google.com stable/main i386 Packages
+Get:3 http://security.ubuntu.com precise-security Release [49.6 kB]
+Hit http://extras.ubuntu.com precise Release
+Hit http://archive.canonical.com precise Release
+Ign http://dl.google.com stable/main TranslationIndex
+Hit http://ppa.launchpad.net precise Release
+Hit http://dl.google.com stable/main i386 Packages
+Ign http://dl.google.com stable/main TranslationIndex
+Hit http://extras.ubuntu.com precise/main Sources
+Hit http://archive.canonical.com precise/partner i386 Packages
+Hit http://ppa.launchpad.net precise Release
+Ign http://archive.canonical.com precise/partner TranslationIndex
+Hit http://ppa.launchpad.net precise Release
+Hit http://extras.ubuntu.com precise/main i386 Packages
+Ign http://extras.ubuntu.com precise/main TranslationIndex
+Hit http://ppa.launchpad.net precise/main Sources
+Hit http://ppa.launchpad.net precise/main i386 Packages
+Ign http://ppa.launchpad.net precise/main TranslationIndex
+Get:4 http://security.ubuntu.com precise-security/main Sources [81.4 kB]
+Hit http://ppa.launchpad.net precise/main Sources
+Hit http://ppa.launchpad.net precise/main i386 Packages
+Ign http://ppa.launchpad.net precise/main TranslationIndex
+Hit http://ppa.launchpad.net precise/main Sources
+Hit http://ppa.launchpad.net precise/main i386 Packages
+Ign http://ppa.launchpad.net precise/main TranslationIndex
+Ign http://dl.google.com stable/main Translation-en_US
+Ign http://dl.google.com stable/main Translation-en
+Ign http://dl.google.com stable/main Translation-en_US
+Ign http://dl.google.com stable/main Translation-en
+Get:5 http://security.ubuntu.com precise-security/restricted Sources [2,494 B]
+Get:6 http://security.ubuntu.com precise-security/universe Sources [26.3 kB]
+Get:7 http://security.ubuntu.com precise-security/multiverse Sources [1,383 B]
+Get:8 http://security.ubuntu.com precise-security/main i386 Packages [308 kB]
+Ign http://extras.ubuntu.com precise/main Translation-en_US
+Ign http://archive.canonical.com precise/partner Translation-en_US
+Ign http://extras.ubuntu.com precise/main Translation-en
+Ign http://archive.canonical.com precise/partner Translation-en
+Get:9 http://security.ubuntu.com precise-security/restricted i386 Packages [4,620 B]
+Get:10 http://security.ubuntu.com precise-security/universe i386 Packages [78.7 kB]
+Ign http://ppa.launchpad.net precise/main Translation-en_US
+Ign http://ppa.launchpad.net precise/main Translation-en
+Ign http://ppa.launchpad.net precise/main Translation-en_US
+Ign http://ppa.launchpad.net precise/main Translation-en
+Ign http://ppa.launchpad.net precise/main Translation-en_US
+Get:11 http://security.ubuntu.com precise-security/multiverse i386 Packages [2,367 B]
+Hit http://security.ubuntu.com precise-security/main TranslationIndex
+Hit http://security.ubuntu.com precise-security/multiverse TranslationIndex
+Hit http://security.ubuntu.com precise-security/restricted TranslationIndex
+Hit http://security.ubuntu.com precise-security/universe TranslationIndex
+Ign http://ppa.launchpad.net precise/main Translation-en
+Hit http://security.ubuntu.com precise-security/main Translation-en
+Hit http://security.ubuntu.com precise-security/multiverse Translation-en
+Hit http://security.ubuntu.com precise-security/restricted Translation-en
+Hit http://security.ubuntu.com precise-security/universe Translation-en
+Get:12 http://cran.ma.imperial.ac.uk precise/ Release.gpg [490 B]
+Hit http://apt.sourcefabric.org precise Release.gpg
+Hit http://cz.archive.ubuntu.com precise Release.gpg
+Hit http://apt.sourcefabric.org precise Release
+Get:13 http://cz.archive.ubuntu.com precise-updates Release.gpg [198 B]
+Get:14 http://cran.ma.imperial.ac.uk precise/ Release [2,280 B]
+Hit http://apt.sourcefabric.org precise/main i386 Packages
+Hit http://cz.archive.ubuntu.com precise Release
+Ign http://apt.sourcefabric.org precise/main TranslationIndex
+Hit http://cran.ma.imperial.ac.uk precise/ Packages
+Get:15 http://cz.archive.ubuntu.com precise-updates Release [49.6 kB]
+Hit http://cz.archive.ubuntu.com precise/main Sources
+Hit http://cz.archive.ubuntu.com precise/restricted Sources
+Hit http://cz.archive.ubuntu.com precise/universe Sources
+Hit http://cz.archive.ubuntu.com precise/multiverse Sources
+Hit http://cz.archive.ubuntu.com precise/main i386 Packages
+Hit http://cz.archive.ubuntu.com precise/restricted i386 Packages
+Hit http://cz.archive.ubuntu.com precise/universe i386 Packages
+Hit http://cz.archive.ubuntu.com precise/multiverse i386 Packages
+Hit http://cz.archive.ubuntu.com precise/main TranslationIndex
+Hit http://cz.archive.ubuntu.com precise/multiverse TranslationIndex
+Hit http://cz.archive.ubuntu.com precise/restricted TranslationIndex
+Hit http://cz.archive.ubuntu.com precise/universe TranslationIndex
+Get:16 http://cz.archive.ubuntu.com precise-updates/main Sources [397 kB]
+Ign http://apt.sourcefabric.org precise/main Translation-en_US
+Ign http://apt.sourcefabric.org precise/main Translation-en
+Get:17 http://cz.archive.ubuntu.com precise-updates/restricted Sources [5,467 B]
+Get:18 http://cz.archive.ubuntu.com precise-updates/universe Sources [90.9 kB]
+Get:19 http://cz.archive.ubuntu.com precise-updates/multiverse Sources [6,571 B]
+Get:20 http://cz.archive.ubuntu.com precise-updates/main i386 Packages [661 kB]
+Get:21 http://cz.archive.ubuntu.com precise-updates/restricted i386 Packages [10.0 kB]
+Get:22 http://cz.archive.ubuntu.com precise-updates/universe i386 Packages [209 kB]
+Get:23 http://cz.archive.ubuntu.com precise-updates/multiverse i386 Packages [13.8 kB]
+Hit http://cz.archive.ubuntu.com precise-updates/main TranslationIndex
+Hit http://cz.archive.ubuntu.com precise-updates/multiverse TranslationIndex
+Hit http://cz.archive.ubuntu.com precise-updates/restricted TranslationIndex
+Hit http://cz.archive.ubuntu.com precise-updates/universe TranslationIndex
+Hit http://cz.archive.ubuntu.com precise/main Translation-en
+Hit http://cz.archive.ubuntu.com precise/multiverse Translation-en
+Hit http://cz.archive.ubuntu.com precise/restricted Translation-en
+Ign http://cran.ma.imperial.ac.uk precise/ Translation-en_US
+Hit http://cz.archive.ubuntu.com precise/universe Translation-en
+Hit http://cz.archive.ubuntu.com precise-updates/main Translation-en
+Hit http://cz.archive.ubuntu.com precise-updates/multiverse Translation-en
+Hit http://cz.archive.ubuntu.com precise-updates/restricted Translation-en
+Hit http://cz.archive.ubuntu.com precise-updates/universe Translation-en
+Ign http://cran.ma.imperial.ac.uk precise/ Translation-en
+Fetched 2,002 kB in 8s (246 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+flac is already the newest version.
+gzip is already the newest version.
+libesd0 is already the newest version.
+libportaudio2 is already the newest version.
+libsamplerate0 is already the newest version.
+lsof is already the newest version.
+patch is already the newest version.
+pwgen is already the newest version.
+rabbitmq-server is already the newest version.
+tar is already the newest version.
+vorbis-tools is already the newest version.
+vorbisgain is already the newest version.
+ecasound is already the newest version.
+libao-ocaml is already the newest version.
+libcamomile-ocaml-data is already the newest version.
+libfaad2 is already the newest version.
+libmad-ocaml is already the newest version.
+libsoundtouch-ocaml is already the newest version.
+libtaglib-ocaml is already the newest version.
+monit is already the newest version.
+mp3gain is already the newest version.
+mpg123 is already the newest version.
+multitail is already the newest version.
+odbc-postgresql is already the newest version.
+python-virtualenv is already the newest version.
+curl is already the newest version.
+libpulse0 is already the newest version.
+lsb-release is already the newest version.
+php-pear is already the newest version.
+php5-curl is already the newest version.
+php5-gd is already the newest version.
+php5-pgsql is already the newest version.
+postgresql is already the newest version.
+sudo is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+The following extra packages will be installed:
+  python-minimal
+Suggested packages:
+  python-doc
+The following packages will be upgraded:
+  python python-minimal
+2 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Need to get 196 kB of archives.
+After this operation, 0 B of additional disk space will be used.
+Get:1 http://cz.archive.ubuntu.com/ubuntu/ precise-updates/main python-minimal i386 2.7.3-0ubuntu2.2 [29.2 kB]
+Get:2 http://cz.archive.ubuntu.com/ubuntu/ precise-updates/main python i386 2.7.3-0ubuntu2.2 [166 kB]
+Fetched 196 kB in 4s (40.4 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 354760 files and directories currently installed.)
+Preparing to replace python-minimal 2.7.3-0ubuntu2 (using .../python-minimal_2.7.3-0ubuntu2.2_i386.deb) ...
+Unpacking replacement python-minimal ...
+Processing triggers for man-db ...
+Setting up python-minimal (2.7.3-0ubuntu2.2) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 354760 files and directories currently installed.)
+Preparing to replace python 2.7.3-0ubuntu2 (using .../python_2.7.3-0ubuntu2.2_i386.deb) ...
+Unpacking replacement python ...
+Processing triggers for man-db ...
+Processing triggers for doc-base ...
+Processing 1 changed doc-base file...
+Registering documents with scrollkeeper...
+Setting up python (2.7.3-0ubuntu2.2) ...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+icecast2 is already the newest version.
+lame is already the newest version.
+libmp3lame-dev is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libzend-framework-php is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+coreutils is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libvo-aacenc0 is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+sourcefabric-keyring is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+liquidsoap is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+silan is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libopus0 is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+Reading package lists...
+Building dependency tree...
+Reading state information...
+apache2 is already the newest version.
+libapache2-mod-php5 is already the newest version.
+The following packages were automatically installed and are no longer required:
+  linux-headers-3.2.0-33-generic-pae linux-headers-3.2.0-33 libev4
+  libv8-3.7.12.22 linux-headers-3.2.0-33-generic libc-ares2
+Use 'apt-get autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+----------------------------------------------------
+2. Apache Config File
+----------------------------------------------------
+Apache config for Airtime already exists...
+----------------------------------------------------
+3. Enable Icecast
+----------------------------------------------------
+Starting icecast2: 
+----------------------------------------------------
+4. Enable Monit
+----------------------------------------------------
+----------------------------------------------------
+5. Run Airtime Install
+----------------------------------------------------
+* Making sure /etc/default/locale is set properly
+LANG="en_US.UTF-8"
+ * None found.
+* Temporarily stopping any previous running services
+
+******************************** Install Begin *********************************
+Ensuring python-virtualenv version > 1.4.8...Success!
+
+*** Creating Virtualenv for Airtime ***
+Already using interpreter /usr/bin/python
+New python executable in /usr/lib/airtime/airtime_virtualenv/bin/python
+Installing setuptools............done.
+Installing pip...............done.
+
+*** Installing Python Libraries ***
+Unpacking /home/naomiaro/airtime/python_apps/python-virtualenv/airtime_virtual_env.pybundle
+Downloading/unpacking pyinotify
+  Running setup.py egg_info for package pyinotify
+    
+Downloading/unpacking mutagen
+  Running setup.py egg_info for package mutagen
+    
+Downloading/unpacking kombu
+  Running setup.py egg_info for package kombu
+    
+Downloading/unpacking anyjson
+  Running setup.py egg_info for package anyjson
+    
+Downloading/unpacking amqplib
+  Running setup.py egg_info for package amqplib
+    
+Requirement already satisfied (use --upgrade to upgrade): argparse in /usr/lib/python2.7
+Downloading/unpacking poster
+  Running setup.py egg_info for package poster
+    
+Downloading/unpacking PyDispatcher
+  Running setup.py egg_info for package PyDispatcher
+    /usr/lib/python2.7/distutils/dist.py:267: UserWarning: Unknown distribution option: 'use_2to3'
+      warnings.warn(msg)
+    
+    warning: no previously-included files matching '*.bat' found anywhere in distribution
+    warning: no previously-included files matching './CVS' found anywhere in distribution
+    warning: no previously-included files matching '.cvsignore' found anywhere in distribution
+Downloading/unpacking docopt
+  Running setup.py egg_info for package docopt
+    
+Requirement already satisfied (use --upgrade to upgrade): wsgiref in /usr/lib/python2.7
+Downloading/unpacking pytz
+  Running setup.py egg_info for package pytz
+    
+    warning: no files found matching '*.pot' under directory 'pytz'
+    warning: no previously-included files found matching 'test_zdump.py'
+Downloading/unpacking configobj
+  Running setup.py egg_info for package configobj
+    
+Installing collected packages: pyinotify, mutagen, kombu, anyjson, amqplib, poster, PyDispatcher, docopt, pytz, configobj
+  Running setup.py install for pyinotify
+    
+  Running setup.py install for mutagen
+    changing mode of build/scripts-2.7/moggsplit from 644 to 755
+    changing mode of build/scripts-2.7/mid3iconv from 644 to 755
+    changing mode of build/scripts-2.7/mid3v2 from 644 to 755
+    changing mode of build/scripts-2.7/mutagen-inspect from 644 to 755
+    changing mode of build/scripts-2.7/mutagen-pony from 644 to 755
+    
+    changing mode of /usr/lib/airtime/airtime_virtualenv/bin/moggsplit to 755
+    changing mode of /usr/lib/airtime/airtime_virtualenv/bin/mid3iconv to 755
+    changing mode of /usr/lib/airtime/airtime_virtualenv/bin/mid3v2 to 755
+    changing mode of /usr/lib/airtime/airtime_virtualenv/bin/mutagen-inspect to 755
+    changing mode of /usr/lib/airtime/airtime_virtualenv/bin/mutagen-pony to 755
+  Running setup.py install for kombu
+    
+  Running setup.py install for anyjson
+    
+  Running setup.py install for amqplib
+    
+  Running setup.py install for poster
+    
+  Running setup.py install for PyDispatcher
+    /usr/lib/python2.7/distutils/dist.py:267: UserWarning: Unknown distribution option: 'use_2to3'
+      warnings.warn(msg)
+    
+    warning: no previously-included files matching '*.bat' found anywhere in distribution
+    warning: no previously-included files matching './CVS' found anywhere in distribution
+    warning: no previously-included files matching '.cvsignore' found anywhere in distribution
+  Running setup.py install for docopt
+    
+  Running setup.py install for pytz
+    
+    warning: no files found matching '*.pot' under directory 'pytz'
+    warning: no previously-included files found matching 'test_zdump.py'
+  Running setup.py install for configobj
+    
+Successfully installed pyinotify mutagen kombu anyjson amqplib poster PyDispatcher docopt pytz configobj
+Cleaning up...
+* Checking for user pypo
+ * Creating user pypo
+* Creating INI files
+* Initializing INI files
+* Airtime Version: 2.4.0
+* Storage directory setup
+* Directory /srv/airtime/stor created
+* Giving Apache permission to access /srv/airtime/stor
+* Directory /srv/airtime/stor/organize created
+* Giving Apache permission to access /srv/airtime/stor/organize
+* Checking database for correct encoding
+
+* Database Installation
+ * Creating Airtime database user
+  * Database user 'airtime' created.
+ * Creating Airtime database
+  * Postgres scripting language already installed
+ * Creating database tables
+ * Setting Airtime version
+ * Inserting stor directory location /srv/airtime/stor/ into music_dirs table
+Creating vhost "/airtime" ...
+...done.
+Creating user "airtime" ...
+...done.
+Setting permissions for user "airtime" in vhost "/airtime" ...
+...done.
+* Creating /etc/airtime
+* Creating /etc/monit/conf.d/monit-airtime-generic.cfg
+* Creating /etc/cron.d/airtime-crons
+* Creating /usr/lib/airtime
+* Creating symbolic links in /usr/bin
+* Creating /var/log/airtime
+* Creating /usr/share/airtime
+* Creating /var/log/airtime
+* Creating /var/tmp/airtime
+Generating locales
+Generating locales...
+  cs_CZ.UTF-8... done
+Generation complete.
+Generating locales...
+  de_AT.UTF-8... done
+Generation complete.
+Generating locales...
+  de_DE.UTF-8... done
+Generation complete.
+Generating locales...
+  el_GR.UTF-8... done
+Generation complete.
+Generating locales...
+  en_CA.UTF-8... done
+Generation complete.
+Generating locales...
+  en_GB.UTF-8... done
+Generation complete.
+Generating locales...
+  en_US.UTF-8... up-to-date
+Generation complete.
+Generating locales...
+  es_ES.UTF-8... done
+Generation complete.
+Generating locales...
+  fr_FR.UTF-8... done
+Generation complete.
+Generating locales...
+  hu_HU.UTF-8... done
+Generation complete.
+Generating locales...
+  it_IT.UTF-8... done
+Generation complete.
+Generating locales...
+  ko_KR.UTF-8... done
+Generation complete.
+Generating locales...
+  pl_PL.UTF-8... done
+Generation complete.
+Generating locales...
+  pt_BR.UTF-8... done
+Generation complete.
+Generating locales...
+  ru_RU.UTF-8... done
+Generation complete.
+Generating locales...
+  zh_CN.UTF-8... done
+Generation complete.
+Starting Airtime Media Monitor: Done.
+* Waiting for media-monitor processes to start...
+* Detecting OS: ...  Found Ubuntu 12.04.2 LTS (precise) on i386 architecture
+ * Creating symlink to Liquidsoap binary
+* Clearing previous pypo cache
+* Waiting for pypo processes to start...
+ * Stopping daemon monitor monit
+   ...done.
+ * Starting daemon monitor monit
+   ...done.
+
+*** Verifying your system environment, running airtime-check-system ***
+AIRTIME_STATUS_URL             = http://localhost:80/api/status/format/json/api_key/%%api_key%%
+AIRTIME_SERVER_RESPONDING      = OK
+KERNEL_VERSION                 = 3.2.0-34-generic-pae
+MACHINE_ARCHITECTURE           = i686
+TOTAL_MEMORY_MBYTES            = 3982936
+TOTAL_SWAP_MBYTES              = 4052988
+AIRTIME_VERSION                = 2.4.0+c2e9f90:1371848298
+OS                             = Ubuntu 12.04.2 LTS i686
+CPU                            = Intel(R) Core(TM) i5 CPU       M 480  @ 2.67GHz
+WEB_SERVER                     = Apache/2.2.22 (Ubuntu)
+PLAYOUT_ENGINE_PROCESS_ID      = 10489
+PLAYOUT_ENGINE_RUNNING_SECONDS = 11
+PLAYOUT_ENGINE_MEM_PERC        = 0.2%
+PLAYOUT_ENGINE_CPU_PERC        = 0.0%
+LIQUIDSOAP_PROCESS_ID          = 10456
+LIQUIDSOAP_RUNNING_SECONDS     = 12
+LIQUIDSOAP_MEM_PERC            = 0.3%
+LIQUIDSOAP_CPU_PERC            = 0.0%
+MEDIA_MONITOR_PROCESS_ID       = 10364
+MEDIA_MONITOR_RUNNING_SECONDS  = 12
+MEDIA_MONITOR_MEM_PERC         = 0.2%
+MEDIA_MONITOR_CPU_PERC         = 0.0%
+-- Your installation of Airtime looks OK!
+
+******************************* Install Complete *******************************
