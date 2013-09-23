@@ -391,13 +391,18 @@ class LocaleController extends Zend_Controller_Action
             "File: %f, size: %s, max file size: %m" => _("File: %f, size: %s, max file size: %m"),
             "Upload URL might be wrong or doesn't exist" => _("Upload URL might be wrong or doesn't exist"),
             "Error: File too large: " => _("Error: File too large: "),
-            "Error: Invalid file extension: " => _("Error: Invalid file extension: ")
-                
+            "Error: Invalid file extension: " => _("Error: Invalid file extension: "),
+            //history translations
+            "Set Default" => _("Set Default"),
+            "Create Entry" => _("Create Entry"),
+            "Edit History Record" => _("Edit History Record"),
+            "No Show" => _("No Show")
+
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         header("Content-type: text/javascript");
         echo "var general_dict=".json_encode($translations);
-        
+
     }
 }
