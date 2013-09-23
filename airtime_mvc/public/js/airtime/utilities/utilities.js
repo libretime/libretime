@@ -35,22 +35,6 @@ var AIRTIME = (function(AIRTIME){
 		};
 	};
 	
-	mod.fnGetSecondsEpoch = function(oDate) {
-		var iTime,
-			iServerOffset,
-			iClientOffset;
-		
-		iTime = oDate.getTime(); //value is in millisec.
-		iTime = Math.round(iTime / 1000);
-		iServerOffset = serverTimezoneOffset;
-		iClientOffset = oDate.getTimezoneOffset() * -60;//function returns minutes
-		
-		//adjust for the fact the the Date object is in client time.
-		iTime = iTime + iClientOffset + iServerOffset;
-		
-		return iTime;
-	}
-	
 	 /*
 	 * Get the schedule range start in unix timestamp form (in seconds).
 	 * defaults to NOW if nothing is selected.
@@ -85,7 +69,15 @@ var AIRTIME = (function(AIRTIME){
 		//0 based month in js.
 		oDate = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
 		
-		return mod.fnGetSecondsEpoch(oDate);
+		iTime = oDate.getTime(); //value is in millisec.
+		iTime = Math.round(iTime / 1000);
+		iServerOffset = serverTimezoneOffset;
+		iClientOffset = oDate.getTimezoneOffset() * -60;//function returns minutes
+		
+		//adjust for the fact the the Date object is in client time.
+		iTime = iTime + iClientOffset + iServerOffset;
+		
+		return iTime;
 	};
 	
 	/*

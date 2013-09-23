@@ -209,43 +209,6 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
-    public function onAirLightAction()
-    {
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $result = array();
-        $result["on_air_light"] = false;
-        $result["on_air_light_expected_status"] = false;
-        $result["station_down"] = false;
-
-        $range = Application_Model_Schedule::GetPlayOrderRange();
-
-        $isItemCurrentlyScheduled = !is_null($range["current"]) && count($range["currentShow"]) > 0 ? true : false;
-
-        $isCurrentItemPlaying = $range["current"]["media_item_played"] ? true : false;
-
-        if ($isItemCurrentlyScheduled ||
-            Application_Model_Preference::GetSourceSwitchStatus("live_dj") == "on" ||
-            Application_Model_Preference::GetSourceSwitchStatus("master_dj") == "on")
-        {
-            $result["on_air_light_expected_status"] = true;
-        }
-
-        if (($isItemCurrentlyScheduled && $isCurrentItemPlaying) ||
-            Application_Model_Preference::GetSourceSwitchStatus("live_dj") == "on" ||
-            Application_Model_Preference::GetSourceSwitchStatus("master_dj") == "on")
-        {
-            $result["on_air_light"] = true;
-        }
-
-        if ($result["on_air_light_expected_status"] != $result["on_air_light"]) {
-            $result["station_down"] = true;
-        }
-
-        echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
-    }
-
     /**
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to
@@ -400,9 +363,6 @@ class ApiController extends Zend_Controller_Action
         $media_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new media item start: $media_id");
         Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
-        
-        $historyService = new Application_Service_HistoryService();
-        $historyService->insertPlayedItem($media_id);
 
         //set a 'last played' timestamp for media item
         //needed for smart blocks
@@ -1009,30 +969,23 @@ class ApiController extends Zend_Controller_Action
             //calculated with silan by actually scanning the entire file. This
             //process takes a really long time, and so we only do it in the background
             //after the file has already been imported -MK
-            try {
-                $length = $file->getDbLength();
-                if (isset($info['length'])) {
-                    $length = $info['length'];
-                    //length decimal number in seconds. Need to convert it to format
-                    //HH:mm:ss to get around silly PHP limitations.
-                    $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
-                    $file->setDbLength($length);
-                }
+            $length = $file->getDbLength();
+            if (isset($info['length'])) {
+                $length = $info['length'];
+                //length decimal number in seconds. Need to convert it to format
+                //HH:mm:ss to get around silly PHP limitations.
+                $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
 
-                $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
-                $cueout = isset($info['cueout']) ? $info['cueout'] : $length;
-
-                $file->setDbCuein($cuein);
-                $file->setDbCueout($cueout);
-                $file->setDbSilanCheck(true);
-                $file->save();
-            } catch (Exception $e) {
-                Logging::info("Failed to update silan values for ".$file->getDbTrackTitle());
-                Logging::info("File length analyzed by Silan is: ".$length);
-                //set silan_check to true so we don't attempt to re-anaylze again
-                $file->setDbSilanCheck(true);
-                $file->save();
+                $file->setDbLength($length);
             }
+
+            $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
+            $cueout = isset($info['cueout']) ? $info['cueout'] : $length;
+
+            $file->setDbCuein($cuein);
+            $file->setDbCueout($cueout);
+            $file->setDbSilanCheck(true);
+            $file->save();
         }
 
         $this->_helper->json->sendJson(array());

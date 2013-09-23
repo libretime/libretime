@@ -444,28 +444,28 @@ function getCurrentShow(){
                  * is switching from week view to day view (and vice versa)
                  * the icon may already be there from previous view
                  */ 
-                $el.siblings().remove("span.now-playing");
+                $el.siblings().remove("span[class=small-icon now-playing]");
                 if (!$el.siblings().hasClass("small-icon now-playing")) {
                     if ($el.siblings().hasClass("small-icon recording")) {
 
                         /* Without removing recording icon, the now playing
                          * icon will overwrite it.
                          */  
-                        $el.siblings().remove("span.recording");
+                        $el.siblings().remove("span[class=small-icon recording]");
                         $el.before('<span class="small-icon now-playing"></span><span class="small-icon recording"></span>');
                     } else if ($el.siblings().hasClass("small-icon rebroadcast")) {
 
                         /* Without removing rebroadcast icon, the now playing
                          * icon will overwrite it.
                          */ 
-                        $el.siblings().remove("span.rebroadcast");
+                        $el.siblings().remove("span[class=small-icon rebroadcast]");
                         $el.before('<span class="small-icon now-playing"></span><span class="small-icon rebroadcast"></span>');
                     } else {
                         $el.before('<span class="small-icon now-playing"></span>');
                     }
                 }
             } else if (view_name === 'month') {
-                if (!$("span[class*=fc-event-title]").siblings().hasClass("now-playing")) {
+                if (!$("span[class*=fc-event-title]").siblings().hasClass("small-icon now-playing")) {
                     $("span[class*=fc-event-title]").after('<span class="small-icon now-playing"></span>');
                 }
             }
@@ -475,7 +475,7 @@ function getCurrentShow(){
         	id = $(this).parents("div.fc-event").data("event").id;
            
             if (id != json.si_id) {
-                $(this).remove("span.now-playing");	
+                $(this).remove("span[small-icon now-playing]");	
             }    	
         });
         

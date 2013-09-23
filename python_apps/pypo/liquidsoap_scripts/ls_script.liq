@@ -41,9 +41,9 @@ source_id = ref 0
 
 def create_source()
     l = request.equeue(id="s#{!source_id}", length=0.5)
+    l = cue_cut(l)
 
     l = audio_to_stereo(id="queue_src", l)
-    l = cue_cut(l)
     l = amplify(1., override="replay_gain", l)
 
     # the crossfade function controls fade in/out
@@ -238,7 +238,8 @@ s = switch(id="schedule_noise_switch",
     )
 
 s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
-    dj_live =
+    dj_live = mksafe(
+        id="dj_live_mksafe",
         audio_to_stereo(
             input.harbor(id="live_dj_harbor",
                 dj_live_stream_mp,
@@ -246,7 +247,7 @@ s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
                 auth=check_dj_client,
                 max=40.,
                 on_connect=live_dj_connect,
-                on_disconnect=live_dj_disconnect))
+                on_disconnect=live_dj_disconnect)))
 
     ignore(output.dummy(dj_live, fallible=true))
 
@@ -260,7 +261,8 @@ else
 end
 
 s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
-    master_dj =
+    master_dj = mksafe(
+        id="master_dj_mksafe",
         audio_to_stereo(
             input.harbor(id="master_harbor",
                 master_live_stream_mp,
@@ -268,7 +270,7 @@ s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
                 auth=check_master_dj_client,
                 max=40.,
                 on_connect=master_dj_connect,
-                on_disconnect=master_dj_disconnect))
+                on_disconnect=master_dj_disconnect)))
 
     ignore(output.dummy(master_dj, fallible=true))
 

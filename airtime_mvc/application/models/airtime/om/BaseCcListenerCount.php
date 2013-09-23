@@ -54,9 +54,9 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 	protected $aCcTimestamp;
 
 	/**
-	 * @var        CcMountName
+	 * @var        CcTimestamp
 	 */
-	protected $aCcMountName;
+	protected $aCcTimestamp;
 
 	/**
 	 * Flag to prevent endless save loop, if this object is referenced
@@ -173,8 +173,8 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 			$this->modifiedColumns[] = CcListenerCountPeer::MOUNT_NAME_ID;
 		}
 
-		if ($this->aCcMountName !== null && $this->aCcMountName->getDbId() !== $v) {
-			$this->aCcMountName = null;
+		if ($this->aCcTimestamp !== null && $this->aCcTimestamp->getDbId() !== $v) {
+			$this->aCcTimestamp = null;
 		}
 
 		return $this;
@@ -270,8 +270,8 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 		if ($this->aCcTimestamp !== null && $this->timestamp_id !== $this->aCcTimestamp->getDbId()) {
 			$this->aCcTimestamp = null;
 		}
-		if ($this->aCcMountName !== null && $this->mount_name_id !== $this->aCcMountName->getDbId()) {
-			$this->aCcMountName = null;
+		if ($this->aCcTimestamp !== null && $this->mount_name_id !== $this->aCcTimestamp->getDbId()) {
+			$this->aCcTimestamp = null;
 		}
 	} // ensureConsistency
 
@@ -313,7 +313,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 		if ($deep) {  // also de-associate any related objects?
 
 			$this->aCcTimestamp = null;
-			$this->aCcMountName = null;
+			$this->aCcTimestamp = null;
 		} // if (deep)
 	}
 
@@ -436,11 +436,11 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 				$this->setCcTimestamp($this->aCcTimestamp);
 			}
 
-			if ($this->aCcMountName !== null) {
-				if ($this->aCcMountName->isModified() || $this->aCcMountName->isNew()) {
-					$affectedRows += $this->aCcMountName->save($con);
+			if ($this->aCcTimestamp !== null) {
+				if ($this->aCcTimestamp->isModified() || $this->aCcTimestamp->isNew()) {
+					$affectedRows += $this->aCcTimestamp->save($con);
 				}
-				$this->setCcMountName($this->aCcMountName);
+				$this->setCcTimestamp($this->aCcTimestamp);
 			}
 
 			if ($this->isNew() ) {
@@ -543,9 +543,9 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 				}
 			}
 
-			if ($this->aCcMountName !== null) {
-				if (!$this->aCcMountName->validate($columns)) {
-					$failureMap = array_merge($failureMap, $this->aCcMountName->getValidationFailures());
+			if ($this->aCcTimestamp !== null) {
+				if (!$this->aCcTimestamp->validate($columns)) {
+					$failureMap = array_merge($failureMap, $this->aCcTimestamp->getValidationFailures());
 				}
 			}
 
@@ -633,8 +633,8 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 			if (null !== $this->aCcTimestamp) {
 				$result['CcTimestamp'] = $this->aCcTimestamp->toArray($keyType, $includeLazyLoadColumns, true);
 			}
-			if (null !== $this->aCcMountName) {
-				$result['CcMountName'] = $this->aCcMountName->toArray($keyType, $includeLazyLoadColumns, true);
+			if (null !== $this->aCcTimestamp) {
+				$result['CcTimestamp'] = $this->aCcTimestamp->toArray($keyType, $includeLazyLoadColumns, true);
 			}
 		}
 		return $result;
@@ -879,13 +879,13 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Declares an association between this object and a CcMountName object.
+	 * Declares an association between this object and a CcTimestamp object.
 	 *
-	 * @param      CcMountName $v
+	 * @param      CcTimestamp $v
 	 * @return     CcListenerCount The current object (for fluent API support)
 	 * @throws     PropelException
 	 */
-	public function setCcMountName(CcMountName $v = null)
+	public function setCcTimestamp(CcTimestamp $v = null)
 	{
 		if ($v === null) {
 			$this->setDbMountNameId(NULL);
@@ -893,10 +893,10 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 			$this->setDbMountNameId($v->getDbId());
 		}
 
-		$this->aCcMountName = $v;
+		$this->aCcTimestamp = $v;
 
 		// Add binding for other direction of this n:n relationship.
-		// If this object has already been added to the CcMountName object, it will not be re-added.
+		// If this object has already been added to the CcTimestamp object, it will not be re-added.
 		if ($v !== null) {
 			$v->addCcListenerCount($this);
 		}
@@ -906,25 +906,25 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 
 
 	/**
-	 * Get the associated CcMountName object
+	 * Get the associated CcTimestamp object
 	 *
 	 * @param      PropelPDO Optional Connection object.
-	 * @return     CcMountName The associated CcMountName object.
+	 * @return     CcTimestamp The associated CcTimestamp object.
 	 * @throws     PropelException
 	 */
-	public function getCcMountName(PropelPDO $con = null)
+	public function getCcTimestamp(PropelPDO $con = null)
 	{
-		if ($this->aCcMountName === null && ($this->mount_name_id !== null)) {
-			$this->aCcMountName = CcMountNameQuery::create()->findPk($this->mount_name_id, $con);
+		if ($this->aCcTimestamp === null && ($this->mount_name_id !== null)) {
+			$this->aCcTimestamp = CcTimestampQuery::create()->findPk($this->mount_name_id, $con);
 			/* The following can be used additionally to
 			   guarantee the related object contains a reference
 			   to this object.  This level of coupling may, however, be
 			   undesirable since it could result in an only partially populated collection
 			   in the referenced object.
-			   $this->aCcMountName->addCcListenerCounts($this);
+			   $this->aCcTimestamp->addCcListenerCounts($this);
 			 */
 		}
-		return $this->aCcMountName;
+		return $this->aCcTimestamp;
 	}
 
 	/**
@@ -959,7 +959,7 @@ abstract class BaseCcListenerCount extends BaseObject  implements Persistent
 		} // if ($deep)
 
 		$this->aCcTimestamp = null;
-		$this->aCcMountName = null;
+		$this->aCcTimestamp = null;
 	}
 
 	/**

@@ -474,28 +474,20 @@ def truncate_to_value(item, value):
     return str(item)
 
 def format_length(mutagen_length):
-    if convert_format(mutagen_length):
-        """ Convert mutagen length to airtime length """
-        t = float(mutagen_length)
-        h = int(math.floor(t / 3600))
-        t = t % 3600
-        m = int(math.floor(t / 60))
-        s = t % 60
-        # will be ss.uuu
-        s = str('{0:f}'.format(s))
-        seconds = s.split(".")
-        s = seconds[0]
-        # have a maximum of 6 subseconds.
-        if len(seconds[1]) >= 6: ss = seconds[1][0:6]
-        else: ss = seconds[1][0:]
-        return "%s:%s:%s.%s" % (h, m, s, ss)
-
-def convert_format(value):
-    regCompiled = re.compile("^[0-9][0-9]:[0-9][0-9]:[0-9][0-9](\.\d+)?$")
-    if re.search(regCompiled, str(value)) is None:
-        return True
-    else:
-        return False
+    """ Convert mutagen length to airtime length """
+    t = float(mutagen_length)
+    h = int(math.floor(t / 3600))
+    t = t % 3600
+    m = int(math.floor(t / 60))
+    s = t % 60
+    # will be ss.uuu
+    s = str('{0:f}'.format(s))
+    seconds = s.split(".")
+    s = seconds[0]
+    # have a maximum of 6 subseconds.
+    if len(seconds[1]) >= 6: ss = seconds[1][0:6]
+    else: ss = seconds[1][0:]
+    return "%s:%s:%s.%s" % (h, m, s, ss)
 
 if __name__ == '__main__':
     import doctest

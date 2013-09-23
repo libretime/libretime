@@ -808,6 +808,7 @@ dl.inline-list dd {
 .dataTables_paginate {
 	float: right;
 	padding: 8px 0 8px 8px;
+	clear: left;
 }
 .dataTables_paginate .ui-button {
 	font-size:12px;
@@ -1550,6 +1551,9 @@ button, input {
 .ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick:hover {
 	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
 }
+
+
+#ui-datepicker-div { z-index: 10 !important }
 
 .button-bar-top {
 	text-align:right;

@@ -8,11 +8,9 @@
 		    </a>
 		    <ul class="sub">
 			    <?php foreach ($page->getPages() as $sub) : ?>
-			    <?php if($this->navigation()->accept($sub)) : ?>
 			    <li>
 				    <a href="<?php echo $sub->getHref(); ?>" <?php echo ($sub->getTarget() != "")?"target=\"".$sub->getTarget()."\"":""; ?>><?php echo _($sub->getLabel()); ?></a>
 			    </li>
-			    <?php endif; ?>
 			    <?php endforeach; ?>
 		    </ul>
 		    <?php else: ?>

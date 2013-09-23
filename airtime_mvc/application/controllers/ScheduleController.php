@@ -46,17 +46,6 @@ class ScheduleController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendScript(
-            "var calendarPref = {};\n".
-            "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
-            "calendarPref.timestamp = ".time().";\n".
-            "calendarPref.timezoneOffset = ".date("Z").";\n".
-            "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
-            "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
-            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
-            "var calendarEvents = null;"
-        );
-
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
@@ -85,6 +74,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.TableTools.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -96,6 +86,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/TableTools.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
         //End Show builder JS/CSS requirements
 
@@ -107,6 +98,16 @@ class ScheduleController extends Zend_Controller_Action
         }
 
         $this->view->addNewShow = true;
+        $this->view->headScript()->appendScript(
+            "var calendarPref = {};\n".
+            "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "calendarPref.timestamp = ".time().";\n".
+            "calendarPref.timezoneOffset = ".date("Z").";\n".
+            "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
+            "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
+            "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
+            "var calendarEvents = null;"
+        );
     }
 
     public function eventFeedAction()

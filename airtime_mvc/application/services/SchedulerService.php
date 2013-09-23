@@ -248,24 +248,22 @@ class Application_Service_SchedulerService
                 }
             } //foreach linked instance
 
-            if (!empty($values)) {
-                $insert_sql = "INSERT INTO cc_schedule (starts, ends, ".
-                    "clip_length, fade_in, fade_out, cue_in, cue_out, ".
-                    "file_id, stream_id, instance_id, position)  VALUES ".
-                    implode($values, ",");
+            $insert_sql = "INSERT INTO cc_schedule (starts, ends, ".
+                "clip_length, fade_in, fade_out, cue_in, cue_out, ".
+                "file_id, stream_id, instance_id, position)  VALUES ".
+                implode($values, ",");
 
-                Application_Common_Database::prepareAndExecute(
-                    $insert_sql, array(), Application_Common_Database::EXECUTE);
+            Application_Common_Database::prepareAndExecute(
+                $insert_sql, array(), Application_Common_Database::EXECUTE);
 
-                //update time_filled in cc_show_instances
-                $now = gmdate("Y-m-d H:i:s");
-                $update_sql = "UPDATE cc_show_instances SET ".
-                    "time_filled = '{$timeFilled}', ".
-                    "last_scheduled = '{$now}' ".
-                    "WHERE show_id = {$ccShow->getDbId()}";
-                Application_Common_Database::prepareAndExecute(
-                    $update_sql, array(), Application_Common_Database::EXECUTE);
-            }
+            //update time_filled in cc_show_instances
+            $now = gmdate("Y-m-d H:i:s");
+            $update_sql = "UPDATE cc_show_instances SET ".
+                "time_filled = '{$timeFilled}', ".
+                "last_scheduled = '{$now}' ".
+                "WHERE show_id = {$ccShow->getDbId()}";
+            Application_Common_Database::prepareAndExecute(
+                $update_sql, array(), Application_Common_Database::EXECUTE);
 
         } //if at least one linked instance has content
     }

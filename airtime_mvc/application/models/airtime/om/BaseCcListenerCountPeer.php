@@ -496,7 +496,7 @@ abstract class BaseCcListenerCountPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related CcMountName table
+	 * Returns the number of rows matching criteria, joining the related CcTimestamp table
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -504,7 +504,7 @@ abstract class BaseCcListenerCountPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinCcMountName(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinCcTimestamp(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -531,7 +531,7 @@ abstract class BaseCcListenerCountPeer {
 			$con = Propel::getConnection(CcListenerCountPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 
-		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcMountNamePeer::ID, $join_behavior);
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -612,7 +612,7 @@ abstract class BaseCcListenerCountPeer {
 
 
 	/**
-	 * Selects a collection of CcListenerCount objects pre-filled with their CcMountName objects.
+	 * Selects a collection of CcListenerCount objects pre-filled with their CcTimestamp objects.
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
@@ -620,7 +620,7 @@ abstract class BaseCcListenerCountPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinCcMountName(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinCcTimestamp(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$criteria = clone $criteria;
 
@@ -631,9 +631,9 @@ abstract class BaseCcListenerCountPeer {
 
 		CcListenerCountPeer::addSelectColumns($criteria);
 		$startcol = (CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS);
-		CcMountNamePeer::addSelectColumns($criteria);
+		CcTimestampPeer::addSelectColumns($criteria);
 
-		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcMountNamePeer::ID, $join_behavior);
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -653,19 +653,19 @@ abstract class BaseCcListenerCountPeer {
 				CcListenerCountPeer::addInstanceToPool($obj1, $key1);
 			} // if $obj1 already loaded
 
-			$key2 = CcMountNamePeer::getPrimaryKeyHashFromRow($row, $startcol);
+			$key2 = CcTimestampPeer::getPrimaryKeyHashFromRow($row, $startcol);
 			if ($key2 !== null) {
-				$obj2 = CcMountNamePeer::getInstanceFromPool($key2);
+				$obj2 = CcTimestampPeer::getInstanceFromPool($key2);
 				if (!$obj2) {
 
-					$cls = CcMountNamePeer::getOMClass(false);
+					$cls = CcTimestampPeer::getOMClass(false);
 
 					$obj2 = new $cls();
 					$obj2->hydrate($row, $startcol);
-					CcMountNamePeer::addInstanceToPool($obj2, $key2);
+					CcTimestampPeer::addInstanceToPool($obj2, $key2);
 				} // if obj2 already loaded
 
-				// Add the $obj1 (CcListenerCount) to $obj2 (CcMountName)
+				// Add the $obj1 (CcListenerCount) to $obj2 (CcTimestamp)
 				$obj2->addCcListenerCount($obj1);
 
 			} // if joined row was not null
@@ -715,7 +715,7 @@ abstract class BaseCcListenerCountPeer {
 
 		$criteria->addJoin(CcListenerCountPeer::TIMESTAMP_ID, CcTimestampPeer::ID, $join_behavior);
 
-		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcMountNamePeer::ID, $join_behavior);
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doCount($criteria, $con);
 
@@ -753,12 +753,12 @@ abstract class BaseCcListenerCountPeer {
 		CcTimestampPeer::addSelectColumns($criteria);
 		$startcol3 = $startcol2 + (CcTimestampPeer::NUM_COLUMNS - CcTimestampPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcMountNamePeer::addSelectColumns($criteria);
-		$startcol4 = $startcol3 + (CcMountNamePeer::NUM_COLUMNS - CcMountNamePeer::NUM_LAZY_LOAD_COLUMNS);
+		CcTimestampPeer::addSelectColumns($criteria);
+		$startcol4 = $startcol3 + (CcTimestampPeer::NUM_COLUMNS - CcTimestampPeer::NUM_LAZY_LOAD_COLUMNS);
 
 		$criteria->addJoin(CcListenerCountPeer::TIMESTAMP_ID, CcTimestampPeer::ID, $join_behavior);
 
-		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcMountNamePeer::ID, $join_behavior);
+		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcTimestampPeer::ID, $join_behavior);
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -795,21 +795,21 @@ abstract class BaseCcListenerCountPeer {
 				$obj2->addCcListenerCount($obj1);
 			} // if joined row not null
 
-			// Add objects for joined CcMountName rows
+			// Add objects for joined CcTimestamp rows
 
-			$key3 = CcMountNamePeer::getPrimaryKeyHashFromRow($row, $startcol3);
+			$key3 = CcTimestampPeer::getPrimaryKeyHashFromRow($row, $startcol3);
 			if ($key3 !== null) {
-				$obj3 = CcMountNamePeer::getInstanceFromPool($key3);
+				$obj3 = CcTimestampPeer::getInstanceFromPool($key3);
 				if (!$obj3) {
 
-					$cls = CcMountNamePeer::getOMClass(false);
+					$cls = CcTimestampPeer::getOMClass(false);
 
 					$obj3 = new $cls();
 					$obj3->hydrate($row, $startcol3);
-					CcMountNamePeer::addInstanceToPool($obj3, $key3);
+					CcTimestampPeer::addInstanceToPool($obj3, $key3);
 				} // if obj3 loaded
 
-				// Add the $obj1 (CcListenerCount) to the collection in $obj3 (CcMountName)
+				// Add the $obj1 (CcListenerCount) to the collection in $obj3 (CcTimestamp)
 				$obj3->addCcListenerCount($obj1);
 			} // if joined row not null
 
@@ -856,8 +856,6 @@ abstract class BaseCcListenerCountPeer {
 			$con = Propel::getConnection(CcListenerCountPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 	
-		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcMountNamePeer::ID, $join_behavior);
-
 		$stmt = BasePeer::doCount($criteria, $con);
 
 		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -871,7 +869,7 @@ abstract class BaseCcListenerCountPeer {
 
 
 	/**
-	 * Returns the number of rows matching criteria, joining the related CcMountName table
+	 * Returns the number of rows matching criteria, joining the related CcTimestamp table
 	 *
 	 * @param      Criteria $criteria
 	 * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -879,7 +877,7 @@ abstract class BaseCcListenerCountPeer {
 	 * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
 	 * @return     int Number of matching rows.
 	 */
-	public static function doCountJoinAllExceptCcMountName(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doCountJoinAllExceptCcTimestamp(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		// we're going to modify criteria, so copy it first
 		$criteria = clone $criteria;
@@ -906,8 +904,6 @@ abstract class BaseCcListenerCountPeer {
 			$con = Propel::getConnection(CcListenerCountPeer::DATABASE_NAME, Propel::CONNECTION_READ);
 		}
 	
-		$criteria->addJoin(CcListenerCountPeer::TIMESTAMP_ID, CcTimestampPeer::ID, $join_behavior);
-
 		$stmt = BasePeer::doCount($criteria, $con);
 
 		if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -944,11 +940,6 @@ abstract class BaseCcListenerCountPeer {
 		CcListenerCountPeer::addSelectColumns($criteria);
 		$startcol2 = (CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcMountNamePeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + (CcMountNamePeer::NUM_COLUMNS - CcMountNamePeer::NUM_LAZY_LOAD_COLUMNS);
-
-		$criteria->addJoin(CcListenerCountPeer::MOUNT_NAME_ID, CcMountNamePeer::ID, $join_behavior);
-
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -967,25 +958,6 @@ abstract class BaseCcListenerCountPeer {
 				CcListenerCountPeer::addInstanceToPool($obj1, $key1);
 			} // if obj1 already loaded
 
-				// Add objects for joined CcMountName rows
-
-				$key2 = CcMountNamePeer::getPrimaryKeyHashFromRow($row, $startcol2);
-				if ($key2 !== null) {
-					$obj2 = CcMountNamePeer::getInstanceFromPool($key2);
-					if (!$obj2) {
-	
-						$cls = CcMountNamePeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CcMountNamePeer::addInstanceToPool($obj2, $key2);
-				} // if $obj2 already loaded
-
-				// Add the $obj1 (CcListenerCount) to the collection in $obj2 (CcMountName)
-				$obj2->addCcListenerCount($obj1);
-
-			} // if joined row is not null
-
 			$results[] = $obj1;
 		}
 		$stmt->closeCursor();
@@ -994,7 +966,7 @@ abstract class BaseCcListenerCountPeer {
 
 
 	/**
-	 * Selects a collection of CcListenerCount objects pre-filled with all related objects except CcMountName.
+	 * Selects a collection of CcListenerCount objects pre-filled with all related objects except CcTimestamp.
 	 *
 	 * @param      Criteria  $criteria
 	 * @param      PropelPDO $con
@@ -1003,7 +975,7 @@ abstract class BaseCcListenerCountPeer {
 	 * @throws     PropelException Any exceptions caught during processing will be
 	 *		 rethrown wrapped into a PropelException.
 	 */
-	public static function doSelectJoinAllExceptCcMountName(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+	public static function doSelectJoinAllExceptCcTimestamp(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
 	{
 		$criteria = clone $criteria;
 
@@ -1017,11 +989,6 @@ abstract class BaseCcListenerCountPeer {
 		CcListenerCountPeer::addSelectColumns($criteria);
 		$startcol2 = (CcListenerCountPeer::NUM_COLUMNS - CcListenerCountPeer::NUM_LAZY_LOAD_COLUMNS);
 
-		CcTimestampPeer::addSelectColumns($criteria);
-		$startcol3 = $startcol2 + (CcTimestampPeer::NUM_COLUMNS - CcTimestampPeer::NUM_LAZY_LOAD_COLUMNS);
-
-		$criteria->addJoin(CcListenerCountPeer::TIMESTAMP_ID, CcTimestampPeer::ID, $join_behavior);
-
 
 		$stmt = BasePeer::doSelect($criteria, $con);
 		$results = array();
@@ -1039,25 +1006,6 @@ abstract class BaseCcListenerCountPeer {
 				$obj1->hydrate($row);
 				CcListenerCountPeer::addInstanceToPool($obj1, $key1);
 			} // if obj1 already loaded
-
-				// Add objects for joined CcTimestamp rows
-
-				$key2 = CcTimestampPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-				if ($key2 !== null) {
-					$obj2 = CcTimestampPeer::getInstanceFromPool($key2);
-					if (!$obj2) {
-	
-						$cls = CcTimestampPeer::getOMClass(false);
-
-					$obj2 = new $cls();
-					$obj2->hydrate($row, $startcol2);
-					CcTimestampPeer::addInstanceToPool($obj2, $key2);
-				} // if $obj2 already loaded
-
-				// Add the $obj1 (CcListenerCount) to the collection in $obj2 (CcTimestamp)
-				$obj2->addCcListenerCount($obj1);
-
-			} // if joined row is not null
 
 			$results[] = $obj1;
 		}

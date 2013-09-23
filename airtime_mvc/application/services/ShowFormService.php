@@ -441,7 +441,7 @@ class Application_Service_ShowFormService
             $rebroadcast = true;
 
             $absRebroadcast = true;
-            if (isset($formData["add_show_rebroadcast"]) && $formData["add_show_rebroadcast"]) {
+            if ($formData["add_show_rebroadcast"]) {
                 $formData["add_show_duration"] = Application_Service_ShowService::formatShowDuration(
                     $formData["add_show_duration"]);
                 $absRebroadcast = $forms["abs_rebroadcast"]->isValid($formData);

@@ -10,7 +10,6 @@ import pytz
 import signal
 import math
 import traceback
-import re
 
 from configobj import ConfigObj
 
@@ -18,7 +17,6 @@ from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 
 from subprocess import Popen
-from subprocess import PIPE
 from threading import Thread
 
 import mutagen
@@ -95,16 +93,12 @@ class ShowRecorder(Thread):
         self.logger.info("starting record")
         self.logger.info("command " + command)
 
-        self.p = Popen(args,stdout=PIPE)
+        self.p = Popen(args)
 
         #blocks at the following line until the child process
         #quits
         self.p.wait()
-        outmsgs = self.p.stdout.readlines()
-        for msg in outmsgs:
-            m = re.search('^ERROR',msg)
-            if not m == None:
-                self.logger.info('Recording error is found: %s', msg)
+
         self.logger.info("finishing record, return code %s", self.p.returncode)
         code = self.p.returncode
 

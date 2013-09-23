@@ -1,33 +1,3 @@
-2.5.0 - September 4th, 2013
-  * New features
-    * Playout History feature overhaul.
-      - custom templates for log sheets.
-      - ability to manually log an item.
-      - ability to edit a history item.
-      - 3 history views: log, file summary, show summary.
-      - hosts can now view/log their own show history.
-
-2.4.1 - August 28th, 2013
-  * Bug Fixes
-    * Playout Engine locking issue
-    * Liquidsoap input harbor blocking scheduled contents
-    * Mono file playout problems
-    * Adding watched folder sometimes causes an exception based on length format
-
-2.4.0 - June 18th, 2013
-  * New features
-    * Show linking
-    * Repeating shows on every nth week of the month (2nd Monday etc)
-    * Waveform Editor (for cues/fades)
-    * Global crossfade setting, separate global fade in/fade out setting
-    * Library view shows which tracks are scheduled and/or in playlist
-    * Opus and AAC/AAC+ output support
-
-  * Improvements/Bug Fixes
-    * Show creation overhaul
-    * Library view re-ordering columns issue fixed
-    * Improved track length detection
-
 2.3.1 - March 19th, 2013
   * Bug fixes
     * Security fixes with running unescaped shell commands

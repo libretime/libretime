@@ -17,7 +17,7 @@ class Application_Model_Scheduler
     private $epochNow;
     private $nowDT;
     private $user;
-
+    
     private $crossfadeDuration;
 
     private $checkUserPermissions = true;
@@ -40,7 +40,7 @@ class Application_Model_Scheduler
         }
 
         $this->user = Application_Model_User::getCurrentUser();
-
+        
         $this->crossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
     }
 
@@ -200,12 +200,9 @@ class Application_Model_Scheduler
             } else {
                 $data = $this->fileInfo;
                 $data["id"] = $id;
-
-                $cuein = Application_Common_DateHelper::playlistTimeToSeconds($file->getDbCuein());
-                $cueout = Application_Common_DateHelper::playlistTimeToSeconds($file->getDbCueout());
-                $row_length = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-
-                $data["cliplength"] = $row_length;
+                $data["cliplength"] = Application_Model_StoredFile::getRealClipLength(
+                    $file->getDbCuein(),
+                    $file->getDbCueout());
 
                 $data["cuein"] = $file->getDbCuein();
                 $data["cueout"] = $file->getDbCueout();
@@ -268,11 +265,11 @@ class Application_Model_Scheduler
                                 $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
                                 $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
                                 $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-
+                                
                                 //fade is in format SS.uuuuuu
                                 $data["fadein"] = $defaultFadeIn;
                                 $data["fadeout"] = $defaultFadeOut;
-
+                                
                                 $data["type"] = 0;
                                 $files[] = $data;
                             }
@@ -327,11 +324,11 @@ class Application_Model_Scheduler
                         $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
                         $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
                         $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-
+                        
                         //fade is in format SS.uuuuuu
                 		$data["fadein"] = $defaultFadeIn;
                 		$data["fadeout"] = $defaultFadeOut;
-
+                		
                         $data["type"] = 0;
                         $files[] = $data;
                     }
@@ -341,7 +338,7 @@ class Application_Model_Scheduler
 
         return $files;
     }
-
+    
     /*
      * @param DateTime startDT in UTC
     *  @param string duration
@@ -352,18 +349,18 @@ class Application_Model_Scheduler
     private function findTimeDifference($p_startDT, $p_seconds)
     {
     	$startEpoch = $p_startDT->format("U.u");
-
+    	
     	//add two float numbers to 6 subsecond precision
     	//DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
     	$newEpoch = bcsub($startEpoch , (string) $p_seconds, 6);
-
+    
     	$dt = DateTime::createFromFormat("U.u", $newEpoch, new DateTimeZone("UTC"));
-
+    
     	if ($dt === false) {
     		//PHP 5.3.2 problem
     		$dt = DateTime::createFromFormat("U", intval($newEpoch), new DateTimeZone("UTC"));
     	}
-
+    
     	return $dt;
     }
 
@@ -423,7 +420,7 @@ class Application_Model_Scheduler
 
         return $nextDT;
     }
-
+    
     /*
      * @param int $showInstance
      *   This function recalculates the start/end times of items in a gapless show to
@@ -502,7 +499,7 @@ class Application_Model_Scheduler
     }
 
     /**
-     *
+     * 
      * Enter description here ...
      * @param $scheduleItems
      *     cc_schedule items, where the items get inserted after
@@ -885,7 +882,7 @@ class Application_Model_Scheduler
 
     private function updateMovedItem()
     {
-
+        
     }
 
     private function getInstances($instanceId)
@@ -1105,7 +1102,7 @@ class Application_Model_Scheduler
                 } else {
                     $removedItem->delete($this->con);
                 }
-
+                
                 // update is_scheduled in cc_files but only if
                 // the file is not scheduled somewhere else
                 $fileId = $removedItem->getDbFileId();

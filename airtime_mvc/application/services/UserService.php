@@ -1,5 +1,10 @@
 <?php
 
+/*define('UTYPE_HOST'            , 'H');
+define('UTYPE_ADMIN'           , 'A');
+define('UTYPE_GUEST'           , 'G');
+define('UTYPE_PROGRAM_MANAGER' , 'P');*/
+
 class Application_Service_UserService
 {
     private $currentUser;
@@ -13,7 +18,7 @@ class Application_Service_UserService
     }
 
     /**
-     *
+     * 
      * Returns a CcSubjs object
      */
     public function getCurrentUser()

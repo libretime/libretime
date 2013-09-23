@@ -45,16 +45,11 @@ class Application_Service_CalendarService
             if ($this->ccShowInstance->isRecorded()) {
 
                 $ccFile = $this->ccShowInstance->getCcFiles();
-                if (!isset($ccFile)) {
-                     $menu["error when recording"] = array (
-                         "name" => _("Record file doesn't exist"),
-                         "icon" => "error");
-                }else {
-                    $menu["view_recorded"] = array(
-                        "name" => _("View Recorded File Metadata"),
-                        "icon" => "overview",
-                        "url" => $baseUrl."library/edit-file-md/id/".$ccFile->getDbId());
-                }
+
+                $menu["view_recorded"] = array(
+                    "name" => _("View Recorded File Metadata"),
+                    "icon" => "overview",
+                    "url" => $baseUrl."library/edit-file-md/id/".$ccFile->getDbId());
 
                 //recorded show can be uploaded to soundcloud
                 if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
@@ -80,10 +75,10 @@ class Application_Service_CalendarService
             }
         } else {
             //Show content can be modified from the calendar if:
-            // the show has not started,
+            // the show has not ended,
             // the user is admin or hosting the show,
             // the show is not recorded
-            if ($now < $start && ($isAdminOrPM || $isHostOfShow) &&
+            if ($now < $end && ($isAdminOrPM || $isHostOfShow) &&
                 !$this->ccShowInstance->isRecorded() ) {
 
                 $menu["schedule"] = array(

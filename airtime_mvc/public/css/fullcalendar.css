@@ -1,11 +1,11 @@
 /*
- * FullCalendar v1.5.4 Stylesheet
+ * FullCalendar v1.5.3 Stylesheet
  *
  * Copyright (c) 2011 Adam Shaw
  * Dual licensed under the MIT and GPL licenses, located in
  * MIT-LICENSE.txt and GPL-LICENSE.txt respectively.
  *
- * Date: Tue Sep 4 23:38:33 2012 -0700
+ * Date: Mon Feb 6 22:40:40 2012 -0800
  *
  */
 
@@ -107,6 +107,15 @@ html .fc,
 	
 /* Content
 ------------------------------------------------------------------------*/
+
+.fc table.fc-agenda-days thead,
+.fc table.fc-agenda-days thead tr{
+    height: 25px;
+}
+
+.fc table.fc-agenda-days thead th{
+    vertical-align: middle;
+}
 	
 .fc-content {
 	clear: both;

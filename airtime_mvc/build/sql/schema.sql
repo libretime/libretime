@@ -753,89 +753,6 @@ COMMENT ON TABLE "cc_locale" IS '';
 
 
 SET search_path TO public;
------------------------------------------------------------------------------
--- cc_playout_history
------------------------------------------------------------------------------
-
-DROP TABLE "cc_playout_history" CASCADE;
-
-
-CREATE TABLE "cc_playout_history"
-(
-	"id" serial  NOT NULL,
-	"file_id" INTEGER,
-	"starts" TIMESTAMP  NOT NULL,
-	"ends" TIMESTAMP  NOT NULL,
-	"instance_id" INTEGER,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_playout_history" IS '';
-
-
-SET search_path TO public;
------------------------------------------------------------------------------
--- cc_playout_history_metadata
------------------------------------------------------------------------------
-
-DROP TABLE "cc_playout_history_metadata" CASCADE;
-
-
-CREATE TABLE "cc_playout_history_metadata"
-(
-	"id" serial  NOT NULL,
-	"history_id" INTEGER  NOT NULL,
-	"key" VARCHAR(128)  NOT NULL,
-	"value" VARCHAR(128)  NOT NULL,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_playout_history_metadata" IS '';
-
-
-SET search_path TO public;
------------------------------------------------------------------------------
--- cc_playout_history_template
------------------------------------------------------------------------------
-
-DROP TABLE "cc_playout_history_template" CASCADE;
-
-
-CREATE TABLE "cc_playout_history_template"
-(
-	"id" serial  NOT NULL,
-	"name" VARCHAR(128)  NOT NULL,
-	"type" VARCHAR(35)  NOT NULL,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_playout_history_template" IS '';
-
-
-SET search_path TO public;
------------------------------------------------------------------------------
--- cc_playout_history_template_field
------------------------------------------------------------------------------
-
-DROP TABLE "cc_playout_history_template_field" CASCADE;
-
-
-CREATE TABLE "cc_playout_history_template_field"
-(
-	"id" serial  NOT NULL,
-	"template_id" INTEGER  NOT NULL,
-	"name" VARCHAR(128)  NOT NULL,
-	"label" VARCHAR(128)  NOT NULL,
-	"type" VARCHAR(128)  NOT NULL,
-	"is_file_md" BOOLEAN default 'f' NOT NULL,
-	"position" INTEGER  NOT NULL,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_playout_history_template_field" IS '';
-
-
-SET search_path TO public;
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey" FOREIGN KEY ("owner_id") REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey" FOREIGN KEY ("editedby") REFERENCES "cc_subjs" ("id");
@@ -891,11 +808,3 @@ ALTER TABLE "cc_webstream_metadata" ADD CONSTRAINT "cc_schedule_inst_fkey" FOREI
 ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_timestamp_inst_fkey" FOREIGN KEY ("timestamp_id") REFERENCES "cc_timestamp" ("id") ON DELETE CASCADE;
 
 ALTER TABLE "cc_listener_count" ADD CONSTRAINT "cc_mount_name_inst_fkey" FOREIGN KEY ("mount_name_id") REFERENCES "cc_mount_name" ("id") ON DELETE CASCADE;
-
-ALTER TABLE "cc_playout_history" ADD CONSTRAINT "cc_playout_history_file_tag_fkey" FOREIGN KEY ("file_id") REFERENCES "cc_files" ("id") ON DELETE CASCADE;
-
-ALTER TABLE "cc_playout_history" ADD CONSTRAINT "cc_his_item_inst_fkey" FOREIGN KEY ("instance_id") REFERENCES "cc_show_instances" ("id") ON DELETE SET NULL;
-
-ALTER TABLE "cc_playout_history_metadata" ADD CONSTRAINT "cc_playout_history_metadata_entry_fkey" FOREIGN KEY ("history_id") REFERENCES "cc_playout_history" ("id") ON DELETE CASCADE;
-
-ALTER TABLE "cc_playout_history_template_field" ADD CONSTRAINT "cc_playout_history_template_template_fkey" FOREIGN KEY ("template_id") REFERENCES "cc_playout_history_template" ("id") ON DELETE CASCADE;

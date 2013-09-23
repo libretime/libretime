@@ -20,7 +20,7 @@ $pages = array(
         'module'     => 'default',
         'controller' => 'Plupload',
         'action'     => 'index',
-        'resource'   => 'plupload'
+        'resource'   =>    'plupload'
     ),
     array(
         'label'      => _('Library'),
@@ -80,6 +80,13 @@ $pages = array(
                 'resource'   =>    'systemstatus'
             ),
             array(
+                'label'      => _('Playout History'),
+                'module'     => 'default',
+                'controller' => 'playouthistory',
+                'action'     => 'index',
+                'resource'   => 'playouthistory'
+            ),
+            array(
                 'label'      => _('Listener Stats'),
                 'module'     => 'default',
                 'controller' => 'listenerstat',
@@ -88,27 +95,6 @@ $pages = array(
             )
         )
     ),
-	array(
-		'label' => _('History'),
-		'uri' => '#',
-		'resource'   => 'playouthistory',
-		'pages'      => array(
-			array(
-				'label'      => _('Playout History'),
-				'module'     => 'default',
-				'controller' => 'playouthistory',
-				'action'     => 'index',
-				'resource'   => 'playouthistory'
-			),
-			array(
-				'label'      => _('History Templates'),
-				'module'     => 'default',
-				'controller' => 'playouthistorytemplate',
-				'action'     => 'index',
-				'resource'   => 'playouthistorytemplate'
-			),
-		)
-	),
     array(
         'label'      => _('Help'),
         'uri'     => '#',

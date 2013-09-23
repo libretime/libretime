@@ -92,10 +92,10 @@ msgstr "이 인스턴스와 이후에 모든 인스턴스 삭제"
 
 #: airtime_mvc/application/services/CalendarService.php:210
 msgid "Permission denied"
-msgstr "권한이 부족합니다"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:214
-#: airtime_mvc/application/models/ShowIn다stance.php:245
+#: airtime_mvc/application/models/ShowInstance.php:245
 msgid "Can't drag and drop repeating shows"
 msgstr "반복쇼는 드래그 앤 드롭 할수 없습니다"
 
@@ -227,12 +227,12 @@ msgstr "로그아웃"
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
-msgstr "재생"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
-msgstr "정지"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:47
 #: airtime_mvc/application/models/Block.php:1334
@@ -254,11 +254,11 @@ msgstr "큐 아웃"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
-msgstr "큐 아웃 설정"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
-msgstr "커서"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:282
@@ -370,7 +370,7 @@ msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
 msgstr ""
-"쇼를 중복되게 스케줄 할수 없습니다.\n"
+"쇼를 중복되게 스케줄 알수 없습니다.\n"
 "주의: 반복 쇼의 크기를 조정하면, 모든 반복 쇼의 크기가 바뀝니다."
 
 #: airtime_mvc/application/models/Webstream.php:157
@@ -442,7 +442,7 @@ msgstr "Airtime 암호 초기화"
 
 #: airtime_mvc/application/models/Scheduler.php:72
 msgid "Cannot move items out of linked shows"
-msgstr "링크 쇼에서 아이템을 분리 할수 없습니다"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:118
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
@@ -479,7 +479,7 @@ msgstr "쇼 %s 업데이트 되었습니다!"
 
 #: airtime_mvc/application/models/Scheduler.php:177
 msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
-msgstr "링크 쇼의 내용은 이미 방송된 쇼의 전후에만 스케쥴 할수 있습니다"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:200
 #: airtime_mvc/application/models/Scheduler.php:286
@@ -566,7 +566,7 @@ msgstr ""
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
 #: airtime_mvc/application/controllers/LocaleController.php:77
 msgid "Label"
-msgstr "레이블"
+msgstr "상"
 
 #: airtime_mvc/application/models/Block.php:1341
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:62
@@ -1123,7 +1123,7 @@ msgstr "Icecast 서버는 마운트 지점을 지정해야 합니다"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr "링크:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
@@ -1186,11 +1186,11 @@ msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:48
 msgid "day of the month"
-msgstr "월중 날짜"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:48
 msgid "day of the week"
-msgstr "주중 날짜"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:67
 msgid "No End?"
@@ -1602,7 +1602,7 @@ msgstr "암호를 입력해주세요"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
 msgid "Default Crossfade Duration (s):"
-msgstr "기본 크로스페이드 길이(s)"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:40
 #: airtime_mvc/application/forms/GeneralPreferences.php:59
@@ -1612,11 +1612,11 @@ msgstr "초단위를 입력해주세요 0{.0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr "기본 페이드 인(s)"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr "기본 페이드 아웃(s)"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
@@ -1740,7 +1740,7 @@ msgstr "데모"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:120
 msgid "Work in progress"
-msgstr "진행중"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:121
 msgid "Stem"
@@ -1967,17 +1967,17 @@ msgstr "현재 페이지 선택 취소 "
 msgid "Deselect all"
 msgstr "모두 선택 취소"
 
-#: airtime_mvc/application/controllers/LocaleController.php:63럭
+#: airtime_mvc/application/controllers/LocaleController.php:63
 msgid "Are you sure you want to delete the selected item(s)?"
 msgstr "선택된 아이템들을 모두 지우시겠습니다?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:64
 msgid "Scheduled"
-msgstr "스케쥴됨"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Playlist / Block"
-msgstr "재생목록/블"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:69
 msgid "Bit Rate"
@@ -2068,7 +2068,7 @@ msgstr "현재 파일이 업로드 중입니다. %s다른 화면으로 이동하
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
 msgid "Open Media Builder"
-msgstr "미디아 빌더 열기"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "please put in a time '00:00:00 (.0)'"
@@ -2196,7 +2196,7 @@ msgstr "경로에 접근할수 없습니다"
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
 msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
-msgstr "어떤 스트림은 추가 설정이 필요합니다. %sAAC+ 지원%s 또는 %sOpus 지원%s 설명"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
 msgid "Connected to the streaming server"
@@ -2266,11 +2266,11 @@ msgstr "쇼 인스턴스가 존재 하지 않습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "Warning: Shows cannot be re-linked"
-msgstr "주의: 쇼는 다시 링크 될수 없습니다"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:196
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
-msgstr "반복 되는 쇼를 링크하면, 반복 쇼에 스케쥴된 아이템들이 다른 반복 쇼에도 스케쥴이 됩니다"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:200
 msgid "Show"
@@ -2494,15 +2494,15 @@ msgstr "아이템 %s개 이동"
 
 #: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Fade Editor"
-msgstr "페이드 에디터"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:296
 msgid "Cue Editor"
-msgstr "큐 에디터"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:297
 msgid "Waveform features are available in a browser supporting the Web Audio API"
-msgstr "웨이브 폼 기능은 Web Audio API를 지원하면 브라우저에서만 사용 가능합니다"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Select all"
@@ -3096,7 +3096,7 @@ msgstr "내용물 없음"
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:3
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:3
 msgid "Show Waveform"
-msgstr "웨이브 폼 보기"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:6
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:70
@@ -3143,12 +3143,12 @@ msgstr "새 웹스트림"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 msgid "Empty playlist content"
-msgstr "재생 목록 비우기"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Clear"
-msgstr "지우기"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:24
 msgid "Shuffle playlist"
@@ -3175,7 +3175,7 @@ msgstr "열린 재생 목록 없음"
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Empty smart block content"
-msgstr "스마트 블락 내용 지우기"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:90
 msgid "No open smart block"

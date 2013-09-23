@@ -53,7 +53,7 @@ class LibraryController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-
+        
         $this->view->headScript()->appendFile($baseUrl.'js/waveformplaylist/observer/observer.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/waveformplaylist/config.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/waveformplaylist/curves.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
@@ -68,9 +68,9 @@ class LibraryController extends Zend_Controller_Action
 
         //arbitrary attributes need to be allowed to set an id for the templates.
         $this->view->headScript()->setAllowArbitraryAttributes(true);
-        //$this->view->headScript()->appendScript(file_get_contents(APPLICATION_PATH.'/../public/js/waveformplaylist/templates/bottombar.tpl'),
+        //$this->view->headScript()->appendScript(file_get_contents(APPLICATION_PATH.'/../public/js/waveformplaylist/templates/bottombar.tpl'), 
         //		'text/template', array('id' => 'tpl_playlist_cues', 'noescape' => true));
-
+                
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
         try {
@@ -179,7 +179,9 @@ class LibraryController extends Zend_Controller_Action
         $type = $this->_getParam('type');
         //playlist||timeline
         $screen = $this->_getParam('screen');
-
+        
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        
         $menu = array();
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
@@ -248,7 +250,7 @@ class LibraryController extends Zend_Controller_Action
         } elseif ($type == "stream") {
             $webstream = CcWebstreamQuery::create()->findPK($id);
             $obj = new Application_Model_Webstream($webstream);
-
+            
             $menu["play"]["mime"] = $webstream->getDbMime();
 
             if (isset($obj_sess->id) && $screen == "playlist") {
@@ -371,15 +373,15 @@ class LibraryController extends Zend_Controller_Action
             $this->view->message = $message;
         }
     }
-
+    
     // duplicate playlist
     public function duplicateAction(){
         $params = $this->getRequest()->getParams();
         $id = $params['id'];
-
+        
         $originalPl = new Application_Model_Playlist($id);
         $newPl = new Application_Model_Playlist();
-
+        
         $contents = $originalPl->getContents();
         foreach ($contents as &$c) {
             if ($c['type'] == '0') {
@@ -391,15 +393,15 @@ class LibraryController extends Zend_Controller_Action
             }
             $c[0] = $c['item_id'];
         }
-
+        
         $newPl->addAudioClips($contents, null, 'before');
-
+        
         $newPl->setCreator(Application_Model_User::getCurrentUser()->getId());
         $newPl->setDescription($originalPl->getDescription());
-
+        
         list($plFadeIn, ) = $originalPl->getFadeInfo(0);
         list(, $plFadeOut) = $originalPl->getFadeInfo($originalPl->getSize()-1);
-
+        
         $newPl->setfades($plFadeIn, $plFadeOut);
         $newPl->setName(sprintf(_("Copy of %s"), $originalPl->getName()));
     }
@@ -547,7 +549,7 @@ class LibraryController extends Zend_Controller_Action
         $id = $this->_getParam('id');
         Application_Model_Soundcloud::uploadSoundcloud($id);
         // we should die with ui info
-        $this->_helper->json->sendJson(null);
+        $this->_helper->json->sendJson(null); 
     }
 
     public function getUploadToSoundcloudStatusAction()

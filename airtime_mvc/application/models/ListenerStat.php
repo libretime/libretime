@@ -4,7 +4,7 @@ class Application_Model_ListenerStat
     public function __construct()
     {
     }
-
+    
     public static function getDataPointsWithinRange($p_start, $p_end) {
         $sql = <<<SQL
 SELECT mount_name, count(*)
@@ -16,13 +16,13 @@ group by mount_name
 SQL;
         $data = Application_Common_Database::prepareAndExecute($sql,
                 array('p1'=>$p_start, 'p2'=>$p_end));
-
+        
         $out = array();
         foreach ($data as $d) {
             $jump = intval($d['count']/1000);
             $jump = max(1, $jump);
             $remainder = $jump == 1?0:1;
-
+            
             $sql = <<<SQL
 SELECT *
 FROM
@@ -41,36 +41,29 @@ SQL;
                 $t->setTimezone(new DateTimeZone(date_default_timezone_get()));
                 // tricking javascript so it thinks the server timezone is in UTC
                 $dt = new DateTime($t->format("Y-m-d H:i:s"), new DateTimeZone("UTC"));
-
+                
                 $r['timestamp'] = $dt->format("U");
                 $out[$r['mount_name']][] = $r;
             }
         }
-
+        
         $enabledStreamIds = Application_Model_StreamSetting::getEnabledStreamIds();
         $enabledOut = array();
-
+        
         foreach ($enabledStreamIds as $sId) {
-
+        	
         	$sql = "SELECT value FROM cc_stream_setting"
         	." WHERE keyname = :key";
-
+        	
         	$result = Application_Common_Database::prepareAndExecute($sql, array('key' => $sId."_mount"), "single");
-
+        	
         	$enabledMountPoint = $result["value"];
-
+        	
         	if (isset($out[$enabledMountPoint])) {
         		$enabledOut[$enabledMountPoint] = $out[$enabledMountPoint];
         	}
-        	else {
-        	    //TODO fix this hack (here for CC-5254)
-        	    //all shoutcast streams are automatically put under "shoutcast" mount point.
-        	    if (isset($out["shoutcast"])) {
-        	        $enabledOut["shoutcast"] = $out["shoutcast"];
-        	    }
-        	}
         }
-
+        
         return $enabledOut;
     }
 

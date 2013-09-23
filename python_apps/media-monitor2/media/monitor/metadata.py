@@ -93,6 +93,7 @@ class Metadata(Loggable):
     # little bit messy. Some of the handling is in m.m.pure while the rest is
     # here. Also interface is not very consistent
 
+    # TODO : what is this shit? maybe get rid of it?
     @staticmethod
     def fix_title(path):
         # If we have no title in path we will format it

@@ -949,7 +949,6 @@ SQL;
 AND ((si1.starts >= :start1::TIMESTAMP AND si1.starts < :end1::TIMESTAMP)
      OR (si1.ends > :start2::TIMESTAMP AND si1.ends <= :end2::TIMESTAMP)
      OR (si1.starts <= :start3::TIMESTAMP AND si1.ends >= :end3::TIMESTAMP))
-ORDER BY si1.starts
 SQL;
             return Application_Common_Database::prepareAndExecute( $sql,
                 array(
