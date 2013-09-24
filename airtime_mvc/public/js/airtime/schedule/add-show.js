@@ -227,6 +227,30 @@ function setAddShowEvents() {
     	}
     });
 
+    form.find("#add_show_timezone").change(function(){
+        var startDateField = form.find("#add_show_start_date"),
+            startTimeField = form.find("#add_show_start_time"),
+            endDateField = form.find("#add_show_end_date_no_repeat"),
+            endTimeField = form.find("#add_show_end_time"),
+            timezone = form.find("#add_show_timezone").val(),
+            showId = form.find("#add_show_id").val();
+
+        $.post(baseUrl+"Schedule/localize-start-end-time",
+               {format: "json",
+                startDate: startDateField.val(),
+                startTime: startTimeField.val(),
+                endDate: endDateField.val(),
+                endTime: endTimeField.val(),
+                timezone: timezone,
+                showId: showId}, function(json){
+
+            startDateField.val(json.start.date);
+            startTimeField.val(json.start.time);
+            endDateField.val(json.end.date);
+            endTimeField.val(json.end.time);
+        });
+    });
+
     form.find("#add_show_repeat_type").change(function(){
         toggleRepeatDays();
         toggleMonthlyRepeatType();

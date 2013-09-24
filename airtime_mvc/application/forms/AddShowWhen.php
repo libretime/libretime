@@ -78,6 +78,15 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'decorators'  => array('ViewHelper')
         ));
 
+        $timezone = new Zend_Form_Element_Select('add_show_timezone');
+        $timezone->setRequired(true)
+                 ->setLabel(_("Timezone:"))
+                 ->setMultiOptions(Application_Common_Timezone::getTimezones())
+                 ->setValue(Application_Model_Preference::GetDefaultTimezone())
+                 ->setAttrib('class', 'input_select add_show_input_select')
+                 ->setDecorators(array('ViewHelper'));
+        $this->addElement($timezone);
+
         // Add repeats element
         $this->addElement('checkbox', 'add_show_repeats', array(
             'label'      => _('Repeats?'),

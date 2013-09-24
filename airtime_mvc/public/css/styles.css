@@ -445,6 +445,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     vertical-align: top;
 }
 
+.add_show_input_select{
+    width: 150px;
+}
+
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
 table.library-track-md{
     width: 280px;

@@ -31,6 +31,7 @@ class CcShowDays extends BaseCcShowDays {
         return $dt;
     }
 
+    // Returns the start of a show in the timezone it was created in
     public function getLocalStartDateAndTime()
     {
         $dt = new DateTime(
@@ -38,16 +39,16 @@ class CcShowDays extends BaseCcShowDays {
             new DateTimeZone($this->getDbTimezone())
         );
 
-        //make timezone current user specific
-        $dt->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+        //set timezone to that of the show
+        $dt->setTimezone(new DateTimeZone($this->getDbTimezone()));
 
         return $dt;
     }
 
     /**
      * 
-     * Enter description here ...
-     * @param DateTime $startDateTime first show in user's local time
+     * Returns the end of a show in the timezone it was created in
+     * @param DateTime $startDateTime first show in show's local time
      */
     public function getLocalEndDateAndTime($showStart)
     {
