@@ -227,13 +227,18 @@ function setAddShowEvents() {
     	}
     });
 
+    // in case user is creating a new show, there will be
+    // no show_id so we have to store the default timezone
+    // to be able to do the conversion when the timezone
+    // setting changes
+    var currentTimezone = form.find("#add_show_timezone").val();
+
     form.find("#add_show_timezone").change(function(){
         var startDateField = form.find("#add_show_start_date"),
             startTimeField = form.find("#add_show_start_time"),
             endDateField = form.find("#add_show_end_date_no_repeat"),
             endTimeField = form.find("#add_show_end_time"),
-            timezone = form.find("#add_show_timezone").val(),
-            showId = form.find("#add_show_id").val();
+            newTimezone = form.find("#add_show_timezone").val();
 
         $.post(baseUrl+"Schedule/localize-start-end-time",
                {format: "json",
@@ -241,8 +246,8 @@ function setAddShowEvents() {
                 startTime: startTimeField.val(),
                 endDate: endDateField.val(),
                 endTime: endTimeField.val(),
-                timezone: timezone,
-                showId: showId}, function(json){
+                newTimezone: newTimezone,
+                oldTimezone: currentTimezone}, function(json){
 
             startDateField.val(json.start.date);
             startTimeField.val(json.start.time);

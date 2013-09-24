@@ -649,16 +649,16 @@ class ScheduleController extends Zend_Controller_Action
      */
     public function localizeStartEndTimeAction()
     {
-        $service_showForm = new Application_Service_ShowFormService(
-            $this->_getParam("showId"));
-        $timezone = $this->_getParam('timezone');
+        $service_showForm = new Application_Service_ShowFormService();
+        $newTimezone = $this->_getParam('newTimezone');
+        $oldTimezone = $this->_getParam('oldTimezone');
         $localTime = array();
 
         $localTime["start"] = $service_showForm->localizeDateTime(
-            $this->_getParam('startDate'), $this->_getParam('startTime'), $timezone);
+            $this->_getParam('startDate'), $this->_getParam('startTime'), $newTimezone, $oldTimezone);
 
         $localTime["end"] = $service_showForm->localizeDateTime(
-            $this->_getParam('endDate'), $this->_getParam('endTime'), $timezone);
+            $this->_getParam('endDate'), $this->_getParam('endTime'), $newTimezone, $oldTimezone);
 
         $this->_helper->json->sendJson($localTime);
     }
