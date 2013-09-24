@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime 2.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-23 14:48+0200\n"
+"POT-Creation-Date: 2013-09-24 09:58+0200\n"
 "PO-Revision-Date: 2013-06-13 14:06+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Greek Localization <contact@sourcefabric.org>\n"
@@ -1016,6 +1016,10 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:56
 #: airtime_mvc/application/controllers/LocaleController.php:386
 msgid "Set Default"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:31
+msgid "New Log Sheet Template"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:35
