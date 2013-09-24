@@ -35,6 +35,7 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('calculate-duration', 'json')
                     ->addActionContext('get-current-show', 'json')
                     ->addActionContext('update-future-is-scheduled', 'json')
+                    ->addActionContext('localize-start-end-time', 'json')
                     ->initContext();
 
         $this->sched_sess = new Zend_Session_Namespace("schedule");
@@ -640,5 +641,25 @@ class ScheduleController extends Zend_Controller_Action
         $schedId = $this->_getParam('schedId');
         $redrawLibTable = Application_Model_StoredFile::setIsScheduled($schedId, false);
         $this->_helper->json->sendJson(array("redrawLibTable" => $redrawLibTable));
+    }
+
+    /**
+     * When the timezone is changed in add-show form this function
+     * applies the new timezone to the start and end time
+     */
+    public function localizeStartEndTimeAction()
+    {
+        $service_showForm = new Application_Service_ShowFormService(
+            $this->_getParam("showId"));
+        $timezone = $this->_getParam('timezone');
+        $localTime = array();
+
+        $localTime["start"] = $service_showForm->localizeDateTime(
+            $this->_getParam('startDate'), $this->_getParam('startTime'), $timezone);
+
+        $localTime["end"] = $service_showForm->localizeDateTime(
+            $this->_getParam('endDate'), $this->_getParam('endTime'), $timezone);
+
+        $this->_helper->json->sendJson($localTime);
     }
 }
