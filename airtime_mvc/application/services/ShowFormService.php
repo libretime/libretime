@@ -495,16 +495,15 @@ class Application_Service_ShowFormService
      * @param $time String
      * @param $timezone String
      */
-    public function localizeDateTime($date, $time, $timezone)
+    public function localizeDateTime($date, $time, $newTimezone, $oldTimezone)
     {
-        $dt = new DateTime($date." ".$time, new DateTimeZone(
-            $this->ccShow->getFirstCcShowDay()->getDbTimezone()));
+        $dt = new DateTime($date." ".$time, new DateTimeZone($oldTimezone));
 
-        $dt->setTimeZone(new DateTimeZone($timezone));
+        $dt->setTimeZone(new DateTimeZone($newTimezone));
 
         return array(
             "date" => $dt->format("Y-m-d"),
-            "time" => $dt->format("h:i")
+            "time" => $dt->format("H:i")
         );
     }
 }

@@ -1330,7 +1330,7 @@ SQL;
             $showDay->setDbFirstShow($startDateTime->format("Y-m-d"));
             $showDay->setDbLastShow($endDate);
             $showDay->setDbStartTime($startDateTime->format("H:i:s"));
-            $showDay->setDbTimezone(Application_Model_Preference::GetTimezone());
+            $showDay->setDbTimezone($showData['add_show_timezone']);
             $showDay->setDbDuration($showData['add_show_duration']);
             $showDay->setDbRepeatType($this->repeatType);
             $showDay->setDbShowId($showId);
