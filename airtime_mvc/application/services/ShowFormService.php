@@ -166,10 +166,10 @@ class Application_Service_ShowFormService
 
         //DateTime object in UTC
         $showStart = $ccShowInstance->getDbStarts(null);
-        $showStart->setTimezone($timezone);
+        $showStart->setTimezone(new DateTimeZone($timezone));
 
         $showEnd = $ccShowInstance->getDbEnds(null);
-        $showEnd->setTimezone($timezone);
+        $showEnd->setTimezone(new DateTimeZone($timezone));
 
         //if the show has started, do not allow editing on the start time
         if ($showStart->getTimestamp() <= time()) {
@@ -395,10 +395,10 @@ class Application_Service_ShowFormService
 
         $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
         $ends = new DateTime($ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
-        $userTimezone = Application_Model_Preference::GetTimezone();
+        $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
 
-        $starts->setTimezone(new DateTimeZone($userTimezone));
-        $ends->setTimezone(new DateTimeZone($userTimezone));
+        $starts->setTimezone(new DateTimeZone($showTimezone));
+        $ends->setTimezone(new DateTimeZone($showTimezone));
 
         return array($starts, $ends);
     }

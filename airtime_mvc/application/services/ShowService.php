@@ -54,10 +54,10 @@ class Application_Service_ShowService
             $oldCcShow = CcShowQuery::create()
                 ->findPk($showData["add_show_id"]);
 
-            //DateTime in user's local time
+            //DateTime in shows's local time
             $newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
             $showData["add_show_start_time"],
-                new DateTimeZone(Application_Model_Preference::GetTimezone()));
+                new DateTimeZone($showData["add_show_timezone"]));
 
             $ccShowInstanceOrig = CcShowInstancesQuery::create()
                 ->findPk($showData["add_show_instance_id"]);
