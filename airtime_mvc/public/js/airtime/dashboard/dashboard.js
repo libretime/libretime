@@ -172,7 +172,7 @@ function updatePlaybar(){
 
         $('#time-elapsed').text(convertToHHMMSS(approximateServerTime - songStartRoughly));
         $('#time-remaining').text(convertToHHMMSS(songEndRoughly - approximateServerTime));
-        $('#song-length').text(convertToHHMMSSmm(currentSong.songLengthMs));
+        $('#song-length').text(convertToHHMMSS(currentSong.songLengthMs));
     }
     /* Column 1 update */
     $('#playlist').text($.i18n._("Current Show:"));
