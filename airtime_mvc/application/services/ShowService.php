@@ -740,10 +740,10 @@ SQL;
         //CcShowDay object
         $currentShowDay = $this->ccShow->getFirstCcShowDay();
 
-        //DateTime in user's local time
+        //DateTime in show's local time
         $newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
         $showData["add_show_start_time"],
-            new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            new DateTimeZone($showData["add_show_timezone"]));
 
         $diff = $this->calculateShowStartDiff($newStartDateTime,
             $currentShowDay->getLocalStartDateAndTime());
@@ -1152,6 +1152,7 @@ SQL;
         do {
             $nextDT = date_create($weekNumberOfMonth." ".$dayOfWeek.
                 " of ".$tempDT->format("F")." ".$tempDT->format("Y"));
+            $nextDT->setTimezone(new DateTimeZone($timezone));
 
             /* We have to check if the next date is in the same month in case
              * the repeat day is in the fifth week of the month.
@@ -1356,7 +1357,7 @@ SQL;
                     $showDay->setDbFirstShow($startDateTimeClone->format("Y-m-d"));
                     $showDay->setDbLastShow($endDate);
                     $showDay->setDbStartTime($startDateTimeClone->format("H:i"));
-                    $showDay->setDbTimezone(Application_Model_Preference::GetTimezone());
+                    $showDay->setDbTimezone($showData['add_show_timezone']);
                     $showDay->setDbDuration($showData['add_show_duration']);
                     $showDay->setDbDay($day);
                     $showDay->setDbRepeatType($this->repeatType);
@@ -1481,12 +1482,13 @@ SQL;
     private function createUTCStartEndDateTime($showStart, $duration, $offset=null)
     {
         $startDateTime = clone $showStart;
+        $timezone = $startDateTime->getTimezone();
 
         if (isset($offset)) {
             //$offset["hours"] and $offset["mins"] represents the start time
             //of a rebroadcast show
             $startDateTime = new DateTime($startDateTime->format("Y-m-d")." ".
-                $offset["hours"].":".$offset["mins"]);
+                $offset["hours"].":".$offset["mins"], $timezone);
             $startDateTime->add(new DateInterval("P{$offset["days"]}D"));
         }
         //convert time to UTC
