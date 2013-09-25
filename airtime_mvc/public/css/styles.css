@@ -246,7 +246,7 @@ select {
 	margin-bottom:3px;
 }
 .time-elapsed {
-	color:#9b9b9b;
+	color:#c4c4c4;
 	padding-right:6px;
 }
 .time-remaining {
@@ -272,6 +272,11 @@ select {
 .now-playing-info .show-length {
 	color:#c4c4c4;
 	padding-left:6px; 
+}
+
+.now-playing-info .song-length {
+	color:#9b9b9b;
+	padding-right:6px; 
 }
 
 .on-air-block  {
