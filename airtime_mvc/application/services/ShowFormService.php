@@ -489,13 +489,14 @@ class Application_Service_ShowFormService
     }
 
     /**
-     * 
-     * Enter description here ...
+     * When the timezone is changed in add-show form this function
+     * applies the new timezone to the start and end time
+     *
      * @param $date String
      * @param $time String
      * @param $timezone String
      */
-    public function localizeDateTime($date, $time, $newTimezone, $oldTimezone)
+    public static function localizeDateTime($date, $time, $newTimezone, $oldTimezone)
     {
         $dt = new DateTime($date." ".$time, new DateTimeZone($oldTimezone));
 
