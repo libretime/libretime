@@ -44,6 +44,9 @@
     constructor: DateTimePicker,
 
     init: function(element, options) {
+    	
+      dates = $.fn.datetimepicker.dates;
+    	
       var icon;
       if (!(options.pickTime || options.pickDate))
         throw new Error('Must choose at least one picker');
@@ -340,7 +343,7 @@
       var dowCnt = this.weekStart;
       var html = $('<tr>');
       while (dowCnt < this.weekStart + 7) {
-        html.append('<th class="dow">' + dates[this.language].daysMin[(dowCnt++) % 7] + '</th>');
+        html.append('<th class="dow">' + dates.daysMin[(dowCnt++) % 7] + '</th>');
       }
       this.widget.find('.datepicker-days thead').append(html);
     },
@@ -349,7 +352,7 @@
       var html = '';
       var i = 0
       while (i < 12) {
-        html += '<span class="month">' + dates[this.language].monthsShort[i++] + '</span>';
+        html += '<span class="month">' + dates.monthsShort[i++] + '</span>';
       }
       this.widget.find('.datepicker-months td').append(html);
     },
@@ -373,7 +376,7 @@
       this.widget.find('.datepicker-years').find('.disabled').removeClass('disabled');
 
       this.widget.find('.datepicker-days th:eq(1)').text(
-        dates[this.language].months[month] + ' ' + year);
+        dates.months[month] + ' ' + year);
 
       var prevMonth = UTCDate(year, month-1, 28, 0, 0, 0, 0);
       var day = DPGlobal.getDaysInMonth(
@@ -1103,7 +1106,6 @@
   $.fn.datetimepicker.Constructor = DateTimePicker;
   var dpgId = 0;
   var dates = $.fn.datetimepicker.dates = {
-    en: {
       days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
         "Friday", "Saturday", "Sunday"],
       daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -1112,7 +1114,6 @@
         "July", "August", "September", "October", "November", "December"],
       monthsShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
         "Aug", "Sep", "Oct", "Nov", "Dec"]
-    }
   };
 
   var dateFormatComponents = {
