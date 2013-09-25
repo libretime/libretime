@@ -305,13 +305,14 @@ class Application_Service_ShowFormService
     private function populateFormRebroadcastAbsolute($form)
     {
         $absolutRebroadcasts = $this->ccShow->getRebroadcastsAbsolute();
+        $timezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
 
         $formValues = array();
         $i = 1;
         foreach ($absolutRebroadcasts as $ar) {
             //convert dates to user's local time
             $start = new DateTime($ar->getDbStarts(), new DateTimeZone("UTC"));
-            $start->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            $start->setTimezone(new DateTimeZone($timezone));
             $formValues["add_show_rebroadcast_date_absolute_$i"] = $start->format("Y-m-d");
             $formValues["add_show_rebroadcast_time_absolute_$i"] = $start->format("H:i");
             $i++;
