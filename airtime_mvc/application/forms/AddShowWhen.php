@@ -167,7 +167,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
          */
         if ($valid) {
             $utc = new DateTimeZone('UTC');
-            $localTimezone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+            $showTimezone = new DateTimeZone($formData["add_show_timezone"]);
             $show_start = new DateTime($start_time);
             $show_start->setTimezone($utc);
             $show_end = new DateTime($end_time);
@@ -233,8 +233,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                              * adding the interval for the next repeating show
                              */
                             
-                            $repeatShowStart->setTimezone($localTimezone);
-                            $repeatShowEnd->setTimezone($localTimezone);
+                            $repeatShowStart->setTimezone($showTimezone);
+                            $repeatShowEnd->setTimezone($showTimezone);
                             $repeatShowStart->add(new DateInterval("P".$daysAdd."D"));
                             $repeatShowEnd->add(new DateInterval("P".$daysAdd."D"));
                             //set back to UTC
@@ -273,8 +273,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                                 $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                                 break 1;
                             } else {
-                                $repeatShowStart->setTimezone($localTimezone);
-                                $repeatShowEnd->setTimezone($localTimezone);
+                                $repeatShowStart->setTimezone($showTimezone);
+                                $repeatShowEnd->setTimezone($showTimezone);
                                 $repeatShowStart->add(new DateInterval($interval));
                                 $repeatShowEnd->add(new DateInterval($interval));
                                 $repeatShowStart->setTimezone($utc);
@@ -337,7 +337,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
              * show start back to local time
              */
             $rebroadcastShowStart->setTimezone(new DateTimeZone(
-                Application_Model_Preference::GetTimezone()));
+                $formData["add_show_timezone"]));
             $rebroadcastWhenDays = explode(" ", $formData["add_show_rebroadcast_date_".$i]);
             $rebroadcastWhenTime = explode(":", $formData["add_show_rebroadcast_time_".$i]);
             $rebroadcastShowStart->add(new DateInterval("P".$rebroadcastWhenDays[0]."D"));
