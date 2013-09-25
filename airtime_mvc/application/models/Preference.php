@@ -505,12 +505,14 @@ class Application_Model_Preference
         return self::getValue("description");
     }
 
+    // Sets station default timezone (from preferences)
     public static function SetDefaultTimezone($timezone)
     {
         self::setValue("timezone", $timezone);
         date_default_timezone_set($timezone);
     }
 
+    // Returns station default timezone (from preferences)
     public static function GetDefaultTimezone()
     {
         return self::getValue("timezone");
@@ -536,6 +538,7 @@ class Application_Model_Preference
         }
     }
 
+    // Always attempts to returns the current user's personal timezone setting
     public static function GetTimezone()
     {
         $auth = Zend_Auth::getInstance();
