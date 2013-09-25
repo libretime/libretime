@@ -481,6 +481,13 @@ function setAddShowEvents() {
 
             event.preventDefault();
 
+            //when editing a show, the record option is disabled
+            //we have to enable it to get the correct value when
+            //we call serializeArray()
+            if (form.find("#add_show_record").attr("disabled", true)) {
+                form.find("#add_show_record").attr("disabled", false);
+            }
+
 			var data = $("form").serializeArray();
 
             var hosts = $('#add_show_hosts-element input').map(function() {
@@ -504,7 +511,7 @@ function setAddShowEvents() {
             });
 
             var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
-            
+
             $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 //addShowButton.removeClass("disabled");
                 $('#schedule-add-show').unblock();
