@@ -1,4 +1,5 @@
 <?php
+require_once( __DIR__ . '/../validate/NotDemoValidate.php');
 
 class Application_Form_AddUser extends Zend_Form
 {
@@ -12,7 +13,8 @@ class Application_Form_AddUser extends Zend_Form
                                     * */
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
-
+        $notDemoValidator = new Application_Validate_NotDemoValidate();
+        
         $this->setAttrib('id', 'user_form');
         
         $hidden = new Zend_Form_Element_Hidden('user_id');
@@ -42,6 +44,7 @@ class Application_Form_AddUser extends Zend_Form
         $passwordVerify->setRequired(true);
         $passwordVerify->addFilter('StringTrim');
         $passwordVerify->addValidator($notEmptyValidator);
+        $passwordVerify->addValidator($notDemoValidator);
         $this->addElement($passwordVerify);
 
         $firstName = new Zend_Form_Element_Text('first_name');
