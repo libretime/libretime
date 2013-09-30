@@ -31,7 +31,7 @@ CREATE TABLE cc_playout_history (
 	id integer DEFAULT nextval('cc_playout_history_id_seq'::regclass) NOT NULL,
 	file_id integer,
 	starts timestamp without time zone NOT NULL,
-	ends timestamp without time zone NOT NULL,
+	ends timestamp without time zone,
 	instance_id integer
 );
 
