@@ -483,7 +483,7 @@
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false" />
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
-    <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
+    <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="false"/>
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="false"/>
     <foreign-key foreignTable="cc_files" name="cc_playout_history_file_tag_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>

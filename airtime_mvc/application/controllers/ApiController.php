@@ -1042,12 +1042,15 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $data = $request->getParam("data");
-        $media_id = $request->getParam("media_id");
+        $media_id = intval($request->getParam("media_id"));
         $data_arr = json_decode($data);
+        
+        //$media_id is -1 sometimes when a stream has stopped playing
+        if (!is_null($media_id) && $media_id > 0) {
 
-        if (!is_null($media_id)) {
-            if (isset($data_arr->title) &&
-                strlen($data_arr->title) < 1024) {
+            if (isset($data_arr->title)) {
+            	
+            	$data_title = substr($data_arr->title, 0, 1024);
 
                 $previous_metadata = CcWebstreamMetadataQuery::create()
                     ->orderByDbStartTime('desc')
@@ -1056,23 +1059,27 @@ class ApiController extends Zend_Controller_Action
 
                 $do_insert = true;
                 if ($previous_metadata) {
-                    if ($previous_metadata->getDbLiquidsoapData() == $data_arr->title) {
-                        Logging::debug("Duplicate found: ".$data_arr->title);
+                    if ($previous_metadata->getDbLiquidsoapData() == $data_title) {
+                        Logging::debug("Duplicate found: ". $data_title);
                         $do_insert = false;
                     }
                 }
 
                 if ($do_insert) {
+                	
+                	$startDT = new DateTime("now", new DateTimeZone("UTC"));
+                	
                     $webstream_metadata = new CcWebstreamMetadata();
                     $webstream_metadata->setDbInstanceId($media_id);
-                    $webstream_metadata->setDbStartTime(new DateTime("now", new DateTimeZone("UTC")));
-                    $webstream_metadata->setDbLiquidsoapData($data_arr->title);
+                    $webstream_metadata->setDbStartTime($startDT);
+                    $webstream_metadata->setDbLiquidsoapData($data_title);
                     $webstream_metadata->save();
+                    
+                    $historyService = new Application_Service_HistoryService();
+                    $historyService->insertWebstreamMetadata($media_id, $startDT, $data_arr);
                 }
             }
-        } else {
-            throw new Exception("Null value of media_id");
-        }
+        } 
 
         $this->view->response = $data;
         $this->view->media_id = $media_id;

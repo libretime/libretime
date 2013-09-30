@@ -41,7 +41,7 @@ class CcPlayoutHistoryTableMap extends TableMap {
 		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
 		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
 		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
-		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
+		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', false, null, null);
 		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', false, null, null);
 		// validators
 	} // initialize()
