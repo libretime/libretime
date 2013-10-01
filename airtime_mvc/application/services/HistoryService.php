@@ -290,9 +290,12 @@ class Application_Service_HistoryService
 			$dateTime->setTimezone($timezoneLocal);
 			$result["starts"] = $dateTime->format("Y-m-d H:i:s");
 
-			$dateTime = new DateTime($result["ends"], $timezoneUTC);
-			$dateTime->setTimezone($timezoneLocal);
-			$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+			//if ends is null we don't want it to default to "now"
+			if (isset($result["ends"])) {
+				$dateTime = new DateTime($result["ends"], $timezoneUTC);
+				$dateTime->setTimezone($timezoneLocal);
+				$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+			}
 
 			if (isset($result[MDATA_KEY_DURATION])) {
 				$formatter = new LengthFormatter($result[MDATA_KEY_DURATION]);
@@ -505,6 +508,48 @@ class Application_Service_HistoryService
 
 		return $filteredShows;
 	}
+	
+	public function insertWebstreamMetadata($schedId, $startDT, $data) {
+		
+		$this->con->beginTransaction();
+		
+		try {
+			
+			$item = CcScheduleQuery::create()->findPK($schedId, $this->con);
+			
+			//TODO figure out how to combine these all into 1 query.
+			$showInstance = $item->getCcShowInstances($this->con);
+			$show = $showInstance->getCcShow($this->con);
+			
+			$webstream = $item->getCcWebstream($this->con);
+			
+			$metadata = array();
+			$metadata["showname"] = $show->getDbName();
+			$metadata[MDATA_KEY_TITLE] = $data->title;
+			$metadata[MDATA_KEY_CREATOR] = $webstream->getDbName();
+			
+			$history = new CcPlayoutHistory();
+			$history->setDbStarts($startDT);
+			$history->setDbEnds(null);
+			$history->setDbInstanceId($item->getDbInstanceId());
+			
+			foreach ($metadata as $key => $val) {
+				$meta = new CcPlayoutHistoryMetaData();
+				$meta->setDbKey($key);
+				$meta->setDbValue($val);
+			
+				$history->addCcPlayoutHistoryMetaData($meta);
+			}
+			
+			$history->save($this->con);
+			
+			$this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+			throw $e;
+		}
+	}
 
 	public function insertPlayedItem($schedId) {
 
@@ -611,7 +656,7 @@ class Application_Service_HistoryService
 					}
 
 					//need to convert to the station's local time first.
-					if ($field["type"] == TEMPLATE_DATETIME) {
+					if ($field["type"] == TEMPLATE_DATETIME && !is_null($value)) {
 						$timezoneUTC = new DateTimeZone("UTC");
 						$timezoneLocal = new DateTimeZone($this->timezone);
 

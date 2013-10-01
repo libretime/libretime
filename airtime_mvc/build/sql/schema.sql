@@ -765,7 +765,7 @@ CREATE TABLE "cc_playout_history"
 	"id" serial  NOT NULL,
 	"file_id" INTEGER,
 	"starts" TIMESTAMP  NOT NULL,
-	"ends" TIMESTAMP  NOT NULL,
+	"ends" TIMESTAMP,
 	"instance_id" INTEGER,
 	PRIMARY KEY ("id")
 );
