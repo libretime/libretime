@@ -211,13 +211,17 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $show_start, $show_end);
                 }
-                //$overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
 
                 /* Check if repeats overlap with previously scheduled shows
                  * Do this for each show day
                  */
                 if (!$overlapping) {
                     $startDow = date("w", $show_start->getTimestamp());
+
+                    if (!isset($formData['add_show_day_check'])) {
+                        return false;
+                    }
+
                     foreach ($formData["add_show_day_check"] as $day) {
                         $repeatShowStart = clone $show_start;
                         $repeatShowEnd = clone $show_end;
