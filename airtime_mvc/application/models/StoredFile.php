@@ -1325,20 +1325,14 @@ SQL;
         }
     }
 
-    public static function setIsScheduled($p_scheduleItem, $p_status,
-        $p_fileId=null) {
+    public static function setIsScheduled($fileId, $status) {
 
-        if (is_null($p_fileId)) {
-            $fileId = Application_Model_Schedule::GetFileId($p_scheduleItem);
-        } else {
-            $fileId = $p_fileId;
-        }
         $file = self::RecallById($fileId);
         $updateIsScheduled = false;
 
         if (!is_null($fileId) && !in_array($fileId,
             Application_Model_Schedule::getAllFutureScheduledFiles())) {
-            $file->_file->setDbIsScheduled($p_status)->save();
+            $file->_file->setDbIsScheduled($status)->save();
             $updateIsScheduled = true;
         }
 

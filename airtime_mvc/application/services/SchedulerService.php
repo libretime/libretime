@@ -407,4 +407,24 @@ class Application_Service_SchedulerService
             return false;
         }
     }
+    
+    /*
+     * TODO in the future this should probably support webstreams.
+     */
+    public function updateFutureIsScheduled($scheduleId, $status) 
+    {
+    	$sched = CcScheduleQuery::create()->findPk($scheduleId);
+    	$redraw = false;
+    	
+    	if (isset($sched)) {
+    		
+    		$fileId = $sched->getDbFileId();
+    		
+    		if (isset($fileId)) {
+    			$redraw = Application_Model_StoredFile::setIsScheduled($fileId, $status);
+    		}
+    	}
+    	
+    	return $redraw;
+    }
 }

@@ -638,7 +638,10 @@ class ScheduleController extends Zend_Controller_Action
     public function updateFutureIsScheduledAction()
     {
         $schedId = $this->_getParam('schedId');
-        $redrawLibTable = Application_Model_StoredFile::setIsScheduled($schedId, false);
+        
+        $scheduleService = new Application_Service_SchedulerService();
+        $redrawLibTable = $scheduleService->updateFutureIsScheduled($schedId, false);
+        
         $this->_helper->json->sendJson(array("redrawLibTable" => $redrawLibTable));
     }
 }
