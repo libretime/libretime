@@ -104,6 +104,10 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             }
         }
 
+        if (!isset($formData['add_show_day_check'])) {
+            $this->getElement('add_show_day_check')->setErrors(array(_('Please select a repeat day')));
+        }
+
         return true;
     }
 
