@@ -168,9 +168,9 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         if ($valid) {
             $utc = new DateTimeZone('UTC');
             $showTimezone = new DateTimeZone($formData["add_show_timezone"]);
-            $show_start = new DateTime($start_time);
+            $show_start = new DateTime($start_time, $showTimezone);
             $show_start->setTimezone($utc);
-            $show_end = new DateTime($end_time);
+            $show_end = new DateTime($end_time, $showTimezone);
             $show_end->setTimezone($utc);
 
             if ($formData["add_show_repeats"]) {
@@ -188,7 +188,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
                 } elseif (!$formData["add_show_no_end"]) {
                     $popUntil = $formData["add_show_end_date"]." ".$formData["add_show_end_time"];
-                    $populateUntilDateTime = new DateTime($popUntil);
+                    $populateUntilDateTime = new DateTime($popUntil, $showTimezone);
                     $populateUntilDateTime->setTimezone($utc);
                 }
 
@@ -216,7 +216,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                  * Do this for each show day
                  */
                 if (!$overlapping) {
-                    $startDow = date("w", $show_start->getTimestamp());
+                    $startDow = $show_start->format("w");
 
                     if (!isset($formData['add_show_day_check'])) {
                         return false;
