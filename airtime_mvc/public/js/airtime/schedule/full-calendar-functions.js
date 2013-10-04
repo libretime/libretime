@@ -217,7 +217,7 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-    $(element).attr("id", "fc-show-instance-"+event.id);
+    $(element).addClass("fc-show-instance-"+event.id);
     $(element).attr("data-show-id", event.showId);
     $(element).attr("data-show-linked", event.linked);
     $(element).data("event", event);
@@ -412,13 +412,13 @@ function checkSCUploadStatus(){
         
         $.post(url, {format: "json", id: id, type:"show"}, function(json){
             if (json.sc_id > 0){
-                $("#fc-show-instance-"+id)
+                $(".fc-show-instance-"+id)
                 	.find(".progress")
                 	.removeClass("progress")
                 	.addClass("soundcloud");
             }
             else if (json.sc_id == "-3"){
-            	$("#fc-show-instance-"+id)
+            	$(".fc-show-instance-"+id)
 	            	.find(".progress")
 	            	.removeClass("progress")
 	            	.addClass("sc-error");
@@ -428,59 +428,39 @@ function checkSCUploadStatus(){
         });
     });
 }
+
 /** This function adds and removes the current
  *  show icon
  */
-function getCurrentShow(){
-    var url = baseUrl+'Schedule/get-current-show/format/json',
-        id,
-        $el;
-    $.post(url, {format: "json"}, function(json) {
+function getCurrentShow() {
+	
+    var url = baseUrl+'Schedule/get-current-show/format/json';
+    
+    function addNowPlaying(json) {
+    	
+    	var $el,
+    		span = '<span class="small-icon now-playing"></span>';
+    	
+    	$(".now-playing").remove();
+    	
         if (json.current_show === true) {
-            $el = $("div[class*=fc-event-time]");
-            if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
-
-                /* Need to remove now-playing class because if user
-                 * is switching from week view to day view (and vice versa)
-                 * the icon may already be there from previous view
-                 */ 
-                $el.siblings().remove("span.now-playing");
-                if (!$el.siblings().hasClass("small-icon now-playing")) {
-                    if ($el.siblings().hasClass("small-icon recording")) {
-
-                        /* Without removing recording icon, the now playing
-                         * icon will overwrite it.
-                         */  
-                        $el.siblings().remove("span.recording");
-                        $el.before('<span class="small-icon now-playing"></span><span class="small-icon recording"></span>');
-                    } else if ($el.siblings().hasClass("small-icon rebroadcast")) {
-
-                        /* Without removing rebroadcast icon, the now playing
-                         * icon will overwrite it.
-                         */ 
-                        $el.siblings().remove("span.rebroadcast");
-                        $el.before('<span class="small-icon now-playing"></span><span class="small-icon rebroadcast"></span>');
-                    } else {
-                        $el.before('<span class="small-icon now-playing"></span>');
-                    }
-                }
-            } else if (view_name === 'month') {
-                if (!$("span[class*=fc-event-title]").siblings().hasClass("now-playing")) {
-                    $("span[class*=fc-event-title]").after('<span class="small-icon now-playing"></span>');
-                }
-            }
+        	
+        	$el = $(".fc-show-instance-"+json.si_id);
+        	
+        	if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
+        		
+        		$el.find(".fc-event-time").before(span);
+        	}
+        	else if (view_name === 'month') {
+        		
+        		$el.find(".fc-event-title").after(span);
+        	}
         }
-        //remove icon from shows that have ended
-        $(".now-playing").each(function(){
-        	id = $(this).parents("div.fc-event").data("event").id;
-           
-            if (id != json.si_id) {
-                $(this).remove("span.now-playing");	
-            }    	
-        });
-        
+
         setTimeout(getCurrentShow, 5000);
-    }); 	
+    }
+    
+    $.post(url, {format: "json"}, addNowPlaying); 	
 }
 
 function addQtipsToIcons(ele, id){
