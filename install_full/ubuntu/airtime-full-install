@@ -130,11 +130,12 @@ else
     echo "----------------------------------------------------"
     if [ ! -f /etc/apache2/sites-available/airtime ]; then
         echo "Creating Apache config for Airtime..."
-        cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
 
         if [ "$dist" = "Ubuntu" -a "$code" = "saucy" ]; then
+	    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime.conf
             a2dissite 000-default
         else
+	    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
             a2dissite default
         fi
         a2ensite airtime
