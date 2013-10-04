@@ -912,9 +912,8 @@ SQL;
              * (NOTE: We cannot call getTimestamp() to compare the dates because of
              * a PHP 5.3.3 bug with DatePeriod objects - See CC-5159 for more details)
              */
-            if ($utcStartDateTime->format("Y-m-d H:i:s") <= $populateUntil->format("Y-m-d H:i:s") &&
-               ( is_null($utcLastShowDateTime) ||
-                 $utcStartDateTime->format("Y-m-d H:i:s") < $utcLastShowDateTime->format("Y-m-d H:i:s")) ) {
+            if ($utcStartDateTime <= $populateUntil &&
+               ( is_null($utcLastShowDateTime) || $utcStartDateTime < $utcLastShowDateTime) ) {
 
                  $lastCreatedShow = clone $utcStartDateTime;
                 /* There may not always be an instance when editing a show
