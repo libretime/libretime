@@ -20,26 +20,26 @@
             <ul class="jp-controls">
                 <?php if ($this->type != "audioclip"): ?>
                 <li class="ui-state-default ui-corner-all jp-previous">
-                    <span class="ui-icon ui-icon-seek-prev" tabindex="1"><? echo _("previous") ?></span>
+                    <span class="ui-icon ui-icon-seek-prev" tabindex="1"><?php echo _("previous") ?></span>
                 </li>
                 <?php endif;?>
 
                 <li class="ui-state-default ui-corner-all jp-play">
-                    <span class="ui-icon ui-icon-play" tabindex="1"><? echo _("play") ?></span>
+                    <span class="ui-icon ui-icon-play" tabindex="1"><?php echo _("play") ?></span>
                 </li>
 
                 <li class="ui-state-default ui-corner-all jp-pause">
-                    <span class="ui-icon ui-icon-pause" tabindex="1"><? echo _("pause") ?></span>
+                    <span class="ui-icon ui-icon-pause" tabindex="1"><?php echo _("pause") ?></span>
                 </li>
 
                 <?php if ($this->type != "audioclip"): ?>
                 <li class="ui-state-default ui-corner-all jp-next">
-                    <span class="ui-icon ui-icon-seek-next" tabindex="1"><? echo _("next") ?></span>
+                    <span class="ui-icon ui-icon-seek-next" tabindex="1"><?php echo _("next") ?></span>
                 </li>
                 <?php endif;?>
 
                 <li class="ui-state-default ui-corner-all jp-stop">
-                    <span class="ui-icon ui-icon-stop" tabindex="1"><? echo _("stop") ?></span>
+                    <span class="ui-icon ui-icon-stop" tabindex="1"><?php echo _("stop") ?></span>
                 </li>
             </ul>
             <div class="jp-time-block">
@@ -57,16 +57,16 @@
             </div>
             <div class="jp-volume-block">
                 <div class="jp-mute">
-                    <span class="ui-icon" tabindex="1" title="mute"><? echo _("mute") ?></span>
+                    <span class="ui-icon" tabindex="1" title="mute"><?php echo _("mute") ?></span>
                 </div>
                 <div class="jp-unmute">
-                    <span class="ui-icon" tabindex="1" title="unmute"><? echo _("unmute") ?></span>
+                    <span class="ui-icon" tabindex="1" title="unmute"><?php echo _("unmute") ?></span>
                 </div>
                 <div class="jp-volume-bar">
                     <div class="jp-volume-bar-value"></div>
                 </div>
                 <div class="jp-volume-max">
-                    <span class="ui-icon" tabindex="1" title="max volume"><? echo _("max volume") ?></span>
+                    <span class="ui-icon" tabindex="1" title="max volume"><?php echo _("max volume") ?></span>
                 </div>
             </div>
         </div>
@@ -76,8 +76,8 @@
             </ul>
         </div>
         <div class="jp-no-solution">
-            <span><? echo _("Update Required") ?></span>
-            <? sprintf(_("To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."),
+            <span><?php echo _("Update Required") ?></span>
+            <?php sprintf(_("To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."),
                 "<a href='http://get.adobe.com/flashplayer/' target='_blank'>",
                 "</a>") ?>
         </div>

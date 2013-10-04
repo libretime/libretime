@@ -161,7 +161,7 @@
     </dl>
     <div id="show_what_sending" style="display: block;">
         <fieldset class="display_field toggle closed">
-        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><? echo _("Show me what I am sending ") ?></legend>
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><?php echo _("Show me what I am sending ") ?></legend>
             <dl>
                 <?php echo $this->element->getElement('SendInfo') ?>
             </dl>
@@ -183,7 +183,7 @@
                 </ul>
             <?php endif; ?>
         <?php }else{?>
-            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;"><? echo _("Sourcefabric Privacy Policy") ?></a>
+            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;"><?php echo _("Sourcefabric Privacy Policy") ?></a>
         <?php }?>
     </div>
 </fieldset>

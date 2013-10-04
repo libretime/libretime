@@ -1,6 +1,6 @@
 <form id="smart-block-form" method="post" action="">
 <fieldset class='toggle <?php echo $this->openOption ? "" : "closed"?> sb-criteria-fieldset' id='smart_block_options'>
-<legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span><? echo _("Smart Block Options") ?></legend>
+<legend style='cursor: pointer;'><span class='ui-icon ui-icon-triangle-2-n-s'></span><?php echo _("Smart Block Options") ?></legend>
 
     <dl class='zend_form search-criteria'>
         <div class='btn-toolbar clearfix'>
@@ -60,7 +60,7 @@
                 </a>
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
-                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><? echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
+                <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
 
                 <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
                     <i class='icon-white icon-remove'></i>

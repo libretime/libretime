@@ -1,7 +1,7 @@
         <?php
         $s_name = "s".$this->stream_number;
         ?>
-        <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"closed":""?>"><span class="arrow-icon"></span><? echo _("Stream "); ?><?php echo $this->stream_number?></h3>
+        <h3 class="collapsible-header <?php echo $this->stream_number == '1'?"closed":""?>"><span class="arrow-icon"></span><?php echo _("Stream "); ?><?php echo $this->stream_number?></h3>
         <div class="stream-setting-content" <?php echo $this->enabled == 0?'style="display: none;':''?> id="<?php echo $s_name?>-config">
         <fieldset class="padded">
             <dl class="zend_form clearfix">
@@ -205,7 +205,7 @@
                 </dl>
             </fieldset>
             <dt id="outputStreamURL-label">
-                <label for="outputStreamURL"><? echo _("Stream URL: "); ?></label>
+                <label for="outputStreamURL"><?php echo _("Stream URL: "); ?></label>
             </dt>
             <dd id="outputStreamURL-element">
                 <span id="stream_url" class="static_text"></span>
