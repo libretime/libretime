@@ -131,8 +131,12 @@ else
     if [ ! -f /etc/apache2/sites-available/airtime ]; then
         echo "Creating Apache config for Airtime..."
         cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
-        a2dissite default
-        a2dissite 000-default #Ubuntu 13.10
+
+        if [ "$dist" = "Ubuntu" -a "$code" = "saucy" ]; then
+            a2dissite 000-default
+        else
+            a2dissite default
+        fi
         a2ensite airtime
     else
         echo "Apache config for Airtime already exists..."
