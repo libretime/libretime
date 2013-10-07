@@ -15,6 +15,8 @@ def __timeout(func, timeout_duration, default, args, kwargs):
     while True:
         it = InterruptableThread()
         it.start()
+        if not first_attempt:
+            timeout_duration = timeout_duration * 2
         it.join(timeout_duration)
 
         if it.isAlive():
