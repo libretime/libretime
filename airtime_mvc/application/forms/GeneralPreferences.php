@@ -102,7 +102,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         /* Form Element for setting the Timezone */
         $timezone = new Zend_Form_Element_Select("timezone");
-        $timezone->setLabel(_("Default Interface Timezone"));
+        $timezone->setLabel(_("Station Timezone"));
         $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
         $timezone->setValue(Application_Model_Preference::GetDefaultTimezone());
         $timezone->setDecorators(array('ViewHelper'));

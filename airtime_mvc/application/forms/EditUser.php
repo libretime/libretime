@@ -118,7 +118,7 @@ class Application_Form_EditUser extends Zend_Form
         $this->addElement($locale);
         
         $timezone = new Zend_Form_Element_Select("cu_timezone");
-        $timezone->setLabel(_("Timezone:"));
+        $timezone->setLabel(_("Interface Timezone:"));
         $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
         $timezone->setValue(Application_Model_Preference::GetUserTimezone($currentUserId));
         $timezone->setDecorators(array('ViewHelper'));

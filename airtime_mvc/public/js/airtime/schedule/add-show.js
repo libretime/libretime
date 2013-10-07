@@ -284,7 +284,29 @@ function setAddShowEvents() {
     form.find("#add_show_day_check-element").addClass("block-display clearfix");
     form.find("#add_show_day_check-element label").addClass("wrapp-label");
     form.find("#add_show_day_check-element br").remove();
-    
+
+    form.find(".show_timezone_help_icon").qtip({
+        content: {
+            text: $.i18n._("Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the " +
+                "Interface Timezone in your user settings.")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
+
     form.find(".airtime_auth_help_icon").qtip({
         content: {
             text: $.i18n._("This follows the same security pattern for the shows: only users assigned to the show can connect.")
