@@ -15,6 +15,8 @@ def __timeout(func, timeout_duration, default, args, kwargs):
     while True:
         it = InterruptableThread()
         it.start()
+        if not first_attempt:
+            timeout_duration = timeout_duration * 2
         it.join(timeout_duration)
 
         if it.isAlive():
@@ -30,7 +32,7 @@ def __timeout(func, timeout_duration, default, args, kwargs):
 
         first_attempt = False
 
-def ls_timeout(f, timeout=4, default=None):
+def ls_timeout(f, timeout=15, default=None):
     def new_f(*args, **kwargs):
         return __timeout(f, timeout, default, args, kwargs)
     return new_f
