@@ -8,30 +8,30 @@ if (isset($this->obj)) {
 <div class="btn-toolbar spl-no-top-margin clearfix">
     <div class="btn-group pull-left">
         <button id="spl_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
-            <? echo _("New")?> <span class="caret"></span>
+            <?php echo _("New")?> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li id='lib-new-pl'><a href="#"><? echo _("New Playlist") ?></a></li>
-            <li id='lib-new-bl'><a href="#"><? echo _("New Smart Block") ?></a></li>
-            <li id='lib-new-ws'><a href="#"><? echo _("New Webstream") ?></a></li>
+            <li id='lib-new-pl'><a href="#"><?php echo _("New Playlist") ?></a></li>
+            <li id='lib-new-bl'><a href="#"><?php echo _("New Smart Block") ?></a></li>
+            <li id='lib-new-ws'><a href="#"><?php echo _("New Webstream") ?></a></li>
         </ul>
     </div>
 <?php if (isset($this->obj)) : ?>
     <div class='btn-group pull-right'>
-        <button class="btn btn-inverse" title='<?php echo _("Empty playlist content") ?>' type="button" id="pl-bl-clear-content"><? echo _("Clear") ?></button>
+        <button class="btn btn-inverse" title='<?php echo _("Empty playlist content") ?>' type="button" id="pl-bl-clear-content"><?php echo _("Clear") ?></button>
     </div>
     <div class='btn-group pull-right'>
-        <button class="btn btn-inverse" title='<?php echo _("Shuffle playlist") ?>' type="button" id="playlist_shuffle_button"><? echo _("Shuffle") ?></button>
+        <button class="btn btn-inverse" title='<?php echo _("Shuffle playlist") ?>' type="button" id="playlist_shuffle_button"><?php echo _("Shuffle") ?></button>
     </div>
     <div class='btn-group pull-right'>
-        <button class="btn btn-inverse" title='<?php echo _("Save playlist") ?>' type="button" id="save_button"><? echo _("Save") ?></button>
+        <button class="btn btn-inverse" title='<?php echo _("Save playlist") ?>' type="button" id="save_button"><?php echo _("Save") ?></button>
     </div>
     <div class='btn-group pull-right'>
-        <button id="spl_delete" class="btn" role="button" aria-disabled="false"><? echo _("Delete") ?></button>
+        <button id="spl_delete" class="btn" role="button" aria-disabled="false"><?php echo _("Delete") ?></button>
     </div>
     <div class='btn-group pull-right'>
         <a href="#" id="spl_crossfade" class="btn crossfade-main-button" style="display:<?php echo $count > 0 ?"block;":"none;"?>">
-            <i class='crossfade-main-icon'></i><span class="ui-button-text"><? echo _("Playlist crossfade") ?></span>
+            <i class='crossfade-main-icon'></i><span class="ui-button-text"><?php echo _("Playlist crossfade") ?></span>
         </a>
     </div>
 <?php endif; ?>
@@ -50,9 +50,9 @@ if (isset($this->obj)) {
     <div id='sp-success' class='success' style='display:none'></div>
 
     <fieldset class="toggle closed" id="fieldset-metadate_change">
-        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><? echo _("View / edit description"); ?></legend>
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><?php echo _("View / edit description"); ?></legend>
         <dl class="zend_form">
-            <dt id="description-label"><label for="description"><? echo _("Description") ?></label></dt>
+            <dt id="description-label"><label for="description"><?php echo _("Description") ?></label></dt>
             <dd id="description-element">
                 <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
             </dd>
@@ -64,10 +64,10 @@ if (isset($this->obj)) {
     <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
       	<span class="ui-icon ui-icon-closethick sp-closethick-center"></span>
 	    <dl id="spl_editor-main" class="inline-list">
-            <dt><? echo _("Fade in: "); ?><span class='spl_cue_hint'>(ss.t)</span></dt>
+            <dt><?php echo _("Fade in: "); ?><span class='spl_cue_hint'>(ss.t)</span></dt>
             <dd><span contenteditable="true" class="spl_text_input spl_main_fade_in">00</span></dd>
             <dd class="edit-error"></dd>
-            <dt><? echo _("Fade out: "); ?><span class='spl_cue_hint'>(ss.t)</span></dt>
+            <dt><?php echo _("Fade out: "); ?><span class='spl_cue_hint'>(ss.t)</span></dt>
             <dd><span contenteditable="true" class="spl_text_input spl_main_fade_out">00</span></dd>
             <dd class="edit-error"></dd>
         </dl>
@@ -82,5 +82,5 @@ if (isset($this->obj)) {
     </div>
 
 <?php else : ?>
-    <div><? echo _("No open playlist") ?></div>
+    <div><?php echo _("No open playlist") ?></div>
 <?php endif; ?>

@@ -2,21 +2,21 @@
 <div class="btn-toolbar spl-no-top-margin clearfix">
     <div class="btn-group pull-left">
         <button id="ws_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
-            <? echo _("New")?> <span class="caret"></span>
+            <?php echo _("New")?> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li id='lib-new-pl'><a href="#"><? echo _("New Playlist") ?></a></li>
-            <li id='lib-new-bl'><a href="#"><? echo _("New Smart Block") ?></a></li>
-            <li id='lib-new-ws'><a href="#"><? echo _("New Webstream") ?></a></li>
+            <li id='lib-new-pl'><a href="#"><?php echo _("New Playlist") ?></a></li>
+            <li id='lib-new-bl'><a href="#"><?php echo _("New Smart Block") ?></a></li>
+            <li id='lib-new-ws'><a href="#"><?php echo _("New Webstream") ?></a></li>
         </ul>
     </div>
 
 <?php if (isset($this->obj)) : ?>
  <div class="btn-group pull-right">
-    <button class="btn btn-inverse" type="submit" id="webstream_save" name="submit"><? echo _("Save") ?></button>
+    <button class="btn btn-inverse" type="submit" id="webstream_save" name="submit"><?php echo _("Save") ?></button>
 </div>
 <div class="btn-group pull-right">
-    <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false"><? echo _("Delete") ?></button>
+    <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false"><?php echo _("Delete") ?></button>
 </div>
 <?php endif; ?>
 </div>
@@ -36,9 +36,9 @@
     </div>
 
     <fieldset class="toggle" id="fieldset-metadate_change">
-        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><? echo _("View / edit description"); ?></legend>
+        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><?php echo _("View / edit description"); ?></legend>
         <dl class="zend_form">
-            <dt id="description-label"><label for="description"><? echo _("Description") ?></label></dt>
+            <dt id="description-label"><label for="description"><?php echo _("Description") ?></label></dt>
             <dd id="description-element">
                 <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
             </dd>
@@ -49,17 +49,17 @@
     <dl class="zend_form">
         <dt id="submit-label" style="display: none;">&nbsp;</dt>
         <div id="url-error" class="errors" style="display:none;"></div>
-        <dt id="streamurl-label"><label for="streamurl"><? echo _("Stream URL:"); ?></label></dt>
+        <dt id="streamurl-label"><label for="streamurl"><?php echo _("Stream URL:"); ?></label></dt>
         <dd id="streamurl-element">
         <input type="text" value="<?php echo $this->obj->getUrl(); ?>" size="40"/>
         </dd>
         <div id="length-error" class="errors" style="display:none;"></div>
-        <dt id="streamlength-label"><label for="streamlength"><? echo _("Default Length:"); ?></label></dt>
+        <dt id="streamlength-label"><label for="streamlength"><?php echo _("Default Length:"); ?></label></dt>
         <dd id="streamlength-element">
         <input type="text" value="<?php echo $this->obj->getDefaultLength() ?>"/>
         </dd>
     </dl>
 
 <?php else : ?>
-    <div><? echo _("No webstream") ?></div>
+    <div><?php echo _("No webstream") ?></div>
 <?php endif; ?>

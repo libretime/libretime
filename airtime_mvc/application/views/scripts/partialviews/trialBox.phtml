@@ -1,12 +1,12 @@
 <?php if($this->trial_remain != '' && $this->trial_remain != "Trial expired."){?>
   <div class="trial-box">
-      <p><? echo _("Your trial expires in") ?></p>
+      <p><?php echo _("Your trial expires in") ?></p>
       <div class="trial-box-calendar">
            <span class="trial-box-calendar-white"><?php echo $this->trial_remain?></span>
-           <div class="trial-box-calendar-gray"><? echo _("days") ?></div>
+           <div class="trial-box-calendar-gray"><?php echo _("days") ?></div>
       </div>
       <div class="trial-box-button">
-            <a title="<?php echo _("Purchase your copy of Airtime")?> href="https://account.sourcefabric.com/clientarea.php" target="_blank"><? echo _("My Account") ?></a>
+            <a title="<?php echo _("Purchase your copy of Airtime")?> href="https://account.sourcefabric.com/clientarea.php" target="_blank"><?php echo _("My Account") ?></a>
       </div>
   </div>
 <?php }?> 
