@@ -17,6 +17,7 @@ class Application_Service_ShowService
     private $oldShowTimezone;
     private $localShowStartHour;
     private $localShowStartMin;
+    private $origCcShowDay;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
     {
@@ -126,11 +127,11 @@ class Application_Service_ShowService
      */
     private function storeOrigLocalShowInfo()
     {
-        $origShowDay = $this->ccShow->getFirstCcShowDay();
+        $this->origCcShowDay = $this->ccShow->getFirstCcShowDay();
 
-        $this->oldShowTimezone = $origShowDay->getDbTimezone();
+        $this->oldShowTimezone = $this->origCcShowDay->getDbTimezone();
 
-        $origStartTime = explode(":", $origShowDay->getDbStartTime());
+        $origStartTime = explode(":", $this->origCcShowDay->getDbStartTime());
         $this->localShowStartHour = $origStartTime[0];
         $this->localShowStartMin = $origStartTime[1];
     }
@@ -185,6 +186,10 @@ class Application_Service_ShowService
             //create new ccShowInstances
             $this->delegateInstanceCreation($daysAdded);
 
+            if ($this->isUpdate) {
+                $this->adjustSchedule($showData);
+            }
+
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
         } catch (Exception $e) {
@@ -192,6 +197,20 @@ class Application_Service_ShowService
             $this->isUpdate ? $action = "update" : $action = "creation";
             Logging::info("EXCEPTION: Show ".$action." failed.");
             Logging::info($e->getMessage());
+        }
+    }
+
+    private function adjustSchedule($showData)
+    {
+        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
+        $ccShowInstances = CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->ccShow->getDbId())
+            ->find();
+
+        $this->updateScheduleStartEndTimes($showData);
+
+        foreach ($ccShowInstances as $instance) {
+            $instance->updateScheduleStatus($con);
         }
     }
 
@@ -761,11 +780,9 @@ SQL;
         return $endDate;
     }
 
-    private function applyShowStartEndDifference($showData)
+    private function updateScheduleStartEndTimes($showData)
     {
         $showId = $this->ccShow->getDbId();
-        //CcShowDay object
-        $currentShowDay = $this->ccShow->getFirstCcShowDay();
 
         //DateTime in show's local time
         $newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
@@ -773,9 +790,8 @@ SQL;
             new DateTimeZone($showData["add_show_timezone"]));
 
         $diff = $this->calculateShowStartDiff($newStartDateTime,
-            $currentShowDay->getLocalStartDateAndTime());
+            $this->origCcShowDay->getLocalStartDateAndTime());
 
-        //$this->updateInstanceStartEndTime($diff);
         $ccShowInstances = $this->ccShow->getFutureCcShowInstancess();
         $instanceIds = array();
         foreach ($ccShowInstances as $ccShowInstance) {
@@ -882,11 +898,6 @@ SQL;
             $ccShowInstance->setDbRecord($showDay->getDbRecord());
             $ccShowInstance->save();
 
-            if ($this->isUpdate) {
-                $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-                $ccShowInstance->updateScheduleStatus($con);
-            }
-
             if ($this->isRebroadcast) {
                 $this->createRebroadcastInstances($showDay, $start, $ccShowInstance->getDbId());
             }
@@ -969,11 +980,6 @@ SQL;
                     $ccShowInstance->setDbEnds($utcEndDateTime);
                     $ccShowInstance->setDbRecord($record);
                     $ccShowInstance->save();
-
-                    if ($updateScheduleStatus) {
-                        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-                        $ccShowInstance->updateScheduleStatus($con);
-                    }
                 }
 
                 if ($this->isRebroadcast) {
@@ -1062,11 +1068,6 @@ SQL;
                     $ccShowInstance->setDbEnds($utcEndDateTime);
                     $ccShowInstance->setDbRecord($record);
                     $ccShowInstance->save();
-
-                    if ($updateScheduleStatus) {
-                        $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-                        $ccShowInstance->updateScheduleStatus($con);
-                    }
                 }
 
                 if ($this->isRebroadcast) {
