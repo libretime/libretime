@@ -14,6 +14,9 @@ class Application_Service_ShowService
     private $repeatType;
     private $isUpdate;
     private $linkedShowContent;
+    private $oldShowTimezone;
+    private $localShowStartHour;
+    private $localShowStartMin;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
     {
@@ -29,6 +32,7 @@ class Application_Service_ShowService
         } else {
             $this->repeatType = -1;
         }
+
         $this->isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
         $this->isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
         $this->isUpdate = $isUpdate;
@@ -114,6 +118,23 @@ class Application_Service_ShowService
         }
     }
 
+    /**
+     * 
+     * If a user is editing a show we need to store the original timezone and
+     * start time in case the show's timezone is changed and we are crossing
+     * over DST
+     */
+    private function storeOrigLocalShowInfo()
+    {
+        $origShowDay = $this->ccShow->getFirstCcShowDay();
+
+        $this->oldShowTimezone = $origShowDay->getDbTimezone();
+
+        $origStartTime = explode(":", $origShowDay->getDbStartTime());
+        $this->localShowStartHour = $origStartTime[0];
+        $this->localShowStartMin = $origStartTime[1];
+    }
+
     public function addUpdateShow($showData)
     {
         $service_user = new Application_Service_UserService();
@@ -134,10 +155,16 @@ class Application_Service_ShowService
             $daysAdded = array();
             if ($this->isUpdate) {
                 $daysAdded = $this->delegateInstanceCleanup($showData);
+
+                $this->storeOrigLocalShowInfo();
+
                 // updates cc_show_instances start/end times, and updates
                 // schedule start/end times
-                $this->applyShowStartEndDifference($showData);
+                // **Not sure why this function is here. It seems unnecesssary
+                //$this->applyShowStartEndDifference($showData);
+
                 $this->deleteRebroadcastInstances();
+
                 $this->deleteCcShowDays();
                 $this->deleteCcShowHosts();
                 if ($this->isRebroadcast) {
@@ -748,7 +775,7 @@ SQL;
         $diff = $this->calculateShowStartDiff($newStartDateTime,
             $currentShowDay->getLocalStartDateAndTime());
 
-        $this->updateInstanceStartEndTime($diff);
+        //$this->updateInstanceStartEndTime($diff);
         $ccShowInstances = $this->ccShow->getFutureCcShowInstancess();
         $instanceIds = array();
         foreach ($ccShowInstances as $ccShowInstance) {
@@ -908,9 +935,6 @@ SQL;
             /*
              * Make sure start date is less than populate until date AND
              * last show date is null OR start date is less than last show date
-             *
-             * (NOTE: We cannot call getTimestamp() to compare the dates because of
-             * a PHP 5.3.3 bug with DatePeriod objects - See CC-5159 for more details)
              */
             if ($utcStartDateTime <= $populateUntil &&
                ( is_null($utcLastShowDateTime) || $utcStartDateTime < $utcLastShowDateTime) ) {
@@ -1218,8 +1242,13 @@ SQL;
      */
     private function getInstance($starts)
     {
+        $temp = clone($starts);
+        $temp->setTimezone(new DateTimeZone($this->oldShowTimezone));
+        $temp->setTime($this->localShowStartHour, $this->localShowStartMin);
+        $temp->setTimezone(new DateTimeZone("UTC"));
+
         $ccShowInstance = CcShowInstancesQuery::create()
-            ->filterByDbStarts($starts->format("Y-m-d H:i:s"), Criteria::EQUAL)
+            ->filterByDbStarts($temp->format("Y-m-d H:i:s"), Criteria::EQUAL)
             ->filterByDbShowId($this->ccShow->getDbId(), Criteria::EQUAL)
             ->filterByDbModifiedInstance(false, Criteria::EQUAL)
             ->filterByDbRebroadcast(0, Criteria::EQUAL)
