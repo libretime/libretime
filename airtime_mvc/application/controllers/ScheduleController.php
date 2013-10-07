@@ -62,7 +62,8 @@ class ScheduleController extends Zend_Controller_Action
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
         $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/schedule/full-calendar-functions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        //set offset to ensure it loads last
+        $this->view->headScript()->offsetSetFile(100, $baseUrl.'js/airtime/schedule/full-calendar-functions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/fullcalendar/fullcalendar.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
