@@ -454,8 +454,8 @@ class Application_Model_Scheduler
             $itemEndDT = $this->findEndTime($itemStartDT, $item["clip_length"]);
 
             $update_sql = "UPDATE cc_schedule SET ".
-                "starts = '{$itemStartDT->format("Y-m-d H:i:s")}', ".
-                "ends = '{$itemEndDT->format("Y-m-d H:i:s")}' ".
+                "starts = '{$itemStartDT->format("Y-m-d H:i:s.u")}', ".
+                "ends = '{$itemEndDT->format("Y-m-d H:i:s.u")}' ".
                 "WHERE id = {$item["id"]}";
             Application_Common_Database::prepareAndExecute(
                 $update_sql, array(), Application_Common_Database::EXECUTE);
@@ -744,8 +744,8 @@ class Application_Model_Scheduler
                         $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         if ($doInsert) {
                             $values[] = "(".
-                                "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
-                                "'{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "'{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
+                                "'{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
                                 "'{$file["cuein"]}', ".
                                 "'{$file["cueout"]}', ".
                                 "'{$file["fadein"]}', ".
@@ -758,8 +758,8 @@ class Application_Model_Scheduler
 
                         } elseif ($doUpdate) {
                             $update_sql = "UPDATE cc_schedule SET ".
-                                "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
-                                "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "starts = '{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
+                                "ends = '{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
                                 "cue_in = '{$file["cuein"]}', ".
                                 "cue_out = '{$file["cueout"]}', ".
                                 "fade_in = '{$file["fadein"]}', ".
@@ -827,8 +827,8 @@ class Application_Model_Scheduler
                             $endTimeDT = $this->findEndTime($nextStartDT, $item["clip_length"]);
                             $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $update_sql = "UPDATE cc_schedule SET ".
-                                "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
-                                "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "starts = '{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
+                                "ends = '{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
                                 "position = {$pos} ".
                                 "WHERE id = {$item["id"]}";
                             Application_Common_Database::prepareAndExecute(
