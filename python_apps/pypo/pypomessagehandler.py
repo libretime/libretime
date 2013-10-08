@@ -2,6 +2,7 @@
 
 import logging
 import traceback
+import sys
 from threading import Thread
 import time
 # For RabbitMQ
@@ -14,7 +15,7 @@ import json
 from std_err_override import LogWriter
 
 # configure logging
-logging.config.fileConfig("configs/logging.cfg")
+logging.config.fileConfig("logging.cfg")
 logger = logging.getLogger('message_h')
 LogWriter.override_std_err(logger)
 
@@ -33,11 +34,8 @@ class PypoMessageHandler(Thread):
     def init_rabbit_mq(self):
         self.logger.info("Initializing RabbitMQ stuff")
         try:
-            schedule_exchange = \
-                    Exchange("airtime-pypo", "direct", 
-                        durable=True, auto_delete=True)
-            schedule_queue = \
-                    Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
+            schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
+            schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
             connection = BrokerConnection(self.config["rabbitmq_host"], \
                     self.config["rabbitmq_user"], \
                     self.config["rabbitmq_password"], \
@@ -98,8 +96,7 @@ class PypoMessageHandler(Thread):
 
     def main(self):
         while not self.init_rabbit_mq():
-            self.logger.error("Error connecting to RabbitMQ Server. " +
-                    "Trying again in few seconds")
+            self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
             time.sleep(5)
 
         loops = 1
@@ -114,8 +111,7 @@ class PypoMessageHandler(Thread):
                 self.logger.error('Exception: %s', e)
                 self.logger.error("traceback: %s", traceback.format_exc())
                 while not self.init_rabbit_mq():
-                    self.logger.error("Error connecting to RabbitMQ Server. " + 
-                            "Trying again in few seconds")
+                    self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
                     time.sleep(5)
             except Exception, e:
                 """

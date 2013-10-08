@@ -227,6 +227,35 @@ function setAddShowEvents() {
     	}
     });
 
+    // in case user is creating a new show, there will be
+    // no show_id so we have to store the default timezone
+    // to be able to do the conversion when the timezone
+    // setting changes
+    var currentTimezone = form.find("#add_show_timezone").val();
+
+    form.find("#add_show_timezone").change(function(){
+        var startDateField = form.find("#add_show_start_date"),
+            startTimeField = form.find("#add_show_start_time"),
+            endDateField = form.find("#add_show_end_date_no_repeat"),
+            endTimeField = form.find("#add_show_end_time"),
+            newTimezone = form.find("#add_show_timezone").val();
+
+        $.post(baseUrl+"Schedule/localize-start-end-time",
+               {format: "json",
+                startDate: startDateField.val(),
+                startTime: startTimeField.val(),
+                endDate: endDateField.val(),
+                endTime: endTimeField.val(),
+                newTimezone: newTimezone,
+                oldTimezone: currentTimezone}, function(json){
+
+            startDateField.val(json.start.date);
+            startTimeField.val(json.start.time);
+            endDateField.val(json.end.date);
+            endTimeField.val(json.end.time);
+        });
+    });
+
     form.find("#add_show_repeat_type").change(function(){
         toggleRepeatDays();
         toggleMonthlyRepeatType();
@@ -481,6 +510,13 @@ function setAddShowEvents() {
 
             event.preventDefault();
 
+            //when editing a show, the record option is disabled
+            //we have to enable it to get the correct value when
+            //we call serializeArray()
+            if (form.find("#add_show_record").attr("disabled", true)) {
+                form.find("#add_show_record").attr("disabled", false);
+            }
+
 			var data = $("form").serializeArray();
 
             var hosts = $('#add_show_hosts-element input').map(function() {
@@ -504,7 +540,7 @@ function setAddShowEvents() {
             });
 
             var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
-            
+
             $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
                 //addShowButton.removeClass("disabled");
                 $('#schedule-add-show').unblock();

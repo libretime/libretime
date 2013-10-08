@@ -150,6 +150,7 @@ class Application_Service_ShowFormService
                 'add_show_end_date_no_repeat' => $showEnd->format("Y-m-d"),
                 'add_show_end_time'    => $showEnd->format("H:i"),
                 'add_show_duration' => $ccShowDay->formatDuration(true),
+                'add_show_timezone' => $ccShowDay->getDbTimezone(),
                 'add_show_repeats' => $ccShowDay->isRepeating() ? 1 : 0));
 
         return $showStart;
@@ -159,13 +160,16 @@ class Application_Service_ShowFormService
     {
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
 
-        $timezone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+        //get timezone the show is created in
+        $timezone = $ccShowInstance->getCcShow()->getFirstCcShowDay()->getDbTimezone();
+        //$timezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+
         //DateTime object in UTC
         $showStart = $ccShowInstance->getDbStarts(null);
-        $showStart->setTimezone($timezone);
+        $showStart->setTimezone(new DateTimeZone($timezone));
 
         $showEnd = $ccShowInstance->getDbEnds(null);
-        $showEnd->setTimezone($timezone);
+        $showEnd->setTimezone(new DateTimeZone($timezone));
 
         //if the show has started, do not allow editing on the start time
         if ($showStart->getTimestamp() <= time()) {
@@ -180,6 +184,7 @@ class Application_Service_ShowFormService
                 'add_show_end_time' => $showEnd->format("H:i"),
                 'add_show_duration' => $this->calculateDuration(
                     $showStart->format("Y-m-d H:i:s"), $showEnd->format("Y-m-d H:i:s")),
+                'add_show_timezone' => $timezone,
                 'add_show_repeats' => 0));
 
         $form->getElement('add_show_repeats')->setOptions(array("disabled" => true));
@@ -300,13 +305,14 @@ class Application_Service_ShowFormService
     private function populateFormRebroadcastAbsolute($form)
     {
         $absolutRebroadcasts = $this->ccShow->getRebroadcastsAbsolute();
+        $timezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
 
         $formValues = array();
         $i = 1;
         foreach ($absolutRebroadcasts as $ar) {
             //convert dates to user's local time
             $start = new DateTime($ar->getDbStarts(), new DateTimeZone("UTC"));
-            $start->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
+            $start->setTimezone(new DateTimeZone($timezone));
             $formValues["add_show_rebroadcast_date_absolute_$i"] = $start->format("Y-m-d");
             $formValues["add_show_rebroadcast_time_absolute_$i"] = $start->format("H:i");
             $i++;
@@ -389,10 +395,10 @@ class Application_Service_ShowFormService
 
         $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
         $ends = new DateTime($ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
-        $userTimezone = Application_Model_Preference::GetTimezone();
+        $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
 
-        $starts->setTimezone(new DateTimeZone($userTimezone));
-        $ends->setTimezone(new DateTimeZone($userTimezone));
+        $starts->setTimezone(new DateTimeZone($showTimezone));
+        $ends->setTimezone(new DateTimeZone($showTimezone));
 
         return array($starts, $ends);
     }
@@ -481,5 +487,25 @@ class Application_Service_ShowFormService
         } catch (Exception $e) {
             return "Invalid Date";
         }
+    }
+
+    /**
+     * When the timezone is changed in add-show form this function
+     * applies the new timezone to the start and end time
+     *
+     * @param $date String
+     * @param $time String
+     * @param $timezone String
+     */
+    public static function localizeDateTime($date, $time, $newTimezone, $oldTimezone)
+    {
+        $dt = new DateTime($date." ".$time, new DateTimeZone($oldTimezone));
+
+        $dt->setTimeZone(new DateTimeZone($newTimezone));
+
+        return array(
+            "date" => $dt->format("Y-m-d"),
+            "time" => $dt->format("H:i")
+        );
     }
 }

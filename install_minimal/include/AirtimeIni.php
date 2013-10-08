@@ -83,7 +83,7 @@ class AirtimeIni
                 exit(1);
             }
                     
-            if (!copy(__DIR__."/../../python_apps/pypo/install/pypo.cfg", self::CONF_FILE_PYPO)){
+            if (!copy(__DIR__."/../../python_apps/pypo/pypo.cfg", self::CONF_FILE_PYPO)){
                 echo "Could not copy pypo.cfg to /etc/airtime/. Exiting.";
                 exit(1);
             } else if (!self::ChangeFileOwnerGroupMod(self::CONF_FILE_PYPO, self::CONF_PYPO_GRP)){

@@ -246,7 +246,7 @@ select {
 	margin-bottom:3px;
 }
 .time-elapsed {
-	color:#9b9b9b;
+	color:#c4c4c4;
 	padding-right:6px;
 }
 .time-remaining {
@@ -272,6 +272,11 @@ select {
 .now-playing-info .show-length {
 	color:#c4c4c4;
 	padding-left:6px; 
+}
+
+.now-playing-info .song-length {
+	color:#9b9b9b;
+	padding-right:6px; 
 }
 
 .on-air-block  {
@@ -443,6 +448,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     margin: 0;
     padding: 2px 2px 2px 0;
     vertical-align: top;
+}
+
+.add_show_input_select{
+    width: 150px;
 }
 
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
@@ -808,7 +817,6 @@ dl.inline-list dd {
 .dataTables_paginate {
 	float: right;
 	padding: 8px 0 8px 8px;
-	clear: left;
 }
 .dataTables_paginate .ui-button {
 	font-size:12px;
@@ -1551,9 +1559,6 @@ button, input {
 .ui-widget-content .user-list-wrapper .ui-icon.ui-icon-closethick:hover {
 	background-image:url(redmond/images/ui-icons_ff5d1a_256x240.png);
 }
-
-
-#ui-datepicker-div { z-index: 10 !important }
 
 .button-bar-top {
 	text-align:right;

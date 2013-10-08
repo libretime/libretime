@@ -82,8 +82,8 @@ def calculate_replay_gain(file_path):
 
     try:
         """
-        Making a duplicate is required because the ReplayGain extraction 
-        utilities we use make unwanted modifications to the file.
+        Making a duplicate is required because the ReplayGain extraction utilities we use
+        make unwanted modifications to the file.
         """
 
         search = None
@@ -95,18 +95,16 @@ def calculate_replay_gain(file_path):
         if file_type:
             if file_type == 'mp3':
                 if run_process(['which', 'mp3gain']) == 0:
-                    command = ['nice', '-n', nice_level, 'mp3gain', '-q', 
-                            temp_file_path]
+                    command = ['nice', '-n', nice_level, 'mp3gain', '-q', temp_file_path]
                     out = get_process_output(command)
-                    search = re.search(r'Recommended "Track" dB change: (.*)',
+                    search = re.search(r'Recommended "Track" dB change: (.*)', \
                                        out)
                 else:
                     logger.warn("mp3gain not found")
             elif file_type == 'vorbis':
                 if run_process(['which', 'ogginfo']) == 0 and \
                         run_process(['which', 'vorbisgain']) == 0:
-                    command = ['nice', '-n', nice_level, 'vorbisgain', '-q', 
-                            '-f', temp_file_path]
+                    command = ['nice', '-n', nice_level, 'vorbisgain', '-q', '-f', temp_file_path]
                     run_process(command)
 
                     out = get_process_output(['ogginfo', temp_file_path])

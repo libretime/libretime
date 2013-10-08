@@ -38,7 +38,7 @@ class TestMMP(unittest.TestCase):
         m1 = mmp.file_md5(p)
         m2 = mmp.file_md5(p,10)
         self.assertTrue( m1 != m2 )
-        self.assertRaises( ValueError, lambda : mmp.file_md5('/bull/shit/path') )
+        self.assertRaises( ValueError, lambda : mmp.file_md5('/file/path') )
         self.assertTrue( m1 == mmp.file_md5(p) )
 
     def test_sub_path(self):

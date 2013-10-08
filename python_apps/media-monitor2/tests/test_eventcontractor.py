@@ -7,22 +7,22 @@ DeleteFile
 class TestMMP(unittest.TestCase):
     def test_event_registered(self):
         ev = EventContractor()
-        e1 = NewFile( FakePyinotify('bullshit.mp3') ).proxify()
-        e2 = MoveFile( FakePyinotify('bullshit.mp3') ).proxify()
+        e1 = NewFile( FakePyinotify('bull.mp3') ).proxify()
+        e2 = MoveFile( FakePyinotify('bull.mp3') ).proxify()
         ev.register(e1)
         self.assertTrue( ev.event_registered(e2) )
 
     def test_get_old_event(self):
         ev = EventContractor()
-        e1 = NewFile( FakePyinotify('bullshit.mp3') ).proxify()
-        e2 = MoveFile( FakePyinotify('bullshit.mp3') ).proxify()
+        e1 = NewFile( FakePyinotify('bull.mp3') ).proxify()
+        e2 = MoveFile( FakePyinotify('bull.mp3') ).proxify()
         ev.register(e1)
         self.assertEqual( ev.get_old_event(e2), e1 )
 
     def test_register(self):
         ev = EventContractor()
-        e1 = NewFile( FakePyinotify('bullshit.mp3') ).proxify()
-        e2 = DeleteFile( FakePyinotify('bullshit.mp3') ).proxify()
+        e1 = NewFile( FakePyinotify('bull.mp3') ).proxify()
+        e2 = DeleteFile( FakePyinotify('bull.mp3') ).proxify()
         self.assertTrue( ev.register(e1) )
 
         self.assertFalse( ev.register(e2) )
@@ -33,14 +33,14 @@ class TestMMP(unittest.TestCase):
         self.assertEqual( delete_ev['mode'], u'delete')
         self.assertEqual( len(ev.store.keys()), 0 )
 
-        e3 = DeleteFile( FakePyinotify('horseshit.mp3') ).proxify()
+        e3 = DeleteFile( FakePyinotify('horse.mp3') ).proxify()
         self.assertTrue( ev.register(e3) )
         self.assertTrue( ev.register(e2) )
 
 
     def test_register2(self):
         ev = EventContractor()
-        p = 'bullshit.mp3'
+        p = 'bull.mp3'
         events = [
                 NewFile( FakePyinotify(p) ),
                 NewFile( FakePyinotify(p) ),

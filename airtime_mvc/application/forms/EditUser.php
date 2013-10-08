@@ -1,4 +1,5 @@
 <?php
+require_once( __DIR__ . '/../validate/NotDemoValidate.php');
 
 class Application_Form_EditUser extends Zend_Form
 {
@@ -16,7 +17,8 @@ class Application_Form_EditUser extends Zend_Form
         $userData = Application_Model_User::GetUserData($currentUserId);
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
-
+        $notDemoValidator = new Application_Validate_NotDemoValidate();
+        
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/edit-user.phtml', "currentUser" => $currentUser->getLogin()))));
         $this->setAttrib('id', 'current-user-form');
@@ -52,6 +54,7 @@ class Application_Form_EditUser extends Zend_Form
         $passwordVerify->setRequired(true);
         $passwordVerify->addFilter('StringTrim');
         $passwordVerify->addValidator($notEmptyValidator);
+        $passwordVerify->addValidator($notDemoValidator);
         $passwordVerify->setDecorators(array('viewHelper'));
         $this->addElement($passwordVerify);
 

@@ -778,6 +778,18 @@ SQL;
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
+            //taken from Datatables.php, needs to be cleaned up there.
+            if (isset($r['ftype'])) {
+                if ($r['ftype'] == 'playlist') {
+                    $pl = new Application_Model_Playlist($r['id']);
+                    $r['length'] = $pl->getLength();
+                } elseif ($r['ftype'] == "block") {
+                    $bl = new Application_Model_Block($r['id']);
+                    $r['bl_type'] = $bl->isStatic() ? 'static' : 'dynamic';
+                    $r['length']  = $bl->getLength();
+                }
+            }
+
             if ($row['ftype'] === "audioclip") {
 
                 $cuein_formatter = new LengthFormatter($row["cuein"]);
@@ -1313,20 +1325,14 @@ SQL;
         }
     }
 
-    public static function setIsScheduled($p_scheduleItem, $p_status,
-        $p_fileId=null) {
+    public static function setIsScheduled($fileId, $status) {
 
-        if (is_null($p_fileId)) {
-            $fileId = Application_Model_Schedule::GetFileId($p_scheduleItem);
-        } else {
-            $fileId = $p_fileId;
-        }
         $file = self::RecallById($fileId);
         $updateIsScheduled = false;
 
         if (!is_null($fileId) && !in_array($fileId,
             Application_Model_Schedule::getAllFutureScheduledFiles())) {
-            $file->_file->setDbIsScheduled($p_status)->save();
+            $file->_file->setDbIsScheduled($status)->save();
             $updateIsScheduled = true;
         }
 

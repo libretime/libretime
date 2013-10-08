@@ -505,12 +505,14 @@ class Application_Model_Preference
         return self::getValue("description");
     }
 
+    // Sets station default timezone (from preferences)
     public static function SetDefaultTimezone($timezone)
     {
         self::setValue("timezone", $timezone);
         date_default_timezone_set($timezone);
     }
 
+    // Returns station default timezone (from preferences)
     public static function GetDefaultTimezone()
     {
         return self::getValue("timezone");
@@ -536,6 +538,7 @@ class Application_Model_Preference
         }
     }
 
+    // Always attempts to returns the current user's personal timezone setting
     public static function GetTimezone()
     {
         $auth = Zend_Auth::getInstance();
@@ -1276,7 +1279,7 @@ class Application_Model_Preference
                 return $ds['ColReorder'][$x];
             } else {
                 /*For now we just have this hack for debugging. We should not
-                    rely on this crappy behaviour in case of failure*/
+                    rely on this behaviour in case of failure*/
                 Logging::warn("Index $x does not exist preferences");
                 Logging::warn("Defaulting to identity and printing preferences");
                 Logging::warn($ds);
@@ -1368,5 +1371,21 @@ class Application_Model_Preference
     public static function setReplayGainModifier($rg_modifier)
     {
         self::setValue("replay_gain_modifier", $rg_modifier, true);
+    }
+    
+    public static function SetHistoryItemTemplate($value) {
+    	self::setValue("history_item_template", $value);
+    }
+    
+    public static function GetHistoryItemTemplate() {
+    	return self::getValue("history_item_template");
+    }
+    
+    public static function SetHistoryFileTemplate($value) {
+    	self::setValue("history_file_template", $value);
+    }
+    
+    public static function GetHistoryFileTemplate() {
+    	return self::getValue("history_file_template");
     }
 }

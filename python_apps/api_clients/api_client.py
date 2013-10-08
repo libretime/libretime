@@ -16,7 +16,7 @@ import base64
 import traceback
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.4.0"
+AIRTIME_VERSION = "2.5.0"
 
 
 # TODO : Place these functions in some common module. Right now, media
@@ -234,7 +234,7 @@ class AirtimeApiClient(object):
 
     def get_schedule(self):
         # TODO : properly refactor this routine
-        # For now the return type is a little fucked for compatibility reasons
+        # For now the return type is a little messed up for compatibility reasons
         try: return (True, self.services.export_url())
         except: return (False, None)
 

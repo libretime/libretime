@@ -3,6 +3,8 @@
     A container object (ex a div) must be passed in, the playlist will be built on this element.
 */
 
+var waveformPlaylistAudio = waveformPlaylistAudio || new (window.AudioContext || window.webkitAudioContext);
+
 var Config = function(params) {
 
         var that = this,
@@ -10,7 +12,7 @@ var Config = function(params) {
 
         defaultParams = {
 
-            ac: new (window.AudioContext || window.webkitAudioContext),
+            ac: waveformPlaylistAudio,
 
             resolution: 4096, //resolution - samples per pixel to draw.
             timeFormat: 'hh:mm:ss.uuu',

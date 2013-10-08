@@ -58,12 +58,9 @@ class AirtimeInstance(object):
     def mm_config(self):
         return MMConfig(self.config_paths['media_monitor'])
 
-    # NOTE to future code monkeys:
-    # I'm well aware that I'm using the shitty service locator pattern
-    # instead of normal constructor injection as I should be. The reason
-    # for this is that I found these issues a little too close to the
-    # end of my tenure. It's highly recommended to rewrite this crap
-    # using proper constructor injection if you ever have the time
+    # I'm well aware that I'm using the service locator pattern
+    # instead of normal constructor injection as I should be.
+    # It's recommended to rewrite this using proper constructor injection
 
     @LazyProperty
     def owner(self): return Owner()

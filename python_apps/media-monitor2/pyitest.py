@@ -5,7 +5,7 @@ import getopt
 import pyinotify
 import pprint
 
-# a little shit script to test out pyinotify events
+# a little script to test out pyinotify events
 
 class AT(pyinotify.ProcessEvent):
     def process_default(self, event):

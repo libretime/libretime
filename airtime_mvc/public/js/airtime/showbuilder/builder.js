@@ -178,7 +178,12 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkToolBarIcons = function() {
-        AIRTIME.library.checkAddButton();
+    	
+    	//library may not be on the page.
+    	if (AIRTIME.library !== undefined) {
+    		AIRTIME.library.checkAddButton();
+    	}
+        
         mod.checkSelectButton();
         mod.checkTrimButton();
         mod.checkDeleteButton();

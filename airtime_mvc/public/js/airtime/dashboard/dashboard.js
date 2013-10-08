@@ -172,7 +172,7 @@ function updatePlaybar(){
 
         $('#time-elapsed').text(convertToHHMMSS(approximateServerTime - songStartRoughly));
         $('#time-remaining').text(convertToHHMMSS(songEndRoughly - approximateServerTime));
-        $('#song-length').text(convertToHHMMSSmm(currentSong.songLengthMs));
+        $('#song-length').text(convertToHHMMSS(currentSong.songLengthMs));
     }
     /* Column 1 update */
     $('#playlist').text($.i18n._("Current Show:"));
@@ -488,13 +488,13 @@ $(document).ready(function() {
         setCurrentUserPseudoPassword();
     }
     
-    $('#current-user').live('click', function() {
+    $('body').on('click','#current-user', function() {
         $.ajax({
             url: baseUrl+'user/edit-user/format/json'
         });
     });
     
-    $('#cu_save_user').live('click', function() {
+    $('body').on('click', '#cu_save_user', function() {
         $.cookie("airtime_locale", $('#cu_locale').val(), {path: '/'});
     });
 

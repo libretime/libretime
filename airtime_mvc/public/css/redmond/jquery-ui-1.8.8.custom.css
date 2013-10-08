@@ -214,6 +214,9 @@
 .ui-widget-content .ui-icon {
 	background-image: url(images/ui-icons_ffffff_256x240.png);
 }
+.ui-widget-content .ui-icon-alert {
+        background-image: url(images/ui-icons_ff5d1a_256x240.png);
+}
 .ui-widget-header .ui-icon {
 	background-image: url(images/ui-icons_ffffff_256x240.png);
 }

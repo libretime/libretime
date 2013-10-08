@@ -1,0 +1,86 @@
+<form>
+<?php $form = $this->element ?>
+
+<dl class="zend_form">
+
+  <?php $formErrors = $form->getErrorMessages() ?>
+  <?php if (count($formErrors) > 0) : ?>
+  <ul class='errors'>
+  <?php foreach ($formErrors as $error): ?>
+    <li><?php echo $error; ?></li>
+    <?php endforeach; ?>
+  </ul>
+  <?php endif; ?>
+
+ <?php $name = "his_item_id"; ?>
+  <dd id="<?php echo $name;?>-element">
+    <?php echo $form->getElement($name); ?>
+  </dd>
+
+<?php foreach (array("his_item_starts", "his_item_ends") as $name): ?>
+  <dt id="<?php echo $name;?>-label">
+    <label for="<?php echo $name;?>"><?php echo $form->getElement($name)->getLabel() ?></label>
+  </dt>
+  <dd id="<?php echo $name;?>-element">
+    <div class="well">
+      <div id="<?php echo $name;?>_datetimepicker" class="input-append date">
+        <?php echo $form->getElement($name) ?>
+        <span class="add-on">
+          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+        </span>
+      </div>
+    </div>
+    <?php if ($form->getElement($name)->hasErrors()) : ?>
+    <ul class='errors'>
+    <?php foreach ($form->getElement($name)->getMessages() as $error): ?>
+      <li><?php echo $error; ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+  </dd>
+<?php endforeach;?>
+
+  <dd id="his_choose_instance">
+    <div>
+      <label for="<?php echo $name;?>"><?php echo _("Choose Show Instance") ?></label>
+    </div>
+    <div>
+      <?php $select = $form->getElement("his_instance_select"); ?>
+      <?php if (isset($select)): ?>
+        <?php echo $select; ?>
+      <?php else: ?>
+      <select id="his_instance_select">
+        <option value="0"><?php echo _("No Show") ?></option>
+      </select>
+      <?php endif; ?>
+      <button class="btn" type="button" id="his_instance_retrieve"><?php echo _("Find") ?></button>
+    </div>
+  </dd>
+
+<?php foreach ($form->getSubForm('his_item_template') as $index=>$el): ?>
+  <?php $name = $el->getName(); ?>
+
+  <dt id="<?php echo $name;?>-label">
+    <label for="<?php echo $name;?>"><?php echo $el->getLabel() ?></label>
+  </dt>
+  <dd id="<?php echo $name;?>-element">
+    <?php echo $el ?>
+    <?php if ($el->hasErrors()): ?>
+    <ul class='errors'>
+    <?php foreach($el->getMessages() as $error): ?>
+      <li><?php echo $error; ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
+  </dd>
+<?php endforeach; ?>
+
+<dd id="submitButtons-element">
+<?php foreach (array("his_item_save", "his_item_cancel") as $name): ?>
+<?php echo $form->getElement($name); ?>
+<?php endforeach;?>
+</dd>
+
+</dl>
+
+</form>

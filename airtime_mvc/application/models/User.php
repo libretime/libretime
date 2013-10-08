@@ -1,10 +1,5 @@
 <?php
 
-define('UTYPE_HOST'            , 'H');
-define('UTYPE_ADMIN'           , 'A');
-define('UTYPE_GUEST'           , 'G');
-define('UTYPE_PROGRAM_MANAGER' , 'P');
-
 class Application_Model_User
 {
     private $_userInstance;

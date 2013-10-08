@@ -5,7 +5,7 @@
 /**
  * Skeleton subclass for representing a row from the 'cc_show' table.
  *
- * 
+ *
  *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
@@ -91,24 +91,21 @@ class CcShow extends BaseCcShow {
 
     public function isRecorded()
     {
-        $ccShowInstances = CcShowInstancesQuery::create()
+        $ccShowDay = CcShowDaysQuery::create()
             ->filterByDbShowId($this->getDbId())
             ->filterByDbRecord(1)
-            ->filterByDbModifiedInstance(false)
             ->findOne();
 
-        return (!is_null($ccShowInstances));
+        return (!is_null($ccShowDay));
     }
 
     public function isRebroadcast()
     {
-        $ccShowInstances = CcShowInstancesQuery::create()
+        $ccShowRebroadcast = CcShowRebroadcastQuery::create()
             ->filterByDbShowId($this->getDbId())
-            ->filterByDbRebroadcast(1)
-            ->filterByDbModifiedInstance(false)
             ->findOne();
 
-        return (!is_null($ccShowInstances));
+        return (!is_null($ccShowRebroadcast));
     }
 
     public function getRebroadcastsRelative()

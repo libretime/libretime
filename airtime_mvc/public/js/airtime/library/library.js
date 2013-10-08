@@ -1102,16 +1102,16 @@ function closeDialogLibrary(event, ui) {
 
 function checkImportStatus() {
     $.getJSON(baseUrl+'Preference/is-import-in-progress', function(data){
-        var div = $('#import_status');
+        var $div = $('#import_status');
         var table = $('#library_display').dataTable();
         if (data == true){
-            div.show();
+            $div.show();
         }
         else{
-            if ($(div).is(':visible')) {
+            if ($div.is(':visible')) {
                 table.fnStandingRedraw();
             }
-            div.hide();
+            $div.hide();
         }
         setTimeout(checkImportStatus, 5000);
     });

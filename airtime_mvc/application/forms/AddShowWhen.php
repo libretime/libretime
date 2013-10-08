@@ -78,6 +78,15 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'decorators'  => array('ViewHelper')
         ));
 
+        $timezone = new Zend_Form_Element_Select('add_show_timezone');
+        $timezone->setRequired(true)
+                 ->setLabel(_("Timezone:"))
+                 ->setMultiOptions(Application_Common_Timezone::getTimezones())
+                 ->setValue(Application_Model_Preference::GetDefaultTimezone())
+                 ->setAttrib('class', 'input_select add_show_input_select')
+                 ->setDecorators(array('ViewHelper'));
+        $this->addElement($timezone);
+
         // Add repeats element
         $this->addElement('checkbox', 'add_show_repeats', array(
             'label'      => _('Repeats?'),
@@ -158,7 +167,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
          */
         if ($valid) {
             $utc = new DateTimeZone('UTC');
-            $localTimezone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+            $showTimezone = new DateTimeZone($formData["add_show_timezone"]);
             $show_start = new DateTime($start_time);
             $show_start->setTimezone($utc);
             $show_end = new DateTime($end_time);
@@ -202,13 +211,17 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $show_start, $show_end);
                 }
-                //$overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
 
                 /* Check if repeats overlap with previously scheduled shows
                  * Do this for each show day
                  */
                 if (!$overlapping) {
                     $startDow = date("w", $show_start->getTimestamp());
+
+                    if (!isset($formData['add_show_day_check'])) {
+                        return false;
+                    }
+
                     foreach ($formData["add_show_day_check"] as $day) {
                         $repeatShowStart = clone $show_start;
                         $repeatShowEnd = clone $show_end;
@@ -224,8 +237,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                              * adding the interval for the next repeating show
                              */
                             
-                            $repeatShowStart->setTimezone($localTimezone);
-                            $repeatShowEnd->setTimezone($localTimezone);
+                            $repeatShowStart->setTimezone($showTimezone);
+                            $repeatShowEnd->setTimezone($showTimezone);
                             $repeatShowStart->add(new DateInterval("P".$daysAdd."D"));
                             $repeatShowEnd->add(new DateInterval("P".$daysAdd."D"));
                             //set back to UTC
@@ -264,8 +277,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                                 $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                                 break 1;
                             } else {
-                                $repeatShowStart->setTimezone($localTimezone);
-                                $repeatShowEnd->setTimezone($localTimezone);
+                                $repeatShowStart->setTimezone($showTimezone);
+                                $repeatShowEnd->setTimezone($showTimezone);
                                 $repeatShowStart->add(new DateInterval($interval));
                                 $repeatShowEnd->add(new DateInterval($interval));
                                 $repeatShowStart->setTimezone($utc);
@@ -328,7 +341,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
              * show start back to local time
              */
             $rebroadcastShowStart->setTimezone(new DateTimeZone(
-                Application_Model_Preference::GetTimezone()));
+                $formData["add_show_timezone"]));
             $rebroadcastWhenDays = explode(" ", $formData["add_show_rebroadcast_date_".$i]);
             $rebroadcastWhenTime = explode(":", $formData["add_show_rebroadcast_time_".$i]);
             $rebroadcastShowStart->add(new DateInterval("P".$rebroadcastWhenDays[0]."D"));
