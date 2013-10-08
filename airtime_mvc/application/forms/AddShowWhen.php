@@ -197,6 +197,10 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $interval = 'P7D';
                 } elseif ($formData["add_show_repeat_type"] == 1) {
                     $interval = 'P14D';
+                } elseif ($formData["add_show_repeat_type"] == 4) {
+                    $interval = 'P21D';
+                } elseif ($formData["add_show_repeat_type"] == 5) {
+                    $interval = 'P28D';
                 } elseif ($formData["add_show_repeat_type"] == 2) {
                     $interval = 'P1M';
                 }

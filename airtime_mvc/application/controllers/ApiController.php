@@ -348,10 +348,11 @@ class ApiController extends Zend_Controller_Action
             $utcDayStart = Application_Common_DateHelper::ConvertToUtcDateTimeString($dayStart);
 
             $dow = array("monday", "tuesday", "wednesday", "thursday", "friday",
-                "saturday", "sunday");
+						"saturday", "sunday", "nextmonday", "nexttuesday", "nextwednesday",
+						"nextthursday", "nextfriday", "nextsaturday", "nextsunday");
 
             $result = array();
-            for ($i=0; $i<7; $i++) {
+            for ($i=0; $i<14; $i++) {
                 $utcDayEnd = Application_Common_DateHelper::GetDayEndTimestamp($utcDayStart);
                 $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
