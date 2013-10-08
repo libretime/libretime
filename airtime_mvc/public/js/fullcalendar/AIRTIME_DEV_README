@@ -3,17 +3,9 @@ in this file.
 
 Running a diff between the original fullcalendar.js and our modified one:
 
-denise@denise-desktop:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u fullcalendar_orig.js fullcalendar.js 
---- fullcalendar_orig.js	2013-05-24 08:33:54.462735215 -0400
-+++ fullcalendar.js	2013-07-19 12:42:37.274284180 -0400
-@@ -1,6 +1,6 @@
- /**
-  * @preserve
-- * FullCalendar v1.5.3
-+ * FullCalendar v1.5.3-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
-  * http://arshaw.com/fullcalendar/
-  *
-  * Use fullcalendar.css for basic styling.
+denise@denise-DX4860:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u fullcalendar_orig.js fullcalendar.js
+--- fullcalendar_orig.js	2013-10-08 16:03:35.442375219 -0400
++++ fullcalendar.js	2013-10-08 16:53:02.586338519 -0400
 @@ -227,7 +227,7 @@
  	var absoluteViewElement;
  	var resizeUID = 0;
@@ -23,7 +15,7 @@ denise@denise-desktop:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u full
  	var events = [];
  	var _dragElement;
  	
-@@ -2277,7 +2277,7 @@
+@@ -2273,7 +2273,7 @@
  	function updateCells(firstTime) {
  		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
  		var month = t.start.getMonth();
@@ -32,7 +24,7 @@ denise@denise-desktop:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u full
  		var cell;
  		var date;
  		var row;
-@@ -3110,7 +3110,7 @@
+@@ -3106,7 +3106,7 @@
  		var headCell;
  		var bodyCell;
  		var date;
@@ -41,7 +33,7 @@ denise@denise-desktop:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u full
  		for (i=0; i<colCnt; i++) {
  			date = colDate(i);
  			headCell = dayHeadCells.eq(i);
-@@ -3867,7 +3867,7 @@
+@@ -3863,7 +3863,7 @@
  				if (seg.contentTop !== undefined && height - seg.contentTop < 10) {
  					// not enough room for title, put it in the time header
  					eventElement.find('div.fc-event-time')
@@ -51,10 +43,6 @@ denise@denise-desktop:~/airtime/airtime_mvc/public/js/fullcalendar$ diff -u full
  						.remove();
  				}
 
- 
--})(jQuery);
-\ No newline at end of file
-+})(jQuery);
 
 
 adjustDateToServerDate() function is defined in "js/airtime/common/common.js"
