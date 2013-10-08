@@ -184,6 +184,7 @@ class LocaleController extends Zend_Controller_Action
             "The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
             "Warning: Shows cannot be re-linked" => _("Warning: Shows cannot be re-linked"),
             "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows" => _("By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"),
+            "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings." => _("Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."),
             //schedule/full-calendar-functions
             //already in schedule/add-show.js
             //"The show instance doesn't exist anymore!" => _("The show instance doesn't exist anymore!"),
