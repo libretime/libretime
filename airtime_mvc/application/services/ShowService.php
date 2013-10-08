@@ -109,7 +109,9 @@ class Application_Service_ShowService
             list($start, $end) = $service_showForm->getNextFutureRepeatShowTime();
             $oldCcShowDay = $oldCcShow->getFirstCcShowDay();
             $oldCcShowDay
-                ->setDbFirstShow($start->setTimezone(new DateTimeZone("UTC"))->format("Y-m-d"))
+                ->setDbFirstShow(
+                    $start->setTimezone(new DateTimeZone(
+                        $oldCcShowDay->getDbTimezone()))->format("Y-m-d"))
                 ->save();
 
             $con->commit();
