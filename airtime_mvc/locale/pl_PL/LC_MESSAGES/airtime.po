@@ -1,11 +1,11 @@
-# LANGUAGE (xx_XX) translation for Airtime.
+# POLISH (pl_PL) translation for Airtime.
 # Copyright (C) 2012 Sourcefabric
 # This file is distributed under the same license as the Airtime package.
 # Sourcefabric <contact@sourcefabric.org>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Airtime 2.4\n"
+"Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-08 11:46-0400\n"
 "PO-Revision-Date: 2013-05-22 10:52+0100\n"
