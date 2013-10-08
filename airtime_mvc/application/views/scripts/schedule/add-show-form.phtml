@@ -1,36 +1,36 @@
 <div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
     <div class="button-bar">
-        <a href="#" id="add-show-close" class="icon-link add-show-close"><span class="ui-icon ui-icon-circle-close"></span><? echo _("Close") ?></a>
+        <a href="#" id="add-show-close" class="icon-link add-show-close"><span class="ui-icon ui-icon-circle-close"></span><?php echo _("Close") ?></a>
         <button data-action="<?php echo isset($this->action) ? $this->action : "add-show" ?>" aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary">
             <span class="ui-icon ui-icon-plusthick"></span>
             <span class="ui-button-text"><?php echo ($this->addNewShow ? _("Add this show") : _("Update show")); ?></span>
         </button>
     </div>
     <div class="clear"></div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><? echo _("What") ?></h3>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("What") ?></h3>
     <div id="schedule-show-what" class="collapsible-content">
         <?php echo $this->what; ?>
     </div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><? echo _("When") ?></h3>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("When") ?></h3>
     <div id="schedule-show-when" class="collapsible-content">
         <?php echo $this->when; ?>
         <?php echo $this->repeats; ?>
     </div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><? echo _("Live Stream Input") ?></h3>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Live Stream Input") ?></h3>
     <div id="live-stream-override" class="collapsible-content">
         <?php echo $this->live; ?>
     </div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><? echo _("Record & Rebroadcast")?></h3>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Record & Rebroadcast")?></h3>
     <div id="schedule-record-rebroadcast" class="collapsible-content">
         <?php echo $this->rr; ?>
         <?php echo $this->absoluteRebroadcast; ?>
         <?php echo $this->rebroadcast; ?>
     </div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><? echo _("Who") ?></h3>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Who") ?></h3>
     <div id="schedule-show-who" class="collapsible-content">
         <?php echo $this->who; ?>
     </div>
-    <h3 class="collapsible-header"><span class="arrow-icon"></span><? echo _("Style") ?></h3>
+    <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Style") ?></h3>
     <div id="schedule-show-style" class="collapsible-content">
         <?php echo $this->style; ?>
     </div>

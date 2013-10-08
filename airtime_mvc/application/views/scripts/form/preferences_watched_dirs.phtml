@@ -16,7 +16,7 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        <dd class="block-display selected-item"><strong><? echo _("Current Import Folder:"); ?></strong><?php $stor = Application_Model_MusicDir::getStorDir(); echo $stor->getDirectory(); ?></dd>
+        <dd class="block-display selected-item"><strong><?php echo _("Current Import Folder:"); ?></strong><?php $stor = Application_Model_MusicDir::getStorDir(); echo $stor->getDirectory(); ?></dd>
 
         <dt id="watchedFolder-label" class="block-display">
             <label class="required" for="watchedFolder"><?php echo $this->element->getElement('watchedFolder')->getLabel() ?></label>
@@ -47,7 +47,7 @@
             <?php endforeach; ?>
         <?php else: ?>
             <dd class="block-display selected-item">
-                <span><? echo _("You are not watching any media folders."); ?></span>
+                <span><?php echo _("You are not watching any media folders."); ?></span>
             </dd>
         <?php endif; ?>
 

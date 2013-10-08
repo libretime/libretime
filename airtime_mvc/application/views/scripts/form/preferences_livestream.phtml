@@ -1,5 +1,5 @@
 <fieldset class="padded stream-setting-global" style="margin-top: 15px">
-    <legend><? echo _("Input Stream Settings") ?></legend>
+    <legend><?php echo _("Input Stream Settings") ?></legend>
     <dl class="zend_form">
         <dt id="auto_transition-label">
             <label class="optional" for="auto_transition"><?php echo $this->element->getElement('auto_transition')->getLabel() ?> :
@@ -112,12 +112,12 @@
         <dd id="master_dj_connection_url-element">
             <span id="stream_url"><?php echo $this->element->getElement('master_dj_connection_url')->setValue($this->master_dj_connection_url) ?></span>
             <?php if(!$this->isDemo){?>
-                <a href=# id="connection_url_override" style="font-size: 12px;"><? echo _("Override") ?></a>&nbsp;&nbsp;
+                <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
                 <span class="override_help_icon">
                 </span><br>
             <?php } ?>
             <div id="master_dj_connection_url_actions" style="display:none">
-                <a href=# id="ok" style="font-size: 12px;"><? echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><? echo _("RESET"); ?></a>
+                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
             </div>
         </dd>
             <dt id="dj_harbor_input_port-label">
@@ -156,12 +156,12 @@
         <dd id="live_dj_connection_url-element">
             <span id="stream_url"><?php echo $this->element->getElement('live_dj_connection_url')->setValue($this->live_dj_connection_url) ?></span>
             <?php if( !$this->isDemo ){?>   
-                <a href=# id="connection_url_override" style="font-size: 12px;"><? echo _("Override") ?></a>&nbsp;&nbsp;
+                <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
                 <span class="override_help_icon">
                 </span><br>
             <?php } ?>
             <div id="live_dj_connection_url_actions" style="display:none">
-                <a href=# id="ok" style="font-size: 12px;"><? echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><? echo _("RESET"); ?></a>
+                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
             </div>
         </dd>
     </dl>

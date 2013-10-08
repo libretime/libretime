@@ -87,6 +87,11 @@ if [ "$code" != "squeeze" -a "$code" != "lucid" ]; then
     apt-get -y --force-yes install libvo-aacenc0
 fi
 
+#Install php5-json on Ubuntu Saucy.
+if [ "$dist" = "Ubuntu" -a "$code" = "saucy" ]; then
+    apt-get -y --force-yes install php5-json
+fi
+
 #Install packages back-ported by Sourcefabric
 apt-get -y --force-yes install sourcefabric-keyring
 apt-get -y --force-yes install liquidsoap
@@ -125,8 +130,14 @@ else
     echo "----------------------------------------------------"
     if [ ! -f /etc/apache2/sites-available/airtime ]; then
         echo "Creating Apache config for Airtime..."
-        cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
-        a2dissite default
+
+        if [ "$dist" = "Ubuntu" -a "$code" = "saucy" ]; then
+	    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime.conf
+            a2dissite 000-default
+        else
+	    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
+            a2dissite default
+        fi
         a2ensite airtime
     else
         echo "Apache config for Airtime already exists..."

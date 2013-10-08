@@ -13,7 +13,7 @@ html, body {
 }
 
 #login-page {
-    background: #1f1f1f url(images/login_page_bg.png) no-repeat center 0;
+    background: #1f1f1f url(images/login_page_bg.png) no-repeat center 0;`
     margin: 0;
     padding: 0;
 	height:100%;
@@ -125,7 +125,8 @@ select {
 
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
 .playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon,
-.admin_username_help_icon, .stream_type_help_icon, .show_linking_help_icon {
+.admin_username_help_icon, .stream_type_help_icon, .show_linking_help_icon,
+.show_timezone_help_icon{
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
