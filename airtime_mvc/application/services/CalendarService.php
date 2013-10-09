@@ -268,8 +268,9 @@ class Application_Service_CalendarService
         }
 
         if ($this->ccShow->isRebroadcast()) {
-            $recordedShow = CcShowInstancesQuery::create()->filterByCcShow(
-                $this->ccShowInstance->getDbOriginalShow())->findOne();
+            $recordedShow = CcShowInstancesQuery::create()
+                ->filterByCcShow($this->ccShowInstance->getDbOriginalShow())
+                ->findOne();
             if (is_null($recordedShow)) {
                 $this->ccShowInstance->delete();
                 throw new Exception(_("Show was deleted because recorded show does not exist!"));
