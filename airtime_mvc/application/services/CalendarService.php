@@ -258,7 +258,7 @@ class Application_Service_CalendarService
             $minRebroadcastStart = self::addDeltas($newEndsDateTime, 0, 60);
             //check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
             $rebroadcasts = CcShowInstancesQuery::create()
-                ->filterByDbOriginalShow($this->_instanceId)
+                ->filterByDbOriginalShow($this->ccShow->getDbId())
                 ->filterByDbStarts($minRebroadcastStart->format('Y-m-d H:i:s'), Criteria::LESS_THAN)
                 ->find();
 
