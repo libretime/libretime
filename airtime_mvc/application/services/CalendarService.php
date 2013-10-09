@@ -231,9 +231,9 @@ class Application_Service_CalendarService
         //the user is moving the show on the calendar from the perspective of local time.
         //incase a show is moved across a time change border offsets should be added to the localtime
         //stamp and then converted back to UTC to avoid show time changes!
-        $localTimezone = Application_Model_Preference::GetTimezone();
-        $startsDateTime->setTimezone(new DateTimeZone($localTimezone));
-        $endsDateTime->setTimezone(new DateTimeZone($localTimezone));
+        $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
+        $startsDateTime->setTimezone(new DateTimeZone($showTimezone));
+        $endsDateTime->setTimezone(new DateTimeZone($showTimezone));
 
         $newStartsDateTime = self::addDeltas($startsDateTime, $deltaDay, $deltaMin);
         $newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin);
@@ -303,9 +303,10 @@ class Application_Service_CalendarService
                 //we can get the first show day because we know the show is
                 //not repeating, and therefore will only have one show day entry
                 $ccShowDay = $this->ccShow->getFirstCcShowDay();
+                $showTimezone = new DateTimeZone($ccShowDay->getDbTimezone());
                 $ccShowDay
-                    ->setDbFirstShow($newStartsDateTime)
-                    ->setDbLastShow($newEndsDateTime)
+                    ->setDbFirstShow($newStartsDateTime->setTimezone($showTimezone))
+                    ->setDbLastShow($newEndsDateTime->setTimezone($showTimezone))
                     ->save();
             }
 
