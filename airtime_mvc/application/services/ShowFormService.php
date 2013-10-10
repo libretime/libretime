@@ -468,10 +468,7 @@ class Application_Service_ShowFormService
             $startDateTime = new DateTime($start);
             $endDateTime = new DateTime($end);
 
-            $UTCStartDateTime = $startDateTime->setTimezone(new DateTimeZone('UTC'));
-            $UTCEndDateTime = $endDateTime->setTimezone(new DateTimeZone('UTC'));
-
-            $duration = $UTCEndDateTime->diff($UTCStartDateTime);
+            $duration = $startDateTime->diff($endDateTime);
 
             $day = intval($duration->format('%d'));
             if ($day > 0) {
@@ -482,7 +479,7 @@ class Application_Service_ShowFormService
                 $sign = $duration->format('%r');
                 return sprintf('%s%02dh %02dm', $sign, $hour, $min);
             } else {
-                return $duration->format('%Hh %Im');
+                return $duration->format('%r%Hh %Im');
             }
         } catch (Exception $e) {
             return "Invalid Date";

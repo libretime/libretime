@@ -693,7 +693,7 @@ function setAddShowEvents() {
         }
     })
 
-	function calculateDuration(endDateTime, startDateTime){
+	function calculateDuration(startDateTime, endDateTime){
 		var loadingIcon = $('#icon-loader-small');
 		
 		loadingIcon.show();
