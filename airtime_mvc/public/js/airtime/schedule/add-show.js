@@ -749,27 +749,3 @@ function alertShowErrorAndReload(){
     alert($.i18n._("The show instance doesn't exist anymore!"));
     window.location.reload();
 }
-
-function windowResize() {
-	var windowWidth = $(this).width();
-    // margin on showform are 16 px on each side
-	if(!$("#schedule-add-show").is(':hidden')){	 
-        var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
-        var widthPercent = parseInt(calendarWidth)+"%";
-        $("#schedule_calendar").css("width", widthPercent);
-	} else {
-        $("#schedule_calendar").css("width", 98.5+"%");
-	}
-	
-	// 200 px for top dashboard and 50 for padding on main content
-	// this calculation was copied from schedule.js line 326
-	var mainHeight = document.documentElement.clientHeight - 200 - 50;
-	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
-	
-}
-
-var scheduleResizeTimeout;
-$(window).resize(function(){
-	clearTimeout(scheduleResizeTimeout);
-	scheduleResizeTimeout = setTimeout(windowResize, 100);
-});
