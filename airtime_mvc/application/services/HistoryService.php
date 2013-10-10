@@ -430,8 +430,10 @@ class Application_Service_HistoryService
 		//-----------------------------------------------------------------
 		//processing the results
 		foreach ($rows as &$row) {
-			$formatter = new LengthFormatter($row['length']);
-			$row['length'] = $formatter->format();
+			if (isset($row[MDATA_KEY_DURATION])) {
+				$formatter = new LengthFormatter($row[MDATA_KEY_DURATION]);
+				$row[MDATA_KEY_DURATION] = $formatter->format();
+			}
 		}
 
 		return array(
