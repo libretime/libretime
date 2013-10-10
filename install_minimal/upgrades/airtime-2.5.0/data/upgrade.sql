@@ -38,13 +38,13 @@ BEGIN
             returning id into hisid;
 
             insert into cc_playout_history_metadata (history_id, key, value)
-            values (hisid, 'track_title', r.title);
+            values (hisid, 'track_title', substring(r.title from 1 for 128));
 
             insert into cc_playout_history_metadata (history_id, key, value)
-            values (hisid, 'artist_name', r.creator);
+            values (hisid, 'artist_name', substring(r.creator from 1 for 128));
 
             insert into cc_playout_history_metadata (history_id, key, value)
-            values (hisid, 'showname', r.showname);
+            values (hisid, 'showname', substring(r.showname from 1 for 128));
             
     END LOOP;
 return 1;
