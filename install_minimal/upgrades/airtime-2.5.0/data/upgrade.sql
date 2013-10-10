@@ -6,20 +6,23 @@ SELECT file_id, starts, ends, instance_id
 FROM cc_schedule
 WHERE media_item_played = true;
 
-drop view ws_history;
-create view ws_history as
 
-select 
+CREATE VIEW ws_history AS
+
+SELECT 
 wm.start_time as starts, 
 ws.name as creator,
 wm.liquidsoap_data as title,
-sched.instance_id as instance_id
+sched.instance_id as instance_id,
+show.name as showname
 
-from cc_webstream_metadata as wm
-left join cc_schedule as sched
-on sched.id = wm.instance_id
-left join cc_webstream as ws
-on sched.stream_id = ws.id;
+FROM cc_webstream_metadata AS wm
+LEFT JOIN cc_schedule AS sched
+ON sched.id = wm.instance_id
+LEFT JOIN cc_webstream AS ws
+ON sched.stream_id = ws.id
+LEFT JOIN cc_show AS show
+ON sched.instance_id = show.id;
 
 
 CREATE OR REPLACE FUNCTION migrateWebstreamHistory() RETURNS int4 AS $$
@@ -40,6 +43,8 @@ BEGIN
             insert into cc_playout_history_metadata (history_id, key, value)
             values (hisid, 'artist_name', r.creator);
 
+            insert into cc_playout_history_metadata (history_id, key, value)
+            values (hisid, 'showname', r.showname);
             
     END LOOP;
 return 1;
@@ -48,3 +53,6 @@ $$
 LANGUAGE plpgsql;
 
 SELECT migrateWebstreamHistory() as output;
+
+DROP FUNCTION migrateWebstreamHistory();
+DROP VIEW ws_history;
