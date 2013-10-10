@@ -4,7 +4,7 @@ INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '2.5.0');
 INSERT INTO cc_playout_history (file_id, starts, ends, instance_id)
 SELECT file_id, starts, ends, instance_id
 FROM cc_schedule
-WHERE media_item_played = true;
+WHERE file_id IS NOT NULL AND media_item_played = true;
 
 
 CREATE VIEW ws_history AS
