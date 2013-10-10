@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-08 11:46-0400\n"
-"PO-Revision-Date: 2013-05-22 10:43+0100\n"
+"PO-Revision-Date: 2013-10-10 17:07+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Sourcefabric <contact@sourcefabric.org>\n"
 "Language: cs_CZ\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Language: Czech\n"
-"X-Poedit-Country: CZECH REPUBLIC\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: airtime_mvc/application/services/HistoryService.php:1091
 #: airtime_mvc/application/services/HistoryService.php:1131
@@ -62,7 +61,7 @@ msgstr "Délka"
 #: airtime_mvc/application/controllers/LocaleController.php:75
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:10
 msgid "Genre"
-msgstr "Pohlaví"
+msgstr "Žánr"
 
 #: airtime_mvc/application/services/HistoryService.php:1096
 #: airtime_mvc/application/models/Block.php:1346
@@ -110,7 +109,7 @@ msgstr "Rok "
 
 #: airtime_mvc/application/services/HistoryService.php:1102
 msgid "Track"
-msgstr ""
+msgstr "Stopa"
 
 #: airtime_mvc/application/services/HistoryService.php:1103
 #: airtime_mvc/application/models/Block.php:1332
@@ -129,12 +128,12 @@ msgstr "Jazyk"
 #: airtime_mvc/application/services/HistoryService.php:1129
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
 msgid "Start Time"
-msgstr ""
+msgstr "Čas začátku"
 
 #: airtime_mvc/application/services/HistoryService.php:1130
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
 msgid "End Time"
-msgstr ""
+msgstr "Čas konce"
 
 #: airtime_mvc/application/services/HistoryService.php:1150
 msgid "Played"
@@ -196,7 +195,7 @@ msgstr "Upravit vysílání"
 
 #: airtime_mvc/application/services/CalendarService.php:138
 msgid "Edit This Instance"
-msgstr ""
+msgstr "Upravit "
 
 #: airtime_mvc/application/services/CalendarService.php:156
 #: airtime_mvc/application/services/CalendarService.php:171
@@ -220,7 +219,7 @@ msgstr "Odstranit tuto instanci a všechny následující"
 
 #: airtime_mvc/application/services/CalendarService.php:215
 msgid "Permission denied"
-msgstr ""
+msgstr "Přístup odepřen"
 
 #: airtime_mvc/application/services/CalendarService.php:219
 #: airtime_mvc/application/models/ShowInstance.php:245
@@ -318,7 +317,7 @@ msgstr "Statistiky poslechovost"
 
 #: airtime_mvc/application/configs/navigation.php:92
 msgid "History"
-msgstr ""
+msgstr "Historie"
 
 #: airtime_mvc/application/configs/navigation.php:97
 msgid "Playout History"
@@ -363,12 +362,12 @@ msgstr "Odhlásit "
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
-msgstr ""
+msgstr "Přehrát"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
-msgstr ""
+msgstr "Zastavit"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:47
 #: airtime_mvc/application/models/Block.php:1334
@@ -379,7 +378,7 @@ msgstr "Cue in"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:49
 msgid "Set Cue In"
-msgstr ""
+msgstr "Nastavit Cue In"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:54
 #: airtime_mvc/application/models/Block.php:1335
@@ -390,11 +389,11 @@ msgstr "Cue out"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
-msgstr ""
+msgstr "Nstavit Cue Out"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
-msgstr ""
+msgstr "Kurzor"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:273
@@ -579,7 +578,7 @@ msgstr "Airtime obnovení hesla"
 
 #: airtime_mvc/application/models/Scheduler.php:72
 msgid "Cannot move items out of linked shows"
-msgstr ""
+msgstr "Nemůže přesunout položky z linkovaných vysílání"
 
 #: airtime_mvc/application/models/Scheduler.php:118
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
@@ -1165,7 +1164,7 @@ msgstr "Přihlašovací jméno není jedinečné."
 #: airtime_mvc/application/controllers/LocaleController.php:390
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 msgid "No Show"
-msgstr ""
+msgstr "Žádné vysílání"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:48
 msgid "Enabled:"
@@ -1253,7 +1252,7 @@ msgstr "Mount nemůže být prázdný s Icecast serverem."
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr ""
+msgstr "Link:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
@@ -1265,15 +1264,15 @@ msgstr "týdně"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:20
 msgid "every 2 weeks"
-msgstr ""
+msgstr "každé 2 týdny"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:21
 msgid "every 3 weeks"
-msgstr ""
+msgstr "každé 3 týdny"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:22
 msgid "every 4 weeks"
-msgstr ""
+msgstr "každé 4 týdny"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:23
 msgid "monthly"
@@ -1320,15 +1319,15 @@ msgstr "So"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:47
 msgid "Repeat By:"
-msgstr ""
+msgstr "Opakovat:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the month"
-msgstr ""
+msgstr "den v měsíci"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the week"
-msgstr ""
+msgstr "den v týdnu"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:69
 msgid "No End?"
@@ -1340,7 +1339,7 @@ msgstr "Datum ukončení musí být po počátečním datumu"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:110
 msgid "Please select a repeat day"
-msgstr ""
+msgstr "Prosím vyberte den opakování"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:26
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:33
@@ -1699,11 +1698,11 @@ msgstr "zadejte čas v sekundách 0{.0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr ""
+msgstr "Přednastavení Fade In:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr ""
+msgstr "Přednastavení Fade Out:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
@@ -2060,7 +2059,7 @@ msgstr "Jste si jisti, že chcete smazat vybranou položku(y)?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:64
 msgid "Scheduled"
-msgstr ""
+msgstr "Naplánováno"
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Playlist / Block"
@@ -2155,7 +2154,7 @@ msgstr "Právě nahráváte soubory. %sPřechodem na jinou obrazovku zrušíte n
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
 msgid "Open Media Builder"
-msgstr ""
+msgstr "Otevřít Media Builder"
 
 #: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "please put in a time '00:00:00 (.0)'"
@@ -2271,7 +2270,7 @@ msgstr "Tato cesta není v současné době dostupná."
 #: airtime_mvc/application/controllers/LocaleController.php:160
 #, php-format
 msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
-msgstr ""
+msgstr "Některé typy streamů vyžadují zvláštní konfiguraci. Detaily o přístupu %sAAC+ Support%s nebo %sOpus Support%s jsou poskytovány."
 
 #: airtime_mvc/application/controllers/LocaleController.php:161
 msgid "Connected to the streaming server"
@@ -2341,7 +2340,7 @@ msgstr "Ukázka vysílání již neexistuje!"
 
 #: airtime_mvc/application/controllers/LocaleController.php:185
 msgid "Warning: Shows cannot be re-linked"
-msgstr ""
+msgstr "Varování: Vysílání nemohou být znovu linkována."
 
 #: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
@@ -2573,11 +2572,11 @@ msgstr "Posunutí %s položek"
 
 #: airtime_mvc/application/controllers/LocaleController.php:286
 msgid "Fade Editor"
-msgstr ""
+msgstr "Fade Editor"
 
 #: airtime_mvc/application/controllers/LocaleController.php:287
 msgid "Cue Editor"
-msgstr ""
+msgstr "Cue Editor"
 
 #: airtime_mvc/application/controllers/LocaleController.php:288
 msgid "Waveform features are available in a browser supporting the Web Audio API"
@@ -2873,15 +2872,15 @@ msgstr "Chyba: Neplatná přípona souboru: "
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:25
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:56
 msgid "Set Default"
-msgstr ""
+msgstr "Nastavit jako default"
 
 #: airtime_mvc/application/controllers/LocaleController.php:388
 msgid "Create Entry"
-msgstr ""
+msgstr "Vytvořit vstup"
 
 #: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "Edit History Record"
-msgstr ""
+msgstr "Editovat historii nahrávky"
 
 #: airtime_mvc/application/controllers/LocaleController.php:392
 #, php-format
@@ -3186,11 +3185,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:8
 msgid "File Summary"
-msgstr ""
+msgstr "Shrnutí souboru"
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:10
 msgid "Show Summary"
-msgstr ""
+msgstr "Shrnutí show"
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:54
 msgid "Expand Static Block"
@@ -3258,12 +3257,12 @@ msgstr "Nový webstream"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 msgid "Empty playlist content"
-msgstr ""
+msgstr "Prázdný playlist"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Clear"
-msgstr ""
+msgstr "Vymazat"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:24
 msgid "Shuffle playlist"
@@ -3467,7 +3466,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
-msgstr ""
+msgstr "Najdi"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:4
 msgid "Stream "
@@ -3662,11 +3661,11 @@ msgstr "Možnosti Smart Blocku"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:39
 msgid "or"
-msgstr ""
+msgstr "nebo"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:40
 msgid "and"
-msgstr ""
+msgstr "a"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:63
 msgid " to "
@@ -3701,11 +3700,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:46
 msgid "Add more elements"
-msgstr ""
+msgstr "Přidat elementy"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:67
 msgid "Add New Field"
-msgstr ""
+msgstr "Přidat nové pole"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:83
 msgid "Set Default Template"
@@ -3834,8 +3833,12 @@ msgstr "Žádné záznamy"
 #~ msgid "Timezone"
 #~ msgstr "Časová zóna"
 
-#~ msgid "%sAirtime%s %s, , the open radio software for scheduling and remote station management. %s"
-#~ msgstr "%s Airtime %s %s ,, open radio software pro plánování a řízení vzdálené stanice. %s"
+#~ msgid ""
+#~ "%sAirtime%s %s, , the open radio software for scheduling and remote "
+#~ "station management. %s"
+#~ msgstr ""
+#~ "%s Airtime %s %s ,, open radio software pro plánování a řízení vzdálené "
+#~ "stanice. %s"
 
 #~ msgid "File"
 #~ msgstr "Soubor"
