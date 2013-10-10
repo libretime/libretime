@@ -19,6 +19,7 @@ class Application_Model_Scheduler
     private $user;
 
     private $crossfadeDuration;
+    private $applyCrossfades = true;
 
     private $checkUserPermissions = true;
 
@@ -400,6 +401,7 @@ class Application_Model_Scheduler
 
         //check for if the show has started.
         if (bccomp( $nEpoch , $sEpoch , 6) === 1) {
+            $this->applyCrossfades = false;
             //need some kind of placeholder for cc_schedule.
             //playout_status will be -1.
             $nextDT = $this->nowDT;
@@ -618,7 +620,7 @@ class Application_Model_Scheduler
                         /* Show is not empty so we need to apply crossfades
                          * for the first inserted item
                          */
-                        $applyCrossfades = true;
+                        //$applyCrossfades = true;
                     }
                     //selected empty row to add after
                     else {
@@ -631,7 +633,7 @@ class Application_Model_Scheduler
                         /* Show is empty so we don't need to calculate crossfades
                          * for the first inserted item
                          */
-                        $applyCrossfades = false;
+                        $this->applyCrossfades = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -646,7 +648,7 @@ class Application_Model_Scheduler
 
                         $pstart = microtime(true);
 
-                        if ($applyCrossfades) {
+                        if ($this->applyCrossfades) {
                             $initalStartDT = clone $this->findTimeDifference(
                                 $nextStartDT, $this->crossfadeDuration);
                         } else {
@@ -730,7 +732,7 @@ class Application_Model_Scheduler
                             default: break;
                         }
 
-                        if ($applyCrossfades) {
+                        if ($this->applyCrossfades) {
                             $nextStartDT = $this->findTimeDifference($nextStartDT,
                                 $this->crossfadeDuration);
                             $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
@@ -738,7 +740,7 @@ class Application_Model_Scheduler
                             /* Set it to false because the rest of the crossfades
                              * will be applied after we insert each item
                              */
-                            $applyCrossfades = false;
+                            $this->applyCrossfades = false;
                         }
 
                         $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
