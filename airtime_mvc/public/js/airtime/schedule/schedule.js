@@ -319,7 +319,8 @@ function createFullCalendar(data){
         eventRender: eventRender,
         eventAfterRender: eventAfterRender,
         eventDrop: eventDrop,
-        eventResize: eventResize 
+        eventResize: eventResize,
+        windowResize: windowResize
     });
 }
 
