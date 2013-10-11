@@ -288,6 +288,21 @@ function eventRender(event, element, view) {
             $(element).find(".fc-event-title").after('<span class="small-icon rebroadcast"></span>');
         }
     }
+    
+    //now playing icon.
+    var span = '<span class="small-icon now-playing"></span>';
+
+	if (event.nowPlaying === true) {
+		
+		if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
+			
+			$(element).find(".fc-event-time").before(span);
+		}
+		else if (view_name === 'month') {
+			
+			$(element).find(".fc-event-title").after(span);
+		}
+	}
 }
 
 function eventAfterRender( event, element, view ) {
