@@ -13,8 +13,13 @@ var AIRTIME = (function(AIRTIME){
 var serverTimezoneOffset = 0;
 
 function closeDialogCalendar(event, ui) {
-    //$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-    $(this).remove();
+    
+    $el = $(this);
+    $el.dialog('destroy');
+    $el.remove();
+    
+    //need to refetch the events to update scheduled status.
+    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
 function checkShowLength(json) {
