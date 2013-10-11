@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-08 11:46-0400\n"
-"PO-Revision-Date: 2013-06-13 16:46+0100\n"
+"PO-Revision-Date: 2013-10-11 15:34+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Hungarian Localization <contact@sourcefabric.org>\n"
 "Language: \n"
@@ -109,7 +109,7 @@ msgstr "Év"
 
 #: airtime_mvc/application/services/HistoryService.php:1102
 msgid "Track"
-msgstr ""
+msgstr "Szám"
 
 #: airtime_mvc/application/services/HistoryService.php:1103
 #: airtime_mvc/application/models/Block.php:1332
@@ -128,12 +128,12 @@ msgstr "Nyelv"
 #: airtime_mvc/application/services/HistoryService.php:1129
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
 msgid "Start Time"
-msgstr ""
+msgstr "Kezdési Idő"
 
 #: airtime_mvc/application/services/HistoryService.php:1130
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
 msgid "End Time"
-msgstr ""
+msgstr "Fejezési Idő"
 
 #: airtime_mvc/application/services/HistoryService.php:1150
 msgid "Played"
@@ -141,7 +141,7 @@ msgstr "Lejátszott"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
-msgstr ""
+msgstr "Rögzített fájl nem létezik"
 
 #: airtime_mvc/application/services/CalendarService.php:54
 msgid "View Recorded File Metadata"
@@ -150,12 +150,12 @@ msgstr "A Rögzített Fájl Metaadatai"
 #: airtime_mvc/application/services/CalendarService.php:65
 #: airtime_mvc/application/controllers/LibraryController.php:282
 msgid "View on Soundcloud"
-msgstr "Megtekintés a SoundCloud -on"
+msgstr "Megtekintés a SoundCloud-on"
 
 #: airtime_mvc/application/services/CalendarService.php:70
 #: airtime_mvc/application/controllers/LibraryController.php:288
 msgid "Upload to SoundCloud"
-msgstr "Feltöltés a SoundCloud -ra"
+msgstr "Feltöltés a SoundCloud-ra"
 
 #: airtime_mvc/application/services/CalendarService.php:70
 #: airtime_mvc/application/controllers/LibraryController.php:286
@@ -171,7 +171,7 @@ msgstr "Műsor Tartalom"
 #: airtime_mvc/application/controllers/LocaleController.php:302
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 msgid "Add / Remove Content"
-msgstr "Az Elemek Hozzáadása / Eltávolítása"
+msgstr "Elemek Hozzáadása / Eltávolítása"
 
 #: airtime_mvc/application/services/CalendarService.php:95
 msgid "Remove All Content"
@@ -317,7 +317,7 @@ msgstr "Hallgatói Statisztikák"
 
 #: airtime_mvc/application/configs/navigation.php:92
 msgid "History"
-msgstr ""
+msgstr "Előzmények"
 
 #: airtime_mvc/application/configs/navigation.php:97
 msgid "Playout History"
@@ -325,7 +325,7 @@ msgstr "Lejátszási Előzmények"
 
 #: airtime_mvc/application/configs/navigation.php:104
 msgid "History Templates"
-msgstr ""
+msgstr "Előzményi Sablonok"
 
 #: airtime_mvc/application/configs/navigation.php:113
 #: airtime_mvc/application/views/scripts/error/error.phtml:13
@@ -693,7 +693,7 @@ msgstr "Mintavételi Ráta (kHz)"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:72
 #: airtime_mvc/application/controllers/LocaleController.php:87
 msgid "Track Number"
-msgstr "Műsorszám Sorszám"
+msgstr "Műsorszám Sorszáma"
 
 #: airtime_mvc/application/models/Block.php:1352
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:73
@@ -877,7 +877,7 @@ msgstr "Támogatási Visszajelzés Küldése"
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 #: airtime_mvc/application/forms/SupportSettings.php:122
 msgid "Promote my station on Sourcefabric.org"
-msgstr "Az állomásom közzététele a Sourcefabric.org -on"
+msgstr "Az állomásom közzététele a Sourcefabric.org-on"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:149
 #: airtime_mvc/application/forms/SupportSettings.php:148
@@ -1164,7 +1164,7 @@ msgstr "A login név nem egyedi."
 #: airtime_mvc/application/controllers/LocaleController.php:390
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 msgid "No Show"
-msgstr ""
+msgstr "Nincs Műsor"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:48
 msgid "Enabled:"
@@ -1264,15 +1264,15 @@ msgstr "hetente"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:20
 msgid "every 2 weeks"
-msgstr ""
+msgstr "minden második héten"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:21
 msgid "every 3 weeks"
-msgstr ""
+msgstr "minden harmadik héten"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:22
 msgid "every 4 weeks"
-msgstr ""
+msgstr "minden negyedik héten"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:23
 msgid "monthly"
@@ -1339,7 +1339,7 @@ msgstr "A befejezési idő után kell, hogy legyen kezdési idő is."
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:110
 msgid "Please select a repeat day"
-msgstr ""
+msgstr "Kérjük, válasszon egy ismétlési napot"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:26
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:33
@@ -1406,7 +1406,7 @@ msgstr "Állomásnév - Műsornév"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
-msgstr "Off Air - Metaadat"
+msgstr "Adáson Kívüli - Metaadat"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69
 msgid "Enable Replay Gain"
@@ -1660,7 +1660,7 @@ msgstr "Összes Műsorom:"
 
 #: airtime_mvc/application/forms/EditUser.php:121
 msgid "Interface Timezone:"
-msgstr ""
+msgstr "Felületi Időzóna:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 msgid "Use Airtime Authentication:"
@@ -1688,7 +1688,7 @@ msgstr "A jelszó nem lehet üres."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
 msgid "Default Crossfade Duration (s):"
-msgstr "Alapértelmezett Áttünési Időtartam (s):"
+msgstr "Alapértelmezett Áttünési Időtartam (mp):"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:40
 #: airtime_mvc/application/forms/GeneralPreferences.php:59
@@ -1698,11 +1698,11 @@ msgstr "adja meg másodpercben 0{0,0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr "Alapértelmezett Felúsztatás (s)"
+msgstr "Alapértelmezett Felúsztatás (mp)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr "Alapértelmezett Leúsztatás (s)"
+msgstr "Alapértelmezett Leúsztatás (mp)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
@@ -1723,7 +1723,7 @@ msgstr "Alapértelmezett Nyelvi Felület"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
 msgid "Station Timezone"
-msgstr ""
+msgstr "Állomási Időzóna:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:113
 msgid "Week Starts On"
@@ -1774,7 +1774,7 @@ msgstr "SoundCloud Feltöltés Engedélyezése"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:36
 msgid "Automatically Mark Files \"Downloadable\" on SoundCloud"
-msgstr "Automatikusan Megjelölt Fájlok \"Letölthető\" SoundCloud -on"
+msgstr "Automatikusan Megjelölt Fájlok \"Letölthetőek\" a SoundCloud-on"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:47
 msgid "SoundCloud Email"
@@ -1932,7 +1932,7 @@ msgstr "az útvonalat meg kell határozni"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:460
 msgid "Problem with Liquidsoap..."
-msgstr "Probléma lépett fel a Liquidsoap -al..."
+msgstr "Probléma lépett fel a Liquidsoap-al..."
 
 #: airtime_mvc/application/controllers/ErrorController.php:17
 msgid "Page not found"
@@ -1968,7 +1968,7 @@ msgstr "Élő Adás"
 
 #: airtime_mvc/application/controllers/LocaleController.php:35
 msgid "Nothing Scheduled"
-msgstr "Semmi Ütemezett"
+msgstr "Nincs semmi ütemezve"
 
 #: airtime_mvc/application/controllers/LocaleController.php:36
 msgid "Current Show:"
@@ -2121,7 +2121,7 @@ msgstr "A soundcloud id erre a fájlra:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:102
 msgid "There was an error while uploading to soundcloud."
-msgstr "A soundcloud -ra feltöltés közben hiba jelentkezett."
+msgstr "A soundcloud-ra feltöltés közben hiba jelentkezett."
 
 #: airtime_mvc/application/controllers/LocaleController.php:103
 msgid "Error code: "
@@ -2203,7 +2203,7 @@ msgstr "Soha ne emlékeztessen"
 
 #: airtime_mvc/application/controllers/LocaleController.php:128
 msgid "Yes, help Airtime"
-msgstr "Igen, segítek az Airtime -nak"
+msgstr "Igen, segítek az Airtime-nak"
 
 #: airtime_mvc/application/controllers/LocaleController.php:129
 #: airtime_mvc/application/controllers/LocaleController.php:178
@@ -2348,7 +2348,7 @@ msgstr "By linking your repeating shows any media items scheduled in any repeat 
 
 #: airtime_mvc/application/controllers/LocaleController.php:187
 msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
-msgstr ""
+msgstr "Az időzóna az Állomási Időzóna szerint van alapértelmezetten beállítva. A naptárban megjelenő helyi időt a Felületi Időzóna menüpontban módosíthatja, a felhasználói beállításoknál."
 
 #: airtime_mvc/application/controllers/LocaleController.php:191
 msgid "Show"
@@ -2596,7 +2596,7 @@ msgstr "A túlfoglalt számok eltávolítása"
 
 #: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Remove selected scheduled items"
-msgstr "A kijelölt üzemezett elemek eltávolítása"
+msgstr "A kijelölt ütemezett elemek eltávolítása"
 
 #: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Jump to the current playing track"
@@ -2800,7 +2800,7 @@ msgstr "Fájlok hozzáadása"
 #: airtime_mvc/application/controllers/LocaleController.php:368
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr "Feltöltött %d/%d fájlok"
+msgstr "Feltöltve %d/%d fájl"
 
 #: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "N/A"
@@ -2872,20 +2872,20 @@ msgstr "Hiba: Érvénytelen fájl kiterjesztés:"
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:25
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:56
 msgid "Set Default"
-msgstr ""
+msgstr "Alapértelmezett"
 
 #: airtime_mvc/application/controllers/LocaleController.php:388
 msgid "Create Entry"
-msgstr ""
+msgstr "Belépés Létrehozása"
 
 #: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "Edit History Record"
-msgstr ""
+msgstr "Rögzítési Előzmények Szerkesztése"
 
 #: airtime_mvc/application/controllers/LocaleController.php:392
 #, php-format
 msgid "Copied %s row%s to the clipboard"
-msgstr "Másolva %s sor%s a vágólapra"
+msgstr "%s sor%s van másolva a vágólapra"
 
 #: airtime_mvc/application/controllers/LocaleController.php:393
 #, php-format
@@ -2925,15 +2925,15 @@ msgstr "Az Ön számára nem érhető el az alábbi erőforrás."
 
 #: airtime_mvc/application/controllers/ApiController.php:563
 msgid "File does not exist in Airtime."
-msgstr "A fájl nem található az Airtime -ban."
+msgstr "A fájl nem található az Airtime-ban."
 
 #: airtime_mvc/application/controllers/ApiController.php:583
 msgid "File does not exist in Airtime"
-msgstr "A fájl nem található az Airtime -ban."
+msgstr "A fájl nem található az Airtime-ban."
 
 #: airtime_mvc/application/controllers/ApiController.php:595
 msgid "File doesn't exist in Airtime."
-msgstr "A fájl nem létezik az Airtime -ban."
+msgstr "A fájl nem létezik az Airtime-ban."
 
 #: airtime_mvc/application/controllers/ApiController.php:646
 msgid "Bad request. no 'mode' parameter passed."
@@ -3044,7 +3044,7 @@ msgstr "Érvénytelen érték forma."
 
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:2
 msgid "Listener Count Over Time"
-msgstr "Hallgatói Szám az Idő Függvényében"
+msgstr "Hallgatói Statisztika"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
@@ -3134,7 +3134,7 @@ msgstr "Megosztás"
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:64
 msgid "Select stream:"
-msgstr "Adásfolyam kiválasztása:"
+msgstr "Adásfolyam:"
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:90
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:60
@@ -3181,15 +3181,15 @@ msgstr "További segítségért, olvassa el a %shasználati útmutatót%s."
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:7
 msgid "Log Sheet"
-msgstr ""
+msgstr "Belépési Adatlap"
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:8
 msgid "File Summary"
-msgstr ""
+msgstr "Fájl Összegzés"
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:10
 msgid "Show Summary"
-msgstr ""
+msgstr "Műsor Összegzés"
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:54
 msgid "Expand Static Block"
@@ -3462,11 +3462,11 @@ msgstr "Úgy néz ki, az oldal, amit keresett nem létezik!"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
-msgstr ""
+msgstr "Adjon hozzá több elemet"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
-msgstr ""
+msgstr "Találat"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:4
 msgid "Stream "
@@ -3554,7 +3554,7 @@ msgstr "Segítsen az Airtime fejlesztésében, tudassa velünk az ötleteit. Az 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:25
 #, php-format
 msgid "Click the box below to advertise your station on %sSourcefabric.org%s. In order to promote your station, 'Send support feedback' must be enabled. This data will be collected in addition to the support feedback."
-msgstr "Kattintson az alábbi mezőbe, hogy hírdetni szeretném az állomásomat a %sSourcefabric.org%s -on. Annak érdekében, hogy támogassák az Ön állomását, a 'Támogatás Visszajelzés Küldését' engedélyeznie kell."
+msgstr "Kattintson az alábbi mezőbe, hogy hírdetni szeretném az állomásomat a %sSourcefabric.org%s-on. Annak érdekében, hogy támogassák az Ön állomását, a 'Támogatás Visszajelzés Küldését' engedélyeznie kell."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:65
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:79
@@ -3674,7 +3674,7 @@ msgstr "-hoz/-hez/-höz"
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:120
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:133
 msgid "files meet the criteria"
-msgstr "a fájlok megfelenek a kritériumoknak"
+msgstr "fájl megfelel a kritériumoknak"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:127
 msgid "file meet the criteria"
@@ -3692,51 +3692,51 @@ msgstr "Speciális Keresési Beállítások"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:2
 msgid "Creating File Summary Template"
-msgstr ""
+msgstr "Összegzési Sablon Fájl Létrehozása"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:4
 msgid "Creating Log Sheet Template"
-msgstr ""
+msgstr "Bejelentkezési Adatlap Sablon Létrehozása"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:46
 msgid "Add more elements"
-msgstr ""
+msgstr "Adjon hozzá több elemet"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:67
 msgid "Add New Field"
-msgstr ""
+msgstr "Új Mező Hozzáadása"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:83
 msgid "Set Default Template"
-msgstr ""
+msgstr "Alapértelmezett Sablon"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:4
 msgid "Log Sheet Templates"
-msgstr ""
+msgstr "Bejelentkezési Adatlap Sablonok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:7
 msgid "No Log Sheet Templates"
-msgstr ""
+msgstr "Nincsenek Bejelentkezési Adatlap Sablonok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:31
 msgid "New Log Sheet Template"
-msgstr ""
+msgstr "Nincs Bejelentkezési Adatlap Sablon"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:35
 msgid "File Summary Templates"
-msgstr ""
+msgstr "Összegzési Sablon Fájlok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:38
 msgid "No File Summary Templates"
-msgstr ""
+msgstr "Nincsenek Összegzési Sablon Fájlok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:62
 msgid "New File Summary Template"
-msgstr ""
+msgstr "Új Összegzési Sablon Fájl"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:2
 msgid "Stream Settings"
-msgstr "Adásfolyam Beállítások"
+msgstr "Adásfolyam/Patak Beállítások"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:12
 msgid "Global Settings"
