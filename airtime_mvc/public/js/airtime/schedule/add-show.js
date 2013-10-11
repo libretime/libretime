@@ -4,6 +4,84 @@
 *
 */
 
+function openAddShowForm() {
+     if($("#add-show-form").length == 1) {
+        if( ($("#add-show-form").css('display')=='none')) {
+            $("#add-show-form").show();
+            var windowWidth = $(window).width();
+            // margin on showform are 16 px on each side
+            var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
+            var widthPercent = parseInt(calendarWidth)+"%";
+            $("#schedule_calendar").css("width", widthPercent);
+
+            // 200 px for top dashboard and 50 for padding on main content
+            // this calculation was copied from schedule.js line 326
+            var mainHeight = document.documentElement.clientHeight - 200 - 50;
+            $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
+        }
+        $("#schedule-show-what").show(0, function(){
+            $add_show_name = $("#add_show_name");
+            $add_show_name.focus();
+            $add_show_name.select();
+        });
+    }
+}
+
+function makeAddShowButton(){
+    $('.fc-header-left')
+        .append('<span class="fc-header-space"></span>')
+        .append('<span class="fc-button"><a href="#" class="add-button"><span class="add-icon"></span>'+$.i18n._("Show")+'</a></span>')
+        .find('span.fc-button:last > a')
+            .click(function(){
+                openAddShowForm();
+                removeAddShowButton();
+            });
+}
+
+function removeAddShowButton(){
+    var aTag = $('.fc-header-left')
+        .find("span.fc-button:last > a");
+
+    var span = aTag.parent();
+    span.prev().remove();
+    span.remove();
+}
+
+//$el is DOM element #add-show-form
+//form is the new form contents to append to $el
+function redrawAddShowForm($el, form) {
+	
+	//need to clean up the color picker.
+    $el.find("#schedule-show-style input").each(function(i, el){
+    	var $input = $(this), 
+    		colId = $input.data("colorpickerId");
+    	
+    	$("#"+colId).remove();
+    	$input.removeData();
+    });
+    
+    $el.empty().append(form);
+    
+    setAddShowEvents($el);
+}
+
+function closeAddShowForm(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    var $el = $("#add-show-form");
+    
+	$el.hide();
+    windowResize();
+
+    $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json) {
+    	
+    	redrawAddShowForm($el, json.form);
+    });
+    
+    makeAddShowButton();
+}
+
 //dateText mm-dd-yy
 function startDpSelect(dateText, inst) {
 	var time, date;
@@ -73,16 +151,14 @@ function findHosts(request, callback) {
 }
 
 function beginEditShow(data){
-    if(data.show_error == true){
+	
+    if (data.show_error == true){
         alertShowErrorAndReload();
         return false;
     }
-    $("#add-show-form")
-        .empty()
-        .append(data.newForm);
-
+    
+    redrawAddShowForm($("#add-show-form"), data.newForm);
     removeAddShowButton();
-    setAddShowEvents();
     openAddShowForm();
 }
 
@@ -130,9 +206,9 @@ function getContrastYIQ(hexcolor){
 }
 
 
-function setAddShowEvents() {
+function setAddShowEvents(form) {
 
-    var form = $("#add-show-form");
+    //var form = $("#add-show-form");
 
 	form.find("h3").click(function(){
         $(this).next().toggle();
@@ -499,7 +575,6 @@ function setAddShowEvents() {
 		}
 	});
 
-
     form.find("#add-show-close").click(closeAddShowForm);
 
 	form.find(".add-show-submit").click(function(event) {
@@ -541,37 +616,30 @@ function setAddShowEvents() {
             
             $('#schedule-add-show').unblock();
             
+            var $addShowForm = $("#add-show-form");
+            
             if (json.form) {
-                $("#add-show-form")
-                    .empty()
-                    .append(json.form);
-
-                setAddShowEvents();
+            	
+            	redrawAddShowForm($addShowForm, json.form);
 
                 $("#add_show_end_date").val(end_date);
                 $("#add_show_start_date").val(start_date);
                 showErrorSections();
-            }else if(json.edit){
+            }
+            else if (json.edit) {
+            	
                 $("#schedule_calendar").removeAttr("style")
-                .fullCalendar('render');
+                	.fullCalendar('render');
 
-                $("#add-show-form").hide();
+                $addShowForm.hide();
                 $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
-                    $("#add-show-form")
-                        .empty()
-                        .append(json.form);
-    
-                    setAddShowEvents();
+                	redrawAddShowForm($addShowForm, json.form);
                 });
                 makeAddShowButton();
             }
             else {
-                 $("#add-show-form")
-                    .empty()
-                    .append(json.newForm);
-                    
 
-                setAddShowEvents();
+                redrawAddShowForm($addShowForm, json.newForm);
                 scheduleRefetchEvents(json);
             }
         });
@@ -715,7 +783,7 @@ function showErrorSections() {
 }
 
 $(document).ready(function() {
-    setAddShowEvents();
+    setAddShowEvents($("#add-show-form"));
 });
 
 //Alert the error and reload the page
