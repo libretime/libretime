@@ -500,107 +500,82 @@ function setAddShowEvents() {
 	});
 
 
-    form.find("#add-show-close")
-		.click(function(event){
-            event.stopPropagation();
-            event.preventDefault();
+    form.find("#add-show-close").click(closeAddShowForm);
 
-			$("#add-show-form").hide();
-            windowResize();
+	form.find(".add-show-submit").click(function(event) {
+		event.preventDefault();
+		
+        var addShowButton = $(this);
+        
+        $('#schedule-add-show').block({ 
+            message: null,
+            applyPlatformOpacityRules: false
+        });
 
-            $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
+        //when editing a show, the record option is disabled
+        //we have to enable it to get the correct value when
+        //we call serializeArray()
+        if (form.find("#add_show_record").attr("disabled", true)) {
+            form.find("#add_show_record").attr("disabled", false);
+        }
+
+		var data = $("form").serializeArray();
+
+        var hosts = $('#add_show_hosts-element input').map(function() {
+            if($(this).attr("checked")) {
+                return $(this).val();
+            }
+        }).get();
+
+        var days = $('#add_show_day_check-element input').map(function() {
+            if($(this).attr("checked")) {
+                return $(this).val();
+            }
+        }).get();
+
+        var start_date = $("#add_show_start_date").val();
+        var end_date = $("#add_show_end_date").val();
+        var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
+
+        $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
+            
+            $('#schedule-add-show').unblock();
+            
+            if (json.form) {
                 $("#add-show-form")
                     .empty()
                     .append(json.form);
 
                 setAddShowEvents();
-            });
-            makeAddShowButton();
-		});
 
-	form.find(".add-show-submit")
-		.click(function(event){
-            var addShowButton = $(this);
-            /*
-            if (!addShowButton.hasClass("disabled")){
-                addShowButton.addClass("disabled");
-            }
-            else {
-                return;
-            }
-            */
+                $("#add_show_end_date").val(end_date);
+                $("#add_show_start_date").val(start_date);
+                showErrorSections();
+            }else if(json.edit){
+                $("#schedule_calendar").removeAttr("style")
+                .fullCalendar('render');
 
-            event.preventDefault();
-
-            //when editing a show, the record option is disabled
-            //we have to enable it to get the correct value when
-            //we call serializeArray()
-            if (form.find("#add_show_record").attr("disabled", true)) {
-                form.find("#add_show_record").attr("disabled", false);
-            }
-
-			var data = $("form").serializeArray();
-
-            var hosts = $('#add_show_hosts-element input').map(function() {
-                if($(this).attr("checked")) {
-                    return $(this).val();
-                }
-            }).get();
-
-            var days = $('#add_show_day_check-element input').map(function() {
-                if($(this).attr("checked")) {
-                    return $(this).val();
-                }
-            }).get();
-
-            var start_date = $("#add_show_start_date").val();
-            var end_date = $("#add_show_end_date").val();
-
-            $('#schedule-add-show').block({ 
-                message: null,
-                applyPlatformOpacityRules: false
-            });
-
-            var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
-
-            $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
-                //addShowButton.removeClass("disabled");
-                $('#schedule-add-show').unblock();
-                if(json.form) {
+                $("#add-show-form").hide();
+                $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
                     $("#add-show-form")
                         .empty()
                         .append(json.form);
-
+    
                     setAddShowEvents();
+                });
+                makeAddShowButton();
+            }
+            else {
+                 $("#add-show-form")
+                    .empty()
+                    .append(json.newForm);
+                    
 
-                    $("#add_show_end_date").val(end_date);
-                    $("#add_show_start_date").val(start_date);
-                    showErrorSections();
-                }else if(json.edit){
-                    $("#schedule_calendar").removeAttr("style")
-                    .fullCalendar('render');
-
-                    $("#add-show-form").hide();
-                    $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
-                        $("#add-show-form")
-                            .empty()
-                            .append(json.form);
-        
-                        setAddShowEvents();
-                    });
-                    makeAddShowButton();
-                }
-                else {
-                     $("#add-show-form")
-                        .empty()
-                        .append(json.newForm);
-                        
-
-                    setAddShowEvents();
-                    scheduleRefetchEvents(json);
-                }
-            });
-		});
+                setAddShowEvents();
+                scheduleRefetchEvents(json);
+            }
+        });
+	});
 
     var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/);
     var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]$/);

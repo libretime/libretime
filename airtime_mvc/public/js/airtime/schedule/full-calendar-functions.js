@@ -42,6 +42,34 @@ function openAddShowForm() {
     }
 }
 
+function closeAddShowForm(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    var $el = $("#add-show-form");
+    
+	$el.hide();
+    windowResize();
+
+    $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json) {
+    	
+    	//need to clean up the color picker.
+        $el.find("#schedule-show-style input").each(function(i, el){
+        	var $input = $(this), 
+        		colId = $input.data("colorpickerId");
+        	
+        	$("#"+colId).remove();
+        	$input.removeData();
+        });
+        
+        $el.empty().append(json.form);
+
+        setAddShowEvents();
+    });
+    
+    makeAddShowButton();
+}
+
 function makeAddShowButton(){
     $('.fc-header-left')
         .append('<span class="fc-header-space"></span>')
