@@ -575,26 +575,38 @@ class Application_Service_HistoryService
 
 				$instanceEnd = $showInstance->getDbEnds(null);
 				$itemEnd = $item->getDbEnds(null);
+				$recordStart = $item->getDbStarts(null);
 				$recordEnd = ($instanceEnd < $itemEnd) ? $instanceEnd : $itemEnd;
-
-				$history = new CcPlayoutHistory();
-				$history->setDbFileId($fileId);
-				$history->setDbStarts($item->getDbStarts(null));
-				$history->setDbEnds($recordEnd);
-				$history->setDbInstanceId($item->getDbInstanceId());
-
-				foreach ($metadata as $key => $val) {
-					$meta = new CcPlayoutHistoryMetaData();
-					$meta->setDbKey($key);
-					$meta->setDbValue($val);
-
-					$history->addCcPlayoutHistoryMetaData($meta);
-				}
-
-				$history->save($this->con);
-			}
-
-			$this->con->commit();
+				
+				//first check if this is a duplicate
+				// (caused by restarting liquidsoap)
+				
+				$prevRecord = CcPlayoutHistoryQuery::create()
+					->filterByDbStarts($recordStart)
+					->filterByDbEnds($recordEnd)
+					->filterByDbFileId($fileId)
+					->findOne($this->con);
+				
+				if (empty($prevRecord)) {
+					
+					$history = new CcPlayoutHistory();
+					$history->setDbFileId($fileId);
+					$history->setDbStarts($recordStart);
+					$history->setDbEnds($recordEnd);
+					$history->setDbInstanceId($item->getDbInstanceId());
+					
+					foreach ($metadata as $key => $val) {
+						$meta = new CcPlayoutHistoryMetaData();
+						$meta->setDbKey($key);
+						$meta->setDbValue($val);
+					
+						$history->addCcPlayoutHistoryMetaData($meta);
+					}
+					
+					$history->save($this->con);
+					$this->con->commit();
+				}	
+			}	
 		}
 		catch (Exception $e) {
 			$this->con->rollback();
