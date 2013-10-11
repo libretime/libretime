@@ -87,9 +87,10 @@ if [ "$code" != "squeeze" -a "$code" != "lucid" ]; then
     apt-get -y --force-yes install libvo-aacenc0
 fi
 
-#Install php5-json on Ubuntu Saucy.
+#Install some plugin packages on Ubuntu Saucy.
 if [ "$dist" = "Ubuntu" -a "$code" = "saucy" ]; then
-    apt-get -y --force-yes install php5-json
+    apt-get -y --force-yes install php5-json 
+    apt-get -y --force-yes install liquidsoap-plugin-alsa liquidsoap-plugin-portaudio liquidsoap-plugin-opus
 fi
 
 #Install packages back-ported by Sourcefabric
