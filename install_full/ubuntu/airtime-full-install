@@ -90,7 +90,8 @@ fi
 #Install some plugin packages on Ubuntu Saucy.
 if [ "$dist" = "Ubuntu" -a "$code" = "saucy" ]; then
     apt-get -y --force-yes install php5-json 
-    apt-get -y --force-yes install liquidsoap-plugin-alsa liquidsoap-plugin-portaudio liquidsoap-plugin-opus
+    apt-get -y --force-yes install liquidsoap-plugin-alsa liquidsoap-plugin-ao liquidsoap-plugin-faad liquidsoap-plugin-flac liquidsoap-plugin-icecast liquidsoap-plugin-lame liquidsoap-plugin-mad liquidsoap-plugin-ogg liquidsoap-plugin-opus liquidsoap-plugin-portaudio liquidsoap-plugin-pulseaudio liquidsoap-plugin-taglib liquidsoap-plugin-voaacenc liquidsoap-plugin-vorbis
+ 
 fi
 
 #Install packages back-ported by Sourcefabric
