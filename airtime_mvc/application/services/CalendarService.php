@@ -79,22 +79,27 @@ class Application_Service_CalendarService
                     "url" => $baseUrl."schedule/show-content-dialog");
             }
         } else {
-            //Show content can be modified from the calendar if:
-            // the show has not started,
+            // Show content can be modified from the calendar if:
             // the user is admin or hosting the show,
             // the show is not recorded
+            
+            if ($now < $end && ($isAdminOrPM || $isHostOfShow) &&
+            		!$this->ccShowInstance->isRecorded() ) {
+            
+            	$menu["schedule"] = array(
+            			"name"=> _("Add / Remove Content"),
+            			"icon" => "add-remove-content",
+            			"url" => $baseUrl."showbuilder/builder-dialog/");
+            	
+            }
+            
             if ($now < $start && ($isAdminOrPM || $isHostOfShow) &&
-                !$this->ccShowInstance->isRecorded() ) {
-
-                $menu["schedule"] = array(
-                        "name"=> _("Add / Remove Content"),
-                        "icon" => "add-remove-content",
-                        "url" => $baseUrl."showbuilder/builder-dialog/");
-
-                $menu["clear"] = array(
-                        "name"=> _("Remove All Content"),
-                        "icon" => "remove-all-content",
-                        "url" => $baseUrl."schedule/clear-show");
+            		!$this->ccShowInstance->isRecorded() ) {
+            
+            	$menu["clear"] = array(
+            			"name"=> _("Remove All Content"),
+            			"icon" => "remove-all-content",
+            			"url" => $baseUrl."schedule/clear-show");
             }
 
             //"Show Content" should be a menu item at all times except when

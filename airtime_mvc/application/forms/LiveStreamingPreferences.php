@@ -179,7 +179,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                             socket_bind($sock, 0, $dj_harbor_input_port);
                         } catch (Exception $e) {
                             $element = $this->getElement("dj_harbor_input_port");
-                            $element->addError(sprintf(_("Port %s is not available"). $dj_harbor_input_port));
+                            $element->addError(sprintf(_("Port %s is not available"), $dj_harbor_input_port));
                             $isValid = false;
                         }
                         socket_close($sock);
