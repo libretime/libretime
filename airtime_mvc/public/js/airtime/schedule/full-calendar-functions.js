@@ -586,8 +586,8 @@ function alertShowErrorAndReload(){
   window.location.reload();
 }
 
-preloadEventFeed();
 $(document).ready(function(){
+    preloadEventFeed();
     checkSCUploadStatus();
     getCurrentShow();
 });
