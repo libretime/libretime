@@ -21,9 +21,10 @@ LEFT JOIN cc_schedule AS sched
 ON sched.id = wm.instance_id
 LEFT JOIN cc_webstream AS ws
 ON sched.stream_id = ws.id
+LEFT JOIN cc_show_instances as showinstances
+ON sched.instance_id = showinstances.id
 LEFT JOIN cc_show AS show
-ON sched.instance_id = show.id;
-
+ON showinstances.show_id = show.id;
 
 CREATE OR REPLACE FUNCTION migrateWebstreamHistory() RETURNS int4 AS $$
 
