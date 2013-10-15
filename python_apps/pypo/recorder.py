@@ -60,16 +60,16 @@ class ShowRecorder(Thread):
 
     def __init__ (self, show_instance, show_name, filelength, start_time):
         Thread.__init__(self)
-        self.logger        = logging.getLogger('recorder')
-        self.api_client    = api_client(self.logger)
-        self.filelength    = filelength
-        self.start_time    = start_time
+        self.logger = logging.getLogger('recorder')
+        self.api_client = api_client(self.logger)
+        self.filelength = filelength
+        self.start_time = start_time
         self.show_instance = show_instance
-        self.show_name     = show_name
-        self.p             = None
+        self.show_name = show_name
+        self.p = None
 
     def record_show(self):
-        length   = str(self.filelength) + ".0"
+        length = str(self.filelength)
         filename = self.start_time
         filename = filename.replace(" ", "-")
 
@@ -94,7 +94,7 @@ class ShowRecorder(Thread):
 
         self.logger.info("starting record")
         self.logger.info("command " + command)
-
+ 
         self.p = Popen(args,stdout=PIPE)
 
         #blocks at the following line until the child process
@@ -104,7 +104,7 @@ class ShowRecorder(Thread):
         for msg in outmsgs:
             m = re.search('^ERROR',msg)
             if not m == None:
-                self.logger.info('Recording error is found: %s', msg)
+                self.logger.info('Recording error is found: %s', outmsgs)
         self.logger.info("finishing record, return code %s", self.p.returncode)
         code = self.p.returncode
 
@@ -113,12 +113,6 @@ class ShowRecorder(Thread):
         return code, filepath
 
     def cancel_recording(self):
-        #add 3 second delay before actually cancelling the show. The reason
-        #for this is because it appears that ecasound starts 1 second later than
-        #it should, and therefore this method is sometimes incorrectly called 1
-        #second before the show ends.
-        #time.sleep(3)
-
         #send signal interrupt (2)
         self.logger.info("Show manually cancelled!")
         if (self.p is not None):
@@ -188,13 +182,13 @@ class ShowRecorder(Thread):
 class Recorder(Thread):
     def __init__(self, q):
         Thread.__init__(self)
-        self.logger          = logging.getLogger('recorder')
-        self.api_client      = api_client(self.logger)
-        self.sr              = None
+        self.logger = logging.getLogger('recorder')
+        self.api_client = api_client(self.logger)
+        self.sr = None
         self.shows_to_record = {}
         self.server_timezone = ''
-        self.queue           = q
-        self.loops           = 0
+        self.queue = q
+        self.loops = 0
         self.logger.info("RecorderFetch: init complete")
 
         success = False
@@ -213,8 +207,8 @@ class Recorder(Thread):
             command = msg["event_type"]
             self.logger.info("Received msg from Pypo Message Handler: %s", msg)
             if command == 'cancel_recording':
-                if self.sr is not None and self.sr.is_recording():
-                    self.sr.cancel_recording()
+                if self.currently_recording():
+                    self.cancel_recording()
             else:
                 self.process_recorder_schedule(msg)
                 self.loops = 0
@@ -228,8 +222,8 @@ class Recorder(Thread):
         shows = m['shows']
         for show in shows:
             show_starts = getDateTimeObj(show[u'starts'])
-            show_end    = getDateTimeObj(show[u'ends'])
-            time_delta  = show_end - show_starts
+            show_end = getDateTimeObj(show[u'ends'])
+            time_delta = show_end - show_starts
 
             temp_shows_to_record[show[u'starts']] = [time_delta,
                     show[u'instance_id'], show[u'name'], m['server_timezone']]
@@ -240,10 +234,10 @@ class Recorder(Thread):
             tnow = datetime.datetime.utcnow()
             sorted_show_keys = sorted(self.shows_to_record.keys())
 
-            start_time       = sorted_show_keys[0]
-            next_show        = getDateTimeObj(start_time)
+            start_time = sorted_show_keys[0]
+            next_show = getDateTimeObj(start_time)
 
-            delta            = next_show - tnow
+            delta = next_show - tnow
             s = '%s.%s' % (delta.seconds, delta.microseconds)
             out = float(s)
 
@@ -252,6 +246,16 @@ class Recorder(Thread):
                 self.logger.debug("Next show %s", next_show)
                 self.logger.debug("Now %s", tnow)
         return out
+    
+    def cancel_recording(self):
+        self.sr.cancel_recording()
+        self.sr = None
+    
+    def currently_recording(self):
+        if self.sr is not None and self.sr.is_recording():
+            return True
+        else:
+            return False
 
     def start_record(self):
         if len(self.shows_to_record) == 0: return None
@@ -262,11 +266,11 @@ class Recorder(Thread):
                 time.sleep(delta)
 
                 sorted_show_keys = sorted(self.shows_to_record.keys())
-                start_time       = sorted_show_keys[0]
-                show_length      = self.shows_to_record[start_time][0]
-                show_instance    = self.shows_to_record[start_time][1]
-                show_name        = self.shows_to_record[start_time][2]
-                server_timezone  = self.shows_to_record[start_time][3]
+                start_time = sorted_show_keys[0]
+                show_length = self.shows_to_record[start_time][0]
+                show_instance = self.shows_to_record[start_time][1]
+                show_name = self.shows_to_record[start_time][2]
+                server_timezone = self.shows_to_record[start_time][3]
 
                 T = pytz.timezone(server_timezone)
                 start_time_on_UTC = getDateTimeObj(start_time)
@@ -274,8 +278,23 @@ class Recorder(Thread):
                 start_time_formatted = '%(year)d-%(month)02d-%(day)02d %(hour)02d:%(min)02d:%(sec)02d' % \
                     {'year': start_time_on_server.year, 'month': start_time_on_server.month, 'day': start_time_on_server.day, \
                         'hour': start_time_on_server.hour, 'min': start_time_on_server.minute, 'sec': start_time_on_server.second}
-                self.sr = ShowRecorder(show_instance, show_name, show_length.seconds, start_time_formatted)
-                self.sr.start()
+                    
+                
+                seconds_waiting = 0
+                
+                #avoiding CC-5299
+                while(True):
+                    if self.currently_recording():
+                        self.logger.info("Previous record not finished, sleeping 100ms")
+                        seconds_waiting = seconds_waiting + 0.1
+                        time.sleep(0.1)   
+                    else:
+                        show_length_seconds = show_length.seconds - seconds_waiting
+                        
+                        self.sr = ShowRecorder(show_instance, show_name, show_length_seconds, start_time_formatted)
+                        self.sr.start()
+                        break
+                    
                 #remove show from shows to record.
                 del self.shows_to_record[start_time]
                 #self.time_till_next_show = self.get_time_till_next_show()
