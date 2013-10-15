@@ -311,8 +311,8 @@ class Application_Service_CalendarService
                 $ccShowDay = $this->ccShow->getFirstCcShowDay();
                 $showTimezone = new DateTimeZone($ccShowDay->getDbTimezone());
                 $ccShowDay
-                    ->setDbFirstShow($newStartsDateTime->setTimezone($showTimezone))
-                    ->setDbLastShow($newEndsDateTime->setTimezone($showTimezone))
+                    ->setDbFirstShow($newStartsDateTime->setTimezone($showTimezone)->format("Y-m-d"))
+                    ->setDbStartTime($newStartsDateTime->format("H:i"))
                     ->save();
             }
 
