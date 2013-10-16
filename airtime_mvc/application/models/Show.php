@@ -453,9 +453,10 @@ SQL;
     }
 
     /**
-     * Get the repeat type of the show. Show can have repeat
-     * type of "weekly", "bi-weekly" and "monthly". These values
-     * are represented by 0, 1, and 2 respectively.
+     * Get the repeat type of the show. Show can have repeat type of 
+     * "weekly", "every 2 weeks", "monthly", "monthly on the same weekday",
+     * "every 3 weeks" and "every 4 weeks". These values are represented 
+     * by 0, 1, 2, 3, 4 and 5, respectively.
      *
      * @return int
      *      Return the integer corresponding to the repeat type.

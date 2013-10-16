@@ -27,7 +27,7 @@ $(document).ready(function() {
     });
     $("#scheduleTabs").airtimeWeekSchedule({
         sourceDomain:"http://localhost",
-        dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday"},
+        dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday", nextmonday:"Next Monday", nexttuesday:"Next Tuesday",nextwednesday:"Next Wednesday", nextthursday:"Next Thursday",nextfriday:"Next Friday", nextsaturday:"Next Saturday", nextsunday:"NextSunday"},
         miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
         updatePeriod: 600 //seconds
     });
@@ -45,7 +45,7 @@ This widget displays which show is currently playing:
 <div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
 <br/>
 <br/>
-<h1>"Current Show & Track Information" Widget</h1>
+<h1>"Current Show &amp; Track Information" Widget</h1>
 This widget displays which show and track are currently playing:
 <br/>
 <br/>
@@ -53,14 +53,14 @@ This widget displays which show and track are currently playing:
 <br/>
 <br/>
 <h1>"Today's Program" Widget</h1>
-This widget displays what is being played today:
+This widget displays the current show and shows being played later today:
 <br/>
 <br/>
 <div id="onAirToday"></div>
 <br/>
 <br/>
 <h1>"Weekly Program" Widget</h1>
-This widget displays all the shows for the entire week:
+This widget displays all the shows for the entire week, and the week ahead:
 <br/>
 <br/>
 <div id="scheduleTabs"></div>
