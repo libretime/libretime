@@ -657,54 +657,70 @@ SQL;
                 $blSelect[]     = "BL.id AS ".$key;
                 $fileSelect[]   = "FILES.id AS $key";
                 $streamSelect[] = "ws.id AS ".$key;
-            } elseif ($key === "track_title") {
+            } 
+            elseif ($key === "track_title") {
                 $plSelect[]     = "name AS ".$key;
                 $blSelect[]     = "name AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "name AS ".$key;
-            } elseif ($key === "ftype") {
+            } 
+            elseif ($key === "ftype") {
                 $plSelect[]     = "'playlist'::varchar AS ".$key;
                 $blSelect[]     = "'block'::varchar AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "'stream'::varchar AS ".$key;
-            } elseif ($key === "artist_name") {
+            } 
+            elseif ($key === "artist_name") {
                 $plSelect[]     = "login AS ".$key;
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "login AS ".$key;
-            } elseif ($key === "owner_id") {
+            } 
+            elseif ($key === "owner_id") {
                 $plSelect[]     = "login AS ".$key;
                 $blSelect[]     = "login AS ".$key;
                 $fileSelect[]   = "sub.login AS $key";
                 $streamSelect[] = "login AS ".$key;
-            } elseif ($key === "replay_gain") {
+            } 
+            elseif ($key === "replay_gain") {
                 $plSelect[]     = "NULL::NUMERIC AS ".$key;
                 $blSelect[]     = "NULL::NUMERIC AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::NUMERIC AS ".$key;
-            } elseif ($key === "lptime") {
+            } 
+            elseif ($key === "lptime") {
                 $plSelect[]     = "NULL::TIMESTAMP AS ".$key;
                 $blSelect[]     = "NULL::TIMESTAMP AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = $key;
-            } elseif ($key === "is_scheduled" || $key === "is_playlist") {
+            } 
+            elseif ($key === "is_scheduled" || $key === "is_playlist") {
                 $plSelect[]     = "NULL::boolean AS ".$key;
                 $blSelect[]     = "NULL::boolean AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::boolean AS ".$key;
-            } elseif ($key === "cuein" || $key === "cueout") {
+            } 
+            elseif ($key === "cuein" || $key === "cueout") {
                 $plSelect[]     = "NULL::INTERVAL AS ".$key;
                 $blSelect[]     = "NULL::INTERVAL AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::INTERVAL AS ".$key;
             }
+            //file length is displayed based on cueout - cuein.
+            else if ($key === "length") {
+            	$plSelect[]     = $key;
+            	$blSelect[]     = $key;
+            	$fileSelect[]   = "(cueout - cuein)::INTERVAL AS length";
+            	$streamSelect[] = $key;
+            }
             //same columns in each table.
-            else if (in_array($key, array("length", "utime", "mtime"))) {
+            else if (in_array($key, array("utime", "mtime"))) {
                 $plSelect[]     = $key;
                 $blSelect[]     = $key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = $key;
-            } elseif ($key === "year") {
+            } 
+            elseif ($key === "year") {
                 $plSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
                 $blSelect[]     = "EXTRACT(YEAR FROM utime)::varchar AS ".$key;
                 $fileSelect[]   = "year AS ".$key;
@@ -716,17 +732,20 @@ SQL;
                 $blSelect[]     = "NULL::int AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "NULL::int AS ".$key;
-            } elseif ($key === "filepath") {
+            } 
+            elseif ($key === "filepath") {
                 $plSelect[]     = "NULL::VARCHAR AS ".$key;
                 $blSelect[]     = "NULL::VARCHAR AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = "url AS ".$key;
-            } else if ($key == "mime") {
+            } 
+            else if ($key == "mime") {
                 $plSelect[]     = "NULL::VARCHAR AS ".$key;
                 $blSelect[]     = "NULL::VARCHAR AS ".$key;
                 $fileSelect[]   = $key;
                 $streamSelect[] = $key;
-            } else {
+            } 
+            else {
                 $plSelect[]     = "NULL::text AS ".$key;
                 $blSelect[]     = "NULL::text AS ".$key;
                 $fileSelect[]   = $key;
