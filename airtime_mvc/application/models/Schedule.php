@@ -814,7 +814,6 @@ SQL;
             'start'             => $start,
             'end'               => $end,
             'show_name'         => $item["show_name"],
-            'row_id'            => $item["id"],
             'independent_event' => true
         );
         self::appendScheduleItem($data, $start, $schedule_item);
@@ -909,12 +908,14 @@ SQL;
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $uri = $storedFile->getFilePath();
                 self::createFileScheduleEvent($data, $item, $media_id, $uri);
-            } elseif (!is_null($item['stream_id'])) {
+            } 
+            elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
                 self::createStreamScheduleEvent($data, $item, $media_id, $uri);
-            } else {
+            } 
+            else {
                 throw new Exception("Unknown schedule type: ".print_r($item, true));
             }
 
@@ -991,7 +992,7 @@ SQL;
         self::createInputHarborKickTimes($data, $range_start, $range_end);
         self::createScheduledEvents($data, $range_start, $range_end);
 
-        self::foldData($data["media"]);
+        //self::foldData($data["media"]);
         return $data;
     }
 
