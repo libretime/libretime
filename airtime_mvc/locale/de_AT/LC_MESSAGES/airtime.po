@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-08 11:46-0400\n"
-"PO-Revision-Date: 2013-10-11 10:35+0100\n"
+"PO-Revision-Date: 2013-10-16 15:38+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Austrian Localization <contact@sourcefabric.org>\n"
 "MIME-Version: 1.0\n"
@@ -170,7 +170,7 @@ msgstr "Sendungsinhalt"
 #: airtime_mvc/application/controllers/LocaleController.php:302
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 msgid "Add / Remove Content"
-msgstr "Inhalt Hinzufügen / Entfernen"
+msgstr "Inhalt hinzufügen / entfernen"
 
 #: airtime_mvc/application/services/CalendarService.php:95
 msgid "Remove All Content"
@@ -185,16 +185,16 @@ msgstr "Aktuelle Sendung abbrechen"
 #: airtime_mvc/application/controllers/LibraryController.php:241
 #: airtime_mvc/application/controllers/LibraryController.php:263
 msgid "Edit"
-msgstr "Ändern"
+msgstr "Bearbeiten"
 
 #: airtime_mvc/application/services/CalendarService.php:133
 #: airtime_mvc/application/services/CalendarService.php:143
 msgid "Edit Show"
-msgstr "Sendung ändern"
+msgstr "Sendung bearbeiten"
 
 #: airtime_mvc/application/services/CalendarService.php:138
 msgid "Edit This Instance"
-msgstr "Bearbeite diese Folge"
+msgstr "Diese Folge bearbeiten"
 
 #: airtime_mvc/application/services/CalendarService.php:156
 #: airtime_mvc/application/services/CalendarService.php:171
@@ -828,7 +828,7 @@ msgstr "Port"
 #: airtime_mvc/application/forms/SupportSettings.php:21
 #: airtime_mvc/application/forms/GeneralPreferences.php:21
 msgid "Station Name"
-msgstr "Sendername:"
+msgstr "Sendername"
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:39
 #: airtime_mvc/application/forms/SupportSettings.php:34
@@ -1001,7 +1001,7 @@ msgstr "Automatisch abschalten"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:26
 msgid "Auto Switch On"
-msgstr "Automatisch anschalten"
+msgstr "Automatisch einschalten"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:33
 msgid "Switch Transition Fade (s)"
@@ -1369,7 +1369,7 @@ msgstr "Beschreibung:"
 
 #: airtime_mvc/application/forms/AddShowWho.php:10
 msgid "Search Users:"
-msgstr "Suche Benutzer:"
+msgstr "Benutzer suchen:"
 
 #: airtime_mvc/application/forms/AddShowWho.php:24
 msgid "DJs:"
@@ -1397,11 +1397,11 @@ msgstr "Artist - Titel"
 
 #: airtime_mvc/application/forms/StreamSetting.php:56
 msgid "Show - Artist - Title"
-msgstr "Sendung - Artist - Titel"
+msgstr "Sendung - Interpret - Titel"
 
 #: airtime_mvc/application/forms/StreamSetting.php:57
 msgid "Station name - Show name"
-msgstr "Radiostation - Sendungsname"
+msgstr "Radiostation - Sendung"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
@@ -1663,11 +1663,11 @@ msgstr "Zeitzone Interface"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 msgid "Use Airtime Authentication:"
-msgstr "Verwende Airtime Authentifizierung:"
+msgstr "Airtime Authentifizierung:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
-msgstr "Verwende benutzerdefinierte Authentifizierung:"
+msgstr "Benutzerdefinierte Authentifizierung:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:26
 msgid "Custom Username"
@@ -1979,7 +1979,7 @@ msgstr "Aktuell"
 
 #: airtime_mvc/application/controllers/LocaleController.php:39
 msgid "You are running the latest version"
-msgstr "Sie betreiben die aktuellste Version"
+msgstr "Sie verwenden die aktuellste Version"
 
 #: airtime_mvc/application/controllers/LocaleController.php:40
 msgid "New version available: "
@@ -2030,7 +2030,7 @@ msgstr "Bitte wählen Sie eine Cursor-Position auf der Zeitleiste."
 #: airtime_mvc/application/controllers/LocaleController.php:57
 #: airtime_mvc/application/controllers/LibraryController.php:218
 msgid "Edit Metadata"
-msgstr "Metadaten ändern"
+msgstr "Metadaten bearbeiten"
 
 #: airtime_mvc/application/controllers/LocaleController.php:58
 msgid "Add to selected show"
@@ -2038,19 +2038,19 @@ msgstr "Zu gewählter Sendung hinzufügen"
 
 #: airtime_mvc/application/controllers/LocaleController.php:59
 msgid "Select"
-msgstr "Wählen"
+msgstr "Auswahl"
 
 #: airtime_mvc/application/controllers/LocaleController.php:60
 msgid "Select this page"
-msgstr "Wählen sie diese Seite"
+msgstr "Ganze Seite markieren"
 
 #: airtime_mvc/application/controllers/LocaleController.php:61
 msgid "Deselect this page"
-msgstr "Wählen sie diese Seite ab"
+msgstr "Ganze Seite nicht markieren"
 
 #: airtime_mvc/application/controllers/LocaleController.php:62
 msgid "Deselect all"
-msgstr "Alle Abwählen"
+msgstr "Keines Markieren"
 
 #: airtime_mvc/application/controllers/LocaleController.php:63
 msgid "Are you sure you want to delete the selected item(s)?"
@@ -2221,7 +2221,7 @@ msgstr ""
 msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
 msgstr ""
 "Ein Dynamischer Smart Block speichert nur die Kriterien.\n"
-"Dabei wird der Inhalt erst erstellt, wenn der Smart Block einer Sendung hinzugefügt wird. Der Inhalt des Smart Blocks kann in der Bibliothek nicht eingesehen oder editiert werden."
+"Dabei wird der Inhalt erst erstellt, wenn der Smart Block einer Sendung hinzugefügt wird. Der Inhalt des Smart Blocks kann in der Bibliothek nicht eingesehen oder verändert werden."
 
 #: airtime_mvc/application/controllers/LocaleController.php:136
 msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
@@ -2346,7 +2346,7 @@ msgstr "Diese Einstellung folgt den Sicherheitsvorlagen für Shows: Nur Benutzer
 
 #: airtime_mvc/application/controllers/LocaleController.php:182
 msgid "Specify custom authentication which will work only for this show."
-msgstr "Bestimmen einer benutzerdefinierten Authentifizierung, welche nur für diese Sendung funktionieren wird."
+msgstr "Hiermit aktiviert man eine benutzerdefinierte Authentifizierung, welche nur für diese Sendung funktionieren wird."
 
 #: airtime_mvc/application/controllers/LocaleController.php:184
 msgid "The show instance doesn't exist anymore!"
@@ -2354,7 +2354,7 @@ msgstr "Die Sendungsinstanz existiert nicht mehr!"
 
 #: airtime_mvc/application/controllers/LocaleController.php:185
 msgid "Warning: Shows cannot be re-linked"
-msgstr "Warnung: Sendungen können nicht wieder verknüpft werden."
+msgstr "Warnung: Sendungen können nicht erneut verknüpft werden."
 
 #: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
@@ -2402,7 +2402,7 @@ msgstr "Daten werden vom Server abgerufen..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:206
 msgid "This show has no scheduled content."
-msgstr "Diese Sendung hat keinen festgelegten Inhalt."
+msgstr "Diese Sendung hat keinen geplanten Inhalt."
 
 #: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "This show is not completely filled with content."
@@ -2519,7 +2519,7 @@ msgstr "Monat"
 
 #: airtime_mvc/application/controllers/LocaleController.php:253
 msgid "Shows longer than their scheduled time will be cut off by a following show."
-msgstr "Wenn der Inhalt einer Sendung länger ist als im Kalender festgelegt ist, wird das Ende durch eine nachfolgende Sendung abgschnitten."
+msgstr "Wenn der Inhalt einer Sendung länger ist als die Sendung im Kalender geplant ist, wird das Ende durch eine nachfolgende Sendung abgeschnitten."
 
 #: airtime_mvc/application/controllers/LocaleController.php:254
 msgid "Cancel Current Show?"
@@ -2610,7 +2610,7 @@ msgstr "Überbuchte Titel entfernen"
 
 #: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Remove selected scheduled items"
-msgstr "Gewähltes Element entfernen"
+msgstr "Gewähltes Objekt entfernen"
 
 #: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Jump to the current playing track"
@@ -2793,7 +2793,7 @@ msgstr "Dateien wählen"
 #: airtime_mvc/application/controllers/LocaleController.php:360
 #: airtime_mvc/application/controllers/LocaleController.php:361
 msgid "Add files to the upload queue and click the start button."
-msgstr "Fügen sie Dateien der Warteschlange zum Hochladen hinzu und drücken Sie auf Start."
+msgstr "Fügen sie zum Hochladen Dateien der Warteschlange hinzu und drücken Sie auf Start."
 
 #: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Add Files"
@@ -2972,7 +2972,7 @@ msgstr "Etwas ist falsch gelaufen."
 #: airtime_mvc/application/controllers/LibraryController.php:234
 #: airtime_mvc/application/controllers/LibraryController.php:257
 msgid "Add to Playlist"
-msgstr "Hinzufügen zu Playlist"
+msgstr "Zu Playlist hinzufügen"
 
 #: airtime_mvc/application/controllers/LibraryController.php:212
 msgid "Add to Smart Block"
@@ -3058,7 +3058,7 @@ msgstr "Ungültiger Eingabewert"
 
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:2
 msgid "Listener Count Over Time"
-msgstr "Hörerzahl im Zeitablauf"
+msgstr "Hörerzahl im Zeitraffer"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
@@ -3184,7 +3184,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:10
 msgid "Select your media from the left pane and drag them to your show in the right pane."
-msgstr "Wählen sie Medien vom linken Feld und ziehen sie es in ihre Sendung am im rechten Feld."
+msgstr "Wählen sie Medien vom linken Feld und ziehen sie diese in ihre Sendung im rechten Feld."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:12
 msgid "Then you're good to go!"
@@ -3217,11 +3217,11 @@ msgstr "Dynamischen Block erweitern"
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:135
 msgid "Empty smart block"
-msgstr "Smart Block leeren"
+msgstr "Smart Block leer"
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:137
 msgid "Empty playlist"
-msgstr "Playlist leeren"
+msgstr "Playlist leer"
 
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:3
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:3
@@ -3297,7 +3297,7 @@ msgstr "Playlist Crossfade"
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:55
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:39
 msgid "View / edit description"
-msgstr "Beschreibung ansehen / ändern"
+msgstr "Beschreibung ansehen / bearbeiten"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:85
 msgid "No open playlist"
@@ -3522,7 +3522,7 @@ msgstr "Stream URL:"
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:9
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:27
 msgid "Choose folder"
-msgstr "Wähle Verzeichnis"
+msgstr "Verzeichnis wählen"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:10
 msgid "Set"
@@ -3599,11 +3599,11 @@ msgstr "Geschäftsbedingungen und Rahmenverhältnisse"
 
 #: airtime_mvc/application/views/scripts/form/showbuilder.phtml:7
 msgid "Find Shows"
-msgstr "Suche Sendungen"
+msgstr "Sendungen suchen"
 
 #: airtime_mvc/application/views/scripts/form/showbuilder.phtml:12
 msgid "Filter By Show:"
-msgstr "Filter nach Sendung:"
+msgstr "Nach Sendung filtern:"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:2
 msgid "Input Stream Settings"
@@ -3616,7 +3616,7 @@ msgstr "Master-Quelle Verbindungs-URL:"
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:115
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:159
 msgid "Override"
-msgstr "Überordnen"
+msgstr "Übersteuern"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
