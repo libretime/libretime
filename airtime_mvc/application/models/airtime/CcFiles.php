@@ -27,36 +27,6 @@ class CcFiles extends BaseCcFiles {
 		return $length;
 	}
 
-    public function getDbLength($format = "H:i:s.u")
-    {
-        return parent::getDbLength($format);
-    }
-
-    public function setDbLength($v)
-    {
-        //we are using DateTime instead of DateInterval because the latter doesn't
-        //support subseconds :(
-        if ($v instanceof DateTime) {
-            $dt = $v;
-        }
-        else {
-
-            try {
-
-                $dt = new DateTime($v);
-
-            } catch (Exception $x) {
-                throw new PropelException('Error parsing date/time value: ' .
-                    var_export($v, true), $x);
-            }
-        }
-
-        $this->length = $dt->format('H:i:s.u');
-        $this->modifiedColumns[] = CcFilesPeer::LENGTH;
-
-        return $this;
-    }
-
     public function setDbTrackNumber($v)
     {
         $max = pow(2, 31)-1;
