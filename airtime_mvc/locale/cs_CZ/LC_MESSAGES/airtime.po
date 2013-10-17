@@ -141,7 +141,7 @@ msgstr "Přehráno"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
-msgstr ""
+msgstr "Soubor s nahrávkou neexistuje"
 
 #: airtime_mvc/application/services/CalendarService.php:54
 msgid "View Recorded File Metadata"
@@ -325,7 +325,7 @@ msgstr "Historie odvysílaného"
 
 #: airtime_mvc/application/configs/navigation.php:104
 msgid "History Templates"
-msgstr ""
+msgstr "Historie nastavení"
 
 #: airtime_mvc/application/configs/navigation.php:113
 #: airtime_mvc/application/views/scripts/error/error.phtml:13
@@ -615,7 +615,7 @@ msgstr "Vysílání %s bylo již dříve aktualizováno!"
 
 #: airtime_mvc/application/models/Scheduler.php:177
 msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
-msgstr ""
+msgstr "Obsah v propojených show musí být zařazen před nebo po kterémkoliv, který je vysílaný "
 
 #: airtime_mvc/application/models/Scheduler.php:199
 #: airtime_mvc/application/models/Scheduler.php:288
@@ -1660,7 +1660,7 @@ msgstr "Všechna má vysílání:"
 
 #: airtime_mvc/application/forms/EditUser.php:121
 msgid "Interface Timezone:"
-msgstr ""
+msgstr "Časové pásmo uživatelského rozhraní"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 msgid "Use Airtime Authentication:"
@@ -1688,7 +1688,7 @@ msgstr "Heslo musí být zadáno."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
 msgid "Default Crossfade Duration (s):"
-msgstr ""
+msgstr "Defoltní nastavení doby plynulého přechodu"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:40
 #: airtime_mvc/application/forms/GeneralPreferences.php:59
@@ -1723,7 +1723,7 @@ msgstr "Výchozí jazyk rozhraní"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
 msgid "Station Timezone"
-msgstr ""
+msgstr "Časové pásmo stanice"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:113
 msgid "Week Starts On"
@@ -2063,7 +2063,7 @@ msgstr "Naplánováno"
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Playlist / Block"
-msgstr ""
+msgstr "Playlist/Blok"
 
 #: airtime_mvc/application/controllers/LocaleController.php:69
 msgid "Bit Rate"
@@ -2251,7 +2251,7 @@ msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
 msgstr ""
-"Jste si jisti, že chcete změnit složku úložiště ? \n"
+"Jste si jisti, že chcete změnit složku úložiště ?\n"
 "Tímto odstraníte soubry z vaší Airtime knihovny!"
 
 #: airtime_mvc/application/controllers/LocaleController.php:156
@@ -2344,11 +2344,11 @@ msgstr "Varování: Vysílání nemohou být znovu linkována."
 
 #: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
-msgstr ""
+msgstr "Propojením vašich opakujících se show, jakákoliv média zařazena v jakékoliv opakující se show bude také zařazena do dalších opakujících se show."
 
 #: airtime_mvc/application/controllers/LocaleController.php:187
 msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
-msgstr ""
+msgstr "Časové pásmo je nastaveno v časovém pásmu stanice defoltně. Show v kalendáři bude zobrazena v lokálním čase nastaveném časovým pásmem vašeho uživatelského rozhraní ve vašem uživatelském nastavení. "
 
 #: airtime_mvc/application/controllers/LocaleController.php:191
 msgid "Show"
@@ -2580,7 +2580,7 @@ msgstr "Cue Editor"
 
 #: airtime_mvc/application/controllers/LocaleController.php:288
 msgid "Waveform features are available in a browser supporting the Web Audio API"
-msgstr ""
+msgstr "Prvky Waveform jsou k dispozici v prohlížeči podporující Web Audio API"
 
 #: airtime_mvc/application/controllers/LocaleController.php:291
 msgid "Select all"
@@ -3181,7 +3181,7 @@ msgstr "Pro podrobnější nápovědu si přečtěte %suživatelský manuál%s."
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:7
 msgid "Log Sheet"
-msgstr ""
+msgstr "Přehled logu"
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:8
 msgid "File Summary"
@@ -3210,7 +3210,7 @@ msgstr "Prázdný playlist"
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:3
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:3
 msgid "Show Waveform"
-msgstr ""
+msgstr "UKázat Waveform"
 
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:6
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:70
@@ -3289,7 +3289,7 @@ msgstr "Neotevřený playlist"
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Empty smart block content"
-msgstr ""
+msgstr "Prázný obsah smart block."
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:90
 msgid "No open smart block"
@@ -3462,7 +3462,7 @@ msgstr "Stránka, kterou hledáte, neexistuje!"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
-msgstr ""
+msgstr "Vybrat instanci show"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
@@ -3692,11 +3692,11 @@ msgstr "Rozšířené možnosti hledání"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:2
 msgid "Creating File Summary Template"
-msgstr ""
+msgstr "Vytvořit soubor přehledu nastavení"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:4
 msgid "Creating Log Sheet Template"
-msgstr ""
+msgstr "Vytvořit vzor přehledu logů"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:46
 msgid "Add more elements"
@@ -3708,31 +3708,31 @@ msgstr "Přidat nové pole"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:83
 msgid "Set Default Template"
-msgstr ""
+msgstr "Nastavit defolní šablnu"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:4
 msgid "Log Sheet Templates"
-msgstr ""
+msgstr "Vzory přehledu logů"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:7
 msgid "No Log Sheet Templates"
-msgstr ""
+msgstr "Vzory přehledu logů nejsou"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:31
 msgid "New Log Sheet Template"
-msgstr ""
+msgstr "Nový vzor přehledu logů"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:35
 msgid "File Summary Templates"
-msgstr ""
+msgstr "Vzory přehledu souboru"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:38
 msgid "No File Summary Templates"
-msgstr ""
+msgstr "Nový vzor přehledu souboru"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:62
 msgid "New File Summary Template"
-msgstr ""
+msgstr "Nový vzor přehledu souboru"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:2
 msgid "Stream Settings"
