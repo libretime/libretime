@@ -4159,12 +4159,16 @@ function AgendaEventRenderer() {
 			},
 			grid: slotHeight,
 			start: function(ev, ui) {
+				console.log("event resize started");
+				
 				slotDelta = prevSlotDelta = 0;
 				hideEvents(event, eventElement);
 				eventElement.css('z-index', 9);
 				trigger('eventResizeStart', this, event, ev, ui);
 			},
 			resize: function(ev, ui) {
+				console.log("event resizing");
+				
 				// don't rely on ui.size.height, doesn't take grid into account
 				slotDelta = Math.round((Math.max(slotHeight, eventElement.height()) - ui.originalSize.height) / slotHeight);
 				if (slotDelta != prevSlotDelta) {
@@ -4180,6 +4184,8 @@ function AgendaEventRenderer() {
 				}
 			},
 			stop: function(ev, ui) {
+				console.log("event resize stopped");
+				
 				trigger('eventResizeStop', this, event, ev, ui);
 				if (slotDelta) {
 					eventResize(this, event, 0, opt('slotMinutes')*slotDelta, ev, ui);

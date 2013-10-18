@@ -453,9 +453,10 @@ SQL;
     }
 
     /**
-     * Get the repeat type of the show. Show can have repeat
-     * type of "weekly", "bi-weekly" and "monthly". These values
-     * are represented by 0, 1, and 2 respectively.
+     * Get the repeat type of the show. Show can have repeat type of 
+     * "weekly", "every 2 weeks", "monthly", "monthly on the same weekday",
+     * "every 3 weeks" and "every 4 weeks". These values are represented 
+     * by 0, 1, 2, 3, 4 and 5, respectively.
      *
      * @return int
      *      Return the integer corresponding to the repeat type.
@@ -1082,6 +1083,14 @@ SQL;
             $event["rebroadcast"]   = intval($show["rebroadcast"]);
             $event["soundcloud_id"] = is_null($show["soundcloud_id"])
                 ? -1 : $show["soundcloud_id"];
+            
+            //for putting the now playing icon on the show.
+            if ($now > $startsDT && $now < $endsDT) {
+            	$event["nowPlaying"] = true;
+            }
+            else {
+            	$event["nowPlaying"] = false;
+            }
 
             //event colouring
             if ($show["color"] != "") {

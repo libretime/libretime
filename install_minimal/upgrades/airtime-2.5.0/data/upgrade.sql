@@ -21,9 +21,10 @@ LEFT JOIN cc_schedule AS sched
 ON sched.id = wm.instance_id
 LEFT JOIN cc_webstream AS ws
 ON sched.stream_id = ws.id
+LEFT JOIN cc_show_instances as showinstances
+ON sched.instance_id = showinstances.id
 LEFT JOIN cc_show AS show
-ON sched.instance_id = show.id;
-
+ON showinstances.show_id = show.id;
 
 CREATE OR REPLACE FUNCTION migrateWebstreamHistory() RETURNS int4 AS $$
 
@@ -56,3 +57,13 @@ SELECT migrateWebstreamHistory() as output;
 
 DROP FUNCTION migrateWebstreamHistory();
 DROP VIEW ws_history;
+
+DELETE from cc_show_instances AS ins 
+WHERE (ins.starts,ins.ends,ins.show_id) 
+IN (SELECT starts,ends,show_id FROM cc_show_instances GROUP BY starts,ends,show_id HAVING count(*) >1 ) 
+AND ins.id NOT IN (SELECT min(id) FROM cc_show_instances GROUP BY starts,ends,show_id HAVING count(*) >1 );
+
+
+DELETE FROM cc_schedule 
+WHERE id 
+IN (SELECT sc.id FROM cc_schedule AS sc LEFT JOIN cc_show_instances AS i ON sc.instance_id=i.id LEFT JOIN cc_show AS s ON i.show_id=s.id WHERE sc.starts<i.starts ORDER BY sc.starts);
