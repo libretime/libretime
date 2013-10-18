@@ -4,14 +4,15 @@ exec 2>&1
 
 target="airtime_git_branch:2.5.x"
 #target="airtime_git_branch:airtime-2.0.0-RC1"
-airtime_versions=("")
-#airtime_versions=("airtime_191_tar" "airtime_192_tar" "airtime_192_tar" "airtime_194_tar" "airtime_195_tar")
-#ubuntu_versions=("ubuntu_lucid_32" "ubuntu_lucid_64" "ubuntu_precise_32" "ubuntu_precise_64" "ubuntu_quantal_32" "ubuntu_quantal_64" "ubuntu_raring_32" "ubuntu_raring_64" "debian_squeeze_32" "debian_squeeze_64" "debian_wheezy_32" "debian_wheezy_64" "ubuntu_saucy_32" "ubuntu_saucy_64")
-ubuntu_versions=("ubuntu_saucy_64" "ubuntu_saucy_32")
+#airtime_versions=("")
+airtime_versions=("airtime_241_tar")
+ubuntu_versions=("ubuntu_lucid_32" "ubuntu_lucid_64" "ubuntu_precise_32" "ubuntu_precise_64" "ubuntu_quantal_32" "ubuntu_quantal_64" "ubuntu_raring_32" "ubuntu_raring_64" "debian_squeeze_32" "debian_squeeze_64" "debian_wheezy_32" "debian_wheezy_64" "ubuntu_saucy_32" "ubuntu_saucy_64")
+#ubuntu_versions=("ubuntu_saucy_64" "ubuntu_saucy_32")
 
 num1=${#ubuntu_versions[@]}
 num2=${#airtime_versions[@]}
-
+upgrade_log_folder="upgrade_logs"
+rm -rf ./upgrade_logs
 mkdir -p ./upgrade_logs
 
 for i in $(seq 0 $(($num1 -1)));
