@@ -399,7 +399,7 @@ def airtime_240_tar():
 def airtime_241_tar():
     do_run('wget http://sourceforge.net/projects/airtime/files/2.4.1/airtime-2.4.1-ga.tar.gz')
     do_run('tar xfz airtime-2.4.1-ga.tar.gz')
-    do_sudo('cd /home/martin/airtime-2.4.0/install_full/ubuntu && ./airtime-full-install')
+    do_sudo('cd /home/martin/Airtime-airtime-2.4.1-ga/install_full/ubuntu && ./airtime-full-install')
 
 def airtime_latest_deb():
     append('/etc/apt/sources.list', "deb http://apt.sourcefabric.org/ lucid main", use_sudo=True)

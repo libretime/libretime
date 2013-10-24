@@ -535,6 +535,9 @@ class Application_Model_Scheduler
             $linked = false;
 
             foreach ($scheduleItems as $schedule) {
+                //reset
+                $this->applyCrossfades = true;
+
                 $id = intval($schedule["id"]);
 
                 /* Find out if the show where the cursor position (where an item will
@@ -597,6 +600,9 @@ class Application_Model_Scheduler
 
                 $excludePositions = array();
                 foreach($instances as &$instance) {
+                    //reset
+                    $this->applyCrossfades = true;
+
                     $instanceId = $instance["id"];
                     if ($id !== 0) {
                         /* We use the selected cursor's position to find the same
@@ -616,11 +622,6 @@ class Application_Model_Scheduler
                             $instanceId);
 
                         $pos++;
-
-                        /* Show is not empty so we need to apply crossfades
-                         * for the first inserted item
-                         */
-                        //$applyCrossfades = true;
                     }
                     //selected empty row to add after
                     else {

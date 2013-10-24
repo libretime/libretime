@@ -1,40 +1,50 @@
 =========================================================================
-==========================    AIRTIME   =================================
+=================   Airtime - Live Broadcast Together   =================
 =========================================================================
-Airtime is an open source application that provides remote automation 
-of a radio station.
 
-Home page: http://airtime.sourcefabric.org/
+Airtime is an open source application that provides remote and 
+collaborative automation of a broadcast station.
+
+Home page: http://www.sourcefabric.org/en/airtime/
 
 Major features:
- * Web-based remote station management.  Authorized personnel can add
-   program material, create playlists and schedule programming all via 
-   a web interface.
- * Automation.  Airtime has a scheduler function that enables users to
-   set shows with playlists for playback at a date and time of their choosing.
-   Playlists can be played back multiple times.
- * Solid, fast playback.  Airtime uses the open source Liquidsoap 
-   multimedia framework for clean, reliable, fast playback. 
+
+ * Web-based remote station management. Authorized personnel can add
+   programme material, create playlists or smart blocks, and stream in live, 
+   all via a web interface.
+ * Automation. Airtime has a scheduler function that enables users to
+   create shows with content for playback at the exact date and time specified. 
+   Playlists, smart blocks and remote stream URLs can be used multiple times.
+ * Solid playout. Airtime uses the open source Liquidsoap streaming language 
+   for reliable and precise playback to multiple outputs. 
  * Open, extensible architecture.  Stations are free to extend and alter 
-   all parts of the program code.
+   all parts of the program code, under the GNU GPLv3 license.
 
 
 INSTALLATION
 ------------
-Please see this page for a typical user installation:
-http://www.sourcefabric.org/en/products/airtime_manuals/
+
+For the fastest, most painless installation on Ubuntu 12.04 and up, run:
+    
+    cd install_full/ubuntu
+    sudo ./airtime-full-install
+
+For Debian, run:
+
+    cd install_full/debian
+    sudo ./airtime-full-install
+
+For custom installation and other distributions of Linux, please see this 
+chapter to begin a typical installation:
+http://sourcefabric.booktype.pro/airtime-24-for-broadcasters/preparing-the-server/
 
 If you are a developer, please see this page:
 http://wiki.sourcefabric.org/display/CC/Airtime+Dev+Site
 
 Quick links to our resources
 ----------------------------
-    User Manual: http://www.sourcefabric.org/en/airtime/manuals/
-    Forums and mailing lists: http://forum.sourcefabric.org
-    Bug Tracking: http://dev.sourcefabric.org
-    Code view/review: http://code.sourcefabric.org
-    Public source code hosting: http://github.com/sourcefabric
-    Download link: https://sourceforge.net/projects/airtime/files/
-    Developer's wiki: http://wiki.sourcefabric.org
-
-
+User manuals: http://www.sourcefabric.org/en/airtime/manuals/
+Forums and mailing lists: http://forum.sourcefabric.org
+Bug tracker: http://dev.sourcefabric.org
+Source code: http://github.com/sourcefabric/Airtime
+IRC chat: #airtime on Freenode

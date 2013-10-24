@@ -760,7 +760,7 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnDrawCallback": AIRTIME.library.fnDrawCallback,
             
-            "aaSorting": [[3, 'asc']],
+            "aaSorting": [[5, 'asc']],
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
             "bAutoWidth": false,
@@ -782,9 +782,6 @@ var AIRTIME = (function(AIRTIME) {
             }
             
         });
-
-        //sort by title, by default
-        oTable.fnSort( [ [5, 'asc'] ] );
 
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
