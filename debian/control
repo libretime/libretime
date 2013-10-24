@@ -3,8 +3,8 @@ Section: web
 Priority: optional
 Maintainer: Daniel James <daniel@64studio.com>
 Build-Depends: debhelper (>= 7.0.50~), po-debconf
-Standards-Version: 3.8.4
-Homepage: http://www.sourcefabric.org/en/products/airtime_overview/
+Standards-Version: 3.9.3
+Homepage: http://www.sourcefabric.org/en/airtime/
 
 Package: airtime
 Architecture: all
@@ -15,48 +15,40 @@ Depends: apache2,
  ecasound,
  flac,
  gzip (>= 1.3.12),
- libao-ocaml,
  libapache2-mod-php5,
- libc-bin,
  libcamomile-ocaml-data,
- libesd0,
- libmad-ocaml,
- libmp3lame0,
- libportaudio2,
- libpulse0,
- libsamplerate0,
- libsoundtouch-ocaml,
- libtaglib-ocaml,
- liquidsoap (>= 1.0.0~),
+ liquidsoap (>= 1.1.1~),
  locales,
  lsof,
  monit,
+ mp3gain,
  multitail,
  odbc-postgresql,
  patch,
- php-db,
  php5-cli,
  php5-curl,
+ php-db,
  php5-gd,
  php-pear,
  php5-pgsql,
  pwgen,
  python,
  rabbitmq-server,
- silan  (>= 0.3.1~),
+ silan (>= 0.3.1~),
  sudo,
  sysv-rc, 
  tar (>= 1.22),
  unzip,
+ vorbisgain,
  vorbis-tools,
  zendframework | libzend-framework-php,
  ${misc:Depends}
 Recommends: icecast2, php-apc
 Suggests: airtime-audio-samples,
  alsa-utils
-Description: open radio software for scheduling and remote station management.
+Description: open broadcast software for scheduling and station management.
  Airtime is an open source application that provides remote automation 
- of a radio station.
+ of a broadcast station.
  .
  Major features:
  .

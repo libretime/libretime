@@ -2,7 +2,7 @@
 # Script for generating nightly Airtime snapshot packages
 # Run from the directory containg the files checked out from git
 
-VERSION=2.4.0~$(date "+%Y%m%d")
+VERSION=2.5.1~$(date "+%Y%m%d")
 BUILDDEST=/tmp/airtime-${VERSION}/
 DEBDIR=`pwd`/debian
 
@@ -23,9 +23,9 @@ cd ${BUILDDEST} || exit
 
 # Set the version of the snapshot package
 
-sed -i "1s:(2.4.0-1):(${VERSION}):g" debian/changelog
+sed -i "1s:(2.5.1-1):(${VERSION}):g" debian/changelog
 
-# FIXES for 2.3.0 #############
+# FIXES for 2.5.1 #############
 
 # these are all moved to debian/copyright
 rm airtime/python_apps/pypo/LICENSE
@@ -45,6 +45,12 @@ rm -r airtime/airtime_mvc/library/ZFDebug/
 
 #Strip un-needed install scripts
 rm -r airtime/install_full/
+
+#Remove dev tools and files
+rm -r airtime/dev_tools/
+rm -r airtime/docs/
+rm airtime/.gitignore
+rm airtime/.zfproject.xml
 
 #############################
 
