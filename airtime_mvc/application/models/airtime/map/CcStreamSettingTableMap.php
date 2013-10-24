@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,40 +18,41 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcStreamSettingTableMap extends TableMap {
+class CcStreamSettingTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcStreamSettingTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcStreamSettingTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_stream_setting');
-		$this->setPhpName('CcStreamSetting');
-		$this->setClassname('CcStreamSetting');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(false);
-		// columns
-		$this->addPrimaryKey('KEYNAME', 'DbKeyName', 'VARCHAR', true, 64, null);
-		$this->addColumn('VALUE', 'DbValue', 'VARCHAR', false, 255, null);
-		$this->addColumn('TYPE', 'DbType', 'VARCHAR', true, 16, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_stream_setting');
+        $this->setPhpName('CcStreamSetting');
+        $this->setClassname('Airtime\\CcStreamSetting');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(false);
+        // columns
+        $this->addPrimaryKey('keyname', 'DbKeyName', 'VARCHAR', true, 64, null);
+        $this->addColumn('value', 'DbValue', 'VARCHAR', false, 255, null);
+        $this->addColumn('type', 'DbType', 'VARCHAR', true, 16, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+    } // buildRelations()
 
 } // CcStreamSettingTableMap

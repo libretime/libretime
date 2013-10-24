@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\PlayoutHistory\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,46 +18,47 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcPlayoutHistoryTableMap extends TableMap {
+class CcPlayoutHistoryTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcPlayoutHistoryTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcPlayoutHistoryTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_playout_history');
-		$this->setPhpName('CcPlayoutHistory');
-		$this->setClassname('CcPlayoutHistory');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_playout_history_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addForeignKey('FILE_ID', 'DbFileId', 'INTEGER', 'cc_files', 'ID', false, null, null);
-		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
-		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', false, null, null);
-		$this->addForeignKey('INSTANCE_ID', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'ID', false, null, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_playout_history');
+        $this->setPhpName('CcPlayoutHistory');
+        $this->setClassname('Airtime\\PlayoutHistory\\CcPlayoutHistory');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_playout_history_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', false, null, null);
+        $this->addColumn('starts', 'DbStarts', 'TIMESTAMP', true, null, null);
+        $this->addColumn('ends', 'DbEnds', 'TIMESTAMP', false, null, null);
+        $this->addForeignKey('instance_id', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'id', false, null, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'SET NULL', null);
-    $this->addRelation('CcPlayoutHistoryMetaData', 'CcPlayoutHistoryMetaData', RelationMap::ONE_TO_MANY, array('id' => 'history_id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcFiles', 'Airtime\\CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('CcShowInstances', 'Airtime\\CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'SET NULL', null);
+        $this->addRelation('CcPlayoutHistoryMetaData', 'Airtime\\PlayoutHistory\\CcPlayoutHistoryMetaData', RelationMap::ONE_TO_MANY, array('id' => 'history_id', ), 'CASCADE', null, 'CcPlayoutHistoryMetaDatas');
+    } // buildRelations()
 
 } // CcPlayoutHistoryTableMap

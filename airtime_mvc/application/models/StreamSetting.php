@@ -1,4 +1,7 @@
 <?php
+
+use Airtime\CcStreamSettingQuery;
+
 class Application_Model_StreamSetting
 {
     public static function setValue($key, $value, $type)

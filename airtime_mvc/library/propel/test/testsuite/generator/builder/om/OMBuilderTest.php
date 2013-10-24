@@ -8,10 +8,8 @@
  * @license    MIT License
  */
 
-require_once 'tools/helpers/bookstore/BookstoreTestBase.php';
-require_once 'builder/om/OMBuilder.php';
-require_once 'builder/util/XmlToAppData.php';
-require_once 'platform/MysqlPlatform.php';
+require_once dirname(__FILE__) . '/../../../../tools/helpers/bookstore/BookstoreTestBase.php';
+require_once dirname(__FILE__) . '/../../../../../generator/lib/builder/om/OMBuilder.php';
 
 /**
  * Test class for OMBuilder.
@@ -20,70 +18,106 @@ require_once 'platform/MysqlPlatform.php';
  * @version    $Id: OMBuilderBuilderTest.php 1347 2009-12-03 21:06:36Z francois $
  * @package    generator.builder.om
  */
-class OMBuilderTest extends PHPUnit_Framework_TestCase 
+class OMBuilderTest extends PHPUnit_Framework_TestCase
 {
-	public function setUp()
-	{
-		$xmlToAppData = new XmlToAppData(new MysqlPlatform(), "defaultpackage", null);
-		$appData = $xmlToAppData->parseFile('fixtures/bookstore/schema.xml');
-		$this->database = $appData->getDatabase("bookstore");
-	}
-	
-	protected function getForeignKey($tableName, $index)
-	{
-		$fks = $this->database->getTable($tableName)->getForeignKeys();
-		return $fks[$index];
-	}
-	
-	public static function getRelatedBySuffixDataProvider()
-	{
-		return array(
-			array('book', 0, '', ''),
-			array('essay', 0, 'RelatedByFirstAuthor', 'RelatedByFirstAuthor'),
-			array('essay', 1, 'RelatedBySecondAuthor', 'RelatedBySecondAuthor'),
-			array('essay', 2, 'RelatedById', 'RelatedByNextEssayId'),
-			array('bookstore_employee', 0, 'RelatedById', 'RelatedBySupervisorId'),
-			array('composite_essay', 0, 'RelatedById0', 'RelatedByFirstEssayId'),
-			array('composite_essay', 1, 'RelatedById1', 'RelatedBySecondEssayId'),
-			array('man', 0, 'RelatedByWifeId', 'RelatedByWifeId'),
-			array('woman', 0, 'RelatedByHusbandId', 'RelatedByHusbandId'),
-		);
-	}
-	
-	/**
-	 * @dataProvider getRelatedBySuffixDataProvider
-	 */
-	public function testGetRelatedBySuffix($table, $index, $expectedSuffix, $expectedReverseSuffix)
-	{
-		$fk = $this->getForeignKey($table, $index);
-		$this->assertEquals($expectedSuffix, TestableOMBuilder::getRefRelatedBySuffix($fk));
-		$this->assertEquals($expectedReverseSuffix, TestableOMBuilder::getRelatedBySuffix($fk));
-	}
 
-	public function testClear()
-	{
-		$b = new Book();
-		$b->setNew(false);
-		$b->clear();
-		$this->assertTrue($b->isNew(), 'clear() sets the object to new');
-		$b = new Book();
-		$b->setDeleted(true);
-		$b->clear();
-		$this->assertFalse($b->isDeleted(), 'clear() sets the object to not deleted');
-	}
+    public function testClear()
+    {
+        $b = new Book();
+        $b->setNew(false);
+        $b->clear();
+        $this->assertTrue($b->isNew(), 'clear() sets the object to new');
+        $b = new Book();
+        $b->setDeleted(true);
+        $b->clear();
+        $this->assertFalse($b->isDeleted(), 'clear() sets the object to not deleted');
+    }
+
+    public function testToStringUsesDefaultStringFormat()
+    {
+        $author = new Author();
+        $author->setFirstName('John');
+        $author->setLastName('Doe');
+        $expected = <<<EOF
+Id: null
+FirstName: John
+LastName: Doe
+Email: null
+Age: null
+
+EOF;
+        $this->assertEquals($expected, (string) $author, 'generated __toString() uses default string format and exportTo()');
+
+        $publisher = new Publisher();
+        $publisher->setId(345345);
+        $publisher->setName('Peguinoo');
+        $expected = <<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <Id>345345</Id>
+  <Name><![CDATA[Peguinoo]]></Name>
+</data>
+
+EOF;
+        $this->assertEquals($expected, (string) $publisher, 'generated __toString() uses default string format and exportTo()');
+    }
+
+    /**
+     * @dataProvider dataGetPackagePath
+     */
+    public function testGetPackagePath($package, $expectedPath)
+    {
+        $builder = new OMBuilderMock();
+        $builder->setPackage($package);
+
+        $this->assertEquals($expectedPath, $builder->getPackagePath());
+    }
+
+    public function dataGetPackagePath()
+    {
+        return array(
+            array('', ''),
+            array('foo.bar', 'foo/bar'),
+            array('foo/bar', 'foo/bar'),
+            array('foo.bar.map', 'foo/bar/map'),
+            array('foo.bar.om', 'foo/bar/om'),
+            array('foo.bar.baz', 'foo/bar/baz'),
+            array('foo.bar.baz.om', 'foo/bar/baz/om'),
+            array('foo.bar.baz.map', 'foo/bar/baz/map'),
+            array('foo/bar/baz', 'foo/bar/baz'),
+            array('foo/bar/baz/map', 'foo/bar/baz/map'),
+            array('foo/bar/baz/om', 'foo/bar/baz/om'),
+            array('foo/bar.baz', 'foo/bar.baz'),
+            array('foo/bar.baz.map', 'foo/bar.baz/map'),
+            array('foo/bar.baz.om', 'foo/bar.baz/om'),
+            array('foo.bar/baz', 'foo.bar/baz'),
+            array('foo.bar/baz.om', 'foo.bar/baz/om'),
+            array('foo.bar/baz.map', 'foo.bar/baz/map'),
+            array('.om', 'om'),
+        );
+    }
+
 }
 
-class TestableOMBuilder extends OMBuilder
+class OMBuilderMock extends OMBuilder
 {
-	public static function getRelatedBySuffix(ForeignKey $fk)
-	{
-		return parent::getRelatedBySuffix($fk);
-	}
-	
-	public static function getRefRelatedBySuffix(ForeignKey $fk)
-	{
-		return parent::getRefRelatedBySuffix($fk);
-	}
-	
-	public function getUnprefixedClassname() {}
+    protected $pkg;
+
+    public function __construct()
+    {
+    }
+
+    public function setPackage($pkg)
+    {
+        $this->pkg = $pkg;
+    }
+
+    public function getPackage()
+    {
+        return $this->pkg;
+    }
+
+    public function getUnprefixedClassname()
+    {
+    }
 }

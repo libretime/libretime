@@ -3,6 +3,9 @@
 require_once 'formatters/LengthFormatter.php';
 require_once 'formatters/TimeFilledFormatter.php';
 
+use Airtime\CcShowHostsQuery;
+use Airtime\CcShowInstancesQuery;
+
 class Application_Model_ShowBuilder
 {
     private $timezone;

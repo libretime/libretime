@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,39 +18,40 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcLoginAttemptsTableMap extends TableMap {
+class CcLoginAttemptsTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcLoginAttemptsTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcLoginAttemptsTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_login_attempts');
-		$this->setPhpName('CcLoginAttempts');
-		$this->setClassname('CcLoginAttempts');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(false);
-		// columns
-		$this->addPrimaryKey('IP', 'DbIP', 'VARCHAR', true, 32, null);
-		$this->addColumn('ATTEMPTS', 'DbAttempts', 'INTEGER', false, null, 0);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_login_attempts');
+        $this->setPhpName('CcLoginAttempts');
+        $this->setClassname('Airtime\\CcLoginAttempts');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(false);
+        // columns
+        $this->addPrimaryKey('ip', 'DbIP', 'VARCHAR', true, 32, null);
+        $this->addColumn('attempts', 'DbAttempts', 'INTEGER', false, null, 0);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+    } // buildRelations()
 
 } // CcLoginAttemptsTableMap

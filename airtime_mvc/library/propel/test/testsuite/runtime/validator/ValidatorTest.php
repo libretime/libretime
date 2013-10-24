@@ -1,7 +1,7 @@
 <?php
 
 /**
- * $Id: ValidatorTest.php 1612 2010-03-16 22:56:21Z francois $
+ * $Id$
  * This file is part of the Propel package.
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -9,7 +9,7 @@
  * @license    MIT License
  */
 
-require_once 'tools/helpers/bookstore/BookstoreEmptyTestBase.php';
+require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreEmptyTestBase.php';
 
 /**
  * Tests the validator classes.
@@ -17,7 +17,7 @@ require_once 'tools/helpers/bookstore/BookstoreEmptyTestBase.php';
  * This test uses generated Bookstore classes to test the behavior of various
  * validator operations.
  *
- * The database is relaoded before every test and flushed after every test.	This
+ * The database is reloaded before every test and flushed after every test.	This
  * means that you can always rely on the contents of the databases being the same
  * for each test method in this class.	See the BookstoreDataPopulator::populate()
  * method for the exact contents of the database.
@@ -29,200 +29,199 @@ require_once 'tools/helpers/bookstore/BookstoreEmptyTestBase.php';
 class ValidatorTest extends BookstoreEmptyTestBase
 {
 
-	protected function setUp()
-	{
-		parent::setUp();
-		BookstoreDataPopulator::populate();
-		require_once 'tools/helpers/bookstore/validator/ISBNValidator.php';
-	}
-	
-	/**
-	 * Test minLength validator.
-	 * This also tests the ${value} substitution.
-	 */
-	public function testDoValidate_MinLength()
-	{
-		$book = new Book();
-		$book->setTitle("12345"); // min length is 10
+    protected function setUp()
+    {
+        parent::setUp();
+        BookstoreDataPopulator::populate();
+        require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/validator/ISBNValidator.php';
+    }
 
-		$res = $book->validate();
-		$this->assertFalse($res, "Expected validation to fail.");
+    /**
+     * Test minLength validator.
+     * This also tests the ${value} substitution.
+     */
+    public function testDoValidate_MinLength()
+    {
+        $book = new Book();
+        $book->setTitle("12345"); // min length is 10
 
-		$failures = $book->getValidationFailures();
-		$this->assertSingleValidation($failures, "Book title must be more than 10 characters long.");
-	}
+        $res = $book->validate();
+        $this->assertFalse($res, "Expected validation to fail.");
 
-	/**
-	 * Test unique validator.
-	 */
-	public function testDoValidate_Unique()
-	{
-		$book = new Book();
-		$book->setTitle("Don Juan");
+        $failures = $book->getValidationFailures();
+        $this->assertSingleValidation($failures, "Book title must be more than 10 characters long.");
+    }
 
-		$ret = $book->validate();
-		$failures = $book->getValidationFailures();
-		$this->assertSingleValidation($failures, "Book title already in database.");
-	}
+    /**
+     * Test unique validator.
+     */
+    public function testDoValidate_Unique()
+    {
+        $book = new Book();
+        $book->setTitle("Don Juan");
 
-	/**
-	 * Test recursive validaton.
-	 */
-	public function testDoValidate_Complex()
-	{
-		$book = new Book();
-		$book->setTitle("12345"); // min length is 10
+        $ret = $book->validate();
+        $failures = $book->getValidationFailures();
+        $this->assertSingleValidation($failures, "Book title already in database.");
+    }
 
-		$author = new Author();
-		$author->setFirstName("Hans"); // last name required, valid email format, age > 0
+    /**
+     * Test recursive validation.
+     */
+    public function testDoValidate_Complex()
+    {
+        $book = new Book();
+        $book->setTitle("12345"); // min length is 10
 
-		$review = new Review();
-		$review->setReviewDate("08/09/2001"); // reviewed_by column required, invalid status (new, reviewed, archived)
+        $author = new Author();
+        $author->setFirstName("Hans"); // last name required, valid email format, age > 0
 
-		$book->setAuthor($author);
-		$book->addReview($review);
+        $review = new Review();
+        $review->setReviewDate("08/09/2001"); // reviewed_by column required, invalid status (new, reviewed, archived)
 
-		$res = $book->validate();
+        $book->setAuthor($author);
+        $book->addReview($review);
 
-		$this->assertFalse($res, "Expected validation to fail.");
+        $res = $book->validate();
 
-		$failures = $book->getValidationFailures();
+        $this->assertFalse($res, "Expected validation to fail.");
 
-		/* Make sure 3 validation messages were returned; NOT 6, because the others were NULL */
-		$this->assertEquals(3, count($failures), "");
+        $failures = $book->getValidationFailures();
 
-		/* Make sure correct columns failed */
-		$expectedCols = array(
-		AuthorPeer::LAST_NAME,
-		BookPeer::TITLE,
-		ReviewPeer::REVIEWED_BY
-		);
-		$returnedCols = array_keys($failures);
+        /* Make sure 3 validation messages were returned; NOT 6, because the others were NULL */
+        $this->assertEquals(3, count($failures), "");
 
-		/* implode for readability */
-		$this->assertEquals(implode(',', $expectedCols), implode(',', $returnedCols));
-	}
+        /* Make sure correct columns failed */
+        $expectedCols = array(
+        AuthorPeer::LAST_NAME,
+        BookPeer::TITLE,
+        ReviewPeer::REVIEWED_BY
+        );
+        $returnedCols = array_keys($failures);
 
-	/**
-	 * Test recursive validaton with specified columns.
-	 */
-	public function testDoValidate_ComplexSpecifiedCols()
-	{
-		$book = new Book();
-		$book->setTitle("12345"); // min length is 10
+        /* implode for readability */
+        $this->assertEquals(implode(',', $expectedCols), implode(',', $returnedCols));
+    }
 
-		$author = new Author();
-		$author->setFirstName("Hans"); // last name required, valid email format, age > 0
+    /**
+     * Test recursive validation with specified columns.
+     */
+    public function testDoValidate_ComplexSpecifiedCols()
+    {
+        $book = new Book();
+        $book->setTitle("12345"); // min length is 10
 
-		$review = new Review();
-		$review->setReviewDate("08/09/2001"); // reviewed_by column required, invalid status (new, reviewed, archived)
+        $author = new Author();
+        $author->setFirstName("Hans"); // last name required, valid email format, age > 0
 
-		$book->setAuthor($author);
-		$book->addReview($review);
+        $review = new Review();
+        $review->setReviewDate("08/09/2001"); // reviewed_by column required, invalid status (new, reviewed, archived)
 
-		$cols = array(AuthorPeer::LAST_NAME, ReviewPeer::REVIEWED_BY);
+        $book->setAuthor($author);
+        $book->addReview($review);
 
-		$res = $book->validate($cols);
+        $cols = array(AuthorPeer::LAST_NAME, ReviewPeer::REVIEWED_BY);
 
-		$this->assertFalse($res, "Expected validation to fail.");
+        $res = $book->validate($cols);
 
-		$failures = $book->getValidationFailures();
+        $this->assertFalse($res, "Expected validation to fail.");
 
-		/* Make sure 3 validation messages were returned; NOT 6, because the others were NULL */
-		$this->assertEquals(2, count($failures), "");
+        $failures = $book->getValidationFailures();
 
-		/* Make sure correct columns failed */
-		$expectedCols = array(
-		AuthorPeer::LAST_NAME,
-		ReviewPeer::REVIEWED_BY
-		);
+        /* Make sure 3 validation messages were returned; NOT 6, because the others were NULL */
+        $this->assertEquals(2, count($failures), "");
 
-		$returnedCols = array_keys($failures);
+        /* Make sure correct columns failed */
+        $expectedCols = array(
+        AuthorPeer::LAST_NAME,
+        ReviewPeer::REVIEWED_BY
+        );
 
-		/* implode for readability */
-		$this->assertEquals(implode(',', $expectedCols), implode(',', $returnedCols));
-	}
+        $returnedCols = array_keys($failures);
 
-	/**
-	 * Test the fact that validators should not complain NULL values for non-required columns.
-	 */
-	public function testDoValidate_Nulls()
-	{
-		$author = new Author();
-		$author->setFirstName("Malcolm"); // last name required, valid email format, age > 0
-		$author->setLastName("X");
+        /* implode for readability */
+        $this->assertEquals(implode(',', $expectedCols), implode(',', $returnedCols));
+    }
 
-		$author->setEmail(null); // just to be explicit, of course these are the defaults anyway
-		$author->setAge(null);
+    /**
+     * Test the fact that validators should not complain NULL values for non-required columns.
+     */
+    public function testDoValidate_Nulls()
+    {
+        $author = new Author();
+        $author->setFirstName("Malcolm"); // last name required, valid email format, age > 0
+        $author->setLastName("X");
 
-		$res = $author->validate();
+        $author->setEmail(null); // just to be explicit, of course these are the defaults anyway
+        $author->setAge(null);
 
+        $res = $author->validate();
 
-		$this->assertTrue($res, "Expected validation to pass with NULL columns");
+        $this->assertTrue($res, "Expected validation to pass with NULL columns");
 
-		$author->setEmail('malcolm@'); // fail
-		$res = $author->validate();
+        $author->setEmail('malcolm@'); // fail
+        $res = $author->validate();
 
-		$this->assertFalse($res, "Expected validation to fail.");
+        $this->assertFalse($res, "Expected validation to fail.");
 
-		$failures = $author->getValidationFailures();
-		$this->assertEquals(1, count($failures), "Expected 1 column to fail validation.");
-		$this->assertEquals(array(AuthorPeer::EMAIL), array_keys($failures), "Expected EMAIL to fail validation.");
+        $failures = $author->getValidationFailures();
+        $this->assertEquals(1, count($failures), "Expected 1 column to fail validation.");
+        $this->assertEquals(array(AuthorPeer::EMAIL), array_keys($failures), "Expected EMAIL to fail validation.");
 
-	}
+    }
 
-	public function testDoValidate_BasicValidatorObj()
-	{
-		$author = new Author();
-		$author->setFirstName("Malcolm"); // last name required, valid email format, age > 0
-		$author->setLastName("X");
-		$author->setEmail('malcolm@'); // fail
+    public function testDoValidate_BasicValidatorObj()
+    {
+        $author = new Author();
+        $author->setFirstName("Malcolm"); // last name required, valid email format, age > 0
+        $author->setLastName("X");
+        $author->setEmail('malcolm@'); // fail
 
-		$res = $author->validate();
+        $res = $author->validate();
 
-		$this->assertFalse($res, "Expected validation to fail.");
+        $this->assertFalse($res, "Expected validation to fail.");
 
-		$failures = $author->getValidationFailures();
+        $failures = $author->getValidationFailures();
 
-		$this->assertEquals(1, count($failures), "Expected 1 column to fail validation.");
-		$this->assertEquals(array(AuthorPeer::EMAIL), array_keys($failures), "Expected EMAIL to fail validation.");
+        $this->assertEquals(1, count($failures), "Expected 1 column to fail validation.");
+        $this->assertEquals(array(AuthorPeer::EMAIL), array_keys($failures), "Expected EMAIL to fail validation.");
 
-		$validator = $failures[AuthorPeer::EMAIL]->getValidator();
-		$this->assertTrue($validator instanceof MatchValidator, "Expected validator that failed to be MatchValidator");
+        $validator = $failures[AuthorPeer::EMAIL]->getValidator();
+        $this->assertTrue($validator instanceof MatchValidator, "Expected validator that failed to be MatchValidator");
 
-	}
+    }
 
-	public function testDoValidate_CustomValidator()
-	{
-		$book = new Book();
-		$book->setTitle("testDoValidate_CustomValidator"); // (valid)
-		$book->setISBN("Foo.Bar.Baz"); // (invalid)
+    public function testDoValidate_CustomValidator()
+    {
+        $book = new Book();
+        $book->setTitle("testDoValidate_CustomValidator"); // (valid)
+        $book->setISBN("Foo.Bar.Baz"); // (invalid)
 
-		$res = $book->validate();
+        $res = $book->validate();
 
-		$this->assertFalse($res, "Expected validation to fail.");
+        $this->assertFalse($res, "Expected validation to fail.");
 
-		$failures = $book->getValidationFailures();
+        $failures = $book->getValidationFailures();
 
-		$this->assertEquals(1, count($failures), "Expected 1 column to fail validation.");
-		$this->assertEquals(array(BookPeer::ISBN), array_keys($failures), "Expected EMAIL to fail validation.");
+        $this->assertEquals(1, count($failures), "Expected 1 column to fail validation.");
+        $this->assertEquals(array(BookPeer::ISBN), array_keys($failures), "Expected EMAIL to fail validation.");
 
-		$validator = $failures[BookPeer::ISBN]->getValidator();
-		$this->assertType('ISBNValidator', $validator, "Expected validator that failed to be ISBNValidator");
-	}
+        $validator = $failures[BookPeer::ISBN]->getValidator();
+        $this->assertInstanceOf('ISBNValidator', $validator, "Expected validator that failed to be ISBNValidator");
+    }
 
-	protected function assertSingleValidation($ret, $expectedMsg)
-	{
-		/* Make sure validation failed */
-		$this->assertTrue($ret !== true, "Expected validation to fail !");
+    protected function assertSingleValidation($ret, $expectedMsg)
+    {
+        /* Make sure validation failed */
+        $this->assertTrue($ret !== true, "Expected validation to fail !");
 
-		/* Make sure 1 validation message was returned */
-		$count = count($ret);
-		$this->assertTrue($count === 1, "Expected that exactly one validation failed ($count) !");
+        /* Make sure 1 validation message was returned */
+        $count = count($ret);
+        $this->assertTrue($count === 1, "Expected that exactly one validation failed ($count) !");
 
-		/* Make sure expected validation message was returned */
-		$el = array_shift($ret);
-		$this->assertEquals($el->getMessage(), $expectedMsg, "Got unexpected validation failed message: " . $el->getMessage());
-	}
+        /* Make sure expected validation message was returned */
+        $el = array_shift($ret);
+        $this->assertEquals($el->getMessage(), $expectedMsg, "Got unexpected validation failed message: " . $el->getMessage());
+    }
 
 }

@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once 'model/Index.php';
+require_once dirname(__FILE__) . '/Index.php';
 
 /**
  * Information about unique columns of a table.  This class assumes
@@ -20,39 +20,37 @@ require_once 'model/Index.php';
  * @author     Hans Lellelid <hans@xmpl.org> (Propel)
  * @author     Jason van Zyl <jvanzyl@apache.org> (Torque)
  * @author     Daniel Rall <dlr@collab.net> (Torque)
- * @version    $Revision: 1612 $
+ * @version    $Revision$
  * @package    propel.generator.model
  */
 class Unique extends Index
 {
 
-	/**
-	 * Returns <code>true</code>.
-	 */
-	public function isUnique()
-	{
-		return true;
-	}
+    /**
+     * Returns <code>true</code>.
+     */
+    public function isUnique()
+    {
+        return true;
+    }
 
-	/**
-	 * @see        XMLElement::appendXml(DOMNode)
-	 */
-	public function appendXml(DOMNode $node)
-	{
-		$doc = ($node instanceof DOMDocument) ? $node : $node->ownerDocument;
+    /**
+     * @see        XMLElement::appendXml(DOMNode)
+     */
+    public function appendXml(DOMNode $node)
+    {
+        $doc = ($node instanceof DOMDocument) ? $node : $node->ownerDocument;
 
-		$uniqueNode = $node->appendChild($doc->createElement('unique'));
-		$uniqueNode->setAttribute('name', $this->getName());
-		$columns = $this->getColumns();
-		foreach ($this->getColumns() as $colname) {
-			$uniqueColNode = $uniqueNode->appendChild($doc->createElement('unique-column'));
-			$uniqueColNode->setAttribute('name', $colname);
-		}
+        $uniqueNode = $node->appendChild($doc->createElement('unique'));
+        $uniqueNode->setAttribute('name', $this->getName());
 
-		foreach ($this->vendorInfos as $vi) {
-			$vi->appendXml($uniqueNode);
-		}
-	}
+        foreach ($this->getColumns() as $colname) {
+            $uniqueColNode = $uniqueNode->appendChild($doc->createElement('unique-column'));
+            $uniqueColNode->setAttribute('name', $colname);
+        }
 
-
+        foreach ($this->vendorInfos as $vi) {
+            $vi->appendXml($uniqueNode);
+        }
+    }
 }

@@ -1,5 +1,8 @@
 <?php
 
+namespace Airtime;
+
+use Airtime\om\BaseCcBlockcontents;
 
 
 /**

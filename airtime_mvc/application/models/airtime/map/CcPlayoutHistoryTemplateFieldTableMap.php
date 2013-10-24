@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\PlayoutHistory\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,46 +18,47 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcPlayoutHistoryTemplateFieldTableMap extends TableMap {
+class CcPlayoutHistoryTemplateFieldTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcPlayoutHistoryTemplateFieldTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcPlayoutHistoryTemplateFieldTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_playout_history_template_field');
-		$this->setPhpName('CcPlayoutHistoryTemplateField');
-		$this->setClassname('CcPlayoutHistoryTemplateField');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_playout_history_template_field_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addForeignKey('TEMPLATE_ID', 'DbTemplateId', 'INTEGER', 'cc_playout_history_template', 'ID', true, null, null);
-		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 128, null);
-		$this->addColumn('LABEL', 'DbLabel', 'VARCHAR', true, 128, null);
-		$this->addColumn('TYPE', 'DbType', 'VARCHAR', true, 128, null);
-		$this->addColumn('IS_FILE_MD', 'DbIsFileMD', 'BOOLEAN', true, null, false);
-		$this->addColumn('POSITION', 'DbPosition', 'INTEGER', true, null, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_playout_history_template_field');
+        $this->setPhpName('CcPlayoutHistoryTemplateField');
+        $this->setClassname('Airtime\\PlayoutHistory\\CcPlayoutHistoryTemplateField');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_playout_history_template_field_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addForeignKey('template_id', 'DbTemplateId', 'INTEGER', 'cc_playout_history_template', 'id', true, null, null);
+        $this->addColumn('name', 'DbName', 'VARCHAR', true, 128, null);
+        $this->addColumn('label', 'DbLabel', 'VARCHAR', true, 128, null);
+        $this->addColumn('type', 'DbType', 'VARCHAR', true, 128, null);
+        $this->addColumn('is_file_md', 'DbIsFileMD', 'BOOLEAN', true, null, false);
+        $this->addColumn('position', 'DbPosition', 'INTEGER', true, null, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcPlayoutHistoryTemplate', 'CcPlayoutHistoryTemplate', RelationMap::MANY_TO_ONE, array('template_id' => 'id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcPlayoutHistoryTemplate', 'Airtime\\PlayoutHistory\\CcPlayoutHistoryTemplate', RelationMap::MANY_TO_ONE, array('template_id' => 'id', ), 'CASCADE', null);
+    } // buildRelations()
 
 } // CcPlayoutHistoryTemplateFieldTableMap

@@ -1,5 +1,8 @@
 <?php
 
+use Airtime\CcScheduleQuery;
+use Airtime\CcShowInstancesQuery;
+
 class Application_Model_Schedule
 {
     /**

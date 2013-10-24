@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,42 +18,43 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcSessTableMap extends TableMap {
+class CcSessTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcSessTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcSessTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_sess');
-		$this->setPhpName('CcSess');
-		$this->setClassname('CcSess');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(false);
-		// columns
-		$this->addPrimaryKey('SESSID', 'Sessid', 'CHAR', true, 32, null);
-		$this->addForeignKey('USERID', 'Userid', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
-		$this->addColumn('LOGIN', 'Login', 'VARCHAR', false, 255, null);
-		$this->addColumn('TS', 'Ts', 'TIMESTAMP', false, null, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_sess');
+        $this->setPhpName('CcSess');
+        $this->setClassname('Airtime\\CcSess');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(false);
+        // columns
+        $this->addPrimaryKey('sessid', 'Sessid', 'CHAR', true, 32, null);
+        $this->addForeignKey('userid', 'Userid', 'INTEGER', 'cc_subjs', 'id', false, null, null);
+        $this->addColumn('login', 'Login', 'VARCHAR', false, 255, null);
+        $this->addColumn('ts', 'Ts', 'TIMESTAMP', false, null, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('userid' => 'id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcSubjs', 'Airtime\\CcSubjs', RelationMap::MANY_TO_ONE, array('userid' => 'id', ), 'CASCADE', null);
+    } // buildRelations()
 
 } // CcSessTableMap

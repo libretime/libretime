@@ -9,45 +9,45 @@
  * @license    MIT License
  */
 
-require_once 'tools/helpers/bookstore/BookstoreTestBase.php';
+require_once dirname(__FILE__) . '/../../../../tools/helpers/bookstore/BookstoreTestBase.php';
 
 /**
  * Tests for ConcreteInheritanceParentBehavior class
  *
  * @author    François Zaniontto
- * @version   $Revision: 1612 $
+ * @version   $Revision$
  * @package   generator.behavior.concrete_inheritance
  */
 class ConcreteInheritanceParentBehaviorTest extends BookstoreTestBase
 {
-	public function testHasChildObject()
-	{
-		ConcreteArticleQuery::create()->deleteAll();
-		ConcreteQuizzQuery::create()->deleteAll();
-		ConcreteContentQuery::create()->deleteAll();
-		$content = new ConcreteContent();
-		$content->save();
-		$this->assertFalse($content->hasChildObject());
-		
-		$article = new ConcreteArticle();
-		$article->save();
-		$content = $article->getConcreteContent();
-		$this->assertTrue($content->hasChildObject());
-	}
-	
-	public function testGetChildObject()
-	{
-		ConcreteArticleQuery::create()->deleteAll();
-		ConcreteQuizzQuery::create()->deleteAll();
-		ConcreteContentQuery::create()->deleteAll();
-		$content = new ConcreteContent();
-		$content->save();
-		$this->assertNull($content->getChildObject());
-		
-		$article = new ConcreteArticle();
-		$article->save();
-		$content = $article->getConcreteContent();
-		$this->assertEquals($article, $content->getChildObject());
-	}
-	
+    public function testHasChildObject()
+    {
+        ConcreteArticleQuery::create()->deleteAll();
+        ConcreteQuizzQuery::create()->deleteAll();
+        ConcreteContentQuery::create()->deleteAll();
+        $content = new ConcreteContent();
+        $content->save();
+        $this->assertFalse($content->hasChildObject());
+
+        $article = new ConcreteArticle();
+        $article->save();
+        $content = $article->getConcreteContent();
+        $this->assertTrue($content->hasChildObject());
+    }
+
+    public function testGetChildObject()
+    {
+        ConcreteArticleQuery::create()->deleteAll();
+        ConcreteQuizzQuery::create()->deleteAll();
+        ConcreteContentQuery::create()->deleteAll();
+        $content = new ConcreteContent();
+        $content->save();
+        $this->assertNull($content->getChildObject());
+
+        $article = new ConcreteArticle();
+        $article->save();
+        $content = $article->getConcreteContent();
+        $this->assertEquals($article, $content->getChildObject());
+    }
+
 }

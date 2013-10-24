@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,41 +18,42 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcLocaleTableMap extends TableMap {
+class CcLocaleTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcLocaleTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcLocaleTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_locale');
-		$this->setPhpName('CcLocale');
-		$this->setClassname('CcLocale');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_locale_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('LOCALE_CODE', 'DbLocaleCode', 'VARCHAR', true, 16, null);
-		$this->addColumn('LOCALE_LANG', 'DbLocaleLang', 'VARCHAR', true, 128, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_locale');
+        $this->setPhpName('CcLocale');
+        $this->setClassname('Airtime\\CcLocale');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_locale_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('locale_code', 'DbLocaleCode', 'VARCHAR', true, 16, null);
+        $this->addColumn('locale_lang', 'DbLocaleLang', 'VARCHAR', true, 128, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+    } // buildRelations()
 
 } // CcLocaleTableMap

@@ -12,52 +12,56 @@
  * Interface for reverse engineering schema parsers.
  *
  * @author     Hans Lellelid <hans@xmpl.org>
- * @version    $Revision: 1612 $
+ * @version    $Revision$
  * @package    propel.generator.reverse
  */
 interface SchemaParser
 {
 
-	/**
-	 * Gets the database connection.
-	 * @return     PDO
-	 */
-	public function getConnection();
+    /**
+     * Gets the database connection.
+     *
+     * @return PDO
+     */
+    public function getConnection();
 
-	/**
-	 * Sets the database connection.
-	 *
-	 * @param      PDO $dbh
-	 */
-	public function setConnection(PDO $dbh);
+    /**
+     * Sets the database connection.
+     *
+     * @param PDO $dbh
+     */
+    public function setConnection(PDO $dbh);
 
-	/**
-	 * Sets the GeneratorConfig to use in the parsing.
-	 *
-	 * @param      GeneratorConfig $config
-	 */
-	public function setGeneratorConfig(GeneratorConfig $config);
+    /**
+     * Sets the GeneratorConfig to use in the parsing.
+     *
+     * @param GeneratorConfigInterface $config
+     */
+    public function setGeneratorConfig(GeneratorConfigInterface $config);
 
-	/**
-	 * Gets a specific propel (renamed) property from the build.
-	 *
-	 * @param      string $name
-	 * @return     mixed
-	 */
-	public function getBuildProperty($name);
+    /**
+     * Gets a specific propel (renamed) property from the build.
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getBuildProperty($name);
 
-	/**
-	 * Gets array of warning messages.
-	 * @return     array string[]
-	 */
-	public function getWarnings();
+    /**
+     * Gets array of warning messages.
+     *
+     * @return array string[]
+     */
+    public function getWarnings();
 
-	/**
-	 * Parse the schema and populate passed-in Database model object.
-	 *
-	 * @param      Database $database
-	 *
-	 * @return     int number of generated tables
-	 */
-	public function parse(Database $database, PDOTask $task = null);
+    /**
+     * Parse the schema and populate passed-in Database model object.
+     *
+     * @param Database $database
+     * @param Task     $task
+     *
+     * @return int number of generated tables
+     */
+    public function parse(Database $database, Task $task = null);
 }

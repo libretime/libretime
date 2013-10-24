@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,44 +18,46 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcMusicDirsTableMap extends TableMap {
+class CcMusicDirsTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcMusicDirsTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcMusicDirsTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_music_dirs');
-		$this->setPhpName('CcMusicDirs');
-		$this->setClassname('CcMusicDirs');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_music_dirs_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addColumn('DIRECTORY', 'Directory', 'LONGVARCHAR', false, null, null);
-		$this->addColumn('TYPE', 'Type', 'VARCHAR', false, 255, null);
-		$this->addColumn('EXISTS', 'Exists', 'BOOLEAN', false, null, true);
-		$this->addColumn('WATCHED', 'Watched', 'BOOLEAN', false, null, true);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_music_dirs');
+        $this->setPhpName('CcMusicDirs');
+        $this->setClassname('Airtime\\CcMusicDirs');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_music_dirs_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addColumn('directory', 'Directory', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('type', 'Type', 'VARCHAR', false, 255, null);
+        $this->addColumn('exists', 'Exists', 'BOOLEAN', false, null, true);
+        $this->addColumn('watched', 'Watched', 'BOOLEAN', false, null, true);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcFiles', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'directory', ), null, null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcFiles', 'Airtime\\CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'directory', ), null, null, 'CcFiless');
+        $this->addRelation('AudioFile', 'Airtime\\MediaItem\\AudioFile', RelationMap::ONE_TO_MANY, array('id' => 'directory', ), null, null, 'AudioFiles');
+    } // buildRelations()
 
 } // CcMusicDirsTableMap

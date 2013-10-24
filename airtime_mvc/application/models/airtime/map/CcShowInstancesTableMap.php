@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,56 +18,57 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcShowInstancesTableMap extends TableMap {
+class CcShowInstancesTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcShowInstancesTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcShowInstancesTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_show_instances');
-		$this->setPhpName('CcShowInstances');
-		$this->setClassname('CcShowInstances');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_show_instances_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('STARTS', 'DbStarts', 'TIMESTAMP', true, null, null);
-		$this->addColumn('ENDS', 'DbEnds', 'TIMESTAMP', true, null, null);
-		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
-		$this->addColumn('RECORD', 'DbRecord', 'TINYINT', false, null, 0);
-		$this->addColumn('REBROADCAST', 'DbRebroadcast', 'TINYINT', false, null, 0);
-		$this->addForeignKey('INSTANCE_ID', 'DbOriginalShow', 'INTEGER', 'cc_show_instances', 'ID', false, null, null);
-		$this->addForeignKey('FILE_ID', 'DbRecordedFile', 'INTEGER', 'cc_files', 'ID', false, null, null);
-		$this->addColumn('TIME_FILLED', 'DbTimeFilled', 'VARCHAR', false, null, '00:00:00');
-		$this->addColumn('CREATED', 'DbCreated', 'TIMESTAMP', true, null, null);
-		$this->addColumn('LAST_SCHEDULED', 'DbLastScheduled', 'TIMESTAMP', false, null, null);
-		$this->addColumn('MODIFIED_INSTANCE', 'DbModifiedInstance', 'BOOLEAN', true, null, false);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_show_instances');
+        $this->setPhpName('CcShowInstances');
+        $this->setClassname('Airtime\\CcShowInstances');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_show_instances_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('starts', 'DbStarts', 'TIMESTAMP', true, null, null);
+        $this->addColumn('ends', 'DbEnds', 'TIMESTAMP', true, null, null);
+        $this->addForeignKey('show_id', 'DbShowId', 'INTEGER', 'cc_show', 'id', true, null, null);
+        $this->addColumn('record', 'DbRecord', 'TINYINT', false, null, 0);
+        $this->addColumn('rebroadcast', 'DbRebroadcast', 'TINYINT', false, null, 0);
+        $this->addForeignKey('instance_id', 'DbOriginalShow', 'INTEGER', 'cc_show_instances', 'id', false, null, null);
+        $this->addForeignKey('file_id', 'DbRecordedFile', 'INTEGER', 'cc_files', 'id', false, null, null);
+        $this->addColumn('time_filled', 'DbTimeFilled', 'VARCHAR', false, null, '00:00:00');
+        $this->addColumn('created', 'DbCreated', 'TIMESTAMP', true, null, null);
+        $this->addColumn('last_scheduled', 'DbLastScheduled', 'TIMESTAMP', false, null, null);
+        $this->addColumn('modified_instance', 'DbModifiedInstance', 'BOOLEAN', true, null, false);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcShow', 'CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcShowInstancesRelatedByDbOriginalShow', 'CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
-    $this->addRelation('CcShowInstancesRelatedByDbId', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
-    $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null);
-    $this->addRelation('CcPlayoutHistory', 'CcPlayoutHistory', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'SET NULL', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcShow', 'Airtime\\CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('CcShowInstancesRelatedByDbOriginalShow', 'Airtime\\CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('CcFiles', 'Airtime\\CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('CcShowInstancesRelatedByDbId', 'Airtime\\CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null, 'CcShowInstancessRelatedByDbId');
+        $this->addRelation('CcSchedule', 'Airtime\\CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null, 'CcSchedules');
+        $this->addRelation('CcPlayoutHistory', 'Airtime\\PlayoutHistory\\CcPlayoutHistory', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'SET NULL', null, 'CcPlayoutHistorys');
+    } // buildRelations()
 
 } // CcShowInstancesTableMap

@@ -1,5 +1,11 @@
 <?php
 
+use Airtime\CcShowQuery;
+use Airtime\CcShowInstancesPeer;
+use Airtime\CcShowInstancesQuery;
+use Airtime\CcSchedulePeer;
+use Airtime\CcShowDaysQuery;
+
 class Application_Model_Show
 {
     private $_showId;

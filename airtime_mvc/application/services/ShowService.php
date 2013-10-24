@@ -8,6 +8,21 @@ define("REPEAT_MONTHLY_WEEKLY", 3);
 define("REPEAT_TRI_WEEKLY", 4);
 define("REPEAT_QUAD_WEEKLY", 5);
 
+use Airtime\CcShowHosts;
+use Airtime\CcShowHostsQuery;
+use Airtime\CcShow;
+use Airtime\CcShowQuery;
+use Airtime\CcShowInstances;
+use Airtime\CcShowInstancesPeer;
+use Airtime\CcShowInstancesQuery;
+use Airtime\CcSchedulePeer;
+use Airtime\CcScheduleQuery;
+use Airtime\CcShowDays;
+use Airtime\CcShowDaysPeer;
+use Airtime\CcShowDaysQuery;
+use Airtime\CcShowRebroadcast;
+use Airtime\CcShowRebroadcastQuery;
+
 class Application_Service_ShowService
 {
     private $ccShow;

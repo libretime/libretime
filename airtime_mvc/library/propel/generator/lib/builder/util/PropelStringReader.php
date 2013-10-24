@@ -11,81 +11,88 @@
 include_once 'phing/system/io/Reader.php';
 
 /**
- * Overrides Phing's StringReader to allow inclusin inside a BufferedReader
+ * Overrides Phing's StringReader to allow inclusion inside a BufferedReader
  *
  * @author     François Zaninotto
- * @version    $Revision: 1785 $
+ * @version    $Revision$
  * @package    propel.generator.builder.util
  */
 class PropelStringReader extends Reader
 {
-	/**
-	 * @var string
-	 */
-	protected $_string;
-	
-	/**
-	* @var int
-	*/
-	protected $mark = 0;
-    
-	/**
-	 * @var int
-	 */
-	protected $currPos = 0;
+    /**
+     * @var string
+     */
+    protected $_string;
 
-	public function __construct($string)
-	{
-		$this->_string = $string;
-	}
+    /**
+     * @var int
+     */
+    protected $mark = 0;
 
-	public function skip($n)
-	{
-		$this->currPos = $this->currPos + $n;
-	}
-	 
-	public function eof()
-	{
-		return $this->currPos == strlen($this->_string);
-	}
+    /**
+     * @var int
+     */
+    protected $currPos = 0;
 
-	public function read($len = null)
-	{
-		if ($len === null) {
-			return $this->_string;
-		} else {            
-			if ($this->currPos >= strlen($this->_string)) {
-				return -1;
-			}            
-			$out = substr($this->_string, $this->currPos, $len);
-			$this->currPos += $len;
-			return $out;
-		}
-	}
+    public function __construct($string)
+    {
+        $this->_string = $string;
+    }
 
-	public function mark()
-	{
-		$this->mark = $this->currPos;
-	}
+    public function skip($n)
+    {
+        $this->currPos = $this->currPos + $n;
+    }
 
-	public function reset()
-	{
-		$this->currPos = $this->mark;
-	}
+    public function eof()
+    {
+        return $this->currPos == strlen($this->_string);
+    }
 
-	public function close() {}
+    public function read($len = null)
+    {
+        if ($len === null) {
+            return $this->_string;
+        } else {
+            if ($this->currPos >= strlen($this->_string)) {
+                return -1;
+            }
+            $out = substr($this->_string, $this->currPos, $len);
+            $this->currPos += $len;
 
-	public function open() {}
+            return $out;
+        }
+    }
 
-	public function ready() {}
+    public function mark()
+    {
+        $this->mark = $this->currPos;
+    }
 
-	public function markSupported() 
-	{
-		return true;
-	}
-	
-	public function getResource() 
-	{
-		return '(string) "'.$this->_string . '"';
-	}
+    public function reset()
+    {
+        $this->currPos = $this->mark;
+    }
+
+    public function close()
+    {
+    }
+
+    public function open()
+    {
+    }
+
+    public function ready()
+    {
+    }
+
+    public function markSupported()
+    {
+        return true;
+    }
+
+    public function getResource()
+    {
+        return '(string) "' . $this->_string . '"';
+    }
 }

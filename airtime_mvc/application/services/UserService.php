@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\CcSubjsQuery;
+
 class Application_Service_UserService
 {
     private $currentUser;

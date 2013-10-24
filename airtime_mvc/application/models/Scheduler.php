@@ -1,5 +1,13 @@
 <?php
 
+use Airtime\CcSchedule;
+use Airtime\CcSchedulePeer;
+use Airtime\CcScheduleQuery;
+use Airtime\CcShowInstancesQuery;
+use Airtime\CcFilesPeer;
+use Airtime\CcFilesQuery;
+use Airtime\CcWebstreamQuery;
+
 class Application_Model_Scheduler
 {
     private $con;

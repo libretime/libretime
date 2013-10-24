@@ -1,4 +1,8 @@
 <?php
+
+use Airtime\CcServiceRegister;
+use Airtime\CcServiceRegisterQuery;
+
 class Application_Model_ServiceRegister
 {
     public static function GetRemoteIpAddr()

@@ -1,4 +1,8 @@
 <?php
+
+use Airtime\CcShowQuery;
+use Airtime\CcShowInstancesQuery;
+
 class Application_Service_ShowFormService
 {
     private $ccShow;

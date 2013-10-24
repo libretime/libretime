@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\CcShowInstancesQuery;
+
 class Application_Service_CalendarService
 {
     private $currentUser;

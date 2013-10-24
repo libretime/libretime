@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,43 +18,44 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcPrefTableMap extends TableMap {
+class CcPrefTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcPrefTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcPrefTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_pref');
-		$this->setPhpName('CcPref');
-		$this->setClassname('CcPref');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_pref_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-		$this->addForeignKey('SUBJID', 'Subjid', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
-		$this->addColumn('KEYSTR', 'Keystr', 'VARCHAR', false, 255, null);
-		$this->addColumn('VALSTR', 'Valstr', 'LONGVARCHAR', false, null, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_pref');
+        $this->setPhpName('CcPref');
+        $this->setClassname('Airtime\\CcPref');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_pref_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addForeignKey('subjid', 'Subjid', 'INTEGER', 'cc_subjs', 'id', false, null, null);
+        $this->addColumn('keystr', 'Keystr', 'VARCHAR', false, 255, null);
+        $this->addColumn('valstr', 'Valstr', 'LONGVARCHAR', false, null, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('subjid' => 'id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcSubjs', 'Airtime\\CcSubjs', RelationMap::MANY_TO_ONE, array('subjid' => 'id', ), 'CASCADE', null);
+    } // buildRelations()
 
 } // CcPrefTableMap

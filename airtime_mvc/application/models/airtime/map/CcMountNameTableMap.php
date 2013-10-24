@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,41 +18,42 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcMountNameTableMap extends TableMap {
+class CcMountNameTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcMountNameTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcMountNameTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_mount_name');
-		$this->setPhpName('CcMountName');
-		$this->setClassname('CcMountName');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_mount_name_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('MOUNT_NAME', 'DbMountName', 'VARCHAR', true, 255, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_mount_name');
+        $this->setPhpName('CcMountName');
+        $this->setClassname('Airtime\\CcMountName');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_mount_name_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('mount_name', 'DbMountName', 'VARCHAR', true, null, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcListenerCount', 'CcListenerCount', RelationMap::ONE_TO_MANY, array('id' => 'mount_name_id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcListenerCount', 'Airtime\\CcListenerCount', RelationMap::ONE_TO_MANY, array('id' => 'mount_name_id', ), 'CASCADE', null, 'CcListenerCounts');
+    } // buildRelations()
 
 } // CcMountNameTableMap

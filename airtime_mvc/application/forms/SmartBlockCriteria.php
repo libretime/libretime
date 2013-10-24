@@ -1,4 +1,8 @@
 <?php
+
+use Airtime\CcBlockQuery;
+use Airtime\CcFilesPeer;
+
 class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 {
     private $criteriaOptions;

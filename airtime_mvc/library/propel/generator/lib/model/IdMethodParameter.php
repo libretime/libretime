@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once 'model/XMLElement.php';
+require_once dirname(__FILE__) . '/XMLElement.php';
 
 /**
  * Information related to an ID method.
@@ -16,93 +16,98 @@ require_once 'model/XMLElement.php';
  * @author     Hans Lellelid <hans@xmpl.org> (Propel)
  * @author     John McNally <jmcnally@collab.net> (Torque)
  * @author     Daniel Rall <dlr@collab.net> (Torque)
- * @version    $Revision: 1612 $
+ * @version    $Revision$
  * @package    propel.generator.model
  */
 class IdMethodParameter extends XMLElement
 {
 
-	private $name;
-	private $value;
-	private $parentTable;
+    private $name;
+    private $value;
 
-   /**
-	 * Sets up the IdMethodParameter object based on the attributes that were passed to loadFromXML().
-	 * @see        parent::loadFromXML()
-	 */
-	protected function setupObject()
-	{
-		$this->name = $this->getAttribute("name");
-		$this->value = $this->getAttribute("value");
-	}
+    /**
+     * @var Table
+     */
+    private $parentTable;
 
-	/**
-	 * Get the parameter name
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
+    /**
+     * Sets up the IdMethodParameter object based on the attributes that were passed to loadFromXML().
+     *
+     * @see        parent::loadFromXML()
+     */
+    protected function setupObject()
+    {
+        $this->name = $this->getAttribute("name");
+        $this->value = $this->getAttribute("value");
+    }
 
-	/**
-	 * Set the parameter name
-	 */
-	public function setName($name)
-	{
-		$this->name = $name;
-	}
+    /**
+     * Get the parameter name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	/**
-	 * Get the parameter value
-	 */
-	public function getValue()
-	{
-		return $this->value;
-	}
+    /**
+     * Set the parameter name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 
-	/**
-	 * Set the parameter value
-	 */
-	public function setValue($value)
-	{
-		$this->value = $value;
-	}
+    /**
+     * Get the parameter value
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
 
-	/**
-	 * Set the parent Table of the id method
-	 */
-	public function setTable(Table $parent)
-	{
-		$this->parentTable = $parent;
-	}
+    /**
+     * Set the parameter value
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
 
-	/**
-	 * Get the parent Table of the id method
-	 */
-	public function getTable()
-	{
-		return $this->parentTable;
-	}
+    /**
+     * Set the parent Table of the id method
+     */
+    public function setTable(Table $parent)
+    {
+        $this->parentTable = $parent;
+    }
 
-	/**
-	 * Returns the Name of the table the id method is in
-	 */
-	public function getTableName()
-	{
-		return $this->parentTable->getName();
-	}
+    /**
+     * Get the parent Table of the id method
+     */
+    public function getTable()
+    {
+        return $this->parentTable;
+    }
 
-	/**
-	 * @see        XMLElement::appendXml(DOMNode)
-	 */
-	public function appendXml(DOMNode $node)
-	{
-		$doc = ($node instanceof DOMDocument) ? $node : $node->ownerDocument;
+    /**
+     * Returns the Name of the table the id method is in
+     */
+    public function getTableName()
+    {
+        return $this->parentTable->getName();
+    }
 
-		$paramNode = $node->appendChild($doc->createElement('id-method-parameter'));
-		if ($this->getName()) {
-			$paramNode->setAttribute('name', $this->getName());
-		}
-		$paramNode->setAttribute('value', $this->getValue());
-	}
+    /**
+     * @see        XMLElement::appendXml(DOMNode)
+     */
+    public function appendXml(DOMNode $node)
+    {
+        $doc = ($node instanceof DOMDocument) ? $node : $node->ownerDocument;
+
+        $paramNode = $node->appendChild($doc->createElement('id-method-parameter'));
+        if ($this->getName()) {
+            $paramNode->setAttribute('name', $this->getName());
+        }
+        $paramNode->setAttribute('value', $this->getValue());
+    }
 }

@@ -1,5 +1,8 @@
 <?php
 
+use Airtime\CcWebstream;
+use Airtime\CcWebstreamQuery;
+
 class WebstreamController extends Zend_Controller_Action
 {
     public function init()

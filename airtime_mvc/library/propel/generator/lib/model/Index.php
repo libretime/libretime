@@ -8,278 +8,331 @@
  * @license    MIT License
  */
 
-require_once 'model/XMLElement.php';
-require_once 'exception/EngineException.php';
+require_once dirname(__FILE__) . '/XMLElement.php';
+require_once dirname(__FILE__) . '/../exception/EngineException.php';
 
 /**
  * Information about indices of a table.
  *
  * @author     Jason van Zyl <vanzyl@apache.org>
  * @author     Daniel Rall <dlr@finemaltcoding.com>
- * @version    $Revision: 1612 $
+ * @version    $Revision$
  * @package    propel.generator.model
  */
 class Index extends XMLElement
 {
 
-	/** enables debug output */
-	const DEBUG = false;
+    /** enables debug output */
+    const DEBUG = false;
 
-	private $indexName;
-	private $parentTable;
+    private $indexName;
 
-	/** @var        array string[] */
-	private $indexColumns;
+    /**
+     * @var Table
+     */
+    private $parentTable;
 
-	/** @var        array  */
-	private $indexColumnSizes = array();
+    /** @var string[] */
+    private $indexColumns;
 
-	/**
-	 * Creates a new Index instance.
-	 *
-	 * @param      string $name
-	 */
-	public function __construct($name=null)
-	{
-		$this->indexName = $name;
-	}
+    /** @var int[] */
+    private $indexColumnSizes = array();
 
-	private function createName()
-	{
-		$table = $this->getTable();
-		$inputs = array();
-		$inputs[] = $table->getDatabase();
-		$inputs[] = $table->getName();
-		if ($this->isUnique()) {
-			$inputs[] = "U";
-		} else {
-			$inputs[] = "I";
-		}
-		// ASSUMPTION: This Index not yet added to the list.
-		if ($this->isUnique()) {
-			$inputs[] = count($table->getUnices()) + 1;
-		} else {
-			$inputs[] = count($table->getIndices()) + 1;
-		}
+    /**
+     * Creates a new Index instance.
+     *
+     * @param string $name
+     */
+    public function __construct($name = null)
+    {
+        $this->indexName = $name;
+    }
 
-		$this->indexName = NameFactory::generateName(
-		NameFactory::CONSTRAINT_GENERATOR, $inputs);
-	}
+    private function createName()
+    {
+        $table = $this->getTable();
+        $inputs = array();
+        $inputs[] = $table->getDatabase();
+        $inputs[] = $table->getCommonName();
+        if ($this->isUnique()) {
+            $inputs[] = "U";
+        } else {
+            $inputs[] = "I";
+        }
+        // ASSUMPTION: This Index not yet added to the list.
+        if ($this->isUnique()) {
+            $inputs[] = count($table->getUnices()) + 1;
+        } else {
+            $inputs[] = count($table->getIndices()) + 1;
+        }
 
-	/**
-	 * Sets up the Index object based on the attributes that were passed to loadFromXML().
-	 * @see        parent::loadFromXML()
-	 */
-	protected function setupObject()
-	{
-		$this->indexName = $this->getAttribute("name");
-	}
+        $this->indexName = NameFactory::generateName(NameFactory::CONSTRAINT_GENERATOR, $inputs);
+    }
 
-	/**
-	 * @see        #isUnique()
-	 * @deprecated Use isUnique() instead.
-	 */
-	public function getIsUnique()
-	{
-		return $this->isUnique();
-	}
+    /**
+     * Sets up the Index object based on the attributes that were passed to loadFromXML().
+     *
+     * @see        parent::loadFromXML()
+     */
+    protected function setupObject()
+    {
+        $this->indexName = $this->getAttribute("name");
+    }
 
-	/**
-	 * Returns the uniqueness of this index.
-	 */
-	public function isUnique()
-	{
-		return false;
-	}
+    /**
+     * @see        #isUnique()
+     * @deprecated Use isUnique() instead.
+     */
+    public function getIsUnique()
+    {
+        return $this->isUnique();
+    }
 
-	/**
-	 * @see        #getName()
-	 * @deprecated Use getName() instead.
-	 */
-	public function getIndexName()
-	{
-		return $this->getName();
-	}
+    /**
+     * Returns the uniqueness of this index.
+     */
+    public function isUnique()
+    {
+        return false;
+    }
 
-	/**
-	 * Gets the name of this index.
-	 */
-	public function getName()
-	{
-		if ($this->indexName === null) {
-			try {
-				// generate an index name if we don't have a supplied one
-				$this->createName();
-			} catch (EngineException $e) {
-				// still no name
-			}
-		}
-		return substr($this->indexName, 0, $this->getTable()->getDatabase()->getPlatform()->getMaxColumnNameLength());
-	}
+    /**
+     * @see        #getName()
+     * @deprecated Use getName() instead.
+     */
+    public function getIndexName()
+    {
+        return $this->getName();
+    }
 
-	/**
-	 * @see        #setName(String name)
-	 * @deprecated Use setName(String name) instead.
-	 */
-	public function setIndexName($name)
-	{
-		$this->setName($name);
-	}
+    /**
+     * Gets the name of this index.
+     */
+    public function getName()
+    {
+        if ($this->indexName === null) {
+            try {
+                // generate an index name if we don't have a supplied one
+                $this->createName();
+            } catch (EngineException $e) {
+                // still no name
+            }
+        }
+        if ($database = $this->getTable()->getDatabase()) {
+            return substr($this->indexName, 0, $database->getPlatform()->getMaxColumnNameLength());
+        } else {
+            return $this->indexName;
+        }
+    }
 
-	/**
-	 * Set the name of this index.
-	 */
-	public function setName($name)
-	{
-		$this->indexName = $name;
-	}
+    /**
+     * @see        #setName(String name)
+     * @deprecated Use setName(String name) instead.
+     */
+    public function setIndexName($name)
+    {
+        $this->setName($name);
+    }
 
-	/**
-	 * Set the parent Table of the index
-	 */
-	public function setTable(Table $parent)
-	{
-		$this->parentTable = $parent;
-	}
+    /**
+     * Set the name of this index.
+     */
+    public function setName($name)
+    {
+        $this->indexName = $name;
+    }
 
-	/**
-	 * Get the parent Table of the index
-	 */
-	public function getTable()
-	{
-		return $this->parentTable;
-	}
+    /**
+     * Set the parent Table of the index
+     */
+    public function setTable(Table $parent)
+    {
+        $this->parentTable = $parent;
+    }
 
-	/**
-	 * Returns the Name of the table the index is in
-	 */
-	public function getTableName()
-	{
-		return $this->parentTable->getName();
-	}
+    /**
+     * Get the parent Table of the index
+     */
+    public function getTable()
+    {
+        return $this->parentTable;
+    }
 
-	/**
-	 * Adds a new column to an index.
-	 * @param      mixed $data Column or attributes from XML.
-	 */
-	public function addColumn($data)
-	{
-		if ($data instanceof Column) {
-			$column = $data;
-			$this->indexColumns[] = $column->getName();
-			if ($column->getSize()) {
-				$this->indexColumnSizes[$column->getName()] = $column->getSize();
-			}
-		} else {
-			$attrib = $data;
-			$name = $attrib["name"];
-			$this->indexColumns[] = $name;
-			if (isset($attrib["size"])) {
-				$this->indexColumnSizes[$name] = $attrib["size"];
-			}
-		}
-	}
+    /**
+     * Returns the Name of the table the index is in
+     */
+    public function getTableName()
+    {
+        return $this->parentTable->getName();
+    }
 
-	/**
-	 * Sets array of columns to use for index.
-	 *
-	 * @param      array $indexColumns Column[]
-	 */
-	public function setColumns(array $indexColumns)
-	{
-		$this->indexColumns = array();
-		$this->indexColumnSizes = array();
-		foreach ($indexColumns as $col) {
-			$this->addColumn($col);
-		}
-	}
+    /**
+     * Adds a new column to an index.
+     *
+     * @param mixed $data Column or attributes from XML.
+     */
+    public function addColumn($data)
+    {
+        if ($data instanceof Column) {
+            $column = $data;
+            $this->indexColumns[] = $column->getName();
+            if ($column->getSize()) {
+                $this->indexColumnSizes[$column->getName()] = $column->getSize();
+            }
+        } else {
+            $attrib = $data;
+            $name = $attrib["name"];
+            $this->indexColumns[] = $name;
+            if (isset($attrib["size"])) {
+                $this->indexColumnSizes[$name] = $attrib["size"];
+            }
+        }
+    }
 
-	/**
-	 * Whether there is a size for the specified column.
-	 * @param      string $name
-	 * @return     boolean
-	 */
-	public function hasColumnSize($name)
-	{
-		return isset($this->indexColumnSizes[$name]);
-	}
+    /**
+     * Sets array of columns to use for index.
+     *
+     * @param array $indexColumns Column[]
+     */
+    public function setColumns(array $indexColumns)
+    {
+        $this->indexColumns = array();
+        $this->indexColumnSizes = array();
+        foreach ($indexColumns as $col) {
+            $this->addColumn($col);
+        }
+    }
 
-	/**
-	 * Returns the size for the specified column, if given.
-	 * @param      string $name
-	 * @return     numeric The size or NULL
-	 */
-	public function getColumnSize($name)
-	{
-		if (isset($this->indexColumnSizes[$name])) {
-			return $this->indexColumnSizes[$name];
-		}
-		return null; // just to be explicit
-	}
+    /**
+     * Whether there is a size for the specified column.
+     *
+     * @param string $name
+     *
+     * @return boolean
+     */
+    public function hasColumnSize($name)
+    {
+        return isset($this->indexColumnSizes[$name]);
+    }
 
-	/**
-	 * @see        #getColumnList()
-	 * @deprecated Use getColumnList() instead (which is not deprecated too!)
-	 */
-	public function getIndexColumnList()
-	{
-		return $this->getColumnList();
-	}
+    /**
+     * Returns the size for the specified column, if given.
+     *
+     * @param string $name
+     *
+     * @return numeric The size or NULL
+     */
+    public function getColumnSize($name)
+    {
+        if (isset($this->indexColumnSizes[$name])) {
+            return $this->indexColumnSizes[$name];
+        }
 
-	/**
-	 * Return a comma delimited string of the columns which compose this index.
-	 * @deprecated because Column::makeList() is deprecated; use the array-returning getColumns() and DDLBuilder->getColumnList() instead instead.
-	 */
-	public function getColumnList()
-	{
-		return Column::makeList($this->getColumns(), $this->getTable()->getDatabase()->getPlatform());
-	}
+        return null; // just to be explicit
+    }
 
-	/**
-	 * @see        #getColumns()
-	 * @deprecated Use getColumns() instead.
-	 */
-	public function getIndexColumns()
-	{
-		return $this->getColumns();
-	}
+    /**
+     * Reset the column sizes. Useful for generated indices for FKs
+     */
+    public function resetColumnSize()
+    {
+        $this->indexColumnSizes = array();
+    }
 
-	
-	/**
-	 * Check whether the index has columns.
-	 * @return     boolean
-	 */
-	public function hasColumns()
-	{
-		return count($this->indexColumns) > 0;
-	}
-	
-	/**
-	 * Return the list of local columns. You should not edit this list.
-	 * @return     array string[]
-	 */
-	public function getColumns()
-	{
-		return $this->indexColumns;
-	}
+    /**
+     * @see        #getColumnList()
+     * @deprecated Use getColumnList() instead (which is not deprecated too!)
+     */
+    public function getIndexColumnList()
+    {
+        return $this->getColumnList();
+    }
 
-	/**
-	 * @see        XMLElement::appendXml(DOMNode)
-	 */
-	public function appendXml(DOMNode $node)
-	{
-		$doc = ($node instanceof DOMDocument) ? $node : $node->ownerDocument;
+    /**
+     * Return a comma delimited string of the columns which compose this index.
+     *
+     * @deprecated because Column::makeList() is deprecated; use the array-returning getColumns() instead.
+     */
+    public function getColumnList()
+    {
+        return Column::makeList($this->getColumns(), $this->getTable()->getDatabase()->getPlatform());
+    }
 
-		$idxNode = $node->appendChild($doc->createElement('index'));
-		$idxNode->setAttribute('name', $this->getName());
+    /**
+     * @see        #getColumns()
+     * @deprecated Use getColumns() instead.
+     */
+    public function getIndexColumns()
+    {
+        return $this->getColumns();
+    }
 
-		foreach ($this->indexColumns as $colname) {
-			$idxColNode = $idxNode->appendChild($doc->createElement('index-column'));
-			$idxColNode->setAttribute('name', $colname);
-		}
+    /**
+     * Check whether this index has a given column at a given position
+     *
+     * @param integer $pos             Position in the column list
+     * @param string  $name            Column name
+     * @param integer $size            optional size check
+     * @param boolean $caseInsensitive Whether the comparison is case insensitive.
+     *                                 False by default.
+     *
+     * @return boolean
+     */
+    public function hasColumnAtPosition($pos, $name, $size = null, $caseInsensitive = false)
+    {
+        if (!isset($this->indexColumns[$pos])) {
+            return false;
+        }
+        $test = $caseInsensitive ?
+            strtolower($this->indexColumns[$pos]) != strtolower($name) :
+            $this->indexColumns[$pos] != $name;
+        if ($test) {
+            return false;
+        }
+        if (null !== $size && $this->indexColumnSizes[$name] != $size) {
+            return false;
+        }
 
-		foreach ($this->vendorInfos as $vi) {
-			$vi->appendXml($idxNode);
-		}
-	}
+        return true;
+    }
+
+    /**
+     * Check whether the index has columns.
+     *
+     * @return boolean
+     */
+    public function hasColumns()
+    {
+        return count($this->indexColumns) > 0;
+    }
+
+    /**
+     * Return the list of local columns. You should not edit this list.
+     *
+     * @return array string[]
+     */
+    public function getColumns()
+    {
+        return $this->indexColumns;
+    }
+
+    /**
+     * @see        XMLElement::appendXml(DOMNode)
+     */
+    public function appendXml(DOMNode $node)
+    {
+        $doc = ($node instanceof DOMDocument) ? $node : $node->ownerDocument;
+
+        $idxNode = $node->appendChild($doc->createElement('index'));
+        $idxNode->setAttribute('name', $this->getName());
+
+        foreach ($this->indexColumns as $colname) {
+            $idxColNode = $idxNode->appendChild($doc->createElement('index-column'));
+            $idxColNode->setAttribute('name', $colname);
+        }
+
+        foreach ($this->vendorInfos as $vi) {
+            $vi->appendXml($idxNode);
+        }
+    }
 }

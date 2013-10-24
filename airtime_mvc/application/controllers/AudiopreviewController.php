@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\CcWebstreamQuery;
+
 class AudiopreviewController extends Zend_Controller_Action
 {
     public function init()

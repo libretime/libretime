@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\CcSubjsQuery;
+
 class LoginController extends Zend_Controller_Action
 {
 

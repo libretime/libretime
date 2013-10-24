@@ -8,19 +8,20 @@
  * @license    MIT License
  */
 
-require_once 'PHPUnit/Framework/TestCase.php';
+require_once dirname(__FILE__) . '/../../../../runtime/lib/map/DatabaseMap.php';
 require_once dirname(__FILE__) . '/../../../../runtime/lib/map/RelationMap.php';
+require_once dirname(__FILE__) . '/../../../../runtime/lib/map/ColumnMap.php';
 require_once dirname(__FILE__) . '/../../../../runtime/lib/map/TableMap.php';
 
 /**
  * Test class for RelationMap.
  *
  * @author     François Zaninotto
- * @version    $Id: RelationMapTest.php 1773 2010-05-25 10:25:06Z francois $
+ * @version    $Id$
  * @package    runtime.map
  */
-class RelationMapTest extends PHPUnit_Framework_TestCase 
-{ 
+class RelationMapTest extends PHPUnit_Framework_TestCase
+{
   protected $databaseMap, $relationName, $rmap;
 
   protected function setUp()
@@ -35,7 +36,7 @@ class RelationMapTest extends PHPUnit_Framework_TestCase
   {
     $this->assertEquals($this->relationName, $this->rmap->getName(), 'constructor sets the relation name');
   }
-  
+
   public function testLocalTable()
   {
     $this->assertNull($this->rmap->getLocalTable(), 'A new relation has no local table');
@@ -51,12 +52,11 @@ class RelationMapTest extends PHPUnit_Framework_TestCase
     $this->rmap->setForeignTable($tmap2);
     $this->assertEquals($tmap2, $this->rmap->getForeignTable(), 'The foreign table is set by setForeignTable()');
   }
-  
+
   public function testProperties()
   {
     $properties = array('type', 'onUpdate', 'onDelete');
-    foreach ($properties as $property)
-    {
+    foreach ($properties as $property) {
       $getter = 'get' . ucfirst($property);
       $setter = 'set' . ucfirst($property);
       $this->assertNull($this->rmap->$getter(), "A new relation has no $property");
@@ -64,7 +64,7 @@ class RelationMapTest extends PHPUnit_Framework_TestCase
       $this->assertEquals('foo_value', $this->rmap->$getter(), "The $property is set by setType()");
     }
   }
-  
+
   public function testColumns()
   {
     $this->assertEquals(array(), $this->rmap->getLocalColumns(), 'A new relation has no local columns');

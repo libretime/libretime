@@ -4,6 +4,8 @@ require_once 'formatters/LengthFormatter.php';
 require_once 'formatters/SamplerateFormatter.php';
 require_once 'formatters/BitrateFormatter.php';
 
+use Airtime\CcWebstreamQuery;
+
 class LibraryController extends Zend_Controller_Action
 {
 

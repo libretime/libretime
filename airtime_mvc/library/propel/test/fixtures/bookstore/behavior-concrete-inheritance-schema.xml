@@ -4,6 +4,13 @@
 	<table name="concrete_category">
 		<column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
 		<column name="name" type="VARCHAR" size="100" primaryString="true" />
+		<behavior name="nested_set" />
+	</table>
+
+	<table name="concrete_tag">
+		<behavior name="concrete_inheritance">
+			<parameter name="extends" value="concrete_category" />
+		</behavior>
 	</table>
 
 	<table name="concrete_content">
@@ -52,7 +59,7 @@
 			<parameter name="copy_data_to_parent" value="false" />
 		</behavior>
 	</table>
-	
+
 	<table name="concrete_quizz_question">
 		<column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
 		<column name="question" type="VARCHAR" size="100" primaryString="true" />
@@ -63,7 +70,15 @@
 		<foreign-key foreignTable="concrete_quizz" onDelete="cascade">
 			<reference local="quizz_id" foreign="id" />
 		</foreign-key>
-
 	</table>
-	
+
+	<table name="concrete_comment">
+		<column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER" />
+		<column name="message" type="VARCHAR" size="255" />
+		<column name="concrete_content_id" required="true" type="INTEGER" />
+		<foreign-key foreignTable="concrete_content" onDelete="cascade">
+			<reference local="concrete_content_id" foreign="id" />
+		</foreign-key>
+	</table>
+
 </database>

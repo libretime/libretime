@@ -1,6 +1,8 @@
 <?php
 
+namespace Airtime;
 
+use Airtime\om\BaseCcSchedule;
 
 /**
  * Skeleton subclass for representing a row from the 'cc_schedule' table.

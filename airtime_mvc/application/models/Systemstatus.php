@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\CcServiceRegisterQuery;
+
 class Application_Model_Systemstatus
 {
 

@@ -1,11 +1,14 @@
 <?php
 
+namespace Airtime;
+
+use Airtime\om\BaseCcServiceRegister;
 
 
 /**
  * Skeleton subclass for representing a row from the 'cc_service_register' table.
  *
- * 
+ *
  *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
@@ -13,6 +16,6 @@
  *
  * @package    propel.generator.airtime
  */
-class CcServiceRegister extends BaseCcServiceRegister {
-
-} // CcServiceRegister
+class CcServiceRegister extends BaseCcServiceRegister
+{
+}

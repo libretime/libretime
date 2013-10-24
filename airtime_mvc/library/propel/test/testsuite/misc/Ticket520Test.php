@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once 'tools/helpers/bookstore/BookstoreTestBase.php';
+require_once dirname(__FILE__) . '/../../tools/helpers/bookstore/BookstoreTestBase.php';
 
 /* It's only fair to admit that these tests were carefully crafted
 after studying the current implementation to make it look as bad as
@@ -19,232 +19,237 @@ possible. I am really sorry. :-( */
  */
 class Ticket520Test extends BookstoreTestBase
 {
-	public function testNewObjectsAvailableWhenSaveNotCalled()
-	{
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+    public function testNewObjectsAvailableWhenSaveNotCalled()
+    {
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $a->addBook($b1);
 
-		$b2 = new Book();
-		$b2->setTitle("The Restaurant At The End Of The Universe");
-		$a->addBook($b2);
+        $b2 = new Book();
+        $b2->setTitle("The Restaurant At The End Of The Universe");
+        $a->addBook($b2);
 
-		// Passing no Criteria means "use the internal collection or query the database"
-		// in that case two objects are added, so it should return 2
-		$books = $a->getBooks();
-		$this->assertEquals(2, count($books));
-	}
+        // Passing no Criteria means "use the internal collection or query the database"
+        // in that case two objects are added, so it should return 2
+        $books = $a->getBooks();
+        $this->assertEquals(2, count($books));
+    }
 
-	public function testNewObjectsNotAvailableWithCriteria()
-	{
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+    public function testNewObjectsNotAvailableWithCriteria()
+    {
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $a->addBook($b1);
 
-		$b2 = new Book();
-		$b2->setTitle("The Restaurant At The End Of The Universe");
-		$a->addBook($b2);
+        $b2 = new Book();
+        $b2->setTitle("The Restaurant At The End Of The Universe");
+        $a->addBook($b2);
 
-		$c = new Criteria();
-		$c->add(BookPeer::TITLE, "%Hitchhiker%", Criteria::LIKE);
+        $c = new Criteria();
+        $c->add(BookPeer::TITLE, "%Hitchhiker%", Criteria::LIKE);
 
-		$guides = $a->getBooks($c);
-		$this->assertEquals(0, count($guides), 'Passing a Criteria means "force a database query"');
-	}
+        $guides = $a->getBooks($c);
+        $this->assertEquals(0, count($guides), 'Passing a Criteria means "force a database query"');
+    }
 
-	public function testNewObjectsAvailableAfterCriteria()
-	{
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+    public function testNewObjectsAvailableAfterCriteria()
+    {
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $a->addBook($b1);
 
-		$b2 = new Book();
-		$b2->setTitle("The Restaurant At The End Of The Universe");
-		$a->addBook($b2);
+        $b2 = new Book();
+        $b2->setTitle("The Restaurant At The End Of The Universe");
+        $a->addBook($b2);
 
-		$c = new Criteria();
-		$c->add(BookPeer::TITLE, "%Hitchhiker%", Criteria::LIKE);
+        $c = new Criteria();
+        $c->add(BookPeer::TITLE, "%Hitchhiker%", Criteria::LIKE);
 
-		$guides = $a->getBooks($c);
-		
-		$books = $a->getBooks();
-		$this->assertEquals(2, count($books), 'A previous query with a Criteria does not erase the internal collection');
-	}
+        $guides = $a->getBooks($c);
 
-	public function testSavedObjectsWithCriteria()
-	{
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+        $books = $a->getBooks();
+        $this->assertEquals(2, count($books), 'A previous query with a Criteria does not erase the internal collection');
+    }
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+    public function testSavedObjectsWithCriteria()
+    {
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$b2 = new Book();
-		$b2->setTitle("The Restaurant At The End Of The Universe");
-		$a->addBook($b2);
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $b1->setIsbn('14');
+        $a->addBook($b1);
 
-		$c = new Criteria();
-		$c->add(BookPeer::TITLE, "%Hitchhiker%", Criteria::LIKE);
+        $b2 = new Book();
+        $b2->setTitle("The Restaurant At The End Of The Universe");
+        $b2->setIsbn('124');
+        $a->addBook($b2);
 
-		$guides = $a->getBooks($c);
+        $c = new Criteria();
+        $c->add(BookPeer::TITLE, "%Hitchhiker%", Criteria::LIKE);
 
-		$a->save();
-		$booksAfterSave = $a->getBooks($c);
-		$this->assertEquals(1, count($booksAfterSave), 'A previous query with a Criteria is not cached');
-	}
+        $guides = $a->getBooks($c);
 
-	public function testAddNewObjectAfterSave()
-	{
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+        $a->save();
+        $booksAfterSave = $a->getBooks($c);
+        $this->assertEquals(1, count($booksAfterSave), 'A previous query with a Criteria is not cached');
+    }
 
-		$a->save();
+    public function testAddNewObjectAfterSave()
+    {
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+        $a->save();
 
-		$books = $a->getBooks();
-		$this->assertEquals(1, count($books));
-		$this->assertTrue($books->contains($b1));
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $b1->setIsbn('13245');
+        $a->addBook($b1);
 
-		/* Now this is the initial ticket 520: If we have a saved author,
-		add a new book but happen to call getBooks() before we call save() again,
-		the book used to be lost. */
-		$a->save();
-		$this->assertFalse($b1->isNew(), 'related objects are also saved after fetching them');
-	}
+        $books = $a->getBooks();
+        $this->assertEquals(1, count($books));
+        $this->assertTrue($books->contains($b1));
 
-	public function testAddNewObjectAfterSaveWithPoisonedCache()
-	{
-		/* This is like testAddNewObjectAfterSave(),
-		but this time we "poison" the author's $colBooks cache
-		before adding the book by calling getBooks(). */
+        /* Now this is the initial ticket 520: If we have a saved author,
+        add a new book but happen to call getBooks() before we call save() again,
+        the book used to be lost. */
+        $a->save();
+        $this->assertFalse($b1->isNew(), 'related objects are also saved after fetching them');
+    }
 
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+    public function testAddNewObjectAfterSaveWithPoisonedCache()
+    {
+        /* This is like testAddNewObjectAfterSave(),
+        but this time we "poison" the author's $colBooks cache
+        before adding the book by calling getBooks(). */
 
-		$a->save();
-		$a->getBooks();
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+        $a->save();
+        $a->getBooks();
 
-		$books = $a->getBooks();
-		$this->assertEquals(1, count($books));
-		$this->assertTrue($books->contains($b1), 'new related objects not deleted after fetching them');
-	}
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $a->addBook($b1);
 
-	public function testCachePoisoning()
-	{
-		/* Like testAddNewObjectAfterSaveWithPoisonedCache, emphasizing
-		cache poisoning. */
+        $books = $a->getBooks();
+        $this->assertEquals(1, count($books));
+        $this->assertTrue($books->contains($b1), 'new related objects not deleted after fetching them');
+    }
 
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+    public function testCachePoisoning()
+    {
+        /* Like testAddNewObjectAfterSaveWithPoisonedCache, emphasizing
+        cache poisoning. */
 
-		$a->save();
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$c = new Criteria();
-		$c->add(BookPeer::TITLE, "%Restaurant%", Criteria::LIKE);
+        $a->save();
 
-		$this->assertEquals(0, count($a->getBooks($c)));
+        $c = new Criteria();
+        $c->add(BookPeer::TITLE, "%Restaurant%", Criteria::LIKE);
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+        $this->assertEquals(0, count($a->getBooks($c)));
 
-		/* Like testAddNewObjectAfterSaveWithPoisonedCache, but this time
-		with a real criteria.  */
-		$this->assertEquals(0, count($a->getBooks($c)));
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $b1->setIsbn('12435');
+        $a->addBook($b1);
 
-		$a->save();
-		$this->assertFalse($b1->isNew());
-		$this->assertEquals(0, count($a->getBooks($c)));
-	}
+        /* Like testAddNewObjectAfterSaveWithPoisonedCache, but this time
+        with a real criteria.  */
+        $this->assertEquals(0, count($a->getBooks($c)));
 
-	public function testDeletedBookDisappears()
-	{
-		$this->markTestSkipped();
-		
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+        $a->save();
+        $this->assertFalse($b1->isNew());
+        $this->assertEquals(0, count($a->getBooks($c)));
+    }
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$a->addBook($b1);
+    public function testDeletedBookDisappears()
+    {
+        $this->markTestSkipped();
 
-		$b2 = new Book();
-		$b2->setTitle("The Restaurant At The End Of The Universe");
-		$a->addBook($b2);
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		/* As you cannot write $a->remove($b2), you have to delete $b2
-		directly. */
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $a->addBook($b1);
 
-		/* All objects unsaved. As of revision 851, this circumvents the
-		$colBooks cache. Anyway, fails because getBooks() never checks if
-		a colBooks entry has been deleted. */
-		$this->assertEquals(2, count($a->getBooks()));
-		$b2->delete();
-		$this->assertEquals(1, count($a->getBooks()));
+        $b2 = new Book();
+        $b2->setTitle("The Restaurant At The End Of The Universe");
+        $a->addBook($b2);
 
-		/* Even if we had saved everything before and the delete() had
-		actually updated the DB, the $b2 would still be a "zombie" in
-		$a's $colBooks field. */
-	}
+        /* As you cannot write $a->remove($b2), you have to delete $b2
+        directly. */
 
-	public function testNewObjectsGetLostOnJoin() {
-		/* While testNewObjectsAvailableWhenSaveNotCalled passed as of
-		revision 851, in this case we call getBooksJoinPublisher() instead
-		of just getBooks(). get...Join...() does not contain the check whether
-		the current object is new, it will always consult the DB and lose the
-		new objects entirely. Thus the test fails. (At least for Propel 1.2 ?!?) */
-		$this->markTestSkipped();
-		
-		$a = new Author();
-		$a->setFirstName("Douglas");
-		$a->setLastName("Adams");
+        /* All objects unsaved. As of revision 851, this circumvents the
+        $colBooks cache. Anyway, fails because getBooks() never checks if
+        a colBooks entry has been deleted. */
+        $this->assertEquals(2, count($a->getBooks()));
+        $b2->delete();
+        $this->assertEquals(1, count($a->getBooks()));
 
-		$p = new Publisher();
-		$p->setName('Pan Books Ltd.');
+        /* Even if we had saved everything before and the delete() had
+        actually updated the DB, the $b2 would still be a "zombie" in
+        $a's $colBooks field. */
+    }
 
-		$b1 = new Book();
-		$b1->setTitle("The Hitchhikers Guide To The Galaxy");
-		$b1->setPublisher($p); // uh... did not check that :^)
-		$a->addBook($b1);
+    public function testNewObjectsGetLostOnJoin()
+    {
+        /* While testNewObjectsAvailableWhenSaveNotCalled passed as of
+        revision 851, in this case we call getBooksJoinPublisher() instead
+        of just getBooks(). get...Join...() does not contain the check whether
+        the current object is new, it will always consult the DB and lose the
+        new objects entirely. Thus the test fails. (At least for Propel 1.2 ?!?) */
+        $this->markTestSkipped();
 
-		$b2 = new Book();
-		$b2->setTitle("The Restaurant At The End Of The Universe");
-		$b2->setPublisher($p);
-		$a->addBook($b2);
+        $a = new Author();
+        $a->setFirstName("Douglas");
+        $a->setLastName("Adams");
 
-		$books = $a->getBooksJoinPublisher();
-		$this->assertEquals(2, count($books));
-		$this->assertContains($b1, $books);
-		$this->assertContains($b2, $books);
+        $p = new Publisher();
+        $p->setName('Pan Books Ltd.');
 
-		$a->save();
-		$this->assertFalse($b1->isNew());
-		$this->assertFalse($b2->isNew());
-	}
+        $b1 = new Book();
+        $b1->setTitle("The Hitchhikers Guide To The Galaxy");
+        $b1->setPublisher($p); // uh... did not check that :^)
+        $a->addBook($b1);
+
+        $b2 = new Book();
+        $b2->setTitle("The Restaurant At The End Of The Universe");
+        $b2->setPublisher($p);
+        $a->addBook($b2);
+
+        $books = $a->getBooksJoinPublisher();
+        $this->assertEquals(2, count($books));
+        $this->assertContains($b1, $books);
+        $this->assertContains($b2, $books);
+
+        $a->save();
+        $this->assertFalse($b1->isNew());
+        $this->assertFalse($b2->isNew());
+    }
 
 }

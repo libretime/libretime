@@ -1,4 +1,12 @@
 <?php
+
+use Airtime\CcSchedule;
+use Airtime\CcSchedulePeer;
+use Airtime\CcScheduleQuery;
+use Airtime\CcShowInstancesQuery;
+use Airtime\CcFilesPeer;
+use Airtime\CcShowInstancesPeer;
+
 class Application_Service_SchedulerService
 {
     private $con;

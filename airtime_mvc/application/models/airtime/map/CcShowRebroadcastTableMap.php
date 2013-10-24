@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,43 +18,44 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcShowRebroadcastTableMap extends TableMap {
+class CcShowRebroadcastTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcShowRebroadcastTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcShowRebroadcastTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_show_rebroadcast');
-		$this->setPhpName('CcShowRebroadcast');
-		$this->setClassname('CcShowRebroadcast');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_show_rebroadcast_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('DAY_OFFSET', 'DbDayOffset', 'VARCHAR', true, 255, null);
-		$this->addColumn('START_TIME', 'DbStartTime', 'TIME', true, null, null);
-		$this->addForeignKey('SHOW_ID', 'DbShowId', 'INTEGER', 'cc_show', 'ID', true, null, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_show_rebroadcast');
+        $this->setPhpName('CcShowRebroadcast');
+        $this->setClassname('Airtime\\CcShowRebroadcast');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_show_rebroadcast_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('day_offset', 'DbDayOffset', 'VARCHAR', true, null, null);
+        $this->addColumn('start_time', 'DbStartTime', 'TIME', true, null, null);
+        $this->addForeignKey('show_id', 'DbShowId', 'INTEGER', 'cc_show', 'id', true, null, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcShow', 'CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcShow', 'Airtime\\CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
+    } // buildRelations()
 
 } // CcShowRebroadcastTableMap

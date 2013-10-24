@@ -1,5 +1,10 @@
 <?php
 
+use Airtime\CcSubjs;
+use Airtime\CcSubjsPeer;
+use Airtime\CcSubjsQuery;
+use Airtime\CcShowHostsQuery;
+
 class Application_Model_User
 {
     private $_userInstance;

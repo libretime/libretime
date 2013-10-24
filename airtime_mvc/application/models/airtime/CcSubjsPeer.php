@@ -1,11 +1,14 @@
 <?php
 
+namespace Airtime;
+
+use Airtime\om\BaseCcSubjsPeer;
 
 
 /**
  * Skeleton subclass for performing query and update operations on the 'cc_subjs' table.
  *
- * 
+ *
  *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
@@ -13,6 +16,6 @@
  *
  * @package    propel.generator.airtime
  */
-class CcSubjsPeer extends BaseCcSubjsPeer {
-
-} // CcSubjsPeer
+class CcSubjsPeer extends BaseCcSubjsPeer
+{
+}

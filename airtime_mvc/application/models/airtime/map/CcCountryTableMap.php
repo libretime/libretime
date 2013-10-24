@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,39 +18,40 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcCountryTableMap extends TableMap {
+class CcCountryTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcCountryTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcCountryTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_country');
-		$this->setPhpName('CcCountry');
-		$this->setClassname('CcCountry');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(false);
-		// columns
-		$this->addPrimaryKey('ISOCODE', 'DbIsoCode', 'CHAR', true, 3, null);
-		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_country');
+        $this->setPhpName('CcCountry');
+        $this->setClassname('Airtime\\CcCountry');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(false);
+        // columns
+        $this->addPrimaryKey('isocode', 'DbIsoCode', 'CHAR', true, 3, null);
+        $this->addColumn('name', 'DbName', 'VARCHAR', true, 255, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+    } // buildRelations()
 
 } // CcCountryTableMap

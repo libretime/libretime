@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime\map;
+
+use \RelationMap;
+use \TableMap;
 
 
 /**
@@ -14,49 +18,50 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcWebstreamTableMap extends TableMap {
+class CcWebstreamTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcWebstreamTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcWebstreamTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_webstream');
-		$this->setPhpName('CcWebstream');
-		$this->setClassname('CcWebstream');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_webstream_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('NAME', 'DbName', 'VARCHAR', true, 255, null);
-		$this->addColumn('DESCRIPTION', 'DbDescription', 'VARCHAR', true, 255, null);
-		$this->addColumn('URL', 'DbUrl', 'VARCHAR', true, 512, null);
-		$this->addColumn('LENGTH', 'DbLength', 'VARCHAR', true, null, '00:00:00');
-		$this->addColumn('CREATOR_ID', 'DbCreatorId', 'INTEGER', true, null, null);
-		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', true, 6, null);
-		$this->addColumn('UTIME', 'DbUtime', 'TIMESTAMP', true, 6, null);
-		$this->addColumn('LPTIME', 'DbLPtime', 'TIMESTAMP', false, 6, null);
-		$this->addColumn('MIME', 'DbMime', 'VARCHAR', false, 255, null);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_webstream');
+        $this->setPhpName('CcWebstream');
+        $this->setClassname('Airtime\\CcWebstream');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_webstream_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('name', 'DbName', 'VARCHAR', true, 255, null);
+        $this->addColumn('description', 'DbDescription', 'VARCHAR', true, 255, null);
+        $this->addColumn('url', 'DbUrl', 'VARCHAR', true, 512, null);
+        $this->addColumn('length', 'DbLength', 'VARCHAR', true, null, '00:00:00');
+        $this->addColumn('creator_id', 'DbCreatorId', 'INTEGER', true, null, null);
+        $this->addColumn('mtime', 'DbMtime', 'TIMESTAMP', true, 6, null);
+        $this->addColumn('utime', 'DbUtime', 'TIMESTAMP', true, 6, null);
+        $this->addColumn('lptime', 'DbLPtime', 'TIMESTAMP', false, 6, null);
+        $this->addColumn('mime', 'DbMime', 'VARCHAR', false, null, null);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'stream_id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcSchedule', 'Airtime\\CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'stream_id', ), 'CASCADE', null, 'CcSchedules');
+    } // buildRelations()
 
 } // CcWebstreamTableMap

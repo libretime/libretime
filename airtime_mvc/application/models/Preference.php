@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\CcPrefPeer;
+
 class Application_Model_Preference
 {
 

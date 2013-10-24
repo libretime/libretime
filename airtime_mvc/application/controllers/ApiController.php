@@ -1,5 +1,10 @@
 <?php
 
+use Airtime\CcFilesPeer;
+use Airtime\CcShowQuery;
+use Airtime\CcWebstreamMetadata;
+use Airtime\CcWebstreamMetadataQuery;
+
 class ApiController extends Zend_Controller_Action
 {
 

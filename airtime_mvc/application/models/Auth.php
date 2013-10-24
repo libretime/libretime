@@ -1,5 +1,9 @@
 <?php
 
+use Airtime\CcSubjsToken;
+use Airtime\CcSubjsTokenQuery;
+
+
 class Application_Model_Auth
 {
     const TOKEN_LIFETIME = 'P2D'; // DateInterval syntax

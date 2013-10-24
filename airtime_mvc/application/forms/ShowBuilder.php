@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\CcShowQuery;
+
 class Application_Form_ShowBuilder extends Zend_Form_SubForm
 {
 

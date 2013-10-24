@@ -1,5 +1,8 @@
 <?php
 
+use Airtime\CcScheduleQuery;
+use Airtime\CcShowInstancesQuery;
+
 class ShowbuilderController extends Zend_Controller_Action
 {
 

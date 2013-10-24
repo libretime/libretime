@@ -1,5 +1,9 @@
 <?php
 
+namespace Airtime;
+
+use Airtime\om\BaseCcPlaylistcontents;
+
 /**
  * Skeleton subclass for representing a row from the 'cc_playlistcontents' table.
  *

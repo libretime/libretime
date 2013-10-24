@@ -1,5 +1,9 @@
 <?php
 
+use Airtime\CcWebstream;
+use Airtime\CcWebstreamQuery;
+use Airtime\CcSubjsQuery;
+
 class Application_Model_Webstream implements Application_Model_LibraryEditable
 {
     private $id;

@@ -2,6 +2,19 @@
 
 require_once 'formatters/LengthFormatter.php';
 
+use Airtime\PlayoutHistory\CcPlayoutHistory;
+use Airtime\PlayoutHistory\CcPlayoutHistoryPeer;
+use Airtime\PlayoutHistory\CcPlayoutHistoryQuery;
+use Airtime\PlayoutHistory\CcPlayoutHistoryMetaData;
+use Airtime\PlayoutHistory\CcPlayoutHistoryTemplate;
+use Airtime\PlayoutHistory\CcPlayoutHistoryTemplatePeer;
+use Airtime\PlayoutHistory\CcPlayoutHistoryTemplateQuery;
+use Airtime\PlayoutHistory\CcPlayoutHistoryTemplateField;
+
+use Airtime\CcShowHostsQuery;
+use Airtime\CcScheduleQuery;
+use Airtime\CcShowInstancesQuery;
+
 class Application_Service_HistoryService
 {
 	private $con;

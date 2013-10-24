@@ -1,729 +1,995 @@
 <?php
 
+namespace Airtime\om;
+
+use \Criteria;
+use \Exception;
+use \ModelCriteria;
+use \ModelJoin;
+use \PDO;
+use \Propel;
+use \PropelCollection;
+use \PropelException;
+use \PropelObjectCollection;
+use \PropelPDO;
+use Airtime\CcShow;
+use Airtime\CcShowDays;
+use Airtime\CcShowHosts;
+use Airtime\CcShowInstances;
+use Airtime\CcShowPeer;
+use Airtime\CcShowQuery;
+use Airtime\CcShowRebroadcast;
 
 /**
  * Base class that represents a query for the 'cc_show' table.
  *
- * 
  *
- * @method     CcShowQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method     CcShowQuery orderByDbName($order = Criteria::ASC) Order by the name column
- * @method     CcShowQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
- * @method     CcShowQuery orderByDbGenre($order = Criteria::ASC) Order by the genre column
- * @method     CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
- * @method     CcShowQuery orderByDbColor($order = Criteria::ASC) Order by the color column
- * @method     CcShowQuery orderByDbBackgroundColor($order = Criteria::ASC) Order by the background_color column
- * @method     CcShowQuery orderByDbLiveStreamUsingAirtimeAuth($order = Criteria::ASC) Order by the live_stream_using_airtime_auth column
- * @method     CcShowQuery orderByDbLiveStreamUsingCustomAuth($order = Criteria::ASC) Order by the live_stream_using_custom_auth column
- * @method     CcShowQuery orderByDbLiveStreamUser($order = Criteria::ASC) Order by the live_stream_user column
- * @method     CcShowQuery orderByDbLiveStreamPass($order = Criteria::ASC) Order by the live_stream_pass column
- * @method     CcShowQuery orderByDbLinked($order = Criteria::ASC) Order by the linked column
- * @method     CcShowQuery orderByDbIsLinkable($order = Criteria::ASC) Order by the is_linkable column
  *
- * @method     CcShowQuery groupByDbId() Group by the id column
- * @method     CcShowQuery groupByDbName() Group by the name column
- * @method     CcShowQuery groupByDbUrl() Group by the url column
- * @method     CcShowQuery groupByDbGenre() Group by the genre column
- * @method     CcShowQuery groupByDbDescription() Group by the description column
- * @method     CcShowQuery groupByDbColor() Group by the color column
- * @method     CcShowQuery groupByDbBackgroundColor() Group by the background_color column
- * @method     CcShowQuery groupByDbLiveStreamUsingAirtimeAuth() Group by the live_stream_using_airtime_auth column
- * @method     CcShowQuery groupByDbLiveStreamUsingCustomAuth() Group by the live_stream_using_custom_auth column
- * @method     CcShowQuery groupByDbLiveStreamUser() Group by the live_stream_user column
- * @method     CcShowQuery groupByDbLiveStreamPass() Group by the live_stream_pass column
- * @method     CcShowQuery groupByDbLinked() Group by the linked column
- * @method     CcShowQuery groupByDbIsLinkable() Group by the is_linkable column
+ * @method CcShowQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method CcShowQuery orderByDbName($order = Criteria::ASC) Order by the name column
+ * @method CcShowQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
+ * @method CcShowQuery orderByDbGenre($order = Criteria::ASC) Order by the genre column
+ * @method CcShowQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
+ * @method CcShowQuery orderByDbColor($order = Criteria::ASC) Order by the color column
+ * @method CcShowQuery orderByDbBackgroundColor($order = Criteria::ASC) Order by the background_color column
+ * @method CcShowQuery orderByDbLiveStreamUsingAirtimeAuth($order = Criteria::ASC) Order by the live_stream_using_airtime_auth column
+ * @method CcShowQuery orderByDbLiveStreamUsingCustomAuth($order = Criteria::ASC) Order by the live_stream_using_custom_auth column
+ * @method CcShowQuery orderByDbLiveStreamUser($order = Criteria::ASC) Order by the live_stream_user column
+ * @method CcShowQuery orderByDbLiveStreamPass($order = Criteria::ASC) Order by the live_stream_pass column
+ * @method CcShowQuery orderByDbLinked($order = Criteria::ASC) Order by the linked column
+ * @method CcShowQuery orderByDbIsLinkable($order = Criteria::ASC) Order by the is_linkable column
  *
- * @method     CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     CcShowQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method CcShowQuery groupByDbId() Group by the id column
+ * @method CcShowQuery groupByDbName() Group by the name column
+ * @method CcShowQuery groupByDbUrl() Group by the url column
+ * @method CcShowQuery groupByDbGenre() Group by the genre column
+ * @method CcShowQuery groupByDbDescription() Group by the description column
+ * @method CcShowQuery groupByDbColor() Group by the color column
+ * @method CcShowQuery groupByDbBackgroundColor() Group by the background_color column
+ * @method CcShowQuery groupByDbLiveStreamUsingAirtimeAuth() Group by the live_stream_using_airtime_auth column
+ * @method CcShowQuery groupByDbLiveStreamUsingCustomAuth() Group by the live_stream_using_custom_auth column
+ * @method CcShowQuery groupByDbLiveStreamUser() Group by the live_stream_user column
+ * @method CcShowQuery groupByDbLiveStreamPass() Group by the live_stream_pass column
+ * @method CcShowQuery groupByDbLinked() Group by the linked column
+ * @method CcShowQuery groupByDbIsLinkable() Group by the is_linkable column
  *
- * @method     CcShowQuery leftJoinCcShowInstances($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowInstances relation
- * @method     CcShowQuery rightJoinCcShowInstances($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
- * @method     CcShowQuery innerJoinCcShowInstances($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowInstances relation
+ * @method CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method CcShowQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     CcShowQuery leftJoinCcShowDays($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowDays relation
- * @method     CcShowQuery rightJoinCcShowDays($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowDays relation
- * @method     CcShowQuery innerJoinCcShowDays($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowDays relation
+ * @method CcShowQuery leftJoinCcShowInstances($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowInstances relation
+ * @method CcShowQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
+ * @method CcShowQuery innerJoinCcShowInstances($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowInstances relation
  *
- * @method     CcShowQuery leftJoinCcShowRebroadcast($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowRebroadcast relation
- * @method     CcShowQuery rightJoinCcShowRebroadcast($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowRebroadcast relation
- * @method     CcShowQuery innerJoinCcShowRebroadcast($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowRebroadcast relation
+ * @method CcShowQuery leftJoinCcShowDays($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowDays relation
+ * @method CcShowQuery rightJoinCcShowDays($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowDays relation
+ * @method CcShowQuery innerJoinCcShowDays($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowDays relation
  *
- * @method     CcShowQuery leftJoinCcShowHosts($relationAlias = '') Adds a LEFT JOIN clause to the query using the CcShowHosts relation
- * @method     CcShowQuery rightJoinCcShowHosts($relationAlias = '') Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
- * @method     CcShowQuery innerJoinCcShowHosts($relationAlias = '') Adds a INNER JOIN clause to the query using the CcShowHosts relation
+ * @method CcShowQuery leftJoinCcShowRebroadcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowRebroadcast relation
+ * @method CcShowQuery rightJoinCcShowRebroadcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowRebroadcast relation
+ * @method CcShowQuery innerJoinCcShowRebroadcast($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowRebroadcast relation
  *
- * @method     CcShow findOne(PropelPDO $con = null) Return the first CcShow matching the query
- * @method     CcShow findOneOrCreate(PropelPDO $con = null) Return the first CcShow matching the query, or a new CcShow object populated from the query conditions when no match is found
+ * @method CcShowQuery leftJoinCcShowHosts($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowHosts relation
+ * @method CcShowQuery rightJoinCcShowHosts($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowHosts relation
+ * @method CcShowQuery innerJoinCcShowHosts($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowHosts relation
  *
- * @method     CcShow findOneByDbId(int $id) Return the first CcShow filtered by the id column
- * @method     CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
- * @method     CcShow findOneByDbUrl(string $url) Return the first CcShow filtered by the url column
- * @method     CcShow findOneByDbGenre(string $genre) Return the first CcShow filtered by the genre column
- * @method     CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
- * @method     CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
- * @method     CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
- * @method     CcShow findOneByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return the first CcShow filtered by the live_stream_using_airtime_auth column
- * @method     CcShow findOneByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return the first CcShow filtered by the live_stream_using_custom_auth column
- * @method     CcShow findOneByDbLiveStreamUser(string $live_stream_user) Return the first CcShow filtered by the live_stream_user column
- * @method     CcShow findOneByDbLiveStreamPass(string $live_stream_pass) Return the first CcShow filtered by the live_stream_pass column
- * @method     CcShow findOneByDbLinked(boolean $linked) Return the first CcShow filtered by the linked column
- * @method     CcShow findOneByDbIsLinkable(boolean $is_linkable) Return the first CcShow filtered by the is_linkable column
+ * @method CcShow findOne(PropelPDO $con = null) Return the first CcShow matching the query
+ * @method CcShow findOneOrCreate(PropelPDO $con = null) Return the first CcShow matching the query, or a new CcShow object populated from the query conditions when no match is found
  *
- * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
- * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
- * @method     array findByDbUrl(string $url) Return CcShow objects filtered by the url column
- * @method     array findByDbGenre(string $genre) Return CcShow objects filtered by the genre column
- * @method     array findByDbDescription(string $description) Return CcShow objects filtered by the description column
- * @method     array findByDbColor(string $color) Return CcShow objects filtered by the color column
- * @method     array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
- * @method     array findByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return CcShow objects filtered by the live_stream_using_airtime_auth column
- * @method     array findByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return CcShow objects filtered by the live_stream_using_custom_auth column
- * @method     array findByDbLiveStreamUser(string $live_stream_user) Return CcShow objects filtered by the live_stream_user column
- * @method     array findByDbLiveStreamPass(string $live_stream_pass) Return CcShow objects filtered by the live_stream_pass column
- * @method     array findByDbLinked(boolean $linked) Return CcShow objects filtered by the linked column
- * @method     array findByDbIsLinkable(boolean $is_linkable) Return CcShow objects filtered by the is_linkable column
+ * @method CcShow findOneByDbName(string $name) Return the first CcShow filtered by the name column
+ * @method CcShow findOneByDbUrl(string $url) Return the first CcShow filtered by the url column
+ * @method CcShow findOneByDbGenre(string $genre) Return the first CcShow filtered by the genre column
+ * @method CcShow findOneByDbDescription(string $description) Return the first CcShow filtered by the description column
+ * @method CcShow findOneByDbColor(string $color) Return the first CcShow filtered by the color column
+ * @method CcShow findOneByDbBackgroundColor(string $background_color) Return the first CcShow filtered by the background_color column
+ * @method CcShow findOneByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return the first CcShow filtered by the live_stream_using_airtime_auth column
+ * @method CcShow findOneByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return the first CcShow filtered by the live_stream_using_custom_auth column
+ * @method CcShow findOneByDbLiveStreamUser(string $live_stream_user) Return the first CcShow filtered by the live_stream_user column
+ * @method CcShow findOneByDbLiveStreamPass(string $live_stream_pass) Return the first CcShow filtered by the live_stream_pass column
+ * @method CcShow findOneByDbLinked(boolean $linked) Return the first CcShow filtered by the linked column
+ * @method CcShow findOneByDbIsLinkable(boolean $is_linkable) Return the first CcShow filtered by the is_linkable column
+ *
+ * @method array findByDbId(int $id) Return CcShow objects filtered by the id column
+ * @method array findByDbName(string $name) Return CcShow objects filtered by the name column
+ * @method array findByDbUrl(string $url) Return CcShow objects filtered by the url column
+ * @method array findByDbGenre(string $genre) Return CcShow objects filtered by the genre column
+ * @method array findByDbDescription(string $description) Return CcShow objects filtered by the description column
+ * @method array findByDbColor(string $color) Return CcShow objects filtered by the color column
+ * @method array findByDbBackgroundColor(string $background_color) Return CcShow objects filtered by the background_color column
+ * @method array findByDbLiveStreamUsingAirtimeAuth(boolean $live_stream_using_airtime_auth) Return CcShow objects filtered by the live_stream_using_airtime_auth column
+ * @method array findByDbLiveStreamUsingCustomAuth(boolean $live_stream_using_custom_auth) Return CcShow objects filtered by the live_stream_using_custom_auth column
+ * @method array findByDbLiveStreamUser(string $live_stream_user) Return CcShow objects filtered by the live_stream_user column
+ * @method array findByDbLiveStreamPass(string $live_stream_pass) Return CcShow objects filtered by the live_stream_pass column
+ * @method array findByDbLinked(boolean $linked) Return CcShow objects filtered by the linked column
+ * @method array findByDbIsLinkable(boolean $is_linkable) Return CcShow objects filtered by the is_linkable column
  *
  * @package    propel.generator.airtime.om
  */
 abstract class BaseCcShowQuery extends ModelCriteria
 {
+    /**
+     * Initializes internal state of BaseCcShowQuery object.
+     *
+     * @param     string $dbName The dabase name
+     * @param     string $modelName The phpName of a model, e.g. 'Book'
+     * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
+     */
+    public function __construct($dbName = null, $modelName = null, $modelAlias = null)
+    {
+        if (null === $dbName) {
+            $dbName = 'airtime';
+        }
+        if (null === $modelName) {
+            $modelName = 'Airtime\\CcShow';
+        }
+        parent::__construct($dbName, $modelName, $modelAlias);
+    }
 
-	/**
-	 * Initializes internal state of BaseCcShowQuery object.
-	 *
-	 * @param     string $dbName The dabase name
-	 * @param     string $modelName The phpName of a model, e.g. 'Book'
-	 * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
-	 */
-	public function __construct($dbName = 'airtime', $modelName = 'CcShow', $modelAlias = null)
-	{
-		parent::__construct($dbName, $modelName, $modelAlias);
-	}
+    /**
+     * Returns a new CcShowQuery object.
+     *
+     * @param     string $modelAlias The alias of a model in the query
+     * @param   CcShowQuery|Criteria $criteria Optional Criteria to build the query from
+     *
+     * @return CcShowQuery
+     */
+    public static function create($modelAlias = null, $criteria = null)
+    {
+        if ($criteria instanceof CcShowQuery) {
+            return $criteria;
+        }
+        $query = new CcShowQuery(null, null, $modelAlias);
 
-	/**
-	 * Returns a new CcShowQuery object.
-	 *
-	 * @param     string $modelAlias The alias of a model in the query
-	 * @param     Criteria $criteria Optional Criteria to build the query from
-	 *
-	 * @return    CcShowQuery
-	 */
-	public static function create($modelAlias = null, $criteria = null)
-	{
-		if ($criteria instanceof CcShowQuery) {
-			return $criteria;
-		}
-		$query = new CcShowQuery();
-		if (null !== $modelAlias) {
-			$query->setModelAlias($modelAlias);
-		}
-		if ($criteria instanceof Criteria) {
-			$query->mergeWith($criteria);
-		}
-		return $query;
-	}
+        if ($criteria instanceof Criteria) {
+            $query->mergeWith($criteria);
+        }
 
-	/**
-	 * Find object by primary key
-	 * Use instance pooling to avoid a database query if the object exists
-	 * <code>
-	 * $obj  = $c->findPk(12, $con);
-	 * </code>
-	 * @param     mixed $key Primary key to use for the query
-	 * @param     PropelPDO $con an optional connection object
-	 *
-	 * @return    CcShow|array|mixed the result, formatted by the current formatter
-	 */
-	public function findPk($key, $con = null)
-	{
-		if ((null !== ($obj = CcShowPeer::getInstanceFromPool((string) $key))) && $this->getFormatter()->isObjectFormatter()) {
-			// the object is alredy in the instance pool
-			return $obj;
-		} else {
-			// the object has not been requested yet, or the formatter is not an object formatter
-			$criteria = $this->isKeepQuery() ? clone $this : $this;
-			$stmt = $criteria
-				->filterByPrimaryKey($key)
-				->getSelectStatement($con);
-			return $criteria->getFormatter()->init($criteria)->formatOne($stmt);
-		}
-	}
+        return $query;
+    }
 
-	/**
-	 * Find objects by primary key
-	 * <code>
-	 * $objs = $c->findPks(array(12, 56, 832), $con);
-	 * </code>
-	 * @param     array $keys Primary keys to use for the query
-	 * @param     PropelPDO $con an optional connection object
-	 *
-	 * @return    PropelObjectCollection|array|mixed the list of results, formatted by the current formatter
-	 */
-	public function findPks($keys, $con = null)
-	{	
-		$criteria = $this->isKeepQuery() ? clone $this : $this;
-		return $this
-			->filterByPrimaryKeys($keys)
-			->find($con);
-	}
+    /**
+     * Find object by primary key.
+     * Propel uses the instance pool to skip the database if the object exists.
+     * Go fast if the query is untouched.
+     *
+     * <code>
+     * $obj  = $c->findPk(12, $con);
+     * </code>
+     *
+     * @param mixed $key Primary key to use for the query
+     * @param     PropelPDO $con an optional connection object
+     *
+     * @return   CcShow|CcShow[]|mixed the result, formatted by the current formatter
+     */
+    public function findPk($key, $con = null)
+    {
+        if ($key === null) {
+            return null;
+        }
+        if ((null !== ($obj = CcShowPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
+            // the object is already in the instance pool
+            return $obj;
+        }
+        if ($con === null) {
+            $con = Propel::getConnection(CcShowPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+        $this->basePreSelect($con);
+        if ($this->formatter || $this->modelAlias || $this->with || $this->select
+         || $this->selectColumns || $this->asColumns || $this->selectModifiers
+         || $this->map || $this->having || $this->joins) {
+            return $this->findPkComplex($key, $con);
+        } else {
+            return $this->findPkSimple($key, $con);
+        }
+    }
 
-	/**
-	 * Filter the query by primary key
-	 *
-	 * @param     mixed $key Primary key to use for the query
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByPrimaryKey($key)
-	{
-		return $this->addUsingAlias(CcShowPeer::ID, $key, Criteria::EQUAL);
-	}
+    /**
+     * Alias of findPk to use instance pooling
+     *
+     * @param     mixed $key Primary key to use for the query
+     * @param     PropelPDO $con A connection object
+     *
+     * @return                 CcShow A model object, or null if the key is not found
+     * @throws PropelException
+     */
+     public function findOneByDbId($key, $con = null)
+     {
+        return $this->findPk($key, $con);
+     }
 
-	/**
-	 * Filter the query by a list of primary keys
-	 *
-	 * @param     array $keys The list of primary key to use for the query
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByPrimaryKeys($keys)
-	{
-		return $this->addUsingAlias(CcShowPeer::ID, $keys, Criteria::IN);
-	}
+    /**
+     * Find object by primary key using raw SQL to go fast.
+     * Bypass doSelect() and the object formatter by using generated code.
+     *
+     * @param     mixed $key Primary key to use for the query
+     * @param     PropelPDO $con A connection object
+     *
+     * @return                 CcShow A model object, or null if the key is not found
+     * @throws PropelException
+     */
+    protected function findPkSimple($key, $con)
+    {
+        $sql = 'SELECT "id", "name", "url", "genre", "description", "color", "background_color", "live_stream_using_airtime_auth", "live_stream_using_custom_auth", "live_stream_user", "live_stream_pass", "linked", "is_linkable" FROM "cc_show" WHERE "id" = :p0';
+        try {
+            $stmt = $con->prepare($sql);
+            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
+            $stmt->execute();
+        } catch (Exception $e) {
+            Propel::log($e->getMessage(), Propel::LOG_ERR);
+            throw new PropelException(sprintf('Unable to execute SELECT statement [%s]', $sql), $e);
+        }
+        $obj = null;
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $obj = new CcShow();
+            $obj->hydrate($row);
+            CcShowPeer::addInstanceToPool($obj, (string) $key);
+        }
+        $stmt->closeCursor();
 
-	/**
-	 * Filter the query on the id column
-	 * 
-	 * @param     int|array $dbId The value to use as filter.
-	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbId($dbId = null, $comparison = null)
-	{
-		if (is_array($dbId) && null === $comparison) {
-			$comparison = Criteria::IN;
-		}
-		return $this->addUsingAlias(CcShowPeer::ID, $dbId, $comparison);
-	}
+        return $obj;
+    }
 
-	/**
-	 * Filter the query on the name column
-	 * 
-	 * @param     string $dbName The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbName($dbName = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbName)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbName)) {
-				$dbName = str_replace('*', '%', $dbName);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::NAME, $dbName, $comparison);
-	}
+    /**
+     * Find object by primary key.
+     *
+     * @param     mixed $key Primary key to use for the query
+     * @param     PropelPDO $con A connection object
+     *
+     * @return CcShow|CcShow[]|mixed the result, formatted by the current formatter
+     */
+    protected function findPkComplex($key, $con)
+    {
+        // As the query uses a PK condition, no limit(1) is necessary.
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $stmt = $criteria
+            ->filterByPrimaryKey($key)
+            ->doSelect($con);
 
-	/**
-	 * Filter the query on the url column
-	 * 
-	 * @param     string $dbUrl The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbUrl($dbUrl = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbUrl)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbUrl)) {
-				$dbUrl = str_replace('*', '%', $dbUrl);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::URL, $dbUrl, $comparison);
-	}
+        return $criteria->getFormatter()->init($criteria)->formatOne($stmt);
+    }
 
-	/**
-	 * Filter the query on the genre column
-	 * 
-	 * @param     string $dbGenre The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbGenre($dbGenre = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbGenre)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbGenre)) {
-				$dbGenre = str_replace('*', '%', $dbGenre);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::GENRE, $dbGenre, $comparison);
-	}
+    /**
+     * Find objects by primary key
+     * <code>
+     * $objs = $c->findPks(array(12, 56, 832), $con);
+     * </code>
+     * @param     array $keys Primary keys to use for the query
+     * @param     PropelPDO $con an optional connection object
+     *
+     * @return PropelObjectCollection|CcShow[]|mixed the list of results, formatted by the current formatter
+     */
+    public function findPks($keys, $con = null)
+    {
+        if ($con === null) {
+            $con = Propel::getConnection($this->getDbName(), Propel::CONNECTION_READ);
+        }
+        $this->basePreSelect($con);
+        $criteria = $this->isKeepQuery() ? clone $this : $this;
+        $stmt = $criteria
+            ->filterByPrimaryKeys($keys)
+            ->doSelect($con);
 
-	/**
-	 * Filter the query on the description column
-	 * 
-	 * @param     string $dbDescription The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbDescription($dbDescription = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbDescription)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbDescription)) {
-				$dbDescription = str_replace('*', '%', $dbDescription);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::DESCRIPTION, $dbDescription, $comparison);
-	}
+        return $criteria->getFormatter()->init($criteria)->format($stmt);
+    }
 
-	/**
-	 * Filter the query on the color column
-	 * 
-	 * @param     string $dbColor The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbColor($dbColor = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbColor)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbColor)) {
-				$dbColor = str_replace('*', '%', $dbColor);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::COLOR, $dbColor, $comparison);
-	}
+    /**
+     * Filter the query by primary key
+     *
+     * @param     mixed $key Primary key to use for the query
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByPrimaryKey($key)
+    {
 
-	/**
-	 * Filter the query on the background_color column
-	 * 
-	 * @param     string $dbBackgroundColor The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbBackgroundColor($dbBackgroundColor = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbBackgroundColor)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbBackgroundColor)) {
-				$dbBackgroundColor = str_replace('*', '%', $dbBackgroundColor);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::BACKGROUND_COLOR, $dbBackgroundColor, $comparison);
-	}
+        return $this->addUsingAlias(CcShowPeer::ID, $key, Criteria::EQUAL);
+    }
 
-	/**
-	 * Filter the query on the live_stream_using_airtime_auth column
-	 * 
-	 * @param     boolean|string $dbLiveStreamUsingAirtimeAuth The value to use as filter.
-	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbLiveStreamUsingAirtimeAuth($dbLiveStreamUsingAirtimeAuth = null, $comparison = null)
-	{
-		if (is_string($dbLiveStreamUsingAirtimeAuth)) {
-			$live_stream_using_airtime_auth = in_array(strtolower($dbLiveStreamUsingAirtimeAuth), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
-		}
-		return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH, $dbLiveStreamUsingAirtimeAuth, $comparison);
-	}
+    /**
+     * Filter the query by a list of primary keys
+     *
+     * @param     array $keys The list of primary key to use for the query
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByPrimaryKeys($keys)
+    {
 
-	/**
-	 * Filter the query on the live_stream_using_custom_auth column
-	 * 
-	 * @param     boolean|string $dbLiveStreamUsingCustomAuth The value to use as filter.
-	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbLiveStreamUsingCustomAuth($dbLiveStreamUsingCustomAuth = null, $comparison = null)
-	{
-		if (is_string($dbLiveStreamUsingCustomAuth)) {
-			$live_stream_using_custom_auth = in_array(strtolower($dbLiveStreamUsingCustomAuth), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
-		}
-		return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, $dbLiveStreamUsingCustomAuth, $comparison);
-	}
+        return $this->addUsingAlias(CcShowPeer::ID, $keys, Criteria::IN);
+    }
 
-	/**
-	 * Filter the query on the live_stream_user column
-	 * 
-	 * @param     string $dbLiveStreamUser The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbLiveStreamUser($dbLiveStreamUser = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbLiveStreamUser)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbLiveStreamUser)) {
-				$dbLiveStreamUser = str_replace('*', '%', $dbLiveStreamUser);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_USER, $dbLiveStreamUser, $comparison);
-	}
+    /**
+     * Filter the query on the id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbId(1234); // WHERE id = 1234
+     * $query->filterByDbId(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterByDbId(array('min' => 12)); // WHERE id >= 12
+     * $query->filterByDbId(array('max' => 12)); // WHERE id <= 12
+     * </code>
+     *
+     * @param     mixed $dbId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbId($dbId = null, $comparison = null)
+    {
+        if (is_array($dbId)) {
+            $useMinMax = false;
+            if (isset($dbId['min'])) {
+                $this->addUsingAlias(CcShowPeer::ID, $dbId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbId['max'])) {
+                $this->addUsingAlias(CcShowPeer::ID, $dbId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
 
-	/**
-	 * Filter the query on the live_stream_pass column
-	 * 
-	 * @param     string $dbLiveStreamPass The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbLiveStreamPass($dbLiveStreamPass = null, $comparison = null)
-	{
-		if (null === $comparison) {
-			if (is_array($dbLiveStreamPass)) {
-				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbLiveStreamPass)) {
-				$dbLiveStreamPass = str_replace('*', '%', $dbLiveStreamPass);
-				$comparison = Criteria::LIKE;
-			}
-		}
-		return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_PASS, $dbLiveStreamPass, $comparison);
-	}
+        return $this->addUsingAlias(CcShowPeer::ID, $dbId, $comparison);
+    }
 
-	/**
-	 * Filter the query on the linked column
-	 * 
-	 * @param     boolean|string $dbLinked The value to use as filter.
-	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbLinked($dbLinked = null, $comparison = null)
-	{
-		if (is_string($dbLinked)) {
-			$linked = in_array(strtolower($dbLinked), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
-		}
-		return $this->addUsingAlias(CcShowPeer::LINKED, $dbLinked, $comparison);
-	}
+    /**
+     * Filter the query on the name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbName('fooValue');   // WHERE name = 'fooValue'
+     * $query->filterByDbName('%fooValue%'); // WHERE name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbName The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbName($dbName = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbName)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbName)) {
+                $dbName = str_replace('*', '%', $dbName);
+                $comparison = Criteria::LIKE;
+            }
+        }
 
-	/**
-	 * Filter the query on the is_linkable column
-	 * 
-	 * @param     boolean|string $dbIsLinkable The value to use as filter.
-	 *            Accepts strings ('false', 'off', '-', 'no', 'n', and '0' are false, the rest is true)
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByDbIsLinkable($dbIsLinkable = null, $comparison = null)
-	{
-		if (is_string($dbIsLinkable)) {
-			$is_linkable = in_array(strtolower($dbIsLinkable), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
-		}
-		return $this->addUsingAlias(CcShowPeer::IS_LINKABLE, $dbIsLinkable, $comparison);
-	}
+        return $this->addUsingAlias(CcShowPeer::NAME, $dbName, $comparison);
+    }
 
-	/**
-	 * Filter the query by a related CcShowInstances object
-	 *
-	 * @param     CcShowInstances $ccShowInstances  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByCcShowInstances($ccShowInstances, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcShowPeer::ID, $ccShowInstances->getDbShowId(), $comparison);
-	}
+    /**
+     * Filter the query on the url column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbUrl('fooValue');   // WHERE url = 'fooValue'
+     * $query->filterByDbUrl('%fooValue%'); // WHERE url LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbUrl The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbUrl($dbUrl = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbUrl)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbUrl)) {
+                $dbUrl = str_replace('*', '%', $dbUrl);
+                $comparison = Criteria::LIKE;
+            }
+        }
 
-	/**
-	 * Adds a JOIN clause to the query using the CcShowInstances relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function joinCcShowInstances($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowInstances');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcShowInstances');
-		}
-		
-		return $this;
-	}
+        return $this->addUsingAlias(CcShowPeer::URL, $dbUrl, $comparison);
+    }
 
-	/**
-	 * Use the CcShowInstances relation CcShowInstances object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowInstancesQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcShowInstancesQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcShowInstances($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', 'CcShowInstancesQuery');
-	}
+    /**
+     * Filter the query on the genre column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbGenre('fooValue');   // WHERE genre = 'fooValue'
+     * $query->filterByDbGenre('%fooValue%'); // WHERE genre LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbGenre The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbGenre($dbGenre = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbGenre)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbGenre)) {
+                $dbGenre = str_replace('*', '%', $dbGenre);
+                $comparison = Criteria::LIKE;
+            }
+        }
 
-	/**
-	 * Filter the query by a related CcShowDays object
-	 *
-	 * @param     CcShowDays $ccShowDays  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByCcShowDays($ccShowDays, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcShowPeer::ID, $ccShowDays->getDbShowId(), $comparison);
-	}
+        return $this->addUsingAlias(CcShowPeer::GENRE, $dbGenre, $comparison);
+    }
 
-	/**
-	 * Adds a JOIN clause to the query using the CcShowDays relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function joinCcShowDays($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowDays');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcShowDays');
-		}
-		
-		return $this;
-	}
+    /**
+     * Filter the query on the description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDbDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbDescription($dbDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbDescription)) {
+                $dbDescription = str_replace('*', '%', $dbDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
 
-	/**
-	 * Use the CcShowDays relation CcShowDays object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowDaysQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcShowDaysQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcShowDays($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowDays', 'CcShowDaysQuery');
-	}
+        return $this->addUsingAlias(CcShowPeer::DESCRIPTION, $dbDescription, $comparison);
+    }
 
-	/**
-	 * Filter the query by a related CcShowRebroadcast object
-	 *
-	 * @param     CcShowRebroadcast $ccShowRebroadcast  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByCcShowRebroadcast($ccShowRebroadcast, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcShowPeer::ID, $ccShowRebroadcast->getDbShowId(), $comparison);
-	}
+    /**
+     * Filter the query on the color column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbColor('fooValue');   // WHERE color = 'fooValue'
+     * $query->filterByDbColor('%fooValue%'); // WHERE color LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbColor The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbColor($dbColor = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbColor)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbColor)) {
+                $dbColor = str_replace('*', '%', $dbColor);
+                $comparison = Criteria::LIKE;
+            }
+        }
 
-	/**
-	 * Adds a JOIN clause to the query using the CcShowRebroadcast relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function joinCcShowRebroadcast($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowRebroadcast');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcShowRebroadcast');
-		}
-		
-		return $this;
-	}
+        return $this->addUsingAlias(CcShowPeer::COLOR, $dbColor, $comparison);
+    }
 
-	/**
-	 * Use the CcShowRebroadcast relation CcShowRebroadcast object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowRebroadcastQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcShowRebroadcastQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcShowRebroadcast($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowRebroadcast', 'CcShowRebroadcastQuery');
-	}
+    /**
+     * Filter the query on the background_color column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbBackgroundColor('fooValue');   // WHERE background_color = 'fooValue'
+     * $query->filterByDbBackgroundColor('%fooValue%'); // WHERE background_color LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbBackgroundColor The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbBackgroundColor($dbBackgroundColor = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbBackgroundColor)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbBackgroundColor)) {
+                $dbBackgroundColor = str_replace('*', '%', $dbBackgroundColor);
+                $comparison = Criteria::LIKE;
+            }
+        }
 
-	/**
-	 * Filter the query by a related CcShowHosts object
-	 *
-	 * @param     CcShowHosts $ccShowHosts  the related object to use as filter
-	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function filterByCcShowHosts($ccShowHosts, $comparison = null)
-	{
-		return $this
-			->addUsingAlias(CcShowPeer::ID, $ccShowHosts->getDbShow(), $comparison);
-	}
+        return $this->addUsingAlias(CcShowPeer::BACKGROUND_COLOR, $dbBackgroundColor, $comparison);
+    }
 
-	/**
-	 * Adds a JOIN clause to the query using the CcShowHosts relation
-	 * 
-	 * @param     string $relationAlias optional alias for the relation
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function joinCcShowHosts($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		$tableMap = $this->getTableMap();
-		$relationMap = $tableMap->getRelation('CcShowHosts');
-		
-		// create a ModelJoin object for this join
-		$join = new ModelJoin();
-		$join->setJoinType($joinType);
-		$join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-		if ($previousJoin = $this->getPreviousJoin()) {
-			$join->setPreviousJoin($previousJoin);
-		}
-		
-		// add the ModelJoin to the current object
-		if($relationAlias) {
-			$this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-			$this->addJoinObject($join, $relationAlias);
-		} else {
-			$this->addJoinObject($join, 'CcShowHosts');
-		}
-		
-		return $this;
-	}
+    /**
+     * Filter the query on the live_stream_using_airtime_auth column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbLiveStreamUsingAirtimeAuth(true); // WHERE live_stream_using_airtime_auth = true
+     * $query->filterByDbLiveStreamUsingAirtimeAuth('yes'); // WHERE live_stream_using_airtime_auth = true
+     * </code>
+     *
+     * @param     boolean|string $dbLiveStreamUsingAirtimeAuth The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbLiveStreamUsingAirtimeAuth($dbLiveStreamUsingAirtimeAuth = null, $comparison = null)
+    {
+        if (is_string($dbLiveStreamUsingAirtimeAuth)) {
+            $dbLiveStreamUsingAirtimeAuth = in_array(strtolower($dbLiveStreamUsingAirtimeAuth), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
 
-	/**
-	 * Use the CcShowHosts relation CcShowHosts object
-	 *
-	 * @see       useQuery()
-	 * 
-	 * @param     string $relationAlias optional alias for the relation,
-	 *                                   to be used as main alias in the secondary query
-	 * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-	 *
-	 * @return    CcShowHostsQuery A secondary query class using the current class as primary query
-	 */
-	public function useCcShowHostsQuery($relationAlias = '', $joinType = Criteria::INNER_JOIN)
-	{
-		return $this
-			->joinCcShowHosts($relationAlias, $joinType)
-			->useQuery($relationAlias ? $relationAlias : 'CcShowHosts', 'CcShowHostsQuery');
-	}
+        return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_USING_AIRTIME_AUTH, $dbLiveStreamUsingAirtimeAuth, $comparison);
+    }
 
-	/**
-	 * Exclude object from result
-	 *
-	 * @param     CcShow $ccShow Object to remove from the list of results
-	 *
-	 * @return    CcShowQuery The current query, for fluid interface
-	 */
-	public function prune($ccShow = null)
-	{
-		if ($ccShow) {
-			$this->addUsingAlias(CcShowPeer::ID, $ccShow->getDbId(), Criteria::NOT_EQUAL);
-	  }
-	  
-		return $this;
-	}
+    /**
+     * Filter the query on the live_stream_using_custom_auth column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbLiveStreamUsingCustomAuth(true); // WHERE live_stream_using_custom_auth = true
+     * $query->filterByDbLiveStreamUsingCustomAuth('yes'); // WHERE live_stream_using_custom_auth = true
+     * </code>
+     *
+     * @param     boolean|string $dbLiveStreamUsingCustomAuth The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbLiveStreamUsingCustomAuth($dbLiveStreamUsingCustomAuth = null, $comparison = null)
+    {
+        if (is_string($dbLiveStreamUsingCustomAuth)) {
+            $dbLiveStreamUsingCustomAuth = in_array(strtolower($dbLiveStreamUsingCustomAuth), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
 
-} // BaseCcShowQuery
+        return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_USING_CUSTOM_AUTH, $dbLiveStreamUsingCustomAuth, $comparison);
+    }
+
+    /**
+     * Filter the query on the live_stream_user column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbLiveStreamUser('fooValue');   // WHERE live_stream_user = 'fooValue'
+     * $query->filterByDbLiveStreamUser('%fooValue%'); // WHERE live_stream_user LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbLiveStreamUser The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbLiveStreamUser($dbLiveStreamUser = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbLiveStreamUser)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbLiveStreamUser)) {
+                $dbLiveStreamUser = str_replace('*', '%', $dbLiveStreamUser);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_USER, $dbLiveStreamUser, $comparison);
+    }
+
+    /**
+     * Filter the query on the live_stream_pass column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbLiveStreamPass('fooValue');   // WHERE live_stream_pass = 'fooValue'
+     * $query->filterByDbLiveStreamPass('%fooValue%'); // WHERE live_stream_pass LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbLiveStreamPass The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbLiveStreamPass($dbLiveStreamPass = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbLiveStreamPass)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbLiveStreamPass)) {
+                $dbLiveStreamPass = str_replace('*', '%', $dbLiveStreamPass);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcShowPeer::LIVE_STREAM_PASS, $dbLiveStreamPass, $comparison);
+    }
+
+    /**
+     * Filter the query on the linked column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbLinked(true); // WHERE linked = true
+     * $query->filterByDbLinked('yes'); // WHERE linked = true
+     * </code>
+     *
+     * @param     boolean|string $dbLinked The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbLinked($dbLinked = null, $comparison = null)
+    {
+        if (is_string($dbLinked)) {
+            $dbLinked = in_array(strtolower($dbLinked), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcShowPeer::LINKED, $dbLinked, $comparison);
+    }
+
+    /**
+     * Filter the query on the is_linkable column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbIsLinkable(true); // WHERE is_linkable = true
+     * $query->filterByDbIsLinkable('yes'); // WHERE is_linkable = true
+     * </code>
+     *
+     * @param     boolean|string $dbIsLinkable The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function filterByDbIsLinkable($dbIsLinkable = null, $comparison = null)
+    {
+        if (is_string($dbIsLinkable)) {
+            $dbIsLinkable = in_array(strtolower($dbIsLinkable), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        return $this->addUsingAlias(CcShowPeer::IS_LINKABLE, $dbIsLinkable, $comparison);
+    }
+
+    /**
+     * Filter the query by a related CcShowInstances object
+     *
+     * @param   CcShowInstances|PropelObjectCollection $ccShowInstances  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcShowQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcShowInstances($ccShowInstances, $comparison = null)
+    {
+        if ($ccShowInstances instanceof CcShowInstances) {
+            return $this
+                ->addUsingAlias(CcShowPeer::ID, $ccShowInstances->getDbShowId(), $comparison);
+        } elseif ($ccShowInstances instanceof PropelObjectCollection) {
+            return $this
+                ->useCcShowInstancesQuery()
+                ->filterByPrimaryKeys($ccShowInstances->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcShowInstances() only accepts arguments of type CcShowInstances or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcShowInstances relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function joinCcShowInstances($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcShowInstances');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcShowInstances');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcShowInstances relation CcShowInstances object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\CcShowInstancesQuery A secondary query class using the current class as primary query
+     */
+    public function useCcShowInstancesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCcShowInstances($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', '\Airtime\CcShowInstancesQuery');
+    }
+
+    /**
+     * Filter the query by a related CcShowDays object
+     *
+     * @param   CcShowDays|PropelObjectCollection $ccShowDays  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcShowQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcShowDays($ccShowDays, $comparison = null)
+    {
+        if ($ccShowDays instanceof CcShowDays) {
+            return $this
+                ->addUsingAlias(CcShowPeer::ID, $ccShowDays->getDbShowId(), $comparison);
+        } elseif ($ccShowDays instanceof PropelObjectCollection) {
+            return $this
+                ->useCcShowDaysQuery()
+                ->filterByPrimaryKeys($ccShowDays->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcShowDays() only accepts arguments of type CcShowDays or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcShowDays relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function joinCcShowDays($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcShowDays');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcShowDays');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcShowDays relation CcShowDays object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\CcShowDaysQuery A secondary query class using the current class as primary query
+     */
+    public function useCcShowDaysQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCcShowDays($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcShowDays', '\Airtime\CcShowDaysQuery');
+    }
+
+    /**
+     * Filter the query by a related CcShowRebroadcast object
+     *
+     * @param   CcShowRebroadcast|PropelObjectCollection $ccShowRebroadcast  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcShowQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcShowRebroadcast($ccShowRebroadcast, $comparison = null)
+    {
+        if ($ccShowRebroadcast instanceof CcShowRebroadcast) {
+            return $this
+                ->addUsingAlias(CcShowPeer::ID, $ccShowRebroadcast->getDbShowId(), $comparison);
+        } elseif ($ccShowRebroadcast instanceof PropelObjectCollection) {
+            return $this
+                ->useCcShowRebroadcastQuery()
+                ->filterByPrimaryKeys($ccShowRebroadcast->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcShowRebroadcast() only accepts arguments of type CcShowRebroadcast or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcShowRebroadcast relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function joinCcShowRebroadcast($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcShowRebroadcast');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcShowRebroadcast');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcShowRebroadcast relation CcShowRebroadcast object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\CcShowRebroadcastQuery A secondary query class using the current class as primary query
+     */
+    public function useCcShowRebroadcastQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCcShowRebroadcast($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcShowRebroadcast', '\Airtime\CcShowRebroadcastQuery');
+    }
+
+    /**
+     * Filter the query by a related CcShowHosts object
+     *
+     * @param   CcShowHosts|PropelObjectCollection $ccShowHosts  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcShowQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcShowHosts($ccShowHosts, $comparison = null)
+    {
+        if ($ccShowHosts instanceof CcShowHosts) {
+            return $this
+                ->addUsingAlias(CcShowPeer::ID, $ccShowHosts->getDbShow(), $comparison);
+        } elseif ($ccShowHosts instanceof PropelObjectCollection) {
+            return $this
+                ->useCcShowHostsQuery()
+                ->filterByPrimaryKeys($ccShowHosts->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcShowHosts() only accepts arguments of type CcShowHosts or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcShowHosts relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function joinCcShowHosts($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcShowHosts');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcShowHosts');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcShowHosts relation CcShowHosts object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\CcShowHostsQuery A secondary query class using the current class as primary query
+     */
+    public function useCcShowHostsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCcShowHosts($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcShowHosts', '\Airtime\CcShowHostsQuery');
+    }
+
+    /**
+     * Exclude object from result
+     *
+     * @param   CcShow $ccShow Object to remove from the list of results
+     *
+     * @return CcShowQuery The current query, for fluid interface
+     */
+    public function prune($ccShow = null)
+    {
+        if ($ccShow) {
+            $this->addUsingAlias(CcShowPeer::ID, $ccShow->getDbId(), Criteria::NOT_EQUAL);
+        }
+
+        return $this;
+    }
+
+}

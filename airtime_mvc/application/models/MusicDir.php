@@ -2,6 +2,10 @@
 
 class NestedDirectoryException extends Exception { }
 
+use Airtime\CcMusicDirs;
+use Airtime\CcMusicDirsQuery;
+use Airtime\CcFilesQuery;
+
 class Application_Model_MusicDir
 {
     /**

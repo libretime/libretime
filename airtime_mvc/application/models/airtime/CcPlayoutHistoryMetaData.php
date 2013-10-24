@@ -1,5 +1,8 @@
 <?php
 
+namespace Airtime\PlayoutHistory;
+
+use Airtime\PlayoutHistory\om\BaseCcPlayoutHistoryMetaData;
 
 
 /**
