@@ -529,4 +529,14 @@ class AirtimeInstall
         }
         return $opts;
     }
+
+    public static function checkPHPVersion()
+    {
+        if (PHP_VERSION_ID < 50400)
+        {
+            echo "Error: Airtime requires PHP 5.4 or greater.";
+            return false;
+        }
+        return true;
+    }
 }
