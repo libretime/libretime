@@ -110,7 +110,7 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbTimestamp($format = 'Y-m-d H:i:s')
@@ -121,13 +121,13 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->timestamp);
+            $dt = new \DateTime($this->timestamp);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->timestamp, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->timestamp, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -169,9 +169,9 @@ abstract class BaseCcTimestamp extends BaseObject implements Persistent
      */
     public function setDbTimestamp($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->timestamp !== null || $dt !== null) {
-            $currentDateAsString = ($this->timestamp !== null && $tmpDt = new DateTime($this->timestamp)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->timestamp !== null && $tmpDt = new \DateTime($this->timestamp)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->timestamp = $newDateAsString;

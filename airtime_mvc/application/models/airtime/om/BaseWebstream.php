@@ -240,7 +240,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getLastPlayedTime($format = 'Y-m-d H:i:s')
@@ -251,13 +251,13 @@ abstract class BaseWebstream extends MediaItem implements Persistent
 
 
         try {
-            $dt = new DateTime($this->last_played);
+            $dt = new \DateTime($this->last_played);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->last_played, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->last_played, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -297,7 +297,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getCreatedAt($format = 'Y-m-d H:i:s')
@@ -308,13 +308,13 @@ abstract class BaseWebstream extends MediaItem implements Persistent
 
 
         try {
-            $dt = new DateTime($this->created_at);
+            $dt = new \DateTime($this->created_at);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->created_at, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->created_at, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -332,7 +332,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getUpdatedAt($format = 'Y-m-d H:i:s')
@@ -343,13 +343,13 @@ abstract class BaseWebstream extends MediaItem implements Persistent
 
 
         try {
-            $dt = new DateTime($this->updated_at);
+            $dt = new \DateTime($this->updated_at);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->updated_at, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->updated_at, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -504,9 +504,9 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      */
     public function setLastPlayedTime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->last_played !== null || $dt !== null) {
-            $currentDateAsString = ($this->last_played !== null && $tmpDt = new DateTime($this->last_played)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->last_played !== null && $tmpDt = new \DateTime($this->last_played)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->last_played = $newDateAsString;
@@ -569,9 +569,9 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      */
     public function setCreatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->created_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->created_at !== null && $tmpDt = new DateTime($this->created_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->created_at !== null && $tmpDt = new \DateTime($this->created_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->created_at = $newDateAsString;
@@ -592,9 +592,9 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      */
     public function setUpdatedAt($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->updated_at !== null || $dt !== null) {
-            $currentDateAsString = ($this->updated_at !== null && $tmpDt = new DateTime($this->updated_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->updated_at !== null && $tmpDt = new \DateTime($this->updated_at)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->updated_at = $newDateAsString;

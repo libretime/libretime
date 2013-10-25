@@ -415,7 +415,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbLastlogin($format = 'Y-m-d H:i:s')
@@ -426,13 +426,13 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->lastlogin);
+            $dt = new \DateTime($this->lastlogin);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->lastlogin, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->lastlogin, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -450,7 +450,7 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbLastfail($format = 'Y-m-d H:i:s')
@@ -461,13 +461,13 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->lastfail);
+            $dt = new \DateTime($this->lastfail);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->lastfail, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->lastfail, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -669,9 +669,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbLastlogin($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->lastlogin !== null || $dt !== null) {
-            $currentDateAsString = ($this->lastlogin !== null && $tmpDt = new DateTime($this->lastlogin)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->lastlogin !== null && $tmpDt = new \DateTime($this->lastlogin)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->lastlogin = $newDateAsString;
@@ -692,9 +692,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      */
     public function setDbLastfail($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->lastfail !== null || $dt !== null) {
-            $currentDateAsString = ($this->lastfail !== null && $tmpDt = new DateTime($this->lastfail)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->lastfail !== null && $tmpDt = new \DateTime($this->lastfail)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->lastfail = $newDateAsString;

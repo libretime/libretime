@@ -177,7 +177,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbFirstShow($format = '%x')
@@ -188,13 +188,13 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->first_show);
+            $dt = new \DateTime($this->first_show);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->first_show, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->first_show, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -212,7 +212,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbLastShow($format = '%x')
@@ -223,13 +223,13 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->last_show);
+            $dt = new \DateTime($this->last_show);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->last_show, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->last_show, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -247,7 +247,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbStartTime($format = '%X')
@@ -258,13 +258,13 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->start_time);
+            $dt = new \DateTime($this->start_time);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->start_time, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->start_time, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -326,7 +326,7 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbNextPopDate($format = '%x')
@@ -337,13 +337,13 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->next_pop_date);
+            $dt = new \DateTime($this->next_pop_date);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->next_pop_date, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->next_pop_date, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -407,9 +407,9 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      */
     public function setDbFirstShow($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->first_show !== null || $dt !== null) {
-            $currentDateAsString = ($this->first_show !== null && $tmpDt = new DateTime($this->first_show)) ? $tmpDt->format('Y-m-d') : null;
+            $currentDateAsString = ($this->first_show !== null && $tmpDt = new \DateTime($this->first_show)) ? $tmpDt->format('Y-m-d') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->first_show = $newDateAsString;
@@ -430,9 +430,9 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      */
     public function setDbLastShow($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->last_show !== null || $dt !== null) {
-            $currentDateAsString = ($this->last_show !== null && $tmpDt = new DateTime($this->last_show)) ? $tmpDt->format('Y-m-d') : null;
+            $currentDateAsString = ($this->last_show !== null && $tmpDt = new \DateTime($this->last_show)) ? $tmpDt->format('Y-m-d') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->last_show = $newDateAsString;
@@ -453,9 +453,9 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      */
     public function setDbStartTime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->start_time !== null || $dt !== null) {
-            $currentDateAsString = ($this->start_time !== null && $tmpDt = new DateTime($this->start_time)) ? $tmpDt->format('H:i:s') : null;
+            $currentDateAsString = ($this->start_time !== null && $tmpDt = new \DateTime($this->start_time)) ? $tmpDt->format('H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->start_time = $newDateAsString;
@@ -560,9 +560,9 @@ abstract class BaseCcShowDays extends BaseObject implements Persistent
      */
     public function setDbNextPopDate($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->next_pop_date !== null || $dt !== null) {
-            $currentDateAsString = ($this->next_pop_date !== null && $tmpDt = new DateTime($this->next_pop_date)) ? $tmpDt->format('Y-m-d') : null;
+            $currentDateAsString = ($this->next_pop_date !== null && $tmpDt = new \DateTime($this->next_pop_date)) ? $tmpDt->format('Y-m-d') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->next_pop_date = $newDateAsString;

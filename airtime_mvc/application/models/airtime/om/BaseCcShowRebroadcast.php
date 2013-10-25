@@ -124,7 +124,7 @@ abstract class BaseCcShowRebroadcast extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbStartTime($format = '%X')
@@ -135,13 +135,13 @@ abstract class BaseCcShowRebroadcast extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->start_time);
+            $dt = new \DateTime($this->start_time);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->start_time, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->start_time, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -215,9 +215,9 @@ abstract class BaseCcShowRebroadcast extends BaseObject implements Persistent
      */
     public function setDbStartTime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->start_time !== null || $dt !== null) {
-            $currentDateAsString = ($this->start_time !== null && $tmpDt = new DateTime($this->start_time)) ? $tmpDt->format('H:i:s') : null;
+            $currentDateAsString = ($this->start_time !== null && $tmpDt = new \DateTime($this->start_time)) ? $tmpDt->format('H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->start_time = $newDateAsString;

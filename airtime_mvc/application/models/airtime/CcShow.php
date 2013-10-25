@@ -2,7 +2,12 @@
 
 namespace Airtime;
 
+use \Criteria;
+use \PropelPDO;
 use Airtime\om\BaseCcShow;
+use Airtime\CcShowDaysQuery;
+use Airtime\CcShowRebroadcastQuery;
+use Airtime\CcShowInstancesQuery;
 
 /**
  * Skeleton subclass for representing a row from the 'cc_show' table.

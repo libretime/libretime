@@ -729,7 +729,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbMtime($format = 'Y-m-d H:i:s')
@@ -740,13 +740,13 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->mtime);
+            $dt = new \DateTime($this->mtime);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->mtime, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->mtime, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -764,7 +764,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbUtime($format = 'Y-m-d H:i:s')
@@ -775,13 +775,13 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->utime);
+            $dt = new \DateTime($this->utime);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->utime, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->utime, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -799,7 +799,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbLPtime($format = 'Y-m-d H:i:s')
@@ -810,13 +810,13 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->lptime);
+            $dt = new \DateTime($this->lptime);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->lptime, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->lptime, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -1373,7 +1373,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbSoundCloundUploadTime($format = 'Y-m-d H:i:s')
@@ -1384,13 +1384,13 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->soundcloud_upload_time);
+            $dt = new \DateTime($this->soundcloud_upload_time);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->soundcloud_upload_time, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->soundcloud_upload_time, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -1696,9 +1696,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbMtime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->mtime !== null || $dt !== null) {
-            $currentDateAsString = ($this->mtime !== null && $tmpDt = new DateTime($this->mtime)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->mtime !== null && $tmpDt = new \DateTime($this->mtime)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->mtime = $newDateAsString;
@@ -1719,9 +1719,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbUtime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->utime !== null || $dt !== null) {
-            $currentDateAsString = ($this->utime !== null && $tmpDt = new DateTime($this->utime)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->utime !== null && $tmpDt = new \DateTime($this->utime)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->utime = $newDateAsString;
@@ -1742,9 +1742,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbLPtime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->lptime !== null || $dt !== null) {
-            $currentDateAsString = ($this->lptime !== null && $tmpDt = new DateTime($this->lptime)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->lptime !== null && $tmpDt = new \DateTime($this->lptime)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->lptime = $newDateAsString;
@@ -2802,9 +2802,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function setDbSoundCloundUploadTime($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->soundcloud_upload_time !== null || $dt !== null) {
-            $currentDateAsString = ($this->soundcloud_upload_time !== null && $tmpDt = new DateTime($this->soundcloud_upload_time)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $currentDateAsString = ($this->soundcloud_upload_time !== null && $tmpDt = new \DateTime($this->soundcloud_upload_time)) ? $tmpDt->format('Y-m-d H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
             if ($currentDateAsString !== $newDateAsString) {
                 $this->soundcloud_upload_time = $newDateAsString;

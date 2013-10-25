@@ -328,7 +328,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbFadein($format = '%X')
@@ -339,13 +339,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->fadein);
+            $dt = new \DateTime($this->fadein);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->fadein, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->fadein, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -363,7 +363,7 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
     public function getDbFadeout($format = '%X')
@@ -374,13 +374,13 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
 
 
         try {
-            $dt = new DateTime($this->fadeout);
+            $dt = new \DateTime($this->fadeout);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->fadeout, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->fadeout, true), $x);
         }
 
         if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            // Because propel.useDateTimeClass is true, we return a \DateTime object.
             return $dt;
         }
 
@@ -644,9 +644,9 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      */
     public function setDbFadein($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->fadein !== null || $dt !== null) {
-            $currentDateAsString = ($this->fadein !== null && $tmpDt = new DateTime($this->fadein)) ? $tmpDt->format('H:i:s') : null;
+            $currentDateAsString = ($this->fadein !== null && $tmpDt = new \DateTime($this->fadein)) ? $tmpDt->format('H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('H:i:s') : null;
             if ( ($currentDateAsString !== $newDateAsString) // normalized values don't match
                 || ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
@@ -669,9 +669,9 @@ abstract class BaseCcPlaylistcontents extends BaseObject implements Persistent
      */
     public function setDbFadeout($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
         if ($this->fadeout !== null || $dt !== null) {
-            $currentDateAsString = ($this->fadeout !== null && $tmpDt = new DateTime($this->fadeout)) ? $tmpDt->format('H:i:s') : null;
+            $currentDateAsString = ($this->fadeout !== null && $tmpDt = new \DateTime($this->fadeout)) ? $tmpDt->format('H:i:s') : null;
             $newDateAsString = $dt ? $dt->format('H:i:s') : null;
             if ( ($currentDateAsString !== $newDateAsString) // normalized values don't match
                 || ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default

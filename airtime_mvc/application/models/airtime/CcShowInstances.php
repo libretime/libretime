@@ -2,7 +2,14 @@
 
 namespace Airtime;
 
+use \Criteria;
+use \PropelPDO;
+use \Exception;
+use \PropelException;
+use \DateTimeZone;
+use \DateTime;
 use Airtime\om\BaseCcShowInstances;
+use Airtime\CcScheduleQuery;
 
 /**
  * Skeleton subclass for representing a row from the 'cc_show_instances' table.

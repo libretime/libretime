@@ -2,6 +2,10 @@
 
 namespace Airtime;
 
+use \DateTime;
+use \DateTimeZone;
+use \Exception;
+use \PropelException;
 use Airtime\om\BaseCcSchedule;
 
 /**

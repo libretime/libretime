@@ -3,6 +3,8 @@
 namespace Airtime;
 
 use Airtime\om\BaseCcSubjs;
+use Airtime\CcShowHostsQuery;
+use Airtime\CcShowInstancesQuery;
 
 /**
  * Skeleton subclass for representing a row from the 'cc_subjs' table.
