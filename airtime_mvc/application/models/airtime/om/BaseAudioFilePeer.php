@@ -17,7 +17,7 @@ use Airtime\MediaItem\AudioFilePeer;
 use Airtime\MediaItem\map\AudioFileTableMap;
 
 /**
- * Base static class for performing query and update operations on the 'audio_file' table.
+ * Base static class for performing query and update operations on the 'media_audiofile' table.
  *
  *
  *
@@ -30,7 +30,7 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'audio_file';
+    const TABLE_NAME = 'media_audiofile';
 
     /** the related Propel class for this table */
     const OM_CLASS = 'Airtime\\MediaItem\\AudioFile';
@@ -39,136 +39,133 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
     const TM_CLASS = 'Airtime\\MediaItem\\map\\AudioFileTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 41;
+    const NUM_COLUMNS = 40;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 41;
+    const NUM_HYDRATE_COLUMNS = 40;
 
     /** the column name for the mime field */
-    const MIME = 'audio_file.mime';
+    const MIME = 'media_audiofile.mime';
 
     /** the column name for the directory field */
-    const DIRECTORY = 'audio_file.directory';
+    const DIRECTORY = 'media_audiofile.directory';
 
     /** the column name for the filepath field */
-    const FILEPATH = 'audio_file.filepath';
+    const FILEPATH = 'media_audiofile.filepath';
 
     /** the column name for the md5 field */
-    const MD5 = 'audio_file.md5';
+    const MD5 = 'media_audiofile.md5';
 
     /** the column name for the track_title field */
-    const TRACK_TITLE = 'audio_file.track_title';
+    const TRACK_TITLE = 'media_audiofile.track_title';
 
     /** the column name for the artist_name field */
-    const ARTIST_NAME = 'audio_file.artist_name';
+    const ARTIST_NAME = 'media_audiofile.artist_name';
 
     /** the column name for the bit_rate field */
-    const BIT_RATE = 'audio_file.bit_rate';
+    const BIT_RATE = 'media_audiofile.bit_rate';
 
     /** the column name for the sample_rate field */
-    const SAMPLE_RATE = 'audio_file.sample_rate';
+    const SAMPLE_RATE = 'media_audiofile.sample_rate';
 
     /** the column name for the album_title field */
-    const ALBUM_TITLE = 'audio_file.album_title';
+    const ALBUM_TITLE = 'media_audiofile.album_title';
 
     /** the column name for the genre field */
-    const GENRE = 'audio_file.genre';
+    const GENRE = 'media_audiofile.genre';
 
     /** the column name for the comments field */
-    const COMMENTS = 'audio_file.comments';
+    const COMMENTS = 'media_audiofile.comments';
 
     /** the column name for the year field */
-    const YEAR = 'audio_file.year';
+    const YEAR = 'media_audiofile.year';
 
     /** the column name for the track_number field */
-    const TRACK_NUMBER = 'audio_file.track_number';
+    const TRACK_NUMBER = 'media_audiofile.track_number';
 
     /** the column name for the channels field */
-    const CHANNELS = 'audio_file.channels';
-
-    /** the column name for the url field */
-    const URL = 'audio_file.url';
+    const CHANNELS = 'media_audiofile.channels';
 
     /** the column name for the bpm field */
-    const BPM = 'audio_file.bpm';
+    const BPM = 'media_audiofile.bpm';
 
     /** the column name for the encoded_by field */
-    const ENCODED_BY = 'audio_file.encoded_by';
+    const ENCODED_BY = 'media_audiofile.encoded_by';
 
     /** the column name for the mood field */
-    const MOOD = 'audio_file.mood';
+    const MOOD = 'media_audiofile.mood';
 
     /** the column name for the label field */
-    const LABEL = 'audio_file.label';
+    const LABEL = 'media_audiofile.label';
 
     /** the column name for the composer field */
-    const COMPOSER = 'audio_file.composer';
+    const COMPOSER = 'media_audiofile.composer';
 
     /** the column name for the copyright field */
-    const COPYRIGHT = 'audio_file.copyright';
+    const COPYRIGHT = 'media_audiofile.copyright';
 
     /** the column name for the isrc_number field */
-    const ISRC_NUMBER = 'audio_file.isrc_number';
+    const ISRC_NUMBER = 'media_audiofile.isrc_number';
 
     /** the column name for the info_url field */
-    const INFO_URL = 'audio_file.info_url';
+    const INFO_URL = 'media_audiofile.info_url';
 
     /** the column name for the language field */
-    const LANGUAGE = 'audio_file.language';
+    const LANGUAGE = 'media_audiofile.language';
 
     /** the column name for the replay_gain field */
-    const REPLAY_GAIN = 'audio_file.replay_gain';
+    const REPLAY_GAIN = 'media_audiofile.replay_gain';
 
     /** the column name for the cuein field */
-    const CUEIN = 'audio_file.cuein';
+    const CUEIN = 'media_audiofile.cuein';
 
     /** the column name for the cueout field */
-    const CUEOUT = 'audio_file.cueout';
+    const CUEOUT = 'media_audiofile.cueout';
 
     /** the column name for the silan_check field */
-    const SILAN_CHECK = 'audio_file.silan_check';
+    const SILAN_CHECK = 'media_audiofile.silan_check';
 
     /** the column name for the file_exists field */
-    const FILE_EXISTS = 'audio_file.file_exists';
+    const FILE_EXISTS = 'media_audiofile.file_exists';
 
     /** the column name for the hidden field */
-    const HIDDEN = 'audio_file.hidden';
+    const HIDDEN = 'media_audiofile.hidden';
 
     /** the column name for the is_scheduled field */
-    const IS_SCHEDULED = 'audio_file.is_scheduled';
+    const IS_SCHEDULED = 'media_audiofile.is_scheduled';
 
     /** the column name for the is_playlist field */
-    const IS_PLAYLIST = 'audio_file.is_playlist';
+    const IS_PLAYLIST = 'media_audiofile.is_playlist';
 
     /** the column name for the id field */
-    const ID = 'audio_file.id';
+    const ID = 'media_audiofile.id';
 
     /** the column name for the name field */
-    const NAME = 'audio_file.name';
+    const NAME = 'media_audiofile.name';
 
     /** the column name for the owner_id field */
-    const OWNER_ID = 'audio_file.owner_id';
+    const OWNER_ID = 'media_audiofile.owner_id';
 
     /** the column name for the description field */
-    const DESCRIPTION = 'audio_file.description';
+    const DESCRIPTION = 'media_audiofile.description';
 
     /** the column name for the last_played field */
-    const LAST_PLAYED = 'audio_file.last_played';
+    const LAST_PLAYED = 'media_audiofile.last_played';
 
     /** the column name for the play_count field */
-    const PLAY_COUNT = 'audio_file.play_count';
+    const PLAY_COUNT = 'media_audiofile.play_count';
 
     /** the column name for the length field */
-    const LENGTH = 'audio_file.length';
+    const LENGTH = 'media_audiofile.length';
 
     /** the column name for the created_at field */
-    const CREATED_AT = 'audio_file.created_at';
+    const CREATED_AT = 'media_audiofile.created_at';
 
     /** the column name for the updated_at field */
-    const UPDATED_AT = 'audio_file.updated_at';
+    const UPDATED_AT = 'media_audiofile.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -189,12 +186,12 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
      * e.g. AudioFilePeer::$fieldNames[AudioFilePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Mime', 'Directory', 'Filepath', 'Md5', 'TrackTitle', 'ArtistName', 'BitRate', 'SampleRate', 'AlbumTitle', 'Genre', 'Comments', 'Year', 'TrackNumber', 'Channels', 'Url', 'Bpm', 'EncodedBy', 'Mood', 'Label', 'Composer', 'Copyright', 'IsrcNumber', 'InfoUrl', 'Language', 'ReplayGain', 'Cuein', 'Cueout', 'IsSilanChecked', 'FileExists', 'IsHidden', 'IsScheduled', 'IsPlaylist', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('mime', 'directory', 'filepath', 'md5', 'trackTitle', 'artistName', 'bitRate', 'sampleRate', 'albumTitle', 'genre', 'comments', 'year', 'trackNumber', 'channels', 'url', 'bpm', 'encodedBy', 'mood', 'label', 'composer', 'copyright', 'isrcNumber', 'infoUrl', 'language', 'replayGain', 'cuein', 'cueout', 'isSilanChecked', 'fileExists', 'isHidden', 'isScheduled', 'isPlaylist', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (AudioFilePeer::MIME, AudioFilePeer::DIRECTORY, AudioFilePeer::FILEPATH, AudioFilePeer::MD5, AudioFilePeer::TRACK_TITLE, AudioFilePeer::ARTIST_NAME, AudioFilePeer::BIT_RATE, AudioFilePeer::SAMPLE_RATE, AudioFilePeer::ALBUM_TITLE, AudioFilePeer::GENRE, AudioFilePeer::COMMENTS, AudioFilePeer::YEAR, AudioFilePeer::TRACK_NUMBER, AudioFilePeer::CHANNELS, AudioFilePeer::URL, AudioFilePeer::BPM, AudioFilePeer::ENCODED_BY, AudioFilePeer::MOOD, AudioFilePeer::LABEL, AudioFilePeer::COMPOSER, AudioFilePeer::COPYRIGHT, AudioFilePeer::ISRC_NUMBER, AudioFilePeer::INFO_URL, AudioFilePeer::LANGUAGE, AudioFilePeer::REPLAY_GAIN, AudioFilePeer::CUEIN, AudioFilePeer::CUEOUT, AudioFilePeer::SILAN_CHECK, AudioFilePeer::FILE_EXISTS, AudioFilePeer::HIDDEN, AudioFilePeer::IS_SCHEDULED, AudioFilePeer::IS_PLAYLIST, AudioFilePeer::ID, AudioFilePeer::NAME, AudioFilePeer::OWNER_ID, AudioFilePeer::DESCRIPTION, AudioFilePeer::LAST_PLAYED, AudioFilePeer::PLAY_COUNT, AudioFilePeer::LENGTH, AudioFilePeer::CREATED_AT, AudioFilePeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('MIME', 'DIRECTORY', 'FILEPATH', 'MD5', 'TRACK_TITLE', 'ARTIST_NAME', 'BIT_RATE', 'SAMPLE_RATE', 'ALBUM_TITLE', 'GENRE', 'COMMENTS', 'YEAR', 'TRACK_NUMBER', 'CHANNELS', 'URL', 'BPM', 'ENCODED_BY', 'MOOD', 'LABEL', 'COMPOSER', 'COPYRIGHT', 'ISRC_NUMBER', 'INFO_URL', 'LANGUAGE', 'REPLAY_GAIN', 'CUEIN', 'CUEOUT', 'SILAN_CHECK', 'FILE_EXISTS', 'HIDDEN', 'IS_SCHEDULED', 'IS_PLAYLIST', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('mime', 'directory', 'filepath', 'md5', 'track_title', 'artist_name', 'bit_rate', 'sample_rate', 'album_title', 'genre', 'comments', 'year', 'track_number', 'channels', 'url', 'bpm', 'encoded_by', 'mood', 'label', 'composer', 'copyright', 'isrc_number', 'info_url', 'language', 'replay_gain', 'cuein', 'cueout', 'silan_check', 'file_exists', 'hidden', 'is_scheduled', 'is_playlist', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, )
+        BasePeer::TYPE_PHPNAME => array ('Mime', 'Directory', 'Filepath', 'Md5', 'TrackTitle', 'ArtistName', 'BitRate', 'SampleRate', 'AlbumTitle', 'Genre', 'Comments', 'Year', 'TrackNumber', 'Channels', 'Bpm', 'EncodedBy', 'Mood', 'Label', 'Composer', 'Copyright', 'IsrcNumber', 'InfoUrl', 'Language', 'ReplayGain', 'Cuein', 'Cueout', 'IsSilanChecked', 'FileExists', 'IsHidden', 'IsScheduled', 'IsPlaylist', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'CreatedAt', 'UpdatedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('mime', 'directory', 'filepath', 'md5', 'trackTitle', 'artistName', 'bitRate', 'sampleRate', 'albumTitle', 'genre', 'comments', 'year', 'trackNumber', 'channels', 'bpm', 'encodedBy', 'mood', 'label', 'composer', 'copyright', 'isrcNumber', 'infoUrl', 'language', 'replayGain', 'cuein', 'cueout', 'isSilanChecked', 'fileExists', 'isHidden', 'isScheduled', 'isPlaylist', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'createdAt', 'updatedAt', ),
+        BasePeer::TYPE_COLNAME => array (AudioFilePeer::MIME, AudioFilePeer::DIRECTORY, AudioFilePeer::FILEPATH, AudioFilePeer::MD5, AudioFilePeer::TRACK_TITLE, AudioFilePeer::ARTIST_NAME, AudioFilePeer::BIT_RATE, AudioFilePeer::SAMPLE_RATE, AudioFilePeer::ALBUM_TITLE, AudioFilePeer::GENRE, AudioFilePeer::COMMENTS, AudioFilePeer::YEAR, AudioFilePeer::TRACK_NUMBER, AudioFilePeer::CHANNELS, AudioFilePeer::BPM, AudioFilePeer::ENCODED_BY, AudioFilePeer::MOOD, AudioFilePeer::LABEL, AudioFilePeer::COMPOSER, AudioFilePeer::COPYRIGHT, AudioFilePeer::ISRC_NUMBER, AudioFilePeer::INFO_URL, AudioFilePeer::LANGUAGE, AudioFilePeer::REPLAY_GAIN, AudioFilePeer::CUEIN, AudioFilePeer::CUEOUT, AudioFilePeer::SILAN_CHECK, AudioFilePeer::FILE_EXISTS, AudioFilePeer::HIDDEN, AudioFilePeer::IS_SCHEDULED, AudioFilePeer::IS_PLAYLIST, AudioFilePeer::ID, AudioFilePeer::NAME, AudioFilePeer::OWNER_ID, AudioFilePeer::DESCRIPTION, AudioFilePeer::LAST_PLAYED, AudioFilePeer::PLAY_COUNT, AudioFilePeer::LENGTH, AudioFilePeer::CREATED_AT, AudioFilePeer::UPDATED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('MIME', 'DIRECTORY', 'FILEPATH', 'MD5', 'TRACK_TITLE', 'ARTIST_NAME', 'BIT_RATE', 'SAMPLE_RATE', 'ALBUM_TITLE', 'GENRE', 'COMMENTS', 'YEAR', 'TRACK_NUMBER', 'CHANNELS', 'BPM', 'ENCODED_BY', 'MOOD', 'LABEL', 'COMPOSER', 'COPYRIGHT', 'ISRC_NUMBER', 'INFO_URL', 'LANGUAGE', 'REPLAY_GAIN', 'CUEIN', 'CUEOUT', 'SILAN_CHECK', 'FILE_EXISTS', 'HIDDEN', 'IS_SCHEDULED', 'IS_PLAYLIST', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'CREATED_AT', 'UPDATED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('mime', 'directory', 'filepath', 'md5', 'track_title', 'artist_name', 'bit_rate', 'sample_rate', 'album_title', 'genre', 'comments', 'year', 'track_number', 'channels', 'bpm', 'encoded_by', 'mood', 'label', 'composer', 'copyright', 'isrc_number', 'info_url', 'language', 'replay_gain', 'cuein', 'cueout', 'silan_check', 'file_exists', 'hidden', 'is_scheduled', 'is_playlist', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'created_at', 'updated_at', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, )
     );
 
     /**
@@ -204,12 +201,12 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
      * e.g. AudioFilePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Mime' => 0, 'Directory' => 1, 'Filepath' => 2, 'Md5' => 3, 'TrackTitle' => 4, 'ArtistName' => 5, 'BitRate' => 6, 'SampleRate' => 7, 'AlbumTitle' => 8, 'Genre' => 9, 'Comments' => 10, 'Year' => 11, 'TrackNumber' => 12, 'Channels' => 13, 'Url' => 14, 'Bpm' => 15, 'EncodedBy' => 16, 'Mood' => 17, 'Label' => 18, 'Composer' => 19, 'Copyright' => 20, 'IsrcNumber' => 21, 'InfoUrl' => 22, 'Language' => 23, 'ReplayGain' => 24, 'Cuein' => 25, 'Cueout' => 26, 'IsSilanChecked' => 27, 'FileExists' => 28, 'IsHidden' => 29, 'IsScheduled' => 30, 'IsPlaylist' => 31, 'Id' => 32, 'Name' => 33, 'OwnerId' => 34, 'Description' => 35, 'LastPlayedTime' => 36, 'PlayCount' => 37, 'Length' => 38, 'CreatedAt' => 39, 'UpdatedAt' => 40, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('mime' => 0, 'directory' => 1, 'filepath' => 2, 'md5' => 3, 'trackTitle' => 4, 'artistName' => 5, 'bitRate' => 6, 'sampleRate' => 7, 'albumTitle' => 8, 'genre' => 9, 'comments' => 10, 'year' => 11, 'trackNumber' => 12, 'channels' => 13, 'url' => 14, 'bpm' => 15, 'encodedBy' => 16, 'mood' => 17, 'label' => 18, 'composer' => 19, 'copyright' => 20, 'isrcNumber' => 21, 'infoUrl' => 22, 'language' => 23, 'replayGain' => 24, 'cuein' => 25, 'cueout' => 26, 'isSilanChecked' => 27, 'fileExists' => 28, 'isHidden' => 29, 'isScheduled' => 30, 'isPlaylist' => 31, 'id' => 32, 'name' => 33, 'ownerId' => 34, 'description' => 35, 'lastPlayedTime' => 36, 'playCount' => 37, 'length' => 38, 'createdAt' => 39, 'updatedAt' => 40, ),
-        BasePeer::TYPE_COLNAME => array (AudioFilePeer::MIME => 0, AudioFilePeer::DIRECTORY => 1, AudioFilePeer::FILEPATH => 2, AudioFilePeer::MD5 => 3, AudioFilePeer::TRACK_TITLE => 4, AudioFilePeer::ARTIST_NAME => 5, AudioFilePeer::BIT_RATE => 6, AudioFilePeer::SAMPLE_RATE => 7, AudioFilePeer::ALBUM_TITLE => 8, AudioFilePeer::GENRE => 9, AudioFilePeer::COMMENTS => 10, AudioFilePeer::YEAR => 11, AudioFilePeer::TRACK_NUMBER => 12, AudioFilePeer::CHANNELS => 13, AudioFilePeer::URL => 14, AudioFilePeer::BPM => 15, AudioFilePeer::ENCODED_BY => 16, AudioFilePeer::MOOD => 17, AudioFilePeer::LABEL => 18, AudioFilePeer::COMPOSER => 19, AudioFilePeer::COPYRIGHT => 20, AudioFilePeer::ISRC_NUMBER => 21, AudioFilePeer::INFO_URL => 22, AudioFilePeer::LANGUAGE => 23, AudioFilePeer::REPLAY_GAIN => 24, AudioFilePeer::CUEIN => 25, AudioFilePeer::CUEOUT => 26, AudioFilePeer::SILAN_CHECK => 27, AudioFilePeer::FILE_EXISTS => 28, AudioFilePeer::HIDDEN => 29, AudioFilePeer::IS_SCHEDULED => 30, AudioFilePeer::IS_PLAYLIST => 31, AudioFilePeer::ID => 32, AudioFilePeer::NAME => 33, AudioFilePeer::OWNER_ID => 34, AudioFilePeer::DESCRIPTION => 35, AudioFilePeer::LAST_PLAYED => 36, AudioFilePeer::PLAY_COUNT => 37, AudioFilePeer::LENGTH => 38, AudioFilePeer::CREATED_AT => 39, AudioFilePeer::UPDATED_AT => 40, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('MIME' => 0, 'DIRECTORY' => 1, 'FILEPATH' => 2, 'MD5' => 3, 'TRACK_TITLE' => 4, 'ARTIST_NAME' => 5, 'BIT_RATE' => 6, 'SAMPLE_RATE' => 7, 'ALBUM_TITLE' => 8, 'GENRE' => 9, 'COMMENTS' => 10, 'YEAR' => 11, 'TRACK_NUMBER' => 12, 'CHANNELS' => 13, 'URL' => 14, 'BPM' => 15, 'ENCODED_BY' => 16, 'MOOD' => 17, 'LABEL' => 18, 'COMPOSER' => 19, 'COPYRIGHT' => 20, 'ISRC_NUMBER' => 21, 'INFO_URL' => 22, 'LANGUAGE' => 23, 'REPLAY_GAIN' => 24, 'CUEIN' => 25, 'CUEOUT' => 26, 'SILAN_CHECK' => 27, 'FILE_EXISTS' => 28, 'HIDDEN' => 29, 'IS_SCHEDULED' => 30, 'IS_PLAYLIST' => 31, 'ID' => 32, 'NAME' => 33, 'OWNER_ID' => 34, 'DESCRIPTION' => 35, 'LAST_PLAYED' => 36, 'PLAY_COUNT' => 37, 'LENGTH' => 38, 'CREATED_AT' => 39, 'UPDATED_AT' => 40, ),
-        BasePeer::TYPE_FIELDNAME => array ('mime' => 0, 'directory' => 1, 'filepath' => 2, 'md5' => 3, 'track_title' => 4, 'artist_name' => 5, 'bit_rate' => 6, 'sample_rate' => 7, 'album_title' => 8, 'genre' => 9, 'comments' => 10, 'year' => 11, 'track_number' => 12, 'channels' => 13, 'url' => 14, 'bpm' => 15, 'encoded_by' => 16, 'mood' => 17, 'label' => 18, 'composer' => 19, 'copyright' => 20, 'isrc_number' => 21, 'info_url' => 22, 'language' => 23, 'replay_gain' => 24, 'cuein' => 25, 'cueout' => 26, 'silan_check' => 27, 'file_exists' => 28, 'hidden' => 29, 'is_scheduled' => 30, 'is_playlist' => 31, 'id' => 32, 'name' => 33, 'owner_id' => 34, 'description' => 35, 'last_played' => 36, 'play_count' => 37, 'length' => 38, 'created_at' => 39, 'updated_at' => 40, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, )
+        BasePeer::TYPE_PHPNAME => array ('Mime' => 0, 'Directory' => 1, 'Filepath' => 2, 'Md5' => 3, 'TrackTitle' => 4, 'ArtistName' => 5, 'BitRate' => 6, 'SampleRate' => 7, 'AlbumTitle' => 8, 'Genre' => 9, 'Comments' => 10, 'Year' => 11, 'TrackNumber' => 12, 'Channels' => 13, 'Bpm' => 14, 'EncodedBy' => 15, 'Mood' => 16, 'Label' => 17, 'Composer' => 18, 'Copyright' => 19, 'IsrcNumber' => 20, 'InfoUrl' => 21, 'Language' => 22, 'ReplayGain' => 23, 'Cuein' => 24, 'Cueout' => 25, 'IsSilanChecked' => 26, 'FileExists' => 27, 'IsHidden' => 28, 'IsScheduled' => 29, 'IsPlaylist' => 30, 'Id' => 31, 'Name' => 32, 'OwnerId' => 33, 'Description' => 34, 'LastPlayedTime' => 35, 'PlayCount' => 36, 'Length' => 37, 'CreatedAt' => 38, 'UpdatedAt' => 39, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('mime' => 0, 'directory' => 1, 'filepath' => 2, 'md5' => 3, 'trackTitle' => 4, 'artistName' => 5, 'bitRate' => 6, 'sampleRate' => 7, 'albumTitle' => 8, 'genre' => 9, 'comments' => 10, 'year' => 11, 'trackNumber' => 12, 'channels' => 13, 'bpm' => 14, 'encodedBy' => 15, 'mood' => 16, 'label' => 17, 'composer' => 18, 'copyright' => 19, 'isrcNumber' => 20, 'infoUrl' => 21, 'language' => 22, 'replayGain' => 23, 'cuein' => 24, 'cueout' => 25, 'isSilanChecked' => 26, 'fileExists' => 27, 'isHidden' => 28, 'isScheduled' => 29, 'isPlaylist' => 30, 'id' => 31, 'name' => 32, 'ownerId' => 33, 'description' => 34, 'lastPlayedTime' => 35, 'playCount' => 36, 'length' => 37, 'createdAt' => 38, 'updatedAt' => 39, ),
+        BasePeer::TYPE_COLNAME => array (AudioFilePeer::MIME => 0, AudioFilePeer::DIRECTORY => 1, AudioFilePeer::FILEPATH => 2, AudioFilePeer::MD5 => 3, AudioFilePeer::TRACK_TITLE => 4, AudioFilePeer::ARTIST_NAME => 5, AudioFilePeer::BIT_RATE => 6, AudioFilePeer::SAMPLE_RATE => 7, AudioFilePeer::ALBUM_TITLE => 8, AudioFilePeer::GENRE => 9, AudioFilePeer::COMMENTS => 10, AudioFilePeer::YEAR => 11, AudioFilePeer::TRACK_NUMBER => 12, AudioFilePeer::CHANNELS => 13, AudioFilePeer::BPM => 14, AudioFilePeer::ENCODED_BY => 15, AudioFilePeer::MOOD => 16, AudioFilePeer::LABEL => 17, AudioFilePeer::COMPOSER => 18, AudioFilePeer::COPYRIGHT => 19, AudioFilePeer::ISRC_NUMBER => 20, AudioFilePeer::INFO_URL => 21, AudioFilePeer::LANGUAGE => 22, AudioFilePeer::REPLAY_GAIN => 23, AudioFilePeer::CUEIN => 24, AudioFilePeer::CUEOUT => 25, AudioFilePeer::SILAN_CHECK => 26, AudioFilePeer::FILE_EXISTS => 27, AudioFilePeer::HIDDEN => 28, AudioFilePeer::IS_SCHEDULED => 29, AudioFilePeer::IS_PLAYLIST => 30, AudioFilePeer::ID => 31, AudioFilePeer::NAME => 32, AudioFilePeer::OWNER_ID => 33, AudioFilePeer::DESCRIPTION => 34, AudioFilePeer::LAST_PLAYED => 35, AudioFilePeer::PLAY_COUNT => 36, AudioFilePeer::LENGTH => 37, AudioFilePeer::CREATED_AT => 38, AudioFilePeer::UPDATED_AT => 39, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('MIME' => 0, 'DIRECTORY' => 1, 'FILEPATH' => 2, 'MD5' => 3, 'TRACK_TITLE' => 4, 'ARTIST_NAME' => 5, 'BIT_RATE' => 6, 'SAMPLE_RATE' => 7, 'ALBUM_TITLE' => 8, 'GENRE' => 9, 'COMMENTS' => 10, 'YEAR' => 11, 'TRACK_NUMBER' => 12, 'CHANNELS' => 13, 'BPM' => 14, 'ENCODED_BY' => 15, 'MOOD' => 16, 'LABEL' => 17, 'COMPOSER' => 18, 'COPYRIGHT' => 19, 'ISRC_NUMBER' => 20, 'INFO_URL' => 21, 'LANGUAGE' => 22, 'REPLAY_GAIN' => 23, 'CUEIN' => 24, 'CUEOUT' => 25, 'SILAN_CHECK' => 26, 'FILE_EXISTS' => 27, 'HIDDEN' => 28, 'IS_SCHEDULED' => 29, 'IS_PLAYLIST' => 30, 'ID' => 31, 'NAME' => 32, 'OWNER_ID' => 33, 'DESCRIPTION' => 34, 'LAST_PLAYED' => 35, 'PLAY_COUNT' => 36, 'LENGTH' => 37, 'CREATED_AT' => 38, 'UPDATED_AT' => 39, ),
+        BasePeer::TYPE_FIELDNAME => array ('mime' => 0, 'directory' => 1, 'filepath' => 2, 'md5' => 3, 'track_title' => 4, 'artist_name' => 5, 'bit_rate' => 6, 'sample_rate' => 7, 'album_title' => 8, 'genre' => 9, 'comments' => 10, 'year' => 11, 'track_number' => 12, 'channels' => 13, 'bpm' => 14, 'encoded_by' => 15, 'mood' => 16, 'label' => 17, 'composer' => 18, 'copyright' => 19, 'isrc_number' => 20, 'info_url' => 21, 'language' => 22, 'replay_gain' => 23, 'cuein' => 24, 'cueout' => 25, 'silan_check' => 26, 'file_exists' => 27, 'hidden' => 28, 'is_scheduled' => 29, 'is_playlist' => 30, 'id' => 31, 'name' => 32, 'owner_id' => 33, 'description' => 34, 'last_played' => 35, 'play_count' => 36, 'length' => 37, 'created_at' => 38, 'updated_at' => 39, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, )
     );
 
     /**
@@ -297,7 +294,6 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
             $criteria->addSelectColumn(AudioFilePeer::YEAR);
             $criteria->addSelectColumn(AudioFilePeer::TRACK_NUMBER);
             $criteria->addSelectColumn(AudioFilePeer::CHANNELS);
-            $criteria->addSelectColumn(AudioFilePeer::URL);
             $criteria->addSelectColumn(AudioFilePeer::BPM);
             $criteria->addSelectColumn(AudioFilePeer::ENCODED_BY);
             $criteria->addSelectColumn(AudioFilePeer::MOOD);
@@ -339,7 +335,6 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
             $criteria->addSelectColumn($alias . '.year');
             $criteria->addSelectColumn($alias . '.track_number');
             $criteria->addSelectColumn($alias . '.channels');
-            $criteria->addSelectColumn($alias . '.url');
             $criteria->addSelectColumn($alias . '.bpm');
             $criteria->addSelectColumn($alias . '.encoded_by');
             $criteria->addSelectColumn($alias . '.mood');
@@ -565,7 +560,7 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to audio_file
+     * Method to invalidate the instance pool of all tables related to media_audiofile
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
@@ -585,11 +580,11 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
     public static function getPrimaryKeyHashFromRow($row, $startcol = 0)
     {
         // If the PK cannot be derived from the row, return null.
-        if ($row[$startcol + 32] === null) {
+        if ($row[$startcol + 31] === null) {
             return null;
         }
 
-        return (string) $row[$startcol + 32];
+        return (string) $row[$startcol + 31];
     }
 
     /**
@@ -604,7 +599,7 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
     public static function getPrimaryKeyFromRow($row, $startcol = 0)
     {
 
-        return (int) $row[$startcol + 32];
+        return (int) $row[$startcol + 31];
     }
 
     /**
@@ -1757,7 +1752,7 @@ abstract class BaseAudioFilePeer extends MediaItemPeer
     }
 
     /**
-     * Deletes all rows from the audio_file table.
+     * Deletes all rows from the media_audiofile table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).

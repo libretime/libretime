@@ -25,7 +25,7 @@ use Airtime\MediaItem\PlaylistPeer;
 use Airtime\MediaItem\PlaylistQuery;
 
 /**
- * Base class that represents a row from the 'playlist' table.
+ * Base class that represents a row from the 'media_playlist' table.
  *
  *
  *
@@ -930,7 +930,7 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         }
 
         $sql = sprintf(
-            'INSERT INTO "playlist" (%s) VALUES (%s)',
+            'INSERT INTO "media_playlist" (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

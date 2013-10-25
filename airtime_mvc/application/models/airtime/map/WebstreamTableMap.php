@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'webstream' table.
+ * This class defines the structure of the 'media_webstream' table.
  *
  *
  *
@@ -36,7 +36,7 @@ class WebstreamTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('webstream');
+        $this->setName('media_webstream');
         $this->setPhpName('Webstream');
         $this->setClassname('Airtime\\MediaItem\\Webstream');
         $this->setPackage('airtime');

@@ -20,7 +20,7 @@ use Airtime\MediaItem\MediaContentsPeer;
 use Airtime\MediaItem\MediaContentsQuery;
 
 /**
- * Base class that represents a row from the 'media_contents' table.
+ * Base class that represents a row from the 'media_content' table.
  *
  *
  *
@@ -808,7 +808,7 @@ abstract class BaseMediaContents extends BaseObject implements Persistent
         }
         if (null === $this->id) {
             try {
-                $stmt = $con->query("SELECT nextval('media_contents_id_seq')");
+                $stmt = $con->query("SELECT nextval('media_content_id_seq')");
                 $row = $stmt->fetch(PDO::FETCH_NUM);
                 $this->id = $row[0];
             } catch (Exception $e) {
@@ -847,7 +847,7 @@ abstract class BaseMediaContents extends BaseObject implements Persistent
         }
 
         $sql = sprintf(
-            'INSERT INTO "media_contents" (%s) VALUES (%s)',
+            'INSERT INTO "media_content" (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

@@ -17,7 +17,7 @@ use Airtime\MediaItem\PlaylistPeer;
 use Airtime\MediaItem\map\PlaylistTableMap;
 
 /**
- * Base static class for performing query and update operations on the 'playlist' table.
+ * Base static class for performing query and update operations on the 'media_playlist' table.
  *
  *
  *
@@ -30,7 +30,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'playlist';
+    const TABLE_NAME = 'media_playlist';
 
     /** the related Propel class for this table */
     const OM_CLASS = 'Airtime\\MediaItem\\Playlist';
@@ -48,34 +48,34 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     const NUM_HYDRATE_COLUMNS = 10;
 
     /** the column name for the id field */
-    const ID = 'playlist.id';
+    const ID = 'media_playlist.id';
 
     /** the column name for the name field */
-    const NAME = 'playlist.name';
+    const NAME = 'media_playlist.name';
 
     /** the column name for the owner_id field */
-    const OWNER_ID = 'playlist.owner_id';
+    const OWNER_ID = 'media_playlist.owner_id';
 
     /** the column name for the description field */
-    const DESCRIPTION = 'playlist.description';
+    const DESCRIPTION = 'media_playlist.description';
 
     /** the column name for the last_played field */
-    const LAST_PLAYED = 'playlist.last_played';
+    const LAST_PLAYED = 'media_playlist.last_played';
 
     /** the column name for the play_count field */
-    const PLAY_COUNT = 'playlist.play_count';
+    const PLAY_COUNT = 'media_playlist.play_count';
 
     /** the column name for the length field */
-    const LENGTH = 'playlist.length';
+    const LENGTH = 'media_playlist.length';
 
     /** the column name for the created_at field */
-    const CREATED_AT = 'playlist.created_at';
+    const CREATED_AT = 'media_playlist.created_at';
 
     /** the column name for the updated_at field */
-    const UPDATED_AT = 'playlist.updated_at';
+    const UPDATED_AT = 'media_playlist.updated_at';
 
     /** the column name for the descendant_class field */
-    const DESCENDANT_CLASS = 'playlist.descendant_class';
+    const DESCENDANT_CLASS = 'media_playlist.descendant_class';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -410,7 +410,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to playlist
+     * Method to invalidate the instance pool of all tables related to media_playlist
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
@@ -1259,7 +1259,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     }
 
     /**
-     * Deletes all rows from the playlist table.
+     * Deletes all rows from the media_playlist table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).

@@ -16,7 +16,7 @@ use Airtime\MediaItem\WebstreamPeer;
 use Airtime\MediaItem\map\WebstreamTableMap;
 
 /**
- * Base static class for performing query and update operations on the 'webstream' table.
+ * Base static class for performing query and update operations on the 'media_webstream' table.
  *
  *
  *
@@ -29,7 +29,7 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'webstream';
+    const TABLE_NAME = 'media_webstream';
 
     /** the related Propel class for this table */
     const OM_CLASS = 'Airtime\\MediaItem\\Webstream';
@@ -47,37 +47,37 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     const NUM_HYDRATE_COLUMNS = 11;
 
     /** the column name for the mime field */
-    const MIME = 'webstream.mime';
+    const MIME = 'media_webstream.mime';
 
     /** the column name for the url field */
-    const URL = 'webstream.url';
+    const URL = 'media_webstream.url';
 
     /** the column name for the id field */
-    const ID = 'webstream.id';
+    const ID = 'media_webstream.id';
 
     /** the column name for the name field */
-    const NAME = 'webstream.name';
+    const NAME = 'media_webstream.name';
 
     /** the column name for the owner_id field */
-    const OWNER_ID = 'webstream.owner_id';
+    const OWNER_ID = 'media_webstream.owner_id';
 
     /** the column name for the description field */
-    const DESCRIPTION = 'webstream.description';
+    const DESCRIPTION = 'media_webstream.description';
 
     /** the column name for the last_played field */
-    const LAST_PLAYED = 'webstream.last_played';
+    const LAST_PLAYED = 'media_webstream.last_played';
 
     /** the column name for the play_count field */
-    const PLAY_COUNT = 'webstream.play_count';
+    const PLAY_COUNT = 'media_webstream.play_count';
 
     /** the column name for the length field */
-    const LENGTH = 'webstream.length';
+    const LENGTH = 'media_webstream.length';
 
     /** the column name for the created_at field */
-    const CREATED_AT = 'webstream.created_at';
+    const CREATED_AT = 'media_webstream.created_at';
 
     /** the column name for the updated_at field */
-    const UPDATED_AT = 'webstream.updated_at';
+    const UPDATED_AT = 'media_webstream.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -414,7 +414,7 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to webstream
+     * Method to invalidate the instance pool of all tables related to media_webstream
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
@@ -1260,7 +1260,7 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     }
 
     /**
-     * Deletes all rows from the webstream table.
+     * Deletes all rows from the media_webstream table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).

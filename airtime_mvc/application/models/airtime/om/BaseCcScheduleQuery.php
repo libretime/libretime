@@ -19,6 +19,7 @@ use Airtime\CcScheduleQuery;
 use Airtime\CcShowInstances;
 use Airtime\CcWebstream;
 use Airtime\CcWebstreamMetadata;
+use Airtime\MediaItem;
 
 /**
  * Base class that represents a query for the 'cc_schedule' table.
@@ -28,6 +29,7 @@ use Airtime\CcWebstreamMetadata;
  * @method CcScheduleQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method CcScheduleQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
  * @method CcScheduleQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
+ * @method CcScheduleQuery orderByDbMediaId($order = Criteria::ASC) Order by the media_id column
  * @method CcScheduleQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
  * @method CcScheduleQuery orderByDbStreamId($order = Criteria::ASC) Order by the stream_id column
  * @method CcScheduleQuery orderByDbClipLength($order = Criteria::ASC) Order by the clip_length column
@@ -44,6 +46,7 @@ use Airtime\CcWebstreamMetadata;
  * @method CcScheduleQuery groupByDbId() Group by the id column
  * @method CcScheduleQuery groupByDbStarts() Group by the starts column
  * @method CcScheduleQuery groupByDbEnds() Group by the ends column
+ * @method CcScheduleQuery groupByDbMediaId() Group by the media_id column
  * @method CcScheduleQuery groupByDbFileId() Group by the file_id column
  * @method CcScheduleQuery groupByDbStreamId() Group by the stream_id column
  * @method CcScheduleQuery groupByDbClipLength() Group by the clip_length column
@@ -65,6 +68,10 @@ use Airtime\CcWebstreamMetadata;
  * @method CcScheduleQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
  * @method CcScheduleQuery innerJoinCcShowInstances($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowInstances relation
  *
+ * @method CcScheduleQuery leftJoinMediaItem($relationAlias = null) Adds a LEFT JOIN clause to the query using the MediaItem relation
+ * @method CcScheduleQuery rightJoinMediaItem($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MediaItem relation
+ * @method CcScheduleQuery innerJoinMediaItem($relationAlias = null) Adds a INNER JOIN clause to the query using the MediaItem relation
+ *
  * @method CcScheduleQuery leftJoinCcFiles($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFiles relation
  * @method CcScheduleQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
  * @method CcScheduleQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
@@ -82,6 +89,7 @@ use Airtime\CcWebstreamMetadata;
  *
  * @method CcSchedule findOneByDbStarts(string $starts) Return the first CcSchedule filtered by the starts column
  * @method CcSchedule findOneByDbEnds(string $ends) Return the first CcSchedule filtered by the ends column
+ * @method CcSchedule findOneByDbMediaId(int $media_id) Return the first CcSchedule filtered by the media_id column
  * @method CcSchedule findOneByDbFileId(int $file_id) Return the first CcSchedule filtered by the file_id column
  * @method CcSchedule findOneByDbStreamId(int $stream_id) Return the first CcSchedule filtered by the stream_id column
  * @method CcSchedule findOneByDbClipLength(string $clip_length) Return the first CcSchedule filtered by the clip_length column
@@ -98,6 +106,7 @@ use Airtime\CcWebstreamMetadata;
  * @method array findByDbId(int $id) Return CcSchedule objects filtered by the id column
  * @method array findByDbStarts(string $starts) Return CcSchedule objects filtered by the starts column
  * @method array findByDbEnds(string $ends) Return CcSchedule objects filtered by the ends column
+ * @method array findByDbMediaId(int $media_id) Return CcSchedule objects filtered by the media_id column
  * @method array findByDbFileId(int $file_id) Return CcSchedule objects filtered by the file_id column
  * @method array findByDbStreamId(int $stream_id) Return CcSchedule objects filtered by the stream_id column
  * @method array findByDbClipLength(string $clip_length) Return CcSchedule objects filtered by the clip_length column
@@ -217,7 +226,7 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "starts", "ends", "file_id", "stream_id", "clip_length", "fade_in", "fade_out", "cue_in", "cue_out", "media_item_played", "instance_id", "playout_status", "broadcasted", "position" FROM "cc_schedule" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "starts", "ends", "media_id", "file_id", "stream_id", "clip_length", "fade_in", "fade_out", "cue_in", "cue_out", "media_item_played", "instance_id", "playout_status", "broadcasted", "position" FROM "cc_schedule" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -432,6 +441,50 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcSchedulePeer::ENDS, $dbEnds, $comparison);
+    }
+
+    /**
+     * Filter the query on the media_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbMediaId(1234); // WHERE media_id = 1234
+     * $query->filterByDbMediaId(array(12, 34)); // WHERE media_id IN (12, 34)
+     * $query->filterByDbMediaId(array('min' => 12)); // WHERE media_id >= 12
+     * $query->filterByDbMediaId(array('max' => 12)); // WHERE media_id <= 12
+     * </code>
+     *
+     * @see       filterByMediaItem()
+     *
+     * @param     mixed $dbMediaId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcScheduleQuery The current query, for fluid interface
+     */
+    public function filterByDbMediaId($dbMediaId = null, $comparison = null)
+    {
+        if (is_array($dbMediaId)) {
+            $useMinMax = false;
+            if (isset($dbMediaId['min'])) {
+                $this->addUsingAlias(CcSchedulePeer::MEDIA_ID, $dbMediaId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbMediaId['max'])) {
+                $this->addUsingAlias(CcSchedulePeer::MEDIA_ID, $dbMediaId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcSchedulePeer::MEDIA_ID, $dbMediaId, $comparison);
     }
 
     /**
@@ -966,6 +1019,82 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
         return $this
             ->joinCcShowInstances($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', '\Airtime\CcShowInstancesQuery');
+    }
+
+    /**
+     * Filter the query by a related MediaItem object
+     *
+     * @param   MediaItem|PropelObjectCollection $mediaItem The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcScheduleQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByMediaItem($mediaItem, $comparison = null)
+    {
+        if ($mediaItem instanceof MediaItem) {
+            return $this
+                ->addUsingAlias(CcSchedulePeer::MEDIA_ID, $mediaItem->getId(), $comparison);
+        } elseif ($mediaItem instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(CcSchedulePeer::MEDIA_ID, $mediaItem->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByMediaItem() only accepts arguments of type MediaItem or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the MediaItem relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcScheduleQuery The current query, for fluid interface
+     */
+    public function joinMediaItem($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('MediaItem');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'MediaItem');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the MediaItem relation MediaItem object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\MediaItemQuery A secondary query class using the current class as primary query
+     */
+    public function useMediaItemQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinMediaItem($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'MediaItem', '\Airtime\MediaItemQuery');
     }
 
     /**

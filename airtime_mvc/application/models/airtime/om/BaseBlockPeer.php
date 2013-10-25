@@ -17,7 +17,7 @@ use Airtime\MediaItem\PlaylistPeer;
 use Airtime\MediaItem\map\BlockTableMap;
 
 /**
- * Base static class for performing query and update operations on the 'block' table.
+ * Base static class for performing query and update operations on the 'media_block' table.
  *
  *
  *
@@ -30,7 +30,7 @@ abstract class BaseBlockPeer extends PlaylistPeer
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'block';
+    const TABLE_NAME = 'media_block';
 
     /** the related Propel class for this table */
     const OM_CLASS = 'Airtime\\MediaItem\\Block';
@@ -48,34 +48,34 @@ abstract class BaseBlockPeer extends PlaylistPeer
     const NUM_HYDRATE_COLUMNS = 10;
 
     /** the column name for the type field */
-    const TYPE = 'block.type';
+    const TYPE = 'media_block.type';
 
     /** the column name for the id field */
-    const ID = 'block.id';
+    const ID = 'media_block.id';
 
     /** the column name for the name field */
-    const NAME = 'block.name';
+    const NAME = 'media_block.name';
 
     /** the column name for the owner_id field */
-    const OWNER_ID = 'block.owner_id';
+    const OWNER_ID = 'media_block.owner_id';
 
     /** the column name for the description field */
-    const DESCRIPTION = 'block.description';
+    const DESCRIPTION = 'media_block.description';
 
     /** the column name for the last_played field */
-    const LAST_PLAYED = 'block.last_played';
+    const LAST_PLAYED = 'media_block.last_played';
 
     /** the column name for the play_count field */
-    const PLAY_COUNT = 'block.play_count';
+    const PLAY_COUNT = 'media_block.play_count';
 
     /** the column name for the length field */
-    const LENGTH = 'block.length';
+    const LENGTH = 'media_block.length';
 
     /** the column name for the created_at field */
-    const CREATED_AT = 'block.created_at';
+    const CREATED_AT = 'media_block.created_at';
 
     /** the column name for the updated_at field */
-    const UPDATED_AT = 'block.updated_at';
+    const UPDATED_AT = 'media_block.updated_at';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -410,7 +410,7 @@ abstract class BaseBlockPeer extends PlaylistPeer
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to block
+     * Method to invalidate the instance pool of all tables related to media_block
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
@@ -1603,7 +1603,7 @@ abstract class BaseBlockPeer extends PlaylistPeer
     }
 
     /**
-     * Deletes all rows from the block table.
+     * Deletes all rows from the media_block table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).

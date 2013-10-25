@@ -18,7 +18,7 @@ use Airtime\MediaItem\MediaContentsPeer;
 use Airtime\MediaItem\MediaContentsQuery;
 
 /**
- * Base class that represents a query for the 'media_contents' table.
+ * Base class that represents a query for the 'media_content' table.
  *
  *
  *
@@ -178,7 +178,7 @@ abstract class BaseMediaContentsQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "media_id", "position", "trackoffset", "cliplength", "cuein", "cueout", "fadein", "fadeout" FROM "media_contents" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "media_id", "position", "trackoffset", "cliplength", "cuein", "cueout", "fadein", "fadeout" FROM "media_content" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

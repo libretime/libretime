@@ -20,7 +20,7 @@ use Airtime\MediaItem\PlaylistPeer;
 use Airtime\MediaItem\PlaylistQuery;
 
 /**
- * Base class that represents a query for the 'playlist' table.
+ * Base class that represents a query for the 'media_playlist' table.
  *
  *
  *
@@ -192,7 +192,7 @@ abstract class BasePlaylistQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at", "descendant_class" FROM "playlist" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at", "descendant_class" FROM "media_playlist" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

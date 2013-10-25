@@ -19,7 +19,7 @@ use Airtime\MediaItem\WebstreamPeer;
 use Airtime\MediaItem\WebstreamQuery;
 
 /**
- * Base class that represents a query for the 'webstream' table.
+ * Base class that represents a query for the 'media_webstream' table.
  *
  *
  *
@@ -191,7 +191,7 @@ abstract class BaseWebstreamQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "mime", "url", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at" FROM "webstream" WHERE "id" = :p0';
+        $sql = 'SELECT "mime", "url", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at" FROM "media_webstream" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);

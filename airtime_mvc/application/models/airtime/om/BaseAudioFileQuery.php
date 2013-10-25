@@ -20,7 +20,7 @@ use Airtime\MediaItem\AudioFilePeer;
 use Airtime\MediaItem\AudioFileQuery;
 
 /**
- * Base class that represents a query for the 'audio_file' table.
+ * Base class that represents a query for the 'media_audiofile' table.
  *
  *
  *
@@ -38,7 +38,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery orderByYear($order = Criteria::ASC) Order by the year column
  * @method AudioFileQuery orderByTrackNumber($order = Criteria::ASC) Order by the track_number column
  * @method AudioFileQuery orderByChannels($order = Criteria::ASC) Order by the channels column
- * @method AudioFileQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method AudioFileQuery orderByBpm($order = Criteria::ASC) Order by the bpm column
  * @method AudioFileQuery orderByEncodedBy($order = Criteria::ASC) Order by the encoded_by column
  * @method AudioFileQuery orderByMood($order = Criteria::ASC) Order by the mood column
@@ -80,7 +79,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery groupByYear() Group by the year column
  * @method AudioFileQuery groupByTrackNumber() Group by the track_number column
  * @method AudioFileQuery groupByChannels() Group by the channels column
- * @method AudioFileQuery groupByUrl() Group by the url column
  * @method AudioFileQuery groupByBpm() Group by the bpm column
  * @method AudioFileQuery groupByEncodedBy() Group by the encoded_by column
  * @method AudioFileQuery groupByMood() Group by the mood column
@@ -141,7 +139,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFile findOneByYear(string $year) Return the first AudioFile filtered by the year column
  * @method AudioFile findOneByTrackNumber(int $track_number) Return the first AudioFile filtered by the track_number column
  * @method AudioFile findOneByChannels(int $channels) Return the first AudioFile filtered by the channels column
- * @method AudioFile findOneByUrl(string $url) Return the first AudioFile filtered by the url column
  * @method AudioFile findOneByBpm(int $bpm) Return the first AudioFile filtered by the bpm column
  * @method AudioFile findOneByEncodedBy(string $encoded_by) Return the first AudioFile filtered by the encoded_by column
  * @method AudioFile findOneByMood(string $mood) Return the first AudioFile filtered by the mood column
@@ -182,7 +179,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method array findByYear(string $year) Return AudioFile objects filtered by the year column
  * @method array findByTrackNumber(int $track_number) Return AudioFile objects filtered by the track_number column
  * @method array findByChannels(int $channels) Return AudioFile objects filtered by the channels column
- * @method array findByUrl(string $url) Return AudioFile objects filtered by the url column
  * @method array findByBpm(int $bpm) Return AudioFile objects filtered by the bpm column
  * @method array findByEncodedBy(string $encoded_by) Return AudioFile objects filtered by the encoded_by column
  * @method array findByMood(string $mood) Return AudioFile objects filtered by the mood column
@@ -316,7 +312,7 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "mime", "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "is_scheduled", "is_playlist", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at" FROM "audio_file" WHERE "id" = :p0';
+        $sql = 'SELECT "mime", "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "is_scheduled", "is_playlist", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at" FROM "media_audiofile" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -876,35 +872,6 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
         }
 
         return $this->addUsingAlias(AudioFilePeer::CHANNELS, $channels, $comparison);
-    }
-
-    /**
-     * Filter the query on the url column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByUrl('fooValue');   // WHERE url = 'fooValue'
-     * $query->filterByUrl('%fooValue%'); // WHERE url LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $url The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return AudioFileQuery The current query, for fluid interface
-     */
-    public function filterByUrl($url = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($url)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $url)) {
-                $url = str_replace('*', '%', $url);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(AudioFilePeer::URL, $url, $comparison);
     }
 
     /**

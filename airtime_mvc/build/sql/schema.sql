@@ -328,6 +328,7 @@ CREATE TABLE "cc_schedule"
     "id" serial NOT NULL,
     "starts" TIMESTAMP NOT NULL,
     "ends" TIMESTAMP NOT NULL,
+    "media_id" INTEGER,
     "file_id" INTEGER,
     "stream_id" INTEGER,
     "clip_length" interval DEFAULT '00:00:00',
@@ -632,12 +633,12 @@ CREATE TABLE "media_item"
 );
 
 -----------------------------------------------------------------------
--- audio_file
+-- media_audiofile
 -----------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "audio_file" CASCADE;
+DROP TABLE IF EXISTS "media_audiofile" CASCADE;
 
-CREATE TABLE "audio_file"
+CREATE TABLE "media_audiofile"
 (
     "mime" VARCHAR,
     "directory" INTEGER,
@@ -653,7 +654,6 @@ CREATE TABLE "audio_file"
     "year" VARCHAR(16),
     "track_number" INTEGER,
     "channels" INTEGER,
-    "url" VARCHAR(1024),
     "bpm" INTEGER,
     "encoded_by" VARCHAR(255),
     "mood" VARCHAR(64),
@@ -683,15 +683,15 @@ CREATE TABLE "audio_file"
     PRIMARY KEY ("id")
 );
 
-CREATE INDEX "audio_file_md5_idx" ON "audio_file" ("md5");
+CREATE INDEX "audio_file_md5_idx" ON "media_audiofile" ("md5");
 
 -----------------------------------------------------------------------
--- webstream
+-- media_webstream
 -----------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "webstream" CASCADE;
+DROP TABLE IF EXISTS "media_webstream" CASCADE;
 
-CREATE TABLE "webstream"
+CREATE TABLE "media_webstream"
 (
     "mime" VARCHAR,
     "url" VARCHAR(512) NOT NULL,
@@ -708,12 +708,12 @@ CREATE TABLE "webstream"
 );
 
 -----------------------------------------------------------------------
--- playlist
+-- media_playlist
 -----------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "playlist" CASCADE;
+DROP TABLE IF EXISTS "media_playlist" CASCADE;
 
-CREATE TABLE "playlist"
+CREATE TABLE "media_playlist"
 (
     "id" INTEGER NOT NULL,
     "name" VARCHAR(128) NOT NULL,
@@ -729,12 +729,12 @@ CREATE TABLE "playlist"
 );
 
 -----------------------------------------------------------------------
--- block
+-- media_block
 -----------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "block" CASCADE;
+DROP TABLE IF EXISTS "media_block" CASCADE;
 
-CREATE TABLE "block"
+CREATE TABLE "media_block"
 (
     "type" VARCHAR(7) DEFAULT 'static',
     "id" INTEGER NOT NULL,
@@ -750,12 +750,12 @@ CREATE TABLE "block"
 );
 
 -----------------------------------------------------------------------
--- media_contents
+-- media_content
 -----------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "media_contents" CASCADE;
+DROP TABLE IF EXISTS "media_content" CASCADE;
 
-CREATE TABLE "media_contents"
+CREATE TABLE "media_content"
 (
     "id" serial NOT NULL,
     "media_id" INTEGER,
@@ -866,6 +866,11 @@ ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_inst_fkey"
     REFERENCES "cc_show_instances" ("id")
     ON DELETE CASCADE;
 
+ALTER TABLE "cc_schedule" ADD CONSTRAINT "media_item_sched_fkey"
+    FOREIGN KEY ("media_id")
+    REFERENCES "media_item" ("id")
+    ON DELETE CASCADE;
+
 ALTER TABLE "cc_schedule" ADD CONSTRAINT "cc_show_file_fkey"
     FOREIGN KEY ("file_id")
     REFERENCES "cc_files" ("id")
@@ -920,52 +925,52 @@ ALTER TABLE "media_item" ADD CONSTRAINT "media_item_owner_fkey"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "audio_file" ADD CONSTRAINT "audio_file_music_dir_fkey"
+ALTER TABLE "media_audiofile" ADD CONSTRAINT "audio_file_music_dir_fkey"
     FOREIGN KEY ("directory")
     REFERENCES "cc_music_dirs" ("id");
 
-ALTER TABLE "audio_file" ADD CONSTRAINT "audio_file_FK_2"
+ALTER TABLE "media_audiofile" ADD CONSTRAINT "media_audiofile_FK_2"
     FOREIGN KEY ("id")
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "audio_file" ADD CONSTRAINT "audio_file_FK_3"
+ALTER TABLE "media_audiofile" ADD CONSTRAINT "media_audiofile_FK_3"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "webstream" ADD CONSTRAINT "webstream_FK_1"
+ALTER TABLE "media_webstream" ADD CONSTRAINT "media_webstream_FK_1"
     FOREIGN KEY ("id")
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "webstream" ADD CONSTRAINT "webstream_FK_2"
+ALTER TABLE "media_webstream" ADD CONSTRAINT "media_webstream_FK_2"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "playlist" ADD CONSTRAINT "playlist_FK_1"
+ALTER TABLE "media_playlist" ADD CONSTRAINT "media_playlist_FK_1"
     FOREIGN KEY ("id")
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "playlist" ADD CONSTRAINT "playlist_FK_2"
+ALTER TABLE "media_playlist" ADD CONSTRAINT "media_playlist_FK_2"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "block" ADD CONSTRAINT "block_FK_1"
+ALTER TABLE "media_block" ADD CONSTRAINT "media_block_FK_1"
     FOREIGN KEY ("id")
-    REFERENCES "playlist" ("id")
+    REFERENCES "media_playlist" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "block" ADD CONSTRAINT "block_FK_2"
+ALTER TABLE "media_block" ADD CONSTRAINT "media_block_FK_2"
     FOREIGN KEY ("id")
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "block" ADD CONSTRAINT "block_FK_3"
+ALTER TABLE "media_block" ADD CONSTRAINT "media_block_FK_3"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "media_contents" ADD CONSTRAINT "media_item_contents_fkey"
+ALTER TABLE "media_content" ADD CONSTRAINT "media_item_contents_fkey"
     FOREIGN KEY ("media_id")
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;

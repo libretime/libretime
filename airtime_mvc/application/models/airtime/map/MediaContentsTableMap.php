@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'media_contents' table.
+ * This class defines the structure of the 'media_content' table.
  *
  *
  *
@@ -36,12 +36,12 @@ class MediaContentsTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('media_contents');
+        $this->setName('media_content');
         $this->setPhpName('MediaContents');
         $this->setClassname('Airtime\\MediaItem\\MediaContents');
         $this->setPackage('airtime');
         $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('media_contents_id_seq');
+        $this->setPrimaryKeyMethodInfo('media_content_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
         $this->addForeignKey('media_id', 'MediaId', 'INTEGER', 'media_item', 'id', false, null, null);

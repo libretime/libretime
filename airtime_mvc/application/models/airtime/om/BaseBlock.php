@@ -23,7 +23,7 @@ use Airtime\MediaItem\Playlist;
 use Airtime\MediaItem\PlaylistQuery;
 
 /**
- * Base class that represents a row from the 'block' table.
+ * Base class that represents a row from the 'media_block' table.
  *
  *
  *
@@ -941,7 +941,7 @@ abstract class BaseBlock extends Playlist implements Persistent
         }
 
         $sql = sprintf(
-            'INSERT INTO "block" (%s) VALUES (%s)',
+            'INSERT INTO "media_block" (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

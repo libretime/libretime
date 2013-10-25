@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'block' table.
+ * This class defines the structure of the 'media_block' table.
  *
  *
  *
@@ -36,14 +36,14 @@ class BlockTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('block');
+        $this->setName('media_block');
         $this->setPhpName('Block');
         $this->setClassname('Airtime\\MediaItem\\Block');
         $this->setPackage('airtime');
         $this->setUseIdGenerator(false);
         // columns
         $this->addColumn('type', 'Type', 'VARCHAR', false, 7, 'static');
-        $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'playlist', 'id', true, null, null);
+        $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_playlist', 'id', true, null, null);
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_item', 'id', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', true, 128, null);
         $this->addForeignKey('owner_id', 'OwnerId', 'INTEGER', 'cc_subjs', 'id', false, null, null);
@@ -76,7 +76,7 @@ class BlockTableMap extends TableMap
     {
         return array(
             'concrete_inheritance' =>  array (
-  'extends' => 'playlist',
+  'extends' => 'media_playlist',
   'descendant_column' => 'descendant_class',
   'copy_data_to_parent' => 'true',
   'schema' => '',

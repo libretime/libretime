@@ -21,7 +21,7 @@ use Airtime\MediaItem\WebstreamPeer;
 use Airtime\MediaItem\WebstreamQuery;
 
 /**
- * Base class that represents a row from the 'webstream' table.
+ * Base class that represents a row from the 'media_webstream' table.
  *
  *
  *
@@ -955,7 +955,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         }
 
         $sql = sprintf(
-            'INSERT INTO "webstream" (%s) VALUES (%s)',
+            'INSERT INTO "media_webstream" (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );

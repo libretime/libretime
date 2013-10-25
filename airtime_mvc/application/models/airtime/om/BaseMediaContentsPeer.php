@@ -15,7 +15,7 @@ use Airtime\MediaItem\MediaContentsPeer;
 use Airtime\MediaItem\map\MediaContentsTableMap;
 
 /**
- * Base static class for performing query and update operations on the 'media_contents' table.
+ * Base static class for performing query and update operations on the 'media_content' table.
  *
  *
  *
@@ -28,7 +28,7 @@ abstract class BaseMediaContentsPeer
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'media_contents';
+    const TABLE_NAME = 'media_content';
 
     /** the related Propel class for this table */
     const OM_CLASS = 'Airtime\\MediaItem\\MediaContents';
@@ -46,31 +46,31 @@ abstract class BaseMediaContentsPeer
     const NUM_HYDRATE_COLUMNS = 9;
 
     /** the column name for the id field */
-    const ID = 'media_contents.id';
+    const ID = 'media_content.id';
 
     /** the column name for the media_id field */
-    const MEDIA_ID = 'media_contents.media_id';
+    const MEDIA_ID = 'media_content.media_id';
 
     /** the column name for the position field */
-    const POSITION = 'media_contents.position';
+    const POSITION = 'media_content.position';
 
     /** the column name for the trackoffset field */
-    const TRACKOFFSET = 'media_contents.trackoffset';
+    const TRACKOFFSET = 'media_content.trackoffset';
 
     /** the column name for the cliplength field */
-    const CLIPLENGTH = 'media_contents.cliplength';
+    const CLIPLENGTH = 'media_content.cliplength';
 
     /** the column name for the cuein field */
-    const CUEIN = 'media_contents.cuein';
+    const CUEIN = 'media_content.cuein';
 
     /** the column name for the cueout field */
-    const CUEOUT = 'media_contents.cueout';
+    const CUEOUT = 'media_content.cueout';
 
     /** the column name for the fadein field */
-    const FADEIN = 'media_contents.fadein';
+    const FADEIN = 'media_content.fadein';
 
     /** the column name for the fadeout field */
-    const FADEOUT = 'media_contents.fadeout';
+    const FADEOUT = 'media_content.fadeout';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -403,7 +403,7 @@ abstract class BaseMediaContentsPeer
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to media_contents
+     * Method to invalidate the instance pool of all tables related to media_content
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
@@ -859,7 +859,7 @@ abstract class BaseMediaContentsPeer
     }
 
     /**
-     * Deletes all rows from the media_contents table.
+     * Deletes all rows from the media_content table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).

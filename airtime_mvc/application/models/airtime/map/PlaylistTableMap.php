@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'playlist' table.
+ * This class defines the structure of the 'media_playlist' table.
  *
  *
  *
@@ -36,7 +36,7 @@ class PlaylistTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('playlist');
+        $this->setName('media_playlist');
         $this->setPhpName('Playlist');
         $this->setClassname('Airtime\\MediaItem\\Playlist');
         $this->setPackage('airtime');

@@ -16,6 +16,8 @@ use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
 use \PropelQuery;
+use Airtime\CcSchedule;
+use Airtime\CcScheduleQuery;
 use Airtime\CcSubjs;
 use Airtime\CcSubjsQuery;
 use Airtime\MediaItem;
@@ -128,6 +130,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     protected $aCcSubjs;
 
     /**
+     * @var        PropelObjectCollection|CcSchedule[] Collection to store aggregation of CcSchedule objects.
+     */
+    protected $collCcSchedules;
+    protected $collCcSchedulesPartial;
+
+    /**
      * @var        PropelObjectCollection|MediaContents[] Collection to store aggregation of MediaContents objects.
      */
     protected $collMediaContentss;
@@ -172,6 +180,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $ccSchedulesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -728,6 +742,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCcSubjs = null;
+            $this->collCcSchedules = null;
+
             $this->collMediaContentss = null;
 
             $this->singleAudioFile = null;
@@ -883,6 +899,23 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->ccSchedulesScheduledForDeletion !== null) {
+                if (!$this->ccSchedulesScheduledForDeletion->isEmpty()) {
+                    CcScheduleQuery::create()
+                        ->filterByPrimaryKeys($this->ccSchedulesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->ccSchedulesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCcSchedules !== null) {
+                foreach ($this->collCcSchedules as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->mediaContentssScheduledForDeletion !== null) {
@@ -1137,6 +1170,14 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             }
 
 
+                if ($this->collCcSchedules !== null) {
+                    foreach ($this->collCcSchedules as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collMediaContentss !== null) {
                     foreach ($this->collMediaContentss as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1282,6 +1323,9 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aCcSubjs) {
                 $result['CcSubjs'] = $this->aCcSubjs->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCcSchedules) {
+                $result['CcSchedules'] = $this->collCcSchedules->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collMediaContentss) {
                 $result['MediaContentss'] = $this->collMediaContentss->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1497,6 +1541,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getCcSchedules() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCcSchedule($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getMediaContentss() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addMediaContents($relObj->copy($deepCopy));
@@ -1636,9 +1686,312 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('CcSchedule' == $relationName) {
+            $this->initCcSchedules();
+        }
         if ('MediaContents' == $relationName) {
             $this->initMediaContentss();
         }
+    }
+
+    /**
+     * Clears out the collCcSchedules collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return MediaItem The current object (for fluent API support)
+     * @see        addCcSchedules()
+     */
+    public function clearCcSchedules()
+    {
+        $this->collCcSchedules = null; // important to set this to null since that means it is uninitialized
+        $this->collCcSchedulesPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCcSchedules collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCcSchedules($v = true)
+    {
+        $this->collCcSchedulesPartial = $v;
+    }
+
+    /**
+     * Initializes the collCcSchedules collection.
+     *
+     * By default this just sets the collCcSchedules collection to an empty array (like clearcollCcSchedules());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCcSchedules($overrideExisting = true)
+    {
+        if (null !== $this->collCcSchedules && !$overrideExisting) {
+            return;
+        }
+        $this->collCcSchedules = new PropelObjectCollection();
+        $this->collCcSchedules->setModel('CcSchedule');
+    }
+
+    /**
+     * Gets an array of CcSchedule objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this MediaItem is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CcSchedule[] List of CcSchedule objects
+     * @throws PropelException
+     */
+    public function getCcSchedules($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCcSchedulesPartial && !$this->isNew();
+        if (null === $this->collCcSchedules || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCcSchedules) {
+                // return empty collection
+                $this->initCcSchedules();
+            } else {
+                $collCcSchedules = CcScheduleQuery::create(null, $criteria)
+                    ->filterByMediaItem($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCcSchedulesPartial && count($collCcSchedules)) {
+                      $this->initCcSchedules(false);
+
+                      foreach ($collCcSchedules as $obj) {
+                        if (false == $this->collCcSchedules->contains($obj)) {
+                          $this->collCcSchedules->append($obj);
+                        }
+                      }
+
+                      $this->collCcSchedulesPartial = true;
+                    }
+
+                    $collCcSchedules->getInternalIterator()->rewind();
+
+                    return $collCcSchedules;
+                }
+
+                if ($partial && $this->collCcSchedules) {
+                    foreach ($this->collCcSchedules as $obj) {
+                        if ($obj->isNew()) {
+                            $collCcSchedules[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCcSchedules = $collCcSchedules;
+                $this->collCcSchedulesPartial = false;
+            }
+        }
+
+        return $this->collCcSchedules;
+    }
+
+    /**
+     * Sets a collection of CcSchedule objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $ccSchedules A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function setCcSchedules(PropelCollection $ccSchedules, PropelPDO $con = null)
+    {
+        $ccSchedulesToDelete = $this->getCcSchedules(new Criteria(), $con)->diff($ccSchedules);
+
+
+        $this->ccSchedulesScheduledForDeletion = $ccSchedulesToDelete;
+
+        foreach ($ccSchedulesToDelete as $ccScheduleRemoved) {
+            $ccScheduleRemoved->setMediaItem(null);
+        }
+
+        $this->collCcSchedules = null;
+        foreach ($ccSchedules as $ccSchedule) {
+            $this->addCcSchedule($ccSchedule);
+        }
+
+        $this->collCcSchedules = $ccSchedules;
+        $this->collCcSchedulesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CcSchedule objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CcSchedule objects.
+     * @throws PropelException
+     */
+    public function countCcSchedules(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCcSchedulesPartial && !$this->isNew();
+        if (null === $this->collCcSchedules || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCcSchedules) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCcSchedules());
+            }
+            $query = CcScheduleQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByMediaItem($this)
+                ->count($con);
+        }
+
+        return count($this->collCcSchedules);
+    }
+
+    /**
+     * Method called to associate a CcSchedule object to this object
+     * through the CcSchedule foreign key attribute.
+     *
+     * @param    CcSchedule $l CcSchedule
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function addCcSchedule(CcSchedule $l)
+    {
+        if ($this->collCcSchedules === null) {
+            $this->initCcSchedules();
+            $this->collCcSchedulesPartial = true;
+        }
+
+        if (!in_array($l, $this->collCcSchedules->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCcSchedule($l);
+
+            if ($this->ccSchedulesScheduledForDeletion and $this->ccSchedulesScheduledForDeletion->contains($l)) {
+                $this->ccSchedulesScheduledForDeletion->remove($this->ccSchedulesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CcSchedule $ccSchedule The ccSchedule object to add.
+     */
+    protected function doAddCcSchedule($ccSchedule)
+    {
+        $this->collCcSchedules[]= $ccSchedule;
+        $ccSchedule->setMediaItem($this);
+    }
+
+    /**
+     * @param	CcSchedule $ccSchedule The ccSchedule object to remove.
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function removeCcSchedule($ccSchedule)
+    {
+        if ($this->getCcSchedules()->contains($ccSchedule)) {
+            $this->collCcSchedules->remove($this->collCcSchedules->search($ccSchedule));
+            if (null === $this->ccSchedulesScheduledForDeletion) {
+                $this->ccSchedulesScheduledForDeletion = clone $this->collCcSchedules;
+                $this->ccSchedulesScheduledForDeletion->clear();
+            }
+            $this->ccSchedulesScheduledForDeletion[]= $ccSchedule;
+            $ccSchedule->setMediaItem(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this MediaItem is new, it will return
+     * an empty collection; or if this MediaItem has previously
+     * been saved, it will retrieve related CcSchedules from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in MediaItem.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcSchedule[] List of CcSchedule objects
+     */
+    public function getCcSchedulesJoinCcShowInstances($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcScheduleQuery::create(null, $criteria);
+        $query->joinWith('CcShowInstances', $join_behavior);
+
+        return $this->getCcSchedules($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this MediaItem is new, it will return
+     * an empty collection; or if this MediaItem has previously
+     * been saved, it will retrieve related CcSchedules from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in MediaItem.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcSchedule[] List of CcSchedule objects
+     */
+    public function getCcSchedulesJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcScheduleQuery::create(null, $criteria);
+        $query->joinWith('CcFiles', $join_behavior);
+
+        return $this->getCcSchedules($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this MediaItem is new, it will return
+     * an empty collection; or if this MediaItem has previously
+     * been saved, it will retrieve related CcSchedules from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in MediaItem.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcSchedule[] List of CcSchedule objects
+     */
+    public function getCcSchedulesJoinCcWebstream($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcScheduleQuery::create(null, $criteria);
+        $query->joinWith('CcWebstream', $join_behavior);
+
+        return $this->getCcSchedules($query, $con);
     }
 
     /**
@@ -2048,6 +2401,11 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collCcSchedules) {
+                foreach ($this->collCcSchedules as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collMediaContentss) {
                 foreach ($this->collMediaContentss as $o) {
                     $o->clearAllReferences($deep);
@@ -2072,6 +2430,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collCcSchedules instanceof PropelCollection) {
+            $this->collCcSchedules->clearIterator();
+        }
+        $this->collCcSchedules = null;
         if ($this->collMediaContentss instanceof PropelCollection) {
             $this->collMediaContentss->clearIterator();
         }

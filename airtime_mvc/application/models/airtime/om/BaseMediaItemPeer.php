@@ -9,6 +9,7 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
+use Airtime\CcSchedulePeer;
 use Airtime\CcSubjsPeer;
 use Airtime\MediaItem;
 use Airtime\MediaItemPeer;
@@ -418,6 +419,9 @@ abstract class BaseMediaItemPeer
      */
     public static function clearRelatedInstancePool()
     {
+        // Invalidate objects in CcSchedulePeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        CcSchedulePeer::clearInstancePool();
         // Invalidate objects in MediaContentsPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         MediaContentsPeer::clearInstancePool();

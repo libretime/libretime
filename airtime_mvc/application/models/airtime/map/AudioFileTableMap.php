@@ -7,7 +7,7 @@ use \TableMap;
 
 
 /**
- * This class defines the structure of the 'audio_file' table.
+ * This class defines the structure of the 'media_audiofile' table.
  *
  *
  *
@@ -36,7 +36,7 @@ class AudioFileTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('audio_file');
+        $this->setName('media_audiofile');
         $this->setPhpName('AudioFile');
         $this->setClassname('Airtime\\MediaItem\\AudioFile');
         $this->setPackage('airtime');
@@ -56,7 +56,6 @@ class AudioFileTableMap extends TableMap
         $this->addColumn('year', 'Year', 'VARCHAR', false, 16, null);
         $this->addColumn('track_number', 'TrackNumber', 'INTEGER', false, null, null);
         $this->addColumn('channels', 'Channels', 'INTEGER', false, null, null);
-        $this->addColumn('url', 'Url', 'VARCHAR', false, 1024, null);
         $this->addColumn('bpm', 'Bpm', 'INTEGER', false, null, null);
         $this->addColumn('encoded_by', 'EncodedBy', 'VARCHAR', false, 255, null);
         $this->addColumn('mood', 'Mood', 'VARCHAR', false, 64, null);

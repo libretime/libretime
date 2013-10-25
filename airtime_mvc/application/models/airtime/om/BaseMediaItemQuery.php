@@ -12,6 +12,7 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
+use Airtime\CcSchedule;
 use Airtime\CcSubjs;
 use Airtime\MediaItem;
 use Airtime\MediaItemPeer;
@@ -56,6 +57,10 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery leftJoinCcSubjs($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSubjs relation
  * @method MediaItemQuery rightJoinCcSubjs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method MediaItemQuery innerJoinCcSubjs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjs relation
+ *
+ * @method MediaItemQuery leftJoinCcSchedule($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSchedule relation
+ * @method MediaItemQuery rightJoinCcSchedule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSchedule relation
+ * @method MediaItemQuery innerJoinCcSchedule($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
  * @method MediaItemQuery leftJoinMediaContents($relationAlias = null) Adds a LEFT JOIN clause to the query using the MediaContents relation
  * @method MediaItemQuery rightJoinMediaContents($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MediaContents relation
@@ -743,6 +748,80 @@ abstract class BaseMediaItemQuery extends ModelCriteria
         return $this
             ->joinCcSubjs($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjs', '\Airtime\CcSubjsQuery');
+    }
+
+    /**
+     * Filter the query by a related CcSchedule object
+     *
+     * @param   CcSchedule|PropelObjectCollection $ccSchedule  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 MediaItemQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcSchedule($ccSchedule, $comparison = null)
+    {
+        if ($ccSchedule instanceof CcSchedule) {
+            return $this
+                ->addUsingAlias(MediaItemPeer::ID, $ccSchedule->getDbMediaId(), $comparison);
+        } elseif ($ccSchedule instanceof PropelObjectCollection) {
+            return $this
+                ->useCcScheduleQuery()
+                ->filterByPrimaryKeys($ccSchedule->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcSchedule() only accepts arguments of type CcSchedule or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcSchedule relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return MediaItemQuery The current query, for fluid interface
+     */
+    public function joinCcSchedule($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcSchedule');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcSchedule');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcSchedule relation CcSchedule object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\CcScheduleQuery A secondary query class using the current class as primary query
+     */
+    public function useCcScheduleQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcSchedule($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcSchedule', '\Airtime\CcScheduleQuery');
     }
 
     /**
