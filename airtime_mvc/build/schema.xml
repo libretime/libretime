@@ -125,6 +125,7 @@
     <column name="rebroadcast" phpName="DbRebroadcast" type="TINYINT" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
     <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
+    <column name="media_id" phpName="DbRecordedMediaItem" type="INTEGER" required="false"/>
     <column name="time_filled" phpName="DbTimeFilled" type="VARCHAR" sqlType="interval" defaultValue="00:00:00" />
     <column name="created" phpName="DbCreated" type="TIMESTAMP" required="true"/>
     <column name="last_scheduled" phpName="DbLastScheduled" type="TIMESTAMP" required="false"/>
@@ -141,6 +142,9 @@
     </foreign-key>
     <foreign-key foreignTable="cc_files" name="cc_recorded_file_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>
+    </foreign-key>
+    <foreign-key foreignTable="media_item" name="cc_recorded_media_item_fkey" onDelete="CASCADE">
+      <reference local="media_id" foreign="id"/>
     </foreign-key>
   </table>
   <table name="cc_show_days" phpName="CcShowDays">

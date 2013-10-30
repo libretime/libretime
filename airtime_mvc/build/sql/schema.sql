@@ -141,6 +141,7 @@ CREATE TABLE "cc_show_instances"
     "rebroadcast" INT2 DEFAULT 0,
     "instance_id" INTEGER,
     "file_id" INTEGER,
+    "media_id" INTEGER,
     "time_filled" interval DEFAULT '00:00:00',
     "created" TIMESTAMP NOT NULL,
     "last_scheduled" TIMESTAMP,
@@ -795,6 +796,11 @@ ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_original_show_instance_fkey"
 ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_recorded_file_fkey"
     FOREIGN KEY ("file_id")
     REFERENCES "cc_files" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_recorded_media_item_fkey"
+    FOREIGN KEY ("media_id")
+    REFERENCES "media_item" ("id")
     ON DELETE CASCADE;
 
 ALTER TABLE "cc_show_days" ADD CONSTRAINT "cc_show_fkey"

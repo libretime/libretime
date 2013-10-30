@@ -13,6 +13,7 @@ use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
 use Airtime\CcSchedule;
+use Airtime\CcShowInstances;
 use Airtime\CcSubjs;
 use Airtime\MediaItem;
 use Airtime\MediaItemPeer;
@@ -57,6 +58,10 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery leftJoinCcSubjs($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSubjs relation
  * @method MediaItemQuery rightJoinCcSubjs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjs relation
  * @method MediaItemQuery innerJoinCcSubjs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjs relation
+ *
+ * @method MediaItemQuery leftJoinCcShowInstances($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowInstances relation
+ * @method MediaItemQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
+ * @method MediaItemQuery innerJoinCcShowInstances($relationAlias = null) Adds a INNER JOIN clause to the query using the CcShowInstances relation
  *
  * @method MediaItemQuery leftJoinCcSchedule($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcSchedule relation
  * @method MediaItemQuery rightJoinCcSchedule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSchedule relation
@@ -748,6 +753,80 @@ abstract class BaseMediaItemQuery extends ModelCriteria
         return $this
             ->joinCcSubjs($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjs', '\Airtime\CcSubjsQuery');
+    }
+
+    /**
+     * Filter the query by a related CcShowInstances object
+     *
+     * @param   CcShowInstances|PropelObjectCollection $ccShowInstances  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 MediaItemQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCcShowInstances($ccShowInstances, $comparison = null)
+    {
+        if ($ccShowInstances instanceof CcShowInstances) {
+            return $this
+                ->addUsingAlias(MediaItemPeer::ID, $ccShowInstances->getDbRecordedMediaItem(), $comparison);
+        } elseif ($ccShowInstances instanceof PropelObjectCollection) {
+            return $this
+                ->useCcShowInstancesQuery()
+                ->filterByPrimaryKeys($ccShowInstances->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCcShowInstances() only accepts arguments of type CcShowInstances or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CcShowInstances relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return MediaItemQuery The current query, for fluid interface
+     */
+    public function joinCcShowInstances($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CcShowInstances');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CcShowInstances');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CcShowInstances relation CcShowInstances object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\CcShowInstancesQuery A secondary query class using the current class as primary query
+     */
+    public function useCcShowInstancesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCcShowInstances($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcShowInstances', '\Airtime\CcShowInstancesQuery');
     }
 
     /**

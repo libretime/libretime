@@ -24,6 +24,8 @@ use Airtime\CcShowInstances;
 use Airtime\CcShowInstancesPeer;
 use Airtime\CcShowInstancesQuery;
 use Airtime\CcShowQuery;
+use Airtime\MediaItem;
+use Airtime\MediaItemQuery;
 use Airtime\PlayoutHistory\CcPlayoutHistory;
 use Airtime\PlayoutHistory\CcPlayoutHistoryQuery;
 
@@ -106,6 +108,12 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     protected $file_id;
 
     /**
+     * The value for the media_id field.
+     * @var        int
+     */
+    protected $media_id;
+
+    /**
      * The value for the time_filled field.
      * Note: this column has a database default value of: '00:00:00'
      * @var        string
@@ -145,6 +153,11 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
      * @var        CcFiles
      */
     protected $aCcFiles;
+
+    /**
+     * @var        MediaItem
+     */
+    protected $aMediaItem;
 
     /**
      * @var        PropelObjectCollection|CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
@@ -360,6 +373,17 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     {
 
         return $this->file_id;
+    }
+
+    /**
+     * Get the [media_id] column value.
+     *
+     * @return int
+     */
+    public function getDbRecordedMediaItem()
+    {
+
+        return $this->media_id;
     }
 
     /**
@@ -639,6 +663,31 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     } // setDbRecordedFile()
 
     /**
+     * Set the value of [media_id] column.
+     *
+     * @param  int $v new value
+     * @return CcShowInstances The current object (for fluent API support)
+     */
+    public function setDbRecordedMediaItem($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->media_id !== $v) {
+            $this->media_id = $v;
+            $this->modifiedColumns[] = CcShowInstancesPeer::MEDIA_ID;
+        }
+
+        if ($this->aMediaItem !== null && $this->aMediaItem->getId() !== $v) {
+            $this->aMediaItem = null;
+        }
+
+
+        return $this;
+    } // setDbRecordedMediaItem()
+
+    /**
      * Set the value of [time_filled] column.
      *
      * @param  string $v new value
@@ -790,10 +839,11 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             $this->rebroadcast = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
             $this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
             $this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
-            $this->time_filled = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->created = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->last_scheduled = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->modified_instance = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
+            $this->media_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+            $this->time_filled = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->created = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->last_scheduled = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->modified_instance = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -803,7 +853,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 12; // 12 = CcShowInstancesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = CcShowInstancesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcShowInstances object", $e);
@@ -834,6 +884,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         }
         if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getDbId()) {
             $this->aCcFiles = null;
+        }
+        if ($this->aMediaItem !== null && $this->media_id !== $this->aMediaItem->getId()) {
+            $this->aMediaItem = null;
         }
     } // ensureConsistency
 
@@ -877,6 +930,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             $this->aCcShow = null;
             $this->aCcShowInstancesRelatedByDbOriginalShow = null;
             $this->aCcFiles = null;
+            $this->aMediaItem = null;
             $this->collCcShowInstancessRelatedByDbId = null;
 
             $this->collCcSchedules = null;
@@ -1022,6 +1076,13 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
                 $this->setCcFiles($this->aCcFiles);
             }
 
+            if ($this->aMediaItem !== null) {
+                if ($this->aMediaItem->isModified() || $this->aMediaItem->isNew()) {
+                    $affectedRows += $this->aMediaItem->save($con);
+                }
+                $this->setMediaItem($this->aMediaItem);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -1145,6 +1206,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) {
             $modifiedColumns[':p' . $index++]  = '"file_id"';
         }
+        if ($this->isColumnModified(CcShowInstancesPeer::MEDIA_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"media_id"';
+        }
         if ($this->isColumnModified(CcShowInstancesPeer::TIME_FILLED)) {
             $modifiedColumns[':p' . $index++]  = '"time_filled"';
         }
@@ -1191,6 +1255,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
                         break;
                     case '"file_id"':
                         $stmt->bindValue($identifier, $this->file_id, PDO::PARAM_INT);
+                        break;
+                    case '"media_id"':
+                        $stmt->bindValue($identifier, $this->media_id, PDO::PARAM_INT);
                         break;
                     case '"time_filled"':
                         $stmt->bindValue($identifier, $this->time_filled, PDO::PARAM_STR);
@@ -1314,6 +1381,12 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
                 }
             }
 
+            if ($this->aMediaItem !== null) {
+                if (!$this->aMediaItem->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aMediaItem->getValidationFailures());
+                }
+            }
+
 
             if (($retval = CcShowInstancesPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
@@ -1404,15 +1477,18 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
                 return $this->getDbRecordedFile();
                 break;
             case 8:
-                return $this->getDbTimeFilled();
+                return $this->getDbRecordedMediaItem();
                 break;
             case 9:
-                return $this->getDbCreated();
+                return $this->getDbTimeFilled();
                 break;
             case 10:
-                return $this->getDbLastScheduled();
+                return $this->getDbCreated();
                 break;
             case 11:
+                return $this->getDbLastScheduled();
+                break;
+            case 12:
                 return $this->getDbModifiedInstance();
                 break;
             default:
@@ -1452,10 +1528,11 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             $keys[5] => $this->getDbRebroadcast(),
             $keys[6] => $this->getDbOriginalShow(),
             $keys[7] => $this->getDbRecordedFile(),
-            $keys[8] => $this->getDbTimeFilled(),
-            $keys[9] => $this->getDbCreated(),
-            $keys[10] => $this->getDbLastScheduled(),
-            $keys[11] => $this->getDbModifiedInstance(),
+            $keys[8] => $this->getDbRecordedMediaItem(),
+            $keys[9] => $this->getDbTimeFilled(),
+            $keys[10] => $this->getDbCreated(),
+            $keys[11] => $this->getDbLastScheduled(),
+            $keys[12] => $this->getDbModifiedInstance(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1471,6 +1548,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             }
             if (null !== $this->aCcFiles) {
                 $result['CcFiles'] = $this->aCcFiles->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aMediaItem) {
+                $result['MediaItem'] = $this->aMediaItem->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->collCcShowInstancessRelatedByDbId) {
                 $result['CcShowInstancessRelatedByDbId'] = $this->collCcShowInstancessRelatedByDbId->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1540,15 +1620,18 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
                 $this->setDbRecordedFile($value);
                 break;
             case 8:
-                $this->setDbTimeFilled($value);
+                $this->setDbRecordedMediaItem($value);
                 break;
             case 9:
-                $this->setDbCreated($value);
+                $this->setDbTimeFilled($value);
                 break;
             case 10:
-                $this->setDbLastScheduled($value);
+                $this->setDbCreated($value);
                 break;
             case 11:
+                $this->setDbLastScheduled($value);
+                break;
+            case 12:
                 $this->setDbModifiedInstance($value);
                 break;
         } // switch()
@@ -1583,10 +1666,11 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         if (array_key_exists($keys[5], $arr)) $this->setDbRebroadcast($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
         if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setDbTimeFilled($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setDbCreated($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setDbLastScheduled($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setDbModifiedInstance($arr[$keys[11]]);
+        if (array_key_exists($keys[8], $arr)) $this->setDbRecordedMediaItem($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setDbTimeFilled($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDbCreated($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setDbLastScheduled($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setDbModifiedInstance($arr[$keys[12]]);
     }
 
     /**
@@ -1606,6 +1690,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowInstancesPeer::REBROADCAST)) $criteria->add(CcShowInstancesPeer::REBROADCAST, $this->rebroadcast);
         if ($this->isColumnModified(CcShowInstancesPeer::INSTANCE_ID)) $criteria->add(CcShowInstancesPeer::INSTANCE_ID, $this->instance_id);
         if ($this->isColumnModified(CcShowInstancesPeer::FILE_ID)) $criteria->add(CcShowInstancesPeer::FILE_ID, $this->file_id);
+        if ($this->isColumnModified(CcShowInstancesPeer::MEDIA_ID)) $criteria->add(CcShowInstancesPeer::MEDIA_ID, $this->media_id);
         if ($this->isColumnModified(CcShowInstancesPeer::TIME_FILLED)) $criteria->add(CcShowInstancesPeer::TIME_FILLED, $this->time_filled);
         if ($this->isColumnModified(CcShowInstancesPeer::CREATED)) $criteria->add(CcShowInstancesPeer::CREATED, $this->created);
         if ($this->isColumnModified(CcShowInstancesPeer::LAST_SCHEDULED)) $criteria->add(CcShowInstancesPeer::LAST_SCHEDULED, $this->last_scheduled);
@@ -1680,6 +1765,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         $copyObj->setDbRebroadcast($this->getDbRebroadcast());
         $copyObj->setDbOriginalShow($this->getDbOriginalShow());
         $copyObj->setDbRecordedFile($this->getDbRecordedFile());
+        $copyObj->setDbRecordedMediaItem($this->getDbRecordedMediaItem());
         $copyObj->setDbTimeFilled($this->getDbTimeFilled());
         $copyObj->setDbCreated($this->getDbCreated());
         $copyObj->setDbLastScheduled($this->getDbLastScheduled());
@@ -1914,6 +2000,58 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         }
 
         return $this->aCcFiles;
+    }
+
+    /**
+     * Declares an association between this object and a MediaItem object.
+     *
+     * @param                  MediaItem $v
+     * @return CcShowInstances The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setMediaItem(MediaItem $v = null)
+    {
+        if ($v === null) {
+            $this->setDbRecordedMediaItem(NULL);
+        } else {
+            $this->setDbRecordedMediaItem($v->getId());
+        }
+
+        $this->aMediaItem = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the MediaItem object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCcShowInstances($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated MediaItem object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return MediaItem The associated MediaItem object.
+     * @throws PropelException
+     */
+    public function getMediaItem(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aMediaItem === null && ($this->media_id !== null) && $doQuery) {
+            $this->aMediaItem = MediaItemQuery::create()->findPk($this->media_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aMediaItem->addCcShowInstancess($this);
+             */
+        }
+
+        return $this->aMediaItem;
     }
 
 
@@ -2209,6 +2347,31 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
     {
         $query = CcShowInstancesQuery::create(null, $criteria);
         $query->joinWith('CcFiles', $join_behavior);
+
+        return $this->getCcShowInstancessRelatedByDbId($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this CcShowInstances is new, it will return
+     * an empty collection; or if this CcShowInstances has previously
+     * been saved, it will retrieve related CcShowInstancessRelatedByDbId from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in CcShowInstances.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcShowInstances[] List of CcShowInstances objects
+     */
+    public function getCcShowInstancessRelatedByDbIdJoinMediaItem($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcShowInstancesQuery::create(null, $criteria);
+        $query->joinWith('MediaItem', $join_behavior);
 
         return $this->getCcShowInstancessRelatedByDbId($query, $con);
     }
@@ -2776,6 +2939,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         $this->rebroadcast = null;
         $this->instance_id = null;
         $this->file_id = null;
+        $this->media_id = null;
         $this->time_filled = null;
         $this->created = null;
         $this->last_scheduled = null;
@@ -2827,6 +2991,9 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
             if ($this->aCcFiles instanceof Persistent) {
               $this->aCcFiles->clearAllReferences($deep);
             }
+            if ($this->aMediaItem instanceof Persistent) {
+              $this->aMediaItem->clearAllReferences($deep);
+            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
@@ -2846,6 +3013,7 @@ abstract class BaseCcShowInstances extends BaseObject implements Persistent
         $this->aCcShow = null;
         $this->aCcShowInstancesRelatedByDbOriginalShow = null;
         $this->aCcFiles = null;
+        $this->aMediaItem = null;
     }
 
     /**

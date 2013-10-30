@@ -1,5 +1,9 @@
 <?php
 
+use Airtime\CcMusicDirsQuery;
+
+use Airtime\CcShowInstancesQuery;
+
 use Airtime\MediaItem\AudioFile;
 use Airtime\MediaItem\AudioFilePeer;
 use Airtime\MediaItem\AudioFileQuery;
@@ -88,7 +92,7 @@ class Application_Service_AudioFileService
 		//TODO implement upload recorded.
 		if ($md['is_record'] != 0) {
 			//think we saved show instance id in field MDATA_KEY_TRACKNUMBER for Airtime recorded shows.
-			//$this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
+			$this->uploadRecordedFile($md['MDATA_KEY_TRACKNUMBER'], $file);
 		}
 	}
 	
@@ -136,6 +140,30 @@ class Application_Service_AudioFileService
 			->save($this->_con);
 	}
 	
+	/*
+	[MDATA_KEY_FILEPATH] => /home/naomi/Music/WatchedFolder/
+    [is_record] => 0
+	 */
+	private function mediaMonitorDeleteDir($md) {
+		
+		$directorypath = Application_Common_OsPath::normpath($md['MDATA_KEY_FILEPATH']);
+		//TODO fix how directories are stored so we can just use this normpath function.
+		$directorypath = $directorypath.'/';
+		
+		$dir = CcMusicDirsQuery::create()
+			->filterByDirectory($directorypath)
+			->findOne($this->_con);
+		
+		if (isset($dir)) {
+			AudioFileQuery::create()
+				->filterByDirectory($dir->getId())
+				->update(array('FileExists' => false), $this->_con);
+		}
+		else {
+			Logging::warn("directory at $directorypath does not exist in Airtime");
+		}	
+	}
+	
 	public function mediaMonitorTask($md, $mode) {
 		
 		$this->_con->beginTransaction();
@@ -158,6 +186,9 @@ class Application_Service_AudioFileService
 				case "delete":
 					$this->mediaMonitorDelete($md);
 					break;
+				case "delete_dir":
+					$this->mediaMonitorDeleteDir($md);
+					break;
 			}
 			
 			$this->_con->commit();
@@ -166,6 +197,49 @@ class Application_Service_AudioFileService
 			Logging::warn($e->getMessage());
 			$this->_con->rollback();
 			throw $e;
+		}
+	}
+	
+	public function uploadRecordedFile($showInstanceId, $file)
+	{
+		$showCanceled = false;
+		$this->_con->beginTransaction();
+		
+		try {
+			
+			$instance = CcShowInstancesQuery::create()->findPk($showInstanceId, $this->_con);
+			
+			if (isset($instance)) {
+				$instance
+					->setDbRecordedMediaItem($file->getId())
+					->save($this->_con);
+			}
+			else {
+				//we've reached here probably because the show was
+				//cancelled, and therefore the show instance does not exist
+				//anymore (ShowInstance constructor threw this error). We've
+				//done all we can do (upload the file and put it in the
+				//library), now lets just return.
+				$showCanceled = true;
+			}
+			
+			$file
+				->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder")
+				->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id)
+				->save($this->_con);
+	
+			$this->_con->commit();
+		} 
+		catch (Exception $e) {
+			Logging::warn($e->getMessage());
+			$this->_con->rollback();
+			throw $e;
+		}
+	
+		if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud()) {
+			$id = $file->getId();
+			//TODO make sure the uploader uses the new media id.
+			Application_Model_Soundcloud::uploadSoundcloud($id);
 		}
 	}
 	

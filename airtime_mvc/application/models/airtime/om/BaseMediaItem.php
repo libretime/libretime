@@ -18,6 +18,8 @@ use \PropelPDO;
 use \PropelQuery;
 use Airtime\CcSchedule;
 use Airtime\CcScheduleQuery;
+use Airtime\CcShowInstances;
+use Airtime\CcShowInstancesQuery;
 use Airtime\CcSubjs;
 use Airtime\CcSubjsQuery;
 use Airtime\MediaItem;
@@ -130,6 +132,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     protected $aCcSubjs;
 
     /**
+     * @var        PropelObjectCollection|CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
+     */
+    protected $collCcShowInstancess;
+    protected $collCcShowInstancessPartial;
+
+    /**
      * @var        PropelObjectCollection|CcSchedule[] Collection to store aggregation of CcSchedule objects.
      */
     protected $collCcSchedules;
@@ -180,6 +188,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $ccShowInstancessScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -742,6 +756,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCcSubjs = null;
+            $this->collCcShowInstancess = null;
+
             $this->collCcSchedules = null;
 
             $this->collMediaContents = null;
@@ -899,6 +915,23 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->ccShowInstancessScheduledForDeletion !== null) {
+                if (!$this->ccShowInstancessScheduledForDeletion->isEmpty()) {
+                    CcShowInstancesQuery::create()
+                        ->filterByPrimaryKeys($this->ccShowInstancessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->ccShowInstancessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCcShowInstancess !== null) {
+                foreach ($this->collCcShowInstancess as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->ccSchedulesScheduledForDeletion !== null) {
@@ -1170,6 +1203,14 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             }
 
 
+                if ($this->collCcShowInstancess !== null) {
+                    foreach ($this->collCcShowInstancess as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collCcSchedules !== null) {
                     foreach ($this->collCcSchedules as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1323,6 +1364,9 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aCcSubjs) {
                 $result['CcSubjs'] = $this->aCcSubjs->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCcShowInstancess) {
+                $result['CcShowInstancess'] = $this->collCcShowInstancess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collCcSchedules) {
                 $result['CcSchedules'] = $this->collCcSchedules->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -1541,6 +1585,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getCcShowInstancess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCcShowInstances($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getCcSchedules() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addCcSchedule($relObj->copy($deepCopy));
@@ -1686,12 +1736,315 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('CcShowInstances' == $relationName) {
+            $this->initCcShowInstancess();
+        }
         if ('CcSchedule' == $relationName) {
             $this->initCcSchedules();
         }
         if ('MediaContent' == $relationName) {
             $this->initMediaContents();
         }
+    }
+
+    /**
+     * Clears out the collCcShowInstancess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return MediaItem The current object (for fluent API support)
+     * @see        addCcShowInstancess()
+     */
+    public function clearCcShowInstancess()
+    {
+        $this->collCcShowInstancess = null; // important to set this to null since that means it is uninitialized
+        $this->collCcShowInstancessPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCcShowInstancess collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCcShowInstancess($v = true)
+    {
+        $this->collCcShowInstancessPartial = $v;
+    }
+
+    /**
+     * Initializes the collCcShowInstancess collection.
+     *
+     * By default this just sets the collCcShowInstancess collection to an empty array (like clearcollCcShowInstancess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCcShowInstancess($overrideExisting = true)
+    {
+        if (null !== $this->collCcShowInstancess && !$overrideExisting) {
+            return;
+        }
+        $this->collCcShowInstancess = new PropelObjectCollection();
+        $this->collCcShowInstancess->setModel('CcShowInstances');
+    }
+
+    /**
+     * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this MediaItem is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CcShowInstances[] List of CcShowInstances objects
+     * @throws PropelException
+     */
+    public function getCcShowInstancess($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCcShowInstancessPartial && !$this->isNew();
+        if (null === $this->collCcShowInstancess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCcShowInstancess) {
+                // return empty collection
+                $this->initCcShowInstancess();
+            } else {
+                $collCcShowInstancess = CcShowInstancesQuery::create(null, $criteria)
+                    ->filterByMediaItem($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCcShowInstancessPartial && count($collCcShowInstancess)) {
+                      $this->initCcShowInstancess(false);
+
+                      foreach ($collCcShowInstancess as $obj) {
+                        if (false == $this->collCcShowInstancess->contains($obj)) {
+                          $this->collCcShowInstancess->append($obj);
+                        }
+                      }
+
+                      $this->collCcShowInstancessPartial = true;
+                    }
+
+                    $collCcShowInstancess->getInternalIterator()->rewind();
+
+                    return $collCcShowInstancess;
+                }
+
+                if ($partial && $this->collCcShowInstancess) {
+                    foreach ($this->collCcShowInstancess as $obj) {
+                        if ($obj->isNew()) {
+                            $collCcShowInstancess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCcShowInstancess = $collCcShowInstancess;
+                $this->collCcShowInstancessPartial = false;
+            }
+        }
+
+        return $this->collCcShowInstancess;
+    }
+
+    /**
+     * Sets a collection of CcShowInstances objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $ccShowInstancess A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function setCcShowInstancess(PropelCollection $ccShowInstancess, PropelPDO $con = null)
+    {
+        $ccShowInstancessToDelete = $this->getCcShowInstancess(new Criteria(), $con)->diff($ccShowInstancess);
+
+
+        $this->ccShowInstancessScheduledForDeletion = $ccShowInstancessToDelete;
+
+        foreach ($ccShowInstancessToDelete as $ccShowInstancesRemoved) {
+            $ccShowInstancesRemoved->setMediaItem(null);
+        }
+
+        $this->collCcShowInstancess = null;
+        foreach ($ccShowInstancess as $ccShowInstances) {
+            $this->addCcShowInstances($ccShowInstances);
+        }
+
+        $this->collCcShowInstancess = $ccShowInstancess;
+        $this->collCcShowInstancessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CcShowInstances objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CcShowInstances objects.
+     * @throws PropelException
+     */
+    public function countCcShowInstancess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCcShowInstancessPartial && !$this->isNew();
+        if (null === $this->collCcShowInstancess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCcShowInstancess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCcShowInstancess());
+            }
+            $query = CcShowInstancesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByMediaItem($this)
+                ->count($con);
+        }
+
+        return count($this->collCcShowInstancess);
+    }
+
+    /**
+     * Method called to associate a CcShowInstances object to this object
+     * through the CcShowInstances foreign key attribute.
+     *
+     * @param    CcShowInstances $l CcShowInstances
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function addCcShowInstances(CcShowInstances $l)
+    {
+        if ($this->collCcShowInstancess === null) {
+            $this->initCcShowInstancess();
+            $this->collCcShowInstancessPartial = true;
+        }
+
+        if (!in_array($l, $this->collCcShowInstancess->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCcShowInstances($l);
+
+            if ($this->ccShowInstancessScheduledForDeletion and $this->ccShowInstancessScheduledForDeletion->contains($l)) {
+                $this->ccShowInstancessScheduledForDeletion->remove($this->ccShowInstancessScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CcShowInstances $ccShowInstances The ccShowInstances object to add.
+     */
+    protected function doAddCcShowInstances($ccShowInstances)
+    {
+        $this->collCcShowInstancess[]= $ccShowInstances;
+        $ccShowInstances->setMediaItem($this);
+    }
+
+    /**
+     * @param	CcShowInstances $ccShowInstances The ccShowInstances object to remove.
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function removeCcShowInstances($ccShowInstances)
+    {
+        if ($this->getCcShowInstancess()->contains($ccShowInstances)) {
+            $this->collCcShowInstancess->remove($this->collCcShowInstancess->search($ccShowInstances));
+            if (null === $this->ccShowInstancessScheduledForDeletion) {
+                $this->ccShowInstancessScheduledForDeletion = clone $this->collCcShowInstancess;
+                $this->ccShowInstancessScheduledForDeletion->clear();
+            }
+            $this->ccShowInstancessScheduledForDeletion[]= $ccShowInstances;
+            $ccShowInstances->setMediaItem(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this MediaItem is new, it will return
+     * an empty collection; or if this MediaItem has previously
+     * been saved, it will retrieve related CcShowInstancess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in MediaItem.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcShowInstances[] List of CcShowInstances objects
+     */
+    public function getCcShowInstancessJoinCcShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcShowInstancesQuery::create(null, $criteria);
+        $query->joinWith('CcShow', $join_behavior);
+
+        return $this->getCcShowInstancess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this MediaItem is new, it will return
+     * an empty collection; or if this MediaItem has previously
+     * been saved, it will retrieve related CcShowInstancess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in MediaItem.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcShowInstances[] List of CcShowInstances objects
+     */
+    public function getCcShowInstancessJoinCcShowInstancesRelatedByDbOriginalShow($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcShowInstancesQuery::create(null, $criteria);
+        $query->joinWith('CcShowInstancesRelatedByDbOriginalShow', $join_behavior);
+
+        return $this->getCcShowInstancess($query, $con);
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this MediaItem is new, it will return
+     * an empty collection; or if this MediaItem has previously
+     * been saved, it will retrieve related CcShowInstancess from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in MediaItem.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|CcShowInstances[] List of CcShowInstances objects
+     */
+    public function getCcShowInstancessJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = CcShowInstancesQuery::create(null, $criteria);
+        $query->joinWith('CcFiles', $join_behavior);
+
+        return $this->getCcShowInstancess($query, $con);
     }
 
     /**
@@ -2401,6 +2754,11 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collCcShowInstancess) {
+                foreach ($this->collCcShowInstancess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collCcSchedules) {
                 foreach ($this->collCcSchedules as $o) {
                     $o->clearAllReferences($deep);
@@ -2430,6 +2788,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collCcShowInstancess instanceof PropelCollection) {
+            $this->collCcShowInstancess->clearIterator();
+        }
+        $this->collCcShowInstancess = null;
         if ($this->collCcSchedules instanceof PropelCollection) {
             $this->collCcSchedules->clearIterator();
         }

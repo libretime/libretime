@@ -2,6 +2,8 @@
 
 namespace Airtime\MediaItem;
 
+use \Config;
+use \Exception;
 use \PropelException;
 use Airtime\MediaItem\om\BaseAudioFile;
 use Airtime\CcMusicDirsQuery;
@@ -40,16 +42,105 @@ class AudioFile extends BaseAudioFile
 		'MDATA_KEY_LANGUAGE' => "Language",
 	);
 	
+	public function getRealFileExtension() {
+		
+		$path = $this->getFilepath();
+		$path_elements = explode('.', $path);
+		
+		if (count($path_elements) < 2) {
+			return "";
+		} else {
+			return $path_elements[count($path_elements) - 1];
+		}
+	}
+	
+	/**
+	 * Return suitable extension.
+	 *
+	 * @return string
+	 *         file extension without a dot
+	 */
+	public function getFileExtension() {
+		
+		$possible_ext = $this->getRealFileExtension();
+		if ($possible_ext !== "") {
+			return $possible_ext;
+		}
+	
+		// We fallback to guessing the extension from the mimetype if we
+		// cannot extract it from the file name
+	
+		$mime = $this->getMime();
+	
+		if ($mime == "audio/ogg" || $mime == "application/ogg") {
+			return "ogg";
+		} 
+		elseif ($mime == "audio/mp3" || $mime == "audio/mpeg") {
+			return "mp3";
+		} 
+		elseif ($mime == "audio/x-flac") {
+			return "flac";
+		} 
+		elseif ($mime == "audio/mp4") {
+			return "mp4";
+		} 
+		else {
+			throw new Exception("Unknown $mime");
+		}
+	}
+	
+	/**
+	 * Get the URL to access this file
+	 */
+	public function getFileUrl()
+	{
+		$CC_CONFIG = Config::getConfig();
+	
+		$protocol = empty($_SERVER['HTTPS']) ? "http" : "https";
+	
+		$serverName = $_SERVER['SERVER_NAME'];
+		$serverPort = $_SERVER['SERVER_PORT'];
+		$subDir = $CC_CONFIG['baseDir'];
+	
+		if ($subDir[0] === "/") {
+			$subDir = substr($subDir, 1, strlen($subDir) - 1);
+		}
+	
+		$baseUrl = "{$protocol}://{$serverName}:{$serverPort}/{$subDir}";
+	
+		return $this->getRelativeFileUrl($baseUrl);
+	}
+	
+	/**
+	 * Sometimes we want a relative URL and not a full URL. See bug
+	 * http://dev.sourcefabric.org/browse/CC-2403
+	 */
+	public function getRelativeFileUrl($baseUrl)
+	{
+		return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
+	}
+	
+	/*
+	 * @param string $key MDATA_KEY_TITLE
+	 * @param mixed $value 'test_title'
+	 * 
+	 */
+	public function setMetadataValue($key, $value) {
+		
+		if (isset($this->_userEditableMd[$key])) {
+			$propelColumn = $this->_userEditableMd[$key];
+			$method = "set$propelColumn";
+				
+			$this->$method($value);
+		}
+
+		return $this;
+	}
+	
 	public function setMetadata($md) {
 	
 		foreach ($md as $index => $value) {
-	
-			if (isset($this->_userEditableMd[$index])) {
-				$propelColumn = $this->_userEditableMd[$index];
-				$method = "set$propelColumn";
-					
-				$this->$method($value);
-			}
+			$this->setMetadataValue($index, $value);
 		}
 		
 		return $this;
