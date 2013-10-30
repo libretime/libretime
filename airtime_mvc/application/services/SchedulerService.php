@@ -173,6 +173,10 @@ class Application_Service_SchedulerService
          * any other instances with content
          */
         $instanceIds = $ccShow->getInstanceIds();
+        if (count($instanceIds) == 0) {
+            return;
+        }
+
         $schedule_sql = "SELECT * FROM cc_schedule ".
             "WHERE instance_id IN (".implode($instanceIds, ",").")";
         $ccSchedules = Application_Common_Database::prepareAndExecute(
