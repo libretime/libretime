@@ -1,12 +1,12 @@
 <?php
 
-namespace Airtime;
+namespace Airtime\MediaItem;
 
-use Airtime\om\BaseMediaItem;
+use Airtime\MediaItem\om\BaseMediaContent;
 
 
 /**
- * Skeleton subclass for representing a row from the 'media_item' table.
+ * Skeleton subclass for representing a row from the 'media_content' table.
  *
  *
  *
@@ -16,6 +16,6 @@ use Airtime\om\BaseMediaItem;
  *
  * @package    propel.generator.airtime
  */
-class MediaItem extends BaseMediaItem
+class MediaContent extends BaseMediaContent
 {
 }

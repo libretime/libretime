@@ -44,7 +44,7 @@ class MediaItemTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('media_item_id_seq');
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', true, 128, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
         $this->addForeignKey('owner_id', 'OwnerId', 'INTEGER', 'cc_subjs', 'id', false, null, null);
         $this->addColumn('description', 'Description', 'VARCHAR', false, 512, null);
         $this->addColumn('last_played', 'LastPlayedTime', 'TIMESTAMP', false, 6, null);
@@ -63,7 +63,7 @@ class MediaItemTableMap extends TableMap
     {
         $this->addRelation('CcSubjs', 'Airtime\\CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
         $this->addRelation('CcSchedule', 'Airtime\\CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'media_id', ), 'CASCADE', null, 'CcSchedules');
-        $this->addRelation('MediaContents', 'Airtime\\MediaItem\\MediaContents', RelationMap::ONE_TO_MANY, array('id' => 'media_id', ), 'CASCADE', null, 'MediaContentss');
+        $this->addRelation('MediaContent', 'Airtime\\MediaItem\\MediaContent', RelationMap::ONE_TO_MANY, array('id' => 'media_id', ), 'CASCADE', null, 'MediaContents');
         $this->addRelation('AudioFile', 'Airtime\\MediaItem\\AudioFile', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
         $this->addRelation('Webstream', 'Airtime\\MediaItem\\Webstream', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
         $this->addRelation('Playlist', 'Airtime\\MediaItem\\Playlist', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);

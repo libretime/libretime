@@ -19,7 +19,7 @@ use Airtime\MediaItemPeer;
 use Airtime\MediaItemQuery;
 use Airtime\MediaItem\AudioFile;
 use Airtime\MediaItem\Block;
-use Airtime\MediaItem\MediaContents;
+use Airtime\MediaItem\MediaContent;
 use Airtime\MediaItem\Playlist;
 use Airtime\MediaItem\Webstream;
 
@@ -62,9 +62,9 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery rightJoinCcSchedule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method MediaItemQuery innerJoinCcSchedule($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
- * @method MediaItemQuery leftJoinMediaContents($relationAlias = null) Adds a LEFT JOIN clause to the query using the MediaContents relation
- * @method MediaItemQuery rightJoinMediaContents($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MediaContents relation
- * @method MediaItemQuery innerJoinMediaContents($relationAlias = null) Adds a INNER JOIN clause to the query using the MediaContents relation
+ * @method MediaItemQuery leftJoinMediaContent($relationAlias = null) Adds a LEFT JOIN clause to the query using the MediaContent relation
+ * @method MediaItemQuery rightJoinMediaContent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MediaContent relation
+ * @method MediaItemQuery innerJoinMediaContent($relationAlias = null) Adds a INNER JOIN clause to the query using the MediaContent relation
  *
  * @method MediaItemQuery leftJoinAudioFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the AudioFile relation
  * @method MediaItemQuery rightJoinAudioFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AudioFile relation
@@ -825,41 +825,41 @@ abstract class BaseMediaItemQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related MediaContents object
+     * Filter the query by a related MediaContent object
      *
-     * @param   MediaContents|PropelObjectCollection $mediaContents  the related object to use as filter
+     * @param   MediaContent|PropelObjectCollection $mediaContent  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 MediaItemQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByMediaContents($mediaContents, $comparison = null)
+    public function filterByMediaContent($mediaContent, $comparison = null)
     {
-        if ($mediaContents instanceof MediaContents) {
+        if ($mediaContent instanceof MediaContent) {
             return $this
-                ->addUsingAlias(MediaItemPeer::ID, $mediaContents->getMediaId(), $comparison);
-        } elseif ($mediaContents instanceof PropelObjectCollection) {
+                ->addUsingAlias(MediaItemPeer::ID, $mediaContent->getMediaId(), $comparison);
+        } elseif ($mediaContent instanceof PropelObjectCollection) {
             return $this
-                ->useMediaContentsQuery()
-                ->filterByPrimaryKeys($mediaContents->getPrimaryKeys())
+                ->useMediaContentQuery()
+                ->filterByPrimaryKeys($mediaContent->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByMediaContents() only accepts arguments of type MediaContents or PropelCollection');
+            throw new PropelException('filterByMediaContent() only accepts arguments of type MediaContent or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the MediaContents relation
+     * Adds a JOIN clause to the query using the MediaContent relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return MediaItemQuery The current query, for fluid interface
      */
-    public function joinMediaContents($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinMediaContent($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('MediaContents');
+        $relationMap = $tableMap->getRelation('MediaContent');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -874,14 +874,14 @@ abstract class BaseMediaItemQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'MediaContents');
+            $this->addJoinObject($join, 'MediaContent');
         }
 
         return $this;
     }
 
     /**
-     * Use the MediaContents relation MediaContents object
+     * Use the MediaContent relation MediaContent object
      *
      * @see       useQuery()
      *
@@ -889,13 +889,13 @@ abstract class BaseMediaItemQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Airtime\MediaItem\MediaContentsQuery A secondary query class using the current class as primary query
+     * @return   \Airtime\MediaItem\MediaContentQuery A secondary query class using the current class as primary query
      */
-    public function useMediaContentsQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useMediaContentQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinMediaContents($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'MediaContents', '\Airtime\MediaItem\MediaContentsQuery');
+            ->joinMediaContent($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'MediaContent', '\Airtime\MediaItem\MediaContentQuery');
     }
 
     /**

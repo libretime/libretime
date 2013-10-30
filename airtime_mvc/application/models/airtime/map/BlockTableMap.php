@@ -45,7 +45,7 @@ class BlockTableMap extends TableMap
         $this->addColumn('type', 'Type', 'VARCHAR', false, 7, 'static');
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_playlist', 'id', true, null, null);
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_item', 'id', true, null, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', true, 128, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
         $this->addForeignKey('owner_id', 'OwnerId', 'INTEGER', 'cc_subjs', 'id', false, null, null);
         $this->addColumn('description', 'Description', 'VARCHAR', false, 512, null);
         $this->addColumn('last_played', 'LastPlayedTime', 'TIMESTAMP', false, 6, null);

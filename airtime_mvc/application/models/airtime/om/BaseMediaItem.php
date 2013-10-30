@@ -27,8 +27,8 @@ use Airtime\MediaItem\AudioFile;
 use Airtime\MediaItem\AudioFileQuery;
 use Airtime\MediaItem\Block;
 use Airtime\MediaItem\BlockQuery;
-use Airtime\MediaItem\MediaContents;
-use Airtime\MediaItem\MediaContentsQuery;
+use Airtime\MediaItem\MediaContent;
+use Airtime\MediaItem\MediaContentQuery;
 use Airtime\MediaItem\Playlist;
 use Airtime\MediaItem\PlaylistQuery;
 use Airtime\MediaItem\Webstream;
@@ -136,10 +136,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     protected $collCcSchedulesPartial;
 
     /**
-     * @var        PropelObjectCollection|MediaContents[] Collection to store aggregation of MediaContents objects.
+     * @var        PropelObjectCollection|MediaContent[] Collection to store aggregation of MediaContent objects.
      */
-    protected $collMediaContentss;
-    protected $collMediaContentssPartial;
+    protected $collMediaContents;
+    protected $collMediaContentsPartial;
 
     /**
      * @var        AudioFile one-to-one related AudioFile object
@@ -191,7 +191,7 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      * An array of objects scheduled for deletion.
      * @var		PropelObjectCollection
      */
-    protected $mediaContentssScheduledForDeletion = null;
+    protected $mediaContentsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -744,7 +744,7 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->aCcSubjs = null;
             $this->collCcSchedules = null;
 
-            $this->collMediaContentss = null;
+            $this->collMediaContents = null;
 
             $this->singleAudioFile = null;
 
@@ -918,17 +918,17 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 }
             }
 
-            if ($this->mediaContentssScheduledForDeletion !== null) {
-                if (!$this->mediaContentssScheduledForDeletion->isEmpty()) {
-                    MediaContentsQuery::create()
-                        ->filterByPrimaryKeys($this->mediaContentssScheduledForDeletion->getPrimaryKeys(false))
+            if ($this->mediaContentsScheduledForDeletion !== null) {
+                if (!$this->mediaContentsScheduledForDeletion->isEmpty()) {
+                    MediaContentQuery::create()
+                        ->filterByPrimaryKeys($this->mediaContentsScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
-                    $this->mediaContentssScheduledForDeletion = null;
+                    $this->mediaContentsScheduledForDeletion = null;
                 }
             }
 
-            if ($this->collMediaContentss !== null) {
-                foreach ($this->collMediaContentss as $referrerFK) {
+            if ($this->collMediaContents !== null) {
+                foreach ($this->collMediaContents as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1178,8 +1178,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                     }
                 }
 
-                if ($this->collMediaContentss !== null) {
-                    foreach ($this->collMediaContentss as $referrerFK) {
+                if ($this->collMediaContents !== null) {
+                    foreach ($this->collMediaContents as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -1327,8 +1327,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             if (null !== $this->collCcSchedules) {
                 $result['CcSchedules'] = $this->collCcSchedules->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
-            if (null !== $this->collMediaContentss) {
-                $result['MediaContentss'] = $this->collMediaContentss->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->collMediaContents) {
+                $result['MediaContents'] = $this->collMediaContents->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->singleAudioFile) {
                 $result['AudioFile'] = $this->singleAudioFile->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
@@ -1547,9 +1547,9 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 }
             }
 
-            foreach ($this->getMediaContentss() as $relObj) {
+            foreach ($this->getMediaContents() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addMediaContents($relObj->copy($deepCopy));
+                    $copyObj->addMediaContent($relObj->copy($deepCopy));
                 }
             }
 
@@ -1689,8 +1689,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ('CcSchedule' == $relationName) {
             $this->initCcSchedules();
         }
-        if ('MediaContents' == $relationName) {
-            $this->initMediaContentss();
+        if ('MediaContent' == $relationName) {
+            $this->initMediaContents();
         }
     }
 
@@ -1995,36 +1995,36 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     }
 
     /**
-     * Clears out the collMediaContentss collection
+     * Clears out the collMediaContents collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
      * them to be refetched by subsequent calls to accessor method.
      *
      * @return MediaItem The current object (for fluent API support)
-     * @see        addMediaContentss()
+     * @see        addMediaContents()
      */
-    public function clearMediaContentss()
+    public function clearMediaContents()
     {
-        $this->collMediaContentss = null; // important to set this to null since that means it is uninitialized
-        $this->collMediaContentssPartial = null;
+        $this->collMediaContents = null; // important to set this to null since that means it is uninitialized
+        $this->collMediaContentsPartial = null;
 
         return $this;
     }
 
     /**
-     * reset is the collMediaContentss collection loaded partially
+     * reset is the collMediaContents collection loaded partially
      *
      * @return void
      */
-    public function resetPartialMediaContentss($v = true)
+    public function resetPartialMediaContents($v = true)
     {
-        $this->collMediaContentssPartial = $v;
+        $this->collMediaContentsPartial = $v;
     }
 
     /**
-     * Initializes the collMediaContentss collection.
+     * Initializes the collMediaContents collection.
      *
-     * By default this just sets the collMediaContentss collection to an empty array (like clearcollMediaContentss());
+     * By default this just sets the collMediaContents collection to an empty array (like clearcollMediaContents());
      * however, you may wish to override this method in your stub class to provide setting appropriate
      * to your application -- for example, setting the initial array to the values stored in database.
      *
@@ -2033,17 +2033,17 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      *
      * @return void
      */
-    public function initMediaContentss($overrideExisting = true)
+    public function initMediaContents($overrideExisting = true)
     {
-        if (null !== $this->collMediaContentss && !$overrideExisting) {
+        if (null !== $this->collMediaContents && !$overrideExisting) {
             return;
         }
-        $this->collMediaContentss = new PropelObjectCollection();
-        $this->collMediaContentss->setModel('MediaContents');
+        $this->collMediaContents = new PropelObjectCollection();
+        $this->collMediaContents->setModel('MediaContent');
     }
 
     /**
-     * Gets an array of MediaContents objects which contain a foreign key that references this object.
+     * Gets an array of MediaContent objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
      * Otherwise the results are fetched from the database the first time, then cached.
@@ -2053,107 +2053,107 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      *
      * @param Criteria $criteria optional Criteria object to narrow the query
      * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|MediaContents[] List of MediaContents objects
+     * @return PropelObjectCollection|MediaContent[] List of MediaContent objects
      * @throws PropelException
      */
-    public function getMediaContentss($criteria = null, PropelPDO $con = null)
+    public function getMediaContents($criteria = null, PropelPDO $con = null)
     {
-        $partial = $this->collMediaContentssPartial && !$this->isNew();
-        if (null === $this->collMediaContentss || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collMediaContentss) {
+        $partial = $this->collMediaContentsPartial && !$this->isNew();
+        if (null === $this->collMediaContents || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collMediaContents) {
                 // return empty collection
-                $this->initMediaContentss();
+                $this->initMediaContents();
             } else {
-                $collMediaContentss = MediaContentsQuery::create(null, $criteria)
+                $collMediaContents = MediaContentQuery::create(null, $criteria)
                     ->filterByMediaItem($this)
                     ->find($con);
                 if (null !== $criteria) {
-                    if (false !== $this->collMediaContentssPartial && count($collMediaContentss)) {
-                      $this->initMediaContentss(false);
+                    if (false !== $this->collMediaContentsPartial && count($collMediaContents)) {
+                      $this->initMediaContents(false);
 
-                      foreach ($collMediaContentss as $obj) {
-                        if (false == $this->collMediaContentss->contains($obj)) {
-                          $this->collMediaContentss->append($obj);
+                      foreach ($collMediaContents as $obj) {
+                        if (false == $this->collMediaContents->contains($obj)) {
+                          $this->collMediaContents->append($obj);
                         }
                       }
 
-                      $this->collMediaContentssPartial = true;
+                      $this->collMediaContentsPartial = true;
                     }
 
-                    $collMediaContentss->getInternalIterator()->rewind();
+                    $collMediaContents->getInternalIterator()->rewind();
 
-                    return $collMediaContentss;
+                    return $collMediaContents;
                 }
 
-                if ($partial && $this->collMediaContentss) {
-                    foreach ($this->collMediaContentss as $obj) {
+                if ($partial && $this->collMediaContents) {
+                    foreach ($this->collMediaContents as $obj) {
                         if ($obj->isNew()) {
-                            $collMediaContentss[] = $obj;
+                            $collMediaContents[] = $obj;
                         }
                     }
                 }
 
-                $this->collMediaContentss = $collMediaContentss;
-                $this->collMediaContentssPartial = false;
+                $this->collMediaContents = $collMediaContents;
+                $this->collMediaContentsPartial = false;
             }
         }
 
-        return $this->collMediaContentss;
+        return $this->collMediaContents;
     }
 
     /**
-     * Sets a collection of MediaContents objects related by a one-to-many relationship
+     * Sets a collection of MediaContent objects related by a one-to-many relationship
      * to the current object.
      * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
      * and new objects from the given Propel collection.
      *
-     * @param PropelCollection $mediaContentss A Propel collection.
+     * @param PropelCollection $mediaContents A Propel collection.
      * @param PropelPDO $con Optional connection object
      * @return MediaItem The current object (for fluent API support)
      */
-    public function setMediaContentss(PropelCollection $mediaContentss, PropelPDO $con = null)
+    public function setMediaContents(PropelCollection $mediaContents, PropelPDO $con = null)
     {
-        $mediaContentssToDelete = $this->getMediaContentss(new Criteria(), $con)->diff($mediaContentss);
+        $mediaContentsToDelete = $this->getMediaContents(new Criteria(), $con)->diff($mediaContents);
 
 
-        $this->mediaContentssScheduledForDeletion = $mediaContentssToDelete;
+        $this->mediaContentsScheduledForDeletion = $mediaContentsToDelete;
 
-        foreach ($mediaContentssToDelete as $mediaContentsRemoved) {
-            $mediaContentsRemoved->setMediaItem(null);
+        foreach ($mediaContentsToDelete as $mediaContentRemoved) {
+            $mediaContentRemoved->setMediaItem(null);
         }
 
-        $this->collMediaContentss = null;
-        foreach ($mediaContentss as $mediaContents) {
-            $this->addMediaContents($mediaContents);
+        $this->collMediaContents = null;
+        foreach ($mediaContents as $mediaContent) {
+            $this->addMediaContent($mediaContent);
         }
 
-        $this->collMediaContentss = $mediaContentss;
-        $this->collMediaContentssPartial = false;
+        $this->collMediaContents = $mediaContents;
+        $this->collMediaContentsPartial = false;
 
         return $this;
     }
 
     /**
-     * Returns the number of related MediaContents objects.
+     * Returns the number of related MediaContent objects.
      *
      * @param Criteria $criteria
      * @param boolean $distinct
      * @param PropelPDO $con
-     * @return int             Count of related MediaContents objects.
+     * @return int             Count of related MediaContent objects.
      * @throws PropelException
      */
-    public function countMediaContentss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function countMediaContents(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
     {
-        $partial = $this->collMediaContentssPartial && !$this->isNew();
-        if (null === $this->collMediaContentss || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collMediaContentss) {
+        $partial = $this->collMediaContentsPartial && !$this->isNew();
+        if (null === $this->collMediaContents || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collMediaContents) {
                 return 0;
             }
 
             if ($partial && !$criteria) {
-                return count($this->getMediaContentss());
+                return count($this->getMediaContents());
             }
-            $query = MediaContentsQuery::create(null, $criteria);
+            $query = MediaContentQuery::create(null, $criteria);
             if ($distinct) {
                 $query->distinct();
             }
@@ -2163,28 +2163,28 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 ->count($con);
         }
 
-        return count($this->collMediaContentss);
+        return count($this->collMediaContents);
     }
 
     /**
-     * Method called to associate a MediaContents object to this object
-     * through the MediaContents foreign key attribute.
+     * Method called to associate a MediaContent object to this object
+     * through the MediaContent foreign key attribute.
      *
-     * @param    MediaContents $l MediaContents
+     * @param    MediaContent $l MediaContent
      * @return MediaItem The current object (for fluent API support)
      */
-    public function addMediaContents(MediaContents $l)
+    public function addMediaContent(MediaContent $l)
     {
-        if ($this->collMediaContentss === null) {
-            $this->initMediaContentss();
-            $this->collMediaContentssPartial = true;
+        if ($this->collMediaContents === null) {
+            $this->initMediaContents();
+            $this->collMediaContentsPartial = true;
         }
 
-        if (!in_array($l, $this->collMediaContentss->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddMediaContents($l);
+        if (!in_array($l, $this->collMediaContents->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddMediaContent($l);
 
-            if ($this->mediaContentssScheduledForDeletion and $this->mediaContentssScheduledForDeletion->contains($l)) {
-                $this->mediaContentssScheduledForDeletion->remove($this->mediaContentssScheduledForDeletion->search($l));
+            if ($this->mediaContentsScheduledForDeletion and $this->mediaContentsScheduledForDeletion->contains($l)) {
+                $this->mediaContentsScheduledForDeletion->remove($this->mediaContentsScheduledForDeletion->search($l));
             }
         }
 
@@ -2192,28 +2192,28 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     }
 
     /**
-     * @param	MediaContents $mediaContents The mediaContents object to add.
+     * @param	MediaContent $mediaContent The mediaContent object to add.
      */
-    protected function doAddMediaContents($mediaContents)
+    protected function doAddMediaContent($mediaContent)
     {
-        $this->collMediaContentss[]= $mediaContents;
-        $mediaContents->setMediaItem($this);
+        $this->collMediaContents[]= $mediaContent;
+        $mediaContent->setMediaItem($this);
     }
 
     /**
-     * @param	MediaContents $mediaContents The mediaContents object to remove.
+     * @param	MediaContent $mediaContent The mediaContent object to remove.
      * @return MediaItem The current object (for fluent API support)
      */
-    public function removeMediaContents($mediaContents)
+    public function removeMediaContent($mediaContent)
     {
-        if ($this->getMediaContentss()->contains($mediaContents)) {
-            $this->collMediaContentss->remove($this->collMediaContentss->search($mediaContents));
-            if (null === $this->mediaContentssScheduledForDeletion) {
-                $this->mediaContentssScheduledForDeletion = clone $this->collMediaContentss;
-                $this->mediaContentssScheduledForDeletion->clear();
+        if ($this->getMediaContents()->contains($mediaContent)) {
+            $this->collMediaContents->remove($this->collMediaContents->search($mediaContent));
+            if (null === $this->mediaContentsScheduledForDeletion) {
+                $this->mediaContentsScheduledForDeletion = clone $this->collMediaContents;
+                $this->mediaContentsScheduledForDeletion->clear();
             }
-            $this->mediaContentssScheduledForDeletion[]= $mediaContents;
-            $mediaContents->setMediaItem(null);
+            $this->mediaContentsScheduledForDeletion[]= $mediaContent;
+            $mediaContent->setMediaItem(null);
         }
 
         return $this;
@@ -2406,8 +2406,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->collMediaContentss) {
-                foreach ($this->collMediaContentss as $o) {
+            if ($this->collMediaContents) {
+                foreach ($this->collMediaContents as $o) {
                     $o->clearAllReferences($deep);
                 }
             }
@@ -2434,10 +2434,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->collCcSchedules->clearIterator();
         }
         $this->collCcSchedules = null;
-        if ($this->collMediaContentss instanceof PropelCollection) {
-            $this->collMediaContentss->clearIterator();
+        if ($this->collMediaContents instanceof PropelCollection) {
+            $this->collMediaContents->clearIterator();
         }
-        $this->collMediaContentss = null;
+        $this->collMediaContents = null;
         if ($this->singleAudioFile instanceof PropelCollection) {
             $this->singleAudioFile->clearIterator();
         }

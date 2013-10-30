@@ -62,6 +62,7 @@ class AudioFileTableMap extends TableMap
         $this->addColumn('label', 'Label', 'VARCHAR', false, 512, null);
         $this->addColumn('composer', 'Composer', 'VARCHAR', false, 512, null);
         $this->addColumn('copyright', 'Copyright', 'VARCHAR', false, 512, null);
+        $this->addColumn('conductor', 'Conductor', 'VARCHAR', false, 512, null);
         $this->addColumn('isrc_number', 'IsrcNumber', 'VARCHAR', false, 512, null);
         $this->addColumn('info_url', 'InfoUrl', 'VARCHAR', false, 512, null);
         $this->addColumn('language', 'Language', 'VARCHAR', false, 512, null);
@@ -70,11 +71,11 @@ class AudioFileTableMap extends TableMap
         $this->addColumn('cueout', 'Cueout', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('silan_check', 'IsSilanChecked', 'BOOLEAN', false, null, false);
         $this->addColumn('file_exists', 'FileExists', 'BOOLEAN', false, null, true);
-        $this->addColumn('hidden', 'IsHidden', 'BOOLEAN', false, null, false);
+        $this->addColumn('hidden', 'FileHidden', 'BOOLEAN', false, null, false);
         $this->addColumn('is_scheduled', 'IsScheduled', 'BOOLEAN', false, null, false);
         $this->addColumn('is_playlist', 'IsPlaylist', 'BOOLEAN', false, null, false);
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_item', 'id', true, null, null);
-        $this->addColumn('name', 'Name', 'VARCHAR', true, 128, null);
+        $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
         $this->addForeignKey('owner_id', 'OwnerId', 'INTEGER', 'cc_subjs', 'id', false, null, null);
         $this->addColumn('description', 'Description', 'VARCHAR', false, 512, null);
         $this->addColumn('last_played', 'LastPlayedTime', 'TIMESTAMP', false, 6, null);

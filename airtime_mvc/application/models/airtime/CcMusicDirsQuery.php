@@ -3,6 +3,7 @@
 namespace Airtime;
 
 use Airtime\om\BaseCcMusicDirsQuery;
+use Airtime\CcMusicDirsPeer;
 
 
 /**
@@ -18,4 +19,18 @@ use Airtime\om\BaseCcMusicDirsQuery;
  */
 class CcMusicDirsQuery extends BaseCcMusicDirsQuery
 {
+	
+	public function filterByFullFilepath($filepath) {
+	
+		$directory = CcMusicDirsPeer::DIRECTORY;
+		
+		$escapedPath = pg_escape_string($filepath);
+	
+		return $this
+			->filterByType(array("watched", "stor"))
+			->filterByExists(true)
+			->filterByWatched(true)
+			->where($this->getModelAliasOrName().".Directory = substring('$escapedPath' from 0 for char_length($directory)+1)")
+			;
+	}
 }

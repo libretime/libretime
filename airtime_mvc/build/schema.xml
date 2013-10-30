@@ -474,10 +474,10 @@
     </foreign-key>
   </table>
   
-  <table name="media_item" phpName="MediaItem" abstract="true">
+  <table name="media_item" phpName="MediaItem">
     <behavior name="timestampable" />
     <column name="id" phpName="Id" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="name" phpName="Name" type="VARCHAR" size="128" required="true" />
+    <column name="name" phpName="Name" type="VARCHAR" size="128" required="false" />
     <column name="owner_id" phpName="OwnerId" type="INTEGER" required="false"/>
     <column name="description" phpName="Description" type="VARCHAR" size="512" required="false"/>
     <column name="last_played" phpName="LastPlayedTime" type="TIMESTAMP" size="6" required="false"/>
@@ -512,6 +512,7 @@
     <column name="label" phpName="Label" type="VARCHAR" size="512" required="false"/>
     <column name="composer" phpName="Composer" type="VARCHAR" size="512" required="false"/>
     <column name="copyright" phpName="Copyright" type="VARCHAR" size="512" required="false"/>
+    <column name="conductor" phpName="Conductor" type="VARCHAR" size="512" required="false"/>
     <column name="isrc_number" phpName="IsrcNumber" type="VARCHAR" size="512" required="false"/>
     <column name="info_url" phpName="InfoUrl" type="VARCHAR" size="512" required="false"/>
     <column name="language" phpName="Language" type="VARCHAR" size="512" required="false"/>
@@ -520,7 +521,7 @@
     <column name="cueout" phpName="Cueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="silan_check" phpName="IsSilanChecked" type="BOOLEAN" defaultValue="false"/>
     <column name="file_exists" phpName="FileExists" type="BOOLEAN" required="false" defaultValue="true"/>
-    <column name="hidden" phpName="IsHidden" type="BOOLEAN" defaultValue="false"/>
+    <column name="hidden" phpName="FileHidden" type="BOOLEAN" defaultValue="false"/>
     <column name="is_scheduled" phpName="IsScheduled" type="BOOLEAN" defaultValue="false"/>
     <column name="is_playlist" phpName="IsPlaylist" type="BOOLEAN" defaultValue="false"/>
     <foreign-key foreignTable="cc_music_dirs" name="audio_file_music_dir_fkey">
@@ -552,7 +553,7 @@
     <column name="type" phpName="Type" type="VARCHAR" size="7" defaultValue="static"/>
   </table>
   
-  <table name="media_content" phpName="MediaContents" namespace="MediaItem">
+  <table name="media_content" phpName="MediaContent" namespace="MediaItem">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="media_id" phpName="MediaId" type="INTEGER" required="false"/>
     <column name="position" phpName="Position" type="INTEGER" required="false"/>

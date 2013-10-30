@@ -668,6 +668,8 @@ class ApiController extends Zend_Controller_Action
             unset( $info_json['mode'] );
             try {
                 $response = $this->dispatchMetadata($info_json, $mode);
+                $audiofile_service = new Application_Service_AudioFileService();
+                $audiofile_service->mediaMonitorTask($info_json, $mode);
             } catch (Exception $e) {
                 Logging::warn($e->getMessage());
                 Logging::warn(gettype($e));

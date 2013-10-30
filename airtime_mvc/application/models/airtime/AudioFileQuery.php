@@ -3,6 +3,7 @@
 namespace Airtime\MediaItem;
 
 use Airtime\MediaItem\om\BaseAudioFileQuery;
+use Airtime\MediaItem\CcMusicDirsQuery;
 
 
 /**
@@ -18,4 +19,5 @@ use Airtime\MediaItem\om\BaseAudioFileQuery;
  */
 class AudioFileQuery extends BaseAudioFileQuery
 {
+	
 }

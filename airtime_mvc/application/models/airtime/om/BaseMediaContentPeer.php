@@ -1,6 +1,6 @@
 <?php
 
-namespace Airtime\om;
+namespace Airtime\MediaItem\om;
 
 use \BasePeer;
 use \Criteria;
@@ -9,86 +9,77 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use Airtime\CcSchedulePeer;
-use Airtime\CcSubjsPeer;
-use Airtime\MediaItem;
 use Airtime\MediaItemPeer;
-use Airtime\MediaItem\AudioFilePeer;
-use Airtime\MediaItem\BlockPeer;
+use Airtime\MediaItem\MediaContent;
 use Airtime\MediaItem\MediaContentPeer;
-use Airtime\MediaItem\PlaylistPeer;
-use Airtime\MediaItem\WebstreamPeer;
-use Airtime\map\MediaItemTableMap;
+use Airtime\MediaItem\map\MediaContentTableMap;
 
 /**
- * Base static class for performing query and update operations on the 'media_item' table.
+ * Base static class for performing query and update operations on the 'media_content' table.
  *
  *
  *
  * @package propel.generator.airtime.om
  */
-abstract class BaseMediaItemPeer
+abstract class BaseMediaContentPeer
 {
 
     /** the default database name for this class */
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'media_item';
+    const TABLE_NAME = 'media_content';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'Airtime\\MediaItem';
+    const OM_CLASS = 'Airtime\\MediaItem\\MediaContent';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'Airtime\\map\\MediaItemTableMap';
+    const TM_CLASS = 'Airtime\\MediaItem\\map\\MediaContentTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 10;
+    const NUM_COLUMNS = 9;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 10;
+    const NUM_HYDRATE_COLUMNS = 9;
 
     /** the column name for the id field */
-    const ID = 'media_item.id';
+    const ID = 'media_content.id';
 
-    /** the column name for the name field */
-    const NAME = 'media_item.name';
+    /** the column name for the media_id field */
+    const MEDIA_ID = 'media_content.media_id';
 
-    /** the column name for the owner_id field */
-    const OWNER_ID = 'media_item.owner_id';
+    /** the column name for the position field */
+    const POSITION = 'media_content.position';
 
-    /** the column name for the description field */
-    const DESCRIPTION = 'media_item.description';
+    /** the column name for the trackoffset field */
+    const TRACKOFFSET = 'media_content.trackoffset';
 
-    /** the column name for the last_played field */
-    const LAST_PLAYED = 'media_item.last_played';
+    /** the column name for the cliplength field */
+    const CLIPLENGTH = 'media_content.cliplength';
 
-    /** the column name for the play_count field */
-    const PLAY_COUNT = 'media_item.play_count';
+    /** the column name for the cuein field */
+    const CUEIN = 'media_content.cuein';
 
-    /** the column name for the length field */
-    const LENGTH = 'media_item.length';
+    /** the column name for the cueout field */
+    const CUEOUT = 'media_content.cueout';
 
-    /** the column name for the created_at field */
-    const CREATED_AT = 'media_item.created_at';
+    /** the column name for the fadein field */
+    const FADEIN = 'media_content.fadein';
 
-    /** the column name for the updated_at field */
-    const UPDATED_AT = 'media_item.updated_at';
-
-    /** the column name for the descendant_class field */
-    const DESCENDANT_CLASS = 'media_item.descendant_class';
+    /** the column name for the fadeout field */
+    const FADEOUT = 'media_content.fadeout';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identity map to hold any loaded instances of MediaItem objects.
+     * An identity map to hold any loaded instances of MediaContent objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
-     * @var        array MediaItem[]
+     * @var        array MediaContent[]
      */
     public static $instances = array();
 
@@ -97,30 +88,30 @@ abstract class BaseMediaItemPeer
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
-     * e.g. MediaItemPeer::$fieldNames[MediaItemPeer::TYPE_PHPNAME][0] = 'Id'
+     * e.g. MediaContentPeer::$fieldNames[MediaContentPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'CreatedAt', 'UpdatedAt', 'DescendantClass', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'createdAt', 'updatedAt', 'descendantClass', ),
-        BasePeer::TYPE_COLNAME => array (MediaItemPeer::ID, MediaItemPeer::NAME, MediaItemPeer::OWNER_ID, MediaItemPeer::DESCRIPTION, MediaItemPeer::LAST_PLAYED, MediaItemPeer::PLAY_COUNT, MediaItemPeer::LENGTH, MediaItemPeer::CREATED_AT, MediaItemPeer::UPDATED_AT, MediaItemPeer::DESCENDANT_CLASS, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'CREATED_AT', 'UPDATED_AT', 'DESCENDANT_CLASS', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'created_at', 'updated_at', 'descendant_class', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'MediaId', 'Position', 'TrackOffset', 'Cliplength', 'Cuein', 'Cueout', 'Fadein', 'Fadeout', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'mediaId', 'position', 'trackOffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+        BasePeer::TYPE_COLNAME => array (MediaContentPeer::ID, MediaContentPeer::MEDIA_ID, MediaContentPeer::POSITION, MediaContentPeer::TRACKOFFSET, MediaContentPeer::CLIPLENGTH, MediaContentPeer::CUEIN, MediaContentPeer::CUEOUT, MediaContentPeer::FADEIN, MediaContentPeer::FADEOUT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'MEDIA_ID', 'POSITION', 'TRACKOFFSET', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'media_id', 'position', 'trackoffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
-     * e.g. MediaItemPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
+     * e.g. MediaContentPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'OwnerId' => 2, 'Description' => 3, 'LastPlayedTime' => 4, 'PlayCount' => 5, 'Length' => 6, 'CreatedAt' => 7, 'UpdatedAt' => 8, 'DescendantClass' => 9, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'ownerId' => 2, 'description' => 3, 'lastPlayedTime' => 4, 'playCount' => 5, 'length' => 6, 'createdAt' => 7, 'updatedAt' => 8, 'descendantClass' => 9, ),
-        BasePeer::TYPE_COLNAME => array (MediaItemPeer::ID => 0, MediaItemPeer::NAME => 1, MediaItemPeer::OWNER_ID => 2, MediaItemPeer::DESCRIPTION => 3, MediaItemPeer::LAST_PLAYED => 4, MediaItemPeer::PLAY_COUNT => 5, MediaItemPeer::LENGTH => 6, MediaItemPeer::CREATED_AT => 7, MediaItemPeer::UPDATED_AT => 8, MediaItemPeer::DESCENDANT_CLASS => 9, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'OWNER_ID' => 2, 'DESCRIPTION' => 3, 'LAST_PLAYED' => 4, 'PLAY_COUNT' => 5, 'LENGTH' => 6, 'CREATED_AT' => 7, 'UPDATED_AT' => 8, 'DESCENDANT_CLASS' => 9, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'owner_id' => 2, 'description' => 3, 'last_played' => 4, 'play_count' => 5, 'length' => 6, 'created_at' => 7, 'updated_at' => 8, 'descendant_class' => 9, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'MediaId' => 1, 'Position' => 2, 'TrackOffset' => 3, 'Cliplength' => 4, 'Cuein' => 5, 'Cueout' => 6, 'Fadein' => 7, 'Fadeout' => 8, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'mediaId' => 1, 'position' => 2, 'trackOffset' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
+        BasePeer::TYPE_COLNAME => array (MediaContentPeer::ID => 0, MediaContentPeer::MEDIA_ID => 1, MediaContentPeer::POSITION => 2, MediaContentPeer::TRACKOFFSET => 3, MediaContentPeer::CLIPLENGTH => 4, MediaContentPeer::CUEIN => 5, MediaContentPeer::CUEOUT => 6, MediaContentPeer::FADEIN => 7, MediaContentPeer::FADEOUT => 8, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'MEDIA_ID' => 1, 'POSITION' => 2, 'TRACKOFFSET' => 3, 'CLIPLENGTH' => 4, 'CUEIN' => 5, 'CUEOUT' => 6, 'FADEIN' => 7, 'FADEOUT' => 8, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'media_id' => 1, 'position' => 2, 'trackoffset' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
     );
 
     /**
@@ -135,10 +126,10 @@ abstract class BaseMediaItemPeer
      */
     public static function translateFieldName($name, $fromType, $toType)
     {
-        $toNames = MediaItemPeer::getFieldNames($toType);
-        $key = isset(MediaItemPeer::$fieldKeys[$fromType][$name]) ? MediaItemPeer::$fieldKeys[$fromType][$name] : null;
+        $toNames = MediaContentPeer::getFieldNames($toType);
+        $key = isset(MediaContentPeer::$fieldKeys[$fromType][$name]) ? MediaContentPeer::$fieldKeys[$fromType][$name] : null;
         if ($key === null) {
-            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(MediaItemPeer::$fieldKeys[$fromType], true));
+            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(MediaContentPeer::$fieldKeys[$fromType], true));
         }
 
         return $toNames[$key];
@@ -155,11 +146,11 @@ abstract class BaseMediaItemPeer
      */
     public static function getFieldNames($type = BasePeer::TYPE_PHPNAME)
     {
-        if (!array_key_exists($type, MediaItemPeer::$fieldNames)) {
+        if (!array_key_exists($type, MediaContentPeer::$fieldNames)) {
             throw new PropelException('Method getFieldNames() expects the parameter $type to be one of the class constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME, BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. ' . $type . ' was given.');
         }
 
-        return MediaItemPeer::$fieldNames[$type];
+        return MediaContentPeer::$fieldNames[$type];
     }
 
     /**
@@ -171,12 +162,12 @@ abstract class BaseMediaItemPeer
      *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
      * </code>
      * @param      string $alias The alias for the current table.
-     * @param      string $column The column name for current table. (i.e. MediaItemPeer::COLUMN_NAME).
+     * @param      string $column The column name for current table. (i.e. MediaContentPeer::COLUMN_NAME).
      * @return string
      */
     public static function alias($alias, $column)
     {
-        return str_replace(MediaItemPeer::TABLE_NAME.'.', $alias.'.', $column);
+        return str_replace(MediaContentPeer::TABLE_NAME.'.', $alias.'.', $column);
     }
 
     /**
@@ -194,27 +185,25 @@ abstract class BaseMediaItemPeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(MediaItemPeer::ID);
-            $criteria->addSelectColumn(MediaItemPeer::NAME);
-            $criteria->addSelectColumn(MediaItemPeer::OWNER_ID);
-            $criteria->addSelectColumn(MediaItemPeer::DESCRIPTION);
-            $criteria->addSelectColumn(MediaItemPeer::LAST_PLAYED);
-            $criteria->addSelectColumn(MediaItemPeer::PLAY_COUNT);
-            $criteria->addSelectColumn(MediaItemPeer::LENGTH);
-            $criteria->addSelectColumn(MediaItemPeer::CREATED_AT);
-            $criteria->addSelectColumn(MediaItemPeer::UPDATED_AT);
-            $criteria->addSelectColumn(MediaItemPeer::DESCENDANT_CLASS);
+            $criteria->addSelectColumn(MediaContentPeer::ID);
+            $criteria->addSelectColumn(MediaContentPeer::MEDIA_ID);
+            $criteria->addSelectColumn(MediaContentPeer::POSITION);
+            $criteria->addSelectColumn(MediaContentPeer::TRACKOFFSET);
+            $criteria->addSelectColumn(MediaContentPeer::CLIPLENGTH);
+            $criteria->addSelectColumn(MediaContentPeer::CUEIN);
+            $criteria->addSelectColumn(MediaContentPeer::CUEOUT);
+            $criteria->addSelectColumn(MediaContentPeer::FADEIN);
+            $criteria->addSelectColumn(MediaContentPeer::FADEOUT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.name');
-            $criteria->addSelectColumn($alias . '.owner_id');
-            $criteria->addSelectColumn($alias . '.description');
-            $criteria->addSelectColumn($alias . '.last_played');
-            $criteria->addSelectColumn($alias . '.play_count');
-            $criteria->addSelectColumn($alias . '.length');
-            $criteria->addSelectColumn($alias . '.created_at');
-            $criteria->addSelectColumn($alias . '.updated_at');
-            $criteria->addSelectColumn($alias . '.descendant_class');
+            $criteria->addSelectColumn($alias . '.media_id');
+            $criteria->addSelectColumn($alias . '.position');
+            $criteria->addSelectColumn($alias . '.trackoffset');
+            $criteria->addSelectColumn($alias . '.cliplength');
+            $criteria->addSelectColumn($alias . '.cuein');
+            $criteria->addSelectColumn($alias . '.cueout');
+            $criteria->addSelectColumn($alias . '.fadein');
+            $criteria->addSelectColumn($alias . '.fadeout');
         }
     }
 
@@ -234,21 +223,21 @@ abstract class BaseMediaItemPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(MediaItemPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(MediaContentPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            MediaItemPeer::addSelectColumns($criteria);
+            MediaContentPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-        $criteria->setDbName(MediaItemPeer::DATABASE_NAME); // Set the correct dbName
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME); // Set the correct dbName
 
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
         // BasePeer returns a PDOStatement
         $stmt = BasePeer::doCount($criteria, $con);
@@ -267,7 +256,7 @@ abstract class BaseMediaItemPeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return MediaItem
+     * @return MediaContent
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -275,7 +264,7 @@ abstract class BaseMediaItemPeer
     {
         $critcopy = clone $criteria;
         $critcopy->setLimit(1);
-        $objects = MediaItemPeer::doSelect($critcopy, $con);
+        $objects = MediaContentPeer::doSelect($critcopy, $con);
         if ($objects) {
             return $objects[0];
         }
@@ -293,7 +282,7 @@ abstract class BaseMediaItemPeer
      */
     public static function doSelect(Criteria $criteria, PropelPDO $con = null)
     {
-        return MediaItemPeer::populateObjects(MediaItemPeer::doSelectStmt($criteria, $con));
+        return MediaContentPeer::populateObjects(MediaContentPeer::doSelectStmt($criteria, $con));
     }
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -311,16 +300,16 @@ abstract class BaseMediaItemPeer
     public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         if (!$criteria->hasSelectClause()) {
             $criteria = clone $criteria;
-            MediaItemPeer::addSelectColumns($criteria);
+            MediaContentPeer::addSelectColumns($criteria);
         }
 
         // Set the correct dbName
-        $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
 
         // BasePeer returns a PDOStatement
         return BasePeer::doSelect($criteria, $con);
@@ -334,16 +323,16 @@ abstract class BaseMediaItemPeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param MediaItem $obj A MediaItem object.
+     * @param MediaContent $obj A MediaContent object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
     {
         if (Propel::isInstancePoolingEnabled()) {
             if ($key === null) {
-                $key = (string) $obj->getId();
+                $key = (string) $obj->getDbId();
             } // if key === null
-            MediaItemPeer::$instances[$key] = $obj;
+            MediaContentPeer::$instances[$key] = $obj;
         }
     }
 
@@ -355,7 +344,7 @@ abstract class BaseMediaItemPeer
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param      mixed $value A MediaItem object or a primary key value.
+     * @param      mixed $value A MediaContent object or a primary key value.
      *
      * @return void
      * @throws PropelException - if the value is invalid.
@@ -363,17 +352,17 @@ abstract class BaseMediaItemPeer
     public static function removeInstanceFromPool($value)
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
-            if (is_object($value) && $value instanceof MediaItem) {
-                $key = (string) $value->getId();
+            if (is_object($value) && $value instanceof MediaContent) {
+                $key = (string) $value->getDbId();
             } elseif (is_scalar($value)) {
                 // assume we've been passed a primary key
                 $key = (string) $value;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or MediaItem object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or MediaContent object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
                 throw $e;
             }
 
-            unset(MediaItemPeer::$instances[$key]);
+            unset(MediaContentPeer::$instances[$key]);
         }
     } // removeInstanceFromPool()
 
@@ -384,14 +373,14 @@ abstract class BaseMediaItemPeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return MediaItem Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return MediaContent Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
     {
         if (Propel::isInstancePoolingEnabled()) {
-            if (isset(MediaItemPeer::$instances[$key])) {
-                return MediaItemPeer::$instances[$key];
+            if (isset(MediaContentPeer::$instances[$key])) {
+                return MediaContentPeer::$instances[$key];
             }
         }
 
@@ -406,37 +395,19 @@ abstract class BaseMediaItemPeer
     public static function clearInstancePool($and_clear_all_references = false)
     {
       if ($and_clear_all_references) {
-        foreach (MediaItemPeer::$instances as $instance) {
+        foreach (MediaContentPeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
-        MediaItemPeer::$instances = array();
+        MediaContentPeer::$instances = array();
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to media_item
+     * Method to invalidate the instance pool of all tables related to media_content
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
-        // Invalidate objects in CcSchedulePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcSchedulePeer::clearInstancePool();
-        // Invalidate objects in MediaContentPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        MediaContentPeer::clearInstancePool();
-        // Invalidate objects in AudioFilePeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        AudioFilePeer::clearInstancePool();
-        // Invalidate objects in WebstreamPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        WebstreamPeer::clearInstancePool();
-        // Invalidate objects in PlaylistPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        PlaylistPeer::clearInstancePool();
-        // Invalidate objects in BlockPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        BlockPeer::clearInstancePool();
     }
 
     /**
@@ -486,11 +457,11 @@ abstract class BaseMediaItemPeer
         $results = array();
 
         // set the class once to avoid overhead in the loop
-        $cls = MediaItemPeer::getOMClass();
+        $cls = MediaContentPeer::getOMClass();
         // populate the object(s)
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key = MediaItemPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj = MediaItemPeer::getInstanceFromPool($key))) {
+            $key = MediaContentPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj = MediaContentPeer::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
@@ -499,7 +470,7 @@ abstract class BaseMediaItemPeer
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                MediaItemPeer::addInstanceToPool($obj, $key);
+                MediaContentPeer::addInstanceToPool($obj, $key);
             } // if key exists
         }
         $stmt->closeCursor();
@@ -513,21 +484,21 @@ abstract class BaseMediaItemPeer
      * @param      int $startcol The 0-based offset for reading from the resultset row.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
-     * @return array (MediaItem object, last column rank)
+     * @return array (MediaContent object, last column rank)
      */
     public static function populateObject($row, $startcol = 0)
     {
-        $key = MediaItemPeer::getPrimaryKeyHashFromRow($row, $startcol);
-        if (null !== ($obj = MediaItemPeer::getInstanceFromPool($key))) {
+        $key = MediaContentPeer::getPrimaryKeyHashFromRow($row, $startcol);
+        if (null !== ($obj = MediaContentPeer::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $startcol, true); // rehydrate
-            $col = $startcol + MediaItemPeer::NUM_HYDRATE_COLUMNS;
+            $col = $startcol + MediaContentPeer::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = MediaItemPeer::OM_CLASS;
+            $cls = MediaContentPeer::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $startcol);
-            MediaItemPeer::addInstanceToPool($obj, $key);
+            MediaContentPeer::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -535,7 +506,7 @@ abstract class BaseMediaItemPeer
 
 
     /**
-     * Returns the number of rows matching criteria, joining the related CcSubjs table
+     * Returns the number of rows matching criteria, joining the related MediaItem table
      *
      * @param      Criteria $criteria
      * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
@@ -543,7 +514,7 @@ abstract class BaseMediaItemPeer
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
      * @return int Number of matching rows.
      */
-    public static function doCountJoinCcSubjs(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doCountJoinMediaItem(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         // we're going to modify criteria, so copy it first
         $criteria = clone $criteria;
@@ -551,26 +522,26 @@ abstract class BaseMediaItemPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(MediaItemPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(MediaContentPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            MediaItemPeer::addSelectColumns($criteria);
+            MediaContentPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(MediaItemPeer::OWNER_ID, CcSubjsPeer::ID, $join_behavior);
+        $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -586,61 +557,61 @@ abstract class BaseMediaItemPeer
 
 
     /**
-     * Selects a collection of MediaItem objects pre-filled with their CcSubjs objects.
+     * Selects a collection of MediaContent objects pre-filled with their MediaItem objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of MediaItem objects.
+     * @return array           Array of MediaContent objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
-    public static function doSelectJoinCcSubjs(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    public static function doSelectJoinMediaItem(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
     {
         $criteria = clone $criteria;
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+            $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
         }
 
+        MediaContentPeer::addSelectColumns($criteria);
+        $startcol = MediaContentPeer::NUM_HYDRATE_COLUMNS;
         MediaItemPeer::addSelectColumns($criteria);
-        $startcol = MediaItemPeer::NUM_HYDRATE_COLUMNS;
-        CcSubjsPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(MediaItemPeer::OWNER_ID, CcSubjsPeer::ID, $join_behavior);
+        $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = MediaItemPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = MediaItemPeer::getInstanceFromPool($key1))) {
+            $key1 = MediaContentPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = MediaContentPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = MediaItemPeer::getOMClass();
+                $cls = MediaContentPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                MediaItemPeer::addInstanceToPool($obj1, $key1);
+                MediaContentPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
-            $key2 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            $key2 = MediaItemPeer::getPrimaryKeyHashFromRow($row, $startcol);
             if ($key2 !== null) {
-                $obj2 = CcSubjsPeer::getInstanceFromPool($key2);
+                $obj2 = MediaItemPeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
-                    $cls = CcSubjsPeer::getOMClass();
+                    $cls = MediaItemPeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol);
-                    CcSubjsPeer::addInstanceToPool($obj2, $key2);
+                    MediaItemPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (MediaItem) to $obj2 (CcSubjs)
-                $obj2->addMediaItem($obj1);
+                // Add the $obj1 (MediaContent) to $obj2 (MediaItem)
+                $obj2->addMediaContent($obj1);
 
             } // if joined row was not null
 
@@ -669,26 +640,26 @@ abstract class BaseMediaItemPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(MediaItemPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(MediaContentPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            MediaItemPeer::addSelectColumns($criteria);
+            MediaContentPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(MediaItemPeer::OWNER_ID, CcSubjsPeer::ID, $join_behavior);
+        $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -703,12 +674,12 @@ abstract class BaseMediaItemPeer
     }
 
     /**
-     * Selects a collection of MediaItem objects pre-filled with all related objects.
+     * Selects a collection of MediaContent objects pre-filled with all related objects.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of MediaItem objects.
+     * @return array           Array of MediaContent objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -718,50 +689,50 @@ abstract class BaseMediaItemPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+            $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
         }
 
+        MediaContentPeer::addSelectColumns($criteria);
+        $startcol2 = MediaContentPeer::NUM_HYDRATE_COLUMNS;
+
         MediaItemPeer::addSelectColumns($criteria);
-        $startcol2 = MediaItemPeer::NUM_HYDRATE_COLUMNS;
+        $startcol3 = $startcol2 + MediaItemPeer::NUM_HYDRATE_COLUMNS;
 
-        CcSubjsPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + CcSubjsPeer::NUM_HYDRATE_COLUMNS;
-
-        $criteria->addJoin(MediaItemPeer::OWNER_ID, CcSubjsPeer::ID, $join_behavior);
+        $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = MediaItemPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = MediaItemPeer::getInstanceFromPool($key1))) {
+            $key1 = MediaContentPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = MediaContentPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = MediaItemPeer::getOMClass();
+                $cls = MediaContentPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                MediaItemPeer::addInstanceToPool($obj1, $key1);
+                MediaContentPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-            // Add objects for joined CcSubjs rows
+            // Add objects for joined MediaItem rows
 
-            $key2 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+            $key2 = MediaItemPeer::getPrimaryKeyHashFromRow($row, $startcol2);
             if ($key2 !== null) {
-                $obj2 = CcSubjsPeer::getInstanceFromPool($key2);
+                $obj2 = MediaItemPeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
-                    $cls = CcSubjsPeer::getOMClass();
+                    $cls = MediaItemPeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    CcSubjsPeer::addInstanceToPool($obj2, $key2);
+                    MediaItemPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 loaded
 
-                // Add the $obj1 (MediaItem) to the collection in $obj2 (CcSubjs)
-                $obj2->addMediaItem($obj1);
+                // Add the $obj1 (MediaContent) to the collection in $obj2 (MediaItem)
+                $obj2->addMediaContent($obj1);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -780,7 +751,7 @@ abstract class BaseMediaItemPeer
      */
     public static function getTableMap()
     {
-        return Propel::getDatabaseMap(MediaItemPeer::DATABASE_NAME)->getTable(MediaItemPeer::TABLE_NAME);
+        return Propel::getDatabaseMap(MediaContentPeer::DATABASE_NAME)->getTable(MediaContentPeer::TABLE_NAME);
     }
 
     /**
@@ -788,9 +759,9 @@ abstract class BaseMediaItemPeer
      */
     public static function buildTableMap()
     {
-      $dbMap = Propel::getDatabaseMap(BaseMediaItemPeer::DATABASE_NAME);
-      if (!$dbMap->hasTable(BaseMediaItemPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new \Airtime\map\MediaItemTableMap());
+      $dbMap = Propel::getDatabaseMap(BaseMediaContentPeer::DATABASE_NAME);
+      if (!$dbMap->hasTable(BaseMediaContentPeer::TABLE_NAME)) {
+        $dbMap->addTableObject(new \Airtime\MediaItem\map\MediaContentTableMap());
       }
     }
 
@@ -802,13 +773,13 @@ abstract class BaseMediaItemPeer
      */
     public static function getOMClass($row = 0, $colnum = 0)
     {
-        return MediaItemPeer::OM_CLASS;
+        return MediaContentPeer::OM_CLASS;
     }
 
     /**
-     * Performs an INSERT on the database, given a MediaItem or Criteria object.
+     * Performs an INSERT on the database, given a MediaContent or Criteria object.
      *
-     * @param      mixed $values Criteria or MediaItem object containing data that is used to create the INSERT statement.
+     * @param      mixed $values Criteria or MediaContent object containing data that is used to create the INSERT statement.
      * @param      PropelPDO $con the PropelPDO connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -817,22 +788,22 @@ abstract class BaseMediaItemPeer
     public static function doInsert($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
         } else {
-            $criteria = $values->buildCriteria(); // build Criteria from MediaItem object
+            $criteria = $values->buildCriteria(); // build Criteria from MediaContent object
         }
 
-        if ($criteria->containsKey(MediaItemPeer::ID) && $criteria->keyContainsValue(MediaItemPeer::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.MediaItemPeer::ID.')');
+        if ($criteria->containsKey(MediaContentPeer::ID) && $criteria->keyContainsValue(MediaContentPeer::ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.MediaContentPeer::ID.')');
         }
 
 
         // Set the correct dbName
-        $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
 
         try {
             // use transaction because $criteria could contain info
@@ -849,9 +820,9 @@ abstract class BaseMediaItemPeer
     }
 
     /**
-     * Performs an UPDATE on the database, given a MediaItem or Criteria object.
+     * Performs an UPDATE on the database, given a MediaContent or Criteria object.
      *
-     * @param      mixed $values Criteria or MediaItem object containing data that is used to create the UPDATE statement.
+     * @param      mixed $values Criteria or MediaContent object containing data that is used to create the UPDATE statement.
      * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
      * @return int             The number of affected rows (if supported by underlying database driver).
      * @throws PropelException Any exceptions caught during processing will be
@@ -860,35 +831,35 @@ abstract class BaseMediaItemPeer
     public static function doUpdate($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
-        $selectCriteria = new Criteria(MediaItemPeer::DATABASE_NAME);
+        $selectCriteria = new Criteria(MediaContentPeer::DATABASE_NAME);
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
 
-            $comparison = $criteria->getComparison(MediaItemPeer::ID);
-            $value = $criteria->remove(MediaItemPeer::ID);
+            $comparison = $criteria->getComparison(MediaContentPeer::ID);
+            $value = $criteria->remove(MediaContentPeer::ID);
             if ($value) {
-                $selectCriteria->add(MediaItemPeer::ID, $value, $comparison);
+                $selectCriteria->add(MediaContentPeer::ID, $value, $comparison);
             } else {
-                $selectCriteria->setPrimaryTableName(MediaItemPeer::TABLE_NAME);
+                $selectCriteria->setPrimaryTableName(MediaContentPeer::TABLE_NAME);
             }
 
-        } else { // $values is MediaItem object
+        } else { // $values is MediaContent object
             $criteria = $values->buildCriteria(); // gets full criteria
             $selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
         }
 
         // set the correct dbName
-        $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
 
         return BasePeer::doUpdate($selectCriteria, $criteria, $con);
     }
 
     /**
-     * Deletes all rows from the media_item table.
+     * Deletes all rows from the media_content table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).
@@ -897,19 +868,19 @@ abstract class BaseMediaItemPeer
     public static function doDeleteAll(PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
         $affectedRows = 0; // initialize var to track total num of affected rows
         try {
             // use transaction because $criteria could contain info
             // for more than one table or we could emulating ON DELETE CASCADE, etc.
             $con->beginTransaction();
-            $affectedRows += BasePeer::doDeleteAll(MediaItemPeer::TABLE_NAME, $con, MediaItemPeer::DATABASE_NAME);
+            $affectedRows += BasePeer::doDeleteAll(MediaContentPeer::TABLE_NAME, $con, MediaContentPeer::DATABASE_NAME);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            MediaItemPeer::clearInstancePool();
-            MediaItemPeer::clearRelatedInstancePool();
+            MediaContentPeer::clearInstancePool();
+            MediaContentPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -920,9 +891,9 @@ abstract class BaseMediaItemPeer
     }
 
     /**
-     * Performs a DELETE on the database, given a MediaItem or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a MediaContent or Criteria object OR a primary key value.
      *
-     * @param      mixed $values Criteria or MediaItem object or primary key or array of primary keys
+     * @param      mixed $values Criteria or MediaContent object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param      PropelPDO $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -933,32 +904,32 @@ abstract class BaseMediaItemPeer
      public static function doDelete($values, PropelPDO $con = null)
      {
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             // invalidate the cache for all objects of this type, since we have no
             // way of knowing (without running a query) what objects should be invalidated
             // from the cache based on this Criteria.
-            MediaItemPeer::clearInstancePool();
+            MediaContentPeer::clearInstancePool();
             // rename for clarity
             $criteria = clone $values;
-        } elseif ($values instanceof MediaItem) { // it's a model object
+        } elseif ($values instanceof MediaContent) { // it's a model object
             // invalidate the cache for this single object
-            MediaItemPeer::removeInstanceFromPool($values);
+            MediaContentPeer::removeInstanceFromPool($values);
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(MediaItemPeer::DATABASE_NAME);
-            $criteria->add(MediaItemPeer::ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(MediaContentPeer::DATABASE_NAME);
+            $criteria->add(MediaContentPeer::ID, (array) $values, Criteria::IN);
             // invalidate the cache for this object(s)
             foreach ((array) $values as $singleval) {
-                MediaItemPeer::removeInstanceFromPool($singleval);
+                MediaContentPeer::removeInstanceFromPool($singleval);
             }
         }
 
         // Set the correct dbName
-        $criteria->setDbName(MediaItemPeer::DATABASE_NAME);
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
 
         $affectedRows = 0; // initialize var to track total num of affected rows
 
@@ -968,7 +939,7 @@ abstract class BaseMediaItemPeer
             $con->beginTransaction();
 
             $affectedRows += BasePeer::doDelete($criteria, $con);
-            MediaItemPeer::clearRelatedInstancePool();
+            MediaContentPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -979,13 +950,13 @@ abstract class BaseMediaItemPeer
     }
 
     /**
-     * Validates all modified columns of given MediaItem object.
+     * Validates all modified columns of given MediaContent object.
      * If parameter $columns is either a single column name or an array of column names
      * than only those columns are validated.
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param MediaItem $obj The object to validate.
+     * @param MediaContent $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -995,8 +966,8 @@ abstract class BaseMediaItemPeer
         $columns = array();
 
         if ($cols) {
-            $dbMap = Propel::getDatabaseMap(MediaItemPeer::DATABASE_NAME);
-            $tableMap = $dbMap->getTable(MediaItemPeer::TABLE_NAME);
+            $dbMap = Propel::getDatabaseMap(MediaContentPeer::DATABASE_NAME);
+            $tableMap = $dbMap->getTable(MediaContentPeer::TABLE_NAME);
 
             if (! is_array($cols)) {
                 $cols = array($cols);
@@ -1012,7 +983,7 @@ abstract class BaseMediaItemPeer
 
         }
 
-        return BasePeer::doValidate(MediaItemPeer::DATABASE_NAME, MediaItemPeer::TABLE_NAME, $columns);
+        return BasePeer::doValidate(MediaContentPeer::DATABASE_NAME, MediaContentPeer::TABLE_NAME, $columns);
     }
 
     /**
@@ -1020,23 +991,23 @@ abstract class BaseMediaItemPeer
      *
      * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
-     * @return MediaItem
+     * @return MediaContent
      */
     public static function retrieveByPK($pk, PropelPDO $con = null)
     {
 
-        if (null !== ($obj = MediaItemPeer::getInstanceFromPool((string) $pk))) {
+        if (null !== ($obj = MediaContentPeer::getInstanceFromPool((string) $pk))) {
             return $obj;
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria = new Criteria(MediaItemPeer::DATABASE_NAME);
-        $criteria->add(MediaItemPeer::ID, $pk);
+        $criteria = new Criteria(MediaContentPeer::DATABASE_NAME);
+        $criteria->add(MediaContentPeer::ID, $pk);
 
-        $v = MediaItemPeer::doSelect($criteria, $con);
+        $v = MediaContentPeer::doSelect($criteria, $con);
 
         return !empty($v) > 0 ? $v[0] : null;
     }
@@ -1046,31 +1017,31 @@ abstract class BaseMediaItemPeer
      *
      * @param      array $pks List of primary keys
      * @param      PropelPDO $con the connection to use
-     * @return MediaItem[]
+     * @return MediaContent[]
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
     public static function retrieveByPKs($pks, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(MediaItemPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         $objs = null;
         if (empty($pks)) {
             $objs = array();
         } else {
-            $criteria = new Criteria(MediaItemPeer::DATABASE_NAME);
-            $criteria->add(MediaItemPeer::ID, $pks, Criteria::IN);
-            $objs = MediaItemPeer::doSelect($criteria, $con);
+            $criteria = new Criteria(MediaContentPeer::DATABASE_NAME);
+            $criteria->add(MediaContentPeer::ID, $pks, Criteria::IN);
+            $objs = MediaContentPeer::doSelect($criteria, $con);
         }
 
         return $objs;
     }
 
-} // BaseMediaItemPeer
+} // BaseMediaContentPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseMediaItemPeer::buildTableMap();
+BaseMediaContentPeer::buildTableMap();
 
