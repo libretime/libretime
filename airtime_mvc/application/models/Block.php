@@ -5,6 +5,7 @@ require_once 'formatters/LengthFormatter.php';
 use Airtime\CcBlock;
 use Airtime\CcBlockPeer;
 use Airtime\CcBlockQuery;
+use Airtime\CcBlockcriteriaQuery;
 use Airtime\CcFilesPeer;
 use Airtime\CcFilesQuery;
 use Airtime\CcPlaylistcontentsQuery;
