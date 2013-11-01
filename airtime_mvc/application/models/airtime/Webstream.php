@@ -18,4 +18,40 @@ use Airtime\MediaItem\om\BaseWebstream;
  */
 class Webstream extends BaseWebstream
 {
+	public function getHoursMins() {
+
+		return explode(":", $this->getLength());
+	}
+	
+	public function getUrlData() {
+		
+		$url = $this->getUrl();
+		
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	
+		// grab URL and pass it to the browser
+		//TODO: What if invalid url?
+		$content = curl_exec($ch);
+	
+		// close cURL resource, and free up system resources
+		curl_close($ch);
+	
+		return $content;
+	}
+	
+	public function setUrl($v) {
+		
+		parent::setUrl($v);
+		
+		//get an associative array of headers.
+		$headers = get_headers($v, 1);
+		$mime = $headers["Content-Type"];
+		
+		$this->setMime($mime);
+		
+		return $this;
+	}
 }

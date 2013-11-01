@@ -186,5 +186,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action' => 'password-change',
             )));
     }
+    
+    protected function _initAutoload () {
+    
+    	// configure new autoloader
+    	$autoloader = new Zend_Application_Module_Autoloader (array ('namespace' => '', 'basePath' => APPLICATION_PATH));
+    
+    	// autoload form validators & filters definition
+    	$autoloader->addResourceType ('Filter', 'forms/filters', 'Filter_');
+    	$autoloader->addResourceType ('Validator', 'forms/validators', 'Validate_');
+    }
 }
 

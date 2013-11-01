@@ -17,7 +17,22 @@ class WebstreamController extends Zend_Controller_Action
 
     public function newAction()
     {
+    	//clear the session in case an old playlist was open: CC-4196
+    	Application_Model_Library::changePlaylist(null, null);
+    	
+    	$service = new Application_Service_WebstreamService();
+    	$form = $service->makeWebstreamForm(null);
+    	
+    	$form->setDefaults(array(
+    		'name' => 'Unititled Webstream',
+    		'hours' => 0,
+    		'mins' => 30,
+    	));
+    	
+    	$this->view->action = "new";
+    	$this->view->html = $form->render();
 
+    	/*
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         if (!$this->isAuthorized(-1)) {
             // TODO: this header call does not actually print any error message
@@ -44,6 +59,7 @@ class WebstreamController extends Zend_Controller_Action
         $this->view->obj = new Application_Model_Webstream($webstream);
         $this->view->action = "new";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
+        */
     }
 
     public function editAction()
@@ -117,20 +133,40 @@ class WebstreamController extends Zend_Controller_Action
     public function saveAction()
     {
         $request = $this->getRequest();
-
-        $id = $request->getParam("id");
-
         $parameters = array();
-        foreach (array('id','length','name','description','url') as $p) {
+        
+        foreach (array('id','hours', 'mins', 'name','description','url') as $p) {
             $parameters[$p] = trim($request->getParam($p));
         }
+        
+        Logging::info($parameters);
+        
+        $service = new Application_Service_WebstreamService();
+        $form = $service->makeWebstreamForm(null);
+        
+        if ($form->isValid($parameters)) {
+        	Logging::info("form is valid");
+        	
+        	$values = $form->getValues();
+        	Logging::info($values);
+        	
+        	$service->saveWebstream($values);
+        }
+        else {
+        	Logging::info("form is not valid");
+        }
+        
+        
 
+        /*
         if (!$this->isAuthorized($id)) {
             header("Status: 401 Not Authorized");
             return;
         }
+        */
 
 
+        /*
         list($analysis, $mime, $mediaUrl, $di) = Application_Model_Webstream::analyzeFormData($parameters);
         try {
             if (Application_Model_Webstream::isValid($analysis)) {
@@ -150,5 +186,6 @@ class WebstreamController extends Zend_Controller_Action
             $this->view->streamId = -1;
             $this->view->analysis = $analysis;
         }
+        */
     }
 }

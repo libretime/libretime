@@ -780,27 +780,37 @@ var AIRTIME = (function(AIRTIME){
     	        disableLoadingIcon();
     	        setTimeout(removeSuccessMsg, 5000);
     	    });
-	    })
+	    });
 
-		$pl.on("click", "#webstream_save", function(){
+		$pl.on("click", "#webstream_save", function() {
             //get all fields and POST to server
-            //description
-            //stream url
-            //default_length  
-            //playlist name
-            var id = $pl.find("#obj_id").attr("value"); 
-            var description = $pl.find("#description").val();
-            var streamurl = $pl.find("#streamurl-element input").val();
-            var length = $pl.find("#streamlength-element input").val();
-            var name = $pl.find("#playlist_name_display").text(); 
+            var id = $pl.find("#ws_id").attr("value"); 
+            var description = $pl.find("#ws_description").val();
+            var streamurl = $pl.find("#ws_url").val();
+            var hours = $pl.find("#ws_hours").val();
+            var mins = $pl.find("#ws_mins").val();
+            var name = $pl.find("#ws_name").text();
+            
+            var parameters = {
+        		format: "json", 
+        		description: description, 
+        		url: streamurl, 
+        		hours: hours, 
+        		mins: mins, 
+        		name: name
+    		};
+            
+            if (id !== "") {
+            	parameters["id"] = id;
+            }
             
             //hide any previous errors (if any)
             $("#side_playlist .errors").empty().hide();
         
             var url = baseUrl+'Webstream/save';
             $.post(url, 
-                {format: "json", id:id, description: description, url:streamurl, length: length, name: name}, 
-                function(json){
+                parameters, 
+                function(json) {
                     if (json.analysis){
                         for (var s in json.analysis){
                             var field = json.analysis[s];
@@ -810,7 +820,8 @@ var AIRTIME = (function(AIRTIME){
                                 var $div = $("#side_playlist " + elemId).text(field[1]).show();
                             }
                         }
-                    } else {
+                    } 
+                    else {
                         var $status = $("#side_playlist .status");
                         $status.html(json.statusMessage);
                         $status.show();
@@ -828,11 +839,8 @@ var AIRTIME = (function(AIRTIME){
 
                         //redraw the library to show the new webstream
                         redrawLib();
-                    }
-                    
+                    }     
                 });    
-        
-        
         });
 
         $lib.on("click", "#pl_edit", function() {
