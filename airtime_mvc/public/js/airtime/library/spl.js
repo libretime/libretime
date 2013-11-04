@@ -784,7 +784,7 @@ var AIRTIME = (function(AIRTIME){
 
 		$pl.on("click", "#webstream_save", function() {
             //get all fields and POST to server
-            var id = $pl.find("#ws_id").attr("value"); 
+            var id = $pl.find("#obj_id").attr("value"); 
             var description = $pl.find("#ws_description").val();
             var streamurl = $pl.find("#ws_url").val();
             var hours = $pl.find("#ws_hours").val();
@@ -1084,16 +1084,14 @@ var AIRTIME = (function(AIRTIME){
 	};
     
 	mod.fnWsDelete = function(wsid) {
-		var url, id, lastMod;
+		var url, id;
 		
 		stopAudioPreview();	
 		id = (wsid === undefined) ? getId() : wsid;
-		lastMod = getModified();
-		type = $('#obj_type').val();
 		url = baseUrl+'Webstream/delete';
         
 		$.post(url, 
-			{format: "json", ids: id, modified: lastMod, type: type}, 
+			{format: "json", ids: id}, 
 			function(json){
 				openPlaylist(json);
 				redrawLib();

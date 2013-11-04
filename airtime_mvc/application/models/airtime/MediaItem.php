@@ -23,6 +23,7 @@ class MediaItem extends BaseMediaItem
 {
 	public function preInsert(PropelPDO $con = null)
 	{
+		//TODO, don't overwrite owner here if already set (from media monitor request)
 		try {
 			$service = new Application_Service_UserService();
 			$this->setCcSubjs($service->getCurrentUser());
@@ -33,5 +34,21 @@ class MediaItem extends BaseMediaItem
 
 		//have to return true for the insert to work.
 		return true;
+	}
+	
+	public function preDelete(PropelPDO $con = null)
+	{
+		try {
+			$service = new Application_Service_UserService();
+			$user = $service->getCurrentUser();
+			
+			//only users who are admins, PMs or owners of the media can delete the item.
+			return $user->isAdminOrPM() || $user->getId() === $this->getOwnerId();
+		}
+		catch(Exception $e) {
+			Logging::warn("Unable to get current user while trying to delete media item {$this->getId()}");
+		}
+		
+		return false;
 	}
 }

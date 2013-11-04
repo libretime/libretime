@@ -17,6 +17,7 @@ class Application_Service_WebstreamService
 				$length = $webstream->getHoursMins();
 				
 				$formValues = array(
+					"id" => $id,
 					"name" => $webstream->getName(),
 					"description" => $webstream->getDescription(),
 					"url" => $webstream->getUrl(),
@@ -83,5 +84,10 @@ class Application_Service_WebstreamService
 		$ws->save();
 		
 		return $ws;
+	}
+	
+	public function deleteWebstreams($ids) {
+		
+		WebstreamQuery::create()->findPks($ids)->delete();
 	}
 }
