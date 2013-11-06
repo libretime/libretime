@@ -717,6 +717,7 @@ DROP TABLE IF EXISTS "media_playlist" CASCADE;
 
 CREATE TABLE "media_playlist"
 (
+    "type" VARCHAR(15) DEFAULT 'standard',
     "id" INTEGER NOT NULL,
     "name" VARCHAR(128),
     "owner_id" INTEGER,
@@ -726,28 +727,23 @@ CREATE TABLE "media_playlist"
     "length" interval DEFAULT '00:00:00',
     "created_at" TIMESTAMP,
     "updated_at" TIMESTAMP,
-    "descendant_class" VARCHAR(100),
     PRIMARY KEY ("id")
 );
 
 -----------------------------------------------------------------------
--- media_block
+-- media_playlist_rule
 -----------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "media_block" CASCADE;
+DROP TABLE IF EXISTS "media_playlist_rule" CASCADE;
 
-CREATE TABLE "media_block"
+CREATE TABLE "media_playlist_rule"
 (
-    "type" VARCHAR(7) DEFAULT 'static',
-    "id" INTEGER NOT NULL,
-    "name" VARCHAR(128),
-    "owner_id" INTEGER,
-    "description" VARCHAR(512),
-    "last_played" TIMESTAMP(6),
-    "play_count" INTEGER DEFAULT 0,
-    "length" interval DEFAULT '00:00:00',
-    "created_at" TIMESTAMP,
-    "updated_at" TIMESTAMP,
+    "id" serial NOT NULL,
+    "criteria" VARCHAR(32) NOT NULL,
+    "modifier" VARCHAR(16) NOT NULL,
+    "value" VARCHAR(512) NOT NULL,
+    "extra" VARCHAR(512),
+    "media_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -963,19 +959,10 @@ ALTER TABLE "media_playlist" ADD CONSTRAINT "media_playlist_FK_2"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
 
-ALTER TABLE "media_block" ADD CONSTRAINT "media_block_FK_1"
-    FOREIGN KEY ("id")
-    REFERENCES "media_playlist" ("id")
-    ON DELETE CASCADE;
-
-ALTER TABLE "media_block" ADD CONSTRAINT "media_block_FK_2"
-    FOREIGN KEY ("id")
+ALTER TABLE "media_playlist_rule" ADD CONSTRAINT "media_item_rule_fkey"
+    FOREIGN KEY ("media_id")
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;
-
-ALTER TABLE "media_block" ADD CONSTRAINT "media_block_FK_3"
-    FOREIGN KEY ("owner_id")
-    REFERENCES "cc_subjs" ("id");
 
 ALTER TABLE "media_content" ADD CONSTRAINT "media_item_contents_fkey"
     FOREIGN KEY ("media_id")

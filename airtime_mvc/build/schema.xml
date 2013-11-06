@@ -548,13 +548,19 @@
     <behavior name="concrete_inheritance">
       <parameter name="extends" value="media_item" />
     </behavior>
+    <column name="type" phpName="Type" type="VARCHAR" size="15" defaultValue="standard"/>
   </table>
   
-  <table name="media_block" phpName="Block" namespace="MediaItem">
-    <behavior name="concrete_inheritance">
-      <parameter name="extends" value="media_playlist" />
-    </behavior>
-    <column name="type" phpName="Type" type="VARCHAR" size="7" defaultValue="static"/>
+  <table name="media_playlist_rule" phpName="PlaylistRule" namespace="MediaItem">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="criteria" phpName="Criteria" type="VARCHAR" size="32" required="true"/>
+    <column name="modifier" phpName="Modifier" type="VARCHAR" size="16" required="true"/>
+    <column name="value" phpName="Value" type="VARCHAR" size="512" required="true"/>
+    <column name="extra" phpName="Extra" type="VARCHAR" size="512" required="false"/>
+    <column name="media_id" phpName="MediaId" type="INTEGER" required="true"/>
+    <foreign-key foreignTable="media_item" name="media_item_rule_fkey" onDelete="CASCADE">
+      <reference local="media_id" foreign="id"/>
+    </foreign-key>    
   </table>
   
   <table name="media_content" phpName="MediaContent" namespace="MediaItem">
@@ -571,6 +577,5 @@
       <reference local="media_id" foreign="id"/>
     </foreign-key>
   </table>
-  
   
 </database>

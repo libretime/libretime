@@ -89,6 +89,9 @@ class Application_Service_AudioFileService
 		
 		$file->save($this->_con);
 		
+		Logging::info($file->toJSON(true));
+		Logging::info($file->toJSON(false));
+		
 		//TODO implement upload recorded.
 		if ($md['is_record'] != 0) {
 			//think we saved show instance id in field MDATA_KEY_TRACKNUMBER for Airtime recorded shows.

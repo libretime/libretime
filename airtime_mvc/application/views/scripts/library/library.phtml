@@ -1,16 +1,18 @@
 <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
-<div id="import_status" class="library_import" style="display:none">
-	<?php echo _("File import in progress..."); ?>
-	<img src=<?php echo $baseUrl . "css/images/file_import_loader.gif"?>></img>
+
+<div id ="lib_tabs">
+	<ul>
+		<li><a href="#lib_audio"><span>Audio</span></a></li>
+		<li><a href="#lib_webstreams"><span>Webstreams</span></a></li>
+		<li><a href="#lib_playlists"><span>Playlists</span></a></li>
+	</ul>
+	<div id="lib_audio">
+		<table id="audio_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+	</div>
+	<div id="lib_webstreams">
+		<table id="webstream_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+	</div>
+	<div id="lib_playlists">
+		<table id="playlist_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+	</div>
 </div>
-
-<fieldset class="toggle closed" id="filter_options">
-    <legend style="cursor: pointer;">
-    	<span class="ui-icon ui-icon-triangle-2-n-s"></span>
-    	<?php echo _("Advanced Search Options") ?>
-    </legend>
-    <div id="advanced_search" class="advanced_search form-horizontal"></div>
-</fieldset>
-
-<table id="library_display" cellpadding="0" cellspacing="0" class="datatable">
-</table>

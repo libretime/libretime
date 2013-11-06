@@ -2,11 +2,11 @@
 
 namespace Airtime\MediaItem;
 
-use Airtime\MediaItem\om\BaseBlockQuery;
+use Airtime\MediaItem\om\BasePlaylistRule;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'block' table.
+ * Skeleton subclass for representing a row from the 'media_playlist_rule' table.
  *
  *
  *
@@ -16,6 +16,6 @@ use Airtime\MediaItem\om\BaseBlockQuery;
  *
  * @package    propel.generator.airtime
  */
-class BlockQuery extends BaseBlockQuery
+class PlaylistRule extends BasePlaylistRule
 {
 }

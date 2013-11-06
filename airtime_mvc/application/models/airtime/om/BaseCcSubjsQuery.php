@@ -23,7 +23,6 @@ use Airtime\CcSubjsQuery;
 use Airtime\CcSubjsToken;
 use Airtime\MediaItem;
 use Airtime\MediaItem\AudioFile;
-use Airtime\MediaItem\Block;
 use Airtime\MediaItem\Playlist;
 use Airtime\MediaItem\Webstream;
 
@@ -107,10 +106,6 @@ use Airtime\MediaItem\Webstream;
  * @method CcSubjsQuery leftJoinPlaylist($relationAlias = null) Adds a LEFT JOIN clause to the query using the Playlist relation
  * @method CcSubjsQuery rightJoinPlaylist($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Playlist relation
  * @method CcSubjsQuery innerJoinPlaylist($relationAlias = null) Adds a INNER JOIN clause to the query using the Playlist relation
- *
- * @method CcSubjsQuery leftJoinBlock($relationAlias = null) Adds a LEFT JOIN clause to the query using the Block relation
- * @method CcSubjsQuery rightJoinBlock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Block relation
- * @method CcSubjsQuery innerJoinBlock($relationAlias = null) Adds a INNER JOIN clause to the query using the Block relation
  *
  * @method CcSubjs findOne(PropelPDO $con = null) Return the first CcSubjs matching the query
  * @method CcSubjs findOneOrCreate(PropelPDO $con = null) Return the first CcSubjs matching the query, or a new CcSubjs object populated from the query conditions when no match is found
@@ -1580,80 +1575,6 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
         return $this
             ->joinPlaylist($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Playlist', '\Airtime\MediaItem\PlaylistQuery');
-    }
-
-    /**
-     * Filter the query by a related Block object
-     *
-     * @param   Block|PropelObjectCollection $block  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 CcSubjsQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByBlock($block, $comparison = null)
-    {
-        if ($block instanceof Block) {
-            return $this
-                ->addUsingAlias(CcSubjsPeer::ID, $block->getOwnerId(), $comparison);
-        } elseif ($block instanceof PropelObjectCollection) {
-            return $this
-                ->useBlockQuery()
-                ->filterByPrimaryKeys($block->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByBlock() only accepts arguments of type Block or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Block relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return CcSubjsQuery The current query, for fluid interface
-     */
-    public function joinBlock($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Block');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Block');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Block relation Block object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Airtime\MediaItem\BlockQuery A secondary query class using the current class as primary query
-     */
-    public function useBlockQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinBlock($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Block', '\Airtime\MediaItem\BlockQuery');
     }
 
     /**

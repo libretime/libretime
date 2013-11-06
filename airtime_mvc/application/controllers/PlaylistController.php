@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\MediaItem\Playlist;
+
 class PlaylistController extends Zend_Controller_Action
 {
 
@@ -70,6 +72,16 @@ class PlaylistController extends Zend_Controller_Action
     private function createFullResponse($obj = null, $isJson = false,
         $formIsValid = false)
     {
+    	$viewPath = 'playlist/playlist.phtml';
+    	$this->view->length = "00";
+    	$this->view->obj = $obj;
+    	$this->view->id = $obj->getId();
+    	
+    	$this->view->html = $this->view->render($viewPath);
+    	
+    	unset($this->view->obj);
+    	
+    	/*
         $isBlock = false;
         $viewPath = 'playlist/playlist.phtml';
         if ($obj instanceof Application_Model_Block) {
@@ -111,6 +123,7 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->html = $this->view->render($viewPath);
             }
         }
+        */
     }
 
     private function playlistOutdated($e)
@@ -166,6 +179,13 @@ class PlaylistController extends Zend_Controller_Action
 
     public function newAction()
     {
+    	$playlist = new Playlist();
+    	$playlist->save();
+    	
+    	Application_Model_Library::changePlaylist($playlist->getId(), "playlist");
+    	$this->createFullResponse($playlist);
+    	
+    	/*
         //$pl_sess = $this->pl_sess;
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $type = $this->_getParam('type');
@@ -183,6 +203,7 @@ class PlaylistController extends Zend_Controller_Action
 
         Application_Model_Library::changePlaylist($obj->getId(), $type);
         $this->createFullResponse($obj);
+        */
     }
 
     public function editAction()

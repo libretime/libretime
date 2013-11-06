@@ -54,4 +54,28 @@ class Webstream extends BaseWebstream
 		
 		return $this;
 	}
+	
+	public function isScheduable() {
+		return true;
+	}
+	
+	public function getSchedulingLength() {
+		return $this->getLength();
+	}
+	
+	public function getSchedulingCueIn() {
+		return "00:00:00";
+	}
+	
+	public function getSchedulingCueOut() {
+		return $this->getLength();
+	}
+	
+	public function getSchedulingFadeIn() {
+		return Application_Model_Preference::GetDefaultFadeIn();
+	}
+	
+	public function getSchedulingFadeOut() {
+		return Application_Model_Preference::GetDefaultFadeOut();
+	}
 }

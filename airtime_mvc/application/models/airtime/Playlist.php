@@ -3,6 +3,7 @@
 namespace Airtime\MediaItem;
 
 use Airtime\MediaItem\om\BasePlaylist;
+use \Criteria;
 
 
 /**
@@ -18,4 +19,21 @@ use Airtime\MediaItem\om\BasePlaylist;
  */
 class Playlist extends BasePlaylist
 {
+	
+	public function applyDefaultValues() {
+		parent::applyDefaultValues();
+		
+		$this->name = _('Untitled Playlist');
+		$this->modifiedColumns[] = PlaylistPeer::NAME;
+	}
+	
+	public function getMediaContents($criteria = NULL, PropelPDO $con = NULL) {
+		
+		if (is_null($criteria)) {
+			$criteria = new Criteria();
+			$criteria->addAscendingOrderByColumn(MediaContentPeer::POSITION);
+		}
+		
+		return parent::getMediaContents($criteria, $con);
+	}
 }

@@ -9,17 +9,13 @@ use \Exception;
 use \PDO;
 use \Persistent;
 use \Propel;
-use \PropelCollection;
 use \PropelDateTime;
 use \PropelException;
 use \PropelPDO;
-use \PropelQuery;
 use Airtime\CcSubjs;
 use Airtime\CcSubjsQuery;
 use Airtime\MediaItem;
 use Airtime\MediaItemQuery;
-use Airtime\MediaItem\Block;
-use Airtime\MediaItem\BlockQuery;
 use Airtime\MediaItem\Playlist;
 use Airtime\MediaItem\PlaylistPeer;
 use Airtime\MediaItem\PlaylistQuery;
@@ -51,6 +47,13 @@ abstract class BasePlaylist extends MediaItem implements Persistent
      * @var       boolean
      */
     protected $startCopy = false;
+
+    /**
+     * The value for the type field.
+     * Note: this column has a database default value of: 'standard'
+     * @var        string
+     */
+    protected $type;
 
     /**
      * The value for the id field.
@@ -109,12 +112,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     protected $updated_at;
 
     /**
-     * The value for the descendant_class field.
-     * @var        string
-     */
-    protected $descendant_class;
-
-    /**
      * @var        MediaItem
      */
     protected $aMediaItem;
@@ -123,11 +120,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
      * @var        CcSubjs
      */
     protected $aCcSubjs;
-
-    /**
-     * @var        Block one-to-one related Block object
-     */
-    protected $singleBlock;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -157,6 +149,7 @@ abstract class BasePlaylist extends MediaItem implements Persistent
      */
     public function applyDefaultValues()
     {
+        $this->type = 'standard';
         $this->play_count = 0;
         $this->length = '00:00:00';
     }
@@ -169,6 +162,17 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     {
         parent::__construct();
         $this->applyDefaultValues();
+    }
+
+    /**
+     * Get the [type] column value.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+
+        return $this->type;
     }
 
     /**
@@ -343,15 +347,25 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     }
 
     /**
-     * Get the [descendant_class] column value.
+     * Set the value of [type] column.
      *
-     * @return string
+     * @param  string $v new value
+     * @return Playlist The current object (for fluent API support)
      */
-    public function getDescendantClass()
+    public function setType($v)
     {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
 
-        return $this->descendant_class;
-    }
+        if ($this->type !== $v) {
+            $this->type = $v;
+            $this->modifiedColumns[] = PlaylistPeer::TYPE;
+        }
+
+
+        return $this;
+    } // setType()
 
     /**
      * Set the value of [id] column.
@@ -557,27 +571,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     } // setUpdatedAt()
 
     /**
-     * Set the value of [descendant_class] column.
-     *
-     * @param  string $v new value
-     * @return Playlist The current object (for fluent API support)
-     */
-    public function setDescendantClass($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->descendant_class !== $v) {
-            $this->descendant_class = $v;
-            $this->modifiedColumns[] = PlaylistPeer::DESCENDANT_CLASS;
-        }
-
-
-        return $this;
-    } // setDescendantClass()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -587,6 +580,10 @@ abstract class BasePlaylist extends MediaItem implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->type !== 'standard') {
+                return false;
+            }
+
             if ($this->play_count !== 0) {
                 return false;
             }
@@ -617,16 +614,16 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     {
         try {
 
-            $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->owner_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->last_played = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->play_count = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-            $this->length = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->created_at = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->updated_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->descendant_class = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->type = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
+            $this->id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->owner_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->last_played = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->play_count = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->length = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->created_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->updated_at = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -706,8 +703,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
 
             $this->aMediaItem = null;
             $this->aCcSubjs = null;
-            $this->singleBlock = null;
-
         } // if (deep)
     }
 
@@ -870,12 +865,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
                 $this->resetModified();
             }
 
-            if ($this->singleBlock !== null) {
-                if (!$this->singleBlock->isDeleted() && ($this->singleBlock->isNew() || $this->singleBlock->isModified())) {
-                        $affectedRows += $this->singleBlock->save($con);
-                }
-            }
-
             $this->alreadyInSave = false;
 
         }
@@ -898,6 +887,9 @@ abstract class BasePlaylist extends MediaItem implements Persistent
 
 
          // check the columns in natural order for more readable SQL queries
+        if ($this->isColumnModified(PlaylistPeer::TYPE)) {
+            $modifiedColumns[':p' . $index++]  = '"type"';
+        }
         if ($this->isColumnModified(PlaylistPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '"id"';
         }
@@ -925,9 +917,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         if ($this->isColumnModified(PlaylistPeer::UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = '"updated_at"';
         }
-        if ($this->isColumnModified(PlaylistPeer::DESCENDANT_CLASS)) {
-            $modifiedColumns[':p' . $index++]  = '"descendant_class"';
-        }
 
         $sql = sprintf(
             'INSERT INTO "media_playlist" (%s) VALUES (%s)',
@@ -939,6 +928,9 @@ abstract class BasePlaylist extends MediaItem implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
+                    case '"type"':
+                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                        break;
                     case '"id"':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
@@ -965,9 +957,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
                         break;
                     case '"updated_at"':
                         $stmt->bindValue($identifier, $this->updated_at, PDO::PARAM_STR);
-                        break;
-                    case '"descendant_class"':
-                        $stmt->bindValue($identifier, $this->descendant_class, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1079,12 +1068,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
             }
 
 
-                if ($this->singleBlock !== null) {
-                    if (!$this->singleBlock->validate($columns)) {
-                        $failureMap = array_merge($failureMap, $this->singleBlock->getValidationFailures());
-                    }
-                }
-
 
             $this->alreadyInValidation = false;
         }
@@ -1121,34 +1104,34 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
+                return $this->getType();
                 break;
             case 1:
-                return $this->getName();
+                return $this->getId();
                 break;
             case 2:
-                return $this->getOwnerId();
+                return $this->getName();
                 break;
             case 3:
-                return $this->getDescription();
+                return $this->getOwnerId();
                 break;
             case 4:
-                return $this->getLastPlayedTime();
+                return $this->getDescription();
                 break;
             case 5:
-                return $this->getPlayCount();
+                return $this->getLastPlayedTime();
                 break;
             case 6:
-                return $this->getLength();
+                return $this->getPlayCount();
                 break;
             case 7:
-                return $this->getCreatedAt();
+                return $this->getLength();
                 break;
             case 8:
-                return $this->getUpdatedAt();
+                return $this->getCreatedAt();
                 break;
             case 9:
-                return $this->getDescendantClass();
+                return $this->getUpdatedAt();
                 break;
             default:
                 return null;
@@ -1179,16 +1162,16 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         $alreadyDumpedObjects['Playlist'][$this->getPrimaryKey()] = true;
         $keys = PlaylistPeer::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getName(),
-            $keys[2] => $this->getOwnerId(),
-            $keys[3] => $this->getDescription(),
-            $keys[4] => $this->getLastPlayedTime(),
-            $keys[5] => $this->getPlayCount(),
-            $keys[6] => $this->getLength(),
-            $keys[7] => $this->getCreatedAt(),
-            $keys[8] => $this->getUpdatedAt(),
-            $keys[9] => $this->getDescendantClass(),
+            $keys[0] => $this->getType(),
+            $keys[1] => $this->getId(),
+            $keys[2] => $this->getName(),
+            $keys[3] => $this->getOwnerId(),
+            $keys[4] => $this->getDescription(),
+            $keys[5] => $this->getLastPlayedTime(),
+            $keys[6] => $this->getPlayCount(),
+            $keys[7] => $this->getLength(),
+            $keys[8] => $this->getCreatedAt(),
+            $keys[9] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1201,9 +1184,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
             }
             if (null !== $this->aCcSubjs) {
                 $result['CcSubjs'] = $this->aCcSubjs->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleBlock) {
-                $result['Block'] = $this->singleBlock->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
         }
 
@@ -1240,34 +1220,34 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
+                $this->setType($value);
                 break;
             case 1:
-                $this->setName($value);
+                $this->setId($value);
                 break;
             case 2:
-                $this->setOwnerId($value);
+                $this->setName($value);
                 break;
             case 3:
-                $this->setDescription($value);
+                $this->setOwnerId($value);
                 break;
             case 4:
-                $this->setLastPlayedTime($value);
+                $this->setDescription($value);
                 break;
             case 5:
-                $this->setPlayCount($value);
+                $this->setLastPlayedTime($value);
                 break;
             case 6:
-                $this->setLength($value);
+                $this->setPlayCount($value);
                 break;
             case 7:
-                $this->setCreatedAt($value);
+                $this->setLength($value);
                 break;
             case 8:
-                $this->setUpdatedAt($value);
+                $this->setCreatedAt($value);
                 break;
             case 9:
-                $this->setDescendantClass($value);
+                $this->setUpdatedAt($value);
                 break;
         } // switch()
     }
@@ -1293,16 +1273,16 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     {
         $keys = PlaylistPeer::getFieldNames($keyType);
 
-        if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setOwnerId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setLastPlayedTime($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setPlayCount($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setLength($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setCreatedAt($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setUpdatedAt($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setDescendantClass($arr[$keys[9]]);
+        if (array_key_exists($keys[0], $arr)) $this->setType($arr[$keys[0]]);
+        if (array_key_exists($keys[1], $arr)) $this->setId($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setOwnerId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDescription($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setLastPlayedTime($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setPlayCount($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setLength($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setCreatedAt($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setUpdatedAt($arr[$keys[9]]);
     }
 
     /**
@@ -1314,6 +1294,7 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     {
         $criteria = new Criteria(PlaylistPeer::DATABASE_NAME);
 
+        if ($this->isColumnModified(PlaylistPeer::TYPE)) $criteria->add(PlaylistPeer::TYPE, $this->type);
         if ($this->isColumnModified(PlaylistPeer::ID)) $criteria->add(PlaylistPeer::ID, $this->id);
         if ($this->isColumnModified(PlaylistPeer::NAME)) $criteria->add(PlaylistPeer::NAME, $this->name);
         if ($this->isColumnModified(PlaylistPeer::OWNER_ID)) $criteria->add(PlaylistPeer::OWNER_ID, $this->owner_id);
@@ -1323,7 +1304,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         if ($this->isColumnModified(PlaylistPeer::LENGTH)) $criteria->add(PlaylistPeer::LENGTH, $this->length);
         if ($this->isColumnModified(PlaylistPeer::CREATED_AT)) $criteria->add(PlaylistPeer::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(PlaylistPeer::UPDATED_AT)) $criteria->add(PlaylistPeer::UPDATED_AT, $this->updated_at);
-        if ($this->isColumnModified(PlaylistPeer::DESCENDANT_CLASS)) $criteria->add(PlaylistPeer::DESCENDANT_CLASS, $this->descendant_class);
 
         return $criteria;
     }
@@ -1387,6 +1367,7 @@ abstract class BasePlaylist extends MediaItem implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setType($this->getType());
         $copyObj->setName($this->getName());
         $copyObj->setOwnerId($this->getOwnerId());
         $copyObj->setDescription($this->getDescription());
@@ -1395,7 +1376,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         $copyObj->setLength($this->getLength());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
-        $copyObj->setDescendantClass($this->getDescendantClass());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1403,11 +1383,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
-
-            $relObj = $this->getBlock();
-            if ($relObj) {
-                $copyObj->setBlock($relObj->copy($deepCopy));
-            }
 
             $relObj = $this->getMediaItem();
             if ($relObj) {
@@ -1562,60 +1537,12 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         return $this->aCcSubjs;
     }
 
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-    }
-
-    /**
-     * Gets a single Block object, which is related to this object by a one-to-one relationship.
-     *
-     * @param PropelPDO $con optional connection object
-     * @return Block
-     * @throws PropelException
-     */
-    public function getBlock(PropelPDO $con = null)
-    {
-
-        if ($this->singleBlock === null && !$this->isNew()) {
-            $this->singleBlock = BlockQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleBlock;
-    }
-
-    /**
-     * Sets a single Block object as related to this object by a one-to-one relationship.
-     *
-     * @param                  Block $v Block
-     * @return Playlist The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setBlock(Block $v = null)
-    {
-        $this->singleBlock = $v;
-
-        // Make sure that that the passed-in Block isn't already associated with this object
-        if ($v !== null && $v->getPlaylist(null, false) === null) {
-            $v->setPlaylist($this);
-        }
-
-        return $this;
-    }
-
     /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
     {
+        $this->type = null;
         $this->id = null;
         $this->name = null;
         $this->owner_id = null;
@@ -1625,7 +1552,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         $this->length = null;
         $this->created_at = null;
         $this->updated_at = null;
-        $this->descendant_class = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1649,9 +1575,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->singleBlock) {
-                $this->singleBlock->clearAllReferences($deep);
-            }
             if ($this->aMediaItem instanceof Persistent) {
               $this->aMediaItem->clearAllReferences($deep);
             }
@@ -1662,10 +1585,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->singleBlock instanceof PropelCollection) {
-            $this->singleBlock->clearIterator();
-        }
-        $this->singleBlock = null;
         $this->aMediaItem = null;
         $this->aCcSubjs = null;
     }
@@ -1759,34 +1678,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         $this->modifiedColumns[] = PlaylistPeer::UPDATED_AT;
 
         return $this;
-    }
-
-    // concrete_inheritance_parent behavior
-
-    /**
-     * Whether or not this object is the parent of a child object
-     *
-     * @return    bool
-     */
-    public function hasChildObject()
-    {
-        return $this->getDescendantClass() !== null;
-    }
-
-    /**
-     * Get the child object of this object
-     *
-     * @return    mixed
-     */
-    public function getChildObject()
-    {
-        if (!$this->hasChildObject()) {
-            return null;
-        }
-        $childObjectClass = $this->getDescendantClass();
-        $childObject = PropelQuery::from($childObjectClass)->findPk($this->getPrimaryKey());
-
-        return $childObject->hasChildObject() ? $childObject->getChildObject() : $childObject;
     }
 
 }

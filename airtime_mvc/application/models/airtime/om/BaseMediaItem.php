@@ -27,12 +27,12 @@ use Airtime\MediaItemPeer;
 use Airtime\MediaItemQuery;
 use Airtime\MediaItem\AudioFile;
 use Airtime\MediaItem\AudioFileQuery;
-use Airtime\MediaItem\Block;
-use Airtime\MediaItem\BlockQuery;
 use Airtime\MediaItem\MediaContent;
 use Airtime\MediaItem\MediaContentQuery;
 use Airtime\MediaItem\Playlist;
 use Airtime\MediaItem\PlaylistQuery;
+use Airtime\MediaItem\PlaylistRule;
+use Airtime\MediaItem\PlaylistRuleQuery;
 use Airtime\MediaItem\Webstream;
 use Airtime\MediaItem\WebstreamQuery;
 
@@ -144,6 +144,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     protected $collCcSchedulesPartial;
 
     /**
+     * @var        PropelObjectCollection|PlaylistRule[] Collection to store aggregation of PlaylistRule objects.
+     */
+    protected $collPlaylistRules;
+    protected $collPlaylistRulesPartial;
+
+    /**
      * @var        PropelObjectCollection|MediaContent[] Collection to store aggregation of MediaContent objects.
      */
     protected $collMediaContents;
@@ -163,11 +169,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      * @var        Playlist one-to-one related Playlist object
      */
     protected $singlePlaylist;
-
-    /**
-     * @var        Block one-to-one related Block object
-     */
-    protected $singleBlock;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -200,6 +201,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $ccSchedulesScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $playlistRulesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -760,6 +767,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
 
             $this->collCcSchedules = null;
 
+            $this->collPlaylistRules = null;
+
             $this->collMediaContents = null;
 
             $this->singleAudioFile = null;
@@ -767,8 +776,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->singleWebstream = null;
 
             $this->singlePlaylist = null;
-
-            $this->singleBlock = null;
 
         } // if (deep)
     }
@@ -951,6 +958,23 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 }
             }
 
+            if ($this->playlistRulesScheduledForDeletion !== null) {
+                if (!$this->playlistRulesScheduledForDeletion->isEmpty()) {
+                    PlaylistRuleQuery::create()
+                        ->filterByPrimaryKeys($this->playlistRulesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->playlistRulesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPlaylistRules !== null) {
+                foreach ($this->collPlaylistRules as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->mediaContentsScheduledForDeletion !== null) {
                 if (!$this->mediaContentsScheduledForDeletion->isEmpty()) {
                     MediaContentQuery::create()
@@ -983,12 +1007,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             if ($this->singlePlaylist !== null) {
                 if (!$this->singlePlaylist->isDeleted() && ($this->singlePlaylist->isNew() || $this->singlePlaylist->isModified())) {
                         $affectedRows += $this->singlePlaylist->save($con);
-                }
-            }
-
-            if ($this->singleBlock !== null) {
-                if (!$this->singleBlock->isDeleted() && ($this->singleBlock->isNew() || $this->singleBlock->isModified())) {
-                        $affectedRows += $this->singleBlock->save($con);
                 }
             }
 
@@ -1219,6 +1237,14 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                     }
                 }
 
+                if ($this->collPlaylistRules !== null) {
+                    foreach ($this->collPlaylistRules as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
                 if ($this->collMediaContents !== null) {
                     foreach ($this->collMediaContents as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -1242,12 +1268,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 if ($this->singlePlaylist !== null) {
                     if (!$this->singlePlaylist->validate($columns)) {
                         $failureMap = array_merge($failureMap, $this->singlePlaylist->getValidationFailures());
-                    }
-                }
-
-                if ($this->singleBlock !== null) {
-                    if (!$this->singleBlock->validate($columns)) {
-                        $failureMap = array_merge($failureMap, $this->singleBlock->getValidationFailures());
                     }
                 }
 
@@ -1371,6 +1391,9 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             if (null !== $this->collCcSchedules) {
                 $result['CcSchedules'] = $this->collCcSchedules->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
+            if (null !== $this->collPlaylistRules) {
+                $result['PlaylistRules'] = $this->collPlaylistRules->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collMediaContents) {
                 $result['MediaContents'] = $this->collMediaContents->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
@@ -1382,9 +1405,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             }
             if (null !== $this->singlePlaylist) {
                 $result['Playlist'] = $this->singlePlaylist->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleBlock) {
-                $result['Block'] = $this->singleBlock->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
         }
 
@@ -1597,6 +1617,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 }
             }
 
+            foreach ($this->getPlaylistRules() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPlaylistRule($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getMediaContents() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addMediaContent($relObj->copy($deepCopy));
@@ -1616,11 +1642,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $relObj = $this->getPlaylist();
             if ($relObj) {
                 $copyObj->setPlaylist($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getBlock();
-            if ($relObj) {
-                $copyObj->setBlock($relObj->copy($deepCopy));
             }
 
             //unflag object copy
@@ -1741,6 +1762,9 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         }
         if ('CcSchedule' == $relationName) {
             $this->initCcSchedules();
+        }
+        if ('PlaylistRule' == $relationName) {
+            $this->initPlaylistRules();
         }
         if ('MediaContent' == $relationName) {
             $this->initMediaContents();
@@ -2348,6 +2372,231 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     }
 
     /**
+     * Clears out the collPlaylistRules collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return MediaItem The current object (for fluent API support)
+     * @see        addPlaylistRules()
+     */
+    public function clearPlaylistRules()
+    {
+        $this->collPlaylistRules = null; // important to set this to null since that means it is uninitialized
+        $this->collPlaylistRulesPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collPlaylistRules collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialPlaylistRules($v = true)
+    {
+        $this->collPlaylistRulesPartial = $v;
+    }
+
+    /**
+     * Initializes the collPlaylistRules collection.
+     *
+     * By default this just sets the collPlaylistRules collection to an empty array (like clearcollPlaylistRules());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPlaylistRules($overrideExisting = true)
+    {
+        if (null !== $this->collPlaylistRules && !$overrideExisting) {
+            return;
+        }
+        $this->collPlaylistRules = new PropelObjectCollection();
+        $this->collPlaylistRules->setModel('PlaylistRule');
+    }
+
+    /**
+     * Gets an array of PlaylistRule objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this MediaItem is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|PlaylistRule[] List of PlaylistRule objects
+     * @throws PropelException
+     */
+    public function getPlaylistRules($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collPlaylistRulesPartial && !$this->isNew();
+        if (null === $this->collPlaylistRules || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPlaylistRules) {
+                // return empty collection
+                $this->initPlaylistRules();
+            } else {
+                $collPlaylistRules = PlaylistRuleQuery::create(null, $criteria)
+                    ->filterByMediaItem($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collPlaylistRulesPartial && count($collPlaylistRules)) {
+                      $this->initPlaylistRules(false);
+
+                      foreach ($collPlaylistRules as $obj) {
+                        if (false == $this->collPlaylistRules->contains($obj)) {
+                          $this->collPlaylistRules->append($obj);
+                        }
+                      }
+
+                      $this->collPlaylistRulesPartial = true;
+                    }
+
+                    $collPlaylistRules->getInternalIterator()->rewind();
+
+                    return $collPlaylistRules;
+                }
+
+                if ($partial && $this->collPlaylistRules) {
+                    foreach ($this->collPlaylistRules as $obj) {
+                        if ($obj->isNew()) {
+                            $collPlaylistRules[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPlaylistRules = $collPlaylistRules;
+                $this->collPlaylistRulesPartial = false;
+            }
+        }
+
+        return $this->collPlaylistRules;
+    }
+
+    /**
+     * Sets a collection of PlaylistRule objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $playlistRules A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function setPlaylistRules(PropelCollection $playlistRules, PropelPDO $con = null)
+    {
+        $playlistRulesToDelete = $this->getPlaylistRules(new Criteria(), $con)->diff($playlistRules);
+
+
+        $this->playlistRulesScheduledForDeletion = $playlistRulesToDelete;
+
+        foreach ($playlistRulesToDelete as $playlistRuleRemoved) {
+            $playlistRuleRemoved->setMediaItem(null);
+        }
+
+        $this->collPlaylistRules = null;
+        foreach ($playlistRules as $playlistRule) {
+            $this->addPlaylistRule($playlistRule);
+        }
+
+        $this->collPlaylistRules = $playlistRules;
+        $this->collPlaylistRulesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PlaylistRule objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related PlaylistRule objects.
+     * @throws PropelException
+     */
+    public function countPlaylistRules(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collPlaylistRulesPartial && !$this->isNew();
+        if (null === $this->collPlaylistRules || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPlaylistRules) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPlaylistRules());
+            }
+            $query = PlaylistRuleQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByMediaItem($this)
+                ->count($con);
+        }
+
+        return count($this->collPlaylistRules);
+    }
+
+    /**
+     * Method called to associate a PlaylistRule object to this object
+     * through the PlaylistRule foreign key attribute.
+     *
+     * @param    PlaylistRule $l PlaylistRule
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function addPlaylistRule(PlaylistRule $l)
+    {
+        if ($this->collPlaylistRules === null) {
+            $this->initPlaylistRules();
+            $this->collPlaylistRulesPartial = true;
+        }
+
+        if (!in_array($l, $this->collPlaylistRules->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPlaylistRule($l);
+
+            if ($this->playlistRulesScheduledForDeletion and $this->playlistRulesScheduledForDeletion->contains($l)) {
+                $this->playlistRulesScheduledForDeletion->remove($this->playlistRulesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	PlaylistRule $playlistRule The playlistRule object to add.
+     */
+    protected function doAddPlaylistRule($playlistRule)
+    {
+        $this->collPlaylistRules[]= $playlistRule;
+        $playlistRule->setMediaItem($this);
+    }
+
+    /**
+     * @param	PlaylistRule $playlistRule The playlistRule object to remove.
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function removePlaylistRule($playlistRule)
+    {
+        if ($this->getPlaylistRules()->contains($playlistRule)) {
+            $this->collPlaylistRules->remove($this->collPlaylistRules->search($playlistRule));
+            if (null === $this->playlistRulesScheduledForDeletion) {
+                $this->playlistRulesScheduledForDeletion = clone $this->collPlaylistRules;
+                $this->playlistRulesScheduledForDeletion->clear();
+            }
+            $this->playlistRulesScheduledForDeletion[]= clone $playlistRule;
+            $playlistRule->setMediaItem(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears out the collMediaContents collection
      *
      * This does not modify the database; however, it will remove any associated objects, causing
@@ -2681,42 +2930,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     }
 
     /**
-     * Gets a single Block object, which is related to this object by a one-to-one relationship.
-     *
-     * @param PropelPDO $con optional connection object
-     * @return Block
-     * @throws PropelException
-     */
-    public function getBlock(PropelPDO $con = null)
-    {
-
-        if ($this->singleBlock === null && !$this->isNew()) {
-            $this->singleBlock = BlockQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleBlock;
-    }
-
-    /**
-     * Sets a single Block object as related to this object by a one-to-one relationship.
-     *
-     * @param                  Block $v Block
-     * @return MediaItem The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setBlock(Block $v = null)
-    {
-        $this->singleBlock = $v;
-
-        // Make sure that that the passed-in Block isn't already associated with this object
-        if ($v !== null && $v->getMediaItem(null, false) === null) {
-            $v->setMediaItem($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -2764,6 +2977,11 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collPlaylistRules) {
+                foreach ($this->collPlaylistRules as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collMediaContents) {
                 foreach ($this->collMediaContents as $o) {
                     $o->clearAllReferences($deep);
@@ -2777,9 +2995,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             }
             if ($this->singlePlaylist) {
                 $this->singlePlaylist->clearAllReferences($deep);
-            }
-            if ($this->singleBlock) {
-                $this->singleBlock->clearAllReferences($deep);
             }
             if ($this->aCcSubjs instanceof Persistent) {
               $this->aCcSubjs->clearAllReferences($deep);
@@ -2796,6 +3011,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->collCcSchedules->clearIterator();
         }
         $this->collCcSchedules = null;
+        if ($this->collPlaylistRules instanceof PropelCollection) {
+            $this->collPlaylistRules->clearIterator();
+        }
+        $this->collPlaylistRules = null;
         if ($this->collMediaContents instanceof PropelCollection) {
             $this->collMediaContents->clearIterator();
         }
@@ -2812,10 +3031,6 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->singlePlaylist->clearIterator();
         }
         $this->singlePlaylist = null;
-        if ($this->singleBlock instanceof PropelCollection) {
-            $this->singleBlock->clearIterator();
-        }
-        $this->singleBlock = null;
         $this->aCcSubjs = null;
     }
 

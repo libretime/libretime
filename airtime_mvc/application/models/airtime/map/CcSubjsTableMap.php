@@ -75,7 +75,6 @@ class CcSubjsTableMap extends TableMap
         $this->addRelation('AudioFile', 'Airtime\\MediaItem\\AudioFile', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'AudioFiles');
         $this->addRelation('Webstream', 'Airtime\\MediaItem\\Webstream', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'Webstreams');
         $this->addRelation('Playlist', 'Airtime\\MediaItem\\Playlist', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'Playlists');
-        $this->addRelation('Block', 'Airtime\\MediaItem\\Block', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'Blocks');
     } // buildRelations()
 
 } // CcSubjsTableMap

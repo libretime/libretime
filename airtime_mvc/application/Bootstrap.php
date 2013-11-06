@@ -195,6 +195,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	// autoload form validators & filters definition
     	$autoloader->addResourceType ('Filter', 'forms/filters', 'Filter_');
     	$autoloader->addResourceType ('Validator', 'forms/validators', 'Validate_');
+    	
+    	$autoloader->addResourceType ('Interface', 'models/interfaces', 'Interface');
     }
 }
 

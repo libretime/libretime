@@ -42,6 +42,7 @@ class PlaylistTableMap extends TableMap
         $this->setPackage('airtime');
         $this->setUseIdGenerator(false);
         // columns
+        $this->addColumn('type', 'Type', 'VARCHAR', false, 15, 'standard');
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_item', 'id', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
         $this->addForeignKey('owner_id', 'OwnerId', 'INTEGER', 'cc_subjs', 'id', false, null, null);
@@ -51,7 +52,6 @@ class PlaylistTableMap extends TableMap
         $this->addColumn('length', 'Length', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
-        $this->addColumn('descendant_class', 'DescendantClass', 'VARCHAR', false, 100, null);
         // validators
     } // initialize()
 
@@ -62,7 +62,6 @@ class PlaylistTableMap extends TableMap
     {
         $this->addRelation('MediaItem', 'Airtime\\MediaItem', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
         $this->addRelation('CcSubjs', 'Airtime\\CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
-        $this->addRelation('Block', 'Airtime\\MediaItem\\Block', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
@@ -85,9 +84,6 @@ class PlaylistTableMap extends TableMap
   'create_column' => 'created_at',
   'update_column' => 'updated_at',
   'disable_updated_at' => 'false',
-),
-            'concrete_inheritance_parent' =>  array (
-  'descendant_column' => 'descendant_class',
 ),
         );
     } // getBehaviors()

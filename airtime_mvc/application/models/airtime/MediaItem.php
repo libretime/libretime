@@ -19,7 +19,7 @@ use \PropelPDO;
  *
  * @package    propel.generator.airtime
  */
-class MediaItem extends BaseMediaItem
+class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 {
 	public function preInsert(PropelPDO $con = null)
 	{
@@ -50,5 +50,57 @@ class MediaItem extends BaseMediaItem
 		}
 		
 		return false;
+	}
+	
+	
+	public function getSchedulingInfo() 
+	{
+		$obj = $this->getChildObject();
+		
+		return array (
+			"id" => $obj->getId(),
+			"cuein" => $obj->getSchedulingCueIn(),
+			"cueout" => $obj->getSchedulingCueOut(),
+			"fadein" => $obj->getSchedulingFadeIn(),
+			"fadeout" => $obj->getSchedulingFadeOut(),
+			"length" => $obj->getSchedulingLength(),
+			"crossfadeDuration" => 0
+		);	
+	}
+	
+	public function isSchedulable() {
+		
+		$obj = $this->getChildObject();
+		return $obj->isSchedulable();
+	}
+	
+	public function getSchedulingLength() {
+		
+		$obj = $this->getChildObject();
+		return $obj->getSchedulingLength();
+	}
+	
+	public function getSchedulingCueIn() {
+		
+		$obj = $this->getChildObject();
+		return $obj->getSchedulingCueIn();
+	}
+	
+	public function getSchedulingCueOut() {
+		
+		$obj = $this->getChildObject();
+		return $obj->getSchedulingCueOut();
+	}
+	
+	public function getSchedulingFadeIn() {
+		
+		$obj = $this->getChildObject();
+		return $obj->getSchedulingFadeIn();
+	}
+	
+	public function getSchedulingFadeOut() {
+		
+		$obj = $this->getChildObject();
+		return $obj->getSchedulingFadeOut();
 	}
 }

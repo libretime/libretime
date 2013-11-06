@@ -1,6 +1,6 @@
 <?php
 if (isset($this->obj)) {
-    $contents = $this->obj->getContents();
+    $contents = $this->obj->getMediaContents();
     $count = count($contents);
 }
 ?>
@@ -39,7 +39,7 @@ if (isset($this->obj)) {
 
 <?php if (isset($this->obj)) : ?>
     <input id="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
-    <input id="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
+    <input id="obj_lastMod" type="hidden" value="<?php echo $this->obj->getUpdatedAt('U'); ?>"></input>
     <input id='obj_type' type='hidden' value='playlist'></input>
     <div class="playlist_title">
         <h3 id="obj_name">

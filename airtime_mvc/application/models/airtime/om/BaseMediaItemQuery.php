@@ -19,9 +19,9 @@ use Airtime\MediaItem;
 use Airtime\MediaItemPeer;
 use Airtime\MediaItemQuery;
 use Airtime\MediaItem\AudioFile;
-use Airtime\MediaItem\Block;
 use Airtime\MediaItem\MediaContent;
 use Airtime\MediaItem\Playlist;
+use Airtime\MediaItem\PlaylistRule;
 use Airtime\MediaItem\Webstream;
 
 /**
@@ -67,6 +67,10 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery rightJoinCcSchedule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method MediaItemQuery innerJoinCcSchedule($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
+ * @method MediaItemQuery leftJoinPlaylistRule($relationAlias = null) Adds a LEFT JOIN clause to the query using the PlaylistRule relation
+ * @method MediaItemQuery rightJoinPlaylistRule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PlaylistRule relation
+ * @method MediaItemQuery innerJoinPlaylistRule($relationAlias = null) Adds a INNER JOIN clause to the query using the PlaylistRule relation
+ *
  * @method MediaItemQuery leftJoinMediaContent($relationAlias = null) Adds a LEFT JOIN clause to the query using the MediaContent relation
  * @method MediaItemQuery rightJoinMediaContent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MediaContent relation
  * @method MediaItemQuery innerJoinMediaContent($relationAlias = null) Adds a INNER JOIN clause to the query using the MediaContent relation
@@ -82,10 +86,6 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery leftJoinPlaylist($relationAlias = null) Adds a LEFT JOIN clause to the query using the Playlist relation
  * @method MediaItemQuery rightJoinPlaylist($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Playlist relation
  * @method MediaItemQuery innerJoinPlaylist($relationAlias = null) Adds a INNER JOIN clause to the query using the Playlist relation
- *
- * @method MediaItemQuery leftJoinBlock($relationAlias = null) Adds a LEFT JOIN clause to the query using the Block relation
- * @method MediaItemQuery rightJoinBlock($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Block relation
- * @method MediaItemQuery innerJoinBlock($relationAlias = null) Adds a INNER JOIN clause to the query using the Block relation
  *
  * @method MediaItem findOne(PropelPDO $con = null) Return the first MediaItem matching the query
  * @method MediaItem findOneOrCreate(PropelPDO $con = null) Return the first MediaItem matching the query, or a new MediaItem object populated from the query conditions when no match is found
@@ -904,6 +904,80 @@ abstract class BaseMediaItemQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query by a related PlaylistRule object
+     *
+     * @param   PlaylistRule|PropelObjectCollection $playlistRule  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 MediaItemQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPlaylistRule($playlistRule, $comparison = null)
+    {
+        if ($playlistRule instanceof PlaylistRule) {
+            return $this
+                ->addUsingAlias(MediaItemPeer::ID, $playlistRule->getMediaId(), $comparison);
+        } elseif ($playlistRule instanceof PropelObjectCollection) {
+            return $this
+                ->usePlaylistRuleQuery()
+                ->filterByPrimaryKeys($playlistRule->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPlaylistRule() only accepts arguments of type PlaylistRule or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PlaylistRule relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return MediaItemQuery The current query, for fluid interface
+     */
+    public function joinPlaylistRule($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PlaylistRule');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PlaylistRule');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PlaylistRule relation PlaylistRule object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Airtime\MediaItem\PlaylistRuleQuery A secondary query class using the current class as primary query
+     */
+    public function usePlaylistRuleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPlaylistRule($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PlaylistRule', '\Airtime\MediaItem\PlaylistRuleQuery');
+    }
+
+    /**
      * Filter the query by a related MediaContent object
      *
      * @param   MediaContent|PropelObjectCollection $mediaContent  the related object to use as filter
@@ -1197,80 +1271,6 @@ abstract class BaseMediaItemQuery extends ModelCriteria
         return $this
             ->joinPlaylist($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Playlist', '\Airtime\MediaItem\PlaylistQuery');
-    }
-
-    /**
-     * Filter the query by a related Block object
-     *
-     * @param   Block|PropelObjectCollection $block  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 MediaItemQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByBlock($block, $comparison = null)
-    {
-        if ($block instanceof Block) {
-            return $this
-                ->addUsingAlias(MediaItemPeer::ID, $block->getId(), $comparison);
-        } elseif ($block instanceof PropelObjectCollection) {
-            return $this
-                ->useBlockQuery()
-                ->filterByPrimaryKeys($block->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByBlock() only accepts arguments of type Block or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the Block relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return MediaItemQuery The current query, for fluid interface
-     */
-    public function joinBlock($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('Block');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'Block');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the Block relation Block object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Airtime\MediaItem\BlockQuery A secondary query class using the current class as primary query
-     */
-    public function useBlockQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
-    {
-        return $this
-            ->joinBlock($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Block', '\Airtime\MediaItem\BlockQuery');
     }
 
     /**

@@ -1483,7 +1483,7 @@ var AIRTIME = (function(AIRTIME){
 
 		setWidgetSize();
 		
-		AIRTIME.library.libraryInit();
+		//AIRTIME.library.libraryInit();
 		AIRTIME.playlist.init();
 
         if ($pl.is(':hidden')) {

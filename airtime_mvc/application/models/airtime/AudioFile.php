@@ -208,4 +208,47 @@ class AudioFile extends BaseAudioFile
 		
 		return $this;
 	}
+	
+	public function getCueLength()
+	{
+		$cuein = $this->getCuein();
+		$cueout = $this->getCueout();
+	
+		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
+		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
+		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
+	
+		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
+	
+		return $length;
+	}
+	
+	// returns true if the file exists and is not hidden
+	public function isVisible() {
+		return $this->getFileExists() && !$this->getFileHidden();
+	}
+	
+	public function isSchedulable() {
+		return $this->isVisible();
+	}
+	
+	public function getSchedulingLength() {
+		return $this->getCueLength();
+	}
+	
+	public function getSchedulingCueIn() {
+		return $this->getCuein();
+	}
+	
+	public function getSchedulingCueOut() {
+		return $this->getCueout();
+	}
+	
+	public function getSchedulingFadeIn() {
+		return Application_Model_Preference::GetDefaultFadeIn();
+	}
+	
+	public function getSchedulingFadeOut() {
+		return Application_Model_Preference::GetDefaultFadeOut();
+	}
 }
