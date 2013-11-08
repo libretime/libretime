@@ -1,30 +1,35 @@
 <?php
 
-use Airtime\MediaItem\AudioFileQuery;
-
+use Airtime\CcSubjsPeer;
+use Airtime\MediaItem\WebstreamPeer;
+use Airtime\MediaItem\PlaylistPeer;
 use Airtime\MediaItem\AudioFilePeer;
+
+use Airtime\MediaItem\AudioFileQuery;
+use Airtime\MediaItem\WebstreamQuery;
+use Airtime\MediaItem\PlaylistQuery;
 
 class Application_Service_MediaService
 {
-	private function getAudioColumnDetails() {
-	
+	private function getAudioFileColumnDetails() {
+		
 		return array(
-			AudioFilePeer::ID => array(
+			"Id" => array(
 				"isColumn" => false
 			),
-			AudioFilePeer::TRACK_TITLE => array(
+			"TrackTitle" => array(
 				"isColumn" => true,
 				"title" => _("Title"),
 				"width" => "170px",
 				"class" => "library_title"
 			),
-			AudioFilePeer::ARTIST_NAME => array(
+			"ArtistName" => array(
 				"isColumn" => true,
 				"title" => _("Creator"),
 				"width" => "160px",
 				"class" => "library_creator"
 			),
-			AudioFilePeer::ALBUM_TITLE => array(
+			"AlbumTitle" => array(
 				"isColumn" => true,
 				"title" => _("Album"),
 				"width" => "150px",
@@ -33,12 +38,41 @@ class Application_Service_MediaService
 		);
 	}
 	
-	private function getAudioDatatableColumnOrder() {
+	private function getWebstreamColumnDetails() {
+	
+		return array(
+			"Id" => array(
+				"isColumn" => false
+			),
+			"Name" => array(
+				"isColumn" => true,
+				"title" => _("Title"),
+				"width" => "170px",
+				"class" => "library_title"
+			),
+			"CcSubjs.DbLogin" => array(
+				"isColumn" => true,
+				"title" => _("Owner"),
+				"width" => "160px",
+				"class" => "library_owner"
+			)
+		);
+	}
+	
+	private function getAudioFileDatatableColumnOrder() {
+
+		return array (
+			"TrackTitle",
+			"ArtistName",
+			"AlbumTitle",
+		);
+	}
+	
+	private function getWebstreamDatatableColumnOrder() {
 	
 		return array (
-			AudioFilePeer::TRACK_TITLE,
-			AudioFilePeer::ARTIST_NAME,
-			AudioFilePeer::ALBUM_TITLE,
+			"Name",
+			"CcSubjs.DbLogin",
 		);
 	}
 	
@@ -59,10 +93,12 @@ class Application_Service_MediaService
 		for ($i = 0; $i < count($columnOrder); $i++) {
 				
 			$data = $columnInfo[$columnOrder[$i]];
-				
+			
 			$datatablesColumns[] = array(
 				"sTitle" =>	$data["title"],
-				"mDataProp" => AudioFilePeer::translateFieldName($columnOrder[$i], BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME),
+				//replacing the dots because datatables will expect a nested array for joined tables
+				//and propel is giving us a single dimension array.
+				"mDataProp" => $columnOrder[$i],
 				"bSortable" => isset($data["sortable"]) ? $data["sortable"] : true,
 				"bSearchable" => isset($data["searchable"]) ? $data["searchable"] : true,
 				"bVisible" => isset($data["visible"]) ? $data["visible"] : true,
@@ -74,20 +110,171 @@ class Application_Service_MediaService
 		return $datatablesColumns;
 	}
 	
+	private function buildQuery($query, $params) {
+		
+		$alias = "media";
+		
+		$selectColumns = array();
+		
+		$len = intval($params["iColumns"]);
+		for ($i = 0; $i < $len; $i++) {
+			$selectColumns[] = $params["mDataProp_{$i}"];	
+		}
+		
+		//$query->select($selectColumns);
+		
+		//$query->setFormatter('PropelArrayFormatter');
+		$query->setFormatter('PropelOnDemandFormatter');
+		
+		//all media join this table for the "Owner" column;
+		//removing the "." access since PropelSimpleArrayFormatter returns a flat array
+		//Datatables is expecting a nested object if there is a "." in the name.
+		//would be nice to extend class PropelSimpleArrayFormatter if possible to include
+		//nested associative arrays in the output.
+		$query->joinWith("CcSubjs");
+		
+		//take care of WHERE clause
+		$search = $params["sSearch"];
+		$searchTerms = $search == "" ? array() : explode(" ", $search);
+		$andConditions = array();
+		$orConditions = array();
+		
+		//namespacing seems to cause a problem in the WHERE clause 
+		//if we don't prefix the PHP name with the model or alias.
+		$modelName = $query->getModelName();
+		foreach ($searchTerms as $term) {
+			
+			$orConditions = array();
+			
+			$len = intval($params["iColumns"]);
+			for ($i = 0; $i < $len; $i++) {
+				
+				$whereTerm = $params["mDataProp_{$i}"];
+				if (strrpos($whereTerm, ".") === false) {
+					$whereTerm = $modelName.".".$whereTerm;
+				}
+				
+				$name = "{$term}{$i}";
+				$cond = "{$whereTerm} iLIKE ?";
+				$param = "{$term}%";
+				
+				$query->condition($name, $cond, $param);
+				
+				$orConditions[] = $name;
+			}
+			
+			if (count($searchTerms) > 1) {
+				$query->combine($orConditions, 'or', $term);
+				$andConditions[] = $term;
+			}
+			else {
+				$query->where($orConditions, 'or');
+			}
+		}
+		if (count($andConditions) > 1) {
+			$query->where($andConditions, 'and');
+		}
+
+		//ORDER BY statements
+		$len = intval($params["iSortingCols"]);
+		for ($i = 0; $i < $len; $i++) {
+			
+			$colNum = $params["iSortCol_{$i}"];
+			$colName = $params["mDataProp_{$colNum}"];
+			$colDir = $params["sSortDir_{$i}"] === "asc" ? Criteria::ASC : Criteria::DESC;
+			
+			$query->orderBy($colName, $colDir);
+		}
+		
+		//LIMIT OFFSET statements
+		$limit = intval($params["iDisplayLength"]);
+		$offset = intval($params["iDisplayStart"]);
+		
+		$query
+			->limit($limit)
+			->offset($offset);
+		
+		Logging::info($query->toString());
+		
+		return $query;
+	}
+	
+	private function columnMapCallback($class) {
+		
+		$func = function ($column) use ($class) {
+		
+			return $class::translateFieldName($column, BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME);
+		};
+		
+		return $func;
+	}
+	
+	/*
+	 * @param $coll PropelCollection formatted on demand.
+	 * 
+	 * @return $output, an array of data with the columns needed for datatables.
+	 */
+	private function createOutput($coll, $columns) {
+		
+		$output = array();
+		$item;
+		
+		foreach ($coll as $media) {
+				
+			$item = array();
+				
+			foreach ($columns as $column) {
+		
+				$x = $media;
+				$a = $item;
+				$getters = explode(".", $column);
+		
+				foreach ($getters as $attr) {
+					
+					$k = $attr;
+					$method = "get{$attr}";
+					$x = $x->$method();
+				}
+		
+				$item[$column] = $x;
+			}
+				
+			$output[] = $item;
+		}
+		
+		return $output;
+	}
+	
 	public function getDatatablesAudioFiles($params) {
 		
-		$func = function ($column) {
-		
-			return AudioFilePeer::translateFieldName($column, BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME);
-		};
-
-		$columns = array_keys(self::getAudioColumnDetails());
-		$selectColumns = array_map($func, $columns);
+		$columns = self::getAudioFileDatatableColumnOrder();
 		
 		$q = AudioFileQuery::create();
-		$q->select($selectColumns);
+		$q = self::buildQuery($q, $params);
 		$coll = $q->find();
 		
-		return $coll->toArray();
+		return self::createOutput($coll, $columns);
+	}
+	
+	public function getDatatablesWebstreams($params) {
+		
+		$columns = self::getWebstreamDatatableColumnOrder();
+	
+		$q = WebstreamQuery::create();
+		$q = self::buildQuery($q, $params);
+		$coll = $q->find();
+	
+		return self::createOutput($coll, $columns);
+	}
+	
+	public function getDatatablesPlaylists($params) {
+	
+		$columns = self::getPlaylistDatatableColumnOrder();
+		
+		$q = PlaylistQuery::create();
+		$q = self::buildQuery($q, $params);
+		$coll = $q->find();
+	
+		return self::createOutput($coll, $columns);
 	}
 }

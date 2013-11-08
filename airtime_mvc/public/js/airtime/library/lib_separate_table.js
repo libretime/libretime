@@ -7,12 +7,12 @@ var AIRTIME = (function(AIRTIME) {
     
     function createDatatable(config) {
     	
-    	$("#"+config.id).dataTable({
+    	var table = $("#"+config.id).dataTable({
     		"aoColumns": config.columns,
 			"bProcessing": true,
 			"bServerSide": true,
 			"sAjaxSource": config.source,
-			"sAjaxDataProp": config.prop,
+			"sAjaxDataProp": "media",
 			"fnServerData": function ( sSource, aoData, fnCallback ) {
                
                 aoData.push( { name: "format", value: "json"} );
@@ -33,6 +33,8 @@ var AIRTIME = (function(AIRTIME) {
 			"bAutoWidth": true,
 			"sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>', 
 		});
+    	
+    	table.fnSetFilteringDelay(350);
     }
      
     mod.onReady = function () {
@@ -51,8 +53,22 @@ var AIRTIME = (function(AIRTIME) {
 		    	},
 		    	localColumns: "datatables-audiofile-aoColumns",
 		    	tableId: "audio_table",
-		    	source: baseUrl+"media/audio-file-feed",
-		    	dataprop: "audiofiles"
+		    	source: baseUrl+"media/audio-file-feed"
+		    },
+		    "lib_webstreams": {
+		    	initialized: false,
+		    	initialize: function() {
+		    		
+		    	},
+		    	navigate: function() {
+		    		
+		    	},
+		    	always: function() {
+		    		
+		    	},
+		    	localColumns: "datatables-webstream-aoColumns",
+		    	tableId: "webstream_table",
+		    	source: baseUrl+"media/webstream-feed"
 		    }
     	};
 
