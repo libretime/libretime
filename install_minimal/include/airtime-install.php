@@ -12,6 +12,12 @@ require_once(__DIR__.'/airtime-constants.php');
 // The only way we get here is if we are doing a new install or a reinstall.
 // -------------------------------------------------------------------------
 
+//Enforce a minimum PHP version
+if (!AirtimeInstall::checkPHPVersion())
+{
+    exit(1);
+}
+
 $iniExists = file_exists("/etc/airtime/airtime.conf");
 if ($iniExists) {
     //reinstall, Will ask if we should rewrite config files.

@@ -34,6 +34,12 @@ $con = Propel::getConnection();
 
 $version = AirtimeInstall::GetVersionInstalled();
 
+//Enforce a minimum PHP version
+if (!AirtimeInstall::checkPHPVersion())
+{
+    exit(1);
+}
+
 echo "******************************** Upgrade Begin *********************************".PHP_EOL;
 
 $CC_CONFIG = Config::getConfig();
