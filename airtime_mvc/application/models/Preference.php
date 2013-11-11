@@ -4,13 +4,26 @@ require_once 'Cache.php';
 
 class Application_Model_Preference
 {
-
+	
+	private static function getUserId()
+	{
+		//called from a daemon process
+		if (!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
+			$userId = null;
+		}
+		else {
+			$auth = Zend_Auth::getInstance();
+			$userId = $auth->getIdentity()->id;
+		}
+		
+		return $userId;
+	}
+	
     /**
      *
-     * @param integer $userId is not null when we are setting a locale for a specific user
      * @param boolean $isUserValue is true when we are setting a value for the current user
      */
-    private static function setValue($key, $value, $isUserValue = false, $userId = null)
+    private static function setValue($key, $value, $isUserValue = false)
     {
     	$cache = new Cache();
     	
@@ -18,13 +31,13 @@ class Application_Model_Preference
             $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
             $con->beginTransaction();
 
-            //called from a daemon process
-            if (!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
-                $id = NULL;
-            } else {
-                $auth = Zend_Auth::getInstance();
-                $id = $auth->getIdentity()->id;
+            $userId = self::getUserId();
+            
+            if ($isUserValue && is_null($userId)) {
+            	throw new Exception("User id can't be null for a user preference.");
             }
+            
+            Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
 
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
@@ -34,15 +47,10 @@ class Application_Model_Preference
             $paramMap[':key'] = $key;
             
             //For user specific preference, check if id matches as well
-            if ($isUserValue && is_null($userId)) {
+            if ($isUserValue) {
                 $sql .= " AND subjid = :id";
-                $paramMap[':id'] = $id;
-            } else if (!is_null($userId)) {
-                $sql .= " AND subjid= :id";
                 $paramMap[':id'] = $userId;
-            }
-
-            Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
+            } 
 
             $result = Application_Common_Database::prepareAndExecute($sql, 
                     $paramMap, 
@@ -55,39 +63,39 @@ class Application_Model_Preference
                 //this case should not happen.
                 throw new Exception("Invalid number of results returned. Should be ".
                     "0 or 1, but is '$result' instead");
-            } elseif ($result == 1) {
+            } 
+            elseif ($result == 1) {
+            	
                 // result found
-                if (is_null($id) || !$isUserValue) {
+                if (is_null($userId)) {
                     // system pref
                     $sql = "UPDATE cc_pref"
                     ." SET subjid = NULL, valstr = :value"
                     ." WHERE keystr = :key";
-                } else {
+                } 
+                else {
                     // user pref
                     $sql = "UPDATE cc_pref"
                     . " SET valstr = :value"
                     . " WHERE keystr = :key AND subjid = :id";
-                    if (is_null($userId)) {
-                        $paramMap[':id'] = $id;
-                    } else {
-                        $paramMap[':id'] = $userId;
-                    }
+                   
+                    $paramMap[':id'] = $userId;
                 }
-            } else {
+            } 
+            else {
+            	
                 // result not found
-                if (is_null($id) || !$isUserValue) {
+                if (is_null($userId)) {
                     // system pref
                     $sql = "INSERT INTO cc_pref (keystr, valstr)"
                     ." VALUES (:key, :value)";
-                } else {
+                } 
+                else {
                     // user pref
                     $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
                     ." VALUES (:id, :key, :value)";
-                    if (is_null($userId)) {
-                        $paramMap[':id'] = $id;
-                    } else {
-                        $paramMap[':id'] = $userId;
-                    }
+                   
+                    $paramMap[':id'] = $userId;
                 }
             }
             $paramMap[':key'] = $key;
@@ -100,7 +108,8 @@ class Application_Model_Preference
                     $con);
 
             $con->commit();
-        } catch (Exception $e) {
+        } 
+        catch (Exception $e) {
             $con->rollback();
             header('HTTP/1.0 503 Service Unavailable');
             Logging::info("Database error: ".$e->getMessage());
@@ -115,22 +124,19 @@ class Application_Model_Preference
     {
     	$cache = new Cache();
     	
-    	//For user specific preference, check if id matches as well
-    	$userId = null;
-    	if ($isUserValue) {
-    		$auth = Zend_Auth::getInstance();
-    		if ($auth->hasIdentity()) {
-    			$userId = $auth->getIdentity()->id;
-    		}
-    	}
-    	
-    	$res = $cache->fetch($key, $userId);
-    	if ($res !== false) {
-    		Logging::info("returning {$key} {$userId} from cache. = {$res}");
-    		return $res;
-    	}
-    	
         try {
+        	
+        	$userId = self::getUserId();
+        	
+        	if ($isUserValue && is_null($userId)) {
+        		throw new Exception("User id can't be null for a user preference.");
+        	}
+        	 
+        	$res = $cache->fetch($key, $userId);
+        	if ($res !== false) {
+        		Logging::info("returning {$key} {$userId} from cache. = {$res}");
+        		return $res;
+        	}
            
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
@@ -148,8 +154,9 @@ class Application_Model_Preference
             
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
             
+            //return an empty string if the result doesn't exist.
             if ($result == 0) {
-                return "";
+                $res = "";
             } 
             else {
                 $sql = "SELECT valstr FROM cc_pref"
@@ -167,11 +174,12 @@ class Application_Model_Preference
                 $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
 
                 $res = ($result !== false) ? $result : "";
-                $cache->store($key, $res, $userId);
-                
-                return $res;
             }
-        } catch (Exception $e) {
+            
+            $cache->store($key, $res, $userId);
+            return $res;
+        } 
+        catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
             Logging::info("Could not connect to database: ".$e->getMessage());
             exit;
@@ -531,6 +539,7 @@ class Application_Model_Preference
     public static function SetDefaultTimezone($timezone)
     {
         self::setValue("timezone", $timezone);
+        //TODO check this if setting value failes.
         date_default_timezone_set($timezone);
     }
 
@@ -540,14 +549,14 @@ class Application_Model_Preference
         return self::getValue("timezone");
     }
 
-    public static function SetUserTimezone($userId, $timezone = null)
+    public static function SetUserTimezone($timezone = null)
     {
         // When a new user is created they will get the default timezone
         // setting which the admin sets on preferences page
         if (is_null($timezone)) {
             $timezone = self::GetDefaultTimezone();
         }
-        self::setValue("user_timezone", $timezone, true, $userId);
+        self::setValue("user_timezone", $timezone, true);
     }
 
     public static function GetUserTimezone($id)
@@ -563,11 +572,12 @@ class Application_Model_Preference
     // Always attempts to returns the current user's personal timezone setting
     public static function GetTimezone()
     {
-        $auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity()) {
-            $id = $auth->getIdentity()->id;
-            return self::GetUserTimezone($id);
-        } else {
+        $userId = self::getUserId();
+        
+        if (!is_null($userId)) {
+            return self::GetUserTimezone();
+        } 
+        else {
             return self::GetDefaultTimezone();
         }
     }
@@ -583,7 +593,7 @@ class Application_Model_Preference
         return self::getValue("locale");
     }
 
-    public static function GetUserLocale($id)
+    public static function GetUserLocale()
     {
         $locale = self::getValue("user_locale", true);
         if (!$locale) {
@@ -593,23 +603,24 @@ class Application_Model_Preference
         }
     }
 
-    public static function SetUserLocale($userId, $locale = null)
+    public static function SetUserLocale($locale = null)
     {
         // When a new user is created they will get the default locale
         // setting which the admin sets on preferences page
         if (is_null($locale)) {
             $locale = self::GetDefaultLocale();
         }
-        self::setValue("user_locale", $locale, true, $userId);
+        self::setValue("user_locale", $locale, true);
     }
 
     public static function GetLocale()
     {
-        $auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity()) {
-            $id = $auth->getIdentity()->id;
-            return self::GetUserLocale($id);
-        } else {
+        $userId = self::getUserId();
+        
+        if (!is_null($userId)) {
+            return self::GetUserLocale($userId);
+        } 
+        else {
             return self::GetDefaultLocale();
         }
     }
@@ -1317,15 +1328,8 @@ class Application_Model_Preference
 
     public static function setCurrentLibraryTableSetting($settings)
     {
-        $num_columns = count(Application_Model_StoredFile::getLibraryColumns());
-        $new_columns_num = count($settings['abVisCols']);
-
-        /*if ($num_columns != $new_columns_num) {
-            throw new Exception("Trying to write a user column preference with incorrect number of columns!");
-        }*/
-
         $data = serialize($settings);
-        $v = self::setValue("library_datatable", $data, true);
+        self::setValue("library_datatable", $data, true);
     }
 
     public static function getCurrentLibraryTableSetting()
