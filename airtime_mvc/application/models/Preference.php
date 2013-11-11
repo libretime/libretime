@@ -1,5 +1,7 @@
 <?php
 
+require_once 'Cache.php';
+
 class Application_Model_Preference
 {
 
@@ -10,6 +12,8 @@ class Application_Model_Preference
      */
     private static function setValue($key, $value, $isUserValue = false, $userId = null)
     {
+    	$cache = new Cache();
+    	
         try {
             $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
             $con->beginTransaction();
@@ -103,10 +107,29 @@ class Application_Model_Preference
             exit;
         }
 
+        $cache->store($key, $value, $userId);
+        Logging::info("SAVING {$key} {$userId} into cache. = {$value}");
     }
 
     private static function getValue($key, $isUserValue = false)
     {
+    	$cache = new Cache();
+    	
+    	//For user specific preference, check if id matches as well
+    	$userId = null;
+    	if ($isUserValue) {
+    		$auth = Zend_Auth::getInstance();
+    		if ($auth->hasIdentity()) {
+    			$userId = $auth->getIdentity()->id;
+    		}
+    	}
+    	
+    	$res = $cache->fetch($key, $userId);
+    	if ($res !== false) {
+    		Logging::info("returning {$key} {$userId} from cache. = {$res}");
+    		return $res;
+    	}
+    	
         try {
            
             //Check if key already exists
@@ -117,14 +140,10 @@ class Application_Model_Preference
             $paramMap[':key'] = $key;
             
             //For user specific preference, check if id matches as well
-            if ($isUserValue) {
-                $auth = Zend_Auth::getInstance();
-                if ($auth->hasIdentity()) {
-                    $id = $auth->getIdentity()->id;
-                    
-                    $sql .= " AND subjid = :id";
-                    $paramMap[':id'] = $id;
-                }
+            if (isset($userId)) {
+               
+                $sql .= " AND subjid = :id";
+                $paramMap[':id'] = $userId;
             }
             
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
@@ -140,14 +159,17 @@ class Application_Model_Preference
                 $paramMap[':key'] = $key;
 
                 //For user specific preference, check if id matches as well
-                if ($isUserValue && $auth->hasIdentity()) {
+                if (isset($userId)) {
                     $sql .= " AND subjid = :id";
-                    $paramMap[':id'] = $id;
+                    $paramMap[':id'] = $userId;
                 }
                 
                 $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
 
-                return ($result !== false) ? $result : "";
+                $res = ($result !== false) ? $result : "";
+                $cache->store($key, $res, $userId);
+                
+                return $res;
             }
         } catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
