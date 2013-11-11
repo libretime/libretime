@@ -118,7 +118,7 @@ class Application_Model_Preference
         }
 
         $cache->store($key, $value, $isUserValue, $userId);
-        Logging::info("SAVING {$key} {$userId} into cache. = {$value}");
+        //Logging::info("SAVING {$key} {$userId} into cache. = {$value}");
     }
 
     private static function getValue($key, $isUserValue = false)
@@ -135,7 +135,7 @@ class Application_Model_Preference
         	 
         	$res = $cache->fetch($key, $isUserValue, $userId);
         	if ($res !== false) {
-        		Logging::info("returning {$key} {$userId} from cache. = {$res}");
+        		//Logging::info("returning {$key} {$userId} from cache. = {$res}");
         		return $res;
         	}
            
