@@ -34,7 +34,7 @@ class Application_Model_Preference
             $userId = self::getUserId();
             
             if ($isUserValue && is_null($userId)) {
-            	throw new Exception("User id can't be null for a user preference.");
+            	throw new Exception("User id can't be null for a user preference {$key}.");
             }
             
             Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
