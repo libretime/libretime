@@ -116,7 +116,7 @@ class Application_Model_Preference
             exit;
         }
 
-        $cache->store($key, $value, $userId);
+        $cache->store($key, $value, $isUserValue, $userId);
         Logging::info("SAVING {$key} {$userId} into cache. = {$value}");
     }
 
@@ -132,7 +132,7 @@ class Application_Model_Preference
         		throw new Exception("User id can't be null for a user preference.");
         	}
         	 
-        	$res = $cache->fetch($key, $userId);
+        	$res = $cache->fetch($key, $isUserValue, $userId);
         	if ($res !== false) {
         		Logging::info("returning {$key} {$userId} from cache. = {$res}");
         		return $res;
@@ -176,7 +176,7 @@ class Application_Model_Preference
                 $res = ($result !== false) ? $result : "";
             }
             
-            $cache->store($key, $res, $userId);
+            $cache->store($key, $res, $isUserValue, $userId);
             return $res;
         } 
         catch (Exception $e) {
