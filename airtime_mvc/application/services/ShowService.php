@@ -163,11 +163,6 @@ class Application_Service_ShowService
 
                 $this->storeOrigLocalShowInfo();
 
-                // updates cc_show_instances start/end times, and updates
-                // schedule start/end times
-                // **Not sure why this function is here. It seems unnecesssary
-                //$this->applyShowStartEndDifference($showData);
-
                 $this->deleteRebroadcastInstances();
 
                 $this->deleteCcShowDays();

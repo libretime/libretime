@@ -70,7 +70,7 @@ class LoginController extends Zend_Controller_Action
                         $tempSess->referrer = 'login';
                         
                         //set the user locale in case user changed it in when logging in
-                        Application_Model_Preference::SetUserLocale($auth->getIdentity()->id, $locale);
+                        Application_Model_Preference::SetUserLocale($locale);
 
                         $this->_redirect('Showbuilder');
                     } else {
