@@ -290,7 +290,7 @@ class Application_Service_MediaService
 			),
 			"CreatedAt" => array(
 				"isColumn" => true,
-				"title" => _("Uploaded"),
+				"title" => _("Created"),
 				"width" => "125px",
 				"class" => "library_upload_time",
 				"visible" => false,
@@ -323,16 +323,89 @@ class Application_Service_MediaService
 	
 		return array (
 			"Name",
-			"CreatedAt",
 			"Mime",
 			"Url",
+			"CcSubjs.DbLogin",
+			"CreatedAt",
+			"UpdatedAt",
+			"Length",
+		);
+	}
+	
+	private function getWebstreamColumnAliases() {
+	
+		return array(
+		);
+	}
+	
+	private function getPlaylistColumnDetails() {
+	
+		return array(
+			"Id" => array(
+				"isColumn" => false
+			),
+			"Type" => array(
+				"isColumn" => true,
+				"title" => _("Type"),
+				"width" => "25px",
+				"class" => "library_type"
+			),
+			"Name" => array(
+				"isColumn" => true,
+				"title" => _("Title"),
+				"width" => "170px",
+				"class" => "library_title"
+			),
+			"Description" => array(
+				"isColumn" => true,
+				"title" => _("Description"),
+				"width" => "200px",
+				"class" => "library_description"
+			),
+			"Length" => array(
+				"isColumn" => true,
+				"title" => _("Length"),
+				"width" => "80px",
+				"class" => "library_length",
+				"searchable" => false,
+			),
+			"CreatedAt" => array(
+				"isColumn" => true,
+				"title" => _("Created"),
+				"width" => "125px",
+				"class" => "library_upload_time",
+				"visible" => false,
+			),
+			"UpdatedAt" => array(
+				"isColumn" => true,
+				"title" => _("Last Modified"),
+				"width" => "125px",
+				"class" => "library_modified_time",
+				"visible" => false,
+			),
+			"CcSubjs.DbLogin" => array(
+				"isColumn" => true,
+				"title" => _("Owner"),
+				"width" => "160px",
+				"class" => "library_owner"
+			),
+		);
+	}
+	
+	private function getPlaylistDatatableColumnOrder() {
+	
+		return array (
+			"Type",
+			"Name",
+			"Description",
+			"CreatedAt",
 			"UpdatedAt",
 			"CcSubjs.DbLogin",
 			"Length",
 		);
 	}
 	
-	private function getWebstreamColumnAliases() {
+	private function getPlaylistColumnAliases() {
 	
 		return array(
 		);
@@ -536,9 +609,10 @@ class Application_Service_MediaService
 	public function getDatatablesPlaylists($params) {
 	
 		$columns = self::getPlaylistDatatableColumnOrder();
+		$aliases = self::getPlaylistColumnAliases();
 		
 		$q = PlaylistQuery::create();
-		$q = self::buildQuery($q, $params);
+		$q = self::buildQuery($q, $params, $aliases);
 		$coll = $q->find();
 	
 		return self::createOutput($coll, $columns);

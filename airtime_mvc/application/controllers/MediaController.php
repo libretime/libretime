@@ -51,7 +51,7 @@ class MediaController extends Zend_Controller_Action
     	Logging::info($params);
     	 
     	$mediaService = new Application_Service_MediaService();
-    	$r = $mediaService->getDatatablesAudioFiles($params);
+    	$r = $mediaService->getDatatablesPlaylists($params);
     	 
     	$this->view->sEcho = intval($params["sEcho"]);
     	$this->view->iTotalDisplayRecords = count($r);

@@ -79,6 +79,10 @@ class LibraryController extends Zend_Controller_Action
         $columns = json_encode($mediaService->makeDatatablesColumns('Webstream'));
         $script .= "localStorage.setItem( 'datatables-webstream-aoColumns', JSON.stringify($columns) ); ";
         
+        //set playlist columns for display of data.
+        $columns = json_encode($mediaService->makeDatatablesColumns('Playlist'));
+        $script .= "localStorage.setItem( 'datatables-playlist-aoColumns', JSON.stringify($columns) ); ";
+        
         $this->view->headScript()->appendScript($script);
 
         try {

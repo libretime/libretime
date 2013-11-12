@@ -69,6 +69,21 @@ var AIRTIME = (function(AIRTIME) {
 		    	localColumns: "datatables-webstream-aoColumns",
 		    	tableId: "webstream_table",
 		    	source: baseUrl+"media/webstream-feed"
+		    },
+		    "lib_playlists": {
+		    	initialized: false,
+		    	initialize: function() {
+		    		
+		    	},
+		    	navigate: function() {
+		    		
+		    	},
+		    	always: function() {
+		    		
+		    	},
+		    	localColumns: "datatables-playlist-aoColumns",
+		    	tableId: "playlist_table",
+		    	source: baseUrl+"media/playlist-feed"
 		    }
     	};
 
