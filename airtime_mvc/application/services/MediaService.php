@@ -54,7 +54,8 @@ class Application_Service_MediaService
 				"title" => _("Bit Rate"),
 				"width" => "80px",
 				"class" => "library_bitrate",
-				"visible" => false
+				"visible" => false,
+				"searchable" => false,
 			),
 			"Bpm" => array(
 				"isColumn" => true,
@@ -62,6 +63,7 @@ class Application_Service_MediaService
 				"width" => "50px",
 				"class" => "library_bpm",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"Composer" => array(
 				"isColumn" => true,
@@ -141,6 +143,7 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_modified_time",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"LastPlayedTime" => array(
 				"isColumn" => true,
@@ -148,6 +151,7 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_modified_time",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"CueLength" => array(
 				"isColumn" => true,
@@ -183,6 +187,7 @@ class Application_Service_MediaService
 				"width" => "80px",
 				"class" => "library_replay_gain",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"SampleRate" => array(
 				"isColumn" => true,
@@ -190,6 +195,7 @@ class Application_Service_MediaService
 				"width" => "80px",
 				"class" => "library_sr",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"TrackNumber" => array(
 				"isColumn" => true,
@@ -197,6 +203,7 @@ class Application_Service_MediaService
 				"width" => "65px",
 				"class" => "library_track",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"CreatedAt" => array(
 				"isColumn" => true,
@@ -204,6 +211,7 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_upload_time",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"InfoUrl" => array(
 				"isColumn" => true,
@@ -294,6 +302,7 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_upload_time",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"UpdatedAt" => array(
 				"isColumn" => true,
@@ -301,6 +310,7 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_modified_time",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"CcSubjs.DbLogin" => array(
 				"isColumn" => true,
@@ -375,6 +385,7 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_upload_time",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"UpdatedAt" => array(
 				"isColumn" => true,
@@ -382,6 +393,7 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_modified_time",
 				"visible" => false,
+				"searchable" => false,
 			),
 			"CcSubjs.DbLogin" => array(
 				"isColumn" => true,
@@ -469,18 +481,21 @@ class Application_Service_MediaService
 			$len = intval($params["iColumns"]);
 			for ($i = 0; $i < $len; $i++) {
 				
-				$whereTerm = $params["mDataProp_{$i}"];
-				if (strrpos($whereTerm, ".") === false) {
-					$whereTerm = $modelName.".".$whereTerm;
+				if ($params["bSearchable_{$i}"] === "true") {
+					
+					$whereTerm = $params["mDataProp_{$i}"];
+					if (strrpos($whereTerm, ".") === false) {
+						$whereTerm = $modelName.".".$whereTerm;
+					}
+					
+					$name = "{$term}{$i}";
+					$cond = "{$whereTerm} iLIKE ?";
+					$param = "{$term}%";
+					
+					$query->condition($name, $cond, $param);
+					
+					$orConditions[] = $name;
 				}
-				
-				$name = "{$term}{$i}";
-				$cond = "{$whereTerm} iLIKE ?";
-				$param = "{$term}%";
-				
-				$query->condition($name, $cond, $param);
-				
-				$orConditions[] = $name;
 			}
 			
 			if (count($searchTerms) > 1) {

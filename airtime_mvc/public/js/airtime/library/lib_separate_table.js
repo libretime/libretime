@@ -104,6 +104,8 @@ var AIRTIME = (function(AIRTIME) {
     					prop: tab.dataprop,
     					source: tab.source
     				});
+    				
+    				tab.initialized = true;
     			}
     			
     			tab.always();
