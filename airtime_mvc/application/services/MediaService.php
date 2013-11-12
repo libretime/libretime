@@ -17,6 +17,20 @@ class Application_Service_MediaService
 			"Id" => array(
 				"isColumn" => false
 			),
+			"IsScheduled" => array(
+				"isColumn" => true,
+				"title" => _("Scheduled"),
+				"width" => "90px",
+				"class" => "library_is_scheduled",
+				"searchable" => false,
+			),
+			"IsPlaylist" => array(
+				"isColumn" => true,
+				"title" => _("Playlist"),
+				"width" => "90px",
+				"class" => "library_is_playlist",
+				"searchable" => false,
+			),
 			"TrackTitle" => array(
 				"isColumn" => true,
 				"title" => _("Title"),
@@ -35,12 +49,218 @@ class Application_Service_MediaService
 				"width" => "150px",
 				"class" => "library_album"
 			),
+			"BitRate" => array(
+				"isColumn" => true,
+				"title" => _("Bit Rate"),
+				"width" => "80px",
+				"class" => "library_bitrate",
+				"visible" => false
+			),
+			"Bpm" => array(
+				"isColumn" => true,
+				"title" => _("BPM"),
+				"width" => "50px",
+				"class" => "library_bpm",
+				"visible" => false,
+			),
+			"Composer" => array(
+				"isColumn" => true,
+				"title" => _("Composer"),
+				"width" => "150px",
+				"class" => "library_composer",
+				"visible" => false,
+			),
+			"Conductor" => array(
+				"isColumn" => true,
+				"title" => _("Conductor"),
+				"width" => "125px",
+				"class" => "library_conductor",
+				"visible" => false,
+			),
+			"Copyright" => array(
+				"isColumn" => true,
+				"title" => _("Copyright"),
+				"width" => "125px",
+				"class" => "library_copyright",
+				"visible" => false,
+			),
+			"Cuein" => array(
+				"isColumn" => true,
+				"title" => _("Cue In"),
+				"width" => "80px",
+				"class" => "library_length",
+				"visible" => false,
+				"searchable" => false,
+			),
+			"Cueout" => array(
+				"isColumn" => true,
+				"title" => _("Cue Out"),
+				"width" => "80px",
+				"class" => "library_length",
+				"visible" => false,
+				"searchable" => false,
+			),
+			"EncodedBy" => array(
+				"isColumn" => true,
+				"title" => _("Encoded By"),
+				"width" => "150px",
+				"class" => "library_encoded",
+				"visible" => false,
+			),
+			"Genre" => array(
+				"isColumn" => true,
+				"title" => _("Genre"),
+				"width" => "100px",
+				"class" => "library_genre",
+				"visible" => false,
+			),
+			"IsrcNumber" => array(
+				"isColumn" => true,
+				"title" => _("ISRC"),
+				"width" => "150px",
+				"class" => "library_isrc",
+				"visible" => false,
+			),
+			"Label" => array(
+				"isColumn" => true,
+				"title" => _("Label"),
+				"width" => "125px",
+				"class" => "library_label",
+				"visible" => false,
+			),
+			"Language" => array(
+				"isColumn" => true,
+				"title" => _("Language"),
+				"width" => "125px",
+				"class" => "library_language",
+				"visible" => false,
+			),
+			"UpdatedAt" => array(
+				"isColumn" => true,
+				"title" => _("Last Modified"),
+				"width" => "125px",
+				"class" => "library_modified_time",
+				"visible" => false,
+			),
+			"LastPlayedTime" => array(
+				"isColumn" => true,
+				"title" => _("Last Played"),
+				"width" => "125px",
+				"class" => "library_modified_time",
+				"visible" => false,
+			),
+			"CueLength" => array(
+				"isColumn" => true,
+				"title" => _("Length"),
+				"width" => "80px",
+				"class" => "library_length",
+				"searchable" => false,
+			),
+			"Mime" => array(
+				"isColumn" => true,
+				"title" => _("Mime"),
+				"width" => "80px",
+				"class" => "library_mime",
+				"visible" => false,
+			),
+			"Mood" => array(
+				"isColumn" => true,
+				"title" => _("Mood"),
+				"width" => "70px",
+				"class" => "library_mood",
+				"visible" => false,
+			),	
 			"CcSubjs.DbLogin" => array(
 				"isColumn" => true,
 				"title" => _("Owner"),
-				"width" => "160px",
-				"class" => "library_owner"
-			)
+				"width" => "125px",
+				"class" => "library_owner",
+				"visible" => false
+			),
+			"ReplayGain" => array(
+				"isColumn" => true,
+				"title" => _("Replay Gain"),
+				"width" => "80px",
+				"class" => "library_replay_gain",
+				"visible" => false,
+			),
+			"SampleRate" => array(
+				"isColumn" => true,
+				"title" => _("Sample Rate"),
+				"width" => "80px",
+				"class" => "library_sr",
+				"visible" => false,
+			),
+			"TrackNumber" => array(
+				"isColumn" => true,
+				"title" => _("Track number"),
+				"width" => "65px",
+				"class" => "library_track",
+				"visible" => false,
+			),
+			"CreatedAt" => array(
+				"isColumn" => true,
+				"title" => _("Uploaded"),
+				"width" => "125px",
+				"class" => "library_upload_time",
+				"visible" => false,
+			),
+			"InfoUrl" => array(
+				"isColumn" => true,
+				"title" => _("Website"),
+				"width" => "150px",
+				"class" => "library_url",
+				"visible" => false,
+			),
+			"Year" => array(
+				"isColumn" => true,
+				"title" => _("Year"),
+				"width" => "60px",
+				"class" => "library_year",
+				"visible" => false,
+			),
+		);
+	}
+	
+	private function getAudioFileDatatableColumnOrder() {
+	
+		return array (
+			"IsScheduled",
+			"IsPlaylist",
+			"TrackTitle",
+			"ArtistName",
+			"AlbumTitle",
+			"BitRate",
+			"Bpm",
+			"Composer",
+			"Conductor",
+			"Copyright",
+			"Cuein",
+			"Cueout",
+			"EncodedBy",
+			"Genre",
+			"IsrcNumber",
+			"Label",
+			"Language",
+			"UpdatedAt",
+			"LastPlayedTime",
+			"CueLength", //this is a custom function in AudioFile
+			"Mime",
+			"Mood",
+			"CcSubjs.DbLogin",
+			"ReplayGain",
+			"SampleRate",
+			"TrackNumber",
+			"CreatedAt",
+			"InfoUrl",
+			"Year",
+		);
+	}
+	
+	private function getAudioFileColumnAliases() {
+		
+		return array(
+			"CueLength",	
 		);
 	}
 	
@@ -56,22 +276,46 @@ class Application_Service_MediaService
 				"width" => "170px",
 				"class" => "library_title"
 			),
+			"Mime" => array(
+				"isColumn" => true,
+				"title" => _("Mime"),
+				"width" => "80px",
+				"class" => "library_mime",
+			),
+			"Url" => array(
+				"isColumn" => true,
+				"title" => _("Url"),
+				"width" => "150px",
+				"class" => "library_url",
+			),
+			"CreatedAt" => array(
+				"isColumn" => true,
+				"title" => _("Uploaded"),
+				"width" => "125px",
+				"class" => "library_upload_time",
+				"visible" => false,
+			),
+			"UpdatedAt" => array(
+				"isColumn" => true,
+				"title" => _("Last Modified"),
+				"width" => "125px",
+				"class" => "library_modified_time",
+				"visible" => false,
+			),
 			"CcSubjs.DbLogin" => array(
 				"isColumn" => true,
 				"title" => _("Owner"),
 				"width" => "160px",
 				"class" => "library_owner"
-			)
-		);
-	}
-	
-	private function getAudioFileDatatableColumnOrder() {
-
-		return array (
-			"TrackTitle",
-			"ArtistName",
-			"AlbumTitle",
-			"CcSubjs.DbLogin",
+			),
+			"Length" => array(
+				"isColumn" => true,
+				"title" => _("Default Length"),
+				"width" => "80px",
+				"class" => "library_length",
+				"searchable" => false,
+				"visible" => false,
+			),
 		);
 	}
 	
@@ -79,7 +323,18 @@ class Application_Service_MediaService
 	
 		return array (
 			"Name",
+			"CreatedAt",
+			"Mime",
+			"Url",
+			"UpdatedAt",
 			"CcSubjs.DbLogin",
+			"Length",
+		);
+	}
+	
+	private function getWebstreamColumnAliases() {
+	
+		return array(
 		);
 	}
 	
@@ -115,27 +370,14 @@ class Application_Service_MediaService
 		return $datatablesColumns;
 	}
 	
-	private function buildQuery($query, $params) {
-		
-		$alias = "media";
-		
-		$selectColumns = array();
+	private function buildQuery($query, $params, $aliasedColumns) {
 		
 		$len = intval($params["iColumns"]);
 		for ($i = 0; $i < $len; $i++) {
 			$selectColumns[] = $params["mDataProp_{$i}"];	
 		}
 		
-		//$query->select($selectColumns);
-		
-		//$query->setFormatter('PropelArrayFormatter');
 		$query->setFormatter('PropelOnDemandFormatter');
-		
-		//all media join this table for the "Owner" column;
-		//removing the "." access since PropelSimpleArrayFormatter returns a flat array
-		//Datatables is expecting a nested object if there is a "." in the name.
-		//would be nice to extend class PropelSimpleArrayFormatter if possible to include
-		//nested associative arrays in the output.
 		$query->joinWith("CcSubjs");
 		
 		//take care of WHERE clause
@@ -187,6 +429,12 @@ class Application_Service_MediaService
 			$colNum = $params["iSortCol_{$i}"];
 			$colName = $params["mDataProp_{$colNum}"];
 			$colDir = $params["sSortDir_{$i}"] === "asc" ? Criteria::ASC : Criteria::DESC;
+			
+			//need to lowercase the column name for the syntax generated by propel
+			//to work properly in postgresql.
+			if (in_array($colName, $aliasedColumns)) {
+				$colName = strtolower($colName);
+			}
 			
 			$query->orderBy($colName, $colDir);
 		}
@@ -260,9 +508,14 @@ class Application_Service_MediaService
 	public function getDatatablesAudioFiles($params) {
 		
 		$columns = self::getAudioFileDatatableColumnOrder();
+		$aliases = self::getAudioFileColumnAliases();
 		
 		$q = AudioFileQuery::create();
-		$q = self::buildQuery($q, $params);
+		
+		$m = $q->getModelName();
+		$q->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
+		
+		$q = self::buildQuery($q, $params, $aliases);
 		$coll = $q->find();
 		
 		return self::createOutput($coll, $columns);
@@ -271,9 +524,10 @@ class Application_Service_MediaService
 	public function getDatatablesWebstreams($params) {
 		
 		$columns = self::getWebstreamDatatableColumnOrder();
+		$aliases = self::getWebstreamColumnAliases();
 	
 		$q = WebstreamQuery::create();
-		$q = self::buildQuery($q, $params);
+		$q = self::buildQuery($q, $params, $aliases);
 		$coll = $q->find();
 	
 		return self::createOutput($coll, $columns);

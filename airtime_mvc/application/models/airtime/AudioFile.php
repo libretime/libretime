@@ -214,11 +214,11 @@ class AudioFile extends BaseAudioFile
 		$cuein = $this->getCuein();
 		$cueout = $this->getCueout();
 	
-		$cueinSec = Application_Common_DateHelper::calculateLengthInSeconds($cuein);
-		$cueoutSec = Application_Common_DateHelper::calculateLengthInSeconds($cueout);
+		$cueinSec = \Application_Common_DateHelper::calculateLengthInSeconds($cuein);
+		$cueoutSec = \Application_Common_DateHelper::calculateLengthInSeconds($cueout);
 		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
 	
-		$length = Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
+		$length = \Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
 	
 		return $length;
 	}
