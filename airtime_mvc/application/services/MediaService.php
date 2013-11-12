@@ -35,6 +35,12 @@ class Application_Service_MediaService
 				"width" => "150px",
 				"class" => "library_album"
 			),
+			"CcSubjs.DbLogin" => array(
+				"isColumn" => true,
+				"title" => _("Owner"),
+				"width" => "160px",
+				"class" => "library_owner"
+			)
 		);
 	}
 	
@@ -65,6 +71,7 @@ class Application_Service_MediaService
 			"TrackTitle",
 			"ArtistName",
 			"AlbumTitle",
+			"CcSubjs.DbLogin",
 		);
 	}
 	
@@ -96,8 +103,6 @@ class Application_Service_MediaService
 			
 			$datatablesColumns[] = array(
 				"sTitle" =>	$data["title"],
-				//replacing the dots because datatables will expect a nested array for joined tables
-				//and propel is giving us a single dimension array.
 				"mDataProp" => $columnOrder[$i],
 				"bSortable" => isset($data["sortable"]) ? $data["sortable"] : true,
 				"bSearchable" => isset($data["searchable"]) ? $data["searchable"] : true,
@@ -209,6 +214,26 @@ class Application_Service_MediaService
 		return $func;
 	}
 	
+	
+	private function makeArray(&$array, &$getters, $obj) {
+		
+		$key = array_shift($getters);
+		$method = "get{$key}";
+		
+		if (count($getters) == 0) {
+			$array[$key] = $obj->$method();
+			return;
+		}
+		
+		if (empty($array[$key])) {
+			$array[$key] = array();
+		}
+		$a =& $array[$key];
+		$nextObj = $obj->$method();
+		
+		return self::makeArray($a, $getters, $nextObj);
+	}
+	
 	/*
 	 * @param $coll PropelCollection formatted on demand.
 	 * 
@@ -217,26 +242,13 @@ class Application_Service_MediaService
 	private function createOutput($coll, $columns) {
 		
 		$output = array();
-		$item;
-		
 		foreach ($coll as $media) {
-				
+			
 			$item = array();
-				
 			foreach ($columns as $column) {
 		
-				$x = $media;
-				$a = $item;
 				$getters = explode(".", $column);
-		
-				foreach ($getters as $attr) {
-					
-					$k = $attr;
-					$method = "get{$attr}";
-					$x = $x->$method();
-				}
-		
-				$item[$column] = $x;
+				self::makeArray($item, $getters, $media);
 			}
 				
 			$output[] = $item;
