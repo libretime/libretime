@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-08 11:46-0400\n"
-"PO-Revision-Date: 2013-10-11 15:34+0100\n"
+"PO-Revision-Date: 2013-11-12 15:05+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Hungarian Localization <contact@sourcefabric.org>\n"
 "Language: \n"
@@ -137,7 +137,7 @@ msgstr "Fejezési Idő"
 
 #: airtime_mvc/application/services/HistoryService.php:1150
 msgid "Played"
-msgstr "Lejátszott"
+msgstr "Lejátszva"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
@@ -2291,7 +2291,7 @@ msgstr "Ha az Airtime mögött van egy router vagy egy tűzfal, akkor be kell á
 #: airtime_mvc/application/controllers/LocaleController.php:167
 #, php-format
 msgid "For more details, please read the %sAirtime Manual%s"
-msgstr "A további részletekért, kérjük olvassa el az %sAirtime Kézikönyvét%s"
+msgstr "A további részletekért, kérjük, olvassa el az %sAirtime Kézikönyvét%s"
 
 #: airtime_mvc/application/controllers/LocaleController.php:169
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
@@ -2911,7 +2911,7 @@ msgstr "a műsor nem található"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
 msgid "Please make sure admin user/password is correct on System->Streams page."
-msgstr "Kérjük, győződjön meg arról, hogy az admin felhasználónév/jelszó helyes-e a Rendszer-> Streams oldalon."
+msgstr "Kérjük, győződjön meg arról, hogy az admin felhasználónév/jelszó helyes-e a Rendszer-> Adásfolyamok oldalon."
 
 #: airtime_mvc/application/controllers/ApiController.php:60
 #: airtime_mvc/application/controllers/ApiController.php:79
@@ -3056,7 +3056,7 @@ msgstr "Következő:"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:24
 msgid "Source Streams"
-msgstr "Adásfolyam Források"
+msgstr "Az Adásfolyam Forrásai"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:29
 msgid "Master Source"
@@ -3360,7 +3360,7 @@ msgstr "Vissza a belépéshez"
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:7
 msgid "Welcome to the online Airtime demo! You can log in using the username 'admin' and the password 'admin'."
-msgstr "Üdvözöljük az online Aitime demó változatában! Jelentkezzen be 'admin' felhasználónévvel és 'admin' jelszóval."
+msgstr "Üdvözöljük az online Airtime demó változatában! Jelentkezzen be 'admin' felhasználónévvel és 'admin' jelszóval."
 
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:3
 #: airtime_mvc/application/views/scripts/form/login.phtml:34
@@ -3583,7 +3583,7 @@ msgstr "Műsorok Keresése"
 
 #: airtime_mvc/application/views/scripts/form/showbuilder.phtml:12
 msgid "Filter By Show:"
-msgstr "Szűrés Műsor Alapján:"
+msgstr "Műsor Alapján:"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:2
 msgid "Input Stream Settings"
