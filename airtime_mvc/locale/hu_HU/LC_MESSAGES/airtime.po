@@ -8,10 +8,9 @@ msgstr ""
 "Project-Id-Version: Airtime 2.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-10-08 11:46-0400\n"
-"PO-Revision-Date: 2013-11-12 15:05+0100\n"
+"PO-Revision-Date: 2013-11-20 10:54+0100\n"
 "Last-Translator: Daniel James <daniel.james@sourcefabric.org>\n"
 "Language-Team: Hungarian Localization <contact@sourcefabric.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -160,7 +159,7 @@ msgstr "Feltöltés a SoundCloud-ra"
 #: airtime_mvc/application/services/CalendarService.php:70
 #: airtime_mvc/application/controllers/LibraryController.php:286
 msgid "Re-upload to SoundCloud"
-msgstr "Újra-feltöltés a SoundCloud -ra"
+msgstr "Újra-feltöltés a SoundCloud-ra"
 
 #: airtime_mvc/application/services/CalendarService.php:77
 #: airtime_mvc/application/services/CalendarService.php:105
@@ -883,7 +882,7 @@ msgstr "Az állomásom közzététele a Sourcefabric.org-on"
 #: airtime_mvc/application/forms/SupportSettings.php:148
 #, php-format
 msgid "By checking this box, I agree to Sourcefabric's %sprivacy policy%s."
-msgstr "A mező bejelölésével, elfogadom a Sourcefabric %sadatvédelmi irányelveket%s."
+msgstr "A mező bejelölésével, elfogadom a Sourcefabric %sadatvédelmi irányelveit%s."
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:166
 #: airtime_mvc/application/forms/SupportSettings.php:171
@@ -2129,7 +2128,7 @@ msgstr "Hibakód:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:104
 msgid "Error msg: "
-msgstr "MSG hiba:"
+msgstr "Hibaüzenet:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:105
 msgid "Input must be a positive number"
@@ -2182,7 +2181,7 @@ msgstr "Lejátszási lista mentve"
 
 #: airtime_mvc/application/controllers/LocaleController.php:120
 msgid "Playlist shuffled"
-msgstr "Kevert lejátszási lista"
+msgstr "Lejátszási lista megkeverve"
 
 #: airtime_mvc/application/controllers/LocaleController.php:122
 msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
@@ -2295,7 +2294,7 @@ msgstr "A további részletekért, kérjük, olvassa el az %sAirtime Kézikönyv
 
 #: airtime_mvc/application/controllers/LocaleController.php:169
 msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
-msgstr "Jelölje be ezt az opciót: metaadatok engedélyezése OGG-os adásfolyamra (adatfolyam metaadatok: a műsorszám címe, előadó, műsornév, amely megjelenik egy audió lejátszóban). A VLC és mplayer lejátszóknál súlyos hibák előfordulhatnak, OGG/Vorbis adatfolyam játszásakor, amelynél a metaadatok küldése engedélyezett: ilyenkor akadozik az adatfolyam. Ha az OGG-os adatfolyam és a hallgatói nem igényelnek támogatást az ilyen jellegű audió lejátszókhoz, akkor nyugodtan engedélyezze ezt az opciót."
+msgstr "Jelölje be és ellenőrizze ezt az opciót: metaadatok engedélyezése OGG-os adásfolyamra (adatfolyam metaadatok: a műsorszám címe, előadó, műsornév, amely megjelenik egy audió lejátszóban). A VLC és mplayer lejátszóknál súlyos hibák előfordulhatnak, OGG/Vorbis adatfolyam játszásakor, amelynél a metaadatok küldése engedélyezett: ilyenkor akadozik az adatfolyam. Ha az OGG-os adatfolyam és a hallgatói nem igényelnek támogatást az ilyen jellegű audió lejátszókhoz, akkor nyugodtan engedélyezze ezt az opciót."
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
@@ -2344,7 +2343,7 @@ msgstr "Figyelem: a Műsorokat nem lehet újra-linkelni"
 
 #: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
-msgstr "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows - fordításra vár"
+msgstr "Az ismétlődő műsorok összekötésével, minden ütemezett médiai elem, az összes ismétlődő műsorban, ugyanazt a sorrendet kapja, mint a többi ismétlődő műsorban"
 
 #: airtime_mvc/application/controllers/LocaleController.php:187
 msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
@@ -2880,7 +2879,7 @@ msgstr "Belépés Létrehozása"
 
 #: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "Edit History Record"
-msgstr "Rögzítési Előzmények Szerkesztése"
+msgstr "Előzmények Szerkesztése"
 
 #: airtime_mvc/application/controllers/LocaleController.php:392
 #, php-format
@@ -3610,7 +3609,7 @@ msgstr "NULLÁZÁS"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "Műsor Kapcsolat Forrása URL:"
+msgstr "Műsor Kapcsolati Forrás URL:"
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 #, php-format
@@ -3641,11 +3640,11 @@ msgstr "Segítse az Airtime fejlesztését azáltal, hogy a Sourcefabric tudja, 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:23
 #, php-format
 msgid "Click the box below to promote your station on %sSourcefabric.org%s."
-msgstr "Kattintson az alábbi mezőbe, hogy hírdesse saját állomását %sSourcefabric.org%s."
+msgstr "Kattintson az alábbi mezőbe, hogy hírdesse a saját állomását %sSourcefabric.org%s."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:41
 msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
-msgstr "(Annak érdekében, hogy hírdetni tudja állomását, a 'Támogatási Visszajelzés Küldését' engedélyeznie kell.)"
+msgstr "(Annak érdekében, hogy hírdetni tudja az állomását, a 'Támogatási Visszajelzés Küldését' engedélyeznie kell.)"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:186
 msgid "Sourcefabric Privacy Policy"
