@@ -169,6 +169,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             $utc = new DateTimeZone('UTC');
             $showTimezone = new DateTimeZone($formData["add_show_timezone"]);
             $show_start = new DateTime($start_time, $showTimezone);
+            //we need to know the start day of the week in show's local timezome
+            $startDow = $show_start->format("w");
             $show_start->setTimezone($utc);
             $show_end = new DateTime($end_time, $showTimezone);
             $show_end->setTimezone($utc);
@@ -220,7 +222,6 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                  * Do this for each show day
                  */
                 if (!$overlapping) {
-                    $startDow = $show_start->format("w");
 
                     if (!isset($formData['add_show_day_check'])) {
                         return false;
@@ -240,7 +241,6 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                              * to convert show start and show end to local time before
                              * adding the interval for the next repeating show
                              */
-                            
                             $repeatShowStart->setTimezone($showTimezone);
                             $repeatShowEnd->setTimezone($showTimezone);
                             $repeatShowStart->add(new DateInterval("P".$daysAdd."D"));
