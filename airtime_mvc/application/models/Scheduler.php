@@ -617,6 +617,23 @@ class Application_Model_Scheduler
                         $linkedItemEnds = Application_Common_Database::prepareAndExecute(
                             $linkedItem_sql, array(), Application_Common_Database::COLUMN);
 
+                        if (!$linkedItemEnds) {
+                            //With dynamic smart blocks there may be different number of items in
+                            //each show. In case the position does not exist we need to select
+                            //the end time of the last position
+                            $maxPos_sql = "SELECT max(position) from cc_schedule ".
+                              "WHERE instance_id = {$instanceId}";
+                            $pos = Application_Common_Database::prepareAndExecute(
+                                $maxPos_sql, array(), Application_Common_Database::COLUMN);
+
+                            $linkedItem_sql = "SELECT ends FROM cc_schedule ".
+                                "WHERE instance_id = {$instanceId} ".
+                                "AND position = {$pos} ".
+                                "AND playout_status != -1";
+                            $linkedItemEnds = Application_Common_Database::prepareAndExecute(
+                                $linkedItem_sql, array(), Application_Common_Database::COLUMN);
+                        }
+
                         $nextStartDT = $this->findNextStartTime(
                             new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
                             $instanceId);
