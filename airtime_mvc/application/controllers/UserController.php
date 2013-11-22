@@ -72,8 +72,8 @@ class UserController extends Zend_Controller_Action
                     // Language and timezone settings are saved on a per-user basis
                     // By default, the default language, and timezone setting on
                     // preferences page is what gets assigned.
-                    Application_Model_Preference::SetUserLocale($user->getId());
-                    Application_Model_Preference::SetUserTimezone($user->getId());
+                    Application_Model_Preference::SetUserLocale();
+                    Application_Model_Preference::SetUserTimezone();
 
                     $form->reset();
                     $this->view->form = $form;
@@ -143,8 +143,8 @@ class UserController extends Zend_Controller_Action
                 $user->setJabber($formData['cu_jabber']);
                 $user->save();
 
-                Application_Model_Preference::SetUserLocale($user->getId(), $formData['cu_locale']);
-                Application_Model_Preference::SetUserTimezone($user->getId(), $formData['cu_timezone']);
+                Application_Model_Preference::SetUserLocale($formData['cu_locale']);
+                Application_Model_Preference::SetUserTimezone($formData['cu_timezone']);
 
                 //configure localization with new locale setting
                 Application_Model_Locale::configureLocalization($formData['cu_locale']);
