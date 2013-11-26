@@ -896,7 +896,13 @@ SQL;
         if ($utcStartDateTime->getTimestamp() < $populateUntil->getTimestamp()) {
             $ccShowInstance = new CcShowInstances();
             if ($this->isUpdate) {
-                $ccShowInstance = $this->getInstance($utcStartDateTime);
+                //use original cc_show_day object to get the current cc_show_instance
+                $origStartDateTime = new DateTime(
+                    $this->origCcShowDay->getDbFirstShow()." ".$this->origCcShowDay->getDbStartTime(),
+                    new DateTimeZone($this->origCcShowDay->getDbTimezone())
+                );
+                $origStartDateTime->setTimezone(new DateTimeZone("UTC"));
+                $ccShowInstance = $this->getInstance($origStartDateTime);
             }
 
             $ccShowInstance->setDbShowId($this->ccShow->getDbId());
