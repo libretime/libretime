@@ -42,6 +42,14 @@ class AudioFile extends BaseAudioFile
 		'MDATA_KEY_LANGUAGE' => "Language",
 	);
 	
+	public function getName() {
+		return $this->getTrackTitle();
+	}
+	
+	public function getCreator() {
+		return $this->getArtistName();
+	}
+	
 	public function getRealFileExtension() {
 		
 		$path = $this->getFilepath();
@@ -214,8 +222,8 @@ class AudioFile extends BaseAudioFile
 		$cuein = $this->getCuein();
 		$cueout = $this->getCueout();
 	
-		$cueinSec = \Application_Common_DateHelper::calculateLengthInSeconds($cuein);
-		$cueoutSec = \Application_Common_DateHelper::calculateLengthInSeconds($cueout);
+		$cueinSec = \Application_Common_DateHelper::playlistTimeToSeconds($cuein);
+		$cueoutSec = \Application_Common_DateHelper::playlistTimeToSeconds($cueout);
 		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
 	
 		$length = \Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
@@ -245,10 +253,10 @@ class AudioFile extends BaseAudioFile
 	}
 	
 	public function getSchedulingFadeIn() {
-		return Application_Model_Preference::GetDefaultFadeIn();
+		return \Application_Model_Preference::GetDefaultFadeIn();
 	}
 	
 	public function getSchedulingFadeOut() {
-		return Application_Model_Preference::GetDefaultFadeOut();
+		return \Application_Model_Preference::GetDefaultFadeOut();
 	}
 }

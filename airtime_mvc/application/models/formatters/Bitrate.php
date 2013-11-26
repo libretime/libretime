@@ -1,6 +1,6 @@
 <?php
 
-class BitrateFormatter
+class Format_Bitrate
 {
     /**
      * @string length

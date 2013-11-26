@@ -24,7 +24,6 @@ use Airtime\MediaItem\AudioFileQuery;
  *
  *
  *
- * @method AudioFileQuery orderByMime($order = Criteria::ASC) Order by the mime column
  * @method AudioFileQuery orderByDirectory($order = Criteria::ASC) Order by the directory column
  * @method AudioFileQuery orderByFilepath($order = Criteria::ASC) Order by the filepath column
  * @method AudioFileQuery orderByMd5($order = Criteria::ASC) Order by the md5 column
@@ -63,10 +62,10 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery orderByLastPlayedTime($order = Criteria::ASC) Order by the last_played column
  * @method AudioFileQuery orderByPlayCount($order = Criteria::ASC) Order by the play_count column
  * @method AudioFileQuery orderByLength($order = Criteria::ASC) Order by the length column
+ * @method AudioFileQuery orderByMime($order = Criteria::ASC) Order by the mime column
  * @method AudioFileQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method AudioFileQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
- * @method AudioFileQuery groupByMime() Group by the mime column
  * @method AudioFileQuery groupByDirectory() Group by the directory column
  * @method AudioFileQuery groupByFilepath() Group by the filepath column
  * @method AudioFileQuery groupByMd5() Group by the md5 column
@@ -105,6 +104,7 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery groupByLastPlayedTime() Group by the last_played column
  * @method AudioFileQuery groupByPlayCount() Group by the play_count column
  * @method AudioFileQuery groupByLength() Group by the length column
+ * @method AudioFileQuery groupByMime() Group by the mime column
  * @method AudioFileQuery groupByCreatedAt() Group by the created_at column
  * @method AudioFileQuery groupByUpdatedAt() Group by the updated_at column
  *
@@ -127,7 +127,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFile findOne(PropelPDO $con = null) Return the first AudioFile matching the query
  * @method AudioFile findOneOrCreate(PropelPDO $con = null) Return the first AudioFile matching the query, or a new AudioFile object populated from the query conditions when no match is found
  *
- * @method AudioFile findOneByMime(string $mime) Return the first AudioFile filtered by the mime column
  * @method AudioFile findOneByDirectory(int $directory) Return the first AudioFile filtered by the directory column
  * @method AudioFile findOneByFilepath(string $filepath) Return the first AudioFile filtered by the filepath column
  * @method AudioFile findOneByMd5(string $md5) Return the first AudioFile filtered by the md5 column
@@ -165,10 +164,10 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFile findOneByLastPlayedTime(string $last_played) Return the first AudioFile filtered by the last_played column
  * @method AudioFile findOneByPlayCount(int $play_count) Return the first AudioFile filtered by the play_count column
  * @method AudioFile findOneByLength(string $length) Return the first AudioFile filtered by the length column
+ * @method AudioFile findOneByMime(string $mime) Return the first AudioFile filtered by the mime column
  * @method AudioFile findOneByCreatedAt(string $created_at) Return the first AudioFile filtered by the created_at column
  * @method AudioFile findOneByUpdatedAt(string $updated_at) Return the first AudioFile filtered by the updated_at column
  *
- * @method array findByMime(string $mime) Return AudioFile objects filtered by the mime column
  * @method array findByDirectory(int $directory) Return AudioFile objects filtered by the directory column
  * @method array findByFilepath(string $filepath) Return AudioFile objects filtered by the filepath column
  * @method array findByMd5(string $md5) Return AudioFile objects filtered by the md5 column
@@ -207,6 +206,7 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method array findByLastPlayedTime(string $last_played) Return AudioFile objects filtered by the last_played column
  * @method array findByPlayCount(int $play_count) Return AudioFile objects filtered by the play_count column
  * @method array findByLength(string $length) Return AudioFile objects filtered by the length column
+ * @method array findByMime(string $mime) Return AudioFile objects filtered by the mime column
  * @method array findByCreatedAt(string $created_at) Return AudioFile objects filtered by the created_at column
  * @method array findByUpdatedAt(string $updated_at) Return AudioFile objects filtered by the updated_at column
  *
@@ -316,7 +316,7 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "mime", "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "conductor", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "is_scheduled", "is_playlist", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at" FROM "media_audiofile" WHERE "id" = :p0';
+        $sql = 'SELECT "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "conductor", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "is_scheduled", "is_playlist", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_audiofile" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -403,35 +403,6 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
     {
 
         return $this->addUsingAlias(AudioFilePeer::ID, $keys, Criteria::IN);
-    }
-
-    /**
-     * Filter the query on the mime column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByMime('fooValue');   // WHERE mime = 'fooValue'
-     * $query->filterByMime('%fooValue%'); // WHERE mime LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $mime The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return AudioFileQuery The current query, for fluid interface
-     */
-    public function filterByMime($mime = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($mime)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $mime)) {
-                $mime = str_replace('*', '%', $mime);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(AudioFilePeer::MIME, $mime, $comparison);
     }
 
     /**
@@ -1674,6 +1645,35 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
         }
 
         return $this->addUsingAlias(AudioFilePeer::LENGTH, $length, $comparison);
+    }
+
+    /**
+     * Filter the query on the mime column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMime('fooValue');   // WHERE mime = 'fooValue'
+     * $query->filterByMime('%fooValue%'); // WHERE mime LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $mime The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AudioFileQuery The current query, for fluid interface
+     */
+    public function filterByMime($mime = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($mime)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $mime)) {
+                $mime = str_replace('*', '%', $mime);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AudioFilePeer::MIME, $mime, $comparison);
     }
 
     /**

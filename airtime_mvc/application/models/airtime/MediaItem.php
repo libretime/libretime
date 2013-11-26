@@ -52,6 +52,18 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 		return false;
 	}
 	
+	public function getType() {
+		$class = $this->getDescendantClass();
+		$a = explode("\\", $class);
+		
+		return array_pop($a);
+	}
+	
+	public function getCreator() {
+		$obj = $this->getChildObject();
+		return $obj->getCreator();
+	}
+	
 	
 	public function getSchedulingInfo() 
 	{

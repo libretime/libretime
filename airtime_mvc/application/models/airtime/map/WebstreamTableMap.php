@@ -42,7 +42,6 @@ class WebstreamTableMap extends TableMap
         $this->setPackage('airtime');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addColumn('mime', 'Mime', 'VARCHAR', false, null, null);
         $this->addColumn('url', 'Url', 'VARCHAR', true, 512, null);
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_item', 'id', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
@@ -51,6 +50,7 @@ class WebstreamTableMap extends TableMap
         $this->addColumn('last_played', 'LastPlayedTime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('play_count', 'PlayCount', 'INTEGER', false, null, 0);
         $this->addColumn('length', 'Length', 'VARCHAR', false, null, '00:00:00');
+        $this->addColumn('mime', 'Mime', 'VARCHAR', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators

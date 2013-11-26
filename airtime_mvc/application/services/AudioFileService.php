@@ -203,6 +203,10 @@ class Application_Service_AudioFileService
 		}
 	}
 	
+	public function getPlaylistPresentationClass($mediaItem) {
+		
+	}
+	
 	public function uploadRecordedFile($showInstanceId, $file)
 	{
 		$showCanceled = false;

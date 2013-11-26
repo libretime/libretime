@@ -27,6 +27,9 @@ class Playlist extends BasePlaylist
 		$this->modifiedColumns[] = PlaylistPeer::NAME;
 	}
 	
+	/*
+	 * returns a list of media contents.
+	 */
 	public function getMediaContents($criteria = NULL, PropelPDO $con = NULL) {
 		
 		if (is_null($criteria)) {

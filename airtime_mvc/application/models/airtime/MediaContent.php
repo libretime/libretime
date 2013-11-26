@@ -18,4 +18,27 @@ use Airtime\MediaItem\om\BaseMediaContent;
  */
 class MediaContent extends BaseMediaContent
 {
+	public function generateCliplength() {
+		
+		$cuein = $this->getCuein();
+		$cueout = $this->getCueout();
+		
+		$cueinSec = \Application_Common_DateHelper::playlistTimeToSeconds($cuein);
+		$cueoutSec = \Application_Common_DateHelper::playlistTimeToSeconds($cueout);
+		$lengthSec = bcsub($cueoutSec, $cueinSec, 6);
+		
+		$length = \Application_Common_DateHelper::secondsToPlaylistTime($lengthSec);
+		
+		if ($this->cliplength !== $length) {
+			$this->cliplength = $length;
+			$this->modifiedColumns[] = MediaContentPeer::CLIPLENGTH;
+		}
+		
+		return $this;
+	}
+	
+	public function setCliplength($v) {
+		
+		throw new PropelException("Cliplength must be generated from cuein & cueout.");
+	}
 }

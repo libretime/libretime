@@ -43,15 +43,16 @@ class MediaContentTableMap extends TableMap
         $this->setUseIdGenerator(true);
         $this->setPrimaryKeyMethodInfo('media_content_id_seq');
         // columns
-        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addForeignKey('playlist_id', 'PlaylistId', 'INTEGER', 'media_playlist', 'id', false, null, null);
         $this->addForeignKey('media_id', 'MediaId', 'INTEGER', 'media_item', 'id', false, null, null);
         $this->addColumn('position', 'Position', 'INTEGER', false, null, null);
         $this->addColumn('trackoffset', 'TrackOffset', 'REAL', true, null, 0);
         $this->addColumn('cliplength', 'Cliplength', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('cuein', 'Cuein', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('cueout', 'Cueout', 'VARCHAR', false, null, '00:00:00');
-        $this->addColumn('fadein', 'Fadein', 'TIME', false, null, '00:00:00');
-        $this->addColumn('fadeout', 'Fadeout', 'TIME', false, null, '00:00:00');
+        $this->addColumn('fadein', 'Fadein', 'DECIMAL', false, null, 0);
+        $this->addColumn('fadeout', 'Fadeout', 'DECIMAL', false, null, 0);
         // validators
     } // initialize()
 
@@ -60,6 +61,7 @@ class MediaContentTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Playlist', 'Airtime\\MediaItem\\Playlist', RelationMap::MANY_TO_ONE, array('playlist_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('MediaItem', 'Airtime\\MediaItem', RelationMap::MANY_TO_ONE, array('media_id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 

@@ -18,6 +18,10 @@ use Airtime\MediaItem\om\BaseWebstream;
  */
 class Webstream extends BaseWebstream
 {
+	public function getCreator() {
+		return $this->getCcSubjs()->getDbLogin();
+	}
+	
 	public function getHoursMins() {
 
 		return explode(":", $this->getLength());
@@ -72,10 +76,10 @@ class Webstream extends BaseWebstream
 	}
 	
 	public function getSchedulingFadeIn() {
-		return Application_Model_Preference::GetDefaultFadeIn();
+		return \Application_Model_Preference::GetDefaultFadeIn();
 	}
 	
 	public function getSchedulingFadeOut() {
-		return Application_Model_Preference::GetDefaultFadeOut();
+		return \Application_Model_Preference::GetDefaultFadeOut();
 	}
 }

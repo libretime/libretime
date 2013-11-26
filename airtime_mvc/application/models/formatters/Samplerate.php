@@ -1,6 +1,6 @@
 <?php
 
-class SamplerateFormatter
+class Format_Samplerate
 {
     /**
      * @string sample rate

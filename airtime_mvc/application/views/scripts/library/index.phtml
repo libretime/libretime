@@ -6,21 +6,17 @@
 if ($this->showPlaylist) {
     $display = "";
 } else {
-    $display = "display:none";
+    //$display = "display:none";
+	$display = "";
 }
 ?>
 <div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded" style="height:697px; width:720px;<?php echo $display?>">
-    <?php if ($this->type == 'block') {
-            echo $this->render('playlist/smart-block.phtml');
-        } else if ($this->type == 'playlist') {
-            echo $this->render('playlist/playlist.phtml');
-        } else if ($this->type == 'stream') {
-            echo $this->render('webstream/webstream.phtml');
-        } else {
-            echo $this->render('webstream/webstream.phtml');
-            //throw new Exception("Unrecognized type: '{$this->type}'");
-        }
-
-
+<?php 
+    if (isset($this->obj)) {
+        echo $this->render('playlist/playlist.phtml');
+    } 
+    else {
+        echo $this->render('webstream/webstream.phtml');
+    }
 ?>
 </div>

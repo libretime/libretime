@@ -1,5 +1,3 @@
-<?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
-
 <div id ="lib_tabs">
 	<ul>
 		<li><a href="#lib_audio"><span>Audio</span></a></li>
@@ -13,6 +11,9 @@
 		<table id="webstream_table" cellpadding="0" cellspacing="0" class="datatable"></table>
 	</div>
 	<div id="lib_playlists">
+		<a id="lib_new_playlist">
+            <span><?php echo _("Create Playlist") ?></span>
+        </a>
 		<table id="playlist_table" cellpadding="0" cellspacing="0" class="datatable"></table>
 	</div>
 </div>

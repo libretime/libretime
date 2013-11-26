@@ -627,6 +627,7 @@ CREATE TABLE "media_item"
     "last_played" TIMESTAMP(6),
     "play_count" INTEGER DEFAULT 0,
     "length" interval DEFAULT '00:00:00',
+    "mime" VARCHAR,
     "created_at" TIMESTAMP,
     "updated_at" TIMESTAMP,
     "descendant_class" VARCHAR(100),
@@ -641,7 +642,6 @@ DROP TABLE IF EXISTS "media_audiofile" CASCADE;
 
 CREATE TABLE "media_audiofile"
 (
-    "mime" VARCHAR,
     "directory" INTEGER,
     "filepath" TEXT DEFAULT '',
     "md5" CHAR(32),
@@ -680,6 +680,7 @@ CREATE TABLE "media_audiofile"
     "last_played" TIMESTAMP(6),
     "play_count" INTEGER DEFAULT 0,
     "length" interval DEFAULT '00:00:00',
+    "mime" VARCHAR,
     "created_at" TIMESTAMP,
     "updated_at" TIMESTAMP,
     PRIMARY KEY ("id")
@@ -695,7 +696,6 @@ DROP TABLE IF EXISTS "media_webstream" CASCADE;
 
 CREATE TABLE "media_webstream"
 (
-    "mime" VARCHAR,
     "url" VARCHAR(512) NOT NULL,
     "id" INTEGER NOT NULL,
     "name" VARCHAR(128),
@@ -704,6 +704,7 @@ CREATE TABLE "media_webstream"
     "last_played" TIMESTAMP(6),
     "play_count" INTEGER DEFAULT 0,
     "length" interval DEFAULT '00:00:00',
+    "mime" VARCHAR,
     "created_at" TIMESTAMP,
     "updated_at" TIMESTAMP,
     PRIMARY KEY ("id")
@@ -725,6 +726,7 @@ CREATE TABLE "media_playlist"
     "last_played" TIMESTAMP(6),
     "play_count" INTEGER DEFAULT 0,
     "length" interval DEFAULT '00:00:00',
+    "mime" VARCHAR,
     "created_at" TIMESTAMP,
     "updated_at" TIMESTAMP,
     PRIMARY KEY ("id")
@@ -756,14 +758,15 @@ DROP TABLE IF EXISTS "media_content" CASCADE;
 CREATE TABLE "media_content"
 (
     "id" serial NOT NULL,
+    "playlist_id" INTEGER,
     "media_id" INTEGER,
     "position" INTEGER,
     "trackoffset" FLOAT DEFAULT 0 NOT NULL,
     "cliplength" interval DEFAULT '00:00:00',
     "cuein" interval DEFAULT '00:00:00',
     "cueout" interval DEFAULT '00:00:00',
-    "fadein" TIME DEFAULT '00:00:00',
-    "fadeout" TIME DEFAULT '00:00:00',
+    "fadein" DECIMAL DEFAULT 0,
+    "fadeout" DECIMAL DEFAULT 0,
     PRIMARY KEY ("id")
 );
 
@@ -964,7 +967,12 @@ ALTER TABLE "media_playlist_rule" ADD CONSTRAINT "media_item_rule_fkey"
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "media_content" ADD CONSTRAINT "media_item_contents_fkey"
+ALTER TABLE "media_content" ADD CONSTRAINT "media_content_playlist_fkey"
+    FOREIGN KEY ("playlist_id")
+    REFERENCES "media_playlist" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "media_content" ADD CONSTRAINT "media_content_media_fkey"
     FOREIGN KEY ("media_id")
     REFERENCES "media_item" ("id")
     ON DELETE CASCADE;

@@ -1,7 +1,7 @@
-/*!
+/*
  * jQuery contextMenu - Plugin for simple contextMenu handling
  *
- * Version: 1.6.5
+ * Version: 1.5.8
  *
  * Authors: Rodney Rehm, Addy Osmani (patches for FF)
  * Web: http://medialize.github.com/jQuery-contextMenu/
@@ -21,48 +21,13 @@
 // determine html5 compatibility
 $.support.htmlMenuitem = ('HTMLMenuItemElement' in window);
 $.support.htmlCommand = ('HTMLCommandElement' in window);
-$.support.eventSelectstart = ("onselectstart" in document.documentElement);
-/* // should the need arise, test for css user-select
-$.support.cssUserSelect = (function(){
-    var t = false,
-        e = document.createElement('div');
-    
-    $.each('Moz|Webkit|Khtml|O|ms|Icab|'.split('|'), function(i, prefix) {
-        var propCC = prefix + (prefix ? 'U' : 'u') + 'serSelect',
-            prop = (prefix ? ('-' + prefix.toLowerCase() + '-') : '') + 'user-select';
-            
-        e.style.cssText = prop + ': text;';
-        if (e.style[propCC] == 'text') {
-            t = true;
-            return false;
-        }
-        
-        return true;
-    });
-    
-    return t;
-})();
-*/
-
-if (!$.ui || !$.ui.widget) {
-    // duck punch $.cleanData like jQueryUI does to get that remove event
-    // https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.widget.js#L16-24
-    var _cleanData = $.cleanData;
-    $.cleanData = function( elems ) {
-        for ( var i = 0, elem; (elem = elems[i]) != null; i++ ) {
-            try {
-                $( elem ).triggerHandler( "remove" );
-                // http://bugs.jquery.com/ticket/8235
-            } catch( e ) {}
-        }
-        _cleanData( elems );
-    };
-}
 
 var // currently active contextMenu trigger
     $currentTrigger = null,
     // is contextMenu initialized with at least one menu?
     initialized = false,
+    // flag stating to ignore the contextmenu event
+    ignoreThisClick = false,
     // window handle
     $win = $(window),
     // number of registered menus
@@ -83,11 +48,10 @@ var // currently active contextMenu trigger
         trigger: "right",
         // hide menu when mouse leaves trigger / menu elements
         autoHide: false,
+        // ignore right click triggers for left, hover or custom activation
+        ignoreRightClick: false,
         // ms to wait before showing a hover-triggered context menu
         delay: 200,
-        // flag denoting if a second trigger should simply move (true) or rebuild (false) an open menu
-        // as long as the trigger happened on one of the trigger-element's child nodes
-        reposition: true,
         // determine position to show menu at
         determinePosition: function($menu) {
             // position to the lower middle of the trigger element
@@ -122,6 +86,15 @@ var // currently active contextMenu trigger
                 offset = opt.$menu.position();
             } else {
                 // x and y are given (by mouse event)
+                var triggerIsFixed = opt.$trigger.parents().andSelf()
+                    .filter(function() {
+                        return $(this).css('position') == "fixed";
+                    }).length;
+
+                if (triggerIsFixed) {
+                    y -= $win.scrollTop();
+                    x -= $win.scrollLeft();
+                }
                 offset = {top: y, left: x};
             }
             
@@ -150,14 +123,13 @@ var // currently active contextMenu trigger
                     my: "left top",
                     at: "right top",
                     of: this,
-                    collision: "flipfit fit"
+                    collision: "fit"
                 }).css('display', '');
             } else {
                 // determine contextMenu position
-                var offset = {
-                    top: 0,
-                    left: this.outerWidth()
-                };
+                var offset = this.offset();
+                offset.top += 0;
+                offset.left += this.outerWidth();
                 $menu.css(offset);
             }
         },
@@ -193,7 +165,7 @@ var // currently active contextMenu trigger
         while (true) {
             zin = Math.max(zin, parseInt($tt.css('z-index'), 10) || 0);
             $tt = $tt.parent();
-            if (!$tt || !$tt.length || "html body".indexOf($tt.prop('nodeName').toLowerCase()) > -1 ) {
+            if (!$tt || !$tt.length || $tt.prop('nodeName').toLowerCase() == 'body') {
                 break;
             }
         }
@@ -211,18 +183,13 @@ var // currently active contextMenu trigger
         // contextmenu show dispatcher
         contextmenu: function(e) {
             var $this = $(this);
-            
             // disable actual context-menu
             e.preventDefault();
             e.stopImmediatePropagation();
             
-            // abort native-triggered events unless we're triggering on right click
-            if (e.data.trigger != 'right' && e.originalEvent) {
-                return;
-            }
-            
-            // abort event if menu is visible for this trigger
-            if ($this.hasClass('context-menu-active')) {
+            // ignore right click trigger
+            if (ignoreThisClick) {
+                ignoreThisClick = false;
                 return;
             }
             
@@ -234,28 +201,8 @@ var // currently active contextMenu trigger
                 
                 $currentTrigger = $this;
                 if (e.data.build) {
-                    var built = e.data.build($currentTrigger, e);
-                    // abort if build() returned false
-                    if (built === false) {
-                        return;
-                    }
-                    
                     // dynamically build menu on invocation
-                    e.data = $.extend(true, {}, defaults, e.data, built || {});
-
-                    // abort if there are no items to display
-                    if (!e.data.items || $.isEmptyObject(e.data.items)) {
-                        // Note: jQuery captures and ignores errors from event handlers
-                        if (window.console) {
-                            (console.error || console.log)("No items specified to show in contextMenu");
-                        }
-                        
-                        throw new Error('No Items sepcified');
-                    }
-                    
-                    // backreference for custom command type creation
-                    e.data.$trigger = $currentTrigger;
-                    
+                    $.extend(true, e.data, defaults, e.data.build($currentTrigger, e) || {});
                     op.create(e.data);
                 }
                 // show menu
@@ -266,7 +213,7 @@ var // currently active contextMenu trigger
         click: function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            $(this).trigger($.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
+            $(this).trigger(jQuery.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
         },
         // contextMenu right-click trigger
         mousedown: function(e) {
@@ -291,7 +238,7 @@ var // currently active contextMenu trigger
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 $currentTrigger = $this;
-                $this.trigger($.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
+                $this.trigger(jQuery.Event("contextmenu", { data: e.data, pageX: e.pageX, pageY: e.pageY }));
             }
             
             $this.removeData('contextMenuActive');
@@ -320,7 +267,7 @@ var // currently active contextMenu trigger
                 hoveract.timer = null;
                 $document.off('mousemove.contextMenuShow');
                 $currentTrigger = $this;
-                $this.trigger($.Event("contextmenu", { data: hoveract.data, pageX: hoveract.pageX, pageY: hoveract.pageY }));
+                $this.trigger(jQuery.Event("contextmenu", { data: hoveract.data, pageX: hoveract.pageX, pageY: hoveract.pageY }));
             }, e.data.delay );
         },
         // contextMenu hover trigger
@@ -342,70 +289,32 @@ var // currently active contextMenu trigger
             
             hoveract.timer = null;
         },
+
+        // ignore right click trigger
+        ignoreRightClick: function(e) {
+            if (e.button == 2) {
+                ignoreThisClick = true;
+            }
+        },
         
         // click on layer to hide contextMenu
         layerClick: function(e) {
             var $this = $(this),
-                root = $this.data('contextMenuRoot'),
-                mouseup = false,
-                button = e.button,
-                x = e.pageX,
-                y = e.pageY,
-                target, 
-                offset,
-                selectors;
+                root = $this.data('contextMenuRoot');
                 
             e.preventDefault();
             e.stopImmediatePropagation();
-            
-            setTimeout(function() {
-                var $window, hideshow, possibleTarget;
-                var triggerAction = ((root.trigger == 'left' && button === 0) || (root.trigger == 'right' && button === 2));
-                
-                // find the element that would've been clicked, wasn't the layer in the way
-                if (document.elementFromPoint) {
-                    root.$layer.hide();
-                    target = document.elementFromPoint(x - $win.scrollLeft(), y - $win.scrollTop());
-                    root.$layer.show();
+            $this.remove();
+            root.$menu.trigger('contextmenu:hide');
+            /* (Airtime) added this to allow user to exit out of menu.
+             * if ignoreThisClick remains false, every right click
+             * thereafter continues to show the menu
+             */  
+            if (handle.ignoreRightClick) {
+                if (e.button == 2) {
+                    ignoreThisClick = true;
                 }
-                
-                if (root.reposition && triggerAction) {
-                    if (document.elementFromPoint) {
-                        if (root.$trigger.is(target) || root.$trigger.has(target).length) {
-                            root.position.call(root.$trigger, root, x, y);
-                            return;
-                        }
-                    } else {
-                        offset = root.$trigger.offset();
-                        $window = $(window);
-                        // while this looks kinda awful, it's the best way to avoid
-                        // unnecessarily calculating any positions
-                        offset.top += $window.scrollTop();
-                        if (offset.top <= e.pageY) {
-                            offset.left += $window.scrollLeft();
-                            if (offset.left <= e.pageX) {
-                                offset.bottom = offset.top + root.$trigger.outerHeight();
-                                if (offset.bottom >= e.pageY) {
-                                    offset.right = offset.left + root.$trigger.outerWidth();
-                                    if (offset.right >= e.pageX) {
-                                        // reposition
-                                        root.position.call(root.$trigger, root, x, y);
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                if (target && triggerAction) {
-                    root.$trigger.one('contextmenu:hidden', function() {
-                        $(target).contextMenu({x: x, y: y});
-                    });
-                }
-
-                root.$menu.trigger('contextmenu:hide');
-            }, 50);
+            }
         },
         // key handled :hover
         keyStop: function(e, opt) {
@@ -416,7 +325,9 @@ var // currently active contextMenu trigger
             e.stopPropagation();
         },
         key: function(e) {
-            var opt = $currentTrigger.data('contextMenu') || {};
+            var opt = $currentTrigger.data('contextMenu') || {},
+                $children = opt.$menu.children(),
+                $round;
 
             switch (e.keyCode) {
                 case 9:
@@ -438,9 +349,8 @@ var // currently active contextMenu trigger
                         opt.$menu.trigger('prevcommand');
                         return;
                     }
-                    // omitting break;
                     
-                // case 9: // tab - reached through omitted break;
+                case 9: // tab
                 case 40: // down
                     handle.keyStop(e, opt);
                     if (opt.isInput) {
@@ -664,6 +574,7 @@ var // currently active contextMenu trigger
             }
         },
         
+        
         // :hover done manually so key handling is possible
         itemMouseenter: function(e) {
             var $this = $(this),
@@ -716,15 +627,15 @@ var // currently active contextMenu trigger
                 key = data.contextMenuKey,
                 callback;
 
-            // abort if the key is unknown or disabled or is a menu
-            if (!opt.items[key] || $this.is('.disabled, .context-menu-submenu, .context-menu-separator, .not-selectable')) {
+            // abort if the key is unknown or disabled
+            if (!opt.items[key] || $this.hasClass('disabled')) {
                 return;
             }
 
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            if ($.isFunction(root.callbacks[key]) && Object.prototype.hasOwnProperty.call(root.callbacks, key)) {
+            if ($.isFunction(root.callbacks[key])) {
                 // item-specific callback
                 callback = root.callbacks[key];
             } else if ($.isFunction(root.callback)) {
@@ -738,7 +649,7 @@ var // currently active contextMenu trigger
             // hide menu if callback doesn't stop that
             if (callback.call(root.$trigger, key, root) !== false) {
                 root.$menu.trigger('contextmenu:hide');
-            } else if (root.$menu.parent().length) {
+            } else {
                 op.update.call(root.$trigger, root);
             }
         },
@@ -748,9 +659,9 @@ var // currently active contextMenu trigger
         },
         
         // hide <menu>
-        hideMenu: function(e, data) {
+        hideMenu: function(e) {
             var root = $(this).data('contextMenuRoot');
-            op.hide.call(root.$trigger, root, data && data.force);
+            op.hide.call(root.$trigger, root);
         },
         // focus <command>
         focusItem: function(e) {
@@ -786,31 +697,31 @@ var // currently active contextMenu trigger
     // operations
     op = {
         show: function(opt, x, y) {
-            var $trigger = $(this),
+            var $this = $(this),
                 offset,
                 css = {};
 
             // hide any open menus
             $('#context-menu-layer').trigger('mousedown');
 
-            // backreference for callbacks
-            opt.$trigger = $trigger;
-
             // show event
-            if (opt.events.show.call($trigger, opt) === false) {
+            if (opt.events.show.call($this, opt) === false) {
                 $currentTrigger = null;
                 return;
             }
+            
+            // backreference for callbacks
+            opt.$trigger = $this;
 
             // create or update context menu
-            op.update.call($trigger, opt);
+            op.update.call($this, opt);
             
             // position menu
-            opt.position.call($trigger, opt, x, y);
+            opt.position.call($this, opt, x, y);
 
             // make sure we're in front
             if (opt.zIndex) {
-                css.zIndex = zindex($trigger) + opt.zIndex;
+                css.zIndex = zindex($this) + opt.zIndex;
             }
             
             // add layer
@@ -820,58 +731,40 @@ var // currently active contextMenu trigger
             opt.$menu.find('ul').css('zIndex', css.zIndex + 1);
             
             // position and show context menu
-            opt.$menu.css( css )[opt.animation.show](opt.animation.duration, function() {
-                $trigger.trigger('contextmenu:visible');
-            });
-            // make options available and set state
-            $trigger
-                .data('contextMenu', opt)
-                .addClass("context-menu-active");
-            
+            opt.$menu.css( css )[opt.animation.show](opt.animation.duration);
+            // make options available
+            $this.data('contextMenu', opt);
             // register key handler
             $(document).off('keydown.contextMenu').on('keydown.contextMenu', handle.key);
             // register autoHide handler
             if (opt.autoHide) {
+                // trigger element coordinates
+                var pos = $this.position();
+                pos.right = pos.left + $this.outerWidth();
+                pos.bottom = pos.top + this.outerHeight();
                 // mouse position handler
                 $(document).on('mousemove.contextMenuAutoHide', function(e) {
-                    // need to capture the offset on mousemove,
-                    // since the page might've been scrolled since activation
-                    var pos = $trigger.offset();
-                    pos.right = pos.left + $trigger.outerWidth();
-                    pos.bottom = pos.top + $trigger.outerHeight();
-                    
                     if (opt.$layer && !opt.hovering && (!(e.pageX >= pos.left && e.pageX <= pos.right) || !(e.pageY >= pos.top && e.pageY <= pos.bottom))) {
                         // if mouse in menu...
-                        opt.$menu.trigger('contextmenu:hide');
+                        opt.$layer.trigger('mousedown');
                     }
                 });
             }
         },
-        hide: function(opt, force) {
-            var $trigger = $(this);
+        hide: function(opt) {
+            var $this = $(this);
             if (!opt) {
-                opt = $trigger.data('contextMenu') || {};
+                opt = $this.data('contextMenu') || {};
             }
             
             // hide event
-            if (!force && opt.events && opt.events.hide.call($trigger, opt) === false) {
+            if (opt.events && opt.events.hide.call($this, opt) === false) {
                 return;
             }
             
-            // remove options and revert state
-            $trigger
-                .removeData('contextMenu')
-                .removeClass("context-menu-active");
-            
             if (opt.$layer) {
-                // keep layer for a bit so the contextmenu event can be aborted properly by opera
-                setTimeout((function($layer) {
-                    return function(){
-                        $layer.remove();
-                    };
-                })(opt.$layer), 10);
-                
                 try {
+                    opt.$layer.remove();
                     delete opt.$layer;
                 } catch(e) {
                     opt.$layer = null;
@@ -887,39 +780,36 @@ var // currently active contextMenu trigger
             //$(document).off('.contextMenuAutoHide keydown.contextMenu'); // http://bugs.jquery.com/ticket/10705
             $(document).off('.contextMenuAutoHide').off('keydown.contextMenu');
             // hide menu
-            opt.$menu && opt.$menu[opt.animation.hide](opt.animation.duration, function (){
-                // tear down dynamically built menu after animation is completed.
-                if (opt.build) {
-                    opt.$menu.remove();
-                    $.each(opt, function(key, value) {
-                        switch (key) {
-                            case 'ns':
-                            case 'selector':
-                            case 'build':
-                            case 'trigger':
-                                return true;
+            opt.$menu && opt.$menu[opt.animation.hide](opt.animation.duration);
+            
+            // tear down dynamically built menu
+            if (opt.build) {
+                opt.$menu.remove();
+                $.each(opt, function(key, value) {
+                    switch (key) {
+                        case 'ns':
+                        case 'selector':
+                        case 'build':
+                        case 'trigger':
+                        case 'ignoreRightClick':
+                            return true;
 
-                            default:
-                                opt[key] = undefined;
-                                try {
-                                    delete opt[key];
-                                } catch (e) {}
-                                return true;
-                        }
-                    });
-                }
-                
-                setTimeout(function() {
-                    $trigger.trigger('contextmenu:hidden');
-                }, 10);
-            });
+                        default:
+                            opt[key] = undefined;
+                            try {
+                                delete opt[key];
+                            } catch (e) {}
+                            return true;
+                   }
+                });
+            }
         },
         create: function(opt, root) {
             if (root === undefined) {
                 root = opt;
             }
             // create contextMenu
-            opt.$menu = $('<ul class="context-menu-list"></ul>').addClass(opt.className || "").data({
+            opt.$menu = $('<ul class="context-menu-list ' + (opt.className || "") + '"></ul>').data({
                 'contextMenu': opt,
                 'contextMenuRoot': root
             });
@@ -935,13 +825,9 @@ var // currently active contextMenu trigger
             
             // create contextMenu items
             $.each(opt.items, function(key, item){
-                var $t = $('<li class="context-menu-item"></li>').addClass(item.className || ""),
+                var $t = $('<li class="context-menu-item ' + (item.className || "") +'"></li>'),
                     $label = null,
                     $input = null;
-                
-                // iOS needs to see a click-event bound to an element to actually
-                // have the TouchEvents infrastructure trigger the click event
-                $t.on('click', $.noop);
                 
                 item.$node = $t.data({
                     'contextMenu': opt,
@@ -993,17 +879,13 @@ var // currently active contextMenu trigger
                 
                     switch (item.type) {
                         case 'text':
-                            $input = $('<input type="text" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .appendTo($label);
+                            $input = $('<input type="text" value="1" name="context-menu-input-'+ key +'" value="">')
+                                .val(item.value || "").appendTo($label);
                             break;
                     
                         case 'textarea':
-                            $input = $('<textarea name=""></textarea>')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .appendTo($label);
+                            $input = $('<textarea name="context-menu-input-'+ key +'"></textarea>')
+                                .val(item.value || "").appendTo($label);
 
                             if (item.height) {
                                 $input.height(item.height);
@@ -1011,25 +893,17 @@ var // currently active contextMenu trigger
                             break;
 
                         case 'checkbox':
-                            $input = $('<input type="checkbox" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .val(item.value || "")
-                                .prop("checked", !!item.selected)
-                                .prependTo($label);
+                            $input = $('<input type="checkbox" value="1" name="context-menu-input-'+ key +'" value="">')
+                                .val(item.value || "").prop("checked", !!item.selected).prependTo($label);
                             break;
 
                         case 'radio':
-                            $input = $('<input type="radio" value="1" name="" value="">')
-                                .attr('name', 'context-menu-input-' + item.radio)
-                                .val(item.value || "")
-                                .prop("checked", !!item.selected)
-                                .prependTo($label);
+                            $input = $('<input type="radio" value="1" name="context-menu-input-'+ item.radio +'" value="">')
+                                .val(item.value || "").prop("checked", !!item.selected).prependTo($label);
                             break;
                     
                         case 'select':
-                            $input = $('<select name="">')
-                                .attr('name', 'context-menu-input-' + key)
-                                .appendTo($label);
+                            $input = $('<select name="context-menu-input-'+ key +'">').appendTo($label);
                             if (item.options) {
                                 $.each(item.options, function(value, text) {
                                     $('<option></option>').val(value).text(text).appendTo($input);
@@ -1039,7 +913,6 @@ var // currently active contextMenu trigger
                             break;
                         
                         case 'sub':
-                            // FIXME: shouldn't this .html() be a .text()?
                             $('<span></span>').html(item._name || item.name).appendTo($t);
                             item.appendTo = item.$node;
                             op.create(item, root);
@@ -1058,7 +931,7 @@ var // currently active contextMenu trigger
                                     k.callbacks[key] = item.callback;
                                 }
                             });
-                            // FIXME: shouldn't this .html() be a .text()?
+                            
                             $('<span></span>').html(item._name || item.name || "").appendTo($t);
                             break;
                     }
@@ -1070,7 +943,7 @@ var // currently active contextMenu trigger
                             .on('blur', handle.blurInput);
                         
                         if (item.events) {
-                            $input.on(item.events, opt);
+                            $input.on(item.events);
                         }
                     }
                 
@@ -1088,11 +961,12 @@ var // currently active contextMenu trigger
                 $t.appendTo(opt.$menu);
                 
                 // Disable text selection
-                if (!opt.hasTypes && $.support.eventSelectstart) {
-                    // browsers support user-select: none, 
-                    // IE has a special event for text-selection
-                    // browsers supporting neither will not be preventing text-selection
-                    $t.on('selectstart.disableTextSelect', handle.abortevent);
+                if (!opt.hasTypes) {
+                    if($.browser.msie) {
+                        $t.on('selectstart.disableTextSelect', handle.abortevent);
+                    } else if(!$.browser.mozilla) {
+                        $t.on('mousedown.disableTextSelect', handle.abortevent);
+                    }
                 }
             });
             // attach contextMenu to <body> (to bypass any possible overflow:hidden issues on parents of the trigger element)
@@ -1101,51 +975,25 @@ var // currently active contextMenu trigger
             }
             opt.$menu.appendTo(opt.appendTo || document.body);
         },
-        resize: function($menu, nested) {
-            // determine widths of submenus, as CSS won't grow them automatically
-            // position:absolute within position:absolute; min-width:100; max-width:200; results in width: 100;
-            // kinda sucks hard...
-
-            // determine width of absolutely positioned element
-            $menu.css({position: 'absolute', display: 'block'});
-            // don't apply yet, because that would break nested elements' widths
-            // add a pixel to circumvent word-break issue in IE9 - #80
-            $menu.data('width', Math.ceil($menu.width()) + 1);
-            // reset styles so they allow nested elements to grow/shrink naturally
-            $menu.css({
-                position: 'static',
-                minWidth: '0px',
-                maxWidth: '100000px'
-            });
-            // identify width of nested menus
-            $menu.find('> li > ul').each(function() {
-                op.resize($(this), true);
-            });
-            // reset and apply changes in the end because nested
-            // elements' widths wouldn't be calculatable otherwise
-            if (!nested) {
-                $menu.find('ul').andSelf().css({
-                    position: '', 
-                    display: '',
-                    minWidth: '',
-                    maxWidth: ''
-                }).width(function() {
-                    return $(this).data('width');
-                });
-            }
-        },
         update: function(opt, root) {
-            var $trigger = this;
+            var $this = this;
             if (root === undefined) {
                 root = opt;
-                op.resize(opt.$menu);
+                // determine widths of submenus, as CSS won't grow them automatically
+                // position:absolute > position:absolute; min-width:100; max-width:200; results in width: 100;
+                // kinda sucks hard...
+                opt.$menu.find('ul').andSelf().css({position: 'static', display: 'block'}).each(function(){
+                    var $this = $(this);
+                    $this.width($this.css('position', 'absolute').width())
+                        .css('position', 'static');
+                }).css({position: '', display: ''});
             }
             // re-check disabled for each item
             opt.$menu.children().each(function(){
                 var $item = $(this),
                     key = $item.data('contextMenuKey'),
                     item = opt.items[key],
-                    disabled = ($.isFunction(item.disabled) && item.disabled.call($trigger, key, root)) || item.disabled === true;
+                    disabled = ($.isFunction(item.disabled) && item.disabled.call($this, key, root)) || item.disabled === true;
 
                 // dis- / enable item
                 $item[disabled ? 'addClass' : 'removeClass']('disabled');
@@ -1174,29 +1022,18 @@ var // currently active contextMenu trigger
                 
                 if (item.$menu) {
                     // update sub-menu
-                    op.update.call($trigger, item, root);
+                    op.update.call($this, item, root);
                 }
             });
         },
         layer: function(opt, zIndex) {
             // add transparent layer for click area
             // filter and background for Internet Explorer, Issue #23
-            var $layer = opt.$layer = $('<div id="context-menu-layer" style="position:fixed; z-index:' + zIndex + '; top:0; left:0; opacity: 0; filter: alpha(opacity=0); background-color: #000;"></div>')
+            return opt.$layer = $('<div id="context-menu-layer" style="position:fixed; z-index:' + zIndex + '; top:0; left:0; opacity: 0; filter: alpha(opacity=0); background-color: #000;"></div>')
                 .css({height: $win.height(), width: $win.width(), display: 'block'})
                 .data('contextMenuRoot', opt)
                 .insertBefore(this)
-                .on('contextmenu', handle.abortevent)
                 .on('mousedown', handle.layerClick);
-            
-            // IE6 doesn't know position:fixed;
-            if (!$.support.fixedPosition) {
-                $layer.css({
-                    'position' : 'absolute',
-                    'height' : $(document).height()
-                });
-            }
-            
-            return $layer;
         }
     };
 
@@ -1220,15 +1057,10 @@ $.fn.contextMenu = function(operation) {
     if (operation === undefined) {
         this.first().trigger('contextmenu');
     } else if (operation.x && operation.y) {
-        this.first().trigger($.Event("contextmenu", {pageX: operation.x, pageY: operation.y}));
+        this.first().trigger(jQuery.Event("contextmenu", {pageX: operation.x, pageY: operation.y}));
     } else if (operation === "hide") {
         var $menu = this.data('contextMenu').$menu;
         $menu && $menu.trigger('contextmenu:hide');
-    } else if (operation === "destroy") {
-        $.contextMenu("destroy", {context: this});
-    } else if ($.isPlainObject(operation)) {
-        operation.context = this;
-        $.contextMenu("create", operation);
     } else if (operation) {
         this.removeClass('context-menu-disabled');
     } else if (!operation) {
@@ -1252,19 +1084,8 @@ $.contextMenu = function(operation, options) {
     }
     
     // merge with default options
-    var o = $.extend(true, {}, defaults, options || {});
-    var $document = $(document);
-    var $context = $document;
-    var _hasContext = false;
-    
-    if (!o.context || !o.context.length) {
-        o.context = document;
-    } else {
-        // you never know what they throw at you...
-        $context = $(o.context).first();
-        o.context = $context.get(0);
-        _hasContext = o.context !== document;
-    }
+    var o = $.extend(true, {}, defaults, options || {}),
+        $body = $body = $(document);
     
     switch (operation) {
         case 'create':
@@ -1281,19 +1102,12 @@ $.contextMenu = function(operation, options) {
             }
             counter ++;
             o.ns = '.contextMenu' + counter;
-            if (!_hasContext) {
-                namespaces[o.selector] = o.ns;
-            }
+            namespaces[o.selector] = o.ns;
             menus[o.ns] = o;
-            
-            // default to right click
-            if (!o.trigger) {
-                o.trigger = 'right';
-            }
             
             if (!initialized) {
                 // make sure item click is registered first
-                $document
+                $body
                     .on({
                         'contextmenu:hide.contextMenu': handle.hideMenu,
                         'prevcommand.contextMenu': handle.prevItem,
@@ -1316,36 +1130,33 @@ $.contextMenu = function(operation, options) {
             }
             
             // engage native contextmenu event
-            $context
+            $body
                 .on('contextmenu' + o.ns, o.selector, o, handle.contextmenu);
-            
-            if (_hasContext) {
-                // add remove hook, just in case
-                $context.on('remove' + o.ns, function() {
-                    $(this).contextMenu("destroy");
-                });
-            }
             
             switch (o.trigger) {
                 case 'hover':
-                        $context
+                        $body
                             .on('mouseenter' + o.ns, o.selector, o, handle.mouseenter)
                             .on('mouseleave' + o.ns, o.selector, o, handle.mouseleave);                    
                     break;
                     
                 case 'left':
-                        $context.on('click' + o.ns, o.selector, o, handle.click);
+                        $body.on('click' + o.ns, o.selector, o, handle.click);
                     break;
                 /*
                 default:
                     // http://www.quirksmode.org/dom/events/contextmenu.html
-                    $document
+                    $body
                         .on('mousedown' + o.ns, o.selector, o, handle.mousedown)
                         .on('mouseup' + o.ns, o.selector, o, handle.mouseup);
                     break;
                 */
             }
             
+            if (o.trigger != 'hover' && o.ignoreRightClick) {
+                $body.on('mousedown' + o.ns, o.selector, handle.ignoreRightClick);
+            }
+
             // create menu
             if (!o.build) {
                 op.create(o);
@@ -1353,38 +1164,10 @@ $.contextMenu = function(operation, options) {
             break;
         
         case 'destroy':
-            var $visibleMenu;
-            if (_hasContext) {
-                // get proper options 
-                var context = o.context;
-                $.each(menus, function(ns, o) {
-                    if (o.context !== context) {
-                        return true;
-                    }
-                    
-                    $visibleMenu = $('.context-menu-list').filter(':visible');
-                    if ($visibleMenu.length && $visibleMenu.data().contextMenuRoot.$trigger.is($(o.context).find(o.selector))) {
-                        $visibleMenu.trigger('contextmenu:hide', {force: true});
-                    }
-
-                    try {
-                        if (menus[o.ns].$menu) {
-                            menus[o.ns].$menu.remove();
-                        }
-
-                        delete menus[o.ns];
-                    } catch(e) {
-                        menus[o.ns] = null;
-                    }
-
-                    $(o.context).off(o.ns);
-                    
-                    return true;
-                });
-            } else if (!o.selector) {
-                $document.off('.contextMenu .contextMenuAutoHide');
-                $.each(menus, function(ns, o) {
-                    $(o.context).off(o.ns);
+            if (!o.selector) {
+                $body.off('.contextMenu .contextMenuAutoHide');
+                $.each(namespaces, function(key, value) {
+                    $body.off(value);
                 });
                 
                 namespaces = {};
@@ -1392,13 +1175,8 @@ $.contextMenu = function(operation, options) {
                 counter = 0;
                 initialized = false;
                 
-                $('#context-menu-layer, .context-menu-list').remove();
+                $('.context-menu-list').remove();
             } else if (namespaces[o.selector]) {
-                $visibleMenu = $('.context-menu-list').filter(':visible');
-                if ($visibleMenu.length && $visibleMenu.data().contextMenuRoot.$trigger.is(o.selector)) {
-                    $visibleMenu.trigger('contextmenu:hide', {force: true});
-                }
-                
                 try {
                     if (menus[namespaces[o.selector]].$menu) {
                         menus[namespaces[o.selector]].$menu.remove();
@@ -1409,7 +1187,7 @@ $.contextMenu = function(operation, options) {
                     menus[namespaces[o.selector]] = null;
                 }
                 
-                $document.off(namespaces[o.selector]);
+                $body.off(namespaces[o.selector]);
             }
             break;
         
@@ -1531,7 +1309,7 @@ function menuChildren(items, $children, counter) {
             // http://www.whatwg.org/specs/web-apps/current-work/multipage/interactive-elements.html#the-menu-element
             case 'menu':
                 item = {name: $node.attr('label'), items: {}};
-                counter = menuChildren(item.items, $node.children(), counter);
+                menuChildren(item.items, $node.children(), counter);
                 break;
             
             // http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#using-the-a-element-to-define-a-command
@@ -1661,8 +1439,6 @@ function menuChildren(items, $children, counter) {
             items['key' + counter] = item;
         }
     });
-    
-    return counter;
 }
 
 // convert html5 menu
@@ -1678,9 +1454,5 @@ $.contextMenu.fromMenu = function(element) {
 // make defaults accessible
 $.contextMenu.defaults = defaults;
 $.contextMenu.types = types;
-// export internal functions - undocumented, for hacking only!
-$.contextMenu.handle = handle;
-$.contextMenu.op = op;
-$.contextMenu.menus = menus;
 
 })(jQuery);

@@ -46,9 +46,6 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 11;
 
-    /** the column name for the mime field */
-    const MIME = 'media_webstream.mime';
-
     /** the column name for the url field */
     const URL = 'media_webstream.url';
 
@@ -72,6 +69,9 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
 
     /** the column name for the length field */
     const LENGTH = 'media_webstream.length';
+
+    /** the column name for the mime field */
+    const MIME = 'media_webstream.mime';
 
     /** the column name for the created_at field */
     const CREATED_AT = 'media_webstream.created_at';
@@ -98,11 +98,11 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
      * e.g. WebstreamPeer::$fieldNames[WebstreamPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Mime', 'Url', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('mime', 'url', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (WebstreamPeer::MIME, WebstreamPeer::URL, WebstreamPeer::ID, WebstreamPeer::NAME, WebstreamPeer::OWNER_ID, WebstreamPeer::DESCRIPTION, WebstreamPeer::LAST_PLAYED, WebstreamPeer::PLAY_COUNT, WebstreamPeer::LENGTH, WebstreamPeer::CREATED_AT, WebstreamPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('MIME', 'URL', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('mime', 'url', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'created_at', 'updated_at', ),
+        BasePeer::TYPE_PHPNAME => array ('Url', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('url', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', ),
+        BasePeer::TYPE_COLNAME => array (WebstreamPeer::URL, WebstreamPeer::ID, WebstreamPeer::NAME, WebstreamPeer::OWNER_ID, WebstreamPeer::DESCRIPTION, WebstreamPeer::LAST_PLAYED, WebstreamPeer::PLAY_COUNT, WebstreamPeer::LENGTH, WebstreamPeer::MIME, WebstreamPeer::CREATED_AT, WebstreamPeer::UPDATED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('URL', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('url', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
@@ -113,11 +113,11 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
      * e.g. WebstreamPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Mime' => 0, 'Url' => 1, 'Id' => 2, 'Name' => 3, 'OwnerId' => 4, 'Description' => 5, 'LastPlayedTime' => 6, 'PlayCount' => 7, 'Length' => 8, 'CreatedAt' => 9, 'UpdatedAt' => 10, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('mime' => 0, 'url' => 1, 'id' => 2, 'name' => 3, 'ownerId' => 4, 'description' => 5, 'lastPlayedTime' => 6, 'playCount' => 7, 'length' => 8, 'createdAt' => 9, 'updatedAt' => 10, ),
-        BasePeer::TYPE_COLNAME => array (WebstreamPeer::MIME => 0, WebstreamPeer::URL => 1, WebstreamPeer::ID => 2, WebstreamPeer::NAME => 3, WebstreamPeer::OWNER_ID => 4, WebstreamPeer::DESCRIPTION => 5, WebstreamPeer::LAST_PLAYED => 6, WebstreamPeer::PLAY_COUNT => 7, WebstreamPeer::LENGTH => 8, WebstreamPeer::CREATED_AT => 9, WebstreamPeer::UPDATED_AT => 10, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('MIME' => 0, 'URL' => 1, 'ID' => 2, 'NAME' => 3, 'OWNER_ID' => 4, 'DESCRIPTION' => 5, 'LAST_PLAYED' => 6, 'PLAY_COUNT' => 7, 'LENGTH' => 8, 'CREATED_AT' => 9, 'UPDATED_AT' => 10, ),
-        BasePeer::TYPE_FIELDNAME => array ('mime' => 0, 'url' => 1, 'id' => 2, 'name' => 3, 'owner_id' => 4, 'description' => 5, 'last_played' => 6, 'play_count' => 7, 'length' => 8, 'created_at' => 9, 'updated_at' => 10, ),
+        BasePeer::TYPE_PHPNAME => array ('Url' => 0, 'Id' => 1, 'Name' => 2, 'OwnerId' => 3, 'Description' => 4, 'LastPlayedTime' => 5, 'PlayCount' => 6, 'Length' => 7, 'Mime' => 8, 'CreatedAt' => 9, 'UpdatedAt' => 10, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('url' => 0, 'id' => 1, 'name' => 2, 'ownerId' => 3, 'description' => 4, 'lastPlayedTime' => 5, 'playCount' => 6, 'length' => 7, 'mime' => 8, 'createdAt' => 9, 'updatedAt' => 10, ),
+        BasePeer::TYPE_COLNAME => array (WebstreamPeer::URL => 0, WebstreamPeer::ID => 1, WebstreamPeer::NAME => 2, WebstreamPeer::OWNER_ID => 3, WebstreamPeer::DESCRIPTION => 4, WebstreamPeer::LAST_PLAYED => 5, WebstreamPeer::PLAY_COUNT => 6, WebstreamPeer::LENGTH => 7, WebstreamPeer::MIME => 8, WebstreamPeer::CREATED_AT => 9, WebstreamPeer::UPDATED_AT => 10, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('URL' => 0, 'ID' => 1, 'NAME' => 2, 'OWNER_ID' => 3, 'DESCRIPTION' => 4, 'LAST_PLAYED' => 5, 'PLAY_COUNT' => 6, 'LENGTH' => 7, 'MIME' => 8, 'CREATED_AT' => 9, 'UPDATED_AT' => 10, ),
+        BasePeer::TYPE_FIELDNAME => array ('url' => 0, 'id' => 1, 'name' => 2, 'owner_id' => 3, 'description' => 4, 'last_played' => 5, 'play_count' => 6, 'length' => 7, 'mime' => 8, 'created_at' => 9, 'updated_at' => 10, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
     );
 
@@ -192,7 +192,6 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(WebstreamPeer::MIME);
             $criteria->addSelectColumn(WebstreamPeer::URL);
             $criteria->addSelectColumn(WebstreamPeer::ID);
             $criteria->addSelectColumn(WebstreamPeer::NAME);
@@ -201,10 +200,10 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
             $criteria->addSelectColumn(WebstreamPeer::LAST_PLAYED);
             $criteria->addSelectColumn(WebstreamPeer::PLAY_COUNT);
             $criteria->addSelectColumn(WebstreamPeer::LENGTH);
+            $criteria->addSelectColumn(WebstreamPeer::MIME);
             $criteria->addSelectColumn(WebstreamPeer::CREATED_AT);
             $criteria->addSelectColumn(WebstreamPeer::UPDATED_AT);
         } else {
-            $criteria->addSelectColumn($alias . '.mime');
             $criteria->addSelectColumn($alias . '.url');
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
@@ -213,6 +212,7 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
             $criteria->addSelectColumn($alias . '.last_played');
             $criteria->addSelectColumn($alias . '.play_count');
             $criteria->addSelectColumn($alias . '.length');
+            $criteria->addSelectColumn($alias . '.mime');
             $criteria->addSelectColumn($alias . '.created_at');
             $criteria->addSelectColumn($alias . '.updated_at');
         }
@@ -434,11 +434,11 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     public static function getPrimaryKeyHashFromRow($row, $startcol = 0)
     {
         // If the PK cannot be derived from the row, return null.
-        if ($row[$startcol + 2] === null) {
+        if ($row[$startcol + 1] === null) {
             return null;
         }
 
-        return (string) $row[$startcol + 2];
+        return (string) $row[$startcol + 1];
     }
 
     /**
@@ -453,7 +453,7 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     public static function getPrimaryKeyFromRow($row, $startcol = 0)
     {
 
-        return (int) $row[$startcol + 2];
+        return (int) $row[$startcol + 1];
     }
 
     /**

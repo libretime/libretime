@@ -18,7 +18,7 @@ class MediaController extends Zend_Controller_Action
     {
     	$params = $this->getRequest()->getParams();
     	
-    	Logging::info($params);
+    	//Logging::info($params);
     	
     	$mediaService = new Application_Service_MediaService();
     	$r = $mediaService->getDatatablesAudioFiles($params);
@@ -33,7 +33,7 @@ class MediaController extends Zend_Controller_Action
     {
     	$params = $this->getRequest()->getParams();
     	 
-    	Logging::info($params);
+    	//Logging::info($params);
     	 
     	$mediaService = new Application_Service_MediaService();
     	$r = $mediaService->getDatatablesWebstreams($params);
@@ -48,7 +48,7 @@ class MediaController extends Zend_Controller_Action
     {
     	$params = $this->getRequest()->getParams();
     	 
-    	Logging::info($params);
+    	//Logging::info($params);
     	 
     	$mediaService = new Application_Service_MediaService();
     	$r = $mediaService->getDatatablesPlaylists($params);

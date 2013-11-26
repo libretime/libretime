@@ -47,13 +47,14 @@
 }
 
 #side_playlist li div.list-item-container,#side_playlist li div.list-item-container.ui-state-active
-    {
+{
     height: 56px;
     border: none;
 }
 
-#spl_name {
-    
+#side_playlist div.list-item-container
+{
+    position: relative;	
 }
 
 .spl-no-top-margin {
@@ -123,11 +124,6 @@
 
 .ui-state-active .spl_artist,.ui-state-active .spl_offset {
     color: #606060 !important;
-}
-
-#spl_editor>div>span { /*	display: inline-block;
-	width: 150px;*/
-    
 }
 
 .ui-icon-closethick,.spl_fade_control,.spl_text_input {
@@ -338,7 +334,6 @@
     margin: 0;
     padding-bottom: 0;
     font-size: 12px;
-    display: none;
 }
 
 /*.edit-error:last-child {

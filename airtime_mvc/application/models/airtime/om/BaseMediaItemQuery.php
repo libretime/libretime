@@ -36,6 +36,7 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery orderByLastPlayedTime($order = Criteria::ASC) Order by the last_played column
  * @method MediaItemQuery orderByPlayCount($order = Criteria::ASC) Order by the play_count column
  * @method MediaItemQuery orderByLength($order = Criteria::ASC) Order by the length column
+ * @method MediaItemQuery orderByMime($order = Criteria::ASC) Order by the mime column
  * @method MediaItemQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method MediaItemQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  * @method MediaItemQuery orderByDescendantClass($order = Criteria::ASC) Order by the descendant_class column
@@ -47,6 +48,7 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery groupByLastPlayedTime() Group by the last_played column
  * @method MediaItemQuery groupByPlayCount() Group by the play_count column
  * @method MediaItemQuery groupByLength() Group by the length column
+ * @method MediaItemQuery groupByMime() Group by the mime column
  * @method MediaItemQuery groupByCreatedAt() Group by the created_at column
  * @method MediaItemQuery groupByUpdatedAt() Group by the updated_at column
  * @method MediaItemQuery groupByDescendantClass() Group by the descendant_class column
@@ -96,6 +98,7 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItem findOneByLastPlayedTime(string $last_played) Return the first MediaItem filtered by the last_played column
  * @method MediaItem findOneByPlayCount(int $play_count) Return the first MediaItem filtered by the play_count column
  * @method MediaItem findOneByLength(string $length) Return the first MediaItem filtered by the length column
+ * @method MediaItem findOneByMime(string $mime) Return the first MediaItem filtered by the mime column
  * @method MediaItem findOneByCreatedAt(string $created_at) Return the first MediaItem filtered by the created_at column
  * @method MediaItem findOneByUpdatedAt(string $updated_at) Return the first MediaItem filtered by the updated_at column
  * @method MediaItem findOneByDescendantClass(string $descendant_class) Return the first MediaItem filtered by the descendant_class column
@@ -107,6 +110,7 @@ use Airtime\MediaItem\Webstream;
  * @method array findByLastPlayedTime(string $last_played) Return MediaItem objects filtered by the last_played column
  * @method array findByPlayCount(int $play_count) Return MediaItem objects filtered by the play_count column
  * @method array findByLength(string $length) Return MediaItem objects filtered by the length column
+ * @method array findByMime(string $mime) Return MediaItem objects filtered by the mime column
  * @method array findByCreatedAt(string $created_at) Return MediaItem objects filtered by the created_at column
  * @method array findByUpdatedAt(string $updated_at) Return MediaItem objects filtered by the updated_at column
  * @method array findByDescendantClass(string $descendant_class) Return MediaItem objects filtered by the descendant_class column
@@ -217,7 +221,7 @@ abstract class BaseMediaItemQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "owner_id", "description", "last_played", "play_count", "length", "created_at", "updated_at", "descendant_class" FROM "media_item" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at", "descendant_class" FROM "media_item" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -562,6 +566,35 @@ abstract class BaseMediaItemQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(MediaItemPeer::LENGTH, $length, $comparison);
+    }
+
+    /**
+     * Filter the query on the mime column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMime('fooValue');   // WHERE mime = 'fooValue'
+     * $query->filterByMime('%fooValue%'); // WHERE mime LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $mime The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return MediaItemQuery The current query, for fluid interface
+     */
+    public function filterByMime($mime = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($mime)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $mime)) {
+                $mime = str_replace('*', '%', $mime);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(MediaItemPeer::MIME, $mime, $comparison);
     }
 
     /**

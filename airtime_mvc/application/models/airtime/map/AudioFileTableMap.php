@@ -42,7 +42,6 @@ class AudioFileTableMap extends TableMap
         $this->setPackage('airtime');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addColumn('mime', 'Mime', 'VARCHAR', false, null, null);
         $this->addForeignKey('directory', 'Directory', 'INTEGER', 'cc_music_dirs', 'id', false, null, null);
         $this->addColumn('filepath', 'Filepath', 'LONGVARCHAR', false, null, '');
         $this->addColumn('md5', 'Md5', 'CHAR', false, 32, null);
@@ -81,6 +80,7 @@ class AudioFileTableMap extends TableMap
         $this->addColumn('last_played', 'LastPlayedTime', 'TIMESTAMP', false, 6, null);
         $this->addColumn('play_count', 'PlayCount', 'INTEGER', false, null, 0);
         $this->addColumn('length', 'Length', 'VARCHAR', false, null, '00:00:00');
+        $this->addColumn('mime', 'Mime', 'VARCHAR', false, null, null);
         $this->addColumn('created_at', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('updated_at', 'UpdatedAt', 'TIMESTAMP', false, null, null);
         // validators

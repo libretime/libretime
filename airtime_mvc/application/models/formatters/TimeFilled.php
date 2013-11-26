@@ -1,6 +1,6 @@
 <?php
 
-class TimeFilledFormatter
+class Format_TimeFilled
 {
     /**
      * @string seconds

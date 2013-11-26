@@ -1,9 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-require_once 'formatters/SamplerateFormatter.php';
-require_once 'formatters/BitrateFormatter.php';
-
 use Airtime\CcWebstreamQuery;
 
 class LibraryController extends Zend_Controller_Action
@@ -55,8 +51,9 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/waveform.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        //$this->view->headScript()->appendFile($baseUrl.'js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        //$this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/playlist.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/waveformplaylist/observer/observer.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/waveformplaylist/config.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
@@ -84,106 +81,33 @@ class LibraryController extends Zend_Controller_Action
         $script .= "localStorage.setItem( 'datatables-playlist-aoColumns', JSON.stringify($columns) ); ";
         
         $this->view->headScript()->appendScript($script);
-
-        try {
-
-            $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
-            if (isset($obj_sess->id)) {
-                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
-                Logging::info($obj_sess->id);
-                Logging::info($obj_sess->type);
-
-                $objInfo     = Application_Model_Library::getObjInfo($obj_sess->type);
-                $obj         = new $objInfo['className']($obj_sess->id);
-                $userInfo    = Zend_Auth::getInstance()->getStorage()->read();
-                $user        = new Application_Model_User($userInfo->id);
-                $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-
-                if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
-                    $this->view->obj = $obj;
-                    if ($obj_sess->type == "block") {
-                        $form = new Application_Form_SmartBlockCriteria();
-                        $form->startForm($obj_sess->id);
-                        $this->view->form = $form;
-                    }
-                }
-
-                $formatter = new LengthFormatter($obj->getLength());
-                $this->view->length = $formatter->format();
-                $this->view->type = $obj_sess->type;
-            }
-
-            //get user settings and determine if we need to hide
-            // or show the playlist editor
-            $showPlaylist = false;
-            $data = Application_Model_Preference::getLibraryScreenSettings();
-            if (!is_null($data)) {
-                if ($data["playlist"] == "true") {
-                    $showPlaylist = true;
-                }
-            }
-            $this->view->showPlaylist = $showPlaylist;
-        } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound($obj_sess->type);
-        } catch (Exception $e) {
-            $this->playlistNotFound($obj_sess->type);
-            Logging::info($e->getMessage());
-            //$this->playlistUnknownError($e);
-        }
+        
+        $this->view->obj = $mediaService->getSessionMediaObject();
     }
-
-    protected function playlistNotFound($p_type)
+    
+    public function contextMenuAction()
     {
-        $this->view->error = sprintf(_("%s not found"), $p_type);
-
-        Logging::info("$p_type not found");
-        Application_Model_Library::changePlaylist(null, $p_type);
-        $this->createFullResponse(null);
+    	$baseUrl = Application_Common_OsPath::getBaseDir();
+    	$id = intval($this->_getParam('id'));
+    	
+    	$menu = array();
+    	
+    	$menu["pl_add"] = array(
+    		"name" => _("Add to Playlist"), 
+    		"requestUrl" => $baseUrl."playlist/add-items",
+    		"requestType" => "POST",
+    		"requestData" => array("ids" => array($id)),
+    		"callback" => "AIRTIME.playlist.redrawPlaylist"
+    	);
+    	
+    	if (empty($menu)) {
+    		$menu["noaction"] = array("name"=>_("No action available"));
+    	}
+    	
+    	$this->view->items = $menu;
     }
 
-    protected function playlistUnknownError($e)
-    {
-        $this->view->error = _("Something went wrong.");
-        Logging::info($e->getMessage());
-    }
-
-    protected function createFullResponse($obj = null, $isJson = false)
-    {
-        $isBlock = false;
-        $viewPath = 'playlist/playlist.phtml';
-        if ($obj instanceof Application_Model_Block) {
-            $isBlock = true;
-            $viewPath = 'playlist/smart-block.phtml';
-        }
-
-        if (isset($obj)) {
-            $formatter = new LengthFormatter($obj->getLength());
-            $this->view->length = $formatter->format();
-
-            if ($isBlock) {
-                $form = new Application_Form_SmartBlockCriteria();
-                $form->removeDecorator('DtDdWrapper');
-                $form->startForm($obj->getId());
-
-                $this->view->form = $form;
-                $this->view->obj = $obj;
-                $this->view->id = $obj->getId();
-                if ($isJson) {
-                    return $this->view->render($viewPath);
-                } else {
-                    $this->view->html = $this->view->render($viewPath);
-                }
-            } else {
-                $this->view->obj = $obj;
-                $this->view->id = $obj->getId();
-                $this->view->html = $this->view->render($viewPath);
-                unset($this->view->obj);
-            }
-        } else {
-            $this->view->html = $this->view->render($viewPath);
-        }
-    }
-
+    /*
     public function contextMenuAction()
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
@@ -309,6 +233,7 @@ class LibraryController extends Zend_Controller_Action
 
         $this->view->items = $menu;
     }
+    */
 
     public function deleteAction()
     {

@@ -1,6 +1,6 @@
 <?php
 
-class LengthFormatter
+class Format_HHMMSSULength
 {
     /**
      * @string length
@@ -15,7 +15,7 @@ class LengthFormatter
         $this->_length = $length;
     }
 
-    public function format()
+    public function format($decimalPlaces = 1)
     {
         if (!preg_match("/^[0-9]{2}:[0-9]{2}:[0-9]{2}/", $this->_length)) {
             return $this->_length;
@@ -23,8 +23,8 @@ class LengthFormatter
 
         $pieces = explode(":", $this->_length);
 
-        $seconds = round($pieces[2], 1);
-        $seconds = number_format($seconds, 1);
+        $seconds = round($pieces[2], $decimalPlaces);
+        $seconds = number_format($seconds, $decimalPlaces);
         list($seconds, $milliStr) = explode(".", $seconds);
 
         if (intval($pieces[0]) !== 0) {

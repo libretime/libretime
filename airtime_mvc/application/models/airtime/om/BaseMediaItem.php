@@ -109,6 +109,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     protected $length;
 
     /**
+     * The value for the mime field.
+     * @var        string
+     */
+    protected $mime;
+
+    /**
      * The value for the created_at field.
      * @var        string
      */
@@ -335,6 +341,17 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     {
 
         return $this->length;
+    }
+
+    /**
+     * Get the [mime] column value.
+     *
+     * @return string
+     */
+    public function getMime()
+    {
+
+        return $this->mime;
     }
 
     /**
@@ -572,6 +589,27 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     } // setLength()
 
     /**
+     * Set the value of [mime] column.
+     *
+     * @param  string $v new value
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function setMime($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->mime !== $v) {
+            $this->mime = $v;
+            $this->modifiedColumns[] = MediaItemPeer::MIME;
+        }
+
+
+        return $this;
+    } // setMime()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param mixed $v string, integer (timestamp), or DateTime value.
@@ -685,9 +723,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $this->last_played = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->play_count = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
             $this->length = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->created_at = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->updated_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->descendant_class = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->mime = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->created_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->updated_at = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->descendant_class = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -697,7 +736,7 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 10; // 10 = MediaItemPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 11; // 11 = MediaItemPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating MediaItem object", $e);
@@ -1067,6 +1106,9 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ($this->isColumnModified(MediaItemPeer::LENGTH)) {
             $modifiedColumns[':p' . $index++]  = '"length"';
         }
+        if ($this->isColumnModified(MediaItemPeer::MIME)) {
+            $modifiedColumns[':p' . $index++]  = '"mime"';
+        }
         if ($this->isColumnModified(MediaItemPeer::CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = '"created_at"';
         }
@@ -1107,6 +1149,9 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                         break;
                     case '"length"':
                         $stmt->bindValue($identifier, $this->length, PDO::PARAM_STR);
+                        break;
+                    case '"mime"':
+                        $stmt->bindValue($identifier, $this->mime, PDO::PARAM_STR);
                         break;
                     case '"created_at"':
                         $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
@@ -1328,12 +1373,15 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 return $this->getLength();
                 break;
             case 7:
-                return $this->getCreatedAt();
+                return $this->getMime();
                 break;
             case 8:
-                return $this->getUpdatedAt();
+                return $this->getCreatedAt();
                 break;
             case 9:
+                return $this->getUpdatedAt();
+                break;
+            case 10:
                 return $this->getDescendantClass();
                 break;
             default:
@@ -1372,9 +1420,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             $keys[4] => $this->getLastPlayedTime(),
             $keys[5] => $this->getPlayCount(),
             $keys[6] => $this->getLength(),
-            $keys[7] => $this->getCreatedAt(),
-            $keys[8] => $this->getUpdatedAt(),
-            $keys[9] => $this->getDescendantClass(),
+            $keys[7] => $this->getMime(),
+            $keys[8] => $this->getCreatedAt(),
+            $keys[9] => $this->getUpdatedAt(),
+            $keys[10] => $this->getDescendantClass(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1462,12 +1511,15 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 $this->setLength($value);
                 break;
             case 7:
-                $this->setCreatedAt($value);
+                $this->setMime($value);
                 break;
             case 8:
-                $this->setUpdatedAt($value);
+                $this->setCreatedAt($value);
                 break;
             case 9:
+                $this->setUpdatedAt($value);
+                break;
+            case 10:
                 $this->setDescendantClass($value);
                 break;
         } // switch()
@@ -1501,9 +1553,10 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if (array_key_exists($keys[4], $arr)) $this->setLastPlayedTime($arr[$keys[4]]);
         if (array_key_exists($keys[5], $arr)) $this->setPlayCount($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setLength($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setCreatedAt($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setUpdatedAt($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setDescendantClass($arr[$keys[9]]);
+        if (array_key_exists($keys[7], $arr)) $this->setMime($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setCreatedAt($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setUpdatedAt($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDescendantClass($arr[$keys[10]]);
     }
 
     /**
@@ -1522,6 +1575,7 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ($this->isColumnModified(MediaItemPeer::LAST_PLAYED)) $criteria->add(MediaItemPeer::LAST_PLAYED, $this->last_played);
         if ($this->isColumnModified(MediaItemPeer::PLAY_COUNT)) $criteria->add(MediaItemPeer::PLAY_COUNT, $this->play_count);
         if ($this->isColumnModified(MediaItemPeer::LENGTH)) $criteria->add(MediaItemPeer::LENGTH, $this->length);
+        if ($this->isColumnModified(MediaItemPeer::MIME)) $criteria->add(MediaItemPeer::MIME, $this->mime);
         if ($this->isColumnModified(MediaItemPeer::CREATED_AT)) $criteria->add(MediaItemPeer::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(MediaItemPeer::UPDATED_AT)) $criteria->add(MediaItemPeer::UPDATED_AT, $this->updated_at);
         if ($this->isColumnModified(MediaItemPeer::DESCENDANT_CLASS)) $criteria->add(MediaItemPeer::DESCENDANT_CLASS, $this->descendant_class);
@@ -1594,6 +1648,7 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         $copyObj->setLastPlayedTime($this->getLastPlayedTime());
         $copyObj->setPlayCount($this->getPlayCount());
         $copyObj->setLength($this->getLength());
+        $copyObj->setMime($this->getMime());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         $copyObj->setDescendantClass($this->getDescendantClass());
@@ -2821,6 +2876,31 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         return $this;
     }
 
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this MediaItem is new, it will return
+     * an empty collection; or if this MediaItem has previously
+     * been saved, it will retrieve related MediaContents from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in MediaItem.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|MediaContent[] List of MediaContent objects
+     */
+    public function getMediaContentsJoinPlaylist($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = MediaContentQuery::create(null, $criteria);
+        $query->joinWith('Playlist', $join_behavior);
+
+        return $this->getMediaContents($query, $con);
+    }
+
     /**
      * Gets a single AudioFile object, which is related to this object by a one-to-one relationship.
      *
@@ -2941,6 +3021,7 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         $this->last_played = null;
         $this->play_count = null;
         $this->length = null;
+        $this->mime = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->descendant_class = null;

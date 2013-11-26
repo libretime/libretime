@@ -49,12 +49,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     protected $startCopy = false;
 
     /**
-     * The value for the mime field.
-     * @var        string
-     */
-    protected $mime;
-
-    /**
      * The value for the url field.
      * @var        string
      */
@@ -103,6 +97,12 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      * @var        string
      */
     protected $length;
+
+    /**
+     * The value for the mime field.
+     * @var        string
+     */
+    protected $mime;
 
     /**
      * The value for the created_at field.
@@ -166,17 +166,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         parent::__construct();
         $this->applyDefaultValues();
-    }
-
-    /**
-     * Get the [mime] column value.
-     *
-     * @return string
-     */
-    public function getMime()
-    {
-
-        return $this->mime;
     }
 
     /**
@@ -292,6 +281,17 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     }
 
     /**
+     * Get the [mime] column value.
+     *
+     * @return string
+     */
+    public function getMime()
+    {
+
+        return $this->mime;
+    }
+
+    /**
      * Get the [optionally formatted] temporal [created_at] column value.
      *
      *
@@ -360,27 +360,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         return $dt->format($format);
 
     }
-
-    /**
-     * Set the value of [mime] column.
-     *
-     * @param  string $v new value
-     * @return Webstream The current object (for fluent API support)
-     */
-    public function setMime($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->mime !== $v) {
-            $this->mime = $v;
-            $this->modifiedColumns[] = WebstreamPeer::MIME;
-        }
-
-
-        return $this;
-    } // setMime()
 
     /**
      * Set the value of [url] column.
@@ -561,6 +540,27 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     } // setLength()
 
     /**
+     * Set the value of [mime] column.
+     *
+     * @param  string $v new value
+     * @return Webstream The current object (for fluent API support)
+     */
+    public function setMime($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->mime !== $v) {
+            $this->mime = $v;
+            $this->modifiedColumns[] = WebstreamPeer::MIME;
+        }
+
+
+        return $this;
+    } // setMime()
+
+    /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param mixed $v string, integer (timestamp), or DateTime value.
@@ -646,15 +646,15 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         try {
 
-            $this->mime = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
-            $this->url = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-            $this->name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->owner_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-            $this->description = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->last_played = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->play_count = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
-            $this->length = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->url = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
+            $this->id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->owner_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->last_played = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->play_count = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->length = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->mime = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->created_at = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->updated_at = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->resetModified();
@@ -920,9 +920,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
 
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(WebstreamPeer::MIME)) {
-            $modifiedColumns[':p' . $index++]  = '"mime"';
-        }
         if ($this->isColumnModified(WebstreamPeer::URL)) {
             $modifiedColumns[':p' . $index++]  = '"url"';
         }
@@ -947,6 +944,9 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         if ($this->isColumnModified(WebstreamPeer::LENGTH)) {
             $modifiedColumns[':p' . $index++]  = '"length"';
         }
+        if ($this->isColumnModified(WebstreamPeer::MIME)) {
+            $modifiedColumns[':p' . $index++]  = '"mime"';
+        }
         if ($this->isColumnModified(WebstreamPeer::CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = '"created_at"';
         }
@@ -964,9 +964,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case '"mime"':
-                        $stmt->bindValue($identifier, $this->mime, PDO::PARAM_STR);
-                        break;
                     case '"url"':
                         $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
                         break;
@@ -990,6 +987,9 @@ abstract class BaseWebstream extends MediaItem implements Persistent
                         break;
                     case '"length"':
                         $stmt->bindValue($identifier, $this->length, PDO::PARAM_STR);
+                        break;
+                    case '"mime"':
+                        $stmt->bindValue($identifier, $this->mime, PDO::PARAM_STR);
                         break;
                     case '"created_at"':
                         $stmt->bindValue($identifier, $this->created_at, PDO::PARAM_STR);
@@ -1143,31 +1143,31 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         switch ($pos) {
             case 0:
-                return $this->getMime();
-                break;
-            case 1:
                 return $this->getUrl();
                 break;
-            case 2:
+            case 1:
                 return $this->getId();
                 break;
-            case 3:
+            case 2:
                 return $this->getName();
                 break;
-            case 4:
+            case 3:
                 return $this->getOwnerId();
                 break;
-            case 5:
+            case 4:
                 return $this->getDescription();
                 break;
-            case 6:
+            case 5:
                 return $this->getLastPlayedTime();
                 break;
-            case 7:
+            case 6:
                 return $this->getPlayCount();
                 break;
-            case 8:
+            case 7:
                 return $this->getLength();
+                break;
+            case 8:
+                return $this->getMime();
                 break;
             case 9:
                 return $this->getCreatedAt();
@@ -1204,15 +1204,15 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         $alreadyDumpedObjects['Webstream'][$this->getPrimaryKey()] = true;
         $keys = WebstreamPeer::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getMime(),
-            $keys[1] => $this->getUrl(),
-            $keys[2] => $this->getId(),
-            $keys[3] => $this->getName(),
-            $keys[4] => $this->getOwnerId(),
-            $keys[5] => $this->getDescription(),
-            $keys[6] => $this->getLastPlayedTime(),
-            $keys[7] => $this->getPlayCount(),
-            $keys[8] => $this->getLength(),
+            $keys[0] => $this->getUrl(),
+            $keys[1] => $this->getId(),
+            $keys[2] => $this->getName(),
+            $keys[3] => $this->getOwnerId(),
+            $keys[4] => $this->getDescription(),
+            $keys[5] => $this->getLastPlayedTime(),
+            $keys[6] => $this->getPlayCount(),
+            $keys[7] => $this->getLength(),
+            $keys[8] => $this->getMime(),
             $keys[9] => $this->getCreatedAt(),
             $keys[10] => $this->getUpdatedAt(),
         );
@@ -1263,31 +1263,31 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         switch ($pos) {
             case 0:
-                $this->setMime($value);
-                break;
-            case 1:
                 $this->setUrl($value);
                 break;
-            case 2:
+            case 1:
                 $this->setId($value);
                 break;
-            case 3:
+            case 2:
                 $this->setName($value);
                 break;
-            case 4:
+            case 3:
                 $this->setOwnerId($value);
                 break;
-            case 5:
+            case 4:
                 $this->setDescription($value);
                 break;
-            case 6:
+            case 5:
                 $this->setLastPlayedTime($value);
                 break;
-            case 7:
+            case 6:
                 $this->setPlayCount($value);
                 break;
-            case 8:
+            case 7:
                 $this->setLength($value);
+                break;
+            case 8:
+                $this->setMime($value);
                 break;
             case 9:
                 $this->setCreatedAt($value);
@@ -1319,15 +1319,15 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         $keys = WebstreamPeer::getFieldNames($keyType);
 
-        if (array_key_exists($keys[0], $arr)) $this->setMime($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setUrl($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setName($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setOwnerId($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDescription($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setLastPlayedTime($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setPlayCount($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setLength($arr[$keys[8]]);
+        if (array_key_exists($keys[0], $arr)) $this->setUrl($arr[$keys[0]]);
+        if (array_key_exists($keys[1], $arr)) $this->setId($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setOwnerId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDescription($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setLastPlayedTime($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setPlayCount($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setLength($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setMime($arr[$keys[8]]);
         if (array_key_exists($keys[9], $arr)) $this->setCreatedAt($arr[$keys[9]]);
         if (array_key_exists($keys[10], $arr)) $this->setUpdatedAt($arr[$keys[10]]);
     }
@@ -1341,7 +1341,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         $criteria = new Criteria(WebstreamPeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(WebstreamPeer::MIME)) $criteria->add(WebstreamPeer::MIME, $this->mime);
         if ($this->isColumnModified(WebstreamPeer::URL)) $criteria->add(WebstreamPeer::URL, $this->url);
         if ($this->isColumnModified(WebstreamPeer::ID)) $criteria->add(WebstreamPeer::ID, $this->id);
         if ($this->isColumnModified(WebstreamPeer::NAME)) $criteria->add(WebstreamPeer::NAME, $this->name);
@@ -1350,6 +1349,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         if ($this->isColumnModified(WebstreamPeer::LAST_PLAYED)) $criteria->add(WebstreamPeer::LAST_PLAYED, $this->last_played);
         if ($this->isColumnModified(WebstreamPeer::PLAY_COUNT)) $criteria->add(WebstreamPeer::PLAY_COUNT, $this->play_count);
         if ($this->isColumnModified(WebstreamPeer::LENGTH)) $criteria->add(WebstreamPeer::LENGTH, $this->length);
+        if ($this->isColumnModified(WebstreamPeer::MIME)) $criteria->add(WebstreamPeer::MIME, $this->mime);
         if ($this->isColumnModified(WebstreamPeer::CREATED_AT)) $criteria->add(WebstreamPeer::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(WebstreamPeer::UPDATED_AT)) $criteria->add(WebstreamPeer::UPDATED_AT, $this->updated_at);
 
@@ -1415,7 +1415,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setMime($this->getMime());
         $copyObj->setUrl($this->getUrl());
         $copyObj->setName($this->getName());
         $copyObj->setOwnerId($this->getOwnerId());
@@ -1423,6 +1422,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         $copyObj->setLastPlayedTime($this->getLastPlayedTime());
         $copyObj->setPlayCount($this->getPlayCount());
         $copyObj->setLength($this->getLength());
+        $copyObj->setMime($this->getMime());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
 
@@ -1591,7 +1591,6 @@ abstract class BaseWebstream extends MediaItem implements Persistent
      */
     public function clear()
     {
-        $this->mime = null;
         $this->url = null;
         $this->id = null;
         $this->name = null;
@@ -1600,6 +1599,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         $this->last_played = null;
         $this->play_count = null;
         $this->length = null;
+        $this->mime = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
@@ -1707,6 +1707,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         $parent->setLastPlayedTime($this->getLastPlayedTime());
         $parent->setPlayCount($this->getPlayCount());
         $parent->setLength($this->getLength());
+        $parent->setMime($this->getMime());
         $parent->setCreatedAt($this->getCreatedAt());
         $parent->setUpdatedAt($this->getUpdatedAt());
         if ($this->getCcSubjs() && $this->getCcSubjs()->isNew()) {

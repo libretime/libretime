@@ -196,7 +196,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	$autoloader->addResourceType ('Filter', 'forms/filters', 'Filter_');
     	$autoloader->addResourceType ('Validator', 'forms/validators', 'Validate_');
     	
-    	$autoloader->addResourceType ('Interface', 'models/interfaces', 'Interface');
+    	$autoloader->addResourceType ('Interface', 'models/interfaces', 'Interface_');
+    	$autoloader->addResourceType ('Presentation', 'models/presentation', 'Presentation_');
+    	$autoloader->addResourceType ('Format', 'models/formatters', 'Format_');
     }
 }
 

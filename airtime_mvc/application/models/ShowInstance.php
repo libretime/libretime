@@ -1,7 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-
 use Airtime\CcShowInstancesQuery;
 use Airtime\CcShowQuery;
 use Airtime\CcShowInstancesPeer;

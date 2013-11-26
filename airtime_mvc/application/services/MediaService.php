@@ -8,6 +8,7 @@ use Airtime\MediaItem\AudioFilePeer;
 use Airtime\MediaItem\AudioFileQuery;
 use Airtime\MediaItem\WebstreamQuery;
 use Airtime\MediaItem\PlaylistQuery;
+use Airtime\MediaItemQuery;
 
 class Application_Service_MediaService
 {
@@ -535,7 +536,7 @@ class Application_Service_MediaService
 			->limit($limit)
 			->offset($offset);
 		
-		Logging::info($query->toString());
+		//Logging::info($query->toString());
 		
 		return $query;
 	}
@@ -595,7 +596,7 @@ class Application_Service_MediaService
 	
 	public function getDatatablesAudioFiles($params) {
 		
-		$columns = self::getAudioFileDatatableColumnOrder();
+		$columns = array_keys(self::getAudioFileColumnDetails());
 		$aliases = self::getAudioFileColumnAliases();
 		
 		$q = AudioFileQuery::create();
@@ -611,7 +612,7 @@ class Application_Service_MediaService
 	
 	public function getDatatablesWebstreams($params) {
 		
-		$columns = self::getWebstreamDatatableColumnOrder();
+		$columns = array_keys(self::getWebstreamColumnDetails());
 		$aliases = self::getWebstreamColumnAliases();
 	
 		$q = WebstreamQuery::create();
@@ -623,7 +624,7 @@ class Application_Service_MediaService
 	
 	public function getDatatablesPlaylists($params) {
 	
-		$columns = self::getPlaylistDatatableColumnOrder();
+		$columns = array_keys(self::getPlaylistColumnDetails());
 		$aliases = self::getPlaylistColumnAliases();
 		
 		$q = PlaylistQuery::create();
@@ -631,5 +632,51 @@ class Application_Service_MediaService
 		$coll = $q->find();
 	
 		return self::createOutput($coll, $columns);
+	}
+	
+	public function getMediaViewScript() {
+		
+	}
+	
+	public function setSessionMediaObject($obj) {
+		
+		$obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+		
+		if (is_null($obj)) {
+			unset($obj_sess->id);
+		} 
+		else {
+			$obj_sess->id = $obj->getId();
+		}
+	}
+	
+	public function getSessionMediaObject() {
+		
+		$obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+		//some type of media is in the session
+		if (isset($obj_sess->id)) {
+			$obj = MediaItemQuery::create()->findPk($obj_sess->id);
+			 
+			if (isset($obj)) {
+				return $obj->getChildObject();
+			}
+			else {
+				$obj_sess->id = null;
+			}
+		}
+	}
+	
+	/*
+	 * @param $obj MediaItem object.
+	 * @return $service proper service for this item type.
+	 */
+	public function locateServiceType($obj) {
+		
+		$class = $obj->getDescendantClass();
+		$class = explode("\\", $class);
+		$type = array_pop($class);
+		
+		$serviceClass = "Application_Service_{$type}Service";
+		return new $serviceClass();
 	}
 }

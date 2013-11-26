@@ -12,6 +12,7 @@ use \PropelPDO;
 use Airtime\MediaItemPeer;
 use Airtime\MediaItem\MediaContent;
 use Airtime\MediaItem\MediaContentPeer;
+use Airtime\MediaItem\PlaylistPeer;
 use Airtime\MediaItem\map\MediaContentTableMap;
 
 /**
@@ -37,16 +38,19 @@ abstract class BaseMediaContentPeer
     const TM_CLASS = 'Airtime\\MediaItem\\map\\MediaContentTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 9;
+    const NUM_COLUMNS = 10;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 9;
+    const NUM_HYDRATE_COLUMNS = 10;
 
     /** the column name for the id field */
     const ID = 'media_content.id';
+
+    /** the column name for the playlist_id field */
+    const PLAYLIST_ID = 'media_content.playlist_id';
 
     /** the column name for the media_id field */
     const MEDIA_ID = 'media_content.media_id';
@@ -91,12 +95,12 @@ abstract class BaseMediaContentPeer
      * e.g. MediaContentPeer::$fieldNames[MediaContentPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'MediaId', 'Position', 'TrackOffset', 'Cliplength', 'Cuein', 'Cueout', 'Fadein', 'Fadeout', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'mediaId', 'position', 'trackOffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
-        BasePeer::TYPE_COLNAME => array (MediaContentPeer::ID, MediaContentPeer::MEDIA_ID, MediaContentPeer::POSITION, MediaContentPeer::TRACKOFFSET, MediaContentPeer::CLIPLENGTH, MediaContentPeer::CUEIN, MediaContentPeer::CUEOUT, MediaContentPeer::FADEIN, MediaContentPeer::FADEOUT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'MEDIA_ID', 'POSITION', 'TRACKOFFSET', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'media_id', 'position', 'trackoffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'PlaylistId', 'MediaId', 'Position', 'TrackOffset', 'Cliplength', 'Cuein', 'Cueout', 'Fadein', 'Fadeout', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'playlistId', 'mediaId', 'position', 'trackOffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+        BasePeer::TYPE_COLNAME => array (MediaContentPeer::ID, MediaContentPeer::PLAYLIST_ID, MediaContentPeer::MEDIA_ID, MediaContentPeer::POSITION, MediaContentPeer::TRACKOFFSET, MediaContentPeer::CLIPLENGTH, MediaContentPeer::CUEIN, MediaContentPeer::CUEOUT, MediaContentPeer::FADEIN, MediaContentPeer::FADEOUT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PLAYLIST_ID', 'MEDIA_ID', 'POSITION', 'TRACKOFFSET', 'CLIPLENGTH', 'CUEIN', 'CUEOUT', 'FADEIN', 'FADEOUT', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'playlist_id', 'media_id', 'position', 'trackoffset', 'cliplength', 'cuein', 'cueout', 'fadein', 'fadeout', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -106,12 +110,12 @@ abstract class BaseMediaContentPeer
      * e.g. MediaContentPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'MediaId' => 1, 'Position' => 2, 'TrackOffset' => 3, 'Cliplength' => 4, 'Cuein' => 5, 'Cueout' => 6, 'Fadein' => 7, 'Fadeout' => 8, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'mediaId' => 1, 'position' => 2, 'trackOffset' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
-        BasePeer::TYPE_COLNAME => array (MediaContentPeer::ID => 0, MediaContentPeer::MEDIA_ID => 1, MediaContentPeer::POSITION => 2, MediaContentPeer::TRACKOFFSET => 3, MediaContentPeer::CLIPLENGTH => 4, MediaContentPeer::CUEIN => 5, MediaContentPeer::CUEOUT => 6, MediaContentPeer::FADEIN => 7, MediaContentPeer::FADEOUT => 8, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'MEDIA_ID' => 1, 'POSITION' => 2, 'TRACKOFFSET' => 3, 'CLIPLENGTH' => 4, 'CUEIN' => 5, 'CUEOUT' => 6, 'FADEIN' => 7, 'FADEOUT' => 8, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'media_id' => 1, 'position' => 2, 'trackoffset' => 3, 'cliplength' => 4, 'cuein' => 5, 'cueout' => 6, 'fadein' => 7, 'fadeout' => 8, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'PlaylistId' => 1, 'MediaId' => 2, 'Position' => 3, 'TrackOffset' => 4, 'Cliplength' => 5, 'Cuein' => 6, 'Cueout' => 7, 'Fadein' => 8, 'Fadeout' => 9, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'playlistId' => 1, 'mediaId' => 2, 'position' => 3, 'trackOffset' => 4, 'cliplength' => 5, 'cuein' => 6, 'cueout' => 7, 'fadein' => 8, 'fadeout' => 9, ),
+        BasePeer::TYPE_COLNAME => array (MediaContentPeer::ID => 0, MediaContentPeer::PLAYLIST_ID => 1, MediaContentPeer::MEDIA_ID => 2, MediaContentPeer::POSITION => 3, MediaContentPeer::TRACKOFFSET => 4, MediaContentPeer::CLIPLENGTH => 5, MediaContentPeer::CUEIN => 6, MediaContentPeer::CUEOUT => 7, MediaContentPeer::FADEIN => 8, MediaContentPeer::FADEOUT => 9, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PLAYLIST_ID' => 1, 'MEDIA_ID' => 2, 'POSITION' => 3, 'TRACKOFFSET' => 4, 'CLIPLENGTH' => 5, 'CUEIN' => 6, 'CUEOUT' => 7, 'FADEIN' => 8, 'FADEOUT' => 9, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'playlist_id' => 1, 'media_id' => 2, 'position' => 3, 'trackoffset' => 4, 'cliplength' => 5, 'cuein' => 6, 'cueout' => 7, 'fadein' => 8, 'fadeout' => 9, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, )
     );
 
     /**
@@ -186,6 +190,7 @@ abstract class BaseMediaContentPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(MediaContentPeer::ID);
+            $criteria->addSelectColumn(MediaContentPeer::PLAYLIST_ID);
             $criteria->addSelectColumn(MediaContentPeer::MEDIA_ID);
             $criteria->addSelectColumn(MediaContentPeer::POSITION);
             $criteria->addSelectColumn(MediaContentPeer::TRACKOFFSET);
@@ -196,6 +201,7 @@ abstract class BaseMediaContentPeer
             $criteria->addSelectColumn(MediaContentPeer::FADEOUT);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.playlist_id');
             $criteria->addSelectColumn($alias . '.media_id');
             $criteria->addSelectColumn($alias . '.position');
             $criteria->addSelectColumn($alias . '.trackoffset');
@@ -330,7 +336,7 @@ abstract class BaseMediaContentPeer
     {
         if (Propel::isInstancePoolingEnabled()) {
             if ($key === null) {
-                $key = (string) $obj->getDbId();
+                $key = (string) $obj->getId();
             } // if key === null
             MediaContentPeer::$instances[$key] = $obj;
         }
@@ -353,7 +359,7 @@ abstract class BaseMediaContentPeer
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
             if (is_object($value) && $value instanceof MediaContent) {
-                $key = (string) $value->getDbId();
+                $key = (string) $value->getId();
             } elseif (is_scalar($value)) {
                 // assume we've been passed a primary key
                 $key = (string) $value;
@@ -506,6 +512,57 @@ abstract class BaseMediaContentPeer
 
 
     /**
+     * Returns the number of rows matching criteria, joining the related Playlist table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinPlaylist(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(MediaContentPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            MediaContentPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(MediaContentPeer::PLAYLIST_ID, PlaylistPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
      * Returns the number of rows matching criteria, joining the related MediaItem table
      *
      * @param      Criteria $criteria
@@ -553,6 +610,73 @@ abstract class BaseMediaContentPeer
         $stmt->closeCursor();
 
         return $count;
+    }
+
+
+    /**
+     * Selects a collection of MediaContent objects pre-filled with their Playlist objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of MediaContent objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinPlaylist(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
+        }
+
+        MediaContentPeer::addSelectColumns($criteria);
+        $startcol = MediaContentPeer::NUM_HYDRATE_COLUMNS;
+        PlaylistPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(MediaContentPeer::PLAYLIST_ID, PlaylistPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = MediaContentPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = MediaContentPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = MediaContentPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                MediaContentPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = PlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = PlaylistPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = PlaylistPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    PlaylistPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (MediaContent) to $obj2 (Playlist)
+                $obj2->addMediaContent($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
     }
 
 
@@ -659,6 +783,8 @@ abstract class BaseMediaContentPeer
             $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
+        $criteria->addJoin(MediaContentPeer::PLAYLIST_ID, PlaylistPeer::ID, $join_behavior);
+
         $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
@@ -695,8 +821,13 @@ abstract class BaseMediaContentPeer
         MediaContentPeer::addSelectColumns($criteria);
         $startcol2 = MediaContentPeer::NUM_HYDRATE_COLUMNS;
 
+        PlaylistPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + PlaylistPeer::NUM_HYDRATE_COLUMNS;
+
         MediaItemPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + MediaItemPeer::NUM_HYDRATE_COLUMNS;
+        $startcol4 = $startcol3 + MediaItemPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(MediaContentPeer::PLAYLIST_ID, PlaylistPeer::ID, $join_behavior);
 
         $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
 
@@ -717,23 +848,291 @@ abstract class BaseMediaContentPeer
                 MediaContentPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-            // Add objects for joined MediaItem rows
+            // Add objects for joined Playlist rows
 
-            $key2 = MediaItemPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+            $key2 = PlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol2);
             if ($key2 !== null) {
-                $obj2 = MediaItemPeer::getInstanceFromPool($key2);
+                $obj2 = PlaylistPeer::getInstanceFromPool($key2);
                 if (!$obj2) {
 
+                    $cls = PlaylistPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    PlaylistPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 loaded
+
+                // Add the $obj1 (MediaContent) to the collection in $obj2 (Playlist)
+                $obj2->addMediaContent($obj1);
+            } // if joined row not null
+
+            // Add objects for joined MediaItem rows
+
+            $key3 = MediaItemPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+            if ($key3 !== null) {
+                $obj3 = MediaItemPeer::getInstanceFromPool($key3);
+                if (!$obj3) {
+
                     $cls = MediaItemPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    MediaItemPeer::addInstanceToPool($obj3, $key3);
+                } // if obj3 loaded
+
+                // Add the $obj1 (MediaContent) to the collection in $obj3 (MediaItem)
+                $obj3->addMediaContent($obj1);
+            } // if joined row not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related Playlist table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptPlaylist(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(MediaContentPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            MediaContentPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related MediaItem table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptMediaItem(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(MediaContentPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            MediaContentPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(MediaContentPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(MediaContentPeer::PLAYLIST_ID, PlaylistPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Selects a collection of MediaContent objects pre-filled with all related objects except Playlist.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of MediaContent objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptPlaylist(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
+        }
+
+        MediaContentPeer::addSelectColumns($criteria);
+        $startcol2 = MediaContentPeer::NUM_HYDRATE_COLUMNS;
+
+        MediaItemPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + MediaItemPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(MediaContentPeer::MEDIA_ID, MediaItemPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = MediaContentPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = MediaContentPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = MediaContentPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                MediaContentPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined MediaItem rows
+
+                $key2 = MediaItemPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = MediaItemPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = MediaItemPeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
                     MediaItemPeer::addInstanceToPool($obj2, $key2);
-                } // if obj2 loaded
+                } // if $obj2 already loaded
 
                 // Add the $obj1 (MediaContent) to the collection in $obj2 (MediaItem)
                 $obj2->addMediaContent($obj1);
-            } // if joined row not null
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of MediaContent objects pre-filled with all related objects except MediaItem.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of MediaContent objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptMediaItem(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(MediaContentPeer::DATABASE_NAME);
+        }
+
+        MediaContentPeer::addSelectColumns($criteria);
+        $startcol2 = MediaContentPeer::NUM_HYDRATE_COLUMNS;
+
+        PlaylistPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + PlaylistPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(MediaContentPeer::PLAYLIST_ID, PlaylistPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = MediaContentPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = MediaContentPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = MediaContentPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                MediaContentPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined Playlist rows
+
+                $key2 = PlaylistPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = PlaylistPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = PlaylistPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    PlaylistPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (MediaContent) to the collection in $obj2 (Playlist)
+                $obj2->addMediaContent($obj1);
+
+            } // if joined row is not null
 
             $results[] = $obj1;
         }
