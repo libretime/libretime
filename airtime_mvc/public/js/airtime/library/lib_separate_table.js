@@ -5,33 +5,6 @@ var AIRTIME = (function(AIRTIME) {
     }
     var mod = AIRTIME.library;
     
-    function makeWebstreamDialog(html) {
-		var $wsDialogEl = $(html);
-		
-		function removeDialog() {
-    		$wsDialogEl.dialog("destroy");
-        	$wsDialogEl.remove();
-    	}
-		
-		function saveDialog() {
-			
-		}
-		
-		$wsDialogEl.dialog({	       
-	        title: $.i18n._("Webstream"),
-	        modal: true,
-	        show: 'clip',
-            hide: 'clip',
-            width: 600,
-            height: 350,
-	        buttons: [
-				{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
-				{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
-			],
-	        close: removeDialog
-	    });
-	}
-    
     function createDatatable(config) {
     	
     	var table = $("#"+config.id).dataTable({
@@ -176,13 +149,65 @@ var AIRTIME = (function(AIRTIME) {
 			}
     	});
     	
-    	$library.on("click", "#lib_new_webstream", function(e) {
-    		var url = baseUrl+"webstream/new",
-    			data = {format: "json"};
+    	function makeWebstreamDialog(html) {
+    		var $wsDialogEl = $(html);
     		
-    		$.post(url, data, function(json) {
+    		function removeDialog() {
+        		$wsDialogEl.dialog("destroy");
+            	$wsDialogEl.remove();
+        	}
+    		
+    		function saveDialog() {
+    			var data = {
+    				name: $wsDialogEl.find("#ws_name").val(),
+    				hours: $wsDialogEl.find("#ws_hours").val(),
+    				mins: $wsDialogEl.find("#ws_mins").val(),
+    				description: $wsDialogEl.find("#ws_description").val(),
+    				url: $wsDialogEl.find("#ws_url").val(),
+    				id: $wsDialogEl.find("#ws_id").val(),
+    				format: "json"
+    			},
+    			url = baseUrl + "webstream/save";
+    			
+    			if (data.id === "") {
+    				delete data.id;
+    			}
+    			
+    			$.post(url, data, function(json) {
+    				
+    				if (json.errors) {
+    					$wsDialogEl.empty()
+    						.append($(json.html).unwrap());
+    				}
+    				else {
+    					removeDialog();
+    				}
+    			});
+    		}
+    		
+    		$wsDialogEl.dialog({	       
+    	        title: $.i18n._("Webstream"),
+    	        modal: true,
+    	        show: 'clip',
+                hide: 'clip',
+                width: 600,
+                height: 350,
+    	        buttons: [
+    				{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
+    				{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
+    			],
+    	        close: removeDialog
+    	    });
+    	}
+    	
+    	$library.on("click", "#lib_new_webstream", function(e) {
+    		var url = baseUrl+"webstream/new/format/json";
+    		
+    		e.preventDefault();
+    		
+    		$.get(url, function(json) {
     			makeWebstreamDialog(json.html);
-    		});
+    		}, "json");
     	});
     	
     	$library.on("click", "#lib_new_playlist", function(e) {

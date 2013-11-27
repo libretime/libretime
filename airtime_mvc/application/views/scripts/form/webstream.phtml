@@ -1,35 +1,66 @@
 <?php $form = $this->element ?>
 
-<div class="status" style="display:none;"></div>
-   
-<dl class="zend_form">
-	<dd>
-		<input id="ws_id" type="hidden" value="<?php echo $form->getElement("id")->getValue() ?>"></input>
-	</dd>
-	<dt>
-		<label><?php echo _("Name") ?></label>
-	</dt>
-	<dd>
-		<input id="ws_name" type="text" value="<?php echo $form->getElement("name")->getValue() ?>" size="60"/>
-	</dd>
-	<dt>
-		<label><?php echo _("Description") ?></label>
-	</dt>
-	<dd>
-		<textarea cols="60" rows="5" id="ws_description"><?php echo $form->getElement("description")->getValue() ?></textarea>
-	</dd>
-	<dt>
-		<label><?php echo _("Stream URL:"); ?></label>
-	</dt>
-	<dd>
-		<input id="ws_url" type="text" value="<?php echo $form->getElement("url")->getValue() ?>" size="60"/>
-	</dd>
-	       
-	<dt>
-		<label><?php echo _("Default Length:"); ?></label>
-	</dt>
-	<dd>
-		<input id="ws_hours" type="text" value="<?php echo $form->getElement("hours")->getValue() ?>" size="2"/><?php echo _("h"); ?>
-		<input id="ws_mins" type="text" value="<?php echo $form->getElement("mins")->getValue() ?>" size="2"/><?php echo _("m"); ?>
-	</dd>
-</dl>
+<div class="ws">   
+	<dl class="zend_form">
+		<dd>
+			<input id="ws_id" type="hidden" value="<?php echo $form->getElement("id")->getValue() ?>"></input>
+		</dd>
+		<dt>
+			<label><?php echo _("Name") ?></label>
+		</dt>
+		<dd>
+			<input id="ws_name" type="text" value="<?php echo $form->getElement("name")->getValue() ?>" size="60"/>
+			<?php if ($form->getElement("name")->hasErrors()) : ?>
+			<ul class='errors'>
+			<?php foreach ($form->getElement("name")->getMessages() as $error): ?>
+			<li><?php echo $error; ?></li>
+			<?php endforeach; ?>
+			</ul>
+			<?php endif; ?>
+		</dd>
+		<dt>
+			<label><?php echo _("Description") ?></label>
+		</dt>
+		<dd>
+			<textarea cols="60" rows="5" id="ws_description"><?php echo $form->getElement("description")->getValue() ?></textarea>
+			<?php if ($form->getElement("description")->hasErrors()) : ?>
+			<ul class='errors'>
+			<?php foreach ($form->getElement("description")->getMessages() as $error): ?>
+			<li><?php echo $error; ?></li>
+			<?php endforeach; ?>
+			</ul>
+			<?php endif; ?>
+		</dd>
+		<dt>
+			<label><?php echo _("Stream URL:"); ?></label>
+		</dt>
+		<dd>
+			<input id="ws_url" type="text" value="<?php echo $form->getElement("url")->getValue() ?>" size="60"/>
+			<?php if ($form->getElement("url")->hasErrors()) : ?>
+			<ul class='errors'>
+			<?php foreach ($form->getElement("url")->getMessages() as $error): ?>
+			<li><?php echo $error; ?></li>
+			<?php endforeach; ?>
+			</ul>
+			<?php endif; ?>
+		</dd>
+		       
+		<dt>
+			<label><?php echo _("Default Length:"); ?></label>
+		</dt>
+		<dd>
+			<input id="ws_hours" type="text" value="<?php echo $form->getElement("hours")->getValue() ?>" size="2"/><?php echo _("h"); ?>
+			<input id="ws_mins" type="text" value="<?php echo $form->getElement("mins")->getValue() ?>" size="2"/><?php echo _("m"); ?>
+			<?php if ($form->getElement("hours")->hasErrors() || $form->getElement("mins")->hasErrors()) : ?>
+			<ul class='errors'>
+			<?php foreach ($form->getElement("hours")->getMessages() as $error): ?>
+			<li><?php echo $error; ?></li>
+			<?php endforeach; ?>
+			<?php foreach ($form->getElement("mins")->getMessages() as $error): ?>
+			<li><?php echo $error; ?></li>
+			<?php endforeach; ?>
+			</ul>
+			<?php endif; ?>
+		</dd>
+	</dl>
+</div>

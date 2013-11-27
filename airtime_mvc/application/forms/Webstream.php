@@ -34,6 +34,7 @@ class Application_Form_Webstream extends Zend_Form
 		$url = new Zend_Form_Element_Text('url');
 		$url->setLabel(_('Stream URL:'));
 		$url->setAttrib('class', 'input_text');
+		$url->setRequired(true);
 		$url->addFilter('StringTrim');
 		$url->addFilter(new Filter_WebstreamRedirect());
 		$url->setValidators(array(

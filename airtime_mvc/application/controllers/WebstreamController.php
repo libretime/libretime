@@ -57,27 +57,18 @@ class WebstreamController extends Zend_Controller_Action
         foreach (array('id','hours', 'mins', 'name','description','url') as $p) {
             $parameters[$p] = trim($request->getParam($p));
         }
-        
-        Logging::info($parameters);
-        
+       
         $service = new Application_Service_WebstreamService();
         $form = $service->makeWebstreamForm(null);
         
         if ($form->isValid($parameters)) {
-        	Logging::info("form is valid");
         	
         	$values = $form->getValues();
-        	Logging::info($values);
-        	
         	$ws = $service->saveWebstream($values);
-        	
-        	$this->view->statusMessage = "<div class='success'>"._("Webstream saved.")."</div>";
         }
         else {
-        	Logging::info("form is not valid");
-        	
-        	$this->view->statusMessage = "<div class='errors'>"._("Invalid form values.")."</div>";
         	$this->view->errors = $form->getMessages();
+        	$this->view->html = $form->render();
         }
     }
 }
