@@ -281,7 +281,7 @@ class Application_Service_MediaService
 			),
 			"Name" => array(
 				"isColumn" => true,
-				"title" => _("Title"),
+				"title" => _("Name"),
 				"width" => "170px",
 				"class" => "library_title"
 			),

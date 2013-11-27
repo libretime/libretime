@@ -30,13 +30,13 @@ class Playlist extends BasePlaylist
 	/*
 	 * returns a list of media contents.
 	 */
-	public function getMediaContents($criteria = NULL, PropelPDO $con = NULL) {
+	public function getContents($criteria = NULL, PropelPDO $con = NULL) {
 		
 		if (is_null($criteria)) {
 			$criteria = new Criteria();
 			$criteria->addAscendingOrderByColumn(MediaContentPeer::POSITION);
 		}
 		
-		return parent::getMediaContents($criteria, $con);
+		return parent::getMediaContentsJoinMediaItem($criteria, $con);
 	}
 }

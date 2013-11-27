@@ -1,8 +1,3 @@
-<?php
-    $contents = $this->obj->getMediaContents();
-    $count = count($contents);
-?>
-
 <div class="btn-toolbar spl-no-top-margin clearfix">
 	<div class="btn-group pull-left">
 		<a href="#" class="close-round" id="lib_pl_close"></a>
@@ -46,7 +41,7 @@
 
 <div style="clear:both; float:none; width:100%;">
 	<ul id="spl_sortable">
-	<?php  $this->contents = $contents; 
+	<?php  $this->contents = $this->obj->getContents(); 
 		echo $this->render('playlist/update.phtml'); 
 	?>
 	</ul>

@@ -15,11 +15,11 @@ class Presentation_PlaylistItemWebstream extends Presentation_PlaylistItem
 	}
 	
 	public function getTitle() {
-		$this->item->getName();
+		return $this->item->getName();
 	}
 	
 	public function getCreator() {
-		return $this->item->getCreator();
+		return $this->item->getUrl();
 	}
 	
 	public function getCliplength() {
