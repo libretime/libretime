@@ -4,6 +4,7 @@ namespace Airtime\MediaItem;
 
 use Airtime\MediaItem\om\BasePlaylist;
 use \Criteria;
+use \PropelPDO;
 
 
 /**

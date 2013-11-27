@@ -20,6 +20,13 @@ class PlaylistController extends Zend_Controller_Action
             ->initContext();
 
     }
+    
+    private function getPlaylist() {
+    	$mediaService = new Application_Service_MediaService();
+    	$playlist = $mediaService->getSessionMediaObject();
+    	
+    	return $playlist;
+    }
 
     private function createUpdateResponse($obj)
     {
@@ -67,7 +74,19 @@ class PlaylistController extends Zend_Controller_Action
 
     public function deleteAction()
     {
-       
+    	try {
+    		$playlist = $this->getPlaylist();
+    		 
+    		$playlistService = new Application_Service_PlaylistService();
+    		$playlistService->deletePlaylist($playlist);
+    		
+    		$mediaService->setSessionMediaObject(null);
+    		 
+    		$this->view->html = $this->view->render('playlist/none.phtml');
+    	}
+    	catch (Exception $e) {
+    		$this->view->error = $e->getMessage();
+    	}
     }
 
     public function addItemsAction()
@@ -78,8 +97,7 @@ class PlaylistController extends Zend_Controller_Action
     	Logging::info($ids);
     	
     	try {
-    		$mediaService = new Application_Service_MediaService();
-    		$playlist = $mediaService->getSessionMediaObject();
+    		$playlist = $this->getPlaylist();
     		 
     		$playlistService = new Application_Service_PlaylistService();
     		$playlistService->addMedia($playlist, $ids, true);
@@ -93,7 +111,32 @@ class PlaylistController extends Zend_Controller_Action
     
     public function clearAction()
     {
-        
+    	try {
+    		$playlist = $this->getPlaylist();
+    		 
+    		$playlistService = new Application_Service_PlaylistService();
+    		$playlistService->clearPlaylist($playlist);
+    		 
+    		$this->createUpdateResponse($playlist);
+    	}
+    	catch (Exception $e) {
+    		$this->view->error = $e->getMessage();
+    	}
+    }
+    
+    public function shuffleAction()
+    {
+    	try {
+    		$playlist = $this->getPlaylist();
+    		 
+    		$playlistService = new Application_Service_PlaylistService();
+    		$playlistService->shufflePlaylist($playlist);
+    		 
+    		$this->createUpdateResponse($playlist);
+    	}
+    	catch (Exception $e) {
+    		$this->view->error = $e->getMessage();
+    	}
     }
     
     public function saveAction()
@@ -103,8 +146,7 @@ class PlaylistController extends Zend_Controller_Action
     	Logging::info($info);
     	
     	try {
-    		$mediaService = new Application_Service_MediaService();
-    		$playlist = $mediaService->getSessionMediaObject();
+    		$playlist = $this->getPlaylist();
     		 
     		$playlistService = new Application_Service_PlaylistService();
     		$playlistService->savePlaylist($playlist, $info);

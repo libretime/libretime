@@ -126,4 +126,69 @@ class Application_Service_PlaylistService
 		
 		Logging::disablePropelLogging();
 	}
+	
+	public function clearPlaylist($playlist) {
+	
+		$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+		$con->beginTransaction();
+	
+		Logging::enablePropelLogging();
+	
+		try {
+			$c = new PropelCollection(array());
+			$playlist->setMediaContents($c, $con);
+			$playlist->save($con);
+				
+			$con->commit();
+		}
+		catch (Exception $e) {
+			$con->rollBack();
+			Logging::error($e->getMessage());
+			throw $e;
+		}
+	
+		Logging::disablePropelLogging();
+	}
+	
+	public function shufflePlaylist($playlist) {
+	
+		$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+		$con->beginTransaction();
+	
+		Logging::enablePropelLogging();
+	
+		try {
+			$contents = $playlist->getContents(null, $con);
+			$count = count($contents);
+			$order = array();
+			
+			for ($i = 0; $i < $count; $i++) {
+				$order[] = $i;
+			}
+			shuffle($order);
+			
+			$i = 0;
+			foreach ($contents as $content) {
+				$content->setPosition($order[$i]);	
+				$i++;
+			}
+			
+			$playlist->setMediaContents($contents, $con);
+			$playlist->save($con);
+	
+			$con->commit();
+		}
+		catch (Exception $e) {
+			$con->rollBack();
+			Logging::error($e->getMessage());
+			throw $e;
+		}
+	
+		Logging::disablePropelLogging();
+	}
+	
+	public function deletePlaylist($playlist) {
+		
+		$playlist->delete();
+	}
 }
