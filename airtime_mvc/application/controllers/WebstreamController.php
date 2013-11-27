@@ -17,9 +17,6 @@ class WebstreamController extends Zend_Controller_Action
 
     public function newAction()
     {
-    	//clear the session in case an old playlist was open: CC-4196
-    	Application_Model_Library::changePlaylist(null, null);
-    	
     	$service = new Application_Service_WebstreamService();
     	$form = $service->makeWebstreamForm(null);
     	
@@ -29,7 +26,6 @@ class WebstreamController extends Zend_Controller_Action
     		'mins' => 30,
     	));
     	
-    	$this->view->action = "new";
     	$this->view->html = $form->render();
     }
 
@@ -41,9 +37,6 @@ class WebstreamController extends Zend_Controller_Action
         $service = new Application_Service_WebstreamService();
     	$form = $service->makeWebstreamForm($id, true);
 
-        Application_Model_Library::changePlaylist($id, "stream");
-
-        $this->view->action = "edit";
         $this->view->html = $form->render();
     }
 
@@ -52,14 +45,8 @@ class WebstreamController extends Zend_Controller_Action
         $request = $this->getRequest();
         $ids = $request->getParam("ids");
 
-        Application_Model_Library::changePlaylist(null, null);
-        
         $service = new Application_Service_WebstreamService();
         $service->deleteWebstreams($ids);
-
-        $this->view->action = "delete";
-        $this->view->html = $this->view->render('form/webstream.phtml');
-
     }
 
     public function saveAction()
@@ -85,14 +72,11 @@ class WebstreamController extends Zend_Controller_Action
         	$ws = $service->saveWebstream($values);
         	
         	$this->view->statusMessage = "<div class='success'>"._("Webstream saved.")."</div>";
-        	$this->view->streamId = $ws->getId();
-        	$this->view->length = "00:05"; //$di->format("%Hh %Im");
         }
         else {
         	Logging::info("form is not valid");
         	
         	$this->view->statusMessage = "<div class='errors'>"._("Invalid form values.")."</div>";
-        	$this->view->streamId = -1;
         	$this->view->errors = $form->getMessages();
         }
     }

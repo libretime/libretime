@@ -5,6 +5,33 @@ var AIRTIME = (function(AIRTIME) {
     }
     var mod = AIRTIME.library;
     
+    function makeWebstreamDialog(html) {
+		var $wsDialogEl = $(html);
+		
+		function removeDialog() {
+    		$wsDialogEl.dialog("destroy");
+        	$wsDialogEl.remove();
+    	}
+		
+		function saveDialog() {
+			
+		}
+		
+		$wsDialogEl.dialog({	       
+	        title: $.i18n._("Webstream"),
+	        modal: true,
+	        show: 'clip',
+            hide: 'clip',
+            width: 600,
+            height: 350,
+	        buttons: [
+				{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
+				{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
+			],
+	        close: removeDialog
+	    });
+	}
+    
     function createDatatable(config) {
     	
     	var table = $("#"+config.id).dataTable({
@@ -147,6 +174,15 @@ var AIRTIME = (function(AIRTIME) {
 			select: function( event, ui ) {
 				var x;
 			}
+    	});
+    	
+    	$library.on("click", "#lib_new_webstream", function(e) {
+    		var url = baseUrl+"webstream/new",
+    			data = {format: "json"};
+    		
+    		$.post(url, data, function(json) {
+    			makeWebstreamDialog(json.html);
+    		});
     	});
     	
     	$library.on("click", "#lib_new_playlist", function(e) {

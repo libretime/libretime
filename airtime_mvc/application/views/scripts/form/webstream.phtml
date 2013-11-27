@@ -1,69 +1,35 @@
 <?php $form = $this->element ?>
 
-<a href="#" class="close-round" id="lib_pl_close"></a>
-<div class="btn-toolbar spl-no-top-margin clearfix">
-    <div class="btn-group pull-left">
-        <button id="ws_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
-            <?php echo _("New")?> <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li id='lib-new-pl'><a href="#"><?php echo _("New Playlist") ?></a></li>
-            <li id='lib-new-bl'><a href="#"><?php echo _("New Smart Block") ?></a></li>
-            <li id='lib-new-ws'><a href="#"><?php echo _("New Webstream") ?></a></li>
-        </ul>
-    </div>
-
-<?php if (isset($form)) : ?>
-<div class="btn-group pull-right">
-    <button class="btn btn-inverse" type="submit" id="webstream_save" name="submit"><?php echo _("Save") ?></button>
-</div>
-<div class="btn-group pull-right">
-    <button id="ws_delete" class="btn" <?php if ($this->action == "new"): ?>style="display:none;"<?php endif; ?>aria-disabled="false"><?php echo _("Delete") ?></button>
-</div>
-<?php endif; ?>
-</div>
-
-<?php if (isset($form)) : ?>
-    <input id="obj_id" type="hidden" value="<?php echo $form->getElement("id")->getValue() ?>"></input>
-    <input id="obj_lastMod" type="hidden" value="<?php echo "1";//$this->obj->getLastModified('U'); ?>"></input>
-    <div class="status" style="display:none;"></div>
-
-    <div class="playlist_title">
-        <h3>
-            <a id="ws_name" contenteditable="true"><?php echo $form->getElement("name")->getValue() ?></a>
-        </h3>
-        <h4 id="ws_length">00h 00m</h4>
-    </div>
-
-    <fieldset class="toggle" id="fieldset-metadate_change">
-        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><?php echo _("View / edit description"); ?></legend>
-        <dl class="zend_form">
-            <dt>
-            	<label><?php echo _("Description") ?></label>
-            </dt>
-            <dd>
-                <textarea cols="80" rows="24" id="ws_description"><?php echo $form->getElement("description")->getValue() ?></textarea>
-            </dd>
-       </dl>
-    </fieldset>
-    
-    <dl class="zend_form">
-        <dt>
-        	<label><?php echo _("Stream URL:"); ?></label>
-        </dt>
-        <dd>
-        	<input id="ws_url" type="text" value="<?php echo $form->getElement("url")->getValue() ?>" size="60"/>
-        </dd>
-       
-        <dt>
-        	<label><?php echo _("Default Length:"); ?></label>
-        </dt>
-        <dd>
-        	<input id="ws_hours" type="text" value="<?php echo $form->getElement("hours")->getValue() ?>" size="2"/><?php echo _("h"); ?>
-        	<input id="ws_mins" type="text" value="<?php echo $form->getElement("mins")->getValue() ?>" size="2"/><?php echo _("m"); ?>
-        </dd>
-    </dl>
-
-<?php else : ?>
-    <div><?php echo _("No webstream") ?></div>
-<?php endif; ?>
+<div class="status" style="display:none;"></div>
+   
+<dl class="zend_form">
+	<dd>
+		<input id="ws_id" type="hidden" value="<?php echo $form->getElement("id")->getValue() ?>"></input>
+	</dd>
+	<dt>
+		<label><?php echo _("Name") ?></label>
+	</dt>
+	<dd>
+		<input id="ws_name" type="text" value="<?php echo $form->getElement("name")->getValue() ?>" size="60"/>
+	</dd>
+	<dt>
+		<label><?php echo _("Description") ?></label>
+	</dt>
+	<dd>
+		<textarea cols="60" rows="5" id="ws_description"><?php echo $form->getElement("description")->getValue() ?></textarea>
+	</dd>
+	<dt>
+		<label><?php echo _("Stream URL:"); ?></label>
+	</dt>
+	<dd>
+		<input id="ws_url" type="text" value="<?php echo $form->getElement("url")->getValue() ?>" size="60"/>
+	</dd>
+	       
+	<dt>
+		<label><?php echo _("Default Length:"); ?></label>
+	</dt>
+	<dd>
+		<input id="ws_hours" type="text" value="<?php echo $form->getElement("hours")->getValue() ?>" size="2"/><?php echo _("h"); ?>
+		<input id="ws_mins" type="text" value="<?php echo $form->getElement("mins")->getValue() ?>" size="2"/><?php echo _("m"); ?>
+	</dd>
+</dl>

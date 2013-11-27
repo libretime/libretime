@@ -2,8 +2,11 @@
     $contents = $this->obj->getMediaContents();
     $count = count($contents);
 ?>
-<a href="#" class="close-round" id="lib_pl_close"></a>
+
 <div class="btn-toolbar spl-no-top-margin clearfix">
+	<div class="btn-group pull-left">
+		<a href="#" class="close-round" id="lib_pl_close"></a>
+	</div>
     <div class='btn-group pull-right'>
         <button class="btn btn-inverse" title='<?php echo _("Empty playlist content") ?>' type="button" id="pl-bl-clear-content"><?php echo _("Clear") ?></button>
     </div>
