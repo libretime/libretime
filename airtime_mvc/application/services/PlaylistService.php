@@ -8,23 +8,22 @@ use Airtime\MediaItem\MediaContent;
 
 class Application_Service_PlaylistService
 {
-	/*return array (
-			"id" => $obj->getId(),
-			"cuein" => $obj->getSchedulingCueIn(),
-			"cueout" => $obj->getSchedulingCueOut(),
-			"fadein" => $obj->getSchedulingFadeIn(),
-			"fadeout" => $obj->getSchedulingFadeOut(),
-			"length" => $obj->getSchedulingLength(),
-			"crossfadeDuration" => 0
-		);
-	*/
 	private function buildContentItem($info) {
 		$item = new MediaContent();
 		
-		$item->setCuein($info["cuein"]);
-		$item->setCueout($info["cueout"]);
-		$item->setFadein($info["fadein"]);
-		$item->setFadeout($info["fadeout"]);
+		if (isset($info["cuein"])) {
+			$item->setCuein($info["cuein"]);
+		}
+		if (isset($info["cueout"])) {
+			$item->setCueout($info["cueout"]);
+		}
+		if (isset($info["fadein"])) {
+			$item->setFadein($info["fadein"]);
+		}
+		if (isset($info["fadeout"])) {
+			$item->setFadeout($info["fadeout"]);
+		}
+		
 		$item->generateCliplength();
 		$item->setMediaId($info["id"]);
 		
@@ -73,13 +72,13 @@ class Application_Service_PlaylistService
 	
 	/*
 	 * [16] => Array
-                (
-                    [id] => 5
-                    [cuein] => 00:00:00
-                    [cueout] => 00:04:12.917551
-                    [fadein] => 0.5
-                    [fadeout] => 0.5
-                )
+       (
+	       [id] => 5
+	       [cuein] => 00:00:00
+	       [cueout] => 00:04:12.917551
+	       [fadein] => 0.5
+	       [fadeout] => 0.5
+       )
 	 */
 	public function savePlaylist($playlist, $data) {
 		
@@ -95,15 +94,28 @@ class Application_Service_PlaylistService
 			
 			$contents = $data["contents"];
 			$position = 0;
+			$m = array();
 			foreach ($contents as $item) {
 				$mediaContent = $this->buildContentItem($item);
 				$mediaContent->setPosition($position);
-				$playlist->addMediaContent($mediaContent);
+				
+				$res = $mediaContent->validate();
+				if ($res === true) {
+					//$playlist->addMediaContent($mediaContent);
+					$m[] = $mediaContent;
+				}
+				else {
+					Logging::info($res);
+					throw new Exception("invalid media content");
+				}
 				
 				$position++;
 			}
-				
+			
+			$c = new PropelCollection($m);
+			$playlist->setMediaContents($c, $con);
 			$playlist->save($con);
+			
 			$con->commit();
 		}
 		catch (Exception $e) {

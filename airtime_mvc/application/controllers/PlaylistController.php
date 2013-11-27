@@ -101,5 +101,18 @@ class PlaylistController extends Zend_Controller_Action
     	$info = $this->_getParam('serialized');
     	
     	Logging::info($info);
+    	
+    	try {
+    		$mediaService = new Application_Service_MediaService();
+    		$playlist = $mediaService->getSessionMediaObject();
+    		 
+    		$playlistService = new Application_Service_PlaylistService();
+    		$playlistService->savePlaylist($playlist, $info);
+    	
+    		$this->createUpdateResponse($playlist);
+    	}
+    	catch (Exception $e) {
+    		$this->view->error = $e->getMessage();
+    	}
     } 
 }
