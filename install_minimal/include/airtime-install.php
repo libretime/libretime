@@ -12,6 +12,14 @@ require_once(__DIR__.'/airtime-constants.php');
 // The only way we get here is if we are doing a new install or a reinstall.
 // -------------------------------------------------------------------------
 
+if (PHP_VERSION_ID < 50400) //PHP 5.4
+{
+    echo("ERROR: Your PHP version is too old!\nAirtime requires PHP 5.4 or greater.\n");
+    exit(1);
+}
+
+die(0);
+
 $iniExists = file_exists("/etc/airtime/airtime.conf");
 if ($iniExists) {
     //reinstall, Will ask if we should rewrite config files.
