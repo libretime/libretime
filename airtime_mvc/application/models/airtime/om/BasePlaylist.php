@@ -862,14 +862,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                // aggregate_column behavior
-                if (null !== $this->collMediaContents) {
-                    $this->setLength($this->computeLength($con));
-                    if ($this->isModified()) {
-                        $this->save($con);
-                    }
-                }
-
                 PlaylistPeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -2056,33 +2048,6 @@ abstract class BasePlaylist extends MediaItem implements Persistent
         }
 
         return $parent;
-    }
-
-    // aggregate_column behavior
-
-    /**
-     * Computes the value of the aggregate column length *
-     * @param PropelPDO $con A connection object
-     *
-     * @return mixed The scalar result from the aggregate query
-     */
-    public function computeLength(PropelPDO $con)
-    {
-        $stmt = $con->prepare('SELECT SUM(cliplength) FROM "media_content" WHERE media_content.playlist_id = :p1');
-        $stmt->bindValue(':p1', $this->getId());
-        $stmt->execute();
-
-        return $stmt->fetchColumn();
-    }
-
-    /**
-     * Updates the aggregate column length *
-     * @param PropelPDO $con A connection object
-     */
-    public function updateLength(PropelPDO $con)
-    {
-        $this->setLength($this->computeLength($con));
-        $this->save($con);
     }
 
     // timestampable behavior

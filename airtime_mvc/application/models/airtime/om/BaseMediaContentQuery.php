@@ -17,7 +17,6 @@ use Airtime\MediaItem\MediaContent;
 use Airtime\MediaItem\MediaContentPeer;
 use Airtime\MediaItem\MediaContentQuery;
 use Airtime\MediaItem\Playlist;
-use Airtime\MediaItem\PlaylistQuery;
 
 /**
  * Base class that represents a query for the 'media_content' table.
@@ -828,92 +827,6 @@ abstract class BaseMediaContentQuery extends ModelCriteria
         }
 
         return $this;
-    }
-
-    /**
-     * Code to execute before every DELETE statement
-     *
-     * @param     PropelPDO $con The connection object used by the query
-     */
-    protected function basePreDelete(PropelPDO $con)
-    {
-        // aggregate_column_relation behavior
-        $this->findRelatedPlaylists($con);
-
-        return $this->preDelete($con);
-    }
-
-    /**
-     * Code to execute after every DELETE statement
-     *
-     * @param     int $affectedRows the number of deleted rows
-     * @param     PropelPDO $con The connection object used by the query
-     */
-    protected function basePostDelete($affectedRows, PropelPDO $con)
-    {
-        // aggregate_column_relation behavior
-        $this->updateRelatedPlaylists($con);
-
-        return $this->postDelete($affectedRows, $con);
-    }
-
-    /**
-     * Code to execute before every UPDATE statement
-     *
-     * @param     array $values The associative array of columns and values for the update
-     * @param     PropelPDO $con The connection object used by the query
-     * @param     boolean $forceIndividualSaves If false (default), the resulting call is a BasePeer::doUpdate(), otherwise it is a series of save() calls on all the found objects
-     */
-    protected function basePreUpdate(&$values, PropelPDO $con, $forceIndividualSaves = false)
-    {
-        // aggregate_column_relation behavior
-        $this->findRelatedPlaylists($con);
-
-        return $this->preUpdate($values, $con, $forceIndividualSaves);
-    }
-
-    /**
-     * Code to execute after every UPDATE statement
-     *
-     * @param     int $affectedRows the number of updated rows
-     * @param     PropelPDO $con The connection object used by the query
-     */
-    protected function basePostUpdate($affectedRows, PropelPDO $con)
-    {
-        // aggregate_column_relation behavior
-        $this->updateRelatedPlaylists($con);
-
-        return $this->postUpdate($affectedRows, $con);
-    }
-
-    // aggregate_column_relation behavior
-
-    /**
-     * Finds the related Playlist objects and keep them for later
-     *
-     * @param PropelPDO $con A connection object
-     */
-    protected function findRelatedPlaylists($con)
-    {
-        $criteria = clone $this;
-        if ($this->useAliasInSQL) {
-            $alias = $this->getModelAlias();
-            $criteria->removeAlias($alias);
-        } else {
-            $alias = '';
-        }
-        $this->playlists = PlaylistQuery::create()
-            ->joinMediaContent($alias)
-            ->mergeWith($criteria)
-            ->find($con);
-    }
-
-    protected function updateRelatedPlaylists($con)
-    {
-        foreach ($this->playlists as $playlist) {
-            $playlist->updateLength($con);
-        }
-        $this->playlists = array();
     }
 
 }

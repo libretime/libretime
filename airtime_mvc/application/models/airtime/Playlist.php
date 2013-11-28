@@ -5,6 +5,7 @@ namespace Airtime\MediaItem;
 use Airtime\MediaItem\om\BasePlaylist;
 use \Criteria;
 use \PropelPDO;
+use \Exception;
 
 
 /**
@@ -40,4 +41,47 @@ class Playlist extends BasePlaylist
 		
 		return parent::getMediaContentsJoinMediaItem($criteria, $con);
 	}
+	
+	/**
+	 * Computes the value of the aggregate column length *
+	 * @param PropelPDO $con A connection object
+	 *
+	 * @return mixed The scalar result from the aggregate query
+	 */
+	public function computeLength(PropelPDO $con)
+	{
+		$stmt = $con->prepare('SELECT SUM(cliplength) FROM "media_content" WHERE media_content.playlist_id = :p1');
+		$stmt->bindValue(':p1', $this->getId());
+		$stmt->execute();
+	
+		return $stmt->fetchColumn();
+	}
+	
+	/**
+	 * Updates the aggregate column length *
+	 * @param PropelPDO $con A connection object
+	 */
+	public function updateLength(PropelPDO $con)
+	{
+		$length = $this->computeLength($con);
+		
+		//update both tables (inheritance) for this playlist
+		$stmt = $con->prepare('UPDATE media_playlist SET length = :p1 WHERE media_playlist.id = :p2');
+		$stmt->bindValue(':p1', $length);
+		$stmt->bindValue(':p2', $this->getId());
+		$stmt->execute();
+		
+		$stmt = $con->prepare('UPDATE media_item SET length = :p1 WHERE media_item.id = :p2');
+		$stmt->bindValue(':p1', $length);
+		$stmt->bindValue(':p2', $this->getId());
+		$stmt->execute();
+		
+		//need to make the object aware of the change.
+		$this->length = $length;
+	}
+	
+	public function postSave(PropelPDO $con = null)
+    {
+    	$this->updateLength($con);
+    }
 }
