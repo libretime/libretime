@@ -18,8 +18,6 @@ if (PHP_VERSION_ID < 50400) //PHP 5.4
     exit(1);
 }
 
-die(0);
-
 $iniExists = file_exists("/etc/airtime/airtime.conf");
 if ($iniExists) {
     //reinstall, Will ask if we should rewrite config files.
