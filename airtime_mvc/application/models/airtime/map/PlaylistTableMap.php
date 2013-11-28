@@ -82,6 +82,13 @@ class PlaylistTableMap extends TableMap
   'schema' => '',
   'excluded_parent_behavior' => 'nested_set',
 ),
+            'aggregate_column' =>  array (
+  'name' => 'length',
+  'expression' => 'SUM(cliplength)',
+  'condition' => NULL,
+  'foreign_table' => 'media_content',
+  'foreign_schema' => NULL,
+),
             'timestampable' =>  array (
   'create_column' => 'created_at',
   'update_column' => 'updated_at',

@@ -547,6 +547,11 @@
     <behavior name="concrete_inheritance">
       <parameter name="extends" value="media_item" />
     </behavior>
+    <behavior name="aggregate_column">
+      <parameter name="name" value="length" />
+      <parameter name="foreign_table" value="media_content" />
+      <parameter name="expression" value="SUM(cliplength)" />
+    </behavior>
     <column name="type" phpName="Type" type="VARCHAR" size="15" defaultValue="standard"/>
   </table>
   

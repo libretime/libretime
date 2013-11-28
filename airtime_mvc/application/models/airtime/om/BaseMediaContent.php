@@ -143,6 +143,9 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
      */
     protected $alreadyInClearAllReferencesDeep = false;
 
+    // aggregate_column_relation behavior
+    protected $oldPlaylist;
+
     /**
      * Applies default values to this object.
      * This method should be called from the object's constructor (or
@@ -725,6 +728,8 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
+                // aggregate_column_relation behavior
+                $this->updateRelatedPlaylist($con);
                 MediaContentPeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
@@ -1377,6 +1382,10 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
      */
     public function setPlaylist(Playlist $v = null)
     {
+        // aggregate_column_relation behavior
+        if (null !== $this->aPlaylist && $v !== $this->aPlaylist) {
+            $this->oldPlaylist = $this->aPlaylist;
+        }
         if ($v === null) {
             $this->setPlaylistId(NULL);
         } else {
@@ -1542,6 +1551,26 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
+    }
+
+    // aggregate_column_relation behavior
+
+    /**
+     * Update the aggregate column in the related Playlist object
+     *
+     * @param PropelPDO $con A connection object
+     */
+    protected function updateRelatedPlaylist(PropelPDO $con)
+    {
+        if ($playlist = $this->getPlaylist()) {
+            if (!$playlist->isAlreadyInSave()) {
+                $playlist->updateLength($con);
+            }
+        }
+        if ($this->oldPlaylist) {
+            $this->oldPlaylist->updateLength($con);
+            $this->oldPlaylist = null;
+        }
     }
 
 }

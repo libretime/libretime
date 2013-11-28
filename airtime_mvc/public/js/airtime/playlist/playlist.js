@@ -135,6 +135,7 @@ var AIRTIME = (function(AIRTIME){
 		$playlist.find("#playlist_name").text(data.name);
 		$playlist.find("#playlist_lastmod").val(data.modified);
 		$playlist.find("#playlist_description").val(data.description);
+		$playlist.find("#playlist_length").text(data.length);
 		$playlist.find("#spl_sortable").html(data.html);
 		
 		$wrapper.append($playlist);

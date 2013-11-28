@@ -31,9 +31,7 @@ class PlaylistController extends Zend_Controller_Action
 
     private function createUpdateResponse($obj)
     {
-        $formatter = new Format_HHMMSSULength($obj->getLength());
-        $this->view->length = $formatter->format();
-
+        $this->view->length = $obj->getLength();
         $this->view->obj = $obj;
         $this->view->contents = $obj->getContents();
         $this->view->html = $this->view->render('playlist/update.phtml');
@@ -47,13 +45,9 @@ class PlaylistController extends Zend_Controller_Action
     
     private function createFullResponse($obj)
     {
-    	$formatter = new Format_HHMMSSULength($obj->getLength());
-    	$this->view->length = $formatter->format();
-    
     	$this->view->obj = $obj;
     	$this->view->html = $this->view->render('playlist/playlist.phtml');
-    	
-    	unset($this->view->length);
+
     	unset($this->view->obj);
     }
 

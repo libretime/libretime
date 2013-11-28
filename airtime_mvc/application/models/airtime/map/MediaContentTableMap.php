@@ -65,4 +65,20 @@ class MediaContentTableMap extends TableMap
         $this->addRelation('MediaItem', 'Airtime\\MediaItem', RelationMap::MANY_TO_ONE, array('media_id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
+    /**
+     *
+     * Gets the list of behaviors registered for this table
+     *
+     * @return array Associative array (name => parameters) of behaviors
+     */
+    public function getBehaviors()
+    {
+        return array(
+            'aggregate_column_relation' =>  array (
+  'foreign_table' => 'media_playlist',
+  'update_method' => 'updateLength',
+),
+        );
+    } // getBehaviors()
+
 } // MediaContentTableMap
