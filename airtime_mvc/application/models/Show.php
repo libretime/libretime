@@ -172,16 +172,16 @@ SQL;
         $show->delete();
     }
 
-    public function resizeShow($deltaDay, $deltaMin)
+    public function resizeShow($deltaDay, $deltaMin, $instanceId)
     {
         $con = Propel::getConnection();
 
         if ($deltaDay > 0) {
             return _("Shows can have a max length of 24 hours.");
         }
-        
+
         $utc = new DateTimeZone("UTC");
-        
+
         $nowDateTime = new DateTime("now", $utc);
 
         $showInstances = CcShowInstancesQuery::create()

@@ -183,6 +183,7 @@ class ScheduleController extends Zend_Controller_Action
         $deltaDay = $this->_getParam('day');
         $deltaMin = $this->_getParam('min');
         $showId = $this->_getParam('showId');
+        $instanceId = $this->_getParam('instanceId');
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
@@ -195,7 +196,7 @@ class ScheduleController extends Zend_Controller_Action
 
                 return false;
             }
-            $error = $show->resizeShow($deltaDay, $deltaMin);
+            $error = $show->resizeShow($deltaDay, $deltaMin, $instanceId);
         }
 
         if (isset($error)) {
