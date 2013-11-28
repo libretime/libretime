@@ -124,7 +124,11 @@ class Application_Service_ShowFormService
 
     private function populateFormWhen($form)
     {
-        $ccShowDay = $this->ccShow->getFirstCcShowDay();
+        if ($this->ccShow->isRepeating()) {
+            $ccShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+        } else {
+            $ccShowDay = $this->ccShow->getFirstCcShowDay();
+        }
 
         $showStart = $ccShowDay->getLocalStartDateAndTime();
         $showEnd = $ccShowDay->getLocalEndDateAndTime($showStart);
@@ -198,7 +202,11 @@ class Application_Service_ShowFormService
      */
     private function populateFormRepeats($form, $nextFutureShowStart)
     {
-        $ccShowDays = $this->ccShow->getCcShowDays();
+        if ($this->ccShow->isRepeating()) {
+            $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
+        } else {
+            $ccShowDays = $this->ccShow->getCcShowDayss();
+        }
 
         $days = array();
         foreach ($ccShowDays as $ccShowDay) {

@@ -15,8 +15,20 @@
  */
 class CcShow extends BaseCcShow {
 
-    public function getCcShowDays(){
-        return CcShowDaysQuery::create()->filterByDbShowId($this->getDbId())->find();
+    /*
+     * Returns all cc_show_day rules that belong to a cc_show and that are
+     * repeating.
+     * We do this because editing a single instance from a repeating sequence
+     * creates a new rule in cc_show_days with the same cc_show id and a repeat
+     * type of -1 (non-repeating).
+     * So when the entire cc_show is updated after that, the single edited
+     * instance can remain separate from the rest of the instances
+     */
+    public function getRepeatingCcShowDays(){
+        return CcShowDaysQuery::create()
+            ->filterByDbShowId($this->id)
+            ->filterByDbRepeatType(-1, Criteria::NOT_EQUAL)
+            ->find();
     }
 
     /**
@@ -52,6 +64,49 @@ class CcShow extends BaseCcShow {
             }
         }
         return $this->collCcShowDayss[0];
+    }
+
+    /**
+     * 
+     * A repeating show may have a rule in cc_show_days with a repeat type
+     * of -1 (not repeating). This happens when a single instances was edited
+     * from the repeating sequence.
+     * 
+     * When the repeating show gets edited in this case, we want to exclude all
+     * the edited instances from the update. We do this by not returning any of
+     * the cc_show_day rules with a -1 repeat type.
+     */
+    public function getFirstRepeatingCcShowDay()
+    {
+        return CcShowDaysQuery::create()
+            ->filterByDbShowId($this->id)
+            ->filterByDbRepeatType(-1, Criteria::NOT_EQUAL)
+            ->orderByDbFirstShow()
+            ->findOne();
+    }
+
+    /**
+     * 
+     * In order to determine if a show is repeating we need to check each
+     * cc_show_day entry and check if there are any non -1 repeat types.
+     * Because editing a single instances creates a new cc_show_day rule
+     * with a -1 (non repeating) repeat type we need to check all cc_show_day
+     * entries
+     */
+    public function isRepeating()
+    {
+        //get ALL cc_show_day entries
+        $ccShowDays = CcShowDaysQuery::create()
+            ->filterByDbShowId($this->id)
+            ->find();
+
+        foreach ($ccShowDays as $day) {
+            if ($day->getDbRepeatType() >= 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
