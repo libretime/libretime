@@ -138,6 +138,29 @@ class CcShowInstances extends BaseCcShowInstances {
         $this->setDbLastScheduled(gmdate("Y-m-d H:i:s"));
         $this->save($con);
     }
+
+    /**
+     * 
+     * This function resets the cc_schedule table's position numbers so that
+     * tracks for each cc_show_instances start at position 1
+     * 
+     * The position numbers can become out of sync when the user deletes items
+     * from linekd shows filled with dyanmic smart blocks, where each instance
+     * has a different amount of scheduled items
+     */
+    public function correctSchedulePositions()
+    {
+        $schedule = CcScheduleQuery::create()
+            ->filterByDbInstanceId($this->id)
+            ->orderByDbStarts()
+            ->find();
+
+        $pos = 0;
+        foreach ($schedule as $item) {
+            $item->setDbPosition($pos)->save();
+            $pos++;
+        }
+    }
     
     /**
      * Computes the value of the aggregate column time_filled
