@@ -159,7 +159,11 @@ class Application_Service_ShowService
      */
     private function storeOrigLocalShowInfo()
     {
-        $this->origCcShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+        if ($this->ccShow->isRepeating()) {
+            $this->origCcShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+        } else {
+            $this->origCcShowDay = $this->ccShow->getFirstCcShowDay();
+        }
 
         $this->oldShowTimezone = $this->origCcShowDay->getDbTimezone();
 
@@ -404,7 +408,11 @@ SQL;
         $daysAdded = array();
 
         //CcShowDay object
-        $currentShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+        if ($this->ccShow->isRepeating()) {
+            $currentShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+        } else {
+            $currentShowDay = $this->ccShow->getFirstCcShowDay();
+        }
 
         //new end date in users' local time
         $endDateTime = $this->calculateEndDate($showData);
@@ -1387,6 +1395,8 @@ SQL;
      */
     private function setCcShowDays($showData)
     {
+        Logging::info($showData);
+        Logging::info($this->repeatType);
         $showId = $this->ccShow->getDbId();
 
         $startDateTime = new DateTime($showData['add_show_start_date']." ".$showData['add_show_start_time']);
@@ -1451,7 +1461,7 @@ SQL;
                     if ($this->isUpdate) {
                         $showDay = CcShowDaysQuery::create()
                            ->filterByDbShowId($showId)
-                           ->filterByDbRepeatType($showData['add_show_repeat_type'])
+                           ->filterByDbRepeatType($this->repeatType)
                            ->filterByDbDay($day)
                            ->findOne();
                         if (!$showDay) {
