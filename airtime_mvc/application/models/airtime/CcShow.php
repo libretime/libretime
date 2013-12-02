@@ -110,6 +110,44 @@ class CcShow extends BaseCcShow {
     }
 
     /**
+     * Returns all cc_show_instances that have been edited out of
+     * a repeating sequence
+     */
+    public function getEditedRepeatingInstanceIds()
+    {
+        //get cc_show_days that have been edited (not repeating)
+        $ccShowDays = CcShowDaysQuery::create()
+            ->filterByDbShowId($this->id)
+            ->filterByDbRepeatType(-1)
+            ->find();
+
+        $startsUTC = array();
+
+        $utc = new DateTimeZone("UTC");
+        foreach ($ccShowDays as $day) {
+            //convert to UTC
+            $starts = new DateTime(
+                $day->getDbFirstShow()." ".$day->getDbStartTime(),
+                new DateTimeZone($day->getDbTimezone())
+            );
+            $starts->setTimezone($utc);
+            array_push($startsUTC, $starts->format("Y-m-d H:i:s"));
+        }
+
+        $excludeInstances = CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->id)
+            ->filterByDbStarts($startsUTC, criteria::IN)
+            ->find();
+
+        $excludeIds = array();
+        foreach ($excludeInstances as $instance) {
+            array_push($excludeIds, $instance->getDbId());
+        }
+
+        return $excludeIds;
+    }
+
+    /**
      * Gets an array of CcShowInstances objects which contain a foreign key that references this object.
      *
      * If the $criteria is not null, it is used to always fetch the results from the database.
