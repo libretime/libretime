@@ -108,12 +108,6 @@ class Application_Service_ShowService
              */
             $this->setCcShowDays($showData);
 
-            /*
-             * Set the new cc_show_day record
-             * Associates it with the current show_id and sets it to non-repeating
-             */
-            $this->setCcShowDays($showData);
-
             // DO WE NEED THIS?
             $this->setCcShowHosts($showData);
 
@@ -1438,7 +1432,6 @@ SQL;
         if ($showData['add_show_repeats'] && $showData['add_show_repeat_type'] == 2) {
 
             if ($this->isUpdate) {
-                //Logging::info(CcShowDaysQuery::create()->find());
                 $showDay = CcShowDaysQuery::create()
                     ->filterByDbShowId($showId)
                     ->filterByDbRepeatType($showData['add_show_repeat_type'])
