@@ -151,7 +151,11 @@ class Application_Service_CalendarService
                         "name" => _("Edit This Instance"),
                         "icon" => "edit",
                         "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
-
+                } elseif ($populateInstance) {
+                    $menu["edit"] = array(
+                        "name" => _("Edit Show"),
+                        "icon" => "edit",
+                        "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
                 } else {
                     $menu["edit"] = array(
                         "name"=> _("Edit Show"),
