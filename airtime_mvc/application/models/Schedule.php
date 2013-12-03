@@ -1292,7 +1292,7 @@ SQL;
                 ->filterByDbId($instanceId)
                 ->findOne();
         }
-        if (!$ccShowInstance || $ccShowInstance->getDbModifiedInstance() == true) {
+        if ($update && (!$ccShowInstance || $ccShowInstance->getDbModifiedInstance() == true)) {
             return false;
         }
 
