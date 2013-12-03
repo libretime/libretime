@@ -626,19 +626,32 @@ class Application_Model_Scheduler
                             $pos = Application_Common_Database::prepareAndExecute(
                                 $maxPos_sql, array(), Application_Common_Database::COLUMN);
 
-                            $linkedItem_sql = "SELECT ends FROM cc_schedule ".
-                                "WHERE instance_id = {$instanceId} ".
-                                "AND position = {$pos} ".
-                                "AND playout_status != -1";
-                            $linkedItemEnds = Application_Common_Database::prepareAndExecute(
-                                $linkedItem_sql, array(), Application_Common_Database::COLUMN);
+                            //show instance has no scheduled tracks
+                            if (empty($pos)) {
+                                $pos = 0;
+                                $nextStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
+                            } else {
+
+                                $linkedItem_sql = "SELECT ends FROM cc_schedule ".
+                                    "WHERE instance_id = {$instanceId} ".
+                                    "AND position = {$pos} ".
+                                    "AND playout_status != -1";
+                                $linkedItemEnds = Application_Common_Database::prepareAndExecute(
+                                    $linkedItem_sql, array(), Application_Common_Database::COLUMN);
+
+                                $nextStartDT = $this->findNextStartTime(
+                                    new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
+                                    $instanceId);
+                            }
+                        } else {
+                            $nextStartDT = $this->findNextStartTime(
+                                new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
+                                $instanceId);
+
+                            $pos++;
                         }
 
-                        $nextStartDT = $this->findNextStartTime(
-                            new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
-                            $instanceId);
-
-                        $pos++;
+                        //$pos++;
                     }
                     //selected empty row to add after
                     else {
@@ -721,6 +734,13 @@ class Application_Model_Scheduler
 
                                 $sched = Application_Common_Database::prepareAndExecute(
                                     $movedItem_sql, array(), Application_Common_Database::SINGLE);
+                            }
+                            /* If we don't find a schedule item it means the linked
+                             * shows have a different amount of items (dyanmic block)
+                             * and we should skip the item move for this show instance
+                             */
+                            if (!$sched) {
+                                continue;
                             }
                             $excludeIds[] = intval($sched["id"]);
 
@@ -1160,6 +1180,7 @@ class Application_Model_Scheduler
 
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($this->con);
+                $instance->correctSchedulePositions();
             }
 
             //update the last scheduled timestamp.
