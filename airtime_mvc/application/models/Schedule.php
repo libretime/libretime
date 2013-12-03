@@ -1282,10 +1282,16 @@ SQL;
         $update=false, $instanceId=null, $showId=null)
     {
         //if the show instance does not exist or was deleted, return false
-        $ccShowInstance = CcShowInstancesQuery::create()
-            ->filterByDbShowId($showId)
-            ->filterByDbStarts($show_start->format("Y-m-d H:i:s"))
-            ->findOne();
+        if (!is_null($showId)) {
+            $ccShowInstance = CcShowInstancesQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbStarts($show_start->format("Y-m-d H:i:s"))
+                ->findOne();
+        } elseif (!is_null($instanceId)) {
+            $ccShowInstance = CcShowInstancesQuery::create()
+                ->filterByDbId($instanceId)
+                ->findOne();
+        }
         if (!$ccShowInstance || $ccShowInstance->getDbModifiedInstance() == true) {
             return false;
         }
