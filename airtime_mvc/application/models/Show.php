@@ -180,9 +180,8 @@ SQL;
             return _("Shows can have a max length of 24 hours.");
         }
 
-        $utc = new DateTimeZone("UTC");
-
-        $nowDateTime = new DateTime("now", $utc);
+        $utcTimezone = new DateTimeZone("UTC");
+        $nowDateTime = new DateTime("now", $utcTimezone);
 
         //keep track of cc_show_day entries we need to update
         $showDayIds = array();
@@ -256,7 +255,8 @@ SQL;
 
         //keep track of instance ids for update show instances start/end times
         $instanceIds = array();
-
+        $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        
         //check if new show time overlaps with any other shows
         foreach ($showInstances as $si) {
             array_push($instanceIds, $si->getDbId());
@@ -268,8 +268,8 @@ SQL;
                 of local time.  * incase a show is moved across a time change
                 border offsets should be added to the local * timestamp and
                 then converted back to UTC to avoid show time changes */
-            $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-            $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            $startsDateTime->setTimezone($displayTimezone);
+            $endsDateTime->setTimezone($displayTimezone);
 
             //$newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
             $newEndsDateTime   = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
@@ -280,7 +280,7 @@ SQL;
 
             //convert our new starts/ends to UTC.
             //$newStartsDateTime->setTimezone($utc);
-            $newEndsDateTime->setTimezone($utc);
+            $newEndsDateTime->setTimezone($utcTimezone);
 
             $overlapping = Application_Model_Schedule::checkOverlappingShows(
                 $startsDateTime, $newEndsDateTime, true, $si->getDbId());
@@ -979,8 +979,8 @@ SQL;
         $isFull = Application_Model_ShowInstance::getIsFull($p_start, $p_end);
 
         $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-        $utc = new DateTimeZone("UTC");
-        $now = new DateTime("now", $utc);
+        $utcTimezone = new DateTimeZone("UTC");
+        $now = new DateTime("now", $utcTimezone);
 
         foreach ($shows as &$show) {
             $options = array();
@@ -991,13 +991,13 @@ SQL;
             }
 
             if (isset($show["parent_starts"])) {
-                $parentStartsDT = new DateTime($show["parent_starts"], $utc);
+                $parentStartsDT = new DateTime($show["parent_starts"], $utcTimezone);
             }
 
             $startsDT = DateTime::createFromFormat("Y-m-d G:i:s",
-                $show["starts"],$utc);
+                $show["starts"], $utcTimezone);
             $endsDT   = DateTime::createFromFormat("Y-m-d G:i:s",
-                $show["ends"], $utc);
+                $show["ends"], $utcTimezone);
 
             if( $p_editable ) {
                 if ($show["record"] && $now > $startsDT) {
