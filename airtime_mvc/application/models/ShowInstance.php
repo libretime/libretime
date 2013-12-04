@@ -694,11 +694,15 @@ SQL;
             ':instance_id2' => $this->_instanceId
         ));
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $userTimezone = Application_Model_Preference::GetUserTimezone();
+        $displayTimezone = new DateTimeZone($userTimezone);
+        $utcTimezone = new DateTimeZone("UTC");
 
         foreach ($results as &$row) {
 
-            $dt = new DateTime($row["starts"], new DateTimeZone("UTC"));
-            $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            $dt = new DateTime($row["starts"], $utcTimezone);
+            $dt->setTimezone($displayTimezone);
             $row["starts"] = $dt->format("Y-m-d H:i:s");
 
             if (isset($row['length'])) {
