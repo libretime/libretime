@@ -131,7 +131,7 @@ class Application_Service_ShowFormService
         }
 
         $showStart = $ccShowDay->getLocalStartDateAndTime();
-        $showEnd = $ccShowDay->getLocalEndDateAndTime($showStart);
+        $showEnd = $ccShowDay->getLocalEndDateAndTime();
 
         //check if the first show is in the past
         if ($ccShowDay->isShowStartInPast()) {
