@@ -743,14 +743,23 @@ SQL;
          */
         else if (count($ccShowInstances) >= 1) {
             $lastShowDays = array();
+
+            //get the show's timezone
+            $ccShow = CcShowQuery::create()->findPk($showId);
+            if ($ccShow->isRepeating()) {
+                $showTimezone = $ccShow->getFirstRepeatingCcShowDay()->getDbTimezone();
+            } else {
+                $showTimezone = $ccShow->getFirstCcShowDay()->getDbTimezone();
+            }
+
             /* Creates an array where the key is the day of the week (monday,
              * tuesday, etc.) and the value is the last show date for each
              * day of the week. We will use this array to update the last_show
              * for each cc_show_days entry of a cc_show
              */
             foreach ($ccShowInstances as $instance) {
-                $instanceStartDT = new DateTime($instance->getDbStarts(),
-                    new DateTimeZone("UTC"));
+                $instanceStartDT = $instance->getDbStarts(null);
+                $instanceStartDT->setTimezone(new DateTimeZone($showTimezone));
                 $lastShowDays[$instanceStartDT->format("w")] = $instanceStartDT;
             }
 
