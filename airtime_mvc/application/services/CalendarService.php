@@ -238,7 +238,7 @@ class Application_Service_CalendarService
             throw new Exception(_("Permission denied"));
         }
 
-        if ($this->ccShow->getFirstCcShowDay()->isRepeating()) {
+        if ($this->ccShow->isRepeating()) {
             throw new Exception(_("Can't drag and drop repeating shows"));
         }
 
