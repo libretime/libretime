@@ -794,6 +794,9 @@ SQL;
         self::updatePastFilesIsScheduled();
         $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
+        $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $utcTimezone = new DateTimeZone("UTC");
+        
         foreach ($results['aaData'] as &$row) {
             $row['id'] = intval($row['id']);
 
@@ -843,13 +846,13 @@ SQL;
 
             $len_formatter = new LengthFormatter($row_length);
             $row['length'] = $len_formatter->format();
-
+            
             //convert mtime and utime to localtime
-            $row['mtime'] = new DateTime($row['mtime'], new DateTimeZone('UTC'));
-            $row['mtime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+            $row['mtime'] = new DateTime($row['mtime'], $utcTimezone);
+            $row['mtime']->setTimeZone($displayTimezone);
             $row['mtime'] = $row['mtime']->format('Y-m-d H:i:s');
-            $row['utime'] = new DateTime($row['utime'], new DateTimeZone('UTC'));
-            $row['utime']->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+            $row['utime'] = new DateTime($row['utime'], $utcTimezone);
+            $row['utime']->setTimeZone($displayTimezone);
             $row['utime'] = $row['utime']->format('Y-m-d H:i:s');
 
             // we need to initalize the checkbox and image row because we do not retrieve
