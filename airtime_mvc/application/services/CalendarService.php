@@ -184,6 +184,11 @@ class Application_Service_CalendarService
                         "name"=> _("Delete This Instance and All Following"),
                         "icon" => "delete",
                         "url" => $baseUrl."schedule/delete-show");
+                } elseif ($populateInstance) {
+                    $menu["del"] = array(
+                        "name"=> _("Delete"),
+                        "icon" => "delete",
+                        "url" => $baseUrl."schedule/delete-show-instance");
                 } else {
                     $menu["del"] = array(
                         "name"=> _("Delete"),
