@@ -1030,11 +1030,6 @@ SQL;
                 if ($this->isUpdate) {
                     if ($this->hasInstance($utcStartDateTime)) {
                         $ccShowInstance = $this->getInstance($utcStartDateTime);
-                        // don't update instances that have been edited out of the repeating sequence
-                        if ($ccShowInstance->getDbModifiedInstance() ||
-                            in_array($ccShowInstance->getDbId(), $this->ccShow->getEditedRepeatingInstanceIds())) {
-                            continue;
-                        }
                         $newInstance = false;
                         $updateScheduleStatus = true;
                     } else {
@@ -1128,11 +1123,6 @@ SQL;
                  */
                 if ($this->isUpdate && $this->hasInstance($utcStartDateTime)) {
                     $ccShowInstance = $this->getInstance($utcStartDateTime);
-                    // don't update instances that have been edited out of the repeating sequence
-                    if ($ccShowInstance->getDbModifiedInstance() ||
-                        in_array($ccShowInstance->getDbId(), $this->ccShow->getEditedRepeatingInstanceIds())) {
-                        continue;
-                    }
                     $newInstance = false;
                     $updateScheduleStatus = true;
                 } else {
