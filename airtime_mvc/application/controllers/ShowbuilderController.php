@@ -150,11 +150,13 @@ class ShowbuilderController extends Zend_Controller_Action
         $from = $request->getParam("from", $now);
         $to   = $request->getParam("to", $now + (24*60*60));
 
-        $start = DateTime::createFromFormat("U", $from, new DateTimeZone("UTC"));
-        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $utcTimezone = new DateTimeZone("UTC");
+        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
 
-        $end = DateTime::createFromFormat("U", $to, new DateTimeZone("UTC"));
-        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $start = DateTime::createFromFormat("U", $from, $utcTimezone);
+        $start->setTimezone($displayTimeZone);
+        $end = DateTime::createFromFormat("U", $to, $utcTimezone);
+        $end->setTimezone($displayTimeZone);
 
         $form = new Application_Form_ShowBuilder();
         $form->populate(array(
@@ -218,10 +220,12 @@ class ShowbuilderController extends Zend_Controller_Action
             return;
         }
 
+        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+        
         $start = $instance->getDbStarts(null);
-        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $start->setTimezone($displayTimeZone);
         $end = $instance->getDbEnds(null);
-        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $end->setTimezone($displayTimeZone);
 
         $show_name = $instance->getCcShow()->getDbName();
         $start_time = $start->format("Y-m-d H:i:s");

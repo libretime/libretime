@@ -33,11 +33,14 @@ class ListenerstatController extends Zend_Controller_Action
         $now = time();
         $from = $request->getParam("from", $now - (24*60*60));
         $to = $request->getParam("to", $now);
+        
+        $utcTimezone = new DateTimeZone("UTC");
+        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
 
-        $start = DateTime::createFromFormat("U", $from, new DateTimeZone("UTC"));
-        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        $end = DateTime::createFromFormat("U", $to, new DateTimeZone("UTC"));
-        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $start = DateTime::createFromFormat("U", $from, $utcTimezone);
+        $start->setTimezone($displayTimeZone);
+        $end = DateTime::createFromFormat("U", $to, $utcTimezone);
+        $end->setTimezone($displayTimeZone);
 
         $form = new Application_Form_DateRange();
         $form->populate(array(
