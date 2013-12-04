@@ -435,23 +435,22 @@ class ApiController extends Zend_Controller_Action
 
     public function recordedShowsAction()
     {
-        $today_timestamp = date("Y-m-d H:i:s");
-        $now             = new DateTime($today_timestamp);
-        $end_timestamp   = $now->add(new DateInterval("PT2H"));
-        $end_timestamp   = $end_timestamp->format("Y-m-d H:i:s");
+        $utcTimezone = new DateTimeZone("UTC");
+        $nowDateTime = new DateTime("now", $utcTimezone);
+        $endDateTime = clone $nowDateTime;
+        $endDateTime = $endDateTime->add(new DateInterval("PT2H"));
 
         $this->view->shows =
             Application_Model_Show::getShows(
-                Application_Common_DateHelper::ConvertToUtcDateTime($today_timestamp, date_default_timezone_get()),
-                Application_Common_DateHelper::ConvertToUtcDateTime($end_timestamp, date_default_timezone_get()),
+                $nowDateTime,
+                $endDateTime,
                 $onlyRecord = true);
 
         $this->view->is_recording = false;
-        $this->view->server_timezone = Application_Model_Preference::GetTimezone();
+        $this->view->server_timezone = Application_Model_Preference::GetDefaultTimezone();
 
-        $rows = Application_Model_Show::getCurrentShow($today_timestamp);
-        Application_Model_Show::convertToLocalTimeZone($rows, array("starts", "ends", "start_timestamp", "end_timestamp"));
-
+        $rows = Application_Model_Show::getCurrentShow();
+        
         if (count($rows) > 0) {
             $this->view->is_recording = ($rows[0]['record'] == 1);
         }
