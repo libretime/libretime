@@ -340,6 +340,7 @@ class Application_Service_CalendarService
         }
     }
 
+    //TODO move the method resizeShow from Application_Model_Show here.
     public function resizeShow($deltaDay, $deltaMin)
     {
         try {

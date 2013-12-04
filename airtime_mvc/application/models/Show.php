@@ -425,55 +425,6 @@ SQL;
     }
 
     /**
-     * Get start time and absolute start date for a recorded
-     * shows rebroadcasts. For example start date format would be
-     * YYYY-MM-DD and time would HH:MM
-     *
-     * @return array
-     *      array of associate arrays containing "start_date" and "start_time"
-     */
-    public function getRebroadcastsAbsolute()
-    {
-        $sql = <<<SQL
-SELECT starts
-FROM cc_show_instances
-WHERE instance_id =
-    (SELECT id
-     FROM cc_show_instances
-     WHERE show_id = :showId
-     ORDER BY starts LIMIT 1)
-  AND rebroadcast = 1
-ORDER BY starts
-SQL;
-
-        $rebroadcasts = Application_Common_Database::prepareAndExecute( $sql,
-            array( 'showId' => $this->getId() ), 'all' );
-
-        $rebroadcastsLocal = array();
-        //get each rebroadcast show in cc_show_instances, convert to current timezone to get start date/time.
-        /*TODO: refactor the following code to get rid of the $i temporary
-            variable. -- RG*/
-        $i = 0;
-
-        $utc = new DateTimeZone("UTC");
-        $dtz = new DateTimeZone( date_default_timezone_get() );
-
-        foreach ($rebroadcasts as $show) {
-            $startDateTime = new DateTime($show["starts"], $utc);
-            $startDateTime->setTimezone($dtz);
-
-            $rebroadcastsLocal[$i]["start_date"] =
-                $startDateTime->format("Y-m-d");
-            $rebroadcastsLocal[$i]["start_time"] =
-                $startDateTime->format("H:i");
-
-            $i = $i + 1;
-        }
-
-        return $rebroadcastsLocal;
-    }
-
-    /**
      * Get start time and relative start date for a recorded
      * shows rebroadcasts. For example start date format would be
      * "x days" and time would HH:MM:SS
@@ -779,67 +730,6 @@ SQL;
             ':add_show_duration' => $p_data['add_show_duration'],
             ':show_id' => $p_data['add_show_id'],
             ':timestamp' => $timestamp), "execute");
-    }
-
-    private function updateStartDateTime($p_data, $p_endDate)
-    {
-        $date = new Application_Common_DateHelper;
-        $timestamp = $date->getTimestamp();
-
-        //TODO fix this from overwriting info.
-        $sql = "UPDATE cc_show_days "
-                ."SET start_time = :start_time::time, "
-                ."first_show = :start_date::date, ";
-        if (strlen ($p_endDate) == 0) {
-            $sql .= "last_show = NULL ";
-        } else {
-            $sql .= "last_show = :end_date::date";
-        }
-        $sql .= "WHERE show_id = :show_id";
-
-        $map = array(":start_time" => $p_data['add_show_start_time'],
-            ':start_date' => $p_data['add_show_start_date'],
-            ':end_date' => $p_endDate,
-            ':show_id' => $p_data['add_show_id'],
-        );
-
-        $res = Application_Common_Database::prepareAndExecute($sql, $map, 
-            Application_Common_Database::EXECUTE);
-
-        $dtOld = new DateTime($this->getStartDate()." ".$this->getStartTime(), new DateTimeZone("UTC"));
-        $dtNew = new DateTime($p_data['add_show_start_date']." ".$p_data['add_show_start_time'], 
-                new DateTimeZone(date_default_timezone_get()));
-        $diff = $dtOld->getTimestamp() - $dtNew->getTimestamp();
-
-        $sql = "UPDATE cc_show_instances "
-                ."SET starts = starts + :diff1::interval, "
-                ."ends = ends + :diff2::interval "
-                ."WHERE show_id = :show_id "
-                ."AND starts > :timestamp::timestamp";
-        $map = array(
-            ":diff1"=>"$diff sec",
-            ":diff2"=>"$diff sec",
-            ":show_id"=>$p_data['add_show_id'],
-            ":timestamp"=>$timestamp,
-        );
-        $res = Application_Common_Database::prepareAndExecute($sql, $map, 
-            Application_Common_Database::EXECUTE);
-
-        $showInstanceIds = $this->getAllFutureInstanceIds();
-        if (count($showInstanceIds) > 0 && $diff != 0) {
-            $showIdsImploded = implode(",", $showInstanceIds);
-            $sql = "UPDATE cc_schedule "
-                    ."SET starts = starts + :diff1::interval, "
-                    ."ends = ends + :diff2::interval "
-                    ."WHERE instance_id IN (:show_ids)";
-            $map = array(
-                ":diff1"=>"$diff sec",
-                ":diff2"=>"$diff sec",
-                ":show_ids"=>$showIdsImploded,           
-            );
-            $res = Application_Common_Database::prepareAndExecute($sql, $map, 
-                Application_Common_Database::EXECUTE);
-        }
     }
 
     public function getDuration($format=false)
@@ -1183,47 +1073,6 @@ SQL;
         $percent = ceil(( $time_filled / $durationSeconds) * 100);
 
         return $percent;
-    }
-
-    /* Takes in a UTC DateTime object.
-     * Converts this to local time, since cc_show days
-     * requires local time. */
-    public function setShowFirstShow($p_dt)
-    {
-        //clone object since we are modifying it and it was passed by reference.
-        $dt = clone $p_dt;
-
-        $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
-
-        $showDay = CcShowDaysQuery::create()
-        ->filterByDbShowId($this->_showId)
-        ->findOne();
-
-        $showDay->setDbFirstShow($dt)->setDbStartTime($dt)
-        ->save();
-
-        //Logging::info("setting show's first show.");
-    }
-
-    /* Takes in a UTC DateTime object
-     * Converts this to local time, since cc_show days
-     * requires local time. */
-    public function setShowLastShow($p_dt)
-    {
-        //clone object since we are modifying it and it was passed by reference.
-        $dt = clone $p_dt;
-
-        $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
-
-        //add one day since the Last Show date in CcShowDays is non-inclusive.
-        $dt->add(new DateInterval("P1D"));
-
-        $showDay = CcShowDaysQuery::create()
-        ->filterByDbShowId($this->_showId)
-        ->findOne();
-
-        $showDay->setDbLastShow($dt)
-        ->save();
     }
 
     /**
