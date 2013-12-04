@@ -16,7 +16,7 @@ includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
 phpinifile="${configdir}/airtime.ini"
 OLDVERSION="$2"
-NEWVERSION="2.4.0"
+NEWVERSION="2.5.1"
 
 case "$1" in
   configure|reconfigure)
@@ -46,6 +46,8 @@ case "$1" in
       # temporarily disable an existing virtual host
       if [ -f /etc/$webserver/sites-available/airtime-vhost ]; then
         a2dissite airtime-vhost
+      elif [ -f /etc/$webserver/sites-available/airtime-vhost.conf ]; then
+        a2dissite airtime-vhost.conf
       fi
 
       db_get airtime/apache-servername
@@ -57,12 +59,12 @@ case "$1" in
         install -d -m755 /etc/$webserver/sites-available/
       fi
       sed -e "s/__SERVER_ADMIN__/${SA}/;s/__SERVER_NAME__/${SN}/" \
-        ${a2tplfile} > /etc/$webserver/sites-available/airtime-vhost
+        ${a2tplfile} > /etc/$webserver/sites-available/airtime-vhost.conf
 
       command -v a2ensite > /dev/null
       RETVAL=$?
       if [ $RETVAL -eq 0 ]; then
-      a2ensite airtime-vhost
+        a2ensite airtime-vhost.conf
       fi
 
       # insert a specific hostname, if provided, into API configuration
@@ -92,7 +94,9 @@ case "$1" in
       db_get airtime/apache-deldefault
       if [ "$RET" == "remove default" ]; then
         if [ -f /etc/apache2/sites-available/default ]; then
-        a2dissite default
+          a2dissite default
+        elif [ -f /etc/apache2/sites-available/000-default.conf ]; then
+          a2dissite 000-default.conf
         fi
       fi
 
@@ -154,6 +158,7 @@ case "$1" in
       if [ -f /etc/default/monit ]; then
         echo "Setting up monit configuration..."
          sed -i 's:startup=.*:startup=1:g' /etc/default/monit
+         sed -i 's:START=.*:START=yes:g' /etc/default/monit
 
            MONITCONFIGURED=$(grep "include /etc/monit/conf.d" /etc/monit/monitrc || true)
            if [ -z "$MONITCONFIGURED" ]; then
