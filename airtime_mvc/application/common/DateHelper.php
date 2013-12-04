@@ -111,43 +111,6 @@ class Application_Common_DateHelper
         return $this->_dateTime;
     }
 
-    /**
-     * Returns the offset in seconds, between local and UTC timezones.
-     * E.g., if local timezone is -4, this function
-     * returns -14400.
-     *
-     * @return type     offset in int, between local and UTC timezones
-     */
-    function getLocalTimeZoneOffset() {
-        $dateTime = new DateTime("@".$this->_dateTime, new DateTimeZone("UTC"));
-        $timezone = new DateTimeZone(date_default_timezone_get());
-        return $timezone->getOffset($dateTime);
-    }
-
-    /**
-     * Returns the offset hour in int, between local and UTC timezones.
-     * E.g., if local timezone is -4:30, this function
-     * returns -4.
-     *
-     * @return type     offset hour in int, between local and UTC timezones
-     */
-    function getLocalOffsetHour() {
-        $offset = $this->getLocalTimeZoneOffset();
-        return (int)($offset / 3600);
-    }
-
-    /**
-     * Returns the offset minute in int, between local and UTC timezones.
-     * E.g., if local timezone is -4:30, this function
-     * returns -30.
-     *
-     * @return type     offset minute in int, between local and UTC timezones
-     */
-    function getLocalOffsetMinute() {
-        $offset = $this->getLocalTimeZoneOffset();
-        return (int)(($offset % 3600) / 60);
-    }
-
     public static function TimeDiff($time1, $time2)
     {
         return strtotime($time2) - strtotime($time1);

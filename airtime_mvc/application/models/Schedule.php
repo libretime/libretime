@@ -72,25 +72,27 @@ SQL;
             return array();
         }
 
-        $date = new Application_Common_DateHelper;
-        $timeNow = $date->getTimestamp();
-        $utcTimeNow = $date->getUtcTimestamp();
+        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+        $displayNow = new DateTime("now", $displayTimeZone);
+        
+        $utcNow = clone $displayNow;
+        $utcNow->setTimezone(new DateTimeZone("UTC"));
 
-        $shows = Application_Model_Show::getPrevCurrentNext($utcTimeNow);
+        $shows = Application_Model_Show::getPrevCurrentNext($utcNow->format("Y-m-d H:i:s"));
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
-        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcTimeNow);
+        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow->format("Y-m-d H:i:s"));
 
         $range = array("env"=>APPLICATION_ENV,
-            "schedulerTime"=>$timeNow,
+            "schedulerTime"=> $displayNow->format("Y-m-d H:i:s"),
             "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
             "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
             "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],
-            "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z")
+            "timezone"=> $displayNow->format("T"),
+            "timezoneOffset"=> $displayNow->format("Z")
         );
 
         return $range;
