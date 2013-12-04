@@ -172,30 +172,97 @@ SQL;
         $show->delete();
     }
 
-    public function resizeShow($deltaDay, $deltaMin)
+    public function resizeShow($deltaDay, $deltaMin, $instanceId)
     {
         $con = Propel::getConnection();
 
         if ($deltaDay > 0) {
             return _("Shows can have a max length of 24 hours.");
         }
-        
+
         $utc = new DateTimeZone("UTC");
-        
+
         $nowDateTime = new DateTime("now", $utc);
 
-        $showInstances = CcShowInstancesQuery::create()
-            ->filterByDbShowId($this->_showId)
-            ->find($con);
+        //keep track of cc_show_day entries we need to update
+        $showDayIds = array();
+
+        /*
+         * If the resized show is an edited instance of a repeating show we
+         * need to treat it as a separate show and not resize the other instances
+         * 
+         * Also, if the resized show has edited instances, we need to exclude
+         * those from the resize
+         */
+        $ccShow = CcShowQuery::create()->findPk($this->_showId);
+        if ($ccShow->isRepeating()) {
+
+            //convert instance to local timezone
+            $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
+            $startsDT = $ccShowInstance->getDbStarts(null);
+            $timezone = $ccShow->getFirstCcShowDay()->getDbTimezone();
+            $startsDT->setTimezone(new DateTimeZone($timezone));
+
+            /* Get cc_show_day for the current instance. If we don't find one
+             * we know it is a repeat interval of one of cc_show_days first
+             * show and we can assume we aren't resizing a modified instance
+             */
+            $ccShowDay = CcShowDaysQuery::create()
+                ->filterByDbFirstShow($startsDT->format("Y-m-d"))
+                ->filterByDbStartTime($startsDT->format("H:i:s"))
+                ->filterByDbShowId($this->_showId)
+                ->findOne();
+
+            /* Check if this cc_show_day rule is non-repeating. If it is, then
+             * we know this instance was edited out of the repeating sequence
+             */
+            if (!$ccShowDay || $ccShowDay->getDbRepeatType() != -1) {
+                $ccShowDays = $ccShow->getRepeatingCcShowDays();
+                foreach ($ccShowDays as $day) {
+                    array_push($showDayIds, $day->getDbId());
+                }
+
+                $excludeIds = $ccShow->getEditedRepeatingInstanceIds();
+
+                //exlcude edited instances from resize
+                $showInstances = CcShowInstancesQuery::create()
+                    ->filterByDbShowId($this->_showId)
+                    ->filterByDbModifiedInstance(false)
+                    ->filterByDbId($excludeIds, criteria::NOT_IN)
+                    ->find();
+            } elseif ($ccShowDay->getDbRepeatType() == -1) {
+                array_push($showDayIds, $ccShowDay->getDbId());
+
+                //treat edited instance as separate show for resize
+                $showInstances = CcShowInstancesQuery::create()
+                    ->filterByDbId($instanceId)
+                    ->find();
+            }
+        } else {
+            $ccShowDays = $ccShow->getCcShowDayss();
+            foreach ($ccShowDays as $day) {
+                array_push($showDayIds, $day->getDbId());
+            }
+
+            $showInstances = CcShowInstancesQuery::create()
+                ->filterByDbShowId($this->_showId)
+                ->find($con);
+        }
 
         /* Check two things:
            1. If the show being resized and any of its repeats end in the past
            2. If the show being resized and any of its repeats overlap
               with other scheduled shows */
 
+        //keep track of instance ids for update show instances start/end times
+        $instanceIds = array();
+
+        //check if new show time overlaps with any other shows
         foreach ($showInstances as $si) {
-            $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
-            $endsDateTime   = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
+            array_push($instanceIds, $si->getDbId());
+
+            $startsDateTime = $si->getDbStarts(null);
+            $endsDateTime   = $si->getDbEnds(null);
 
             /* The user is moving the show on the calendar from the perspective
                 of local time.  * incase a show is moved across a time change
@@ -204,19 +271,19 @@ SQL;
             $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
             $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
 
-            $newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
+            //$newStartsDateTime = Application_Model_ShowInstance::addDeltas($startsDateTime, $deltaDay, $deltaMin);
             $newEndsDateTime   = Application_Model_ShowInstance::addDeltas($endsDateTime, $deltaDay, $deltaMin);
-            
+
             if ($newEndsDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
                 return _("End date/time cannot be in the past");
             }
 
             //convert our new starts/ends to UTC.
-            $newStartsDateTime->setTimezone($utc);
+            //$newStartsDateTime->setTimezone($utc);
             $newEndsDateTime->setTimezone($utc);
 
             $overlapping = Application_Model_Schedule::checkOverlappingShows(
-                $newStartsDateTime, $newEndsDateTime, true, $si->getDbId());
+                $startsDateTime, $newEndsDateTime, true, $si->getDbId());
 
             if ($overlapping) {
                 return _("Cannot schedule overlapping shows.\nNote: Resizing a repeating show ".
@@ -228,39 +295,30 @@ SQL;
         $hours = ($hours > 0) ? floor($hours) : ceil($hours);
         $mins  = abs($deltaMin % 60);
 
-        //current timesamp in UTC.
-        $current_timestamp = gmdate("Y-m-d H:i:s");
-
-        $sql_gen = <<<SQL
-UPDATE cc_show_instances
-SET ends = (ends + :deltaDay1::INTERVAL + :interval1::INTERVAL)
-WHERE (show_id = :show_id1
-       AND ends > :current_timestamp1)
-  AND ((ends + :deltaDay2::INTERVAL + :interval2::INTERVAL - starts) <= interval '24:00')
-SQL;
+        $sql_gen = "UPDATE cc_show_instances ".
+            "SET ends = (ends + :deltaDay1::INTERVAL + :interval1::INTERVAL) ".
+            "WHERE (id IN (".implode($instanceIds, ",").") ".
+            "AND ends > :current_timestamp1) ".
+            "AND ((ends + :deltaDay2::INTERVAL + :interval2::INTERVAL - starts) <= interval '24:00')";
 
         Application_Common_Database::prepareAndExecute($sql_gen,
             array(
                 ':deltaDay1'          => "$deltaDay days",
                 ':interval1'          => "$hours:$mins",
-                ':show_id1'           =>  $this->_showId,
-                ':current_timestamp1' =>  $current_timestamp,
+                ':current_timestamp1' =>  $nowDateTime->format("Y-m-d H:i:s"),
                 ':deltaDay2'          => "$deltaDay days",
                 ':interval2'          => "$hours:$mins"
             ), "execute");
 
-        $sql_gen = <<<SQL
-UPDATE cc_show_days
-SET duration = (CAST(duration AS interval) + :deltaDay3::INTERVAL + :interval3::INTERVAL)
-WHERE show_id = :show_id2
-  AND ((CAST(duration AS interval) + :deltaDay4::INTERVAL + :interval4::INTERVAL) <= interval '24:00')
-SQL;
+        $sql_gen = "UPDATE cc_show_days ".
+            "SET duration = (CAST(duration AS interval) + :deltaDay3::INTERVAL + :interval3::INTERVAL) ".
+            "WHERE id IN (".implode($showDayIds, ",").") ".
+            "AND ((CAST(duration AS interval) + :deltaDay4::INTERVAL + :interval4::INTERVAL) <= interval '24:00')";
 
         Application_Common_Database::prepareAndExecute($sql_gen,
             array(
                 ':deltaDay3'          => "$deltaDay days",
                 ':interval3'          => "$hours:$mins",
-                ':show_id2'           =>  $this->_showId,
                 ':deltaDay4'          => "$deltaDay days",
                 ':interval4'          => "$hours:$mins"
             ), "execute");
@@ -278,8 +336,8 @@ SQL;
             CcShowInstancesPeer::clearInstancePool();
 
             $instances = CcShowInstancesQuery::create()
-                ->filterByDbEnds($current_timestamp, Criteria::GREATER_THAN)
-                ->filterByDbShowId($this->_showId)
+                ->filterByDbEnds($nowDateTime->format("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+                ->filterByDbId($instanceIds, Criteria::IN)
                 ->find($con);
 
             foreach ($instances as $instance) {
