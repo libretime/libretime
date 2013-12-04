@@ -134,9 +134,6 @@ class Application_Service_ShowService
             $updateCriteria->add(CcSchedulePeer::INSTANCE_ID, $ccShowInstance->getDbId());
             BasePeer::doUpdate($selectCriteria, $updateCriteria, $con);
 
-            $ccShowInstance
-                ->setDbLastScheduled(gmdate("Y-m-d H:i:s"))
-                ->save();
             $ccShowInstance->updateDbTimeFilled($con);
             $ccShowInstance->updateScheduleStatus($con);
 
