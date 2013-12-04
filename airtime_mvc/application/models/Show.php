@@ -977,8 +977,8 @@ SQL;
         $content_count = Application_Model_ShowInstance::getContentCount(
             $p_start, $p_end);
         $isFull = Application_Model_ShowInstance::getIsFull($p_start, $p_end);
-        $userTimezone = Application_Model_Preference::GetUserTimezone();
-        $displayTimezone = new DateTimeZone($userTimezone);
+
+        $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utc = new DateTimeZone("UTC");
         $now = new DateTime("now", $utc);
 
