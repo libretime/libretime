@@ -1091,8 +1091,8 @@ SQL;
         $content_count = Application_Model_ShowInstance::getContentCount(
             $p_start, $p_end);
         $isFull = Application_Model_ShowInstance::getIsFull($p_start, $p_end);
-        $timezone = date_default_timezone_get();
-        $current_timezone = new DateTimeZone($timezone);
+        $userTimezone = Application_Model_Preference::GetUserTimezone();
+        $displayTimezone = new DateTimeZone($userTimezone);
         $utc = new DateTimeZone("UTC");
         $now = new DateTime("now", $utc);
 
@@ -1124,8 +1124,8 @@ SQL;
                 }
             }
 
-            $startsDT->setTimezone($current_timezone);
-            $endsDT->setTimezone($current_timezone);
+            $startsDT->setTimezone($displayTimezone);
+            $endsDT->setTimezone($displayTimezone);
 
             $options["show_empty"] = (array_key_exists($show['instance_id'],
                 $content_count)) ? 0 : 1;
