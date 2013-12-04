@@ -95,15 +95,14 @@ class CcShow extends BaseCcShow {
      */
     public function isRepeating()
     {
-        //get ALL cc_show_day entries
+        //get all cc_show_day entries that are repeating
         $ccShowDays = CcShowDaysQuery::create()
             ->filterByDbShowId($this->id)
+            ->filterByDbRepeatType(0, Criteria::GREATER_EQUAL)
             ->find();
 
-        foreach ($ccShowDays as $day) {
-            if ($day->getDbRepeatType() >= 0) {
-                return true;
-            }
+        if (!$ccShowDays->isEmpty()) {
+            return true;
         }
 
         return false;
