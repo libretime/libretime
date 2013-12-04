@@ -16,7 +16,7 @@ includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
 phpinifile="${configdir}/airtime.ini"
 OLDVERSION="$2"
-NEWVERSION="2.5.0"
+NEWVERSION="2.5.1"
 
 case "$1" in
   configure|reconfigure)
