@@ -1,8 +1,32 @@
+airtime (2.5.1-1) unstable; urgency=low
+
+  * Nightly development snapshot of Airtime 2.5.x series
+
+ -- Daniel James <daniel@64studio.com>  Thu, 24 Oct 2013 11:04:56 +0100
+
+airtime (2.5.0-1) unstable; urgency=low
+
+  * Upstream 2.5.0-ga release
+
+ -- Daniel James <daniel@64studio.com>  Wed, 23 Oct 2013 14:56:21 +0100
+
+airtime (2.4.1-1) unstable; urgency=low
+
+  * Upstream 2.4.1-ga release
+
+ -- Daniel James <daniel@64studio.com>  Wed, 28 Aug 2013 11:53:10 +0100
+
 airtime (2.4.0-1) unstable; urgency=low
 
-  * Nightly development snapshot of Airtime 2.4.x series
+  * Upstream 2.4.0-ga release
 
- -- Daniel James <daniel@64studio.com>  Tue, 19 Mar 2013 16:39:23 +0000
+ -- Daniel James <daniel@64studio.com>  Tue, 25 Jun 2013 14:26:55 +0100
+
+airtime (2.3.1-1) unstable; urgency=low
+
+  * Upstream 2.3.1 release
+
+ -- Daniel James <daniel@64studio.com>  Wed, 20 Mar 2013 09:43:15 +0000
 
 airtime (2.3.0-2) unstable; urgency=low
 
