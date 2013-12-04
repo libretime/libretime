@@ -854,6 +854,13 @@ SQL;
             $row['utime'] = new DateTime($row['utime'], $utcTimezone);
             $row['utime']->setTimeZone($displayTimezone);
             $row['utime'] = $row['utime']->format('Y-m-d H:i:s');
+            
+            //need to convert last played to localtime if it exists.
+            if (isset($row['lptime'])) {
+            	$row['lptime'] = new DateTime($row['lptime'], $utcTimezone);
+            	$row['lptime']->setTimeZone($displayTimezone);
+            	$row['lptime'] = $row['lptime']->format('Y-m-d H:i:s');
+            }
 
             // we need to initalize the checkbox and image row because we do not retrieve
             // any data from the db for these and datatables will complain
