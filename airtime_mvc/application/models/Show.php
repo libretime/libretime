@@ -199,8 +199,7 @@ SQL;
 
             //convert instance to local timezone
             $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
-            $startsDT = new DateTime($ccShowInstance->getDbStarts(),
-                new DateTimeZone("UTC"));
+            $startsDT = $ccShowInstance->getDbStarts(null);
             $timezone = $ccShow->getFirstCcShowDay()->getDbTimezone();
             $startsDT->setTimezone(new DateTimeZone($timezone));
 
@@ -262,8 +261,8 @@ SQL;
         foreach ($showInstances as $si) {
             array_push($instanceIds, $si->getDbId());
 
-            $startsDateTime = new DateTime($si->getDbStarts(), new DateTimeZone("UTC"));
-            $endsDateTime   = new DateTime($si->getDbEnds(), new DateTimeZone("UTC"));
+            $startsDateTime = $si->getDbStarts(null);
+            $endsDateTime   = $si->getDbEnds(null);
 
             /* The user is moving the show on the calendar from the perspective
                 of local time.  * incase a show is moved across a time change
@@ -296,9 +295,6 @@ SQL;
         $hours = ($hours > 0) ? floor($hours) : ceil($hours);
         $mins  = abs($deltaMin % 60);
 
-        //current timesamp in UTC.
-        $current_timestamp = gmdate("Y-m-d H:i:s");
-
         $sql_gen = "UPDATE cc_show_instances ".
             "SET ends = (ends + :deltaDay1::INTERVAL + :interval1::INTERVAL) ".
             "WHERE (id IN (".implode($instanceIds, ",").") ".
@@ -309,7 +305,7 @@ SQL;
             array(
                 ':deltaDay1'          => "$deltaDay days",
                 ':interval1'          => "$hours:$mins",
-                ':current_timestamp1' =>  $current_timestamp,
+                ':current_timestamp1' =>  $nowDateTime->format("Y-m-d H:i:s"),
                 ':deltaDay2'          => "$deltaDay days",
                 ':interval2'          => "$hours:$mins"
             ), "execute");
@@ -340,7 +336,7 @@ SQL;
             CcShowInstancesPeer::clearInstancePool();
 
             $instances = CcShowInstancesQuery::create()
-                ->filterByDbEnds($current_timestamp, Criteria::GREATER_THAN)
+                ->filterByDbEnds($nowDateTime->format("Y-m-d H:i:s"), Criteria::GREATER_THAN)
                 ->filterByDbId($instanceIds, Criteria::IN)
                 ->find($con);
 
