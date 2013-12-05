@@ -687,7 +687,8 @@ function setAddShowEvents(form) {
     		// calculate duration
     		var startDateTimeString = startDateString + " " + startTimeString;
     		var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
-    		calculateDuration(startDateTimeString, endDateTimeString);
+    		var timezone = $("#add_show_timezone").val();
+    		calculateDuration(startDateTimeString, endDateTimeString, timezone);
 	    }
 	});
 
@@ -718,7 +719,8 @@ function setAddShowEvents(form) {
     		// calculate duration
     		var startDateTimeString = startDateString + " " + startTimeString;
             var endDateTimeString = endDateString + " " + endTimeString;
-            calculateDuration(startDateTimeString, endDateTimeString);
+            var timezone = $("#add_show_timezone").val();
+            calculateDuration(startDateTimeString, endDateTimeString, timezone);
         }
 	});
 
@@ -736,13 +738,16 @@ function setAddShowEvents(form) {
         }
     })
 
-	function calculateDuration(startDateTime, endDateTime){
+	function calculateDuration(startDateTime, endDateTime, timezone){
 		var loadingIcon = $('#icon-loader-small');
 		
 		loadingIcon.show();
-		$.post(baseUrl+"Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
-		    $('#add_show_duration').val(JSON.parse(data));
-		    loadingIcon.hide();
+		$.post(
+			baseUrl+"Schedule/calculate-duration", 
+			{startTime: startDateTime, endTime: endDateTime, timezone: timezone}, 
+			function(data) {
+			    $('#add_show_duration').val(JSON.parse(data));
+			    loadingIcon.hide();
 		});
 	}
     

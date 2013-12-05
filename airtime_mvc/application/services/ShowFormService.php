@@ -470,11 +470,13 @@ class Application_Service_ShowFormService
         }
     }
 
-    public function calculateDuration($start, $end)
+    public function calculateDuration($start, $end, $timezone)
     {
         try {
-            $startDateTime = new DateTime($start);
-            $endDateTime = new DateTime($end);
+        	
+        	$tz = new DateTimeZone($timezone);
+            $startDateTime = new DateTime($start, $tz);
+            $endDateTime = new DateTime($end, $tz);
 
             $duration = $startDateTime->diff($endDateTime);
 
@@ -490,6 +492,7 @@ class Application_Service_ShowFormService
                 return $duration->format('%r%Hh %Im');
             }
         } catch (Exception $e) {
+        	Logging::info($e->getMessage());
             return "Invalid Date";
         }
     }

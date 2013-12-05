@@ -630,9 +630,12 @@ class ScheduleController extends Zend_Controller_Action
 
     public function calculateDurationAction()
     {
+    	$start = $this->_getParam('startTime');
+    	$end = $this->_getParam('endTime');
+    	$timezone = $this->_getParam('timezone');
+    	
         $service_showForm = new Application_Service_ShowFormService();
-        $result = $service_showForm->calculateDuration($this->_getParam('startTime'),
-            $this->_getParam('endTime'));
+        $result = $service_showForm->calculateDuration($start, $end, $timezone);
 
         echo Zend_Json::encode($result);
         exit();
