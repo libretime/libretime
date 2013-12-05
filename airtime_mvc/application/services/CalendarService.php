@@ -184,6 +184,11 @@ class Application_Service_CalendarService
                         "name"=> _("Delete This Instance and All Following"),
                         "icon" => "delete",
                         "url" => $baseUrl."schedule/delete-show");
+                } elseif ($populateInstance) {
+                    $menu["del"] = array(
+                        "name"=> _("Delete"),
+                        "icon" => "delete",
+                        "url" => $baseUrl."schedule/delete-show-instance");
                 } else {
                     $menu["del"] = array(
                         "name"=> _("Delete"),
@@ -233,7 +238,7 @@ class Application_Service_CalendarService
             throw new Exception(_("Permission denied"));
         }
 
-        if ($this->ccShow->getFirstCcShowDay()->isRepeating()) {
+        if ($this->ccShow->isRepeating()) {
             throw new Exception(_("Can't drag and drop repeating shows"));
         }
 
