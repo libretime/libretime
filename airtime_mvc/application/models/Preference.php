@@ -539,8 +539,6 @@ class Application_Model_Preference
     public static function SetDefaultTimezone($timezone)
     {
         self::setValue("timezone", $timezone);
-        //TODO check this if setting value failes.
-        date_default_timezone_set($timezone);
     }
 
     // Returns station default timezone (from preferences)
