@@ -44,47 +44,31 @@ class Application_Service_SchedulerService
      * Applies the show start difference to any scheduled items
      * 
      * @param $instanceIds
-     * @param $diff
-     * @param $newStart
+     * @param $diff (integer, difference between unix epoch in seconds)
      */
-    public static function updateScheduleStartTime($instanceIds, $diff=null, $newStart=null)
+    public static function updateScheduleStartTime($instanceIds, $diff)
     {
         $con = Propel::getConnection();
         if (count($instanceIds) > 0) {
             $showIdList = implode(",", $instanceIds);
 
-            if (is_null($diff)) {
-                $ccSchedule = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                    ->orderByDbStarts()
-                    ->limit(1)
-                    ->findOne();
-
-                if (!is_null($ccSchedule)) {
-                    $scheduleStartsEpoch = strtotime($ccSchedule->getDbStarts());
-                    $showStartsEpoch     = strtotime($newStart->format("Y-m-d H:i:s"));
-
-                    $diff = $showStartsEpoch - $scheduleStartsEpoch;
-                }
-            }
-
             $ccSchedules = CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                ->find();
+                ->find($con);
 
             $interval = new DateInterval("PT".abs($diff)."S");
             if ($diff < 0) {
                 $interval->invert = 1;
             }
             foreach ($ccSchedules as $ccSchedule) {
-                $start = new DateTime($ccSchedule->getDbStarts());
+                $start = $ccSchedule->getDbStarts(null);
                 $newStart = $start->add($interval);
-                $end = new DateTime($ccSchedule->getDbEnds());
+                $end = $ccSchedule->getDbEnds(null);
                 $newEnd = $end->add($interval);
                 $ccSchedule
-                    ->setDbStarts($newStart->format("Y-m-d H:i:s"))
-                    ->setDbEnds($newEnd->format("Y-m-d H:i:s"))
-                    ->save();
+                    ->setDbStarts($newStart)
+                    ->setDbEnds($newEnd)
+                    ->save($con);
             }
         }
     }

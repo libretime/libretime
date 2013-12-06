@@ -213,7 +213,7 @@ class Application_Common_DateHelper
             $dateTime = new DateTime($p_dateString, new DateTimeZone($timezone));
         }
         else {
-            $dateTime = new DateTime($p_dateString, new DateTimeZone(date_default_timezone_get()));
+            $dateTime = new DateTime($p_dateString, new DateTimeZone(Application_Model_Preference::GetTimezone()));
         }
         $dateTime->setTimezone(new DateTimeZone("UTC"));
 
