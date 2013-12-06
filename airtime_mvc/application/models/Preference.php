@@ -131,7 +131,7 @@ class Application_Model_Preference
         	if ($isUserValue && is_null($userId)) {
         		throw new Exception("User id can't be null for a user preference.");
         	}
-        	 
+
         	$res = $cache->fetch($key, $isUserValue, $userId);
         	if ($res !== false) {
         		//Logging::info("returning {$key} {$userId} from cache. = {$res}");
@@ -146,8 +146,7 @@ class Application_Model_Preference
             $paramMap[':key'] = $key;
             
             //For user specific preference, check if id matches as well
-            if (isset($userId)) {
-               
+            if ($isUserValue) {                         
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $userId;
             }
@@ -166,7 +165,7 @@ class Application_Model_Preference
                 $paramMap[':key'] = $key;
 
                 //For user specific preference, check if id matches as well
-                if (isset($userId)) {
+                if ($isUserValue) {
                     $sql .= " AND subjid = :id";
                     $paramMap[':id'] = $userId;
                 }
