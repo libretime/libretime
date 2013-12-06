@@ -778,12 +778,6 @@ SQL;
                         ->save();
                 }
             }
-
-            //remove the old repeating deleted instances.
-            /*CcShowInstancesQuery::create()
-                ->filterByDbShowId($showId)
-                ->filterByDbModifiedInstance(true)
-                ->delete();*/
         }
 
         return false;
