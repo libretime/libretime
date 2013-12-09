@@ -16,7 +16,7 @@ import base64
 import traceback
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.5.0"
+AIRTIME_VERSION = "2.5.1"
 
 
 # TODO : Place these functions in some common module. Right now, media

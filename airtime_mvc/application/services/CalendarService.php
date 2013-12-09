@@ -128,34 +128,35 @@ class Application_Service_CalendarService
 
             $excludeIds = $this->ccShow->getEditedRepeatingInstanceIds();
 
-            $isRepeating = true;
+            $isRepeating = $this->ccShow->isRepeating();
             $populateInstance = false;
-            if (in_array($this->ccShowInstance->getDbId(), $excludeIds)) {
+            if ($isRepeating && in_array($this->ccShowInstance->getDbId(), $excludeIds)) {
                 $populateInstance = true;
-                $isRepeating = false;
             }
 
             if (!$this->ccShowInstance->isRebroadcast() && $isAdminOrPM) {
                 if ($isRepeating) {
-                    $menu["edit"] = array(
-                        "name" => _("Edit"),
-                        "icon" => "edit",
-                        "items" => array());
+                    if ($populateInstance) {
+                        $menu["edit"] = array(
+                            "name" => _("Edit Show"),
+                            "icon" => "edit",
+                            "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
+                    } else {
+                        $menu["edit"] = array(
+                            "name" => _("Edit"),
+                            "icon" => "edit",
+                            "items" => array());
 
-                    $menu["edit"]["items"]["all"] = array(
-                        "name" => _("Edit Show"),
-                        "icon" => "edit",
-                        "url" => $baseUrl."Schedule/populate-show-form");
+                        $menu["edit"]["items"]["all"] = array(
+                            "name" => _("Edit Show"),
+                            "icon" => "edit",
+                            "url" => $baseUrl."Schedule/populate-show-form");
 
-                    $menu["edit"]["items"]["instance"] = array(
-                        "name" => _("Edit This Instance"),
-                        "icon" => "edit",
-                        "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
-                } elseif ($populateInstance) {
-                    $menu["edit"] = array(
-                        "name" => _("Edit Show"),
-                        "icon" => "edit",
-                        "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
+                        $menu["edit"]["items"]["instance"] = array(
+                            "name" => _("Edit This Instance"),
+                            "icon" => "edit",
+                            "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
+                        }
                 } else {
                     $menu["edit"] = array(
                         "name"=> _("Edit Show"),
