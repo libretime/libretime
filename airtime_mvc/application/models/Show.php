@@ -658,10 +658,7 @@ SQL;
      */
     public function isStartDateTimeInPast()
     {
-        $date = new Application_Common_DateHelper;
-        $current_timestamp = $date->getUtcTimestamp();
-
-        return ($current_timestamp > ($this->getStartDate()." ".$this->getStartTime()));
+        return (gmdate("Y-m-d H:i:s") > ($this->getStartDate()." ".$this->getStartTime()));
     }
 
     /**
@@ -702,9 +699,7 @@ SQL;
     {
         //need to update cc_show_instances, cc_show_days
         $con = Propel::getConnection();
-
-        $date = new Application_Common_DateHelper;
-        $timestamp = $date->getUtcTimestamp();
+        $timestamp = gmdate("Y-m-d H:i:s");
 
         $stmt =  $con->prepare("UPDATE cc_show_days "
                  ."SET duration = :add_show_duration "
@@ -1080,11 +1075,9 @@ SQL;
      */
     public static function getCurrentShow($timeNow=null)
     {
-        $CC_CONFIG = Config::getConfig();
         $con = Propel::getConnection();
         if ($timeNow == null) {
-            $date = new Application_Common_DateHelper;
-            $timeNow = $date->getUtcTimestamp();
+            $timeNow = gmdate("Y-m-d H:i:s");
         }
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = <<<SQL
@@ -1300,25 +1293,6 @@ SQL;
         }
 
         return Application_Common_Database::prepareAndExecute( $sql, $params, 'all');
-    }
-
-    /**
-     * Convert the columns given in the array $columnsToConvert in the
-     * database result $rows to local timezone.
-     *
-     * @param type $rows             arrays of arrays containing database query result
-     * @param type $columnsToConvert array of column names to convert
-     */
-    public static function convertToLocalTimeZone(&$rows, $columnsToConvert)
-    {
-        if (!is_array($rows)) {
-            return;
-        }
-        foreach ($rows as &$row) {
-            foreach ($columnsToConvert as $column) {
-                $row[$column] = Application_Common_DateHelper::ConvertToLocalDateTimeString($row[$column]);
-            }
-        }
     }
 
     public static function getMaxLengths()
