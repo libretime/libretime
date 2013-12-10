@@ -203,5 +203,6 @@ echo "----------------------------------------------------"
 echo "5. Run Airtime Install"
 echo "----------------------------------------------------"
 cd $SCRIPTPATH/../../install_minimal
-./airtime-install
+# Restart apache to clear php cache
 service apache2 restart
+./airtime-install
