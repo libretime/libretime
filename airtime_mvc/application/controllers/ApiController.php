@@ -80,13 +80,16 @@ class ApiController extends Zend_Controller_Action
 
             return;
         }
+        
+        $tz = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $now = new DateTime("now", $tz);
 
         $this->view->calendarInit = array(
-            "timestamp"      => time(),
-            "timezoneOffset" => date("Z"),
-            "timeScale"      => Application_Model_Preference::GetCalendarTimeScale(),
-            "timeInterval"   => Application_Model_Preference::GetCalendarTimeInterval(),
-            "weekStartDay"   => Application_Model_Preference::GetWeekStartDay()
+            "timestamp" => time(),
+            "timezoneOffset" => $now->format("Z"),
+            "timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
+            "timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
+            "weekStartDay" => Application_Model_Preference::GetWeekStartDay()
         );
 
         $this->_helper->json->sendJson(array());
@@ -283,7 +286,9 @@ class ApiController extends Zend_Controller_Action
                 }
 
                 // make getNextShows use end of day
-                $utcTimeEnd = Application_Common_DateHelper::GetDayEndTimestampInUtc();
+                $end = Application_Common_DateHelper::getTodayStationEndDateTime();
+                $end->setTimezone(new DateTimeZone("UTC"));
+                $utcTimeEnd = $end->format("Y-m-d H:i:s");
                 $result = array(
 					"env" => APPLICATION_ENV,
                     "schedulerTime" => $utcTimeNow,
@@ -351,13 +356,17 @@ class ApiController extends Zend_Controller_Action
             $utcDayStart = $weekStartDateTime->format("Y-m-d H:i:s");
             for ($i = 0; $i < 14; $i++) {
             	
+            	//have to be in station timezone when adding 1 day for daylight savings.
             	$weekStartDateTime->setTimezone($stationTimezone);
             	$weekStartDateTime->add(new DateInterval('P1D'));
+            	
+            	//convert back to UTC to get the actual timestamp used for search.
+            	$weekStartDateTime->setTimezone($utcTimezone);
             	
                 $utcDayEnd = $weekStartDateTime->format("Y-m-d H:i:s");
                 $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
-
+                
                 Application_Common_DateHelper::convertTimestamps(
                 	$shows,
                     array("starts", "ends", "start_timestamp","end_timestamp"),

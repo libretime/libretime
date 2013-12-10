@@ -45,23 +45,49 @@ class Application_Common_DateHelper
         return gmdate("H:i:s", $this->_dateTime);
     }
     
+    /**
+     *
+     * @return DateTime - YYYY-MM-DD 00:00 in station timezone of today
+     */
+    public static function getTodayStationStartDateTime()
+    {
+    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+    	$now = new DateTime("now", $stationTimezone);
+    	
+    	$now->setTime(0, 0, 0);
+    	
+    	return $now;
+    }
+    
+    /**
+     *
+     * @return DateTime - YYYY-MM-DD 00:00 in station timezone of tomorrow
+     */
+    public static function getTodayStationEndDateTime()
+    {
+    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+    	$now = new DateTime("now", $stationTimezone);
+    	 
+    	$now->add(new DateInterval("P1D"));
+    	$now->setTime(0, 0, 0);
+    	 
+    	return $now;
+    }
+    
     /** 
      *
      * @return DateTime - YYYY-MM-DD 00:00 in station timezone
      */
     public static function getWeekStartDateTime()
     {
-    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
-    	$now = new DateTime("now", $stationTimezone);
-    	//want it to be the start of the day.
-    	$now->setTime(0, 0, 0);
+    	$now = self::getTodayStationStartDateTime();
     	
         // our week starts on monday, but php week starts on sunday.
         $day = $now->format('w');
         if ($day == 0) {
         	$day = 7;
         }
-
+        
         $dayDiff = $day - 1;
         if ($dayDiff > 0) {
         	$now->sub(new DateInterval("P{$dayDiff}D"));
