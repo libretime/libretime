@@ -98,4 +98,8 @@ if (strcmp($version, "2.5.0") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.5.0/airtime-upgrade.php");
     pause();
 }
+if (strcmp($version, "2.5.1") < 0) {
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.5.1/airtime-upgrade.php");
+    pause();
+}
 echo "******************************* Upgrade Complete *******************************".PHP_EOL;
