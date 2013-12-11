@@ -67,7 +67,7 @@ class Application_Model_Preference
             elseif ($result == 1) {
             	
                 // result found
-                if (is_null($userId)) {
+                if (!$isUserValue) {
                     // system pref
                     $sql = "UPDATE cc_pref"
                     ." SET subjid = NULL, valstr = :value"
@@ -85,7 +85,7 @@ class Application_Model_Preference
             else {
             	
                 // result not found
-                if (is_null($userId)) {
+                if (!$isUserValue) {
                     // system pref
                     $sql = "INSERT INTO cc_pref (keystr, valstr)"
                     ." VALUES (:key, :value)";
