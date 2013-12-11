@@ -45,18 +45,71 @@ class Application_Common_DateHelper
         return gmdate("H:i:s", $this->_dateTime);
     }
     
-    /**
-     * Get the week start date of this week in the format
-     * YYYY-MM-DD
-     *
-     * @return String - week start date
-     */
-    function getWeekStartDate()
+    public static function getUserTimezoneOffset()
     {
+    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+    	$now = new DateTime("now", $userTimezone);
+    	
+    	return $now->format("Z");
+    }
+    
+    public static function getStationTimezoneOffset()
+    {
+    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+    	$now = new DateTime("now", $stationTimezone);
+    	
+    	return $now->format("Z");
+    }
+    
+    /**
+     *
+     * @return DateTime - YYYY-MM-DD 00:00 in station timezone of today
+     */
+    public static function getTodayStationStartDateTime()
+    {
+    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+    	$now = new DateTime("now", $stationTimezone);
+    	
+    	$now->setTime(0, 0, 0);
+    	
+    	return $now;
+    }
+    
+    /**
+     *
+     * @return DateTime - YYYY-MM-DD 00:00 in station timezone of tomorrow
+     */
+    public static function getTodayStationEndDateTime()
+    {
+    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+    	$now = new DateTime("now", $stationTimezone);
+    	 
+    	$now->add(new DateInterval("P1D"));
+    	$now->setTime(0, 0, 0);
+    	 
+    	return $now;
+    }
+    
+    /** 
+     *
+     * @return DateTime - YYYY-MM-DD 00:00 in station timezone
+     */
+    public static function getWeekStartDateTime()
+    {
+    	$now = self::getTodayStationStartDateTime();
+    	
         // our week starts on monday, but php week starts on sunday.
-        $startDate = date('w') == 0 ? date('Y-m-d', strtotime('monday last week')) : date('Y-m-d', strtotime('monday this week'));
-        $startDateTime = new DateTime($startDate);
-        return $startDateTime->format('Y-m-d H:i:s');
+        $day = $now->format('w');
+        if ($day == 0) {
+        	$day = 7;
+        }
+        
+        $dayDiff = $day - 1;
+        if ($dayDiff > 0) {
+        	$now->sub(new DateInterval("P{$dayDiff}D"));
+        }
+        
+        return $now;
     }
 
     /**
@@ -234,24 +287,6 @@ class Application_Common_DateHelper
         return $dateTime;
     }
     
-    /* Convenience method to return a date formatted into a String rather than a
-     * DateTime object. Note that if an empty string is provided for $p_dateString
-     * then the current time is provided.
-     *
-     * @param $p_dateString
-     *      Date string in UTC timezone.
-     * @param $p_format
-     *      Format which the string should be returned in.
-     *
-     * @return string
-     *      Date String in localtime
-     * */
-    public static function ConvertToLocalDateTimeString($p_dateString, $p_format="Y-m-d H:i:s"){
-        if (is_null($p_dateString) || strlen($p_dateString) == 0)
-            return $p_dateString;
-        return self::ConvertToLocalDateTime($p_dateString)->format($p_format);
-    }
-    
     public static function ConvertToUtcDateTimeString($p_dateString, $p_format="Y-m-d H:i:s"){
         if (is_null($p_dateString) || strlen($p_dateString) == 0)
             return $p_dateString;
@@ -323,6 +358,74 @@ class Application_Common_DateHelper
             }
         }
         return $retVal;
+    }
+    
+    /*
+     * @param $datetime string Y-m-d H:i:s in UTC timezone
+     * 
+     * @return string in $format default Y-m-d H:i:s in station timezone
+     */
+    public static function UTCStringToStationTimezoneString($datetime, $format="Y-m-d H:i:s") {
+    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+    	$utcTimezone = new DateTimeZone("UTC");
+    	
+    	$d = new DateTime($datetime, $utcTimezone);
+    	$d->setTimezone($stationTimezone);
+    	
+    	return $d->format($format);
+    }
+    
+    /*
+     * @param $datetime string Y-m-d H:i:s in UTC timezone
+    *
+    * @return string Y-m-d H:i:s in user's timezone
+    */
+    public static function UTCStringToUserTimezoneString($datetime, $format="Y-m-d H:i:s") {
+    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+    	$utcTimezone = new DateTimeZone("UTC");
+    	
+    	$d = new DateTime($datetime, $utcTimezone);
+    	$d->setTimezone($userTimezone);
+    	 
+    	return $d->format($format);
+    }
+    
+    /*
+     * @param $datetime string Y-m-d H:i:s in user timezone
+    *
+    * @return string Y-m-d H:i:s in UTC timezone
+    */
+    public static function UserTimezoneStringToUTCString($datetime, $format="Y-m-d H:i:s") {
+    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+    	$utcTimezone = new DateTimeZone("UTC");
+    	 
+    	$d = new DateTime($datetime, $userTimezone);
+    	$d->setTimezone($utcTimezone);
+    
+    	return $d->format($format);
+    }
+    
+    /**
+     * Convert the columns given in the array $columnsToConvert in the
+     * database result $rows to local timezone.
+     *
+     * @param array $rows             arrays of arrays containing database query result
+     * @param array $columnsToConvert array of column names to convert
+     * @param string (station|user) convert to either station or user timezone.
+     */
+    public static function convertTimestamps(&$rows, $columnsToConvert, $domain="station")
+    {
+    	if (!is_array($rows)) {
+    		return;
+    	}
+    	
+    	$converter = "UTCStringTo".ucfirst($domain)."TimezoneString";
+    	
+    	foreach ($rows as &$row) {
+    		foreach ($columnsToConvert as $column) {
+    			$row[$column] = self::$converter($row[$column]);
+    		}
+    	}
     }
     
     /**
