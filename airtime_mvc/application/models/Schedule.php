@@ -78,11 +78,11 @@ SQL;
         $utcNow = clone $displayNow;
         $utcNow->setTimezone(new DateTimeZone("UTC"));
 
-        $shows = Application_Model_Show::getPrevCurrentNext($utcNow->format("Y-m-d H:i:s"));
+        $shows = Application_Model_Show::getPrevCurrentNext($utcNow);
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
-        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow->format("Y-m-d H:i:s"));
+        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
 
         $range = array("env"=>APPLICATION_ENV,
             "schedulerTime"=> $displayNow->format("Y-m-d H:i:s"),
@@ -108,8 +108,12 @@ SQL;
      * through this mechanism a call is made to the old way of querying
      * the database to find the track info.
     **/
-    public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $p_timeNow)
+    public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $utcNow)
     {
+        $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
+        assert(get_class($utcNow) === "DateTime");
+        assert($utcNow->getTimeZone() == $timeZone);
+        
         if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null) {
             return;
         }
@@ -167,14 +171,17 @@ SQL;
         $results['current']  = null;
         $results['next']     = null;
 
-        $timeNowAsMillis = strtotime($p_timeNow);
         for ($i = 0; $i < $numberOfRows; ++$i) {
+            
             // if the show is overbooked, then update the track end time to the end of the show time.
             if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
-
-            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)) {
+            
+            $curShowStartTime = new DateTime($rows[$i]['starts'], $timeZone);
+            $curShowEndTime   = new DateTime($rows[$i]['ends'], $timeZone);
+            
+            if (($curShowStartTime <= $utcNow) && ($curShowEndTime >= $utcNow)) {
                 if ($i - 1 >= 0) {
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
                             "starts"=>$rows[$i-1]["starts"],
@@ -195,10 +202,10 @@ SQL;
                 }
                 break;
             }
-            if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
+            if ($curShowEndTime < $utcNow ) {
                 $previousIndex = $i;
             }
-            if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
+            if ($curShowStartTime > $utcNow) {
                 $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
                             "starts"=>$rows[$i]["starts"],
                             "ends"=>$rows[$i]["ends"],

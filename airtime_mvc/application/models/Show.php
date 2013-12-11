@@ -1116,9 +1116,17 @@ SQL;
     /**
      * Gets the current show, previous and next with an 2day window from
      * the given timeNow, so timeNow-2days and timeNow+2days.
+     * 
+     * @param $utcNow A DateTime object containing the current time in UTC.
+     * @return An array (with stupid sub-arrays) containing the previous show id, 
+     *         current show id, and next show id.
      */
-    public static function getPrevCurrentNext($p_timeNow)
+    public static function getPrevCurrentNext($utcNow)
     {
+        $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
+        assert(get_class($utcNow) === "DateTime");
+        assert($utcNow->getTimeZone() == $timeZone);
+        
         $CC_CONFIG = Config::getConfig();
         $con = Propel::getConnection();
         //
@@ -1144,9 +1152,10 @@ ORDER BY si.starts
 SQL;
 
         $stmt = $con->prepare($sql);
-
-        $stmt->bindValue(':timeNow1', $p_timeNow);
-        $stmt->bindValue(':timeNow2', $p_timeNow);
+        
+        $utcNowStr = $utcNow->format("Y-m-d H:i:s");
+        $stmt->bindValue(':timeNow1', $utcNowStr);
+        $stmt->bindValue(':timeNow2', $utcNowStr);
 
         if ($stmt->execute()) {
             $rows = $stmt->fetchAll();
@@ -1161,12 +1170,14 @@ SQL;
         $results['currentShow']  = array();
         $results['nextShow']     = array();
 
-        $timeNowAsMillis = strtotime($p_timeNow);
-
         for ($i = 0; $i < $numberOfRows; ++$i) {
+            //All shows start/end times are stored in the database as UTC.
+            $showStartTime = new DateTime($rows[$i]['starts'], $timeZone);
+            $showEndTime   = new DateTime($rows[$i]['ends'], $timeZone);
+            
             //Find the show that is within the current time.
-            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis)
-                && (strtotime($rows[$i]['ends']) > $timeNowAsMillis)) {
+            if (($showStartTime <= $utcNow) && ($showEndTime > $utcNow)) 
+            {   
                 if ($i-1 >= 0) {
                     $results['previousShow'][0] = array(
                                 "id"              => $rows[$i-1]['id'],
@@ -1199,11 +1210,11 @@ SQL;
                 break;
             }
             //Previous is any row that ends after time now capture it in case we need it later.
-            if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
+            if ($showEndTime < $utcNow ) {
                 $previousShowIndex = $i;
             }
             //if we hit this we know we've gone to far and can stop looping.
-            if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
+            if ($showStartTime > $utcNow) {
                 $results['nextShow'][0] = array(
                                 "id"              => $rows[$i]['id'],
                                 "instance_id"     => $rows[$i]['instance_id'],
