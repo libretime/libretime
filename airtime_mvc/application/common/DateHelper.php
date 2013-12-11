@@ -122,26 +122,6 @@ class Application_Common_DateHelper
     }
 
     /**
-     * Calculate and return the timestamp for end of day today
-     * in local time.
-     *
-     * For example, if local time is 2PM on 2011-11-01,
-     * then the function would return 2011-11-02 00:00:00
-     *
-     * @return  End of day timestamp in local timezone
-     */
-    public static function GetDayEndTimestamp($time = "") {
-        $dateTime = $time == "" ? new DateTime(date("Y-m-d")) : new DateTime($time);
-        $dateTime->add(new DateInterval('P1D'));
-        return $dateTime->format('Y-m-d H:i:s');
-    }
-    
-    public static function GetDayEndTimestampInUtc($time = "") {
-        $dayEndTimestamp = Application_Common_DateHelper::GetDayEndTimestamp($time);
-        return Application_Common_DateHelper::ConvertToUtcDateTimeString($dayEndTimestamp);
-    }
-
-    /**
      * Find the epoch timestamp difference from "now" to the beginning of today.
      */
     function getNowDayStartDiff()
@@ -271,26 +251,6 @@ class Application_Common_DateHelper
         $dateTime->setTimezone(new DateTimeZone("UTC"));
 
         return $dateTime;
-    }
-
-    public static function ConvertToSpecificTimezoneDateTime($p_dateString, $timezone){
-        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
-        $dateTime->setTimezone(new DateTimeZone($timezone));
-
-        return $dateTime;
-    }
-
-    public static function ConvertToLocalDateTime($p_dateString){
-        $dateTime = new DateTime($p_dateString, new DateTimeZone("UTC"));
-        $dateTime->setTimezone(new DateTimeZone(Application_Model_Preference::GetTimezone()));
-
-        return $dateTime;
-    }
-    
-    public static function ConvertToUtcDateTimeString($p_dateString, $p_format="Y-m-d H:i:s"){
-        if (is_null($p_dateString) || strlen($p_dateString) == 0)
-            return $p_dateString;
-        return self::ConvertToUtcDateTime($p_dateString)->format($p_format);
     }
     
     /*
