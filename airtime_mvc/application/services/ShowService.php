@@ -1608,13 +1608,14 @@ SQL;
                 $offset["hours"].":".$offset["mins"], $timezone);
             $startDateTime->add(new DateInterval("P{$offset["days"]}D"));
         }
-        //convert time to UTC
-        $startDateTime->setTimezone(new DateTimeZone('UTC'));
 
         $endDateTime = clone $startDateTime;
         $duration = explode(":", $duration);
         list($hours, $mins) = array_slice($duration, 0, 2);
         $endDateTime->add(new DateInterval("PT{$hours}H{$mins}M"));
+
+        $startDateTime->setTimezone(new DateTimeZone('UTC'));
+        $endDateTime->setTimezone(new DateTimeZone('UTC'));
 
         return array($startDateTime, $endDateTime);
     }
