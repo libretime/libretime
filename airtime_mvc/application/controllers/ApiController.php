@@ -69,33 +69,6 @@ class ApiController extends Zend_Controller_Action
     }
 
     /**
-     * Sets up and send init values used in the Calendar.
-     * This is only being used by schedule.js at the moment.
-     */
-    public function calendarInitAction()
-    {
-        if (is_null(Zend_Auth::getInstance()->getStorage()->read())) {
-            header('HTTP/1.0 401 Unauthorized');
-            print _('You are not allowed to access this resource.');
-
-            return;
-        }
-        
-        $tz = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-        $now = new DateTime("now", $tz);
-
-        $this->view->calendarInit = array(
-            "timestamp" => time(),
-            "timezoneOffset" => $now->format("Z"),
-            "timeScale" => Application_Model_Preference::GetCalendarTimeScale(),
-            "timeInterval" => Application_Model_Preference::GetCalendarTimeInterval(),
-            "weekStartDay" => Application_Model_Preference::GetWeekStartDay()
-        );
-
-        $this->_helper->json->sendJson(array());
-    }
-
-    /**
      * Allows remote client to download requested media file.
      *
      * @return void

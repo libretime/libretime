@@ -51,7 +51,7 @@ class ScheduleController extends Zend_Controller_Action
             "var calendarPref = {};\n".
             "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
             "calendarPref.timestamp = ".time().";\n".
-            "calendarPref.timezoneOffset = ".date("Z").";\n".
+            "calendarPref.timezoneOffset = ".Application_Common_DateHelper::getUserTimezoneOffset().";\n".
             "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
             "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
             "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
@@ -61,7 +61,8 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         //full-calendar-functions.js requires this variable, so that datePicker widget can be offset to server time instead of client time
-        $this->view->headScript()->appendScript("var timezoneOffset = ".date("Z")."; //in seconds");
+        //this should be as a default, however with our new drop down timezone changing for shows, we should reset this offset then??
+        $this->view->headScript()->appendScript("var timezoneOffset = ".Application_Common_DateHelper::getStationTimezoneOffset()."; //in seconds");
         //set offset to ensure it loads last
         $this->view->headScript()->offsetSetFile(90, $baseUrl.'js/airtime/schedule/full-calendar-functions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
