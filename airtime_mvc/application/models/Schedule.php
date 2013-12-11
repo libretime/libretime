@@ -588,33 +588,6 @@ SQL;
     }
 
     /**
-     * Compute the difference between two times in the format          .
-     * "HH:MM:SS.mmmmmm" Note: currently only supports calculating     .
-     * millisec differences                                            .
-     *
-     * @param  string $p_time1
-     * @param  string $p_time2
-     * @return double
-     */
-    private static function TimeDiff($p_time1, $p_time2)
-    {
-        $parts1 = explode(".", $p_time1);
-        $parts2 = explode(".", $p_time2);
-        $diff = 0;
-        if ( (count($parts1) > 1) && (count($parts2) > 1) ) {
-            $millisec1 = substr($parts1[1], 0, 3);
-            $millisec1 = str_pad($millisec1, 3, "0");
-            $millisec1 = intval($millisec1);
-            $millisec2 = substr($parts2[1], 0, 3);
-            $millisec2 = str_pad($millisec2, 3, "0");
-            $millisec2 = intval($millisec2);
-            $diff = abs($millisec1 - $millisec2)/1000;
-        }
-
-        return $diff;
-    }
-
-    /**
      * Returns an array of schedule items from cc_schedule table. Tries
      * to return at least 3 items (if they are available). The parameters
      * $p_startTime and $p_endTime specify the range. Schedule items returned
