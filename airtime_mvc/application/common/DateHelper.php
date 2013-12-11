@@ -45,6 +45,22 @@ class Application_Common_DateHelper
         return gmdate("H:i:s", $this->_dateTime);
     }
     
+    public static function getUserTimezoneOffset()
+    {
+    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+    	$now = new DateTime("now", $userTimezone);
+    	
+    	return $now->format("Z");
+    }
+    
+    public static function getStationTimezoneOffset()
+    {
+    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+    	$now = new DateTime("now", $stationTimezone);
+    	
+    	return $now->format("Z");
+    }
+    
     /**
      *
      * @return DateTime - YYYY-MM-DD 00:00 in station timezone of today
@@ -371,6 +387,21 @@ class Application_Common_DateHelper
     	$d = new DateTime($datetime, $utcTimezone);
     	$d->setTimezone($userTimezone);
     	 
+    	return $d->format($format);
+    }
+    
+    /*
+     * @param $datetime string Y-m-d H:i:s in user timezone
+    *
+    * @return string Y-m-d H:i:s in UTC timezone
+    */
+    public static function UserTimezoneStringToUTCString($datetime, $format="Y-m-d H:i:s") {
+    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+    	$utcTimezone = new DateTimeZone("UTC");
+    	 
+    	$d = new DateTime($datetime, $userTimezone);
+    	$d->setTimezone($utcTimezone);
+    
     	return $d->format($format);
     }
     
