@@ -52,8 +52,7 @@ class Application_Model_Datatables
                 }
             }
         }
-        
-        Logging::info($where);
+
         return $where;
     }
     /*
