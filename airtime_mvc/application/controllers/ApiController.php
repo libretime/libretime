@@ -185,6 +185,7 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
+    //Used by the SaaS monitoring
     public function onAirLightAction()
     {
         $this->view->layout()->disableLayout();
@@ -285,6 +286,14 @@ class ApiController extends Zend_Controller_Action
             foreach ($result["nextShow"] as &$next) {
             	$next["name"] = htmlspecialchars($next["name"]);
             }
+            
+            //For consistency, all times here are being sent in the station timezone, which
+            //seems to be what we've normalized everything to.
+            
+            //Convert the UTC scheduler time ("now") to the station timezone.
+            $result["schedulerTime"] = Application_Common_DateHelper::UTCStringToStationTimezoneString($result["schedulerTime"]);
+            $result["timezone"] = Application_Common_DateHelper::getStationTimezoneAbbreviation();
+            $result["timezoneOffset"] = Application_Common_DateHelper::getStationTimezoneOffset();
             
             //Convert from UTC to station time for Web Browser.
             Application_Common_DateHelper::convertTimestamps($result["currentShow"],

@@ -65,6 +65,8 @@ SQL;
      */
     public static function GetPlayOrderRange($p_prev = 1, $p_next = 1)
     {
+        //Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
+        
         if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
             Logging::info("Invalid range parameters: $p_prev or $p_next");
@@ -72,12 +74,8 @@ SQL;
             return array();
         }
 
-        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
-        $displayNow = new DateTime("now", $displayTimeZone);
+        $utcNow = new DateTime("now", new DateTimeZone("UTC"));
         
-        $utcNow = clone $displayNow;
-        $utcNow->setTimezone(new DateTimeZone("UTC"));
-
         $shows = Application_Model_Show::getPrevCurrentNext($utcNow);
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
@@ -85,14 +83,14 @@ SQL;
         $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
 
         $range = array("env"=>APPLICATION_ENV,
-            "schedulerTime"=> $displayNow->format("Y-m-d H:i:s"),
+            "schedulerTime"=> $utcNow->format("Y-m-d H:i:s"),
+            //Previous, current, next songs!
             "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
             "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
             "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
+            //Current and next shows
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],
-            "timezone"=> $displayNow->format("T"),
-            "timezoneOffset"=> $displayNow->format("Z")
         );
 
         return $range;
@@ -831,18 +829,18 @@ SQL;
     {
         $CC_CONFIG = Config::getConfig();
 
-        $scheduleTimeZone = new DateTimeZone('UTC');
+        $utcTimeZone = new DateTimeZone('UTC');
         
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
             then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime("@".time(), $scheduleTimeZone);
+            $t1 = new DateTime("@".time(), $utcTimeZone);
             $range_start = $t1->format("Y-m-d H:i:s");
         } else {
             $range_start = Application_Model_Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
         }
         if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime("@".time(), $scheduleTimeZone);
+            $t2 = new DateTime("@".time(), $utcTimeZone);
 
             $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
 

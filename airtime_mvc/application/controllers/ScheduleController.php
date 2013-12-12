@@ -263,6 +263,8 @@ class ScheduleController extends Zend_Controller_Action
         $show = Application_Model_Show::getCurrentShow();
 
         /* Convert all UTC times to localtime before sending back to user. */
+        $range["schedulerTime"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["schedulerTime"]);
+        
         if (isset($range["previous"])) {
             $range["previous"]["starts"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["previous"]["starts"]);
             $range["previous"]["ends"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["previous"]["ends"]);
@@ -275,7 +277,7 @@ class ScheduleController extends Zend_Controller_Action
             $range["next"]["starts"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["next"]["starts"]);
             $range["next"]["ends"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["next"]["ends"]);
         }
-
+  
         Application_Common_DateHelper::convertTimestamps(
         	$range["currentShow"], 
         	array("starts", "ends", "start_timestamp", "end_timestamp"),
@@ -287,6 +289,10 @@ class ScheduleController extends Zend_Controller_Action
         	"user"
         );
 
+        //TODO: Add timezone and timezoneOffset back into the ApiController's results.
+        $range["timezone"] = Application_Common_DateHelper::getUserTimezoneAbbreviation();
+        $range["timezoneOffset"] = Application_Common_DateHelper::getUserTimezoneOffset();
+        
         $source_status = array();
         $switch_status = array();
         $live_dj = Application_Model_Preference::GetSourceStatus("live_dj");
