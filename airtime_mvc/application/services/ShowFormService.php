@@ -215,12 +215,13 @@ class Application_Service_ShowFormService
         }
 
         $service_show = new Application_Service_ShowService($this->ccShow->getDbId());
-        $repeatEndDate = new DateTime($service_show->getRepeatingEndDate(), new DateTimeZone(
-            $ccShowDays[0]->getDbTimezone()));
+        $repeatEndDate = $service_show->getRepeatingEndDate();
         //end dates are stored non-inclusively so we need to
         //subtract one day
-        $repeatEndDate->sub(new DateInterval("P1D"));
-
+        if (!is_null($repeatEndDate)) {
+        	$repeatEndDate->sub(new DateInterval("P1D"));
+        }
+        
         //default monthly repeat type
         $monthlyRepeatType = 2;
         $repeatType = $ccShowDays[0]->getDbRepeatType();
@@ -237,8 +238,8 @@ class Application_Service_ShowFormService
                 'add_show_linked' => $this->ccShow->getDbLinked(),
                 'add_show_repeat_type' => $repeatType,
                 'add_show_day_check' => $days,
-                'add_show_end_date' => $repeatEndDate->format("Y-m-d"),
-                'add_show_no_end' => (!$service_show->getRepeatingEndDate()),
+                'add_show_end_date' => (!is_null($repeatEndDate)) ? $repeatEndDate->format("Y-m-d"):null,
+                'add_show_no_end' => (is_null($repeatEndDate)),
                 'add_show_monthly_repeat_type' => $monthlyRepeatType));
 
         if (!$this->ccShow->isLinkable() || $this->ccShow->isRecorded()) {

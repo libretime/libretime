@@ -413,13 +413,8 @@ SQL;
             $currentShowDay = $this->ccShow->getFirstCcShowDay();
         }
 
-        //new end date in users' local time
+        //new end date in the show's timezone (from the select box)
         $endDateTime = $this->calculateEndDate($showData);
-        if (!is_null($endDateTime)) {
-            $endDate = $endDateTime->format("Y-m-d");
-        } else {
-            $endDate = $endDateTime;
-        }
 
         //repeat option was toggled
         if ($showData['add_show_repeats'] != $currentShowDay->isRepeating()) {
@@ -512,28 +507,27 @@ SQL;
                 }
             }
 
-            $currentShowEndDate = $this->getRepeatingEndDate();
-            //check if "no end" option has changed
-            if ($currentShowEndDate != $showData['add_show_no_end']) {
+            //get the endate from the past for this show.
+            //check if this is null if "no end"
+            $currentShowEndDateTime = $this->getRepeatingEndDate();
+            
+            if ($currentShowEndDateTime != $endDateTime) {
+            	
+            	$endDate = clone $endDateTime;
+            	$endDate->setTimezone(new DateTimeZone("UTC"));
+            	
                 //show "No End" option was toggled
-                if (!$showData['add_show_no_end']) {
+                //or the end date comes earlier
+                if (is_null($currentShowEndDateTime) || ($endDateTime < $currentShowEndDateTime)) {
                     //"No End" option was unchecked so we need to delete the
                     //repeat instances that are scheduled after the new end date
-                    $this->deleteInstancesFromDate($endDate, $showId);
+                    //OR
+                	//end date was pushed back so we have to delete any
+                	//instances of this show scheduled after the new end date
+                    $this->deleteInstancesFromDate($endDate->format("Y-m-d"), $showId);
                 }
             }
-
-            if ($currentShowEndDate != $showData['add_show_end_date']) {
-                //end date was changed
-                $newEndDate = strtotime($showData['add_show_end_date']);
-                $oldEndDate = strtotime($currentShowEndDate);
-                if ($newEndDate < $oldEndDate) {
-                    //end date was pushed back so we have to delete any
-                    //instances of this show scheduled after the new end date
-                    $this->deleteInstancesFromDate($endDate, $showId);
-                }
-            }
-        }//if repeats
+        }
 
         return $daysAdded;
     }
@@ -554,19 +548,34 @@ SQL;
        }
     }
 
+    /*
+     * returns a DateTime of the current show end date set to the timezone of the show.
+     */
     public function getRepeatingEndDate()
     {
         $sql = <<<SQL
-SELECT last_show
+SELECT last_show, timezone
 FROM cc_show_days
 WHERE show_id = :showId
 ORDER BY last_show DESC
+LIMIT 1
 SQL;
 
         $query = Application_Common_Database::prepareAndExecute( $sql,
-            array( 'showId' => $this->ccShow->getDbId() ), 'column' );
+            array( 'showId' => $this->ccShow->getDbId() ), 'single');
 
-        return ($query !== false) ? $query : false;
+        Logging::info($query);
+        
+        $date = null;
+        
+        if ($query !== false && isset($query["last_show"])) {
+        	$date = new DateTime(
+        		$query["last_show"],
+        		new DateTimeZone($query["timezone"])	
+        	);
+        }
+        
+        return $date;
     }
 
     private function deleteInstancesFromDate($endDate, $showId)
@@ -823,13 +832,24 @@ SQL;
      */
     private function calculateEndDate($showData)
     {
+    	//if no end return null
         if ($showData['add_show_no_end']) {
-            $endDate = NULL;
-        } elseif ($showData['add_show_repeats']) {
-            $endDate = new DateTime($showData['add_show_end_date']);
+            $endDate = null;
+        } 
+        //if the show is repeating & ends, then return the end date
+        elseif ($showData['add_show_repeats']) {
+            $endDate = new DateTime(
+            	$showData['add_show_end_date'], 
+            	new DateTimeZone($showData["add_show_timezone"])
+            );
             $endDate->add(new DateInterval("P1D"));
-        } else {
-            $endDate = new DateTime($showData['add_show_start_date']);
+        }
+        //the show doesn't repeat, so add one day to the start date. 
+        else {
+            $endDate = new DateTime(
+            	$showData['add_show_start_date'],
+            	new DateTimeZone($showData["add_show_timezone"])
+            );
             $endDate->add(new DateInterval("P1D"));
         }
 
@@ -1407,24 +1427,23 @@ SQL;
     {
         $showId = $this->ccShow->getDbId();
 
-        $startDateTime = new DateTime($showData['add_show_start_date']." ".$showData['add_show_start_time']);
+        $startDateTime = new DateTime(
+        	$showData['add_show_start_date']." ".$showData['add_show_start_time'],
+        	new DateTimeZone($showData['add_show_timezone'])	
+        );
 
         $endDateTime = $this->calculateEndDate($showData);
         if (!is_null($endDateTime)) {
             $endDate = $endDateTime->format("Y-m-d");
-        } else {
-            $endDate = $endDateTime;
+        }
+        else {
+        	$endDate = null;
         }
 
-        /* What we are doing here is checking if the show repeats or if
-         * any repeating days have been checked. If not, then by default
-         * the "selected" DOW is the initial day.
-         * DOW in local time.
-         */
-        $startDow = date("w", $startDateTime->getTimestamp());
+        //Our calculated start DOW must be used for non repeating since a day has not been selected.
+        //For all repeating shows, only the selected days of the week will be repeated on.
+        $startDow = $startDateTime->format("w");
         if (!$showData['add_show_repeats']) {
-            $showData['add_show_day_check'] = array($startDow);
-        } elseif ($showData['add_show_repeats'] && $showData['add_show_day_check'] == "") {
             $showData['add_show_day_check'] = array($startDow);
         }
 
