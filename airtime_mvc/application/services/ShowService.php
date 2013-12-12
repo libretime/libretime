@@ -998,8 +998,13 @@ SQL;
         $datePeriod = $this->getDatePeriod($start, $timezone, $last_show,
             $repeatInterval, $populateUntil);
 
-        $utcLastShowDateTime = $last_show ?
-            Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
+        if ($last_show) {
+        	$utcLastShowDateTime = new DateTime($last_show, new DateTimeZone($timezone));
+        	$utcLastShowDateTime->setTimezone(new DateTimeZone("UTC"));
+        }
+        else {
+        	$utcLastShowDateTime = null;
+        }
 
         $previousDate = clone $start;
 
@@ -1093,8 +1098,13 @@ SQL;
 
         $this->repeatType = $showDay->getDbRepeatType();
 
-        $utcLastShowDateTime = $last_show ?
-            Application_Common_DateHelper::ConvertToUtcDateTime($last_show, $timezone) : null;
+    	if ($last_show) {
+        	$utcLastShowDateTime = new DateTime($last_show, new DateTimeZone($timezone));
+        	$utcLastShowDateTime->setTimezone(new DateTimeZone("UTC"));
+        }
+        else {
+        	$utcLastShowDateTime = null;
+        }
 
         while ($start->getTimestamp() < $end->getTimestamp()) {
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(

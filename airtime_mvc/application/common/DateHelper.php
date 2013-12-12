@@ -113,71 +113,6 @@ class Application_Common_DateHelper
     }
 
     /**
-     * Set the internal timestamp of the object.
-     */
-    function setDate($dateString)
-    {
-        $dateTime = new DateTime($dateString, new DateTimeZone("UTC"));
-        $this->_dateTime = $dateTime->getTimestamp();
-    }
-
-    /**
-     * Find the epoch timestamp difference from "now" to the beginning of today.
-     */
-    function getNowDayStartDiff()
-    {
-        $dayStartTs = ((int)($this->_dateTime/86400))*86400;
-        return $this->_dateTime - $dayStartTs;
-    }
-
-    /**
-     * Find the epoch timestamp difference from "now" to the end of today.
-     */
-    function getNowDayEndDiff()
-    {
-        $dayEndTs = ((int)(($this->_dateTime+86400)/86400))*86400;
-        return $dayEndTs - $this->_dateTime;
-    }
-
-    function getEpochTime()
-    {
-        return $this->_dateTime;
-    }
-
-    public static function TimeDiff($time1, $time2)
-    {
-        return strtotime($time2) - strtotime($time1);
-    }
-    
-    public static function TimeAdd($time1, $time2)
-    {
-        return strtotime($time2) + strtotime($time1);
-    }
-
-    public static function ConvertMSToHHMMSSmm($time)
-    {
-        $hours = floor($time / 3600000);
-        $time -= 3600000*$hours;
-
-        $minutes = floor($time / 60000);
-        $time -= 60000*$minutes;
-
-        $seconds = floor($time / 1000);
-        $time -= 1000*$seconds;
-
-        $ms = $time;
-
-        if (strlen($hours) == 1)
-        $hours = "0".$hours;
-        if (strlen($minutes) == 1)
-        $minutes = "0".$minutes;
-        if (strlen($seconds) == 1)
-        $seconds = "0".$seconds;
-
-        return $hours.":".$minutes.":".$seconds.".".$ms;
-    }
-
-    /**
      * This function formats a time by removing seconds
      *
      * When we receive a time from the database we get the
@@ -200,16 +135,6 @@ class Application_Common_DateHelper
             return $timeExplode[0].":".$timeExplode[1];
         else
             return $p_dateTime;
-    }
-
-    public static function getDateFromTimestamp($p_dateTime){
-        $explode = explode(" ", $p_dateTime);
-        return $explode[0];
-    }
-
-    public static function getTimeFromTimestamp($p_dateTime){
-        $explode = explode(" ", $p_dateTime);
-        return $explode[1];
     }
 
     /* Given a track length in the format HH:MM:SS.mm, we want to
@@ -239,30 +164,6 @@ class Application_Common_DateHelper
         
         $totalSeconds = ($hours*3600 + $minutes*60 + $seconds).".$ms";
         return round($totalSeconds, 3);
-    }
-
-    public static function ConvertToUtcDateTime($p_dateString, $timezone=null){
-        if (isset($timezone)) {
-            $dateTime = new DateTime($p_dateString, new DateTimeZone($timezone));
-        }
-        else {
-            $dateTime = new DateTime($p_dateString, new DateTimeZone(Application_Model_Preference::GetTimezone()));
-        }
-        $dateTime->setTimezone(new DateTimeZone("UTC"));
-
-        return $dateTime;
-    }
-    
-    /*
-     * Example input: "00:02:32.746562". Output is a DateInterval object
-     * representing that 2 minute, 32.746562 second interval.
-     *
-     */
-    public static function getDateIntervalFromString($p_interval){
-        list($hour_min_sec, $subsec) = explode(".", $p_interval);
-        list($hour, $min, $sec) = explode(":", $hour_min_sec);
-        
-        return new DateInterval("PT{$hour}H{$min}M{$sec}S");
     }
     
     /**

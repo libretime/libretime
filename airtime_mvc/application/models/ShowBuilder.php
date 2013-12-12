@@ -282,13 +282,13 @@ class Application_Model_ShowBuilder
             $row["starts"]   = $schedStartDT->format("H:i:s");
             $row["ends"]     = $schedEndDT->format("H:i:s");
             
-            $cue_out = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_out']);
-            $cue_in = Application_Common_DateHelper::calculateLengthInSeconds($p_item['cue_in']);
+            $cue_out = Application_Common_DateHelper::playlistTimeToSeconds($p_item['cue_out']);
+            $cue_in = Application_Common_DateHelper::playlistTimeToSeconds($p_item['cue_in']);
             
             $run_time = $cue_out-$cue_in;
             
-            $formatter       = new LengthFormatter(Application_Common_DateHelper::ConvertMSToHHMMSSmm($run_time*1000));
-            $row['runtime']  = $formatter->format();
+            $formatter = new LengthFormatter(Application_Common_DateHelper::secondsToPlaylistTime($run_time));
+            $row['runtime'] = $formatter->format();
 
             $row["title"]    = htmlspecialchars($p_item["file_track_title"]);
             $row["creator"]  = htmlspecialchars($p_item["file_artist_name"]);
