@@ -82,15 +82,25 @@ class Application_Service_CalendarService
             // Show content can be modified from the calendar if:
             // the user is admin or hosting the show,
             // the show is not recorded
-            
-            if ($now < $end && ($isAdminOrPM || $isHostOfShow) &&
-            		!$this->ccShowInstance->isRecorded() ) {
-            
-            	$menu["schedule"] = array(
-            			"name"=> _("Add / Remove Content"),
-            			"icon" => "add-remove-content",
-            			"url" => $baseUrl."showbuilder/builder-dialog/");
-            	
+            $currentShow = Application_Model_Show::getCurrentShow();
+            $showIsLinked = $this->ccShow->isLinked();
+            if ($now < $end && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded()) {
+                //if the show is not linked the user can add/remove content
+                if (!$showIsLinked) {
+
+                    $menu["schedule"] = array(
+                        "name"=> _("Add / Remove Content"),
+                        "icon" => "add-remove-content",
+                        "url" => $baseUrl."showbuilder/builder-dialog/");
+                //if the show is linked and it's not currently playing the user can add/remove content
+                } elseif ($showIsLinked && (count($currentShow) > 0 && $currentShow[0]["id"] != $this->ccShow->getDbId())) {
+
+                    $menu["schedule"] = array(
+                        "name"=> _("Add / Remove Content"),
+                        "icon" => "add-remove-content",
+                        "url" => $baseUrl."showbuilder/builder-dialog/");
+                }
+
             }
             
             if ($now < $start && ($isAdminOrPM || $isHostOfShow) &&
