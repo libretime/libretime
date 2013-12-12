@@ -83,6 +83,7 @@ class Application_Service_CalendarService
             // the user is admin or hosting the show,
             // the show is not recorded
             $currentShow = Application_Model_Show::getCurrentShow();
+            $currentShowId = count($currentShow) == 1 ? $currentShow[0]["id"] : null;
             $showIsLinked = $this->ccShow->isLinked();
             if ($now < $end && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded()) {
                 //if the show is not linked the user can add/remove content
@@ -93,7 +94,7 @@ class Application_Service_CalendarService
                         "icon" => "add-remove-content",
                         "url" => $baseUrl."showbuilder/builder-dialog/");
                 //if the show is linked and it's not currently playing the user can add/remove content
-                } elseif ($showIsLinked && (count($currentShow) > 0 && $currentShow[0]["id"] != $this->ccShow->getDbId())) {
+                } elseif ($showIsLinked  && $currentShowId != $this->ccShow->getDbId()) {
 
                     $menu["schedule"] = array(
                         "name"=> _("Add / Remove Content"),
