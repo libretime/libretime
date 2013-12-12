@@ -831,16 +831,18 @@ SQL;
     {
         $CC_CONFIG = Config::getConfig();
 
+        $scheduleTimeZone = new DateTimeZone('UTC');
+        
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
             then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime("@".time());
+            $t1 = new DateTime("@".time(), $scheduleTimeZone);
             $range_start = $t1->format("Y-m-d H:i:s");
         } else {
             $range_start = Application_Model_Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
         }
         if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime("@".time());
+            $t2 = new DateTime("@".time(), $scheduleTimeZone);
 
             $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
 
