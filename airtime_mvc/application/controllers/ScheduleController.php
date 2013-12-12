@@ -116,9 +116,11 @@ class ScheduleController extends Zend_Controller_Action
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
 
-        $start = new DateTime($this->_getParam('start', null));
+        $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        
+        $start = new DateTime($this->_getParam('start', null), $userTimezone);
         $start->setTimezone(new DateTimeZone("UTC"));
-        $end = new DateTime($this->_getParam('end', null));
+        $end = new DateTime($this->_getParam('end', null), $userTimezone);
         $end->setTimezone(new DateTimeZone("UTC"));
 
         $events = &Application_Model_Show::getFullCalendarEvents($start, $end,
