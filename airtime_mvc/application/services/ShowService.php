@@ -41,7 +41,7 @@ class Application_Service_ShowService
         $this->isUpdate = $isUpdate;
     }
 
-    public function createShowFromRepeatingInstance($showData) {
+    public function editRepeatingShowInstance($showData) {
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
 
@@ -107,9 +107,6 @@ class Application_Service_ShowService
              * Associates it with the current show_id and sets it to non-repeating
              */
             $this->setCcShowDays($showData);
-
-            // DO WE NEED THIS?
-            $this->setCcShowHosts($showData);
 
             /*
              * We need to find the new show day rule we just created by passing
@@ -196,8 +193,8 @@ class Application_Service_ShowService
 
                 $this->deleteRebroadcastInstances();
 
-                //$this->deleteCcShowDays();
                 $this->deleteCcShowHosts();
+
                 if ($this->isRebroadcast) {
                     //delete entry in cc_show_rebroadcast
                     $this->deleteCcShowRebroadcasts();

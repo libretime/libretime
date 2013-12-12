@@ -45,6 +45,29 @@ class Application_Common_DateHelper
         return gmdate("H:i:s", $this->_dateTime);
     }
     
+    /** Get the abbreviated timezone for the currently logged in user. 
+     *  @return A string containing the short form of the timezone set in the preferences for the current user (eg. EST, CEST, etc.)
+     */
+    public static function getUserTimezoneAbbreviation()
+    {
+        return self::getTimezoneAbbreviation(Application_Model_Preference::GetUserTimezone());
+    }
+    
+    /** Get the abbreviated timezone string of the timezone the station is set to.
+     *  @return A string containing the short form of the station's timezone (eg. EST, CEST, etc.)
+     */
+    public static function getStationTimezoneAbbreviation()
+    {
+        return self::getTimezoneAbbreviation(Application_Model_Preference::GetDefaultTimezone());
+    }
+    
+    private static function getTimezoneAbbreviation($fullTimeZoneName)
+    {
+        $timeZone = new DateTimeZone($fullTimeZoneName);
+        $now = new DateTime("now", $timeZone);
+        return $now->format("T");
+    }
+    
     public static function getUserTimezoneOffset()
     {
     	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
