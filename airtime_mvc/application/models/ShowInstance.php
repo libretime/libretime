@@ -730,21 +730,6 @@ SQL;
         return ($query !== false) ? $query : null;
     }
 
-    public function getShowEndGapTime()
-    {
-        $showEnd = $this->getShowInstanceEnd();
-        $lastItemEnd = $this->getLastAudioItemEnd();
-
-        if (is_null($lastItemEnd)) {
-            $lastItemEnd = $this->getShowInstanceStart();
-        }
-
-
-        $diff = strtotime($showEnd) - strtotime($lastItemEnd);
-
-        return ($diff < 0) ? 0 : $diff;
-    }
-
     public static function GetLastShowInstance($p_timeNow)
     {
         $sql = <<<SQL
