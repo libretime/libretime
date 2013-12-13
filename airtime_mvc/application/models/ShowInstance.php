@@ -164,43 +164,6 @@ SQL;
         $this->_showInstance->getDbModifiedInstance();
     }
 
-    public function correctScheduleStartTimes()
-    {
-        $con = Propel::getConnection();
-
-        $instance_id = $this->getShowInstanceId();
-        $sql = <<<SQL
-SELECT starts
-FROM cc_schedule
-WHERE instance_id = :instanceId
-ORDER BY starts LIMIT 1;
-SQL;
-        $scheduleStarts = Application_Common_Database::prepareAndExecute( $sql,
-            array( ':instanceId' => $instance_id ), 'column' );
-
-        if ($scheduleStarts) {
-            $scheduleStartsEpoch = strtotime($scheduleStarts);
-            $showStartsEpoch     = strtotime($this->getShowInstanceStart());
-
-            $diff = $showStartsEpoch - $scheduleStartsEpoch;
-
-            if ($diff != 0) {
-                $sql = <<<SQL
-UPDATE cc_schedule
-SET starts = starts + :diff1::INTERVAL SECOND,
-    ends = ends + :diff2::INTERVAL SECOND
-WHERE instance_id = :instanceId
-SQL;
-                Application_Common_Database::prepareAndExecute($sql,
-                    array(
-                        ':diff1'      => $diff,
-                        ':diff2'      => $diff,
-                        ':instanceId' => $instance_id ), 'execute');
-            }
-        }
-        Application_Model_RabbitMq::PushSchedule();
-    }
-
     /*
      * @param $dateTime
      *      php Datetime object to add deltas to
