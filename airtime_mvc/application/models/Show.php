@@ -1011,7 +1011,11 @@ SQL;
             $options["show_empty"] = (array_key_exists($show['instance_id'],
                 $content_count)) ? 0 : 1;
 
-            $options["show_partial_filled"] = !$isFull[$show['instance_id']];
+            if (array_key_exists($show['instance_id'], $isFull)) {
+                $options["show_partial_filled"] = !$isFull[$show['instance_id']];
+            } else {
+                $options["show_partial_filled"] = true;
+            }
 
             $event = array();
 
