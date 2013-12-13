@@ -257,12 +257,16 @@ class Application_Service_ShowFormService
             $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
         }
 
-        /* Because live editing of a linked show is disabled, we will disable
-         * the linking option if the current show is being edited. We don't
-         * want the user to suddenly not be able to edit the current show
+        /* Because live editing of a linked show is disabled, we will make
+         * the linking option readonly if the current show is being edited. We
+         * dont' want the user to suddenly not be able to edit the current show
+         * 
+         * Readonly does not work with checkboxes but we can't disable it
+         * because the value won't get posted. In add-show.js we stop the
+         * onclick event from firing by returning false
          */
         if ($this->hasShowStarted($nextFutureShowStart)) {
-            $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
+            $form->getElement('add_show_linked')->setAttrib('readonly', 'readonly');
         }
     }
 
