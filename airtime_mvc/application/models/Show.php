@@ -1061,8 +1061,12 @@ SQL;
     {
         $durationSeconds = (strtotime($p_ends) - strtotime($p_starts));
         $time_filled = Application_Model_Schedule::WallTimeToMillisecs($p_time_filled) / 1000;
-        $percent = ceil(( $time_filled / $durationSeconds) * 100);
-
+        
+        if ($durationSeconds != 0) { //Prevent division by zero if zero length show occurs.
+            $percent = ceil(( $time_filled / $durationSeconds) * 100);
+        } else {
+            $percent = 0;
+        }
         return $percent;
     }
 

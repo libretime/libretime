@@ -550,9 +550,12 @@ SQL;
     {
         $durationSeconds = $this->getDurationSecs();
         $timeSeconds = $this->getTimeScheduledSecs();
-
-        $percent = ceil(($timeSeconds / $durationSeconds) * 100);
-
+    
+        if ($durationSeconds != 0) { //Prevent division by zero if the show duration is somehow zero.
+            $percent = ceil(($timeSeconds / $durationSeconds) * 100);
+        } else {
+            $percent = 0;
+        }
         return $percent;
     }
 
