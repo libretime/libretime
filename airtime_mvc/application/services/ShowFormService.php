@@ -81,9 +81,20 @@ class Application_Service_ShowFormService
         $this->populateFormLive($forms["live"]);
         $this->populateFormStyle($forms["style"]);
 
-        //no need to populate these forms since the user won't
-        //be able to see them
+        /* Only the field on the 'when' form will get updated so we should
+         * make all other forms disabled or readonly
+         * 
+         * 'what' needs to be readonly because zendform will not validate
+         * if they are disabled
+         * 
+         * All other forms can be disabled because we do not update those values
+         * when the user edits a repeating instance
+         */
+        $forms["what"]->makeReadonly();
         $forms["repeats"]->disable();
+        $forms["who"]->disable();
+        $forms["style"]->disable();
+        $forms["live"]->disable();
         $forms["record"]->disable();
         $forms["rebroadcast"]->disable();
         $forms["abs_rebroadcast"]->disable();

@@ -560,8 +560,6 @@ SQL;
 
         $query = Application_Common_Database::prepareAndExecute( $sql,
             array( 'showId' => $this->ccShow->getDbId() ), 'single');
-
-        Logging::info($query);
         
         $date = null;
         
