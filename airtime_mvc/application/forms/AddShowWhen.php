@@ -82,7 +82,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $timezone->setRequired(true)
                  ->setLabel(_("Timezone:"))
                  ->setMultiOptions(Application_Common_Timezone::getTimezones())
-                 ->setValue(Application_Model_Preference::GetDefaultTimezone())
+                 ->setValue(Application_Model_Preference::GetUserTimezone())
                  ->setAttrib('class', 'input_select add_show_input_select')
                  ->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
