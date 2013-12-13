@@ -450,7 +450,7 @@ class ScheduleController extends Zend_Controller_Action
             }
             $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
             $this->view->addNewShow = false;
-            $this->view->action = "edit-show";
+            $this->view->action = "edit-repeating-show-instance";
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
     }
