@@ -239,67 +239,6 @@ SQL;
         return $newDateTime;
     }
 
-    public function resizeShow($deltaDay, $deltaMin)
-    {
-        $con = Propel::getConnection();
-
-        $hours = $deltaMin / 60;
-
-        $hours = ($hours > 0) ? floor($hours) : ceil($hours);
-
-        $mins = abs($deltaMin % 60);
-
-        $today_timestamp = gmdate("Y-m-d H:i:s");
-        $starts          = $this->getShowInstanceStart();
-        $ends            = $this->getShowInstanceEnd();
-
-        if (strtotime($today_timestamp) > strtotime($starts)) {
-            return _("can't resize a past show");
-        }
-
-        //$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $sql = "SELECT timestamp :ends + interval :deltaDays + interval :deltaTime";
-
-        $now_ends = Application_Common_Database::prepareAndExecute($sql,
-            array(':ends'      => $ends,
-                  ':deltaDays' => "$deltaDay days",
-                  ':deltaTime' => "{$hours}:{$mins}"), 'column'
-        );
-
-        //only need to check overlap if show increased in size.
-        if (strtotime($now_ends) > strtotime($ends)) {
-
-            $utcStartDateTime = new DateTime($ends, new DateTimeZone("UTC"));
-            $utcEndDateTime = new DateTime($now_ends, new DateTimeZone("UTC"));
-
-            $overlap =  Application_Model_Show::getShows($utcStartDateTime, $utcEndDateTime);
-
-            if (count($overlap) > 0) {
-                // TODO : fix ghetto error handling -- RG
-                return _("Should not overlap shows");
-            }
-        }
-        //with overbooking no longer need to check already scheduled content still fits.
-
-        //must update length of all rebroadcast instances.
-        if ($this->isRecorded()) {
-            $sql = <<<SQL
-UPDATE cc_show_instances
-SET ends = (ends + interval :deltaDays + interval :interval)
-WHERE rebroadcast = 1
-  AND instance_id = :instanceId;
-SQL;
-            Application_Common_Database::prepareAndExecute( $sql, array(
-                ':deltaDays' => "$deltaDay days",
-                ':interval' => "$hours:$mins",
-                ':instanceId' => $this->_instanceId ), 'execute');
-
-        }
-
-        $this->setShowEnd($now_ends);
-        Application_Model_RabbitMq::PushSchedule();
-    }
-
     /**
      * Add a playlist as the last item of the current show.
      *
