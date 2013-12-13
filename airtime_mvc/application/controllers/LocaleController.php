@@ -177,6 +177,7 @@ class LocaleController extends Zend_Controller_Action
             //preferences/support-setting.js
             "Image must be one of jpg, jpeg, png, or gif" => _("Image must be one of jpg, jpeg, png, or gif"),
             //schedule/add-show.js
+            "Warning: You cannot change this field while the show is currently playing" => _("Warning: You cannot change this field while the show is currently playing"),
             "No result found" => _("No result found"),
             "This follows the same security pattern for the shows: only users assigned to the show can connect." => _("This follows the same security pattern for the shows: only users assigned to the show can connect."),
             "Specify custom authentication which will work only for this show." => _("Specify custom authentication which will work only for this show."),

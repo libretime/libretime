@@ -1056,13 +1056,17 @@ SQL;
     /**
      * Calculates the percentage of a show scheduled given the start and end times in date/time format
      * and the time_filled as the total time the schow is scheduled for in time format.
+     * 
+     * TODO when using propel properly this should be a method on the propel show instance model.
      **/
     private static function getPercentScheduled($p_starts, $p_ends, $p_time_filled)
     {
-        $durationSeconds = (strtotime($p_ends) - strtotime($p_starts));
-        $time_filled = Application_Model_Schedule::WallTimeToMillisecs($p_time_filled) / 1000;
-        
-        if ($durationSeconds != 0) { //Prevent division by zero if zero length show occurs.
+    	$utcTimezone = new DatetimeZone("UTC");
+    	$startDt = new DateTime($p_starts, $utcTimezone);
+    	$endDt = new DateTime($p_ends, $utcTimezone);
+        $durationSeconds = intval($endDt->format("U")) - intval($startDt->format("U"));
+        $time_filled = Application_Common_DateHelper::playlistTimeToSeconds($p_time_filled);
+        if ($durationSeconds != 0) { //Prevent division by zero if the show duration somehow becomes zero.
             $percent = ceil(( $time_filled / $durationSeconds) * 100);
         } else {
             $percent = 0;

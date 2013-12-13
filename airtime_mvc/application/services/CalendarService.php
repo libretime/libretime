@@ -149,7 +149,7 @@ class Application_Service_CalendarService
                 if ($isRepeating) {
                     if ($populateInstance) {
                         $menu["edit"] = array(
-                            "name" => _("Edit Show"),
+                            "name" => _("Edit This Instance"),
                             "icon" => "edit",
                             "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
                     } else {

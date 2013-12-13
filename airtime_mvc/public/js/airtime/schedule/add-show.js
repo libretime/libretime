@@ -264,6 +264,13 @@ function setAddShowEvents(form) {
     });
 
     form.find("#add_show_linked").click(function(){
+        if ($(this).attr("readonly")) {
+            if ($("#show-link-readonly-warning").length === 0) {
+                $(this).parent().after("<ul id='show-link-readonly-warning' class='errors'><li>"+$.i18n._("Warning: You cannot change this field while the show is currently playing")+"</li></ul>");
+            }
+            return false;
+        }
+
         if (!$(this).attr("checked") && $("#show-link-warning").length === 0) {
             $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: Shows cannot be re-linked")+"</li></ul>");
         }

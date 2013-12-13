@@ -437,7 +437,7 @@ class ScheduleController extends Zend_Controller_Action
         if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
 
-            $service_show->createShowFromRepeatingInstance($data);
+            $service_show->editRepeatingShowInstance($data);
 
             $this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
@@ -450,7 +450,7 @@ class ScheduleController extends Zend_Controller_Action
             }
             $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
             $this->view->addNewShow = false;
-            $this->view->action = "edit-show";
+            $this->view->action = "edit-repeating-show-instance";
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
         }
     }
