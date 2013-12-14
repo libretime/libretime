@@ -252,8 +252,8 @@ function createFullCalendar(data){
 
     serverTimezoneOffset = data.calendarInit.timezoneOffset;
 
-    var mainHeight = document.documentElement.clientHeight - 200 - 50;
-    
+    var mainHeight = $(window).height() - 200 - 35;
+
     $('#schedule_calendar').fullCalendar({
         header: {
             left: 'prev, next, today',

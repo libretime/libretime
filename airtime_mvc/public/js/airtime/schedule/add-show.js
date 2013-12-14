@@ -8,6 +8,7 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
+            /*
             var windowWidth = $(window).width();
             // margin on showform are 16 px on each side
             var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
@@ -18,6 +19,8 @@ function openAddShowForm() {
             // this calculation was copied from schedule.js line 326
             var mainHeight = document.documentElement.clientHeight - 200 - 50;
             $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
+            */
+           windowResize();
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
