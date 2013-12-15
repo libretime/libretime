@@ -270,9 +270,26 @@ class Application_Service_CalendarService
         $startsDateTime->setTimezone(new DateTimeZone($showTimezone));
         $endsDateTime->setTimezone(new DateTimeZone($showTimezone));
 
+        $duration = $startsDateTime->diff($endsDateTime);
+        
         $newStartsDateTime = self::addDeltas($startsDateTime, $deltaDay, $deltaMin);
-        $newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin);
-
+        /* WARNING: Do not separately add a time delta to the start and end times because
+                    that does not preserve the duration across a DST time change.
+                    For example, 5am - 3 hours = 3am when DST occurs at 2am.
+                             BUT, 6am - 3 hours = 3am also!
+                              So when a DST change occurs, adding the deltas like this
+                              separately does not conserve the duration of a show.
+                    Since that's what we want (otherwise we'll get a zero length show), 
+                    we calculate the show duration FIRST, then we just add that on
+                    to the start time to calculate the end time. 
+                    This is a safer approach.
+                    The key lesson here is that in general: duration != end - start
+                    ... so be careful!
+        */
+        //$newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin); <--- Wrong, don't do it.
+        $newEndsDateTime = clone $newStartsDateTime;
+        $newEndsDateTime = $newEndsDateTime->add($duration);
+        
         //convert our new starts/ends to UTC.
         $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
         $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
