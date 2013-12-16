@@ -1055,9 +1055,9 @@ SQL;
                 }
 
                 /* When editing the start/end time of a repeating show, we don't want to
-                 * change shows that started in the past. So check the start time.
+                 * change shows that are in the past so we check the end time.
                  */
-                if ($newInstance || $ccShowInstance->getDbStarts() > gmdate("Y-m-d H:i:s")) {
+                if ($newInstance || $ccShowInstance->getDbEnds() > gmdate("Y-m-d H:i:s")) {
                     $ccShowInstance->setDbShowId($show_id);
                     $ccShowInstance->setDbStarts($utcStartDateTime);
                     $ccShowInstance->setDbEnds($utcEndDateTime);
