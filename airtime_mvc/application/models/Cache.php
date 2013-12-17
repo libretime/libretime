@@ -19,8 +19,16 @@ class Cache
 	}
 
 	private static function getMemcached() {
+
+	    $CC_CONFIG = Config::getConfig();
+
 	    $memcached = new Memcached();
-	    $memcached->addServer('localhost', 11211);
+	    //$server is in the format "host:port"
+	    foreach($CC_CONFIG['memcached']['servers'] as $server) {
+
+	        list($host, $port) = explode(":", $server);
+	        $memcached->addServer($host, $port);
+	    }
 
 	    return $memcached;
 	}

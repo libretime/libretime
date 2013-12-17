@@ -31,6 +31,9 @@ $front->registerPlugin(new RabbitMqPlugin());
 //localization configuration
 Application_Model_Locale::configureLocalization();
 
+//only to avoid complaints for now, we should never rely on the default timezone in Airtime.
+date_default_timezone_set("UTC");
+
 /* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
@@ -100,21 +103,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'locale/datatables-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendScript("$.i18n.setDictionary(general_dict)");
         $view->headScript()->appendScript("var baseUrl='$baseUrl'");
-        
+
 		//These timezones are needed to adjust javascript Date objects on the client to make sense to the user's set timezone
 		//or the server's set timezone.
         $serverTimeZone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $now = new DateTime("now", $serverTimeZone);
         $offset = $now->format("Z") * -1;
         $view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
-        
+
         if (class_exists("Zend_Auth", false) && Zend_Auth::getInstance()->hasIdentity()) {
         	$userTimeZone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         	$now = new DateTime("now", $userTimeZone);
         	$offset = $now->format("Z") * -1;
         	$view->headScript()->appendScript("var userTimezoneOffset = {$offset}; //in seconds");
         }
-        
+
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'js/airtime/airtime_bootstrap.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/airtime/dashboard/helperfunctions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
