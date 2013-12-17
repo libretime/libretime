@@ -532,9 +532,9 @@ class AirtimeInstall
 
     public static function checkPHPVersion()
     {
-        if (PHP_VERSION_ID < 50400)
+        if (PHP_VERSION_ID < 50300)
         {
-            echo "Error: Airtime requires PHP 5.4 or greater.";
+            echo "Error: Airtime requires PHP 5.3 or greater.";
             return false;
         }
         return true;

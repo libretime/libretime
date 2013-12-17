@@ -1166,7 +1166,8 @@ thead tr.fc-first
     which makes it a pain in the ass to fix. That's why we're overriding it 
     with !important here.
 */
-.fc-view > div:nth-child(2)
+
+div.fc-agenda > div:nth-child(2)
 {
 	top: 34px !important;
 }

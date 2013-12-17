@@ -12,9 +12,9 @@ require_once(__DIR__.'/airtime-constants.php');
 // The only way we get here is if we are doing a new install or a reinstall.
 // -------------------------------------------------------------------------
 
-if (PHP_VERSION_ID < 50400) //PHP 5.4
+if (PHP_VERSION_ID < 50300) //PHP 5.3
 {
-    echo("ERROR: Your PHP version is too old!\nAirtime requires PHP 5.4 or greater.\n");
+    echo("ERROR: Your PHP version is too old!\nAirtime requires PHP 5.3 or greater.\n");
     exit(1);
 }
 
