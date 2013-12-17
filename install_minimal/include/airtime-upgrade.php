@@ -34,6 +34,12 @@ $con = Propel::getConnection();
 
 $version = AirtimeInstall::GetVersionInstalled();
 
+//Enforce a minimum PHP version
+if (!AirtimeInstall::checkPHPVersion())
+{
+    exit(1);
+}
+
 echo "******************************** Upgrade Begin *********************************".PHP_EOL;
 
 $CC_CONFIG = Config::getConfig();
@@ -90,6 +96,10 @@ if (strcmp($version, "2.4.1") < 0) {
 }
 if (strcmp($version, "2.5.0") < 0) {
     passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.5.0/airtime-upgrade.php");
+    pause();
+}
+if (strcmp($version, "2.5.1") < 0) {
+    passthru("php --php-ini $SCRIPTPATH/../airtime-php.ini $SCRIPTPATH/../upgrades/airtime-2.5.1/airtime-upgrade.php");
     pause();
 }
 echo "******************************* Upgrade Complete *******************************".PHP_EOL;

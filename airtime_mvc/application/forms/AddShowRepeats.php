@@ -17,7 +17,9 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
             'class' => ' input_select',
             'multiOptions' => array(
                 "0" => _("weekly"),
-                "1" => _("bi-weekly"),
+                "1" => _("every 2 weeks"),
+                "4" => _("every 3 weeks"),
+                "5" => _("every 4 weeks"),
                 "2" => _("monthly")
             ),
         ));
@@ -81,8 +83,8 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
     }
 
     public function isValid($formData) {
-        if (parent::isValid($formData)) {
-             return $this->checkReliantFields($formData);
+        if (parent::isValid($formData)) {            
+            return $this->checkReliantFields($formData);
         } else {
             return false;
         }
@@ -93,15 +95,22 @@ class Application_Form_AddShowRepeats extends Zend_Form_SubForm
         if (!$formData['add_show_no_end']) {
             $start_timestamp = $formData['add_show_start_date'];
             $end_timestamp = $formData['add_show_end_date'];
-
-            $start_epoch = strtotime($start_timestamp);
-            $end_epoch = strtotime($end_timestamp);
-
-            if ($end_epoch < $start_epoch) {
+            $showTimeZone = new DateTimeZone($formData['add_show_timezone']);
+            
+            //We're assuming all data is valid at this point (timezone, etc.).
+            
+            $startDate = new DateTime($start_timestamp, $showTimeZone);
+            $endDate = new DateTime($end_timestamp, $showTimeZone);
+            
+            if ($endDate < $startDate) {
                 $this->getElement('add_show_end_date')->setErrors(array(_('End date must be after start date')));
-
                 return false;
             }
+            return true;
+        }
+
+        if (!isset($formData['add_show_day_check'])) {
+            $this->getElement('add_show_day_check')->setErrors(array(_('Please select a repeat day')));
         }
 
         return true;

@@ -1,9 +1,9 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong preferences">
-<h2 style="float:left"><? echo _("Preferences") ?></h2>
+<h2 style="float:left"><?php echo _("Preferences") ?></h2>
 <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
 <form method="post" id="pref_form" enctype="application/x-www-form-urlencoded">
     
-    <button name="pref_save" id="pref_save" type="button" class="btn right-floated"><? echo _("Save") ?></button>
+    <button name="pref_save" id="pref_save" type="button" class="btn right-floated"><?php echo _("Save") ?></button>
     <div style="clear:both"></div>
     
     <?php
@@ -11,6 +11,6 @@
         echo $this->form;
     ?>
     <br />
-    <button name="pref_save" id="pref_save" type="button" class="btn right-floated"><? echo _("Save") ?></button>
+    <button name="pref_save" id="pref_save" type="button" class="btn right-floated"><?php echo _("Save") ?></button>
 </form>
 </div>

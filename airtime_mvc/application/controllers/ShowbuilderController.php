@@ -20,30 +20,14 @@ class ShowbuilderController extends Zend_Controller_Action
     {
 
         $CC_CONFIG = Config::getConfig();
-        
+
         $request = $this->getRequest();
-        
+
         $baseUrl = Application_Common_OsPath::getBaseDir();
-        
+
         $user = Application_Model_User::GetCurrentUser();
         $userType = $user->getType();
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
-
-        $data = Application_Model_Preference::getCurrentLibraryTableSetting();
-        if (!is_null($data)) {
-            $libraryTable = json_encode($data);
-            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
-        } else {
-            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
-        }
-
-        $data = Application_Model_Preference::getTimelineDatatableSetting();
-        if (!is_null($data)) {
-            $timelineTable = json_encode($data);
-            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
-        } else {
-            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', '' );");
-        }
 
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -57,14 +41,12 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/utilities/utilities.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'css/media_library.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $refer_sses = new Zend_Session_Namespace('referrer');
 
         if ($request->isPost()) {
@@ -141,16 +123,40 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->disableLib = $disableLib;
         $this->view->showLib    = $showLib;
 
+        //only include library things on the page if the user can see it.
+        if (!$disableLib) {
+            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+            $data = Application_Model_Preference::getCurrentLibraryTableSetting();
+            if (!is_null($data)) {
+                $libraryTable = json_encode($data);
+                $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
+            } else {
+                $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
+            }
+        }
+
+        $data = Application_Model_Preference::getTimelineDatatableSetting();
+        if (!is_null($data)) {
+            $timelineTable = json_encode($data);
+            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
+        } else {
+            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', '' );");
+        }
+
         //populate date range form for show builder.
         $now  = time();
         $from = $request->getParam("from", $now);
         $to   = $request->getParam("to", $now + (24*60*60));
 
-        $start = DateTime::createFromFormat("U", $from, new DateTimeZone("UTC"));
-        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $utcTimezone = new DateTimeZone("UTC");
+        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
 
-        $end = DateTime::createFromFormat("U", $to, new DateTimeZone("UTC"));
-        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $start = DateTime::createFromFormat("U", $from, $utcTimezone);
+        $start->setTimezone($displayTimeZone);
+        $end = DateTime::createFromFormat("U", $to, $utcTimezone);
+        $end->setTimezone($displayTimeZone);
 
         $form = new Application_Form_ShowBuilder();
         $form->populate(array(
@@ -162,8 +168,6 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->sb_form = $form;
 
-        $offset = date("Z") * -1;
-        $this->view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/main_builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -214,10 +218,12 @@ class ShowbuilderController extends Zend_Controller_Action
             return;
         }
 
+        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+        
         $start = $instance->getDbStarts(null);
-        $start->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $start->setTimezone($displayTimeZone);
         $end = $instance->getDbEnds(null);
-        $end->setTimezone(new DateTimeZone(date_default_timezone_get()));
+        $end->setTimezone($displayTimeZone);
 
         $show_name = $instance->getCcShow()->getDbName();
         $start_time = $start->format("Y-m-d H:i:s");
@@ -270,8 +276,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $startsDT = DateTime::createFromFormat("U", $starts_epoch, new DateTimeZone("UTC"));
         $endsDT   = DateTime::createFromFormat("U", $ends_epoch, new DateTimeZone("UTC"));
 
-        $opts = array("myShows" => $my_shows, 
-                "showFilter" => $show_filter, 
+        $opts = array("myShows" => $my_shows,
+                "showFilter" => $show_filter,
                 "showInstanceFilter" => $show_instance_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 

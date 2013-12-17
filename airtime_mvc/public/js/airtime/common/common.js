@@ -30,6 +30,21 @@ var i18n_months = [
     $.i18n._("December")
 ];
 
+var i18n_months_short = [
+    $.i18n._("Jan"),
+    $.i18n._("Feb"),
+    $.i18n._("Mar"),
+    $.i18n._("Apr"),
+    $.i18n._("May"),
+    $.i18n._("Jun"),
+    $.i18n._("Jul"),
+    $.i18n._("Aug"),
+    $.i18n._("Sep"),
+    $.i18n._("Oct"),
+    $.i18n._("Nov"),
+    $.i18n._("Dec")
+];
+
 var i18n_days_short = [
     $.i18n._("Su"),
     $.i18n._("Mo"),

@@ -6,46 +6,46 @@ foreach ($this->md as $key => &$value) {
 ?>
 <?php if($this->type == "audioclip") : ?>
 <table class='library-track-md'>
-<tr><td><? echo _("Title:"); ?></td><td><?php echo ($this->md["MDATA_KEY_TITLE"]);?></td></tr>
-<tr><td><? echo _("Creator:"); ?></td><td><?php echo ($this->md["MDATA_KEY_CREATOR"]);?></td></tr>
-<tr><td><? echo _("Album:"); ?></td><td><?php echo ($this->md["MDATA_KEY_SOURCE"]);?></td></tr>
-<tr><td><? echo _("Track:"); ?></td><td><?php echo ($this->md["MDATA_KEY_TRACKNUMBER"]);?></td></tr>
-<tr><td><? echo _("Length:"); ?></td><td><?php echo ($this->md["MDATA_KEY_DURATION"]);?></td></tr>
-<tr><td class='file-md-qtip-nowrap'><? echo _("Sample Rate:"); ?></td><td><?php echo ($this->md["MDATA_KEY_SAMPLERATE"]);?></td></tr>
-<tr><td><? echo _("Bit Rate:"); ?></td><td><?php echo ($this->md["MDATA_KEY_BITRATE"]);?></td></tr>
-<tr><td><? echo _("Mood:"); ?></td><td><?php echo ($this->md["MDATA_KEY_MOOD"]);?></td></tr>
-<tr><td><? echo _("Genre:"); ?></td><td><?php echo ($this->md["MDATA_KEY_GENRE"]);?></td></tr>
-<tr><td><? echo _("Year:"); ?></td><td><?php echo ($this->md["MDATA_KEY_YEAR"]);?></td></tr>
-<tr><td><? echo _("Label:"); ?></td><td><?php echo ($this->md["MDATA_KEY_LABEL"]);?></td></tr>
-<tr><td><? echo _("BPM:"); ?></td><td><?php echo ($this->md["MDATA_KEY_BPM"]);?></td></tr>
-<tr><td><? echo _("Composer:"); ?></td><td><?php echo ($this->md["MDATA_KEY_COMPOSER"]);?></td></tr>
-<tr><td><? echo _("Conductor:"); ?></td><td><?php echo ($this->md["MDATA_KEY_CONDUCTOR"]);?></td></tr>
-<tr><td><? echo _("Copyright:"); ?></td><td><?php echo ($this->md["MDATA_KEY_COPYRIGHT"]);?></td></tr>
-<tr><td><? echo _("Isrc Number:"); ?></td><td><?php echo ($this->md["MDATA_KEY_ISRC"]);?></td></tr>
-<tr><td><? echo _("Website:"); ?></td><td><?php echo ($this->md["MDATA_KEY_URL"]);?></td></tr>
-<tr><td><? echo _("Language:"); ?></td><td><?php echo ($this->md["MDATA_KEY_LANGUAGE"]);?></td></tr>
-<tr><td class='file-md-qtip-nowrap'><? echo _("File Path:"); ?></td><td><?php echo ($this->md["MDATA_KEY_FILEPATH"]);?></td></tr>
+<tr><td><?php echo _("Title:"); ?></td><td><?php echo ($this->md["MDATA_KEY_TITLE"]);?></td></tr>
+<tr><td><?php echo _("Creator:"); ?></td><td><?php echo ($this->md["MDATA_KEY_CREATOR"]);?></td></tr>
+<tr><td><?php echo _("Album:"); ?></td><td><?php echo ($this->md["MDATA_KEY_SOURCE"]);?></td></tr>
+<tr><td><?php echo _("Track:"); ?></td><td><?php echo ($this->md["MDATA_KEY_TRACKNUMBER"]);?></td></tr>
+<tr><td><?php echo _("Length:"); ?></td><td><?php echo ($this->md["MDATA_KEY_DURATION"]);?></td></tr>
+<tr><td class='file-md-qtip-nowrap'><?php echo _("Sample Rate:"); ?></td><td><?php echo ($this->md["MDATA_KEY_SAMPLERATE"]);?></td></tr>
+<tr><td><?php echo _("Bit Rate:"); ?></td><td><?php echo ($this->md["MDATA_KEY_BITRATE"]);?></td></tr>
+<tr><td><?php echo _("Mood:"); ?></td><td><?php echo ($this->md["MDATA_KEY_MOOD"]);?></td></tr>
+<tr><td><?php echo _("Genre:"); ?></td><td><?php echo ($this->md["MDATA_KEY_GENRE"]);?></td></tr>
+<tr><td><?php echo _("Year:"); ?></td><td><?php echo ($this->md["MDATA_KEY_YEAR"]);?></td></tr>
+<tr><td><?php echo _("Label:"); ?></td><td><?php echo ($this->md["MDATA_KEY_LABEL"]);?></td></tr>
+<tr><td><?php echo _("BPM:"); ?></td><td><?php echo ($this->md["MDATA_KEY_BPM"]);?></td></tr>
+<tr><td><?php echo _("Composer:"); ?></td><td><?php echo ($this->md["MDATA_KEY_COMPOSER"]);?></td></tr>
+<tr><td><?php echo _("Conductor:"); ?></td><td><?php echo ($this->md["MDATA_KEY_CONDUCTOR"]);?></td></tr>
+<tr><td><?php echo _("Copyright:"); ?></td><td><?php echo ($this->md["MDATA_KEY_COPYRIGHT"]);?></td></tr>
+<tr><td><?php echo _("Isrc Number:"); ?></td><td><?php echo ($this->md["MDATA_KEY_ISRC"]);?></td></tr>
+<tr><td><?php echo _("Website:"); ?></td><td><?php echo ($this->md["MDATA_KEY_URL"]);?></td></tr>
+<tr><td><?php echo _("Language:"); ?></td><td><?php echo ($this->md["MDATA_KEY_LANGUAGE"]);?></td></tr>
+<tr><td class='file-md-qtip-nowrap'><?php echo _("File Path:"); ?></td><td><?php echo ($this->md["MDATA_KEY_FILEPATH"]);?></td></tr>
 </table>
 <?php endif; ?>
 
 <?php if($this->type == "playlist" || $this->type == "block") : ?>
 <div class='file-md-qtip-left'>
-    <span><? echo _("Name:"); ?></span><span><?php echo ($this->md["dc:title"]);?></span><br />
-    <span><? echo _("Creator:"); ?></span><span><?php echo ($this->md["dc:creator"]);?></span><br />
+    <span><?php echo _("Name:"); ?></span><span><?php echo ($this->md["dc:title"]);?></span><br />
+    <span><?php echo _("Creator:"); ?></span><span><?php echo ($this->md["dc:creator"]);?></span><br />
     <?php if ($this->type == "block" && $this->blType == "Dynamic") { ?>
-    <span><? echo _("Length:"); ?></span><span><?php echo $this->block->getLength();?></span><br />
+    <span><?php echo _("Length:"); ?></span><span><?php echo $this->block->getLength();?></span><br />
     <?php } else { ?>
-    <span><? echo _("Length:"); ?></span><span><?php echo ($this->md["dcterms:extent"]);?></span><br />
+    <span><?php echo _("Length:"); ?></span><span><?php echo ($this->md["dcterms:extent"]);?></span><br />
     <?php } ?>
-    <span><? echo _("Description:"); ?></span><span><?php echo ($this->md["dc:description"]);?></span>
+    <span><?php echo _("Description:"); ?></span><span><?php echo ($this->md["dc:description"]);?></span>
 </div>
 
 <?php if ($this->type == "playlist") { ?>
 <div class='file-md-qtip-legend'>
-<span class='webstream'>o</span> <span><? echo _("Web Stream"); ?></span><br />
-<span class='dynamic'>o</span> <span><? echo _("Dynamic Smart Block"); ?></span><br />
-<span class='static'>o</span> <span><? echo _("Static Smart Block"); ?></span><br />
-<span>o</span> <span><? echo _("Audio Track"); ?></span>
+<span class='webstream'>o</span> <span><?php echo _("Web Stream"); ?></span><br />
+<span class='dynamic'>o</span> <span><?php echo _("Dynamic Smart Block"); ?></span><br />
+<span class='static'>o</span> <span><?php echo _("Static Smart Block"); ?></span><br />
+<span>o</span> <span><?php echo _("Audio Track"); ?></span>
 </div>
 
 <?php } ?>
@@ -60,9 +60,9 @@ foreach ($this->md as $key => &$value) {
         }*/
         ?>
         <?php if ($this->type == "playlist") { ?>
-            <div class='file-md-qtip-left'><span><? echo _("Playlist Contents: "); ?></span></div>
+            <div class='file-md-qtip-left'><span><?php echo _("Playlist Contents: "); ?></span></div>
         <?php } else { ?>
-            <div class='file-md-qtip-left'><span><? echo _("Static Smart Block Contents: "); ?></span></div>
+            <div class='file-md-qtip-left'><span><?php echo _("Static Smart Block Contents: "); ?></span></div>
         <?php } ?>
         <table class='library-get-file-md'>
         <?php foreach($this->contents as $row) : ?>
@@ -101,7 +101,7 @@ foreach ($this->md as $key => &$value) {
         </table>
         
     <?php } elseif ($this->blType == "Dynamic") { ?>
-        <div class='file-md-qtip-left'><span><? echo _("Dynamic Smart Block Criteria: "); ?></span></div>
+        <div class='file-md-qtip-left'><span><?php echo _("Dynamic Smart Block Criteria: "); ?></span></div>
         <table class='library-get-file-md table-small'>
         <?php foreach ($this->contents["crit"] as &$criterias) : ?>
             <?php foreach ($criterias as &$crit ) : ?>
@@ -134,7 +134,7 @@ foreach ($this->md as $key => &$value) {
             <?php endforeach; ?>
         <?php endforeach; ?>
             <tr>
-                <td><? echo _("Limit to ") ?></td>
+                <td><?php echo _("Limit to ") ?></td>
                 <td><?php echo $this->contents["limit"]["value"] ?> <?php echo $this->contents["limit"]["modifier"] ?></td>
             </tr>
         </table>
@@ -143,11 +143,11 @@ foreach ($this->md as $key => &$value) {
 
 <?php if ($this->type == "stream") : ?>
 
-<div><span><? echo _("Name:"); ?></span><span><?php echo ($this->md["name"]);?></span></div>
-<div><span><? echo _("Length:"); ?></span><span><?php echo ($this->md["length"]);?></span></div>
-<div><span><? echo _("Creator:"); ?></span><span><?php echo ($this->md["login"]);?></span></div>
-<div><span><? echo _("Description:"); ?></span><span><?php echo ($this->md["description"]);?></span></div>
-<div><span><? echo _("URL:"); ?></span><span><?php echo ($this->md["url"]);?></span></div>
+<div><span><?php echo _("Name:"); ?></span><span><?php echo ($this->md["name"]);?></span></div>
+<div><span><?php echo _("Length:"); ?></span><span><?php echo ($this->md["length"]);?></span></div>
+<div><span><?php echo _("Creator:"); ?></span><span><?php echo ($this->md["login"]);?></span></div>
+<div><span><?php echo _("Description:"); ?></span><span><?php echo ($this->md["description"]);?></span></div>
+<div><span><?php echo _("URL:"); ?></span><span><?php echo ($this->md["url"]);?></span></div>
 
 
 <?php endif; ?>

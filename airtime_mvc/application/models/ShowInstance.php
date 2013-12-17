@@ -164,43 +164,6 @@ SQL;
         $this->_showInstance->getDbModifiedInstance();
     }
 
-    public function correctScheduleStartTimes()
-    {
-        $con = Propel::getConnection();
-
-        $instance_id = $this->getShowInstanceId();
-        $sql = <<<SQL
-SELECT starts
-FROM cc_schedule
-WHERE instance_id = :instanceId
-ORDER BY starts LIMIT 1;
-SQL;
-        $scheduleStarts = Application_Common_Database::prepareAndExecute( $sql,
-            array( ':instanceId' => $instance_id ), 'column' );
-
-        if ($scheduleStarts) {
-            $scheduleStartsEpoch = strtotime($scheduleStarts);
-            $showStartsEpoch     = strtotime($this->getShowInstanceStart());
-
-            $diff = $showStartsEpoch - $scheduleStartsEpoch;
-
-            if ($diff != 0) {
-                $sql = <<<SQL
-UPDATE cc_schedule
-SET starts = starts + :diff1::INTERVAL SECOND,
-    ends = ends + :diff2::INTERVAL SECOND
-WHERE instance_id = :instanceId
-SQL;
-                Application_Common_Database::prepareAndExecute($sql,
-                    array(
-                        ':diff1'      => $diff,
-                        ':diff2'      => $diff,
-                        ':instanceId' => $instance_id ), 'execute');
-            }
-        }
-        Application_Model_RabbitMq::PushSchedule();
-    }
-
     /*
      * @param $dateTime
      *      php Datetime object to add deltas to
@@ -237,152 +200,6 @@ SQL;
         }
 
         return $newDateTime;
-    }
-
-    public function moveShow($deltaDay, $deltaMin)
-    {
-        if ($this->getShow()->isRepeating()) {
-            return _("Can't drag and drop repeating shows");
-        }
-
-        $today_timestamp = time();
-        $startsDateTime = new DateTime($this->getShowInstanceStart(), new DateTimeZone("UTC"));
-        $endsDateTime = new DateTime($this->getShowInstanceEnd(), new DateTimeZone("UTC"));
-
-        if ($today_timestamp > $startsDateTime->getTimestamp()) {
-            return _("Can't move a past show");
-        }
-
-        //the user is moving the show on the calendar from the perspective of local time.
-        //incase a show is moved across a time change border offsets should be added to the localtime
-        //stamp and then converted back to UTC to avoid show time changes!
-        $startsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-        $endsDateTime->setTimezone(new DateTimeZone(date_default_timezone_get()));
-
-        $newStartsDateTime = self::addDeltas($startsDateTime, $deltaDay, $deltaMin);
-        $newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin);
-
-        //convert our new starts/ends to UTC.
-        $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
-        $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
-
-        if ($today_timestamp > $newStartsDateTime->getTimestamp()) {
-            return _("Can't move show into past");
-        }
-
-        //check if show is overlapping
-        $overlapping = Application_Model_Schedule::checkOverlappingShows($newStartsDateTime, $newEndsDateTime, true, $this->getShowInstanceId());
-        if ($overlapping) {
-            return _("Cannot schedule overlapping shows");
-        }
-
-        if ($this->isRecorded()) {
-
-            //rebroadcasts should start at max 1 hour after a recorded show has ended.
-            $minRebroadcastStart = self::addDeltas($newEndsDateTime, 0, 60);
-            //check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
-            $rebroadcasts = CcShowInstancesQuery::create()
-                ->filterByDbOriginalShow($this->_instanceId)
-                ->filterByDbStarts($minRebroadcastStart->format('Y-m-d H:i:s'), Criteria::LESS_THAN)
-                ->find();
-
-            if (count($rebroadcasts) > 0) {
-                return _("Can't move a recorded show less than 1 hour before its rebroadcasts.");
-            }
-        }
-
-        if ($this->isRebroadcast()) {
-
-            try {
-                $recordedShow = new Application_Model_ShowInstance($this->_showInstance->getDbOriginalShow());
-            }
-            //recorded show doesn't exist.
-            catch (Exception $e) {
-                $this->_showInstance->delete();
-
-                return _("Show was deleted because recorded show does not exist!");
-            }
-
-            $recordEndDateTime = new DateTime($recordedShow->getShowInstanceEnd(), new DateTimeZone("UTC"));
-            $newRecordEndDateTime = self::addDeltas($recordEndDateTime, 0, 60);
-
-            if ($newStartsDateTime->getTimestamp() < $newRecordEndDateTime->getTimestamp()) {
-                return _("Must wait 1 hour to rebroadcast.");
-            }
-        }
-
-        $this->setShowStart($newStartsDateTime);
-        $this->setShowEnd($newEndsDateTime);
-        $this->correctScheduleStartTimes();
-
-        $show = new Application_Model_Show($this->getShowId());
-        if (!$show->isRepeating() && is_null($this->isRebroadcast())) {
-            $show->setShowFirstShow($newStartsDateTime);
-            $show->setShowLastShow($newEndsDateTime);
-        }
-
-        Application_Model_RabbitMq::PushSchedule();
-    }
-
-    public function resizeShow($deltaDay, $deltaMin)
-    {
-        $con = Propel::getConnection();
-
-        $hours = $deltaMin / 60;
-
-        $hours = ($hours > 0) ? floor($hours) : ceil($hours);
-
-        $mins = abs($deltaMin % 60);
-
-        $today_timestamp = gmdate("Y-m-d H:i:s");
-        $starts          = $this->getShowInstanceStart();
-        $ends            = $this->getShowInstanceEnd();
-
-        if (strtotime($today_timestamp) > strtotime($starts)) {
-            return _("can't resize a past show");
-        }
-
-        //$sql = "SELECT timestamp '{$ends}' + interval '{$deltaDay} days' + interval '{$hours}:{$mins}'";
-        $sql = "SELECT timestamp :ends + interval :deltaDays + interval :deltaTime";
-
-        $now_ends = Application_Common_Database::prepareAndExecute($sql,
-            array(':ends'      => $ends,
-                  ':deltaDays' => "$deltaDay days",
-                  ':deltaTime' => "{$hours}:{$mins}"), 'column'
-        );
-
-        //only need to check overlap if show increased in size.
-        if (strtotime($now_ends) > strtotime($ends)) {
-
-            $utcStartDateTime = new DateTime($ends, new DateTimeZone("UTC"));
-            $utcEndDateTime = new DateTime($now_ends, new DateTimeZone("UTC"));
-
-            $overlap =  Application_Model_Show::getShows($utcStartDateTime, $utcEndDateTime);
-
-            if (count($overlap) > 0) {
-                // TODO : fix ghetto error handling -- RG
-                return _("Should not overlap shows");
-            }
-        }
-        //with overbooking no longer need to check already scheduled content still fits.
-
-        //must update length of all rebroadcast instances.
-        if ($this->isRecorded()) {
-            $sql = <<<SQL
-UPDATE cc_show_instances
-SET ends = (ends + interval :deltaDays + interval :interval)
-WHERE rebroadcast = 1
-  AND instance_id = :instanceId;
-SQL;
-            Application_Common_Database::prepareAndExecute( $sql, array(
-                ':deltaDays' => "$deltaDay days",
-                ':interval' => "$hours:$mins",
-                ':instanceId' => $this->_instanceId ), 'execute');
-
-        }
-
-        $this->setShowEnd($now_ends);
-        Application_Model_RabbitMq::PushSchedule();
     }
 
     /**
@@ -635,9 +452,12 @@ SQL;
     {
         $durationSeconds = $this->getDurationSecs();
         $timeSeconds = $this->getTimeScheduledSecs();
-
-        $percent = ceil(($timeSeconds / $durationSeconds) * 100);
-
+    
+        if ($durationSeconds != 0) { //Prevent division by zero if the show duration is somehow zero.
+            $percent = ceil(($timeSeconds / $durationSeconds) * 100);
+        } else {
+            $percent = 0;
+        }
         return $percent;
     }
 
@@ -779,11 +599,15 @@ SQL;
             ':instance_id2' => $this->_instanceId
         ));
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        $userTimezone = Application_Model_Preference::GetUserTimezone();
+        $displayTimezone = new DateTimeZone($userTimezone);
+        $utcTimezone = new DateTimeZone("UTC");
 
         foreach ($results as &$row) {
 
-            $dt = new DateTime($row["starts"], new DateTimeZone("UTC"));
-            $dt->setTimezone(new DateTimeZone(date_default_timezone_get()));
+            $dt = new DateTime($row["starts"], $utcTimezone);
+            $dt->setTimezone($displayTimezone);
             $row["starts"] = $dt->format("Y-m-d H:i:s");
 
             if (isset($row['length'])) {
@@ -809,21 +633,6 @@ SQL;
             array(':instanceId' => $this->_instanceId), 'column');
 
         return ($query !== false) ? $query : null;
-    }
-
-    public function getShowEndGapTime()
-    {
-        $showEnd = $this->getShowInstanceEnd();
-        $lastItemEnd = $this->getLastAudioItemEnd();
-
-        if (is_null($lastItemEnd)) {
-            $lastItemEnd = $this->getShowInstanceStart();
-        }
-
-
-        $diff = strtotime($showEnd) - strtotime($lastItemEnd);
-
-        return ($diff < 0) ? 0 : $diff;
     }
 
     public static function GetLastShowInstance($p_timeNow)

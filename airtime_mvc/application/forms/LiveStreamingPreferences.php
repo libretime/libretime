@@ -107,6 +107,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     public function isValid($data)
     {
         $isValid = parent::isValid($data);
+
         return $isValid;
     }
 

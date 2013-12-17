@@ -13,8 +13,13 @@ var AIRTIME = (function(AIRTIME){
 var serverTimezoneOffset = 0;
 
 function closeDialogCalendar(event, ui) {
-    //$("#schedule_calendar").fullCalendar( 'refetchEvents' );
-    $(this).remove();
+    
+    $el = $(this);
+    $el.dialog('destroy');
+    $el.remove();
+    
+    //need to refetch the events to update scheduled status.
+    $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
 function checkShowLength(json) {
@@ -247,8 +252,8 @@ function createFullCalendar(data){
 
     serverTimezoneOffset = data.calendarInit.timezoneOffset;
 
-    var mainHeight = document.documentElement.clientHeight - 200 - 50;
-    
+    var mainHeight = $(window).height() - 200 - 35;
+
     $('#schedule_calendar').fullCalendar({
         header: {
             left: 'prev, next, today',
@@ -319,7 +324,8 @@ function createFullCalendar(data){
         eventRender: eventRender,
         eventAfterRender: eventAfterRender,
         eventDrop: eventDrop,
-        eventResize: eventResize 
+        eventResize: eventResize,
+        windowResize: windowResize
     });
 }
 

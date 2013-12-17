@@ -408,6 +408,23 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
         return $webstream->getDbId();
     }
+    
+    /*
+     * method is not used, webstreams aren't currently kept track of for isScheduled.
+     */
+    public static function setIsScheduled($p_webstreamId, $p_status) {
+    
+    	$webstream = CcWebstreamQuery::create()->findPK($p_webstreamId);
+    	$updateIsScheduled = false;
+    
+    	if (isset($webstream) && !in_array($p_webstreamId,
+    			Application_Model_Schedule::getAllFutureScheduledWebstreams())) {
+    		//$webstream->setDbIsScheduled($p_status)->save();
+    		$updateIsScheduled = true;
+    	}
+    
+    	return $updateIsScheduled;
+    }
 }
 
 class WebstreamNoPermissionException extends Exception {}

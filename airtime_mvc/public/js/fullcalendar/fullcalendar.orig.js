@@ -1,6 +1,6 @@
 /**
  * @preserve
- * FullCalendar v1.5.3-CUSTOM (Changes by Martin Konecny -added primitive support for timezones)
+ * FullCalendar v1.5.4
  * http://arshaw.com/fullcalendar/
  *
  * Use fullcalendar.css for basic styling.
@@ -11,7 +11,7 @@
  * Dual licensed under the MIT and GPL licenses, located in
  * MIT-LICENSE.txt and GPL-LICENSE.txt respectively.
  *
- * Date: Mon Feb 6 22:40:40 2012 -0800
+ * Date: Tue Sep 4 23:38:33 2012 -0700
  *
  */
  
@@ -111,7 +111,7 @@ var rtlDefaults = {
 
 
 
-var fc = $.fullCalendar = { version: "1.5.3" };
+var fc = $.fullCalendar = { version: "1.5.4" };
 var fcViews = fc.views = {};
 
 
@@ -227,7 +227,7 @@ function Calendar(element, options, eventSources) {
 	var absoluteViewElement;
 	var resizeUID = 0;
 	var ignoreWindowResize = 0;
-	var date = adjustDateToServerDate(new Date(), options["serverTimezoneOffset"]);
+	var date = new Date();
 	var events = [];
 	var _dragElement;
 	
@@ -1658,7 +1658,7 @@ function sliceSegs(events, visEventEnds, start, end) {
 				msLength: segEnd - segStart
 			});
 		}
-	} 
+	}
 	return segs.sort(segCmp);
 }
 
@@ -1742,29 +1742,26 @@ function setOuterHeight(element, height, includeMargins) {
 }
 
 
-// TODO: curCSS has been deprecated (jQuery 1.4.3 - 10/16/2010)
-
-
 function hsides(element, includeMargins) {
 	return hpadding(element) + hborders(element) + (includeMargins ? hmargins(element) : 0);
 }
 
 
 function hpadding(element) {
-	return (parseFloat($.curCSS(element[0], 'paddingLeft', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'paddingRight', true)) || 0);
+	return (parseFloat($.css(element[0], 'paddingLeft', true)) || 0) +
+	       (parseFloat($.css(element[0], 'paddingRight', true)) || 0);
 }
 
 
 function hmargins(element) {
-	return (parseFloat($.curCSS(element[0], 'marginLeft', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'marginRight', true)) || 0);
+	return (parseFloat($.css(element[0], 'marginLeft', true)) || 0) +
+	       (parseFloat($.css(element[0], 'marginRight', true)) || 0);
 }
 
 
 function hborders(element) {
-	return (parseFloat($.curCSS(element[0], 'borderLeftWidth', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'borderRightWidth', true)) || 0);
+	return (parseFloat($.css(element[0], 'borderLeftWidth', true)) || 0) +
+	       (parseFloat($.css(element[0], 'borderRightWidth', true)) || 0);
 }
 
 
@@ -1774,20 +1771,20 @@ function vsides(element, includeMargins) {
 
 
 function vpadding(element) {
-	return (parseFloat($.curCSS(element[0], 'paddingTop', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'paddingBottom', true)) || 0);
+	return (parseFloat($.css(element[0], 'paddingTop', true)) || 0) +
+	       (parseFloat($.css(element[0], 'paddingBottom', true)) || 0);
 }
 
 
 function vmargins(element) {
-	return (parseFloat($.curCSS(element[0], 'marginTop', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'marginBottom', true)) || 0);
+	return (parseFloat($.css(element[0], 'marginTop', true)) || 0) +
+	       (parseFloat($.css(element[0], 'marginBottom', true)) || 0);
 }
 
 
 function vborders(element) {
-	return (parseFloat($.curCSS(element[0], 'borderTopWidth', true)) || 0) +
-	       (parseFloat($.curCSS(element[0], 'borderBottomWidth', true)) || 0);
+	return (parseFloat($.css(element[0], 'borderTopWidth', true)) || 0) +
+	       (parseFloat($.css(element[0], 'borderBottomWidth', true)) || 0);
 }
 
 
@@ -1954,7 +1951,6 @@ function firstDefined() {
 		}
 	}
 }
-
 
 
 fcViews.month = MonthView;
@@ -2277,7 +2273,7 @@ function BasicView(element, calendar, viewName) {
 	function updateCells(firstTime) {
 		var dowDirty = firstTime || rowCnt == 1; // could the cells' day-of-weeks need updating?
 		var month = t.start.getMonth();
-		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
+		var today = clearTime(new Date());
 		var cell;
 		var date;
 		var row;
@@ -3110,7 +3106,7 @@ function AgendaView(element, calendar, viewName) {
 		var headCell;
 		var bodyCell;
 		var date;
-		var today = clearTime(adjustDateToServerDate(new Date(), opt("serverTimezoneOffset")));
+		var today = clearTime(new Date());
 		for (i=0; i<colCnt; i++) {
 			date = colDate(i);
 			headCell = dayHeadCells.eq(i);
@@ -4163,12 +4159,16 @@ function AgendaEventRenderer() {
 			},
 			grid: slotHeight,
 			start: function(ev, ui) {
+				console.log("event resize started");
+				
 				slotDelta = prevSlotDelta = 0;
 				hideEvents(event, eventElement);
 				eventElement.css('z-index', 9);
 				trigger('eventResizeStart', this, event, ev, ui);
 			},
 			resize: function(ev, ui) {
+				console.log("event resizing");
+				
 				// don't rely on ui.size.height, doesn't take grid into account
 				slotDelta = Math.round((Math.max(slotHeight, eventElement.height()) - ui.originalSize.height) / slotHeight);
 				if (slotDelta != prevSlotDelta) {
@@ -4184,6 +4184,8 @@ function AgendaEventRenderer() {
 				}
 			},
 			stop: function(ev, ui) {
+				console.log("event resize stopped");
+				
 				trigger('eventResizeStop', this, event, ev, ui);
 				if (slotDelta) {
 					eventResize(this, event, 0, opt('slotMinutes')*slotDelta, ev, ui);

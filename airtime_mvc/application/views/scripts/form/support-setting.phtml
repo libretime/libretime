@@ -27,7 +27,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="Email-label" class="block-display">
             <label class="optional" for="Email"><?php echo $this->element->getElement('Email')->getLabel() ?></label>
@@ -43,7 +43,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="StationWebSite-label" class="block-display">
             <label class="optional" for="StationWebSite"><?php echo $this->element->getElement('StationWebSite')->getLabel() ?></label>
@@ -104,7 +104,7 @@
             <?php if($this->element->getView()->logoImg){?>
             <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
             <?php }?>
-            
+
             <?php echo $this->element->getElement('Logo') ?>
             <div class="info-text">
                 <p><?php echo _("Note: Anything larger than 600x600 will be resized.")?></p>

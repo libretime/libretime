@@ -19,6 +19,7 @@ class Application_Model_Scheduler
     private $user;
 
     private $crossfadeDuration;
+    private $applyCrossfades = true;
 
     private $checkUserPermissions = true;
 
@@ -400,6 +401,7 @@ class Application_Model_Scheduler
 
         //check for if the show has started.
         if (bccomp( $nEpoch , $sEpoch , 6) === 1) {
+            $this->applyCrossfades = false;
             //need some kind of placeholder for cc_schedule.
             //playout_status will be -1.
             $nextDT = $this->nowDT;
@@ -454,8 +456,8 @@ class Application_Model_Scheduler
             $itemEndDT = $this->findEndTime($itemStartDT, $item["clip_length"]);
 
             $update_sql = "UPDATE cc_schedule SET ".
-                "starts = '{$itemStartDT->format("Y-m-d H:i:s")}', ".
-                "ends = '{$itemEndDT->format("Y-m-d H:i:s")}' ".
+                "starts = '{$itemStartDT->format("Y-m-d H:i:s.u")}', ".
+                "ends = '{$itemEndDT->format("Y-m-d H:i:s.u")}' ".
                 "WHERE id = {$item["id"]}";
             Application_Common_Database::prepareAndExecute(
                 $update_sql, array(), Application_Common_Database::EXECUTE);
@@ -533,6 +535,9 @@ class Application_Model_Scheduler
             $linked = false;
 
             foreach ($scheduleItems as $schedule) {
+                //reset
+                $this->applyCrossfades = true;
+
                 $id = intval($schedule["id"]);
 
                 /* Find out if the show where the cursor position (where an item will
@@ -595,6 +600,9 @@ class Application_Model_Scheduler
 
                 $excludePositions = array();
                 foreach($instances as &$instance) {
+                    //reset
+                    $this->applyCrossfades = true;
+
                     $instanceId = $instance["id"];
                     if ($id !== 0) {
                         /* We use the selected cursor's position to find the same
@@ -609,16 +617,41 @@ class Application_Model_Scheduler
                         $linkedItemEnds = Application_Common_Database::prepareAndExecute(
                             $linkedItem_sql, array(), Application_Common_Database::COLUMN);
 
-                        $nextStartDT = $this->findNextStartTime(
-                            new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
-                            $instanceId);
+                        if (!$linkedItemEnds) {
+                            //With dynamic smart blocks there may be different number of items in
+                            //each show. In case the position does not exist we need to select
+                            //the end time of the last position
+                            $maxPos_sql = "SELECT max(position) from cc_schedule ".
+                              "WHERE instance_id = {$instanceId}";
+                            $pos = Application_Common_Database::prepareAndExecute(
+                                $maxPos_sql, array(), Application_Common_Database::COLUMN);
 
-                        $pos++;
+                            //show instance has no scheduled tracks
+                            if (empty($pos)) {
+                                $pos = 0;
+                                $nextStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
+                            } else {
 
-                        /* Show is not empty so we need to apply crossfades
-                         * for the first inserted item
-                         */
-                        $applyCrossfades = true;
+                                $linkedItem_sql = "SELECT ends FROM cc_schedule ".
+                                    "WHERE instance_id = {$instanceId} ".
+                                    "AND position = {$pos} ".
+                                    "AND playout_status != -1";
+                                $linkedItemEnds = Application_Common_Database::prepareAndExecute(
+                                    $linkedItem_sql, array(), Application_Common_Database::COLUMN);
+
+                                $nextStartDT = $this->findNextStartTime(
+                                    new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
+                                    $instanceId);
+                            }
+                        } else {
+                            $nextStartDT = $this->findNextStartTime(
+                                new DateTime($linkedItemEnds, new DateTimeZone("UTC")),
+                                $instanceId);
+
+                            $pos++;
+                        }
+
+                        //$pos++;
                     }
                     //selected empty row to add after
                     else {
@@ -631,7 +664,7 @@ class Application_Model_Scheduler
                         /* Show is empty so we don't need to calculate crossfades
                          * for the first inserted item
                          */
-                        $applyCrossfades = false;
+                        $this->applyCrossfades = false;
                     }
 
                     if (!in_array($instanceId, $affectedShowInstances)) {
@@ -646,7 +679,7 @@ class Application_Model_Scheduler
 
                         $pstart = microtime(true);
 
-                        if ($applyCrossfades) {
+                        if ($this->applyCrossfades) {
                             $initalStartDT = clone $this->findTimeDifference(
                                 $nextStartDT, $this->crossfadeDuration);
                         } else {
@@ -702,6 +735,13 @@ class Application_Model_Scheduler
                                 $sched = Application_Common_Database::prepareAndExecute(
                                     $movedItem_sql, array(), Application_Common_Database::SINGLE);
                             }
+                            /* If we don't find a schedule item it means the linked
+                             * shows have a different amount of items (dyanmic block)
+                             * and we should skip the item move for this show instance
+                             */
+                            if (!$sched) {
+                                continue;
+                            }
                             $excludeIds[] = intval($sched["id"]);
 
                             $file["cliplength"] = $sched["clip_length"];
@@ -730,7 +770,7 @@ class Application_Model_Scheduler
                             default: break;
                         }
 
-                        if ($applyCrossfades) {
+                        if ($this->applyCrossfades) {
                             $nextStartDT = $this->findTimeDifference($nextStartDT,
                                 $this->crossfadeDuration);
                             $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
@@ -738,14 +778,14 @@ class Application_Model_Scheduler
                             /* Set it to false because the rest of the crossfades
                              * will be applied after we insert each item
                              */
-                            $applyCrossfades = false;
+                            $this->applyCrossfades = false;
                         }
 
                         $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         if ($doInsert) {
                             $values[] = "(".
-                                "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
-                                "'{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "'{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
+                                "'{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
                                 "'{$file["cuein"]}', ".
                                 "'{$file["cueout"]}', ".
                                 "'{$file["fadein"]}', ".
@@ -758,8 +798,8 @@ class Application_Model_Scheduler
 
                         } elseif ($doUpdate) {
                             $update_sql = "UPDATE cc_schedule SET ".
-                                "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
-                                "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "starts = '{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
+                                "ends = '{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
                                 "cue_in = '{$file["cuein"]}', ".
                                 "cue_out = '{$file["cueout"]}', ".
                                 "fade_in = '{$file["fadein"]}', ".
@@ -827,8 +867,8 @@ class Application_Model_Scheduler
                             $endTimeDT = $this->findEndTime($nextStartDT, $item["clip_length"]);
                             $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $update_sql = "UPDATE cc_schedule SET ".
-                                "starts = '{$nextStartDT->format("Y-m-d H:i:s")}', ".
-                                "ends = '{$endTimeDT->format("Y-m-d H:i:s")}', ".
+                                "starts = '{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
+                                "ends = '{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
                                 "position = {$pos} ".
                                 "WHERE id = {$item["id"]}";
                             Application_Common_Database::prepareAndExecute(
@@ -1140,6 +1180,7 @@ class Application_Model_Scheduler
 
             foreach ($instances as $instance) {
                 $instance->updateScheduleStatus($this->con);
+                $instance->correctSchedulePositions();
             }
 
             //update the last scheduled timestamp.

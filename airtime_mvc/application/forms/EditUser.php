@@ -1,4 +1,5 @@
 <?php
+require_once( __DIR__ . '/../validate/NotDemoValidate.php');
 
 class Application_Form_EditUser extends Zend_Form
 {
@@ -16,7 +17,8 @@ class Application_Form_EditUser extends Zend_Form
         $userData = Application_Model_User::GetUserData($currentUserId);
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
-
+        $notDemoValidator = new Application_Validate_NotDemoValidate();
+        
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/edit-user.phtml', "currentUser" => $currentUser->getLogin()))));
         $this->setAttrib('id', 'current-user-form');
@@ -52,6 +54,7 @@ class Application_Form_EditUser extends Zend_Form
         $passwordVerify->setRequired(true);
         $passwordVerify->addFilter('StringTrim');
         $passwordVerify->addValidator($notEmptyValidator);
+        $passwordVerify->addValidator($notDemoValidator);
         $passwordVerify->setDecorators(array('viewHelper'));
         $this->addElement($passwordVerify);
 
@@ -115,7 +118,7 @@ class Application_Form_EditUser extends Zend_Form
         $this->addElement($locale);
         
         $timezone = new Zend_Form_Element_Select("cu_timezone");
-        $timezone->setLabel(_("Timezone:"));
+        $timezone->setLabel(_("Interface Timezone:"));
         $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
         $timezone->setValue(Application_Model_Preference::GetUserTimezone($currentUserId));
         $timezone->setDecorators(array('ViewHelper'));

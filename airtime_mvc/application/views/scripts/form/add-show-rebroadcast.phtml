@@ -1,7 +1,7 @@
 <fieldset id="add_show_rebroadcast_relative">
     <dl>
         <dt id="add_show_hosts_rebroadcast_repeat_day-label" class="block-display">
-          <label for="add_show_rebroadcast_repeat_day" class="optional"><? echo _("Repeat Days:"); ?></label>
+          <label for="add_show_rebroadcast_repeat_day" class="optional"><?php echo _("Repeat Days:"); ?></label>
         </dt> 
         <dd id="add_show_rebroadcast_repeat_day-element" class="block-display clearfix">
             <ul class="formrow-repeat"> 
@@ -15,7 +15,7 @@
                     <?php if($i > 1): ?>
                         <a class="ui-button ui-button-icon-only  ui-widget ui-state-default" id="remove_rebroadcast_<?php echo $i ?>">
                             <span class="ui-icon ui-icon-closethick"></span>
-                            <span class="ui-button-text"><? echo _("Remove") ?></span>
+                            <span class="ui-button-text"><?php echo _("Remove") ?></span>
                         </a>
                     <?php endif; ?>
                     <?php if(($this->element->getElement('add_show_rebroadcast_date_'.$i)->hasErrors()) 
@@ -38,7 +38,7 @@
             </ul>
         <a class="ui-button ui-button-icon-only  ui-widget ui-state-default add_absolute_rebroadcast_day">
             <span class="ui-icon ui-icon-plusthick"></span>
-            <span class="ui-button-text"><? echo _("Add") ?></span>
+            <span class="ui-button-text"><?php echo _("Add") ?></span>
         </a>
         </dd>
     </dl>

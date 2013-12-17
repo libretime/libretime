@@ -14,5 +14,21 @@
  * @package    propel.generator.airtime
  */
 class CcPlayoutHistoryMetaData extends BaseCcPlayoutHistoryMetaData {
+	
+	/**
+	 * Set the value of [value] column.
+	 *
+	 * @param      string $v new value
+	 * @return     CcPlayoutHistoryMetaData The current object (for fluent API support)
+	 */
+	public function setDbValue($v)
+	{
+		//make sure the metadata isn't longer than the DB field.
+		$v = substr($v, 0, 128);
+		
+		parent::setDbValue($v);
+	
+		return $this;
+	} // setDbValue()
 
 } // CcPlayoutHistoryMetaData

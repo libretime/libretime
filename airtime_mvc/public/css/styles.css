@@ -13,7 +13,7 @@ html, body {
 }
 
 #login-page {
-    background: #1f1f1f url(images/login_page_bg.png) no-repeat center 0;
+    background: #1f1f1f url(images/login_page_bg.png) no-repeat center 0;`
     margin: 0;
     padding: 0;
 	height:100%;
@@ -125,7 +125,8 @@ select {
 
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
 .playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon,
-.admin_username_help_icon, .stream_type_help_icon, .show_linking_help_icon {
+.admin_username_help_icon, .stream_type_help_icon, .show_linking_help_icon,
+.show_timezone_help_icon{
         cursor: help;
         position: relative;
         display:inline-block; zoom:1;
@@ -246,7 +247,7 @@ select {
 	margin-bottom:3px;
 }
 .time-elapsed {
-	color:#9b9b9b;
+	color:#c4c4c4;
 	padding-right:6px;
 }
 .time-remaining {
@@ -272,6 +273,11 @@ select {
 .now-playing-info .show-length {
 	color:#c4c4c4;
 	padding-left:6px; 
+}
+
+.now-playing-info .song-length {
+	color:#9b9b9b;
+	padding-right:6px; 
 }
 
 .on-air-block  {
@@ -445,6 +451,10 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     vertical-align: top;
 }
 
+.add_show_input_select{
+    width: 150px;
+}
+
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
 table.library-track-md{
     width: 280px;
@@ -559,7 +569,7 @@ input.input_text.sp_input_text{
 }
 
 input.input_text.sp_extra_input_text{
-    width: 60px !important;
+    width: 139px !important;
 }
 
 .sp_text_font{
@@ -1135,9 +1145,51 @@ dt.block-display, dd.block-display {
 	font-size:16px;
 	font-weight:normal;
 }
+
 #schedule_calendar {
-	width:98.5%
+    width: 100%;
 }
+
+#schedule_block_table {
+	width: 100%;
+}
+
+thead tr.fc-first
+{
+	height: 32px;
+	line-height: 32px;	
+}
+
+/** Extremely nasty workaround for a fullcalendar bug, where clicking "Add Show"
+    would cause this large space under the table header. The CSS to get to that
+    is ridiculously complicated and set in the HTML (!) dynamically with JS,
+    which makes it a pain in the ass to fix. That's why we're overriding it 
+    with !important here.
+*/
+
+div.fc-agenda > div:nth-child(2)
+{
+	top: 34px !important;
+}
+
+#schedule_calendar_cell
+{
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    padding-right: 20px !important;
+}
+
+.schedule_change_slots /** The time span combobox */
+{
+	margin-top: 4px; /** Center it vertically */
+}
+
+#schedule_block_table td {
+	padding: 0px;
+	vertical-align: top;
+}
+
 div.ui-datepicker {
 	/*font-size: 75%;*/
 }

@@ -1,13 +1,13 @@
 <div id="master-panel">
   <div class="now-playing-block">
-    <div class="text-row"><strong><? echo _("Previous:"); ?></strong> <span id='previous'></span> <span id='prev-length'></span></div>
+    <div class="text-row"><strong><?php echo _("Previous:"); ?></strong> <span id='previous'></span> <span id='prev-length'></span></div>
     <div class="now-playing-info song">
-      <div class="time-flow"><span class="time-elapsed" id="time-elapsed"></span><span class="time-remaining" id="time-remaining"></span></div>
-      <span id='current'></span><span class="length" id="song-length"></span></div>
+      <div class="time-flow"><span class="song-length" id="song-length"></span><span class="time-elapsed" id="time-elapsed"></span><span class="time-remaining" id="time-remaining"></span></div>
+      <span id='current'></span></div>
     <div class="progressbar">
       <div class="progress-song" id="progress-bar" style="width:0%;"></div>
     </div>
-    <div class="text-row next-song"><strong><? echo _("Next:"); ?></strong> <span id='next'></span> <span id='next-length'></span></div>
+    <div class="text-row next-song"><strong><?php echo _("Next:"); ?></strong> <span id='next'></span> <span id='next-length'></span></div>
   </div>
     <div class="show-block">
       <div class="text-row">&nbsp;</div>
@@ -21,12 +21,12 @@
       </div>
     </div>
   <div class="source-info-block">
- 	<h3><? echo _("Source Streams") ?></h3>
+ 	<h3><?php echo _("Source Streams") ?></h3>
     <ul>
       <li>
         <div id="master_dj_div" class="source-label">
           <a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a>
-          <? echo _("Master Source") ?>
+          <?php echo _("Master Source") ?>
         </div>
         <div class="line-to-switch"></div>
         <a href="#" id="master_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->master_dj_switch?></span></a>
@@ -35,14 +35,14 @@
       <li>
         <div id="live_dj_div" class="source-label">
         <a id="live_dj" class="source-kick-button" onclick="kickSource(this)"></a>
-          <? echo _("Show Source")?>
+          <?php echo _("Show Source")?>
         </div>
         <div class="line-to-switch"></div>
         <a href="#" id="live_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->live_dj_switch?></span></a>
         <div class="line-to-on-air"></div>
       </li>
       <li>
-        <div id="scheduled_play_div" class="source-label"><? echo " "._("Scheduled Play") ?></div>
+        <div id="scheduled_play_div" class="source-label"><?php echo " "._("Scheduled Play") ?></div>
         <div class="line-to-switch"></div>
         <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
         <div class="line-to-on-air"></div>
@@ -51,12 +51,12 @@
   </div>
   <div class="on-air-block">
   <h3>&nbsp;</h3>
-    <div class="on-air-info off" id="on-air-info"><? echo _("ON AIR") ?></div>
-    <a href="#" class="listen-control-button"><span><? echo _("Listen") ?></span></a>
+    <div class="on-air-info off" id="on-air-info"><?php echo _("ON AIR") ?></div>
+    <a href="#" class="listen-control-button"><span><?php echo _("Listen") ?></span></a>
   </div>
   <div class="time-info-block pull-right">
     <ul>
-      <li><? echo _("Station time") ?></li>
+      <li><?php echo _("Station time") ?></li>
       <li class="time" id="time"></li>
       <li class="time-zone"><span id="time-zone"></span></li>
     </ul>

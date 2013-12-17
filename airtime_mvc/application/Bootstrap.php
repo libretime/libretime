@@ -17,10 +17,8 @@ require_once "Timezone.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
-date_default_timezone_set('UTC');
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
-date_default_timezone_set(Application_Model_Preference::GetTimezone());
 
 Config::setAirtimeVersion();
 require_once __DIR__."/configs/navigation.php";
@@ -102,7 +100,21 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'locale/datatables-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendScript("$.i18n.setDictionary(general_dict)");
         $view->headScript()->appendScript("var baseUrl='$baseUrl'");
-
+        
+		//These timezones are needed to adjust javascript Date objects on the client to make sense to the user's set timezone
+		//or the server's set timezone.
+        $serverTimeZone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+        $now = new DateTime("now", $serverTimeZone);
+        $offset = $now->format("Z") * -1;
+        $view->headScript()->appendScript("var serverTimezoneOffset = {$offset}; //in seconds");
+        
+        if (class_exists("Zend_Auth", false) && Zend_Auth::getInstance()->hasIdentity()) {
+        	$userTimeZone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        	$now = new DateTime("now", $userTimeZone);
+        	$offset = $now->format("Z") * -1;
+        	$view->headScript()->appendScript("var userTimezoneOffset = {$offset}; //in seconds");
+        }
+        
         //scripts for now playing bar
         $view->headScript()->appendFile($baseUrl.'js/airtime/airtime_bootstrap.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/airtime/dashboard/helperfunctions.js?'.$CC_CONFIG['airtime_version'],'text/javascript');

@@ -16,8 +16,11 @@ def notify_stream(m)
   #escaping the apostrophe, and then starting a new string right after it. This is why we use 3 apostrophes.
   json_str = string.replace(pattern="'",(fun (s) -> "'\''"), json_str)
   command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
-  log(command)
-  system(command)
+  
+  if !current_dyn_id != "-1" then
+    log(command)
+    system(command)
+  end
 end
 
 # A function applied to each metadata chunk

@@ -44,47 +44,31 @@ class Application_Service_SchedulerService
      * Applies the show start difference to any scheduled items
      * 
      * @param $instanceIds
-     * @param $diff
-     * @param $newStart
+     * @param $diff (integer, difference between unix epoch in seconds)
      */
-    public static function updateScheduleStartTime($instanceIds, $diff=null, $newStart=null)
+    public static function updateScheduleStartTime($instanceIds, $diff)
     {
         $con = Propel::getConnection();
         if (count($instanceIds) > 0) {
             $showIdList = implode(",", $instanceIds);
 
-            if (is_null($diff)) {
-                $ccSchedule = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                    ->orderByDbStarts()
-                    ->limit(1)
-                    ->findOne();
-
-                if (!is_null($ccSchedule)) {
-                    $scheduleStartsEpoch = strtotime($ccSchedule->getDbStarts());
-                    $showStartsEpoch     = strtotime($newStart->format("Y-m-d H:i:s"));
-
-                    $diff = $showStartsEpoch - $scheduleStartsEpoch;
-                }
-            }
-
             $ccSchedules = CcScheduleQuery::create()
                 ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                ->find();
+                ->find($con);
 
             $interval = new DateInterval("PT".abs($diff)."S");
             if ($diff < 0) {
                 $interval->invert = 1;
             }
             foreach ($ccSchedules as $ccSchedule) {
-                $start = new DateTime($ccSchedule->getDbStarts());
+                $start = $ccSchedule->getDbStarts(null);
                 $newStart = $start->add($interval);
-                $end = new DateTime($ccSchedule->getDbEnds());
+                $end = $ccSchedule->getDbEnds(null);
                 $newEnd = $end->add($interval);
                 $ccSchedule
-                    ->setDbStarts($newStart->format("Y-m-d H:i:s"))
-                    ->setDbEnds($newEnd->format("Y-m-d H:i:s"))
-                    ->save();
+                    ->setDbStarts($newStart)
+                    ->setDbEnds($newEnd)
+                    ->save($con);
             }
         }
     }
@@ -173,6 +157,10 @@ class Application_Service_SchedulerService
          * any other instances with content
          */
         $instanceIds = $ccShow->getInstanceIds();
+        if (count($instanceIds) == 0) {
+            return;
+        }
+
         $schedule_sql = "SELECT * FROM cc_schedule ".
             "WHERE instance_id IN (".implode($instanceIds, ",").")";
         $ccSchedules = Application_Common_Database::prepareAndExecute(
@@ -406,5 +394,25 @@ class Application_Service_SchedulerService
             Logging::info($e->getMessage());
             return false;
         }
+    }
+    
+    /*
+     * TODO in the future this should probably support webstreams.
+     */
+    public function updateFutureIsScheduled($scheduleId, $status) 
+    {
+    	$sched = CcScheduleQuery::create()->findPk($scheduleId);
+    	$redraw = false;
+    	
+    	if (isset($sched)) {
+    		
+    		$fileId = $sched->getDbFileId();
+    		
+    		if (isset($fileId)) {
+    			$redraw = Application_Model_StoredFile::setIsScheduled($fileId, $status);
+    		}
+    	}
+    	
+    	return $redraw;
     }
 }

@@ -78,6 +78,15 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             'decorators'  => array('ViewHelper')
         ));
 
+        $timezone = new Zend_Form_Element_Select('add_show_timezone');
+        $timezone->setRequired(true)
+                 ->setLabel(_("Timezone:"))
+                 ->setMultiOptions(Application_Common_Timezone::getTimezones())
+                 ->setValue(Application_Model_Preference::GetUserTimezone())
+                 ->setAttrib('class', 'input_select add_show_input_select')
+                 ->setDecorators(array('ViewHelper'));
+        $this->addElement($timezone);
+
         // Add repeats element
         $this->addElement('checkbox', 'add_show_repeats', array(
             'label'      => _('Repeats?'),
@@ -104,18 +113,20 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $start_time = $formData['add_show_start_date']." ".$formData['add_show_start_time'];
         $end_time = $formData['add_show_end_date_no_repeat']." ".$formData['add_show_end_time'];
 
-        //DateTime stores $start_time in the current timezone
-        $nowDateTime = new DateTime();
-        $showStartDateTime = new DateTime($start_time);
-        $showEndDateTime = new DateTime($end_time);
+        //have to use the timezone the user has entered in the form to check past/present
+        $showTimezone = new DateTimeZone($formData["add_show_timezone"]);
+        $nowDateTime = new DateTime("now", $showTimezone);
+        $showStartDateTime = new DateTime($start_time, $showTimezone);
+        $showEndDateTime = new DateTime($end_time, $showTimezone);
+
         if ($validateStartDate) {
-            if ($showStartDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
+            if ($showStartDateTime < $nowDateTime) {
                 $this->getElement('add_show_start_time')->setErrors(array(_('Cannot create show in the past')));
                 $valid = false;
             }
             // if edit action, check if original show start time is in the past. CC-3864
             if ($originalStartDate) {
-                if ($originalStartDate->getTimestamp() < $nowDateTime->getTimestamp()) {
+                if ($originalStartDate < $nowDateTime) {
                     $this->getElement('add_show_start_time')->setValue($originalStartDate->format("H:i"));
                     $this->getElement('add_show_start_date')->setValue($originalStartDate->format("Y-m-d"));
                     $this->getElement('add_show_start_time')->setErrors(array(_('Cannot modify start date/time of the show that is already started')));
@@ -126,43 +137,42 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         }
 
         // if end time is in the past, return error
-        if ($showEndDateTime->getTimestamp() < $nowDateTime->getTimestamp()) {
+        if ($showEndDateTime < $nowDateTime) {
             $this->getElement('add_show_end_time')->setErrors(array(_('End date/time cannot be in the past')));
             $valid = false;
         }
 
-        $pattern =  '/([0-9][0-9])h ([0-9][0-9])m/';
+        //validate duration.
+        $duration = $showStartDateTime->diff($showEndDateTime);
 
-        if (preg_match($pattern, $formData['add_show_duration'], $matches) && count($matches) == 3) {
-            $hours = $matches[1];
-            $minutes = $matches[2];
-            if ($formData["add_show_duration"] == "00h 00m") {
-                $this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration 00h 00m')));
-                $valid = false;
-            } elseif (strpos($formData["add_show_duration"], 'h') !== false && $hours >= 24) {
-                if ($hours > 24 || ($hours == 24 && $minutes > 0)) {
-                    $this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration greater than 24h')));
-                    $valid = false;
-                }
-            } elseif ( strstr($formData["add_show_duration"], '-') ) {
-                $this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration < 0m')));
-                $valid = false;
-            }
-        } else {
-            $valid = false;
+        if ($showStartDateTime > $showEndDateTime) {
+        	$this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration < 0m')));
+        	$valid = false;
         }
+        else if ($showStartDateTime == $showEndDateTime) {
+        	$this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration 00h 00m')));
+        	$valid = false;
+        }
+        else if (intval($duration->format('%d')) > 0 &&
+        		(intval($duration->format('%h')) > 0
+        		 || intval($duration->format('%i')) > 0
+        		 || intval($duration->format('%s')) > 0)) {
+        	$this->getElement('add_show_duration')->setErrors(array(_('Cannot have duration greater than 24h')));
+        	$valid = false;
+        }
+
 
         /* Check if show is overlapping
          * We will only do this check if the show is valid
          * upto this point
          */
         if ($valid) {
+        	//we need to know the start day of the week in show's local timezome
+        	$startDow = $showStartDateTime->format("w");
+
             $utc = new DateTimeZone('UTC');
-            $localTimezone = new DateTimeZone(Application_Model_Preference::GetTimezone());
-            $show_start = new DateTime($start_time);
-            $show_start->setTimezone($utc);
-            $show_end = new DateTime($end_time);
-            $show_end->setTimezone($utc);
+            $showStartDateTime->setTimezone($utc);
+            $showEndDateTime->setTimezone($utc);
 
             if ($formData["add_show_repeats"]) {
 
@@ -179,7 +189,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
 
                 } elseif (!$formData["add_show_no_end"]) {
                     $popUntil = $formData["add_show_end_date"]." ".$formData["add_show_end_time"];
-                    $populateUntilDateTime = new DateTime($popUntil);
+                    $populateUntilDateTime = new DateTime($popUntil, $showTimezone);
                     $populateUntilDateTime->setTimezone($utc);
                 }
 
@@ -188,6 +198,10 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $interval = 'P7D';
                 } elseif ($formData["add_show_repeat_type"] == 1) {
                     $interval = 'P14D';
+                } elseif ($formData["add_show_repeat_type"] == 4) {
+                    $interval = 'P21D';
+                } elseif ($formData["add_show_repeat_type"] == 5) {
+                    $interval = 'P28D';
                 } elseif ($formData["add_show_repeat_type"] == 2) {
                     $interval = 'P1M';
                 }
@@ -197,21 +211,24 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                  */
                 if ($update) {
                     $overlapping = Application_Model_Schedule::checkOverlappingShows(
-                                    $show_start, $show_end, $update, null, $formData["add_show_id"]);
+                                    $showStartDateTime, $showEndDateTime, $update, null, $formData["add_show_id"]);
                 } else {
                     $overlapping = Application_Model_Schedule::checkOverlappingShows(
-                                    $show_start, $show_end);
+                                    $showStartDateTime, $showEndDateTime);
                 }
-                //$overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
 
                 /* Check if repeats overlap with previously scheduled shows
                  * Do this for each show day
                  */
                 if (!$overlapping) {
-                    $startDow = date("w", $show_start->getTimestamp());
+
+                    if (!isset($formData['add_show_day_check'])) {
+                        return false;
+                    }
+
                     foreach ($formData["add_show_day_check"] as $day) {
-                        $repeatShowStart = clone $show_start;
-                        $repeatShowEnd = clone $show_end;
+                        $repeatShowStart = clone $showStartDateTime;
+                        $repeatShowEnd = clone $showEndDateTime;
                         $daysAdd=0;
                         if ($startDow !== $day) {
                             if ($startDow > $day)
@@ -223,9 +240,8 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                              * to convert show start and show end to local time before
                              * adding the interval for the next repeating show
                              */
-                            
-                            $repeatShowStart->setTimezone($localTimezone);
-                            $repeatShowEnd->setTimezone($localTimezone);
+                            $repeatShowStart->setTimezone($showTimezone);
+                            $repeatShowEnd->setTimezone($showTimezone);
                             $repeatShowStart->add(new DateInterval("P".$daysAdd."D"));
                             $repeatShowEnd->add(new DateInterval("P".$daysAdd."D"));
                             //set back to UTC
@@ -245,14 +261,14 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                                     $repeatShowStart, $repeatShowEnd, $update, null, $formData["add_show_id"]);
                             }
-                            
+
                             if ($overlapping) {
                                 $valid = false;
                                 $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                                 break 1;
                             } else {
-                                $repeatShowStart->setTimezone($localTimezone);
-                                $repeatShowEnd->setTimezone($localTimezone);
+                                $repeatShowStart->setTimezone($showTimezone);
+                                $repeatShowEnd->setTimezone($showTimezone);
                                 $repeatShowStart->add(new DateInterval($interval));
                                 $repeatShowEnd->add(new DateInterval($interval));
                                 $repeatShowStart->setTimezone($utc);
@@ -264,8 +280,9 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                     $valid = false;
                     $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                 }
+
             } else {
-              $overlapping = Application_Model_Schedule::checkOverlappingShows($show_start, $show_end, $update, $instanceId);
+              $overlapping = Application_Model_Schedule::checkOverlappingShows($showStartDateTime, $showEndDateTime, $update, $instanceId);
                 if ($overlapping) {
                     $this->getElement('add_show_duration')->setErrors(array(_('Cannot schedule overlapping shows')));
                     $valid = false;
@@ -285,16 +302,16 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
              * show start back to local time
              */
             $rebroadcastShowStart->setTimezone(new DateTimeZone(
-                Application_Model_Preference::GetTimezone()));
+                $formData["add_show_timezone"]));
             $rebroadcastWhenDays = explode(" ", $formData["add_show_rebroadcast_date_".$i]);
             $rebroadcastWhenTime = explode(":", $formData["add_show_rebroadcast_time_".$i]);
             $rebroadcastShowStart->add(new DateInterval("P".$rebroadcastWhenDays[0]."D"));
             $rebroadcastShowStart->setTime($rebroadcastWhenTime[0], $rebroadcastWhenTime[1]);
             $rebroadcastShowStart->setTimezone(new DateTimeZone('UTC'));
-            
+
             $rebroadcastShowEnd = clone $rebroadcastShowStart;
             $rebroadcastShowEnd->add(new DateInterval("PT".$hours."H".$minutes."M"));
-            
+
             if ($showEdit) {
                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                     $rebroadcastShowStart, $rebroadcastShowEnd, true, null, $formData['add_show_id']);
@@ -302,13 +319,13 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
                 $overlapping = Application_Model_Schedule::checkOverlappingShows(
                     $rebroadcastShowStart, $rebroadcastShowEnd);
             }
-            
+
             if ($overlapping) break;
         }
-        
+
         return $overlapping;
     }
-    
+
     public function disable()
     {
         $elements = $this->getElements();

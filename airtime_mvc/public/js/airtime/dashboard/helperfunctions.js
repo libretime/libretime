@@ -73,10 +73,7 @@ function convertToHHMMSS(timeInMS){
 		minutes = "0" + minutes;
 	if (seconds.length == 1)
 		seconds = "0" + seconds;
-	if (hours == "00")
-		return minutes + ":" + seconds;
-	else
-		return hours + ":" + minutes + ":" + seconds;
+	return hours + ":" + minutes + ":" + seconds;
 }
 
 function convertToHHMMSSmm(timeInMS){

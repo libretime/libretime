@@ -1197,13 +1197,26 @@ SQL;
             $critKeys = array_keys($p_criteriaData['criteria']);
             for ($i = 0; $i < count($critKeys); $i++) {
                 foreach ($p_criteriaData['criteria'][$critKeys[$i]] as $d) {
+                	
+                	$field = $d['sp_criteria_field'];
+                	$value = $d['sp_criteria_value'];
+                		 	
+                	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                		$value = Application_Common_DateHelper::UserTimezoneStringToUTCString($value);
+                	}
+                	
                     $qry = new CcBlockcriteria();
-                    $qry->setDbCriteria($d['sp_criteria_field'])
+                    $qry->setDbCriteria($field)
                     ->setDbModifier($d['sp_criteria_modifier'])
-                    ->setDbValue($d['sp_criteria_value'])
+                    ->setDbValue($value)
                     ->setDbBlockId($this->id);
 
                     if (isset($d['sp_criteria_extra'])) {
+                    	
+                    	if ($field == 'utime' || $field == 'mtime' || $field == 'lptime') {
+                    		$d['sp_criteria_extra'] = Application_Common_DateHelper::UserTimezoneStringToUTCString($d['sp_criteria_extra']);
+                    	}
+                    	
                         $qry->setDbExtra($d['sp_criteria_extra']);
                     }
                     $qry->save();
@@ -1413,28 +1426,18 @@ SQL;
             foreach ($storedCrit["crit"] as $crit) {
                 $i = 0;
                 foreach ($crit as $criteria) {
-                    //$spCriteriaPhpName = self::$criteria2PeerMap[$criteria['criteria']];
                     $spCriteria = $criteria['criteria'];
                     $spCriteriaModifier = $criteria['modifier'];
 
                     $column = CcFilesPeer::getTableMap()->getColumnByPhpName(self::$criteria2PeerMap[$spCriteria]);
-                    // if the column is timestamp, convert it into UTC
-                    if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
-                        $spCriteriaValue = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['value']);
-                        /* Check if only a date was supplied and trim
-                         * the time after it is converted to UTC time
-                         */
-                        if (strlen($criteria['value']) <= 10) {
-                            //extract date only from timestamp in db
-                            $spCriteria = 'date('.$spCriteria.')';
-                            $spCriteriaValue = substr($spCriteriaValue, 0, 10);
-                        }
 
+                    //data should already be in UTC, do we have to do anything special here anymore?
+                    if ($column->getType() == PropelColumnTypes::TIMESTAMP) {
+                    	
+                        $spCriteriaValue = $criteria['value'];
+                        
                         if (isset($criteria['extra'])) {
-                            $spCriteriaExtra = Application_Common_DateHelper::ConvertToUtcDateTimeString($criteria['extra']);
-                            if (strlen($criteria['extra']) <= 10) {
-                                $spCriteriaExtra = substr($spCriteriaExtra, 0, 10);
-                            }
+                            $spCriteriaExtra = $criteria['extra'];
                         }
                     } elseif ($spCriteria == "bit_rate" || $spCriteria == 'sample_rate') {
                         // multiply 1000 because we store only number value

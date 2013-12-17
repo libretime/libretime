@@ -36,11 +36,15 @@ WHERE (temp.rownum%:p4) = :p5;
 SQL;
             $result = Application_Common_Database::prepareAndExecute($sql,
                     array('p1'=>$p_start, 'p2'=>$p_end, 'p3'=>$d['mount_name'], 'p4'=>$jump, 'p5'=>$remainder));
+            
+            $utcTimezone = new DateTimeZone("UTC");
+            $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+            
             foreach ($result as $r) {
-                $t = new DateTime($r['timestamp'], new DateTimeZone("UTC"));
-                $t->setTimezone(new DateTimeZone(date_default_timezone_get()));
+                $t = new DateTime($r['timestamp'], $utcTimezone);
+                $t->setTimezone($displayTimezone);
                 // tricking javascript so it thinks the server timezone is in UTC
-                $dt = new DateTime($t->format("Y-m-d H:i:s"), new DateTimeZone("UTC"));
+                $dt = new DateTime($t->format("Y-m-d H:i:s"), $utcTimezone);
 
                 $r['timestamp'] = $dt->format("U");
                 $out[$r['mount_name']][] = $r;

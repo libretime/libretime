@@ -1,4 +1,4 @@
-2.5.0 - September 4th, 2013
+2.5.0 - October 8th, 2013
   * New features
     * Playout History feature overhaul.
       - custom templates for log sheets.
@@ -6,6 +6,16 @@
       - ability to edit a history item.
       - 3 history views: log, file summary, show summary.
       - hosts can now view/log their own show history.
+    * Ubuntu 13.10 Saucy Salamander support (PHP 5.5)
+
+  * Bug Fixes
+    * Several important timezone handling improvements
+    * Rebroadcast shows bugfix
+    * Reduce likelihood of playout stalls under high memory pressure
+    * Fixed calendar not loading sometimes
+    * Fixed webstream disconnections due to Now Playing page
+    * Prevent admin password changes in demo mode
+    * Plus dozens of other bugfixes!
 
 2.4.1 - August 28th, 2013
   * Bug Fixes

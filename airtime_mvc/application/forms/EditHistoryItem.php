@@ -43,7 +43,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	    $ends->addFilter('StringTrim');
 	    $ends->setLabel(_('End Time'));
 	    $ends->setDecorators(array('ViewHelper'));
-	    $ends->setRequired(true);
+	    //$ends->setRequired(true);
 	    $this->addElement($ends);
 	}
 

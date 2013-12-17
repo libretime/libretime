@@ -4,6 +4,87 @@
 *
 */
 
+function openAddShowForm() {
+     if($("#add-show-form").length == 1) {
+        if( ($("#add-show-form").css('display')=='none')) {
+            $("#add-show-form").show();
+            /*
+            var windowWidth = $(window).width();
+            // margin on showform are 16 px on each side
+            var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
+            var widthPercent = parseInt(calendarWidth)+"%";
+            $("#schedule_calendar").css("width", widthPercent);
+
+            // 200 px for top dashboard and 50 for padding on main content
+            // this calculation was copied from schedule.js line 326
+            var mainHeight = document.documentElement.clientHeight - 200 - 50;
+            $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
+            */
+           windowResize();
+        }
+        $("#schedule-show-what").show(0, function(){
+            $add_show_name = $("#add_show_name");
+            $add_show_name.focus();
+            $add_show_name.select();
+        });
+    }
+}
+
+function makeAddShowButton(){
+    $('.fc-header-left')
+        .append('<span class="fc-header-space"></span>')
+        .append('<span class="fc-button"><a href="#" class="add-button"><span class="add-icon"></span>'+$.i18n._("Show")+'</a></span>')
+        .find('span.fc-button:last > a')
+            .click(function(){
+                openAddShowForm();
+                removeAddShowButton();
+            });
+}
+
+function removeAddShowButton(){
+    var aTag = $('.fc-header-left')
+        .find("span.fc-button:last > a");
+
+    var span = aTag.parent();
+    span.prev().remove();
+    span.remove();
+}
+
+//$el is DOM element #add-show-form
+//form is the new form contents to append to $el
+function redrawAddShowForm($el, form) {
+	
+	//need to clean up the color picker.
+    $el.find("#schedule-show-style input").each(function(i, el){
+    	var $input = $(this), 
+    		colId = $input.data("colorpickerId");
+    	
+    	$("#"+colId).remove();
+    	$input.removeData();
+    });
+    
+    $el.empty().append(form);
+    
+    setAddShowEvents($el);
+}
+
+function closeAddShowForm(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    var $el = $("#add-show-form");
+    
+	$el.hide();
+    windowResize();
+
+    $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json) {
+    	
+    	redrawAddShowForm($el, json.form);
+    });
+    
+    makeAddShowButton();
+}
+
 //dateText mm-dd-yy
 function startDpSelect(dateText, inst) {
 	var time, date;
@@ -73,16 +154,14 @@ function findHosts(request, callback) {
 }
 
 function beginEditShow(data){
-    if(data.show_error == true){
+	
+    if (data.show_error == true){
         alertShowErrorAndReload();
         return false;
     }
-    $("#add-show-form")
-        .empty()
-        .append(data.newForm);
-
+    
+    redrawAddShowForm($("#add-show-form"), data.newForm);
     removeAddShowButton();
-    setAddShowEvents();
     openAddShowForm();
 }
 
@@ -130,9 +209,9 @@ function getContrastYIQ(hexcolor){
 }
 
 
-function setAddShowEvents() {
+function setAddShowEvents(form) {
 
-    var form = $("#add-show-form");
+    //var form = $("#add-show-form");
 
 	form.find("h3").click(function(){
         $(this).next().toggle();
@@ -188,6 +267,13 @@ function setAddShowEvents() {
     });
 
     form.find("#add_show_linked").click(function(){
+        if ($(this).attr("readonly")) {
+            if ($("#show-link-readonly-warning").length === 0) {
+                $(this).parent().after("<ul id='show-link-readonly-warning' class='errors'><li>"+$.i18n._("Warning: You cannot change this field while the show is currently playing")+"</li></ul>");
+            }
+            return false;
+        }
+
         if (!$(this).attr("checked") && $("#show-link-warning").length === 0) {
             $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: Shows cannot be re-linked")+"</li></ul>");
         }
@@ -227,6 +313,35 @@ function setAddShowEvents() {
     	}
     });
 
+    // in case user is creating a new show, there will be
+    // no show_id so we have to store the default timezone
+    // to be able to do the conversion when the timezone
+    // setting changes
+    var currentTimezone = form.find("#add_show_timezone").val();
+
+    form.find("#add_show_timezone").change(function(){
+        var startDateField = form.find("#add_show_start_date"),
+            startTimeField = form.find("#add_show_start_time"),
+            endDateField = form.find("#add_show_end_date_no_repeat"),
+            endTimeField = form.find("#add_show_end_time"),
+            newTimezone = form.find("#add_show_timezone").val();
+
+        $.post(baseUrl+"Schedule/localize-start-end-time",
+               {format: "json",
+                startDate: startDateField.val(),
+                startTime: startTimeField.val(),
+                endDate: endDateField.val(),
+                endTime: endTimeField.val(),
+                newTimezone: newTimezone,
+                oldTimezone: currentTimezone}, function(json){
+
+            startDateField.val(json.start.date);
+            startTimeField.val(json.start.time);
+            endDateField.val(json.end.date);
+            endTimeField.val(json.end.time);
+        });
+    });
+
     form.find("#add_show_repeat_type").change(function(){
         toggleRepeatDays();
         toggleMonthlyRepeatType();
@@ -234,7 +349,7 @@ function setAddShowEvents() {
     toggleMonthlyRepeatType();
     toggleRepeatDays();
     function toggleRepeatDays() {
-        if(form.find("#add_show_repeat_type").val() >= 2) {
+        if(form.find("#add_show_repeat_type").val() == 2 || form.find("#add_show_repeat_type").val() == 3) {
             form.find("#add_show_day_check-label, #add_show_day_check-element").hide();
             //form.find("#add_show_monthly_repeat_type-label, #add_show_monthly_repeat_type-element").show();
         }
@@ -255,7 +370,29 @@ function setAddShowEvents() {
     form.find("#add_show_day_check-element").addClass("block-display clearfix");
     form.find("#add_show_day_check-element label").addClass("wrapp-label");
     form.find("#add_show_day_check-element br").remove();
-    
+
+    form.find(".show_timezone_help_icon").qtip({
+        content: {
+            text: $.i18n._("Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the " +
+                "Interface Timezone in your user settings.")
+        },
+        hide: {
+            delay: 500,
+            fixed: true
+        },
+        style: {
+            border: {
+                width: 0,
+                radius: 4
+            },
+            classes: "ui-tooltip-dark ui-tooltip-rounded"
+        },
+        position: {
+            my: "left bottom",
+            at: "right center"
+        }
+    });
+
     form.find(".airtime_auth_help_icon").qtip({
         content: {
             text: $.i18n._("This follows the same security pattern for the shows: only users assigned to the show can connect.")
@@ -448,101 +585,75 @@ function setAddShowEvents() {
 		}
 	});
 
+    form.find("#add-show-close").click(closeAddShowForm);
 
-    form.find("#add-show-close")
-		.click(function(event){
-            event.stopPropagation();
-            event.preventDefault();
+	form.find(".add-show-submit").click(function(event) {
+		event.preventDefault();
+		
+        var addShowButton = $(this);
+        
+        $('#schedule-add-show').block({ 
+            message: null,
+            applyPlatformOpacityRules: false
+        });
 
-			$("#add-show-form").hide();
-            windowResize();
+        //when editing a show, the record option is disabled
+        //we have to enable it to get the correct value when
+        //we call serializeArray()
+        if (form.find("#add_show_record").attr("disabled", true)) {
+            form.find("#add_show_record").attr("disabled", false);
+        }
 
-            $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
-                $("#add-show-form")
-                    .empty()
-                    .append(json.form);
+		var data = $("form").serializeArray();
 
-                setAddShowEvents();
-            });
-            makeAddShowButton();
-		});
+        var hosts = $('#add_show_hosts-element input').map(function() {
+            if($(this).attr("checked")) {
+                return $(this).val();
+            }
+        }).get();
 
-	form.find(".add-show-submit")
-		.click(function(event){
-            var addShowButton = $(this);
-            /*
-            if (!addShowButton.hasClass("disabled")){
-                addShowButton.addClass("disabled");
+        var days = $('#add_show_day_check-element input').map(function() {
+            if($(this).attr("checked")) {
+                return $(this).val();
+            }
+        }).get();
+
+        var start_date = $("#add_show_start_date").val();
+        var end_date = $("#add_show_end_date").val();
+        var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
+
+        $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
+            
+            $('#schedule-add-show').unblock();
+            
+            var $addShowForm = $("#add-show-form");
+            
+            if (json.form) {
+            	
+            	redrawAddShowForm($addShowForm, json.form);
+
+                $("#add_show_end_date").val(end_date);
+                $("#add_show_start_date").val(start_date);
+                showErrorSections();
+            }
+            else if (json.edit) {
+            	
+                $("#schedule_calendar").removeAttr("style")
+                	.fullCalendar('render');
+
+                $addShowForm.hide();
+                $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
+                	redrawAddShowForm($addShowForm, json.form);
+                });
+                makeAddShowButton();
             }
             else {
-                return;
+
+                redrawAddShowForm($addShowForm, json.newForm);
+                scheduleRefetchEvents(json);
             }
-            */
-
-            event.preventDefault();
-
-			var data = $("form").serializeArray();
-
-            var hosts = $('#add_show_hosts-element input').map(function() {
-                if($(this).attr("checked")) {
-                    return $(this).val();
-                }
-            }).get();
-
-            var days = $('#add_show_day_check-element input').map(function() {
-                if($(this).attr("checked")) {
-                    return $(this).val();
-                }
-            }).get();
-
-            var start_date = $("#add_show_start_date").val();
-            var end_date = $("#add_show_end_date").val();
-
-            $('#schedule-add-show').block({ 
-                message: null,
-                applyPlatformOpacityRules: false
-            });
-
-            var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
-            
-            $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
-                //addShowButton.removeClass("disabled");
-                $('#schedule-add-show').unblock();
-                if(json.form) {
-                    $("#add-show-form")
-                        .empty()
-                        .append(json.form);
-
-                    setAddShowEvents();
-
-                    $("#add_show_end_date").val(end_date);
-                    $("#add_show_start_date").val(start_date);
-                    showErrorSections();
-                }else if(json.edit){
-                    $("#schedule_calendar").removeAttr("style")
-                    .fullCalendar('render');
-
-                    $("#add-show-form").hide();
-                    $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
-                        $("#add-show-form")
-                            .empty()
-                            .append(json.form);
-        
-                        setAddShowEvents();
-                    });
-                    makeAddShowButton();
-                }
-                else {
-                     $("#add-show-form")
-                        .empty()
-                        .append(json.newForm);
-                        
-
-                    setAddShowEvents();
-                    scheduleRefetchEvents(json);
-                }
-            });
-		});
+        });
+	});
 
     var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/);
     var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]$/);
@@ -586,7 +697,8 @@ function setAddShowEvents() {
     		// calculate duration
     		var startDateTimeString = startDateString + " " + startTimeString;
     		var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
-    		calculateDuration(startDateTimeString, endDateTimeString);
+    		var timezone = $("#add_show_timezone").val();
+    		calculateDuration(startDateTimeString, endDateTimeString, timezone);
 	    }
 	});
 
@@ -617,7 +729,8 @@ function setAddShowEvents() {
     		// calculate duration
     		var startDateTimeString = startDateString + " " + startTimeString;
             var endDateTimeString = endDateString + " " + endTimeString;
-            calculateDuration(startDateTimeString, endDateTimeString);
+            var timezone = $("#add_show_timezone").val();
+            calculateDuration(startDateTimeString, endDateTimeString, timezone);
         }
 	});
 
@@ -635,13 +748,16 @@ function setAddShowEvents() {
         }
     })
 
-	function calculateDuration(endDateTime, startDateTime){
+	function calculateDuration(startDateTime, endDateTime, timezone){
 		var loadingIcon = $('#icon-loader-small');
 		
 		loadingIcon.show();
-		$.post(baseUrl+"Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
-		    $('#add_show_duration').val(JSON.parse(data));
-		    loadingIcon.hide();
+		$.post(
+			baseUrl+"Schedule/calculate-duration", 
+			{startTime: startDateTime, endTime: endDateTime, timezone: timezone}, 
+			function(data) {
+			    $('#add_show_duration').val(JSON.parse(data));
+			    loadingIcon.hide();
 		});
 	}
     
@@ -682,7 +798,7 @@ function showErrorSections() {
 }
 
 $(document).ready(function() {
-    setAddShowEvents();
+    setAddShowEvents($("#add-show-form"));
 });
 
 //Alert the error and reload the page
@@ -691,27 +807,3 @@ function alertShowErrorAndReload(){
     alert($.i18n._("The show instance doesn't exist anymore!"));
     window.location.reload();
 }
-
-function windowResize() {
-	var windowWidth = $(this).width();
-    // margin on showform are 16 px on each side
-	if(!$("#schedule-add-show").is(':hidden')){	 
-        var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
-        var widthPercent = parseInt(calendarWidth)+"%";
-        $("#schedule_calendar").css("width", widthPercent);
-	} else {
-        $("#schedule_calendar").css("width", 98.5+"%");
-	}
-	
-	// 200 px for top dashboard and 50 for padding on main content
-	// this calculation was copied from schedule.js line 326
-	var mainHeight = document.documentElement.clientHeight - 200 - 50;
-	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
-	
-}
-
-var scheduleResizeTimeout;
-$(window).resize(function(){
-	clearTimeout(scheduleResizeTimeout);
-	scheduleResizeTimeout = setTimeout(windowResize, 100);
-});

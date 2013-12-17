@@ -140,14 +140,14 @@ class PypoLiquidsoap():
 
         #Iterate over the new files, and compare them to currently scheduled
         #tracks. If already in liquidsoap queue still need to make sure they don't
-        #have different attributes such replay_gain etc.
+        #have different attributes
+        #if replay gain changes, it shouldn't change the amplification of the currently playing song
         for i in scheduled_now_files:
             if i["row_id"] in row_id_map:
                 mi = row_id_map[i["row_id"]]
                 correct = mi['start'] == i['start'] and \
                         mi['end'] == i['end'] and \
-                        mi['row_id'] == i['row_id'] and \
-                        mi['replay_gain'] == i['replay_gain']
+                        mi['row_id'] == i['row_id']
 
                 if not correct:
                     #need to re-add
@@ -181,7 +181,7 @@ class PypoLiquidsoap():
         #handle webstreams
         current_stream_id = self.telnet_liquidsoap.get_current_stream_id()
         if scheduled_now_webstream:
-            if current_stream_id != scheduled_now_webstream[0]:
+            if int(current_stream_id) != int(scheduled_now_webstream[0]["row_id"]):
                 self.play(scheduled_now_webstream[0])
         elif current_stream_id != "-1":
             #something is playing and it shouldn't be.

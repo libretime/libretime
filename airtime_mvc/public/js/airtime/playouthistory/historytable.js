@@ -466,6 +466,13 @@ var AIRTIME = (function(AIRTIME) {
     		    }
     		];
     	
+    	//set the locale names for the bootstrap calendar.
+    	$.fn.datetimepicker.dates = {
+    		daysMin: i18n_days_short,
+    		months: i18n_months,
+    		monthsShort: i18n_months_short
+    	};
+    	
     	
     	$historyContentDiv = $("#history_content");
     	

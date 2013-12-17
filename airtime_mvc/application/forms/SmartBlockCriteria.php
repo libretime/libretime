@@ -127,6 +127,31 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     public function init()
     {
     }
+    
+    /*
+     * converts UTC timestamp citeria into user timezone strings.
+     */
+    private function convertTimestamps(&$criteria)
+    {
+    	$columns = array("utime", "mtime", "lptime");
+    	
+    	foreach ($columns as $column) {
+    		
+    		if (isset($criteria[$column])) {
+    			
+    			foreach ($criteria[$column] as &$constraint) {
+    				
+    				$constraint['value'] =
+    				Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['value']);
+    				 
+    				if (isset($constraint['extra'])) {
+    					$constraint['extra'] =
+    					Application_Common_DateHelper::UTCStringToUserTimezoneString($constraint['extra']);
+    				}
+    			}
+    		}
+    	}
+    }
 
     public function startForm($p_blockId, $p_isValid = false)
     {
@@ -150,6 +175,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $bl = new Application_Model_Block($p_blockId);
         $storedCrit = $bl->getCriteria();
+        
+        //need to convert criteria to be displayed in the user's timezone if there's some timestamp type.
+        self::convertTimestamps($storedCrit["crit"]);
 
         /* $modRoadMap stores the number of same criteria
          * Ex: 3 Album titles, and 2 Track titles

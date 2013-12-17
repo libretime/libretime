@@ -197,6 +197,22 @@ def ubuntu_quantal_64(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Ubuntu_12.10_64', icecast2_config=True)
         
+def ubuntu_raring_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_13.04_32', icecast2_config=True)
+    
+def ubuntu_raring_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_13.04_64', icecast2_config=True)
+        
+def ubuntu_saucy_32(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_13.10_32', icecast2_config=True)
+    
+def ubuntu_saucy_64(fresh_os=True):
+    if (fresh_os):
+        create_fresh_os('Ubuntu_13.10_64', icecast2_config=True)
+        
 def debian_squeeze_32(fresh_os=True):
     if (fresh_os):
         create_fresh_os('Debian_Squeeze_32', debian=True)
@@ -375,6 +391,15 @@ def airtime_231_tar():
     do_run('tar xfz airtime-2.3.1-ga.tar.gz')
     do_sudo('cd /home/martin/airtime-2.3.1/install_full/ubuntu && ./airtime-full-install')
 
+def airtime_240_tar():
+    do_run('wget http://sourceforge.net/projects/airtime/files/2.4.0/airtime-2.4.0-ga.tar.gz')
+    do_run('tar xfz airtime-2.4.0-ga.tar.gz')
+    do_sudo('cd /home/martin/airtime-2.4.0/install_full/ubuntu && ./airtime-full-install')
+
+def airtime_241_tar():
+    do_run('wget http://sourceforge.net/projects/airtime/files/2.4.1/airtime-2.4.1-ga.tar.gz')
+    do_run('tar xfz airtime-2.4.1-ga.tar.gz')
+    do_sudo('cd /home/martin/Airtime-airtime-2.4.1-ga/install_full/ubuntu && ./airtime-full-install')
 
 def airtime_latest_deb():
     append('/etc/apt/sources.list', "deb http://apt.sourcefabric.org/ lucid main", use_sudo=True)
@@ -386,7 +411,7 @@ def airtime_latest_deb():
     do_sudo('apt-get purge -y pulseaudio')
     do_sudo('apt-get install -y --force-yes airtime')
     
-def airtime_git_branch(branch="devel"):
+def airtime_git_branch(branch="2.5.x"):
     do_sudo('apt-get update')
     do_sudo('apt-get install -y git-core')
     do_run('git clone https://github.com/sourcefabric/Airtime.git ~/airtime_git')

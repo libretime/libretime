@@ -182,19 +182,20 @@ class CcSchedule extends BaseCcSchedule {
      */
     public function setDbStarts($v)
     {
+        $utcTimeZone = new DateTimeZone('UTC');
+    	
        if ($v instanceof DateTime) {
             $dt = $v;
+            $dt->setTimezone($utcTimeZone);
         } else {
             // some string/numeric value passed; we normalize that so that we can
             // validate it.
             try {
                 if (is_numeric($v)) { // if it's a unix timestamp
-                    $dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-                    // We have to explicitly specify and then change the time zone because of a
-                    // DateTime bug: http://bugs.php.net/bug.php?id=43003
-                    $dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+                    $dt = new DateTime('@'.$v, $utcTimeZone);
+                    
                 } else {
-                    $dt = new DateTime($v);
+                    $dt = new DateTime($v, $utcTimeZone);
                 }
             } catch (Exception $x) {
                 throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
@@ -216,20 +217,20 @@ class CcSchedule extends BaseCcSchedule {
      */
     public function setDbEnds($v)
     {
-
+		$utcTimeZone = new DateTimeZone('UTC');
+    	
         if ($v instanceof DateTime) {
             $dt = $v;
+            $dt->setTimezone($utcTimeZone);
         } else {
             // some string/numeric value passed; we normalize that so that we can
             // validate it.
             try {
                 if (is_numeric($v)) { // if it's a unix timestamp
-                    $dt = new DateTime('@'.$v, new DateTimeZone('UTC'));
-                    // We have to explicitly specify and then change the time zone because of a
-                    // DateTime bug: http://bugs.php.net/bug.php?id=43003
-                    $dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+                    $dt = new DateTime('@'.$v, $utcTimeZone);
+                    
                 } else {
-                    $dt = new DateTime($v);
+                    $dt = new DateTime($v, $utcTimeZone);
                 }
             } catch (Exception $x) {
                 throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);

@@ -19,49 +19,6 @@ function scheduleRefetchEvents(json) {
     $("#schedule_calendar").fullCalendar( 'refetchEvents' );
 }
 
-function openAddShowForm() {
-     if($("#add-show-form").length == 1) {
-        if( ($("#add-show-form").css('display')=='none')) {
-            $("#add-show-form").show();
-            var windowWidth = $(window).width();
-            // margin on showform are 16 px on each side
-            var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
-            var widthPercent = parseInt(calendarWidth)+"%";
-            $("#schedule_calendar").css("width", widthPercent);
-
-            // 200 px for top dashboard and 50 for padding on main content
-            // this calculation was copied from schedule.js line 326
-            var mainHeight = document.documentElement.clientHeight - 200 - 50;
-            $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
-        }
-        $("#schedule-show-what").show(0, function(){
-            $add_show_name = $("#add_show_name");
-            $add_show_name.focus();
-            $add_show_name.select();
-        });
-    }
-}
-
-function makeAddShowButton(){
-    $('.fc-header-left')
-        .append('<span class="fc-header-space"></span>')
-        .append('<span class="fc-button"><a href="#" class="add-button"><span class="add-icon"></span>'+$.i18n._("Show")+'</a></span>')
-        .find('span.fc-button:last > a')
-            .click(function(){
-                openAddShowForm();
-                removeAddShowButton();
-            });
-}
-
-function removeAddShowButton(){
-    var aTag = $('.fc-header-left')
-        .find("span.fc-button:last > a");
-
-    var span = aTag.parent();
-    span.prev().remove();
-    span.remove();
-}
-
 function makeTimeStamp(date){
     var sy, sm, sd, h, m, s, timestamp;
     sy = date.getFullYear();
@@ -193,8 +150,8 @@ function viewDisplay( view ) {
 
         var topLeft = $(view.element).find("table.fc-agenda-days > thead th:first");
 
-        select.width(topLeft.width())
-            .height(topLeft.height());
+        //select.width(topLeft.width())
+        //    .height(topLeft.height());
 
         topLeft.empty()
             .append(select);
@@ -217,7 +174,7 @@ function viewDisplay( view ) {
 }
 
 function eventRender(event, element, view) {
-    $(element).attr("id", "fc-show-instance-"+event.id);
+    $(element).addClass("fc-show-instance-"+event.id);
     $(element).attr("data-show-id", event.showId);
     $(element).attr("data-show-linked", event.linked);
     $(element).data("event", event);
@@ -331,6 +288,21 @@ function eventRender(event, element, view) {
             $(element).find(".fc-event-title").after('<span class="small-icon rebroadcast"></span>');
         }
     }
+    
+    //now playing icon.
+    var span = '<span class="small-icon now-playing"></span>';
+
+	if (event.nowPlaying === true) {
+		
+		if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
+			
+			$(element).find(".fc-event-time").before(span);
+		}
+		else if (view_name === 'month') {
+			
+			$(element).find(".fc-event-title").after(span);
+		}
+	}
 }
 
 function eventAfterRender( event, element, view ) {
@@ -353,6 +325,12 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
                 alert(json.error);
                 revertFunc();
             }
+            
+            //Workaround for cases where FullCalendar handles events over DST
+            //time changes in a different way than Airtime does. 
+            //(Airtime preserves show duration, FullCalendar doesn't.)
+            scheduleRefetchEvents(json);
+
         });
 }
 
@@ -360,7 +338,7 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
     var url = baseUrl+'Schedule/resize-show/format/json';
 
     $.post(url,
-        {day: dayDelta, min: minuteDelta, showId: event.showId},
+        {day: dayDelta, min: minuteDelta, showId: event.showId, instanceId: event.id},
         function(json){
             if(json.show_error == true){
                 alertShowErrorAndReload();
@@ -372,6 +350,13 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
 
             scheduleRefetchEvents(json);
         });
+}
+
+function windowResize() {	
+	// 200 px for top dashboard and 50 for padding on main content
+	// this calculation was copied from schedule.js line 326
+	var mainHeight = $(window).height() - 200 - 24;
+	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
 }
 
 function preloadEventFeed () {
@@ -412,13 +397,13 @@ function checkSCUploadStatus(){
         
         $.post(url, {format: "json", id: id, type:"show"}, function(json){
             if (json.sc_id > 0){
-                $("#fc-show-instance-"+id)
+                $(".fc-show-instance-"+id)
                 	.find(".progress")
                 	.removeClass("progress")
                 	.addClass("soundcloud");
             }
             else if (json.sc_id == "-3"){
-            	$("#fc-show-instance-"+id)
+            	$(".fc-show-instance-"+id)
 	            	.find(".progress")
 	            	.removeClass("progress")
 	            	.addClass("sc-error");
@@ -428,59 +413,39 @@ function checkSCUploadStatus(){
         });
     });
 }
+
 /** This function adds and removes the current
  *  show icon
  */
-function getCurrentShow(){
-    var url = baseUrl+'Schedule/get-current-show/format/json',
-        id,
-        $el;
-    $.post(url, {format: "json"}, function(json) {
+function getCurrentShow() {
+	
+    var url = baseUrl+'Schedule/get-current-show/format/json';
+    
+    function addNowPlaying(json) {
+    	
+    	var $el,
+    		span = '<span class="small-icon now-playing"></span>';
+    	
+    	$(".now-playing").remove();
+    	
         if (json.current_show === true) {
-            $el = $("div[class*=fc-event-time]");
-            if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
-
-                /* Need to remove now-playing class because if user
-                 * is switching from week view to day view (and vice versa)
-                 * the icon may already be there from previous view
-                 */ 
-                $el.siblings().remove("span.now-playing");
-                if (!$el.siblings().hasClass("small-icon now-playing")) {
-                    if ($el.siblings().hasClass("small-icon recording")) {
-
-                        /* Without removing recording icon, the now playing
-                         * icon will overwrite it.
-                         */  
-                        $el.siblings().remove("span.recording");
-                        $el.before('<span class="small-icon now-playing"></span><span class="small-icon recording"></span>');
-                    } else if ($el.siblings().hasClass("small-icon rebroadcast")) {
-
-                        /* Without removing rebroadcast icon, the now playing
-                         * icon will overwrite it.
-                         */ 
-                        $el.siblings().remove("span.rebroadcast");
-                        $el.before('<span class="small-icon now-playing"></span><span class="small-icon rebroadcast"></span>');
-                    } else {
-                        $el.before('<span class="small-icon now-playing"></span>');
-                    }
-                }
-            } else if (view_name === 'month') {
-                if (!$("span[class*=fc-event-title]").siblings().hasClass("now-playing")) {
-                    $("span[class*=fc-event-title]").after('<span class="small-icon now-playing"></span>');
-                }
-            }
+        	
+        	$el = $(".fc-show-instance-"+json.si_id);
+        	
+        	if (view_name === 'agendaDay' || view_name === 'agendaWeek') {
+        		
+        		$el.find(".fc-event-time").before(span);
+        	}
+        	else if (view_name === 'month') {
+        		
+        		$el.find(".fc-event-title").after(span);
+        	}
         }
-        //remove icon from shows that have ended
-        $(".now-playing").each(function(){
-        	id = $(this).parents("div.fc-event").data("event").id;
-           
-            if (id != json.si_id) {
-                $(this).remove("span.now-playing");	
-            }    	
-        });
-        
+
         setTimeout(getCurrentShow, 5000);
-    }); 	
+    }
+    
+    $.post(url, {format: "json"}, addNowPlaying); 	
 }
 
 function addQtipsToIcons(ele, id){
@@ -616,8 +581,8 @@ function alertShowErrorAndReload(){
   window.location.reload();
 }
 
-preloadEventFeed();
 $(document).ready(function(){
+    preloadEventFeed();
     checkSCUploadStatus();
     getCurrentShow();
 });

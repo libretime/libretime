@@ -23,7 +23,7 @@ var AIRTIME = (function(AIRTIME) {
     		"<li data-template='<%= id %>' data-name='<%= name %>'>" +
     			"<a href='<%= editUrl %>' class='template_name'><%= name %></a>" +
     			"<a href='<%= removeUrl %>' class='template_remove'><i class='icon icon-trash'></i></a>" +
-    			"<a href='<%= defaultUrl %>' class='template_default'>Set Default</a>" +	
+    			"<a href='<%= defaultUrl %>' class='template_default'>" + $.i18n._('Set Default') + "</a>" +	
     		"</li>";
     	
     	var template = (configured) === true ? itemConfigured : item;
