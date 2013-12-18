@@ -8,6 +8,9 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function setUp()
     {
         $this->bootstrap = array($this, 'appBootstrap');
+        //TODO: Use AirtimeInstall.php to create the database and database tables
+        //AirtimeInstall::createDatabase(blah blah);
+        //AirtimeInstall::createDatabaseTables(blah blah);
         parent::setUp();
     }
 
@@ -28,7 +31,6 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
                     'password' => 'airtime'
                 )
             );
-            var_dump($config);
             $connection = Zend_Db::factory('pdo_pgsql', $config);
 
             $this->_connectionMock = $this->createZendDbConnection(
