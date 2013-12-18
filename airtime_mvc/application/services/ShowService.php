@@ -1406,8 +1406,9 @@ SQL;
      * @param $ccShow
      * @param $showData
      */
-    private function setCcShow($showData)
+    public function setCcShow($showData)
     {
+        Logging::info($showData);
         if (!$this->isUpdate) {
             $ccShow = new CcShow();
         } else {
