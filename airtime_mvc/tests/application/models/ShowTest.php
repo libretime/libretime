@@ -20,8 +20,16 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function getConnection()
     {
         if ($this->_connectionMock == null) {
-            $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', 'production');
-            $connection = Zend_Db::factory($config->db);
+            $config = new Zend_Config(
+                array(
+                    'host'     => '127.0.0.1',
+                    'dbname'   => 'airtime_test',
+                    'username' => 'airtime',
+                    'password' => 'airtime'
+                )
+            );
+            var_dump($config);
+            $connection = Zend_Db::factory('pdo_pgsql', $config);
 
             $this->_connectionMock = $this->createZendDbConnection(
                 $connection,
