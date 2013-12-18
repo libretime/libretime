@@ -59,7 +59,7 @@ libtaglib-ocaml libao-ocaml libmad-ocaml ecasound \
 libesd0 libportaudio2 libsamplerate0 rabbitmq-server patch \
 php5-curl mpg123 monit python-virtualenv multitail libcamomile-ocaml-data \
 libpulse0 vorbis-tools lsb-release lsof sudo mp3gain vorbisgain flac vorbis-tools \
-pwgen libfaad2 memcached php5-memcached
+pwgen libfaad2 memcached php5-memcached php5-json
 
 
 #install packages with --force-yes option (this is useful in the case
@@ -130,20 +130,33 @@ else
     echo "----------------------------------------------------"
     echo "2.1 Apache Config File"
     echo "----------------------------------------------------"
-    if [ ! -f /etc/apache2/sites-available/airtime ]; then
-        echo "Creating Apache config for Airtime..."
-
-        if [ "$dist" = "Ubuntu" -a "$code" = "saucy" ]; then
-	    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime.conf
-            a2dissite 000-default
+    
+    vregex='(Apache\/2\.4)'
+    apachev=`apache2 -v | grep 'Server version'`
+    echo "$apachev"
+    
+    if [[ "$apachev" =~ $vregex ]]
+    then
+        #Apache is version 2.4
+        
+        if [ ! -f /etc/apache2/sites-available/airtime.conf ]; then
+            echo "Creating Apache config for Airtime..."
+            cp $SCRIPTPATH/../apache/2.4/airtime-vhost /etc/apache2/sites-available/airtime.conf   
         else
-	    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/airtime
-            a2dissite default
+            echo "Apache config for Airtime already exists..."
         fi
-        a2ensite airtime
     else
-        echo "Apache config for Airtime already exists..."
+        #Apache is older, use 2.2 config.
+        
+        if [ ! -f /etc/apache2/sites-available/airtime ]; then
+            echo "Creating Apache config for Airtime..."
+            cp $SCRIPTPATH/../apache/2.2/airtime-vhost /etc/apache2/sites-available/airtime   
+        else
+            echo "Apache config for Airtime already exists..."
+        fi
     fi
+    
+    a2ensite airtime
 
     if [ ! -d /usr/share/airtime/public ]; then
         echo "Creating Apache web root directory..."
@@ -156,7 +169,7 @@ else
     echo "----------------------------------------------------"
     echo "2.2 PHP Config File for Apache"
     echo "----------------------------------------------------"
-    if [ ! -f /etc/php5/apache2/airtime.ini ]; then
+    if [ ! -f /etc/php5/apache2/conf.d/airtime.ini ]; then
         echo "Creating Airtime PHP config for Apache..."
         cp $SCRIPTPATH/../php5/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
     else
@@ -203,6 +216,4 @@ echo "----------------------------------------------------"
 echo "5. Run Airtime Install"
 echo "----------------------------------------------------"
 cd $SCRIPTPATH/../../install_minimal
-# Restart apache to clear php cache
-service apache2 restart
 ./airtime-install
