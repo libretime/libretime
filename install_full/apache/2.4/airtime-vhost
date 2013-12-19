@@ -1,0 +1,11 @@
+<VirtualHost localhost:80>
+   ServerName localhost
+   DocumentRoot "/usr/share/airtime/public"
+   php_admin_value upload_tmp_dir /tmp
+   
+  <Directory "/usr/share/airtime/public">
+      Options All
+      AllowOverride all
+      Require all granted
+  </Directory>
+</VirtualHost>
