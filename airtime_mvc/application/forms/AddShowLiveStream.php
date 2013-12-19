@@ -72,4 +72,14 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
 
         return $isValid;
     }
+
+    public function disable()
+    {
+        $elements = $this->getElements();
+        foreach ($elements as $element) {
+            if ($element->getType() != 'Zend_Form_Element_Hidden') {
+                $element->setAttrib('disabled','disabled');
+            }
+        }
+    }
 }

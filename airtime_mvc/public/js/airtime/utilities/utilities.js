@@ -37,19 +37,19 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.fnGetSecondsEpoch = function(oDate) {
 		var iTime,
-			iServerOffset,
+			iUserOffset,
 			iClientOffset;
 		
 		iTime = oDate.getTime(); //value is in millisec.
 		iTime = Math.round(iTime / 1000);
-		iServerOffset = serverTimezoneOffset;
+		iUserOffset = userTimezoneOffset;
 		iClientOffset = oDate.getTimezoneOffset() * -60;//function returns minutes
 		
 		//adjust for the fact the the Date object is in client time.
-		iTime = iTime + iClientOffset + iServerOffset;
+		iTime = iTime + iClientOffset + iUserOffset;
 		
 		return iTime;
-	}
+	};
 	
 	 /*
 	 * Get the schedule range start in unix timestamp form (in seconds).
@@ -64,9 +64,6 @@ var AIRTIME = (function(AIRTIME){
 	mod.fnGetTimestamp = function(sDateId, sTimeId) {
 		var date, 
 			time,
-			iTime,
-			iServerOffset,
-			iClientOffset,
 			temp;
 	
 		temp = $(sDateId).val();

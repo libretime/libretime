@@ -84,15 +84,26 @@ class Application_Service_CalendarService
             // Show content can be modified from the calendar if:
             // the user is admin or hosting the show,
             // the show is not recorded
-            
-            if ($now < $end && ($isAdminOrPM || $isHostOfShow) &&
-            		!$this->ccShowInstance->isRecorded() ) {
-            
-            	$menu["schedule"] = array(
-            			"name"=> _("Add / Remove Content"),
-            			"icon" => "add-remove-content",
-            			"url" => $baseUrl."showbuilder/builder-dialog/");
-            	
+            $currentShow = Application_Model_Show::getCurrentShow();
+            $currentShowId = count($currentShow) == 1 ? $currentShow[0]["id"] : null;
+            $showIsLinked = $this->ccShow->isLinked();
+            if ($now < $end && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded()) {
+                //if the show is not linked the user can add/remove content
+                if (!$showIsLinked) {
+
+                    $menu["schedule"] = array(
+                        "name"=> _("Add / Remove Content"),
+                        "icon" => "add-remove-content",
+                        "url" => $baseUrl."showbuilder/builder-dialog/");
+                //if the show is linked and it's not currently playing the user can add/remove content
+                } elseif ($showIsLinked  && $currentShowId != $this->ccShow->getDbId()) {
+
+                    $menu["schedule"] = array(
+                        "name"=> _("Add / Remove Content"),
+                        "icon" => "add-remove-content",
+                        "url" => $baseUrl."showbuilder/builder-dialog/");
+                }
+
             }
             
             if ($now < $start && ($isAdminOrPM || $isHostOfShow) &&
@@ -128,23 +139,37 @@ class Application_Service_CalendarService
                 }
             }
 
-            $isRepeating = $this->ccShow->getFirstCcShowDay()->isRepeating();
+            $excludeIds = $this->ccShow->getEditedRepeatingInstanceIds();
+
+            $isRepeating = $this->ccShow->isRepeating();
+            $populateInstance = false;
+            if ($isRepeating && in_array($this->ccShowInstance->getDbId(), $excludeIds)) {
+                $populateInstance = true;
+            }
+
             if (!$this->ccShowInstance->isRebroadcast() && $isAdminOrPM) {
                 if ($isRepeating) {
-                    $menu["edit"] = array(
-                        "name" => _("Edit"),
-                        "icon" => "edit",
-                        "items" => array());
+                    if ($populateInstance) {
+                        $menu["edit"] = array(
+                            "name" => _("Edit This Instance"),
+                            "icon" => "edit",
+                            "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
+                    } else {
+                        $menu["edit"] = array(
+                            "name" => _("Edit"),
+                            "icon" => "edit",
+                            "items" => array());
 
-                    $menu["edit"]["items"]["all"] = array(
-                        "name" => _("Edit Show"),
-                        "icon" => "edit",
-                        "url" => $baseUrl."Schedule/populate-show-form");
+                        $menu["edit"]["items"]["all"] = array(
+                            "name" => _("Edit Show"),
+                            "icon" => "edit",
+                            "url" => $baseUrl."Schedule/populate-show-form");
 
-                    $menu["edit"]["items"]["instance"] = array(
-                        "name" => _("Edit This Instance"),
-                        "icon" => "edit",
-                        "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
+                        $menu["edit"]["items"]["instance"] = array(
+                            "name" => _("Edit This Instance"),
+                            "icon" => "edit",
+                            "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
+                        }
                 } else {
                     $menu["edit"] = array(
                         "name"=> _("Edit Show"),
@@ -173,6 +198,11 @@ class Application_Service_CalendarService
                         "name"=> _("Delete This Instance and All Following"),
                         "icon" => "delete",
                         "url" => $baseUrl."schedule/delete-show");
+                } elseif ($populateInstance) {
+                    $menu["del"] = array(
+                        "name"=> _("Delete"),
+                        "icon" => "delete",
+                        "url" => $baseUrl."schedule/delete-show-instance");
                 } else {
                     $menu["del"] = array(
                         "name"=> _("Delete"),
@@ -222,14 +252,14 @@ class Application_Service_CalendarService
             throw new Exception(_("Permission denied"));
         }
 
-        if ($this->ccShow->getFirstCcShowDay()->isRepeating()) {
+        if ($this->ccShow->isRepeating()) {
             throw new Exception(_("Can't drag and drop repeating shows"));
         }
 
         $today_timestamp = time();
 
-        $startsDateTime = new DateTime($this->ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
-        $endsDateTime = new DateTime($this->ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
+        $startsDateTime = $this->ccShowInstance->getDbStarts(null);
+        $endsDateTime = $this->ccShowInstance->getDbEnds(null);
 
         if ($today_timestamp > $startsDateTime->getTimestamp()) {
             throw new Exception(_("Can't move a past show"));
@@ -242,9 +272,26 @@ class Application_Service_CalendarService
         $startsDateTime->setTimezone(new DateTimeZone($showTimezone));
         $endsDateTime->setTimezone(new DateTimeZone($showTimezone));
 
+        $duration = $startsDateTime->diff($endsDateTime);
+        
         $newStartsDateTime = self::addDeltas($startsDateTime, $deltaDay, $deltaMin);
-        $newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin);
-
+        /* WARNING: Do not separately add a time delta to the start and end times because
+                    that does not preserve the duration across a DST time change.
+                    For example, 5am - 3 hours = 3am when DST occurs at 2am.
+                             BUT, 6am - 3 hours = 3am also!
+                              So when a DST change occurs, adding the deltas like this
+                              separately does not conserve the duration of a show.
+                    Since that's what we want (otherwise we'll get a zero length show), 
+                    we calculate the show duration FIRST, then we just add that on
+                    to the start time to calculate the end time. 
+                    This is a safer approach.
+                    The key lesson here is that in general: duration != end - start
+                    ... so be careful!
+        */
+        //$newEndsDateTime = self::addDeltas($endsDateTime, $deltaDay, $deltaMin); <--- Wrong, don't do it.
+        $newEndsDateTime = clone $newStartsDateTime;
+        $newEndsDateTime = $newEndsDateTime->add($duration);
+        
         //convert our new starts/ends to UTC.
         $newStartsDateTime->setTimezone(new DateTimeZone("UTC"));
         $newEndsDateTime->setTimezone(new DateTimeZone("UTC"));
@@ -299,13 +346,16 @@ class Application_Service_CalendarService
             $con = Propel::getConnection();
             $con->beginTransaction();
 
+            //new starts,ends are in UTC
             list($newStartsDateTime, $newEndsDateTime) = $this->validateShowMove(
                 $deltaDay, $deltaMin);
+            
+            $oldStartDateTime = $this->ccShowInstance->getDbStarts(null);
 
             $this->ccShowInstance
                 ->setDbStarts($newStartsDateTime)
                 ->setDbEnds($newEndsDateTime)
-                ->save();
+                ->save($con);
 
             if (!$this->ccShowInstance->getCcShow()->isRebroadcast()) {
                 //we can get the first show day because we know the show is
@@ -315,11 +365,13 @@ class Application_Service_CalendarService
                 $ccShowDay
                     ->setDbFirstShow($newStartsDateTime->setTimezone($showTimezone)->format("Y-m-d"))
                     ->setDbStartTime($newStartsDateTime->format("H:i"))
-                    ->save();
+                    ->save($con);
             }
-
+            
+            $diff = $newStartsDateTime->getTimestamp() - $oldStartDateTime->getTimestamp();
+            
             Application_Service_SchedulerService::updateScheduleStartTime(
-                array($this->ccShowInstance->getDbId()), null, $newStartsDateTime);
+                array($this->ccShowInstance->getDbId()), $diff);
 
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
@@ -329,6 +381,7 @@ class Application_Service_CalendarService
         }
     }
 
+    //TODO move the method resizeShow from Application_Model_Show here.
     public function resizeShow($deltaDay, $deltaMin)
     {
         try {

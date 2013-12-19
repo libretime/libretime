@@ -224,7 +224,7 @@ class AirtimeInstall
             return true;
         }
 
-        $command = "su postgres -c \"createdb $database --encoding UTF8 --owner $username\"";
+        $command = "sudo -i -u postgres psql postgres -c \"CREATE DATABASE ".$database." WITH ENCODING 'UTF8' TEMPLATE template0 OWNER ".$username."\"";
 
         @exec($command, $output, $results);
         if ($results == 0) {
@@ -528,5 +528,15 @@ class AirtimeInstall
             return NULL;
         }
         return $opts;
+    }
+
+    public static function checkPHPVersion()
+    {
+        if (PHP_VERSION_ID < 50300)
+        {
+            echo "Error: Airtime requires PHP 5.3 or greater.";
+            return false;
+        }
+        return true;
     }
 }

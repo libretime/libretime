@@ -150,8 +150,8 @@ function viewDisplay( view ) {
 
         var topLeft = $(view.element).find("table.fc-agenda-days > thead th:first");
 
-        select.width(topLeft.width())
-            .height(topLeft.height());
+        //select.width(topLeft.width())
+        //    .height(topLeft.height());
 
         topLeft.empty()
             .append(select);
@@ -325,6 +325,12 @@ function eventDrop(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui
                 alert(json.error);
                 revertFunc();
             }
+            
+            //Workaround for cases where FullCalendar handles events over DST
+            //time changes in a different way than Airtime does. 
+            //(Airtime preserves show duration, FullCalendar doesn't.)
+            scheduleRefetchEvents(json);
+
         });
 }
 
@@ -332,7 +338,7 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
     var url = baseUrl+'Schedule/resize-show/format/json';
 
     $.post(url,
-        {day: dayDelta, min: minuteDelta, showId: event.showId},
+        {day: dayDelta, min: minuteDelta, showId: event.showId, instanceId: event.id},
         function(json){
             if(json.show_error == true){
                 alertShowErrorAndReload();
@@ -346,22 +352,11 @@ function eventResize( event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, vie
         });
 }
 
-function windowResize() {
-	var windowWidth = $(this).width();
-	
-    // margin on showform are 16 px on each side
-	if(!$("#schedule-add-show").is(':hidden')){	 
-        var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
-        var widthPercent = parseInt(calendarWidth)+"%";
-        $("#schedule_calendar").css("width", widthPercent);
-	} else {
-        $("#schedule_calendar").css("width", 98.5+"%");
-	}
-	
+function windowResize() {	
 	// 200 px for top dashboard and 50 for padding on main content
 	// this calculation was copied from schedule.js line 326
-	var mainHeight = document.documentElement.clientHeight - 200 - 50;
-	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);	
+	var mainHeight = $(window).height() - 200 - 24;
+	$('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
 }
 
 function preloadEventFeed () {

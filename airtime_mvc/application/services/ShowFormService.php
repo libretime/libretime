@@ -85,9 +85,20 @@ class Application_Service_ShowFormService
         $this->populateFormLive($forms["live"]);
         $this->populateFormStyle($forms["style"]);
 
-        //no need to populate these forms since the user won't
-        //be able to see them
+        /* Only the field on the 'when' form will get updated so we should
+         * make all other forms disabled or readonly
+         * 
+         * 'what' needs to be readonly because zendform will not validate
+         * if they are disabled
+         * 
+         * All other forms can be disabled because we do not update those values
+         * when the user edits a repeating instance
+         */
+        $forms["what"]->makeReadonly();
         $forms["repeats"]->disable();
+        $forms["who"]->disable();
+        $forms["style"]->disable();
+        $forms["live"]->disable();
         $forms["record"]->disable();
         $forms["rebroadcast"]->disable();
         $forms["abs_rebroadcast"]->disable();
@@ -128,10 +139,14 @@ class Application_Service_ShowFormService
 
     private function populateFormWhen($form)
     {
-        $ccShowDay = $this->ccShow->getFirstCcShowDay();
+        if ($this->ccShow->isRepeating()) {
+            $ccShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+        } else {
+            $ccShowDay = $this->ccShow->getFirstCcShowDay();
+        }
 
         $showStart = $ccShowDay->getLocalStartDateAndTime();
-        $showEnd = $ccShowDay->getLocalEndDateAndTime($showStart);
+        $showEnd = $ccShowDay->getLocalEndDateAndTime();
 
         //check if the first show is in the past
         if ($ccShowDay->isShowStartInPast()) {
@@ -187,7 +202,7 @@ class Application_Service_ShowFormService
                 'add_show_end_date_no_repeat' => $showEnd->format("Y-m-d"),
                 'add_show_end_time' => $showEnd->format("H:i"),
                 'add_show_duration' => $this->calculateDuration(
-                    $showStart->format("Y-m-d H:i:s"), $showEnd->format("Y-m-d H:i:s")),
+                    $showStart->format("Y-m-d H:i:s"), $showEnd->format("Y-m-d H:i:s"), $timezone),
                 'add_show_timezone' => $timezone,
                 'add_show_repeats' => 0));
 
@@ -202,7 +217,11 @@ class Application_Service_ShowFormService
      */
     private function populateFormRepeats($form, $nextFutureShowStart)
     {
-        $ccShowDays = $this->ccShow->getCcShowDays();
+        if ($this->ccShow->isRepeating()) {
+            $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
+        } else {
+            $ccShowDays = $this->ccShow->getCcShowDayss();
+        }
 
         $days = array();
         foreach ($ccShowDays as $ccShowDay) {
@@ -211,12 +230,13 @@ class Application_Service_ShowFormService
         }
 
         $service_show = new Application_Service_ShowService($this->ccShow->getDbId());
-        $repeatEndDate = new DateTime($service_show->getRepeatingEndDate(), new DateTimeZone(
-            $ccShowDays[0]->getDbTimezone()));
+        $repeatEndDate = $service_show->getRepeatingEndDate();
         //end dates are stored non-inclusively so we need to
         //subtract one day
-        $repeatEndDate->sub(new DateInterval("P1D"));
-
+        if (!is_null($repeatEndDate)) {
+        	$repeatEndDate->sub(new DateInterval("P1D"));
+        }
+        
         //default monthly repeat type
         $monthlyRepeatType = 2;
         $repeatType = $ccShowDays[0]->getDbRepeatType();
@@ -233,20 +253,24 @@ class Application_Service_ShowFormService
                 'add_show_linked' => $this->ccShow->getDbLinked(),
                 'add_show_repeat_type' => $repeatType,
                 'add_show_day_check' => $days,
-                'add_show_end_date' => $repeatEndDate->format("Y-m-d"),
-                'add_show_no_end' => (!$service_show->getRepeatingEndDate()),
+                'add_show_end_date' => (!is_null($repeatEndDate)) ? $repeatEndDate->format("Y-m-d"):null,
+                'add_show_no_end' => (is_null($repeatEndDate)),
                 'add_show_monthly_repeat_type' => $monthlyRepeatType));
 
         if (!$this->ccShow->isLinkable() || $this->ccShow->isRecorded()) {
             $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
         }
 
-        /* Because live editing of a linked show is disabled, we will disable
-         * the linking option if the current show is being edited. We don't
-         * want the user to suddenly not be able to edit the current show
+        /* Because live editing of a linked show is disabled, we will make
+         * the linking option readonly if the current show is being edited. We
+         * dont' want the user to suddenly not be able to edit the current show
+         * 
+         * Readonly does not work with checkboxes but we can't disable it
+         * because the value won't get posted. In add-show.js we stop the
+         * onclick event from firing by returning false
          */
         if ($this->hasShowStarted($nextFutureShowStart)) {
-            $form->getElement('add_show_linked')->setOptions(array('disabled' => true));
+            $form->getElement('add_show_linked')->setAttrib('readonly', 'readonly');
         }
     }
 
@@ -466,11 +490,13 @@ class Application_Service_ShowFormService
         }
     }
 
-    public function calculateDuration($start, $end)
+    public function calculateDuration($start, $end, $timezone)
     {
         try {
-            $startDateTime = new DateTime($start);
-            $endDateTime = new DateTime($end);
+        	
+        	$tz = new DateTimeZone($timezone);
+            $startDateTime = new DateTime($start, $tz);
+            $endDateTime = new DateTime($end, $tz);
 
             $duration = $startDateTime->diff($endDateTime);
 
@@ -486,6 +512,7 @@ class Application_Service_ShowFormService
                 return $duration->format('%r%Hh %Im');
             }
         } catch (Exception $e) {
+        	Logging::info($e->getMessage());
             return "Invalid Date";
         }
     }

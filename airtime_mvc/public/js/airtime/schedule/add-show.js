@@ -8,6 +8,7 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
+            /*
             var windowWidth = $(window).width();
             // margin on showform are 16 px on each side
             var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
@@ -18,6 +19,8 @@ function openAddShowForm() {
             // this calculation was copied from schedule.js line 326
             var mainHeight = document.documentElement.clientHeight - 200 - 50;
             $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
+            */
+           windowResize();
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
@@ -264,6 +267,13 @@ function setAddShowEvents(form) {
     });
 
     form.find("#add_show_linked").click(function(){
+        if ($(this).attr("readonly")) {
+            if ($("#show-link-readonly-warning").length === 0) {
+                $(this).parent().after("<ul id='show-link-readonly-warning' class='errors'><li>"+$.i18n._("Warning: You cannot change this field while the show is currently playing")+"</li></ul>");
+            }
+            return false;
+        }
+
         if (!$(this).attr("checked") && $("#show-link-warning").length === 0) {
             $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: Shows cannot be re-linked")+"</li></ul>");
         }
@@ -687,7 +697,8 @@ function setAddShowEvents(form) {
     		// calculate duration
     		var startDateTimeString = startDateString + " " + startTimeString;
     		var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
-    		calculateDuration(startDateTimeString, endDateTimeString);
+    		var timezone = $("#add_show_timezone").val();
+    		calculateDuration(startDateTimeString, endDateTimeString, timezone);
 	    }
 	});
 
@@ -718,7 +729,8 @@ function setAddShowEvents(form) {
     		// calculate duration
     		var startDateTimeString = startDateString + " " + startTimeString;
             var endDateTimeString = endDateString + " " + endTimeString;
-            calculateDuration(startDateTimeString, endDateTimeString);
+            var timezone = $("#add_show_timezone").val();
+            calculateDuration(startDateTimeString, endDateTimeString, timezone);
         }
 	});
 
@@ -736,13 +748,16 @@ function setAddShowEvents(form) {
         }
     })
 
-	function calculateDuration(startDateTime, endDateTime){
+	function calculateDuration(startDateTime, endDateTime, timezone){
 		var loadingIcon = $('#icon-loader-small');
 		
 		loadingIcon.show();
-		$.post(baseUrl+"Schedule/calculate-duration", {startTime: startDateTime, endTime: endDateTime}, function(data){
-		    $('#add_show_duration').val(JSON.parse(data));
-		    loadingIcon.hide();
+		$.post(
+			baseUrl+"Schedule/calculate-duration", 
+			{startTime: startDateTime, endTime: endDateTime, timezone: timezone}, 
+			function(data) {
+			    $('#add_show_duration').val(JSON.parse(data));
+			    loadingIcon.hide();
 		});
 	}
     

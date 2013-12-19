@@ -68,6 +68,8 @@ SQL;
      */
     public static function GetPlayOrderRange($p_prev = 1, $p_next = 1)
     {
+        //Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
+        
         if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
             Logging::info("Invalid range parameters: $p_prev or $p_next");
@@ -75,25 +77,23 @@ SQL;
             return array();
         }
 
-        $date = new Application_Common_DateHelper;
-        $timeNow = $date->getTimestamp();
-        $utcTimeNow = $date->getUtcTimestamp();
-
-        $shows = Application_Model_Show::getPrevCurrentNext($utcTimeNow);
+        $utcNow = new DateTime("now", new DateTimeZone("UTC"));
+        
+        $shows = Application_Model_Show::getPrevCurrentNext($utcNow);
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
-        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcTimeNow);
+        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
 
         $range = array("env"=>APPLICATION_ENV,
-            "schedulerTime"=>$timeNow,
+            "schedulerTime"=> $utcNow->format("Y-m-d H:i:s"),
+            //Previous, current, next songs!
             "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
             "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
             "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
+            //Current and next shows
             "currentShow"=>$shows['currentShow'],
             "nextShow"=>$shows['nextShow'],
-            "timezone"=> date("T"),
-            "timezoneOffset"=> date("Z")
         );
 
         return $range;
@@ -109,8 +109,12 @@ SQL;
      * through this mechanism a call is made to the old way of querying
      * the database to find the track info.
     **/
-    public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $p_timeNow)
+    public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $utcNow)
     {
+        $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
+        assert(get_class($utcNow) === "DateTime");
+        assert($utcNow->getTimeZone() == $timeZone);
+        
         if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null) {
             return;
         }
@@ -168,14 +172,17 @@ SQL;
         $results['current']  = null;
         $results['next']     = null;
 
-        $timeNowAsMillis = strtotime($p_timeNow);
         for ($i = 0; $i < $numberOfRows; ++$i) {
+            
             // if the show is overbooked, then update the track end time to the end of the show time.
             if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
-
-            if ((strtotime($rows[$i]['starts']) <= $timeNowAsMillis) && (strtotime($rows[$i]['ends']) >= $timeNowAsMillis)) {
+            
+            $curShowStartTime = new DateTime($rows[$i]['starts'], $timeZone);
+            $curShowEndTime   = new DateTime($rows[$i]['ends'], $timeZone);
+            
+            if (($curShowStartTime <= $utcNow) && ($curShowEndTime >= $utcNow)) {
                 if ($i - 1 >= 0) {
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
                             "starts"=>$rows[$i-1]["starts"],
@@ -196,10 +203,10 @@ SQL;
                 }
                 break;
             }
-            if (strtotime($rows[$i]['ends']) < $timeNowAsMillis ) {
+            if ($curShowEndTime < $utcNow ) {
                 $previousIndex = $i;
             }
-            if (strtotime($rows[$i]['starts']) > $timeNowAsMillis) {
+            if ($curShowStartTime > $utcNow) {
                 $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
                             "starts"=>$rows[$i]["starts"],
                             "ends"=>$rows[$i]["ends"],
@@ -589,33 +596,6 @@ SQL;
     }
 
     /**
-     * Compute the difference between two times in the format          .
-     * "HH:MM:SS.mmmmmm" Note: currently only supports calculating     .
-     * millisec differences                                            .
-     *
-     * @param  string $p_time1
-     * @param  string $p_time2
-     * @return double
-     */
-    private static function TimeDiff($p_time1, $p_time2)
-    {
-        $parts1 = explode(".", $p_time1);
-        $parts2 = explode(".", $p_time2);
-        $diff = 0;
-        if ( (count($parts1) > 1) && (count($parts2) > 1) ) {
-            $millisec1 = substr($parts1[1], 0, 3);
-            $millisec1 = str_pad($millisec1, 3, "0");
-            $millisec1 = intval($millisec1);
-            $millisec2 = substr($parts2[1], 0, 3);
-            $millisec2 = str_pad($millisec2, 3, "0");
-            $millisec2 = intval($millisec2);
-            $diff = abs($millisec1 - $millisec2)/1000;
-        }
-
-        return $diff;
-    }
-
-    /**
      * Returns an array of schedule items from cc_schedule table. Tries
      * to return at least 3 items (if they are available). The parameters
      * $p_startTime and $p_endTime specify the range. Schedule items returned
@@ -852,16 +832,18 @@ SQL;
     {
         $CC_CONFIG = Config::getConfig();
 
+        $utcTimeZone = new DateTimeZone('UTC');
+        
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
             then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime("@".time());
+            $t1 = new DateTime("@".time(), $utcTimeZone);
             $range_start = $t1->format("Y-m-d H:i:s");
         } else {
             $range_start = Application_Model_Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
         }
         if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime("@".time());
+            $t2 = new DateTime("@".time(), $utcTimeZone);
 
             $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
 
@@ -1012,278 +994,24 @@ SQL;
         Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
-    /*public static function createNewFormSections($p_view)
-    {
-        $formWhat    = new Application_Form_AddShowWhat();
-        $formWho     = new Application_Form_AddShowWho();
-        $formWhen    = new Application_Form_AddShowWhen();
-        $formRepeats = new Application_Form_AddShowRepeats();
-        $formStyle   = new Application_Form_AddShowStyle();
-        $formLive    = new Application_Form_AddShowLiveStream();
-
-        $formWhat->removeDecorator('DtDdWrapper');
-        $formWho->removeDecorator('DtDdWrapper');
-        $formWhen->removeDecorator('DtDdWrapper');
-        $formRepeats->removeDecorator('DtDdWrapper');
-        $formStyle->removeDecorator('DtDdWrapper');
-        $formLive->removeDecorator('DtDdWrapper');
-
-        $p_view->what = $formWhat;
-        $p_view->when = $formWhen;
-        $p_view->repeats = $formRepeats;
-        $p_view->who = $formWho;
-        $p_view->style = $formStyle;
-        $p_view->live = $formLive;
-
-        $formWhat->populate(array('add_show_id' => '-1',
-                                      'add_show_instance_id' => '-1'));
-        $formWhen->populate(array('add_show_start_date' => date("Y-m-d"),
-                                      'add_show_start_time' => '00:00',
-                                      'add_show_end_date_no_repeate' => date("Y-m-d"),
-                                      'add_show_end_time' => '01:00',
-                                      'add_show_duration' => '01h 00m'));
-
-        $formRepeats->populate(array('add_show_end_date' => date("Y-m-d")));
-
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
-
-            $p_view->rr = $formRecord;
-            $p_view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-            $p_view->rebroadcast = $formRebroadcast;
-        $p_view->addNewShow = true;
-    }*/
-
-    /* This function is responsible for handling the case where an individual
-     * show instance in a repeating show was edited (via the context menu in the Calendar).
-     * There is still lots of clean-up to do. For example we shouldn't be passing $controller into
-     * this method to manipulate the view (this should be done inside the controller function). With
-     * 2.1 deadline looming, this is OK for now. -Martin */
-    public static function updateShowInstance($data, $controller)
-    {
-        $formWhat    = new Application_Form_AddShowWhat();
-        $formWhen    = new Application_Form_AddShowWhen();
-        $formRepeats = new Application_Form_AddShowRepeats();
-        $formWho     = new Application_Form_AddShowWho();
-        $formStyle   = new Application_Form_AddShowStyle();
-        $formLive    = new Application_Form_AddShowLiveStream();
-
-        $formWhat->removeDecorator('DtDdWrapper');
-        $formWhen->removeDecorator('DtDdWrapper');
-        $formRepeats->removeDecorator('DtDdWrapper');
-        $formWho->removeDecorator('DtDdWrapper');
-        $formStyle->removeDecorator('DtDdWrapper');
-        $formLive->removeDecorator('DtDdWrapper');
-
-            $formRecord = new Application_Form_AddShowRR();
-            $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-            $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-            $formRecord->removeDecorator('DtDdWrapper');
-            $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-            $formRebroadcast->removeDecorator('DtDdWrapper');
-        $when = $formWhen->isValid($data);
-
-        if ($when && $formWhen->checkReliantFields($data, true, null, true)) {
-            $start_dt = new DateTime($data['add_show_start_date']." ".$data['add_show_start_time'],
-                    new DateTimeZone(date_default_timezone_get()));
-            $start_dt->setTimezone(new DateTimeZone('UTC'));
-
-            $end_dt = new DateTime($data['add_show_end_date_no_repeat']." ".$data['add_show_end_time'],
-                    new DateTimeZone(date_default_timezone_get()));
-            $end_dt->setTimezone(new DateTimeZone('UTC'));
-
-            $ccShowInstance = CcShowInstancesQuery::create()->findPK($data["add_show_instance_id"]);
-            $ccShowInstance->setDbStarts($start_dt);
-            $ccShowInstance->setDbEnds($end_dt);
-            $ccShowInstance->save();
-
-            Application_Model_Schedule::createNewFormSections($controller->view);
-
-            return true;
-        } else {
-            $formWhat->disable();
-            $formWhen->disableRepeatCheckbox();
-            $formRepeats->disable();
-            $formWho->disable();
-            $formStyle->disable();
-            //$formLive->disable();
-
-            $controller->view->what    = $formWhat;
-            $controller->view->when    = $formWhen;
-            $controller->view->repeats = $formRepeats;
-            $controller->view->who     = $formWho;
-            $controller->view->style   = $formStyle;
-            $controller->view->live    = $formLive;
-                $controller->view->rr = $formRecord;
-                $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                $controller->view->rebroadcast = $formRebroadcast;
-
-                //$formRecord->disable();
-                //$formAbsoluteRebroadcast->disable();
-                //$formRebroadcast->disable();
-
-            return false;
-        }
-    }
-
-    /* This function is responsible for handling the case where the entire show (not a single show instance)
-     * was edited (via the context menu in the Calendar).
-     * There is still lots of clean-up to do. For example we shouldn't be passing $controller into
-     * this method to manipulate the view (this should be done inside the controller function). With
-     * 2.1 deadline looming, this is OK for now.
-     * Another clean-up is to move all the form manipulation to the proper form class.....
-     * -Martin
-     */
-    /*public static function addUpdateShow($data, $controller, $validateStartDate,
-        $originalStartDate=null, $update=false, $instanceId=null)
-    {
-        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-        $user = new Application_Model_User($userInfo->id);
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-
-        $record = false;
-
-        $formWhat    = new Application_Form_AddShowWhat();
-        $formWho     = new Application_Form_AddShowWho();
-        $formWhen    = new Application_Form_AddShowWhen();
-        $formRepeats = new Application_Form_AddShowRepeats();
-        $formStyle   = new Application_Form_AddShowStyle();
-        $formLive    = new Application_Form_AddShowLiveStream();
-
-        $formWhat->removeDecorator('DtDdWrapper');
-        $formWho->removeDecorator('DtDdWrapper');
-        $formWhen->removeDecorator('DtDdWrapper');
-        $formRepeats->removeDecorator('DtDdWrapper');
-        $formStyle->removeDecorator('DtDdWrapper');
-        $formLive->removeDecorator('DtDdWrapper');
-
-        $what = $formWhat->isValid($data);
-        $when = $formWhen->isValid($data);
-        $live = $formLive->isValid($data);
-        if ($when) {
-            $when = $formWhen->checkReliantFields($data, $validateStartDate, $originalStartDate, $update, $instanceId);
-        }
-
-        //The way the following code works is that is parses the hour and
-        //minute from a string with the format "1h 20m" or "2h" or "36m".
-        //So we are detecting whether an hour or minute value exists via strpos
-        //and then parse appropriately. A better way to do this in the future is
-        //actually pass the format from javascript in the format hh:mm so we don't
-        //have to do this extra String parsing.
-        $hPos = strpos($data["add_show_duration"], 'h');
-        $mPos = strpos($data["add_show_duration"], 'm');
-
-        $hValue = 0;
-        $mValue = 0;
-
-        if ($hPos !== false) {
-            $hValue = trim(substr($data["add_show_duration"], 0, $hPos));
-        }
-        if ($mPos !== false) {
-            $hPos = $hPos === false ? 0 : $hPos+1;
-            $mValue = trim(substr($data["add_show_duration"], $hPos, -1 ));
-        }
-
-        $data["add_show_duration"] = $hValue.":".$mValue;
-
-        $formRecord = new Application_Form_AddShowRR();
-        $formAbsoluteRebroadcast = new Application_Form_AddShowAbsoluteRebroadcastDates();
-        $formRebroadcast = new Application_Form_AddShowRebroadcastDates();
-
-        $formRecord->removeDecorator('DtDdWrapper');
-        $formAbsoluteRebroadcast->removeDecorator('DtDdWrapper');
-        $formRebroadcast->removeDecorator('DtDdWrapper');
-
-
-            $record = $formRecord->isValid($data);
-
-        if ($data["add_show_repeats"]) {
-            $repeats = $formRepeats->isValid($data);
-            if ($repeats) {
-                $repeats = $formRepeats->checkReliantFields($data);
-            }
-            $formAbsoluteRebroadcast->reset();
-            //make it valid, results don't matter anyways.
-            $rebroadAb = 1;
-
-            if ($data["add_show_rebroadcast"]) {
-                $rebroad = $formRebroadcast->isValid($data);
-                if ($rebroad) {
-                    $rebroad = $formRebroadcast->checkReliantFields($data);
-                }
-            } else {
-                $rebroad = 1;
-            }
-        } else {
-            $repeats = 1;
-                $formRebroadcast->reset();
-                 //make it valid, results don't matter anyways.
-                $rebroad = 1;
-
-                if ($data["add_show_rebroadcast"]) {
-                    $rebroadAb = $formAbsoluteRebroadcast->isValid($data);
-                    if ($rebroadAb) {
-                        $rebroadAb = $formAbsoluteRebroadcast->checkReliantFields($data);
-                    }
-                } else {
-                    $rebroadAb = 1;
-                }
-        }
-
-        $who = $formWho->isValid($data);
-        $style = $formStyle->isValid($data);
-        if ($what && $when && $repeats && $who && $style && $live) {
-                if ($record && $rebroadAb && $rebroad) {
-                    if ($isAdminOrPM) {
-                        Application_Model_Show::create($data);
-                    }
-
-                    //send back a new form for the user.
-                    Application_Model_Schedule::createNewFormSections($controller->view);
-
-                    //$controller->view->newForm = $controller->view->render('schedule/add-show-form.phtml');
-                    return true;
-                } else {
-                    $controller->view->what = $formWhat;
-                    $controller->view->when = $formWhen;
-                    $controller->view->repeats = $formRepeats;
-                    $controller->view->who = $formWho;
-                    $controller->view->style = $formStyle;
-                    $controller->view->rr = $formRecord;
-                    $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-                    $controller->view->rebroadcast = $formRebroadcast;
-                    $controller->view->live = $formLive;
-                    //$controller->view->addNewShow = !$editShow;
-
-                    //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
-                    return false;
-
-                }
-        } else {
-            $controller->view->what    = $formWhat;
-            $controller->view->when    = $formWhen;
-            $controller->view->repeats = $formRepeats;
-            $controller->view->who     = $formWho;
-            $controller->view->style   = $formStyle;
-            $controller->view->live    = $formLive;
-            $controller->view->rr = $formRecord;
-            $controller->view->absoluteRebroadcast = $formAbsoluteRebroadcast;
-            $controller->view->rebroadcast = $formRebroadcast;
-            //$controller->view->addNewShow = !$editShow;
-            //$controller->view->form = $controller->view->render('schedule/add-show-form.phtml');
-            return false;
-        }
-    }*/
-
     public static function checkOverlappingShows($show_start, $show_end,
         $update=false, $instanceId=null, $showId=null)
     {
+        //if the show instance does not exist or was deleted, return false
+        if (!is_null($showId)) {
+            $ccShowInstance = CcShowInstancesQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbStarts($show_start->format("Y-m-d H:i:s"))
+                ->findOne();
+        } elseif (!is_null($instanceId)) {
+            $ccShowInstance = CcShowInstancesQuery::create()
+                ->filterByDbId($instanceId)
+                ->findOne();
+        }
+        if ($update && ($ccShowInstance && $ccShowInstance->getDbModifiedInstance() == true)) {
+            return false;
+        }
+
         $overlapping = false;
 
         $params = array(

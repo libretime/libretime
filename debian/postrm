@@ -83,6 +83,8 @@ case "$1" in
 
     if [ -f /etc/$webserver/sites-available/airtime-vhost ]; then
       a2dissite airtime-vhost &>/dev/null || true
+    elif [ -f /etc/$webserver/sites-available/airtime-vhost.conf ]; then
+      a2dissite airtime-vhost.conf &>/dev/null || true
       # TODO: if airtime-vhost is not modified -> delete it
       restart="$webserver $restart"
     fi
