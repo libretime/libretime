@@ -43,8 +43,6 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
     set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
 }
 
-$_SERVER['AIRTIME_CONF'] = 'airtime.conf';
-
 require_once 'Zend/Application.php';
 require_once 'Zend/Config.php';
 #require_once 'DatabaseTestCase.php';
