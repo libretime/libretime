@@ -21,10 +21,19 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library')
 )));
 
+// Ensure library/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+    get_include_path(),
+    realpath(APPLICATION_PATH . '/../../install_minimal/include')
+)));
+
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
 //Propel classes.
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
+
+//Services
+set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_path());
 
 //Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
@@ -36,8 +45,4 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 
 require_once 'Zend/Application.php';
 require_once 'Zend/Config.php';
-require_once 'Zend/Session.php';
 #require_once 'DatabaseTestCase.php';
-
-//Start the Session TODO: Move to an _initSession() function in a class
-Zend_Session::start();
