@@ -31,6 +31,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         echo($dbhost);
         AirtimeInstall::createDatabase();
         AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
+        AirtimeInstall::SetDefaultTimezone();
         
         $this->appBootstrap();
         
