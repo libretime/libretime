@@ -1,6 +1,7 @@
 <?php
 require_once "Zend/Test/PHPUnit/DatabaseTestCase.php";
 require_once "ShowService.php";
+require_once "../application/configs/conf.php";
 require_once "AirtimeInstall.php";
 
 class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
@@ -12,10 +13,27 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         //XXX: Zend_Test_PHPUnit_DatabaseTestCase doesn't use this for whatever reason:
         //$this->bootstrap = array($this, 'appBootstrap');
         //So instead we just manually call the appBootstrap here:
-        $this->appBootstrap();
         //TODO: Use AirtimeInstall.php to create the database and database tables
-        //AirtimeInstall::createDatabase(blah blah);
-        //AirtimeInstall::createDatabaseTables(blah blah);
+        //Load Database parameters
+        
+        //We need to load the config before our app bootstrap runs. The config
+        //is normally 
+        $_SERVER['AIRTIME_CONF'] = 'airtime.conf';
+        $CC_CONFIG = Config::getConfig();
+        
+        $dbuser = $CC_CONFIG['dsn']['username'];
+        $dbpasswd = $CC_CONFIG['dsn']['password'];
+        $dbname = $CC_CONFIG['dsn']['database'];
+        $dbhost = $CC_CONFIG['dsn']['hostspec'];
+        echo($dbuser);
+        echo($dbpasswd);
+        echo($dbname);
+        echo($dbhost);
+        AirtimeInstall::createDatabase();
+        AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
+        
+        $this->appBootstrap();
+        
         parent::setUp();
     }
 
