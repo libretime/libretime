@@ -17,18 +17,14 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         //Load Database parameters
         
         //We need to load the config before our app bootstrap runs. The config
-        //is normally 
-        $_SERVER['AIRTIME_CONF'] = 'airtime.conf';
+        //is normally
         $CC_CONFIG = Config::getConfig();
         
         $dbuser = $CC_CONFIG['dsn']['username'];
         $dbpasswd = $CC_CONFIG['dsn']['password'];
         $dbname = $CC_CONFIG['dsn']['database'];
         $dbhost = $CC_CONFIG['dsn']['hostspec'];
-        echo($dbuser);
-        echo($dbpasswd);
-        echo($dbname);
-        echo($dbhost);
+
         AirtimeInstall::createDatabase();
         AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
         AirtimeInstall::SetDefaultTimezone();
