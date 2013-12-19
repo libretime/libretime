@@ -185,12 +185,6 @@ AIRTIME = (function(AIRTIME) {
                 dateEndId, timeEndId);
         AIRTIME.showbuilder.fnServerData.start = oRange.start;
         AIRTIME.showbuilder.fnServerData.end = oRange.end;
-
-        //the user might not have the library on the page (guest user)
-        if (AIRTIME.library !== undefined) {
-        	AIRTIME.library.libraryInit();
-        }
-        
         AIRTIME.showbuilder.builderDataTable();
         setWidgetSize();
 

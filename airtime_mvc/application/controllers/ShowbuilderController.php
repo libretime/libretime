@@ -128,9 +128,10 @@ class ShowbuilderController extends Zend_Controller_Action
 
         //only include library things on the page if the user can see it.
         if (!$disableLib) {
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
+            //$this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+            //$this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        	$this->view->headScript()->appendFile($baseUrl.'js/airtime/library/lib_separate_table.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        	
             $data = Application_Model_Preference::getCurrentLibraryTableSetting();
             if (!is_null($data)) {
                 $libraryTable = json_encode($data);

@@ -181,7 +181,7 @@ var AIRTIME = (function(AIRTIME){
     	
     	//library may not be on the page.
     	if (AIRTIME.library !== undefined) {
-    		AIRTIME.library.checkAddButton();
+    		//AIRTIME.library.checkAddButton();
     	}
         
         mod.checkSelectButton();

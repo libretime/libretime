@@ -1,8 +1,5 @@
 <?php
 
-require_once 'formatters/LengthFormatter.php';
-require_once 'formatters/TimeFilledFormatter.php';
-
 use Airtime\CcShowHostsQuery;
 use Airtime\CcShowInstancesQuery;
 
@@ -290,7 +287,7 @@ class Application_Model_ShowBuilder
             
             $run_time = $cue_out-$cue_in;
             
-            $formatter = new LengthFormatter(Application_Common_DateHelper::secondsToPlaylistTime($run_time));
+            $formatter = new HHMMSSULength(Application_Common_DateHelper::secondsToPlaylistTime($run_time));
             $row['runtime'] = $formatter->format();
 
             $row["title"]    = htmlspecialchars($p_item["file_track_title"]);
@@ -353,7 +350,7 @@ class Application_Model_ShowBuilder
         $runtime         = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
         $row["runtime"]  = $runtime;
 
-        $timeFilled      = new TimeFilledFormatter($runtime);
+        $timeFilled      = new TimeFilled($runtime);
         $row["fRuntime"] = $timeFilled->format();
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));
