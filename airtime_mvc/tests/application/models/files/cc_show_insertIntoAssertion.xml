@@ -22,12 +22,12 @@
             <null />
             <value>ffffff</value>
             <value>364492</value>
-            <value>false</value>
-            <value>false</value>
+            <value></value>
+            <value></value>
             <null />
             <null />
-            <value>false</value>
-            <value>true</value>
+            <value></value>
+            <value>1</value>
         </row>
    </table>
 </dataset>
