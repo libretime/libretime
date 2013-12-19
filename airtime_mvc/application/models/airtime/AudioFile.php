@@ -183,12 +183,34 @@ class AudioFile extends BaseAudioFile
 	
 	public function setTrackNumber($v) {
 		
-		if ($v === "") {
+		if (!is_numeric($v)) {
 			$v = null;
 		}
 		
 		parent::setTrackNumber($v);
 		
+		return $this;
+	}
+	
+	public function setBitRate($v) {
+		
+		if (!is_numeric($v)) {
+			$v = null;
+		}
+		
+		parent::setBitRate($v);
+		
+		return $this;
+	}
+	
+	public function setSampleRate($v) {
+	
+		if (!is_numeric($v)) {
+			$v = null;
+		}
+	
+		parent::setBitRate($v);
+	
 		return $this;
 	}
 	
