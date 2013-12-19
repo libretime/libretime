@@ -1,5 +1,7 @@
 <?php
 require_once "Zend/Test/PHPUnit/DatabaseTestCase.php";
+require_once "ShowService.php";
+require_once "AirtimeInstall.php";
 
 class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
