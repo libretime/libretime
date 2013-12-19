@@ -88,11 +88,11 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
             "add_show_genre" => null,
             "add_show_color" => "ffffff",
             "add_show_background_color" => "364492",
-            "cb_airtime_auth" => 0,
-            "cb_custom_auth" => 0,
+            "cb_airtime_auth" => false,
+            "cb_custom_auth" => false,
             "custom_username" => null,
             "custom_password" => null,
-            "add_show_linked" => 0
+            "add_show_linked" => false
         );
 
         $showService->setCcShow($data);
