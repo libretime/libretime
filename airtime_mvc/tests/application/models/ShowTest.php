@@ -7,7 +7,9 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
     public function setUp()
     {
+        //XXX: Zend_Test_PHPUnit_DatabaseTestCase doesn't use this for whatever reason:
         //$this->bootstrap = array($this, 'appBootstrap');
+        //So instead we just manually call the appBootstrap here:
         $this->appBootstrap();
         //TODO: Use AirtimeInstall.php to create the database and database tables
         //AirtimeInstall::createDatabase(blah blah);
