@@ -22,7 +22,6 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function appBootstrap()
     {
         $this->application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH .'/configs/application.ini');
-        Zend_Session::start();
         $this->application->bootstrap();
     }
 
