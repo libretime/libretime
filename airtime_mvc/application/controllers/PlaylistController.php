@@ -35,8 +35,6 @@ class PlaylistController extends Zend_Controller_Action
         $this->view->obj = $obj;
         $this->view->contents = $obj->getContents();
         $this->view->html = $this->view->render('playlist/update.phtml');
-        $this->view->name = $obj->getName();
-        $this->view->description = $obj->getDescription();
         $this->view->modified = $obj->getUpdatedAt("U");
 
         unset($this->view->obj);

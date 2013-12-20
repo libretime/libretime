@@ -92,7 +92,7 @@ class Application_Service_PlaylistService
 			$playlist->setName($data["name"]);
 			$playlist->setDescription($data["description"]);
 			
-			$contents = $data["contents"];
+			$contents = isset($data["contents"]) ? $data["contents"] : array();
 			$position = 0;
 			$m = array();
 			foreach ($contents as $item) {
@@ -101,7 +101,6 @@ class Application_Service_PlaylistService
 				
 				$res = $mediaContent->validate();
 				if ($res === true) {
-					//$playlist->addMediaContent($mediaContent);
 					$m[] = $mediaContent;
 				}
 				else {

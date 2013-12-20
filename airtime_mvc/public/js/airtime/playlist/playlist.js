@@ -7,11 +7,7 @@ var AIRTIME = (function(AIRTIME){
 	var mod = AIRTIME.playlist;
 	
 	function cleanString(string) {
-		var pattern = /\r\n/g,
-			s;
-		
-		s = string.replace(pattern, "");
-		return s.trim();
+		return string.trim();
 	}
 	
 	function isTimeValid(time) {
@@ -120,31 +116,42 @@ var AIRTIME = (function(AIRTIME){
 		}
 		
 		info["name"] = cleanString($("#playlist_name").text());
-		info["description"] = $("#playlist_description").val();
+		info["description"] = cleanString($("#playlist_description").val());
 		info["contents"] = entries;
 		
 		return info;
 	}
 	
-	mod.redrawPlaylist = function redrawPlaylist(data) {
+	function makeSortable() {
+		var $contents = $("#spl_sortable");
 		
-		$wrapper = $("div.wrapper");
-		$playlist = $("#side_playlist");
+		$contents.sortable({
+			items: 'li',
+			handle: 'div.list-item-container'
+		});
+	}
+	
+	mod.redrawPlaylist = function redrawPlaylist(data) {
+		var $wrapper = $("div.wrapper"),
+			$playlist = $("#side_playlist");
+		
 		$playlist.detach();
 		
-		$playlist.find("#playlist_name").text(data.name);
 		$playlist.find("#playlist_lastmod").val(data.modified);
-		$playlist.find("#playlist_description").val(data.description);
 		$playlist.find("#playlist_length").text(data.length);
-		$playlist.find("#spl_sortable").html(data.html);
+		$playlist.find("#spl_sortable").html(data.html).sortable("refresh");
 		
 		$wrapper.append($playlist);
 	};
 	
 	mod.drawPlaylist = function drawPlaylist(data) {
-		$playlist = $("#side_playlist");
+		var $playlist = $("#side_playlist");
 		
-		$playlist.empty().append(data.html);
+		$playlist
+			.empty()
+			.append(data.html);
+		
+		makeSortable();
 	};
 	
 	function showCuesWaveform(e) {
@@ -251,13 +258,9 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.onReady = function() {
 		
-		var $playlist = $("#side_playlist"),
-			$contents = $("#spl_sortable");
+		var $playlist = $("#side_playlist");
 		
-		$contents.sortable({
-			items: 'li',
-			handle: 'div.list-item-container'
-		});
+		makeSortable();
 		
 		$playlist.on("click", ".ui-icon-closethick", function(e) {
 			var $li = $(this).parents("li");
@@ -310,8 +313,8 @@ var AIRTIME = (function(AIRTIME){
 		});
 		
 		$playlist.on("click", "#spl_save", function(e) {
-			
-			var order = $contents.sortable("toArray"),
+			var $contents = $("#spl_sortable"),
+				order = $contents.sortable("toArray"),
 				url = baseUrl+"playlist/save",
 				data,
 				$errors = $playlist.find(".edit-error");

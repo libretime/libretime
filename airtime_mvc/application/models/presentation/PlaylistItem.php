@@ -27,5 +27,44 @@ abstract class Presentation_PlaylistItem {
 	abstract protected function canPreview();
 	abstract protected function getTitle();
 	abstract protected function getCreator();
-	abstract protected function getCliplength();
+	
+	public function getCliplength() {
+		$length = $this->content->getCliplength();
+		$class = self::LENGTH_FORMATTER_CLASS;
+		$formatter = new $class($length);
+		return $formatter->format();
+	}
+	
+	public function getCueIn() {
+		return $this->content->getCueIn();
+	}
+	
+	public function getCueOut() {
+		return $this->content->getCueOut();
+	}
+	
+	public function getFadeIn() {
+		return $this->content->getFadeIn();
+	}
+	
+	public function getFadeOut() {
+		return $this->content->getFadeOut();
+	}
+	
+	public function getLength() {
+		$length = $this->item->getLength();
+		$class = self::LENGTH_FORMATTER_CLASS;
+		$formatter = new $class($length);
+		return $formatter->format(3);
+	}
+	
+	public function getCueInSec() {
+		$cuein = $this->content->getCueIn();
+		return Application_Common_DateHelper::playlistTimeToSeconds($cuein);
+	}
+	
+	public function getCueOutSec() {
+		$cueout = $this->content->getCueOut();
+		return Application_Common_DateHelper::playlistTimeToSeconds($cueout);
+	}
 }

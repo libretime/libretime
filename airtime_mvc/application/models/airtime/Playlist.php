@@ -80,6 +80,15 @@ class Playlist extends BasePlaylist
 		$this->length = $length;
 	}
 	
+	public function getLength()
+	{
+		if (is_null($this->length)) {
+			$this->length = "00:00:00";
+		}
+		
+		return $this->length;
+	}
+	
 	public function postSave(PropelPDO $con = null)
     {
     	$this->updateLength($con);
