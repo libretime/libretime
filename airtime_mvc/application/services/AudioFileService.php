@@ -89,8 +89,7 @@ class Application_Service_AudioFileService
 		
 		$file->save($this->_con);
 		
-		Logging::info($file->toJSON(true));
-		Logging::info($file->toJSON(false));
+		Logging::info($md);
 		
 		//TODO implement upload recorded.
 		if ($md['is_record'] != 0) {

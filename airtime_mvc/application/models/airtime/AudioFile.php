@@ -209,7 +209,7 @@ class AudioFile extends BaseAudioFile
 			$v = null;
 		}
 	
-		parent::setBitRate($v);
+		parent::setSampleRate($v);
 	
 		return $this;
 	}
