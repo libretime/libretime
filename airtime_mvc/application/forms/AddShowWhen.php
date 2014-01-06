@@ -167,7 +167,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
          * rebroadcast instances
          */
         $hours = $duration->format("%h");
-        $minutes = $duration->format("%m");
+        $minutes = $duration->format("%i");
 
         /* Check if show is overlapping
          * We will only do this check if the show is valid
