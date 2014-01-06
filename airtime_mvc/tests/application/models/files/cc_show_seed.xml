@@ -14,5 +14,47 @@
         <column>live_stream_pass</column>
         <column>linked</column>
         <column>is_linkable</column>
-   </table>
+    </table>
+
+    <table name="cc_show_days">
+        <column>id</column>
+        <column>first_show</column>
+        <column>last_show</column>
+        <column>start_time</column>
+        <column>timezone</column>
+        <column>duration</column>
+        <column>day</column>
+        <column>repeat_type</column>
+        <column>next_pop_date</column>
+        <column>show_id</column>
+        <column>record</column>
+    </table>
+
+    <table name="cc_show_instances">
+        <column>id</column>
+        <column>starts</column>
+        <column>ends</column>
+        <column>show_id</column>
+        <column>record</column>
+        <column>rebroadcast</column>
+        <column>instance_id</column>
+        <column>file_id</column>
+        <column>time_filled</column>
+        <column>created</column>
+        <column>last_scheduled</column>
+        <column>modified_instance</column>
+    </table>
+
+    <table name="cc_show_rebroadcast">
+        <column>id</column>
+        <column>day_offset</column>
+        <column>start_time</column>
+        <column>show_id</column>
+    </table>
+
+    <table name="cc_show_hosts">
+        <column>id</column>
+        <column>show_id</column>
+        <column>subjs_id</column>
+    </table>
 </dataset>
