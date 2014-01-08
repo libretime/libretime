@@ -18,12 +18,6 @@ class TestHelper
             //the default storage is a session with namespace Zend_Auth
             $authStorage = $auth->getStorage();
             $authStorage->write($userInfo);
-
-            //Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
-            //Application_Model_Subjects::resetLoginAttempts($username);
-
-            //$tempSess = new Zend_Session_Namespace("referrer");
-            //$tempSess->referrer = 'login';
         }
     }
 }
