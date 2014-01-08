@@ -4,6 +4,7 @@ require_once "ShowService.php";
 require_once "../application/configs/conf.php";
 require_once "AirtimeInstall.php";
 require_once "ShowData.php";
+require_once "TestHelper.php";
 
 class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
@@ -110,6 +111,8 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     public function testNoRepeatNoRRShowCreated()
     {
+        TestHelper::loginUser();
+
         $data = ShowData::getNoRepeatNoRRData();
         $showService = new Application_Service_ShowService();
 
@@ -120,13 +123,21 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
-        $ds->addTable('cc_show_instances', 'select * from cc_show_instances');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/cc_show_insertIntoAssertion.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/files/noRepeatNoRRShowCreated.xml"),
             $ds
         );
+    }
+
+    /* Tests that a weekly repeating, non-record, non-rebroadcast show
+     * gets created correctly
+     */
+    public function testWeeklyRepeatNoRRShowCreated()
+    {
+        
     }
 }

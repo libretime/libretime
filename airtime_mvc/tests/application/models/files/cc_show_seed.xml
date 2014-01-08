@@ -1,60 +1,15 @@
 <?xml version="1.0" ?>
 <dataset>
-    <table name="cc_show">
+    <table name="cc_pref">
         <column>id</column>
-        <column>name</column>
-        <column>url</column>
-        <column>genre</column>
-        <column>description</column>
-        <column>color</column>
-        <column>background_color</column>
-        <column>live_stream_using_airtime_auth</column>
-        <column>live_stream_using_custom_auth</column>
-        <column>live_stream_user</column>
-        <column>live_stream_pass</column>
-        <column>linked</column>
-        <column>is_linkable</column>
-    </table>
-
-    <table name="cc_show_days">
-        <column>id</column>
-        <column>first_show</column>
-        <column>last_show</column>
-        <column>start_time</column>
-        <column>timezone</column>
-        <column>duration</column>
-        <column>day</column>
-        <column>repeat_type</column>
-        <column>next_pop_date</column>
-        <column>show_id</column>
-        <column>record</column>
-    </table>
-
-    <table name="cc_show_instances">
-        <column>id</column>
-        <column>starts</column>
-        <column>ends</column>
-        <column>show_id</column>
-        <column>record</column>
-        <column>rebroadcast</column>
-        <column>instance_id</column>
-        <column>file_id</column>
-        <column>time_filled</column>
-        <column>created</column>
-        <column>last_scheduled</column>
-        <column>modified_instance</column>
-    </table>
-
-    <table name="cc_show_rebroadcast">
-        <column>id</column>
-        <column>day_offset</column>
-        <column>start_time</column>
-        <column>show_id</column>
-    </table>
-
-    <table name="cc_show_hosts">
-        <column>id</column>
-        <column>show_id</column>
-        <column>subjs_id</column>
+        <column>subjid</column>
+        <column>keystr</column>
+        <column>valstr</column>
+        <row>
+            <value>1</value>
+            <null />
+            <value>shows_populated_until</value>
+            <value>2016-02-01 05:00:00</value>
+        </row>
     </table>
 </dataset>

@@ -46,6 +46,9 @@ set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . ge
 //test data
 set_include_path(APPLICATION_PATH . '/../tests/application/testdata' . PATH_SEPARATOR . get_include_path());
 
+//helper functions
+set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPARATOR . get_include_path());
+
 //Zend framework
 if (file_exists('/usr/share/php/libzend-framework-php')) {
     set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
