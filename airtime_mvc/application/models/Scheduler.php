@@ -515,6 +515,9 @@ class Application_Model_Scheduler
     private function insertAfter($scheduleItems, $mediaItems, $filesToInsert=null, $adjustSched=true, $moveAction=false)
     {
         try {
+            // temporary fix for CC-5665
+            set_time_limit(180);
+
             $affectedShowInstances = array();
 
             //dont want to recalculate times for moved items
