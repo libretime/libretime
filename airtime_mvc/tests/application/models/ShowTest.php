@@ -101,7 +101,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show', 'select * from cc_show');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/cc_show_insertIntoAssertion.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/files/test_ccShowInsertedIntoDatabase.xml"),
             $ds
         );
     }
@@ -114,7 +114,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         TestHelper::loginUser();
 
         $data = ShowData::getNoRepeatNoRRData();
-        $showService = new Application_Service_ShowService();
+        $showService = new Application_Service_ShowService(null, $data);
 
         $showService->addUpdateShow($data);
 
@@ -128,16 +128,35 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/noRepeatNoRRShowCreated.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/files/test_noRepeatNoRRShowCreated.xml"),
             $ds
         );
     }
 
     /* Tests that a weekly repeating, non-record, non-rebroadcast show
-     * gets created correctly
+     *  with no end date gets created correctly
      */
-    public function testWeeklyRepeatNoRRShowCreated()
+    public function testWeeklyRepeatNoEndNoRRShowCreated()
     {
-        
+        TestHelper::loginUser();
+
+        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $showService = new Application_Service_ShowService(null, $data);
+
+        $showService->addUpdateShow($data);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/files/test_weeklyRepeatNoEndNoRRShowCreated.xml"),
+            $ds
+        );
     }
 }
