@@ -159,4 +159,31 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
             $ds
         );
     }
+
+    /* Tests that a show instances gets deleted from it's repeating sequence
+     * properly
+     */
+    public function testDeleteShowInstance()
+    {
+        TestHelper::loginUser();
+
+        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $service_show = new Application_Service_ShowService(null, $data);
+        $service_show->addUpdateShow($data);
+        //$service_show->deleteShow(3, true);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/files/test_deleteShowInstance.xml"),
+            $ds
+        );
+    }
 }
