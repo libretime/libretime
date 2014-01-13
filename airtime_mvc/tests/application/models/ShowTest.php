@@ -160,8 +160,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    /* Tests that a show instance gets deleted from it's repeating sequence
-     * properly
+    /* Tests that a show instance gets deleted from it's repeating sequence properly
      */
     public function testDeleteShowInstance()
     {
