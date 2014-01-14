@@ -248,4 +248,32 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
             $ds
         );
     }
+
+    /* Tests the entire show gets deleted when the user selects 'Delete this
+     * instance and all following' from the context menu on the calendar
+     */
+    public function testDeleteRepeatingShow()
+    {
+        TestHelper::loginUser();
+
+        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $showService = new Application_Service_ShowService(null, $data);
+
+        $showService->addUpdateShow($data);
+        $showService->deleteShow(1);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances order by id');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/files/test_deleteRepeatingShow.xml"),
+            $ds
+        );
+    }
 }
