@@ -56,6 +56,19 @@
             <value>1</value>
             <value>0</value>
         </row>
+        <row>
+            <value>2</value>
+            <value>2016-01-08</value>
+            <value>2016-01-09</value>
+            <value>01:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>5</value>
+            <value>-1</value>
+            <value>2016-01-08</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
     </table>
 
     <table name="cc_show_instances">
@@ -85,7 +98,7 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <value></value>
+            <value>1</value>
         </row>
         <row>
             <value>3</value>
@@ -95,7 +108,7 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <value>1</value>
+            <value></value>
         </row>
         <row>
             <value>4</value>
@@ -121,6 +134,16 @@
             <value>6</value>
             <value>2016-02-05 00:00:00</value>
             <value>2016-02-05 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
+            <value>7</value>
+            <value>2016-01-08 01:00:00</value>
+            <value>2016-01-08 02:00:00</value>
             <value>1</value>
             <value>0</value>
             <value>0</value>

@@ -155,4 +155,30 @@ Class ShowData
     {
         return array(1,2,3,4,5);
     }
+
+    public static function getEditRepeatInstanceData()
+    {
+        return array(
+            "add_show_id" => 1,
+            "add_show_instance_id" => 2,
+            "add_show_name" => "test show",
+            "add_show_url" => null,
+            "add_show_genre" => null,
+            "add_show_description" => null,
+            "add_show_start_date" => "2016-01-08",
+            "add_show_start_time" => "01:00",
+            "add_show_end_date_no_repeat" => "2016-01-08",
+            "add_show_end_time" => "02:00",
+            "add_show_duration" => "01h 00m",
+            "add_show_timezone" => "UTC",
+            "add_show_repeats" => 0,
+            "add_show_linked" => 0,
+            "add_show_no_end" => 0,
+            "cb_airtime_auth" => 0,
+            "cb_custom_auth" => 0,
+            "add_show_record" => 0,
+            "add_show_rebroadcast" => 0,
+            "add_show_hosts" => null
+        );
+    }
 }

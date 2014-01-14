@@ -92,9 +92,6 @@
         <column>record</column>
         <column>rebroadcast</column>
         <column>instance_id</column>
-        <column>file_id</column>
-        <column>time_filled</column>
-        <column>last_scheduled</column>
         <column>modified_instance</column>
         <row>
             <value>1</value>
@@ -103,9 +100,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value>1</value>
         </row>
@@ -117,9 +111,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value></value>
         </row>
         <row>
@@ -129,9 +120,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value></value>
         </row>
@@ -143,9 +131,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value>1</value>
         </row>
         <row>
@@ -155,9 +140,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value>1</value>
         </row>
@@ -169,9 +151,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value>1</value>
         </row>
         <row>
@@ -181,9 +160,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value></value>
         </row>
@@ -195,9 +171,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value>1</value>
         </row>
         <row>
@@ -207,9 +180,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value></value>
         </row>
@@ -221,9 +191,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value>1</value>
         </row>
         <row>
@@ -233,9 +200,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value>1</value>
         </row>
@@ -247,9 +211,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value></value>
         </row>
         <row>
@@ -259,9 +220,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value></value>
         </row>
@@ -273,9 +231,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value></value>
         </row>
         <row>
@@ -286,9 +241,6 @@
             <value>0</value>
             <value>0</value>
             <null />
-            <null />
-            <value>00:00:00</value>
-            <null />
             <value>1</value>
         </row>
         <row>
@@ -298,9 +250,6 @@
             <value>1</value>
             <value>0</value>
             <value>0</value>
-            <null />
-            <null />
-            <value>00:00:00</value>
             <null />
             <value>1</value>
         </row>

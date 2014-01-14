@@ -11,5 +11,11 @@
             <value>shows_populated_until</value>
             <value>2016-02-07 00:00:00</value>
         </row>
+        <row>
+            <value>2</value>
+            <null />
+            <value>timezone</value>
+            <value>UTC</value>
+        </row>
     </table>
 </dataset>

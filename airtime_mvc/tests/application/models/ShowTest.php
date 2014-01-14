@@ -123,7 +123,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
-        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
@@ -150,7 +150,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
-        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
@@ -176,7 +176,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
-        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances order by id');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances order by id');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
@@ -210,12 +210,41 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days order by first_show');
-        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances order by id');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances order by id');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
             $this->createXmlDataSet(dirname(__FILE__)."/files/test_deleteShowInstanceAndAllFollowing.xml"),
+            $ds
+        );
+    }
+
+    public function testEditRepeatingShowInstance()
+    {
+        TestHelper::loginUser();
+
+        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $showService = new Application_Service_ShowService(null, $data);
+
+        $showService->addUpdateShow($data);
+        $editData = ShowData::getEditRepeatInstanceData();
+
+        //need to create a new service so it gets constructed with the new data
+        $showService = new Application_Service_ShowService(null, $editData);
+        $showService->editRepeatingShowInstance($editData);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances order by id');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/files/test_editRepeatingShowInstance.xml"),
             $ds
         );
     }
