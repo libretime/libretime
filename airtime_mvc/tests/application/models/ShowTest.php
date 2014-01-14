@@ -185,4 +185,38 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
             $ds
         );
     }
+
+    /* Tests that when a user selects 'Delete this instance and all following
+     * on the calendar the database gets updated correctly
+     */
+    public function testDeleteShowInstanceAndAllFollowing()
+    {
+        TestHelper::loginUser();
+
+        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $data["add_show_day_check"] = array(5,1,2);
+
+        $service_show = new Application_Service_ShowService(null, $data);
+        $service_show->addUpdateShow($data);
+        //delete some single instances first
+        $service_show->deleteShow(1, true);
+        $service_show->deleteShow(6, true);
+        $service_show->deleteShow(8, true);
+        //delete all instances including and after where id=4
+        $service_show->deleteShow(4);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days order by first_show');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, file_id, time_filled, last_scheduled, modified_instance from cc_show_instances order by id');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/files/test_deleteShowInstanceAndAllFollowing.xml"),
+            $ds
+        );
+    }
 }

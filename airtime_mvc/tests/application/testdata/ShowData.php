@@ -150,4 +150,9 @@ Class ShowData
             "add_show_day_check" => array(5)
         );
     }
+
+    public static function getWeeklyRepeatDays()
+    {
+        return array(1,2,3,4,5);
+    }
 }
