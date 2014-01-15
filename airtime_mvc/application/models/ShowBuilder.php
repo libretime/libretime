@@ -350,7 +350,7 @@ class Application_Model_ShowBuilder
         $runtime         = bcsub($contentDT->format("U.u"), $showEndDT->format("U.u"), 6);
         $row["runtime"]  = $runtime;
 
-        $timeFilled      = new TimeFilled($runtime);
+        $timeFilled      = new Format_TimeFilled($runtime);
         $row["fRuntime"] = $timeFilled->format();
 
         $showStartDT = new DateTime($p_item["si_starts"], new DateTimeZone("UTC"));

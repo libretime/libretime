@@ -1,11 +1,27 @@
 <div class="wrapper">
     <div id="library_content" class="lib-content tabs ui-widget ui-widget-content block-shadow alpha-block padded">
-        <div id="import_status" style="display:none"><?php echo _("File import in progress..."); ?></div>
-        <fieldset class="toggle closed" id="filter_options">
-            <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><?php echo _("Advanced Search Options") ?></legend>
-            <div id="advanced_search" class="advanced_search form-horizontal"></div>
-        </fieldset>
-        <table id="library_display" cellpadding="0" cellspacing="0" class="datatable"></table>
+        <div id ="lib_tabs">
+			<ul>
+				<li><a href="#lib_audio"><span>Audio</span></a></li>
+				<li><a href="#lib_webstreams"><span>Webstreams</span></a></li>
+				<li><a href="#lib_playlists"><span>Playlists</span></a></li>
+			</ul>
+			<div id="lib_audio">
+				<table id="audio_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+			</div>
+			<div id="lib_webstreams">
+				<a id="lib_new_webstream">
+		            <span><?php echo _("Create Webstream") ?></span>
+		        </a>
+				<table id="webstream_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+			</div>
+			<div id="lib_playlists">
+				<a id="lib_new_playlist">
+		            <span><?php echo _("Create Playlist") ?></span>
+		        </a>
+				<table id="playlist_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+			</div>
+		</div>
     </div>
     <div id="show_builder" class="sb-content ui-widget ui-widget-content block-shadow omega-block padded">
         <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>

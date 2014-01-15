@@ -8,4 +8,5 @@ interface Interface_Schedulable
 	public function getSchedulingCueOut();
 	public function getSchedulingFadeIn();
 	public function getSchedulingFadeOut();
+	public function getScheduledContent();
 }

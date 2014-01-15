@@ -2,6 +2,8 @@
 
 namespace Airtime;
 
+use \DateTime;
+use \DateTimeZone;
 use \Criteria;
 use \PropelPDO;
 use Airtime\om\BaseCcShow;

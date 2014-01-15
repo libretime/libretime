@@ -186,7 +186,9 @@ function buildScheduleDialog (json, instance_id) {
     fnServer.ops.showInstanceFilter = instance_id;
     fnServer.ops.myShows = 0;
     
-    AIRTIME.library.libraryInit();
+    //AIRTIME.library.libraryInit();
+    //TODO separate this from the onReady event
+    AIRTIME.library.onReady();
     AIRTIME.showbuilder.builderDataTable();
     
     //set max heights of datatables.

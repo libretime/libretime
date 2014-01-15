@@ -64,7 +64,12 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 		return $obj->getCreator();
 	}
 	
-	
+	/*
+	 * TODO if we change to not unwrapping playlists/blocks this method should be used to get the info
+	 * needed when scheduling shows. 
+	 * The scheduler itself will then unroll content as needed when sending the information to pypo.
+	 * Otherwise in the meantime we must implement another method that unwraps playlists and blocks.
+	 */
 	public function getSchedulingInfo() 
 	{
 		$obj = $this->getChildObject();
@@ -78,6 +83,14 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 			"length" => $obj->getSchedulingLength(),
 			"crossfadeDuration" => 0
 		);	
+	}
+	
+	/*
+	 * TODO remove this method and just rely on method getSchedulingInfo
+	 * in the future if we don't unroll playlists/blocks when scheduling them.
+	 */
+	public function getScheduledContent() {
+		
 	}
 	
 	public function isSchedulable() {

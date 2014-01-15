@@ -194,6 +194,9 @@ class Application_Model_Scheduler
     /*
      * @param $id
      * @param $type
+     * 
+     * id will be the media id of the item. 
+     * Each item should provide a way to produce itself in a schedulable format that this function can then use.
      *
      * @return $files
      */

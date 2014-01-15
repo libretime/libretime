@@ -22,8 +22,8 @@
     position: absolute;
     list-style-type: none;
     
-    border: 1px solid #DDD;
-    background: #EEE;
+    border: 1px solid #333333;
+    background: #f0f0f0;
     
     -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
        -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -31,36 +31,40 @@
          -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     
-    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
 }
 
 .context-menu-item {
-    padding: 2px 2px 2px 24px;
-    background-color: #EEE;
+    padding: 2px 5px;
+    background-color: #f0f0f0;
     position: relative;
-    -webkit-user-select: none;
-       -moz-user-select: -moz-none;
-        -ms-user-select: none;
-            user-select: none;
+    min-height: 18px;
+    -moz-user-select: -moz-none;
+    display: block;
+    width: 100%;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box; 
+}
+
+.context-menu-item.icon {
+    padding: 2px 2px 2px 28px;
 }
 
 .context-menu-separator {
     padding-bottom:0;
     border-bottom: 1px solid #DDD;
+    min-height: 2px;
 }
 
-.context-menu-item > label > input,
-.context-menu-item > label > textarea {
-    -webkit-user-select: text;
-       -moz-user-select: text;
-        -ms-user-select: text;
-            user-select: text;
+.context-menu-item > label {
+    -moz-user-select: text;
 }
 
 .context-menu-item.hover {
     cursor: pointer;
-    background-color: #39F;
+    background-color: #ff5d1a;
 }
 
 .context-menu-item.disabled {
@@ -89,13 +93,21 @@
     .context-menu-item.icon:before {}
  */
 .context-menu-item.icon { min-height: 18px; background-repeat: no-repeat; background-position: 4px 2px; }
-.context-menu-item.icon-edit { background-image: url(images/page_white_edit.png); }
-.context-menu-item.icon-cut { background-image: url(images/cut.png); }
-.context-menu-item.icon-copy { background-image: url(images/page_white_copy.png); }
-.context-menu-item.icon-paste { background-image: url(images/page_white_paste.png); }
-.context-menu-item.icon-delete { background-image: url(images/page_white_delete.png); }
-.context-menu-item.icon-add { background-image: url(images/page_white_add.png); }
-.context-menu-item.icon-quit { background-image: url(images/door.png); }
+.context-menu-item.icon-edit { background-image: url(images/icon_edit_cm.png); }
+.context-menu-item.icon-cut { background-image: url(images/icon_cut_cm.png); }
+.context-menu-item.icon-copy { background-image: url(images/icon_copy_cm.png); }
+.context-menu-item.icon-paste { background-image: url(images/icon_paste_cm.png); }
+.context-menu-item.icon-delete { background-image: url(images/icon_delete_cm.png); }
+.context-menu-item.icon-quit { background-image: url(images/icon_door_cm.png); }
+.context-menu-item.icon-soundcloud { background-image: url(images/icon_soundcloud_cm.png); }
+.context-menu-item.icon-download { background-image: url(images/icon_download_cm.png); }
+.context-menu-item.icon-overview { background-image: url(images/icon_overview_cm.png); }
+.context-menu-item.icon-play { background-image: url(images/icon_play_cm.png); }
+.context-menu-item.icon-select-cursor { background-image: url(images/icon_select-cursor_cm.png); }
+.context-menu-item.icon-add-playlist { background-image: url(images/icon_add_playlist_cm.png); }
+.context-menu-item.icon-add-remove-content { background-image: url(images/icon_add_content_cm.png); }
+.context-menu-item.icon-remove-all-content { background-image: url(images/icon_remove_all_content_cm.png); }
+.context-menu-item.icon-error { background-image: url(images/icon_alert_cal_alt.png); }
 
 /* vertically align inside labels */
 .context-menu-input > label > * { vertical-align: top; }
