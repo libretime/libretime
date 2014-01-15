@@ -3,10 +3,10 @@ require_once "Zend/Test/PHPUnit/DatabaseTestCase.php";
 require_once "ShowService.php";
 require_once "../application/configs/conf.php";
 require_once "AirtimeInstall.php";
-require_once "ShowData.php";
+require_once "ShowServiceData.php";
 require_once "TestHelper.php";
 
-class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
+class ShowServiceTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
 
@@ -70,7 +70,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function getDataSet()
     {
         return $this->createXmlDataSet(
-            dirname(__FILE__) . '/files/cc_show_seed.xml'
+            dirname(__FILE__) . '/datasets/cc_show_seed.xml'
         );
     }
 
@@ -101,7 +101,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show', 'select * from cc_show');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/test_ccShowInsertedIntoDatabase.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_ccShowInsertedIntoDatabase.xml"),
             $ds
         );
     }
@@ -113,7 +113,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $data = ShowData::getNoRepeatNoRRData();
+        $data = ShowServiceData::getNoRepeatNoRRData();
         $showService = new Application_Service_ShowService(null, $data);
 
         $showService->addUpdateShow($data);
@@ -128,7 +128,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/test_noRepeatNoRRShowCreated.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_noRepeatNoRRShowCreated.xml"),
             $ds
         );
     }
@@ -140,7 +140,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $showService = new Application_Service_ShowService(null, $data);
 
         $showService->addUpdateShow($data);
@@ -155,7 +155,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/test_weeklyRepeatNoEndNoRRShowCreated.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_weeklyRepeatNoEndNoRRShowCreated.xml"),
             $ds
         );
     }
@@ -166,7 +166,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $service_show = new Application_Service_ShowService(null, $data);
         $service_show->addUpdateShow($data);
         $service_show->deleteShow(3, true);
@@ -181,7 +181,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/test_deleteShowInstance.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_deleteShowInstance.xml"),
             $ds
         );
     }
@@ -193,7 +193,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $data["add_show_day_check"] = array(5,1,2);
 
         $service_show = new Application_Service_ShowService(null, $data);
@@ -215,7 +215,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/test_deleteShowInstanceAndAllFollowing.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_deleteShowInstanceAndAllFollowing.xml"),
             $ds
         );
     }
@@ -224,11 +224,11 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $showService = new Application_Service_ShowService(null, $data);
 
         $showService->addUpdateShow($data);
-        $editData = ShowData::getEditRepeatInstanceData();
+        $editData = ShowServiceData::getEditRepeatInstanceData();
 
         //need to create a new service so it gets constructed with the new data
         $showService = new Application_Service_ShowService(null, $editData);
@@ -244,7 +244,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/test_editRepeatingShowInstance.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_editRepeatingShowInstance.xml"),
             $ds
         );
     }
@@ -256,7 +256,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
     {
         TestHelper::loginUser();
 
-        $data = ShowData::getWeeklyRepeatNoEndNoRRData();
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $showService = new Application_Service_ShowService(null, $data);
 
         $showService->addUpdateShow($data);
@@ -272,7 +272,7 @@ class ShowTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/files/test_deleteRepeatingShow.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_deleteRepeatingShow.xml"),
             $ds
         );
     }

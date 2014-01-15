@@ -1,5 +1,5 @@
 <?php
-Class ShowData
+Class ShowServiceData
 {
     public static function getNoRepeatNoRRData()
     {
