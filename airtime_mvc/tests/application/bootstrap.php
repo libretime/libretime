@@ -40,6 +40,9 @@ set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_pat
 //Services
 set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_path());
 
+//models
+set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
+
 //Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 

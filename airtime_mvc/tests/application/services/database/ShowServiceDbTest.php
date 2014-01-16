@@ -6,7 +6,7 @@ require_once "AirtimeInstall.php";
 require_once "ShowServiceData.php";
 require_once "TestHelper.php";
 
-class ShowServiceTest extends Zend_Test_PHPUnit_DatabaseTestCase
+class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
 
