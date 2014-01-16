@@ -375,7 +375,7 @@ var AIRTIME = (function(AIRTIME) {
             if ($cb.is(":checked")) {
                 
                 if (ev.shiftKey) {
-                    $prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
+                    $prev = $library.find("tr."+LIB_SELECTED_CLASS+":visible").eq(-1);
                     $trs = $prev.nextUntil($tr);
                     
                     $trs.each(function(i, el){
