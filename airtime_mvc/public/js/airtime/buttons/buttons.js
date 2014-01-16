@@ -1,17 +1,18 @@
 var AIRTIME = (function(AIRTIME) {
-    var mod, DEFAULT_CLASS = 'ui-button ui-state-default', DISABLED_CLASS = 'ui-state-disabled';
+    var mod, 
+	    DEFAULT_CLASS = 'ui-button ui-state-default', 
+	    DISABLED_CLASS = 'ui-state-disabled';
 
     if (AIRTIME.button === undefined) {
         AIRTIME.button = {};
     }
     mod = AIRTIME.button;
 
-    mod.isDisabled = function(c, useParent) {
+    //c is a unique class on the <button>
+    mod.isDisabled = function(c) {
         var button = $("." + c);
-        if (useParent) {
-            button = button.parent();
-        }
 
+        //disable the <button>
         if (button.hasClass(DISABLED_CLASS)) {
             return true;
         }
@@ -19,25 +20,19 @@ var AIRTIME = (function(AIRTIME) {
         return false;
     };
 
-    mod.enableButton = function(c, useParent) {
-        if (useParent) {
-            var button = $("." + c).parent();
-        } else {
-            var button = $("." + c);
-        }
-
+    //c is a unique class on the <button>
+    mod.enableButton = function(c) {
+        var button = $("." + c);
+        
         if (button.hasClass(DISABLED_CLASS)) {
             button.removeClass(DISABLED_CLASS);
             button.removeAttr('disabled');
         }
     };
 
-    mod.disableButton = function(c, useParent) {
-        if (useParent) {
-            var button = $("." + c).parent();
-        } else {
-            var button = $("." + c);
-        }
+    //c is a unique class on the <button>
+    mod.disableButton = function(c) {
+        var button = $("." + c);
 
         if (!button.hasClass(DISABLED_CLASS)) {
             button.addClass(DISABLED_CLASS);

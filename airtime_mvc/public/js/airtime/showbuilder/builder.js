@@ -109,10 +109,10 @@ var AIRTIME = (function(AIRTIME){
         var $selectable = $sbTable.find("tbody").find("input:checkbox");
         
         if ($selectable.length !== 0) {
-            AIRTIME.button.enableButton("btn-group #timeline-select", false);
+            AIRTIME.button.enableButton("sb-select");
         }
         else {
-            AIRTIME.button.disableButton("btn-group #timeline-select", false);
+            AIRTIME.button.disableButton("sb-select");
         }
         
         //need to check if the 'Select' button is disabled
@@ -125,10 +125,10 @@ var AIRTIME = (function(AIRTIME){
         var $over = $sbTable.find(".sb-over.sb-allowed");
         
         if ($over.length !== 0) {
-            AIRTIME.button.enableButton("icon-cut", true);
+            AIRTIME.button.enableButton("sb-overbooked");
         }
         else {
-            AIRTIME.button.disableButton("icon-cut", true);
+            AIRTIME.button.disableButton("sb-overbooked");
         }
     };
     
@@ -136,10 +136,10 @@ var AIRTIME = (function(AIRTIME){
         var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked");
         
         if ($selected.length !== 0) {
-            AIRTIME.button.enableButton("icon-trash", true);
+            AIRTIME.button.enableButton("sb-trash");
         }
         else {
-            AIRTIME.button.disableButton("icon-trash", true);
+            AIRTIME.button.disableButton("sb-trash");
         }
     };
     
@@ -147,10 +147,10 @@ var AIRTIME = (function(AIRTIME){
         var $current = $sbTable.find("."+NOW_PLAYING_CLASS);
         
         if ($current.length !== 0) {
-            AIRTIME.button.enableButton("icon-step-forward", true);
+            AIRTIME.button.enableButton("sb-current");
         }
         else {
-            AIRTIME.button.disableButton("icon-step-forward", true);
+            AIRTIME.button.disableButton("sb-current");
         }
     };
     
@@ -170,10 +170,10 @@ var AIRTIME = (function(AIRTIME){
         }
        
         if (canCancel === true) {
-        	AIRTIME.button.enableButton("icon-ban-circle", true);
+        	AIRTIME.button.enableButton("sb-cancel");
         }
         else {
-        	AIRTIME.button.disableButton("icon-ban-circle", true);
+        	AIRTIME.button.disableButton("sb-cancel");
         }
     };
     
@@ -1033,7 +1033,7 @@ var AIRTIME = (function(AIRTIME){
 
         $menu = $("<div class='btn-toolbar'/>");
         $menu.append("<div class='btn-group'>" +
-                     "<button class='btn btn-small dropdown-toggle'  id='timeline-select' data-toggle='dropdown'>" +
+                     "<button class='btn btn-small dropdown-toggle sb-select'  id='timeline-select' data-toggle='dropdown'>" +
                          $.i18n._("Select")+" <span class='caret'></span>" +
                      "</button>" +
                      "<ul class='dropdown-menu'>" +
@@ -1042,20 +1042,20 @@ var AIRTIME = (function(AIRTIME){
                      "</ul>" +
                      "</div>")
             .append("<div class='btn-group'>" +
-                    "<button title='"+$.i18n._("Remove overbooked tracks")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
+                    "<button title='"+$.i18n._("Remove overbooked tracks")+"' class='ui-state-disabled btn btn-small sb-overbooked' disabled='disabled'>" +
                     "<i class='icon-white icon-cut'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='"+$.i18n._("Remove selected scheduled items")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
+                    "<button title='"+$.i18n._("Remove selected scheduled items")+"' class='ui-state-disabled btn btn-small sb-trash' disabled='disabled'>" +
                     "<i class='icon-white icon-trash'></i></button></div>");
 
         //if 'Add/Remove content' was chosen from the context menu
         //in the Calendar do not append these buttons
         if ($(".ui-dialog-content").length === 0) {
             $menu.append("<div class='btn-group'>" +
-                    "<button  title='"+$.i18n._("Jump to the current playing track")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
+                    "<button  title='"+$.i18n._("Jump to the current playing track")+"' class='ui-state-disabled btn btn-small sb-current' disabled='disabled'>" +
                     "<i class='icon-white icon-step-forward'></i></button></div>")
             .append("<div class='btn-group'>" +
-                    "<button title='"+$.i18n._("Cancel current show")+"' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
+                    "<button title='"+$.i18n._("Cancel current show")+"' class='ui-state-disabled btn btn-small btn-danger sb-cancel' disabled='disabled'>" +
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
         }
 

@@ -5,6 +5,10 @@ var AIRTIME = (function(AIRTIME) {
     }
     var mod = AIRTIME.library;
     
+    //stored in format chosenItems[tabname] = object of chosen ids for the tab.
+    var chosenItems = {},
+    	LIB_SELECTED_CLASS = "lib-selected";
+    
     function createDatatable(config) {
     	
     	var table = $("#"+config.id).dataTable({
@@ -33,7 +37,7 @@ var AIRTIME = (function(AIRTIME) {
 			"bAutoWidth": true,
 			"sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-	           $(nRow).data("aData", aData);
+				$(nRow).data("aData", aData);
 	        }
 		});
     	
@@ -68,6 +72,148 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
     }
+    
+    //$el is a select table row <tr>
+    mod.addToChosen = function($el) {
+        var data = $el.data('aData'),
+        	tabId = $el.parents("div.ui-tabs-panel").attr("id");
+        
+        if (chosenItems[tabId] === undefined) {
+        	chosenItems[tabId] = {};
+        }
+        
+        chosenItems[tabId][data.Id] = $el.data('aData');
+    };
+    
+    //$el is a select table row <tr>
+    mod.removeFromChosen = function($el) {
+    	var data = $el.data('aData'),
+    		tabId = $el.parents("div.ui-tabs-panel").attr("id");
+        
+        // used to not keep dragged items selected.
+        if (!$el.hasClass(LIB_SELECTED_CLASS)) {
+            delete chosenItems[tabId][data.Id];
+        }   
+    };
+    
+    //$el is a select table row <tr>
+    mod.highlightItem = function($el) {
+        var $input = $el.find("input");
+    
+        $input.attr("checked", true);
+        $el.addClass(LIB_SELECTED_CLASS);
+    };
+    
+    //$el is a select table row <tr>
+    mod.unHighlightItem = function($el) {
+        var $input = $el.find("input");
+    
+        $input.attr("checked", false);
+        $el.removeClass(LIB_SELECTED_CLASS);
+    };
+    
+  //$el is a select table row <tr>
+    mod.selectItem = function($el) {
+        
+        mod.highlightItem($el);
+        mod.addToChosen($el);
+        
+        mod.checkToolBarIcons();
+    };
+    
+  //$el is a select table row <tr>
+    mod.deselectItem = function($el) {
+        
+        mod.unHighlightItem($el);
+        mod.removeFromChosen($el);
+        
+        mod.checkToolBarIcons();
+    };
+    
+    /*
+     * selects all items which the user can currently see. (behaviour taken from
+     * gmail)
+     * 
+     * by default the items are selected in reverse order so we need to reverse
+     * it back
+     */
+    mod.selectCurrentPage = function() {
+        $.fn.reverse = [].reverse;
+        var $inputs = $libTable.find("tbody input:checkbox"),
+            $trs = $inputs.parents("tr").reverse();
+            
+        $inputs.attr("checked", true);
+        $trs.addClass(LIB_SELECTED_CLASS);
+
+        $trs.each(function(i, el){
+            $el = $(this);
+            mod.addToChosen($el);
+        });
+
+        mod.checkToolBarIcons();     
+    };
+    
+    /*
+     * deselects all items that the user can currently see. (behaviour taken
+     * from gmail)
+     */
+    mod.deselectCurrentPage = function() {
+        var $inputs = $libTable.find("tbody input:checkbox"),
+            $trs = $inputs.parents("tr"),
+            id;
+        
+        $inputs.attr("checked", false);
+        $trs.removeClass(LIB_SELECTED_CLASS);
+        
+        $trs.each(function(i, el){
+            $el = $(this);
+            id = $el.attr("id");
+            delete chosenItems[id];
+        });
+        
+        mod.checkToolBarIcons();     
+    };
+    
+    mod.selectNone = function() {
+        var $inputs = $libTable.find("tbody input:checkbox"),
+            $trs = $inputs.parents("tr");
+        
+        $inputs.attr("checked", false);
+        $trs.removeClass(LIB_SELECTED_CLASS);
+        
+        chosenItems = {};
+        
+        mod.checkToolBarIcons();
+    };
+    
+    mod.createToolbarButtons = function() {
+        var $menu = $("<div class='btn-toolbar' />");
+        
+        $menu
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+                            $.i18n._("Select")+" <span class='caret'></span>" +
+                        "</button>" +
+                        "<ul class='dropdown-menu'>" +
+                            "<li id='sb-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
+                            "<li id='sb-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
+                            "<li id='sb-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
+                        "</ul>" +
+                    "</div>")
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small' id='library-plus'>" +
+                            "<i class='icon-white icon-plus'></i>" +
+                            "<span id='lib-plus-text'></span>" +
+                        "</button>" +
+                    "</div>")
+            .append("<div class='btn-group'>" +
+                        "<button class='btn btn-small' id='sb-trash'>" +
+                            "<i class='icon-white icon-trash'></i>" +
+                        "</button>" +
+                    "</div>");
+        
+        return $menu;
+    };
      
     mod.onReady = function () {
     	
@@ -121,7 +267,6 @@ var AIRTIME = (function(AIRTIME) {
 		    }
     	};
 
-    	
     	$("#lib_tabs").tabs({
     		show: function( event, ui ) {
     			var tab = tabsInit[ui.panel.id];
@@ -139,6 +284,7 @@ var AIRTIME = (function(AIRTIME) {
     					source: tab.source
     				});
     				
+    				mod.setupToolbar(ui.panel.id);
     				tab.initialized = true;
     			}
     			
@@ -219,10 +365,35 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	});
     	
+    	$library.on("click", "input[type=checkbox]", function(ev) {
+            
+            var $cb = $(this),
+                $prev,
+                $tr = $cb.parents("tr"),
+                $trs;
+            
+            if ($cb.is(":checked")) {
+                
+                if (ev.shiftKey) {
+                    $prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
+                    $trs = $prev.nextUntil($tr);
+                    
+                    $trs.each(function(i, el){
+                        mod.selectItem($(el));
+                    });
+                }
+
+                mod.selectItem($tr);
+            }
+            else {
+                mod.deselectItem($tr);  
+            }
+        });
+    	
     	 // begin context menu initialization.
         $.contextMenu({
             selector: '#lib_tabs td',
-            trigger: "left",
+            trigger: "none",
             ignoreRightClick: true,
             
             build: function($el, e) {
