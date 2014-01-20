@@ -1278,6 +1278,18 @@ SQL;
         return $dt;
     }
 
+    /**
+     * 
+     * Returns a DateTime object of when the next repeating show that repeats
+     * monthly, by day of the week (i.e. every fourth Tuesday) should be created
+     * 
+     * @param DateTime $start
+     *     $start only has the year and month of the next show
+     * @param string $timezone
+     * @param string (i.e. '14:30' $startTime
+     * @param string (i.e. 'first', 'second') $weekNumberOfMonth
+     * @param string (i.e. 'Monday') $dayOfWeek
+     */
     private function getNextMonthlyWeeklyRepeatDate(
         $start,
         $timezone,
