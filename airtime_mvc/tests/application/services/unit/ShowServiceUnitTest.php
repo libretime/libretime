@@ -5,10 +5,15 @@ require_once "ShowServiceData.php";
 
 class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 {
+    // needed for accessing private methods
+    protected $_reflectionOfShowService;
+
     protected $_showService;
 
     public function setUp()
     {
+        $this->_reflectionOfShowService = new ReflectionClass('Application_Service_ShowService');
+
         $this->_showService = new Application_Service_ShowService();
     }
 
@@ -26,47 +31,49 @@ class ShowServiceUnitTest extends PHPUnit_Framework_TestCase
 
     public function testCalculateEndDate()
     {
-        $end = $this->_showService->calculateEndDate(ShowServiceData::getNoRepeatNoRRData());
+        $method = $this->_reflectionOfShowService->getMethod('calculateEndDate');
+        $method->setAccessible(true);
+
+        $end = $method->invokeArgs($this->_showService, array(ShowServiceData::getNoRepeatNoRRData()));
         $this->assertEquals(null, $end);
 
-        $end = $this->_showService->calculateEndDate(ShowServiceData::getWeeklyRepeatWithEndNoRRData());
+        $end = $method->invokeArgs($this->_showService, array(ShowServiceData::getWeeklyRepeatWithEndNoRRData()));
         $this->assertEquals(new DateTime("2016-01-27", new DateTimeZone("UTC")), $end);
 
-        $end = $this->_showService->calculateEndDate(ShowServiceData::getWeeklyRepeatNoEndNoRRData());
+        $end = $method->invokeArgs($this->_showService, array(ShowServiceData::getWeeklyRepeatNoEndNoRRData()));
         $this->assertEquals(null, $end);
     }
 
     public function testGetMonthlyWeeklyRepeatInterval()
     {
-        $repeatInterval = $this->_showService->getMonthlyWeeklyRepeatInterval(
-            new DateTime("2016-01-01"), new DateTimeZone("UTC"));
+        $method = $this->_reflectionOfShowService->getMethod('getMonthlyWeeklyRepeatInterval');
+        $method->setAccessible(true);
+
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-01"), new DateTimeZone("UTC")));
         $this->assertEquals(array("first", "Friday"), $repeatInterval);
 
-        $repeatInterval = $this->_showService->getMonthlyWeeklyRepeatInterval(
-            new DateTime("2016-01-12"), new DateTimeZone("UTC"));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-12"), new DateTimeZone("UTC")));
         $this->assertEquals(array("second", "Tuesday"), $repeatInterval);
 
-        $repeatInterval = $this->_showService->getMonthlyWeeklyRepeatInterval(
-            new DateTime("2016-01-18"), new DateTimeZone("UTC"));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-18"), new DateTimeZone("UTC")));
         $this->assertEquals(array("third", "Monday"), $repeatInterval);
 
-        $repeatInterval = $this->_showService->getMonthlyWeeklyRepeatInterval(
-            new DateTime("2016-01-28"), new DateTimeZone("UTC"));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-28"), new DateTimeZone("UTC")));
         $this->assertEquals(array("fourth", "Thursday"), $repeatInterval);
 
-        $repeatInterval = $this->_showService->getMonthlyWeeklyRepeatInterval(
-            new DateTime("2016-01-30"), new DateTimeZone("UTC"));
+        $repeatInterval = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-30"), new DateTimeZone("UTC")));
         $this->assertEquals(array("fifth", "Saturday"), $repeatInterval);
     }
 
     public function testGetNextMonthlyMonthlyRepeatDate()
     {
-        $next = $this->_showService->getNextMonthlyMonthlyRepeatDate(
-            new DateTime("2016-01-01"), "UTC", "00:00");
+        $method = $this->_reflectionOfShowService->getMethod('getNextMonthlyMonthlyRepeatDate');
+        $method->setAccessible(true);
+
+        $next = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-01"), "UTC", "00:00"));
         $this->assertEquals(new DateTime("2016-02-01", new DateTimeZone("UTC")), $next);
 
-        $next = $this->_showService->getNextMonthlyMonthlyRepeatDate(
-            new DateTime("2016-01-30"), "UTC", "00:00");
+        $next = $method->invokeArgs($this->_showService, array(new DateTime("2016-01-30"), "UTC", "00:00"));
         $this->assertEquals(new DateTime("2016-03-30", new DateTimeZone("UTC")), $next);
     }
 
