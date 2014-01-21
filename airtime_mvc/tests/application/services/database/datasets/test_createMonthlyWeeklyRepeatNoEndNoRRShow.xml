@@ -29,9 +29,9 @@
             <value></value>
             <value>1</value>
         </row>
-   </table>
+    </table>
 
-  <table name="cc_show_days">
+    <table name="cc_show_days">
         <column>id</column>
         <column>first_show</column>
         <column>last_show</column>

@@ -5,10 +5,20 @@ require_once "../application/configs/conf.php";
 require_once "AirtimeInstall.php";
 require_once "ShowServiceData.php";
 require_once "TestHelper.php";
+#require_once "PHPUnit/Extensions/Database/DataSet/ReplacementDataSet.php";
 
+/*
+ * All dates in the xml files are hard coded and in the year 2016
+ * It would have been nice to use 'PHPUnit/Extensions/Database/DataSet/ReplacementDataSet.php'
+ * to be able to use variables in the xml dataset files so dates can be relative. This proved
+ * not practical for Airtime; For repeating shows, the start times are always varing and would
+ * require functions that calculate the start and end dates, and the next populate date. The
+ * tests would be performing the same work as the application and require tests themselves.
+ */
 class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 {
     private $_connectionMock;
+    //private $_nowDT;
 
     public function setUp()
     {
@@ -32,6 +42,8 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         AirtimeInstall::SetDefaultTimezone();
         
         $this->appBootstrap();
+
+        //$this->_nowDT = new DateTime("now", new DateTimeZone("UTC"));
         
         parent::setUp();
     }
@@ -69,9 +81,14 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      */
     public function getDataSet()
     {
-        return $this->createXmlDataSet(
+        $xml_dataset = $this->createXmlDataSet(
             dirname(__FILE__) . '/datasets/cc_show_seed.xml'
         );
+        /*$xml_dataset_fixed = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
+            $xml_dataset, array('SIX_WEEKS' => $this->_nowDT->add(new DateInterval("P42D"))->format("Y-m-d H:i:s")));
+
+        return $xml_dataset_fixed;*/
+        return $xml_dataset;
     }
 
     public function testCcShowInsertedIntoDatabase()
@@ -400,5 +417,10 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
             $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_deleteRepeatingShow.xml"),
             $ds
         );
+    }
+
+    public function testCreateShowOverDaylightSavingsTime()
+    {
+        
     }
 }
