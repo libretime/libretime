@@ -11,7 +11,7 @@ require_once "TestHelper.php";
  * All dates in the xml files are hard coded and in the year 2016
  * It would have been nice to use 'PHPUnit/Extensions/Database/DataSet/ReplacementDataSet.php'
  * to be able to use variables in the xml dataset files so dates can be relative. This proved
- * not practical for Airtime; For repeating shows, the start times are always varing and would
+ * not practical for Airtime; For repeating shows, the start times are always varying and would
  * require functions that calculate the start and end dates, and the next populate date. The
  * tests would be performing the same work as the application and require tests themselves.
  */
