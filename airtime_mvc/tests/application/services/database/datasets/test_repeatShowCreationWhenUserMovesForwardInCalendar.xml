@@ -29,9 +29,9 @@
             <value></value>
             <value>1</value>
         </row>
-    </table>
+   </table>
 
-    <table name="cc_show_days">
+  <table name="cc_show_days">
         <column>id</column>
         <column>first_show</column>
         <column>last_show</column>
@@ -51,8 +51,8 @@
             <value>UTC</value>
             <value>01:00</value>
             <value>5</value>
-            <value>0</value>
-            <value>2016-02-12</value>
+            <value>1</value>
+            <value>2016-03-25</value>
             <value>1</value>
             <value>0</value>
         </row>
@@ -79,16 +79,6 @@
         </row>
         <row>
             <value>2</value>
-            <value>2016-01-08 00:00:00</value>
-            <value>2016-01-08 01:00:00</value>
-            <value>1</value>
-            <value>0</value>
-            <value>0</value>
-            <null />
-            <value></value>
-        </row>
-        <row>
-            <value>3</value>
             <value>2016-01-15 00:00:00</value>
             <value>2016-01-15 01:00:00</value>
             <value>1</value>
@@ -98,17 +88,7 @@
             <value></value>
         </row>
         <row>
-            <value>4</value>
-            <value>2016-01-22 00:00:00</value>
-            <value>2016-01-22 01:00:00</value>
-            <value>1</value>
-            <value>0</value>
-            <value>0</value>
-            <null />
-            <value></value>
-        </row>
-        <row>
-            <value>5</value>
+            <value>3</value>
             <value>2016-01-29 00:00:00</value>
             <value>2016-01-29 01:00:00</value>
             <value>1</value>
@@ -118,9 +98,29 @@
             <value></value>
         </row>
         <row>
+            <value>4</value>
+            <value>2016-02-12 00:00:00</value>
+            <value>2016-02-12 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
+            <value>5</value>
+            <value>2016-02-26 00:00:00</value>
+            <value>2016-02-26 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
             <value>6</value>
-            <value>2016-02-05 00:00:00</value>
-            <value>2016-02-05 01:00:00</value>
+            <value>2016-03-11 00:00:00</value>
+            <value>2016-03-11 01:00:00</value>
             <value>1</value>
             <value>0</value>
             <value>0</value>

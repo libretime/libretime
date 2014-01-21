@@ -370,6 +370,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService = new Application_Service_ShowService(null, $data);
 
         $showService->addUpdateShow($data);
+        //move the start date forward one week and the start time forward one hour
         $editData = ShowServiceData::getEditRepeatInstanceData();
 
         //need to create a new service so it gets constructed with the new data
@@ -419,8 +420,32 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
     }
 
-    public function testCreateShowOverDaylightSavingsTime()
+    public function testRepeatShowCreationWhenUserMovesForwardInCalendar()
     {
-        
+        TestHelper::loginUser();
+
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
+        $data["add_show_repeat_type"] = "1";
+        $showService = new Application_Service_ShowService(null, $data);
+
+        $showService->addUpdateShow($data);
+
+        //simulate the user moves forward in the calendar
+        $end = new DateTime("2016-03-12", new DateTimeZone("UTC"));
+        $showService->delegateInstanceCreation(null, $end, true);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_repeatShowCreationWhenUserMovesForwardInCalendar.xml"),
+            $ds
+        );
     }
 }
