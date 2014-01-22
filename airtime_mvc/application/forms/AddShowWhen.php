@@ -162,6 +162,13 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         }
         
 
+        /* We need to know the show duration broken down into hours and minutes
+         * They are used for checking overlapping shows and for validating
+         * rebroadcast instances
+         */
+        $hours = $duration->format("%h");
+        $minutes = $duration->format("%i");
+
         /* Check if show is overlapping
          * We will only do this check if the show is valid
          * upto this point

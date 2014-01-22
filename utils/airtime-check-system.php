@@ -221,10 +221,7 @@ class AirtimeCheck {
     }
     
     public static function show_log_file($log) {
-        exec("tail -5 $log", $output);
-        self::output_comment("Displaying log file $log");
-        self::output_comment($output);
-        self::output_comment("");
+        self::output_comment("Check the log file $log");
         self::output_comment("");
     }
 
