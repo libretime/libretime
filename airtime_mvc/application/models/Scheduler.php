@@ -880,7 +880,7 @@ class Application_Model_Scheduler
                 $selected = CcScheduleQuery::create()->findPk($selectedItems[$i]["id"], $this->con);
                 $selectedInstance = $selected->getCcShowInstances($this->con);
 
-                $data = $this->fileInfo;
+                $data = $this->mediaInfo;
                 $data["id"] = $selected->getDbFileId();
                 $data["cliplength"] = $selected->getDbClipLength();
                 $data["cuein"] = $selected->getDbCueIn();

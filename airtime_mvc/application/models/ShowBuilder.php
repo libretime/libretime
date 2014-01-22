@@ -476,7 +476,7 @@ class Application_Model_ShowBuilder
             $showInstance[] = $this->opts["showInstanceFilter"];
         }
 
-        Logging::enablePropelLogging();
+        //Logging::enablePropelLogging();
         
         $scheduledShows = Application_Model_Schedule::GetScheduleDetailItems(
             $this->startDT, $this->endDT, $shows, $showInstance);
@@ -498,7 +498,7 @@ class Application_Model_ShowBuilder
         	$display_items[]= $footer;
         }
         
-        Logging::disablePropelLogging();
+        //Logging::disablePropelLogging();
         
         return array(
             "schedule" => $display_items,

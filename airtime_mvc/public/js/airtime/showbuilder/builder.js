@@ -95,12 +95,15 @@ var AIRTIME = (function(AIRTIME){
         // once a track plays out we need to check if we can update
         // the is_scheduled flag in cc_files
         if (schedId > 0) {
+        	//TODO work on this
+        	/*
             $.post(baseUrl+"schedule/update-future-is-scheduled", 
                     {"format": "json", "schedId": schedId}, function(data) {
                         if (data.redrawLibTable !== undefined && data.redrawLibTable) {
                             $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
                         }
                     });
+                    */
             oSchedTable.fnDraw();
         }
     };
@@ -278,7 +281,7 @@ var AIRTIME = (function(AIRTIME){
         oSchedTable.fnDraw();
 
         mod.enableUI();
-        $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
+        //$("#library_content").find("#library_display").dataTable().fnStandingRedraw();
     };
     
     mod.getSelectedCursors = function() {
@@ -1091,7 +1094,7 @@ var AIRTIME = (function(AIRTIME){
                             url: url,
                             data: {format: "json", id: data.instance},
                             success: function(data){
-                                $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
+                                //$("#library_content").find("#library_display").dataTable().fnStandingRedraw();
                                 var oTable = $sbTable.dataTable();
                                 oTable.fnDraw();
                             }
