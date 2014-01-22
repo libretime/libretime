@@ -7,7 +7,10 @@ var AIRTIME = (function(AIRTIME) {
     
     //stored in format chosenItems[tabname] = object of chosen ids for the tab.
     var chosenItems = {},
-    	LIB_SELECTED_CLASS = "lib-selected";
+    	LIB_SELECTED_CLASS = "lib-selected",
+    	//used for using dbclick vs click events on the library rows.
+    	alreadyclicked = false,
+    	alreadyclickedTimeout;
     
     function createDatatable(config) {
     	
@@ -388,6 +391,37 @@ var AIRTIME = (function(AIRTIME) {
             else {
                 mod.deselectItem($tr);  
             }
+        });
+    	
+    	// call the context menu so we can prevent the event from
+        // propagating.
+    	$library.on("click", 'td:not(.library_checkbox)', function(e) {
+    		
+            var $el = $(this);
+            
+            if (mod.alreadyclicked) {
+            	
+            	// reset
+            	mod.alreadyclicked = false;
+                // prevent this from happening
+                clearTimeout(mod.alreadyclickedTimeout); 
+    
+                // do what needs to happen on double click.
+                $tr = $el.parent();
+                data = $tr.data("aData");
+                mod.dblClickAdd(data);
+            }
+            else
+            {
+            	mod.alreadyclicked = true;
+            	mod.alreadyclickedTimeout = setTimeout(function() {
+            		// reset when it happens
+            		mod.alreadyclicked = false;
+                    // do what needs to happen on single click.
+                    $el.contextMenu({x: e.pageX, y: e.pageY});
+                }, 200); // <-- dblclick tolerance here
+            }
+            return false;
         });
     	
     	 // begin context menu initialization.

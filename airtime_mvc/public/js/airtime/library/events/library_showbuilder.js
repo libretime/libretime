@@ -9,8 +9,8 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.checkAddButton = function() {
         var selected = mod.getChosenItemsLength(),
-	        $cursor = $('tr.cursor-selected-row'),
-	        check = false;
+        $cursor = $('tr.cursor-selected-row'), 
+        check = false;
 
         // make sure library items are selected and a cursor is selected.
         if (selected !== 0 && $cursor.length !== 0) {

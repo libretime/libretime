@@ -4,22 +4,20 @@ use Airtime\CcSchedule;
 use Airtime\CcSchedulePeer;
 use Airtime\CcScheduleQuery;
 use Airtime\CcShowInstancesQuery;
-use Airtime\CcFilesPeer;
-use Airtime\CcFilesQuery;
-use Airtime\CcWebstreamQuery;
+use Airtime\MediaItem;
+use Airtime\MediaItemQuery;
 
 class Application_Model_Scheduler
 {
     private $con;
-    private $fileInfo = array(
+    private $mediaInfo = array(
             "id" => "",
             "cliplength" => "",
             "cuein" => "00:00:00",
             "cueout" => "00:00:00",
             "fadein" => "00:00:00",
             "fadeout" => "00:00:00",
-            "sched_id" => null,
-            "type" => 0 //default type of '0' to represent files. type '1' represents a webstream
+            "sched_id" => null
         );
 
     private $epochNow;
@@ -193,165 +191,26 @@ class Application_Model_Scheduler
 
     /*
      * @param $id
-     * @param $type
      * 
      * id will be the media id of the item. 
      * Each item should provide a way to produce itself in a schedulable format that this function can then use.
      *
      * @return $files
      */
-    private function retrieveMediaFiles($id, $type)
+    private function retrieveMediaFiles($id)
     {
-        $files = array();
-
-        if ($type === "audioclip") {
-            $file = CcFilesQuery::create()->findPK($id, $this->con);
-
-            if (is_null($file) || !$file->visible()) {
-                throw new Exception(_("A selected File does not exist!"));
-            } else {
-                $data = $this->fileInfo;
-                $data["id"] = $id;
-
-                $cuein = Application_Common_DateHelper::playlistTimeToSeconds($file->getDbCuein());
-                $cueout = Application_Common_DateHelper::playlistTimeToSeconds($file->getDbCueout());
-                $row_length = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-
-                $data["cliplength"] = $row_length;
-
-                $data["cuein"] = $file->getDbCuein();
-                $data["cueout"] = $file->getDbCueout();
-
-                //fade is in format SS.uuuuuu
-                $data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
-                $data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
-
-                $files[] = $data;
-            }
-        } elseif ($type === "playlist") {
-            $pl = new Application_Model_Playlist($id);
-            $contents = $pl->getContents();
-
-            foreach ($contents as $plItem) {
-                if ($plItem['type'] == 0) {
-                    $data["id"] = $plItem['item_id'];
-                    $data["cliplength"] = $plItem['length'];
-                    $data["cuein"] = $plItem['cuein'];
-                    $data["cueout"] = $plItem['cueout'];
-                    $data["fadein"] = $plItem['fadein'];
-                    $data["fadeout"] = $plItem['fadeout'];
-                    $data["type"] = 0;
-                    $files[] = $data;
-                } elseif ($plItem['type'] == 1) {
-                    $data["id"] = $plItem['item_id'];
-                    $data["cliplength"] = $plItem['length'];
-                    $data["cuein"] = $plItem['cuein'];
-                    $data["cueout"] = $plItem['cueout'];
-                    $data["fadein"] = "00.500000";//$plItem['fadein'];
-                    $data["fadeout"] = "00.500000";//$plItem['fadeout'];
-                    $data["type"] = 1;
-                    $files[] = $data;
-                } elseif ($plItem['type'] == 2) {
-                    // if it's a block
-                    $bl = new Application_Model_Block($plItem['item_id']);
-                    if ($bl->isStatic()) {
-                        foreach ($bl->getContents() as $track) {
-                            $data["id"] = $track['item_id'];
-                            $data["cliplength"] = $track['length'];
-                            $data["cuein"] = $track['cuein'];
-                            $data["cueout"] = $track['cueout'];
-                            $data["fadein"] = $track['fadein'];
-                            $data["fadeout"] = $track['fadeout'];
-                            $data["type"] = 0;
-                            $files[] = $data;
-                        }
-                    } else {
-                        $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
-                        $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                        $dynamicFiles = $bl->getListOfFilesUnderLimit();
-                        foreach ($dynamicFiles as $f) {
-                            $fileId = $f['id'];
-                            $file = CcFilesQuery::create()->findPk($fileId);
-                            if (isset($file) && $file->visible()) {
-                                $data["id"] = $file->getDbId();
-                                $data["cuein"] = $file->getDbCuein();
-                                $data["cueout"] = $file->getDbCueout();
-
-                                $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
-                                $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
-                                $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-
-                                //fade is in format SS.uuuuuu
-                                $data["fadein"] = $defaultFadeIn;
-                                $data["fadeout"] = $defaultFadeOut;
-
-                                $data["type"] = 0;
-                                $files[] = $data;
-                            }
-                        }
-                    }
-                }
-            }
-        } elseif ($type == "stream") {
-            //need to return
-             $stream = CcWebstreamQuery::create()->findPK($id, $this->con);
-
-            if (is_null($stream) /* || !$file->visible() */) {
-                throw new Exception(_("A selected File does not exist!"));
-            } else {
-                $data = $this->fileInfo;
-                $data["id"] = $id;
-                $data["cliplength"] = $stream->getDbLength();
-                $data["cueout"] = $stream->getDbLength();
-                $data["type"] = 1;
-
-                //fade is in format SS.uuuuuu
-                $data["fadein"] = Application_Model_Preference::GetDefaultFadeIn();
-                $data["fadeout"] = Application_Model_Preference::GetDefaultFadeOut();
-
-                $files[] = $data;
-            }
-        } elseif ($type == "block") {
-            $bl = new Application_Model_Block($id);
-            if ($bl->isStatic()) {
-                foreach ($bl->getContents() as $track) {
-                    $data["id"] = $track['item_id'];
-                    $data["cliplength"] = $track['length'];
-                    $data["cuein"] = $track['cuein'];
-                    $data["cueout"] = $track['cueout'];
-                    $data["fadein"] = $track['fadein'];
-                    $data["fadeout"] = $track['fadeout'];
-                    $data["type"] = 0;
-                    $files[] = $data;
-                }
-            } else {
-                $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
-                $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-                $dynamicFiles = $bl->getListOfFilesUnderLimit();
-                foreach ($dynamicFiles as $f) {
-                    $fileId = $f['id'];
-                    $file = CcFilesQuery::create()->findPk($fileId);
-                    if (isset($file) && $file->visible()) {
-                        $data["id"] = $file->getDbId();
-                        $data["cuein"] = $file->getDbCuein();
-                        $data["cueout"] = $file->getDbCueout();
-
-                        $cuein = Application_Common_DateHelper::calculateLengthInSeconds($data["cuein"]);
-                        $cueout = Application_Common_DateHelper::calculateLengthInSeconds($data["cueout"]);
-                        $data["cliplength"] = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
-
-                        //fade is in format SS.uuuuuu
-                		$data["fadein"] = $defaultFadeIn;
-                		$data["fadeout"] = $defaultFadeOut;
-
-                        $data["type"] = 0;
-                        $files[] = $data;
-                    }
-                }
-            }
-        }
-
-        return $files;
+    	$schedulerInfo = array();
+    	$media = MediaItemQuery::create()->findPK($id, $this->con);
+    	
+    	//content could be an unrolled playlist or a single file/webstream.
+    	$content = $media->getScheduledContent();
+    	
+    	//merge in any defaults or extra things needed by the scheduler.
+    	for ($i = 0, $len = count($content); $i < $len; $i++) {
+    		$schedulerInfo[] = array_merge($this->mediaInfo, $content[$i]);
+    	}
+    	
+        return $schedulerInfo;
     }
 
     /*
@@ -704,9 +563,9 @@ class Application_Model_Scheduler
 
                     if (is_null($filesToInsert)) {
                         $filesToInsert = array();
-                        foreach ($mediaItems as $media) {
+                        foreach ($mediaItems as $mediaId) {
                             $filesToInsert = array_merge($filesToInsert,
-                                $this->retrieveMediaFiles($media["id"], $media["type"]));
+                                $this->retrieveMediaFiles($mediaId));
                         }
                     }
 
@@ -769,18 +628,6 @@ class Application_Model_Scheduler
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
                         $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
 
-                        switch ($file["type"]) {
-                            case 0:
-                                $fileId = $file["id"];
-                                $streamId = "null";
-                                break;
-                            case 1:
-                                $streamId = $file["id"];
-                                $fileId = "null";
-                                break;
-                            default: break;
-                        }
-
                         if ($this->applyCrossfades) {
                             $nextStartDT = $this->findTimeDifference($nextStartDT,
                                 $this->crossfadeDuration);
@@ -804,8 +651,7 @@ class Application_Model_Scheduler
                                 "'{$file["cliplength"]}', ".
                                 "{$pos}, ".
                                 "{$instanceId}, ".
-                                "{$fileId}, ".
-                                "{$streamId})";
+                                "{$file["id"]})";
 
                         } elseif ($doUpdate) {
                             $update_sql = "UPDATE cc_schedule SET ".
@@ -830,7 +676,7 @@ class Application_Model_Scheduler
                     if ($doInsert) {
                         $insert_sql = "INSERT INTO cc_schedule ".
                             "(starts, ends, cue_in, cue_out, fade_in, fade_out, ".
-                            "clip_length, position, instance_id, file_id, stream_id) VALUES ".
+                            "clip_length, position, instance_id, media_id) VALUES ".
                             implode($values, ",")." RETURNING id";
 
                         $stmt = $this->con->prepare($insert_sql);
@@ -840,7 +686,10 @@ class Application_Model_Scheduler
                             }
                         };
                     }
+                    
+                    //TODO update is Scheduled to work with media
                     // update is_scheduled flag for each cc_file
+                    /*
                     $fileIds = array();
                     foreach ($filesToInsert as &$file) {
                         $fileIds[] = $file["id"];
@@ -851,6 +700,7 @@ class Application_Model_Scheduler
                     $updateCriteria = new Criteria();
                     $updateCriteria->add(CcFilesPeer::IS_SCHEDULED, true);
                     BasePeer::doUpdate($selectCriteria, $updateCriteria, $this->con);
+                    */
 
                     /* Reset files to insert so we can get a new set of files. We have
                      * to do this in case we are inserting a dynamic block
@@ -973,8 +823,7 @@ class Application_Model_Scheduler
              *     cueout => 00:04:32,
              *     fadein => 00.5,
              *     fadeout => 00.5,
-             *     sched_id => ,
-             *     type => 0)
+             *     sched_id => )
              * [1] = Array(
              *     id => 2,
              *     cliplength => 00:05:07,
@@ -982,8 +831,7 @@ class Application_Model_Scheduler
              *     cueout => 00:05:07,
              *     fadein => 00.5,
              *     fadeout => 00.5,
-             *     sched_id => ,
-             *     type => 0)
+             *     sched_id => )
              */
             $this->insertAfter($scheduleItems, $mediaItems, null, $adjustSched);
 
@@ -1157,8 +1005,10 @@ class Application_Model_Scheduler
                     $removedItem->delete($this->con);
                 }
 
+                //TODO fix the is scheduled to work with media items.
                 // update is_scheduled in cc_files but only if
                 // the file is not scheduled somewhere else
+                /*
                 $fileId = $removedItem->getDbFileId();
                 // check if the removed item is scheduled somewhere else
                 $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
@@ -1166,6 +1016,7 @@ class Application_Model_Scheduler
                      $db_file = CcFilesQuery::create()->findPk($fileId, $this->con);
                      $db_file->setDbIsScheduled(false)->save($this->con);
                 }
+                */
             }
 
             if ($adjustSched === true) {

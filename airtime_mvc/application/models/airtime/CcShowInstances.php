@@ -216,6 +216,33 @@ class CcShowInstances extends BaseCcShowInstances {
     {
         return $this->getDbRebroadcast() == 1 ? true : false;
     }
+    
+    /*
+     * @param $now epoch seconds, useful if comparing several shows.
+     * 
+     * returns true if this show instance is currently playing
+     */
+    public function isCurrentShow($epochNow = null)
+    {
+    	if (is_null($epochNow)) {
+            $epochNow = microtime(true);
+        }
+        
+        $epochStart = floatval($this->getDbStarts('U.u'));
+        $epochEnd = floatval($this->getDbEnds('U.u'));
+        
+        if ($epochStart < $epochNow && $epochEnd > $epochNow) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public function isLinked()
+    {
+    	$show = $this->getCcShow();
+    	return $show->isLinked();
+    }
 
     public function getLocalStartDateTime()
     {

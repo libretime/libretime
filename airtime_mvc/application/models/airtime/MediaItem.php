@@ -70,8 +70,7 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 	 * The scheduler itself will then unroll content as needed when sending the information to pypo.
 	 * Otherwise in the meantime we must implement another method that unwraps playlists and blocks.
 	 */
-	public function getSchedulingInfo() 
-	{
+	public function getSchedulingInfo() {
 		$obj = $this->getChildObject();
 		
 		return array (
@@ -90,7 +89,9 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 	 * in the future if we don't unroll playlists/blocks when scheduling them.
 	 */
 	public function getScheduledContent() {
+		$obj = $this->getChildObject();
 		
+		return $obj->getScheduledContent();
 	}
 	
 	public function isSchedulable() {

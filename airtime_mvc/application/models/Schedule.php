@@ -294,15 +294,40 @@ SQL;
 
     /*
      *
-     * @param DateTime $p_startDateTime
-     *
-     * @param DateTime $p_endDateTime
+     * @param DateTime $start in UTC timezone
+     * @param DateTime $end in UTC timezone
      *
      * @return array $scheduledItems
      *
      */
-    public static function GetScheduleDetailItems($p_start, $p_end, $p_shows, $p_show_instances)
+    public static function GetScheduleDetailItems($start, $end, $showIds, $showInstanceIds)
     {
+    	//ordering first by show instance start time
+    	//and then by scheduled item start time.
+    	$items = CcShowInstancesQuery::create()
+    		->filterByDbModifiedInstance(false)
+    		->_if(isset($showIds) && count($showIds) > 0)
+    			->filterByDbShowId($showIds)
+    		->_endif()
+    		->_if(isset($showInstanceIds) && count($showInstanceIds) > 0)
+    			->filterByDbId($showInstanceIds)
+    		->_endif()
+    		->between($start, $end)
+    		->orderByDbStarts()
+    		//including these relations to prevent further database queries for 
+    		->joinWith("CcShow", Criteria::LEFT_JOIN)
+    		->useCcScheduleQuery(null, Criteria::LEFT_JOIN)
+	    		->orderByDbStarts()
+	    		->endUse()
+	    	->with("CcSchedule")
+    		->joinWith("CcSchedule.MediaItem", Criteria::LEFT_JOIN)
+    		->joinWith("MediaItem.AudioFile", Criteria::LEFT_JOIN)
+    		->joinWith("MediaItem.Webstream", Criteria::LEFT_JOIN)
+    		->find();
+    	
+    	return $items;
+    	
+    	/*
         $p_start_str = $p_start->format("Y-m-d H:i:s");
         $p_end_str = $p_end->format("Y-m-d H:i:s");
 
@@ -468,6 +493,9 @@ SQL;
         );
 
         return $rows;
+        */
+    	
+    	return array();
     }
 
     public static function UpdateMediaPlayedStatus($p_id)

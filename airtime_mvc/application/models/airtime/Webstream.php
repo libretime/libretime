@@ -83,24 +83,17 @@ class Webstream extends BaseWebstream
 		return \Application_Model_Preference::GetDefaultFadeOut();
 	}
 	
-	/*
-	$data["id"] = $plItem['item_id'];
-	$data["cliplength"] = $plItem['length'];
-	$data["cuein"] = $plItem['cuein'];
-	$data["cueout"] = $plItem['cueout'];
-	$data["fadein"] = $plItem['fadein'];
-	$data["fadeout"] = $plItem['fadeout'];
-	$data["type"] = 0; //can remove this now since it's all done by media id.
-	*/
 	public function getScheduledContent() {
 	
-		return array (
-			"id" => $this->getId(),
-			"cliplength" => $this->getLength(),
-			"cuein" => $this->getCuein(),
-			"cueout" => $this->getCueout(),
-			"fadein" => \Application_Model_Preference::GetDefaultFadeIn(),
-			"fadeout" => \Application_Model_Preference::GetDefaultFadeOut(),
+		return array(
+			array (
+				"id" => $this->getId(),
+				"cliplength" => $this->getLength(),
+				"cuein" => $this->getCuein(),
+				"cueout" => $this->getCueout(),
+				"fadein" => \Application_Model_Preference::GetDefaultFadeIn(),
+				"fadeout" => \Application_Model_Preference::GetDefaultFadeOut(),
+			)
 		);
 	}
 }

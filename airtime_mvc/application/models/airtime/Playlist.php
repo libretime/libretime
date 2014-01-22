@@ -94,15 +94,6 @@ class Playlist extends BasePlaylist
     	$this->updateLength($con);
     }
     
-    /*
-    $data["id"] = $plItem['item_id'];
-    $data["cliplength"] = $plItem['length'];
-    $data["cuein"] = $plItem['cuein'];
-    $data["cueout"] = $plItem['cueout'];
-    $data["fadein"] = $plItem['fadein'];
-    $data["fadeout"] = $plItem['fadeout'];
-    $data["type"] = 0; //can remove this now since it's all done by media id.
-    */
     public function getScheduledContent() {
     
     	$contents = $this->getMediaContents();

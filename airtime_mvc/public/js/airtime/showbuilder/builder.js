@@ -625,7 +625,7 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     $node = $(nRow.children[0]);
-                    if (aData.allowed === true && aData.scheduled >= 1 && aData.linked_allowed) {
+                    if (aData.allowed === true && aData.scheduled >= 1) {
                         $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
                     }
                     else {
@@ -667,7 +667,7 @@ var AIRTIME = (function(AIRTIME){
                     $nRow.addClass("sb-future");
                 }
                 
-                if (aData.allowed !== true || aData.linked_allowed === false) {
+                if (aData.allowed !== true) {
                     $nRow.addClass("sb-not-allowed");
                 }
                 else {

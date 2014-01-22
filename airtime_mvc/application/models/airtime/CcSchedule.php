@@ -251,18 +251,18 @@ class CcSchedule extends BaseCcSchedule {
     
     public function isCurrentItem($epochNow = null) {
         
-        if (is_null($epochNow)) {
-            $epochNow = microtime(true);
-        }
-        
-        $epochStart = floatval($this->getDbStarts('U.u'));
-        $epochEnd = floatval($this->getDbEnds('U.u'));
-        
-        if ($epochStart < $epochNow && $epochEnd > $epochNow) {
-            return true;
-        }
-        
-        return false;
+    	if (is_null($epochNow)) {
+    		$epochNow = microtime(true);
+    	}
+    	
+    	$epochStart = floatval($this->getDbStarts('U.u'));
+    	$epochEnd = floatval($this->getDbEnds('U.u'));
+    	
+    	if ($epochStart < $epochNow && $epochEnd > $epochNow) {
+    		return true;
+    	}
+    	
+    	return false;
     }
 
 } // CcSchedule
