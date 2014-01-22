@@ -13,9 +13,11 @@
             </exclude>
         </whitelist>
     </filter>
-    
+
+    <!-- Disabling broken code coverage report. It's not using our autoloader for some reason... 
     <logging>
         <log type="coverage-html" target="./log/report" charset="UTF-8" yui="true" hightlight="true" lowupperbound="50" highlowerbound="80">
         <log type="testdox" target="./log/testdox.html">
     </log></log></logging>
+-->
 </phpunit>
