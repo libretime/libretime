@@ -88,9 +88,9 @@ class Webstream extends BaseWebstream
 		return array(
 			array (
 				"id" => $this->getId(),
-				"cliplength" => $this->getLength(),
-				"cuein" => $this->getCuein(),
-				"cueout" => $this->getCueout(),
+				"cliplength" => $this->getSchedulingLength(),
+				"cuein" => $this->getSchedulingCueIn(),
+				"cueout" => $this->getSchedulingCueOut(),
 				"fadein" => \Application_Model_Preference::GetDefaultFadeIn(),
 				"fadeout" => \Application_Model_Preference::GetDefaultFadeOut(),
 			)
