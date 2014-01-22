@@ -221,6 +221,7 @@ class Application_Model_Preference
      */
     public static function SetShowsPopulatedUntil($dateTime)
     {
+        $dateTime->setTimezone(new DateTimeZone("UTC"));
         self::setValue("shows_populated_until", $dateTime->format("Y-m-d H:i:s"));
     }
 
