@@ -45,9 +45,70 @@ class TestHelper
         $dbpasswd = $CC_CONFIG['dsn']['password'];
         $dbname = $CC_CONFIG['dsn']['database'];
         $dbhost = $CC_CONFIG['dsn']['hostspec'];
+    
+        $databaseAlreadyExists = AirtimeInstall::createDatabase();
+        if ($databaseAlreadyExists)
+        {
+            //Truncate all the tables
+            $con = Propel::getConnection();
+            $sql = "select * from pg_tables where tableowner = 'airtime'";
+            try {
+                $rows = $con->query($sql)->fetchAll();
+            } catch (Exception $e) {
+                $rows = array();
+            }
+            
+            //Add any tables that shouldn't be cleared here.
+            //   cc_subjs - Most of Airtime requires an admin account to work, which has id=1,
+            //              so don't clear it.
+            $tablesToNotClear = array("cc_subjs");
 
-        AirtimeInstall::createDatabase();
-        AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
+            $con->beginTransaction();
+            foreach ($rows as $row) {
+                $tablename = $row["tablename"];
+                if (in_array($tablename, $tablesToNotClear))
+                {
+                    continue;
+                }
+                //echo "   * Clearing database table $tablename...";
+
+                //TRUNCATE is actually slower than DELETE in many cases:
+                //http://stackoverflow.com/questions/11419536/postgresql-truncation-speed
+                //$sql = "TRUNCATE TABLE $tablename CASCADE";
+                $sql = "DELETE FROM $tablename";
+                AirtimeInstall::InstallQuery($sql, false);
+            }
+            $con->commit();
+            
+            //Because we're DELETEing all the rows instead of using TRUNCATE (for speed),
+            //we have to reset the sequences so the auto-increment columns (like primary keys)
+            //all start at 1 again. This is hacky but it still lets all of this execute fast.
+            $sql = "SELECT c.relname FROM pg_class c WHERE c.relkind = 'S'";
+            try {
+                $rows = $con->query($sql)->fetchAll();
+            } catch (Exception $e) {
+                $rows = array();
+            }
+            $con->beginTransaction();
+            foreach ($rows as $row) {
+                $seqrelname= $row["relname"];
+                $sql = "ALTER SEQUENCE ${seqrelname} RESTART WITH 1";
+                AirtimeInstall::InstallQuery($sql, false);
+            }
+            $con->commit();
+        }
+        else
+        {
+            //Create all the database tables
+            AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
+        }
         AirtimeInstall::SetDefaultTimezone();
+    }
+
+    public static function setupZendBootstrap()
+    {
+        $application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH .'/configs/application.ini');
+        $application->bootstrap();
+        return $application;
     }
 }
