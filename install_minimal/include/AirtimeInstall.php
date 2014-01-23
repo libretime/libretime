@@ -117,7 +117,8 @@ class AirtimeInstall
     {
         AirtimeInstall::InstallQuery("DROP SEQUENCE IF EXISTS $p_sequenceName", false);
     }
-
+    
+    
     /**
      * Try to connect to the database.  Return true on success, false on failure.
      * @param boolean $p_exitOnError
@@ -215,12 +216,14 @@ class AirtimeInstall
         $database = $CC_CONFIG['dsn']['database'];
         $username = $CC_CONFIG['dsn']['username'];
         #$command = "echo \"CREATE DATABASE $database OWNER $username\" | su postgres -c psql  2>/dev/null";
-
-        $command = "su postgres -c \"psql -l | cut -f2 -d' ' | grep -w 'airtime'\";";
+       
+        echo $database . PHP_EOL;
+        $command = "su postgres -c \"psql -l | cut -f2 -d' ' | grep -w '{$database}'\";";
         exec($command, $output, $rv);
 
         if ($rv == 0) {
             //database already exists
+            echo "Database already exists." . PHP_EOL;
             return true;
         }
 
