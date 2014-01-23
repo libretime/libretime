@@ -22,21 +22,11 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function setUp()
     {
         TestHelper::installTestDatabase();
-        
-        //XXX: Zend_Test_PHPUnit_DatabaseTestCase doesn't use this for whatever reason:
-        //$this->bootstrap = array($this, 'appBootstrap');
-        //So instead we just manually call the appBootstrap here:
-        $this->appBootstrap();
+        TestHelper::setupZendBootstrap();
 
         //$this->_nowDT = new DateTime("now", new DateTimeZone("UTC"));
         
         parent::setUp();
-    }
-
-    public function appBootstrap()
-    {
-        $this->application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH .'/configs/application.ini');
-        $this->application->bootstrap();
     }
 
     public function getConnection()

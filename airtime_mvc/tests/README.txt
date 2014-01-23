@@ -19,4 +19,24 @@ DbUnit overwrites a file that's actually part of the PHPUnit package,
 with a version that's incompatible and gives an error for us.
 
 
+2) Running the unit tests:
 
+    1. To run all the unit tests, run:
+
+        $ sudo ./runtests.sh
+
+    (It has to be run as root to access the database for now.)
+
+    2. To run one specific test, you can do something like:
+
+        $ export AIRTIME_UNIT_TEST="1"
+        $ sudo -E phpunit --filter testEditReatingShowInstance application/services/database/ShowServiceDbTest.php
+
+    IMPORTANT: Make sure you use "sudo" with the "-E" flag so it preserves the environment variable we set before that.
+
+
+
+FAQ
+====
+- If you get errors about an AMPQ fwrite failing, it means your RabbitMQ credentials are wrong in airtime.conf.
+  (That's the airtime.conf in this directory.)

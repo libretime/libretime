@@ -59,6 +59,7 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 
 require_once 'Zend/Application.php';
 require_once 'Zend/Config.php';
+//require_once 'helpers/TestHelper.php';
 
 require_once APPLICATION_PATH.'/configs/conf.php';
 require_once 'propel/runtime/lib/Propel.php';
@@ -67,3 +68,5 @@ Propel::init("../application/configs/airtime-conf-production.php");
 #require_once 'DatabaseTestCase.php';
 require_once 'Zend/Session.php';
 Zend_Session::start();
+
+//TestHelper::installTestDatabase();
