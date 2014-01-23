@@ -2,7 +2,6 @@
 require_once "Zend/Test/PHPUnit/DatabaseTestCase.php";
 require_once "ShowService.php";
 require_once "../application/configs/conf.php";
-require_once "AirtimeInstall.php";
 require_once "ShowServiceData.php";
 require_once "TestHelper.php";
 #require_once "PHPUnit/Extensions/Database/DataSet/ReplacementDataSet.php";
@@ -22,25 +21,11 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
     public function setUp()
     {
+        TestHelper::installTestDatabase();
+        
         //XXX: Zend_Test_PHPUnit_DatabaseTestCase doesn't use this for whatever reason:
         //$this->bootstrap = array($this, 'appBootstrap');
         //So instead we just manually call the appBootstrap here:
-        //TODO: Use AirtimeInstall.php to create the database and database tables
-        //Load Database parameters
-        
-        //We need to load the config before our app bootstrap runs. The config
-        //is normally
-        $CC_CONFIG = Config::getConfig();
-        
-        $dbuser = $CC_CONFIG['dsn']['username'];
-        $dbpasswd = $CC_CONFIG['dsn']['password'];
-        $dbname = $CC_CONFIG['dsn']['database'];
-        $dbhost = $CC_CONFIG['dsn']['hostspec'];
-
-        AirtimeInstall::createDatabase();
-        AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
-        AirtimeInstall::SetDefaultTimezone();
-        
         $this->appBootstrap();
 
         //$this->_nowDT = new DateTime("now", new DateTimeZone("UTC"));
@@ -57,14 +42,8 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function getConnection()
     {
         if ($this->_connectionMock == null) {
-            $config = new Zend_Config(
-                array(
-                    'host'     => '127.0.0.1',
-                    'dbname'   => 'airtime_test',
-                    'username' => 'airtime',
-                    'password' => 'airtime'
-                )
-            );
+            $config = TestHelper::getDbZendConfig();
+
             $connection = Zend_Db::factory('pdo_pgsql', $config);
 
             $this->_connectionMock = $this->createZendDbConnection(
