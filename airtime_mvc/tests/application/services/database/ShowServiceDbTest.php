@@ -61,7 +61,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function getDataSet()
     {
         $xml_dataset = $this->createXmlDataSet(
-            dirname(__FILE__) . '/datasets/cc_show_seed.xml'
+            dirname(__FILE__) . '/datasets/seed_show_service.xml'
         );
         /*$xml_dataset_fixed = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
             $xml_dataset, array('SIX_WEEKS' => $this->_nowDT->add(new DateInterval("P42D"))->format("Y-m-d H:i:s")));

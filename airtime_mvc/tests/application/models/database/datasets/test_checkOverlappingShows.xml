@@ -1,0 +1,341 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="cc_show">
+        <column>id</column>
+        <column>name</column>
+        <column>url</column>
+        <column>genre</column>
+        <column>description</column>
+        <column>color</column>
+        <column>background_color</column>
+        <column>live_stream_using_airtime_auth</column>
+        <column>live_stream_using_custom_auth</column>
+        <column>live_stream_user</column>
+        <column>live_stream_pass</column>
+        <column>linked</column>
+        <column>is_linkable</column>
+        <row>
+            <value>1</value>
+            <value>test show</value>
+            <null />
+            <null />
+            <null />
+            <value>ffffff</value>
+            <value>364492</value>
+            <value></value>
+            <value></value>
+            <null />
+            <null />
+            <value></value>
+            <value>1</value>
+        </row>
+    </table>
+
+    <table name="cc_show_days">
+        <column>id</column>
+        <column>first_show</column>
+        <column>last_show</column>
+        <column>start_time</column>
+        <column>timezone</column>
+        <column>duration</column>
+        <column>day</column>
+        <column>repeat_type</column>
+        <column>next_pop_date</column>
+        <column>show_id</column>
+        <column>record</column>
+        <row>
+            <value>1</value>
+            <value>2014-01-05</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>0</value>
+            <value>0</value>
+            <value>2014-02-02</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>2014-01-06</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>2014-02-03</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>2014-01-07</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>2</value>
+            <value>0</value>
+            <value>2014-02-04</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>2014-01-08</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>3</value>
+            <value>0</value>
+            <value>2014-02-05</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+        <row>
+            <value>5</value>
+            <value>2014-01-09</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>4</value>
+            <value>0</value>
+            <value>2014-02-06</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+        <row>
+            <value>6</value>
+            <value>2014-01-10</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>5</value>
+            <value>0</value>
+            <value>2014-02-07</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+        <row>
+            <value>7</value>
+            <value>2014-01-11</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>6</value>
+            <value>0</value>
+            <value>2014-02-01</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+    </table>
+
+    <table name="cc_show_instances">
+        <column>id</column>
+        <column>starts</column>
+        <column>ends</column>
+        <column>show_id</column>
+        <column>modified_instance</column>
+    <row>
+        <value>1</value>
+        <value>2014-01-05 00:00:00</value>
+        <value>2014-01-05 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>2</value>
+        <value>2014-01-12 00:00:00</value>
+        <value>2014-01-12 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>3</value>
+        <value>2014-01-19 00:00:00</value>
+        <value>2014-01-19 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>4</value>
+        <value>2014-01-26 00:00:00</value>
+        <value>2014-01-26 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>5</value>
+        <value>2014-01-06 00:00:00</value>
+        <value>2014-01-06 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>6</value>
+        <value>2014-01-13 00:00:00</value>
+        <value>2014-01-13 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>7</value>
+        <value>2014-01-20 00:00:00</value>
+        <value>2014-01-20 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>8</value>
+        <value>2014-01-27 00:00:00</value>
+        <value>2014-01-27 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>9</value>
+        <value>2014-01-07 00:00:00</value>
+        <value>2014-01-07 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>10</value>
+        <value>2014-01-14 00:00:00</value>
+        <value>2014-01-14 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>11</value>
+        <value>2014-01-21 00:00:00</value>
+        <value>2014-01-21 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>12</value>
+        <value>2014-01-28 00:00:00</value>
+        <value>2014-01-28 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>13</value>
+        <value>2014-01-08 00:00:00</value>
+        <value>2014-01-08 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>14</value>
+        <value>2014-01-15 00:00:00</value>
+        <value>2014-01-15 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>15</value>
+        <value>2014-01-22 00:00:00</value>
+        <value>2014-01-22 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>16</value>
+        <value>2014-01-29 00:00:00</value>
+        <value>2014-01-29 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>17</value>
+        <value>2014-01-09 00:00:00</value>
+        <value>2014-01-09 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>18</value>
+        <value>2014-01-16 00:00:00</value>
+        <value>2014-01-16 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>19</value>
+        <value>2014-01-23 00:00:00</value>
+        <value>2014-01-23 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>20</value>
+        <value>2014-01-30 00:00:00</value>
+        <value>2014-01-30 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>21</value>
+        <value>2014-01-10 00:00:00</value>
+        <value>2014-01-10 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>22</value>
+        <value>2014-01-17 00:00:00</value>
+        <value>2014-01-17 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>23</value>
+        <value>2014-01-24 00:00:00</value>
+        <value>2014-01-24 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>24</value>
+        <value>2014-01-31 00:00:00</value>
+        <value>2014-01-31 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>25</value>
+        <value>2014-01-11 00:00:00</value>
+        <value>2014-01-11 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>26</value>
+        <value>2014-01-18 00:00:00</value>
+        <value>2014-01-18 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    <row>
+        <value>27</value>
+        <value>2014-01-25 00:00:00</value>
+        <value>2014-01-25 01:00:00</value>
+        <value>1</value>
+        <value></value>
+    </row>
+    </table>
+
+    <table name="cc_show_rebroadcast">
+    </table>
+
+    <table name="cc_show_hosts">
+    </table>
+</dataset>
