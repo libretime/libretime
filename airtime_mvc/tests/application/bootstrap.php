@@ -50,7 +50,7 @@ set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_pat
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
 //test data
-set_include_path(APPLICATION_PATH . '/../tests/application/services/testdata' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/../tests/application/testdata' . PATH_SEPARATOR . get_include_path());
 
 //helper functions
 set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPARATOR . get_include_path());
