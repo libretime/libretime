@@ -64,8 +64,8 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
             $this->getConnection()
         );
         $ds->addTable('cc_show', 'select * from cc_show');
-        $ds->addTable('cc_show_days', 'select * from cc_show_days');
-        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days order by id');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, modified_instance from cc_show_instances order by id');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
 
@@ -118,6 +118,25 @@ class ScheduleDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
         $this->assertEquals($overlapping, false);
 
-        /** Delete a repeating instance and test if we can modify the show after **/
+        /** Delete a repeating instance, create a new show in it's place and
+         *  test if we can modify the repeating show after **/
+        $ccShowInstance = CcShowInstancesQuery::create()->findPk(1);
+        $ccShowInstance->setDbModifiedInstance(true)->save();
+
+        $newShowData = ShowServiceData::getNoRepeatNoRRData();
+        $newShowData["add_show_start_date"] = "2014-01-05";
+        $newShowData["add_show_end_date_no_repeat"] = "2014-01-05";
+        $newShowData["add_show_end_date"] = "2014-01-05";
+
+        $showService->addUpdateShow($newShowData);
+
+        $overlapping = Application_Model_Schedule::checkOverlappingShows(
+            new DateTime("2014-01-06 00:00:00", $utcTimezone),
+            new DateTime("2014-01-06 00:30:00", $utcTimezone),
+            true,
+            null,
+            1
+        );
+        $this->assertEquals($overlapping, false);
     }
 }
