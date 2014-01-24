@@ -32,6 +32,9 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../../install_minimal/include')
 )));
 
+require_once (APPLICATION_PATH."/logging/Logging.php");
+Logging::setLogPath('/var/log/airtime/zendphp.log');
+
 set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
 
 //Propel classes.
