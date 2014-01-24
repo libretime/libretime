@@ -104,6 +104,8 @@ class PypoMessageHandler(Thread):
             self.logger.info("Loop #%s", loops)
             try:
                 message = self.simple_queue.get(block=True)
+                self.logger.info("received message")
+                self.logger.info(message)
                 self.handle_message(message.payload)
                 # ACK the message to take it off the queue
                 message.ack()

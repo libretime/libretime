@@ -15,8 +15,8 @@ class Application_Model_Scheduler
             "cliplength" => "",
             "cuein" => "00:00:00",
             "cueout" => "00:00:00",
-            "fadein" => "00:00:00",
-            "fadeout" => "00:00:00",
+            "fadein" => "0",
+            "fadeout" => "0",
             "sched_id" => null
         );
 
@@ -627,9 +627,8 @@ class Application_Model_Scheduler
                         }
 
                         // default fades are in seconds
-                        // we need to convert to '00:00:00' format
-                        $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
-                        $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
+                        $file['fadein'] = $file['fadein'];
+                        $file['fadeout'] = $file['fadeout'];
 
                         if ($this->applyCrossfades) {
                             $nextStartDT = $this->findTimeDifference($nextStartDT,

@@ -5,23 +5,6 @@ use Airtime\CcShowInstancesQuery;
 
 class Application_Model_Schedule
 {
-    /**
-     * Return TRUE if file is going to be played in the future.
-     *
-     * @param string $p_fileId
-     */
-    public static function IsFileScheduledInTheFuture($p_fileId)
-    {
-        $sql = <<<SQL
-SELECT COUNT(*)
-FROM cc_schedule
-WHERE file_id = :file_id
-  AND ends > NOW() AT TIME ZONE 'UTC'
-SQL;
-        $count = Application_Common_Database::prepareAndExecute( $sql, array(
-            ':file_id'=>$p_fileId), 'column');
-        return (is_numeric($count) && ($count != '0'));
-    }
 
     public static function getAllFutureScheduledFiles($instanceId=null)
     {
@@ -42,23 +25,6 @@ SQL;
         return $real_files;
     }
 
-    public static function getAllFutureScheduledWebstreams()
-    {
-        $sql = <<<SQL
-SELECT distinct(stream_id)
-FROM cc_schedule
-WHERE ends > now() AT TIME ZONE 'UTC'
-AND stream_id is not null
-SQL;
-        $streams = Application_Common_Database::prepareAndExecute( $sql, array());
-
-        $real_streams = array();
-        foreach ($streams as $s) {
-            $real_streams[] = $s['stream_id'];
-        }
-
-        return $real_streams;
-    }
     /**
      * Returns data related to the scheduled items.
      *
@@ -300,8 +266,11 @@ SQL;
      * @return array $scheduledItems
      *
      */
-    public static function GetScheduleDetailItems($start, $end, $showIds, $showInstanceIds)
+    public static function GetScheduleDetailItems($start, $end, $getOnlyPlayable = false, 
+    		$getOnlyFuture = false, $showIds = array(), $showInstanceIds = array())
     {
+    	$utcNow = new DateTime("now", new DateTimeZone("UTC"));
+    	
     	//ordering first by show instance start time
     	//and then by scheduled item start time.
     	$items = CcShowInstancesQuery::create()
@@ -317,6 +286,11 @@ SQL;
     		//including these relations to prevent further database queries for 
     		->joinWith("CcShow", Criteria::LEFT_JOIN)
     		->useCcScheduleQuery(null, Criteria::LEFT_JOIN)
+    			//only retrieve items that will get played in the future.
+	    		->_if($getOnlyPlayable)
+	    			->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
+	    			->filterByDbEnds($utcNow->format("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+	    		->_endif()
 	    		->orderByDbStarts()
 	    		->endUse()
 	    	->with("CcSchedule")
@@ -326,45 +300,6 @@ SQL;
     		->find();
     	
     	return $items;
-    }
-
-    public static function UpdateMediaPlayedStatus($p_id)
-    {
-        $sql = "UPDATE cc_schedule"
-                ." SET media_item_played=TRUE";
-        // we need to update 'broadcasted' column as well
-        // check the current switch status
-        $live_dj        = Application_Model_Preference::GetSourceSwitchStatus('live_dj')        == 'on';
-        $master_dj      = Application_Model_Preference::GetSourceSwitchStatus('master_dj')      == 'on';
-        $scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on';
-
-        if (!$live_dj && !$master_dj && $scheduled_play) {
-            $sql .= ", broadcasted=1";
-        }
-
-        $sql .= " WHERE id=:pid";
-        $map = array(":pid" => $p_id);
-
-        Application_Common_Database::prepareAndExecute($sql, $map,
-            Application_Common_Database::EXECUTE);
-    }
-
-    public static function UpdateBrodcastedStatus($dateTime, $value)
-    {
-        $now = $dateTime->format("Y-m-d H:i:s");
-
-        $sql = <<<SQL
-UPDATE cc_schedule
-SET broadcasted=:broadcastedValue
-WHERE starts <= :starts::TIMESTAMP
-  AND ends >= :ends::TIMESTAMP
-SQL;
-
-        $retVal = Application_Common_Database::prepareAndExecute($sql, array(
-            ':broadcastedValue' => $value,
-            ':starts' => $now,
-            ':ends' => $now), 'execute');
-        return $retVal;
     }
 
     public static function getSchduledPlaylistCount()
@@ -384,173 +319,13 @@ SQL;
      * @param  string $p_time
      * @return string
      */
-    private static function AirtimeTimeToPypoTime($p_time)
+    public static function AirtimeTimeToPypoTime($p_time)
     {
         $p_time = substr($p_time, 0, 19);
         $p_time = str_replace(" ", "-", $p_time);
         $p_time = str_replace(":", "-", $p_time);
 
         return $p_time;
-    }
-
-    /**
-     * Convert a time string in the format "YYYY-MM-DD-HH-mm-SS" to
-     * "YYYY-MM-DD HH:mm:SS".
-     *
-     * @param  string $p_time
-     * @return string
-     */
-    private static function PypoTimeToAirtimeTime($p_time)
-    {
-        $t = explode("-", $p_time);
-
-        return $t[0]."-".$t[1]."-".$t[2]." ".$t[3].":".$t[4].":00";
-    }
-
-    /**
-     * Return true if the input string is in the format YYYY-MM-DD-HH-mm
-     *
-     * @param  string  $p_time
-     * @return boolean
-     */
-    public static function ValidPypoTimeFormat($p_time)
-    {
-        $t = explode("-", $p_time);
-        if (count($t) != 5) {
-            return false;
-        }
-        foreach ($t as $part) {
-            if (!is_numeric($part)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Converts a time value as a string (with format HH:MM:SS.mmmmmm) to
-     * millisecs.
-     *
-     * @param  string $p_time
-     * @return int
-     */
-    public static function WallTimeToMillisecs($p_time)
-    {
-        $t = explode(":", $p_time);
-        $millisecs = 0;
-        if (strpos($t[2], ".")) {
-            $secParts = explode(".", $t[2]);
-            $millisecs = $secParts[1];
-            $millisecs = str_pad(substr($millisecs, 0, 3),3, '0');
-            $millisecs = intval($millisecs);
-            $seconds = intval($secParts[0]);
-        } else {
-            $seconds = intval($t[2]);
-        }
-        $ret = $millisecs + ($seconds * 1000) + ($t[1] * 60 * 1000) + ($t[0] * 60 * 60 * 1000);
-
-        return $ret;
-    }
-
-    /**
-     * Returns an array of schedule items from cc_schedule table. Tries
-     * to return at least 3 items (if they are available). The parameters
-     * $p_startTime and $p_endTime specify the range. Schedule items returned
-     * do not have to be entirely within this range. It is enough that the end
-     * or beginning of the scheduled item is in the range.
-     *
-     *
-     * @param string $p_startTime
-     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     * @param string $p_endTime
-     *    In the format YYYY-MM-DD HH:MM:SS.nnnnnn
-     * @return array
-     *    Returns null if nothing found, else an array of associative
-     *    arrays representing each row.
-     */
-    public static function getItems($p_startTime, $p_endTime)
-    {
-        $baseQuery = <<<SQL
-SELECT st.file_id     AS file_id,
-       st.id          AS id,
-       st.instance_id AS instance_id,
-       st.starts      AS start,
-       st.ends        AS end,
-       st.cue_in      AS cue_in,
-       st.cue_out     AS cue_out,
-       st.fade_in     AS fade_in,
-       st.fade_out    AS fade_out,
-       si.starts      AS show_start,
-       si.ends        AS show_end,
-       s.name         AS show_name,
-       f.id           AS file_id,
-       f.replay_gain  AS replay_gain,
-       ws.id          AS stream_id,
-       ws.url         AS url
-FROM cc_schedule AS st
-LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
-LEFT JOIN cc_show           AS s  ON s.id = si.show_id
-LEFT JOIN cc_files          AS f  ON st.file_id = f.id
-LEFT JOIN cc_webstream      AS ws ON st.stream_id = ws.id
-SQL;
-        $predicates = <<<SQL
-WHERE st.ends > :startTime1
-  AND st.starts < :endTime
-  AND st.playout_status > 0
-  AND si.ends > :startTime2
-  AND si.modified_instance = 'f'
-ORDER BY st.starts
-SQL;
-
-        $sql = $baseQuery." ".$predicates;
-
-        $rows = Application_Common_Database::prepareAndExecute($sql, array(
-            ':startTime1' => $p_startTime,
-            ':endTime'    => $p_endTime,
-            ':startTime2' => $p_startTime));
-
-        if (count($rows) < 3) {
-            $dt = new DateTime("@".time());
-            $dt->add(new DateInterval("PT24H"));
-            $range_end = $dt->format("Y-m-d H:i:s");
-
-            $predicates = <<<SQL
-WHERE st.ends > :startTime1
-  AND st.starts < :rangeEnd
-  AND st.playout_status > 0
-  AND si.ends > :startTime2
-  AND si.modified_instance = 'f'
-ORDER BY st.starts LIMIT 3
-SQL;
-
-            $sql = $baseQuery." ".$predicates." ";
-            $rows = Application_Common_Database::prepareAndExecute($sql,
-                array(
-                    ':startTime1' => $p_startTime,
-                    ':rangeEnd'   => $range_end,
-                    ':startTime2' => $p_startTime));
-        }
-
-        return $rows;
-    }
-
-    /**
-     * This function will ensure that an existing index in the
-     * associative array is never overwritten, instead appending
-     * _0, _1, _2, ... to the end of the key to make sure it is unique
-     */
-    private static function appendScheduleItem(&$data, $time, $item)
-    {
-        $key = $time;
-        $i = 0;
-
-        while (array_key_exists($key, $data["media"])) {
-            $key = "{$time}_{$i}";
-            $i++;
-        }
-
-        $data["media"][$key] = $item;
     }
 
     private static function createInputHarborKickTimes(&$data, $range_start, $range_end)
@@ -568,122 +343,21 @@ SQL;
             $switch_off_time   = $switch_off_time->format("Y-m-d H:i:s");
 
             $kick_start = self::AirtimeTimeToPypoTime($kick_time);
-            $data["media"][$kick_start]['start']             = $kick_start;
-            $data["media"][$kick_start]['end']               = $kick_start;
-            $data["media"][$kick_start]['event_type']        = "kick_out";
-            $data["media"][$kick_start]['type']              = "event";
+            $data["media"][$kick_start]['start'] = $kick_start;
+            $data["media"][$kick_start]['end'] = $kick_start;
+            $data["media"][$kick_start]['event_type'] = "kick_out";
+            $data["media"][$kick_start]['type'] = "event";
             $data["media"][$kick_start]['independent_event'] = true;
 
             if ($kick_time !== $switch_off_time) {
                 $switch_start = self::AirtimeTimeToPypoTime($switch_off_time);
-                $data["media"][$switch_start]['start']             = $switch_start;
-                $data["media"][$switch_start]['end']               = $switch_start;
-                $data["media"][$switch_start]['event_type']        = "switch_off";
-                $data["media"][$switch_start]['type']                = "event";
+                $data["media"][$switch_start]['start'] = $switch_start;
+                $data["media"][$switch_start]['end'] = $switch_start;
+                $data["media"][$switch_start]['event_type'] = "switch_off";
+                $data["media"][$switch_start]['type'] = "event";
                 $data["media"][$switch_start]['independent_event'] = true;
             }
         }
-    }
-
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri)
-    {
-        $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end   = self::AirtimeTimeToPypoTime($item["end"]);
-
-        list(,,,$start_hour,,) = explode("-", $start);
-        list(,,,$end_hour,,) = explode("-", $end);
-
-        $same_hour = $start_hour == $end_hour;
-        $independent_event = !$same_hour;
-
-        $replay_gain = is_null($item["replay_gain"]) ? "0": $item["replay_gain"];
-        $replay_gain += Application_Model_Preference::getReplayGainModifier();
-
-        if ( !Application_Model_Preference::GetEnableReplayGain() ) {
-            $replay_gain = 0;
-        }
-
-        $schedule_item = array(
-            'id'                => $media_id,
-            'type'              => 'file',
-            'row_id'            => $item["id"],
-            'uri'               => $uri,
-            'fade_in'           => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
-            'fade_out'          => Application_Model_Schedule::WallTimeToMillisecs($item["fade_out"]),
-            'cue_in'            => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_in"]),
-            'cue_out'           => Application_Common_DateHelper::CalculateLengthInSeconds($item["cue_out"]),
-            'start'             => $start,
-            'end'               => $end,
-            'show_name'         => $item["show_name"],
-            'replay_gain'       => $replay_gain,
-            'independent_event' => $independent_event,
-        );
-
-        if ($schedule_item['cue_in'] > $schedule_item['cue_out']) {
-            $schedule_item['cue_in'] = $schedule_item['cue_out'];
-        }
-        self::appendScheduleItem($data, $start, $schedule_item);
-    }
-
-    private static function createStreamScheduleEvent(&$data, $item, $media_id, $uri)
-    {
-        $start = self::AirtimeTimeToPypoTime($item["start"]);
-        $end   = self::AirtimeTimeToPypoTime($item["end"]);
-
-        //create an event to start stream buffering 5 seconds ahead of the streams actual time.
-        $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
-        $buffer_start->sub(new DateInterval("PT5S"));
-
-        $stream_buffer_start = self::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
-
-        $schedule_item = array(
-            'start'             => $stream_buffer_start,
-            'end'               => $stream_buffer_start,
-            'uri'               => $uri,
-            'row_id'            => $item["id"],
-            'type'              => 'stream_buffer_start',
-            'independent_event' => true
-        );
-
-        self::appendScheduleItem($data, $start, $schedule_item);
-
-        $schedule_item = array(
-            'id'                => $media_id,
-            'type'              => 'stream_output_start',
-            'row_id'            => $item["id"],
-            'uri'               => $uri,
-            'start'             => $start,
-            'end'               => $end,
-            'show_name'         => $item["show_name"],
-            'independent_event' => true
-        );
-        self::appendScheduleItem($data, $start, $schedule_item);
-
-        //since a stream never ends we have to insert an additional "kick stream" event. The "start"
-        //time of this event is the "end" time of the stream minus 1 second.
-        $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
-        $dt->sub(new DateInterval("PT1S"));
-
-        $stream_end = self::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
-
-        $schedule_item = array(
-            'start'             => $stream_end,
-            'end'               => $stream_end,
-            'uri'               => $uri,
-            'type'              => 'stream_buffer_end',
-            'row_id'            => $item["id"],
-            'independent_event' => true
-        );
-        self::appendScheduleItem($data, $stream_end, $schedule_item);
-
-        $schedule_item = array(
-            'start'             => $stream_end,
-            'end'               => $stream_end,
-            'uri'               => $uri,
-            'type'              => 'stream_output_end',
-            'independent_event' => true
-        );
-        self::appendScheduleItem($data, $stream_end, $schedule_item);
     }
 
     private static function getRangeStartAndEnd($p_fromDateTime, $p_toDateTime)
@@ -693,163 +367,73 @@ SQL;
         $utcTimeZone = new DateTimeZone('UTC');
         
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
-            then set range * from "now" to "now + 24 hours". */
+            then set range * from "now" to "now + cache_ahead_hours". */
         if (is_null($p_fromDateTime)) {
-            $t1 = new DateTime("@".time(), $utcTimeZone);
-            $range_start = $t1->format("Y-m-d H:i:s");
-        } else {
-            $range_start = Application_Model_Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
+            $p_fromDateTime = new DateTime("now", $utcTimeZone);
+        } 
+        else {
+        	$p_fromDateTime->setTimezone($utcTimeZone);
         }
-        if (is_null($p_fromDateTime)) {
-            $t2 = new DateTime("@".time(), $utcTimeZone);
+        if (is_null($p_toDateTime)) {
+            $p_toDateTime = clone $p_fromDateTime;
 
             $cache_ahead_hours = $CC_CONFIG["cache_ahead_hours"];
 
             if (is_numeric($cache_ahead_hours)) {
                 //make sure we are not dealing with a float
                 $cache_ahead_hours = intval($cache_ahead_hours);
-            } else {
+            } 
+            else {
                 $cache_ahead_hours = 1;
             }
 
-            $t2->add(new DateInterval("PT".$cache_ahead_hours."H"));
-            $range_end = $t2->format("Y-m-d H:i:s");
-        } else {
-            $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
+            $p_toDateTime->add(new DateInterval("PT".$cache_ahead_hours."H"));
+        } 
+        else {
+        	$p_toDateTime->setTimezone($utcTimeZone);
         }
 
-        return array($range_start, $range_end);
+        return array($p_fromDateTime, $p_toDateTime);
     }
 
 
-    private static function createScheduledEvents(&$data, $range_start, $range_end)
-    {
-        $utcTimeZone = new DateTimeZone("UTC");
-        $items = self::getItems($range_start, $range_end);
-
-        foreach ($items as $item) {
-            $showEndDateTime = new DateTime($item["show_end"], $utcTimeZone);
-
-            $trackStartDateTime = new DateTime($item["start"], $utcTimeZone);
-            $trackEndDateTime = new DateTime($item["end"], $utcTimeZone);
-
-            if ($trackStartDateTime->getTimestamp() > $showEndDateTime->getTimestamp()) {
-                //do not send any tracks that start past their show's end time
-                continue;
-            }
-
-            if ($trackEndDateTime->getTimestamp() > $showEndDateTime->getTimestamp()) {
-                $di = $trackStartDateTime->diff($showEndDateTime);
-
-                $item["cue_out"] = $di->format("%H:%i:%s").".000";
-                $item["end"] = $showEndDateTime->format("Y-m-d H:i:s");
-            }
-
-            if (!is_null($item['file_id'])) {
-                //row is from "file"
-                $media_id = $item['file_id'];
-                $storedFile = Application_Model_StoredFile::RecallById($media_id);
-                $uri = $storedFile->getFilePath();
-                self::createFileScheduleEvent($data, $item, $media_id, $uri);
-            } 
-            elseif (!is_null($item['stream_id'])) {
-                //row is type "webstream"
-                $media_id = $item['stream_id'];
-                $uri = $item['url'];
-                self::createStreamScheduleEvent($data, $item, $media_id, $uri);
-            } 
-            else {
-                throw new Exception("Unknown schedule type: ".print_r($item, true));
-            }
-
-        }
-    }
-
-    /* Check if two events are less than or equal to 1 second apart
+    /*
+     * @param array $data output array for events, contains key "media"
+     * @param DateTime $startDT UTC start of schedule range
+     * @param DateTime $endDT UTC end of schedule range
      */
-    public static function areEventsLinked($event1, $event2) {
-        $dt1 = DateTime::createFromFormat("Y-m-d-H-i-s", $event1['start']);
-        $dt2 = DateTime::createFromFormat("Y-m-d-H-i-s", $event2['start']);
-
-        $seconds = $dt2->getTimestamp() - $dt1->getTimestamp();
-        return $seconds <= 1;
-    }
-
-    /**
-     * Streams are a 4 stage process.
-     * 1) start buffering stream 5 seconds ahead of its start time
-     * 2) at the start time tell liquidsoap to switch to this source
-     * 3) at the end time, tell liquidsoap to stop reading this stream
-     * 4) at the end time, tell liquidsoap to switch away from input.http source.
-     *
-     * When we have two streams back-to-back, some of these steps are unnecessary
-     * for the second stream. Instead of sending commands 1,2,3,4,1,2,3,4 we should
-     * send 1,2,1,2,3,4 - We don't need to tell liquidsoap to stop reading (#3), because #1
-     * of the next stream implies this when we pass in a new url. We also don't need #4.
-     *
-     * There's a special case here is well. When the back-to-back streams are the same, we
-     * can collapse the instructions 1,2,(3,4,1,2),3,4 to 1,2,3,4. We basically cut out the
-     * middle part. This function handles this.
-     */
-    private static function foldData(&$data)
+    private static function createScheduledEvents(&$data, $startDT, $endDT)
     {
-        $previous_key = null;
-        $previous_val = null;
-        $previous_previous_key = null;
-        $previous_previous_val = null;
-        $previous_previous_previous_key = null;
-        $previous_previous_previous_val = null;
-        foreach ($data as $k => $v) {
+        $showInstances = self::GetScheduleDetailItems($startDT, $endDT, true);
+        
+        //Logging::info($showInstances);
 
-            if ($v["type"] == "stream_output_start"
-                && !is_null($previous_previous_val)
-                && $previous_previous_val["type"] == "stream_output_end"
-                && self::areEventsLinked($previous_previous_val, $v)) {
-
-                unset($data[$previous_previous_previous_key]);
-                unset($data[$previous_previous_key]);
-                unset($data[$previous_key]);
-                if ($previous_previous_val['uri'] == $v['uri']) {
-                    unset($data[$k]);
-                }
-            }
-
-            $previous_previous_previous_key = $previous_previous_key;
-            $previous_previous_previous_val = $previous_previous_val;
-            $previous_previous_key = $previous_key;
-            $previous_previous_val = $previous_val;
-            $previous_key = $k;
-            $previous_val = $v;
+        foreach ($showInstances as $showInstance) {
+        	
+        	foreach($showInstance->getCcSchedules() as $scheduleItem) {
+        		
+        		$event = $scheduleItem->createScheduleEvent($data);
+        	}
         }
     }
 
     public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
     {
-        list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
-
+    	//Logging::enablePropelLogging();
+    	
+        list($startDT, $endDT) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
+        
         $data = array();
         $data["media"] = array();
 
         //Harbor kick times *MUST* be ahead of schedule events, so that pypo
         //executes them first.
-        self::createInputHarborKickTimes($data, $range_start, $range_end);
-        self::createScheduledEvents($data, $range_start, $range_end);
+        self::createInputHarborKickTimes($data, $startDT->format("Y-m-d H:i:s"), $endDT->format("Y-m-d H:i:s"));
+        self::createScheduledEvents($data, $startDT, $endDT);
+        
+        //Logging::disablePropelLogging();
 
-        //self::foldData($data["media"]);
         return $data;
-    }
-
-    public static function deleteAll()
-    {
-        $sql = "TRUNCATE TABLE cc_schedule";
-        Application_Common_Database::prepareAndExecute($sql, array(),
-            Application_Common_Database::EXECUTE);
-    }
-
-    public static function deleteWithFileId($fileId)
-    {
-        $sql = "DELETE FROM cc_schedule WHERE file_id=:file_id";
-        Application_Common_Database::prepareAndExecute($sql, array(':file_id'=>$fileId), 'execute');
     }
 
     public static function checkOverlappingShows($show_start, $show_end,
@@ -939,28 +523,5 @@ SQL;
         }
 
         return $overlapping;
-    }
-
-    public static function GetType($p_scheduleId){
-        $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
-        if ($scheduledItem->getDbFileId() == null) {
-            return 'webstream';
-        } else {
-            return 'file';
-        }
-    }
-
-    public static function GetFileId($p_scheduleId)
-    {
-        $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
-
-        return $scheduledItem->getDbFileId();
-    }
-
-    public static function GetStreamId($p_scheduleId)
-    {
-        $scheduledItem = CcScheduleQuery::create()->findPK($p_scheduleId);
-
-        return $scheduledItem->getDbStreamId();
     }
 }

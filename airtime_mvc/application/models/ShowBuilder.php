@@ -479,7 +479,7 @@ class Application_Model_ShowBuilder
         //Logging::enablePropelLogging();
         
         $scheduledShows = Application_Model_Schedule::GetScheduleDetailItems(
-            $this->startDT, $this->endDT, $shows, $showInstance);
+            $this->startDT, $this->endDT, false, $shows, $showInstance);
          
         //Logging::info($scheduledShows);
         

@@ -609,14 +609,13 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByDbFadeIn('2011-03-14'); // WHERE fade_in = '2011-03-14'
-     * $query->filterByDbFadeIn('now'); // WHERE fade_in = '2011-03-14'
-     * $query->filterByDbFadeIn(array('max' => 'yesterday')); // WHERE fade_in < '2011-03-13'
+     * $query->filterByDbFadeIn(1234); // WHERE fade_in = 1234
+     * $query->filterByDbFadeIn(array(12, 34)); // WHERE fade_in IN (12, 34)
+     * $query->filterByDbFadeIn(array('min' => 12)); // WHERE fade_in >= 12
+     * $query->filterByDbFadeIn(array('max' => 12)); // WHERE fade_in <= 12
      * </code>
      *
      * @param     mixed $dbFadeIn The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -652,14 +651,13 @@ abstract class BaseCcScheduleQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByDbFadeOut('2011-03-14'); // WHERE fade_out = '2011-03-14'
-     * $query->filterByDbFadeOut('now'); // WHERE fade_out = '2011-03-14'
-     * $query->filterByDbFadeOut(array('max' => 'yesterday')); // WHERE fade_out < '2011-03-13'
+     * $query->filterByDbFadeOut(1234); // WHERE fade_out = 1234
+     * $query->filterByDbFadeOut(array(12, 34)); // WHERE fade_out IN (12, 34)
+     * $query->filterByDbFadeOut(array('min' => 12)); // WHERE fade_out >= 12
+     * $query->filterByDbFadeOut(array('max' => 12)); // WHERE fade_out <= 12
      * </code>
      *
      * @param     mixed $dbFadeOut The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.

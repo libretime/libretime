@@ -102,14 +102,14 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
 
     /**
      * The value for the fade_in field.
-     * Note: this column has a database default value of: '00:00:00'
+     * Note: this column has a database default value of: '0'
      * @var        string
      */
     protected $fade_in;
 
     /**
      * The value for the fade_out field.
-     * Note: this column has a database default value of: '00:00:00'
+     * Note: this column has a database default value of: '0'
      * @var        string
      */
     protected $fade_out;
@@ -221,8 +221,8 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
     public function applyDefaultValues()
     {
         $this->clip_length = '00:00:00';
-        $this->fade_in = '00:00:00';
-        $this->fade_out = '00:00:00';
+        $this->fade_in = '0';
+        $this->fade_out = '0';
         $this->media_item_played = false;
         $this->playout_status = 1;
         $this->broadcasted = 0;
@@ -365,73 +365,25 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [optionally formatted] temporal [fade_in] column value.
+     * Get the [fade_in] column value.
      *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
-     * @throws PropelException - if unable to parse/validate the date/time value.
+     * @return string
      */
-    public function getDbFadeIn($format = '%X')
+    public function getDbFadeIn()
     {
-        if ($this->fade_in === null) {
-            return null;
-        }
 
-
-        try {
-            $dt = new \DateTime($this->fade_in);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->fade_in, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a \DateTime object.
-            return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
-        return $dt->format($format);
-
+        return $this->fade_in;
     }
 
     /**
-     * Get the [optionally formatted] temporal [fade_out] column value.
+     * Get the [fade_out] column value.
      *
-     *
-     * @param string $format The date/time format string (either date()-style or strftime()-style).
-     *				 If format is null, then the raw DateTime object will be returned.
-     * @return mixed Formatted date/time value as string or \DateTime object (if format is null), null if column is null
-     * @throws PropelException - if unable to parse/validate the date/time value.
+     * @return string
      */
-    public function getDbFadeOut($format = '%X')
+    public function getDbFadeOut()
     {
-        if ($this->fade_out === null) {
-            return null;
-        }
 
-
-        try {
-            $dt = new \DateTime($this->fade_out);
-        } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to \DateTime: " . var_export($this->fade_out, true), $x);
-        }
-
-        if ($format === null) {
-            // Because propel.useDateTimeClass is true, we return a \DateTime object.
-            return $dt;
-        }
-
-        if (strpos($format, '%') !== false) {
-            return strftime($format, $dt->format('U'));
-        }
-
-        return $dt->format($format);
-
+        return $this->fade_out;
     }
 
     /**
@@ -675,50 +627,42 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
     } // setDbClipLength()
 
     /**
-     * Sets the value of [fade_in] column to a normalized version of the date/time value specified.
+     * Set the value of [fade_in] column.
      *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
+     * @param  string $v new value
      * @return CcSchedule The current object (for fluent API support)
      */
     public function setDbFadeIn($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->fade_in !== null || $dt !== null) {
-            $currentDateAsString = ($this->fade_in !== null && $tmpDt = new \DateTime($this->fade_in)) ? $tmpDt->format('H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('H:i:s') : null;
-            if ( ($currentDateAsString !== $newDateAsString) // normalized values don't match
-                || ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
-                 ) {
-                $this->fade_in = $newDateAsString;
-                $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
-            }
-        } // if either are not null
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->fade_in !== $v) {
+            $this->fade_in = $v;
+            $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
+        }
 
 
         return $this;
     } // setDbFadeIn()
 
     /**
-     * Sets the value of [fade_out] column to a normalized version of the date/time value specified.
+     * Set the value of [fade_out] column.
      *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
+     * @param  string $v new value
      * @return CcSchedule The current object (for fluent API support)
      */
     public function setDbFadeOut($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
-        if ($this->fade_out !== null || $dt !== null) {
-            $currentDateAsString = ($this->fade_out !== null && $tmpDt = new \DateTime($this->fade_out)) ? $tmpDt->format('H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('H:i:s') : null;
-            if ( ($currentDateAsString !== $newDateAsString) // normalized values don't match
-                || ($dt->format('H:i:s') === '00:00:00') // or the entered value matches the default
-                 ) {
-                $this->fade_out = $newDateAsString;
-                $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
-            }
-        } // if either are not null
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->fade_out !== $v) {
+            $this->fade_out = $v;
+            $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
+        }
 
 
         return $this;
@@ -897,11 +841,11 @@ abstract class BaseCcSchedule extends BaseObject implements Persistent
                 return false;
             }
 
-            if ($this->fade_in !== '00:00:00') {
+            if ($this->fade_in !== '0') {
                 return false;
             }
 
-            if ($this->fade_out !== '00:00:00') {
+            if ($this->fade_out !== '0') {
                 return false;
             }
 

@@ -83,102 +83,6 @@ class CcSchedule extends BaseCcSchedule {
         }
     }
 
- /**
-     * Get the [optionally formatted] temporal [fadein] column value.
-     *
-     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-     * @throws     PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getDbFadeIn($format = "s.u")
-    {
-        return parent::getDbFadein($format);
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [fadein] column value.
-     *
-     * @return     mixed Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL
-     * @throws     PropelException - if unable to parse/validate the date/time value.
-     */
-    public function getDbFadeOut($format = "s.u")
-    {
-        return parent::getDbFadeout($format);
-    }
-
-    /**
-     *
-     * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
-     *
-     * @return CcPlaylistcontents The current object (for fluent API support)
-     */
-    public function setDbFadeIn($v)
-    {
-        $microsecond = 0;
-        if ($v instanceof DateTime) {
-            $dt = $v;
-        }
-        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
-            // Hence we need to do parsing.
-            $info = explode('.', $v);
-            $microsecond = $info[1];
-            $dt = DateTime::createFromFormat("s", $info[0]);
-        }
-        else {
-            try {
-                $dt = new DateTime($v);
-            } catch (Exception $x) {
-                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-            }
-        }
-
-        if ($microsecond == 0) {
-            $this->fade_in = $dt->format('H:i:s.u');
-        } else {
-            $this->fade_in = $dt->format('H:i:s').".".$microsecond;
-        }
-        $this->modifiedColumns[] = CcSchedulePeer::FADE_IN;
-
-        return $this;
-    } // setDbFadein()
-
-    /**
-    *
-    * @param String in format SS.uuuuuu, Datetime, or DateTime accepted string.
-    *
-    * @return CcPlaylistcontents The current object (for fluent API support)
-    */
-    public function setDbFadeOut($v)
-    {
-        $microsecond = 0;
-        if ($v instanceof DateTime) {
-            $dt = $v;
-        }
-        else if (preg_match('/^[0-9]{1,2}(\.\d{1,6})?$/', $v)) {
-            // in php 5.3.2 createFromFormat() with "u" is not supported(bug)
-            // Hence we need to do parsing.
-            $info = explode('.', $v);
-            $microsecond = $info[1];
-            $dt = DateTime::createFromFormat("s", $info[0]);
-        }
-        else {
-            try {
-                $dt = new DateTime($v);
-            } catch (Exception $x) {
-                throw new PropelException('Error parsing date/time value: ' . var_export($v, true), $x);
-            }
-        }
-
-        if ($microsecond == 0) {
-            $this->fade_out = $dt->format('H:i:s.u');
-        } else {
-            $this->fade_out = $dt->format('H:i:s').".".$microsecond;
-        }
-        $this->modifiedColumns[] = CcSchedulePeer::FADE_OUT;
-
-        return $this;
-    } // setDbFadeout()
-
     /**
      * Sets the value of [starts] column to a normalized version of the date/time value specified.
      *
@@ -263,6 +167,15 @@ class CcSchedule extends BaseCcSchedule {
     	}
     	
     	return false;
+    }
+    
+    public function createScheduleEvent(&$data) {
+    	
+    	$type = $this->getMediaItem()->getType();
+    	$class = "Presentation_Liquidsoap{$type}Event";
+    	$event = new $class($this);
+    	
+    	return $event->createScheduleEvent($data);
     }
 
 } // CcSchedule

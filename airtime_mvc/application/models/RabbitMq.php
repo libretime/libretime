@@ -33,6 +33,7 @@ class Application_Model_RabbitMq
 
         $channel->exchange_declare($exchange, 'direct', false, true);
 
+        Logging::info($data);
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
 
         $channel->basic_publish($msg, $exchange);

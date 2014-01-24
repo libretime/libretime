@@ -76,10 +76,17 @@ var AIRTIME = (function(AIRTIME) {
         });
     }
     
+    function getActiveTabId() {
+    	var $tab = $("div.ui-tabs-panel").not(".ui-tabs-hide");
+    	
+    	return $tab.attr("id");
+    }
+    
     //$el is a select table row <tr>
     mod.addToChosen = function($el) {
         var data = $el.data('aData'),
-        	tabId = $el.parents("div.ui-tabs-panel").attr("id");
+        	tabId = getActiveTabId();
+        
         
         if (chosenItems[tabId] === undefined) {
         	chosenItems[tabId] = {};
@@ -91,7 +98,7 @@ var AIRTIME = (function(AIRTIME) {
     //$el is a select table row <tr>
     mod.removeFromChosen = function($el) {
     	var data = $el.data('aData'),
-    		tabId = $el.parents("div.ui-tabs-panel").attr("id");
+    		tabId = getActiveTabId();
         
         // used to not keep dragged items selected.
         if (!$el.hasClass(LIB_SELECTED_CLASS)) {
@@ -204,13 +211,13 @@ var AIRTIME = (function(AIRTIME) {
                         "</ul>" +
                     "</div>")
             .append("<div class='btn-group'>" +
-                        "<button class='btn btn-small' id='library-plus'>" +
+                        "<button class='btn btn-small ui-state-disabled' disabled='disabled'>" +
                             "<i class='icon-white icon-plus'></i>" +
-                            "<span id='lib-plus-text'></span>" +
+                            //"<span id='lib-plus-text'></span>" +
                         "</button>" +
                     "</div>")
             .append("<div class='btn-group'>" +
-                        "<button class='btn btn-small' id='sb-trash'>" +
+                        "<button class='btn btn-small ui-state-disabled' disabled='disabled'>" +
                             "<i class='icon-white icon-trash'></i>" +
                         "</button>" +
                     "</div>");

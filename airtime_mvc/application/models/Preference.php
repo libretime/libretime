@@ -253,7 +253,6 @@ class Application_Model_Preference
     	$duration = self::getValue("default_crossfade_duration");
 
     	if ($duration === "") {
-    		// the default value of the fade is 00.5
     		return "0";
     	}
 
@@ -292,38 +291,6 @@ class Application_Model_Preference
     	}
 
     	return $fade;
-    }
-
-    public static function SetDefaultFade($fade)
-    {
-        self::setValue("default_fade", $fade);
-    }
-
-    public static function GetDefaultFade()
-    {
-        $fade = self::getValue("default_fade");
-
-        if ($fade === "") {
-            // the default value of the fade is 00.5
-            return "00.5";
-        }
-
-        // we need this function to work with 2.0 version on default_fade value in cc_pref
-        // it has 00:00:00.000000 format where in 2.1 we have 00.000000 format
-        if (preg_match("/([0-9]{2}):([0-9]{2}):([0-9]{2}).([0-9]{6})/", $fade, $matches) == 1 && count($matches) == 5) {
-            $out = 0;
-            $out += intval($matches[1] * 3600);
-            $out += intval($matches[2] * 60);
-            $out += intval($matches[3]);
-            $out .= ".$matches[4]";
-            $fade = $out;
-        }
-
-        $fade = number_format($fade, 1, '.', '');
-        //fades need 2 leading zeros for DateTime conversion
-        $fade = str_pad($fade, 4, "0", STR_PAD_LEFT);
-
-        return $fade;
     }
 
     public static function SetDefaultTransitionFade($fade)
@@ -1386,7 +1353,7 @@ class Application_Model_Preference
         $rg_modifier = self::getValue("replay_gain_modifier");
 
         if ($rg_modifier === "") {
-            return "0";
+            $rg_modifier = 0;
         }
 
         return $rg_modifier;

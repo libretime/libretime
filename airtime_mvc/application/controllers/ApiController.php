@@ -397,37 +397,14 @@ class ApiController extends Zend_Controller_Action
 
     public function notifyMediaItemStartPlayAction()
     {
-        $media_id = $this->_getParam("media_id");
-        Logging::debug("Received notification of new media item start: $media_id");
-        Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
+        $schedule_id = $this->_getParam("media_id");
+        Logging::debug("Received notification of new schedule item start: $schedule_id");
+        
+        $scheduleService = new Application_Service_SchedulerService();
+        $scheduleService->updateMediaPlayedStatus($schedule_id);
         
         $historyService = new Application_Service_HistoryService();
-        $historyService->insertPlayedItem($media_id);
-
-        //set a 'last played' timestamp for media item
-        //needed for smart blocks
-        try {
-            $mediaType = Application_Model_Schedule::GetType($media_id);
-            if ($mediaType == 'file') {
-                $file_id = Application_Model_Schedule::GetFileId($media_id);
-                if (!is_null($file_id)) {
-                    //we are dealing with a file not a stream
-                    $file = Application_Model_StoredFile::RecallById($file_id);
-                    $now = new DateTime("now", new DateTimeZone("UTC"));
-                    $file->setLastPlayedTime($now);
-                }
-            } else {
-                // webstream
-                $stream_id = Application_Model_Schedule::GetStreamId($media_id);
-                if (!is_null($stream_id)) {
-                    $webStream = new Application_Model_Webstream($stream_id);
-                    $now = new DateTime("now", new DateTimeZone("UTC"));
-                    $webStream->setLastPlayed($now);
-                }
-            }
-        } catch (Exception $e) {
-            Logging::info($e);
-        }
+        $historyService->insertPlayedItem($schedule_id);
 
         $this->_helper->json->sendJson(array("status"=>1, "message"=>""));
     }

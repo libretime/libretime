@@ -10,21 +10,8 @@ use Airtime\CcShowInstancesPeer;
 class Application_Service_SchedulerService
 {
     private $con;
-    private $fileInfo = array(
-            "id" => "",
-            "cliplength" => "",
-            "cuein" => "00:00:00",
-            "cueout" => "00:00:00",
-            "fadein" => "00:00:00",
-            "fadeout" => "00:00:00",
-            "sched_id" => null,
-            "type" => 0 //default type of '0' to represent files. type '1' represents a webstream
-        );
-
     private $epochNow;
     private $nowDT;
-    private $currentUser;
-    private $checkUserPermissions = true;
 
     public function __construct()
     {
@@ -42,9 +29,6 @@ class Application_Service_SchedulerService
             // In PHP 5.3.3 (Ubuntu 10.10), this has been fixed.
             $this->nowDT = DateTime::createFromFormat("U", time(), new DateTimeZone("UTC"));
         }
-
-        $user_service = new Application_Service_UserService();
-        $this->currentUser = $user_service->getCurrentUser();
     }
 
     /**
@@ -422,5 +406,42 @@ class Application_Service_SchedulerService
     	}
     	
     	return $redraw;
+    }
+    
+    public function updateMediaPlayedStatus($schedId)
+    {
+    	$con = $this->con;
+    	$con->beginTransaction();
+    	
+    	try {
+    		// we need to update 'broadcasted' column as well
+    		// check the current switch status
+    		$live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on';
+    		$master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on';
+    		$scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on';
+    		
+    		$scheduledItem = CcScheduleQuery::create()->findPk($schedId, $con);
+    		
+    		$scheduledItem->setDbMediaItemPlayed(true);
+    		
+    		//not sure how well this broadcasted column actually is at doing anything.
+    		if (!$live_dj && !$master_dj && $scheduled_play) {
+    			$scheduledItem->setDbBroadcasted(1);
+    		}
+    		
+    		//set a 'last played' timestamp for media item
+    		$utcNow = new DateTime("now", new DateTimeZone("UTC"));
+    		$mediaItem = $scheduledItem->getMediaItem();
+    		$mediaItem->setLastPlayedTime($utcNow);
+    		
+    		$mediaItem->save($con);
+    		$scheduledItem->save($con);
+    		$con->commit();
+    	}
+    	catch (Exception $e) {
+    		$con->rollBack();
+    		Logging::error($e->getMessage());
+    		throw $e;
+    	}
     }
 }

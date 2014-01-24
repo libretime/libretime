@@ -36,17 +36,24 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 		return true;
 	}
 	
+	/*
+	 * only users who are admins, PMs or owners of the media can delete the item.
+	 * if the item is scheduled in the future it cannot be deleted.
+	 */
 	public function preDelete(PropelPDO $con = null)
 	{
 		try {
 			$service = new Application_Service_UserService();
 			$user = $service->getCurrentUser();
+
+			$userTest =  $user->isAdminOrPM() || $user->getId() === $this->getOwnerId();
+			$scheduleTest = $this->isScheduledInFuture();
 			
-			//only users who are admins, PMs or owners of the media can delete the item.
-			return $user->isAdminOrPM() || $user->getId() === $this->getOwnerId();
+			return ($userTest && $scheduleTest);
 		}
 		catch(Exception $e) {
-			Logging::warn("Unable to get current user while trying to delete media item {$this->getId()}");
+			Logging::warn("Failed to delete media item {$this->getId()}");
+			Logging::warn($e->getMessage());
 		}
 		
 		return false;
@@ -98,6 +105,27 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 		
 		$obj = $this->getChildObject();
 		return $obj->isSchedulable();
+	}
+	
+	public function isScheduled() {
+		
+		$count = CcScheduleQuery::create()
+			->filterByMediaItem($this)
+			->count();
+		
+		return ($count > 0) ? true : false;
+	}
+	
+	public function isScheduledInFuture() {
+		
+		$utcNow = new DateTime("now", new DateTimeZone("UTC"));
+		
+		$count = CcScheduleQuery::create()
+			->filterByMediaItem($this)
+			->filterByDbStarts($utcNow->format("Y-m-d H:i:s"), Criteria::GREATER_EQUAL)
+			->count();
+		
+		return ($count > 0) ? true : false; 
 	}
 	
 	public function getSchedulingLength() {

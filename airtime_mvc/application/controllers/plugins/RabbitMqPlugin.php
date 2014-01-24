@@ -5,6 +5,7 @@ class RabbitMqPlugin extends Zend_Controller_Plugin_Abstract
     public function dispatchLoopShutdown()
     {
         if (Application_Model_RabbitMq::$doPush) {
+        	Logging::info("NEED to push schedule");
             $md = array('schedule' => Application_Model_Schedule::getSchedule());
             Application_Model_RabbitMq::SendMessageToPypo("update_schedule", $md);
             if (!isset($_SERVER['AIRTIME_SRV'])) {

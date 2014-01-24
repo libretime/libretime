@@ -315,7 +315,7 @@ class Application_Model_LiveLog
                     Application_Common_Database::EXECUTE);
                 if ($state == "S") {
                     // if scheduled play source is getting broadcasted
-                    Application_Model_Schedule::UpdateBrodcastedStatus($dateTime, 1);
+                    //Application_Model_Schedule::UpdateBrodcastedStatus($dateTime, 1);
                 }
             }
 
