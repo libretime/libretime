@@ -213,51 +213,6 @@ SQL;
         return $row;
     }
 
-    public static function GetCurrentScheduleItem($p_timeNow, $p_instanceId)
-    {
-        /* Note that usually there will be one result returned. In some
-         * rare cases two songs are returned. This happens when a track
-         * that was overbooked from a previous show appears as if it
-         * hasnt ended yet (track end time hasn't been reached yet). For
-         * this reason,  we need to get the track that starts later, as
-         * this is the *real* track that is currently playing. So this
-         * is why we are ordering by track start time. */
-        $sql = "SELECT *"
-        ." FROM cc_schedule st"
-        ." LEFT JOIN cc_files ft"
-        ." ON st.file_id = ft.id"
-        ." WHERE st.starts <= TIMESTAMP :timeNow1"
-        ." AND st.instance_id = :instanceId"
-        ." AND st.ends > TIMESTAMP :timeNow2"
-        ." ORDER BY st.starts DESC"
-        ." LIMIT 1";
-
-        $row = Application_Common_Database::prepareAndExecute($sql, array(':timeNow1'=>$p_timeNow, ':instanceId'=>$p_instanceId, ':timeNow2'=>$p_timeNow,));
-
-        return $row;
-    }
-
-    public static function GetNextScheduleItem($p_timeNow)
-    {
-        $sql = "SELECT"
-        ." ft.artist_name, ft.track_title,"
-        ." st.starts as starts, st.ends as ends"
-        ." FROM cc_schedule st"
-        ." LEFT JOIN cc_files ft"
-        ." ON st.file_id = ft.id"
-        ." LEFT JOIN cc_show_instances sit"
-        ." ON st.instance_id = sit.id"
-        ." WHERE st.starts > TIMESTAMP :timeNow"
-        ." AND st.starts >= sit.starts" //this and the next line are necessary since we can overbook shows.
-        ." AND st.starts < sit.ends"
-        ." ORDER BY st.starts"
-        ." LIMIT 1";
-
-        $row = Application_Common_Database::prepareAndExecute($sql, array(':timeNow'=>$p_timeNow));
-
-        return $row;
-    }
-
     /*
      *
      * @param DateTime $start in UTC timezone
@@ -523,5 +478,177 @@ SQL;
         }
 
         return $overlapping;
+    }
+    
+    public static function getDashboardInfo()
+    {
+    	<<<SQL
+    	select
+
+npItems.media_title,
+npItems.item_start,
+npItems.item_end,
+npItems.show_start,
+npItems.show_end,
+npItems.show_id,
+show.name as show_name 
+
+from
+(
+
+select 
+
+pcnItems.media_title,
+pcnItems.starts as item_start,
+pcnItems.ends as item_end,
+pcnShows.starts as show_start,
+pcnShows.ends as show_end,
+pcnShows.show_id
+
+from
+(
+
+select 
+
+preCurrNextShows.starts,
+preCurrNextShows.ends,
+preCurrNextShows.show_id
+
+from
+(
+
+select * from 
+(
+select * from cc_show_instances instance
+where
+instance.modified_instance = false
+and instance.starts <= (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC') 
+and instance.ends > (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+)
+
+as currInstance
+
+union
+
+select * from 
+(
+select * from cc_show_instances instance
+where 
+instance.modified_instance = false
+and instance.starts > (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+order by instance.starts
+limit 1
+)
+
+as nextInstance
+
+union
+
+select * from 
+(
+select * from cc_show_instances instance
+where 
+instance.modified_instance = false
+and instance.ends < (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+order by instance.ends desc
+limit 1
+)
+
+as prevInstance
+
+)
+
+as preCurrNextShows
+)
+
+as pcnShows
+
+full outer join
+
+(
+
+select 
+preCurrNextItem.starts, 
+preCurrNextItem.ends,
+preCurrNextItem.show_id,
+media.name as media_title
+
+
+from 
+(
+
+select * from
+
+(select currentItem.starts, currentItem.ends, currentItem.media_id, showInstance.show_id from
+(select sched.starts, sched.ends, sched.instance_id, sched.media_id from cc_schedule sched
+where 
+sched.playout_status > 0
+and sched.starts <= (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC') 
+and sched.ends > (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC'))
+as currentItem
+left join cc_show_instances showInstance on currentItem.instance_id = showInstance.id
+where showInstance.modified_instance = false
+and showInstance.starts <= (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC') 
+and showInstance.ends > (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC'))
+
+as cItem
+
+
+union
+
+select * from
+(select nextItem.starts, nextItem.ends, nextItem.media_id, showInstance.show_id from
+(select sched.starts, sched.ends, sched.instance_id, sched.media_id from cc_schedule sched
+where 
+sched.playout_status > 0
+and sched.starts > (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC') 
+order by sched.starts 
+limit 1)
+as nextItem
+left join cc_show_instances showInstance on nextItem.instance_id = showInstance.id
+where showInstance.modified_instance = false)
+
+as nItem
+
+union
+
+select * from
+(select prevItem.starts, prevItem.ends, prevItem.media_id, showInstance.show_id from
+(select sched.starts, sched.ends, sched.instance_id, sched.media_id from cc_schedule sched
+where 
+sched.playout_status > 0
+and sched.ends < (select CURRENT_TIMESTAMP AT TIME ZONE 'UTC') 
+order by sched.ends desc 
+limit 1)
+as prevItem
+left join cc_show_instances showInstance on prevItem.instance_id = showInstance.id
+where showInstance.modified_instance = false)
+
+as pItem
+
+)
+as preCurrNextItem
+
+left join media_item media on preCurrNextItem.media_id = media.id
+)
+
+as pcnItems
+
+using(show_id)
+
+)
+
+as npItems
+
+left join cc_show show on npItems.show_id = show.id
+
+where npItems.show_id is not null
+
+order by 
+npItems.show_start, 
+npItems.item_start
+SQL;
+    	
+
     }
 }
