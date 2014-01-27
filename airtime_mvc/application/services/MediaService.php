@@ -551,8 +551,9 @@ class Application_Service_MediaService
 		$len = intval($params["iSortingCols"]);
 		for ($i = 0; $i < $len; $i++) {
 			
-			if ($params["bSortable_{$i}"] === "true") {
-				$colNum = $params["iSortCol_{$i}"];
+			$colNum = $params["iSortCol_{$i}"];
+			
+			if ($params["bSortable_{$colNum}"] == "true") {
 				$colName = $params["mDataProp_{$colNum}"];
 				$colDir = $params["sSortDir_{$i}"] === "asc" ? Criteria::ASC : Criteria::DESC;
 					
