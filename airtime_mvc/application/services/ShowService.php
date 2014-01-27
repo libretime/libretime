@@ -667,11 +667,7 @@ SQL;
 
             $showId = $ccShowInstance->getDbShowId();
             if ($singleInstance) {
-                $ccShowInstances = CcShowInstancesQuery::create()
-                    ->filterByDbShowId($showId)
-                    ->filterByDbStarts($ccShowInstance->getDbStarts(), Criteria::GREATER_EQUAL)
-                    ->filterByDbEnds($ccShowInstance->getDbEnds(), Criteria::LESS_EQUAL)
-                    ->find();
+                $ccShowInstances = array($ccShowInstance);
             } else {
                 $ccShowInstances = CcShowInstancesQuery::create()
                     ->filterByDbShowId($showId)
@@ -680,7 +676,9 @@ SQL;
             }
 
             if (gmdate("Y-m-d H:i:s") <= $ccShowInstance->getDbEnds()) {
-                $this->deleteShowInstances($ccShowInstances, $ccShowInstance->getDbShowId());
+                $this->deleteShowInstances($ccShowInstances, $showId);
+            } else {
+                throw new Exception("Cannot delete a show instance in the past");
             }
 
             Application_Model_StoredFile::updatePastFilesIsScheduled();
@@ -688,6 +686,7 @@ SQL;
             Application_Model_RabbitMq::PushSchedule();
 
             $con->commit();
+
             return $showId;
         } catch (Exception $e) {
             $con->rollback();
@@ -723,6 +722,78 @@ SQL;
             CcShowQuery::create()
                 ->filterByDbId($showId)
                 ->delete();
+        /* There is only one cc_show_instance if the user selects 'Delete This Instance'
+         * There is more than one cc_show_instance if the user selects 'Delete This
+         * Instance and All Following'. We only need to set the last_show value
+         * when 'Delete This Instance and All Following' has been selected
+         */
+        } elseif (count($ccShowInstances) > 1) {
+            $this->setLastRepeatingShowDate($showId);
+        }
+    }
+
+    private function setLastRepeatingShowDate($showId)
+    {
+        $ccShowInstances = CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbModifiedInstance(false)
+            ->filterByDbRebroadcast(0)
+            ->orderByDbStarts()
+            ->find();
+
+        /* We need to update the last_show in cc_show_days so the instances
+         * don't get recreated as the user moves forward in the calendar
+         */
+        $lastShowDays = array();
+
+        //get the show's timezone
+        $ccShow = CcShowQuery::create()->findPk($showId);
+        if ($ccShow->isRepeating()) {
+            $showTimezone = $ccShow->getFirstRepeatingCcShowDay()->getDbTimezone();
+        } else {
+            $showTimezone = $ccShow->getFirstCcShowDay()->getDbTimezone();
+        }
+
+        /* Creates an array where the key is the day of the week (monday,
+         * tuesday, etc.) and the value is the last show date for each
+         * day of the week. We will use this array to update the last_show
+         * for each cc_show_days entry of a cc_show
+         */
+        foreach ($ccShowInstances as $instance) {
+            $instanceStartDT = $instance->getDbStarts(null);
+            $instanceStartDT->setTimezone(new DateTimeZone($showTimezone));
+            $lastShowDays[$instanceStartDT->format("w")] = $instanceStartDT;
+        }
+
+        foreach ($lastShowDays as $dayOfWeek => $lastShowStartDT) {
+            $ccShowDay = CcShowDaysQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbDay($dayOfWeek)
+                ->filterByDbRepeatType(-1, Criteria::NOT_EQUAL)
+                ->findOne();
+
+            if (isset($ccShowDay)) {
+                $lastShowStartDT->setTimeZone(new DateTimeZone(
+                    $ccShowDay->getDbTimezone()));
+                $lastShowEndDT = Application_Service_CalendarService::addDeltas(
+                    $lastShowStartDT, 1, 0);
+
+                $ccShowDay
+                    ->setDbLastShow($lastShowEndDT->format("Y-m-d"))
+                    ->save();
+            }
+        }
+
+        // NOTE: Some cc_show_day records may not get updated because there may not be an instance
+        // left on one of the repeating days so we have to find the entries where the last_show is
+        // still null
+        $showDays = CcShowDaysQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbRepeatType(0, Criteria::GREATER_EQUAL)
+            ->filterByDbLastShow(null)
+            ->find();
+        foreach ($showDays as $showDay) {
+            $showDay->setDbLastShow($showDay->getDbFirstShow())->save();
         }
     }
 
@@ -738,50 +809,6 @@ SQL;
 
         if ($ccShowInstances->isEmpty()) {
             return true;
-        }
-        /* We need to update the last_show in cc_show_days so the instances
-         * don't get recreated as the user moves forward in the calendar
-         */
-        else if (count($ccShowInstances) >= 1) {
-            $lastShowDays = array();
-
-            //get the show's timezone
-            $ccShow = CcShowQuery::create()->findPk($showId);
-            if ($ccShow->isRepeating()) {
-                $showTimezone = $ccShow->getFirstRepeatingCcShowDay()->getDbTimezone();
-            } else {
-                $showTimezone = $ccShow->getFirstCcShowDay()->getDbTimezone();
-            }
-
-            /* Creates an array where the key is the day of the week (monday,
-             * tuesday, etc.) and the value is the last show date for each
-             * day of the week. We will use this array to update the last_show
-             * for each cc_show_days entry of a cc_show
-             */
-            foreach ($ccShowInstances as $instance) {
-                $instanceStartDT = $instance->getDbStarts(null);
-                $instanceStartDT->setTimezone(new DateTimeZone($showTimezone));
-                $lastShowDays[$instanceStartDT->format("w")] = $instanceStartDT;
-            }
-
-            foreach ($lastShowDays as $dayOfWeek => $lastShowStartDT) {
-                $ccShowDay = CcShowDaysQuery::create()
-                    ->filterByDbShowId($showId)
-                    ->filterByDbDay($dayOfWeek)
-                    ->filterByDbRepeatType(-1, Criteria::NOT_EQUAL)
-                    ->findOne();
-
-                if (isset($ccShowDay)) {
-                    $lastShowStartDT->setTimeZone(new DateTimeZone(
-                        $ccShowDay->getDbTimezone()));
-                    $lastShowEndDT = Application_Service_CalendarService::addDeltas(
-                        $lastShowStartDT, 1, 0);
-
-                    $ccShowDay
-                        ->setDbLastShow($lastShowEndDT->format("Y-m-d"))
-                        ->save();
-                }
-            }
         }
 
         return false;
@@ -1251,6 +1278,18 @@ SQL;
         return $dt;
     }
 
+    /**
+     * 
+     * Returns a DateTime object of when the next repeating show that repeats
+     * monthly, by day of the week (i.e. every fourth Tuesday) should be created
+     * 
+     * @param DateTime $start
+     *     $start only has the year and month of the next show
+     * @param string $timezone
+     * @param string (i.e. '14:30' $startTime
+     * @param string (i.e. 'first', 'second') $weekNumberOfMonth
+     * @param string (i.e. 'Monday') $dayOfWeek
+     */
     private function getNextMonthlyWeeklyRepeatDate(
         $start,
         $timezone,

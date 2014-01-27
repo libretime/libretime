@@ -921,41 +921,6 @@ SQL;
     }
 
     /**
-     * Generate all the repeating shows in the given range.
-     *
-     * @param DateTime $p_startTimestamp
-     *         In UTC format.
-     * @param DateTime $p_endTimestamp
-     *         In UTC format.
-     */
-    public static function populateAllShowsInRange($p_startTimestamp, $p_endTimestamp)
-    {
-        $con = Propel::getConnection();
-
-        $endTimeString = $p_endTimestamp->format("Y-m-d H:i:s");
-        if (!is_null($p_startTimestamp)) {
-            $startTimeString = $p_startTimestamp->format("Y-m-d H:i:s");
-        } else {
-            $today_timestamp = new DateTime("now", new DateTimeZone("UTC"));
-            $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
-        }
-
-        $stmt = $con->prepare("
-            SELECT * FROM cc_show_days
-            WHERE last_show IS NULL
-            OR first_show < :endTimeString AND last_show > :startTimeString");
-
-        $stmt->bindParam(':endTimeString', $endTimeString);
-        $stmt->bindParam(':startTimeString', $startTimeString);
-        $stmt->execute();
-
-        $res = $stmt->fetchAll();
-        foreach ($res as $row) {
-            Application_Model_Show::populateShow($row, $p_endTimestamp);
-        }
-    }
-
-    /**
      *
      * @param DateTime $start
      *          -in UTC time
