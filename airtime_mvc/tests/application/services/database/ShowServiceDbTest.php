@@ -444,7 +444,6 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         );
 
         /** Test unlinking a show **/
-        // TODO: find out why linked and is_linkable columns are getting set to NULL
         $data["add_show_id"] = 1;
         $data["add_show_linked"] = 0;
         $showService = new Application_Service_ShowService(null, $data, true);
