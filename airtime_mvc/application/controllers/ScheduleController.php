@@ -261,9 +261,8 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentPlaylistAction()
     {
-        $range = Application_Model_Schedule::GetPlayOrderRange();
-        $show = Application_Model_Show::getCurrentShow();
-
+        $range = Application_Model_Schedule::getDashboardInfo();
+        
         /* Convert all UTC times to localtime before sending back to user. */
         $range["schedulerTime"] = Application_Common_DateHelper::UTCStringToUserTimezoneString($range["schedulerTime"]);
         
@@ -315,7 +314,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->switch_status = $switch_status;
 
         $this->view->entries = $range;
-        $this->view->show_name = isset($show[0])?$show[0]["name"]:"";
+        $this->view->show_name = isset($range["currentShow"][0]) ? $range["currentShow"][0]["name"] : "";
     }
 
     public function showContentDialogAction()
