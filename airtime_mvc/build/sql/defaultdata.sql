@@ -330,16 +330,19 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_GB', 'English (Brit
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('en_US', 'English (USA)');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('cs_CZ', 'Český');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_DE', 'Deutsch');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_AT', 'Österreichisches Deutsch');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('hu_HU', 'Magyar');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('de_AT', 'Deutsch (Österreich)');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('el_GR', 'Ελληνικά');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('es_ES', 'Español');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('fr_FR', 'Français');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('hr_HR', 'Hrvatski');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('hu_HU', 'Magyar');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('it_IT', 'Italiano');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ko_KR', '한국어');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pl_PL', 'Polski');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pt_BR', 'Português Brasileiro');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('pt_BR', 'Português (Brasil)');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('ru_RU', 'Русский');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('sr_RS', 'Српски (Ћирилица)');
+INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('sr_RS@latin', 'Srpski (Latinica)');
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
-INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('el_GR', 'Ελληνικά');
 
 -- end of added in 2.3
