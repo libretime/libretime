@@ -360,21 +360,27 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     private static function discoverStreamMime($url)
     {
-        //TODO: What if invalid URL?
-        $headers = get_headers($url);
+        try {
+            $headers = @get_headers($url);
 
-        $headers = self::cleanHeaders($headers);
-
-        $mime = null;
-        $content_length_found = false;
-        foreach ($headers as $h) {
-            if (preg_match("/^content-type:/i", $h)) {
-                list(, $value) = explode(":", $h, 2);
-                $mime = trim($value);
+            $mime = null;
+            $content_length_found = false;
+    
+            if ($headers !== false) {
+                $headers = self::cleanHeaders($headers);
+                foreach ($headers as $h) {
+                    if (preg_match("/^content-type:/i", $h)) {
+                        list(, $value) = explode(":", $h, 2);
+                        $mime = trim($value);
+                    }
+                    if (preg_match("/^content-length:/i", $h)) {
+                        $content_length_found = true;
+                    }
+                }
             }
-            if (preg_match("/^content-length:/i", $h)) {
-                $content_length_found = true;
-            }
+        } catch (Exception $e) {
+            Logging::info("Invalid stream URL");
+            Logging::info($e->getMessage());
         }
 
         return array($mime, $content_length_found);
