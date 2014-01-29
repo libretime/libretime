@@ -707,6 +707,23 @@ class Application_Service_MediaService
 		}
 	}
 	
+	public function createLibraryColumnsJavascript() {
+		
+		//set audio columns for display of data.
+		$columns = json_encode(self::makeDatatablesColumns('AudioFile'));
+		$script = "localStorage.setItem( 'datatables-audiofile-aoColumns', JSON.stringify($columns) ); ";
+		
+		//set webstream columns for display of data.
+		$columns = json_encode(self::makeDatatablesColumns('Webstream'));
+		$script .= "localStorage.setItem( 'datatables-webstream-aoColumns', JSON.stringify($columns) ); ";
+		
+		//set playlist columns for display of data.
+		$columns = json_encode(self::makeDatatablesColumns('Playlist'));
+		$script .= "localStorage.setItem( 'datatables-playlist-aoColumns', JSON.stringify($columns) ); ";
+		
+		return $script;
+	}
+	
 	/*
 	 * @param $obj MediaItem object.
 	 * @return $service proper service for this item type.

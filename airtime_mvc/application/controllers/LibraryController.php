@@ -65,18 +65,7 @@ class LibraryController extends Zend_Controller_Action
             
         //set audio columns for display of data.
         $mediaService = new Application_Service_MediaService();
-        $columns = json_encode($mediaService->makeDatatablesColumns('AudioFile'));
-        $script = "localStorage.setItem( 'datatables-audiofile-aoColumns', JSON.stringify($columns) ); ";
-        
-        //set webstream columns for display of data.
-        $columns = json_encode($mediaService->makeDatatablesColumns('Webstream'));
-        $script .= "localStorage.setItem( 'datatables-webstream-aoColumns', JSON.stringify($columns) ); ";
-        
-        //set playlist columns for display of data.
-        $columns = json_encode($mediaService->makeDatatablesColumns('Playlist'));
-        $script .= "localStorage.setItem( 'datatables-playlist-aoColumns', JSON.stringify($columns) ); ";
-        
-        $this->view->headScript()->appendScript($script);
+        $this->view->headScript()->appendScript($mediaService->createLibraryColumnsJavascript());
         
         $this->view->obj = $mediaService->getSessionMediaObject();
     }

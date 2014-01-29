@@ -7,11 +7,8 @@ var AIRTIME = (function(AIRTIME) {
     
     //stored in format chosenItems[tabname] = object of chosen ids for the tab.
     var chosenItems = {},
-    	LIB_SELECTED_CLASS = "lib-selected",
-    	//used for using dbclick vs click events on the library rows.
-    	alreadyclicked = false,
-    	alreadyclickedTimeout;
-    
+    	LIB_SELECTED_CLASS = "lib-selected";
+    	
     function createDatatable(config) {
     	
     	var table = $("#"+config.id).dataTable({
@@ -400,42 +397,31 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
     	
-    	// call the context menu so we can prevent the event from
-        // propagating.
-    	$library.on("click", 'td:not(.library_checkbox)', function(e) {
+    	$library.on("mousedown", 'td:not(.library_checkbox)', function(e) {
+    		//only trigger context menu on right click.
+    		if (e.which === 3) {
+    			var $el = $(this);
+    			
+    			$el.contextMenu({x: e.pageX, y: e.pageY});
+    		}
+    	});
+    	
+    	//perform the double click action on an item row.
+    	$library.on("dblclick", 'td:not(.library_checkbox)', function(e) {
+    		var $el = $(this),
+    			$tr,
+    			data;
     		
-            var $el = $(this);
-            
-            if (mod.alreadyclicked) {
-            	
-            	// reset
-            	mod.alreadyclicked = false;
-                // prevent this from happening
-                clearTimeout(mod.alreadyclickedTimeout); 
-    
-                // do what needs to happen on double click.
-                $tr = $el.parent();
-                data = $tr.data("aData");
-                mod.dblClickAdd(data);
-            }
-            else
-            {
-            	mod.alreadyclicked = true;
-            	mod.alreadyclickedTimeout = setTimeout(function() {
-            		// reset when it happens
-            		mod.alreadyclicked = false;
-                    // do what needs to happen on single click.
-                    $el.contextMenu({x: e.pageX, y: e.pageY});
-                }, 200); // <-- dblclick tolerance here
-            }
-            return false;
-        });
+    		$tr = $el.parent();
+            data = $tr.data("aData");
+            mod.dblClickAdd(data);
+    	});
     	
     	 // begin context menu initialization.
         $.contextMenu({
             selector: '#lib_tabs td',
             trigger: "none",
-            ignoreRightClick: true,
+            ignoreRightClick: false,
             
             build: function($el, e) {
                 var data, items, $tr;
