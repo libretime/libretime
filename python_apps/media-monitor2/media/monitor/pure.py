@@ -114,7 +114,13 @@ def clean_empty_dirs(path):
             full_paths = ( os.path.join(root, d) for d in dirs )
             for d in full_paths:
                 if os.path.exists(d):
-                    if not os.listdir(d): os.removedirs(d)
+                    #Try block avoids a race condition where a file is added AFTER listdir
+                    #is run but before removedirs. (Dir is not empty and removedirs throws
+                    #an exception in that case then.)
+                    try: 
+                        if not os.listdir(d): os.removedirs(d)
+                    except OSError:
+                        pass
 
 def extension(path):
     """
