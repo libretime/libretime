@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-01-29 17:31+0000\n"
+"PO-Revision-Date: 2014-01-30 18:16+0000\n"
 "Last-Translator: andrey.podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/airtime/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -1781,7 +1781,7 @@ msgstr "Редактировать метаданные"
 
 #: airtime_mvc/application/controllers/LibraryController.php:226
 msgid "Duplicate Playlist"
-msgstr ""
+msgstr "Дублировать плейлист"
 
 #: airtime_mvc/application/controllers/LibraryController.php:276
 msgid "Soundcloud"
@@ -1802,7 +1802,7 @@ msgstr "Не удается удалить некоторые запланиро
 #: airtime_mvc/application/controllers/LibraryController.php:404
 #, php-format
 msgid "Copy of %s"
-msgstr ""
+msgstr "Копия %s"
 
 #: airtime_mvc/application/controllers/LocaleController.php:32
 msgid "Recording:"
@@ -1908,7 +1908,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Playlist / Block"
-msgstr ""
+msgstr "Плейлист / Блок"
 
 #: airtime_mvc/application/controllers/LocaleController.php:69
 msgid "Bit Rate"
@@ -2693,15 +2693,15 @@ msgstr "Отправить отзыв о поддержке"
 
 #: airtime_mvc/application/controllers/LocaleController.php:333
 msgid "View system status"
-msgstr ""
+msgstr "Системный статус"
 
 #: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "Access playout history"
-msgstr ""
+msgstr "Доступ к истории плейлиста"
 
 #: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "View listener stats"
-msgstr ""
+msgstr "Статистика слушателей"
 
 #: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "Show / hide columns"
@@ -2769,7 +2769,7 @@ msgstr "Сделано"
 
 #: airtime_mvc/application/controllers/LocaleController.php:360
 msgid "Select files"
-msgstr ""
+msgstr "Выбрать файлы"
 
 #: airtime_mvc/application/controllers/LocaleController.php:361
 #: airtime_mvc/application/controllers/LocaleController.php:362
@@ -2778,32 +2778,32 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:365
 msgid "Add Files"
-msgstr ""
+msgstr "Добавить файлы"
 
 #: airtime_mvc/application/controllers/LocaleController.php:366
 msgid "Stop Upload"
-msgstr ""
+msgstr "Остановить загрузку"
 
 #: airtime_mvc/application/controllers/LocaleController.php:367
 msgid "Start upload"
-msgstr ""
+msgstr "Начать загрузку"
 
 #: airtime_mvc/application/controllers/LocaleController.php:368
 msgid "Add files"
-msgstr ""
+msgstr "Добавить файлы"
 
 #: airtime_mvc/application/controllers/LocaleController.php:369
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr ""
+msgstr "Загружено файлов: %d/%d "
 
 #: airtime_mvc/application/controllers/LocaleController.php:370
 msgid "N/A"
-msgstr ""
+msgstr "н/о"
 
 #: airtime_mvc/application/controllers/LocaleController.php:371
 msgid "Drag files here."
-msgstr ""
+msgstr "Перетащите сюда файлы."
 
 #: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "File extension error."
@@ -2835,7 +2835,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "IO error."
-msgstr ""
+msgstr "Ошибка записи/чтения."
 
 #: airtime_mvc/application/controllers/LocaleController.php:380
 #, php-format
