@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\MediaItem\AudioFileQuery;
+
 use Airtime\CcFilesPeer;
 use Airtime\CcShowQuery;
 use Airtime\CcWebstreamMetadata;
@@ -81,26 +83,28 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
-        $fileId = $this->_getParam("file");
+        $info = $this->_getParam("file");
+        list($id, $ext) = explode(".", $info);
 
-        $media = Application_Model_StoredFile::RecallById($fileId);
+        $media = AudioFileQuery::create()->findPK($id);
         if ($media != null) {
 
-            $filepath = $media->getFilePath();
+            $filepath = $media->getFilepath();
             // Make sure we don't have some wrong result beecause of caching
             clearstatcache();
+            
             if (is_file($filepath)) {
-                $full_path = $media->getPropelOrm()->getDbFilepath();
+                //$full_path = $media->getPropelOrm()->getDbFilepath();
 
-                $file_base_name = strrchr($full_path, '/');
+                //$file_base_name = strrchr($full_path, '/');
                 /* If $full_path does not contain a '/', strrchr will return false,
                  * in which case we can use $full_path as the base name.
                  */
-                if (!$file_base_name) {
-                    $file_base_name = $full_path;
-                } else {
-                    $file_base_name = substr($file_base_name, 1);
-                }
+                //if (!$file_base_name) {
+                //    $file_base_name = $full_path;
+                //} else {
+                //    $file_base_name = substr($file_base_name, 1);
+                //}
 
                 //Download user left clicks a track and selects Download.
                 if ("true" == $this->_getParam('download')) {
@@ -108,13 +112,13 @@ class ApiController extends Zend_Controller_Action
                     //We just want the basename which is the file name with the path
                     //information stripped away. We are using Content-Disposition to specify
                     //to the browser what name the file should be saved as.
-                    header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
+                    header('Content-Disposition: attachment; filename="'.$info.'"');
                 } else {
                     //user clicks play button for track and downloads it.
-                    header('Content-Disposition: inline; filename="'.$file_base_name.'"');
+                    header('Content-Disposition: inline; filename="'.$info.'"');
                 }
 
-                $this->smartReadFile($filepath, $media->getPropelOrm()->getDbMime());
+                $this->smartReadFile($filepath, $media->getMime());
                 exit;
             } else {
                 header ("HTTP/1.1 404 Not Found");
@@ -138,6 +142,13 @@ class ApiController extends Zend_Controller_Action
     */
     public function smartReadFile($location, $mimeType = 'audio/mp3')
     {
+    	Logging::info($location);
+    	
+    	//We can have multiple levels of output buffering. Need to
+    	//keep looping until all have been disabled!!!
+    	//http://www.php.net/manual/en/function.ob-end-flush.php
+    	while (@ob_end_flush());
+    	
         $size= filesize($location);
         $time= date('r', filemtime($location));
 
@@ -153,39 +164,58 @@ class ApiController extends Zend_Controller_Action
 
         if (isset($_SERVER['HTTP_RANGE'])) {
             if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
-                $begin = intval($matches[1]);
+            	Logging::info("byte range is matched");
+                $rangeBegin = intval($matches[1]);
+                Logging::info($rangeBegin);
                 if (!empty($matches[2])) {
-                    $end = intval($matches[2]);
+                    $rangeEnd = intval($matches[2]);
+                    Logging::info($rangeEnd);  
                 }
             }
         }
-
-        if (isset($_SERVER['HTTP_RANGE'])) {
-            header('HTTP/1.1 206 Partial Content');
-        } else {
-            header('HTTP/1.1 200 OK');
+        
+        //this check is performed to stop Chrome from hanging on a request
+        // with "Range:bytes=0-"
+        //http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer
+        $sendPartialContent = false;
+        if (isset($rangeBegin) && $rangeBegin > 0) {
+        	$sendPartialContent = true;
+        	$begin = $rangeBegin;
+        	$end = isset($rangeEnd) ? $rangeEnd : $end;
         }
+        
+        Logging::info("Range: {$begin} - {$end}");
+        
+        if ($sendPartialContent) {
+        	header('HTTP/1.1 206 Partial Content');
+        }
+        else {
+        	header('HTTP/1.1 200 OK');
+        }
+        
         header("Content-Type: $mimeType");
         header('Cache-Control: public, must-revalidate, max-age=0');
         header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
         header('Content-Length:' . (($end - $begin) + 1));
-        if (isset($_SERVER['HTTP_RANGE'])) {
-            header("Content-Range: bytes $begin-$end/$size");
+        
+        if ($sendPartialContent) {
+        	header("Content-Range: bytes $begin-$end/$size");
         }
+
         header("Content-Transfer-Encoding: binary");
         header("Last-Modified: $time");
 
         //We can have multiple levels of output buffering. Need to
         //keep looping until all have been disabled!!!
         //http://www.php.net/manual/en/function.ob-end-flush.php
-        while (@ob_end_flush());
+        //while (@ob_end_flush());
 
         $cur = $begin;
         fseek($fm, $begin, 0);
 
         while (!feof($fm) && $cur <= $end && (connection_status() == 0)) {
-            echo  fread($fm, min(1024 * 16, ($end - $cur) + 1));
+            echo fread($fm, min(1024 * 16, ($end - $cur) + 1));
             $cur += 1024 * 16;
         }
     }

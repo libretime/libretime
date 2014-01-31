@@ -490,7 +490,7 @@ SQL;
     	//at most 5 items will be returned, need to find the proper prev/curr/next.
     	$rows = Application_Common_Database::prepareAndExecute($sql);
     	
-    	Logging::info($rows);
+    	//Logging::info($rows);
     	
     	$prev = null;
     	$curr = null;

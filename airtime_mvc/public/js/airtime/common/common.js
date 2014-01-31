@@ -1,12 +1,5 @@
 $(document).ready(function() {
 
-    $("#Panel").stickyPanel({
-	    topPadding: 1,
-	    afterDetachCSSClass: "floated-panel",
-	    savePanelSpace: true
-    });
-
-
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
 });
@@ -161,3 +154,11 @@ function removeSuccessMsg() {
     
     $status.fadeOut("slow", function(){$status.empty()});
 }
+
+function openPreviewWindow() {
+	var url = baseUrl+'audiopreview';
+	
+	if (AIRTIME.previewWindow === undefined || AIRTIME.previewWindow.closed) {
+		previewWindow = window.open(url, $.i18n._('Audio Player'), 'width=450,height=100,scrollbars=yes');
+	}
+};

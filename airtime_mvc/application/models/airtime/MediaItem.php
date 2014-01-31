@@ -71,6 +71,11 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 		return $obj->getCreator();
 	}
 	
+	public function getURI() {
+		$obj = $this->getChildObject();
+		return $obj->getURI();
+	}
+	
 	/*
 	 * TODO if we change to not unwrapping playlists/blocks this method should be used to get the info
 	 * needed when scheduling shows. 

@@ -144,13 +144,30 @@ select {
 
 
 /* Master Panel */
-#sticky {
+
+#Panel {
 	position:fixed;
-	height:130px;
-	top:0;
-	left:0;
+    height:130px;
+    top:0;
+    left:0;
+    right:0;
 }
 
+#MainContent {
+    position:fixed;
+    top:130px;
+    left:0;
+    right:0;
+    bottom:100px;
+    overflow: hidden;
+}
+
+#BottomBar {
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+}
 
 #master-panel {
 	background:#3d3d3d url(images/masterpanel_bg.png) repeat-x 0 0;
@@ -168,9 +185,9 @@ select {
 }
 
 .source-info-block {
-        height:100px;
-        float:left;
-        min-width:170px;
+    height:100px;
+    float:left;
+    min-width:170px;
 }
 
 .personal-block  {
@@ -362,8 +379,14 @@ select {
 
 
 .wrapper {
-	margin: 0 5px 0 5px;
-	padding:10px 0 0 0;
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	overflow-y: scroll;
+	margin-top: 20px;
 }
 
 .alpha-block {

@@ -77,6 +77,7 @@ class LibraryController extends Zend_Controller_Action
     	
     	$menu = array();
     	
+    	/*
     	$menu["pl_add"] = array(
     		"name" => _("Add to Playlist"), 
     		"requestUrl" => $baseUrl."playlist/add-items",
@@ -84,7 +85,15 @@ class LibraryController extends Zend_Controller_Action
     		"requestData" => array("ids" => array($id)),
     		"callback" => "AIRTIME.playlist.redrawPlaylist"
     	);
+    	*/
     	
+    	$menu["preview"] = array(
+    		"name" => _("Preview"),
+    		"icon" => "play",
+    		"id" => $id,
+    		"callback" => "previewMedia"
+    	);
+    	    	
     	if (empty($menu)) {
     		$menu["noaction"] = array("name"=>_("No action available"));
     	}

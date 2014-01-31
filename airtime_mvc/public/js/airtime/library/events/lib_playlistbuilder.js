@@ -29,6 +29,11 @@ var AIRTIME = (function(AIRTIME) {
         mod.checkDeleteButton();
     };
     
+    mod.dblClickAdd = function(data) {
+    	
+    	
+    };
+    
     return AIRTIME;
 
 }(AIRTIME || {}));

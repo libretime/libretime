@@ -675,10 +675,6 @@ class Application_Service_MediaService
 		return self::createOutput($coll, $columns);
 	}
 	
-	public function getMediaViewScript() {
-		
-	}
-	
 	public function setSessionMediaObject($obj) {
 		
 		$obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
@@ -736,5 +732,18 @@ class Application_Service_MediaService
 		
 		$serviceClass = "Application_Service_{$type}Service";
 		return new $serviceClass();
+	}
+	
+	public function getJPlayerPreviewPlaylist($mediaId) {
+		
+		$mediaItem = MediaItemQuery::create()->findPK($mediaId);
+		
+		$type = $mediaItem->getType();
+		
+		$class = "Presentation_JPlayerItem{$type}";
+		
+		$jPlayerPlaylist = new $class($mediaItem);
+		
+		return $jPlayerPlaylist;
 	}
 }

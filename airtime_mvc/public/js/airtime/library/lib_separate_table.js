@@ -35,7 +35,18 @@ var AIRTIME = (function(AIRTIME) {
 			"sPaginationType": "full_numbers",
 			"bJQueryUI": true,
 			"bAutoWidth": true,
+			
 			"sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
+			
+			"oColVis": {
+                "aiExclude": [ 0 ],
+                "buttonText": $.i18n._("Show / hide columns"),
+            },
+            
+            "oColReorder": {
+                "iFixedColumns": 1
+            },
+            
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
 				$(nRow).data("aData", aData);
 	        }
@@ -44,8 +55,18 @@ var AIRTIME = (function(AIRTIME) {
     	table.fnSetFilteringDelay(350);
     }
     
+    mod.previewMedia = function(mediaId) {
+    	console.log("previewing media " + mediaId);
+    	
+    	AIRTIME.playerPreview.previewMedia(mediaId);
+    };
+    
     function sendContextMenuRequest(data) {
     	
+    	console.log(data);
+    	mod[data.callback](data.id);
+    	
+    	/*
     	var callback = data.callback;
     	
     	data.requestData["format"] = "json";
@@ -71,6 +92,7 @@ var AIRTIME = (function(AIRTIME) {
             	obj(json);
             }
         });
+        */
     }
     
     function getActiveTabId() {

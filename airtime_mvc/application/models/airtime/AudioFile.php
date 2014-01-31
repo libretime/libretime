@@ -97,6 +97,10 @@ class AudioFile extends BaseAudioFile
 		}
 	}
 	
+	public function getURI() {
+		return self::getFileUrl();
+	}
+	
 	/**
 	 * Get the URL to access this file
 	 */

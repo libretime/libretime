@@ -8,11 +8,20 @@ class AudiopreviewController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('show-preview', 'json')
-                    ->addActionContext('audio-preview', 'json')
-                    ->addActionContext('get-show', 'json')
-                    ->addActionContext('playlist-preview', 'json')
-                    ->addActionContext('get-playlist', 'json')
+                    ->addActionContext('media-preview', 'json')
                     ->initContext();
+    }
+    
+    public function mediaPreviewAction()
+    {
+    	$mediaId = $this->_getParam('id');
+    	
+    	$mediaService = new Application_Service_MediaService();
+    	$jPlayerMaker = $mediaService->getJPlayerPreviewPlaylist($mediaId);
+    	
+    	$this->view->playlist = $jPlayerMaker->getJPlayerPlaylist();
+    	$this->view->hasMultiple = $jPlayerMaker->hasMultiple();
+    	$this->view->hasDuration = $jPlayerMaker->hasDuration();
     }
 
     /**

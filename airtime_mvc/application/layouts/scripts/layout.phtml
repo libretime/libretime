@@ -19,8 +19,8 @@
     ?>
     <?php echo $this->partial('partialviews/header.phtml', array("live_dj_switch"=>$sss['live_dj'], "live_dj_connection"=>$scs['live_dj'], "master_dj_switch"=>$sss['master_dj'], "master_dj_connection"=>$scs['master_dj'],
                 "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
-<?php 	$partial = array('menu.phtml', 'default');
-    $this->navigation()->menu()->setPartial($partial); ?>
+                
+	<?php $this->navigation()->menu()->setPartial(array('menu.phtml', 'default')); ?>
     <div class="personal-block solo">
         <ul>
           <li>
@@ -32,7 +32,15 @@
 <?php echo $this->navigation()->menu() ?>
 </div>
 
-<div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>
+<div id="MainContent">
+	<div class="wrapper" id="content">
+		<?php echo $this->layout()->content ?>
+	</div>
+</div>
+
+<div id="BottomBar">
+	<?php echo $this->partial('partialviews/jplayer.phtml') ?>
+</div>
 
 <script id="tmpl-pl-cues" type="text/template">
 <div class="waveform-cues">
