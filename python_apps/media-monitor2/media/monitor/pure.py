@@ -118,7 +118,7 @@ def clean_empty_dirs(path):
                     #is run but before removedirs. (Dir is not empty and removedirs throws
                     #an exception in that case then.)
                     try: 
-                        if not os.listdir(d): os.removedirs(d)
+                        if not os.listdir(d): os.rmdir(d)
                     except OSError:
                         pass
 
