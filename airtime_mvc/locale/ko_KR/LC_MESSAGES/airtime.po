@@ -1,24 +1,28 @@
-# KOREAN (ko_KR) translation for Airtime.
+# LANGUAGE (xx_XX) translation for Airtime.
 # Copyright (C) 2012 Sourcefabric
 # This file is distributed under the same license as the Airtime package.
-# Sourcefabric <contact@sourcefabric.org>, 2012.
-#
+# 
+# Translators:
+# Sourcefabric <contact@sourcefabric.org>, 2012
 msgid ""
 msgstr ""
-"Project-Id-Version: Airtime 2.5\n"
+"Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2013-12-13 13:01-0500\n"
-"Last-Translator: Denise Rigato <denise.rigato@sourcefabric.org>\n"
-"Language-Team: Korean Localization <contact@sourcefabric.org>\n"
-"Language: ko_KR\n"
+"PO-Revision-Date: 2014-01-29 15:11+0000\n"
+"Last-Translator: andrey.podshivalov\n"
+"Language-Team: Korean (Korea) (http://www.transifex.com/projects/p/airtime/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ko_KR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: airtime_mvc/application/layouts/scripts/login.phtml:16
 #, php-format
-msgid "Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved.%sMaintained and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"
+msgid ""
+"Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved.%sMaintained"
+" and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"
 msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/bare.phtml:5
@@ -385,7 +389,9 @@ msgid "Add"
 msgstr "추가"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:43
-msgid "Rescan watched directory (This is useful if it is network mount and may be out of sync with Airtime)"
+msgid ""
+"Rescan watched directory (This is useful if it is network mount and may be "
+"out of sync with Airtime)"
 msgstr "모니터중인 폴더 다시 검색(네트워크 드라이브를 모니터중일떄, Airtime과  동기화 실패시 사용)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
@@ -402,12 +408,19 @@ msgstr "Airtime 등록"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:6
 #, php-format
-msgid "Help Airtime improve by letting us know how you are using it. This info will be collected regularly in order to enhance your user experience.%sClick 'Yes, help Airtime' and we'll make sure the features you use are constantly improving."
+msgid ""
+"Help Airtime improve by letting us know how you are using it. This info will"
+" be collected regularly in order to enhance your user experience.%sClick "
+"'Yes, help Airtime' and we'll make sure the features you use are constantly "
+"improving."
 msgstr "Airtime 사용자들 께서 피드백을 보내주시면, 그걸 기본으로 사용자들이 원하는 방향으로 나아가는Airtime이 되겠습니다.  %s'Airtime 도와주기' 클릭하여 피드백을 보내주세요"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:25
 #, php-format
-msgid "Click the box below to advertise your station on %sSourcefabric.org%s. In order to promote your station, 'Send support feedback' must be enabled. This data will be collected in addition to the support feedback."
+msgid ""
+"Click the box below to advertise your station on %sSourcefabric.org%s. In "
+"order to promote your station, 'Send support feedback' must be enabled. This"
+" data will be collected in addition to the support feedback."
 msgstr "%sSourcefabric.org%s에 방송국을 홍보 하시려면 체크 하세요. 체크 하기 위해선 '피드백 보내기'를 체크 하셔야 합니다"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:47
@@ -488,7 +501,11 @@ msgstr "접속 URL:"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
 #, php-format
-msgid "Help Airtime improve by letting Sourcefabric know how you are using it. This information will be collected regularly in order to enhance your user experience.%sClick the 'Send support feedback' box and we'll make sure the features you use are constantly improving."
+msgid ""
+"Help Airtime improve by letting Sourcefabric know how you are using it. This"
+" information will be collected regularly in order to enhance your user "
+"experience.%sClick the 'Send support feedback' box and we'll make sure the "
+"features you use are constantly improving."
 msgstr "Airtime 사용자들 께서 피드백을 보내주시면, 그걸 기본으로 사용자들이 원하는 방향으로 나아가는Airtime이 되겠습니다.  %s'Airtime 도와주기' 클릭하여 피드백을 보내주세요"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:23
@@ -497,7 +514,8 @@ msgid "Click the box below to promote your station on %sSourcefabric.org%s."
 msgstr "%sSourcefabric.org%s에 방송국을 홍보 하시려면 체크 하세요."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:41
-msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
+msgid ""
+"(In order to promote your station, 'Send support feedback' must be enabled)."
 msgstr "(체크 하기 위해선 '피드백 보내기'를 체크 하셔야 합니다)"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:186
@@ -580,7 +598,8 @@ msgid "Additional Options"
 msgstr "추가 설정"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:137
-msgid "The following info will be displayed to listeners in their media player:"
+msgid ""
+"The following info will be displayed to listeners in their media player:"
 msgstr "밑에 정보들은 청취자에 플래이어에 표시 됩니다:"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:170
@@ -600,23 +619,33 @@ msgid "Welcome to Airtime!"
 msgstr "Airtime에 오신걸 환영합니다"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:4
-msgid "Here's how you can get started using Airtime to automate your broadcasts: "
+msgid ""
+"Here's how you can get started using Airtime to automate your broadcasts: "
 msgstr "Airtime을 이용하여 방송을 자동화 할수 있는 기본 가이드 입니다:"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
-msgid "Begin by adding your files to the library using the 'Add Media' menu button. You can drag and drop your files to this window too."
+msgid ""
+"Begin by adding your files to the library using the 'Add Media' menu button."
+" You can drag and drop your files to this window too."
 msgstr "미디어 추가 페이지로 가셔서 원하는 파일을 드래그 앤 드랍 하십시오. 라이브러리 페이지를 가시면 업로드된 파일을 확인 할수 있습니다."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:8
-msgid "Create a show by going to 'Calendar' in the menu bar, and then clicking the '+ Show' icon. This can be either a one-time or repeating show. Only admins and program managers can add shows."
+msgid ""
+"Create a show by going to 'Calendar' in the menu bar, and then clicking the "
+"'+ Show' icon. This can be either a one-time or repeating show. Only admins "
+"and program managers can add shows."
 msgstr "스케쥴 페이지에 가셔서 원하는 날짜에 더블클릭 하셔서 쇼를 생성 하십시오. 관지자와 프로그램 매니저만  쇼를 생성할수 있는 권한이 있습니다"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:9
-msgid "Add media to the show by going to your show in the Schedule calendar, left-clicking on it and selecting 'Add / Remove Content'"
+msgid ""
+"Add media to the show by going to your show in the Schedule calendar, left-"
+"clicking on it and selecting 'Add / Remove Content'"
 msgstr "만드신 쇼에 클릭을 하신다음 '내용 추가/제거' 를 클릭하십시오."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:10
-msgid "Select your media from the left pane and drag them to your show in the right pane."
+msgid ""
+"Select your media from the left pane and drag them to your show in the right"
+" pane."
 msgstr "왼쪽 라이브러리 스크린에서 오른쪽 쇼 내용 패널로 드래그 앤 드랍 하며 미디어를 추가 합니다"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:12
@@ -635,12 +664,15 @@ msgstr "정보"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:5
 #, php-format
-msgid "%sAirtime%s %s, the open radio software for scheduling and remote station management. %s"
+msgid ""
+"%sAirtime%s %s, the open radio software for scheduling and remote station "
+"management. %s"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:13
 #, php-format
-msgid "%sSourcefabric%s o.p.s. Airtime is distributed under the %sGNU GPL v.3%s"
+msgid ""
+"%sSourcefabric%s o.p.s. Airtime is distributed under the %sGNU GPL v.3%s"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
@@ -667,11 +699,15 @@ msgid "Login"
 msgstr "로그인"
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:7
-msgid "Welcome to the online Airtime demo! You can log in using the username 'admin' and the password 'admin'."
+msgid ""
+"Welcome to the online Airtime demo! You can log in using the username "
+"'admin' and the password 'admin'."
 msgstr "Airtime 데모에 오신건 환영합니다! admin/admin으로 로그인 하십시오."
 
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:7
-msgid "Please enter your account e-mail address. You will receive a link to create a new password via e-mail."
+msgid ""
+"Please enter your account e-mail address. You will receive a link to create "
+"a new password via e-mail."
 msgstr "사용자 계정의 이메일을 입력해 주세요. 새로 암호를 설정할수 있는 링크가 포함된 이메일이 전송 됩니다"
 
 #: airtime_mvc/application/views/scripts/login/password-restore-after.phtml:3
@@ -1030,7 +1066,9 @@ msgstr "업데이트가 필요함"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:80
 #, php-format
-msgid "To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."
+msgid ""
+"To play the media you will need to either update your browser to a recent "
+"version or update your %sFlash plugin%s."
 msgstr "미디어를 재생하기 위해선, 브라우저를 최신 버젼으로 업데이트 하시고, %sFlash plugin%s도 업데이트 해주세요"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:2
@@ -1291,9 +1329,7 @@ msgstr "종료 날짜/시간을 과거로 설정할수 없습니다"
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
-msgstr ""
-"쇼를 중복되게 스케줄 할수 없습니다.\n"
-"주의: 반복 쇼의 크기를 조정하면, 모든 반복 쇼의 크기가 바뀝니다."
+msgstr "쇼를 중복되게 스케줄 할수 없습니다.\n주의: 반복 쇼의 크기를 조정하면, 모든 반복 쇼의 크기가 바뀝니다."
 
 #: airtime_mvc/application/models/ShowInstance.php:257
 msgid "can't resize a past show"
@@ -1330,12 +1366,14 @@ msgstr "%s는 옳은 경로가 아닙니다."
 
 #: airtime_mvc/application/models/MusicDir.php:232
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list"
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list"
 msgstr "%s는 이미 현재 저장 폴더로 지정이 되었거나 모니터중인 폴더 입니다."
 
 #: airtime_mvc/application/models/MusicDir.php:386
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list."
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list."
 msgstr "%s는 이미 현재 저장 폴더로 지정이 되었거나 모니터중인 폴더 입니다."
 
 #: airtime_mvc/application/models/MusicDir.php:429
@@ -1566,9 +1604,7 @@ msgid ""
 "Hi %s, \n"
 "\n"
 "Click this link to reset your password: "
-msgstr ""
-"안녕하세요 %s님, \n"
-"암호 재설정을 하시려면 링크를 클릭하세요: "
+msgstr "안녕하세요 %s님, \n암호 재설정을 하시려면 링크를 클릭하세요: "
 
 #: airtime_mvc/application/models/Auth.php:36
 msgid "Airtime Password Reset"
@@ -1617,7 +1653,9 @@ msgid "The show %s has been previously updated!"
 msgstr "쇼 %s 업데이트 되었습니다!"
 
 #: airtime_mvc/application/models/Scheduler.php:178
-msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
+msgid ""
+"Content in linked shows must be scheduled before or after any one is "
+"broadcasted"
 msgstr "링크 쇼의 내용은 이미 방송된 쇼의 전후에만 스케쥴 할수 있습니다"
 
 #: airtime_mvc/application/models/Scheduler.php:200
@@ -1631,15 +1669,21 @@ msgstr "스마트 블록"
 
 #: airtime_mvc/application/models/StoredFile.php:1017
 #, php-format
-msgid "The file was not uploaded, there is %s MB of disk space left and the file you are uploading has a size of %s MB."
+msgid ""
+"The file was not uploaded, there is %s MB of disk space left and the file "
+"you are uploading has a size of %s MB."
 msgstr "파일 업로드를 실패 하였습니다. 남은 disk공간이 %s MB 이고, 파일 크기가 %s MB 입니다."
 
 #: airtime_mvc/application/models/StoredFile.php:1026
-msgid "This file appears to be corrupted and will not be added to media library."
+msgid ""
+"This file appears to be corrupted and will not be added to media library."
 msgstr "파일이 손상되었으므로, 라이브러리에 추가 되지 않습니다."
 
 #: airtime_mvc/application/models/StoredFile.php:1065
-msgid "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space or the stor directory does not have correct write permissions."
+msgid ""
+"The file was not uploaded, this error can occur if the computer hard drive "
+"does not have enough disk space or the stor directory does not have correct "
+"write permissions."
 msgstr "파일이 업로드 되지 않았습니다. 이 에러는 하드 디스크에 공간이 충분치 않거나, 권한이 부족하여 생길수 있습니다."
 
 #: airtime_mvc/application/controllers/DashboardController.php:36
@@ -1667,7 +1711,8 @@ msgid "Download"
 msgstr "다운로드"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
-msgid "Please make sure admin user/password is correct on System->Streams page."
+msgid ""
+"Please make sure admin user/password is correct on System->Streams page."
 msgstr "시스템->스트림 에서 관리자 아이디/암호를 다시 확인하세요."
 
 #: airtime_mvc/application/controllers/ApiController.php:60
@@ -1945,7 +1990,9 @@ msgstr "hh:mm:ss.t의 형태로 입력해주세요"
 
 #: airtime_mvc/application/controllers/LocaleController.php:111
 #, php-format
-msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+msgid ""
+"You are currently uploading files. %sGoing to another screen will cancel the"
+" upload process. %sAre you sure you want to leave the page?"
 msgstr "현재 파일이 업로드 중입니다. %s다른 화면으로 이동하면 현재까지 업로드한 프로세스가 취소됩니다. %s이동하겠습니까?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
@@ -1981,7 +2028,10 @@ msgid "Playlist shuffled"
 msgstr "플레이 리스트가 셔플 되었습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:122
-msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+msgid ""
+"Airtime is unsure about the status of this file. This can happen when the "
+"file is on a remote drive that is unaccessible or the file is in a directory"
+" that isn't 'watched' anymore."
 msgstr "Airtime이 파일에 대해 정확히 알수 없습니다. 이 경우는 파일이 접근할수 없는 리모트 드라이브에 있거나, 파일이 있는 폴더가 더이상 모니터 되지 않을때 일어날수 있습니다."
 
 #: airtime_mvc/application/controllers/LocaleController.php:124
@@ -2007,15 +2057,24 @@ msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr "허용된 이미지 파일 타입은 jpg, jpeg, png 또는 gif 입니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:132
-msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+msgid ""
+"A static smart block will save the criteria and generate the block content "
+"immediately. This allows you to edit and view it in the Library before "
+"adding it to a show."
 msgstr "정적 스마트 블록은 크라이테리아를 저장하고 내용을 생성 합니다. 그러므로 쇼에 추가 하기전에 내용을 수정하실수 있습니다 "
 
 #: airtime_mvc/application/controllers/LocaleController.php:134
-msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+msgid ""
+"A dynamic smart block will only save the criteria. The block content will "
+"get generated upon adding it to a show. You will not be able to view and "
+"edit the content in the Library."
 msgstr "동적 스마트 블록은 크라이테리아만 저장하고 내용은 쇼에 추가 할때까지 생성하지 않습니다. 이는 동적 스마트 블록을 쇼에 추가 할때마다 다른 내용을 추가하게 됩니다."
 
 #: airtime_mvc/application/controllers/LocaleController.php:136
-msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+msgid ""
+"The desired block length will not be reached if Airtime cannot find enough "
+"unique tracks to match your criteria. Enable this option if you wish to "
+"allow tracks to be added multiple times to the smart block."
 msgstr "블록 생성시 충분한 파일을 찾지 못하면, 블록 길이가 원하는 길이보다 짧아 질수 있습니다. 이 옵션을 선택하시면,Airtime이 트랙을 반복적으로 사용하여 길이를 채웁니다."
 
 #: airtime_mvc/application/controllers/LocaleController.php:137
@@ -2058,7 +2117,9 @@ msgstr "경로에 접근할수 없습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:160
 #, php-format
-msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid ""
+"Some stream types require extra configuration. Details about enabling %sAAC+"
+" Support%s or %sOpus Support%s are provided."
 msgstr "어떤 스트림은 추가 설정이 필요합니다. %sAAC+ 지원%s 또는 %sOpus 지원%s 설명"
 
 #: airtime_mvc/application/controllers/LocaleController.php:161
@@ -2079,7 +2140,12 @@ msgid "Can not connect to the streaming server"
 msgstr "스트리밍 서버에 접속 할수 없음"
 
 #: airtime_mvc/application/controllers/LocaleController.php:166
-msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+msgid ""
+"If Airtime is behind a router or firewall, you may need to configure port "
+"forwarding and this field information will be incorrect. In this case you "
+"will need to manually update this field so it shows the correct "
+"host/port/mount that your DJ's need to connect to. The allowed range is "
+"between 1024 and 49151."
 msgstr "Airtime이 방화벽 뒤에 설치 되었다면, 포트 포워딩을 설정해야 할수도 있습니다. 이 경우엔  자동으로 생성된 이 정보가 틀릴수 있습니다. 수동적으로 이 필드를 수정하여 DJ들이 접속해야 하는서버/마운트/포트 등을 공지 하십시오. 포트 범위는 1024~49151 입니다."
 
 #: airtime_mvc/application/controllers/LocaleController.php:167
@@ -2088,36 +2154,61 @@ msgid "For more details, please read the %sAirtime Manual%s"
 msgstr "더 자세한 정보는 %sAirtime Manual%s에서 찾으실수 있습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:169
-msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+msgid ""
+"Check this option to enable metadata for OGG streams (stream metadata is the"
+" track title, artist, and show name that is displayed in an audio player). "
+"VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that "
+"has metadata information enabled: they will disconnect from the stream after"
+" every song. If you are using an OGG stream and your listeners do not "
+"require support for these audio players, then feel free to enable this "
+"option."
 msgstr "OGG 스트림의 메타데이타를 사용하고 싶으시면, 이 옵션을 체크 해주세요. VLC나 mplayer 같은 플래이어들에서 버그가 발견되어 OGG 스트림을 메타데이타와 함꼐 사용시, 각 파일 종료시 스트림을 끊어버립니다."
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
-msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
+msgid ""
+"Check this box to automatically switch off Master/Show source upon source "
+"disconnection."
 msgstr "마스터/쇼 소스가 끊어졌을때 자동으로 스위치를 끔."
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
-msgid "Check this box to automatically switch on Master/Show source upon source connection."
+msgid ""
+"Check this box to automatically switch on Master/Show source upon source "
+"connection."
 msgstr "마스터/쇼 소스가 접속 되었을때 자동으로 스위를 켬."
 
 #: airtime_mvc/application/controllers/LocaleController.php:172
-msgid "If your Icecast server expects a username of 'source', this field can be left blank."
+msgid ""
+"If your Icecast server expects a username of 'source', this field can be "
+"left blank."
 msgstr "Icecast 서버 인증 아이디가 source로 설정이 되어있다면, 이 필드는 입렵 하실필요 없습니다."
 
 #: airtime_mvc/application/controllers/LocaleController.php:173
 #: airtime_mvc/application/controllers/LocaleController.php:184
-msgid "If your live streaming client does not ask for a username, this field should be 'source'."
+msgid ""
+"If your live streaming client does not ask for a username, this field should"
+" be 'source'."
 msgstr "현재 사용중이신 라이브 스트리밍 클라이언트에 사용자 필드가 없다면, 이 필드에 'source'라고 입력 해주세요."
 
 #: airtime_mvc/application/controllers/LocaleController.php:175
-msgid "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."
+msgid ""
+"If you change the username or password values for an enabled stream the "
+"playout engine will be rebooted and your listeners will hear silence for "
+"5-10 seconds. Changing the following fields will NOT cause a reboot: Stream "
+"Label (Global Settings), and Switch Transition Fade(s), Master Username, and"
+" Master Password (Input Stream Settings). If Airtime is recording, and if "
+"the change causes a playout engine restart, the recording will be "
+"interrupted."
 msgstr "스트림 되고 있는 스트림에 아이디나 암호를 수정한다면, 플레이 아웃 엔진이 다시 시작되며, 청취자들이 5~10초 정도 정적이 들릴것입니다. 다음 필드들을 수정하는것은 엔진을 다시 시작 하지 않습니다:  (스트림 레이블, 스위치 페이딩, 마스터 마이디, 마스터 암호). Airtime이 현재 녹음 중이고 엔진이 재시작 되면 녹음이 중단 됩니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:176
-msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgid ""
+"This is the admin username and password for Icecast/SHOUTcast to get "
+"listener statistics."
 msgstr "관리자 아이디/암호는 Icecast와 SHOUTcast에서 청취자 통계를 얻기 위해 필요합니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:180
-msgid "Warning: You cannot change this field while the show is currently playing"
+msgid ""
+"Warning: You cannot change this field while the show is currently playing"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
@@ -2125,7 +2216,9 @@ msgid "No result found"
 msgstr "결과 없음"
 
 #: airtime_mvc/application/controllers/LocaleController.php:182
-msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
+msgid ""
+"This follows the same security pattern for the shows: only users assigned to"
+" the show can connect."
 msgstr "쇼에 지정된 사람들만 접속 할수 있습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:183
@@ -2141,11 +2234,16 @@ msgid "Warning: Shows cannot be re-linked"
 msgstr "주의: 쇼는 다시 링크 될수 없습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:187
-msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgid ""
+"By linking your repeating shows any media items scheduled in any repeat show"
+" will also get scheduled in the other repeat shows"
 msgstr "반복 되는 쇼를 링크하면, 반복 쇼에 스케쥴된 아이템들이 다른 반복 쇼에도 스케쥴이 됩니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:188
-msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
+msgid ""
+"Timezone is set to the station timezone by default. Shows in the calendar "
+"will be displayed in your local time defined by the Interface Timezone in "
+"your user settings."
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:192
@@ -2372,7 +2470,8 @@ msgid "Sat"
 msgstr "토"
 
 #: airtime_mvc/application/controllers/LocaleController.php:254
-msgid "Shows longer than their scheduled time will be cut off by a following show."
+msgid ""
+"Shows longer than their scheduled time will be cut off by a following show."
 msgstr "쇼가 자신의 길이보다 더 길게 스케쥴 되었다면, 쇼 길이에 맞게 짤라지며, 다음 쇼가 시작 됩니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:255
@@ -2450,7 +2549,8 @@ msgid "Cue Editor"
 msgstr "큐 에디터"
 
 #: airtime_mvc/application/controllers/LocaleController.php:289
-msgid "Waveform features are available in a browser supporting the Web Audio API"
+msgid ""
+"Waveform features are available in a browser supporting the Web Audio API"
 msgstr "웨이브 폼 기능은 Web Audio API를 지원하면 브라우저에서만 사용 가능합니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:292
@@ -2774,7 +2874,9 @@ msgstr "%s row %s를 클립보드로 복사 하였습니다"
 
 #: airtime_mvc/application/controllers/LocaleController.php:394
 #, php-format
-msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
+msgid ""
+"%sPrint view%sPlease use your browser's print function to print this table. "
+"Press escape when finished."
 msgstr "%sPrint view%s프린트를 하려면 브라우저의 프린트 기능을 사용하여주세요. 종료를 원하시면 ESC키를 누르세요"
 
 #: airtime_mvc/application/controllers/LoginController.php:34
@@ -2786,7 +2888,9 @@ msgid "Wrong username or password provided. Please try again."
 msgstr "아이디와 암호가 맞지 않습니다. 다시 시도해주세요"
 
 #: airtime_mvc/application/controllers/LoginController.php:142
-msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
+msgid ""
+"Email could not be sent. Check your mail server settings and ensure it has "
+"been configured properly."
 msgstr "이메일을 전송 할수 없습니다. 메일 서버 세팅을 다시 확인 하여 주세요"
 
 #: airtime_mvc/application/controllers/LoginController.php:145
@@ -3246,7 +3350,8 @@ msgid "You have to agree to privacy policy."
 msgstr "사용자 약관에 동의 하십시오"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:19
-msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgid ""
+"'%value%' is no valid email address in the basic format local-part@hostname"
 msgstr "'%value%'은 맞지 않는 이메일 형식 입니다."
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:33
@@ -3478,7 +3583,9 @@ msgstr "기본 페이드 아웃(s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
-msgid "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make front-end widgets work.)"
+msgid ""
+"Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make "
+"front-end widgets work.)"
 msgstr "리모트 웹사이트에서 스케쥴 정보에 접근을 허용? %s (위젯을 사용하려면 체크 하세요)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:90
@@ -3580,7 +3687,9 @@ msgstr "길이는 00:00:00 형태로 입력하세요"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:541
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:554
-msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgid ""
+"The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 "
+"00:00:00)"
 msgstr "이 값은 timestamp 형태 (e.g. 0000-00-00 or 0000-00-00 00:00:00) 로 입력해주세요"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:568
@@ -3803,51 +3912,3 @@ msgstr "옵션을 선택 해주세요"
 #: airtime_mvc/library/propel/contrib/pear/HTML_QuickForm_Propel/Propel.php:531
 msgid "No Records"
 msgstr "레코드 없음"
-
-#~ msgid "bi-weekly"
-#~ msgstr "2주간"
-
-#~ msgid "Default Interface Timezone"
-#~ msgstr "기본 인터페이스 시간대"
-
-#~ msgid "Default Fade (s):"
-#~ msgstr "기본 페이드 (s):"
-
-#~ msgid "Playlist preview"
-#~ msgstr "재생목록 프리뷰"
-
-#~ msgid "Webstream preview"
-#~ msgstr "웹스트림 프리"
-
-#~ msgid "Smart Block"
-#~ msgstr "스마트 블록"
-
-#~ msgid "Specific action is not allowed in demo version!"
-#~ msgstr "데모 버젼에선 허용되지 않습니다!"
-
-#~ msgid "Time format should be HH:mm"
-#~ msgstr "시간은 HH:mm 형태 이어야 합니다"
-
-#~ msgid "Timezone"
-#~ msgstr "시간대"
-
-#~ msgid " Add to current playlist"
-#~ msgstr " 현재 재생목록에 추가"
-
-#~ msgid " Add to current smart block"
-#~ msgstr " 현재 스마트 블록에 추가"
-
-#~ msgid " Add to selected show"
-#~ msgstr " 선택된 쇼에 추가"
-
-#~ msgid " Find Shows"
-#~ msgstr " 쇼 찾기"
-
-#~ msgid " files meet the criteria"
-#~ msgstr " 개의 파일들"
-
-#~ msgid "File"
-#~ msgstr "파일"
-
-#~ msgid "Path:"
-#~ msgstr "경로:"
