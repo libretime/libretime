@@ -1,4 +1,5 @@
 #!/bin/bash
+rabbitmqctl start_app
 
 RABBITMQ_VHOST="/airtime"
 RABBITMQ_USER="airtime_tests"
