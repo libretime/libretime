@@ -155,9 +155,9 @@ class Application_Service_ShowService
     private function storeOrigLocalShowInfo()
     {
         if ($this->ccShow->isRepeating()) {
-            $this->origCcShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+            $this->origCcShowDay = clone $this->ccShow->getFirstRepeatingCcShowDay();
         } else {
-            $this->origCcShowDay = $this->ccShow->getFirstCcShowDay();
+            $this->origCcShowDay = clone $this->ccShow->getFirstCcShowDay();
         }
 
         $this->oldShowTimezone = $this->origCcShowDay->getDbTimezone();
