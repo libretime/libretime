@@ -1,4 +1,5 @@
 #!/bin/bash
+
 rabbitmqctl start_app
 
 RABBITMQ_VHOST="/airtime"
@@ -23,5 +24,5 @@ export RABBITMQ_PASSWORD
 export RABBITMQ_VHOST
 
 export AIRTIME_UNIT_TEST="1"
-phpunit
+phpunit --log-junit test_results.xml
 
