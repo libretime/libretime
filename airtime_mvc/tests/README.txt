@@ -34,4 +34,3 @@ with a version that's incompatible and gives an error for us.
 
     IMPORTANT: Make sure you use "sudo" with the "-E" flag so it preserves the environment variable we set before that.
 
-#testing for commit triggers on bamboo server
