@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #Create a RabbitMQ airtime_tests user
+#This is necessary for tests to run
 
 rabbitmqctl start_app
 
