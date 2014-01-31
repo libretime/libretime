@@ -1,2 +1,0 @@
-TODO:
-- Set up a RabbitMQ airtime_test user that is hardcoded

@@ -34,9 +34,3 @@ with a version that's incompatible and gives an error for us.
 
     IMPORTANT: Make sure you use "sudo" with the "-E" flag so it preserves the environment variable we set before that.
 
-
-
-FAQ
-====
-- If you get errors about an AMPQ fwrite failing, it means your RabbitMQ credentials are wrong in airtime.conf.
-  (That's the airtime.conf in this directory.)

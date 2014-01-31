@@ -1,8 +1,10 @@
 #!/bin/bash
 
+#Create a RabbitMQ airtime_tests user
+
 rabbitmqctl start_app
 
-RABBITMQ_VHOST="/airtime"
+RABBITMQ_VHOST="/airtime_tests"
 RABBITMQ_USER="airtime_tests"
 RABBITMQ_PASSWORD="airtime_tests"
 EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
