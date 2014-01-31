@@ -18,8 +18,13 @@ class Config {
                 "rootDir" => __DIR__."/../.."
         );
         
-        $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
-
+        //In the unit testing environment, we always want to use our local airtime.conf in airtime_mvc/application/test:
+        if (getenv('AIRTIME_UNIT_TEST') == '1') {
+            $filename = "airtime.conf";
+        } else {
+            $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+        }
+        
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user

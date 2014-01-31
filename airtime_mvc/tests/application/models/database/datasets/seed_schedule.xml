@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="cc_pref">
+        <column>id</column>
+        <column>subjid</column>
+        <column>keystr</column>
+        <column>valstr</column>
+        <row>
+            <value>1</value>
+            <null />
+            <value>shows_populated_until</value>
+            <value>2014-02-01 00:00:00</value>
+        </row>
+        <row>
+            <value>2</value>
+            <null />
+            <value>timezone</value>
+            <value>UTC</value>
+        </row>
+    </table>
+</dataset>

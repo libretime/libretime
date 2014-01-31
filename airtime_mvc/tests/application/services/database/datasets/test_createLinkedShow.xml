@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="cc_show">
+        <column>id</column>
+        <column>name</column>
+        <column>url</column>
+        <column>genre</column>
+        <column>description</column>
+        <column>color</column>
+        <column>background_color</column>
+        <column>live_stream_using_airtime_auth</column>
+        <column>live_stream_using_custom_auth</column>
+        <column>live_stream_user</column>
+        <column>live_stream_pass</column>
+        <column>linked</column>
+        <column>is_linkable</column>
+        <row>
+            <value>1</value>
+            <value>test show</value>
+            <null />
+            <null />
+            <null />
+            <value>ffffff</value>
+            <value>364492</value>
+            <value></value>
+            <value></value>
+            <null />
+            <null />
+            <value>1</value>
+            <value>1</value>
+        </row>
+    </table>
+
+    <table name="cc_show_days">
+        <column>id</column>
+        <column>first_show</column>
+        <column>last_show</column>
+        <column>start_time</column>
+        <column>timezone</column>
+        <column>duration</column>
+        <column>day</column>
+        <column>repeat_type</column>
+        <column>next_pop_date</column>
+        <column>show_id</column>
+        <column>record</column>
+        <row>
+            <value>1</value>
+            <value>2016-01-01</value>
+            <null />
+            <value>00:00:00</value>
+            <value>UTC</value>
+            <value>01:00</value>
+            <value>5</value>
+            <value>0</value>
+            <value>2016-02-12</value>
+            <value>1</value>
+            <value>0</value>
+        </row>
+    </table>
+
+    <table name="cc_show_instances">
+        <column>id</column>
+        <column>starts</column>
+        <column>ends</column>
+        <column>show_id</column>
+        <column>record</column>
+        <column>rebroadcast</column>
+        <column>instance_id</column>
+        <column>modified_instance</column>
+        <row>
+            <value>1</value>
+            <value>2016-01-01 00:00:00</value>
+            <value>2016-01-01 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>2016-01-08 00:00:00</value>
+            <value>2016-01-08 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>2016-01-15 00:00:00</value>
+            <value>2016-01-15 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>2016-01-22 00:00:00</value>
+            <value>2016-01-22 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
+            <value>5</value>
+            <value>2016-01-29 00:00:00</value>
+            <value>2016-01-29 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+        <row>
+            <value>6</value>
+            <value>2016-02-05 00:00:00</value>
+            <value>2016-02-05 01:00:00</value>
+            <value>1</value>
+            <value>0</value>
+            <value>0</value>
+            <null />
+            <value></value>
+        </row>
+    </table>
+
+    <table name="cc_show_rebroadcast">
+    </table>
+
+    <table name="cc_show_hosts">
+    </table>
+</dataset>
