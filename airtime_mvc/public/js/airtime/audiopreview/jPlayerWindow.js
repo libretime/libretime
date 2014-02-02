@@ -50,7 +50,10 @@ var AIRTIME = (function(AIRTIME) {
         [], //array of songs will be filled with json call
         {
             swfPath: baseUrl+"js/jplayer",
-            supplied:"oga, mp3, m4v, m4a, wav, flac",
+            supplied: "oga, mp3, m4a, wav, flac",
+            //solution: "flash, html",
+            preload: "none",
+            wmode: "window",
             size: {
                 width: "0px",
                 height: "0px",
@@ -66,8 +69,13 @@ var AIRTIME = (function(AIRTIME) {
                 removeTime: 0,
                 shuffleTime: 0
             },
-            ready: function() {
-              
+            ready: function(e) {
+            	console.log("ready");
+            	console.log(e);
+            },
+            error: function(e) {
+            	console.log("error");
+            	console.error(e);
             }
         });
 

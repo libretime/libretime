@@ -92,7 +92,7 @@ class ApiController extends Zend_Controller_Action
             $filepath = $media->getFilepath();
             // Make sure we don't have some wrong result beecause of caching
             clearstatcache();
-            
+
             if (is_file($filepath)) {
                 //$full_path = $media->getPropelOrm()->getDbFilepath();
 
@@ -143,12 +143,12 @@ class ApiController extends Zend_Controller_Action
     public function smartReadFile($location, $mimeType = 'audio/mp3')
     {
     	Logging::info($location);
-    	
+
     	//We can have multiple levels of output buffering. Need to
     	//keep looping until all have been disabled!!!
     	//http://www.php.net/manual/en/function.ob-end-flush.php
     	while (@ob_end_flush());
-    	
+
         $size= filesize($location);
         $time= date('r', filemtime($location));
 
@@ -169,36 +169,37 @@ class ApiController extends Zend_Controller_Action
                 Logging::info($rangeBegin);
                 if (!empty($matches[2])) {
                     $rangeEnd = intval($matches[2]);
-                    Logging::info($rangeEnd);  
+                    Logging::info($rangeEnd);
                 }
             }
         }
-        
+
         //this check is performed to stop Chrome from hanging on a request
         // with "Range:bytes=0-"
         //http://stackoverflow.com/questions/12801192/client-closes-connection-when-streaming-m4v-from-apache-to-chrome-with-jplayer
         $sendPartialContent = false;
-        if (isset($rangeBegin) && $rangeBegin > 0) {
+        if (isset($rangeBegin)) {
+        //if (isset($rangeBegin) && $rangeBegin > 0) {
         	$sendPartialContent = true;
         	$begin = $rangeBegin;
         	$end = isset($rangeEnd) ? $rangeEnd : $end;
         }
-        
+
         Logging::info("Range: {$begin} - {$end}");
-        
+
         if ($sendPartialContent) {
         	header('HTTP/1.1 206 Partial Content');
         }
         else {
         	header('HTTP/1.1 200 OK');
         }
-        
+
         header("Content-Type: $mimeType");
         header('Cache-Control: public, must-revalidate, max-age=0');
         header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
         header('Content-Length:' . (($end - $begin) + 1));
-        
+
         if ($sendPartialContent) {
         	header("Content-Range: bytes $begin-$end/$size");
         }
@@ -279,7 +280,7 @@ class ApiController extends Zend_Controller_Action
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
-            
+
             $utcTimeNow = gmdate("Y-m-d H:i:s");
             $utcTimeEnd = "";   // if empty, getNextShows will use interval instead of end of day
 
@@ -311,9 +312,9 @@ class ApiController extends Zend_Controller_Action
                 // XSS exploit prevention
                 $result["previous"]["name"] = htmlspecialchars($result["previous"]["name"]);
                 $result["current"]["name"] = htmlspecialchars($result["current"]["name"]);
-                $result["next"]["name"] = htmlspecialchars($result["next"]["name"]);        
+                $result["next"]["name"] = htmlspecialchars($result["next"]["name"]);
             }
-            
+
             // XSS exploit prevention
             foreach ($result["currentShow"] as &$current) {
             	$current["name"] = htmlspecialchars($current["name"]);
@@ -321,15 +322,15 @@ class ApiController extends Zend_Controller_Action
             foreach ($result["nextShow"] as &$next) {
             	$next["name"] = htmlspecialchars($next["name"]);
             }
-            
+
             //For consistency, all times here are being sent in the station timezone, which
             //seems to be what we've normalized everything to.
-            
+
             //Convert the UTC scheduler time ("now") to the station timezone.
             $result["schedulerTime"] = Application_Common_DateHelper::UTCStringToStationTimezoneString($result["schedulerTime"]);
             $result["timezone"] = Application_Common_DateHelper::getStationTimezoneAbbreviation();
             $result["timezoneOffset"] = Application_Common_DateHelper::getStationTimezoneOffset();
-            
+
             //Convert from UTC to station time for Web Browser.
             Application_Common_DateHelper::convertTimestamps($result["currentShow"],
             		array("starts", "ends", "start_timestamp", "end_timestamp"),
@@ -360,7 +361,7 @@ class ApiController extends Zend_Controller_Action
 
             //weekStart is in station time.
             $weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
-            
+
             $dow = array("monday", "tuesday", "wednesday", "thursday", "friday",
 						"saturday", "sunday", "nextmonday", "nexttuesday", "nextwednesday",
 						"nextthursday", "nextfriday", "nextsaturday", "nextsunday");
@@ -372,18 +373,18 @@ class ApiController extends Zend_Controller_Action
             $weekStartDateTime->setTimezone($utcTimezone);
             $utcDayStart = $weekStartDateTime->format("Y-m-d H:i:s");
             for ($i = 0; $i < 14; $i++) {
-            	
+
             	//have to be in station timezone when adding 1 day for daylight savings.
             	$weekStartDateTime->setTimezone($stationTimezone);
             	$weekStartDateTime->add(new DateInterval('P1D'));
-            	
+
             	//convert back to UTC to get the actual timestamp used for search.
             	$weekStartDateTime->setTimezone($utcTimezone);
-            	
+
                 $utcDayEnd = $weekStartDateTime->format("Y-m-d H:i:s");
                 $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
-                
+
                 Application_Common_DateHelper::convertTimestamps(
                 	$shows,
                     array("starts", "ends", "start_timestamp","end_timestamp"),
@@ -429,10 +430,10 @@ class ApiController extends Zend_Controller_Action
     {
         $schedule_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new schedule item start: $schedule_id");
-        
+
         $scheduleService = new Application_Service_SchedulerService();
         $scheduleService->updateMediaPlayedStatus($schedule_id);
-        
+
         $historyService = new Application_Service_HistoryService();
         $historyService->insertPlayedItem($schedule_id);
 
@@ -456,7 +457,7 @@ class ApiController extends Zend_Controller_Action
         $this->view->server_timezone = Application_Model_Preference::GetDefaultTimezone();
 
         $rows = Application_Model_Show::getCurrentShow();
-        
+
         if (count($rows) > 0) {
             $this->view->is_recording = ($rows[0]['record'] == 1);
         }
@@ -499,7 +500,7 @@ class ApiController extends Zend_Controller_Action
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance_id);
             $show_inst->setRecordedFile($file_id);
-        } 
+        }
         catch (Exception $e) {
             //we've reached here probably because the show was
             //cancelled, and therefore the show instance does not exist
@@ -557,7 +558,7 @@ class ApiController extends Zend_Controller_Action
                 if ($md['is_record'] != 0) {
                     $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
                 }
-                
+
             } elseif ($mode == "modify") {
                 $filepath = $md['MDATA_KEY_FILEPATH'];
                 $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
@@ -672,7 +673,7 @@ class ApiController extends Zend_Controller_Action
             } catch (Exception $e) {
                 Logging::warn($e->getMessage());
                 Logging::warn(gettype($e));
-            } 
+            }
             // We tack on the 'key' back to every request in case the would like to associate
             // his requests with particular responses
             $response['key'] = $k;
@@ -977,12 +978,12 @@ class ApiController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson($rows);
     }
-    
+
     public function getFilesWithoutSilanValueAction()
     {
         //connect to db and get get sql
         $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
-    
+
         $this->_helper->json->sendJson($rows);
     }
 
@@ -1001,7 +1002,7 @@ class ApiController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson(array());
     }
-    
+
     public function updateCueValuesBySilanAction()
     {
         $request = $this->getRequest();
@@ -1051,12 +1052,12 @@ class ApiController extends Zend_Controller_Action
         $data = $request->getParam("data");
         $media_id = intval($request->getParam("media_id"));
         $data_arr = json_decode($data);
-        
+
         //$media_id is -1 sometimes when a stream has stopped playing
         if (!is_null($media_id) && $media_id > 0) {
 
             if (isset($data_arr->title)) {
-            	
+
             	$data_title = substr($data_arr->title, 0, 1024);
 
                 $previous_metadata = CcWebstreamMetadataQuery::create()
@@ -1073,20 +1074,20 @@ class ApiController extends Zend_Controller_Action
                 }
 
                 if ($do_insert) {
-                	
+
                 	$startDT = new DateTime("now", new DateTimeZone("UTC"));
-                	
+
                     $webstream_metadata = new CcWebstreamMetadata();
                     $webstream_metadata->setDbInstanceId($media_id);
                     $webstream_metadata->setDbStartTime($startDT);
                     $webstream_metadata->setDbLiquidsoapData($data_title);
                     $webstream_metadata->save();
-                    
+
                     $historyService = new Application_Service_HistoryService();
                     $historyService->insertWebstreamMetadata($media_id, $startDT, $data_arr);
                 }
             }
-        } 
+        }
 
         $this->view->response = $data;
         $this->view->media_id = $media_id;
@@ -1109,11 +1110,11 @@ class ApiController extends Zend_Controller_Action
         Application_Model_ListenerStat::insertDataPoints($data);
         $this->view->data = $data;
     }
-    
+
     public function updateStreamSettingTableAction() {
         $request = $this->getRequest();
         $data = json_decode($request->getParam("data"), true);
-        
+
         foreach ($data as $k=>$v) {
             Application_Model_StreamSetting::SetListenerStatError($k, $v);
         }
