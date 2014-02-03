@@ -734,6 +734,16 @@ class Application_Service_MediaService
 		return new $serviceClass();
 	}
 	
+	public function createContextMenu($mediaId) {
+		
+		$mediaItem = MediaItemQuery::create()->findPK($mediaId);
+		$obj = $mediaItem->getChildObject();
+		
+		$service = self::locateServiceType($mediaItem);
+		
+		return $service->createContextMenu($obj);
+	}
+	
 	public function getJPlayerPreviewPlaylist($mediaId) {
 		
 		$mediaItem = MediaItemQuery::create()->findPK($mediaId);

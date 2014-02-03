@@ -94,25 +94,15 @@ class ApiController extends Zend_Controller_Action
             clearstatcache();
             
             if (is_file($filepath)) {
-                //$full_path = $media->getPropelOrm()->getDbFilepath();
-
-                //$file_base_name = strrchr($full_path, '/');
-                /* If $full_path does not contain a '/', strrchr will return false,
-                 * in which case we can use $full_path as the base name.
-                 */
-                //if (!$file_base_name) {
-                //    $file_base_name = $full_path;
-                //} else {
-                //    $file_base_name = substr($file_base_name, 1);
-                //}
-
+               
                 //Download user left clicks a track and selects Download.
                 if ("true" == $this->_getParam('download')) {
                     //path_info breaks up a file path into seperate pieces of informaiton.
                     //We just want the basename which is the file name with the path
                     //information stripped away. We are using Content-Disposition to specify
                     //to the browser what name the file should be saved as.
-                    header('Content-Disposition: attachment; filename="'.$info.'"');
+                	$filename = basename($filepath);
+                    header('Content-Disposition: attachment; filename="'.$filename.'"');
                 } else {
                     //user clicks play button for track and downloads it.
                     header('Content-Disposition: inline; filename="'.$info.'"');

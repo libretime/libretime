@@ -90,4 +90,20 @@ class Application_Service_WebstreamService
 		
 		WebstreamQuery::create()->findPks($ids)->delete();
 	}
+	
+	public function createContextMenu($webstream) {
+	
+		$id = $webstream->getId();
+		
+		$menu = array();
+		
+		$menu["preview"] = array(
+			"name" => _("Preview"),
+			"icon" => "play",
+			"id" => $id,
+			"callback" => "previewMedia"
+		);
+		
+		return $menu;
+	}
 }

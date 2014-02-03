@@ -464,4 +464,28 @@ class Application_Service_AudioFileService
 	
 		return ($rv == 0 && !$isError);
 	}
+	
+	public function createContextMenu($audioFile) {
+		
+		$id = $audioFile->getId();
+		
+		$menu = array();
+		
+		$menu["preview"] = array(
+			"name" => _("Preview"),
+			"icon" => "play",
+			"id" => $id,
+			"callback" => "previewMedia"
+		);
+		
+		$url = $audioFile->getFileUrl().'/download/true';
+		$menu["download"] = array(
+			"name" => _("Download"), 
+			"icon" => "download", 
+			"url" => $url,
+			"callback" => "downloadMedia"
+		);
+		
+		return $menu;
+	}
 }
