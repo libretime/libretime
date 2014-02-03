@@ -7,8 +7,9 @@ class Application_Model_Preference
 	
 	private static function getUserId()
 	{
-		//called from a daemon process
-		if (!class_exists("Zend_Auth", false) || !Zend_Auth::getInstance()->hasIdentity()) {
+		//pass in true so the check is made with the autoloader
+		//we need this check because saas calls this function from outside Zend
+		if (!class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
 			$userId = null;
 		}
 		else {
