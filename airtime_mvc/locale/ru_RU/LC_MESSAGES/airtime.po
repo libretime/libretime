@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-01-30 20:43+0000\n"
+"PO-Revision-Date: 2014-01-31 15:14+0000\n"
 "Last-Translator: andrey.podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/airtime/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -46,12 +46,12 @@ msgstr "Выход"
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
-msgstr ""
+msgstr "Проигр."
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
-msgstr ""
+msgstr "Стоп"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:47
 #: airtime_mvc/application/models/Block.php:1347
@@ -62,7 +62,7 @@ msgstr "Начало звучания"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:49
 msgid "Set Cue In"
-msgstr ""
+msgstr "Установить начало звучания"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:54
 #: airtime_mvc/application/models/Block.php:1348
@@ -200,12 +200,12 @@ msgstr "Язык"
 #: airtime_mvc/application/services/HistoryService.php:1143
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
 msgid "Start Time"
-msgstr ""
+msgstr "Время старта"
 
 #: airtime_mvc/application/services/HistoryService.php:1144
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
 msgid "End Time"
-msgstr ""
+msgstr "Время окончания"
 
 #: airtime_mvc/application/services/HistoryService.php:1164
 msgid "Played"
@@ -213,7 +213,7 @@ msgstr "Проиграно"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
-msgstr ""
+msgstr "Записанный файл не найден"
 
 #: airtime_mvc/application/services/CalendarService.php:54
 msgid "View Recorded File Metadata"
@@ -577,17 +577,17 @@ msgstr "Настройки SoundCloud "
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 #, php-format
 msgid "%s's Settings"
-msgstr ""
+msgstr "%s's Настройки"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
-msgstr ""
+msgstr "Выберите Show"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 #: airtime_mvc/application/controllers/LocaleController.php:391
 #: airtime_mvc/application/forms/EditHistoryItem.php:57
 msgid "No Show"
-msgstr ""
+msgstr "Нет Show"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
@@ -681,7 +681,7 @@ msgstr "%sSourcefabric%s o.p.s. Airtime распространяется в со
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
 msgid "Share"
-msgstr ""
+msgstr "Поделиться"
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:64
 msgid "Select stream:"
@@ -929,7 +929,7 @@ msgstr "Нет веб-потока"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 msgid "Empty playlist content"
-msgstr ""
+msgstr "Очистить плейлист"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
@@ -973,7 +973,7 @@ msgstr "Нет открытых плейлистов"
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:3
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:3
 msgid "Show Waveform"
-msgstr ""
+msgstr "Показать трек"
 
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:6
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:19
@@ -984,7 +984,7 @@ msgstr "(сс)"
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Empty smart block content"
-msgstr ""
+msgstr "Очистить умный блок"
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:90
 msgid "No open smart block"
@@ -1077,11 +1077,11 @@ msgstr "Для проигрывания медиа-файла необходим
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:2
 msgid "Creating File Summary Template"
-msgstr ""
+msgstr "Создание шаблона по файлам"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:4
 msgid "Creating Log Sheet Template"
-msgstr ""
+msgstr "Создание шаблона лога"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:9
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:153
@@ -1090,7 +1090,7 @@ msgstr "Имя"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:46
 msgid "Add more elements"
-msgstr ""
+msgstr "Добавить еще элементы"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:67
 msgid "Add New Field"
@@ -1098,21 +1098,21 @@ msgstr "Добавить поле"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:83
 msgid "Set Default Template"
-msgstr ""
+msgstr "Установить шаблон по умолчанию"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:4
 msgid "Log Sheet Templates"
-msgstr ""
+msgstr "Шаблоны лога"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:7
 msgid "No Log Sheet Templates"
-msgstr ""
+msgstr "Нет шаблона лога"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:25
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:56
 #: airtime_mvc/application/controllers/LocaleController.php:388
 msgid "Set Default"
-msgstr ""
+msgstr "Установить по умолчанию"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:31
 msgid "New Log Sheet Template"
@@ -2807,11 +2807,11 @@ msgstr "Перетащите сюда файлы."
 
 #: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "File extension error."
-msgstr ""
+msgstr "Неверное расширение файла."
 
 #: airtime_mvc/application/controllers/LocaleController.php:373
 msgid "File size error."
-msgstr ""
+msgstr "Невереный размер файла."
 
 #: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "File count error."
@@ -2819,7 +2819,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:375
 msgid "Init error."
-msgstr ""
+msgstr "Ошибка инициализации."
 
 #: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "HTTP Error."
@@ -2857,7 +2857,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "Error: File too large: "
-msgstr ""
+msgstr "Ошибка: Файл слишком большой:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:386
 msgid "Error: Invalid file extension: "

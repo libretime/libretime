@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="cc_show">
+    </table>
+
+    <table name="cc_show_days">
+    </table>
+
+    <table name="cc_show_instances">
+    </table>
+
+    <table name="cc_show_rebroadcast">
+    </table>
+
+    <table name="cc_show_hosts">
+    </table>
+</dataset>

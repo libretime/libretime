@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="cc_show">
+        <column>id</column>
+        <column>name</column>
+        <column>url</column>
+        <column>genre</column>
+        <column>description</column>
+        <column>color</column>
+        <column>background_color</column>
+        <column>live_stream_using_airtime_auth</column>
+        <column>live_stream_using_custom_auth</column>
+        <column>live_stream_user</column>
+        <column>live_stream_pass</column>
+        <column>linked</column>
+        <column>is_linkable</column>
+        <row>
+            <value>1</value>
+            <value>test show</value>
+            <null />
+            <null />
+            <null />
+            <value>ffffff</value>
+            <value>364492</value>
+            <value></value>
+            <value></value>
+            <null />
+            <null />
+            <value></value>
+            <value>1</value>
+        </row>
+   </table>
+</dataset>
