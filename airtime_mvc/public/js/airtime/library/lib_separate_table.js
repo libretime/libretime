@@ -187,8 +187,11 @@ var AIRTIME = (function(AIRTIME) {
 			"sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
 			
 			"oColVis": {
+				"sAlign": "right",
                 "aiExclude": [ 0 ],
                 "buttonText": $.i18n._("Show / hide columns"),
+                //use this to show/hide advanced search fields.
+                //"fnStateChange": setFilterElement
             },
             
             "oColReorder": {
