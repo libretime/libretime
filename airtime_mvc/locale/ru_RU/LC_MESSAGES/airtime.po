@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-02-04 11:25+0000\n"
+"PO-Revision-Date: 2014-02-04 13:23+0000\n"
 "Last-Translator: andrey.podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/airtime/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -2671,11 +2671,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Admins can do the following:"
-msgstr ""
+msgstr "Администраторы могут:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "Manage preferences"
-msgstr ""
+msgstr "Настроить предпочтения"
 
 #: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Manage users"
@@ -2869,7 +2869,7 @@ msgstr "Создать"
 
 #: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "Edit History Record"
-msgstr ""
+msgstr "Редактировать историю"
 
 #: airtime_mvc/application/controllers/LocaleController.php:393
 #, php-format
@@ -2999,7 +2999,7 @@ msgstr "Пользователь успешно обновлен!"
 
 #: airtime_mvc/application/controllers/UserController.php:154
 msgid "Settings updated successfully!"
-msgstr ""
+msgstr "Изменения в настройках сохранены!"
 
 #: airtime_mvc/application/common/DateHelper.php:213
 #, php-format
@@ -3190,7 +3190,7 @@ msgstr "Длительность:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:83
 msgid "Timezone:"
-msgstr ""
+msgstr "Временная зона:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:92
 msgid "Repeats?"
@@ -3230,15 +3230,15 @@ msgstr "Еженедельно"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:20
 msgid "every 2 weeks"
-msgstr ""
+msgstr "каждые 2 недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:21
 msgid "every 3 weeks"
-msgstr ""
+msgstr "каждые 3 недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:22
 msgid "every 4 weeks"
-msgstr ""
+msgstr "каждые 4 недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:23
 msgid "monthly"
@@ -3254,11 +3254,11 @@ msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the month"
-msgstr ""
+msgstr "день месяца"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the week"
-msgstr ""
+msgstr "день недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:56
 #: airtime_mvc/application/forms/DateRange.php:44
@@ -3376,7 +3376,7 @@ msgstr "'%значение%' не входит в промежуток '%min%' �
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:89
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Пароли не совпадают"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:48
 msgid "Enabled:"
@@ -3421,11 +3421,11 @@ msgstr "Точка монтирования"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:195
 msgid "Admin User"
-msgstr ""
+msgstr "Администратор"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:207
 msgid "Admin Password"
-msgstr ""
+msgstr "Пароль администратора"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:232
 msgid "Server cannot be empty."
@@ -3469,7 +3469,7 @@ msgstr "Название станции - Название программы"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
-msgstr ""
+msgstr "Отключить мета-данные"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69
 msgid "Enable Replay Gain"
@@ -3579,11 +3579,11 @@ msgstr "Введите время в секундах 0 {0,0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr ""
+msgstr "Возрастание по умолчанию:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr ""
+msgstr "Затухание по умолчанию:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
@@ -3602,7 +3602,7 @@ msgstr "Активировано"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:97
 msgid "Default Interface Language"
-msgstr ""
+msgstr "Язык по умолчанию"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
 msgid "Station Timezone"
