@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-02-04 13:23+0000\n"
+"PO-Revision-Date: 2014-02-04 17:30+0000\n"
 "Last-Translator: andrey.podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/airtime/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -551,7 +551,7 @@ msgstr "ВОССТАНОВИТЬ"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "URL подключения к Show:"
+msgstr "URL подключения к программе:"
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:4
 msgid "Choose Days:"
@@ -581,7 +581,7 @@ msgstr "%s's Настройки"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
-msgstr "Выберите Show"
+msgstr "Выберите программу"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 #: airtime_mvc/application/controllers/LocaleController.php:391
@@ -769,7 +769,7 @@ msgstr "Источник Master "
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:38
 msgid "Show Source"
-msgstr "Источник Show "
+msgstr "Источник Show"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
@@ -1318,7 +1318,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:10
 msgid "Show Summary"
-msgstr ""
+msgstr "Данные по прграмме"
 
 #: airtime_mvc/application/models/Show.php:180
 msgid "Shows can have a max length of 24 hours."
@@ -2288,7 +2288,7 @@ msgstr "Retreiving данных с сервера ..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "This show has no scheduled content."
-msgstr "Это шоу не имеет запланированного содержания."
+msgstr "Эта программа не имеет запланированного содержания."
 
 #: airtime_mvc/application/controllers/LocaleController.php:208
 msgid "This show is not completely filled with content."
@@ -2631,7 +2631,7 @@ msgstr "Показать календарь"
 
 #: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "View show content"
-msgstr "Показать содержимое show"
+msgstr "Показать программу"
 
 #: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "DJs can do the following:"
@@ -2659,11 +2659,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "View and manage show content"
-msgstr ""
+msgstr "Редактировать программу"
 
 #: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "Schedule shows"
-msgstr "Планировать show"
+msgstr "Планировать программу"
 
 #: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Manage all library content"

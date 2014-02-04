@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the Airtime package.
 # 
 # Translators:
+# hoerich <hoerich@gmx.at>, 2014
 # Sourcefabric <contact@sourcefabric.org>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-01-29 15:10+0000\n"
-"Last-Translator: andrey.podshivalov\n"
+"PO-Revision-Date: 2014-02-04 18:19+0000\n"
+"Last-Translator: hoerich <hoerich@gmx.at>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/airtime/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
