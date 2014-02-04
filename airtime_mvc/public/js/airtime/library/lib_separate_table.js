@@ -88,7 +88,6 @@ var AIRTIME = (function(AIRTIME) {
 		}
          
 		$mdDialog.dialog({
-            //autoOpen: false,
             title: $.i18n._("Edit Metadata"),
             width: 460,
             height: 660,
@@ -120,6 +119,63 @@ var AIRTIME = (function(AIRTIME) {
                     "data": aoData,
                     "success": fnCallback
                 } );
+            },
+            //save the tables based on tableId
+            "bStateSave": true,
+            "fnStateSaveParams": function (oSettings, oData) {
+                // remove oData components we don't want to save.
+                delete oData.oSearch;
+                delete oData.aoSearchCols;
+            },
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('datatables-'+ config.settings, JSON.stringify(oData));
+                
+                $.ajax({
+                    url: baseUrl+"usersettings/set-"+ config.settings,
+                    type: "POST",
+                    data: {settings : oData, format: "json"},
+                    dataType: "json"
+                  });
+                
+                colReorderMap = oData.ColReorder;
+            },
+            "fnStateLoad": function fnLibStateLoad(oSettings) {
+                var settings = localStorage.getItem('datatables-'+ config.settings);
+               
+                try {
+                    return JSON.parse(settings);
+                } catch (e) {
+                    return null;
+                }
+            },
+            "fnStateLoadParams": function (oSettings, oData) {
+                var i,
+                    length,
+                    a = oData.abVisCols;
+                
+                if (a) {
+                    // putting serialized data back into the correct js type to make
+                    // sure everything works properly.
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = (a[i] === "true") ? true : false;
+                        } 
+                    }
+                }
+                    
+                a = oData.ColReorder;
+                if (a) {
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = parseInt(a[i], 10);
+                        }
+                    }
+                }
+                
+                oData.iEnd = parseInt(oData.iEnd, 10);
+                oData.iLength = parseInt(oData.iLength, 10);
+                oData.iStart = parseInt(oData.iStart, 10);
+                oData.iCreate = parseInt(oData.iCreate, 10);
             },
 			"oLanguage": datatables_dict,
 			"aLengthMenu": [[5, 10, 15, 20, 25, 50, 100], [5, 10, 15, 20, 25, 50, 100]],
@@ -345,7 +401,8 @@ var AIRTIME = (function(AIRTIME) {
 		    	},
 		    	localColumns: "datatables-audiofile-aoColumns",
 		    	tableId: "audio_table",
-		    	source: baseUrl+"media/audio-file-feed"
+		    	source: baseUrl+"media/audio-file-feed",
+		    	settings: "audio-datatable"
 		    },
 		    "lib_webstreams": {
 		    	initialized: false,
@@ -360,7 +417,8 @@ var AIRTIME = (function(AIRTIME) {
 		    	},
 		    	localColumns: "datatables-webstream-aoColumns",
 		    	tableId: "webstream_table",
-		    	source: baseUrl+"media/webstream-feed"
+		    	source: baseUrl+"media/webstream-feed",
+		    	settings: "webstream-datatable"
 		    },
 		    "lib_playlists": {
 		    	initialized: false,
@@ -375,7 +433,8 @@ var AIRTIME = (function(AIRTIME) {
 		    	},
 		    	localColumns: "datatables-playlist-aoColumns",
 		    	tableId: "playlist_table",
-		    	source: baseUrl+"media/playlist-feed"
+		    	source: baseUrl+"media/playlist-feed",
+		    	settings: "playlist-datatable"
 		    }
     	};
 
@@ -393,7 +452,8 @@ var AIRTIME = (function(AIRTIME) {
     					id: tab.tableId, 
     					columns: columns,
     					prop: tab.dataprop,
-    					source: tab.source
+    					source: tab.source,
+    					settings: tab.settings
     				});
     				
     				mod.setupToolbar(ui.panel.id);

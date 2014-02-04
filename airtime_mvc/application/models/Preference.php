@@ -1290,17 +1290,41 @@ class Application_Model_Preference
     {
         return self::getOrderingMap("library_datatable");
     }
-
-    public static function setCurrentLibraryTableSetting($settings)
+    
+    public static function setAudioTableSetting($settings)
     {
-        $data = serialize($settings);
-        self::setValue("library_datatable", $data, true);
+    	$data = serialize($settings);
+    	self::setValue("audio_datatable", $data, true);
     }
-
-    public static function getCurrentLibraryTableSetting()
+    
+    public static function getAudioTableSetting()
     {
-        $data = self::getValue("library_datatable", true);
-        return ($data != "") ? unserialize($data) : null;
+    	$data = self::getValue("audio_datatable", true);
+    	return ($data != "") ? unserialize($data) : null;
+    }
+    
+    public static function setWebstreamTableSetting($settings)
+    {
+    	$data = serialize($settings);
+    	self::setValue("webstream_datatable", $data, true);
+    }
+    
+    public static function getWebstreamTableSetting()
+    {
+    	$data = self::getValue("webstream_datatable", true);
+    	return ($data != "") ? unserialize($data) : null;
+    }
+    
+    public static function setPlaylistTableSetting($settings)
+    {
+    	$data = serialize($settings);
+    	self::setValue("playlist_datatable", $data, true);
+    }
+    
+    public static function getPlaylistTableSetting()
+    {
+    	$data = self::getValue("playlist_datatable", true);
+    	return ($data != "") ? unserialize($data) : null;
     }
 
 

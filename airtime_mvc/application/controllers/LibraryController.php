@@ -9,7 +9,7 @@ class LibraryController extends Zend_Controller_Action
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('contents-feed', 'json')
+        $ajaxContext
                     ->addActionContext('delete', 'json')
                     ->addActionContext('duplicate', 'json')
                     ->addActionContext('delete-group', 'json')
@@ -17,7 +17,6 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('get-file-metadata', 'html')
                     ->addActionContext('upload-file-soundcloud', 'json')
                     ->addActionContext('get-upload-to-soundcloud-status', 'json')
-                    ->addActionContext('set-num-entries', 'json')
                     ->addActionContext('edit-file-md', 'json')
                     ->initContext();
     }
@@ -318,19 +317,6 @@ class LibraryController extends Zend_Controller_Action
 
         $newPl->setfades($plFadeIn, $plFadeOut);
         $newPl->setName(sprintf(_("Copy of %s"), $originalPl->getName()));
-    }
-
-    public function contentsFeedAction()
-    {
-        $params = $this->getRequest()->getParams();
-
-        # terrible name for the method below. it does not only search files.
-        $r = Application_Model_StoredFile::searchLibraryFiles($params);
-
-        $this->view->sEcho = $r["sEcho"];
-        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
-        $this->view->iTotalRecords = $r["iTotalRecords"];
-        $this->view->files = $r["aaData"];
     }
 
     public function editFileMdAction()
