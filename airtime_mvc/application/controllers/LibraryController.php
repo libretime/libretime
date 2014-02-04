@@ -75,24 +75,8 @@ class LibraryController extends Zend_Controller_Action
     	$baseUrl = Application_Common_OsPath::getBaseDir();
     	$id = intval($this->_getParam('id'));
     	
-    	$menu = array();
-    	
-    	/*
-    	$menu["pl_add"] = array(
-    		"name" => _("Add to Playlist"), 
-    		"requestUrl" => $baseUrl."playlist/add-items",
-    		"requestType" => "POST",
-    		"requestData" => array("ids" => array($id)),
-    		"callback" => "AIRTIME.playlist.redrawPlaylist"
-    	);
-    	*/
-    	
-    	$menu["preview"] = array(
-    		"name" => _("Preview"),
-    		"icon" => "play",
-    		"id" => $id,
-    		"callback" => "previewMedia"
-    	);
+    	$mediaService = new Application_Service_MediaService();
+    	$menu = $mediaService->createContextMenu($id);
     	    	
     	if (empty($menu)) {
     		$menu["noaction"] = array("name"=>_("No action available"));

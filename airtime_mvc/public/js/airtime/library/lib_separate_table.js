@@ -55,7 +55,15 @@ var AIRTIME = (function(AIRTIME) {
     	table.fnSetFilteringDelay(350);
     }
     
-    mod.previewMedia = function(mediaId) {
+    mod.downloadMedia = function(data) {
+    	console.log("downloading media " + data.id);
+    	
+    	document.location.href = data.url;
+    };
+    
+    mod.previewMedia = function(data) {
+    	var mediaId = data.id;
+    	
     	console.log("previewing media " + mediaId);
     	
     	AIRTIME.playerPreview.previewMedia(mediaId);
@@ -64,35 +72,10 @@ var AIRTIME = (function(AIRTIME) {
     function sendContextMenuRequest(data) {
     	
     	console.log(data);
-    	mod[data.callback](data.id);
     	
-    	/*
-    	var callback = data.callback;
-    	
-    	data.requestData["format"] = "json";
-    	
-    	$.ajax({
-            url: data.requestUrl,
-            type: data.requestType,
-            data: data.requestData,
-            dataType: "json",
-            async: false,
-            success: function(json) {
-            	
-            	var f = callback.split("."),
-            		i,
-            		len,
-            		obj = window;
-            	
-            	for (i = 0, len = f.length; i < len; i++) {
-            		
-            		obj = obj[f[i]];
-            	}
-            	
-            	obj(json);
-            }
-        });
-        */
+    	if (data.callback !== undefined) {
+    		mod[data.callback](data);
+    	}
     }
     
     function getActiveTabId() {
