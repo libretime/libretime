@@ -720,6 +720,40 @@ class Application_Service_MediaService
 		return $script;
 	}
 	
+	public function createLibraryColumnSettingsJavascript() {
+	
+		$script = "";
+		
+		$settings = Application_Model_Preference::getAudioTableSetting();
+        if (!is_null($settings)) {
+            $data = json_encode($settings);
+            $script .= "localStorage.setItem( 'datatables-audio', JSON.stringify($data) ); ";
+        } 
+        else {
+        	$script .= "localStorage.setItem( 'datatables-audio', null ); ";
+        }
+        
+        $settings = Application_Model_Preference::getWebstreamTableSetting();
+        if (!is_null($settings)) {
+        	$data = json_encode($settings);
+        	$script .= "localStorage.setItem( 'datatables-webstream', JSON.stringify($data) ); ";
+        }
+        else {
+        	$script .= "localStorage.setItem( 'datatables-webstream', null ); ";
+        }
+        
+        $settings = Application_Model_Preference::getPlaylistTableSetting();
+        if (!is_null($settings)) {
+        	$data = json_encode($settings);
+        	$script .= "localStorage.setItem( 'datatables-playlist', JSON.stringify($data) ); ";
+        }
+        else {
+        	$script .= "localStorage.setItem( 'datatables-playlist', null ); ";
+        }
+	
+		return $script;
+	}
+	
 	/*
 	 * @param $obj MediaItem object.
 	 * @return $service proper service for this item type.

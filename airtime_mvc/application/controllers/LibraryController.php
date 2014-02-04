@@ -66,6 +66,7 @@ class LibraryController extends Zend_Controller_Action
         //set audio columns for display of data.
         $mediaService = new Application_Service_MediaService();
         $this->view->headScript()->appendScript($mediaService->createLibraryColumnsJavascript());
+        $this->view->headScript()->appendScript($mediaService->createLibraryColumnSettingsJavascript());
         
         $this->view->obj = $mediaService->getSessionMediaObject();
     }

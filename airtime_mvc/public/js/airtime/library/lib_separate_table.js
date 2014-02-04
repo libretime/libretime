@@ -102,7 +102,7 @@ var AIRTIME = (function(AIRTIME) {
     	
     function createDatatable(config) {
     	
-    	var table = $("#"+config.id).dataTable({
+    	var table = $("#"+config.type + "_table").dataTable({
     		"aoColumns": config.columns,
 			"bProcessing": true,
 			"bServerSide": true,
@@ -128,10 +128,10 @@ var AIRTIME = (function(AIRTIME) {
                 delete oData.aoSearchCols;
             },
             "fnStateSave": function (oSettings, oData) {
-                localStorage.setItem('datatables-'+ config.settings, JSON.stringify(oData));
+                localStorage.setItem('datatables-'+ config.type, JSON.stringify(oData));
                 
                 $.ajax({
-                    url: baseUrl+"usersettings/set-"+ config.settings,
+                    url: baseUrl+"usersettings/set-"+ config.type + "-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
                     dataType: "json"
@@ -140,7 +140,7 @@ var AIRTIME = (function(AIRTIME) {
                 colReorderMap = oData.ColReorder;
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
-                var settings = localStorage.getItem('datatables-'+ config.settings);
+                var settings = localStorage.getItem('datatables-'+ config.type);
                
                 try {
                     return JSON.parse(settings);
@@ -400,9 +400,8 @@ var AIRTIME = (function(AIRTIME) {
 		    		
 		    	},
 		    	localColumns: "datatables-audiofile-aoColumns",
-		    	tableId: "audio_table",
 		    	source: baseUrl+"media/audio-file-feed",
-		    	settings: "audio-datatable"
+		    	type: "audio"
 		    },
 		    "lib_webstreams": {
 		    	initialized: false,
@@ -416,9 +415,8 @@ var AIRTIME = (function(AIRTIME) {
 		    		
 		    	},
 		    	localColumns: "datatables-webstream-aoColumns",
-		    	tableId: "webstream_table",
 		    	source: baseUrl+"media/webstream-feed",
-		    	settings: "webstream-datatable"
+		    	type: "webstream"
 		    },
 		    "lib_playlists": {
 		    	initialized: false,
@@ -432,9 +430,8 @@ var AIRTIME = (function(AIRTIME) {
 		    		
 		    	},
 		    	localColumns: "datatables-playlist-aoColumns",
-		    	tableId: "playlist_table",
 		    	source: baseUrl+"media/playlist-feed",
-		    	settings: "playlist-datatable"
+		    	type: "playlist"
 		    }
     	};
 
@@ -449,11 +446,10 @@ var AIRTIME = (function(AIRTIME) {
     				
     				var columns = JSON.parse(localStorage.getItem(tab.localColumns));
     				createDatatable({
-    					id: tab.tableId, 
     					columns: columns,
     					prop: tab.dataprop,
     					source: tab.source,
-    					settings: tab.settings
+    					type: tab.type
     				});
     				
     				mod.setupToolbar(ui.panel.id);
