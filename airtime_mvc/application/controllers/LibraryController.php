@@ -1,6 +1,7 @@
 <?php
 
 use Airtime\CcWebstreamQuery;
+use Airtime\MediaItem\AudioFileQuery;
 
 class LibraryController extends Zend_Controller_Action
 {
@@ -338,21 +339,22 @@ class LibraryController extends Zend_Controller_Action
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $request = $this->getRequest();
-
-
-
-
-        $file_id = $this->_getParam('id', null);
-        $file = Application_Model_StoredFile::RecallById($file_id);
-
-        if (!$isAdminOrPM && $file->getFileOwnerId() != $user->getId()) {
+        $id = $this->_getParam('id', null);
+        
+        $audioFile = AudioFileQuery::create()->findPk($id);
+        
+        //TODO check for hidden/exists and set headers.
+        if (empty($audioFile)) {
+        	return;
+        }
+        
+        if (!$isAdminOrPM && $audioFile->getOwnerId() != $user->getId()) {
             return;
         }
-
+        
         $form = new Application_Form_EditAudioMD();
-        $form->startForm($file_id);
-        $form->populate($file->getDbColMetadata());
-
+        $form->populate(array("MDATA_ID" => $id));
+        
         if ($request->isPost()) {
 
             $js = $this->_getParam('data');
@@ -361,29 +363,29 @@ class LibraryController extends Zend_Controller_Action
             foreach ($js as $j) {
                 $serialized[$j["name"]] = $j["value"];
             }
-
+           
             if ($form->isValid($serialized)) {
 
-                $formValues = $this->_getParam('data', null);
-                $formdata = array();
-                foreach ($formValues as $val) {
-                    $formdata[$val["name"]] = $val["value"];
-                }
-                $file->setDbColMetadata($formdata);
-
-                $data = $file->getMetadata();
-
-                // set MDATA_KEY_FILEPATH
-                $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
-                Logging::info($data['MDATA_KEY_FILEPATH']);
-                Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
-
-                $this->_redirect('Library');
+            	$values = $form->getValues();
+                $audioFile->setMetadata($values);
+                
+                //set MDATA_KEY_FILEPATH
+                $values['MDATA_KEY_FILEPATH'] = $audioFile->getFilepath();
+                Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $values);
+            }
+            else {
+            	$this->view->errors = $form->getMessages();
+            	$this->view->html = $form->render();
             }
         }
-
-        $this->view->form = $form;
-        $this->view->dialog = $this->view->render('library/edit-file-md.phtml');
+        else {
+        	$md = $audioFile->getMetadata();
+        	$form->populate($md);
+        	
+        	$this->view->form = $form;
+        	$this->view->dialog = $this->view->render('library/edit-file-md.phtml');
+        	unset($this->view->form);
+        }
     }
 
     public function getFileMetadataAction()

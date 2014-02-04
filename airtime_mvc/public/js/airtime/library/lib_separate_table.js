@@ -8,6 +8,98 @@ var AIRTIME = (function(AIRTIME) {
     //stored in format chosenItems[tabname] = object of chosen ids for the tab.
     var chosenItems = {},
     	LIB_SELECTED_CLASS = "lib-selected";
+    
+    function makeWebstreamDialog(html) {
+		var $wsDialogEl = $(html);
+		
+		function removeDialog() {
+    		$wsDialogEl.dialog("destroy");
+        	$wsDialogEl.remove();
+    	}
+		
+		function saveDialog() {
+			var data = {
+				name: $wsDialogEl.find("#ws_name").val(),
+				hours: $wsDialogEl.find("#ws_hours").val(),
+				mins: $wsDialogEl.find("#ws_mins").val(),
+				description: $wsDialogEl.find("#ws_description").val(),
+				url: $wsDialogEl.find("#ws_url").val(),
+				id: $wsDialogEl.find("#ws_id").val(),
+				format: "json"
+			},
+			url = baseUrl + "webstream/save";
+			
+			if (data.id === "") {
+				delete data.id;
+			}
+			
+			$.post(url, data, function(json) {
+				
+				if (json.errors) {
+					$wsDialogEl.empty()
+						.append($(json.html).unwrap());
+				}
+				else {
+					removeDialog();
+				}
+			});
+		}
+		
+		$wsDialogEl.dialog({	       
+	        title: $.i18n._("Webstream"),
+	        modal: true,
+	        show: 'clip',
+            hide: 'clip',
+            width: 600,
+            height: 350,
+	        buttons: [
+				{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
+				{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
+			],
+	        close: removeDialog
+	    });
+	}
+    
+    function buildEditMetadataDialog (html){
+    	var $mdDialog = $(html);
+		
+		function removeDialog() {
+			$mdDialog.dialog("destroy");
+			$mdDialog.remove();
+    	}
+		
+		function saveDialog() {
+			var mediaId = $('#MDATA_ID').val(),
+            	data = $("#edit-md-dialog form").serializeArray();
+        
+	        $.post(baseUrl+'library/edit-file-md', 
+	        	{format: "json", id: mediaId, data: data}, 
+	        	function(json) {
+	        		
+	        		if (json.errors) {
+						$mdDialog
+							.empty()
+							.append($(json.html));
+					}
+					else {
+						removeDialog();
+					}
+	        });
+		}
+         
+		$mdDialog.dialog({
+            //autoOpen: false,
+            title: $.i18n._("Edit Metadata"),
+            width: 460,
+            height: 660,
+            buttons: [
+  				{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
+  				{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
+  			],
+            modal: true,
+            close: removeDialog
+        });
+    }
     	
     function createDatatable(config) {
     	
@@ -67,6 +159,13 @@ var AIRTIME = (function(AIRTIME) {
     	console.log("previewing media " + mediaId);
     	
     	AIRTIME.playerPreview.previewMedia(mediaId);
+    };
+    
+    mod.editMetadata = function(data) {
+    	
+    	$.get(data.url, {format: "json"}, function(json){
+            buildEditMetadataDialog(json.dialog);
+        });
     };
     
     function sendContextMenuRequest(data) {
@@ -229,7 +328,8 @@ var AIRTIME = (function(AIRTIME) {
      
     mod.onReady = function () {
     	
-    	var $library = $("#library_content");
+    	var $library = $("#library_content"),
+    		$body = $("body");
 
     	var tabsInit = {
     		"lib_audio": {
@@ -307,57 +407,6 @@ var AIRTIME = (function(AIRTIME) {
 			}
     	});
     	
-    	function makeWebstreamDialog(html) {
-    		var $wsDialogEl = $(html);
-    		
-    		function removeDialog() {
-        		$wsDialogEl.dialog("destroy");
-            	$wsDialogEl.remove();
-        	}
-    		
-    		function saveDialog() {
-    			var data = {
-    				name: $wsDialogEl.find("#ws_name").val(),
-    				hours: $wsDialogEl.find("#ws_hours").val(),
-    				mins: $wsDialogEl.find("#ws_mins").val(),
-    				description: $wsDialogEl.find("#ws_description").val(),
-    				url: $wsDialogEl.find("#ws_url").val(),
-    				id: $wsDialogEl.find("#ws_id").val(),
-    				format: "json"
-    			},
-    			url = baseUrl + "webstream/save";
-    			
-    			if (data.id === "") {
-    				delete data.id;
-    			}
-    			
-    			$.post(url, data, function(json) {
-    				
-    				if (json.errors) {
-    					$wsDialogEl.empty()
-    						.append($(json.html).unwrap());
-    				}
-    				else {
-    					removeDialog();
-    				}
-    			});
-    		}
-    		
-    		$wsDialogEl.dialog({	       
-    	        title: $.i18n._("Webstream"),
-    	        modal: true,
-    	        show: 'clip',
-                hide: 'clip',
-                width: 600,
-                height: 350,
-    	        buttons: [
-    				{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
-    				{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
-    			],
-    	        close: removeDialog
-    	    });
-    	}
-    	
     	$library.on("click", "#lib_new_webstream", function(e) {
     		var url = baseUrl+"webstream/new/format/json";
     		
@@ -421,6 +470,35 @@ var AIRTIME = (function(AIRTIME) {
             data = $tr.data("aData");
             mod.dblClickAdd(data);
     	});
+    	
+    	//events for the edit metadata dialog
+    	$body.on("click", "#editmdsave", function() {
+            var file_id = $('#file_id').val(),
+                data = $("#edit-md-dialog form").serializeArray();
+            
+            $.post(baseUrl+'library/edit-file-md', 
+            	{format: "json", id: file_id, data: data}, 
+            	function() {
+            		$("#edit-md-dialog").dialog().remove();
+
+	                // don't redraw the library table if we are on calendar page
+	                // we would be on calendar if viewing recorded file metadata
+	                if ($("#schedule_calendar").length === 0) {
+	                    oTable.fnStandingRedraw();
+	                }
+            });
+        });
+        
+        $('#editmdcancel').live("click", function() {
+            $("#edit-md-dialog").dialog().remove();
+        });
+
+        $('#edit-md-dialog').live("keyup", function(event) {
+            if (event.keyCode === 13) {
+                $('#editmdsave').click();
+            }
+        });
+        //end of events fo the edit metadata dialog.
     	
     	 // begin context menu initialization.
         $.contextMenu({
