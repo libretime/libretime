@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-02-04 11:24+0000\n"
+"PO-Revision-Date: 2014-02-04 11:25+0000\n"
 "Last-Translator: andrey.podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/airtime/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -73,7 +73,7 @@ msgstr "Окончание звучания"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
-msgstr ""
+msgstr "Установить окончание звучания"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
@@ -1904,7 +1904,7 @@ msgstr "Вы действительно хотите удалить выделе
 
 #: airtime_mvc/application/controllers/LocaleController.php:64
 msgid "Scheduled"
-msgstr ""
+msgstr "Запланировано"
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Playlist / Block"
@@ -2001,7 +2001,7 @@ msgstr "Вы загружаете файлы. %sПереход на другой
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
 msgid "Open Media Builder"
-msgstr ""
+msgstr "Открыть медиа-построитель"
 
 #: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "please put in a time '00:00:00 (.0)'"
@@ -2546,7 +2546,7 @@ msgstr "Отменить"
 
 #: airtime_mvc/application/controllers/LocaleController.php:287
 msgid "Fade Editor"
-msgstr ""
+msgstr "Редактор затухания"
 
 #: airtime_mvc/application/controllers/LocaleController.php:288
 msgid "Cue Editor"
@@ -2627,11 +2627,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "View schedule"
-msgstr ""
+msgstr "Показать календарь"
 
 #: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "View show content"
-msgstr ""
+msgstr "Показать содержимое show"
 
 #: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "DJs can do the following:"
@@ -2643,7 +2643,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Import media files"
-msgstr ""
+msgstr "Импорт медиа-файлов"
 
 #: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Create playlists, smart blocks, and webstreams"
@@ -2663,7 +2663,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "Schedule shows"
-msgstr ""
+msgstr "Планировать show"
 
 #: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Manage all library content"
@@ -2823,15 +2823,15 @@ msgstr "Ошибка инициализации."
 
 #: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "HTTP Error."
-msgstr ""
+msgstr "Ошибка HTTP."
 
 #: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "Security error."
-msgstr ""
+msgstr "Ошибка безопасности."
 
 #: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "Generic error."
-msgstr ""
+msgstr "Общая ошибка."
 
 #: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "IO error."
@@ -2865,7 +2865,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "Create Entry"
-msgstr ""
+msgstr "Создать"
 
 #: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "Edit History Record"
@@ -3047,7 +3047,7 @@ msgstr "Пароль:"
 #: airtime_mvc/application/forms/AddUser.php:42
 #: airtime_mvc/application/forms/EditUser.php:52
 msgid "Verify Password:"
-msgstr ""
+msgstr "Повторите пароль:"
 
 #: airtime_mvc/application/forms/AddUser.php:51
 #: airtime_mvc/application/forms/EditUser.php:62
@@ -3218,7 +3218,7 @@ msgstr "Не может иметь длительность более 24 час
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr ""
+msgstr "Ссылка:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
