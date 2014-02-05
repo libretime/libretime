@@ -1,6 +1,7 @@
 <?php
 Class ShowServiceData
 {
+    //Just a regular show - Non repeating, and not a recording & rebroadcast show.
     public static function getNoRepeatNoRRData()
     {
         return array(

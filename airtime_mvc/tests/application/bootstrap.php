@@ -46,6 +46,9 @@ set_include_path(APPLICATION_PATH . '/services' . PATH_SEPARATOR . get_include_p
 //models
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
+//Controllers.
+set_include_path(APPLICATION_PATH . '/controllers' . PATH_SEPARATOR . get_include_path());
+
 //Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
@@ -58,18 +61,16 @@ set_include_path(APPLICATION_PATH . '/../tests/application/helpers' . PATH_SEPAR
 //Zend framework
 if (file_exists('/usr/share/php/libzend-framework-php')) {
     set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
+    set_include_path('/usr/share/php/libzend-framework-php/Zend/Test/PHPUnit' . PATH_SEPARATOR . get_include_path());
 }
 
 require_once 'Zend/Application.php';
 require_once 'Zend/Config.php';
-//require_once 'helpers/TestHelper.php';
 
 require_once APPLICATION_PATH.'/configs/conf.php';
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init("../application/configs/airtime-conf-production.php");
 
-#require_once 'DatabaseTestCase.php';
 require_once 'Zend/Session.php';
 Zend_Session::start();
 
-//TestHelper::installTestDatabase();
