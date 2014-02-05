@@ -158,6 +158,22 @@ class AudioFile extends BaseAudioFile
 		return $this;
 	}
 
+	/**
+	 * Get metadata as array.
+	 *
+	 * @return array
+	 */
+	public function getMetadata()
+	{
+		$md = array();
+		foreach ($this->_userEditableMd as $mdColumn => $propelColumn) {
+			$method = "get$propelColumn";
+			$md[$mdColumn] = $this->$method();
+		}
+
+		return $md;
+	}
+
 	public function reactivateFile($md) {
 		// If the file already exists we will update and make sure that
 		// it's marked as 'exists'.

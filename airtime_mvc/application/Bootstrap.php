@@ -77,7 +77,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headLink()->appendStylesheet($baseUrl.'css/styles.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/masterpanel.css?'.$CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl.'css/tipsy/jquery.tipsy.css?'.$CC_CONFIG['airtime_version']);
-        
+
         //jPlayer css.
         $view->headLink()->appendStylesheet($baseUrl.'js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
     }
@@ -129,7 +129,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $view->headScript()->appendFile($baseUrl.'js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/airtime/common/audioplaytest.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        
+
         //scripts for the jPlayer preview bar.
         $view->headScript()->appendFile($baseUrl.'js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/airtime/audiopreview/jPlayerWindow.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -207,16 +207,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'action' => 'password-change',
             )));
     }
-    
+
     protected function _initAutoload () {
-    
+
     	// configure new autoloader
     	$autoloader = new Zend_Application_Module_Autoloader (array ('namespace' => '', 'basePath' => APPLICATION_PATH));
-    
+
     	// autoload form validators & filters definition
     	$autoloader->addResourceType ('Filter', 'forms/filters', 'Filter_');
     	$autoloader->addResourceType ('Validator', 'forms/validators', 'Validate_');
-    	
+
     	$autoloader->addResourceType ('Interface', 'models/interfaces', 'Interface_');
     	$autoloader->addResourceType ('Presentation', 'models/presentation', 'Presentation_');
     	$autoloader->addResourceType ('Format', 'models/formatters', 'Format_');

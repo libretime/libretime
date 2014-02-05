@@ -128,21 +128,14 @@ class ShowbuilderController extends Zend_Controller_Action
 
         //only include library things on the page if the user can see it.
         if (!$disableLib) {
+
+            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/lib_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        	$this->view->headScript()->appendFile($baseUrl.'js/airtime/library/lib_separate_table.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         	
         	//set media columns for display of data.
         	$mediaService = new Application_Service_MediaService();
         	$this->view->headScript()->appendScript($mediaService->createLibraryColumnsJavascript());
-        	
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/lib_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        	$this->view->headScript()->appendFile($baseUrl.'js/airtime/library/lib_separate_table.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        	
-            $data = Application_Model_Preference::getCurrentLibraryTableSetting();
-            if (!is_null($data)) {
-                $libraryTable = json_encode($data);
-                $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
-            } else {
-                $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', null );");
-            }
+            $this->view->headScript()->appendScript($mediaService->createLibraryColumnSettingsJavascript());
         }
 
         $data = Application_Model_Preference::getTimelineDatatableSetting();

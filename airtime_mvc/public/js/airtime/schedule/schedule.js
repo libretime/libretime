@@ -14,7 +14,7 @@ var serverTimezoneOffset = 0;
 
 function closeDialogCalendar(event, ui) {
     
-    $el = $(this);
+    var $el = $(this);
     $el.dialog('destroy');
     $el.remove();
     

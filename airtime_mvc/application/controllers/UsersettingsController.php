@@ -8,8 +8,12 @@ class UsersettingsController extends Zend_Controller_Action
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('get-now-playing-screen-settings', 'json')
                     ->addActionContext('set-now-playing-screen-settings', 'json')
-                    ->addActionContext('get-library-datatable', 'json')
-                    ->addActionContext('set-library-datatable', 'json')
+                    ->addActionContext('get-audio-datatable', 'json')
+                    ->addActionContext('set-audio-datatable', 'json')
+                    ->addActionContext('get-webstream-datatable', 'json')
+                    ->addActionContext('set-webstream-datatable', 'json')
+                    ->addActionContext('get-playlist-datatable', 'json')
+                    ->addActionContext('set-playlist-datatable', 'json')
                     ->addActionContext('get-timeline-datatable', 'json')
                     ->addActionContext('set-timeline-datatable', 'json')
                     ->addActionContext('remindme', 'json')
@@ -34,21 +38,44 @@ class UsersettingsController extends Zend_Controller_Action
             $this->view->settings = $data;
         }
     }
-
-    public function setLibraryDatatableAction()
+    
+    public function setAudioDatatableAction()
     {
-        $request = $this->getRequest();
-        $settings = $request->getParam("settings");
-
-        Application_Model_Preference::setCurrentLibraryTableSetting($settings);
+    	$request = $this->getRequest();
+    	$settings = $request->getParam("settings");
+    
+    	Application_Model_Preference::setAudioTableSetting($settings);
     }
-
-    public function getLibraryDatatableAction()
+    
+    public function getAudioDatatableAction()
     {
-        $data = Application_Model_Preference::getCurrentLibraryTableSetting();
-        if (!is_null($data)) {
-            $this->view->settings = $data;
-        }
+    	$this->view->settings = Application_Model_Preference::getAudioTableSetting();
+    }
+    
+    public function setWebstreamDatatableAction()
+    {
+    	$request = $this->getRequest();
+    	$settings = $request->getParam("settings");
+    
+    	Application_Model_Preference::setWebstreamTableSetting($settings);
+    }
+    
+    public function getWebstreamDatatableAction()
+    {
+    	$this->view->settings = Application_Model_Preference::getWebstreamTableSetting();
+    }
+    
+    public function setPlaylistDatatableAction()
+    {
+    	$request = $this->getRequest();
+    	$settings = $request->getParam("settings");
+    
+    	Application_Model_Preference::setPlaylistTableSetting($settings);
+    }
+    
+    public function getPlaylistDatatableAction()
+    {
+    	$this->view->settings = Application_Model_Preference::getPlaylistTableSetting();
     }
 
     public function setTimelineDatatableAction()

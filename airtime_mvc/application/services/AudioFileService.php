@@ -467,6 +467,8 @@ class Application_Service_AudioFileService
 	
 	public function createContextMenu($audioFile) {
 		
+		$baseUrl = Application_Common_OsPath::getBaseDir();
+		
 		$id = $audioFile->getId();
 		
 		$menu = array();
@@ -478,6 +480,13 @@ class Application_Service_AudioFileService
 			"callback" => "previewMedia"
 		);
 		
+		$menu["edit"] = array(
+			"name"=> _("Edit Metadata"), 
+			"icon" => "edit", 
+			"url" => $baseUrl."library/edit-file-md/id/{$id}",
+			"callback" => "editMetadata"
+		);
+		
 		$url = $audioFile->getFileUrl().'/download/true';
 		$menu["download"] = array(
 			"name" => _("Download"), 
@@ -485,6 +494,13 @@ class Application_Service_AudioFileService
 			"url" => $url,
 			"callback" => "downloadMedia"
 		);
+		
+		/*
+		if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
+			$menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
+			$menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
+		}
+		*/
 		
 		return $menu;
 	}

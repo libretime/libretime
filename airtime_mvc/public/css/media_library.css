@@ -17,17 +17,18 @@
     padding: 5px 0;
 	margin: 2px 0 0;
     cursor: default;
-	}
-	.lib-content .fg-toolbar ul.dropdown-menu li {
-	    list-style-type: none;
-	    float: none;
-	    padding: 0;
-	    margin-right: 0;
-		}
-		.lib-content .fg-toolbar ul.dropdown-menu li.nav-header {
-	    	padding-right: 20px;
-			padding-left: 20px;
-			}
+}
+.lib-content .fg-toolbar ul.dropdown-menu li {
+    list-style-type: none;
+    float: none;
+    padding: 0;
+    margin-right: 0;
+}
+.lib-content .fg-toolbar ul.dropdown-menu li.nav-header {
+   	padding-right: 20px;
+	padding-left: 20px;
+}
+			
 .lib-selected.even {
 	background-color: rgba(240, 109, 53, 1);
 }
