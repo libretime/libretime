@@ -10,6 +10,9 @@ import time
 from api_clients import api_client
 
 class ListenerStat(Thread):
+
+    HTTP_REQUEST_TIMEOUT = 30 # 30 second HTTP request timeout
+
     def __init__(self, config, logger=None):
         Thread.__init__(self)
         self.config = config
@@ -47,7 +50,7 @@ class ListenerStat(Thread):
             url=url,
             headers=header)
 
-        f = urllib2.urlopen(req)
+        f = urllib2.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
         document = f.read()
 
         return document

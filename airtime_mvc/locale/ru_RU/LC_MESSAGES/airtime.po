@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-01-31 15:14+0000\n"
+"PO-Revision-Date: 2014-02-04 17:30+0000\n"
 "Last-Translator: andrey.podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/airtime/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -73,7 +73,7 @@ msgstr "Окончание звучания"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
-msgstr ""
+msgstr "Установить окончание звучания"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
@@ -551,7 +551,7 @@ msgstr "ВОССТАНОВИТЬ"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "URL подключения к Show:"
+msgstr "URL подключения к программе:"
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:4
 msgid "Choose Days:"
@@ -581,7 +581,7 @@ msgstr "%s's Настройки"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
-msgstr "Выберите Show"
+msgstr "Выберите программу"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 #: airtime_mvc/application/controllers/LocaleController.php:391
@@ -769,7 +769,7 @@ msgstr "Источник Master "
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:38
 msgid "Show Source"
-msgstr "Источник Show "
+msgstr "Источник Show"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
@@ -1318,7 +1318,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:10
 msgid "Show Summary"
-msgstr ""
+msgstr "Данные по прграмме"
 
 #: airtime_mvc/application/models/Show.php:180
 msgid "Shows can have a max length of 24 hours."
@@ -1904,7 +1904,7 @@ msgstr "Вы действительно хотите удалить выделе
 
 #: airtime_mvc/application/controllers/LocaleController.php:64
 msgid "Scheduled"
-msgstr ""
+msgstr "Запланировано"
 
 #: airtime_mvc/application/controllers/LocaleController.php:65
 msgid "Playlist / Block"
@@ -2001,7 +2001,7 @@ msgstr "Вы загружаете файлы. %sПереход на другой
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
 msgid "Open Media Builder"
-msgstr ""
+msgstr "Открыть медиа-построитель"
 
 #: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "please put in a time '00:00:00 (.0)'"
@@ -2288,7 +2288,7 @@ msgstr "Retreiving данных с сервера ..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "This show has no scheduled content."
-msgstr "Это шоу не имеет запланированного содержания."
+msgstr "Эта программа не имеет запланированного содержания."
 
 #: airtime_mvc/application/controllers/LocaleController.php:208
 msgid "This show is not completely filled with content."
@@ -2546,7 +2546,7 @@ msgstr "Отменить"
 
 #: airtime_mvc/application/controllers/LocaleController.php:287
 msgid "Fade Editor"
-msgstr ""
+msgstr "Редактор затухания"
 
 #: airtime_mvc/application/controllers/LocaleController.php:288
 msgid "Cue Editor"
@@ -2627,11 +2627,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "View schedule"
-msgstr ""
+msgstr "Показать календарь"
 
 #: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "View show content"
-msgstr ""
+msgstr "Показать программу"
 
 #: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "DJs can do the following:"
@@ -2643,7 +2643,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:321
 msgid "Import media files"
-msgstr ""
+msgstr "Импорт медиа-файлов"
 
 #: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Create playlists, smart blocks, and webstreams"
@@ -2659,11 +2659,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:325
 msgid "View and manage show content"
-msgstr ""
+msgstr "Редактировать программу"
 
 #: airtime_mvc/application/controllers/LocaleController.php:326
 msgid "Schedule shows"
-msgstr ""
+msgstr "Планировать программу"
 
 #: airtime_mvc/application/controllers/LocaleController.php:327
 msgid "Manage all library content"
@@ -2671,11 +2671,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Admins can do the following:"
-msgstr ""
+msgstr "Администраторы могут:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "Manage preferences"
-msgstr ""
+msgstr "Настроить предпочтения"
 
 #: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Manage users"
@@ -2823,15 +2823,15 @@ msgstr "Ошибка инициализации."
 
 #: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "HTTP Error."
-msgstr ""
+msgstr "Ошибка HTTP."
 
 #: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "Security error."
-msgstr ""
+msgstr "Ошибка безопасности."
 
 #: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "Generic error."
-msgstr ""
+msgstr "Общая ошибка."
 
 #: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "IO error."
@@ -2865,11 +2865,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "Create Entry"
-msgstr ""
+msgstr "Создать"
 
 #: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "Edit History Record"
-msgstr ""
+msgstr "Редактировать историю"
 
 #: airtime_mvc/application/controllers/LocaleController.php:393
 #, php-format
@@ -2999,7 +2999,7 @@ msgstr "Пользователь успешно обновлен!"
 
 #: airtime_mvc/application/controllers/UserController.php:154
 msgid "Settings updated successfully!"
-msgstr ""
+msgstr "Изменения в настройках сохранены!"
 
 #: airtime_mvc/application/common/DateHelper.php:213
 #, php-format
@@ -3047,7 +3047,7 @@ msgstr "Пароль:"
 #: airtime_mvc/application/forms/AddUser.php:42
 #: airtime_mvc/application/forms/EditUser.php:52
 msgid "Verify Password:"
-msgstr ""
+msgstr "Повторите пароль:"
 
 #: airtime_mvc/application/forms/AddUser.php:51
 #: airtime_mvc/application/forms/EditUser.php:62
@@ -3190,7 +3190,7 @@ msgstr "Длительность:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:83
 msgid "Timezone:"
-msgstr ""
+msgstr "Временная зона:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:92
 msgid "Repeats?"
@@ -3218,7 +3218,7 @@ msgstr "Не может иметь длительность более 24 час
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr ""
+msgstr "Ссылка:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
@@ -3230,15 +3230,15 @@ msgstr "Еженедельно"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:20
 msgid "every 2 weeks"
-msgstr ""
+msgstr "каждые 2 недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:21
 msgid "every 3 weeks"
-msgstr ""
+msgstr "каждые 3 недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:22
 msgid "every 4 weeks"
-msgstr ""
+msgstr "каждые 4 недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:23
 msgid "monthly"
@@ -3254,11 +3254,11 @@ msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the month"
-msgstr ""
+msgstr "день месяца"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the week"
-msgstr ""
+msgstr "день недели"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:56
 #: airtime_mvc/application/forms/DateRange.php:44
@@ -3376,7 +3376,7 @@ msgstr "'%значение%' не входит в промежуток '%min%' �
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:89
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Пароли не совпадают"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:48
 msgid "Enabled:"
@@ -3421,11 +3421,11 @@ msgstr "Точка монтирования"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:195
 msgid "Admin User"
-msgstr ""
+msgstr "Администратор"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:207
 msgid "Admin Password"
-msgstr ""
+msgstr "Пароль администратора"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:232
 msgid "Server cannot be empty."
@@ -3469,7 +3469,7 @@ msgstr "Название станции - Название программы"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
-msgstr ""
+msgstr "Отключить мета-данные"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69
 msgid "Enable Replay Gain"
@@ -3579,11 +3579,11 @@ msgstr "Введите время в секундах 0 {0,0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr ""
+msgstr "Возрастание по умолчанию:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr ""
+msgstr "Затухание по умолчанию:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
@@ -3602,7 +3602,7 @@ msgstr "Активировано"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:97
 msgid "Default Interface Language"
-msgstr ""
+msgstr "Язык по умолчанию"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
 msgid "Station Timezone"

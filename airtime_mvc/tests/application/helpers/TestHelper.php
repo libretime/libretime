@@ -61,7 +61,9 @@ class TestHelper
             //Add any tables that shouldn't be cleared here.
             //   cc_subjs - Most of Airtime requires an admin account to work, which has id=1,
             //              so don't clear it.
-            $tablesToNotClear = array("cc_subjs");
+            //   cc_music_dirs - Has foreign key constraints against cc_files, so we clear cc_files 
+            //                   first and ckear cc_music_dirs after
+            $tablesToNotClear = array("cc_subjs", "cc_music_dirs");
 
             $con->beginTransaction();
             foreach ($rows as $row) {
@@ -78,6 +80,11 @@ class TestHelper
                 $sql = "DELETE FROM $tablename";
                 AirtimeInstall::InstallQuery($sql, false);
             }
+
+            //Now that cc_files is empty, clearing cc_music_dirs should work
+            $sql = "DELETE FROM cc_music_dirs";
+            AirtimeInstall::InstallQuery($sql, false);
+
             $con->commit();
             
             //Because we're DELETEing all the rows instead of using TRUNCATE (for speed),

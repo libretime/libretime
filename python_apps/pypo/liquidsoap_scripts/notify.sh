@@ -11,4 +11,4 @@ SCRIPT=`readlink -f $0`
 SCRIPTPATH=`dirname $SCRIPT`
 
 cd ${SCRIPTPATH}/../ 
-timeout 45 python pyponotify.py "$@"
+timeout --signal=KILL 45 python pyponotify.py "$@"

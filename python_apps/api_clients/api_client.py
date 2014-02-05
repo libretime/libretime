@@ -10,6 +10,7 @@ import sys
 import time
 import urllib
 import urllib2
+import socket 
 import logging
 import json
 import base64
@@ -121,6 +122,9 @@ class ApcUrl(object):
         else: return self.base_url
 
 class ApiRequest(object):
+
+    API_HTTP_REQUEST_TIMEOUT = 30 # 30 second HTTP request timeout
+
     def __init__(self, name, url, logger=None):
         self.name = name
         self.url  = url
@@ -134,9 +138,15 @@ class ApiRequest(object):
         self.logger.debug(final_url)
         try:
             req = urllib2.Request(final_url, _post_data)
-            f = urllib2.urlopen(req)
+            f = urllib2.urlopen(req, timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT)
             content_type = f.info().getheader('Content-Type')
             response = f.read()
+        #Everything that calls an ApiRequest should be catching URLError explicitly
+        #(according to the other comments in this file and a cursory grep through the code)
+        #Note that URLError can occur for timeouts as well as socket.timeout
+        except socket.timeout:
+            self.logger.error('HTTP request to %s timed out', final_url)
+            raise
         except Exception, e:
             #self.logger.error('Exception: %s', e)
             #self.logger.error("traceback: %s", traceback.format_exc())
@@ -277,7 +287,7 @@ class AirtimeApiClient(object):
 
             try:
                 request = urllib2.Request(url, data, headers)
-                response = urllib2.urlopen(request).read().strip()
+                response = urllib2.urlopen(request, timeout=ApiClient.API_HTTP_REQUEST_TIMEOUT).read().strip()
 
                 logger.info("uploaded show result %s", response)
                 break
