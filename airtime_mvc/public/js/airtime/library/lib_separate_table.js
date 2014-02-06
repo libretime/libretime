@@ -117,7 +117,7 @@ var AIRTIME = (function(AIRTIME) {
     	return $el;
     }
     
-    function setUpAdvancedSearch() {
+    function setUpAdvancedSearch(columns) {
     	
     }
     	
