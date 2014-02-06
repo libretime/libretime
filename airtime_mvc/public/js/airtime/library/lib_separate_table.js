@@ -470,6 +470,7 @@ var AIRTIME = (function(AIRTIME) {
     		var url = baseUrl+"webstream/new/format/json";
     		
     		e.preventDefault();
+    		e.stopPropagation();
     		
     		$.get(url, function(json) {
     			makeWebstreamDialog(json.html);
@@ -485,7 +486,9 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	});
     	
-    	$library.on("click", "input[type=checkbox]", function(ev) {
+    	$library.on("click", "input[type=checkbox]", function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
             
             var $cb = $(this),
                 $prev,
@@ -494,7 +497,7 @@ var AIRTIME = (function(AIRTIME) {
             
             if ($cb.is(":checked")) {
                 
-                if (ev.shiftKey) {
+                if (e.shiftKey) {
                     $prev = $library.find("tr."+LIB_SELECTED_CLASS+":visible").eq(-1);
                     $trs = $prev.nextUntil($tr);
                     
@@ -511,6 +514,9 @@ var AIRTIME = (function(AIRTIME) {
         });
     	
     	$library.on("mousedown", 'td:not(.library_checkbox)', function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
+    		
     		//only trigger context menu on right click.
     		if (e.which === 3) {
     			var $el = $(this);
@@ -521,6 +527,9 @@ var AIRTIME = (function(AIRTIME) {
     	
     	//perform the double click action on an item row.
     	$library.on("dblclick", 'td:not(.library_checkbox)', function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
+    		
     		var $el = $(this),
     			$tr,
     			data;
@@ -531,32 +540,13 @@ var AIRTIME = (function(AIRTIME) {
     	});
     	
     	//events for the edit metadata dialog
-    	$body.on("click", "#editmdsave", function() {
-            var file_id = $('#file_id').val(),
-                data = $("#edit-md-dialog form").serializeArray();
-            
-            $.post(baseUrl+'library/edit-file-md', 
-            	{format: "json", id: file_id, data: data}, 
-            	function() {
-            		$("#edit-md-dialog").dialog().remove();
-
-	                // don't redraw the library table if we are on calendar page
-	                // we would be on calendar if viewing recorded file metadata
-	                if ($("#schedule_calendar").length === 0) {
-	                    oTable.fnStandingRedraw();
-	                }
-            });
-        });
-        
-        $('#editmdcancel').live("click", function() {
-            $("#edit-md-dialog").dialog().remove();
-        });
-
+    	/*
         $('#edit-md-dialog').live("keyup", function(event) {
             if (event.keyCode === 13) {
                 $('#editmdsave').click();
             }
         });
+        */
         //end of events fo the edit metadata dialog.
     	
     	 // begin context menu initialization.
