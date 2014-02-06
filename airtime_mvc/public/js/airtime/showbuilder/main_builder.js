@@ -324,7 +324,7 @@ AIRTIME = (function(AIRTIME) {
         }
 
         //check if the timeline view needs updating.
-        checkScheduleUpdates();
+        //checkScheduleUpdates();
     };
 
     mod.onResize = function() {

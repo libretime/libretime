@@ -16,7 +16,7 @@ class ApiController extends Zend_Controller_Action
 
         $params = $this->getRequest()->getParams();
         if (!in_array($params['action'], $ignoreAuth)) {
-            $this->checkAuth();
+            //$this->checkAuth();
         }
         /* Initialize action controller here */
         $context = $this->_helper->getHelper('contextSwitch');
@@ -61,12 +61,14 @@ class ApiController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
         $api_key = $this->_getParam('api_key');
 
+        /*
         if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
             is_null(Zend_Auth::getInstance()->getStorage()->read())) {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource.');
             exit;
         }
+        */
     }
 
     public function versionAction()
@@ -94,7 +96,7 @@ class ApiController extends Zend_Controller_Action
             clearstatcache();
 
             if (is_file($filepath)) {
-               
+
                 //Download user left clicks a track and selects Download.
                 if ("true" == $this->_getParam('download')) {
                     //path_info breaks up a file path into seperate pieces of informaiton.
@@ -105,7 +107,7 @@ class ApiController extends Zend_Controller_Action
                     header('Content-Disposition: attachment; filename="'.$filename.'"');
                 } else {
                     //user clicks play button for track and downloads it.
-                    header('Content-Disposition: inline; filename="'.$info.'"');
+                    header('Content-Disposition: signal; filename="'.$info.'"');
                 }
 
                 $this->smartReadFile($filepath, $media->getMime());
@@ -200,7 +202,7 @@ class ApiController extends Zend_Controller_Action
         //We can have multiple levels of output buffering. Need to
         //keep looping until all have been disabled!!!
         //http://www.php.net/manual/en/function.ob-end-flush.php
-        //while (@ob_end_flush());
+        while (@ob_end_flush());
 
         $cur = $begin;
         fseek($fm, $begin, 0);
