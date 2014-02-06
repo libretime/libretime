@@ -99,14 +99,38 @@ var AIRTIME = (function(AIRTIME) {
             close: removeDialog
         });
     }
+    
+    function createAdvancedSearchField(config) {
+    	var template,
+    		$el,
+    		display = config.display ? "" : "style='display:none;'";
+    	
+    	template = 
+    		"<div id='advanced_search_col_<%= index %>' class='control-group' <%= style %>>" +
+            	"<label class='control-label'><%= title %></label>" +
+            	"<div id='adv-search-<%= id %>' class='controls'></div>" +
+            "</div>";
+    	
+    	template = _.template(template);
+    	$el = $(template(config));
+    	
+    	return $el;
+    }
+    
+    function setUpAdvancedSearch() {
+    	
+    }
     	
     function createDatatable(config) {
     	
+    	var key = "datatables-"+config.type+"-aoColumns",
+    		columns = JSON.parse(localStorage.getItem(key));
+    	
     	var table = $("#"+config.type + "_table").dataTable({
-    		"aoColumns": config.columns,
+    		"aoColumns": columns,
 			"bProcessing": true,
 			"bServerSide": true,
-			"sAjaxSource": config.source,
+			"sAjaxSource": baseUrl+"media/"+config.type+"-feed",
 			"sAjaxDataProp": "media",
 			"fnServerData": function ( sSource, aoData, fnCallback ) {
                
@@ -135,9 +159,7 @@ var AIRTIME = (function(AIRTIME) {
                     type: "POST",
                     data: {settings : oData, format: "json"},
                     dataType: "json"
-                  });
-                
-                colReorderMap = oData.ColReorder;
+                  }); 
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-'+ config.type);
@@ -191,7 +213,14 @@ var AIRTIME = (function(AIRTIME) {
                 "aiExclude": [ 0 ],
                 "buttonText": $.i18n._("Show / hide columns"),
                 //use this to show/hide advanced search fields.
-                //"fnStateChange": setFilterElement
+                "fnStateChange": function ( iColumn, bVisible ) {
+                	var c = table.fnSettings().aoColumns,
+                		origIndex = c[iColumn]._ColReorder_iOrigCol;
+                		col = columns[origIndex];
+                	
+                	console.log(col);
+                	
+                }
             },
             
             "oColReorder": {
@@ -402,8 +431,6 @@ var AIRTIME = (function(AIRTIME) {
 		    	always: function() {
 		    		
 		    	},
-		    	localColumns: "datatables-audiofile-aoColumns",
-		    	source: baseUrl+"media/audio-file-feed",
 		    	type: "audio"
 		    },
 		    "lib_webstreams": {
@@ -417,8 +444,6 @@ var AIRTIME = (function(AIRTIME) {
 		    	always: function() {
 		    		
 		    	},
-		    	localColumns: "datatables-webstream-aoColumns",
-		    	source: baseUrl+"media/webstream-feed",
 		    	type: "webstream"
 		    },
 		    "lib_playlists": {
@@ -432,8 +457,6 @@ var AIRTIME = (function(AIRTIME) {
 		    	always: function() {
 		    		
 		    	},
-		    	localColumns: "datatables-playlist-aoColumns",
-		    	source: baseUrl+"media/playlist-feed",
 		    	type: "playlist"
 		    }
     	};
@@ -447,10 +470,7 @@ var AIRTIME = (function(AIRTIME) {
     			}
     			else {
     				
-    				var columns = JSON.parse(localStorage.getItem(tab.localColumns));
     				createDatatable({
-    					columns: columns,
-    					prop: tab.dataprop,
     					source: tab.source,
     					type: tab.type
     				});
@@ -546,7 +566,6 @@ var AIRTIME = (function(AIRTIME) {
                 $('#editmdsave').click();
             }
         });
-        */
         //end of events fo the edit metadata dialog.
     	
     	 // begin context menu initialization.

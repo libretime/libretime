@@ -7,14 +7,14 @@ class MediaController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext
-        	->addActionContext('audio-file-feed', 'json')
+        	->addActionContext('audio-feed', 'json')
         	->addActionContext('webstream-feed', 'json')
         	->addActionContext('playlist-feed', 'json')
             ->initContext();
 
     }
 
-    public function audioFileFeedAction()
+    public function audioFeedAction()
     {
     	$params = $this->getRequest()->getParams();
     	
