@@ -108,23 +108,66 @@ var AIRTIME = (function(AIRTIME) {
     	template = 
     		"<div id='advanced_search_col_<%= index %>' class='control-group' <%= style %>>" +
             	"<label class='control-label'><%= title %></label>" +
-            	"<div id='adv-search-<%= id %>' class='controls'></div>" +
+            	"<div id='<%= id %>' class='controls'></div>" +
             "</div>";
     	
     	template = _.template(template);
-    	$el = $(template(config));
+    	$el = $(template({
+    		index: config.index,
+    		style: display,
+    		title: config.title,
+    		id: config.id
+    	}));
     	
     	return $el;
     }
     
-    function setUpAdvancedSearch() {
+    function setUpAdvancedSearch(columns, type) {
+    	var i, len,
+    		selector = "#advanced_search_"+type,
+    		$div = $(selector),
+    		col, tmp,
+    		searchFields = [];
     	
+    	for (i = 0, len = columns.length; i < len; i++) {
+    		
+    		col = columns[i];
+    		
+    		if (col.bSearchable) {
+    			tmp = createAdvancedSearchField({
+        			index: i,
+        			display: col.bVisible,
+        			title: col.sTitle,
+        			id: "adv-search-"+ col.mDataProp
+        		});
+    			
+    			searchFields.push(tmp);
+    		}
+    	}
+    	
+    	//http://www.bennadel.com/blog/2281-jQuery-Appends-Multiple-Elements-Using-Efficient-Document-Fragments.htm
+    	$div.append(searchFields);
+    }
+    
+    function setAdvancedSearchColumnDisplay(colNum, display) {
+    	var selector = "#advanced_search_col_" + colNum,
+    		$column = $(selector);
+    	
+    	if (display) {
+    		$column.show();
+    	}
+    	else {
+    		$column.hide();
+    	}
     }
     	
     function createDatatable(config) {
-    	
     	var key = "datatables-"+config.type+"-aoColumns",
-    		columns = JSON.parse(localStorage.getItem(key));
+    		columns = JSON.parse(localStorage.getItem(key)),
+    		abVisible,
+    		i, len;
+    	
+    	setUpAdvancedSearch(columns, config.type);
     	
     	var table = $("#"+config.type + "_table").dataTable({
     		"aoColumns": columns,
@@ -132,17 +175,17 @@ var AIRTIME = (function(AIRTIME) {
 			"bServerSide": true,
 			"sAjaxSource": baseUrl+"media/"+config.type+"-feed",
 			"sAjaxDataProp": "media",
-			"fnServerData": function ( sSource, aoData, fnCallback ) {
+			"fnServerData": function (sSource, aoData, fnCallback) {
                
-                aoData.push( { name: "format", value: "json"} );
+                aoData.push({ name: "format", value: "json"});
                
-                $.ajax( {
+                $.ajax({
                     "dataType": 'json',
                     "type": "POST",
                     "url": sSource,
                     "data": aoData,
                     "success": fnCallback
-                } );
+                });
             },
             //save the tables based on tableId
             "bStateSave": true,
@@ -194,6 +237,10 @@ var AIRTIME = (function(AIRTIME) {
                     }
                 }
                 
+                //abVisible indices belong to the original column order.
+                //use to fix up advanced search.
+                abVisible = oData.abVisCols;
+                
                 oData.iEnd = parseInt(oData.iEnd, 10);
                 oData.iLength = parseInt(oData.iLength, 10);
                 oData.iStart = parseInt(oData.iStart, 10);
@@ -216,10 +263,8 @@ var AIRTIME = (function(AIRTIME) {
                 "fnStateChange": function ( iColumn, bVisible ) {
                 	var c = table.fnSettings().aoColumns,
                 		origIndex = c[iColumn]._ColReorder_iOrigCol;
-                		col = columns[origIndex];
-                	
-                	console.log(col);
-                	
+                		
+                	setAdvancedSearchColumnDisplay(origIndex, bVisible);
                 }
             },
             
@@ -231,6 +276,12 @@ var AIRTIME = (function(AIRTIME) {
 				$(nRow).data("aData", aData);
 	        }
 		});
+    	
+    	//fnStateLoadParams will have already run.
+    	//fix up advanced search from saved settings.
+    	for (i = 0, len = abVisible.length; i < len; i++) {
+    		setAdvancedSearchColumnDisplay(i, abVisible[i]);
+    	}
     	
     	table.fnSetFilteringDelay(350);
     }
@@ -485,6 +536,12 @@ var AIRTIME = (function(AIRTIME) {
 				var x;
 			}
     	});
+    	
+    	 $library.on("click", "legend", function() {
+    		 var $fs = $(this).parents("fieldset");
+    		 
+    		 $fs.toggleClass("closed");
+    	 });
     	
     	$library.on("click", "#lib_new_webstream", function(e) {
     		var url = baseUrl+"webstream/new/format/json";

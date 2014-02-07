@@ -54,7 +54,6 @@ class Application_Service_MediaService
 				"title" => _("Scheduled"),
 				"width" => "90px",
 				"class" => "library_is_scheduled",
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "checkbox"		
 				)
@@ -64,7 +63,6 @@ class Application_Service_MediaService
 				"title" => _("Playlist"),
 				"width" => "90px",
 				"class" => "library_is_playlist",
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "checkbox"		
 				)
@@ -102,7 +100,6 @@ class Application_Service_MediaService
 				"width" => "80px",
 				"class" => "library_bitrate",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "number-range"
 				)
@@ -113,7 +110,6 @@ class Application_Service_MediaService
 				"width" => "50px",
 				"class" => "library_bpm",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "number-range"
 				)
@@ -226,7 +222,6 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_modified_time",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "date-range"
 				)
@@ -237,7 +232,6 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_modified_time",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "date-range"
 				)
@@ -288,7 +282,6 @@ class Application_Service_MediaService
 				"width" => "80px",
 				"class" => "library_replay_gain",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "number-range"
 				)
@@ -299,7 +292,6 @@ class Application_Service_MediaService
 				"width" => "80px",
 				"class" => "library_sr",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "number-range"
 				)
@@ -310,7 +302,6 @@ class Application_Service_MediaService
 				"width" => "65px",
 				"class" => "library_track",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "number-range"
 				)
@@ -321,7 +312,6 @@ class Application_Service_MediaService
 				"width" => "125px",
 				"class" => "library_upload_time",
 				"visible" => false,
-				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "date-range"
 				)
