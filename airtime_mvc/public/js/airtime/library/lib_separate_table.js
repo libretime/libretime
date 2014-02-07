@@ -566,6 +566,7 @@ var AIRTIME = (function(AIRTIME) {
                 $('#editmdsave').click();
             }
         });
+        */
         //end of events fo the edit metadata dialog.
     	
     	 // begin context menu initialization.
