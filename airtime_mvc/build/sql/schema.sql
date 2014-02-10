@@ -652,7 +652,7 @@ CREATE TABLE "media_audiofile"
     "album_title" VARCHAR(512),
     "genre" VARCHAR(64),
     "comments" TEXT,
-    "year" VARCHAR(16),
+    "year" INTEGER,
     "track_number" INTEGER,
     "channels" INTEGER,
     "bpm" INTEGER,

@@ -113,7 +113,7 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
 
     /**
      * The value for the year field.
-     * @var        string
+     * @var        int
      */
     protected $year;
 
@@ -484,7 +484,7 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
     /**
      * Get the [year] column value.
      *
-     * @return string
+     * @return int
      */
     public function getYear()
     {
@@ -1111,13 +1111,13 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
     /**
      * Set the value of [year] column.
      *
-     * @param  string $v new value
+     * @param  int $v new value
      * @return AudioFile The current object (for fluent API support)
      */
     public function setYear($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
         if ($this->year !== $v) {
@@ -1895,7 +1895,7 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
             $this->album_title = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->genre = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
             $this->comments = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->year = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->year = ($row[$startcol + 10] !== null) ? (int) $row[$startcol + 10] : null;
             $this->track_number = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
             $this->channels = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
             $this->bpm = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
@@ -2365,7 +2365,7 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
                         $stmt->bindValue($identifier, $this->comments, PDO::PARAM_STR);
                         break;
                     case '"year"':
-                        $stmt->bindValue($identifier, $this->year, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, $this->year, PDO::PARAM_INT);
                         break;
                     case '"track_number"':
                         $stmt->bindValue($identifier, $this->track_number, PDO::PARAM_INT);

@@ -724,9 +724,18 @@
             });
 
             for (j = 0; j < aiCustomSearch_Indexes.length; j++) {
+            	
+            	//fix to return "" instead of the range separator if both fields are blank.;
                 var fnSearch_ = function () {
-                    var id = oTable.attr("id");
-                    return $("#" + id + "_range_from_" + aiCustomSearch_Indexes[j]).val() + properties.sRangeSeparator + $("#" + id + "_range_to_" + aiCustomSearch_Indexes[j]).val();
+                    var id = oTable.attr("id"),
+                    	from = $("#" + id + "_range_from_" + aiCustomSearch_Indexes[j]).val(),
+                    	to = $("#" + id + "_range_to_" + aiCustomSearch_Indexes[j]).val();
+                    
+                    if (from === "" && to === "") {
+                    	return "";
+                    }
+                    
+                    return  from + properties.sRangeSeparator + to;
                 };
                 afnSearch_.push(fnSearch_);
             }
