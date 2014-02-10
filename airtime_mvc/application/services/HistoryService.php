@@ -560,6 +560,9 @@ class Application_Service_HistoryService
 		try {
 
 			$item = CcScheduleQuery::create()->findPK($schedId, $this->con);
+			if (is_null($item)) {
+			    throw new Exception("Invalid schedule id: ".$schedId);
+			}
 
 			//TODO figure out how to combine these all into 1 query.
 			$showInstance = $item->getCcShowInstances($this->con);

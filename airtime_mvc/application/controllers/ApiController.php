@@ -395,13 +395,13 @@ class ApiController extends Zend_Controller_Action
         $media_id = $this->_getParam("media_id");
         Logging::debug("Received notification of new media item start: $media_id");
         Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
-        
-        $historyService = new Application_Service_HistoryService();
-        $historyService->insertPlayedItem($media_id);
 
-        //set a 'last played' timestamp for media item
-        //needed for smart blocks
         try {
+            $historyService = new Application_Service_HistoryService();
+            $historyService->insertPlayedItem($media_id);
+
+            //set a 'last played' timestamp for media item
+            //needed for smart blocks
             $mediaType = Application_Model_Schedule::GetType($media_id);
             if ($mediaType == 'file') {
                 $file_id = Application_Model_Schedule::GetFileId($media_id);
