@@ -640,15 +640,19 @@ class Application_Service_MediaService
 		
 		if (isset($from) && preg_match_all('/(\d{4}-\d{2}-\d{2})/', $from)) {
 			$name = "adv_{$col}_from";
-			$cond = "{$col} >= ?";	
-			$query->condition($name, $cond, $from);
+			$cond = "{$col} >= ?";
+			
+			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($from);
+			$query->condition($name, $cond, $date);
 			$num++;
 		}
 		
 		if (isset($to) && preg_match_all('/(\d{4}-\d{2}-\d{2})/', $to)) {
 			$name = "adv_{$col}_to";
 			$cond = "{$col} <= ?";
-			$query->condition($name, $cond, $to);
+			
+			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($to);
+			$query->condition($name, $cond, $date);
 			$num++;
 		}
 		

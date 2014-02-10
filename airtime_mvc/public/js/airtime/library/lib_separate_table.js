@@ -124,6 +124,7 @@ var AIRTIME = (function(AIRTIME) {
     
     function setUpAdvancedSearch(columns, type) {
     	var i, len,
+    		prop,
     		selector = "#advanced_search_"+type,
     		$div = $(selector),
     		col,
@@ -139,11 +140,13 @@ var AIRTIME = (function(AIRTIME) {
     		
     		if (col.bSearchable) {
     			
+    			prop = col.mDataProp.split(".").pop();
+    			
     			config = {
         			index: i,
         			display: col.bVisible,
         			title: col.sTitle,
-        			id: "adv-search-"+col.mDataProp
+        			id: "adv-search-" + prop
         		};
     			
     			field = createAdvancedSearchField(config);
@@ -175,31 +178,11 @@ var AIRTIME = (function(AIRTIME) {
     		$column.hide();
     	}
     }
-    
-    function orderSearchConfig(oTable, searchConfig, aOrder) {
-    	var orderedSearchConfig = [];
-    	
-    	if (aOrder === undefined) {
-    		orderedSearchConfig = searchConfig;
-    	}
-    	else {
-    		for (i = 0, len = aOrder.length; i < len; i++) {
-        		orderedSearchConfig.push(searchConfig[aOrder[i]]);
-        	}
-    	}
-
-    	oTable.columnFilter({
-    		aoColumns: orderedSearchConfig,
-    		sPlaceHolder: "head:before",
-    		bUseColVis: false
-    	});
-    }
     	
     function createDatatable(config) {
     	var key = "datatables-"+config.type+"-aoColumns",
     		columns = JSON.parse(localStorage.getItem(key)),
     		abVisible,
-    		aOrder,
     		i, len,
     		searchConfig;
     	
@@ -276,8 +259,6 @@ var AIRTIME = (function(AIRTIME) {
                 //abVisible indices belong to the original column order.
                 //use to fix up advanced search.
                 abVisible = oData.abVisCols;
-                //use to set the advance search config.
-                aOrder = oData.ColReorder;
                 
                 oData.iEnd = parseInt(oData.iEnd, 10);
                 oData.iLength = parseInt(oData.iLength, 10);
@@ -324,7 +305,10 @@ var AIRTIME = (function(AIRTIME) {
     		setAdvancedSearchColumnDisplay(i, abVisible[i]);
     	}
     	
-    	orderSearchConfig(table, searchConfig);//, aOrder);
+    	table.columnFilter({
+    		aoColumns: searchConfig,
+    		sPlaceHolder: "head:before"
+    	});
     	
     	table.fnSetFilteringDelay(350);
     }
