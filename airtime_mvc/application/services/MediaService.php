@@ -54,6 +54,7 @@ class Application_Service_MediaService
 				"title" => _("Scheduled"),
 				"width" => "90px",
 				"class" => "library_is_scheduled",
+				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "checkbox"		
 				)
@@ -63,6 +64,7 @@ class Application_Service_MediaService
 				"title" => _("Playlist"),
 				"width" => "90px",
 				"class" => "library_is_playlist",
+				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "checkbox"		
 				)
@@ -559,6 +561,7 @@ class Application_Service_MediaService
 				"bVisible" => isset($data["visible"]) ? $data["visible"] : true,
 				"sWidth" => $data["width"],
 				"sClass" => $data["class"],
+				"search" => isset($data["advancedSearch"]) ? $data["advancedSearch"] : null
 			);
 		}
 		

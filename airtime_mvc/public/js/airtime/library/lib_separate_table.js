@@ -126,27 +126,42 @@ var AIRTIME = (function(AIRTIME) {
     	var i, len,
     		selector = "#advanced_search_"+type,
     		$div = $(selector),
-    		col, tmp,
-    		searchFields = [];
+    		col,
+    		field,
+    		colConfig,
+    		searchFields = [],
+    		datatablesConfig = [],
+    		config;
     	
     	for (i = 0, len = columns.length; i < len; i++) {
     		
     		col = columns[i];
     		
     		if (col.bSearchable) {
-    			tmp = createAdvancedSearchField({
+    			
+    			config = {
         			index: i,
         			display: col.bVisible,
         			title: col.sTitle,
-        			id: "adv-search-"+ col.mDataProp
-        		});
+        			id: "adv-search-"+col.mDataProp
+        		};
     			
-    			searchFields.push(tmp);
+    			field = createAdvancedSearchField(config);
+    			searchFields.push(field);
+
+    			colConfig = col["search"];
+    			colConfig["sSelector"] =  "#"+config.id;
+    			datatablesConfig.push(colConfig);
+    		}
+    		else {
+    			datatablesConfig.push(null);
     		}
     	}
     	
     	//http://www.bennadel.com/blog/2281-jQuery-Appends-Multiple-Elements-Using-Efficient-Document-Fragments.htm
     	$div.append(searchFields);
+    	
+    	return datatablesConfig;
     }
     
     function setAdvancedSearchColumnDisplay(colNum, display) {
@@ -160,14 +175,35 @@ var AIRTIME = (function(AIRTIME) {
     		$column.hide();
     	}
     }
+    
+    function orderSearchConfig(oTable, searchConfig, aOrder) {
+    	var orderedSearchConfig = [];
+    	
+    	if (aOrder === undefined) {
+    		orderedSearchConfig = searchConfig;
+    	}
+    	else {
+    		for (i = 0, len = aOrder.length; i < len; i++) {
+        		orderedSearchConfig.push(searchConfig[aOrder[i]]);
+        	}
+    	}
+
+    	oTable.columnFilter({
+    		aoColumns: orderedSearchConfig,
+    		sPlaceHolder: "head:before",
+    		bUseColVis: false
+    	});
+    }
     	
     function createDatatable(config) {
     	var key = "datatables-"+config.type+"-aoColumns",
     		columns = JSON.parse(localStorage.getItem(key)),
     		abVisible,
-    		i, len;
+    		aOrder,
+    		i, len,
+    		searchConfig;
     	
-    	setUpAdvancedSearch(columns, config.type);
+    	searchConfig = setUpAdvancedSearch(columns, config.type);
     	
     	var table = $("#"+config.type + "_table").dataTable({
     		"aoColumns": columns,
@@ -240,6 +276,8 @@ var AIRTIME = (function(AIRTIME) {
                 //abVisible indices belong to the original column order.
                 //use to fix up advanced search.
                 abVisible = oData.abVisCols;
+                //use to set the advance search config.
+                aOrder = oData.ColReorder;
                 
                 oData.iEnd = parseInt(oData.iEnd, 10);
                 oData.iLength = parseInt(oData.iLength, 10);
@@ -269,7 +307,10 @@ var AIRTIME = (function(AIRTIME) {
             },
             
             "oColReorder": {
-                "iFixedColumns": 1
+                "iFixedColumns": 1,
+                "fnReorderCallback": function () {
+                    var x;
+                }
             },
             
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
@@ -282,6 +323,8 @@ var AIRTIME = (function(AIRTIME) {
     	for (i = 0, len = abVisible.length; i < len; i++) {
     		setAdvancedSearchColumnDisplay(i, abVisible[i]);
     	}
+    	
+    	orderSearchConfig(table, searchConfig);//, aOrder);
     	
     	table.fnSetFilteringDelay(350);
     }

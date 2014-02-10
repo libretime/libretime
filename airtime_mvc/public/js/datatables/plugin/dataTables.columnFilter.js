@@ -23,7 +23,7 @@
 
     $.fn.columnFilter = function (options) {
 
-        var asInitVals, i, label, th;
+        var asInitVals, i, label, th, j, k;
 
         //var sTableId = "table";
         var sRangeFormat = "From {from} to {to}";
@@ -87,12 +87,15 @@
         }
 
         function _fnColumnIndex(iColumnIndex) {
-            if (properties.bUseColVis)
-                return iColumnIndex;
-            else
-                return oTable.fnSettings().oApi._fnVisibleToColumnIndex(oTable.fnSettings(), iColumnIndex);
-            //return iColumnIndex;
-            //return oTable.fnSettings().oApi._fnColumnIndexToVisible(oTable.fnSettings(), iColumnIndex);
+        	var s = oTable.fnSettings(),
+        		order = s.oLoadedState.ColReorder,
+        		index = order.indexOf(iColumnIndex);
+        	
+        	//iColumnIndex is the original column index.
+        	//to match the rest of the data sent to the server it must give
+        	//its new display index after reordering in the table.
+        	console.log("index "+iColumnIndex+" is now "+index);
+        	return index;
         }
 
         function fnCreateInput(oTable, regex, smart, bIsNumber, iFilterLength, iMaxLenght) {
@@ -175,7 +178,6 @@
 
         function fnCreateRangeInput(oTable) {
 
-			//var currentFilter = oTable.fnSettings().aoPreSearchCols[i].sSearch;
             th.html(_fnRangeLabelPart(0));
             var sFromId = oTable.attr("id") + '_range_from_' + i;
             var from = $('<input type="text" class="number_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
@@ -199,30 +201,30 @@
             */
             //$.fn.dataTableExt.afnFiltering.push(
             oTable.dataTableExt.afnFiltering.push(
-	        function (oSettings, aData, iDataIndex) {
-	            if (oTable.attr("id") != oSettings.sTableId)
-	                return true;
-	            // Try to handle missing nodes more gracefully
-	            if (document.getElementById(sFromId) == null)
-	                return true;
-	            var iMin = document.getElementById(sFromId).value * 1;
-	            var iMax = document.getElementById(sToId).value * 1;
-	            var iValue = aData[_fnColumnIndex(index)] == "-" ? 0 : aData[_fnColumnIndex(index)] * 1;
-	            if (iMin == "" && iMax == "") {
-	                return true;
-	            }
-	            else if (iMin == "" && iValue <= iMax) {
-	                return true;
-	            }
-	            else if (iMin <= iValue && "" == iMax) {
-	                return true;
-	            }
-	            else if (iMin <= iValue && iValue <= iMax) {
-	                return true;
-	            }
-	            return false;
-	        }
-        );
+		        function (oSettings, aData, iDataIndex) {
+		            if (oTable.attr("id") != oSettings.sTableId)
+		                return true;
+		            // Try to handle missing nodes more gracefully
+		            if (document.getElementById(sFromId) == null)
+		                return true;
+		            var iMin = document.getElementById(sFromId).value * 1;
+		            var iMax = document.getElementById(sToId).value * 1;
+		            var iValue = aData[_fnColumnIndex(index)] == "-" ? 0 : aData[_fnColumnIndex(index)] * 1;
+		            if (iMin == "" && iMax == "") {
+		                return true;
+		            }
+		            else if (iMin == "" && iValue <= iMax) {
+		                return true;
+		            }
+		            else if (iMin <= iValue && "" == iMax) {
+		                return true;
+		            }
+		            else if (iMin <= iValue && iValue <= iMax) {
+		                return true;
+		            }
+		            return false;
+		        }
+	        );
             //------------end range filtering function
 
 
@@ -237,40 +239,33 @@
                 oTable.fnDraw();
                 fnOnFiltered();
             });
-
-
         }
-
 
         function fnCreateDateRangeInput(oTable) {
 
             var aoFragments = sRangeFormat.split(/[}{]/);
 
             th.html("");
-            //th.html(_fnRangeLabelPart(0));
             var sFromId = oTable.attr("id") + '_range_from_' + i;
             var from = $('<input type="text" class="date_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
             from.datepicker();
-            //th.append(from);
-            //th.append(_fnRangeLabelPart(1));
+           
             var sToId = oTable.attr("id") + '_range_to_' + i;
             var to = $('<input type="text" class="date_range_filter" id="' + sToId + '" rel="' + i + '"/>');
-            //th.append(to);
-            //th.append(_fnRangeLabelPart(2));
-
+            
             for (ti = 0; ti < aoFragments.length; ti++) {
 
                 if (aoFragments[ti] == properties.sDateFromToken) {
                     th.append(from);
-                } else {
+                } 
+                else {
                     if (aoFragments[ti] == properties.sDateToToken) {
                         th.append(to);
-                    } else {
+                    } 
+                    else {
                         th.append(aoFragments[ti]);
                     }
-                }
-                
-
+                }              
             }
 
 
@@ -421,8 +416,7 @@
 				oTable.fnFilter($(this).data('value'), index);
 			});
 		}
-		
-		
+			
         function fnCreateCheckbox(oTable, aData) {
 
             if (aData == null)
@@ -587,23 +581,7 @@
                 });
                 fnOnFilteredCurrent();
             };
-            //reset
-            /*
-            $('#'+buttonId+"Reset").button();
-            $('#'+buttonId+"Reset").click(function(){
-            $('#'+buttonId).removeClass("filter_selected"); //LM remove border if filter selected
-            $('input:checkbox[name="'+localLabel+'"]:checked').each(function(index3) {
-            $(this).attr('checked', false);
-            $(this).addClass("search_init");
-            });
-            oTable.fnFilter('', index, true, false);
-            return false;
-            }); 
-            */
         }
-
-
-
 
         function _fnRangeLabelPart(iPlace) {
             switch (iPlace) {
@@ -615,9 +593,6 @@
                     return sRangeFormat.substring(sRangeFormat.indexOf("{to}") + 4);
             }
         }
-
-
-
 
         var oTable = this;
 
@@ -749,11 +724,10 @@
             });
 
             for (j = 0; j < aiCustomSearch_Indexes.length; j++) {
-                //var index = aiCustomSearch_Indexes[j];
                 var fnSearch_ = function () {
                     var id = oTable.attr("id");
-                    return $("#" + id + "_range_from_" + aiCustomSearch_Indexes[j]).val() + properties.sRangeSeparator + $("#" + id + "_range_to_" + aiCustomSearch_Indexes[j]).val()
-                }
+                    return $("#" + id + "_range_from_" + aiCustomSearch_Indexes[j]).val() + properties.sRangeSeparator + $("#" + id + "_range_to_" + aiCustomSearch_Indexes[j]).val();
+                };
                 afnSearch_.push(fnSearch_);
             }
 
@@ -764,11 +738,14 @@
                 oTable.fnSettings().fnServerData = function (sSource, aoData, fnCallback) {
 
                     for (j = 0; j < aiCustomSearch_Indexes.length; j++) {
-                        var index = aiCustomSearch_Indexes[j];
+                    	//aiCustomSearch_Indexes holds the ORIGINAL column position.
+                        var index = _fnColumnIndex(aiCustomSearch_Indexes[j]);
 
                         for (k = 0; k < aoData.length; k++) {
-                            if (aoData[k].name == "sSearch_" + index)
-                                aoData[k].value = afnSearch_[j]();
+                        	//custom search modifications for range fields.
+                            if (aoData[k].name == "sSearch_" + index) {
+                            	aoData[k].value = afnSearch_[j]();
+                            }     
                         }
                     }
                     aoData.push({ "name": "sRangeSeparator", "value": properties.sRangeSeparator });
@@ -786,14 +763,8 @@
                         });
                     }
                 };
-
             }
-
         });
-
     };
-
-
-
 
 })(jQuery);
