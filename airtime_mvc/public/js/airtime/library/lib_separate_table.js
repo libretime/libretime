@@ -106,7 +106,7 @@ var AIRTIME = (function(AIRTIME) {
     		display = config.display ? "" : "style='display:none;'";
     	
     	template = 
-    		"<div id='advanced_search_col_<%= index %>' class='control-group' <%= style %>>" +
+    		"<div id='advanced_search_<%= type %>_col_<%= index %>' class='control-group' <%= style %>>" +
             	"<label class='control-label'><%= title %></label>" +
             	"<div id='<%= id %>' class='controls'></div>" +
             "</div>";
@@ -116,7 +116,8 @@ var AIRTIME = (function(AIRTIME) {
     		index: config.index,
     		style: display,
     		title: config.title,
-    		id: config.id
+    		id: config.id,
+    		type: config.type
     	}));
     	
     	return $el;
@@ -146,7 +147,8 @@ var AIRTIME = (function(AIRTIME) {
         			index: i,
         			display: col.bVisible,
         			title: col.sTitle,
-        			id: "adv-search-" + prop
+        			id: "adv-search-" + type + "-" + prop,
+        			type: type
         		};
     			
     			field = createAdvancedSearchField(config);
@@ -167,8 +169,8 @@ var AIRTIME = (function(AIRTIME) {
     	return datatablesConfig;
     }
     
-    function setAdvancedSearchColumnDisplay(colNum, display) {
-    	var selector = "#advanced_search_col_" + colNum,
+    function setAdvancedSearchColumnDisplay(colNum, display, type) {
+    	var selector = "#advanced_search_" + type + "_col_" + colNum,
     		$column = $(selector);
     	
     	if (display) {
@@ -283,7 +285,7 @@ var AIRTIME = (function(AIRTIME) {
                 	var c = table.fnSettings().aoColumns,
                 		origIndex = c[iColumn]._ColReorder_iOrigCol;
                 		
-                	setAdvancedSearchColumnDisplay(origIndex, bVisible);
+                	setAdvancedSearchColumnDisplay(origIndex, bVisible, config.type);
                 }
             },
             
@@ -302,7 +304,7 @@ var AIRTIME = (function(AIRTIME) {
     	//fnStateLoadParams will have already run.
     	//fix up advanced search from saved settings.
     	for (i = 0, len = abVisible.length; i < len; i++) {
-    		setAdvancedSearchColumnDisplay(i, abVisible[i]);
+    		setAdvancedSearchColumnDisplay(i, abVisible[i], config.type);
     	}
     	
     	table.columnFilter({
