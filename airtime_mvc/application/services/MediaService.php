@@ -673,6 +673,8 @@ class Application_Service_MediaService
 		$query->setFormatter('PropelOnDemandFormatter');
 		$query->joinWith("CcSubjs");
 		
+		$totalCount = $query->count();
+		
 		//add advanced search terms to query.
 		$len = intval($params["iColumns"]);
 		$advConds = array();
@@ -783,6 +785,8 @@ class Application_Service_MediaService
 			}
 		}
 		
+		$filteredCount = $query->count();
+		
 		//LIMIT OFFSET statements
 		$limit = intval($params["iDisplayLength"]);
 		$offset = intval($params["iDisplayStart"]);
@@ -791,9 +795,13 @@ class Application_Service_MediaService
 			->limit($limit)
 			->offset($offset);
 		
-		//Logging::info($query->toString());
+		$records = $query->find();
 		
-		return $query;
+		return array (
+			"totalCount" => $totalCount,
+	    	"count" => $filteredCount,
+	    	"media" => $records
+		);
 	}
 	
 	private function makeArray(&$array, &$getters, $obj) {
@@ -852,36 +860,53 @@ class Application_Service_MediaService
 		$m = $q->getModelName();
 		$q->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
 		
-		$q = self::buildQuery($q, $params, $columns, $aliases);
-		$coll = $q->find();
+		$results = self::buildQuery($q, $params, $columns, $aliases);
 		
 		Logging::disablePropelLogging();
 		
-		return self::createOutput($coll, $columns);
+		return array(
+			"count" => $results["count"],
+			"totalCount" => $results["totalCount"],
+			"records" => self::createOutput($results["media"], $columns)
+		);	
 	}
 	
 	public function getDatatablesWebstreams($params) {
+		
+		Logging::enablePropelLogging();
 		
 		$columns = array_keys(self::getWebstreamColumnDetails());
 		$aliases = self::getWebstreamColumnAliases();
 	
 		$q = WebstreamQuery::create();
-		$q = self::buildQuery($q, $params, $columns, $aliases);
-		$coll = $q->find();
-	
-		return self::createOutput($coll, $columns);
+		$results = self::buildQuery($q, $params, $columns, $aliases);
+		
+		Logging::disablePropelLogging();
+		
+		return array(
+			"count" => $results["count"],
+			"totalCount" => $results["totalCount"],
+			"records" => self::createOutput($results["media"], $columns)
+		);
 	}
 	
 	public function getDatatablesPlaylists($params) {
 	
+		Logging::enablePropelLogging();
+		
 		$columns = array_keys(self::getPlaylistColumnDetails());
 		$aliases = self::getPlaylistColumnAliases();
 		
 		$q = PlaylistQuery::create();
-		$q = self::buildQuery($q, $params, $columns, $aliases);
-		$coll = $q->find();
-	
-		return self::createOutput($coll, $columns);
+		$results = self::buildQuery($q, $params, $columns, $aliases);
+		
+		Logging::disablePropelLogging();
+		
+		return array(
+			"count" => $results["count"],
+			"totalCount" => $results["totalCount"],
+			"records" => self::createOutput($results["media"], $columns)
+		);
 	}
 	
 	public function setSessionMediaObject($obj) {

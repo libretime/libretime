@@ -18,44 +18,38 @@ class MediaController extends Zend_Controller_Action
     {
     	$params = $this->getRequest()->getParams();
     	
-    	//Logging::info($params);
-    	
     	$mediaService = new Application_Service_MediaService();
     	$r = $mediaService->getDatatablesAudioFiles($params);
     	
     	$this->view->sEcho = intval($params["sEcho"]);
-    	$this->view->iTotalDisplayRecords = count($r);
-    	$this->view->iTotalRecords = count($r);
-    	$this->view->media = $r;
+    	$this->view->iTotalDisplayRecords = $r["count"];
+    	$this->view->iTotalRecords = $r["totalCount"];
+    	$this->view->media = $r["records"];
     }
     
     public function webstreamFeedAction()
     {
     	$params = $this->getRequest()->getParams();
-    	 
-    	//Logging::info($params);
-    	 
+    	
     	$mediaService = new Application_Service_MediaService();
     	$r = $mediaService->getDatatablesWebstreams($params);
     	 
     	$this->view->sEcho = intval($params["sEcho"]);
-    	$this->view->iTotalDisplayRecords = count($r);
-    	$this->view->iTotalRecords = count($r);
-    	$this->view->media = $r;
+    	$this->view->iTotalDisplayRecords = $r["count"];
+    	$this->view->iTotalRecords = $r["totalCount"];
+    	$this->view->media = $r["records"];
     }
     
     public function playlistFeedAction()
     {
     	$params = $this->getRequest()->getParams();
     	 
-    	//Logging::info($params);
-    	 
     	$mediaService = new Application_Service_MediaService();
     	$r = $mediaService->getDatatablesPlaylists($params);
     	 
     	$this->view->sEcho = intval($params["sEcho"]);
-    	$this->view->iTotalDisplayRecords = count($r);
-    	$this->view->iTotalRecords = count($r);
-    	$this->view->media = $r;
+    	$this->view->iTotalDisplayRecords = $r["count"];
+    	$this->view->iTotalRecords = $r["totalCount"];
+    	$this->view->media = $r["records"];
     }
 }
