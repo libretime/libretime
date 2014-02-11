@@ -477,7 +477,7 @@ class Application_Service_AudioFileService
 			"name" => _("Preview"),
 			"icon" => "play",
 			"id" => $id,
-			"callback" => "previewMedia"
+			"callback" => "previewItem"
 		);
 		
 		$menu["edit"] = array(
@@ -492,7 +492,15 @@ class Application_Service_AudioFileService
 			"name" => _("Download"), 
 			"icon" => "download", 
 			"url" => $url,
-			"callback" => "downloadMedia"
+			"callback" => "downloadItem"
+		);
+		
+		$menu["delete"] = array(
+			"name" => _("Delete"),
+			"icon" => "delete",
+			"url" => $baseUrl."media/delete",
+			"id" => $id,
+			"callback" => "deleteItem"
 		);
 		
 		/*
@@ -503,5 +511,10 @@ class Application_Service_AudioFileService
 		*/
 		
 		return $menu;
+	}
+	
+	public function delete($audioFile) {
+	
+		$audioFile->delete();
 	}
 }

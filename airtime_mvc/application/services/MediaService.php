@@ -1057,4 +1057,16 @@ class Application_Service_MediaService
 
 		return $jPlayerPlaylist;
 	}
+	
+	public function delete($mediaIds) {
+		
+		$mediaItems = MediaItemQuery::create()->findPKs($mediaIds);
+		
+		foreach ($mediaItems as $mediaItem) {
+			
+			$obj = $mediaItem->getChildObject();
+			//TODO implement preDelete functions for the media types.
+			$obj->delete();
+		}
+	}
 }

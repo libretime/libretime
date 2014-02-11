@@ -186,7 +186,7 @@ class Application_Service_PlaylistService
 		Logging::disablePropelLogging();
 	}
 	
-	public function deletePlaylist($playlist) {
+	public function delete($playlist) {
 		
 		$playlist->delete();
 	}

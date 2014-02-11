@@ -7,6 +7,10 @@ use \Application_Service_UserService;
 use \Exception;
 use \Logging;
 use \PropelPDO;
+use \DateTime;
+use \DateTimeZone;
+use \Criteria;
+use Airtime\CcScheduleQuery;
 
 /**
  * Skeleton subclass for representing a row from the 'media_item' table.
@@ -49,7 +53,7 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 			$userTest =  $user->isAdminOrPM() || $user->getId() === $this->getOwnerId();
 			$scheduleTest = $this->isScheduledInFuture();
 			
-			return ($userTest && $scheduleTest);
+			return ($userTest && !$scheduleTest);
 		}
 		catch(Exception $e) {
 			Logging::warn("Failed to delete media item {$this->getId()}");

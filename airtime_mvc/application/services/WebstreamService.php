@@ -106,4 +106,9 @@ class Application_Service_WebstreamService
 		
 		return $menu;
 	}
+	
+	public function delete($webstream) {
+	
+		$webstream->delete();
+	}
 }
