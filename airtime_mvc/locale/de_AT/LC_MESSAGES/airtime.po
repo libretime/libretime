@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-02-04 18:19+0000\n"
+"PO-Revision-Date: 2014-02-11 20:08+0000\n"
 "Last-Translator: hoerich <hoerich@gmx.at>\n"
 "Language-Team: German (Austria) (http://www.transifex.com/projects/p/airtime/language/de_AT/)\n"
 "MIME-Version: 1.0\n"
@@ -2210,7 +2210,7 @@ msgstr "Das sind Admin Benutzername und Passwort, für die Hörerstatistiken von
 #: airtime_mvc/application/controllers/LocaleController.php:180
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
-msgstr ""
+msgstr "Warnung: Dieses Feld kann nicht geändert werden, während die Sendung wiedergegeben wird."
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
 msgid "No result found"
