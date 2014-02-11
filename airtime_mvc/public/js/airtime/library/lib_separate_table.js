@@ -7,7 +7,8 @@ var AIRTIME = (function(AIRTIME) {
     
     //stored in format chosenItems[tabname] = object of chosen ids for the tab.
     var chosenItems = {},
-    	LIB_SELECTED_CLASS = "lib-selected";
+    	LIB_SELECTED_CLASS = "lib-selected",
+    	$library;
     
     function makeWebstreamDialog(html) {
 		var $wsDialogEl = $(html);
@@ -312,7 +313,7 @@ var AIRTIME = (function(AIRTIME) {
     		sPlaceHolder: "head:before"
     	});
     	
-    	table.fnSetFilteringDelay(350);
+    	table.fnFilterOnReturn();
     }
     
     mod.downloadMedia = function(data) {
@@ -391,7 +392,7 @@ var AIRTIME = (function(AIRTIME) {
         $el.removeClass(LIB_SELECTED_CLASS);
     };
     
-  //$el is a select table row <tr>
+    //$el is a select table row <tr>
     mod.selectItem = function($el) {
         
         mod.highlightItem($el);
@@ -400,7 +401,7 @@ var AIRTIME = (function(AIRTIME) {
         mod.checkToolBarIcons();
     };
     
-  //$el is a select table row <tr>
+    //$el is a select table row <tr>
     mod.deselectItem = function($el) {
         
         mod.unHighlightItem($el);
@@ -418,8 +419,9 @@ var AIRTIME = (function(AIRTIME) {
      */
     mod.selectCurrentPage = function() {
         $.fn.reverse = [].reverse;
-        var $inputs = $libTable.find("tbody input:checkbox"),
-            $trs = $inputs.parents("tr").reverse();
+        var tabId = getActiveTabId(),
+	    	$inputs = $library.find("#"+tabId).find("tbody input:checkbox"),
+	        $trs = $inputs.parents("tr").reverse();
             
         $inputs.attr("checked", true);
         $trs.addClass(LIB_SELECTED_CLASS);
@@ -437,31 +439,33 @@ var AIRTIME = (function(AIRTIME) {
      * from gmail)
      */
     mod.deselectCurrentPage = function() {
-        var $inputs = $libTable.find("tbody input:checkbox"),
-            $trs = $inputs.parents("tr"),
-            id;
+    	var tabId = getActiveTabId(),
+	    	$inputs = $library.find("#"+tabId).find("tbody input:checkbox"),
+	        $trs = $inputs.parents("tr");
         
         $inputs.attr("checked", false);
         $trs.removeClass(LIB_SELECTED_CLASS);
         
         $trs.each(function(i, el){
             $el = $(this);
-            id = $el.attr("id");
-            delete chosenItems[id];
+            mod.removeFromChosen($el);
         });
         
         mod.checkToolBarIcons();     
     };
     
+    /*
+     * resets the chosenItems object, everything is gone (from a tab only).
+     */
     mod.selectNone = function() {
-        var $inputs = $libTable.find("tbody input:checkbox"),
+        var tabId = getActiveTabId(),
+        	$inputs = $library.find("#"+tabId).find("tbody input:checkbox"),
             $trs = $inputs.parents("tr");
         
         $inputs.attr("checked", false);
         $trs.removeClass(LIB_SELECTED_CLASS);
-        
-        chosenItems = {};
-        
+       
+        delete chosenItems[tabId];
         mod.checkToolBarIcons();
     };
     
@@ -474,9 +478,9 @@ var AIRTIME = (function(AIRTIME) {
                             $.i18n._("Select")+" <span class='caret'></span>" +
                         "</button>" +
                         "<ul class='dropdown-menu'>" +
-                            "<li id='sb-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
-                            "<li id='sb-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
-                            "<li id='sb-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
+                            "<li class='lib-select-page'><a href='#'>"+$.i18n._("Select this page")+"</a></li>" +
+                            "<li class='lib-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
+                            "<li class='lib-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
                         "</ul>" +
                     "</div>")
             .append("<div class='btn-group'>" +
@@ -496,8 +500,7 @@ var AIRTIME = (function(AIRTIME) {
      
     mod.onReady = function () {
     	
-    	var $library = $("#library_content"),
-    		$body = $("body");
+    	$library = $("#library_content");
 
     	var tabsInit = {
     		"lib_audio": {
@@ -643,6 +646,29 @@ var AIRTIME = (function(AIRTIME) {
             data = $tr.data("aData");
             mod.dblClickAdd(data);
     	});
+    	
+    	//start events for select dropdown on media tables.
+    	$library.on("click", '.lib-select-page', function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
+    		
+    		mod.selectCurrentPage();
+    	});
+    	
+    	$library.on("click", '.lib-dselect-page', function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
+    		
+    		mod.deselectCurrentPage();
+    	});
+    	
+    	$library.on("click", '.lib-dselect-all', function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
+    		
+    		mod.selectNone();
+    	});
+    	//end events for select dropdown.
     	
     	//events for the edit metadata dialog
     	/*
