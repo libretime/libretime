@@ -593,7 +593,6 @@ var AIRTIME = (function(AIRTIME) {
     	});
     	
     	$library.on("click", "input[type=checkbox]", function(e) {
-    		e.preventDefault();
     		e.stopPropagation();
             
             var $cb = $(this),
