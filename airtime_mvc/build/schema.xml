@@ -507,7 +507,7 @@
     <column name="album_title" phpName="AlbumTitle" type="VARCHAR" size="512" required="false"/>
     <column name="genre" phpName="Genre" type="VARCHAR" size="64" required="false"/>
     <column name="comments" phpName="Comments" type="LONGVARCHAR" required="false"/>
-    <column name="year" phpName="Year" type="VARCHAR" size="16" required="false"/>
+    <column name="year" phpName="Year" type="INTEGER" required="false"/>
     <column name="track_number" phpName="TrackNumber" type="INTEGER" required="false"/>
     <column name="channels" phpName="Channels" type="INTEGER" required="false"/>
     <column name="bpm" phpName="Bpm" type="INTEGER" required="false"/>

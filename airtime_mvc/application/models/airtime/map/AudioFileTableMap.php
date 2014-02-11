@@ -52,7 +52,7 @@ class AudioFileTableMap extends TableMap
         $this->addColumn('album_title', 'AlbumTitle', 'VARCHAR', false, 512, null);
         $this->addColumn('genre', 'Genre', 'VARCHAR', false, 64, null);
         $this->addColumn('comments', 'Comments', 'LONGVARCHAR', false, null, null);
-        $this->addColumn('year', 'Year', 'VARCHAR', false, 16, null);
+        $this->addColumn('year', 'Year', 'INTEGER', false, null, null);
         $this->addColumn('track_number', 'TrackNumber', 'INTEGER', false, null, null);
         $this->addColumn('channels', 'Channels', 'INTEGER', false, null, null);
         $this->addColumn('bpm', 'Bpm', 'INTEGER', false, null, null);

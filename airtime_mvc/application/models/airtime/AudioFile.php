@@ -247,7 +247,7 @@ class AudioFile extends BaseAudioFile
 		// digits is an OK result. CC-3771
 
 
-		if (strlen($v) > 4) {
+		if (is_string($v) && strlen($v) > 4) {
 			$v = substr($v, 0, 4);
 		}
 		if (!is_numeric($v)) {

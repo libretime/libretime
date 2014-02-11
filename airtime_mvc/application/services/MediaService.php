@@ -12,6 +12,17 @@ use Airtime\MediaItemQuery;
 
 class Application_Service_MediaService
 {
+	//used for creating media search.
+	//can't seem to call a class dynamically even though
+	//http://www.php.net/manual/en/language.namespaces.importing.php
+	//seems to say it's possible.
+	private $_ns = array(
+		"AudioFilePeer" => "Airtime\MediaItem\AudioFilePeer",
+		"PlaylistPeer" => "Airtime\MediaItem\PlaylistPeer",
+		"WebstreamPeer" => "Airtime\MediaItem\WebstreamPeer",
+		"CcSubjsPeer" => "Airtime\CcSubjsPeer",
+	);
+	
 	private function enhanceDatatablesColumns(&$datatablesColumns) {
 		
 		$checkbox = array(
@@ -54,6 +65,7 @@ class Application_Service_MediaService
 				"title" => _("Scheduled"),
 				"width" => "90px",
 				"class" => "library_is_scheduled",
+				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "checkbox"		
 				)
@@ -63,6 +75,7 @@ class Application_Service_MediaService
 				"title" => _("Playlist"),
 				"width" => "90px",
 				"class" => "library_is_playlist",
+				"searchable" => false,
 				"advancedSearch" => array(
 					"type" => "checkbox"		
 				)
@@ -559,6 +572,7 @@ class Application_Service_MediaService
 				"bVisible" => isset($data["visible"]) ? $data["visible"] : true,
 				"sWidth" => $data["width"],
 				"sClass" => $data["class"],
+				"search" => isset($data["advancedSearch"]) ? $data["advancedSearch"] : null
 			);
 		}
 		
@@ -567,31 +581,153 @@ class Application_Service_MediaService
 		return $datatablesColumns;
 	}
 	
-	private function buildQuery($query, $params, $dataColumns, $aliasedColumns) {
+	private function getColumnType($base, $column) {
+		$b = explode("\\", $base);
+		$b = array_pop($b);	
+		$class = $this->_ns["{$b}Peer"];
 		
-		$len = intval($params["iColumns"]);
-		for ($i = 0; $i < $len; $i++) {
-			
-			$prop = $params["mDataProp_{$i}"];
-			
-			//if it's not in this array then it's a display only column.
-			if (in_array($prop, $dataColumns)) {
-				$selectColumns[] = $prop;
-			}		
+		$field = $class::translateFieldName($column, BasePeer::TYPE_PHPNAME, BasePeer::TYPE_FIELDNAME);
+		Logging::info($field);
+		
+		$propelMap = $class::getTableMap();
+		$col = $propelMap->getColumn($field);
+		$type = $col->getType();
+		Logging::info($type);
+		
+		return $type;
+	}
+	
+	private function searchNumber($query, $col, $from, $to) {
+		$num = 0;
+		
+		if (isset($from) && is_numeric($from)) {
+			$name = "adv_{$col}_from";
+			$cond = "{$col} >= ?";	
+			$query->condition($name, $cond, $from);
+			$num++;
 		}
+		
+		if (isset($to) && is_numeric($to)) {
+			$name = "adv_{$col}_to";
+			$cond = "{$col} <= ?";
+			$query->condition($name, $cond, $to);
+			$num++;
+		}
+		
+		if ($num > 1) {
+			$name = "adv_{$col}_from_to";
+			$query->combine(array("adv_{$col}_from", "adv_{$col}_to"), 'and', $name);
+		}
+		
+		//returns the final query condition to combine with other columns.
+		return $name;
+	}
+	
+	//need to return name of condition so that 
+	//all advanced search fields can be combined into an AND.
+	private function searchString($query, $col, $value) {
+		
+		$name = "adv_{$col}";
+		$cond = "{$col} iLIKE ?";
+		$param = "%{$value}%";
+		$query->condition($name, $cond, $param);
+		
+		return $name;
+	}
+	
+	private function searchDate($query, $col, $from, $to) {
+		$num = 0;
+		
+		if (isset($from) && preg_match_all('/(\d{4}-\d{2}-\d{2})/', $from)) {
+			$name = "adv_{$col}_from";
+			$cond = "{$col} >= ?";
+			
+			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($from);
+			$query->condition($name, $cond, $date);
+			$num++;
+		}
+		
+		if (isset($to) && preg_match_all('/(\d{4}-\d{2}-\d{2})/', $to)) {
+			$name = "adv_{$col}_to";
+			$cond = "{$col} <= ?";
+			
+			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($to);
+			$query->condition($name, $cond, $date);
+			$num++;
+		}
+		
+		if ($num > 1) {
+			$name = "adv_{$col}_from_to";
+			$query->combine(array("adv_{$col}_from", "adv_{$col}_to"), 'and', $name);
+		}
+		
+		//returns the final query condition to combine with other columns.
+		return $name;
+	}
+	
+	private function buildQuery($query, $params, $dataColumns, $aliasedColumns) {
+		//namespacing seems to cause a problem in the WHERE clause
+		//if we don't prefix the PHP name with the model or alias.
+		$modelName = $query->getModelName();
 		
 		$query->setFormatter('PropelOnDemandFormatter');
 		$query->joinWith("CcSubjs");
 		
+		$totalCount = $query->count();
+		
+		//add advanced search terms to query.
+		$len = intval($params["iColumns"]);
+		$advConds = array();
+		for ($i = 0; $i < $len; $i++) {
+				
+			$prop = $params["mDataProp_{$i}"];
+		
+			if ($params["bSearchable_{$i}"] === "true"
+				&& $params["sSearch_{$i}"] != ""
+				&& in_array($prop, $dataColumns) 
+				&& !in_array($prop, $aliasedColumns)) {
+		
+				if (strrpos($prop, ".") === false) {
+					$b = $modelName;
+					$c = $prop;
+				}
+				else {
+					list($b, $c) = explode(".", $prop);
+				}
+		
+				$type = self::getColumnType($b, $c);
+				$searchCol = "{$b}.{$c}";
+				$value = $params["sSearch_{$i}"];
+				$separator = $params["sRangeSeparator"];
+				
+				switch($type) {
+					case PropelColumnTypes::DATE:
+      				case PropelColumnTypes::TIMESTAMP:
+      					list($from, $to) = explode($separator, $value);
+      					$advConds[] = self::searchDate($query, $searchCol, $from, $to);
+      					break;
+      				case PropelColumnTypes::NUMERIC:
+      				case PropelColumnTypes::INTEGER:
+      					list($from, $to) = explode($separator, $value);
+      					$advConds[] = self::searchNumber($query, $searchCol, $from, $to);
+      					break;
+      				default:
+      					$advConds[] = self::searchString($query, $searchCol, $value);
+      					break;
+				}	
+			}
+		}
+		if (count($advConds) > 0) {
+			$query->where($advConds, 'and');
+		}
+		
 		//take care of WHERE clause
+		/*
 		$search = $params["sSearch"];
 		$searchTerms = $search == "" ? array() : explode(" ", $search);
 		$andConditions = array();
 		$orConditions = array();
 		
-		//namespacing seems to cause a problem in the WHERE clause 
-		//if we don't prefix the PHP name with the model or alias.
-		$modelName = $query->getModelName();
 		foreach ($searchTerms as $term) {
 			
 			$orConditions = array();
@@ -627,6 +763,7 @@ class Application_Service_MediaService
 		if (count($andConditions) > 1) {
 			$query->where($andConditions, 'and');
 		}
+		*/
 
 		//ORDER BY statements
 		$len = intval($params["iSortingCols"]);
@@ -648,6 +785,8 @@ class Application_Service_MediaService
 			}
 		}
 		
+		$filteredCount = $query->count();
+		
 		//LIMIT OFFSET statements
 		$limit = intval($params["iDisplayLength"]);
 		$offset = intval($params["iDisplayStart"]);
@@ -656,21 +795,14 @@ class Application_Service_MediaService
 			->limit($limit)
 			->offset($offset);
 		
-		//Logging::info($query->toString());
+		$records = $query->find();
 		
-		return $query;
+		return array (
+			"totalCount" => $totalCount,
+	    	"count" => $filteredCount,
+	    	"media" => $records
+		);
 	}
-	
-	private function columnMapCallback($class) {
-		
-		$func = function ($column) use ($class) {
-		
-			return $class::translateFieldName($column, BasePeer::TYPE_COLNAME, BasePeer::TYPE_PHPNAME);
-		};
-		
-		return $func;
-	}
-	
 	
 	private function makeArray(&$array, &$getters, $obj) {
 		
@@ -718,6 +850,8 @@ class Application_Service_MediaService
 	
 	public function getDatatablesAudioFiles($params) {
 		
+		Logging::enablePropelLogging();
+		
 		$columns = array_keys(self::getAudioFileColumnDetails());
 		$aliases = self::getAudioFileColumnAliases();
 		
@@ -726,34 +860,53 @@ class Application_Service_MediaService
 		$m = $q->getModelName();
 		$q->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
 		
-		$q = self::buildQuery($q, $params, $columns, $aliases);
-		$coll = $q->find();
+		$results = self::buildQuery($q, $params, $columns, $aliases);
 		
-		return self::createOutput($coll, $columns);
+		Logging::disablePropelLogging();
+		
+		return array(
+			"count" => $results["count"],
+			"totalCount" => $results["totalCount"],
+			"records" => self::createOutput($results["media"], $columns)
+		);	
 	}
 	
 	public function getDatatablesWebstreams($params) {
+		
+		Logging::enablePropelLogging();
 		
 		$columns = array_keys(self::getWebstreamColumnDetails());
 		$aliases = self::getWebstreamColumnAliases();
 	
 		$q = WebstreamQuery::create();
-		$q = self::buildQuery($q, $params, $columns, $aliases);
-		$coll = $q->find();
-	
-		return self::createOutput($coll, $columns);
+		$results = self::buildQuery($q, $params, $columns, $aliases);
+		
+		Logging::disablePropelLogging();
+		
+		return array(
+			"count" => $results["count"],
+			"totalCount" => $results["totalCount"],
+			"records" => self::createOutput($results["media"], $columns)
+		);
 	}
 	
 	public function getDatatablesPlaylists($params) {
 	
+		Logging::enablePropelLogging();
+		
 		$columns = array_keys(self::getPlaylistColumnDetails());
 		$aliases = self::getPlaylistColumnAliases();
 		
 		$q = PlaylistQuery::create();
-		$q = self::buildQuery($q, $params, $columns, $aliases);
-		$coll = $q->find();
-	
-		return self::createOutput($coll, $columns);
+		$results = self::buildQuery($q, $params, $columns, $aliases);
+		
+		Logging::disablePropelLogging();
+		
+		return array(
+			"count" => $results["count"],
+			"totalCount" => $results["totalCount"],
+			"records" => self::createOutput($results["media"], $columns)
+		);
 	}
 	
 	public function setSessionMediaObject($obj) {

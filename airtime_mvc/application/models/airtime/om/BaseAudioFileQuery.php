@@ -137,7 +137,7 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFile findOneByAlbumTitle(string $album_title) Return the first AudioFile filtered by the album_title column
  * @method AudioFile findOneByGenre(string $genre) Return the first AudioFile filtered by the genre column
  * @method AudioFile findOneByComments(string $comments) Return the first AudioFile filtered by the comments column
- * @method AudioFile findOneByYear(string $year) Return the first AudioFile filtered by the year column
+ * @method AudioFile findOneByYear(int $year) Return the first AudioFile filtered by the year column
  * @method AudioFile findOneByTrackNumber(int $track_number) Return the first AudioFile filtered by the track_number column
  * @method AudioFile findOneByChannels(int $channels) Return the first AudioFile filtered by the channels column
  * @method AudioFile findOneByBpm(int $bpm) Return the first AudioFile filtered by the bpm column
@@ -178,7 +178,7 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method array findByAlbumTitle(string $album_title) Return AudioFile objects filtered by the album_title column
  * @method array findByGenre(string $genre) Return AudioFile objects filtered by the genre column
  * @method array findByComments(string $comments) Return AudioFile objects filtered by the comments column
- * @method array findByYear(string $year) Return AudioFile objects filtered by the year column
+ * @method array findByYear(int $year) Return AudioFile objects filtered by the year column
  * @method array findByTrackNumber(int $track_number) Return AudioFile objects filtered by the track_number column
  * @method array findByChannels(int $channels) Return AudioFile objects filtered by the channels column
  * @method array findByBpm(int $bpm) Return AudioFile objects filtered by the bpm column
@@ -741,24 +741,37 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
      *
      * Example usage:
      * <code>
-     * $query->filterByYear('fooValue');   // WHERE year = 'fooValue'
-     * $query->filterByYear('%fooValue%'); // WHERE year LIKE '%fooValue%'
+     * $query->filterByYear(1234); // WHERE year = 1234
+     * $query->filterByYear(array(12, 34)); // WHERE year IN (12, 34)
+     * $query->filterByYear(array('min' => 12)); // WHERE year >= 12
+     * $query->filterByYear(array('max' => 12)); // WHERE year <= 12
      * </code>
      *
-     * @param     string $year The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     mixed $year The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return AudioFileQuery The current query, for fluid interface
      */
     public function filterByYear($year = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($year)) {
+        if (is_array($year)) {
+            $useMinMax = false;
+            if (isset($year['min'])) {
+                $this->addUsingAlias(AudioFilePeer::YEAR, $year['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($year['max'])) {
+                $this->addUsingAlias(AudioFilePeer::YEAR, $year['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $year)) {
-                $year = str_replace('*', '%', $year);
-                $comparison = Criteria::LIKE;
             }
         }
 
