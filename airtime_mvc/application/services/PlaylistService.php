@@ -186,8 +186,28 @@ class Application_Service_PlaylistService
 		Logging::disablePropelLogging();
 	}
 	
-	public function delete($playlist) {
-		
-		$playlist->delete();
+	public function createContextMenu($playlist) {
+	
+		$id = $playlist->getId();
+		$baseUrl = Application_Common_OsPath::getBaseDir();
+	
+		$menu = array();
+	
+		$menu["preview"] = array(
+			"name" => _("Preview"),
+			"icon" => "play",
+			"id" => $id,
+			"callback" => "previewItem"
+		);
+	
+		$menu["delete"] = array(
+			"name" => _("Delete"),
+			"icon" => "delete",
+			"url" => $baseUrl."media/delete",
+			"id" => $id,
+			"callback" => "deleteItem"
+		);
+	
+		return $menu;
 	}
 }

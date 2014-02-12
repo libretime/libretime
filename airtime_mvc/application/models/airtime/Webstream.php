@@ -27,6 +27,10 @@ class Webstream extends BaseWebstream
 		return explode(":", $this->getLength());
 	}
 	
+	public function getURI() {
+		return $this->getUrl();
+	}
+	
 	public function getUrlData() {
 		
 		$url = $this->getUrl();

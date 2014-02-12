@@ -315,4 +315,26 @@ class AudioFile extends BaseAudioFile
 			)
 		);
 	}
+	
+	public function preDelete(PropelPDO $con = null)
+	{
+		try {
+			//fails if media is scheduled
+			//or current user does not have permission.
+			$canDelete = parent::preDelete($con);
+			
+			if ($canDelete) {
+				$this->setFileHidden(true);
+			}	
+		}
+		catch(Exception $e) {
+			Logging::warn("Failed to delete media item {$this->getId()}");
+			Logging::warn($e->getMessage());
+		}
+	
+		//always return false since we don't actually remove an audiofile from the database,
+		//we just set it to hidden = true/false and/or exists = true/false.
+		//returning false will make sure the entry isn't removed from the database.
+		return false;
+	}
 }

@@ -11,7 +11,8 @@ var AIRTIME = (function(AIRTIME) {
     	$library;
     
     function makeWebstreamDialog(html) {
-		var $wsDialogEl = $(html);
+		var $wsDialogEl = $(html),
+			oTable = getActiveDatatable();
 		
 		function removeDialog() {
     		$wsDialogEl.dialog("destroy");
@@ -41,6 +42,7 @@ var AIRTIME = (function(AIRTIME) {
 						.append($(json.html).unwrap());
 				}
 				else {
+					oTable.fnDraw();
 					removeDialog();
 				}
 			});

@@ -45,8 +45,8 @@ class WebstreamController extends Zend_Controller_Action
         $request = $this->getRequest();
         $ids = $request->getParam("ids");
 
-        $service = new Application_Service_WebstreamService();
-        $service->deleteWebstreams($ids);
+        $service = new Application_Service_MediaService();
+        $service->delete($ids);
     }
 
     public function saveAction()

@@ -68,7 +68,7 @@ class PlaylistController extends Zend_Controller_Action
     	try {
     		$playlist = $this->getPlaylist();
     		
-    		$this->playlistService->delete($playlist);
+    		$this->mediaService->delete($playlist->getId());
     		$this->mediaService->setSessionMediaObject(null);
     		 
     		$this->view->html = $this->view->render('playlist/none.phtml');
