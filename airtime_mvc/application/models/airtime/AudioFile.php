@@ -309,11 +309,11 @@ class AudioFile extends BaseAudioFile
 		return array (
 			array (
 				"id" => $this->getId(),
-				"cliplength" => $this->getCueLength(),
-				"cuein" => $this->getCuein(),
-				"cueout" => $this->getCueout(),
-				"fadein" => \Application_Model_Preference::GetDefaultFadeIn(),
-				"fadeout" => \Application_Model_Preference::GetDefaultFadeOut(),
+				"cliplength" => $this->getSchedulingLength(),
+				"cuein" => $this->getSchedulingCueIn(),
+				"cueout" => $this->getSchedulingCueOut(),
+				"fadein" => $this->getSchedulingFadeIn(),
+				"fadeout" => $this->getSchedulingFadeOut(),
 			)
 		);
 	}

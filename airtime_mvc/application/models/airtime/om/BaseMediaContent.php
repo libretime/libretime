@@ -73,8 +73,8 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
 
     /**
      * The value for the trackoffset field.
-     * Note: this column has a database default value of: 0
-     * @var        double
+     * Note: this column has a database default value of: '00:00:00'
+     * @var        string
      */
     protected $trackoffset;
 
@@ -151,7 +151,7 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
      */
     public function applyDefaultValues()
     {
-        $this->trackoffset = 0;
+        $this->trackoffset = '00:00:00';
         $this->cliplength = '00:00:00';
         $this->cuein = '00:00:00';
         $this->cueout = '00:00:00';
@@ -216,7 +216,7 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
     /**
      * Get the [trackoffset] column value.
      *
-     * @return double
+     * @return string
      */
     public function getTrackOffset()
     {
@@ -374,13 +374,13 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
     /**
      * Set the value of [trackoffset] column.
      *
-     * @param  double $v new value
+     * @param  string $v new value
      * @return MediaContent The current object (for fluent API support)
      */
     public function setTrackOffset($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (double) $v;
+            $v = (string) $v;
         }
 
         if ($this->trackoffset !== $v) {
@@ -507,7 +507,7 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
-            if ($this->trackoffset !== 0) {
+            if ($this->trackoffset !== '00:00:00') {
                 return false;
             }
 
@@ -557,7 +557,7 @@ abstract class BaseMediaContent extends BaseObject implements Persistent
             $this->playlist_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->media_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->position = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-            $this->trackoffset = ($row[$startcol + 4] !== null) ? (double) $row[$startcol + 4] : null;
+            $this->trackoffset = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->cliplength = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->cuein = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
             $this->cueout = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;

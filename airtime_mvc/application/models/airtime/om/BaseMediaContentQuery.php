@@ -63,7 +63,7 @@ use Airtime\MediaItem\Playlist;
  * @method MediaContent findOneByPlaylistId(int $playlist_id) Return the first MediaContent filtered by the playlist_id column
  * @method MediaContent findOneByMediaId(int $media_id) Return the first MediaContent filtered by the media_id column
  * @method MediaContent findOneByPosition(int $position) Return the first MediaContent filtered by the position column
- * @method MediaContent findOneByTrackOffset(double $trackoffset) Return the first MediaContent filtered by the trackoffset column
+ * @method MediaContent findOneByTrackOffset(string $trackoffset) Return the first MediaContent filtered by the trackoffset column
  * @method MediaContent findOneByCliplength(string $cliplength) Return the first MediaContent filtered by the cliplength column
  * @method MediaContent findOneByCuein(string $cuein) Return the first MediaContent filtered by the cuein column
  * @method MediaContent findOneByCueout(string $cueout) Return the first MediaContent filtered by the cueout column
@@ -74,7 +74,7 @@ use Airtime\MediaItem\Playlist;
  * @method array findByPlaylistId(int $playlist_id) Return MediaContent objects filtered by the playlist_id column
  * @method array findByMediaId(int $media_id) Return MediaContent objects filtered by the media_id column
  * @method array findByPosition(int $position) Return MediaContent objects filtered by the position column
- * @method array findByTrackOffset(double $trackoffset) Return MediaContent objects filtered by the trackoffset column
+ * @method array findByTrackOffset(string $trackoffset) Return MediaContent objects filtered by the trackoffset column
  * @method array findByCliplength(string $cliplength) Return MediaContent objects filtered by the cliplength column
  * @method array findByCuein(string $cuein) Return MediaContent objects filtered by the cuein column
  * @method array findByCueout(string $cueout) Return MediaContent objects filtered by the cueout column
@@ -453,37 +453,24 @@ abstract class BaseMediaContentQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByTrackOffset(1234); // WHERE trackoffset = 1234
-     * $query->filterByTrackOffset(array(12, 34)); // WHERE trackoffset IN (12, 34)
-     * $query->filterByTrackOffset(array('min' => 12)); // WHERE trackoffset >= 12
-     * $query->filterByTrackOffset(array('max' => 12)); // WHERE trackoffset <= 12
+     * $query->filterByTrackOffset('fooValue');   // WHERE trackoffset = 'fooValue'
+     * $query->filterByTrackOffset('%fooValue%'); // WHERE trackoffset LIKE '%fooValue%'
      * </code>
      *
-     * @param     mixed $trackOffset The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $trackOffset The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return MediaContentQuery The current query, for fluid interface
      */
     public function filterByTrackOffset($trackOffset = null, $comparison = null)
     {
-        if (is_array($trackOffset)) {
-            $useMinMax = false;
-            if (isset($trackOffset['min'])) {
-                $this->addUsingAlias(MediaContentPeer::TRACKOFFSET, $trackOffset['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($trackOffset['max'])) {
-                $this->addUsingAlias(MediaContentPeer::TRACKOFFSET, $trackOffset['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($trackOffset)) {
                 $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $trackOffset)) {
+                $trackOffset = str_replace('*', '%', $trackOffset);
+                $comparison = Criteria::LIKE;
             }
         }
 

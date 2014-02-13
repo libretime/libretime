@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\MediaItem\MediaContentQuery;
+
 use Airtime\MediaItem\PlaylistPeer;
 
 use Airtime\MediaItemQuery;
@@ -8,8 +10,12 @@ use Airtime\MediaItem\MediaContent;
 
 class Application_Service_PlaylistService
 {
-	private function buildContentItem($info) {
+	private function buildContentItem($info, $position) {
 		$item = new MediaContent();
+		
+		$defaultCrossfade = Application_Model_Preference::GetDefaultCrossfadeDuration();
+		$defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
+		$defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
 		
 		if (isset($info["cuein"])) {
 			$item->setCuein($info["cuein"]);
@@ -17,15 +23,22 @@ class Application_Service_PlaylistService
 		if (isset($info["cueout"])) {
 			$item->setCueout($info["cueout"]);
 		}
-		if (isset($info["fadein"])) {
-			$item->setFadein($info["fadein"]);
-		}
-		if (isset($info["fadeout"])) {
-			$item->setFadeout($info["fadeout"]);
+		
+		$fadeIn = (isset($info["fadein"])) ? $info["fadein"] : $defaultFadeIn;
+		$item->setFadein($fadeIn);
+
+		$fadeOut = (isset($info["fadeout"])) ? $info["fadeout"] : $defaultFadeOut;
+		$item->setFadeout($fadeOut);
+
+		$item->generateCliplength();
+		
+		//need trackoffset to be zero for the first item.
+		if ($position !== 0) {
+			$item->setTrackOffset($defaultCrossfade);
 		}
 		
-		$item->generateCliplength();
 		$item->setMediaId($info["id"]);
+		$item->setPosition($position);
 		
 		return $item;
 	}
@@ -47,10 +60,8 @@ class Application_Service_PlaylistService
 			
 			foreach ($mediaToAdd as $media) {
 				$info = $media->getSchedulingInfo();
-				Logging::info($info);
-				$mediaContent = $this->buildContentItem($info);
-				
-				$mediaContent->setPosition($position);
+
+				$mediaContent = $this->buildContentItem($info, $position);
 				$mediaContent->setPlaylist($playlist);
 				$mediaContent->save($con);
 				
@@ -99,8 +110,8 @@ class Application_Service_PlaylistService
 			$position = 0;
 			$m = array();
 			foreach ($contents as $item) {
-				$mediaContent = $this->buildContentItem($item);
-				$mediaContent->setPosition($position);
+				
+				$mediaContent = $this->buildContentItem($item, $position);
 				$mediaContent->setPlaylist($playlist);
 				
 				$res = $mediaContent->validate();
@@ -141,10 +152,11 @@ class Application_Service_PlaylistService
 		Logging::enablePropelLogging();
 	
 		try {
-			$c = new PropelCollection(array());
-			$playlist->setMediaContents($c, $con);
-			$playlist->save($con);
-				
+			MediaContentQuery::create(null, $con)
+				->filterByPlaylist($playlist)
+				->delete($con);
+			
+			$playlist->save($con);	
 			$con->commit();
 		}
 		catch (Exception $e) {

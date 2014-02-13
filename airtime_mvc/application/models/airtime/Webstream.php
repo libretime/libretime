@@ -95,8 +95,8 @@ class Webstream extends BaseWebstream
 				"cliplength" => $this->getSchedulingLength(),
 				"cuein" => $this->getSchedulingCueIn(),
 				"cueout" => $this->getSchedulingCueOut(),
-				"fadein" => \Application_Model_Preference::GetDefaultFadeIn(),
-				"fadeout" => \Application_Model_Preference::GetDefaultFadeOut(),
+				"fadein" => $this->getSchedulingFadeIn(),
+				"fadeout" => $this->getSchedulingFadeOut(),
 			)
 		);
 	}

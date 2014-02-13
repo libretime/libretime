@@ -3,6 +3,7 @@
 namespace Airtime\MediaItem;
 
 use Airtime\MediaItem\om\BaseMediaContent;
+use \PropelException;
 
 
 /**
@@ -40,5 +41,25 @@ class MediaContent extends BaseMediaContent
 	public function setCliplength($v) {
 		
 		throw new PropelException("Cliplength must be generated from cuein & cueout.");
+	}
+	
+	//given in seconds, convert to an interval.
+	public function setTrackOffset($v) {
+		
+		if (is_numeric($v)) {
+			$v = \Application_Common_DateHelper::secondsToPlaylistTime($v);
+		}
+		else {
+			$v = "00:00:00";
+		}
+		
+		parent::setTrackOffset($v);
+		
+		return $this;
+	}
+	
+	public function getTrackOffset() {
+		
+		return \Application_Common_DateHelper::playlistTimeToSeconds(parent::getTrackOffset());
 	}
 }

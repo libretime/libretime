@@ -47,8 +47,8 @@ class MediaContentTableMap extends TableMap
         $this->addForeignKey('playlist_id', 'PlaylistId', 'INTEGER', 'media_playlist', 'id', false, null, null);
         $this->addForeignKey('media_id', 'MediaId', 'INTEGER', 'media_item', 'id', false, null, null);
         $this->addColumn('position', 'Position', 'INTEGER', false, null, null);
-        $this->addColumn('trackoffset', 'TrackOffset', 'REAL', true, null, 0);
-        $this->addColumn('cliplength', 'Cliplength', 'VARCHAR', false, null, '00:00:00');
+        $this->addColumn('trackoffset', 'TrackOffset', 'VARCHAR', true, null, '00:00:00');
+        $this->addColumn('cliplength', 'Cliplength', 'VARCHAR', true, null, '00:00:00');
         $this->addColumn('cuein', 'Cuein', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('cueout', 'Cueout', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('fadein', 'Fadein', 'DECIMAL', false, null, 0);

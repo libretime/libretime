@@ -42,7 +42,8 @@ class Playlist extends BasePlaylist
 
 		//use a window function to calculate offsets for the playlist.
 		return $q
-		    ->withColumn("SUM({$m}.Cliplength) OVER(ORDER BY {$m}.Position)", "offset")
+		    ->withColumn("SUM({$m}.Cliplength)  OVER(ORDER BY {$m}.Position) - 
+		    	SUM({$m}.TrackOffset) OVER(ORDER BY {$m}.Position)", "offset")
 		    ->filterByPlaylist($this)
 		    ->joinWith('MediaItem', Criteria::LEFT_JOIN)
 		    ->joinWith("MediaItem.AudioFile", Criteria::LEFT_JOIN)
@@ -60,7 +61,9 @@ class Playlist extends BasePlaylist
 	 */
 	public function computeLength(PropelPDO $con)
 	{
-		$stmt = $con->prepare('SELECT SUM(cliplength) FROM "media_content" WHERE media_content.playlist_id = :p1');
+		//have to subtract the track offsets (crossfade times)
+		$stmt = $con->prepare('SELECT SUM(cliplength) - SUM(trackoffset) 
+				FROM "media_content" WHERE media_content.playlist_id = :p1');
 		$stmt->bindValue(':p1', $this->getId());
 		$stmt->execute();
 
