@@ -248,11 +248,11 @@ var AIRTIME = (function(AIRTIME){
 		var url = baseUrl+"playlist/add-items",
 			data = {
 				format: "json",
-				media: mediaIds
+				ids: mediaIds
 			};
 		
 		$.post(url, data, function(json) {
-			
+			mod.redrawPlaylist(json);
 		});
 	};
 	

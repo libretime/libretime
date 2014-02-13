@@ -5,6 +5,8 @@ namespace Airtime\MediaItem;
 use \Config;
 use \Exception;
 use \PropelException;
+use \PropelPDO;
+use \Logging;
 use Airtime\MediaItem\om\BaseAudioFile;
 use Airtime\CcMusicDirsQuery;
 
@@ -178,7 +180,7 @@ class AudioFile extends BaseAudioFile
 		// If the file already exists we will update and make sure that
 		// it's marked as 'exists'.
 		$this->setFileExists(true);
-		$this->setFileHidden(false);
+		//$this->setFileHidden(false);
 		$this->setMetadata($md);
 
 		return $this;
@@ -319,22 +321,45 @@ class AudioFile extends BaseAudioFile
 	public function preDelete(PropelPDO $con = null)
 	{
 		try {
+			Logging::info("in preDelete for Audiofile");
 			//fails if media is scheduled
 			//or current user does not have permission.
 			$canDelete = parent::preDelete($con);
 			
+			Logging::info("can delete file: {$canDelete}");
+			
+			//remove from all playlists.
 			if ($canDelete) {
-				$this->setFileHidden(true);
-			}	
+				//$this->setFileHidden(true);
+				
+				$mediaItem = $this->getMediaItem($con);
+				$contents = $mediaItem->getMediaContentsJoinPlaylist(null, $con);
+				
+				//delete file from playlists
+				$contents->delete($con);
+				
+				$idMap = array();
+				//recalculate playlist length.
+				foreach ($contents as $content) {
+					$playlist = $content->getPlaylist($con);
+					$playlistId = $playlist->getId();
+					
+					if (!in_array($playlistId, $idMap)) {
+						$idMap[] = $playlistId;
+						
+						//will update playlist length
+						//and last modified time.
+						//also fixes content positions
+						$playlist->save($con);
+					}
+				}
+			}
 		}
 		catch(Exception $e) {
-			Logging::warn("Failed to delete media item {$this->getId()}");
 			Logging::warn($e->getMessage());
+			throw $e;
 		}
 	
-		//always return false since we don't actually remove an audiofile from the database,
-		//we just set it to hidden = true/false and/or exists = true/false.
-		//returning false will make sure the entry isn't removed from the database.
-		return false;
+		return $canDelete;
 	}
 }

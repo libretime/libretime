@@ -77,7 +77,11 @@ class Playlist extends BasePlaylist
 		$stmt->execute();
 		
 		//need to make the object aware of the change.
-		$this->length = $length;
+		//for last modified
+		if ($this->length != $length) {
+			$this->modifiedColumns[] = PlaylistPeer::LENGTH;
+		}
+		$this->length = $length;	
 	}
 	
 	public function getLength()
@@ -89,9 +93,20 @@ class Playlist extends BasePlaylist
 		return $this->length;
 	}
 	
+	//* if this returns false when creating a new object it seems ONLY a media item row is created
+	//and nothing in the playlist table. seems like a bug...
+	public function preSave(PropelPDO $con = null)
+	{
+		//run through positions to close gaps if any.
+		
+		$this->updateLength($con);
+		
+		return true;
+	}
+	
 	public function postSave(PropelPDO $con = null)
     {
-    	$this->updateLength($con);
+    	//$this->updateLength($con);
     }
     
     public function getScheduledContent() {

@@ -889,7 +889,7 @@ class Application_Service_MediaService
 		$aliases = self::getAudioFileColumnAliases();
 
 		$q = AudioFileQuery::create();
-
+		
 		$m = $q->getModelName();
 		$q->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
 
@@ -960,8 +960,8 @@ class Application_Service_MediaService
 		//some type of media is in the session
 		if (isset($obj_sess->id)) {
 			$obj = MediaItemQuery::create()->findPk($obj_sess->id);
-
-			if (isset($obj)) {
+			
+			if (isset($obj) && $obj->getType() === "Playlist") {
 				return $obj->getChildObject();
 			}
 			else {
@@ -1063,6 +1063,8 @@ class Application_Service_MediaService
 		$mediaItems = MediaItemQuery::create()->findPKs($mediaIds);
 		
 		foreach ($mediaItems as $mediaItem) {
+			
+			Logging::info($mediaItem->getId());
 			
 			$obj = $mediaItem->getChildObject();
 			//TODO implement preDelete functions for the media types.

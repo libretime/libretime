@@ -49,9 +49,10 @@ class Application_Service_PlaylistService
 				$info = $media->getSchedulingInfo();
 				Logging::info($info);
 				$mediaContent = $this->buildContentItem($info);
-				$mediaContent->setPosition($position);
 				
-				$playlist->addMediaContent($mediaContent);
+				$mediaContent->setPosition($position);
+				$mediaContent->setPlaylist($playlist);
+				$mediaContent->save($con);
 				
 				$position++;
 			}
@@ -89,6 +90,8 @@ class Application_Service_PlaylistService
 		
 		try {
 			
+			$playlist->getMediaContents(null, $con)->delete($con);
+			
 			$playlist->setName($data["name"]);
 			$playlist->setDescription($data["description"]);
 			
@@ -98,6 +101,7 @@ class Application_Service_PlaylistService
 			foreach ($contents as $item) {
 				$mediaContent = $this->buildContentItem($item);
 				$mediaContent->setPosition($position);
+				$mediaContent->setPlaylist($playlist);
 				
 				$res = $mediaContent->validate();
 				if ($res === true) {
@@ -109,10 +113,13 @@ class Application_Service_PlaylistService
 				}
 				
 				$position++;
+				
+				//save each content item in the transaction
+				//first so that Playlist preSave can calculate
+				//the new playlist length properly.
+				$mediaContent->save($con);
 			}
 			
-			$c = new PropelCollection($m);
-			$playlist->setMediaContents($c, $con);
 			$playlist->save($con);
 			
 			$con->commit();

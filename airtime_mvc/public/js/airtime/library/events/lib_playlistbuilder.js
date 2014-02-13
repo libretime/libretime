@@ -29,9 +29,10 @@ var AIRTIME = (function(AIRTIME) {
         mod.checkDeleteButton();
     };
     
+  //data is the aData of the tr element.
     mod.dblClickAdd = function(data) {
     	
-    	
+    	AIRTIME.playlist.addItems(data.Id);
     };
     
     return AIRTIME;

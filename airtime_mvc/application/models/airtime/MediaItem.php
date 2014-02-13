@@ -47,6 +47,8 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 	public function preDelete(PropelPDO $con = null)
 	{
 		try {
+			Logging::info("in preDelete for MediaItem");
+			
 			$service = new Application_Service_UserService();
 			$user = $service->getCurrentUser();
 
@@ -56,8 +58,8 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 			return ($userTest && !$scheduleTest);
 		}
 		catch(Exception $e) {
-			Logging::warn("Failed to delete media item {$this->getId()}");
 			Logging::warn($e->getMessage());
+			throw $e;
 		}
 		
 		return false;

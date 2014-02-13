@@ -29,6 +29,7 @@ var AIRTIME = (function(AIRTIME) {
         mod.checkDeleteButton();
     };
     
+  //data is the aData of the tr element.
     mod.dblClickAdd = function(data) {
         var i, 
 	        length, 
