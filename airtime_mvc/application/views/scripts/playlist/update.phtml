@@ -1,14 +1,14 @@
 <?php
 $items = $this->contents;
 if (count($items)) : ?>
-<?php foreach($items as $item): 
+<?php foreach($items as $item):
 
 	$media = $item->getMediaItem();
 	$class = "Presentation_PlaylistItem" . $media->getType();
 	$p = new $class($item);
 ?>
     <li class="ui-state-default" id="spl_<?php echo $p->getId(); ?>"
-    	data-media-id="<?php echo $p->getMediaId(); ?>" 
+    	data-media-id="<?php echo $p->getMediaId(); ?>"
         data-mime-type="<?php echo $p->getMime(); ?>"
     >
     	<?php if ($p->canEditFades()): ?>
@@ -16,7 +16,7 @@ if (count($items)) : ?>
             <?php echo $this->partial('playlist/set-fade-in.phtml', array(
             	'id' => $p->getId(),
                 'fadeIn' => $p->getFadeIn(),
-            )); 
+            ));
             ?>
         </div>
         <?php endif; ?>
@@ -31,24 +31,24 @@ if (count($items)) : ?>
                 <span class="ui-icon ui-icon-alert"></span>
             </div>
             <?php endif; ?>
-            
+
             <div class="text-row top">
                 <span class="spl_playlength"><?php echo $p->getCliplength(); ?></span>
-                
+
                 <?php if ($p->canEditCues()):?>
                 <span class="spl_cue ui-state-default"></span>
                 <?php endif; ?>
                 <?php if ($p->canEditFades()):?>
                 <span class="spl_fade spl_cue ui-state-default">fade</span>
                 <?php endif; ?>
-                
+
                 <span class="spl_title"><?php echo $p->getTitle(); ?></span>
             </div>
             <div class="text-row">
                 <span class="spl_artist"><?php echo $p->getCreator(); ?></span>
-                <span class="spl_offset"><?php echo "offset" ?></span>
+                <span class="spl_offset"><?php echo $p->getOffset(); ?></span>
             </div>
-  
+
             <span class="ui-icon ui-icon-closethick"></span>
         </div>
         <?php if ($p->canEditCues()): ?>
@@ -61,7 +61,7 @@ if (count($items)) : ?>
                 'cueOutSec' => $p->getCueOutSec(),
                 'uri' => $p->getUrl(),
                 'origLength' => $p->getLength(),
-            )); 
+            ));
             ?>
         </div>
         <?php endif; ?>
@@ -70,7 +70,7 @@ if (count($items)) : ?>
             <?php echo $this->partial('playlist/set-fade-out.phtml', array(
             	'id' => $p->getId(),
                 'fadeOut' => $p->getFadeOut(),
-            )); 
+            ));
             ?>
         </div>
         <?php endif; ?>
