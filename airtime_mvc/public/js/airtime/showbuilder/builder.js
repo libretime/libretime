@@ -109,51 +109,50 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkSelectButton = function() {
-        var $selectable = $sbTable.find("tbody").find("input:checkbox");
+        var $selectable = $sbTable.find("tbody").find("input:checkbox"),
+        	$button = $(".sb-select");
         
         if ($selectable.length !== 0) {
-            AIRTIME.button.enableButton("sb-select");
+            AIRTIME.button.enableButton($button);
         }
         else {
-            AIRTIME.button.disableButton("sb-select");
-        }
-        
-        //need to check if the 'Select' button is disabled
-        if ($(".btn-group #timeline-select").is(":disabled")) {
-            $(".btn-group #timeline-select").removeAttr("disabled");
+            AIRTIME.button.disableButton($button);
         }
     };
     
     mod.checkTrimButton = function() {
-        var $over = $sbTable.find(".sb-over.sb-allowed");
+        var $over = $sbTable.find(".sb-over.sb-allowed"),
+        	$button = $(".sb-overbooked");
         
         if ($over.length !== 0) {
-            AIRTIME.button.enableButton("sb-overbooked");
+            AIRTIME.button.enableButton($button);
         }
         else {
-            AIRTIME.button.disableButton("sb-overbooked");
+            AIRTIME.button.disableButton($button);
         }
     };
     
     mod.checkDeleteButton = function() {
-        var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked");
+        var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked"),
+        	$button = $(".sb-trash");
         
         if ($selected.length !== 0) {
-            AIRTIME.button.enableButton("sb-trash");
+            AIRTIME.button.enableButton($button);
         }
         else {
-            AIRTIME.button.disableButton("sb-trash");
+            AIRTIME.button.disableButton($button);
         }
     };
     
     mod.checkJumpToCurrentButton = function() {
-        var $current = $sbTable.find("."+NOW_PLAYING_CLASS);
+        var $current = $sbTable.find("."+NOW_PLAYING_CLASS),
+        	$button = $(".sb-current");
         
         if ($current.length !== 0) {
-            AIRTIME.button.enableButton("sb-current");
+            AIRTIME.button.enableButton($button);
         }
         else {
-            AIRTIME.button.disableButton("sb-current");
+            AIRTIME.button.disableButton($button);
         }
     };
     
@@ -163,7 +162,8 @@ var AIRTIME = (function(AIRTIME){
             //this user type should be refactored into a separate users module later
             //when there's more time and more JS will need to know user data.
             userType = localStorage.getItem('user-type'),
-            canCancel = false;
+            canCancel = false,
+            $button = $(".sb-cancel");
         
         if ($current.length !== 0 && $current.hasClass("sb-allowed")) {
         	canCancel = true;
@@ -173,10 +173,10 @@ var AIRTIME = (function(AIRTIME){
         }
        
         if (canCancel === true) {
-        	AIRTIME.button.enableButton("sb-cancel");
+        	AIRTIME.button.enableButton($button);
         }
         else {
-        	AIRTIME.button.disableButton("sb-cancel");
+        	AIRTIME.button.disableButton($button);
         }
     };
     
@@ -1069,89 +1069,57 @@ var AIRTIME = (function(AIRTIME){
         $('#timeline-sn').click(function(){mod.selectNone();});
         
         //cancel current show
-        $toolbar.find('.icon-ban-circle').parent()
-            .click(function() {
-                var $tr,
-                    data,
-                    msg = $.i18n._('Cancel Current Show?');
+        $toolbar.find('.sb-cancel').click(function() {
+            var $tr,
+                data,
+                msg = $.i18n._('Cancel Current Show?');
+            
+            $tr = $sbTable.find('tr.sb-future:first');
+            
+            if ($tr.hasClass('sb-current-show')) {
+                data = $tr.data("aData");
                 
-                if (AIRTIME.button.isDisabled('icon-ban-circle', true) === true) {
-                    return;
+                if (data.record === true) {
+                    msg = $.i18n._('Stop recording current show?');
                 }
                 
-                $tr = $sbTable.find('tr.sb-future:first');
-                
-                if ($tr.hasClass('sb-current-show')) {
-                    data = $tr.data("aData");
-                    
-                    if (data.record === true) {
-                        msg = $.i18n._('Stop recording current show?');
-                    }
-                    
-                    if (confirm(msg)) {
-                        var url = baseUrl+"Schedule/cancel-current-show";
-                        $.ajax({
-                            url: url,
-                            data: {format: "json", id: data.instance},
-                            success: function(data){
-                                //$("#library_content").find("#library_display").dataTable().fnStandingRedraw();
-                                var oTable = $sbTable.dataTable();
-                                oTable.fnDraw();
-                            }
-                        });
-                    }
-                }   
-            });
+                if (confirm(msg)) {
+                    var url = baseUrl+"Schedule/cancel-current-show";
+                    $.ajax({
+                        url: url,
+                        data: {format: "json", id: data.instance},
+                        success: function(data){
+                            var oTable = $sbTable.dataTable();
+                            oTable.fnDraw();
+                        }
+                    });
+                }
+            }   
+        });
         
         //jump to current
-        $toolbar.find('.icon-step-forward').parent()
-            .click(function() {
-                
-                if (AIRTIME.button.isDisabled('icon-step-forward', true) === true) {
-                    return;
-                }
-                /*
-                var $scroll = $sbContent.find(".dataTables_scrolling"),
-                    scrolled = $scroll.scrollTop(),
-                    scrollingTop = $scroll.offset().top,
-                    current = $sbTable.find("."+NOW_PLAYING_CLASS),
-                    currentTop = current.offset().top;
-        
-                $scroll.scrollTop(currentTop - scrollingTop + scrolled);
-                */
-                mod.jumpToCurrentTrack();
-            });
+        $toolbar.find('.sb-current').click(function() {
+            mod.jumpToCurrentTrack();
+        });
         
         //delete overbooked tracks.
-        $toolbar.find('.icon-cut', true).parent()
-            .click(function() {
-                
-                if (AIRTIME.button.isDisabled('icon-cut', true) === true) {
-                    return;
-                }
-                
-                var temp,
-                    aItems = [],
-                    trs = $sbTable.find(".sb-over.sb-future.sb-allowed");
-        
-                trs.each(function(){
-                    temp = $(this).data("aData");
-                    aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});   
-                });
-                
-                mod.fnRemove(aItems);
+        $toolbar.find('.sb-overbooked').click(function() {
+            var temp,
+                aItems = [],
+                $trs = $sbTable.find(".sb-over.sb-future.sb-allowed");
+    
+            $trs.each(function(){
+                temp = $(this).data("aData");
+                aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});   
             });
+            
+            mod.fnRemove(aItems);
+        });
         
         //delete selected tracks
-        $toolbar.find('.icon-trash').parent()
-            .click(function() {
-                
-                if (AIRTIME.button.isDisabled('icon-trash', true) === true) {
-                    return;
-                }
-                
-                mod.fnRemoveSelectedItems();
-            });
+        $toolbar.find('.sb-trash').click(function() {
+            mod.fnRemoveSelectedItems();
+        });
         
         //add events to cursors.
         $sbTable.find("tbody").on("click", "div.marker", function(event) {
@@ -1172,23 +1140,6 @@ var AIRTIME = (function(AIRTIME){
             
             return false;
         });
-        
-        /*
-         * Select button dropdown state in the toolbar.
-         * The button has to be disabled to prevent the dropdown
-         * from opening
-         */
-        $sbContent.on("mouseenter", ".btn-group #timeline-select", function(ev) {
-            $el = $(this);
-            
-            if ($el.hasClass("ui-state-disabled")) {
-                $el.attr("disabled", "disabled");
-            }
-            else {
-                $el.removeAttr("disabled");
-            }       
-        });
-        
         
         //begin context menu initialization.
         $.contextMenu({

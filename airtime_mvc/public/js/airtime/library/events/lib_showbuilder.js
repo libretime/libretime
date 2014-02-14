@@ -15,51 +15,61 @@ var AIRTIME = (function(AIRTIME) {
         
     };
     
-    mod.checkAddButton = function(tabId) {
-    	
+    mod.checkAddButton = function($pane) {
+    	var $selected = $pane.find("."+mod.LIB_SELECTED_CLASS),
+			$button = $pane.find("." + mod.LIB_ADD_CLASS);
+		
+		if ($selected.length > 0) {
+			AIRTIME.button.enableButton($button);
+		}
+		else {
+			AIRTIME.button.disableButton($button);
+		}
     };
     
-    mod.checkDeleteButton = function(tabId) {
+    mod.checkToolBarIcons = function() {
+    	var tabId = mod.getActiveTabId();
+			$pane = $("#"+tabId);
     	
+    	mod.checkAddButton($pane);
+        mod.checkDeleteButton($pane);
     };
     
-    mod.checkToolBarIcons = function(tabId) {
-    	
-    	mod.checkAddButton();
-        mod.checkDeleteButton();
-    };
+    function getScheduleCursors() {
+    	var aSchedIds = [];
+	
+    	// process selected schedule rows to add media after.
+	    $("#show_builder_table tr.cursor-selected-row").each(function(i, el) {
+	    	var data = $(el).prev().data("aData");
+	    	
+	    	aSchedIds.push( {
+	            "id" : data.id,
+	            "instance" : data.instance,
+	            "timestamp" : data.timestamp
+	        });
+	    });
+
+	    return aSchedIds;
+    }
     
-  //data is the aData of the tr element.
-    mod.dblClickAdd = function(data) {
-        var i, 
-	        length, 
-	        temp, 
-	        aMediaIds = [], 
-	        aSchedIds = [], 
-	        aData = [];
-
-        // process selected media.
-        aMediaIds.push(data.Id);
-
-        $("#show_builder_table tr.cursor-selected-row").each(function(i, el) {
-            aData.push($(el).prev().data("aData"));
-        });
-
-        // process selected schedule rows to add media after.
-        for (i = 0, length = aData.length; i < length; i++) {
-            temp = aData[i];
-            aSchedIds.push( {
-                "id" : temp.id,
-                "instance" : temp.instance,
-                "timestamp" : temp.timestamp
-            });
-        }
-
-        if (aSchedIds.length == 0) {
+    function scheduleMedia(aMediaIds) {
+    	var cursorInfo = getScheduleCursors();
+    	
+    	if (cursorInfo.length == 0) {
             alert($.i18n._("Please select a cursor position on timeline."));
             return false;
         }
-        AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
+        
+        AIRTIME.showbuilder.fnAdd(aMediaIds, cursorInfo);
+    }
+    
+    //data is the aData of the tr element.
+    mod.dblClickAdd = function(data) {
+    	scheduleMedia([data.Id]);
+    };
+    
+    mod.addButtonClick = function() {
+    	scheduleMedia(mod.getVisibleChosen());
     };
     
     return AIRTIME;

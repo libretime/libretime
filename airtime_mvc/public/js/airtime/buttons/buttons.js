@@ -9,34 +9,29 @@ var AIRTIME = (function(AIRTIME) {
     mod = AIRTIME.button;
 
     //c is a unique class on the <button>
-    mod.isDisabled = function(c) {
-        var button = $("." + c);
-
+    mod.isDisabled = function($button) {
+        
         //disable the <button>
-        if (button.hasClass(DISABLED_CLASS)) {
+        if ($button.hasClass(DISABLED_CLASS)) {
             return true;
         }
 
         return false;
     };
 
-    //c is a unique class on the <button>
-    mod.enableButton = function(c) {
-        var button = $("." + c);
-        
-        if (button.hasClass(DISABLED_CLASS)) {
-            button.removeClass(DISABLED_CLASS);
-            button.removeAttr('disabled');
+    mod.enableButton = function($button) {
+       
+        if ($button.hasClass(DISABLED_CLASS)) {
+            $button.removeClass(DISABLED_CLASS);
+            $button.removeAttr('disabled');
         }
     };
 
-    //c is a unique class on the <button>
-    mod.disableButton = function(c) {
-        var button = $("." + c);
-
-        if (!button.hasClass(DISABLED_CLASS)) {
-            button.addClass(DISABLED_CLASS);
-            button.attr('disabled', 'disabled');
+    mod.disableButton = function($button) {
+       
+        if (!$button.hasClass(DISABLED_CLASS)) {
+            $button.addClass(DISABLED_CLASS);
+            $button.attr('disabled', 'disabled');
         }
     };
 

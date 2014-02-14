@@ -7,8 +7,14 @@ var AIRTIME = (function(AIRTIME) {
     
     //stored in format chosenItems[tabname] = object of chosen ids for the tab.
     var chosenItems = {},
+    	$library,
     	LIB_SELECTED_CLASS = "lib-selected",
-    	$library;
+    	LIB_ADD_CLASS = "lib-add",
+    	LIB_TRASH_CLASS = "lib-trash";
+    
+    mod.LIB_SELECTED_CLASS = LIB_SELECTED_CLASS;
+    mod.LIB_ADD_CLASS = LIB_ADD_CLASS;
+    mod.LIB_TRASH_CLASS = LIB_TRASH_CLASS;
     
     function makeWebstreamDialog(html) {
 		var $wsDialogEl = $(html),
@@ -183,6 +189,25 @@ var AIRTIME = (function(AIRTIME) {
     		$column.hide();
     	}
     }
+    
+    function highlightChosen() {
+    	//re-highlight chosen items (after a table pagination or sort etc).
+    	var ids = getChosen(),
+    		$tr,
+    		i, len;
+    	
+    	for (i = 0, len = ids.length; i < len; i++) {
+    		$tr = $("#media_row_" + ids[i]);
+    		mod.highlightItem($tr);
+    	}
+    }
+    
+    function datatablesDrawCallback(oSettings) {
+    	var tabId = getActiveTabId();
+    	
+    	highlightChosen();
+    	mod.checkToolBarIcons();
+    }
     	
     function createDatatable(config) {
     	var key = "datatables-"+config.type+"-aoColumns",
@@ -293,15 +318,18 @@ var AIRTIME = (function(AIRTIME) {
             },
             
             "oColReorder": {
-                "iFixedColumns": 1,
-                "fnReorderCallback": function () {
-                    var x;
-                }
+                "iFixedColumns": 1
             },
             
 			"fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-				$(nRow).data("aData", aData);
-	        }
+				var $nRow = $(nRow);
+				
+				$nRow
+					.data("aData", aData)
+					.attr("id", "media_row_"+aData.Id);
+	        },
+	        
+	        "fnDrawCallback": datatablesDrawCallback
 		});
     	
     	//fnStateLoadParams will have already run.
@@ -362,17 +390,39 @@ var AIRTIME = (function(AIRTIME) {
     	return $tab.attr("id");
     }
     
+    mod.getActiveTabId = getActiveTabId;
+    
     function getActiveDatatable() {
     	var tabId = getActiveTabId();
     	
     	return $library.find("#"+tabId).find("table").dataTable();
     }
     
+    //returns everything chosen from the current tab
+    function getChosen() {
+    	var tabId = getActiveTabId();
+    	
+        if (chosenItems[tabId] === undefined) {
+        	chosenItems[tabId] = {};
+        }
+        
+        return Object.keys(chosenItems[tabId]);
+    }
+    
+    //returns an array of all the visibly chosen items
+    mod.getVisibleChosen = function() {
+    	var tabId = getActiveTabId(),
+    		$visible = $("#"+tabId).find("."+LIB_SELECTED_CLASS);
+    	
+    	return $.map($visible, function(el, i) {
+    		return $(el).data("aData").Id;
+    	});
+    };
+    
     //$el is a select table row <tr>
     mod.addToChosen = function($el) {
         var data = $el.data('aData'),
         	tabId = getActiveTabId();
-        
         
         if (chosenItems[tabId] === undefined) {
         	chosenItems[tabId] = {};
@@ -514,18 +564,30 @@ var AIRTIME = (function(AIRTIME) {
                         "</ul>" +
                     "</div>")
             .append("<div class='btn-group'>" +
-                        "<button class='btn btn-small ui-state-disabled' disabled='disabled'>" +
+                        "<button class='btn btn-small ui-state-disabled "+LIB_ADD_CLASS+"' disabled='disabled'>" +
                             "<i class='icon-white icon-plus'></i>" +
                             //"<span id='lib-plus-text'></span>" +
                         "</button>" +
                     "</div>")
             .append("<div class='btn-group'>" +
-                        "<button class='btn btn-small ui-state-disabled' disabled='disabled'>" +
+                        "<button class='btn btn-small ui-state-disabled "+LIB_TRASH_CLASS+"' disabled='disabled'>" +
                             "<i class='icon-white icon-trash'></i>" +
                         "</button>" +
                     "</div>");
         
         return $menu;
+    };
+    
+    mod.checkDeleteButton = function($pane) {
+    	var $selected = $pane.find("."+mod.LIB_SELECTED_CLASS),
+			$button = $pane.find("." + mod.LIB_TRASH_CLASS);
+		
+		if ($selected.length > 0) {
+			AIRTIME.button.enableButton($button);
+		}
+		else {
+			AIRTIME.button.disableButton($button);
+		}
     };
      
     mod.onReady = function () {
@@ -677,7 +739,7 @@ var AIRTIME = (function(AIRTIME) {
             mod.dblClickAdd(data);
     	});
     	
-    	//start events for select dropdown on media tables.
+    	//start events for toolbar on media tables.
     	$library.on("click", '.lib-select-page', function(e) {
     		e.preventDefault();
     		e.stopPropagation();
@@ -698,7 +760,23 @@ var AIRTIME = (function(AIRTIME) {
     		
     		mod.selectNone();
     	});
-    	//end events for select dropdown.
+    	
+    	$library.on("click", '.lib-add', function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
+
+    		mod.addButtonClick();
+    	});
+    	
+    	$library.on("click", '.lib-trash', function(e) {
+    		e.preventDefault();
+    		e.stopPropagation();
+    		
+    		if (confirm($.i18n._('Are you sure you want to delete the selected item(s)?'))) {
+    			mod.deleteMedia(mod.getVisibleChosen());
+    		}
+    	});
+    	//end events for toolbar.
     	
     	//events for the edit metadata dialog
     	/*
