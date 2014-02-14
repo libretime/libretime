@@ -17,7 +17,7 @@ import base64
 import traceback
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.5.1"
+AIRTIME_API_VERSION = "1.1"
 
 
 # TODO : Place these functions in some common module. Right now, media
@@ -218,27 +218,30 @@ class AirtimeApiClient(object):
             sys.exit(1)
 
     def __get_airtime_version(self):
-        try: return self.services.version_url()[u'version']
+        try: return self.services.version_url()[u'airtime_version']
+        except Exception: return -1
+    
+    def __get_api_version(self):
+        try: return self.services.version_url()[u'api_version']
         except Exception: return -1
 
     def is_server_compatible(self, verbose=True):
         logger = self.logger
-        version = self.__get_airtime_version()
+        api_version = self.__get_api_version()
         # logger.info('Airtime version found: ' + str(version))
-        if version == -1:
-            if (verbose):
-                logger.info('Unable to get Airtime version number.\n')
-            return False
-        elif version[0:3] != AIRTIME_VERSION[0:3]:
+        if api_version == -1:
             if verbose:
-                logger.info('Airtime version found: ' + str(version))
-                logger.info('pypo is at version ' + AIRTIME_VERSION +
-                    ' and is not compatible with this version of Airtime.\n')
+                logger.info('Unable to get Airtime API version number.\n')
+            return False
+        elif api_version[0:3] != AIRTIME_API_VERSION[0:3]:
+            if verbose:
+                logger.info('Airtime API version found: ' + str(api_version))
+                logger.info('pypo is only compatible with API version: ' + AIRTIME_API_VERSION)
             return False
         else:
             if verbose:
-                logger.info('Airtime version: ' + str(version))
-                logger.info('pypo is at version ' + AIRTIME_VERSION + ' and is compatible with this version of Airtime.')
+                logger.info('Airtime API version found: ' + str(api_version))
+                logger.info('pypo is only compatible with API version: ' + AIRTIME_API_VERSION)
             return True
 
 

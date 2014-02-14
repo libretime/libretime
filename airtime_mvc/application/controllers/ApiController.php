@@ -65,7 +65,8 @@ class ApiController extends Zend_Controller_Action
     public function versionAction()
     {
         $this->_helper->json->sendJson( array(
-            "version" => Application_Model_Preference::GetAirtimeVersion()));
+            "airtime_version" => Application_Model_Preference::GetAirtimeVersion(),
+            "api_version" => AIRTIME_API_VERSION));
     }
 
     /**
