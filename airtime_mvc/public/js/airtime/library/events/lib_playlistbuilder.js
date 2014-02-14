@@ -49,6 +49,12 @@ var AIRTIME = (function(AIRTIME) {
     	addToPlaylist(mod.getVisibleChosen());
     };
     
+    mod.openPlaylist = function(data) {
+    	var mediaId = data.id;
+    	
+    	AIRTIME.playlist.edit(mediaId);
+    };
+    
     return AIRTIME;
 
 }(AIRTIME || {}));

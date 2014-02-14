@@ -94,7 +94,6 @@ class Application_Service_WebstreamService
 	public function createContextMenu($webstream) {
 	
 		$id = $webstream->getId();
-		$baseUrl = Application_Common_OsPath::getBaseDir();
 		
 		$menu = array();
 		
@@ -108,7 +107,6 @@ class Application_Service_WebstreamService
 		$menu["delete"] = array(
 			"name" => _("Delete"),
 			"icon" => "delete",
-			"url" => $baseUrl."media/delete",
 			"id" => $id,
 			"callback" => "deleteItem"
 		);

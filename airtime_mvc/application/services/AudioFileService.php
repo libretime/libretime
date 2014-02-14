@@ -494,17 +494,9 @@ class Application_Service_AudioFileService
 		$menu["delete"] = array(
 			"name" => _("Delete"),
 			"icon" => "delete",
-			"url" => $baseUrl."media/delete",
 			"id" => $id,
 			"callback" => "deleteItem"
 		);
-		
-		/*
-		if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
-			$menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
-			$menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
-		}
-		*/
 		
 		return $menu;
 	}

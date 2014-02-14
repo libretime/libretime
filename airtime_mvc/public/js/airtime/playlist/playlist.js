@@ -243,6 +243,17 @@ var AIRTIME = (function(AIRTIME){
         });	
 	};
 	
+	mod.edit = function(id) {
+		var url = baseUrl+"playlist/edit",
+			data;
+		
+		data = {format: "json", id: id};
+		
+		$.post(url, data, function(json) {
+			mod.drawPlaylist(json);
+		});
+	};
+	
 	mod.addItems = function(mediaIds) {
 		
 		var url = baseUrl+"playlist/add-items",
