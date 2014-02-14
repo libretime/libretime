@@ -52,6 +52,10 @@ class Config {
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
 
+        if (!isset($values['memcached'])) {
+            die("Fatal Error: [memcached] section missing from your airtime.conf.<br>" . 
+                "Please see the default airtime.conf for an example.");
+        }
         $CC_CONFIG['memcached']['servers'] = $values['memcached']['servers'];
 
         if(isset($values['demo']['demo'])){
