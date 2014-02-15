@@ -83,6 +83,9 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
+        //close the session to avoid this long request from blocking.
+        session_write_close();
+
         $info = $this->_getParam("file");
         list($id, $ext) = explode(".", $info);
 
