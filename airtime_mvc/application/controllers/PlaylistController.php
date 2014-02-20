@@ -31,21 +31,21 @@ class PlaylistController extends Zend_Controller_Action
     	return $this->mediaService->getSessionMediaObject();
     }
 
-    private function createUpdateResponse($obj)
+    private function createUpdateResponse($playlist)
     {
+    	$obj = new Presentation_Playlist($playlist);
+    	
         $this->view->length = $obj->getLength();
-        $this->view->obj = $obj;
-        $this->view->contents = $obj->getContents();
+        $this->view->contents = $obj->getContent();
+        $this->view->modified = $obj->getLastModifiedEpoch();
         $this->view->html = $this->view->render('playlist/update.phtml');
-        $this->view->modified = $obj->getUpdatedAt("U");
 
-        unset($this->view->obj);
         unset($this->view->contents);
     }
     
     private function createFullResponse($obj)
     {
-    	$this->view->obj = $obj;
+    	$this->view->obj = new Presentation_Playlist($obj);
     	$this->view->html = $this->view->render('playlist/playlist.phtml');
 
     	unset($this->view->obj);

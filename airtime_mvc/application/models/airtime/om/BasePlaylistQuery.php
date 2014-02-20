@@ -25,6 +25,7 @@ use Airtime\MediaItem\PlaylistQuery;
  *
  *
  * @method PlaylistQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method PlaylistQuery orderByRules($order = Criteria::ASC) Order by the rules column
  * @method PlaylistQuery orderById($order = Criteria::ASC) Order by the id column
  * @method PlaylistQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method PlaylistQuery orderByOwnerId($order = Criteria::ASC) Order by the owner_id column
@@ -37,6 +38,7 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method PlaylistQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
  * @method PlaylistQuery groupByType() Group by the type column
+ * @method PlaylistQuery groupByRules() Group by the rules column
  * @method PlaylistQuery groupById() Group by the id column
  * @method PlaylistQuery groupByName() Group by the name column
  * @method PlaylistQuery groupByOwnerId() Group by the owner_id column
@@ -67,7 +69,8 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method Playlist findOne(PropelPDO $con = null) Return the first Playlist matching the query
  * @method Playlist findOneOrCreate(PropelPDO $con = null) Return the first Playlist matching the query, or a new Playlist object populated from the query conditions when no match is found
  *
- * @method Playlist findOneByType(string $type) Return the first Playlist filtered by the type column
+ * @method Playlist findOneByType(int $type) Return the first Playlist filtered by the type column
+ * @method Playlist findOneByRules(string $rules) Return the first Playlist filtered by the rules column
  * @method Playlist findOneByName(string $name) Return the first Playlist filtered by the name column
  * @method Playlist findOneByOwnerId(int $owner_id) Return the first Playlist filtered by the owner_id column
  * @method Playlist findOneByDescription(string $description) Return the first Playlist filtered by the description column
@@ -78,7 +81,8 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method Playlist findOneByCreatedAt(string $created_at) Return the first Playlist filtered by the created_at column
  * @method Playlist findOneByUpdatedAt(string $updated_at) Return the first Playlist filtered by the updated_at column
  *
- * @method array findByType(string $type) Return Playlist objects filtered by the type column
+ * @method array findByType(int $type) Return Playlist objects filtered by the type column
+ * @method array findByRules(string $rules) Return Playlist objects filtered by the rules column
  * @method array findById(int $id) Return Playlist objects filtered by the id column
  * @method array findByName(string $name) Return Playlist objects filtered by the name column
  * @method array findByOwnerId(int $owner_id) Return Playlist objects filtered by the owner_id column
@@ -196,7 +200,7 @@ abstract class BasePlaylistQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "type", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_playlist" WHERE "id" = :p0';
+        $sql = 'SELECT "type", "rules", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_playlist" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -290,28 +294,70 @@ abstract class BasePlaylistQuery extends MediaItemQuery
      *
      * Example usage:
      * <code>
-     * $query->filterByType('fooValue');   // WHERE type = 'fooValue'
-     * $query->filterByType('%fooValue%'); // WHERE type LIKE '%fooValue%'
+     * $query->filterByType(1234); // WHERE type = 1234
+     * $query->filterByType(array(12, 34)); // WHERE type IN (12, 34)
+     * $query->filterByType(array('min' => 12)); // WHERE type >= 12
+     * $query->filterByType(array('max' => 12)); // WHERE type <= 12
      * </code>
      *
-     * @param     string $type The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     mixed $type The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return PlaylistQuery The current query, for fluid interface
      */
     public function filterByType($type = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($type)) {
+        if (is_array($type)) {
+            $useMinMax = false;
+            if (isset($type['min'])) {
+                $this->addUsingAlias(PlaylistPeer::TYPE, $type['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($type['max'])) {
+                $this->addUsingAlias(PlaylistPeer::TYPE, $type['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $type)) {
-                $type = str_replace('*', '%', $type);
-                $comparison = Criteria::LIKE;
             }
         }
 
         return $this->addUsingAlias(PlaylistPeer::TYPE, $type, $comparison);
+    }
+
+    /**
+     * Filter the query on the rules column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRules('fooValue');   // WHERE rules = 'fooValue'
+     * $query->filterByRules('%fooValue%'); // WHERE rules LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $rules The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PlaylistQuery The current query, for fluid interface
+     */
+    public function filterByRules($rules = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($rules)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $rules)) {
+                $rules = str_replace('*', '%', $rules);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PlaylistPeer::RULES, $rules, $comparison);
     }
 
     /**

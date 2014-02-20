@@ -68,7 +68,10 @@ class LibraryController extends Zend_Controller_Action
         $this->view->headScript()->appendScript($mediaService->createLibraryColumnsJavascript());
         $this->view->headScript()->appendScript($mediaService->createLibraryColumnSettingsJavascript());
         
-        $this->view->obj = $mediaService->getSessionMediaObject();
+        $pl = $mediaService->getSessionMediaObject();
+        if (isset($pl)) {
+        	$this->view->obj = new Presentation_Playlist($pl);
+        }
     }
     
     public function contextMenuAction()

@@ -12,6 +12,14 @@ var AIRTIME = (function(AIRTIME) {
     	LIB_ADD_CLASS = "lib-add",
     	LIB_TRASH_CLASS = "lib-trash";
     
+    var template = 
+		"<div id='advanced_search_<%= type %>_col_<%= index %>' class='control-group' <%= style %>>" +
+        	"<label class='control-label'><%= title %></label>" +
+        	"<div id='<%= id %>' class='controls'></div>" +
+        "</div>";
+
+    var advancedSearchTemplate = _.template(template);
+    
     mod.LIB_SELECTED_CLASS = LIB_SELECTED_CLASS;
     mod.LIB_ADD_CLASS = LIB_ADD_CLASS;
     mod.LIB_TRASH_CLASS = LIB_TRASH_CLASS;
@@ -110,18 +118,10 @@ var AIRTIME = (function(AIRTIME) {
     }
     
     function createAdvancedSearchField(config) {
-    	var template,
-    		$el,
+    	var $el,
     		display = config.display ? "" : "style='display:none;'";
     	
-    	template = 
-    		"<div id='advanced_search_<%= type %>_col_<%= index %>' class='control-group' <%= style %>>" +
-            	"<label class='control-label'><%= title %></label>" +
-            	"<div id='<%= id %>' class='controls'></div>" +
-            "</div>";
-    	
-    	template = _.template(template);
-    	$el = $(template({
+    	$el = $(advancedSearchTemplate({
     		index: config.index,
     		style: display,
     		title: config.title,

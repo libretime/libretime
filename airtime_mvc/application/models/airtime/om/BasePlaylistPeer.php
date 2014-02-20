@@ -39,16 +39,19 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     const TM_CLASS = 'Airtime\\MediaItem\\map\\PlaylistTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 12;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 12;
 
     /** the column name for the type field */
     const TYPE = 'media_playlist.type';
+
+    /** the column name for the rules field */
+    const RULES = 'media_playlist.rules';
 
     /** the column name for the id field */
     const ID = 'media_playlist.id';
@@ -99,12 +102,12 @@ abstract class BasePlaylistPeer extends MediaItemPeer
      * e.g. PlaylistPeer::$fieldNames[PlaylistPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Type', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('type', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (PlaylistPeer::TYPE, PlaylistPeer::ID, PlaylistPeer::NAME, PlaylistPeer::OWNER_ID, PlaylistPeer::DESCRIPTION, PlaylistPeer::LAST_PLAYED, PlaylistPeer::PLAY_COUNT, PlaylistPeer::LENGTH, PlaylistPeer::MIME, PlaylistPeer::CREATED_AT, PlaylistPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('TYPE', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('type', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Type', 'Rules', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('type', 'rules', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', ),
+        BasePeer::TYPE_COLNAME => array (PlaylistPeer::TYPE, PlaylistPeer::RULES, PlaylistPeer::ID, PlaylistPeer::NAME, PlaylistPeer::OWNER_ID, PlaylistPeer::DESCRIPTION, PlaylistPeer::LAST_PLAYED, PlaylistPeer::PLAY_COUNT, PlaylistPeer::LENGTH, PlaylistPeer::MIME, PlaylistPeer::CREATED_AT, PlaylistPeer::UPDATED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('TYPE', 'RULES', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('type', 'rules', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -114,12 +117,12 @@ abstract class BasePlaylistPeer extends MediaItemPeer
      * e.g. PlaylistPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Type' => 0, 'Id' => 1, 'Name' => 2, 'OwnerId' => 3, 'Description' => 4, 'LastPlayedTime' => 5, 'PlayCount' => 6, 'Length' => 7, 'Mime' => 8, 'CreatedAt' => 9, 'UpdatedAt' => 10, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('type' => 0, 'id' => 1, 'name' => 2, 'ownerId' => 3, 'description' => 4, 'lastPlayedTime' => 5, 'playCount' => 6, 'length' => 7, 'mime' => 8, 'createdAt' => 9, 'updatedAt' => 10, ),
-        BasePeer::TYPE_COLNAME => array (PlaylistPeer::TYPE => 0, PlaylistPeer::ID => 1, PlaylistPeer::NAME => 2, PlaylistPeer::OWNER_ID => 3, PlaylistPeer::DESCRIPTION => 4, PlaylistPeer::LAST_PLAYED => 5, PlaylistPeer::PLAY_COUNT => 6, PlaylistPeer::LENGTH => 7, PlaylistPeer::MIME => 8, PlaylistPeer::CREATED_AT => 9, PlaylistPeer::UPDATED_AT => 10, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('TYPE' => 0, 'ID' => 1, 'NAME' => 2, 'OWNER_ID' => 3, 'DESCRIPTION' => 4, 'LAST_PLAYED' => 5, 'PLAY_COUNT' => 6, 'LENGTH' => 7, 'MIME' => 8, 'CREATED_AT' => 9, 'UPDATED_AT' => 10, ),
-        BasePeer::TYPE_FIELDNAME => array ('type' => 0, 'id' => 1, 'name' => 2, 'owner_id' => 3, 'description' => 4, 'last_played' => 5, 'play_count' => 6, 'length' => 7, 'mime' => 8, 'created_at' => 9, 'updated_at' => 10, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Type' => 0, 'Rules' => 1, 'Id' => 2, 'Name' => 3, 'OwnerId' => 4, 'Description' => 5, 'LastPlayedTime' => 6, 'PlayCount' => 7, 'Length' => 8, 'Mime' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('type' => 0, 'rules' => 1, 'id' => 2, 'name' => 3, 'ownerId' => 4, 'description' => 5, 'lastPlayedTime' => 6, 'playCount' => 7, 'length' => 8, 'mime' => 9, 'createdAt' => 10, 'updatedAt' => 11, ),
+        BasePeer::TYPE_COLNAME => array (PlaylistPeer::TYPE => 0, PlaylistPeer::RULES => 1, PlaylistPeer::ID => 2, PlaylistPeer::NAME => 3, PlaylistPeer::OWNER_ID => 4, PlaylistPeer::DESCRIPTION => 5, PlaylistPeer::LAST_PLAYED => 6, PlaylistPeer::PLAY_COUNT => 7, PlaylistPeer::LENGTH => 8, PlaylistPeer::MIME => 9, PlaylistPeer::CREATED_AT => 10, PlaylistPeer::UPDATED_AT => 11, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('TYPE' => 0, 'RULES' => 1, 'ID' => 2, 'NAME' => 3, 'OWNER_ID' => 4, 'DESCRIPTION' => 5, 'LAST_PLAYED' => 6, 'PLAY_COUNT' => 7, 'LENGTH' => 8, 'MIME' => 9, 'CREATED_AT' => 10, 'UPDATED_AT' => 11, ),
+        BasePeer::TYPE_FIELDNAME => array ('type' => 0, 'rules' => 1, 'id' => 2, 'name' => 3, 'owner_id' => 4, 'description' => 5, 'last_played' => 6, 'play_count' => 7, 'length' => 8, 'mime' => 9, 'created_at' => 10, 'updated_at' => 11, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
     /**
@@ -194,6 +197,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(PlaylistPeer::TYPE);
+            $criteria->addSelectColumn(PlaylistPeer::RULES);
             $criteria->addSelectColumn(PlaylistPeer::ID);
             $criteria->addSelectColumn(PlaylistPeer::NAME);
             $criteria->addSelectColumn(PlaylistPeer::OWNER_ID);
@@ -206,6 +210,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
             $criteria->addSelectColumn(PlaylistPeer::UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.rules');
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.owner_id');
@@ -438,11 +443,11 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     public static function getPrimaryKeyHashFromRow($row, $startcol = 0)
     {
         // If the PK cannot be derived from the row, return null.
-        if ($row[$startcol + 1] === null) {
+        if ($row[$startcol + 2] === null) {
             return null;
         }
 
-        return (string) $row[$startcol + 1];
+        return (string) $row[$startcol + 2];
     }
 
     /**
@@ -457,7 +462,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     public static function getPrimaryKeyFromRow($row, $startcol = 0)
     {
 
-        return (int) $row[$startcol + 1];
+        return (int) $row[$startcol + 2];
     }
 
     /**

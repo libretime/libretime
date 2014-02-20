@@ -12,8 +12,8 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use Airtime\CcFiles;
 use Airtime\CcShowInstances;
+use Airtime\MediaItem;
 use Airtime\PlayoutHistory\CcPlayoutHistory;
 use Airtime\PlayoutHistory\CcPlayoutHistoryMetaData;
 use Airtime\PlayoutHistory\CcPlayoutHistoryPeer;
@@ -25,13 +25,13 @@ use Airtime\PlayoutHistory\CcPlayoutHistoryQuery;
  *
  *
  * @method CcPlayoutHistoryQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method CcPlayoutHistoryQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
+ * @method CcPlayoutHistoryQuery orderByDbMediaId($order = Criteria::ASC) Order by the media_id column
  * @method CcPlayoutHistoryQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
  * @method CcPlayoutHistoryQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
  * @method CcPlayoutHistoryQuery orderByDbInstanceId($order = Criteria::ASC) Order by the instance_id column
  *
  * @method CcPlayoutHistoryQuery groupByDbId() Group by the id column
- * @method CcPlayoutHistoryQuery groupByDbFileId() Group by the file_id column
+ * @method CcPlayoutHistoryQuery groupByDbMediaId() Group by the media_id column
  * @method CcPlayoutHistoryQuery groupByDbStarts() Group by the starts column
  * @method CcPlayoutHistoryQuery groupByDbEnds() Group by the ends column
  * @method CcPlayoutHistoryQuery groupByDbInstanceId() Group by the instance_id column
@@ -40,9 +40,9 @@ use Airtime\PlayoutHistory\CcPlayoutHistoryQuery;
  * @method CcPlayoutHistoryQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcPlayoutHistoryQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method CcPlayoutHistoryQuery leftJoinCcFiles($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFiles relation
- * @method CcPlayoutHistoryQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
- * @method CcPlayoutHistoryQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
+ * @method CcPlayoutHistoryQuery leftJoinMediaItem($relationAlias = null) Adds a LEFT JOIN clause to the query using the MediaItem relation
+ * @method CcPlayoutHistoryQuery rightJoinMediaItem($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MediaItem relation
+ * @method CcPlayoutHistoryQuery innerJoinMediaItem($relationAlias = null) Adds a INNER JOIN clause to the query using the MediaItem relation
  *
  * @method CcPlayoutHistoryQuery leftJoinCcShowInstances($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowInstances relation
  * @method CcPlayoutHistoryQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
@@ -55,13 +55,13 @@ use Airtime\PlayoutHistory\CcPlayoutHistoryQuery;
  * @method CcPlayoutHistory findOne(PropelPDO $con = null) Return the first CcPlayoutHistory matching the query
  * @method CcPlayoutHistory findOneOrCreate(PropelPDO $con = null) Return the first CcPlayoutHistory matching the query, or a new CcPlayoutHistory object populated from the query conditions when no match is found
  *
- * @method CcPlayoutHistory findOneByDbFileId(int $file_id) Return the first CcPlayoutHistory filtered by the file_id column
+ * @method CcPlayoutHistory findOneByDbMediaId(int $media_id) Return the first CcPlayoutHistory filtered by the media_id column
  * @method CcPlayoutHistory findOneByDbStarts(string $starts) Return the first CcPlayoutHistory filtered by the starts column
  * @method CcPlayoutHistory findOneByDbEnds(string $ends) Return the first CcPlayoutHistory filtered by the ends column
  * @method CcPlayoutHistory findOneByDbInstanceId(int $instance_id) Return the first CcPlayoutHistory filtered by the instance_id column
  *
  * @method array findByDbId(int $id) Return CcPlayoutHistory objects filtered by the id column
- * @method array findByDbFileId(int $file_id) Return CcPlayoutHistory objects filtered by the file_id column
+ * @method array findByDbMediaId(int $media_id) Return CcPlayoutHistory objects filtered by the media_id column
  * @method array findByDbStarts(string $starts) Return CcPlayoutHistory objects filtered by the starts column
  * @method array findByDbEnds(string $ends) Return CcPlayoutHistory objects filtered by the ends column
  * @method array findByDbInstanceId(int $instance_id) Return CcPlayoutHistory objects filtered by the instance_id column
@@ -172,7 +172,7 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "file_id", "starts", "ends", "instance_id" FROM "cc_playout_history" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "media_id", "starts", "ends", "instance_id" FROM "cc_playout_history" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -304,19 +304,19 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the file_id column
+     * Filter the query on the media_id column
      *
      * Example usage:
      * <code>
-     * $query->filterByDbFileId(1234); // WHERE file_id = 1234
-     * $query->filterByDbFileId(array(12, 34)); // WHERE file_id IN (12, 34)
-     * $query->filterByDbFileId(array('min' => 12)); // WHERE file_id >= 12
-     * $query->filterByDbFileId(array('max' => 12)); // WHERE file_id <= 12
+     * $query->filterByDbMediaId(1234); // WHERE media_id = 1234
+     * $query->filterByDbMediaId(array(12, 34)); // WHERE media_id IN (12, 34)
+     * $query->filterByDbMediaId(array('min' => 12)); // WHERE media_id >= 12
+     * $query->filterByDbMediaId(array('max' => 12)); // WHERE media_id <= 12
      * </code>
      *
-     * @see       filterByCcFiles()
+     * @see       filterByMediaItem()
      *
-     * @param     mixed $dbFileId The value to use as filter.
+     * @param     mixed $dbMediaId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -324,16 +324,16 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
      *
      * @return CcPlayoutHistoryQuery The current query, for fluid interface
      */
-    public function filterByDbFileId($dbFileId = null, $comparison = null)
+    public function filterByDbMediaId($dbMediaId = null, $comparison = null)
     {
-        if (is_array($dbFileId)) {
+        if (is_array($dbMediaId)) {
             $useMinMax = false;
-            if (isset($dbFileId['min'])) {
-                $this->addUsingAlias(CcPlayoutHistoryPeer::FILE_ID, $dbFileId['min'], Criteria::GREATER_EQUAL);
+            if (isset($dbMediaId['min'])) {
+                $this->addUsingAlias(CcPlayoutHistoryPeer::MEDIA_ID, $dbMediaId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($dbFileId['max'])) {
-                $this->addUsingAlias(CcPlayoutHistoryPeer::FILE_ID, $dbFileId['max'], Criteria::LESS_EQUAL);
+            if (isset($dbMediaId['max'])) {
+                $this->addUsingAlias(CcPlayoutHistoryPeer::MEDIA_ID, $dbMediaId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -344,7 +344,7 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CcPlayoutHistoryPeer::FILE_ID, $dbFileId, $comparison);
+        return $this->addUsingAlias(CcPlayoutHistoryPeer::MEDIA_ID, $dbMediaId, $comparison);
     }
 
     /**
@@ -478,43 +478,43 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related CcFiles object
+     * Filter the query by a related MediaItem object
      *
-     * @param   CcFiles|PropelObjectCollection $ccFiles The related object(s) to use as filter
+     * @param   MediaItem|PropelObjectCollection $mediaItem The related object(s) to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 CcPlayoutHistoryQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByCcFiles($ccFiles, $comparison = null)
+    public function filterByMediaItem($mediaItem, $comparison = null)
     {
-        if ($ccFiles instanceof CcFiles) {
+        if ($mediaItem instanceof MediaItem) {
             return $this
-                ->addUsingAlias(CcPlayoutHistoryPeer::FILE_ID, $ccFiles->getDbId(), $comparison);
-        } elseif ($ccFiles instanceof PropelObjectCollection) {
+                ->addUsingAlias(CcPlayoutHistoryPeer::MEDIA_ID, $mediaItem->getId(), $comparison);
+        } elseif ($mediaItem instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(CcPlayoutHistoryPeer::FILE_ID, $ccFiles->toKeyValue('PrimaryKey', 'DbId'), $comparison);
+                ->addUsingAlias(CcPlayoutHistoryPeer::MEDIA_ID, $mediaItem->toKeyValue('PrimaryKey', 'Id'), $comparison);
         } else {
-            throw new PropelException('filterByCcFiles() only accepts arguments of type CcFiles or PropelCollection');
+            throw new PropelException('filterByMediaItem() only accepts arguments of type MediaItem or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the CcFiles relation
+     * Adds a JOIN clause to the query using the MediaItem relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return CcPlayoutHistoryQuery The current query, for fluid interface
      */
-    public function joinCcFiles($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function joinMediaItem($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CcFiles');
+        $relationMap = $tableMap->getRelation('MediaItem');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -529,14 +529,14 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'CcFiles');
+            $this->addJoinObject($join, 'MediaItem');
         }
 
         return $this;
     }
 
     /**
-     * Use the CcFiles relation CcFiles object
+     * Use the MediaItem relation MediaItem object
      *
      * @see       useQuery()
      *
@@ -544,13 +544,13 @@ abstract class BaseCcPlayoutHistoryQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Airtime\CcFilesQuery A secondary query class using the current class as primary query
+     * @return   \Airtime\MediaItemQuery A secondary query class using the current class as primary query
      */
-    public function useCcFilesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    public function useMediaItemQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinCcFiles($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CcFiles', '\Airtime\CcFilesQuery');
+            ->joinMediaItem($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'MediaItem', '\Airtime\MediaItemQuery');
     }
 
     /**

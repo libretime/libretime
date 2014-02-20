@@ -12,7 +12,6 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use Airtime\CcFiles;
 use Airtime\CcMusicDirs;
 use Airtime\CcMusicDirsPeer;
 use Airtime\CcMusicDirsQuery;
@@ -38,10 +37,6 @@ use Airtime\MediaItem\AudioFile;
  * @method CcMusicDirsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcMusicDirsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method CcMusicDirsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
- *
- * @method CcMusicDirsQuery leftJoinCcFiles($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFiles relation
- * @method CcMusicDirsQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
- * @method CcMusicDirsQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
  *
  * @method CcMusicDirsQuery leftJoinAudioFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the AudioFile relation
  * @method CcMusicDirsQuery rightJoinAudioFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the AudioFile relation
@@ -408,80 +403,6 @@ abstract class BaseCcMusicDirsQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcMusicDirsPeer::WATCHED, $watched, $comparison);
-    }
-
-    /**
-     * Filter the query by a related CcFiles object
-     *
-     * @param   CcFiles|PropelObjectCollection $ccFiles  the related object to use as filter
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return                 CcMusicDirsQuery The current query, for fluid interface
-     * @throws PropelException - if the provided filter is invalid.
-     */
-    public function filterByCcFiles($ccFiles, $comparison = null)
-    {
-        if ($ccFiles instanceof CcFiles) {
-            return $this
-                ->addUsingAlias(CcMusicDirsPeer::ID, $ccFiles->getDbDirectory(), $comparison);
-        } elseif ($ccFiles instanceof PropelObjectCollection) {
-            return $this
-                ->useCcFilesQuery()
-                ->filterByPrimaryKeys($ccFiles->getPrimaryKeys())
-                ->endUse();
-        } else {
-            throw new PropelException('filterByCcFiles() only accepts arguments of type CcFiles or PropelCollection');
-        }
-    }
-
-    /**
-     * Adds a JOIN clause to the query using the CcFiles relation
-     *
-     * @param     string $relationAlias optional alias for the relation
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return CcMusicDirsQuery The current query, for fluid interface
-     */
-    public function joinCcFiles($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CcFiles');
-
-        // create a ModelJoin object for this join
-        $join = new ModelJoin();
-        $join->setJoinType($joinType);
-        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
-        if ($previousJoin = $this->getPreviousJoin()) {
-            $join->setPreviousJoin($previousJoin);
-        }
-
-        // add the ModelJoin to the current object
-        if ($relationAlias) {
-            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
-            $this->addJoinObject($join, $relationAlias);
-        } else {
-            $this->addJoinObject($join, 'CcFiles');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Use the CcFiles relation CcFiles object
-     *
-     * @see       useQuery()
-     *
-     * @param     string $relationAlias optional alias for the relation,
-     *                                   to be used as main alias in the secondary query
-     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
-     *
-     * @return   \Airtime\CcFilesQuery A secondary query class using the current class as primary query
-     */
-    public function useCcFilesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
-    {
-        return $this
-            ->joinCcFiles($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CcFiles', '\Airtime\CcFilesQuery');
     }
 
     /**

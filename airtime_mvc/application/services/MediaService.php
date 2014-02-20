@@ -500,7 +500,7 @@ class Application_Service_MediaService
 				"class" => "library_type",
 		        "advancedSearch" => array(
 	                "type" => "select",
-		            "values" => array("standard", "static", "dynamic")
+		            "values" => array("static", "dynamic")
 		        )
 			),
 			"Name" => array(

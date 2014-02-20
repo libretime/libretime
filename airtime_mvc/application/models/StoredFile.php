@@ -1099,7 +1099,7 @@ SQL;
 
     public static function getFileCount()
     {
-        $sql = "SELECT count(*) as cnt FROM cc_files WHERE file_exists";
+        $sql = "SELECT count(*) as cnt FROM media_audiofile WHERE file_exists";
         return Application_Common_Database::prepareAndExecute($sql, array(),
             Application_Common_Database::COLUMN);
     }

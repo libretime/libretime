@@ -47,8 +47,6 @@ class CcScheduleTableMap extends TableMap
         $this->addColumn('starts', 'DbStarts', 'TIMESTAMP', true, null, null);
         $this->addColumn('ends', 'DbEnds', 'TIMESTAMP', true, null, null);
         $this->addForeignKey('media_id', 'DbMediaId', 'INTEGER', 'media_item', 'id', false, null, null);
-        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', false, null, null);
-        $this->addForeignKey('stream_id', 'DbStreamId', 'INTEGER', 'cc_webstream', 'id', false, null, null);
         $this->addColumn('clip_length', 'DbClipLength', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('fade_in', 'DbFadeIn', 'DECIMAL', false, null, 0);
         $this->addColumn('fade_out', 'DbFadeOut', 'DECIMAL', false, null, 0);
@@ -69,9 +67,6 @@ class CcScheduleTableMap extends TableMap
     {
         $this->addRelation('CcShowInstances', 'Airtime\\CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('MediaItem', 'Airtime\\MediaItem', RelationMap::MANY_TO_ONE, array('media_id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('CcFiles', 'Airtime\\CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('CcWebstream', 'Airtime\\CcWebstream', RelationMap::MANY_TO_ONE, array('stream_id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('CcWebstreamMetadata', 'Airtime\\CcWebstreamMetadata', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null, 'CcWebstreamMetadatas');
     } // buildRelations()
 
 } // CcScheduleTableMap

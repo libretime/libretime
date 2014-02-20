@@ -42,7 +42,8 @@ class PlaylistTableMap extends TableMap
         $this->setPackage('airtime');
         $this->setUseIdGenerator(false);
         // columns
-        $this->addColumn('type', 'Type', 'VARCHAR', false, 15, 'standard');
+        $this->addColumn('type', 'Type', 'TINYINT', true, null, 0);
+        $this->addColumn('rules', 'Rules', 'LONGVARCHAR', true, null, '');
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_item', 'id', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', false, 128, null);
         $this->addForeignKey('owner_id', 'OwnerId', 'INTEGER', 'cc_subjs', 'id', false, null, null);

@@ -17,8 +17,8 @@ use Airtime\MediaItemPeer;
 use Airtime\MediaItem\AudioFilePeer;
 use Airtime\MediaItem\MediaContentPeer;
 use Airtime\MediaItem\PlaylistPeer;
-use Airtime\MediaItem\PlaylistRulePeer;
 use Airtime\MediaItem\WebstreamPeer;
+use Airtime\PlayoutHistory\CcPlayoutHistoryPeer;
 use Airtime\map\MediaItemTableMap;
 
 /**
@@ -431,9 +431,9 @@ abstract class BaseMediaItemPeer
         // Invalidate objects in CcSchedulePeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcSchedulePeer::clearInstancePool();
-        // Invalidate objects in PlaylistRulePeer instance pool,
+        // Invalidate objects in CcPlayoutHistoryPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        PlaylistRulePeer::clearInstancePool();
+        CcPlayoutHistoryPeer::clearInstancePool();
         // Invalidate objects in MediaContentPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         MediaContentPeer::clearInstancePool();

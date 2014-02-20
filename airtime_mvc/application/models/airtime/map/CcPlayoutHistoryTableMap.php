@@ -44,7 +44,7 @@ class CcPlayoutHistoryTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('cc_playout_history_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
-        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', false, null, null);
+        $this->addForeignKey('media_id', 'DbMediaId', 'INTEGER', 'media_item', 'id', false, null, null);
         $this->addColumn('starts', 'DbStarts', 'TIMESTAMP', true, null, null);
         $this->addColumn('ends', 'DbEnds', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('instance_id', 'DbInstanceId', 'INTEGER', 'cc_show_instances', 'id', false, null, null);
@@ -56,7 +56,7 @@ class CcPlayoutHistoryTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcFiles', 'Airtime\\CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('MediaItem', 'Airtime\\MediaItem', RelationMap::MANY_TO_ONE, array('media_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('CcShowInstances', 'Airtime\\CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'SET NULL', null);
         $this->addRelation('CcPlayoutHistoryMetaData', 'Airtime\\PlayoutHistory\\CcPlayoutHistoryMetaData', RelationMap::ONE_TO_MANY, array('id' => 'history_id', ), 'CASCADE', null, 'CcPlayoutHistoryMetaDatas');
     } // buildRelations()

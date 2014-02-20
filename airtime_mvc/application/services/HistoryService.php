@@ -531,6 +531,7 @@ class Application_Service_HistoryService
 			$item = CcScheduleQuery::create()->findPK($schedId, $this->con);
 			
 			//TODO figure out how to combine these all into 1 query.
+			//TODO look for duplicate metadata entries.
 			$showInstance = $item->getCcShowInstances($this->con);
 			$show = $showInstance->getCcShow($this->con);
 			

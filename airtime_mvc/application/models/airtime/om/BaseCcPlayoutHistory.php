@@ -15,10 +15,10 @@ use \PropelDateTime;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use Airtime\CcFiles;
-use Airtime\CcFilesQuery;
 use Airtime\CcShowInstances;
 use Airtime\CcShowInstancesQuery;
+use Airtime\MediaItem;
+use Airtime\MediaItemQuery;
 use Airtime\PlayoutHistory\CcPlayoutHistory;
 use Airtime\PlayoutHistory\CcPlayoutHistoryMetaData;
 use Airtime\PlayoutHistory\CcPlayoutHistoryMetaDataQuery;
@@ -60,10 +60,10 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the file_id field.
+     * The value for the media_id field.
      * @var        int
      */
-    protected $file_id;
+    protected $media_id;
 
     /**
      * The value for the starts field.
@@ -84,9 +84,9 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
     protected $instance_id;
 
     /**
-     * @var        CcFiles
+     * @var        MediaItem
      */
-    protected $aCcFiles;
+    protected $aMediaItem;
 
     /**
      * @var        CcShowInstances
@@ -137,14 +137,14 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [file_id] column value.
+     * Get the [media_id] column value.
      *
      * @return int
      */
-    public function getDbFileId()
+    public function getDbMediaId()
     {
 
-        return $this->file_id;
+        return $this->media_id;
     }
 
     /**
@@ -250,29 +250,29 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
     } // setDbId()
 
     /**
-     * Set the value of [file_id] column.
+     * Set the value of [media_id] column.
      *
      * @param  int $v new value
      * @return CcPlayoutHistory The current object (for fluent API support)
      */
-    public function setDbFileId($v)
+    public function setDbMediaId($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
         }
 
-        if ($this->file_id !== $v) {
-            $this->file_id = $v;
-            $this->modifiedColumns[] = CcPlayoutHistoryPeer::FILE_ID;
+        if ($this->media_id !== $v) {
+            $this->media_id = $v;
+            $this->modifiedColumns[] = CcPlayoutHistoryPeer::MEDIA_ID;
         }
 
-        if ($this->aCcFiles !== null && $this->aCcFiles->getDbId() !== $v) {
-            $this->aCcFiles = null;
+        if ($this->aMediaItem !== null && $this->aMediaItem->getId() !== $v) {
+            $this->aMediaItem = null;
         }
 
 
         return $this;
-    } // setDbFileId()
+    } // setDbMediaId()
 
     /**
      * Sets the value of [starts] column to a normalized version of the date/time value specified.
@@ -378,7 +378,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->file_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->media_id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->starts = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->ends = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->instance_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
@@ -414,8 +414,8 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
-        if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getDbId()) {
-            $this->aCcFiles = null;
+        if ($this->aMediaItem !== null && $this->media_id !== $this->aMediaItem->getId()) {
+            $this->aMediaItem = null;
         }
         if ($this->aCcShowInstances !== null && $this->instance_id !== $this->aCcShowInstances->getDbId()) {
             $this->aCcShowInstances = null;
@@ -459,7 +459,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCcFiles = null;
+            $this->aMediaItem = null;
             $this->aCcShowInstances = null;
             $this->collCcPlayoutHistoryMetaDatas = null;
 
@@ -581,11 +581,11 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCcFiles !== null) {
-                if ($this->aCcFiles->isModified() || $this->aCcFiles->isNew()) {
-                    $affectedRows += $this->aCcFiles->save($con);
+            if ($this->aMediaItem !== null) {
+                if ($this->aMediaItem->isModified() || $this->aMediaItem->isNew()) {
+                    $affectedRows += $this->aMediaItem->save($con);
                 }
-                $this->setCcFiles($this->aCcFiles);
+                $this->setMediaItem($this->aMediaItem);
             }
 
             if ($this->aCcShowInstances !== null) {
@@ -662,8 +662,8 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
         if ($this->isColumnModified(CcPlayoutHistoryPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '"id"';
         }
-        if ($this->isColumnModified(CcPlayoutHistoryPeer::FILE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '"file_id"';
+        if ($this->isColumnModified(CcPlayoutHistoryPeer::MEDIA_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"media_id"';
         }
         if ($this->isColumnModified(CcPlayoutHistoryPeer::STARTS)) {
             $modifiedColumns[':p' . $index++]  = '"starts"';
@@ -688,8 +688,8 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
                     case '"id"':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case '"file_id"':
-                        $stmt->bindValue($identifier, $this->file_id, PDO::PARAM_INT);
+                    case '"media_id"':
+                        $stmt->bindValue($identifier, $this->media_id, PDO::PARAM_INT);
                         break;
                     case '"starts"':
                         $stmt->bindValue($identifier, $this->starts, PDO::PARAM_STR);
@@ -792,9 +792,9 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCcFiles !== null) {
-                if (!$this->aCcFiles->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aCcFiles->getValidationFailures());
+            if ($this->aMediaItem !== null) {
+                if (!$this->aMediaItem->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aMediaItem->getValidationFailures());
                 }
             }
 
@@ -857,7 +857,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
                 return $this->getDbId();
                 break;
             case 1:
-                return $this->getDbFileId();
+                return $this->getDbMediaId();
                 break;
             case 2:
                 return $this->getDbStarts();
@@ -898,7 +898,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
         $keys = CcPlayoutHistoryPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getDbId(),
-            $keys[1] => $this->getDbFileId(),
+            $keys[1] => $this->getDbMediaId(),
             $keys[2] => $this->getDbStarts(),
             $keys[3] => $this->getDbEnds(),
             $keys[4] => $this->getDbInstanceId(),
@@ -909,8 +909,8 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aCcFiles) {
-                $result['CcFiles'] = $this->aCcFiles->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aMediaItem) {
+                $result['MediaItem'] = $this->aMediaItem->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aCcShowInstances) {
                 $result['CcShowInstances'] = $this->aCcShowInstances->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -956,7 +956,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
                 $this->setDbId($value);
                 break;
             case 1:
-                $this->setDbFileId($value);
+                $this->setDbMediaId($value);
                 break;
             case 2:
                 $this->setDbStarts($value);
@@ -992,7 +992,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
         $keys = CcPlayoutHistoryPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setDbFileId($arr[$keys[1]]);
+        if (array_key_exists($keys[1], $arr)) $this->setDbMediaId($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDbStarts($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDbEnds($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setDbInstanceId($arr[$keys[4]]);
@@ -1008,7 +1008,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
         $criteria = new Criteria(CcPlayoutHistoryPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(CcPlayoutHistoryPeer::ID)) $criteria->add(CcPlayoutHistoryPeer::ID, $this->id);
-        if ($this->isColumnModified(CcPlayoutHistoryPeer::FILE_ID)) $criteria->add(CcPlayoutHistoryPeer::FILE_ID, $this->file_id);
+        if ($this->isColumnModified(CcPlayoutHistoryPeer::MEDIA_ID)) $criteria->add(CcPlayoutHistoryPeer::MEDIA_ID, $this->media_id);
         if ($this->isColumnModified(CcPlayoutHistoryPeer::STARTS)) $criteria->add(CcPlayoutHistoryPeer::STARTS, $this->starts);
         if ($this->isColumnModified(CcPlayoutHistoryPeer::ENDS)) $criteria->add(CcPlayoutHistoryPeer::ENDS, $this->ends);
         if ($this->isColumnModified(CcPlayoutHistoryPeer::INSTANCE_ID)) $criteria->add(CcPlayoutHistoryPeer::INSTANCE_ID, $this->instance_id);
@@ -1075,7 +1075,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setDbFileId($this->getDbFileId());
+        $copyObj->setDbMediaId($this->getDbMediaId());
         $copyObj->setDbStarts($this->getDbStarts());
         $copyObj->setDbEnds($this->getDbEnds());
         $copyObj->setDbInstanceId($this->getDbInstanceId());
@@ -1144,24 +1144,24 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
     }
 
     /**
-     * Declares an association between this object and a CcFiles object.
+     * Declares an association between this object and a MediaItem object.
      *
-     * @param                  CcFiles $v
+     * @param                  MediaItem $v
      * @return CcPlayoutHistory The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcFiles(CcFiles $v = null)
+    public function setMediaItem(MediaItem $v = null)
     {
         if ($v === null) {
-            $this->setDbFileId(NULL);
+            $this->setDbMediaId(NULL);
         } else {
-            $this->setDbFileId($v->getDbId());
+            $this->setDbMediaId($v->getId());
         }
 
-        $this->aCcFiles = $v;
+        $this->aMediaItem = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the CcFiles object, it will not be re-added.
+        // If this object has already been added to the MediaItem object, it will not be re-added.
         if ($v !== null) {
             $v->addCcPlayoutHistory($this);
         }
@@ -1172,27 +1172,27 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
 
 
     /**
-     * Get the associated CcFiles object
+     * Get the associated MediaItem object
      *
      * @param PropelPDO $con Optional Connection object.
      * @param $doQuery Executes a query to get the object if required
-     * @return CcFiles The associated CcFiles object.
+     * @return MediaItem The associated MediaItem object.
      * @throws PropelException
      */
-    public function getCcFiles(PropelPDO $con = null, $doQuery = true)
+    public function getMediaItem(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aCcFiles === null && ($this->file_id !== null) && $doQuery) {
-            $this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
+        if ($this->aMediaItem === null && ($this->media_id !== null) && $doQuery) {
+            $this->aMediaItem = MediaItemQuery::create()->findPk($this->media_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCcFiles->addCcPlayoutHistorys($this);
+                $this->aMediaItem->addCcPlayoutHistorys($this);
              */
         }
 
-        return $this->aCcFiles;
+        return $this->aMediaItem;
     }
 
     /**
@@ -1494,7 +1494,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->file_id = null;
+        $this->media_id = null;
         $this->starts = null;
         $this->ends = null;
         $this->instance_id = null;
@@ -1525,8 +1525,8 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
-            if ($this->aCcFiles instanceof Persistent) {
-              $this->aCcFiles->clearAllReferences($deep);
+            if ($this->aMediaItem instanceof Persistent) {
+              $this->aMediaItem->clearAllReferences($deep);
             }
             if ($this->aCcShowInstances instanceof Persistent) {
               $this->aCcShowInstances->clearAllReferences($deep);
@@ -1539,7 +1539,7 @@ abstract class BaseCcPlayoutHistory extends BaseObject implements Persistent
             $this->collCcPlayoutHistoryMetaDatas->clearIterator();
         }
         $this->collCcPlayoutHistoryMetaDatas = null;
-        $this->aCcFiles = null;
+        $this->aMediaItem = null;
         $this->aCcShowInstances = null;
     }
 

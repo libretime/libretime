@@ -64,11 +64,7 @@ class CcSubjsTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcFilesRelatedByDbOwnerId', 'Airtime\\CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'CcFilessRelatedByDbOwnerId');
-        $this->addRelation('CcFilesRelatedByDbEditedby', 'Airtime\\CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'editedby', ), null, null, 'CcFilessRelatedByDbEditedby');
         $this->addRelation('CcShowHosts', 'Airtime\\CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'subjs_id', ), 'CASCADE', null, 'CcShowHostss');
-        $this->addRelation('CcPlaylist', 'Airtime\\CcPlaylist', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcPlaylists');
-        $this->addRelation('CcBlock', 'Airtime\\CcBlock', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcBlocks');
         $this->addRelation('CcPref', 'Airtime\\CcPref', RelationMap::ONE_TO_MANY, array('id' => 'subjid', ), 'CASCADE', null, 'CcPrefs');
         $this->addRelation('CcSubjsToken', 'Airtime\\CcSubjsToken', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', null, 'CcSubjsTokens');
         $this->addRelation('MediaItem', 'Airtime\\MediaItem', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'MediaItems');

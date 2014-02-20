@@ -13,8 +13,6 @@ use \PropelCollection;
 use \PropelException;
 use \PropelObjectCollection;
 use \PropelPDO;
-use Airtime\CcFiles;
-use Airtime\CcFilesQuery;
 use Airtime\CcMusicDirs;
 use Airtime\CcMusicDirsPeer;
 use Airtime\CcMusicDirsQuery;
@@ -82,12 +80,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
     protected $watched;
 
     /**
-     * @var        PropelObjectCollection|CcFiles[] Collection to store aggregation of CcFiles objects.
-     */
-    protected $collCcFiless;
-    protected $collCcFilessPartial;
-
-    /**
      * @var        PropelObjectCollection|AudioFile[] Collection to store aggregation of AudioFile objects.
      */
     protected $collAudioFiles;
@@ -112,12 +104,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
-
-    /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $ccFilessScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -439,8 +425,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collCcFiless = null;
-
             $this->collAudioFiles = null;
 
         } // if (deep)
@@ -565,24 +549,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->ccFilessScheduledForDeletion !== null) {
-                if (!$this->ccFilessScheduledForDeletion->isEmpty()) {
-                    foreach ($this->ccFilessScheduledForDeletion as $ccFiles) {
-                        // need to save related object because we set the relation to null
-                        $ccFiles->save($con);
-                    }
-                    $this->ccFilessScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collCcFiless !== null) {
-                foreach ($this->collCcFiless as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             if ($this->audioFilesScheduledForDeletion !== null) {
@@ -772,14 +738,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
             }
 
 
-                if ($this->collCcFiless !== null) {
-                    foreach ($this->collCcFiless as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
                 if ($this->collAudioFiles !== null) {
                     foreach ($this->collAudioFiles as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
@@ -879,9 +837,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collCcFiless) {
-                $result['CcFiless'] = $this->collCcFiless->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
             if (null !== $this->collAudioFiles) {
                 $result['AudioFiles'] = $this->collAudioFiles->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
@@ -1054,12 +1009,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getCcFiless() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCcFiles($relObj->copy($deepCopy));
-                }
-            }
-
             foreach ($this->getAudioFiles() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addAudioFile($relObj->copy($deepCopy));
@@ -1127,287 +1076,9 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
-        if ('CcFiles' == $relationName) {
-            $this->initCcFiless();
-        }
         if ('AudioFile' == $relationName) {
             $this->initAudioFiles();
         }
-    }
-
-    /**
-     * Clears out the collCcFiless collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return CcMusicDirs The current object (for fluent API support)
-     * @see        addCcFiless()
-     */
-    public function clearCcFiless()
-    {
-        $this->collCcFiless = null; // important to set this to null since that means it is uninitialized
-        $this->collCcFilessPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collCcFiless collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialCcFiless($v = true)
-    {
-        $this->collCcFilessPartial = $v;
-    }
-
-    /**
-     * Initializes the collCcFiless collection.
-     *
-     * By default this just sets the collCcFiless collection to an empty array (like clearcollCcFiless());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initCcFiless($overrideExisting = true)
-    {
-        if (null !== $this->collCcFiless && !$overrideExisting) {
-            return;
-        }
-        $this->collCcFiless = new PropelObjectCollection();
-        $this->collCcFiless->setModel('CcFiles');
-    }
-
-    /**
-     * Gets an array of CcFiles objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this CcMusicDirs is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
-     * @throws PropelException
-     */
-    public function getCcFiless($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collCcFilessPartial && !$this->isNew();
-        if (null === $this->collCcFiless || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collCcFiless) {
-                // return empty collection
-                $this->initCcFiless();
-            } else {
-                $collCcFiless = CcFilesQuery::create(null, $criteria)
-                    ->filterByCcMusicDirs($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collCcFilessPartial && count($collCcFiless)) {
-                      $this->initCcFiless(false);
-
-                      foreach ($collCcFiless as $obj) {
-                        if (false == $this->collCcFiless->contains($obj)) {
-                          $this->collCcFiless->append($obj);
-                        }
-                      }
-
-                      $this->collCcFilessPartial = true;
-                    }
-
-                    $collCcFiless->getInternalIterator()->rewind();
-
-                    return $collCcFiless;
-                }
-
-                if ($partial && $this->collCcFiless) {
-                    foreach ($this->collCcFiless as $obj) {
-                        if ($obj->isNew()) {
-                            $collCcFiless[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collCcFiless = $collCcFiless;
-                $this->collCcFilessPartial = false;
-            }
-        }
-
-        return $this->collCcFiless;
-    }
-
-    /**
-     * Sets a collection of CcFiles objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $ccFiless A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return CcMusicDirs The current object (for fluent API support)
-     */
-    public function setCcFiless(PropelCollection $ccFiless, PropelPDO $con = null)
-    {
-        $ccFilessToDelete = $this->getCcFiless(new Criteria(), $con)->diff($ccFiless);
-
-
-        $this->ccFilessScheduledForDeletion = $ccFilessToDelete;
-
-        foreach ($ccFilessToDelete as $ccFilesRemoved) {
-            $ccFilesRemoved->setCcMusicDirs(null);
-        }
-
-        $this->collCcFiless = null;
-        foreach ($ccFiless as $ccFiles) {
-            $this->addCcFiles($ccFiles);
-        }
-
-        $this->collCcFiless = $ccFiless;
-        $this->collCcFilessPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related CcFiles objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related CcFiles objects.
-     * @throws PropelException
-     */
-    public function countCcFiless(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collCcFilessPartial && !$this->isNew();
-        if (null === $this->collCcFiless || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCcFiless) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getCcFiless());
-            }
-            $query = CcFilesQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByCcMusicDirs($this)
-                ->count($con);
-        }
-
-        return count($this->collCcFiless);
-    }
-
-    /**
-     * Method called to associate a CcFiles object to this object
-     * through the CcFiles foreign key attribute.
-     *
-     * @param    CcFiles $l CcFiles
-     * @return CcMusicDirs The current object (for fluent API support)
-     */
-    public function addCcFiles(CcFiles $l)
-    {
-        if ($this->collCcFiless === null) {
-            $this->initCcFiless();
-            $this->collCcFilessPartial = true;
-        }
-
-        if (!in_array($l, $this->collCcFiless->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddCcFiles($l);
-
-            if ($this->ccFilessScheduledForDeletion and $this->ccFilessScheduledForDeletion->contains($l)) {
-                $this->ccFilessScheduledForDeletion->remove($this->ccFilessScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	CcFiles $ccFiles The ccFiles object to add.
-     */
-    protected function doAddCcFiles($ccFiles)
-    {
-        $this->collCcFiless[]= $ccFiles;
-        $ccFiles->setCcMusicDirs($this);
-    }
-
-    /**
-     * @param	CcFiles $ccFiles The ccFiles object to remove.
-     * @return CcMusicDirs The current object (for fluent API support)
-     */
-    public function removeCcFiles($ccFiles)
-    {
-        if ($this->getCcFiless()->contains($ccFiles)) {
-            $this->collCcFiless->remove($this->collCcFiless->search($ccFiles));
-            if (null === $this->ccFilessScheduledForDeletion) {
-                $this->ccFilessScheduledForDeletion = clone $this->collCcFiless;
-                $this->ccFilessScheduledForDeletion->clear();
-            }
-            $this->ccFilessScheduledForDeletion[]= $ccFiles;
-            $ccFiles->setCcMusicDirs(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this CcMusicDirs is new, it will return
-     * an empty collection; or if this CcMusicDirs has previously
-     * been saved, it will retrieve related CcFiless from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in CcMusicDirs.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
-     */
-    public function getCcFilessJoinFkOwner($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = CcFilesQuery::create(null, $criteria);
-        $query->joinWith('FkOwner', $join_behavior);
-
-        return $this->getCcFiless($query, $con);
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this CcMusicDirs is new, it will return
-     * an empty collection; or if this CcMusicDirs has previously
-     * been saved, it will retrieve related CcFiless from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in CcMusicDirs.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|CcFiles[] List of CcFiles objects
-     */
-    public function getCcFilessJoinCcSubjsRelatedByDbEditedby($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = CcFilesQuery::create(null, $criteria);
-        $query->joinWith('CcSubjsRelatedByDbEditedby', $join_behavior);
-
-        return $this->getCcFiless($query, $con);
     }
 
     /**
@@ -1718,11 +1389,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collCcFiless) {
-                foreach ($this->collCcFiless as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
             if ($this->collAudioFiles) {
                 foreach ($this->collAudioFiles as $o) {
                     $o->clearAllReferences($deep);
@@ -1732,10 +1398,6 @@ abstract class BaseCcMusicDirs extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collCcFiless instanceof PropelCollection) {
-            $this->collCcFiless->clearIterator();
-        }
-        $this->collCcFiless = null;
         if ($this->collAudioFiles instanceof PropelCollection) {
             $this->collAudioFiles->clearIterator();
         }

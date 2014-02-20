@@ -21,8 +21,8 @@ use Airtime\MediaItemQuery;
 use Airtime\MediaItem\AudioFile;
 use Airtime\MediaItem\MediaContent;
 use Airtime\MediaItem\Playlist;
-use Airtime\MediaItem\PlaylistRule;
 use Airtime\MediaItem\Webstream;
+use Airtime\PlayoutHistory\CcPlayoutHistory;
 
 /**
  * Base class that represents a query for the 'media_item' table.
@@ -69,9 +69,9 @@ use Airtime\MediaItem\Webstream;
  * @method MediaItemQuery rightJoinCcSchedule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSchedule relation
  * @method MediaItemQuery innerJoinCcSchedule($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSchedule relation
  *
- * @method MediaItemQuery leftJoinPlaylistRule($relationAlias = null) Adds a LEFT JOIN clause to the query using the PlaylistRule relation
- * @method MediaItemQuery rightJoinPlaylistRule($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PlaylistRule relation
- * @method MediaItemQuery innerJoinPlaylistRule($relationAlias = null) Adds a INNER JOIN clause to the query using the PlaylistRule relation
+ * @method MediaItemQuery leftJoinCcPlayoutHistory($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcPlayoutHistory relation
+ * @method MediaItemQuery rightJoinCcPlayoutHistory($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistory relation
+ * @method MediaItemQuery innerJoinCcPlayoutHistory($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistory relation
  *
  * @method MediaItemQuery leftJoinMediaContent($relationAlias = null) Adds a LEFT JOIN clause to the query using the MediaContent relation
  * @method MediaItemQuery rightJoinMediaContent($relationAlias = null) Adds a RIGHT JOIN clause to the query using the MediaContent relation
@@ -937,41 +937,41 @@ abstract class BaseMediaItemQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related PlaylistRule object
+     * Filter the query by a related CcPlayoutHistory object
      *
-     * @param   PlaylistRule|PropelObjectCollection $playlistRule  the related object to use as filter
+     * @param   CcPlayoutHistory|PropelObjectCollection $ccPlayoutHistory  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 MediaItemQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByPlaylistRule($playlistRule, $comparison = null)
+    public function filterByCcPlayoutHistory($ccPlayoutHistory, $comparison = null)
     {
-        if ($playlistRule instanceof PlaylistRule) {
+        if ($ccPlayoutHistory instanceof CcPlayoutHistory) {
             return $this
-                ->addUsingAlias(MediaItemPeer::ID, $playlistRule->getMediaId(), $comparison);
-        } elseif ($playlistRule instanceof PropelObjectCollection) {
+                ->addUsingAlias(MediaItemPeer::ID, $ccPlayoutHistory->getDbMediaId(), $comparison);
+        } elseif ($ccPlayoutHistory instanceof PropelObjectCollection) {
             return $this
-                ->usePlaylistRuleQuery()
-                ->filterByPrimaryKeys($playlistRule->getPrimaryKeys())
+                ->useCcPlayoutHistoryQuery()
+                ->filterByPrimaryKeys($ccPlayoutHistory->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByPlaylistRule() only accepts arguments of type PlaylistRule or PropelCollection');
+            throw new PropelException('filterByCcPlayoutHistory() only accepts arguments of type CcPlayoutHistory or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the PlaylistRule relation
+     * Adds a JOIN clause to the query using the CcPlayoutHistory relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return MediaItemQuery The current query, for fluid interface
      */
-    public function joinPlaylistRule($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCcPlayoutHistory($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('PlaylistRule');
+        $relationMap = $tableMap->getRelation('CcPlayoutHistory');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -986,14 +986,14 @@ abstract class BaseMediaItemQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'PlaylistRule');
+            $this->addJoinObject($join, 'CcPlayoutHistory');
         }
 
         return $this;
     }
 
     /**
-     * Use the PlaylistRule relation PlaylistRule object
+     * Use the CcPlayoutHistory relation CcPlayoutHistory object
      *
      * @see       useQuery()
      *
@@ -1001,13 +1001,13 @@ abstract class BaseMediaItemQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   \Airtime\MediaItem\PlaylistRuleQuery A secondary query class using the current class as primary query
+     * @return   \Airtime\PlayoutHistory\CcPlayoutHistoryQuery A secondary query class using the current class as primary query
      */
-    public function usePlaylistRuleQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCcPlayoutHistoryQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
-            ->joinPlaylistRule($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'PlaylistRule', '\Airtime\MediaItem\PlaylistRuleQuery');
+            ->joinCcPlayoutHistory($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcPlayoutHistory', '\Airtime\PlayoutHistory\CcPlayoutHistoryQuery');
     }
 
     /**

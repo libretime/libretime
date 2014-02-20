@@ -8,6 +8,8 @@ use \PropelPDO;
 use \Exception;
 use \Logging;
 
+const RULE_REPEAT_TRACKS = "repeat-tracks";
+const RULE_USERS_TRACKS_ONLY = "owners-tracks";
 
 /**
  * Skeleton subclass for representing a row from the 'playlist' table.
@@ -22,12 +24,18 @@ use \Logging;
  */
 class Playlist extends BasePlaylist
 {
-
 	public function applyDefaultValues() {
 		parent::applyDefaultValues();
 
 		$this->name = _('Untitled Playlist');
 		$this->modifiedColumns[] = PlaylistPeer::NAME;
+		
+		$defaultRules = array(
+			RULE_REPEAT_TRACKS => true,
+			RULE_USERS_TRACKS_ONLY => false
+		);
+		
+		$this->setRules($defaultRules);
 	}
 
 	/*
@@ -141,4 +149,34 @@ class Playlist extends BasePlaylist
 
     	return $items;
     }
+    
+    /**
+     * Get the [rules] column value.
+     *
+     * @return array
+     */
+    public function getRules()
+    {
+    	$rules = parent::getRules();
+    
+    	return json_decode($rules);
+    }
+    
+    /**
+     * Set the value of [rules] column.
+     *
+     * @param  array $v new value
+     * @return PlaylistRule The current object (for fluent API support)
+     */
+    public function setRules($v)
+    {
+    	$rules = json_encode($v);
+    
+    	if ($rules === false) {
+    		throw new PropelException("Cannot parse rules JSON");
+    	}
+    	parent::setRules($rules);
+    
+    	return $this;
+    } // setRules()
 }

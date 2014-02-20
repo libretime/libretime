@@ -50,7 +50,6 @@ class CcShowInstancesTableMap extends TableMap
         $this->addColumn('record', 'DbRecord', 'TINYINT', false, null, 0);
         $this->addColumn('rebroadcast', 'DbRebroadcast', 'TINYINT', false, null, 0);
         $this->addForeignKey('instance_id', 'DbOriginalShow', 'INTEGER', 'cc_show_instances', 'id', false, null, null);
-        $this->addForeignKey('file_id', 'DbRecordedFile', 'INTEGER', 'cc_files', 'id', false, null, null);
         $this->addForeignKey('media_id', 'DbRecordedMediaItem', 'INTEGER', 'media_item', 'id', false, null, null);
         $this->addColumn('time_filled', 'DbTimeFilled', 'VARCHAR', false, null, '00:00:00');
         $this->addColumn('created', 'DbCreated', 'TIMESTAMP', true, null, null);
@@ -66,7 +65,6 @@ class CcShowInstancesTableMap extends TableMap
     {
         $this->addRelation('CcShow', 'Airtime\\CcShow', RelationMap::MANY_TO_ONE, array('show_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('CcShowInstancesRelatedByDbOriginalShow', 'Airtime\\CcShowInstances', RelationMap::MANY_TO_ONE, array('instance_id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('CcFiles', 'Airtime\\CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('MediaItem', 'Airtime\\MediaItem', RelationMap::MANY_TO_ONE, array('media_id' => 'id', ), 'CASCADE', null);
         $this->addRelation('CcShowInstancesRelatedByDbId', 'Airtime\\CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null, 'CcShowInstancessRelatedByDbId');
         $this->addRelation('CcSchedule', 'Airtime\\CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'instance_id', ), 'CASCADE', null, 'CcSchedules');

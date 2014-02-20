@@ -11,94 +11,6 @@
       <unique-column name="directory"/>
     </unique>
   </table>
-  <table name="cc_files" phpName="CcFiles">
-    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="mime" phpName="DbMime" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="ftype" phpName="DbFtype" type="VARCHAR" size="128" required="true" defaultValue=""/>
-    <column name="directory" phpName="DbDirectory" type="INTEGER" required="false"/>
-    <column name="filepath" phpName="DbFilepath" type="LONGVARCHAR" required="false" defaultValue=""/>
-    <column name="state" phpName="DbState" type="VARCHAR" size="128" required="true" defaultValue="empty"/>
-    <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
-    <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
-    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="md5" phpName="DbMd5" type="CHAR" size="32" required="false"/>
-    <column name="track_title" phpName="DbTrackTitle" type="VARCHAR" size="512" required="false"/>
-    <column name="artist_name" phpName="DbArtistName" type="VARCHAR" size="512" required="false"/>
-    <column name="bit_rate" phpName="DbBitRate" type="INTEGER" required="false"/>
-    <column name="sample_rate" phpName="DbSampleRate" type="INTEGER" required="false"/>
-    <column name="format" phpName="DbFormat" type="VARCHAR" size="128" required="false"/>
-    <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00" required="false"/>
-    <column name="album_title" phpName="DbAlbumTitle" type="VARCHAR" size="512" required="false"/>
-    <column name="genre" phpName="DbGenre" type="VARCHAR" size="64" required="false"/>
-    <column name="comments" phpName="DbComments" type="LONGVARCHAR" required="false"/>
-    <column name="year" phpName="DbYear" type="VARCHAR" size="16" required="false"/>
-    <column name="track_number" phpName="DbTrackNumber" type="INTEGER" required="false"/>
-    <column name="channels" phpName="DbChannels" type="INTEGER" required="false"/>
-    <column name="url" phpName="DbUrl" type="VARCHAR" size="1024" required="false"/>
-    <column name="bpm" phpName="DbBpm" type="INTEGER" required="false"/>
-    <column name="rating" phpName="DbRating" type="VARCHAR" size="8" required="false"/>
-    <column name="encoded_by" phpName="DbEncodedBy" type="VARCHAR" size="255" required="false"/>
-    <column name="disc_number" phpName="DbDiscNumber" type="VARCHAR" size="8" required="false"/>
-    <column name="mood" phpName="DbMood" type="VARCHAR" size="64" required="false"/>
-    <column name="label" phpName="DbLabel" type="VARCHAR" size="512" required="false"/>
-    <column name="composer" phpName="DbComposer" type="VARCHAR" size="512" required="false"/>
-    <column name="encoder" phpName="DbEncoder" type="VARCHAR" size="64" required="false"/>
-    <column name="checksum" phpName="DbChecksum" type="VARCHAR" size="256" required="false"/>
-    <column name="lyrics" phpName="DbLyrics" type="LONGVARCHAR" required="false"/>
-    <column name="orchestra" phpName="DbOrchestra" type="VARCHAR" size="512" required="false"/>
-    <column name="conductor" phpName="DbConductor" type="VARCHAR" size="512" required="false"/>
-    <column name="lyricist" phpName="DbLyricist" type="VARCHAR" size="512" required="false"/>
-    <column name="original_lyricist" phpName="DbOriginalLyricist" type="VARCHAR" size="512" required="false"/>
-    <column name="radio_station_name" phpName="DbRadioStationName" type="VARCHAR" size="512" required="false"/>
-    <column name="info_url" phpName="DbInfoUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="artist_url" phpName="DbArtistUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="audio_source_url" phpName="DbAudioSourceUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="radio_station_url" phpName="DbRadioStationUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="buy_this_url" phpName="DbBuyThisUrl" type="VARCHAR" size="512" required="false"/>
-    <column name="isrc_number" phpName="DbIsrcNumber" type="VARCHAR" size="512" required="false"/>
-    <column name="catalog_number" phpName="DbCatalogNumber" type="VARCHAR" size="512" required="false"/>
-    <column name="original_artist" phpName="DbOriginalArtist" type="VARCHAR" size="512" required="false"/>
-    <column name="copyright" phpName="DbCopyright" type="VARCHAR" size="512" required="false"/>
-    <column name="report_datetime" phpName="DbReportDatetime" type="VARCHAR" size="32" required="false"/>
-    <column name="report_location" phpName="DbReportLocation" type="VARCHAR" size="512" required="false"/>
-    <column name="report_organization" phpName="DbReportOrganization" type="VARCHAR" size="512" required="false"/>
-    <column name="subject" phpName="DbSubject" type="VARCHAR" size="512" required="false"/>
-    <column name="contributor" phpName="DbContributor" type="VARCHAR" size="512" required="false"/>
-    <column name="language" phpName="DbLanguage" type="VARCHAR" size="512" required="false"/>
-    <column name="file_exists" phpName="DbFileExists" type="BOOLEAN" required="false" defaultValue="true"/>
-    <column name="soundcloud_id" phpName="DbSoundcloudId" type="Integer" required="false"/>
-    <column name="soundcloud_error_code" phpName="DbSoundcloudErrorCode" type="Integer" required="false"/>
-    <column name="soundcloud_error_msg" phpName="DbSoundcloudErrorMsg" type="VARCHAR" size="512" required="false"/>
-    <column name="soundcloud_link_to_file" phpName="DbSoundcloudLinkToFile" type="VARCHAR" size="4096" required="false"/>
-    <column name="soundcloud_upload_time" phpName="DbSoundCloundUploadTime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="replay_gain" phpName="DbReplayGain" type="NUMERIC" required="false"/>
-    <column name="owner_id" phpName="DbOwnerId" type="INTEGER" required="false"/>
-    <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="cueout" phpName="DbCueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="silan_check" phpName="DbSilanCheck" type="BOOLEAN" defaultValue="false"/>
-    <column name="hidden" phpName="DbHidden" type="BOOLEAN" defaultValue="false"/>
-    <column name="is_scheduled" phpName="DbIsScheduled" type="BOOLEAN" defaultValue="false"/>
-    <column name="is_playlist" phpName="DbIsPlaylist" type="BOOLEAN" defaultValue="false"/>
-    <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
-      <reference local="owner_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_subjs" name="cc_files_editedby_fkey">
-      <reference local="editedby" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_music_dirs" name="cc_music_dirs_folder_fkey">
-      <reference local="directory" foreign="id"/>
-    </foreign-key>
-    <index name="cc_files_md5_idx">
-      <index-column name="md5"/>
-    </index>
-    <index name="cc_files_name_idx">
-      <index-column name="name"/>
-    </index>
-  </table>
-  
   <table name="cc_show" phpName="CcShow">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
@@ -124,7 +36,6 @@
     <column name="record" phpName="DbRecord" type="TINYINT" required="false" defaultValue="0"/>
     <column name="rebroadcast" phpName="DbRebroadcast" type="TINYINT" required="false" defaultValue="0"/>
     <column name="instance_id" phpName="DbOriginalShow" type="INTEGER" required="false"/>
-    <column name="file_id" phpName="DbRecordedFile" type="INTEGER" required="false"/>
     <column name="media_id" phpName="DbRecordedMediaItem" type="INTEGER" required="false"/>
     <column name="time_filled" phpName="DbTimeFilled" type="VARCHAR" sqlType="interval" defaultValue="00:00:00" />
     <column name="created" phpName="DbCreated" type="TIMESTAMP" required="true"/>
@@ -139,9 +50,6 @@
     </foreign-key>
     <foreign-key foreignTable="cc_show_instances" name="cc_original_show_instance_fkey" onDelete="CASCADE">
       <reference local="instance_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_files" name="cc_recorded_file_fkey" onDelete="CASCADE">
-      <reference local="file_id" foreign="id"/>
     </foreign-key>
     <foreign-key foreignTable="media_item" name="cc_recorded_media_item_fkey" onDelete="CASCADE">
       <reference local="media_id" foreign="id"/>
@@ -183,100 +91,6 @@
       <reference local="subjs_id" foreign="id"/>
     </foreign-key>
   </table>
-  <table name="cc_playlist" phpName="CcPlaylist">
-    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="false"/>
-    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
-    <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00"/>
-    <behavior name="aggregate_column">
-      <parameter name="name" value="length" />
-      <parameter name="foreign_table" value="cc_playlistcontents" />
-      <parameter name="expression" value="SUM(cliplength)" />
-    </behavior>
-    <foreign-key foreignTable="cc_subjs" name="cc_playlist_createdby_fkey" onDelete="CASCADE">
-      <reference local="creator_id" foreign="id"/>
-    </foreign-key>
-  </table>
-  <table name="cc_playlistcontents" phpName="CcPlaylistcontents">
-    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="playlist_id" phpName="DbPlaylistId" type="INTEGER" required="false"/>
-    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
-    <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false"/>
-    <column name="stream_id" phpName="DbStreamId" type="INTEGER" required="false"/>
-    <!-- What type of item is stored in the playlist. 
-            0: audiotrack
-            1: webstream
-            2: block
-            1: webstream
-    -->
-    <column name="type" phpName="DbType" type="SMALLINT" required="true" default="0"/>
-    <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
-    <column name="trackoffset" phpName="DbTrackOffset" type="REAL" required="true" default="0"/>
-    <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="cueout" phpName="DbCueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="fadein" phpName="DbFadein" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="fadeout" phpName="DbFadeout" type="TIME" required="false" defaultValue="00:00:00"/>
-    <foreign-key foreignTable="cc_files" name="cc_playlistcontents_file_id_fkey" onDelete="CASCADE">
-      <reference local="file_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_block" name="cc_playlistcontents_block_id_fkey" onDelete="CASCADE">
-      <reference local="block_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_playlist" name="cc_playlistcontents_playlist_id_fkey" onDelete="CASCADE">
-      <reference local="playlist_id" foreign="id"/>
-    </foreign-key>
-  </table>
-  <table name="cc_block" phpName="CcBlock">
-    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
-    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="false"/>
-    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
-    <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" defaultValue="00:00:00"/>
-    <column name="type" phpName="DbType" type="VARCHAR" size="7" defaultValue="static"/>
-    <behavior name="aggregate_column">
-      <parameter name="name" value="length" />
-      <parameter name="foreign_table" value="cc_blockcontents" />
-      <parameter name="expression" value="SUM(cliplength)" />
-    </behavior>
-    <foreign-key foreignTable="cc_subjs" name="cc_block_createdby_fkey" onDelete="CASCADE">
-      <reference local="creator_id" foreign="id"/>
-    </foreign-key>
-  </table>
-  <table name="cc_blockcontents" phpName="CcBlockcontents">
-    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="block_id" phpName="DbBlockId" type="INTEGER" required="false"/>
-    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
-    <column name="position" phpName="DbPosition" type="INTEGER" required="false"/>
-    <column name="trackoffset" phpName="DbTrackOffset" type="REAL" required="true" default="0"/>
-    <column name="cliplength" phpName="DbCliplength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="cuein" phpName="DbCuein" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="cueout" phpName="DbCueout" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
-    <column name="fadein" phpName="DbFadein" type="TIME" required="false" defaultValue="00:00:00"/>
-    <column name="fadeout" phpName="DbFadeout" type="TIME" required="false" defaultValue="00:00:00"/>
-    <foreign-key foreignTable="cc_files" name="cc_blockcontents_file_id_fkey" onDelete="CASCADE">
-      <reference local="file_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_block" name="cc_blockcontents_block_id_fkey" onDelete="CASCADE">
-      <reference local="block_id" foreign="id"/>
-    </foreign-key>
-  </table>
-  <table name="cc_blockcriteria" phpName="CcBlockcriteria">
-    <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="criteria" phpName="DbCriteria" type="VARCHAR" size="32" required="true"/>
-    <column name="modifier" phpName="DbModifier" type="VARCHAR" size="16" required="true"/>
-    <column name="value" phpName="DbValue" type="VARCHAR" size="512" required="true"/>
-    <column name="extra" phpName="DbExtra" type="VARCHAR" size="512" required="false"/>
-    <column name="block_id" phpName="DbBlockId" type="INTEGER" required="true"/>
-    <foreign-key foreignTable="cc_block" name="cc_blockcontents_block_id_fkey" onDelete="CASCADE">
-      <reference local="block_id" foreign="id"/>
-    </foreign-key>    
-  </table>
   <table name="cc_pref" phpName="CcPref">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="subjid" phpName="Subjid" type="INTEGER" required="false"/>
@@ -301,8 +115,6 @@
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
     <column name="media_id" phpName="DbMediaId" type="INTEGER" required="false"/>
-    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false"/>
-    <column name="stream_id" phpName="DbStreamId" type="INTEGER" required="false"/>
     <column name="clip_length" phpName="DbClipLength" type="VARCHAR" sqlType="interval" required="false" defaultValue="00:00:00"/>
     <column name="fade_in" phpName="DbFadeIn" type="DECIMAL" required="false" defaultValue="0"/>
     <column name="fade_out" phpName="DbFadeOut" type="DECIMAL" required="false" defaultValue="0"/>
@@ -323,12 +135,6 @@
     </foreign-key>
     <foreign-key foreignTable="media_item" name="media_item_sched_fkey" onDelete="CASCADE">
       <reference local="media_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_files" name="cc_show_file_fkey" onDelete="CASCADE">
-      <reference local="file_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="cc_webstream" name="cc_show_stream_fkey" onDelete="CASCADE">
-      <reference local="stream_id" foreign="id"/>
     </foreign-key>
     <index name="cc_schedule_instance_id_idx">
       <index-column name="instance_id"/>
@@ -391,28 +197,6 @@
     <column name="start_time" phpName="DbStartTime" type="TIMESTAMP" required="true" />
     <column name="end_time" phpName="DbEndTime" type="TIMESTAMP" required="false"/>
   </table>
-  <table name="cc_webstream" phpName="CcWebstream">
-    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" />
-    <!-- TODO, remove hardlimit on this column length? -->
-    <column name="description" phpName="DbDescription" type="VARCHAR" size="255" required="true" />
-    <column name="url" phpName="DbUrl" type="VARCHAR" size="512" required="true" />
-    <column name="length" phpName="DbLength" type="VARCHAR" sqlType="interval" required="true" defaultValue="00:00:00"/>
-    <column name="creator_id" phpName="DbCreatorId" type="INTEGER" required="true" />
-    <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="true" />
-    <column name="utime" phpName="DbUtime" type="TIMESTAMP" size="6" required="true" />
-    <column name="lptime" phpName="DbLPtime" type="TIMESTAMP" size="6" required="false"/>
-    <column name="mime" phpName="DbMime" type="VARCHAR" />
-  </table>
-  <table name="cc_webstream_metadata" phpName="CcWebstreamMetadata">
-    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="true"/>
-    <column name="start_time" phpName="DbStartTime" type="TIMESTAMP" required="true" />
-    <column name="liquidsoap_data" phpName="DbLiquidsoapData" type="VARCHAR" size="1024" required="true"/>
-    <foreign-key foreignTable="cc_schedule" name="cc_schedule_inst_fkey" onDelete="CASCADE">
-      <reference local="instance_id" foreign="id"/>
-    </foreign-key>
-  </table>
   <table name="cc_mount_name" phpName="CcMountName">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="mount_name" phpName="DbMountName" type="VARCHAR" required="true" />
@@ -440,12 +224,12 @@
   </table>
   <table name="cc_playout_history" phpName="CcPlayoutHistory" namespace="PlayoutHistory">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="file_id" phpName="DbFileId" type="INTEGER" required="false" />
+    <column name="media_id" phpName="DbMediaId" type="INTEGER" required="false"/>
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="false"/>
     <column name="instance_id" phpName="DbInstanceId" type="INTEGER" required="false"/>
-    <foreign-key foreignTable="cc_files" name="cc_playout_history_file_tag_fkey" onDelete="CASCADE">
-      <reference local="file_id" foreign="id"/>
+    <foreign-key foreignTable="media_item" name="media_item_history_fkey" onDelete="SETNULL">
+      <reference local="media_id" foreign="id"/>
     </foreign-key>
     <foreign-key foreignTable="cc_show_instances" name="cc_his_item_inst_fkey" onDelete="SETNULL">
       <reference local="instance_id" foreign="id"/>
@@ -547,21 +331,10 @@
     <behavior name="concrete_inheritance">
       <parameter name="extends" value="media_item" />
     </behavior>
-    <column name="type" phpName="Type" type="VARCHAR" size="15" defaultValue="standard"/>
+    <column name="type" phpName="Type" type="TINYINT" required="true" defaultValue="0"/>
+    <column name="rules" phpName="Rules" type="LONGVARCHAR" sqlType="text" required="true" default=""/>
   </table>
-  
-  <table name="media_playlist_rule" phpName="PlaylistRule" namespace="MediaItem">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="criteria" phpName="Criteria" type="VARCHAR" size="32" required="true"/>
-    <column name="modifier" phpName="Modifier" type="VARCHAR" size="16" required="true"/>
-    <column name="value" phpName="Value" type="VARCHAR" size="512" required="true"/>
-    <column name="extra" phpName="Extra" type="VARCHAR" size="512" required="false"/>
-    <column name="media_id" phpName="MediaId" type="INTEGER" required="true"/>
-    <foreign-key foreignTable="media_item" name="media_item_rule_fkey" onDelete="CASCADE">
-      <reference local="media_id" foreign="id"/>
-    </foreign-key>    
-  </table>
-  
+
   <table name="media_content" phpName="MediaContent" namespace="MediaItem">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="playlist_id" phpName="PlaylistId" type="INTEGER" required="false"/>

@@ -975,7 +975,7 @@ SQL;
 
     public static function getPlaylistCount()
     {
-        $sql = 'SELECT count(*) as cnt FROM cc_playlist';
+        $sql = 'SELECT count(*) as cnt FROM media_playlist';
 
         return Application_Common_Database::prepareAndExecute($sql, array(),
             Application_Common_Database::COLUMN);

@@ -1052,33 +1052,10 @@ class ApiController extends Zend_Controller_Action
             if (isset($data_arr->title)) {
 
             	$data_title = substr($data_arr->title, 0, 1024);
+                $startDT = new DateTime("now", new DateTimeZone("UTC"));
 
-                $previous_metadata = CcWebstreamMetadataQuery::create()
-                    ->orderByDbStartTime('desc')
-                    ->filterByDbInstanceId($media_id)
-                    ->findOne();
-
-                $do_insert = true;
-                if ($previous_metadata) {
-                    if ($previous_metadata->getDbLiquidsoapData() == $data_title) {
-                        Logging::debug("Duplicate found: ". $data_title);
-                        $do_insert = false;
-                    }
-                }
-
-                if ($do_insert) {
-
-                	$startDT = new DateTime("now", new DateTimeZone("UTC"));
-
-                    $webstream_metadata = new CcWebstreamMetadata();
-                    $webstream_metadata->setDbInstanceId($media_id);
-                    $webstream_metadata->setDbStartTime($startDT);
-                    $webstream_metadata->setDbLiquidsoapData($data_title);
-                    $webstream_metadata->save();
-
-                    $historyService = new Application_Service_HistoryService();
-                    $historyService->insertWebstreamMetadata($media_id, $startDT, $data_arr);
-                }
+                $historyService = new Application_Service_HistoryService();
+                $historyService->insertWebstreamMetadata($media_id, $startDT, $data_arr);
             }
         }
 

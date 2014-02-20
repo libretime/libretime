@@ -9,8 +9,6 @@ use \PDOStatement;
 use \Propel;
 use \PropelException;
 use \PropelPDO;
-use Airtime\CcBlockPeer;
-use Airtime\CcPlaylistPeer;
 use Airtime\CcPrefPeer;
 use Airtime\CcShowHostsPeer;
 use Airtime\CcSubjs;
@@ -435,12 +433,6 @@ abstract class BaseCcSubjsPeer
         // Invalidate objects in CcShowHostsPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcShowHostsPeer::clearInstancePool();
-        // Invalidate objects in CcPlaylistPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcPlaylistPeer::clearInstancePool();
-        // Invalidate objects in CcBlockPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcBlockPeer::clearInstancePool();
         // Invalidate objects in CcPrefPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcPrefPeer::clearInstancePool();
