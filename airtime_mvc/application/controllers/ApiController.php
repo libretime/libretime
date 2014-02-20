@@ -1,11 +1,7 @@
 <?php
 
 use Airtime\MediaItem\AudioFileQuery;
-
-use Airtime\CcFilesPeer;
 use Airtime\CcShowQuery;
-use Airtime\CcWebstreamMetadata;
-use Airtime\CcWebstreamMetadataQuery;
 
 class ApiController extends Zend_Controller_Action
 {
@@ -526,100 +522,6 @@ class ApiController extends Zend_Controller_Action
         $this->view->watched_dirs = $watchedDirsPath;
     }
 
-    public function dispatchMetadata($md, $mode)
-    {
-        $return_hash = array();
-        Application_Model_Preference::SetImportTimestamp();
-
-        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
-        $con->beginTransaction();
-        try {
-            // create also modifies the file if it exists
-            if ($mode == "create") {
-                $filepath = $md['MDATA_KEY_FILEPATH'];
-                $filepath = Application_Common_OsPath::normpath($filepath);
-                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
-                if (is_null($file)) {
-                    $file = Application_Model_StoredFile::Insert($md, $con);
-                } else {
-                    // If the file already exists we will update and make sure that
-                    // it's marked as 'exists'.
-                    $file->setFileExistsFlag(true);
-                    $file->setFileHiddenFlag(false);
-                    $file->setMetadata($md);
-                }
-                if ($md['is_record'] != 0) {
-                    $this->uploadRecordedActionParam($md['MDATA_KEY_TRACKNUMBER'], $file->getId());
-                }
-
-            } elseif ($mode == "modify") {
-                $filepath = $md['MDATA_KEY_FILEPATH'];
-                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
-
-                //File is not in database anymore.
-                if (is_null($file)) {
-                    $return_hash['error'] = _("File does not exist in Airtime.");
-                }
-                //Updating a metadata change.
-                else {
-                    //CC-5207 - restart media-monitor causes it to reevaluate all
-                    //files in watched directories, and reset their cue-in/cue-out
-                    //values. Since media-monitor has nothing to do with cue points
-                    //let's unset it here. Note that on mode == "create", we still
-                    //want media-monitor sending info about cue_out which by default
-                    //will be equal to length of track until silan can take over.
-                    unset($md['MDATA_KEY_CUE_IN']);
-                    unset($md['MDATA_KEY_CUE_OUT']);
-
-                    $file->setMetadata($md);
-                }
-            } elseif ($mode == "moved") {
-                $file = Application_Model_StoredFile::RecallByFilepath(
-                    $md['MDATA_KEY_ORIGINAL_PATH'], $con);
-
-                if (is_null($file)) {
-                    $return_hash['error'] = _('File does not exist in Airtime');
-                } else {
-                    $filepath = $md['MDATA_KEY_FILEPATH'];
-                    //$filepath = str_replace("\\", "", $filepath);
-                    $file->setFilePath($filepath);
-                }
-            } elseif ($mode == "delete") {
-                $filepath = $md['MDATA_KEY_FILEPATH'];
-                $filepath = str_replace("\\", "", $filepath);
-                $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
-
-                if (is_null($file)) {
-                    $return_hash['error'] = _("File doesn't exist in Airtime.");
-                    Logging::warn("Attempt to delete file that doesn't exist.
-                        Path: '$filepath'");
-                } else {
-                    $file->deleteByMediaMonitor();
-                }
-            } elseif ($mode == "delete_dir") {
-                $filepath = $md['MDATA_KEY_FILEPATH'];
-                //$filepath = str_replace("\\", "", $filepath);
-                $files = Application_Model_StoredFile::RecallByPartialFilepath($filepath, $con);
-
-                foreach ($files as $file) {
-                    $file->deleteByMediaMonitor();
-                }
-                $return_hash['success'] = 1;
-            }
-
-            if (!isset($return_hash['error'])) {
-                $return_hash['fileid'] = is_null($file) ? '-1' : $file->getId();
-            }
-            $con->commit();
-        } catch (Exception $e) {
-            Logging::warn("rolling back");
-            Logging::warn($e->getMessage());
-            $con->rollback();
-            $return_hash['error'] = $e->getMessage();
-        }
-        return $return_hash;
-    }
-
     public function reloadMetadataGroupAction()
     {
         // extract all file metadata params from the request.
@@ -630,6 +532,7 @@ class ApiController extends Zend_Controller_Action
         $responses   = array();
         $params      = $request->getParams();
         $valid_modes = array('delete_dir', 'delete', 'moved', 'modify', 'create');
+        
         foreach ($params as $k => $raw_json) {
             // Valid requests must start with mdXXX where XXX represents at
             // least 1 digit
@@ -660,7 +563,6 @@ class ApiController extends Zend_Controller_Action
             $mode = $info_json['mode'];
             unset( $info_json['mode'] );
             try {
-                $response = $this->dispatchMetadata($info_json, $mode);
                 $audiofile_service = new Application_Service_AudioFileService();
                 $audiofile_service->mediaMonitorTask($info_json, $mode);
             } catch (Exception $e) {
@@ -672,6 +574,7 @@ class ApiController extends Zend_Controller_Action
             $response['key'] = $k;
             array_push($responses, $response);
         }
+
         $this->_helper->json->sendJson($responses);
     }
 
@@ -679,10 +582,11 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $dir_id = $request->getParam('dir_id');
-        $all    = $request->getParam('all');
-
-        $this->view->files =
-            Application_Model_StoredFile::listAllFiles($dir_id, $all);
+        
+        $service = new Application_Service_AudioFileService();
+        $rows = $service->listAllFiles($dir_id);
+       
+        $this->view->files = $rows;
     }
 
     public function listAllWatchedDirsAction()
@@ -849,8 +753,9 @@ class ApiController extends Zend_Controller_Action
 
                     $watchDir = Application_Model_MusicDir::getDirByPath($rd);
                     // get all the files that is under $dirPath
-                    $files = Application_Model_StoredFile::listAllFiles(
-                        $dir->getId(),$all=false);
+                    $service = new Application_Service_AudioFileService();
+                    $files = $service->listAllFiles($dir->getId(), false);
+                    
                     foreach ($files as $f) {
                         // if the file is from this mount
                         if (substr($f->getFilePath(), 0, strlen($rd)) === $rd) {
@@ -966,17 +871,17 @@ class ApiController extends Zend_Controller_Action
     {
         $dir_id = $this->_getParam('dir_id');
 
-        //connect to db and get get sql
-        $rows = Application_Model_StoredFile::listAllFiles2($dir_id, 100);
-
+        $service = new Application_Service_AudioFileService();
+        $rows = $service->getAllFilesWithoutReplayGain($dir_id);
+        
         $this->_helper->json->sendJson($rows);
     }
 
     public function getFilesWithoutSilanValueAction()
     {
-        //connect to db and get get sql
-        $rows = Application_Model_StoredFile::getAllFilesWithoutSilan();
-
+    	$service = new Application_Service_AudioFileService();
+    	$rows = $service->getAllFilesWithoutSilan();
+        
         $this->_helper->json->sendJson($rows);
     }
 
@@ -984,13 +889,24 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'));
-
-        foreach ($data as $pair) {
-            list($id, $gain) = $pair;
-            // TODO : move this code into model -- RG
-            $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
-            $file->setDbReplayGain($gain);
-            $file->save();
+        
+        $con = Propel::getConnection();
+        $con->beginTransaction();
+        
+        try {
+        	foreach ($data as $pair) {
+        		list($id, $gain) = $pair;
+        		
+        		$file = AudioFileQuery::create()->findPk($id, $con);
+        		$file->setReplayGain($gain);
+        		$file->save($con);
+        	}
+        	
+        	$con->commit();
+        }
+        catch (Exception $e) {
+        	$con->rollBack();
+        	Logging::error($e->getMessage());
         }
 
         $this->_helper->json->sendJson(array());
@@ -1000,42 +916,44 @@ class ApiController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $data = json_decode($request->getParam('data'), $assoc = true);
-
-        foreach ($data as $pair) {
-            list($id, $info) = $pair;
-            // TODO : move this code into model -- RG
-            $file = Application_Model_StoredFile::RecallById($p_id = $id)->getPropelOrm();
-
-            //What we are doing here is setting a more accurate length that was
-            //calculated with silan by actually scanning the entire file. This
-            //process takes a really long time, and so we only do it in the background
-            //after the file has already been imported -MK
-            try {
-                $length = $file->getDbLength();
-                if (isset($info['length'])) {
-                    $length = $info['length'];
-                    //length decimal number in seconds. Need to convert it to format
-                    //HH:mm:ss to get around silly PHP limitations.
-                    $length = Application_Common_DateHelper::secondsToPlaylistTime($length);
-                    $file->setDbLength($length);
-                }
-
-                $cuein = isset($info['cuein']) ? $info['cuein'] : 0;
-                $cueout = isset($info['cueout']) ? $info['cueout'] : $length;
-
-                $file->setDbCuein($cuein);
-                $file->setDbCueout($cueout);
-                $file->setDbSilanCheck(true);
-                $file->save();
-            } catch (Exception $e) {
-                Logging::info("Failed to update silan values for ".$file->getDbTrackTitle());
-                Logging::info("File length analyzed by Silan is: ".$length);
-                //set silan_check to true so we don't attempt to re-anaylze again
-                $file->setDbSilanCheck(true);
-                $file->save();
-            }
+        
+        $con = Propel::getConnection();
+        $con->beginTransaction();
+        
+        try {
+        	foreach ($data as $pair) {
+        		list($id, $info) = $pair;
+        
+        		$file = AudioFileQuery::create()->findPk($id, $con);
+        		
+        		$length = $file->getLength();
+        		if (isset($info['length'])) {
+        			$length = $info['length'];
+        			//length decimal number in seconds. Need to convert it to format
+        			//HH:mm:ss
+        			$length = Application_Common_DateHelper::secondsToPlaylistTime($length);
+        			$file->setLength($length);
+        		}
+        		
+        		$cuein = isset($info['cuein']) ? $info['cuein'] : 0;
+        		$cueout = isset($info['cueout']) ? $info['cueout'] : $length;
+        		
+        		$file->setCuein($cuein);
+        		$file->setCueout($cueout);
+        		$file->setIsSilanChecked(true);
+        		$file->save($con);
+        	}	
+        }
+        catch (Exception $e) {
+        	Logging::error($e->getMessage());
+        	Logging::info("Failed to update silan values for ".$file->getTrackTitle());
+        	Logging::info("File length analyzed by Silan is: ".$length);
+        	//set silan_check to true so we don't attempt to re-anaylze again
+        	$file->setIsSilanChecked(true);
+        	$file->save($con);
         }
 
+        $con->commit();
         $this->_helper->json->sendJson(array());
     }
 

@@ -461,6 +461,92 @@ class Application_Service_AudioFileService
 		return ($rv == 0 && !$isError);
 	}
 	
+	public function getAllFilesWithoutSilan() {
+		$con = Propel::getConnection();
+	
+		$sql = <<<SQL
+SELECT f.id,
+       f.filepath AS fp
+FROM media_audiofile as f
+WHERE file_exists = 'TRUE'
+  AND silan_check IS FALSE Limit 100
+SQL;
+		$stmt = $con->prepare($sql);
+	
+		if ($stmt->execute()) {
+			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} else {
+			$msg = implode(',', $stmt->errorInfo());
+			throw new Exception("Error: $msg");
+		}
+	
+		return $rows;
+	}
+	
+	public function getAllFilesWithoutReplayGain($dir_id=null)
+	{
+		$con = Propel::getConnection();
+	
+		$sql = <<<SQL
+SELECT id,
+       filepath AS fp
+FROM media_audiofile as f
+WHERE directory = :dir_id
+  AND file_exists = 'TRUE'
+  AND replay_gain IS NULL LIMIT 100
+SQL;
+	
+		$stmt = $con->prepare($sql);
+		$stmt->bindParam(':dir_id', $dir_id);
+	
+		if ($stmt->execute()) {
+			$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} else {
+			$msg = implode(',', $stmt->errorInfo());
+			throw new Exception("Error: $msg");
+		}
+	
+		return $rows;
+	}
+	
+	/**
+	 *
+	 * Enter description here ...
+	 * @param $dir_id - if this is not provided, it returns all files with full
+	 * path constructed.
+	 */
+	public function listAllFiles($dir_id=null, $onlyExists=true)
+	{
+		$con = Propel::getConnection();
+	
+		$sql = <<<SQL
+SELECT filepath AS fp
+FROM media_audiofile as f
+WHERE f.directory = :dir_id
+SQL;
+		
+		if ($onlyExists) {
+			$sql .= " AND f.file_exists = 'TRUE'";
+		}
+	
+		$stmt = $con->prepare($sql);
+		$stmt->bindParam(':dir_id', $dir_id);
+	
+		if ($stmt->execute()) {
+			$rows = $stmt->fetchAll();
+		} else {
+			$msg = implode(',', $stmt->errorInfo());
+			throw new Exception("Error: $msg");
+		}
+	
+		$results = array();
+		foreach ($rows as $row) {
+			$results[] = $row["fp"];
+		}
+	
+		return $results;
+	}
+	
 	public function createContextMenu($audioFile) {
 		
 		$baseUrl = Application_Common_OsPath::getBaseDir();

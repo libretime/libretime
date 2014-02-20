@@ -78,8 +78,9 @@ class AirtimeDB(Loggable):
 
     def dir_id_get_files(self, dir_id, all_files=True):
         """ Get all files in a directory with id dir_id """
-        base_dir = self.id_to_dir[ dir_id ]
-        return set(( join(base_dir,p) for p in
+        #base_dir = self.id_to_dir[ dir_id ]
+        
+        return set(( p for p in
             self.apc.list_all_db_files( dir_id, all_files ) ))
 
     def directory_get_files(self, directory, all_files=True):
