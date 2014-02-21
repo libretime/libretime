@@ -522,6 +522,34 @@ class Application_Service_HistoryService
 		return $filteredShows;
 	}
 	
+	public function insertHistoryItem($schedId, $opts = array()) {
+
+		$this->con->beginTransaction();
+		
+		try {
+				
+			$item = CcScheduleQuery::create()
+				->filterByPrimaryKey($schedId)
+				->joinWith("MediaItem", Criteria::LEFT_JOIN)
+				->findOne($this->con);
+			
+			if (isset($item)) {
+				$mediaItem = $item->getMediaItem($this->con);
+				
+				$type = $mediaItem->getType();
+				$strategy = "Strategy_{$type}HistoryItem";
+				
+				$insertStrategy = new $strategy();
+				$insertStrategy->insertHistoryItem($schedId, $this->con, $opts);
+			}
+						
+			$this->con->commit();
+		}
+		catch (Exception $e) {
+			$this->con->rollback();
+		}
+	}
+	
 	public function insertWebstreamMetadata($schedId, $startDT, $data) {
 		
 		$this->con->beginTransaction();
@@ -535,12 +563,12 @@ class Application_Service_HistoryService
 			$showInstance = $item->getCcShowInstances($this->con);
 			$show = $showInstance->getCcShow($this->con);
 			
-			$webstream = $item->getCcWebstream($this->con);
+			$webstream = $item->getMediaItem($this->con);
 			
 			$metadata = array();
 			$metadata["showname"] = $show->getDbName();
 			$metadata[MDATA_KEY_TITLE] = $data->title;
-			$metadata[MDATA_KEY_CREATOR] = $webstream->getDbName();
+			$metadata[MDATA_KEY_CREATOR] = $webstream->getName();
 			
 			$history = new CcPlayoutHistory();
 			$history->setDbStarts($startDT);
@@ -577,11 +605,13 @@ class Application_Service_HistoryService
 			$showInstance = $item->getCcShowInstances($this->con);
 			$show = $showInstance->getCcShow($this->con);
 
-			$fileId = $item->getDbFileId();
+			$mediaItem = $item->getMediaItem($this->con);
 
-			//don't add webstreams
-			if (isset($fileId)) {
+			//only add files.
+			if (isset($mediaItem) && $mediaItem->getType() === "AudioFile") {
 
+				$mediaId = $mediaItem->getId();
+				
 				$metadata = array();
 				$metadata["showname"] = $show->getDbName();
 
@@ -596,13 +626,13 @@ class Application_Service_HistoryService
 				$prevRecord = CcPlayoutHistoryQuery::create()
 					->filterByDbStarts($recordStart)
 					->filterByDbEnds($recordEnd)
-					->filterByDbFileId($fileId)
+					->filterByDbMediaId($mediaId)
 					->findOne($this->con);
 				
 				if (empty($prevRecord)) {
 					
 					$history = new CcPlayoutHistory();
-					$history->setDbFileId($fileId);
+					$history->setDbMediaId($mediaId);
 					$history->setDbStarts($recordStart);
 					$history->setDbEnds($recordEnd);
 					$history->setDbInstanceId($item->getDbInstanceId());

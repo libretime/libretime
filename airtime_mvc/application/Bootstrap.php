@@ -220,6 +220,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	$autoloader->addResourceType ('Interface', 'models/interfaces', 'Interface_');
     	$autoloader->addResourceType ('Presentation', 'models/presentation', 'Presentation_');
     	$autoloader->addResourceType ('Format', 'models/formatters', 'Format_');
+    	$autoloader->addResourceType ('Strategy', 'models/strategy', 'Strategy_');
     }
 }
 

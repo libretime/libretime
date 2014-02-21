@@ -342,6 +342,8 @@ CREATE TABLE "cc_playout_history"
     PRIMARY KEY ("id")
 );
 
+CREATE INDEX "history_item_starts_index" ON "cc_playout_history" ("starts");
+
 -----------------------------------------------------------------------
 -- cc_playout_history_metadata
 -----------------------------------------------------------------------

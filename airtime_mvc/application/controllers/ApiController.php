@@ -424,7 +424,7 @@ class ApiController extends Zend_Controller_Action
         $scheduleService->updateMediaPlayedStatus($schedule_id);
 
         $historyService = new Application_Service_HistoryService();
-        $historyService->insertPlayedItem($schedule_id);
+        $historyService->insertHistoryItem($schedule_id);
 
         $this->_helper->json->sendJson(array("status"=>1, "message"=>""));
     }
@@ -753,6 +753,8 @@ class ApiController extends Zend_Controller_Action
 
                     $watchDir = Application_Model_MusicDir::getDirByPath($rd);
                     // get all the files that is under $dirPath
+                    
+                    //TODO fix this file stuff up, make sure delete can work here.
                     $service = new Application_Service_AudioFileService();
                     $files = $service->listAllFiles($dir->getId(), false);
                     
@@ -969,11 +971,13 @@ class ApiController extends Zend_Controller_Action
 
             if (isset($data_arr->title)) {
 
-            	$data_title = substr($data_arr->title, 0, 1024);
                 $startDT = new DateTime("now", new DateTimeZone("UTC"));
 
                 $historyService = new Application_Service_HistoryService();
-                $historyService->insertWebstreamMetadata($media_id, $startDT, $data_arr);
+                $historyService->insertHistoryItem($media_id, array(
+                	HISTORY_ITEM_STARTS => 	$startDT,
+                	MDATA_KEY_TITLE => $data_arr->title
+                ));
             }
         }
 

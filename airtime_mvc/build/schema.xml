@@ -234,6 +234,9 @@
     <foreign-key foreignTable="cc_show_instances" name="cc_his_item_inst_fkey" onDelete="SETNULL">
       <reference local="instance_id" foreign="id"/>
     </foreign-key>
+    <index name="history_item_starts_index">
+      <index-column name="starts" />
+    </index>
   </table>
   <table name="cc_playout_history_metadata" phpName="CcPlayoutHistoryMetaData" namespace="PlayoutHistory">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />

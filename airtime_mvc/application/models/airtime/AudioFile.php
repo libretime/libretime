@@ -43,6 +43,28 @@ class AudioFile extends BaseAudioFile
 		'MDATA_KEY_CONDUCTOR' => "Conductor",
 		'MDATA_KEY_LANGUAGE' => "Language",
 	);
+	
+	// Metadata Keys for files
+	// user editable metadata
+	private $_md = array (
+		'MDATA_KEY_TITLE' => "TrackTitle",
+		'MDATA_KEY_CREATOR' => "ArtistName",
+		'MDATA_KEY_SOURCE' => "AlbumTitle",
+		'MDATA_KEY_URL' => "InfoUrl",
+		'MDATA_KEY_GENRE' => "Genre",
+		'MDATA_KEY_MOOD' => "Mood",
+		'MDATA_KEY_LABEL' => "Label",
+		'MDATA_KEY_COMPOSER' => "Composer",
+		'MDATA_KEY_ISRC' => "IsrcNumber",
+		'MDATA_KEY_COPYRIGHT' => "Copyright",
+		'MDATA_KEY_YEAR' => "Year",
+		'MDATA_KEY_BPM' => "Bpm",
+		'MDATA_KEY_TRACKNUMBER' => "TrackNumber",
+		'MDATA_KEY_CONDUCTOR' => "Conductor",
+		'MDATA_KEY_LANGUAGE' => "Language",
+		'MDATA_KEY_LENGTH' => "Length",
+		'MDATA_KEY_ISRC' => "IsrcNumber",
+	);
 
 	public function getName() {
 		return $this->getTrackTitle();
@@ -159,6 +181,22 @@ class AudioFile extends BaseAudioFile
 
 		return $this;
 	}
+	
+	/**
+	 * Get metadata as array.
+	 *
+	 * @return array
+	 */
+	public function getUserEditableMetadata()
+	{
+		$md = array();
+		foreach ($this->_userEditableMd as $mdColumn => $propelColumn) {
+			$method = "get$propelColumn";
+			$md[$mdColumn] = $this->$method();
+		}
+	
+		return $md;
+	}
 
 	/**
 	 * Get metadata as array.
@@ -168,7 +206,7 @@ class AudioFile extends BaseAudioFile
 	public function getMetadata()
 	{
 		$md = array();
-		foreach ($this->_userEditableMd as $mdColumn => $propelColumn) {
+		foreach ($this->_md as $mdColumn => $propelColumn) {
 			$method = "get$propelColumn";
 			$md[$mdColumn] = $this->$method();
 		}
