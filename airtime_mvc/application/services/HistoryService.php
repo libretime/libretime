@@ -31,8 +31,105 @@ class Application_Service_HistoryService
 	{
 		return array(self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE);
 	}
+	
+	private function getNeededItemMetadataColumns()
+	{
+		$template = $this->getConfiguredItemTemplate();
+		$fields = $template["fields"];
+		$cols = array();
+		$notCols = array(HISTORY_ITEM_STARTS, HISTORY_ITEM_ENDS);
+		
+		foreach ($fields as $field) {
+			$name = $field["name"];
+			
+			if (!in_array($name, $notCols)) {
+				$cols[$name] = null;
+			}
+		}
+		
+		return $cols;
+	}
+	
+	//opts is from datatables.
+	 public function getPlayedItemData($startDT, $endDT, $opts, $instanceId=null)
+	 {
+	 	$this->con->beginTransaction();
+	 	
+	 	//LIMIT OFFSET statements
+	 	$limit = intval($opts["iDisplayLength"]);
+	 	$offset = intval($opts["iDisplayStart"]);
+	 	
+	 	$query = CcPlayoutHistoryQuery::create()
+		 	->_if(isset($instanceId))
+		 		->filterByDbInstanceId($instanceId)
+		 	->_endif()
+		 	->_if(is_null($instanceId))
+		 		->filterByDbStarts($startDT, Criteria::GREATER_EQUAL)
+	 			->filterByDbStarts($endDT, Criteria::LESS_EQUAL)
+		 	->_endif();
+	 	
+	 	$totalCount = $query->count($this->con);
+	 	
+		$items = $query
+		 	->orderByDbStarts()
+	 		->_if($limit !== -1) //Datatables ALL
+		 		->limit($limit)
+		 		->offset($offset)
+	 		->_endif()
+	 		->find($this->con);
+		
+		$items->populateRelation('CcPlayoutHistoryMetaData');
+		
+		$this->con->commit();
+		
+		$timezoneUTC = new DateTimeZone("UTC");
+		$timezoneLocal = new DateTimeZone($this->timezone);
+		
+		$neededColumns = $this->getNeededItemMetadataColumns();
+		$neededMetadata = array_keys($neededColumns);
+		$datatables = array();
+		foreach($items as $item) {
+			$row = $neededColumns;
+			
+			//need to display the results in the station's timezone.
+			$start = $item->getDbStarts(null);
+			$start->setTimezone($timezoneLocal);
+			$row[HISTORY_ITEM_STARTS] = $start->format("Y-m-d H:i:s");
+			
+			$end = $item->getDbEnds(null);
+			//if ends is null we don't want it to default to "now"
+			if (isset($end)) {
+				$end->setTimezone($timezoneLocal);
+				$row[HISTORY_ITEM_ENDS] = $end->format("Y-m-d H:i:s");
+			}
+			else {
+				$row[HISTORY_ITEM_ENDS] = null;
+			}
+			
+			$metadata = $item->getCcPlayoutHistoryMetaDatas(null, $this->con);
+			foreach ($metadata as $m) {
+				$key = $m->getDbKey();
+				
+				if (in_array($key, $neededMetadata)) {
+					$row[$key] = $m->getDbValue();
+				}
+			}
+			
+			$row["checkbox"] = "";
+			
+			$datatables[] = $row;
+		}
+	 	
+	 	return array(
+ 			"sEcho" => intval($opts["sEcho"]),
+ 			"iTotalDisplayRecords" => intval($totalCount),
+ 			"iTotalRecords" => intval($totalCount),
+ 			"history" => $datatables
+	 	);
+	 }
 
 	//opts is from datatables.
+	/*
 	public function getPlayedItemData($startDT, $endDT, $opts, $instanceId=null)
 	{
 		$mainSqlQuery = "";
@@ -329,7 +426,9 @@ class Application_Service_HistoryService
 			"history" => $rows
 		);
 	}
+	*/
 
+	/*
 	public function getFileSummaryData($startDT, $endDT, $opts)
 	{
 		$select = array (
@@ -455,6 +554,7 @@ class Application_Service_HistoryService
 			"history" => $rows
 		);
 	}
+	*/
 
 	public function getShowList($startDT, $endDT)
 	{
@@ -550,112 +650,6 @@ class Application_Service_HistoryService
 		}
 	}
 	
-	public function insertWebstreamMetadata($schedId, $startDT, $data) {
-		
-		$this->con->beginTransaction();
-		
-		try {
-			
-			$item = CcScheduleQuery::create()->findPK($schedId, $this->con);
-			
-			//TODO figure out how to combine these all into 1 query.
-			//TODO look for duplicate metadata entries.
-			$showInstance = $item->getCcShowInstances($this->con);
-			$show = $showInstance->getCcShow($this->con);
-			
-			$webstream = $item->getMediaItem($this->con);
-			
-			$metadata = array();
-			$metadata["showname"] = $show->getDbName();
-			$metadata[MDATA_KEY_TITLE] = $data->title;
-			$metadata[MDATA_KEY_CREATOR] = $webstream->getName();
-			
-			$history = new CcPlayoutHistory();
-			$history->setDbStarts($startDT);
-			$history->setDbEnds(null);
-			$history->setDbInstanceId($item->getDbInstanceId());
-			
-			foreach ($metadata as $key => $val) {
-				$meta = new CcPlayoutHistoryMetaData();
-				$meta->setDbKey($key);
-				$meta->setDbValue($val);
-			
-				$history->addCcPlayoutHistoryMetaData($meta);
-			}
-			
-			$history->save($this->con);
-			
-			$this->con->commit();
-		}
-		catch (Exception $e) {
-			$this->con->rollback();
-			throw $e;
-		}
-	}
-
-	public function insertPlayedItem($schedId) {
-
-		$this->con->beginTransaction();
-
-		try {
-
-			$item = CcScheduleQuery::create()->findPK($schedId, $this->con);
-
-			//TODO figure out how to combine these all into 1 query.
-			$showInstance = $item->getCcShowInstances($this->con);
-			$show = $showInstance->getCcShow($this->con);
-
-			$mediaItem = $item->getMediaItem($this->con);
-
-			//only add files.
-			if (isset($mediaItem) && $mediaItem->getType() === "AudioFile") {
-
-				$mediaId = $mediaItem->getId();
-				
-				$metadata = array();
-				$metadata["showname"] = $show->getDbName();
-
-				$instanceEnd = $showInstance->getDbEnds(null);
-				$itemEnd = $item->getDbEnds(null);
-				$recordStart = $item->getDbStarts(null);
-				$recordEnd = ($instanceEnd < $itemEnd) ? $instanceEnd : $itemEnd;
-				
-				//first check if this is a duplicate
-				// (caused by restarting liquidsoap)
-				
-				$prevRecord = CcPlayoutHistoryQuery::create()
-					->filterByDbStarts($recordStart)
-					->filterByDbEnds($recordEnd)
-					->filterByDbMediaId($mediaId)
-					->findOne($this->con);
-				
-				if (empty($prevRecord)) {
-					
-					$history = new CcPlayoutHistory();
-					$history->setDbMediaId($mediaId);
-					$history->setDbStarts($recordStart);
-					$history->setDbEnds($recordEnd);
-					$history->setDbInstanceId($item->getDbInstanceId());
-					
-					foreach ($metadata as $key => $val) {
-						$meta = new CcPlayoutHistoryMetaData();
-						$meta->setDbKey($key);
-						$meta->setDbValue($val);
-					
-						$history->addCcPlayoutHistoryMetaData($meta);
-					}
-					
-					$history->save($this->con);
-					$this->con->commit();
-				}	
-			}	
-		}
-		catch (Exception $e) {
-			$this->con->rollback();
-			throw $e;
-		}
-	}
-
 	/* id is an id in cc_playout_history */
 	public function makeHistoryItemForm($id, $populate=false) {
 
@@ -1182,8 +1176,8 @@ class Application_Service_HistoryService
 		$template = array();
 		$fields = array();
 
-		$fields[] = array("name" => "starts", "label"=> _("Start Time"),"type" => TEMPLATE_DATETIME, "isFileMd" => false);
-		$fields[] = array("name" => "ends", "label"=> _("End Time"), "type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => HISTORY_ITEM_STARTS, "label"=> _("Start Time"),"type" => TEMPLATE_DATETIME, "isFileMd" => false);
+		$fields[] = array("name" => HISTORY_ITEM_ENDS, "label"=> _("End Time"), "type" => TEMPLATE_DATETIME, "isFileMd" => false);
 		$fields[] = array("name" => MDATA_KEY_TITLE, "label"=> _("Title"), "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "label"=> _("Creator"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 
@@ -1319,7 +1313,8 @@ class Application_Service_HistoryService
 				"sTitle"=> $label,
 				"mDataProp"=> $key,
 				"sClass"=> "his_{$key}",
-				"sDataType"=> $field["type"]
+				"sDataType"=> $field["type"],
+				"bSortable"=> false
 			);
 		}
 
