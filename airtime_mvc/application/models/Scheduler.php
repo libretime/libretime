@@ -706,6 +706,9 @@ class Application_Model_Scheduler
                     $doUpdate = false;
                     $values = array();
 
+                    //array that stores the cc_file ids so we can update the is_scheduled flag
+                    $fileIds = array();
+
                     foreach ($filesToInsert as &$file) {
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
@@ -760,9 +763,6 @@ class Application_Model_Scheduler
                         // we need to convert to '00:00:00' format
                         $file['fadein'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadein']);
                         $file['fadeout'] = Application_Common_DateHelper::secondsToPlaylistTime($file['fadeout']);
-
-                        //array that stores the cc_file ids so we can update the is_scheduled flag
-                        $fileIds = array();
 
                         switch ($file["type"]) {
                             case 0:
