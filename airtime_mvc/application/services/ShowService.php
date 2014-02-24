@@ -1067,6 +1067,11 @@ SQL;
                         $ccShowInstance = $this->getInstance($utcStartDateTime);
                         $newInstance = false;
                         $updateScheduleStatus = true;
+                        /* Keep track of which instances in the cc_show are being
+                         * updated. We are not interested in which instances are
+                         * new because we won't need to update the scheduled content
+                         * for those shows
+                         */
                         array_push($this->instanceIdsForScheduleUpdates, $ccShowInstance->getDbId());
                     } else {
                         $newInstance = true;
