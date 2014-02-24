@@ -20,6 +20,7 @@ class Application_Service_ShowService
     private $localShowStartHour;
     private $localShowStartMin;
     private $origCcShowDay;
+    private $instanceIdsForScheduleUpdates;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
     {
@@ -39,6 +40,7 @@ class Application_Service_ShowService
         $this->isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
         $this->isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
         $this->isUpdate = $isUpdate;
+        $this->instanceIdsForScheduleUpdates = array();
     }
 
     public function editRepeatingShowInstance($showData) {
@@ -230,12 +232,10 @@ class Application_Service_ShowService
     private function adjustSchedule($showData)
     {
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-        $ccShowInstances = CcShowInstancesQuery::create()
-            ->filterByDbShowId($this->ccShow->getDbId())
-            ->find();
 
         $this->updateScheduleStartEndTimes($showData);
 
+        $ccShowInstances = $this->ccShow->getCcShowInstancess();
         foreach ($ccShowInstances as $instance) {
             $instance->updateScheduleStatus($con);
         }
@@ -271,6 +271,7 @@ class Application_Service_ShowService
         $ccShows = array();
 
         foreach ($ccShowDays as $day) {
+            $this->instanceIdsForScheduleUpdates = array();
 
             $this->ccShow = $day->getCcShow();
             $this->isRecorded = $this->ccShow->isRecorded();
@@ -881,7 +882,6 @@ SQL;
     private function updateScheduleStartEndTimes($showData)
     {
         $showId = $this->ccShow->getDbId();
-
         //DateTime in show's local time
         $newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
         $showData["add_show_start_time"],
@@ -890,12 +890,9 @@ SQL;
         $diff = $this->calculateShowStartDiff($newStartDateTime,
             $this->origCcShowDay->getLocalStartDateAndTime());
 
-        $ccShowInstances = $this->ccShow->getFutureCcShowInstancess();
-        $instanceIds = array();
-        foreach ($ccShowInstances as $ccShowInstance) {
-            array_push($instanceIds, $ccShowInstance->getDbId());
-        }
-        Application_Service_SchedulerService::updateScheduleStartTime($instanceIds, $diff);
+        Application_Service_SchedulerService::updateScheduleStartTime(
+            $this->instanceIdsForScheduleUpdates,
+            $diff);
     }
 
     /**
@@ -1070,6 +1067,7 @@ SQL;
                         $ccShowInstance = $this->getInstance($utcStartDateTime);
                         $newInstance = false;
                         $updateScheduleStatus = true;
+                        array_push($this->instanceIdsForScheduleUpdates, $ccShowInstance->getDbId());
                     } else {
                         $newInstance = true;
                         $ccShowInstance = new CcShowInstances();
