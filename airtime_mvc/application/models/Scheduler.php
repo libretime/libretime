@@ -880,7 +880,7 @@ class Application_Model_Scheduler
                 $selectedInstance = $selected->getCcShowInstances($this->con);
 
                 $data = $this->mediaInfo;
-                $data["id"] = $selected->getDbFileId();
+                $data["id"] = $selected->getDbMediaId();
                 $data["cliplength"] = $selected->getDbClipLength();
                 $data["cuein"] = $selected->getDbCueIn();
                 $data["cueout"] = $selected->getDbCueOut();

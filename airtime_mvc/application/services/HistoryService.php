@@ -32,6 +32,24 @@ class Application_Service_HistoryService
 		return array(self::TEMPLATE_TYPE_ITEM, self::TEMPLATE_TYPE_FILE);
 	}
 	
+	private function getNeededFileMetadataColumns()
+	{
+		$template = $this->getConfiguredFileTemplate();
+		$fields = $template["fields"];
+		$cols = array();
+		$notCols = array(HISTORY_ITEM_PLAYED);
+	
+		foreach ($fields as $field) {
+			$name = $field["name"];
+				
+			if (!in_array($name, $notCols)) {
+				$cols[$name] = null;
+			}
+		}
+	
+		return $cols;
+	}
+	
 	private function getNeededItemMetadataColumns()
 	{
 		$template = $this->getConfiguredItemTemplate();
@@ -427,15 +445,123 @@ class Application_Service_HistoryService
 		);
 	}
 	*/
-
-	/*
+	
+	 /*
 	public function getFileSummaryData($startDT, $endDT, $opts)
 	{
+		$this->con->beginTransaction();
+		 	 
+		//LIMIT OFFSET statements
+		$limit = intval($opts["iDisplayLength"]);
+		$offset = intval($opts["iDisplayStart"]);
+		
+		Logging::enablePropelLogging();
+		
+		$query = CcPlayoutHistoryQuery::create();
+		$modelName = $query->getModelName();
+		
+
+		$subQuery = CcPlayoutHistoryQuery::create()
+			->withColumn("count({$modelName}.DbMediaId)", "played")
+			->filterByDbStarts($startDT, Criteria::GREATER_EQUAL)
+			->filterByDbStarts($endDT, Criteria::LESS_EQUAL)
+			->groupBy("{$modelName}.DbMediaId")
+			//->select(array("{$modelName}.DbMediaId", "played"))
+			//->orderBy("played")
+			->select(array("DbMediaId", "played"))
+			->find();
+		
+		
+		$query
+			->joinWith("MediaItem")
+			//->withColumn("COUNT(MediaItem.Id)", "played")
+			//->withColumn("count({$modelName}.DbMediaId)", "played")
+			->withColumn("COUNT({$modelName}.DbMediaId) OVER (partition by {$modelName}.DbMediaId)", "played")
+			//Users of PostgreSQL will need to use the alternative method groupByClass($class) 
+			//to force the grouping on all the columns of a given model whenever they use an aggregate function:
+			//http://propelorm.org/Propel/reference/model-criteria.html
+			//->groupBy("{$modelName}.DbMediaId")
+			//->groupByClass($modelName)
+			->filterByDbStarts($startDT, Criteria::GREATER_EQUAL)
+			->filterByDbStarts($endDT, Criteria::LESS_EQUAL);
+
+		 	 
+		$totalCount = $query->count($this->con);
+		 	 
+		$items = $query
+			->orderByDbStarts()
+			->_if($limit !== -1) //Datatables ALL
+				->limit($limit)
+				->offset($offset)
+			->_endif()
+			->find($this->con);
+		
+		Logging::disablePropelLogging();
+		
+		//TODO try to join this with audiofile somehow.
+		//$items->populateRelation('MediaItem');
+		//$items->populateRelation('MediaItem.AudioFile');
+		
+		$neededColumns = $this->getNeededFileMetadataColumns();
+		$neededMetadata = array_keys($neededColumns);
+		$datatables = array();
+		foreach($items as $item) {
+			$row = $neededColumns;
+				
+			$audiofile = $item->getMediaItem(null, $this->con)->getChildObject();
+			$metadata = $audiofile->getMetadata();
+			foreach ($neededMetadata as $key) {
+				
+				if (in_array($key, $metadata)) {
+					$row[$key] = $metadata[$key];
+				}
+				else {
+					$row[$key] = null;
+				}
+			}
+			
+			$row[HISTORY_ITEM_PLAYED] = $item->getPlayed();
+			$row["checkbox"] = "";
+				
+			$datatables[] = $row;
+		}
+		
+		return array(
+ 			"sEcho" => intval($opts["sEcho"]),
+ 			"iTotalDisplayRecords" => intval($totalCount),
+ 			"iTotalRecords" => intval($totalCount),
+ 			"history" => $datatables
+	 	);
+	}
+	*/
+
+	public function getFileSummaryData($startDT, $endDT, $opts)
+	{
+		Logging::enablePropelLogging();
+		
+		$fieldMap = array(
+			MDATA_KEY_TITLE => "track_title",
+			MDATA_KEY_CREATOR => "artist_name",
+			MDATA_KEY_SOURCE => "album_title",
+			MDATA_KEY_GENRE => "genre",
+			MDATA_KEY_MOOD => "mood",
+			MDATA_KEY_LABEL => "label",
+			MDATA_KEY_COMPOSER => "composer",
+			MDATA_KEY_ISRC => "isrc_number",
+			MDATA_KEY_COPYRIGHT => "copyright",
+			MDATA_KEY_YEAR => "year",
+			MDATA_KEY_TRACKNUMBER => "track_number",
+			MDATA_KEY_CONDUCTOR => "conductor",
+			MDATA_KEY_LANGUAGE => "language",
+			MDATA_KEY_DURATION => "length",
+			HISTORY_ITEM_PLAYED => "played"
+		);
+		
 		$select = array (
-			"summary.played",
-			"summary.file_id",
-			"summary.".MDATA_KEY_TITLE,
-			"summary.".MDATA_KEY_CREATOR
+			"summary.played AS \"".HISTORY_ITEM_PLAYED."\"",
+			"summary.media_id",
+			"summary.{$fieldMap[MDATA_KEY_TITLE]} AS \"".MDATA_KEY_TITLE."\"",
+			"summary.{$fieldMap[MDATA_KEY_CREATOR]} AS \"".MDATA_KEY_CREATOR."\""
 		);
 
 		$mainSqlQuery = "";
@@ -458,17 +584,16 @@ class Application_Service_HistoryService
 				continue;
 			}
 
-			$select[] = "summary.{$key}";
+			$select[] = "summary.{$fieldMap[$key]} AS \"{$key}\"";
 		}
 
 		$fileSummaryTable = "((
-			SELECT COUNT(history.file_id) as played, history.file_id as file_id
+			SELECT COUNT(history.media_id) as played, history.media_id as media_id
 			FROM cc_playout_history AS history
 			WHERE history.starts >= :starts AND history.starts < :ends
-			AND history.file_id IS NOT NULL
-			GROUP BY history.file_id
+			GROUP BY history.media_id
 		) AS playout
-		LEFT JOIN cc_files AS file ON (file.id = playout.file_id)) AS summary";
+		JOIN media_audiofile AS audiofile ON (audiofile.id = playout.media_id)) AS summary";
 
 		$mainSqlQuery.=
 		"SELECT ".join(", ", $select).
@@ -501,7 +626,7 @@ class Application_Service_HistoryService
 			$key = $opts["mDataProp_".$colNum];
 			$sortDir = $opts["sSortDir_".$i];
 
-			$orderBys[] = "summary.{$key} {$sortDir}";
+			$orderBys[] = "summary.{$fieldMap[$key]} {$sortDir}";
 		}
 
 		if ($numOrderColumns > 0) {
@@ -541,20 +666,20 @@ class Application_Service_HistoryService
 		//processing the results
 		foreach ($rows as &$row) {
 			if (isset($row[MDATA_KEY_DURATION])) {
-				$formatter = new HHMMSSULength($row[MDATA_KEY_DURATION]);
+				$formatter = new Format_HHMMSSULength($row[MDATA_KEY_DURATION]);
 				$row[MDATA_KEY_DURATION] = $formatter->format();
 			}
 		}
+		
+		Logging::disablePropelLogging();
 
 		return array(
 			"sEcho" => intval($opts["sEcho"]),
-			//"iTotalDisplayRecords" => intval($totalDisplayRows),
 			"iTotalDisplayRecords" => intval($totalRows),
 			"iTotalRecords" => intval($totalRows),
 			"history" => $rows
 		);
 	}
-	*/
 
 	public function getShowList($startDT, $endDT)
 	{
@@ -1159,14 +1284,14 @@ class Application_Service_HistoryService
 
 	public function mandatoryItemFields() {
 
-	    $fields = array("starts", "ends");
+	    $fields = array(HISTORY_ITEM_STARTS, HISTORY_ITEM_ENDS);
 
 	    return $fields;
 	}
 
 	public function mandatoryFileFields() {
 
-		$fields = array("played");
+		$fields = array(HISTORY_ITEM_PLAYED);
 
 		return $fields;
 	}
@@ -1197,7 +1322,7 @@ class Application_Service_HistoryService
 
 		$fields[] = array("name" => MDATA_KEY_TITLE, "label"=> _("Title"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "label"=> _("Creator"), "type" => TEMPLATE_STRING, "isFileMd" => true);
-		$fields[] = array("name" => "played", "label"=> _("Played"), "type" => TEMPLATE_INT, "isFileMd" => false);
+		$fields[] = array("name" => HISTORY_ITEM_PLAYED, "label"=> _("Played"), "type" => TEMPLATE_INT, "isFileMd" => false);
 		$fields[] = array("name" => MDATA_KEY_DURATION, "label"=> _("Length"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 		$fields[] = array("name" => MDATA_KEY_COMPOSER, "label"=> _("Composer"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 		$fields[] = array("name" => MDATA_KEY_COPYRIGHT, "label"=> _("Copyright"), "type" => TEMPLATE_STRING, "isFileMd" => true);
@@ -1300,7 +1425,7 @@ class Application_Service_HistoryService
 		return $this->getTemplates(self::TEMPLATE_TYPE_FILE);
 	}
 
-	private function datatablesColumns($fields) {
+	private function datatablesColumns($fields, $sortable=false) {
 
 		$columns = array();
 
@@ -1314,7 +1439,7 @@ class Application_Service_HistoryService
 				"mDataProp"=> $key,
 				"sClass"=> "his_{$key}",
 				"sDataType"=> $field["type"],
-				"bSortable"=> false
+				"bSortable"=> $sortable
 			);
 		}
 
@@ -1349,7 +1474,7 @@ class Application_Service_HistoryService
 
 		try {
 			$template = $this->getConfiguredFileTemplate();
-			return $this->datatablesColumns($template["fields"]);
+			return $this->datatablesColumns($template["fields"], true);
 		}
 		catch (Exception $e) {
 			throw $e;

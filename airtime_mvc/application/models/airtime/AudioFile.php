@@ -62,8 +62,7 @@ class AudioFile extends BaseAudioFile
 		'MDATA_KEY_TRACKNUMBER' => "TrackNumber",
 		'MDATA_KEY_CONDUCTOR' => "Conductor",
 		'MDATA_KEY_LANGUAGE' => "Language",
-		'MDATA_KEY_LENGTH' => "Length",
-		'MDATA_KEY_ISRC' => "IsrcNumber",
+		'MDATA_KEY_DURATION' => "Length",
 	);
 
 	public function getName() {
