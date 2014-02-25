@@ -32,6 +32,7 @@ use Airtime\MediaItem\Playlist;
 use Airtime\MediaItem\PlaylistQuery;
 use Airtime\MediaItem\Webstream;
 use Airtime\MediaItem\WebstreamQuery;
+use Airtime\MediaItem\om\BasePlaylist;
 
 /**
  * Base class that represents a row from the 'cc_subjs' table.
@@ -3527,13 +3528,13 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
     }
 
     /**
-     * Method called to associate a Playlist object to this object
-     * through the Playlist foreign key attribute.
+     * Method called to associate a BasePlaylist object to this object
+     * through the BasePlaylist foreign key attribute.
      *
-     * @param    Playlist $l Playlist
+     * @param    BasePlaylist $l BasePlaylist
      * @return CcSubjs The current object (for fluent API support)
      */
-    public function addPlaylist(Playlist $l)
+    public function addPlaylist(BasePlaylist $l)
     {
         if ($this->collPlaylists === null) {
             $this->initPlaylists();

@@ -680,15 +680,6 @@ var AIRTIME = (function(AIRTIME) {
     		}, "json");
     	});
     	
-    	$library.on("click", "#lib_new_playlist", function(e) {
-    		var url = baseUrl+"playlist/new",
-    			data = {format: "json"};
-    		
-    		$.post(url, data, function(json) {
-    			AIRTIME.playlist.drawPlaylist(json);
-    		});
-    	});
-    	
     	$library.on("click", "input[type=checkbox]", function(e) {
     		e.stopPropagation();
             

@@ -119,6 +119,15 @@ var AIRTIME = (function(AIRTIME){
 		info["description"] = cleanString($("#playlist_description").val());
 		info["contents"] = entries;
 		
+		info["rules"] = {
+			"repeat-tracks": $("#rule_repeat_tracks").find("input:checkbox").is(":checked"),
+			"my-tracks": $("#rule_my_tracks").find("input:checkbox").is(":checked"),
+			"limit": {
+				"value": $("#pl_limit_value").val(),
+				"unit":  $("#pl_limit_options").val()
+			}
+		};
+		
 		return info;
 	}
 	
@@ -272,6 +281,24 @@ var AIRTIME = (function(AIRTIME){
 		var $playlist = $("#side_playlist");
 		
 		makeSortable();
+		
+		$playlist.on("click", "#lib-new-pl-static", function(e) {
+    		var url = baseUrl+"playlist/new",
+    			data = {format: "json", type: "0"};
+    		
+    		$.post(url, data, function(json) {
+    			AIRTIME.playlist.drawPlaylist(json);
+    		});
+    	});
+		
+		$playlist.on("click", "#lib-new-pl-dynamic", function(e) {
+    		var url = baseUrl+"playlist/new",
+    			data = {format: "json", type: "1"};
+    		
+    		$.post(url, data, function(json) {
+    			AIRTIME.playlist.drawPlaylist(json);
+    		});
+    	});
 		
 		$playlist.on("click", ".ui-icon-closethick", function(e) {
 			var $li = $(this).parents("li");

@@ -24,7 +24,7 @@ use Airtime\MediaItem\PlaylistQuery;
  *
  *
  *
- * @method PlaylistQuery orderByType($order = Criteria::ASC) Order by the type column
+ * @method PlaylistQuery orderByClassKey($order = Criteria::ASC) Order by the class_key column
  * @method PlaylistQuery orderByRules($order = Criteria::ASC) Order by the rules column
  * @method PlaylistQuery orderById($order = Criteria::ASC) Order by the id column
  * @method PlaylistQuery orderByName($order = Criteria::ASC) Order by the name column
@@ -37,7 +37,7 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method PlaylistQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method PlaylistQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
- * @method PlaylistQuery groupByType() Group by the type column
+ * @method PlaylistQuery groupByClassKey() Group by the class_key column
  * @method PlaylistQuery groupByRules() Group by the rules column
  * @method PlaylistQuery groupById() Group by the id column
  * @method PlaylistQuery groupByName() Group by the name column
@@ -69,7 +69,7 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method Playlist findOne(PropelPDO $con = null) Return the first Playlist matching the query
  * @method Playlist findOneOrCreate(PropelPDO $con = null) Return the first Playlist matching the query, or a new Playlist object populated from the query conditions when no match is found
  *
- * @method Playlist findOneByType(int $type) Return the first Playlist filtered by the type column
+ * @method Playlist findOneByClassKey(int $class_key) Return the first Playlist filtered by the class_key column
  * @method Playlist findOneByRules(string $rules) Return the first Playlist filtered by the rules column
  * @method Playlist findOneByName(string $name) Return the first Playlist filtered by the name column
  * @method Playlist findOneByOwnerId(int $owner_id) Return the first Playlist filtered by the owner_id column
@@ -81,7 +81,7 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method Playlist findOneByCreatedAt(string $created_at) Return the first Playlist filtered by the created_at column
  * @method Playlist findOneByUpdatedAt(string $updated_at) Return the first Playlist filtered by the updated_at column
  *
- * @method array findByType(int $type) Return Playlist objects filtered by the type column
+ * @method array findByClassKey(int $class_key) Return Playlist objects filtered by the class_key column
  * @method array findByRules(string $rules) Return Playlist objects filtered by the rules column
  * @method array findById(int $id) Return Playlist objects filtered by the id column
  * @method array findByName(string $name) Return Playlist objects filtered by the name column
@@ -200,7 +200,7 @@ abstract class BasePlaylistQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "type", "rules", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_playlist" WHERE "id" = :p0';
+        $sql = 'SELECT "class_key", "rules", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_playlist" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -211,7 +211,8 @@ abstract class BasePlaylistQuery extends MediaItemQuery
         }
         $obj = null;
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $obj = new Playlist();
+            $cls = PlaylistPeer::getOMClass($row, 0);
+            $obj = new $cls();
             $obj->hydrate($row);
             PlaylistPeer::addInstanceToPool($obj, (string) $key);
         }
@@ -290,17 +291,17 @@ abstract class BasePlaylistQuery extends MediaItemQuery
     }
 
     /**
-     * Filter the query on the type column
+     * Filter the query on the class_key column
      *
      * Example usage:
      * <code>
-     * $query->filterByType(1234); // WHERE type = 1234
-     * $query->filterByType(array(12, 34)); // WHERE type IN (12, 34)
-     * $query->filterByType(array('min' => 12)); // WHERE type >= 12
-     * $query->filterByType(array('max' => 12)); // WHERE type <= 12
+     * $query->filterByClassKey(1234); // WHERE class_key = 1234
+     * $query->filterByClassKey(array(12, 34)); // WHERE class_key IN (12, 34)
+     * $query->filterByClassKey(array('min' => 12)); // WHERE class_key >= 12
+     * $query->filterByClassKey(array('max' => 12)); // WHERE class_key <= 12
      * </code>
      *
-     * @param     mixed $type The value to use as filter.
+     * @param     mixed $classKey The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -308,16 +309,16 @@ abstract class BasePlaylistQuery extends MediaItemQuery
      *
      * @return PlaylistQuery The current query, for fluid interface
      */
-    public function filterByType($type = null, $comparison = null)
+    public function filterByClassKey($classKey = null, $comparison = null)
     {
-        if (is_array($type)) {
+        if (is_array($classKey)) {
             $useMinMax = false;
-            if (isset($type['min'])) {
-                $this->addUsingAlias(PlaylistPeer::TYPE, $type['min'], Criteria::GREATER_EQUAL);
+            if (isset($classKey['min'])) {
+                $this->addUsingAlias(PlaylistPeer::CLASS_KEY, $classKey['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($type['max'])) {
-                $this->addUsingAlias(PlaylistPeer::TYPE, $type['max'], Criteria::LESS_EQUAL);
+            if (isset($classKey['max'])) {
+                $this->addUsingAlias(PlaylistPeer::CLASS_KEY, $classKey['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -328,7 +329,7 @@ abstract class BasePlaylistQuery extends MediaItemQuery
             }
         }
 
-        return $this->addUsingAlias(PlaylistPeer::TYPE, $type, $comparison);
+        return $this->addUsingAlias(PlaylistPeer::CLASS_KEY, $classKey, $comparison);
     }
 
     /**

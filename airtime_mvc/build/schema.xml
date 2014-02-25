@@ -373,11 +373,14 @@
     <column name="url" phpName="Url" type="VARCHAR" size="512" required="true" />
   </table>
   
-  <table name="media_playlist" phpName="Playlist" namespace="MediaItem">
+  <table name="media_playlist" phpName="Playlist" namespace="MediaItem" abstract="true">
     <behavior name="concrete_inheritance">
       <parameter name="extends" value="media_item" />
     </behavior>
-    <column name="type" phpName="Type" type="TINYINT" required="true" defaultValue="0"/>
+    <column name="class_key" type="INTEGER" inheritance="single">
+      <inheritance key="0" class="PlaylistStatic" extends="Playlist"/>
+      <inheritance key="1" class="PlaylistDynamic" extends="Playlist"/>
+    </column>
     <column name="rules" phpName="Rules" type="LONGVARCHAR" sqlType="text" required="true" default=""/>
   </table>
 

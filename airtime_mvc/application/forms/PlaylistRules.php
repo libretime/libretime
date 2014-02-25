@@ -120,16 +120,6 @@ class Application_Form_PlaylistRules extends Zend_Form
     		array('ViewScript', array('viewScript' => 'form/playlist-rules.phtml'))
     	));
     	
-    	$spType = new Zend_Form_Element_Radio('pl_type');
-    	$spType
-    		->setLabel(_('Type:'))
-	    	->setDecorators(array('ViewHelper'))
-	    	->setMultiOptions(array(
-    			0 => _('Static'),
-    			1 => _('Dynamic')
-    	));
-    	$this->addElement($spType);
-    	
     	$repeatTracks = new Zend_Form_Element_Checkbox('pl_repeat_tracks');
     	$repeatTracks
     		->setDecorators(array('ViewHelper'))

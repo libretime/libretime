@@ -493,7 +493,7 @@ class Application_Service_MediaService
 			"Id" => array(
 				"isColumn" => false
 			),
-			"Type" => array(
+			"ClassKey" => array(
 				"isColumn" => true,
 				"title" => _("Type"),
 				"width" => "25px",
@@ -563,7 +563,7 @@ class Application_Service_MediaService
 	private function getPlaylistDatatableColumnOrder() {
 
 		return array (
-			"Type",
+			"ClassKey",
 			"Name",
 			"Description",
 			"CreatedAt",

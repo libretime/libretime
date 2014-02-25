@@ -33,7 +33,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     const TABLE_NAME = 'media_playlist';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'Airtime\\MediaItem\\Playlist';
+    const OM_CLASS = '';
 
     /** the related TableMap class for this table */
     const TM_CLASS = 'Airtime\\MediaItem\\map\\PlaylistTableMap';
@@ -47,8 +47,8 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
     const NUM_HYDRATE_COLUMNS = 12;
 
-    /** the column name for the type field */
-    const TYPE = 'media_playlist.type';
+    /** the column name for the class_key field */
+    const CLASS_KEY = 'media_playlist.class_key';
 
     /** the column name for the rules field */
     const RULES = 'media_playlist.rules';
@@ -83,6 +83,24 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     /** the column name for the updated_at field */
     const UPDATED_AT = 'media_playlist.updated_at';
 
+    /** A key representing a particular subclass */
+    const CLASSKEY_0 = '0';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PLAYLISTSTATIC = '0';
+
+    /** A class that can be returned by this peer. */
+    const CLASSNAME_0 = 'Airtime\\MediaItem\\PlaylistStatic';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_1 = '1';
+
+    /** A key representing a particular subclass */
+    const CLASSKEY_PLAYLISTDYNAMIC = '1';
+
+    /** A class that can be returned by this peer. */
+    const CLASSNAME_1 = 'Airtime\\MediaItem\\PlaylistDynamic';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -102,11 +120,11 @@ abstract class BasePlaylistPeer extends MediaItemPeer
      * e.g. PlaylistPeer::$fieldNames[PlaylistPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Type', 'Rules', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('type', 'rules', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (PlaylistPeer::TYPE, PlaylistPeer::RULES, PlaylistPeer::ID, PlaylistPeer::NAME, PlaylistPeer::OWNER_ID, PlaylistPeer::DESCRIPTION, PlaylistPeer::LAST_PLAYED, PlaylistPeer::PLAY_COUNT, PlaylistPeer::LENGTH, PlaylistPeer::MIME, PlaylistPeer::CREATED_AT, PlaylistPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('TYPE', 'RULES', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('type', 'rules', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', ),
+        BasePeer::TYPE_PHPNAME => array ('ClassKey', 'Rules', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('classKey', 'rules', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', ),
+        BasePeer::TYPE_COLNAME => array (PlaylistPeer::CLASS_KEY, PlaylistPeer::RULES, PlaylistPeer::ID, PlaylistPeer::NAME, PlaylistPeer::OWNER_ID, PlaylistPeer::DESCRIPTION, PlaylistPeer::LAST_PLAYED, PlaylistPeer::PLAY_COUNT, PlaylistPeer::LENGTH, PlaylistPeer::MIME, PlaylistPeer::CREATED_AT, PlaylistPeer::UPDATED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CLASS_KEY', 'RULES', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('class_key', 'rules', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
@@ -117,11 +135,11 @@ abstract class BasePlaylistPeer extends MediaItemPeer
      * e.g. PlaylistPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Type' => 0, 'Rules' => 1, 'Id' => 2, 'Name' => 3, 'OwnerId' => 4, 'Description' => 5, 'LastPlayedTime' => 6, 'PlayCount' => 7, 'Length' => 8, 'Mime' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('type' => 0, 'rules' => 1, 'id' => 2, 'name' => 3, 'ownerId' => 4, 'description' => 5, 'lastPlayedTime' => 6, 'playCount' => 7, 'length' => 8, 'mime' => 9, 'createdAt' => 10, 'updatedAt' => 11, ),
-        BasePeer::TYPE_COLNAME => array (PlaylistPeer::TYPE => 0, PlaylistPeer::RULES => 1, PlaylistPeer::ID => 2, PlaylistPeer::NAME => 3, PlaylistPeer::OWNER_ID => 4, PlaylistPeer::DESCRIPTION => 5, PlaylistPeer::LAST_PLAYED => 6, PlaylistPeer::PLAY_COUNT => 7, PlaylistPeer::LENGTH => 8, PlaylistPeer::MIME => 9, PlaylistPeer::CREATED_AT => 10, PlaylistPeer::UPDATED_AT => 11, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('TYPE' => 0, 'RULES' => 1, 'ID' => 2, 'NAME' => 3, 'OWNER_ID' => 4, 'DESCRIPTION' => 5, 'LAST_PLAYED' => 6, 'PLAY_COUNT' => 7, 'LENGTH' => 8, 'MIME' => 9, 'CREATED_AT' => 10, 'UPDATED_AT' => 11, ),
-        BasePeer::TYPE_FIELDNAME => array ('type' => 0, 'rules' => 1, 'id' => 2, 'name' => 3, 'owner_id' => 4, 'description' => 5, 'last_played' => 6, 'play_count' => 7, 'length' => 8, 'mime' => 9, 'created_at' => 10, 'updated_at' => 11, ),
+        BasePeer::TYPE_PHPNAME => array ('ClassKey' => 0, 'Rules' => 1, 'Id' => 2, 'Name' => 3, 'OwnerId' => 4, 'Description' => 5, 'LastPlayedTime' => 6, 'PlayCount' => 7, 'Length' => 8, 'Mime' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('classKey' => 0, 'rules' => 1, 'id' => 2, 'name' => 3, 'ownerId' => 4, 'description' => 5, 'lastPlayedTime' => 6, 'playCount' => 7, 'length' => 8, 'mime' => 9, 'createdAt' => 10, 'updatedAt' => 11, ),
+        BasePeer::TYPE_COLNAME => array (PlaylistPeer::CLASS_KEY => 0, PlaylistPeer::RULES => 1, PlaylistPeer::ID => 2, PlaylistPeer::NAME => 3, PlaylistPeer::OWNER_ID => 4, PlaylistPeer::DESCRIPTION => 5, PlaylistPeer::LAST_PLAYED => 6, PlaylistPeer::PLAY_COUNT => 7, PlaylistPeer::LENGTH => 8, PlaylistPeer::MIME => 9, PlaylistPeer::CREATED_AT => 10, PlaylistPeer::UPDATED_AT => 11, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('CLASS_KEY' => 0, 'RULES' => 1, 'ID' => 2, 'NAME' => 3, 'OWNER_ID' => 4, 'DESCRIPTION' => 5, 'LAST_PLAYED' => 6, 'PLAY_COUNT' => 7, 'LENGTH' => 8, 'MIME' => 9, 'CREATED_AT' => 10, 'UPDATED_AT' => 11, ),
+        BasePeer::TYPE_FIELDNAME => array ('class_key' => 0, 'rules' => 1, 'id' => 2, 'name' => 3, 'owner_id' => 4, 'description' => 5, 'last_played' => 6, 'play_count' => 7, 'length' => 8, 'mime' => 9, 'created_at' => 10, 'updated_at' => 11, ),
         BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
     );
 
@@ -196,7 +214,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PlaylistPeer::TYPE);
+            $criteria->addSelectColumn(PlaylistPeer::CLASS_KEY);
             $criteria->addSelectColumn(PlaylistPeer::RULES);
             $criteria->addSelectColumn(PlaylistPeer::ID);
             $criteria->addSelectColumn(PlaylistPeer::NAME);
@@ -209,7 +227,7 @@ abstract class BasePlaylistPeer extends MediaItemPeer
             $criteria->addSelectColumn(PlaylistPeer::CREATED_AT);
             $criteria->addSelectColumn(PlaylistPeer::UPDATED_AT);
         } else {
-            $criteria->addSelectColumn($alias . '.type');
+            $criteria->addSelectColumn($alias . '.class_key');
             $criteria->addSelectColumn($alias . '.rules');
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
@@ -476,8 +494,6 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     {
         $results = array();
 
-        // set the class once to avoid overhead in the loop
-        $cls = PlaylistPeer::getOMClass();
         // populate the object(s)
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
             $key = PlaylistPeer::getPrimaryKeyHashFromRow($row, 0);
@@ -487,6 +503,9 @@ abstract class BasePlaylistPeer extends MediaItemPeer
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
+                // class must be set each time from the record row
+                $cls = PlaylistPeer::getOMClass($row, 0);
+                $cls = substr('.'.$cls, strrpos('.'.$cls, '.') + 1);
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
@@ -514,8 +533,13 @@ abstract class BasePlaylistPeer extends MediaItemPeer
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $startcol, true); // rehydrate
             $col = $startcol + PlaylistPeer::NUM_HYDRATE_COLUMNS;
+        } elseif (null == $key) {
+            // empty resultset, probably from a left join
+            // since this table is abstract, we can't hydrate an empty object
+            $obj = null;
+            $col = $startcol + PlaylistPeer::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = PlaylistPeer::OM_CLASS;
+            $cls = PlaylistPeer::getOMClass($row, $startcol);
             $obj = new $cls();
             $col = $obj->hydrate($row, $startcol);
             PlaylistPeer::addInstanceToPool($obj, $key);
@@ -662,7 +686,8 @@ abstract class BasePlaylistPeer extends MediaItemPeer
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = PlaylistPeer::getOMClass();
+                $omClass = PlaylistPeer::getOMClass($row, 0);
+                $cls = substr('.'.$omClass, strrpos('.'.$omClass, '.') + 1);
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
@@ -730,7 +755,8 @@ abstract class BasePlaylistPeer extends MediaItemPeer
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = PlaylistPeer::getOMClass();
+                $omClass = PlaylistPeer::getOMClass($row, 0);
+                $cls = substr('.'.$omClass, strrpos('.'.$omClass, '.') + 1);
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
@@ -856,7 +882,8 @@ abstract class BasePlaylistPeer extends MediaItemPeer
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = PlaylistPeer::getOMClass();
+                $omClass = PlaylistPeer::getOMClass($row, 0);
+        $cls = substr('.'.$omClass, strrpos('.'.$omClass, '.') + 1);
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
@@ -1049,7 +1076,8 @@ abstract class BasePlaylistPeer extends MediaItemPeer
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = PlaylistPeer::getOMClass();
+                $omClass = PlaylistPeer::getOMClass($row, 0);
+                $cls = substr('.'.$omClass, strrpos('.'.$omClass, '.') + 1);
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
@@ -1123,7 +1151,8 @@ abstract class BasePlaylistPeer extends MediaItemPeer
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = PlaylistPeer::getOMClass();
+                $omClass = PlaylistPeer::getOMClass($row, 0);
+                $cls = substr('.'.$omClass, strrpos('.'.$omClass, '.') + 1);
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
@@ -1180,14 +1209,41 @@ abstract class BasePlaylistPeer extends MediaItemPeer
     }
 
     /**
-     * The class that the Peer will make instances of.
+     * The returned Class will contain objects of the default type or
+     * objects that inherit from the default.
      *
-     *
-     * @return string ClassName
+     * @param      array $row PropelPDO result row.
+     * @param      int $colnum Column to examine for OM class information (first is 0).
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
      */
     public static function getOMClass($row = 0, $colnum = 0)
     {
-        return PlaylistPeer::OM_CLASS;
+        try {
+
+            $omClass = null;
+            $classKey = $row[$colnum + 0];
+
+            switch ($classKey) {
+
+                case PlaylistPeer::CLASSKEY_0:
+                    $omClass = PlaylistPeer::CLASSNAME_0;
+                    break;
+
+                case PlaylistPeer::CLASSKEY_1:
+                    $omClass = PlaylistPeer::CLASSNAME_1;
+                    break;
+
+                default:
+                    $omClass = PlaylistPeer::OM_CLASS;
+
+            } // switch
+
+        } catch (Exception $e) {
+            throw new PropelException('Unable to get OM class.', $e);
+        }
+
+        return $omClass;
     }
 
     /**

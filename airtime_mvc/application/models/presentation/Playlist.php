@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\MediaItem\PlaylistPeer;
+
 class Presentation_Playlist {
 	
 	const LENGTH_FORMATTER_CLASS = "Format_HHMMSSULength";
@@ -40,9 +42,9 @@ class Presentation_Playlist {
 	
 	public function hasContent() {
 		
-		$type = $this->playlist->getType();
+		$type = $this->playlist->getClassKey();
 		
-		return $type === 0 ? true: false;
+		return $type === PlaylistPeer::CLASSKEY_0 ? true: false;
 	}
 	
 	public function getContent() {
@@ -55,7 +57,7 @@ class Presentation_Playlist {
 		$rules = new Application_Form_PlaylistRules();
 		
 		$rules->populate(array(
-			"pl_type" => $this->playlist->getType()		
+			//"pl_type" => $this->playlist->getType()		
 		));
 		
 		return $rules;

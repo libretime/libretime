@@ -11,12 +11,5 @@ if ($this->showPlaylist) {
 }
 ?>
 <div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded">
-<?php 
-    if (isset($this->obj)) {
-        echo $this->render('playlist/playlist.phtml');
-    } 
-    else {
-        echo $this->render('playlist/none.phtml');
-    }
-?>
+<?php echo $this->render('playlist/playlist.phtml') ?>
 </div>

@@ -234,4 +234,20 @@ class Application_Service_PlaylistService
 	
 		return $menu;
 	}
+	
+	public function createPlaylist($type) {
+		
+		switch($type) {
+			case PlaylistPeer::CLASSKEY_0:
+				$class = PlaylistPeer::CLASSNAME_0;
+				return new $class();
+				break;
+			case PlaylistPeer::CLASSKEY_1:
+			default:
+				$class = PlaylistPeer::CLASSNAME_1;
+				return new $class();
+				break;
+				
+		}
+	}
 }

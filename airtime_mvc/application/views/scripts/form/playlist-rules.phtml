@@ -1,54 +1,17 @@
 <dl class='zend_form search-criteria'>
-	<dd id='sp_type-element'>
-		<label class='sp-label'>
-	        <?php echo $this->element->getElement('pl_type')->getLabel() ?>
-	        <span class='playlist_type_help_icon'></span>
-        </label>
-        <?php $i=0;
-              $value = $this->element->getElement('pl_type')->getValue();
-              Logging::info("value");
-              Logging::info($value);
-              foreach ($this->element->getElement('pl_type')->getMultiOptions() as $radio) : ?>
-                  
-              <label class='sp-label' for='sp_type-<?php echo $i?>'>
-                  <input 
-	                  type="radio" 
-	                  value="<?php echo $i ?>" 
-	                  id="sp_type-<?php echo $i ?>" 
-	                  name="sp_type" <?php if($i == $value){echo 'checked="checked"';}?> >
-                  <?php echo $radio ?>
-              </label>
-        <?php $i = $i + 1; ?>
-        <?php endforeach; ?>
-    </dd>
-   
-    <dd id='sp_repeate_tracks-element'>
+    <dd id='rule_repeat_tracks'>
 		<span class='sp_text_font'><?php echo $this->element->getElement('pl_repeat_tracks')->getLabel() ?></span>
         <span class='repeat_tracks_help_icon'></span>
         <?php echo $this->element->getElement('pl_repeat_tracks')?>
-        <?php if($this->element->getElement("pl_repeat_tracks")->hasErrors()) : ?>
-        	<?php foreach($this->element->getElement("pl_repeat_tracks")->getMessages() as $error): ?>
-                <span class='errors sp-errors'>
-                   <?php echo $error; ?>
-                </span>
-            <?php endforeach; ?>
-        <?php endif; ?>
     </dd>
     
-    <dd id='sp_my_tracks-element'>
+    <dd id='rule_my_tracks'>
 		<span class='sp_text_font'><?php echo $this->element->getElement('pl_my_tracks')->getLabel() ?></span>
         <span class='repeat_tracks_help_icon'></span>
         <?php echo $this->element->getElement('pl_my_tracks')?>
-        <?php if($this->element->getElement("pl_my_tracks")->hasErrors()) : ?>
-        	<?php foreach($this->element->getElement("pl_my_tracks")->getMessages() as $error): ?>
-                <span class='errors sp-errors'>
-                   <?php echo $error; ?>
-                </span>
-            <?php endforeach; ?>
-        <?php endif; ?>
     </dd>
         
-	<dd id='sp_limit-element'>
+	<dd id='rule_limit'>
     	<span class='sp_text_font'><?php echo $this->element->getElement('pl_limit_value')->getLabel() ?></span>
         <?php echo $this->element->getElement('pl_limit_value')?>
         <?php echo $this->element->getElement('pl_limit_options') ?>
