@@ -10,6 +10,8 @@ import time
 from api_clients import api_client
 
 class ListenerStat(Thread):
+    HTTP_REQUEST_TIMEOUT = 30 # 30 second HTTP request timeout
+
     def __init__(self, logger=None):
         Thread.__init__(self)
         self.api_client = api_client.AirtimeApiClient()
@@ -46,7 +48,7 @@ class ListenerStat(Thread):
             url=url,
             headers=header)
 
-        f = urllib2.urlopen(req)
+        f = urllib2.urlopen(req, timeout=ListenerStat.HTTP_REQUEST_TIMEOUT)
         document = f.read()
         return document
 

@@ -10,13 +10,14 @@ import sys
 import time
 import urllib
 import urllib2
+import socket 
 import logging
 import json
 import base64
 import traceback
 from configobj import ConfigObj
 
-AIRTIME_VERSION = "2.5.1"
+AIRTIME_API_VERSION = "1.1"
 
 
 # TODO : Place these functions in some common module. Right now, media
@@ -121,6 +122,9 @@ class ApcUrl(object):
         else: return self.base_url
 
 class ApiRequest(object):
+
+    API_HTTP_REQUEST_TIMEOUT = 30 # 30 second HTTP request timeout
+
     def __init__(self, name, url, logger=None):
         self.name = name
         self.url  = url
@@ -134,9 +138,15 @@ class ApiRequest(object):
         self.logger.debug(final_url)
         try:
             req = urllib2.Request(final_url, _post_data)
-            f = urllib2.urlopen(req)
+            f = urllib2.urlopen(req, timeout=ApiRequest.API_HTTP_REQUEST_TIMEOUT)
             content_type = f.info().getheader('Content-Type')
             response = f.read()
+        #Everything that calls an ApiRequest should be catching URLError explicitly
+        #(according to the other comments in this file and a cursory grep through the code)
+        #Note that URLError can occur for timeouts as well as socket.timeout
+        except socket.timeout:
+            self.logger.error('HTTP request to %s timed out', final_url)
+            raise
         except Exception, e:
             #self.logger.error('Exception: %s', e)
             #self.logger.error("traceback: %s", traceback.format_exc())
@@ -208,27 +218,30 @@ class AirtimeApiClient(object):
             sys.exit(1)
 
     def __get_airtime_version(self):
-        try: return self.services.version_url()[u'version']
+        try: return self.services.version_url()[u'airtime_version']
+        except Exception: return -1
+    
+    def __get_api_version(self):
+        try: return self.services.version_url()[u'api_version']
         except Exception: return -1
 
     def is_server_compatible(self, verbose=True):
         logger = self.logger
-        version = self.__get_airtime_version()
+        api_version = self.__get_api_version()
         # logger.info('Airtime version found: ' + str(version))
-        if version == -1:
-            if (verbose):
-                logger.info('Unable to get Airtime version number.\n')
-            return False
-        elif version[0:3] != AIRTIME_VERSION[0:3]:
+        if api_version == -1:
             if verbose:
-                logger.info('Airtime version found: ' + str(version))
-                logger.info('pypo is at version ' + AIRTIME_VERSION +
-                    ' and is not compatible with this version of Airtime.\n')
+                logger.info('Unable to get Airtime API version number.\n')
+            return False
+        elif api_version[0:3] != AIRTIME_API_VERSION[0:3]:
+            if verbose:
+                logger.info('Airtime API version found: ' + str(api_version))
+                logger.info('pypo is only compatible with API version: ' + AIRTIME_API_VERSION)
             return False
         else:
             if verbose:
-                logger.info('Airtime version: ' + str(version))
-                logger.info('pypo is at version ' + AIRTIME_VERSION + ' and is compatible with this version of Airtime.')
+                logger.info('Airtime API version found: ' + str(api_version))
+                logger.info('pypo is only compatible with API version: ' + AIRTIME_API_VERSION)
             return True
 
 
@@ -277,7 +290,7 @@ class AirtimeApiClient(object):
 
             try:
                 request = urllib2.Request(url, data, headers)
-                response = urllib2.urlopen(request).read().strip()
+                response = urllib2.urlopen(request, timeout=ApiClient.API_HTTP_REQUEST_TIMEOUT).read().strip()
 
                 logger.info("uploaded show result %s", response)
                 break

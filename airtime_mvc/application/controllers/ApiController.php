@@ -68,7 +68,8 @@ class ApiController extends Zend_Controller_Action
     public function versionAction()
     {
         $this->_helper->json->sendJson( array(
-            "version" => Application_Model_Preference::GetAirtimeVersion()));
+            "airtime_version" => Application_Model_Preference::GetAirtimeVersion(),
+            "api_version" => AIRTIME_API_VERSION));
     }
 
     /**
@@ -425,6 +426,8 @@ class ApiController extends Zend_Controller_Action
 
         $historyService = new Application_Service_HistoryService();
         $historyService->insertHistoryItem($schedule_id);
+
+        //TODO set last played of media items here.
 
         $this->_helper->json->sendJson(array("status"=>1, "message"=>""));
     }

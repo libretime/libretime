@@ -576,6 +576,9 @@ class Application_Model_Scheduler
                     $doUpdate = false;
                     $values = array();
 
+                    //array that stores the cc_file ids so we can update the is_scheduled flag
+                    $fileIds = array();
+
                     foreach ($filesToInsert as &$file) {
                         //item existed previously and is being moved.
                         //need to keep same id for resources if we want REST.
@@ -626,9 +629,6 @@ class Application_Model_Scheduler
                             $doInsert = true;
                         }
 
-                        // default fades are in seconds
-                        $file['fadein'] = $file['fadein'];
-                        $file['fadeout'] = $file['fadeout'];
 
                         if ($this->applyCrossfades) {
                             $nextStartDT = $this->findTimeDifference($nextStartDT,
@@ -688,6 +688,7 @@ class Application_Model_Scheduler
                             }
                         };
                     }
+
                     
                     //TODO update is Scheduled to work with media
                     // update is_scheduled flag for each cc_file
@@ -696,6 +697,7 @@ class Application_Model_Scheduler
                     foreach ($filesToInsert as &$file) {
                         $fileIds[] = $file["id"];
                     }
+
                     $selectCriteria = new Criteria();
                     $selectCriteria->add(CcFilesPeer::ID, $fileIds, Criteria::IN);
                     $selectCriteria->addAnd(CcFilesPeer::IS_SCHEDULED, false);
