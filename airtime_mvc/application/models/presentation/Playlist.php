@@ -44,7 +44,7 @@ class Presentation_Playlist {
 		
 		$type = $this->playlist->getClassKey();
 		
-		return $type === PlaylistPeer::CLASSKEY_0 ? true: false;
+		return $type === intval(PlaylistPeer::CLASSKEY_0) ? true: false;
 	}
 	
 	public function getContent() {

@@ -3,6 +3,8 @@
 namespace Airtime\MediaItem;
 
 use \PropelPDO;
+use \Criteria;
+use Airtime\MediaItem\MediaContentQuery;
 
 
 /**
@@ -32,8 +34,6 @@ class PlaylistStatic extends Playlist {
     */
     public function getContents(PropelPDO $con = null) {
     
-    	Logging::enablePropelLogging();
-    
     	$q = MediaContentQuery::create();
     	$m = $q->getModelName();
     
@@ -46,8 +46,6 @@ class PlaylistStatic extends Playlist {
 	    	->joinWith("MediaItem.AudioFile", Criteria::LEFT_JOIN)
 	    	->joinWith("MediaItem.Webstream", Criteria::LEFT_JOIN)
 	    	->find($con);
-    
-    	Logging::disablePropelLogging();
     }
     
     /**
