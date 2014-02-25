@@ -17,7 +17,7 @@
     <?php echo $form->getElement($name); ?>
   </dd>
 
-<?php foreach (array("his_item_starts", "his_item_ends") as $name): ?>
+<?php foreach (array("his_item_".HISTORY_ITEM_STARTS, "his_item_".HISTORY_ITEM_ENDS) as $name): ?>
   <dt id="<?php echo $name;?>-label">
     <label for="<?php echo $name;?>"><?php echo $form->getElement($name)->getLabel() ?></label>
   </dt>

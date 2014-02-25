@@ -488,8 +488,8 @@ var AIRTIME = (function(AIRTIME) {
     	}
     	
     	function initializeDialog() {
-    		var $startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker'),
-    			$endPicker = $hisDialogEl.find('#his_item_ends_datetimepicker');
+    		var $startPicker = $hisDialogEl.find('#his_item_HISTORY_ITEM_STARTS_datetimepicker'),
+    			$endPicker = $hisDialogEl.find('#his_item_HISTORY_ITEM_ENDS_datetimepicker');
     		
         	$startPicker.datetimepicker();
 
@@ -508,7 +508,7 @@ var AIRTIME = (function(AIRTIME) {
     			$el.find("#his_choose_instance").remove();
     		}
     		
-    		return $el
+    		return $el;
     	}
     	
     	function makeHistoryDialog(html) {

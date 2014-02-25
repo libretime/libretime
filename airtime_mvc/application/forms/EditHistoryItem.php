@@ -22,7 +22,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 		$this->addElement($instance);
 		*/
 
-	    $starts = new Zend_Form_Element_Text(self::ID_PREFIX.'starts');
+	    $starts = new Zend_Form_Element_Text(self::ID_PREFIX.HISTORY_ITEM_STARTS);
 	    $starts->setValidators(array(
 	    	new Zend_Validate_Date(self::VALIDATE_DATETIME_FORMAT)
 	    ));
@@ -34,7 +34,7 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	    $starts->setRequired(true);
 	    $this->addElement($starts);
 
-	    $ends = new Zend_Form_Element_Text(self::ID_PREFIX.'ends');
+	    $ends = new Zend_Form_Element_Text(self::ID_PREFIX.HISTORY_ITEM_ENDS);
 	    $ends->setValidators(array(
 	    	new Zend_Validate_Date(self::VALIDATE_DATETIME_FORMAT)
 	    ));

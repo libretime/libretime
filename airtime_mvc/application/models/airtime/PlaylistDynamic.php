@@ -39,5 +39,9 @@ class PlaylistDynamic extends Playlist {
     public function getContents(PropelPDO $con = null) {
     	throw new PropelException("Dynamic playlist does not have content");
     }
+    
+    public function getScheduledContent() {
+    	//TODO generate content based on the saved rules.
+    }
 
 } // PlaylistDynamic
