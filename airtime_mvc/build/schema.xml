@@ -361,6 +361,9 @@
     <index name="audiofile_directory_idx">
       <index-column name="directory"/>
     </index>
+    <index name="audiofile_filepath_idx">
+      <index-column name="filepath"/>
+    </index>
   </table>
   
   <table name="media_webstream" phpName="Webstream" namespace="MediaItem">

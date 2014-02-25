@@ -837,6 +837,11 @@ var AIRTIME = (function(AIRTIME){
             "oColVis": {
                 "aiExclude": [ 0, 1 ],
                 "buttonText": $.i18n._("Show / hide columns"),
+                "fnStateChange": function ( iColumn, bVisible ) {
+                	//row callback doesn't seem to be called anymore, 
+                	//make sure headers and footers don't looks weird.
+                	$(".sb-header, .sb-footer").find("td:gt(1)").hide();
+                }
             },
             
             "oColReorder": {

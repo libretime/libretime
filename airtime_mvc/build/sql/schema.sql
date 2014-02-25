@@ -493,6 +493,8 @@ CREATE TABLE "media_audiofile"
 
 CREATE INDEX "audiofile_directory_idx" ON "media_audiofile" ("directory");
 
+CREATE INDEX "audiofile_filepath_idx" ON "media_audiofile" ("filepath");
+
 -----------------------------------------------------------------------
 -- media_webstream
 -----------------------------------------------------------------------
