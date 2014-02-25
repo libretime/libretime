@@ -63,6 +63,14 @@ CREATE TABLE "cc_show_instances"
     PRIMARY KEY ("id")
 );
 
+CREATE INDEX "show_instance_original_show_idx" ON "cc_show_instances" ("instance_id");
+
+CREATE INDEX "show_instance_starts_idx" ON "cc_show_instances" ("starts");
+
+CREATE INDEX "show_instance_ends_idx" ON "cc_show_instances" ("ends");
+
+CREATE INDEX "show_instance_modified_idx" ON "cc_show_instances" ("modified_instance");
+
 -----------------------------------------------------------------------
 -- cc_show_days
 -----------------------------------------------------------------------
@@ -85,6 +93,8 @@ CREATE TABLE "cc_show_days"
     PRIMARY KEY ("id")
 );
 
+CREATE INDEX "show_days_show_id_idx" ON "cc_show_days" ("show_id");
+
 -----------------------------------------------------------------------
 -- cc_show_rebroadcast
 -----------------------------------------------------------------------
@@ -100,6 +110,8 @@ CREATE TABLE "cc_show_rebroadcast"
     PRIMARY KEY ("id")
 );
 
+CREATE INDEX "rebroadcast_show_id_idx" ON "cc_show_rebroadcast" ("show_id");
+
 -----------------------------------------------------------------------
 -- cc_show_hosts
 -----------------------------------------------------------------------
@@ -113,6 +125,10 @@ CREATE TABLE "cc_show_hosts"
     "subjs_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
+
+CREATE INDEX "hosts_show_id_idx" ON "cc_show_hosts" ("show_id");
+
+CREATE INDEX "hosts_user_id_idx" ON "cc_show_hosts" ("subjs_id");
 
 -----------------------------------------------------------------------
 -- cc_pref
@@ -159,6 +175,12 @@ CREATE TABLE "cc_schedule"
 );
 
 CREATE INDEX "cc_schedule_instance_id_idx" ON "cc_schedule" ("instance_id");
+
+CREATE INDEX "cc_schedule_starts_idx" ON "cc_schedule" ("starts");
+
+CREATE INDEX "cc_schedule_ends_idx" ON "cc_schedule" ("ends");
+
+CREATE INDEX "cc_schedule_playout_status_idx" ON "cc_schedule" ("playout_status");
 
 -----------------------------------------------------------------------
 -- cc_subjs
@@ -468,6 +490,8 @@ CREATE TABLE "media_audiofile"
     "updated_at" TIMESTAMP,
     PRIMARY KEY ("id")
 );
+
+CREATE INDEX "audiofile_directory_idx" ON "media_audiofile" ("directory");
 
 -----------------------------------------------------------------------
 -- media_webstream

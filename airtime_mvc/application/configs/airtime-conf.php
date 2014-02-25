@@ -12,6 +12,14 @@ $conf = array (
         'dsn' => 'pgsql:host=localhost;port=5432;dbname=airtime;user=airtime;password=airtime',
       ),
     ),
+    'airtime_test' => 
+    array (
+      'adapter' => 'pgsql',
+      'connection' => 
+      array (
+        'dsn' => 'pgsql:host=localhost;port=5432;dbname=airtime_test;user=airtime;password=airtime',
+      ),
+    ),
     'default' => 'airtime',
   ),
   'generator_version' => '1.7.0',
