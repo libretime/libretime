@@ -189,9 +189,11 @@ class Application_Service_ShowService
             $daysAdded = array();
 
             if ($this->isUpdate) {
-                $daysAdded = $this->delegateInstanceCleanup($showData);
+                if (!$this->ccShow->getCcShowDayss()->isEmpty()) {
+                    $this->storeOrigLocalShowInfo();
+                }
 
-                $this->storeOrigLocalShowInfo();
+                $daysAdded = $this->delegateInstanceCleanup($showData);
 
                 $this->deleteRebroadcastInstances();
 
