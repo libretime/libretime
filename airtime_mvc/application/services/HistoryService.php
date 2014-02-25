@@ -8,6 +8,7 @@ use Airtime\PlayoutHistory\CcPlayoutHistoryTemplate;
 use Airtime\PlayoutHistory\CcPlayoutHistoryTemplatePeer;
 use Airtime\PlayoutHistory\CcPlayoutHistoryTemplateQuery;
 use Airtime\PlayoutHistory\CcPlayoutHistoryTemplateField;
+use Airtime\PlayoutHistory\CcPlayoutHistoryTemplateFieldPeer;
 
 use Airtime\CcShowHostsQuery;
 use Airtime\CcScheduleQuery;

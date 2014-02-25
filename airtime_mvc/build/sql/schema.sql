@@ -359,6 +359,8 @@ CREATE TABLE "cc_playout_history_metadata"
     PRIMARY KEY ("id")
 );
 
+CREATE INDEX "playout_history_metadata_idx" ON "cc_playout_history_metadata" ("history_id");
+
 -----------------------------------------------------------------------
 -- cc_playout_history_template
 -----------------------------------------------------------------------
@@ -390,6 +392,8 @@ CREATE TABLE "cc_playout_history_template_field"
     "position" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
+
+CREATE INDEX "playout_history_template_field_i" ON "cc_playout_history_template_field" ("template_id");
 
 -----------------------------------------------------------------------
 -- media_item
@@ -465,8 +469,6 @@ CREATE TABLE "media_audiofile"
     PRIMARY KEY ("id")
 );
 
-CREATE INDEX "audio_file_md5_idx" ON "media_audiofile" ("md5");
-
 -----------------------------------------------------------------------
 -- media_webstream
 -----------------------------------------------------------------------
@@ -532,6 +534,10 @@ CREATE TABLE "media_content"
     "fadeout" DECIMAL DEFAULT 0,
     PRIMARY KEY ("id")
 );
+
+CREATE INDEX "media_content_playlist_idx" ON "media_content" ("playlist_id");
+
+CREATE INDEX "media_content_media_idx" ON "media_content" ("media_id");
 
 ALTER TABLE "cc_show_instances" ADD CONSTRAINT "cc_show_fkey"
     FOREIGN KEY ("show_id")

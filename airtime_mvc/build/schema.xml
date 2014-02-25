@@ -246,6 +246,9 @@
     <foreign-key foreignTable="cc_playout_history" name="cc_playout_history_metadata_entry_fkey" onDelete="CASCADE">
       <reference local="history_id" foreign="id"/>
     </foreign-key>
+    <index name="playout_history_metadata_idx">
+      <index-column name="history_id"/>
+    </index>
   </table>
   <table name="cc_playout_history_template" phpName="CcPlayoutHistoryTemplate" namespace="PlayoutHistory">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
@@ -263,6 +266,9 @@
     <foreign-key foreignTable="cc_playout_history_template" name="cc_playout_history_template_template_fkey" onDelete="CASCADE">
       <reference local="template_id" foreign="id"/>
     </foreign-key>
+    <index name="playout_history_template_field_idx">
+      <index-column name="template_id"/>
+    </index>
   </table>
   
   <table name="media_item" phpName="MediaItem">
@@ -318,9 +324,6 @@
     <foreign-key foreignTable="cc_music_dirs" name="audio_file_music_dir_fkey">
       <reference local="directory" foreign="id"/>
     </foreign-key>
-    <index name="audio_file_md5_idx">
-      <index-column name="md5"/>
-    </index>
   </table>
   
   <table name="media_webstream" phpName="Webstream" namespace="MediaItem">
@@ -355,6 +358,12 @@
     <foreign-key foreignTable="media_item" name="media_content_media_fkey" onDelete="CASCADE">
       <reference local="media_id" foreign="id"/>
     </foreign-key>
+    <index name="media_content_playlist_idx">
+      <index-column name="playlist_id"/>
+    </index>
+    <index name="media_content_media_idx">
+      <index-column name="media_id"/>
+    </index>
   </table>
   
 </database>
