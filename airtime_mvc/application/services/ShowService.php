@@ -220,6 +220,13 @@ class Application_Service_ShowService
             $this->delegateInstanceCreation($daysAdded);
 
             if ($this->isUpdate) {
+                /* Set the show's start date to the start date of the first instance.
+                 * We need to do this so we get the correct time diff for
+                 * updating show content. CC-5696
+                 */
+                $showData["add_show_start_date"] = $this->ccShow->getFirstCcShowDay()->getDbFirstShow();
+                $showData["add_show_start_time"] = $this->ccShow->getFirstCcShowDay()->getDbStartTime();
+
                 $this->adjustSchedule($showData);
             }
 
