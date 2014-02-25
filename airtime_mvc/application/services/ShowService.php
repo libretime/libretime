@@ -201,6 +201,8 @@ class Application_Service_ShowService
                     //delete entry in cc_show_rebroadcast
                     $this->deleteCcShowRebroadcasts();
                 }
+
+                $this->storeInstanceIds();
             }
 
             //update ccShowDays
@@ -226,6 +228,21 @@ class Application_Service_ShowService
             $this->isUpdate ? $action = "update" : $action = "creation";
             Logging::info("EXCEPTION: Show ".$action." failed.");
             Logging::info($e->getMessage());
+        }
+    }
+
+    /**
+     * 
+     * Returns an array of instance ids that already exist
+     * We need this if a show is being updated so we can separate the 
+     * instances that already exist and any new instances that
+     * get created (by adding a new repeat show day)
+     */
+    private function storeInstanceIds()
+    {
+        $instances = $this->ccShow->getCcShowInstancess();
+        foreach ($instances as $instance) {
+            $this->instanceIdsForScheduleUpdates[] = $instance->getDbId();
         }
     }
 
@@ -271,7 +288,6 @@ class Application_Service_ShowService
         $ccShows = array();
 
         foreach ($ccShowDays as $day) {
-            $this->instanceIdsForScheduleUpdates = array();
 
             $this->ccShow = $day->getCcShow();
             $this->isRecorded = $this->ccShow->isRecorded();
@@ -1067,12 +1083,6 @@ SQL;
                         $ccShowInstance = $this->getInstance($utcStartDateTime);
                         $newInstance = false;
                         $updateScheduleStatus = true;
-                        /* Keep track of which instances in the cc_show are being
-                         * updated. We are not interested in which instances are
-                         * new because we won't need to update the scheduled content
-                         * for those shows
-                         */
-                        array_push($this->instanceIdsForScheduleUpdates, $ccShowInstance->getDbId());
                     } else {
                         $newInstance = true;
                         $ccShowInstance = new CcShowInstances();
