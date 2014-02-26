@@ -73,16 +73,23 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
     } // setRules()
     
     
-    public function savePlaylistContent($content)
+    public function savePlaylistContent($content, $replace=false)
     {
     	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
 		$con->beginTransaction();
 		
 		try {
 			
-			$position = 0;
 			$m = array();
-			$this->getMediaContents(null, $con)->delete($con);
+			$currentContent = $this->getMediaContents(null, $con);
+			
+			if ($replace) {
+				$currentContent->delete($con);
+				$position = 0;
+			}
+			else {
+				$position = count($currentContent);
+			}
 			
 			foreach ($content as $item) {
 				

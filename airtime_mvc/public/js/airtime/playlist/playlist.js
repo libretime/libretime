@@ -117,7 +117,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		info["name"] = cleanString($("#playlist_name").text());
 		info["description"] = cleanString($("#playlist_description").val());
-		info["contents"] = entries;
+		info["content"] = entries;
 		
 		info["rules"] = {
 			"repeat-tracks": $("#rule_repeat_tracks").find("input:checkbox").is(":checked"),
@@ -269,12 +269,10 @@ var AIRTIME = (function(AIRTIME){
 			return {"id": value};
 		});
 		
-		var url = baseUrl+"playlist/save",
+		var url = baseUrl+"playlist/add-items",
 			data = {
 				format: "json",
-				serialized: {
-					content: content
-				}
+				content: content
 			};
 		
 		$.post(url, data, function(json) {

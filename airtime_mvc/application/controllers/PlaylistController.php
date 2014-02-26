@@ -111,6 +111,20 @@ class PlaylistController extends Zend_Controller_Action
     	}
     }
     
+    public function addItemsAction()
+    {
+    	$content = $this->_getParam('content');
+    	
+    	try {
+    		$playlist = $this->getPlaylist();
+    		$playlist->savePlaylistContent($content);
+    		$this->createUpdateResponse($playlist);
+    	}
+    	catch (Exception $e) {
+    		$this->view->error = $e->getMessage();
+    	}
+    }
+    
     public function saveAction()
     {
     	$info = $this->_getParam('serialized');
@@ -133,7 +147,7 @@ class PlaylistController extends Zend_Controller_Action
     		}
     		
     		if (isset($info["content"])) {
-    			$playlist->savePlaylistContent($info["content"]);
+    			$playlist->savePlaylistContent($info["content"], true);
     		}
 
     		$this->createUpdateResponse($playlist);
