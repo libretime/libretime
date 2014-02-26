@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\MediaItem\Playlist;
+
 use Airtime\MediaItem\PlaylistPeer;
 
 class Presentation_Playlist {
@@ -54,12 +56,15 @@ class Presentation_Playlist {
 	
 	public function getRules() {
 		
-		$rules = new Application_Form_PlaylistRules();
+		$form = new Application_Form_PlaylistRules();
 		
-		$rules->populate(array(
-			//"pl_type" => $this->playlist->getType()		
+		$rules = $this->playlist->getRules();
+		
+		$form->populate(array(
+			"pl_repeat_tracks" => $rules[Playlist::RULE_REPEAT_TRACKS],
+			"pl_my_tracks" => $rules[Playlist::RULE_USERS_TRACKS_ONLY]	
 		));
 		
-		return $rules;
+		return $form;
 	}
 }

@@ -265,10 +265,16 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.addItems = function(mediaIds) {
 		
-		var url = baseUrl+"playlist/add-items",
+		var content = $.map(mediaIds, function(value, index) {
+			return {"id": value};
+		});
+		
+		var url = baseUrl+"playlist/save",
 			data = {
 				format: "json",
-				ids: mediaIds
+				serialized: {
+					content: content
+				}
 			};
 		
 		$.post(url, data, function(json) {

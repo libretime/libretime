@@ -39,38 +39,36 @@ class Application_Form_PlaylistRules extends Zend_Form
 	
 	private function getCriteriaOptions($option = null)
     {
-        if (!isset($this->criteriaOptions)) {
-            $this->criteriaOptions = array(
-                ""             => _("Select criteria"),
-                "album_title"  => _("Album"),
-                "bit_rate"     => _("Bit Rate (Kbps)"),
-                "bpm"          => _("BPM"),
-                "composer"     => _("Composer"),
-                "conductor"    => _("Conductor"),
-                "copyright"    => _("Copyright"),
-                "cuein"        => _("Cue In"),
-                "cueout"       => _("Cue Out"),
-                "artist_name"  => _("Creator"),
-                "encoded_by"   => _("Encoded By"),
-                "genre"        => _("Genre"),
-                "isrc_number"  => _("ISRC"),
-                "label"        => _("Label"),
-                "language"     => _("Language"),
-                "mtime"        => _("Last Modified"),
-                "lptime"       => _("Last Played"),
-                "length"       => _("Length"),
-                "mime"         => _("Mime"),
-                "mood"         => _("Mood"),
-                "owner_id"     => _("Owner"),
-                "replay_gain"  => _("Replay Gain"),
-                "sample_rate"  => _("Sample Rate (kHz)"),
-                "track_title"  => _("Title"),
-                "track_number" => _("Track Number"),
-                "utime"        => _("Uploaded"),
-                "info_url"     => _("Website"),
-                "year"         => _("Year")
-            );
-        }
+		$this->criteriaOptions = array(
+        	""             => _("Select criteria"),
+            "album_title"  => _("Album"),
+            "bit_rate"     => _("Bit Rate (Kbps)"),
+            "bpm"          => _("BPM"),
+            "composer"     => _("Composer"),
+            "conductor"    => _("Conductor"),
+            "copyright"    => _("Copyright"),
+            "cuein"        => _("Cue In"),
+            "cueout"       => _("Cue Out"),
+            "artist_name"  => _("Creator"),
+            "encoded_by"   => _("Encoded By"),
+            "genre"        => _("Genre"),
+            "isrc_number"  => _("ISRC"),
+            "label"        => _("Label"),
+            "language"     => _("Language"),
+            "mtime"        => _("Last Modified"),
+            "lptime"       => _("Last Played"),
+            "length"       => _("Length"),
+            "mime"         => _("Mime"),
+            "mood"         => _("Mood"),
+            "owner_id"     => _("Owner"),
+            "replay_gain"  => _("Replay Gain"),
+            "sample_rate"  => _("Sample Rate (kHz)"),
+            "track_title"  => _("Title"),
+            "track_number" => _("Track Number"),
+            "utime"        => _("Uploaded"),
+            "info_url"     => _("Website"),
+            "year"         => _("Year")
+        );
 
         if (is_null($option)) {
         	return $this->criteriaOptions;

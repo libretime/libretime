@@ -26,6 +26,11 @@ class PlaylistDynamic extends Playlist {
         $this->setClassKey(PlaylistPeer::CLASSKEY_1);
     }
     
+    public function buildContentItem($mediaId, $position, $cuein=null, $cueout=null, $fadein=null, $fadeout=null)
+    {
+    	throw new PropelException("Dynamic playlist does not have content");
+    }
+    
     //TODO get this based on the rule.
     public function getLength()
     {
@@ -42,6 +47,18 @@ class PlaylistDynamic extends Playlist {
     
     public function getScheduledContent() {
     	//TODO generate content based on the saved rules.
+    }
+    
+    public function generate() {
+    	throw new PropelException("Cannot generate a dynamic playlist");
+    }
+    
+    public function shuffle() {
+    	throw new PropelException("Cannot shuffle a dynamic playlist");
+    }
+    
+    public function clear() {
+    	throw new PropelException("Cannot clear a dynamic playlist");
     }
 
 } // PlaylistDynamic

@@ -2,6 +2,8 @@
 
 namespace Airtime\MediaItem;
 
+use Airtime\MediaItemQuery;
+
 use \PropelPDO;
 use \Criteria;
 use Airtime\MediaItem\MediaContentQuery;
@@ -27,6 +29,35 @@ class PlaylistStatic extends Playlist {
     {
         parent::__construct();
         $this->setClassKey(PlaylistPeer::CLASSKEY_0);
+    }
+    
+    public function buildContentItem($mediaItem, $position, $cuein=null, $cueout=null, $fadein=null, $fadeout=null) {
+    	$item = new MediaContent();
+    	$defaultCrossfade = \Application_Model_Preference::GetDefaultCrossfadeDuration();
+    	
+    	$cue = (isset($cuein)) ? $cuein : $mediaItem->getSchedulingCueIn();
+    	$item->setCuein($cue);
+    	
+    	$cue = (isset($cueout)) ? $cueout : $mediaItem->getSchedulingCueOut();
+    	$item->setCueout($cue);
+
+    	$fade = (isset($fadein)) ? $fadein : $mediaItem->getSchedulingFadeIn();
+    	$item->setFadein($fade);
+    
+    	$fade = (isset($fadeout)) ? $fadeout : $mediaItem->getSchedulingFadeOut();
+    	$item->setFadeout($fade);
+    
+    	$item->generateCliplength();
+    
+    	//need trackoffset to be zero for the first item.
+    	if ($position !== 0) {
+    		$item->setTrackOffset($defaultCrossfade);
+    	}
+    
+    	$item->setMediaItem($mediaItem);
+    	$item->setPosition($position);
+    
+    	return $item;
     }
 
     /*
@@ -130,6 +161,63 @@ class PlaylistStatic extends Playlist {
     	}
     
     	return $items;
+    }
+    
+    public function generate() {
+    	
+    }
+    
+    public function shuffle() {
+    	
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	$con->beginTransaction();
+    	
+    	try {
+    		$contents = $this->getMediaContents(null, $con);
+    		$count = count($contents);
+    		$order = array();
+    			
+    		for ($i = 0; $i < $count; $i++) {
+    			$order[] = $i;
+    		}
+    		shuffle($order);
+    			
+    		$i = 0;
+    		foreach ($contents as $content) {
+    			$content->setPosition($order[$i]);
+    			$i++;
+    		}
+    			
+    		$this->setMediaContents($contents, $con);
+    		$this->save($con);
+    	
+    		$con->commit();
+    	}
+    	catch (Exception $e) {
+    		$con->rollBack();
+    		Logging::error($e->getMessage());
+    		throw $e;
+    	}
+    }
+    
+    public function clear() {
+    	
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	$con->beginTransaction();
+    	
+    	try {
+    		MediaContentQuery::create(null, $con)
+	    		->filterByPlaylist($this)
+	    		->delete($con);
+    			
+    		$this->save($con);
+    		$con->commit();
+    	}
+    	catch (Exception $e) {
+    		$con->rollBack();
+    		Logging::error($e->getMessage());
+    		throw $e;
+    	}
     }
     
 } // PlaylistStatic

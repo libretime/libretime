@@ -2,14 +2,15 @@
 
 namespace Airtime\MediaItem;
 
+use Airtime\MediaItemQuery;
+
 use Airtime\MediaItem\om\BasePlaylist;
 use \Criteria;
 use \PropelPDO;
 use \Exception;
 use \Logging;
+use \Propel;
 
-const RULE_REPEAT_TRACKS = "repeat-tracks";
-const RULE_USERS_TRACKS_ONLY = "owners-tracks";
 
 /**
  * Skeleton subclass for representing a row from the 'playlist' table.
@@ -24,6 +25,9 @@ const RULE_USERS_TRACKS_ONLY = "owners-tracks";
  */
 abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 {
+	const RULE_REPEAT_TRACKS = 0;
+	const RULE_USERS_TRACKS_ONLY = 1;
+	
 	public function applyDefaultValues() {
 		parent::applyDefaultValues();
 
@@ -31,8 +35,8 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 		$this->modifiedColumns[] = PlaylistPeer::NAME;
 		
 		$defaultRules = array(
-			RULE_REPEAT_TRACKS => true,
-			RULE_USERS_TRACKS_ONLY => false
+			self::RULE_REPEAT_TRACKS => true,
+			self::RULE_USERS_TRACKS_ONLY => false
 		);
 		
 		$this->setRules($defaultRules);
@@ -47,7 +51,7 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
     {
     	$rules = parent::getRules();
     
-    	return json_decode($rules);
+    	return json_decode($rules, true);
     }
     
     /**
@@ -67,4 +71,56 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
     
     	return $this;
     } // setRules()
+    
+    
+    public function savePlaylistContent($content)
+    {
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+		$con->beginTransaction();
+		
+		try {
+			
+			$position = 0;
+			$m = array();
+			$this->getMediaContents(null, $con)->delete($con);
+			
+			foreach ($content as $item) {
+				
+				$mediaId = $item["id"];
+				$cuein = isset($item["cuein"]) ? $item["cuein"] : null;
+				$cueout = isset($item["cueout"]) ? $item["cueout"] : null;
+				$fadein = isset($item["fadein"]) ? $item["fadein"] : null;
+				$fadeout = isset($item["fadeout"]) ? $item["fadeout"] : null;
+				
+				$mediaItem = MediaItemQuery::create()->findPK($mediaId, $con);
+				$mediaContent = $this->buildContentItem($mediaItem, $position, $cuein, $cueout, $fadein, $fadeout);
+				$mediaContent->setPlaylist($this);
+				
+				$res = $mediaContent->validate();
+				if ($res === true) {
+					$m[] = $mediaContent;
+				}
+				else {
+					Logging::info($res);
+					throw new Exception("invalid media content");
+				}
+				
+				$position++;
+				
+				//save each content item in the transaction
+				//first so that Playlist preSave can calculate
+				//the new playlist length properly.
+				$mediaContent->save($con);
+			}
+			
+			$this->save($con);
+			
+			$con->commit();
+		}
+		catch (Exception $e) {
+			$con->rollBack();
+			Logging::error($e->getMessage());
+			throw $e;
+		}
+    }
 }
