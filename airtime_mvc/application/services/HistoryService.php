@@ -947,17 +947,17 @@ class Application_Service_HistoryService
 		    $timezoneUTC = new DateTimeZone("UTC");
 		    $timezoneLocal = new DateTimeZone($this->timezone);
 
-	    	$dateTime = new DateTime($values[$prefix."starts"], $timezoneLocal);
+	    	$dateTime = new DateTime($values[$prefix.HISTORY_ITEM_STARTS], $timezoneLocal);
 	    	$dateTime->setTimezone($timezoneUTC);
 	    	$historyRecord->setDbStarts($dateTime->format("Y-m-d H:i:s"));
 
-	    	$dateTime = new DateTime($values[$prefix."ends"], $timezoneLocal);
+	    	$dateTime = new DateTime($values[$prefix.HISTORY_ITEM_ENDS], $timezoneLocal);
 	    	$dateTime->setTimezone($timezoneUTC);
 	    	$historyRecord->setDbEnds($dateTime->format("Y-m-d H:i:s"));
 
 	    	$templateValues = $values[$prefix."template"];
 
-	    	$file = $historyRecord->getCcFiles();
+	    	$file = $historyRecord->getMediaItem($this->con);
 
 	    	$md = array();
 	    	$metadata = array();
@@ -975,22 +975,9 @@ class Application_Service_HistoryService
 	    	    	continue;
 	    	    }
 
-	    	    $isFileMd = $field["isFileMd"];
 	    	    $entry = $phpCasts[$field["type"]]($templateValues[$prefix.$key]);
-
-	    	    if ($isFileMd && isset($file)) {
-	    	        Logging::info("adding metadata associated to a file for {$key} = {$entry}");
-	    	        $md[$key] = $entry;
-	    	    }
-	    	    else {
-	    	    	Logging::info("adding metadata for {$key} = {$entry}");
-                    $metadata[$key] = $entry;
-	    	    }
-	    	}
-
-	    	if (count($md) > 0) {
-	    		$f = Application_Model_StoredFile::createWithFile($file, $this->con);
-	    		$f->setDbColMetadata($md);
+	    	    Logging::info("adding metadata for {$key} = {$entry}");
+                $metadata[$key] = $entry;
 	    	}
 
 	    	//Use this array to update existing values.
@@ -1042,22 +1029,11 @@ class Application_Service_HistoryService
 
 	private function validateHistoryItem($instanceId, $form) {
 
-	    /*
-	    $userService = new Application_Service_UserService();
-	    $currentUser = $userService->getCurrentUser();
-
-	    if (!$currentUser->isAdminOrPM()) {
-	        if (empty($instance_id) ) {
-
-	        }
-	    }
-	    */
-
 	    $valid = true;
 
-	    $recordStartsEl = $form->getElement("his_item_starts");
+	    $recordStartsEl = $form->getElement("his_item_".HISTORY_ITEM_STARTS);
 	    $recordStarts = $recordStartsEl->getValue();
-	    $recordEndsEl = $form->getElement("his_item_starts");
+	    $recordEndsEl = $form->getElement("his_item_".HISTORY_ITEM_ENDS);
 	    $recordEnds = $recordEndsEl->getValue();
 
 	    $timezoneLocal = new DateTimeZone($this->timezone);

@@ -8,6 +8,9 @@ var AIRTIME = (function(AIRTIME) {
     
     var $historyContentDiv;
     
+    var historyStartsDatetimeId = "his_item_HISTORY_ITEM_STARTS_datetimepicker";
+    var historyEndsDatetimeId = "his_item_HISTORY_ITEM_ENDS_datetimepicker";
+    
     var oTableTools = {
         "sSwfPath": baseUrl+"js/datatables/plugin/TableTools-2.1.5/swf/copy_csv_xls_pdf.swf",
         "aButtons": [
@@ -488,8 +491,8 @@ var AIRTIME = (function(AIRTIME) {
     	}
     	
     	function initializeDialog() {
-    		var $startPicker = $hisDialogEl.find('#his_item_HISTORY_ITEM_STARTS_datetimepicker'),
-    			$endPicker = $hisDialogEl.find('#his_item_HISTORY_ITEM_ENDS_datetimepicker');
+    		var $startPicker = $hisDialogEl.find('#'+historyStartsDatetimeId),
+    			$endPicker = $hisDialogEl.find('#'+historyEndsDatetimeId);
     		
         	$startPicker.datetimepicker();
 
@@ -667,8 +670,8 @@ var AIRTIME = (function(AIRTIME) {
     	});
     	
     	$('body').on("click", "#his_instance_retrieve", function(e) {
-    		var startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker').data('datetimepicker'),
-				endPicker = $hisDialogEl.find('#his_item_ends_datetimepicker').data('datetimepicker'),
+    		var startPicker = $hisDialogEl.find('#'+historyStartsDatetimeId).data('datetimepicker'),
+				endPicker = $hisDialogEl.find('#'+historyEndsDatetimeId).data('datetimepicker'),
 				url = baseUrl+"playouthistory/show-history-feed",
 				startDate = startPicker.getLocalDate(),
 				endDate = endPicker.getLocalDate(),
