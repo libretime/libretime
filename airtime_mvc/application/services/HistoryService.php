@@ -1,5 +1,7 @@
 <?php
 
+use Airtime\MediaItem\AudioFileQuery;
+
 use Airtime\PlayoutHistory\CcPlayoutHistory;
 use Airtime\PlayoutHistory\CcPlayoutHistoryPeer;
 use Airtime\PlayoutHistory\CcPlayoutHistoryQuery;
@@ -861,8 +863,8 @@ class Application_Service_HistoryService
 			$required = $this->mandatoryFileFields();
 			$form->createFromTemplate($template["fields"], $required);
 
-		    $file = Application_Model_StoredFile::RecallById($id, $this->con);
-		    $md = $file->getDbColMetadata();
+		    $file = AudioFileQuery::create()->findPK($id, $this->con);
+		    $md = $file->getMetadata();
 
 		    $prefix = Application_Form_EditHistoryFile::ID_PREFIX;
 		    $formValues = array();
@@ -896,7 +898,7 @@ class Application_Service_HistoryService
 
 		try {
 
-			$file = Application_Model_StoredFile::RecallById($id, $this->con);
+			$file = AudioFileQuery::create()->findPk($id, $this->con);
 
 			$prefix = Application_Form_EditHistoryFile::ID_PREFIX;
 			$prefix_len = strlen($prefix);
@@ -909,8 +911,12 @@ class Application_Service_HistoryService
 				$key = substr($index, $prefix_len);
 				$md[$key] = $value;
 			}
+			
+			Logging::info($md);
 
-			$file->setDbColMetadata($md);
+			$file->setMetadata($md);
+			$file->save($this->con);
+			
 			$this->con->commit();
 		}
 		catch (Exception $e) {
@@ -1304,7 +1310,7 @@ class Application_Service_HistoryService
 		$fields[] = array("name" => MDATA_KEY_TITLE, "label"=> _("Title"), "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "label"=> _("Creator"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 
-		$template["name"] = "Log Sheet ".date("Y-m-d H:i:s")." Template";
+		$template["name"] = "Log Sheet ".gmdate("c")." Template";
 		$template["fields"] = $fields;
 
 		return $template;
@@ -1325,7 +1331,7 @@ class Application_Service_HistoryService
 		$fields[] = array("name" => MDATA_KEY_COMPOSER, "label"=> _("Composer"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 		$fields[] = array("name" => MDATA_KEY_COPYRIGHT, "label"=> _("Copyright"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 
-		$template["name"] = "File Summary ".date("Y-m-d H:i:s")." Template";
+		$template["name"] = "File Summary ".gmdate("c")." Template";
 		$template["fields"] = $fields;
 
 		return $template;

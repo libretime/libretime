@@ -299,7 +299,7 @@ var AIRTIME = (function(AIRTIME) {
         	fnRowCallback;
 
         fnRowCallback = function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-        	var editUrl = baseUrl+"playouthistory/edit-file-item/id/"+aData.file_id,
+        	var editUrl = baseUrl+"playouthistory/edit-file-item/id/"+aData.media_id,
         		$nRow = $(nRow);
         		
         	$nRow.data('url-edit', editUrl);
@@ -521,9 +521,11 @@ var AIRTIME = (function(AIRTIME) {
     	        open: function( event, ui ) {
     	        	initializeDialog();	
     	        },
-    	        close: function() {
-    	        	removeHistoryDialog();
-    	        }
+    	        close: removeHistoryDialog
+    	       // buttons: [
+	  			//	{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
+	  			//	{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
+	  			//]
     	    });
     	}
     	

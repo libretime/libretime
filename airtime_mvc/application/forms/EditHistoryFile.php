@@ -18,5 +18,13 @@ class Application_Form_EditHistoryFile extends Application_Form_EditHistory
 	public function createFromTemplate($template, $required) {
 	
 		parent::createFromTemplate($template, $required);
+		
+		$templateSubForm = $this->getTemplateSubForm();
+		
+		//slightly hacky, but just need to check length for now.
+		$el = $templateSubForm->getElement(self::ID_PREFIX.MDATA_KEY_DURATION);
+		if (isset($el)) {
+			$el->setAttrib("readonly", true);
+		}
 	}
 }

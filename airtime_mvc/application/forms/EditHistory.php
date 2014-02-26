@@ -144,10 +144,14 @@ class Application_Form_EditHistory extends Zend_Form
 			)
 		));
 	}
+	
+	protected function getTemplateSubForm() {
+		return $this->getSubForm($this::ID_PREFIX.'template');
+	}
 
 	public function createFromTemplate($template, $required) {
 
-		$templateSubForm = $this->getSubForm($this::ID_PREFIX.'template');
+		$templateSubForm = self::getTemplateSubForm();
 
 		for ($i = 0, $len = count($template); $i < $len; $i++) {
 
