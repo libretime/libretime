@@ -548,7 +548,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
      * the show's first instance start date, updates the scheduled content
      * correctly
      */
-    public function testRemoveFirstRepeatShowDayUpdatesScheduleCorrectly()
+    /*public function testRemoveFirstRepeatShowDayUpdatesScheduleCorrectly()
     {
         TestHelper::loginUser();
 
@@ -597,5 +597,5 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService->addUpdateShow($data);
 
         
-    }
+    }*/
 }
