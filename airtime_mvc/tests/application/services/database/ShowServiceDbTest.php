@@ -542,4 +542,60 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
             $ds
         );
     }
+
+    /**
+     * Tests that when you remove the first repeat show day, which changes
+     * the show's first instance start date, updates the scheduled content
+     * correctly
+     */
+    public function testRemoveFirstRepeatShowDayUpdatesScheduleCorrectly()
+    {
+        TestHelper::loginUser();
+
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
+        $data["add_show_day_check"] = array(3,4);
+        $data["add_show_linked"] = 1;
+        $showService = new Application_Service_ShowService(null, $data);
+        $showService->addUpdateShow($data);
+
+        //insert some fake tracks into cc_schedule table
+        $scheduleItems = array(
+            0 => array(
+                "id" => 0,
+                "instance" => 1
+            )
+        );
+        $mediaItems = array(
+            0 => array(
+                "id" => 1,
+                "cliplength" => "00:04:32",
+                "cuein" => "00:00:00",
+                "cueout" => "00:04:32",
+                "fadein" => 00.5,
+                "fadeout" => 00.5,
+                "sched_id" => null,
+                "type" => 0
+            ),
+            1 => array(
+                "id" => 2,
+                "cliplength" => "00:03:21",
+                "cuein" => "00:00:00",
+                "cueout" => "00:03:21",
+                "fadein" => 00.5,
+                "fadeout" => 00.5,
+                "sched_id" => null,
+                "type" => 0
+            )
+        );
+        $scheduler = new Application_Model_Scheduler();
+        $scheduler->scheduleAfter($scheduleItems, $mediaItems);
+
+        //delete the first repeat day
+        $data["add_show_day_check"] = array(4);
+        $data["add_show_id"] = 1;
+        $showService = new Application_Service_ShowService(null, $data, true);
+        $showService->addUpdateShow($data);
+
+        
+    }
 }
