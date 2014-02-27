@@ -44,15 +44,15 @@
         <column>show_id</column>
         <column>record</column>
         <row>
-            <value>1</value>
-            <value>2016-01-01</value>
+            <value>2</value>
+            <value>2016-01-30</value>
             <null />
             <value>00:00:00</value>
             <value>UTC</value>
             <value>01:00</value>
-            <value>5</value>
+            <value>6</value>
             <value>0</value>
-            <value>2016-02-12</value>
+            <value>2016-02-13</value>
             <value>1</value>
             <value>0</value>
         </row>
@@ -68,29 +68,9 @@
         <column>instance_id</column>
         <column>modified_instance</column>
         <row>
-            <value>1</value>
-            <value>2016-01-01 00:00:00</value>
-            <value>2016-01-01 01:00:00</value>
-            <value>1</value>
-            <value>0</value>
-            <value>0</value>
-            <null />
-            <value></value>
-        </row>
-        <row>
-            <value>2</value>
-            <value>2016-01-08 00:00:00</value>
-            <value>2016-01-08 01:00:00</value>
-            <value>1</value>
-            <value>0</value>
-            <value>0</value>
-            <null />
-            <value></value>
-        </row>
-        <row>
             <value>3</value>
-            <value>2016-01-15 00:00:00</value>
-            <value>2016-01-15 01:00:00</value>
+            <value>2016-01-30 00:00:00</value>
+            <value>2016-01-30 01:00:00</value>
             <value>1</value>
             <value>0</value>
             <value>0</value>
@@ -99,28 +79,8 @@
         </row>
         <row>
             <value>4</value>
-            <value>2016-01-22 00:00:00</value>
-            <value>2016-01-22 01:00:00</value>
-            <value>1</value>
-            <value>0</value>
-            <value>0</value>
-            <null />
-            <value></value>
-        </row>
-        <row>
-            <value>5</value>
-            <value>2016-01-29 00:00:00</value>
-            <value>2016-01-29 01:00:00</value>
-            <value>1</value>
-            <value>0</value>
-            <value>0</value>
-            <null />
-            <value></value>
-        </row>
-        <row>
-            <value>6</value>
-            <value>2016-02-05 00:00:00</value>
-            <value>2016-02-05 01:00:00</value>
+            <value>2016-02-06 00:00:00</value>
+            <value>2016-02-06 01:00:00</value>
             <value>1</value>
             <value>0</value>
             <value>0</value>
@@ -133,5 +93,45 @@
     </table>
 
     <table name="cc_show_hosts">
+    </table>
+
+    <table name="cc_schedule">
+        <column>id</column>
+        <column>starts</column>
+        <column>ends</column>
+        <column>file_id</column>
+        <column>clip_length</column>
+        <column>fade_in</column>
+        <column>fade_out</column>
+        <column>cue_in</column>
+        <column>cue_out</column>
+        <column>instance_id</column>
+        <column>playout_status</column>
+        <row>
+            <value>3</value>
+            <value>2016-01-30 00:00:00</value>
+            <value>2016-01-30 00:04:32</value>
+            <value>1</value>
+            <value>00:04:32</value>
+            <value>00:00:00.5</value>
+            <value>00:00:00.5</value>
+            <value>00:00:00</value>
+            <value>00:04:32</value>
+            <value>3</value>
+            <value>1</value>
+        </row>
+        <row>
+            <value>4</value>
+            <value>2016-02-06 00:00:00</value>
+            <value>2016-02-06 00:04:32</value>
+            <value>1</value>
+            <value>00:04:32</value>
+            <value>00:00:00.5</value>
+            <value>00:00:00.5</value>
+            <value>00:00:00</value>
+            <value>00:04:32</value>
+            <value>4</value>
+            <value>1</value>
+        </row>
     </table>
 </dataset>
