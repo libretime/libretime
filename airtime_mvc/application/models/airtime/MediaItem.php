@@ -72,11 +72,6 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 		return array_pop($a);
 	}
 	
-	public function getCreator() {
-		$obj = $this->getChildObject();
-		return $obj->getCreator();
-	}
-	
 	public function getURI() {
 		$obj = $this->getChildObject();
 		return $obj->getURI();
@@ -95,8 +90,8 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 			"id" => $obj->getId(),
 			"cuein" => $obj->getSchedulingCueIn(),
 			"cueout" => $obj->getSchedulingCueOut(),
-			//"fadein" => $obj->getSchedulingFadeIn(),
-			//"fadeout" => $obj->getSchedulingFadeOut(),
+			"fadein" => $obj->getSchedulingFadeIn(),
+			"fadeout" => $obj->getSchedulingFadeOut(),
 			"length" => $obj->getSchedulingLength(),
 			//"crossfadeDuration" => 0
 		);	

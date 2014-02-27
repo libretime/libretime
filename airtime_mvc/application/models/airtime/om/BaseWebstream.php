@@ -67,6 +67,18 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     protected $name;
 
     /**
+     * The value for the creator field.
+     * @var        string
+     */
+    protected $creator;
+
+    /**
+     * The value for the source field.
+     * @var        string
+     */
+    protected $source;
+
+    /**
      * The value for the owner_id field.
      * @var        int
      */
@@ -199,6 +211,28 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
 
         return $this->name;
+    }
+
+    /**
+     * Get the [creator] column value.
+     *
+     * @return string
+     */
+    public function getCreator()
+    {
+
+        return $this->creator;
+    }
+
+    /**
+     * Get the [source] column value.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+
+        return $this->source;
     }
 
     /**
@@ -429,6 +463,48 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     } // setName()
 
     /**
+     * Set the value of [creator] column.
+     *
+     * @param  string $v new value
+     * @return Webstream The current object (for fluent API support)
+     */
+    public function setCreator($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->creator !== $v) {
+            $this->creator = $v;
+            $this->modifiedColumns[] = WebstreamPeer::CREATOR;
+        }
+
+
+        return $this;
+    } // setCreator()
+
+    /**
+     * Set the value of [source] column.
+     *
+     * @param  string $v new value
+     * @return Webstream The current object (for fluent API support)
+     */
+    public function setSource($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->source !== $v) {
+            $this->source = $v;
+            $this->modifiedColumns[] = WebstreamPeer::SOURCE;
+        }
+
+
+        return $this;
+    } // setSource()
+
+    /**
      * Set the value of [owner_id] column.
      *
      * @param  int $v new value
@@ -649,14 +725,16 @@ abstract class BaseWebstream extends MediaItem implements Persistent
             $this->url = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
             $this->id = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
             $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->owner_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-            $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->last_played = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->play_count = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-            $this->length = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->mime = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->created_at = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->updated_at = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->creator = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->source = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->owner_id = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+            $this->description = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->last_played = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->play_count = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+            $this->length = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->mime = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->created_at = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->updated_at = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -666,7 +744,7 @@ abstract class BaseWebstream extends MediaItem implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 11; // 11 = WebstreamPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = WebstreamPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Webstream object", $e);
@@ -929,6 +1007,12 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         if ($this->isColumnModified(WebstreamPeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = '"name"';
         }
+        if ($this->isColumnModified(WebstreamPeer::CREATOR)) {
+            $modifiedColumns[':p' . $index++]  = '"creator"';
+        }
+        if ($this->isColumnModified(WebstreamPeer::SOURCE)) {
+            $modifiedColumns[':p' . $index++]  = '"source"';
+        }
         if ($this->isColumnModified(WebstreamPeer::OWNER_ID)) {
             $modifiedColumns[':p' . $index++]  = '"owner_id"';
         }
@@ -972,6 +1056,12 @@ abstract class BaseWebstream extends MediaItem implements Persistent
                         break;
                     case '"name"':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '"creator"':
+                        $stmt->bindValue($identifier, $this->creator, PDO::PARAM_STR);
+                        break;
+                    case '"source"':
+                        $stmt->bindValue($identifier, $this->source, PDO::PARAM_STR);
                         break;
                     case '"owner_id"':
                         $stmt->bindValue($identifier, $this->owner_id, PDO::PARAM_INT);
@@ -1152,27 +1242,33 @@ abstract class BaseWebstream extends MediaItem implements Persistent
                 return $this->getName();
                 break;
             case 3:
-                return $this->getOwnerId();
+                return $this->getCreator();
                 break;
             case 4:
-                return $this->getDescription();
+                return $this->getSource();
                 break;
             case 5:
-                return $this->getLastPlayedTime();
+                return $this->getOwnerId();
                 break;
             case 6:
-                return $this->getPlayCount();
+                return $this->getDescription();
                 break;
             case 7:
-                return $this->getLength();
+                return $this->getLastPlayedTime();
                 break;
             case 8:
-                return $this->getMime();
+                return $this->getPlayCount();
                 break;
             case 9:
-                return $this->getCreatedAt();
+                return $this->getLength();
                 break;
             case 10:
+                return $this->getMime();
+                break;
+            case 11:
+                return $this->getCreatedAt();
+                break;
+            case 12:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1207,14 +1303,16 @@ abstract class BaseWebstream extends MediaItem implements Persistent
             $keys[0] => $this->getUrl(),
             $keys[1] => $this->getId(),
             $keys[2] => $this->getName(),
-            $keys[3] => $this->getOwnerId(),
-            $keys[4] => $this->getDescription(),
-            $keys[5] => $this->getLastPlayedTime(),
-            $keys[6] => $this->getPlayCount(),
-            $keys[7] => $this->getLength(),
-            $keys[8] => $this->getMime(),
-            $keys[9] => $this->getCreatedAt(),
-            $keys[10] => $this->getUpdatedAt(),
+            $keys[3] => $this->getCreator(),
+            $keys[4] => $this->getSource(),
+            $keys[5] => $this->getOwnerId(),
+            $keys[6] => $this->getDescription(),
+            $keys[7] => $this->getLastPlayedTime(),
+            $keys[8] => $this->getPlayCount(),
+            $keys[9] => $this->getLength(),
+            $keys[10] => $this->getMime(),
+            $keys[11] => $this->getCreatedAt(),
+            $keys[12] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1272,27 +1370,33 @@ abstract class BaseWebstream extends MediaItem implements Persistent
                 $this->setName($value);
                 break;
             case 3:
-                $this->setOwnerId($value);
+                $this->setCreator($value);
                 break;
             case 4:
-                $this->setDescription($value);
+                $this->setSource($value);
                 break;
             case 5:
-                $this->setLastPlayedTime($value);
+                $this->setOwnerId($value);
                 break;
             case 6:
-                $this->setPlayCount($value);
+                $this->setDescription($value);
                 break;
             case 7:
-                $this->setLength($value);
+                $this->setLastPlayedTime($value);
                 break;
             case 8:
-                $this->setMime($value);
+                $this->setPlayCount($value);
                 break;
             case 9:
-                $this->setCreatedAt($value);
+                $this->setLength($value);
                 break;
             case 10:
+                $this->setMime($value);
+                break;
+            case 11:
+                $this->setCreatedAt($value);
+                break;
+            case 12:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1322,14 +1426,16 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         if (array_key_exists($keys[0], $arr)) $this->setUrl($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setId($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setName($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setOwnerId($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setDescription($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setLastPlayedTime($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setPlayCount($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setLength($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setMime($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setCreatedAt($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setUpdatedAt($arr[$keys[10]]);
+        if (array_key_exists($keys[3], $arr)) $this->setCreator($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setSource($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setOwnerId($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDescription($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setLastPlayedTime($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setPlayCount($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setLength($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setMime($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setCreatedAt($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setUpdatedAt($arr[$keys[12]]);
     }
 
     /**
@@ -1344,6 +1450,8 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         if ($this->isColumnModified(WebstreamPeer::URL)) $criteria->add(WebstreamPeer::URL, $this->url);
         if ($this->isColumnModified(WebstreamPeer::ID)) $criteria->add(WebstreamPeer::ID, $this->id);
         if ($this->isColumnModified(WebstreamPeer::NAME)) $criteria->add(WebstreamPeer::NAME, $this->name);
+        if ($this->isColumnModified(WebstreamPeer::CREATOR)) $criteria->add(WebstreamPeer::CREATOR, $this->creator);
+        if ($this->isColumnModified(WebstreamPeer::SOURCE)) $criteria->add(WebstreamPeer::SOURCE, $this->source);
         if ($this->isColumnModified(WebstreamPeer::OWNER_ID)) $criteria->add(WebstreamPeer::OWNER_ID, $this->owner_id);
         if ($this->isColumnModified(WebstreamPeer::DESCRIPTION)) $criteria->add(WebstreamPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(WebstreamPeer::LAST_PLAYED)) $criteria->add(WebstreamPeer::LAST_PLAYED, $this->last_played);
@@ -1417,6 +1525,8 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         $copyObj->setUrl($this->getUrl());
         $copyObj->setName($this->getName());
+        $copyObj->setCreator($this->getCreator());
+        $copyObj->setSource($this->getSource());
         $copyObj->setOwnerId($this->getOwnerId());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setLastPlayedTime($this->getLastPlayedTime());
@@ -1594,6 +1704,8 @@ abstract class BaseWebstream extends MediaItem implements Persistent
         $this->url = null;
         $this->id = null;
         $this->name = null;
+        $this->creator = null;
+        $this->source = null;
         $this->owner_id = null;
         $this->description = null;
         $this->last_played = null;
@@ -1702,6 +1814,8 @@ abstract class BaseWebstream extends MediaItem implements Persistent
     {
         $parent = $this->getParentOrCreate($con);
         $parent->setName($this->getName());
+        $parent->setCreator($this->getCreator());
+        $parent->setSource($this->getSource());
         $parent->setOwnerId($this->getOwnerId());
         $parent->setDescription($this->getDescription());
         $parent->setLastPlayedTime($this->getLastPlayedTime());

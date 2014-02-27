@@ -57,6 +57,8 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery orderByIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
  * @method AudioFileQuery orderById($order = Criteria::ASC) Order by the id column
  * @method AudioFileQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method AudioFileQuery orderByCreator($order = Criteria::ASC) Order by the creator column
+ * @method AudioFileQuery orderBySource($order = Criteria::ASC) Order by the source column
  * @method AudioFileQuery orderByOwnerId($order = Criteria::ASC) Order by the owner_id column
  * @method AudioFileQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method AudioFileQuery orderByLastPlayedTime($order = Criteria::ASC) Order by the last_played column
@@ -99,6 +101,8 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery groupByIsPlaylist() Group by the is_playlist column
  * @method AudioFileQuery groupById() Group by the id column
  * @method AudioFileQuery groupByName() Group by the name column
+ * @method AudioFileQuery groupByCreator() Group by the creator column
+ * @method AudioFileQuery groupBySource() Group by the source column
  * @method AudioFileQuery groupByOwnerId() Group by the owner_id column
  * @method AudioFileQuery groupByDescription() Group by the description column
  * @method AudioFileQuery groupByLastPlayedTime() Group by the last_played column
@@ -159,6 +163,8 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFile findOneByIsScheduled(boolean $is_scheduled) Return the first AudioFile filtered by the is_scheduled column
  * @method AudioFile findOneByIsPlaylist(boolean $is_playlist) Return the first AudioFile filtered by the is_playlist column
  * @method AudioFile findOneByName(string $name) Return the first AudioFile filtered by the name column
+ * @method AudioFile findOneByCreator(string $creator) Return the first AudioFile filtered by the creator column
+ * @method AudioFile findOneBySource(string $source) Return the first AudioFile filtered by the source column
  * @method AudioFile findOneByOwnerId(int $owner_id) Return the first AudioFile filtered by the owner_id column
  * @method AudioFile findOneByDescription(string $description) Return the first AudioFile filtered by the description column
  * @method AudioFile findOneByLastPlayedTime(string $last_played) Return the first AudioFile filtered by the last_played column
@@ -201,6 +207,8 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method array findByIsPlaylist(boolean $is_playlist) Return AudioFile objects filtered by the is_playlist column
  * @method array findById(int $id) Return AudioFile objects filtered by the id column
  * @method array findByName(string $name) Return AudioFile objects filtered by the name column
+ * @method array findByCreator(string $creator) Return AudioFile objects filtered by the creator column
+ * @method array findBySource(string $source) Return AudioFile objects filtered by the source column
  * @method array findByOwnerId(int $owner_id) Return AudioFile objects filtered by the owner_id column
  * @method array findByDescription(string $description) Return AudioFile objects filtered by the description column
  * @method array findByLastPlayedTime(string $last_played) Return AudioFile objects filtered by the last_played column
@@ -316,7 +324,7 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "conductor", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "is_scheduled", "is_playlist", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_audiofile" WHERE "id" = :p0';
+        $sql = 'SELECT "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "conductor", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "is_scheduled", "is_playlist", "id", "name", "creator", "source", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_audiofile" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1471,6 +1479,64 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
         }
 
         return $this->addUsingAlias(AudioFilePeer::NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the creator column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCreator('fooValue');   // WHERE creator = 'fooValue'
+     * $query->filterByCreator('%fooValue%'); // WHERE creator LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $creator The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AudioFileQuery The current query, for fluid interface
+     */
+    public function filterByCreator($creator = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($creator)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $creator)) {
+                $creator = str_replace('*', '%', $creator);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AudioFilePeer::CREATOR, $creator, $comparison);
+    }
+
+    /**
+     * Filter the query on the source column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySource('fooValue');   // WHERE source = 'fooValue'
+     * $query->filterBySource('%fooValue%'); // WHERE source LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $source The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return AudioFileQuery The current query, for fluid interface
+     */
+    public function filterBySource($source = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($source)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $source)) {
+                $source = str_replace('*', '%', $source);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(AudioFilePeer::SOURCE, $source, $comparison);
     }
 
     /**

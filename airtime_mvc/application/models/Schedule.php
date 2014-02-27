@@ -14,7 +14,7 @@ class Application_Model_Schedule
      *
      */
     public static function GetScheduleDetailItems($start, $end, $getOnlyPlayable = false, 
-    		$getOnlyFuture = false, $showIds = array(), $showInstanceIds = array())
+    		$showIds = array(), $showInstanceIds = array())
     {
     	$utcNow = new DateTime("now", new DateTimeZone("UTC"));
     	
@@ -279,7 +279,7 @@ SQL;
     	}
     	
     	return array(
-    		"name"=> $row["media_title"], //TODO add artist back in
+    		"name"=> $row["media_title"] ." - ".$row["media_creator"],
     		"starts" => $row["item_start"],
     		"ends" => (($row["item_end"] > $row["show_end"]) ? $row["show_end"]: $row["item_end"]),
     		"media_item_played" => (boolean) $row["media_item_played"],
@@ -310,6 +310,7 @@ SQL;
 select
 
 npItems.media_title,
+npItems.media_creator,
 npItems.item_start,
 npItems.item_end,
 npItems.show_start,
@@ -327,6 +328,7 @@ from
 select 
 
 pcnItems.media_title,
+pcnItems.media_creator,
 pcnItems.starts as item_start,
 pcnItems.ends as item_end,
 pcnItems.media_item_played,
@@ -405,7 +407,8 @@ preCurrNextItem.starts,
 preCurrNextItem.ends,
 preCurrNextItem.show_id,
 preCurrNextItem.media_item_played,
-media.name as media_title
+media.name as media_title,
+media.creator as media_creator
 
 
 from 

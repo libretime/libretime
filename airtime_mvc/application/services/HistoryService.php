@@ -27,7 +27,7 @@ class Application_Service_HistoryService
 	public function __construct()
 	{
 		$this->con = isset($con) ? $con : Propel::getConnection(CcPlayoutHistoryPeer::DATABASE_NAME);
-		$this->timezone = Application_Model_Preference::GetUserTimezone();
+		$this->timezone = Application_Model_Preference::GetTimezone();
 	}
 
 	public function getSupportedTemplateTypes()
@@ -367,20 +367,44 @@ class Application_Service_HistoryService
 		$this->con->beginTransaction();
 
 		try {
-
-			$item = CcScheduleQuery::create()
+			
+			// we need to update 'broadcasted' column as well
+			// check the current switch status
+			$live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on';
+			$master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on';
+			$scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on';
+			
+			$scheduledItem = CcScheduleQuery::create()
 				->filterByPrimaryKey($schedId)
 				->joinWith("MediaItem", Criteria::LEFT_JOIN)
 				->findOne($this->con);
 
-			if (isset($item)) {
-				$mediaItem = $item->getMediaItem($this->con);
+			if (isset($scheduledItem)) {
 
-				$type = $mediaItem->getType();
-				$strategy = "Strategy_{$type}HistoryItem";
-
-				$insertStrategy = new $strategy();
-				$insertStrategy->insertHistoryItem($schedId, $this->con, $opts);
+				$scheduledItem->setDbMediaItemPlayed(true);
+					
+				//not sure how well this broadcasted column actually is at doing anything.
+				if (!$live_dj && !$master_dj && $scheduled_play) {
+					$scheduledItem->setDbBroadcasted(1);
+					
+					$mediaItem = $scheduledItem->getMediaItem($this->con);
+						
+					//set a 'last played' timestamp for media item
+					$utcNow = new DateTime("now", new DateTimeZone("UTC"));
+					$mediaItem->setLastPlayedTime($utcNow);
+					
+					$playcount = $mediaItem->getPlayCount();
+					$mediaItem->setPlayCount($playcount + 1);
+					
+					$mediaItem->save($this->con);
+					$scheduledItem->save($this->con);
+					
+					$type = $mediaItem->getType();
+					$strategy = "Strategy_{$type}HistoryItem";
+					
+					$insertStrategy = new $strategy();
+					$insertStrategy->insertHistoryItem($schedId, $this->con, $opts);
+				}	
 			}
 
 			$this->con->commit();

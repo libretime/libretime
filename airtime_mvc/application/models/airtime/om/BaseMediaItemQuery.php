@@ -31,6 +31,8 @@ use Airtime\PlayoutHistory\CcPlayoutHistory;
  *
  * @method MediaItemQuery orderById($order = Criteria::ASC) Order by the id column
  * @method MediaItemQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method MediaItemQuery orderByCreator($order = Criteria::ASC) Order by the creator column
+ * @method MediaItemQuery orderBySource($order = Criteria::ASC) Order by the source column
  * @method MediaItemQuery orderByOwnerId($order = Criteria::ASC) Order by the owner_id column
  * @method MediaItemQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method MediaItemQuery orderByLastPlayedTime($order = Criteria::ASC) Order by the last_played column
@@ -43,6 +45,8 @@ use Airtime\PlayoutHistory\CcPlayoutHistory;
  *
  * @method MediaItemQuery groupById() Group by the id column
  * @method MediaItemQuery groupByName() Group by the name column
+ * @method MediaItemQuery groupByCreator() Group by the creator column
+ * @method MediaItemQuery groupBySource() Group by the source column
  * @method MediaItemQuery groupByOwnerId() Group by the owner_id column
  * @method MediaItemQuery groupByDescription() Group by the description column
  * @method MediaItemQuery groupByLastPlayedTime() Group by the last_played column
@@ -93,6 +97,8 @@ use Airtime\PlayoutHistory\CcPlayoutHistory;
  * @method MediaItem findOneOrCreate(PropelPDO $con = null) Return the first MediaItem matching the query, or a new MediaItem object populated from the query conditions when no match is found
  *
  * @method MediaItem findOneByName(string $name) Return the first MediaItem filtered by the name column
+ * @method MediaItem findOneByCreator(string $creator) Return the first MediaItem filtered by the creator column
+ * @method MediaItem findOneBySource(string $source) Return the first MediaItem filtered by the source column
  * @method MediaItem findOneByOwnerId(int $owner_id) Return the first MediaItem filtered by the owner_id column
  * @method MediaItem findOneByDescription(string $description) Return the first MediaItem filtered by the description column
  * @method MediaItem findOneByLastPlayedTime(string $last_played) Return the first MediaItem filtered by the last_played column
@@ -105,6 +111,8 @@ use Airtime\PlayoutHistory\CcPlayoutHistory;
  *
  * @method array findById(int $id) Return MediaItem objects filtered by the id column
  * @method array findByName(string $name) Return MediaItem objects filtered by the name column
+ * @method array findByCreator(string $creator) Return MediaItem objects filtered by the creator column
+ * @method array findBySource(string $source) Return MediaItem objects filtered by the source column
  * @method array findByOwnerId(int $owner_id) Return MediaItem objects filtered by the owner_id column
  * @method array findByDescription(string $description) Return MediaItem objects filtered by the description column
  * @method array findByLastPlayedTime(string $last_played) Return MediaItem objects filtered by the last_played column
@@ -221,7 +229,7 @@ abstract class BaseMediaItemQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at", "descendant_class" FROM "media_item" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "creator", "source", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at", "descendant_class" FROM "media_item" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -379,6 +387,64 @@ abstract class BaseMediaItemQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(MediaItemPeer::NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the creator column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCreator('fooValue');   // WHERE creator = 'fooValue'
+     * $query->filterByCreator('%fooValue%'); // WHERE creator LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $creator The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return MediaItemQuery The current query, for fluid interface
+     */
+    public function filterByCreator($creator = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($creator)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $creator)) {
+                $creator = str_replace('*', '%', $creator);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(MediaItemPeer::CREATOR, $creator, $comparison);
+    }
+
+    /**
+     * Filter the query on the source column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySource('fooValue');   // WHERE source = 'fooValue'
+     * $query->filterBySource('%fooValue%'); // WHERE source LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $source The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return MediaItemQuery The current query, for fluid interface
+     */
+    public function filterBySource($source = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($source)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $source)) {
+                $source = str_replace('*', '%', $source);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(MediaItemPeer::SOURCE, $source, $comparison);
     }
 
     /**

@@ -130,7 +130,7 @@ class Application_Model_Preference
         	$userId = self::getUserId();
 
         	if ($isUserValue && is_null($userId)) {
-        		throw new Exception("User id can't be null for a user preference.");
+        		throw new Exception("User id can't be null for a user preference. {$key}");
         	}
 
         	$cacheInfo = $cache->fetch($key, $isUserValue, $userId);

@@ -418,16 +418,11 @@ class ApiController extends Zend_Controller_Action
 
     public function notifyMediaItemStartPlayAction()
     {
-        $schedule_id = $this->_getParam("media_id");
-        Logging::debug("Received notification of new schedule item start: $schedule_id");
-
-        $scheduleService = new Application_Service_SchedulerService();
-        $scheduleService->updateMediaPlayedStatus($schedule_id);
+        $scheduleId = $this->_getParam("media_id");
+        Logging::debug("Received notification of new schedule item start: $scheduleId");
 
         $historyService = new Application_Service_HistoryService();
-        $historyService->insertHistoryItem($schedule_id);
-
-        //TODO set last played of media items here.
+        $historyService->insertHistoryItem($scheduleId);
 
         $this->_helper->json->sendJson(array("status"=>1, "message"=>""));
     }

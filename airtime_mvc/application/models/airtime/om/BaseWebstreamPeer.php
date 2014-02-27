@@ -38,13 +38,13 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
     const TM_CLASS = 'Airtime\\MediaItem\\map\\WebstreamTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 13;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 13;
 
     /** the column name for the url field */
     const URL = 'media_webstream.url';
@@ -54,6 +54,12 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
 
     /** the column name for the name field */
     const NAME = 'media_webstream.name';
+
+    /** the column name for the creator field */
+    const CREATOR = 'media_webstream.creator';
+
+    /** the column name for the source field */
+    const SOURCE = 'media_webstream.source';
 
     /** the column name for the owner_id field */
     const OWNER_ID = 'media_webstream.owner_id';
@@ -98,12 +104,12 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
      * e.g. WebstreamPeer::$fieldNames[WebstreamPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Url', 'Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('url', 'id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', ),
-        BasePeer::TYPE_COLNAME => array (WebstreamPeer::URL, WebstreamPeer::ID, WebstreamPeer::NAME, WebstreamPeer::OWNER_ID, WebstreamPeer::DESCRIPTION, WebstreamPeer::LAST_PLAYED, WebstreamPeer::PLAY_COUNT, WebstreamPeer::LENGTH, WebstreamPeer::MIME, WebstreamPeer::CREATED_AT, WebstreamPeer::UPDATED_AT, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('URL', 'ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', ),
-        BasePeer::TYPE_FIELDNAME => array ('url', 'id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Url', 'Id', 'Name', 'Creator', 'Source', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('url', 'id', 'name', 'creator', 'source', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', ),
+        BasePeer::TYPE_COLNAME => array (WebstreamPeer::URL, WebstreamPeer::ID, WebstreamPeer::NAME, WebstreamPeer::CREATOR, WebstreamPeer::SOURCE, WebstreamPeer::OWNER_ID, WebstreamPeer::DESCRIPTION, WebstreamPeer::LAST_PLAYED, WebstreamPeer::PLAY_COUNT, WebstreamPeer::LENGTH, WebstreamPeer::MIME, WebstreamPeer::CREATED_AT, WebstreamPeer::UPDATED_AT, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('URL', 'ID', 'NAME', 'CREATOR', 'SOURCE', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', ),
+        BasePeer::TYPE_FIELDNAME => array ('url', 'id', 'name', 'creator', 'source', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -113,12 +119,12 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
      * e.g. WebstreamPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Url' => 0, 'Id' => 1, 'Name' => 2, 'OwnerId' => 3, 'Description' => 4, 'LastPlayedTime' => 5, 'PlayCount' => 6, 'Length' => 7, 'Mime' => 8, 'CreatedAt' => 9, 'UpdatedAt' => 10, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('url' => 0, 'id' => 1, 'name' => 2, 'ownerId' => 3, 'description' => 4, 'lastPlayedTime' => 5, 'playCount' => 6, 'length' => 7, 'mime' => 8, 'createdAt' => 9, 'updatedAt' => 10, ),
-        BasePeer::TYPE_COLNAME => array (WebstreamPeer::URL => 0, WebstreamPeer::ID => 1, WebstreamPeer::NAME => 2, WebstreamPeer::OWNER_ID => 3, WebstreamPeer::DESCRIPTION => 4, WebstreamPeer::LAST_PLAYED => 5, WebstreamPeer::PLAY_COUNT => 6, WebstreamPeer::LENGTH => 7, WebstreamPeer::MIME => 8, WebstreamPeer::CREATED_AT => 9, WebstreamPeer::UPDATED_AT => 10, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('URL' => 0, 'ID' => 1, 'NAME' => 2, 'OWNER_ID' => 3, 'DESCRIPTION' => 4, 'LAST_PLAYED' => 5, 'PLAY_COUNT' => 6, 'LENGTH' => 7, 'MIME' => 8, 'CREATED_AT' => 9, 'UPDATED_AT' => 10, ),
-        BasePeer::TYPE_FIELDNAME => array ('url' => 0, 'id' => 1, 'name' => 2, 'owner_id' => 3, 'description' => 4, 'last_played' => 5, 'play_count' => 6, 'length' => 7, 'mime' => 8, 'created_at' => 9, 'updated_at' => 10, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Url' => 0, 'Id' => 1, 'Name' => 2, 'Creator' => 3, 'Source' => 4, 'OwnerId' => 5, 'Description' => 6, 'LastPlayedTime' => 7, 'PlayCount' => 8, 'Length' => 9, 'Mime' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('url' => 0, 'id' => 1, 'name' => 2, 'creator' => 3, 'source' => 4, 'ownerId' => 5, 'description' => 6, 'lastPlayedTime' => 7, 'playCount' => 8, 'length' => 9, 'mime' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
+        BasePeer::TYPE_COLNAME => array (WebstreamPeer::URL => 0, WebstreamPeer::ID => 1, WebstreamPeer::NAME => 2, WebstreamPeer::CREATOR => 3, WebstreamPeer::SOURCE => 4, WebstreamPeer::OWNER_ID => 5, WebstreamPeer::DESCRIPTION => 6, WebstreamPeer::LAST_PLAYED => 7, WebstreamPeer::PLAY_COUNT => 8, WebstreamPeer::LENGTH => 9, WebstreamPeer::MIME => 10, WebstreamPeer::CREATED_AT => 11, WebstreamPeer::UPDATED_AT => 12, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('URL' => 0, 'ID' => 1, 'NAME' => 2, 'CREATOR' => 3, 'SOURCE' => 4, 'OWNER_ID' => 5, 'DESCRIPTION' => 6, 'LAST_PLAYED' => 7, 'PLAY_COUNT' => 8, 'LENGTH' => 9, 'MIME' => 10, 'CREATED_AT' => 11, 'UPDATED_AT' => 12, ),
+        BasePeer::TYPE_FIELDNAME => array ('url' => 0, 'id' => 1, 'name' => 2, 'creator' => 3, 'source' => 4, 'owner_id' => 5, 'description' => 6, 'last_played' => 7, 'play_count' => 8, 'length' => 9, 'mime' => 10, 'created_at' => 11, 'updated_at' => 12, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -195,6 +201,8 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
             $criteria->addSelectColumn(WebstreamPeer::URL);
             $criteria->addSelectColumn(WebstreamPeer::ID);
             $criteria->addSelectColumn(WebstreamPeer::NAME);
+            $criteria->addSelectColumn(WebstreamPeer::CREATOR);
+            $criteria->addSelectColumn(WebstreamPeer::SOURCE);
             $criteria->addSelectColumn(WebstreamPeer::OWNER_ID);
             $criteria->addSelectColumn(WebstreamPeer::DESCRIPTION);
             $criteria->addSelectColumn(WebstreamPeer::LAST_PLAYED);
@@ -207,6 +215,8 @@ abstract class BaseWebstreamPeer extends MediaItemPeer
             $criteria->addSelectColumn($alias . '.url');
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.creator');
+            $criteria->addSelectColumn($alias . '.source');
             $criteria->addSelectColumn($alias . '.owner_id');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.last_played');

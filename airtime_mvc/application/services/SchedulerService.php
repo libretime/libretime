@@ -407,41 +407,4 @@ class Application_Service_SchedulerService
     	
     	return $redraw;
     }
-    
-    public function updateMediaPlayedStatus($schedId)
-    {
-    	$con = $this->con;
-    	$con->beginTransaction();
-    	
-    	try {
-    		// we need to update 'broadcasted' column as well
-    		// check the current switch status
-    		$live_dj = Application_Model_Preference::GetSourceSwitchStatus('live_dj') == 'on';
-    		$master_dj = Application_Model_Preference::GetSourceSwitchStatus('master_dj') == 'on';
-    		$scheduled_play = Application_Model_Preference::GetSourceSwitchStatus('scheduled_play') == 'on';
-    		
-    		$scheduledItem = CcScheduleQuery::create()->findPk($schedId, $con);
-    		
-    		$scheduledItem->setDbMediaItemPlayed(true);
-    		
-    		//not sure how well this broadcasted column actually is at doing anything.
-    		if (!$live_dj && !$master_dj && $scheduled_play) {
-    			$scheduledItem->setDbBroadcasted(1);
-    		}
-    		
-    		//set a 'last played' timestamp for media item
-    		$utcNow = new DateTime("now", new DateTimeZone("UTC"));
-    		$mediaItem = $scheduledItem->getMediaItem();
-    		$mediaItem->setLastPlayedTime($utcNow);
-    		
-    		$mediaItem->save($con);
-    		$scheduledItem->save($con);
-    		$con->commit();
-    	}
-    	catch (Exception $e) {
-    		$con->rollBack();
-    		Logging::error($e->getMessage());
-    		throw $e;
-    	}
-    }
 }

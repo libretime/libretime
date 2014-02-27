@@ -3,6 +3,7 @@
 namespace Airtime\MediaItem;
 
 use Airtime\MediaItem\om\BaseWebstream;
+use \PropelPDO;
 
 
 /**
@@ -18,8 +19,19 @@ use Airtime\MediaItem\om\BaseWebstream;
  */
 class Webstream extends BaseWebstream
 {
-	public function getCreator() {
-		return $this->getCcSubjs()->getDbLogin();
+	public function preInsert(PropelPDO $con = null) {
+		
+		parent::preInsert($con);
+		
+		try {
+			$creator = $this->getCcSubjs()->getDbLogin();
+			$this->setCreator($creator);
+		}
+		catch(Exception $e) {
+			Logging::warn("Unable to set the creator for the webstream");
+		}
+		
+		return true;
 	}
 	
 	public function getHoursMins() {
@@ -59,6 +71,7 @@ class Webstream extends BaseWebstream
 		$mime = $headers["Content-Type"];
 		
 		$this->setMime($mime);
+		$this->setSource($v);
 		
 		return $this;
 	}

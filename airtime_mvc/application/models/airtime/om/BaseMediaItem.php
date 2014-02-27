@@ -77,6 +77,18 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     protected $name;
 
     /**
+     * The value for the creator field.
+     * @var        string
+     */
+    protected $creator;
+
+    /**
+     * The value for the source field.
+     * @var        string
+     */
+    protected $source;
+
+    /**
      * The value for the owner_id field.
      * @var        int
      */
@@ -262,6 +274,28 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     {
 
         return $this->name;
+    }
+
+    /**
+     * Get the [creator] column value.
+     *
+     * @return string
+     */
+    public function getCreator()
+    {
+
+        return $this->creator;
+    }
+
+    /**
+     * Get the [source] column value.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+
+        return $this->source;
     }
 
     /**
@@ -476,6 +510,48 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
 
         return $this;
     } // setName()
+
+    /**
+     * Set the value of [creator] column.
+     *
+     * @param  string $v new value
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function setCreator($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->creator !== $v) {
+            $this->creator = $v;
+            $this->modifiedColumns[] = MediaItemPeer::CREATOR;
+        }
+
+
+        return $this;
+    } // setCreator()
+
+    /**
+     * Set the value of [source] column.
+     *
+     * @param  string $v new value
+     * @return MediaItem The current object (for fluent API support)
+     */
+    public function setSource($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->source !== $v) {
+            $this->source = $v;
+            $this->modifiedColumns[] = MediaItemPeer::SOURCE;
+        }
+
+
+        return $this;
+    } // setSource()
 
     /**
      * Set the value of [owner_id] column.
@@ -718,15 +794,17 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->owner_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->last_played = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->play_count = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-            $this->length = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->mime = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->created_at = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->updated_at = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->descendant_class = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->creator = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->source = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->owner_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+            $this->description = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->last_played = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->play_count = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+            $this->length = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->mime = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->created_at = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->updated_at = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->descendant_class = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -736,7 +814,7 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 11; // 11 = MediaItemPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = MediaItemPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating MediaItem object", $e);
@@ -1092,6 +1170,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         if ($this->isColumnModified(MediaItemPeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = '"name"';
         }
+        if ($this->isColumnModified(MediaItemPeer::CREATOR)) {
+            $modifiedColumns[':p' . $index++]  = '"creator"';
+        }
+        if ($this->isColumnModified(MediaItemPeer::SOURCE)) {
+            $modifiedColumns[':p' . $index++]  = '"source"';
+        }
         if ($this->isColumnModified(MediaItemPeer::OWNER_ID)) {
             $modifiedColumns[':p' . $index++]  = '"owner_id"';
         }
@@ -1135,6 +1219,12 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                         break;
                     case '"name"':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '"creator"':
+                        $stmt->bindValue($identifier, $this->creator, PDO::PARAM_STR);
+                        break;
+                    case '"source"':
+                        $stmt->bindValue($identifier, $this->source, PDO::PARAM_STR);
                         break;
                     case '"owner_id"':
                         $stmt->bindValue($identifier, $this->owner_id, PDO::PARAM_INT);
@@ -1359,30 +1449,36 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 return $this->getName();
                 break;
             case 2:
-                return $this->getOwnerId();
+                return $this->getCreator();
                 break;
             case 3:
-                return $this->getDescription();
+                return $this->getSource();
                 break;
             case 4:
-                return $this->getLastPlayedTime();
+                return $this->getOwnerId();
                 break;
             case 5:
-                return $this->getPlayCount();
+                return $this->getDescription();
                 break;
             case 6:
-                return $this->getLength();
+                return $this->getLastPlayedTime();
                 break;
             case 7:
-                return $this->getMime();
+                return $this->getPlayCount();
                 break;
             case 8:
-                return $this->getCreatedAt();
+                return $this->getLength();
                 break;
             case 9:
-                return $this->getUpdatedAt();
+                return $this->getMime();
                 break;
             case 10:
+                return $this->getCreatedAt();
+                break;
+            case 11:
+                return $this->getUpdatedAt();
+                break;
+            case 12:
                 return $this->getDescendantClass();
                 break;
             default:
@@ -1416,15 +1512,17 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
         $result = array(
             $keys[0] => $this->getId(),
             $keys[1] => $this->getName(),
-            $keys[2] => $this->getOwnerId(),
-            $keys[3] => $this->getDescription(),
-            $keys[4] => $this->getLastPlayedTime(),
-            $keys[5] => $this->getPlayCount(),
-            $keys[6] => $this->getLength(),
-            $keys[7] => $this->getMime(),
-            $keys[8] => $this->getCreatedAt(),
-            $keys[9] => $this->getUpdatedAt(),
-            $keys[10] => $this->getDescendantClass(),
+            $keys[2] => $this->getCreator(),
+            $keys[3] => $this->getSource(),
+            $keys[4] => $this->getOwnerId(),
+            $keys[5] => $this->getDescription(),
+            $keys[6] => $this->getLastPlayedTime(),
+            $keys[7] => $this->getPlayCount(),
+            $keys[8] => $this->getLength(),
+            $keys[9] => $this->getMime(),
+            $keys[10] => $this->getCreatedAt(),
+            $keys[11] => $this->getUpdatedAt(),
+            $keys[12] => $this->getDescendantClass(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1497,30 +1595,36 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
                 $this->setName($value);
                 break;
             case 2:
-                $this->setOwnerId($value);
+                $this->setCreator($value);
                 break;
             case 3:
-                $this->setDescription($value);
+                $this->setSource($value);
                 break;
             case 4:
-                $this->setLastPlayedTime($value);
+                $this->setOwnerId($value);
                 break;
             case 5:
-                $this->setPlayCount($value);
+                $this->setDescription($value);
                 break;
             case 6:
-                $this->setLength($value);
+                $this->setLastPlayedTime($value);
                 break;
             case 7:
-                $this->setMime($value);
+                $this->setPlayCount($value);
                 break;
             case 8:
-                $this->setCreatedAt($value);
+                $this->setLength($value);
                 break;
             case 9:
-                $this->setUpdatedAt($value);
+                $this->setMime($value);
                 break;
             case 10:
+                $this->setCreatedAt($value);
+                break;
+            case 11:
+                $this->setUpdatedAt($value);
+                break;
+            case 12:
                 $this->setDescendantClass($value);
                 break;
         } // switch()
@@ -1549,15 +1653,17 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setOwnerId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDescription($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setLastPlayedTime($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setPlayCount($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setLength($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setMime($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setCreatedAt($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setUpdatedAt($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setDescendantClass($arr[$keys[10]]);
+        if (array_key_exists($keys[2], $arr)) $this->setCreator($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setSource($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setOwnerId($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDescription($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setLastPlayedTime($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setPlayCount($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setLength($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setMime($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setCreatedAt($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setUpdatedAt($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setDescendantClass($arr[$keys[12]]);
     }
 
     /**
@@ -1571,6 +1677,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
 
         if ($this->isColumnModified(MediaItemPeer::ID)) $criteria->add(MediaItemPeer::ID, $this->id);
         if ($this->isColumnModified(MediaItemPeer::NAME)) $criteria->add(MediaItemPeer::NAME, $this->name);
+        if ($this->isColumnModified(MediaItemPeer::CREATOR)) $criteria->add(MediaItemPeer::CREATOR, $this->creator);
+        if ($this->isColumnModified(MediaItemPeer::SOURCE)) $criteria->add(MediaItemPeer::SOURCE, $this->source);
         if ($this->isColumnModified(MediaItemPeer::OWNER_ID)) $criteria->add(MediaItemPeer::OWNER_ID, $this->owner_id);
         if ($this->isColumnModified(MediaItemPeer::DESCRIPTION)) $criteria->add(MediaItemPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(MediaItemPeer::LAST_PLAYED)) $criteria->add(MediaItemPeer::LAST_PLAYED, $this->last_played);
@@ -1644,6 +1752,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setName($this->getName());
+        $copyObj->setCreator($this->getCreator());
+        $copyObj->setSource($this->getSource());
         $copyObj->setOwnerId($this->getOwnerId());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setLastPlayedTime($this->getLastPlayedTime());
@@ -2967,6 +3077,8 @@ abstract class BaseMediaItem extends BaseObject implements Persistent
     {
         $this->id = null;
         $this->name = null;
+        $this->creator = null;
+        $this->source = null;
         $this->owner_id = null;
         $this->description = null;
         $this->last_played = null;

@@ -65,14 +65,6 @@ class AudioFile extends BaseAudioFile
 		MDATA_KEY_DURATION => "Length",
 	);
 
-	public function getName() {
-		return $this->getTrackTitle();
-	}
-
-	public function getCreator() {
-		return $this->getArtistName();
-	}
-
 	public function getRealFileExtension() {
 
 		$path = $this->getFilepath();
@@ -238,6 +230,30 @@ class AudioFile extends BaseAudioFile
 		}
 
 		return $this;
+	}
+	
+	//this is implemented to copy main data to avoid table joins.
+	public function setTrackTitle($v) {
+		
+		parent::setTrackTitle($v);
+		
+		$this->setName($v);
+	}
+	
+	//this is implemented to copy main data to avoid table joins.
+	public function setArtistName($v) {
+		
+		parent::setArtistName($v);
+		
+		$this->setCreator($v);
+	}
+	
+	//this is implemented to copy main data to avoid table joins.
+	public function setAlbumTitle($v) {
+		
+		parent::setAlbumTitle($v);
+		
+		$this->setSource($v);
 	}
 
 	public function setTrackNumber($v) {

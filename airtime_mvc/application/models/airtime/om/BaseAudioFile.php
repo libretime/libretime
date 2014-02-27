@@ -257,6 +257,18 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
     protected $name;
 
     /**
+     * The value for the creator field.
+     * @var        string
+     */
+    protected $creator;
+
+    /**
+     * The value for the source field.
+     * @var        string
+     */
+    protected $source;
+
+    /**
      * The value for the owner_id field.
      * @var        int
      */
@@ -732,6 +744,28 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
     {
 
         return $this->name;
+    }
+
+    /**
+     * Get the [creator] column value.
+     *
+     * @return string
+     */
+    public function getCreator()
+    {
+
+        return $this->creator;
+    }
+
+    /**
+     * Get the [source] column value.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+
+        return $this->source;
     }
 
     /**
@@ -1636,6 +1670,48 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
     } // setName()
 
     /**
+     * Set the value of [creator] column.
+     *
+     * @param  string $v new value
+     * @return AudioFile The current object (for fluent API support)
+     */
+    public function setCreator($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->creator !== $v) {
+            $this->creator = $v;
+            $this->modifiedColumns[] = AudioFilePeer::CREATOR;
+        }
+
+
+        return $this;
+    } // setCreator()
+
+    /**
+     * Set the value of [source] column.
+     *
+     * @param  string $v new value
+     * @return AudioFile The current object (for fluent API support)
+     */
+    public function setSource($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->source !== $v) {
+            $this->source = $v;
+            $this->modifiedColumns[] = AudioFilePeer::SOURCE;
+        }
+
+
+        return $this;
+    } // setSource()
+
+    /**
      * Set the value of [owner_id] column.
      *
      * @param  int $v new value
@@ -1918,14 +1994,16 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
             $this->is_playlist = ($row[$startcol + 30] !== null) ? (boolean) $row[$startcol + 30] : null;
             $this->id = ($row[$startcol + 31] !== null) ? (int) $row[$startcol + 31] : null;
             $this->name = ($row[$startcol + 32] !== null) ? (string) $row[$startcol + 32] : null;
-            $this->owner_id = ($row[$startcol + 33] !== null) ? (int) $row[$startcol + 33] : null;
-            $this->description = ($row[$startcol + 34] !== null) ? (string) $row[$startcol + 34] : null;
-            $this->last_played = ($row[$startcol + 35] !== null) ? (string) $row[$startcol + 35] : null;
-            $this->play_count = ($row[$startcol + 36] !== null) ? (int) $row[$startcol + 36] : null;
-            $this->length = ($row[$startcol + 37] !== null) ? (string) $row[$startcol + 37] : null;
-            $this->mime = ($row[$startcol + 38] !== null) ? (string) $row[$startcol + 38] : null;
-            $this->created_at = ($row[$startcol + 39] !== null) ? (string) $row[$startcol + 39] : null;
-            $this->updated_at = ($row[$startcol + 40] !== null) ? (string) $row[$startcol + 40] : null;
+            $this->creator = ($row[$startcol + 33] !== null) ? (string) $row[$startcol + 33] : null;
+            $this->source = ($row[$startcol + 34] !== null) ? (string) $row[$startcol + 34] : null;
+            $this->owner_id = ($row[$startcol + 35] !== null) ? (int) $row[$startcol + 35] : null;
+            $this->description = ($row[$startcol + 36] !== null) ? (string) $row[$startcol + 36] : null;
+            $this->last_played = ($row[$startcol + 37] !== null) ? (string) $row[$startcol + 37] : null;
+            $this->play_count = ($row[$startcol + 38] !== null) ? (int) $row[$startcol + 38] : null;
+            $this->length = ($row[$startcol + 39] !== null) ? (string) $row[$startcol + 39] : null;
+            $this->mime = ($row[$startcol + 40] !== null) ? (string) $row[$startcol + 40] : null;
+            $this->created_at = ($row[$startcol + 41] !== null) ? (string) $row[$startcol + 41] : null;
+            $this->updated_at = ($row[$startcol + 42] !== null) ? (string) $row[$startcol + 42] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -1935,7 +2013,7 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 41; // 41 = AudioFilePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 43; // 43 = AudioFilePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating AudioFile object", $e);
@@ -2299,6 +2377,12 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
         if ($this->isColumnModified(AudioFilePeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = '"name"';
         }
+        if ($this->isColumnModified(AudioFilePeer::CREATOR)) {
+            $modifiedColumns[':p' . $index++]  = '"creator"';
+        }
+        if ($this->isColumnModified(AudioFilePeer::SOURCE)) {
+            $modifiedColumns[':p' . $index++]  = '"source"';
+        }
         if ($this->isColumnModified(AudioFilePeer::OWNER_ID)) {
             $modifiedColumns[':p' . $index++]  = '"owner_id"';
         }
@@ -2432,6 +2516,12 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
                         break;
                     case '"name"':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
+                        break;
+                    case '"creator"':
+                        $stmt->bindValue($identifier, $this->creator, PDO::PARAM_STR);
+                        break;
+                    case '"source"':
+                        $stmt->bindValue($identifier, $this->source, PDO::PARAM_STR);
                         break;
                     case '"owner_id"':
                         $stmt->bindValue($identifier, $this->owner_id, PDO::PARAM_INT);
@@ -2708,27 +2798,33 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
                 return $this->getName();
                 break;
             case 33:
-                return $this->getOwnerId();
+                return $this->getCreator();
                 break;
             case 34:
-                return $this->getDescription();
+                return $this->getSource();
                 break;
             case 35:
-                return $this->getLastPlayedTime();
+                return $this->getOwnerId();
                 break;
             case 36:
-                return $this->getPlayCount();
+                return $this->getDescription();
                 break;
             case 37:
-                return $this->getLength();
+                return $this->getLastPlayedTime();
                 break;
             case 38:
-                return $this->getMime();
+                return $this->getPlayCount();
                 break;
             case 39:
-                return $this->getCreatedAt();
+                return $this->getLength();
                 break;
             case 40:
+                return $this->getMime();
+                break;
+            case 41:
+                return $this->getCreatedAt();
+                break;
+            case 42:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -2793,14 +2889,16 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
             $keys[30] => $this->getIsPlaylist(),
             $keys[31] => $this->getId(),
             $keys[32] => $this->getName(),
-            $keys[33] => $this->getOwnerId(),
-            $keys[34] => $this->getDescription(),
-            $keys[35] => $this->getLastPlayedTime(),
-            $keys[36] => $this->getPlayCount(),
-            $keys[37] => $this->getLength(),
-            $keys[38] => $this->getMime(),
-            $keys[39] => $this->getCreatedAt(),
-            $keys[40] => $this->getUpdatedAt(),
+            $keys[33] => $this->getCreator(),
+            $keys[34] => $this->getSource(),
+            $keys[35] => $this->getOwnerId(),
+            $keys[36] => $this->getDescription(),
+            $keys[37] => $this->getLastPlayedTime(),
+            $keys[38] => $this->getPlayCount(),
+            $keys[39] => $this->getLength(),
+            $keys[40] => $this->getMime(),
+            $keys[41] => $this->getCreatedAt(),
+            $keys[42] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -2951,27 +3049,33 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
                 $this->setName($value);
                 break;
             case 33:
-                $this->setOwnerId($value);
+                $this->setCreator($value);
                 break;
             case 34:
-                $this->setDescription($value);
+                $this->setSource($value);
                 break;
             case 35:
-                $this->setLastPlayedTime($value);
+                $this->setOwnerId($value);
                 break;
             case 36:
-                $this->setPlayCount($value);
+                $this->setDescription($value);
                 break;
             case 37:
-                $this->setLength($value);
+                $this->setLastPlayedTime($value);
                 break;
             case 38:
-                $this->setMime($value);
+                $this->setPlayCount($value);
                 break;
             case 39:
-                $this->setCreatedAt($value);
+                $this->setLength($value);
                 break;
             case 40:
+                $this->setMime($value);
+                break;
+            case 41:
+                $this->setCreatedAt($value);
+                break;
+            case 42:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -3031,14 +3135,16 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
         if (array_key_exists($keys[30], $arr)) $this->setIsPlaylist($arr[$keys[30]]);
         if (array_key_exists($keys[31], $arr)) $this->setId($arr[$keys[31]]);
         if (array_key_exists($keys[32], $arr)) $this->setName($arr[$keys[32]]);
-        if (array_key_exists($keys[33], $arr)) $this->setOwnerId($arr[$keys[33]]);
-        if (array_key_exists($keys[34], $arr)) $this->setDescription($arr[$keys[34]]);
-        if (array_key_exists($keys[35], $arr)) $this->setLastPlayedTime($arr[$keys[35]]);
-        if (array_key_exists($keys[36], $arr)) $this->setPlayCount($arr[$keys[36]]);
-        if (array_key_exists($keys[37], $arr)) $this->setLength($arr[$keys[37]]);
-        if (array_key_exists($keys[38], $arr)) $this->setMime($arr[$keys[38]]);
-        if (array_key_exists($keys[39], $arr)) $this->setCreatedAt($arr[$keys[39]]);
-        if (array_key_exists($keys[40], $arr)) $this->setUpdatedAt($arr[$keys[40]]);
+        if (array_key_exists($keys[33], $arr)) $this->setCreator($arr[$keys[33]]);
+        if (array_key_exists($keys[34], $arr)) $this->setSource($arr[$keys[34]]);
+        if (array_key_exists($keys[35], $arr)) $this->setOwnerId($arr[$keys[35]]);
+        if (array_key_exists($keys[36], $arr)) $this->setDescription($arr[$keys[36]]);
+        if (array_key_exists($keys[37], $arr)) $this->setLastPlayedTime($arr[$keys[37]]);
+        if (array_key_exists($keys[38], $arr)) $this->setPlayCount($arr[$keys[38]]);
+        if (array_key_exists($keys[39], $arr)) $this->setLength($arr[$keys[39]]);
+        if (array_key_exists($keys[40], $arr)) $this->setMime($arr[$keys[40]]);
+        if (array_key_exists($keys[41], $arr)) $this->setCreatedAt($arr[$keys[41]]);
+        if (array_key_exists($keys[42], $arr)) $this->setUpdatedAt($arr[$keys[42]]);
     }
 
     /**
@@ -3083,6 +3189,8 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
         if ($this->isColumnModified(AudioFilePeer::IS_PLAYLIST)) $criteria->add(AudioFilePeer::IS_PLAYLIST, $this->is_playlist);
         if ($this->isColumnModified(AudioFilePeer::ID)) $criteria->add(AudioFilePeer::ID, $this->id);
         if ($this->isColumnModified(AudioFilePeer::NAME)) $criteria->add(AudioFilePeer::NAME, $this->name);
+        if ($this->isColumnModified(AudioFilePeer::CREATOR)) $criteria->add(AudioFilePeer::CREATOR, $this->creator);
+        if ($this->isColumnModified(AudioFilePeer::SOURCE)) $criteria->add(AudioFilePeer::SOURCE, $this->source);
         if ($this->isColumnModified(AudioFilePeer::OWNER_ID)) $criteria->add(AudioFilePeer::OWNER_ID, $this->owner_id);
         if ($this->isColumnModified(AudioFilePeer::DESCRIPTION)) $criteria->add(AudioFilePeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(AudioFilePeer::LAST_PLAYED)) $criteria->add(AudioFilePeer::LAST_PLAYED, $this->last_played);
@@ -3186,6 +3294,8 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
         $copyObj->setIsScheduled($this->getIsScheduled());
         $copyObj->setIsPlaylist($this->getIsPlaylist());
         $copyObj->setName($this->getName());
+        $copyObj->setCreator($this->getCreator());
+        $copyObj->setSource($this->getSource());
         $copyObj->setOwnerId($this->getOwnerId());
         $copyObj->setDescription($this->getDescription());
         $copyObj->setLastPlayedTime($this->getLastPlayedTime());
@@ -3445,6 +3555,8 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
         $this->is_playlist = null;
         $this->id = null;
         $this->name = null;
+        $this->creator = null;
+        $this->source = null;
         $this->owner_id = null;
         $this->description = null;
         $this->last_played = null;
@@ -3557,6 +3669,8 @@ abstract class BaseAudioFile extends MediaItem implements Persistent
     {
         $parent = $this->getParentOrCreate($con);
         $parent->setName($this->getName());
+        $parent->setCreator($this->getCreator());
+        $parent->setSource($this->getSource());
         $parent->setOwnerId($this->getOwnerId());
         $parent->setDescription($this->getDescription());
         $parent->setLastPlayedTime($this->getLastPlayedTime());

@@ -307,7 +307,9 @@
   <table name="media_item" phpName="MediaItem">
     <behavior name="timestampable" />
     <column name="id" phpName="Id" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="name" phpName="Name" type="VARCHAR" size="128" required="false" />
+    <column name="name" phpName="Name" type="VARCHAR" size="512" required="false" />
+    <column name="creator" phpName="Creator" type="VARCHAR" size="512" required="false"/>
+    <column name="source" phpName="Source" type="VARCHAR" size="512" required="false"/>
     <column name="owner_id" phpName="OwnerId" type="INTEGER" required="false"/>
     <column name="description" phpName="Description" type="VARCHAR" size="512" required="false"/>
     <column name="last_played" phpName="LastPlayedTime" type="TIMESTAMP" size="6" required="false"/>

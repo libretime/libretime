@@ -328,7 +328,7 @@ class Application_Model_ShowBuilder
     			$mediaItem = $scheduledItem->getMediaItem();
     			$row["title"] = htmlspecialchars($mediaItem->getName());
     			$row["creator"] = htmlspecialchars($mediaItem->getCreator());
-    			$row["album"] = "";//htmlspecialchars($p_item["file_album_title"]);
+    			$row["album"] = htmlspecialchars($mediaItem->getSource());
     			$row["mime"] = $mediaItem->getMime();
     		
     			$row["cuein"] = $scheduledItem->getDbCueIn();

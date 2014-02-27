@@ -28,6 +28,8 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method PlaylistQuery orderByRules($order = Criteria::ASC) Order by the rules column
  * @method PlaylistQuery orderById($order = Criteria::ASC) Order by the id column
  * @method PlaylistQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method PlaylistQuery orderByCreator($order = Criteria::ASC) Order by the creator column
+ * @method PlaylistQuery orderBySource($order = Criteria::ASC) Order by the source column
  * @method PlaylistQuery orderByOwnerId($order = Criteria::ASC) Order by the owner_id column
  * @method PlaylistQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method PlaylistQuery orderByLastPlayedTime($order = Criteria::ASC) Order by the last_played column
@@ -41,6 +43,8 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method PlaylistQuery groupByRules() Group by the rules column
  * @method PlaylistQuery groupById() Group by the id column
  * @method PlaylistQuery groupByName() Group by the name column
+ * @method PlaylistQuery groupByCreator() Group by the creator column
+ * @method PlaylistQuery groupBySource() Group by the source column
  * @method PlaylistQuery groupByOwnerId() Group by the owner_id column
  * @method PlaylistQuery groupByDescription() Group by the description column
  * @method PlaylistQuery groupByLastPlayedTime() Group by the last_played column
@@ -72,6 +76,8 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method Playlist findOneByClassKey(int $class_key) Return the first Playlist filtered by the class_key column
  * @method Playlist findOneByRules(string $rules) Return the first Playlist filtered by the rules column
  * @method Playlist findOneByName(string $name) Return the first Playlist filtered by the name column
+ * @method Playlist findOneByCreator(string $creator) Return the first Playlist filtered by the creator column
+ * @method Playlist findOneBySource(string $source) Return the first Playlist filtered by the source column
  * @method Playlist findOneByOwnerId(int $owner_id) Return the first Playlist filtered by the owner_id column
  * @method Playlist findOneByDescription(string $description) Return the first Playlist filtered by the description column
  * @method Playlist findOneByLastPlayedTime(string $last_played) Return the first Playlist filtered by the last_played column
@@ -85,6 +91,8 @@ use Airtime\MediaItem\PlaylistQuery;
  * @method array findByRules(string $rules) Return Playlist objects filtered by the rules column
  * @method array findById(int $id) Return Playlist objects filtered by the id column
  * @method array findByName(string $name) Return Playlist objects filtered by the name column
+ * @method array findByCreator(string $creator) Return Playlist objects filtered by the creator column
+ * @method array findBySource(string $source) Return Playlist objects filtered by the source column
  * @method array findByOwnerId(int $owner_id) Return Playlist objects filtered by the owner_id column
  * @method array findByDescription(string $description) Return Playlist objects filtered by the description column
  * @method array findByLastPlayedTime(string $last_played) Return Playlist objects filtered by the last_played column
@@ -200,7 +208,7 @@ abstract class BasePlaylistQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "class_key", "rules", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_playlist" WHERE "id" = :p0';
+        $sql = 'SELECT "class_key", "rules", "id", "name", "creator", "source", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_playlist" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -432,6 +440,64 @@ abstract class BasePlaylistQuery extends MediaItemQuery
         }
 
         return $this->addUsingAlias(PlaylistPeer::NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the creator column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCreator('fooValue');   // WHERE creator = 'fooValue'
+     * $query->filterByCreator('%fooValue%'); // WHERE creator LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $creator The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PlaylistQuery The current query, for fluid interface
+     */
+    public function filterByCreator($creator = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($creator)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $creator)) {
+                $creator = str_replace('*', '%', $creator);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PlaylistPeer::CREATOR, $creator, $comparison);
+    }
+
+    /**
+     * Filter the query on the source column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySource('fooValue');   // WHERE source = 'fooValue'
+     * $query->filterBySource('%fooValue%'); // WHERE source LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $source The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PlaylistQuery The current query, for fluid interface
+     */
+    public function filterBySource($source = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($source)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $source)) {
+                $source = str_replace('*', '%', $source);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PlaylistPeer::SOURCE, $source, $comparison);
     }
 
     /**

@@ -44,19 +44,25 @@ abstract class BaseMediaItemPeer
     const TM_CLASS = 'Airtime\\map\\MediaItemTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 11;
+    const NUM_COLUMNS = 13;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 11;
+    const NUM_HYDRATE_COLUMNS = 13;
 
     /** the column name for the id field */
     const ID = 'media_item.id';
 
     /** the column name for the name field */
     const NAME = 'media_item.name';
+
+    /** the column name for the creator field */
+    const CREATOR = 'media_item.creator';
+
+    /** the column name for the source field */
+    const SOURCE = 'media_item.source';
 
     /** the column name for the owner_id field */
     const OWNER_ID = 'media_item.owner_id';
@@ -104,12 +110,12 @@ abstract class BaseMediaItemPeer
      * e.g. MediaItemPeer::$fieldNames[MediaItemPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', 'DescendantClass', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', 'descendantClass', ),
-        BasePeer::TYPE_COLNAME => array (MediaItemPeer::ID, MediaItemPeer::NAME, MediaItemPeer::OWNER_ID, MediaItemPeer::DESCRIPTION, MediaItemPeer::LAST_PLAYED, MediaItemPeer::PLAY_COUNT, MediaItemPeer::LENGTH, MediaItemPeer::MIME, MediaItemPeer::CREATED_AT, MediaItemPeer::UPDATED_AT, MediaItemPeer::DESCENDANT_CLASS, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', 'DESCENDANT_CLASS', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', 'descendant_class', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Creator', 'Source', 'OwnerId', 'Description', 'LastPlayedTime', 'PlayCount', 'Length', 'Mime', 'CreatedAt', 'UpdatedAt', 'DescendantClass', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'creator', 'source', 'ownerId', 'description', 'lastPlayedTime', 'playCount', 'length', 'mime', 'createdAt', 'updatedAt', 'descendantClass', ),
+        BasePeer::TYPE_COLNAME => array (MediaItemPeer::ID, MediaItemPeer::NAME, MediaItemPeer::CREATOR, MediaItemPeer::SOURCE, MediaItemPeer::OWNER_ID, MediaItemPeer::DESCRIPTION, MediaItemPeer::LAST_PLAYED, MediaItemPeer::PLAY_COUNT, MediaItemPeer::LENGTH, MediaItemPeer::MIME, MediaItemPeer::CREATED_AT, MediaItemPeer::UPDATED_AT, MediaItemPeer::DESCENDANT_CLASS, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'CREATOR', 'SOURCE', 'OWNER_ID', 'DESCRIPTION', 'LAST_PLAYED', 'PLAY_COUNT', 'LENGTH', 'MIME', 'CREATED_AT', 'UPDATED_AT', 'DESCENDANT_CLASS', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'creator', 'source', 'owner_id', 'description', 'last_played', 'play_count', 'length', 'mime', 'created_at', 'updated_at', 'descendant_class', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -119,12 +125,12 @@ abstract class BaseMediaItemPeer
      * e.g. MediaItemPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'OwnerId' => 2, 'Description' => 3, 'LastPlayedTime' => 4, 'PlayCount' => 5, 'Length' => 6, 'Mime' => 7, 'CreatedAt' => 8, 'UpdatedAt' => 9, 'DescendantClass' => 10, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'ownerId' => 2, 'description' => 3, 'lastPlayedTime' => 4, 'playCount' => 5, 'length' => 6, 'mime' => 7, 'createdAt' => 8, 'updatedAt' => 9, 'descendantClass' => 10, ),
-        BasePeer::TYPE_COLNAME => array (MediaItemPeer::ID => 0, MediaItemPeer::NAME => 1, MediaItemPeer::OWNER_ID => 2, MediaItemPeer::DESCRIPTION => 3, MediaItemPeer::LAST_PLAYED => 4, MediaItemPeer::PLAY_COUNT => 5, MediaItemPeer::LENGTH => 6, MediaItemPeer::MIME => 7, MediaItemPeer::CREATED_AT => 8, MediaItemPeer::UPDATED_AT => 9, MediaItemPeer::DESCENDANT_CLASS => 10, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'OWNER_ID' => 2, 'DESCRIPTION' => 3, 'LAST_PLAYED' => 4, 'PLAY_COUNT' => 5, 'LENGTH' => 6, 'MIME' => 7, 'CREATED_AT' => 8, 'UPDATED_AT' => 9, 'DESCENDANT_CLASS' => 10, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'owner_id' => 2, 'description' => 3, 'last_played' => 4, 'play_count' => 5, 'length' => 6, 'mime' => 7, 'created_at' => 8, 'updated_at' => 9, 'descendant_class' => 10, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Creator' => 2, 'Source' => 3, 'OwnerId' => 4, 'Description' => 5, 'LastPlayedTime' => 6, 'PlayCount' => 7, 'Length' => 8, 'Mime' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, 'DescendantClass' => 12, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'creator' => 2, 'source' => 3, 'ownerId' => 4, 'description' => 5, 'lastPlayedTime' => 6, 'playCount' => 7, 'length' => 8, 'mime' => 9, 'createdAt' => 10, 'updatedAt' => 11, 'descendantClass' => 12, ),
+        BasePeer::TYPE_COLNAME => array (MediaItemPeer::ID => 0, MediaItemPeer::NAME => 1, MediaItemPeer::CREATOR => 2, MediaItemPeer::SOURCE => 3, MediaItemPeer::OWNER_ID => 4, MediaItemPeer::DESCRIPTION => 5, MediaItemPeer::LAST_PLAYED => 6, MediaItemPeer::PLAY_COUNT => 7, MediaItemPeer::LENGTH => 8, MediaItemPeer::MIME => 9, MediaItemPeer::CREATED_AT => 10, MediaItemPeer::UPDATED_AT => 11, MediaItemPeer::DESCENDANT_CLASS => 12, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'CREATOR' => 2, 'SOURCE' => 3, 'OWNER_ID' => 4, 'DESCRIPTION' => 5, 'LAST_PLAYED' => 6, 'PLAY_COUNT' => 7, 'LENGTH' => 8, 'MIME' => 9, 'CREATED_AT' => 10, 'UPDATED_AT' => 11, 'DESCENDANT_CLASS' => 12, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'creator' => 2, 'source' => 3, 'owner_id' => 4, 'description' => 5, 'last_played' => 6, 'play_count' => 7, 'length' => 8, 'mime' => 9, 'created_at' => 10, 'updated_at' => 11, 'descendant_class' => 12, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -200,6 +206,8 @@ abstract class BaseMediaItemPeer
         if (null === $alias) {
             $criteria->addSelectColumn(MediaItemPeer::ID);
             $criteria->addSelectColumn(MediaItemPeer::NAME);
+            $criteria->addSelectColumn(MediaItemPeer::CREATOR);
+            $criteria->addSelectColumn(MediaItemPeer::SOURCE);
             $criteria->addSelectColumn(MediaItemPeer::OWNER_ID);
             $criteria->addSelectColumn(MediaItemPeer::DESCRIPTION);
             $criteria->addSelectColumn(MediaItemPeer::LAST_PLAYED);
@@ -212,6 +220,8 @@ abstract class BaseMediaItemPeer
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.name');
+            $criteria->addSelectColumn($alias . '.creator');
+            $criteria->addSelectColumn($alias . '.source');
             $criteria->addSelectColumn($alias . '.owner_id');
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.last_played');

@@ -26,6 +26,8 @@ use Airtime\MediaItem\WebstreamQuery;
  * @method WebstreamQuery orderByUrl($order = Criteria::ASC) Order by the url column
  * @method WebstreamQuery orderById($order = Criteria::ASC) Order by the id column
  * @method WebstreamQuery orderByName($order = Criteria::ASC) Order by the name column
+ * @method WebstreamQuery orderByCreator($order = Criteria::ASC) Order by the creator column
+ * @method WebstreamQuery orderBySource($order = Criteria::ASC) Order by the source column
  * @method WebstreamQuery orderByOwnerId($order = Criteria::ASC) Order by the owner_id column
  * @method WebstreamQuery orderByDescription($order = Criteria::ASC) Order by the description column
  * @method WebstreamQuery orderByLastPlayedTime($order = Criteria::ASC) Order by the last_played column
@@ -38,6 +40,8 @@ use Airtime\MediaItem\WebstreamQuery;
  * @method WebstreamQuery groupByUrl() Group by the url column
  * @method WebstreamQuery groupById() Group by the id column
  * @method WebstreamQuery groupByName() Group by the name column
+ * @method WebstreamQuery groupByCreator() Group by the creator column
+ * @method WebstreamQuery groupBySource() Group by the source column
  * @method WebstreamQuery groupByOwnerId() Group by the owner_id column
  * @method WebstreamQuery groupByDescription() Group by the description column
  * @method WebstreamQuery groupByLastPlayedTime() Group by the last_played column
@@ -64,6 +68,8 @@ use Airtime\MediaItem\WebstreamQuery;
  *
  * @method Webstream findOneByUrl(string $url) Return the first Webstream filtered by the url column
  * @method Webstream findOneByName(string $name) Return the first Webstream filtered by the name column
+ * @method Webstream findOneByCreator(string $creator) Return the first Webstream filtered by the creator column
+ * @method Webstream findOneBySource(string $source) Return the first Webstream filtered by the source column
  * @method Webstream findOneByOwnerId(int $owner_id) Return the first Webstream filtered by the owner_id column
  * @method Webstream findOneByDescription(string $description) Return the first Webstream filtered by the description column
  * @method Webstream findOneByLastPlayedTime(string $last_played) Return the first Webstream filtered by the last_played column
@@ -76,6 +82,8 @@ use Airtime\MediaItem\WebstreamQuery;
  * @method array findByUrl(string $url) Return Webstream objects filtered by the url column
  * @method array findById(int $id) Return Webstream objects filtered by the id column
  * @method array findByName(string $name) Return Webstream objects filtered by the name column
+ * @method array findByCreator(string $creator) Return Webstream objects filtered by the creator column
+ * @method array findBySource(string $source) Return Webstream objects filtered by the source column
  * @method array findByOwnerId(int $owner_id) Return Webstream objects filtered by the owner_id column
  * @method array findByDescription(string $description) Return Webstream objects filtered by the description column
  * @method array findByLastPlayedTime(string $last_played) Return Webstream objects filtered by the last_played column
@@ -191,7 +199,7 @@ abstract class BaseWebstreamQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "url", "id", "name", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_webstream" WHERE "id" = :p0';
+        $sql = 'SELECT "url", "id", "name", "creator", "source", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_webstream" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -380,6 +388,64 @@ abstract class BaseWebstreamQuery extends MediaItemQuery
         }
 
         return $this->addUsingAlias(WebstreamPeer::NAME, $name, $comparison);
+    }
+
+    /**
+     * Filter the query on the creator column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByCreator('fooValue');   // WHERE creator = 'fooValue'
+     * $query->filterByCreator('%fooValue%'); // WHERE creator LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $creator The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return WebstreamQuery The current query, for fluid interface
+     */
+    public function filterByCreator($creator = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($creator)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $creator)) {
+                $creator = str_replace('*', '%', $creator);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(WebstreamPeer::CREATOR, $creator, $comparison);
+    }
+
+    /**
+     * Filter the query on the source column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterBySource('fooValue');   // WHERE source = 'fooValue'
+     * $query->filterBySource('%fooValue%'); // WHERE source LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $source The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return WebstreamQuery The current query, for fluid interface
+     */
+    public function filterBySource($source = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($source)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $source)) {
+                $source = str_replace('*', '%', $source);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(WebstreamPeer::SOURCE, $source, $comparison);
     }
 
     /**
