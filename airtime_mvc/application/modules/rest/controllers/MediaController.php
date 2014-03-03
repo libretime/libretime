@@ -106,7 +106,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: No show ID specified."); 
+            $resp->appendBody("ERROR: No file ID specified."); 
             return false;
         } 
         return $id;
@@ -115,23 +115,15 @@ class Rest_MediaController extends Zend_Rest_Controller
     private function verifyAPIKey()
     {
         //The API key is passed in via HTTP "basic authentication":
-        //  http://en.wikipedia.org/wiki/Basic_access_authentication
+        // http://en.wikipedia.org/wiki/Basic_access_authentication
 
-        //TODO: Fetch the user's API key from the database to check against 
-        $unencodedStoredApiKey = "foobar"; 
-        $encodedStoredApiKey = base64_encode($unencodedStoredApiKey . ":");
+        $CC_CONFIG = Config::getConfig();
 
-        //Decode the API key that was passed to us in the HTTP request.
         $authHeader = $this->getRequest()->getHeader("Authorization");
-        $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
 
-        //if ($encodedRequestApiKey === $encodedStoredApiKey)
-        if (true)
-        {
+        if (in_array($authHeader, $CC_CONFIG["apiKey"])) {
             return true;
-        }
-        else
-        {
+        } else {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(401);
             $resp->appendBody("ERROR: Incorrect API key."); 
