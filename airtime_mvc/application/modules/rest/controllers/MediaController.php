@@ -95,7 +95,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         if ($file) {
             $file->delete();
             $this->getResponse()
-                ->setHttpResponseCode(200);
+                ->setHttpResponseCode(204);
         } else {
             $this->fileNotFoundResponse();
         }
