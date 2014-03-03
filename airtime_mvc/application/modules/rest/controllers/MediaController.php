@@ -54,11 +54,11 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file->fromArray($this->getRequest()->getPost());
         $file->save();
 
-        $resp = $this->getResponse();
-        $resp->setHttpResponseCode(201);
-        $resp->appendBody(json_encode($file->toArray()));
+        $this->getResponse()
+            ->setHttpResponseCode(201)
+            ->appendBody(json_encode($file->toArray()));
     }
-    
+
     public function putAction()
     {
         if (!$this->verifyApiKey()) {
@@ -70,17 +70,18 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         
         $file = CcFilesQuery::create()->findPk($id);
-        if ($show)
+        if ($file)
         {
-            $show->importFrom('JSON', $this->getRequest()->getRawBody());
-            $show->save();
+            $file->fromArray(json_decode($this->getRequest()->getRawBody(), true));
+            $file->save();
             $this->getResponse()
-                ->appendBody("From putAction() updating the requested show");
+                ->setHttpResponseCode(200)
+                ->appendBody(json_encode($file->toArray()));
         } else {
-            $this->showNotFoundResponse();
+            $this->fileNotFoundResponse();
         }
     }
-    
+
     public function deleteAction()
     {
         if (!$this->verifyApiKey()) {
@@ -90,11 +91,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id) {
             return;
         }
-        $show = CcShowQuery::create()->$query->findPk($id);
-        if ($show) {
-            $show->delete();
+        $file = CcFilesQuery::create()->findPk($id);
+        if ($file) {
+            $file->delete();
+            $this->getResponse()
+                ->setHttpResponseCode(200);
         } else {
-            $this->showNotFoundResponse();
+            $this->fileNotFoundResponse();
         }
     }
 
@@ -140,6 +143,6 @@ class Rest_MediaController extends Zend_Rest_Controller
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
-        $resp->appendBody("ERROR: Show not found."); 
+        $resp->appendBody("ERROR: Media not found."); 
     }
 }
