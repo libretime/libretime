@@ -614,20 +614,32 @@ class Application_Service_MediaService
 		return $datatablesColumns;
 	}
 
-	private function getColumnType($base, $column) {
+	private function getColumnType($prop, $modelName) {
+		
+		if (strrpos($prop, ".") === false) {
+			$base = $modelName;
+			$column = $prop;
+		}
+		else {
+			list($base, $column) = explode(".", $prop);
+		}
+		
 		$b = explode("\\", $base);
 		$b = array_pop($b);
 		$class = $this->_ns["{$b}Peer"];
 
 		$field = $class::translateFieldName($column, BasePeer::TYPE_PHPNAME, BasePeer::TYPE_FIELDNAME);
-		Logging::info($field);
+		//Logging::info($field);
 
 		$propelMap = $class::getTableMap();
 		$col = $propelMap->getColumn($field);
 		$type = $col->getType();
-		Logging::info($type);
+		//Logging::info($type);
 
-		return $type;
+		return array(
+			"type" => $type,
+			"column" => "{$base}.{$column}"
+		);
 	}
 
 	private function searchNumber($query, $col, $from, $to) {
@@ -697,8 +709,12 @@ class Application_Service_MediaService
 		//returns the final query condition to combine with other columns.
 		return $name;
 	}
+	
+	private function isVisible($prop, $settings) {
+		
+	}
 
-	private function buildQuery($query, $params, $dataColumns, $aliasedColumns) {
+	private function buildQuery($query, $params, $dataColumns, $aliasedColumns, $settings) {
 		//namespacing seems to cause a problem in the WHERE clause
 		//if we don't prefix the PHP name with the model or alias.
 		$modelName = $query->getModelName();
@@ -720,20 +736,12 @@ class Application_Service_MediaService
 				&& in_array($prop, $dataColumns)
 				&& !in_array($prop, $aliasedColumns)) {
 
-				if (strrpos($prop, ".") === false) {
-					$b = $modelName;
-					$c = $prop;
-				}
-				else {
-					list($b, $c) = explode(".", $prop);
-				}
-
-				$type = self::getColumnType($b, $c);
-				$searchCol = "{$b}.{$c}";
+				$info = self::getColumnType($prop, $modelName);
+				$searchCol = $info["column"];
 				$value = $params["sSearch_{$i}"];
 				$separator = $params["sRangeSeparator"];
 
-				switch($type) {
+				switch($info["type"]) {
 					case PropelColumnTypes::DATE:
       				case PropelColumnTypes::TIMESTAMP:
       					list($from, $to) = explode($separator, $value);
@@ -754,7 +762,6 @@ class Application_Service_MediaService
 			$query->where($advConds, 'and');
 		}
 
-		//take care of WHERE clause
 		/*
 		$search = $params["sSearch"];
 		$searchTerms = $search == "" ? array() : explode(" ", $search);
@@ -768,7 +775,9 @@ class Application_Service_MediaService
 			$len = intval($params["iColumns"]);
 			for ($i = 0; $i < $len; $i++) {
 
-				if ($params["bSearchable_{$i}"] === "true") {
+				if ($params["bSearchable_{$i}"] === "true"
+					&& in_array($prop, $dataColumns)
+					&& !in_array($prop, $aliasedColumns)) {
 
 					$whereTerm = $params["mDataProp_{$i}"];
 					if (strrpos($whereTerm, ".") === false) {
@@ -780,6 +789,9 @@ class Application_Service_MediaService
 					$param = "{$term}%";
 
 					$query->condition($name, $cond, $param);
+					
+					$info = self::getColumnType($prop, $modelName);
+					$searchCol = $info["column"];
 
 					$orConditions[] = $name;
 				}
@@ -887,13 +899,16 @@ class Application_Service_MediaService
 
 		$columns = array_keys(self::getAudioFileColumnDetails());
 		$aliases = self::getAudioFileColumnAliases();
+		
+		$datatables = Application_Model_Preference::getAudioTableSetting();
+		Logging::info($datatables);
 
 		$q = AudioFileQuery::create();
 		
 		$m = $q->getModelName();
 		$q->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
 
-		$results = self::buildQuery($q, $params, $columns, $aliases);
+		$results = self::buildQuery($q, $params, $columns, $aliases, $datatables);
 
 		Logging::disablePropelLogging();
 
@@ -910,9 +925,12 @@ class Application_Service_MediaService
 
 		$columns = array_keys(self::getWebstreamColumnDetails());
 		$aliases = self::getWebstreamColumnAliases();
+		
+		$datatables = Application_Model_Preference::getWebstreamTableSetting();
+		Logging::info($datatables);
 
 		$q = WebstreamQuery::create();
-		$results = self::buildQuery($q, $params, $columns, $aliases);
+		$results = self::buildQuery($q, $params, $columns, $aliases, $datatables);
 
 		Logging::disablePropelLogging();
 
@@ -929,9 +947,12 @@ class Application_Service_MediaService
 
 		$columns = array_keys(self::getPlaylistColumnDetails());
 		$aliases = self::getPlaylistColumnAliases();
+		
+		$datatables = Application_Model_Preference::getPlaylistTableSetting();
+		Logging::info($datatables);
 
 		$q = PlaylistQuery::create();
-		$results = self::buildQuery($q, $params, $columns, $aliases);
+		$results = self::buildQuery($q, $params, $columns, $aliases, $datatables);
 
 		Logging::disablePropelLogging();
 

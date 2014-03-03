@@ -610,7 +610,7 @@ var AIRTIME = (function(AIRTIME) {
 		    	},
 		    	type: "audio"
 		    },
-		    "lib_webstreams": {
+		    "lib_webstream": {
 		    	initialized: false,
 		    	initialize: function() {
 		    		
@@ -623,7 +623,7 @@ var AIRTIME = (function(AIRTIME) {
 		    	},
 		    	type: "webstream"
 		    },
-		    "lib_playlists": {
+		    "lib_playlist": {
 		    	initialized: false,
 		    	initialize: function() {
 		    		
