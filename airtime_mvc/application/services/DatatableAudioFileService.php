@@ -12,9 +12,9 @@ use Airtime\MediaItemQuery;
 
 class Application_Service_DatatableAudioFileService extends Application_Service_DatatableService
 {
-	private $columns; 
+	protected $columns; 
 	
-	private $order = array (
+	protected $order = array (
 		"IsScheduled",
 		"IsPlaylist",
 		"TrackTitle",
@@ -46,7 +46,7 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		"Year",
 	);
 	
-	private $aliases = array(
+	protected $aliases = array(
 		"CueLength",
 	);
 	
@@ -55,11 +55,11 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		parent::__construct();
 	}
 	
-	private function getSettings() {
+	protected function getSettings() {
 		return Application_Model_Preference::getAudioTableSetting();
 	}
 	
-	private function getColumns() {
+	protected function getColumns() {
 
 		return array(
 			"Id" => array(
@@ -358,6 +358,27 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 					"type" => "number-range"
 				)
 			),
+		);
+	}
+	
+	public function getDatatables($params) {
+	
+		Logging::enablePropelLogging();
+	
+		$q = AudioFileQuery::create();
+	
+		$m = $q->getModelName();
+		$q->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
+		$q->joinWith("CcSubjs");
+	
+		$results = self::buildQuery($q, $params);
+	
+		Logging::disablePropelLogging();
+	
+		return array(
+			"count" => $results["count"],
+			"totalCount" => $results["totalCount"],
+			"records" => $this->createOutput($results["media"], $this->columnKeys)
 		);
 	}
 }

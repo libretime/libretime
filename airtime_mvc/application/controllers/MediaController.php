@@ -19,8 +19,8 @@ class MediaController extends Zend_Controller_Action
     {
     	$params = $this->getRequest()->getParams();
     	
-    	$mediaService = new Application_Service_MediaService();
-    	$r = $mediaService->getDatatablesAudioFiles($params);
+    	$datatablesService = new Application_Service_DatatableAudioFileService();
+    	$r = $datatablesService->getDatatables($params);
     	
     	$this->view->sEcho = intval($params["sEcho"]);
     	$this->view->iTotalDisplayRecords = $r["count"];
@@ -32,8 +32,8 @@ class MediaController extends Zend_Controller_Action
     {
     	$params = $this->getRequest()->getParams();
     	
-    	$mediaService = new Application_Service_MediaService();
-    	$r = $mediaService->getDatatablesWebstreams($params);
+    	$datatablesService = new Application_Service_DatatableWebstreamService();
+    	$r = $datatablesService->getDatatables($params);
     	 
     	$this->view->sEcho = intval($params["sEcho"]);
     	$this->view->iTotalDisplayRecords = $r["count"];
@@ -45,8 +45,8 @@ class MediaController extends Zend_Controller_Action
     {
     	$params = $this->getRequest()->getParams();
     	 
-    	$mediaService = new Application_Service_MediaService();
-    	$r = $mediaService->getDatatablesPlaylists($params);
+    	$datatablesService = new Application_Service_DatatablePlaylistService();
+    	$r = $datatablesService->getDatatables($params);
     	 
     	$this->view->sEcho = intval($params["sEcho"]);
     	$this->view->iTotalDisplayRecords = $r["count"];
