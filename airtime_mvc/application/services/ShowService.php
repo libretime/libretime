@@ -534,12 +534,11 @@ SQL;
             //check if this is null if "no end"
             $currentShowEndDateTime = $this->getRepeatingEndDate();
             
-            if ($currentShowEndDateTime != $endDateTime) {
-            	
+            if ($endDateTime && $currentShowEndDateTime != $endDateTime) {
             	$endDate = clone $endDateTime;
             	$endDate->setTimezone(new DateTimeZone("UTC"));
             	
-                //show "No End" option was toggled
+                //show's "No End" option was toggled
                 //or the end date comes earlier
                 if (is_null($currentShowEndDateTime) || ($endDateTime < $currentShowEndDateTime)) {
                     //"No End" option was unchecked so we need to delete the
