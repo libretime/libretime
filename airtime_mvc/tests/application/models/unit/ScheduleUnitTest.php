@@ -22,7 +22,7 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase //PHPUnit_Fr
         
     }
 
-    /*public function testIsFileScheduledInTheFuture()
+    public function testIsFileScheduledInTheFuture()
     {
         TestHelper::loginUser();
         $CC_CONFIG = Config::getConfig();
@@ -92,6 +92,6 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase //PHPUnit_Fr
         
         //Test the function we actually want to test. :-)
         $this->assertEquals($scheduleModel->IsFileScheduledInTheFuture($fileId), true);
-    }*/
+    }
 }
 

@@ -595,10 +595,9 @@ class Application_Model_Scheduler
                         ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
                         ->find();
                 } else {
-                    $instance_sql = "SELECT * FROM cc_show_instances ".
-                        "WHERE id = ".$schedule["instance"];
-                    $instances = Application_Common_Database::prepareAndExecute(
-                        $instance_sql);
+                    $instances = CcShowInstancesQuery::create()
+                        ->filterByDbId($schedule["instance"])
+                        ->find();
                 }
 
                 $excludePositions = array();
