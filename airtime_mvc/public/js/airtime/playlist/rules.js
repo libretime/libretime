@@ -11,9 +11,6 @@ var AIRTIME = (function(AIRTIME){
 			'<select class="input_select sp_input_select rule_criteria <%= showCriteria %>">' +
 				'<%= criteria %>' + 
 			'</select>' +
-			'<a class="btn btn-small pl-same-criteria">' +
-			    '<i class="icon-white icon-plus"></i>' +
-			'</a>' +
 			'<select class="input_select sp_input_select rule_modifier">'+
 				'<%= options %>'+
 			'</select>' +
@@ -24,8 +21,8 @@ var AIRTIME = (function(AIRTIME){
 			'<a class="btn btn-small btn-danger">' +
 				'<i class="icon-white icon-remove"></i>' +
 			'</a>' +
-			'<a class="btn btn-small pl-diff-criteria">' +
-			    '<i class="icon-white icon-plus"></i>' +
+			'<a class="btn btn-small pl-or-criteria">' +
+			    '<span>'+$.i18n._("OR")+'</span>' +
 			'</a>' +
 		'</div>';
 	
@@ -248,7 +245,18 @@ var AIRTIME = (function(AIRTIME){
 		
 		setupCriteriaOptions();
 		
-		$criteriaEl.on("click", ".pl-diff-criteria", function(e) {
+		$criteriaEl.on("click", "#spl_AND", function(e) {
+			e.preventDefault();
+			
+			var $el = createCriteriaRow("", "");
+			
+			$div = $("<div class='pl-criteria-and'></div>");
+			$div.append($el);
+			
+			$(this).before($div);
+		});
+		
+		$criteriaEl.on("click", ".pl-or-criteria", function(e) {
 			e.preventDefault();
 			
 			var $el = createCriteriaRow("", "");

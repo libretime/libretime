@@ -580,3 +580,7 @@ li.spl_empty {
 .expand-block-separate {
     border-top: 1px solid #5B5B5B;
 }
+
+.pl-criteria-and {
+	border: 2px solid;
+}
