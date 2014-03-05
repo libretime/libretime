@@ -15,7 +15,10 @@ abstract class Application_Service_DatatableService
 	public function __construct() {
 		
 		$this->columns = $this->getColumns();
+		
+		//can't rely on ordering with these settings as it can be one action behind.
 		$this->settings = $this->getSettings();
+		
 		$this->columnKeys = array_keys($this->columns);
 	}
 	
@@ -28,6 +31,12 @@ abstract class Application_Service_DatatableService
 		"PlaylistPeer" => "Airtime\MediaItem\PlaylistPeer",
 		"WebstreamPeer" => "Airtime\MediaItem\WebstreamPeer",
 		"CcSubjsPeer" => "Airtime\CcSubjsPeer",
+	);
+	
+	protected $_propelTextTypes = array(
+		PropelColumnTypes::VARCHAR,
+		PropelColumnTypes::LONGVARCHAR,
+		PropelColumnTypes::CHAR
 	);
 	
 	protected function enhanceDatatablesColumns(&$datatablesColumns) {
@@ -113,26 +122,32 @@ abstract class Application_Service_DatatableService
 		);
 	}
 	
+	private function generateRandomString($length = 15)
+	{
+	    return substr(sha1(rand()), 0, $length);
+	}
+	
 	private function searchNumber($query, $col, $from, $to) {
+		$prefix = self::generateRandomString(5);
 		$num = 0;
 	
 		if (isset($from) && is_numeric($from)) {
-			$name = "adv_{$col}_from";
+			$name = "{$prefix}_{$col}_from";
 			$cond = "{$col} >= ?";
 			$query->condition($name, $cond, $from);
 			$num++;
 		}
 	
 		if (isset($to) && is_numeric($to)) {
-			$name = "adv_{$col}_to";
+			$name = "{$prefix}_{$col}_to";
 			$cond = "{$col} <= ?";
 			$query->condition($name, $cond, $to);
 			$num++;
 		}
 	
 		if ($num > 1) {
-			$name = "adv_{$col}_from_to";
-			$query->combine(array("adv_{$col}_from", "adv_{$col}_to"), 'and', $name);
+			$name = "{$prefix}_{$col}_from_to";
+			$query->combine(array("{$prefix}_{$col}_from", "{$prefix}_{$col}_to"), 'and', $name);
 		}
 	
 		//returns the final query condition to combine with other columns.
@@ -142,8 +157,9 @@ abstract class Application_Service_DatatableService
 	//need to return name of condition so that
 	//all advanced search fields can be combined into an AND.
 	private function searchString($query, $col, $value) {
-	
-		$name = "adv_{$col}";
+		$prefix = self::generateRandomString(5);
+		
+		$name = "{$prefix}_{$col}";
 		$cond = "{$col} iLIKE ?";
 		$param = "%{$value}%";
 		$query->condition($name, $cond, $param);
@@ -153,9 +169,10 @@ abstract class Application_Service_DatatableService
 	
 	private function searchDate($query, $col, $from, $to) {
 		$num = 0;
+		$prefix = self::generateRandomString(5);
 	
 		if (isset($from) && preg_match_all('/(\d{4}-\d{2}-\d{2})/', $from)) {
-			$name = "adv_{$col}_from";
+			$name = "{$prefix}_{$col}_from";
 			$cond = "{$col} >= ?";
 	
 			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($from);
@@ -164,7 +181,7 @@ abstract class Application_Service_DatatableService
 		}
 	
 		if (isset($to) && preg_match_all('/(\d{4}-\d{2}-\d{2})/', $to)) {
-			$name = "adv_{$col}_to";
+			$name = "{$prefix}_{$col}_to";
 			$cond = "{$col} <= ?";
 	
 			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($to);
@@ -173,16 +190,25 @@ abstract class Application_Service_DatatableService
 		}
 	
 		if ($num > 1) {
-			$name = "adv_{$col}_from_to";
-			$query->combine(array("adv_{$col}_from", "adv_{$col}_to"), 'and', $name);
+			$name = "{$prefix}_{$col}_from_to";
+			$query->combine(array("{$prefix}_{$col}_from", "{$prefix}_{$col}_to"), 'and', $name);
 		}
 	
 		//returns the final query condition to combine with other columns.
 		return $name;
 	}
 	
-	protected function isVisible($prop, $settings) {
+	protected function isVisible($prop) {
 	
+		$origPropOrder = array_flip($this->order);
+		$origIndex = $origPropOrder[$prop];
+		
+		$origIndex++; //hacky, but used because of added checkbox column for now.
+		$currIndex = $this->settings["ColReorder"][$origIndex];
+		
+		$vis = $this->settings["abVisCols"][$currIndex];
+		
+		return ($vis === "true" ? true : false);
 	}
 	
 	protected function buildQuery($query, $params) {
@@ -196,89 +222,75 @@ abstract class Application_Service_DatatableService
 	
 		//add advanced search terms to query.
 		$len = intval($params["iColumns"]);
+		
+		//regular search terms
+		$search = $params["sSearch"];
+		$searchTerms = $search == "" ? array() : explode(" ", $search);
+		$searchTermCount = count($searchTerms);
+		
+		//from advanced search
 		$advConds = array();
+		//general search if column is visible and is varchar/text
+		$regularConds = array();
+		//combined conditions
+		$searchConds = array();
+		
 		for ($i = 0; $i < $len; $i++) {
 	
 			$prop = $params["mDataProp_{$i}"];
 	
 			if ($params["bSearchable_{$i}"] === "true"
-				&& $params["sSearch_{$i}"] != ""
 				&& in_array($prop, $this->columnKeys)
 				&& !in_array($prop, $this->aliases)) {
 	
 				$info = self::getColumnType($prop, $modelName);
 				$searchCol = $info["column"];
-				$value = $params["sSearch_{$i}"];
-				$separator = $params["sRangeSeparator"];
-	
-				switch($info["type"]) {
-					case PropelColumnTypes::DATE:
-					case PropelColumnTypes::TIMESTAMP:
-						list($from, $to) = explode($separator, $value);
-						$advConds[] = self::searchDate($query, $searchCol, $from, $to);
-						break;
-					case PropelColumnTypes::NUMERIC:
-					case PropelColumnTypes::INTEGER:
-						list($from, $to) = explode($separator, $value);
-						$advConds[] = self::searchNumber($query, $searchCol, $from, $to);
-						break;
-					default:
-						$advConds[] = self::searchString($query, $searchCol, $value);
-						break;
+				$type = $info["type"];
+				
+				if ($params["sSearch_{$i}"] != "") {
+					$value = $params["sSearch_{$i}"];
+					$separator = $params["sRangeSeparator"];
+					
+					switch($type) {
+						case PropelColumnTypes::DATE:
+						case PropelColumnTypes::TIMESTAMP:
+							list($from, $to) = explode($separator, $value);
+							$advConds[] = self::searchDate($query, $searchCol, $from, $to);
+							break;
+						case PropelColumnTypes::NUMERIC:
+						case PropelColumnTypes::INTEGER:
+							list($from, $to) = explode($separator, $value);
+							$advConds[] = self::searchNumber($query, $searchCol, $from, $to);
+							break;
+						default:
+							$advConds[] = self::searchString($query, $searchCol, $value);
+							break;
+					}
+				}
+				
+				if (self::isVisible($prop) && in_array($type, $this->_propelTextTypes)) {
+					
+					for ($s = 0; $s < $searchTermCount; $s++) {
+						
+						$regularConds[$s][] = self::searchString($query, $searchCol, $searchTerms[$s]);
+					}	
 				}
 			}
 		}
+		
+		if ($searchTermCount > 0) {
+			
+			for ($s = 0; $s < $searchTermCount; $s++) {
+			
+				$name = "regular_search_{$s}";
+				$query->combine($regularConds[$s], 'or', $name);
+				$advConds[] = $name;
+			}
+		}
+		
 		if (count($advConds) > 0) {
 			$query->where($advConds, 'and');
 		}
-	
-		/*
-			$search = $params["sSearch"];
-		$searchTerms = $search == "" ? array() : explode(" ", $search);
-		$andConditions = array();
-		$orConditions = array();
-	
-		foreach ($searchTerms as $term) {
-	
-		$orConditions = array();
-	
-		$len = intval($params["iColumns"]);
-		for ($i = 0; $i < $len; $i++) {
-	
-		if ($params["bSearchable_{$i}"] === "true"
-				&& in_array($prop, $dataColumns)
-				&& !in_array($prop, $aliasedColumns)) {
-	
-		$whereTerm = $params["mDataProp_{$i}"];
-		if (strrpos($whereTerm, ".") === false) {
-		$whereTerm = $modelName.".".$whereTerm;
-		}
-	
-		$name = "{$term}{$i}";
-		$cond = "{$whereTerm} iLIKE ?";
-		$param = "{$term}%";
-	
-		$query->condition($name, $cond, $param);
-			
-		$info = self::getColumnType($prop, $modelName);
-		$searchCol = $info["column"];
-	
-		$orConditions[] = $name;
-		}
-		}
-	
-		if (count($searchTerms) > 1) {
-		$query->combine($orConditions, 'or', $term);
-		$andConditions[] = $term;
-		}
-		else {
-		$query->where($orConditions, 'or');
-		}
-		}
-		if (count($andConditions) > 1) {
-		$query->where($andConditions, 'and');
-		}
-		*/
 	
 		//ORDER BY statements
 		$len = intval($params["iSortingCols"]);

@@ -8,46 +8,64 @@ var AIRTIME = (function(AIRTIME){
 	
 	var template = 
 		'<div class="pl-criteria-row">' +
-			'<select><%= criteria %></select>' +
-			'<select><%= options %></select>' +
-			'<input class="<%= fieldOneClass %>"></input>' +
+			'<select class="input_select sp_input_select rule_criteria <%= showCriteria %>">' +
+				'<%= criteria %>' + 
+			'</select>' +
+			'<a class="btn btn-small pl-same-criteria">' +
+			    '<i class="icon-white icon-plus"></i>' +
+			'</a>' +
+			'<select class="input_select sp_input_select rule_modifier">'+
+				'<%= options %>'+
+			'</select>' +
+			'<input class="input_text sp_input_text"></input>' +
 			'<% if (range) { %>' +
-			'<input class="<%= fieldTwoClass %>"></input>' +
+				'<input class="input_text sp_extra_input_text"></input>' +
 			'<% } %>' +
-			'<a class="btn btn-small">' +
-			    '<i class="icon-white icon-minus"></i>' +
+			'<a class="btn btn-small btn-danger">' +
+				'<i class="icon-white icon-remove"></i>' +
 			'</a>' +
-			'<a class="btn btn-small">' +
-			    '<span class="pl-or">OR</span>' +
-			'</a>' +
-			'<a class="btn btn-small">' +
-			    '<span class="pl-and">AND</span>' +
+			'<a class="btn btn-small pl-diff-criteria">' +
+			    '<i class="icon-white icon-plus"></i>' +
 			'</a>' +
 		'</div>';
 	
+	template = _.template(template);
+	
+	var criteriaOptions = {};
+	
+	var emptyCriteriaOptions = {
+		0 : $.i18n._("Select modifier")	
+	};
+	
 	var stringCriteriaOptions = {
-	    "" : $.i18n._("Select modifier"),
-	    "contains" : $.i18n._("contains"),
-	    "does not contain" : $.i18n._("does not contain"),
-	    "is" : $.i18n._("is"),
-	    "is not" : $.i18n._("is not"),
-	    "starts with" : $.i18n._("starts with"),
-	    "ends with" : $.i18n._("ends with")
+	    0 : $.i18n._("Select modifier"),
+	    1 : $.i18n._("contains"),
+	    2 : $.i18n._("does not contain"),
+	    3 : $.i18n._("is"),
+	    4 : $.i18n._("is not"),
+	    5 : $.i18n._("starts with"),
+	    6 : $.i18n._("ends with")
 	};
 	    
 	var numericCriteriaOptions = {
-	    "" : $.i18n._("Select modifier"),
-	    "is" : $.i18n._("is"),
-	    "is not" : $.i18n._("is not"),
-	    "is greater than" : $.i18n._("is greater than"),
-	    "is less than" : $.i18n._("is less than"),
-	    "is in the range" : $.i18n._("is in the range")
+	    0 : $.i18n._("Select modifier"),
+	    3 : $.i18n._("is"),
+	    4 : $.i18n._("is not"),
+	    7 : $.i18n._("is greater than"),
+	    8 : $.i18n._("is less than"),
+	    9 : $.i18n._("is greater than or equal to"),
+	    10 : $.i18n._("is less than or equal to"),
+	    11 : $.i18n._("is in the range")
 	};
 	
 	// We need to know if the criteria value will be a string
 	// or numeric value in order to populate the modifier
 	// select list
 	var criteriaTypes = {
+		"": {
+			type: "",
+			name: $.i18n._("Select criteria")
+		},
 	    "AlbumTitle": {
 	    	type: "s",
 	    	name: $.i18n._("Album")
@@ -154,6 +172,104 @@ var AIRTIME = (function(AIRTIME){
 	    }
 	};
 	
+	function setupCriteriaOptions() {
+		var key;
+		
+		for (key in criteriaTypes) {
+			criteriaOptions[key] = criteriaTypes[key].name;
+		}
+	}
+	
+	function makeSelectOptions(options, selected) {
+		var key;
+		var modifier = "";
+		
+		for (key in options) {
+			
+			if (key === selected) {
+				modifier += '<option value="'+key+'" label="'+options[key]+'" selected="selected">'+options[key]+'</option>';
+			}
+			else {
+				modifier += '<option value="'+key+'" label="'+options[key]+'">'+options[key]+'</option>';
+			}
+		}
+		
+		return modifier;
+	}
+	
+	function createCriteriaRow(criteria, modifierValue, options) {
+    	var $el,
+    		defaults,
+    		settings,
+    		showCriteria;
+    	
+    	var fullCriteria = makeSelectOptions(criteriaOptions, criteria);
+    	
+    	var modifier = setCorrectModifier(criteria);
+    	var modifierHtml = makeSelectOptions(modifier, modifierValue);
+    	
+    	defaults = {
+    		range: false,
+    		showCriteria: true,
+    		options: modifierHtml,
+    		criteria: fullCriteria
+    	};
+    	
+    	settings = $.extend({}, defaults, options);
+    	
+    	showCriteria = settings.showCriteria ? "" : "sp-invisible";
+    	
+    	$el = $(template({
+    		showCriteria: showCriteria,
+    		range: settings.range,
+    		options: settings.options,
+    		criteria: settings.criteria
+    	}));
+    	
+    	return $el;
+    }
+	
+	function setCorrectModifier(criteriaValue) {
+		var type = criteriaTypes[criteriaValue].type;
+		
+		if (type === "s") {
+			return stringCriteriaOptions; 
+		}
+		else if (type === "n") {
+			return numericCriteriaOptions;
+		}
+		else {
+			return emptyCriteriaOptions;
+		}
+	}
+	
+	mod.onReady = function() {
+		var $criteriaEl = $("#rule_criteria");
+		
+		setupCriteriaOptions();
+		
+		$criteriaEl.on("click", ".pl-diff-criteria", function(e) {
+			e.preventDefault();
+			
+			var $el = createCriteriaRow("", "");
+			
+			$(this).parent().after($el);
+		});
+		
+		$criteriaEl.on("change", ".rule_criteria", function(e) {
+			var $select,
+				$el;
+			
+			e.preventDefault();
+			
+			$select = $(this);
+			$el = createCriteriaRow($select.val(), "");
+			$select.parent().replaceWith($el);	
+		});
+	};
+
 return AIRTIME;
 	
 }(AIRTIME || {}));
+
+$(document).ready(AIRTIME.rules.onReady);

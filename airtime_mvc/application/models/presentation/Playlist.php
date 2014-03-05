@@ -57,6 +57,7 @@ class Presentation_Playlist {
 	public function getRules() {
 		
 		$form = new Application_Form_PlaylistRules();
+		$form->buildCriteria();
 		
 		$rules = $this->playlist->getRules();
 		

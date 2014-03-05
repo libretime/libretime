@@ -142,14 +142,15 @@
             asInitVals[i] = label;
             var index = i;
 
+            /*
             if (bIsNumber && !oTable.fnSettings().oFeatures.bServerSide) {
                 input.keyup(function () {
-                    /* Filter on the column all numbers that starts with the entered value */
+                    // Filter on the column all numbers that starts with the entered value 
                     oTable.fnFilter('^' + this.value, _fnColumnIndex(index), true, false); //Issue 37
                     fnOnFiltered();
                 });
             } else {
-                input.keyup(function () {
+                input.keyup(function (e) {
                     if (oTable.fnSettings().oFeatures.bServerSide && iFilterLength != 0) {
                         //If filter length is set in the server-side processing mode
                         //Check has the user entered at least iFilterLength new characters
@@ -168,11 +169,12 @@
                             $(this).data("dt-iLastFilterLength", iCurrentFilterLength);
                         }
                     }
-                    /* Filter on the column (the index) of this element */
+                    // Filter on the column (the index) of this element
                     oTable.fnFilter(this.value, _fnColumnIndex(index), regex, smart); //Issue 37
                     fnOnFiltered();
                 });
             }
+            */
 
             input.focus(function () {
                 if ($(this).hasClass("search_init")) {
@@ -241,6 +243,7 @@
 
 
 
+            /*
             $('#' + sFromId + ',#' + sToId, th).keyup(function () {
 
                 var iMin = document.getElementById(sFromId).value * 1;
@@ -251,6 +254,7 @@
                 oTable.fnDraw();
                 fnOnFiltered();
             });
+            */
         }
 
         function fnCreateDateRangeInput(oTable) {
@@ -328,11 +332,12 @@
         );
             //------------end date range filtering function
 
+            /*
             $('#' + sFromId + ',#' + sToId, th).change(function () {
                 oTable.fnDraw();
                 fnOnFiltered();
             });
-
+            */
 
         }
 

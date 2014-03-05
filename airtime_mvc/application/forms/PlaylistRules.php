@@ -7,99 +7,102 @@ class Application_Form_PlaylistRules extends Zend_Form
 	* select list
 	*/
 	private $criteriaTypes = array(
-		""             => "",
-		"album_title"  => "s",
-		"bit_rate"     => "n",
-		"bpm"          => "n",
-		"composer"     => "s",
-		"conductor"    => "s",
-		"copyright"    => "s",
-		"cuein"        => "n",
-		"cueout"       => "n",
-		"artist_name"  => "s",
-		"encoded_by"   => "s",
-		"utime"        => "n",
-		"mtime"        => "n",
-		"lptime"       => "n",
-		"genre"        => "s",
-		"isrc_number"  => "s",
-		"label"        => "s",
-		"language"     => "s",
-		"length"       => "n",
-		"mime"         => "s",
-		"mood"         => "s",
-		"owner_id"     => "s",
-		"replay_gain"  => "n",
-		"sample_rate"  => "n",
-		"track_title"  => "s",
-		"track_number" => "n",
-		"info_url"     => "s",
-		"year"         => "n"
+		""  => "",
+		"AlbumTitle" => "s",
+		"BitRate" => "n",
+		"Bpm" => "n",
+		"Composer" => "s",
+		"Conductor" => "s",
+		"Copyright" => "s",
+		"Cuein" => "n",
+		"Cueout" => "n",
+		"ArtistName" => "s",
+		"EncodedBy" => "s",
+		"CreatedAt" => "n",
+		"UpdatedAt" => "n",
+		"LastPlayedTime" => "n",
+		"Genre" => "s",
+		"IsrcNumber" => "s",
+		"Label" => "s",
+		"Language" => "s",
+		"Length" => "n",
+		"Mime" => "s",
+		"Mood" => "s",
+		"ReplayGain" => "n",
+		"SampleRate" => "n",
+		"TrackTitle" => "s",
+		"TrackNumber" => "n",
+		"InfoUrl" => "s",
+		"Year" => "n"
 	);
 	
-	private function getCriteriaOptions($option = null)
+	private function getCriteriaOptions()
     {
-		$this->criteriaOptions = array(
-        	""             => _("Select criteria"),
-            "album_title"  => _("Album"),
-            "bit_rate"     => _("Bit Rate (Kbps)"),
-            "bpm"          => _("BPM"),
-            "composer"     => _("Composer"),
-            "conductor"    => _("Conductor"),
-            "copyright"    => _("Copyright"),
-            "cuein"        => _("Cue In"),
-            "cueout"       => _("Cue Out"),
-            "artist_name"  => _("Creator"),
-            "encoded_by"   => _("Encoded By"),
-            "genre"        => _("Genre"),
-            "isrc_number"  => _("ISRC"),
-            "label"        => _("Label"),
-            "language"     => _("Language"),
-            "mtime"        => _("Last Modified"),
-            "lptime"       => _("Last Played"),
-            "length"       => _("Length"),
-            "mime"         => _("Mime"),
-            "mood"         => _("Mood"),
-            "owner_id"     => _("Owner"),
-            "replay_gain"  => _("Replay Gain"),
-            "sample_rate"  => _("Sample Rate (kHz)"),
-            "track_title"  => _("Title"),
-            "track_number" => _("Track Number"),
-            "utime"        => _("Uploaded"),
-            "info_url"     => _("Website"),
-            "year"         => _("Year")
+		return array(
+        	""  => _("Select criteria"),
+            "AlbumTitle" => _("Album"),
+            "BitRate" => _("Bit Rate (Kbps)"),
+            "Bpm" => _("BPM"),
+            "Composer" => _("Composer"),
+            "Conductor" => _("Conductor"),
+            "Copyright" => _("Copyright"),
+            "Cuein" => _("Cue In"),
+            "Cueout" => _("Cue Out"),
+            "ArtistName" => _("Creator"),
+            "EncodedBy" => _("Encoded By"),
+            "Genre" => _("Genre"),
+            "IsrcNumber" => _("ISRC"),
+            "Label" => _("Label"),
+            "Language" => _("Language"),
+            "UpdatedAt" => _("Last Modified"),
+            "LastPlayedTime" => _("Last Played"),
+            "Length" => _("Length"),
+            "Mime" => _("Mime"),
+            "Mood" => _("Mood"),
+            "ReplayGain" => _("Replay Gain"),
+            "SampleRate" => _("Sample Rate (kHz)"),
+            "TrackTitle" => _("Title"),
+            "TrackNumber" => _("Track Number"),
+            "CreatedAt" => _("Uploaded"),
+            "InfoUrl" => _("Website"),
+            "Year" => _("Year")
         );
-
-        if (is_null($option)) {
-        	return $this->criteriaOptions;
-        }
-        else {
-        	return $this->criteriaOptions[$option];
-        }
+    }
+    
+    private function getOption($option = null)
+    {
+    	if (is_null($option)) {
+    		return $this->criteriaOptions;
+    	}
+    	else {
+    		return $this->criteriaOptions[$option];
+    	}
     }
 		
 	private function getStringCriteriaOptions()
 	{
 		return array(
-			""                => _("Select modifier"),
-			"contains"         => _("contains"),
-			"does not contain" => _("does not contain"),
-			"is"               => _("is"),
-			"is not"           => _("is not"),
-			"starts with"      => _("starts with"),
-			"ends with"        => _("ends with")
+			0 => _("Select modifier"),
+			1 => _("contains"),
+			2 => _("does not contain"),
+			3 => _("is"),
+			4 => _("is not"),
+			5 => _("starts with"),
+			6 => _("ends with")
 		);
 	}
 	
 	private function getNumericCriteriaOptions()
 	{
 		return array(
-			""               => _("Select modifier"),
-			"is"              => _("is"),
-			"is not"          => _("is not"),
-			"is greater than" => _("is greater than"),
-			"is less than"    => _("is less than"),
-			"is in the range" => _("is in the range")
+			0  => _("Select modifier"),
+			3 => _("is"),
+			4 => _("is not"),
+			7 => _("is greater than"),
+			8 => _("is less than"),
+			9 => _("is greater than or equal to"),
+			10 => _("is less than or equal to"),
+			11 => _("is in the range")
 		);
 	}
 	
@@ -114,6 +117,11 @@ class Application_Form_PlaylistRules extends Zend_Form
 
     public function init()
     {
+    	//$this->criteriaOptions = self::getCriteriaOptions();
+    	//$this->stringOptions = self::getStringCriteriaOptions();
+    	//$this->numericOptions = self::getNumericCriteriaOptions();
+    	//$this->limitOptions = self::getLimitOptions();
+    	
     	$this->setDecorators(array(
     		array('ViewScript', array('viewScript' => 'form/playlist-rules.phtml'))
     	));
@@ -143,5 +151,48 @@ class Application_Form_PlaylistRules extends Zend_Form
 	    	->setLabel(_('Limit to'))
 	    	->setDecorators(array('ViewHelper'));
     	$this->addElement($limitValue);
+    }
+    
+    public function buildCriteria($criteria = null)
+    {
+    	$criteria = new Zend_Form_Element_Select("sp_criteria_field_");
+    	$criteria
+    		->setAttrib('class', 'input_select sp_input_select rule_criteria')
+	    	->setValue('Select criteria')
+	    	->setDecorators(array('viewHelper'))
+	    	->setMultiOptions($this->getCriteriaOptions());
+    	
+    	$this->addElement($criteria);
+    	
+    	/****************** MODIFIER ***********/
+    	$criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_");
+    	$criteriaModifers
+    		->setValue('Select modifier')
+	    	->setAttrib('class', 'input_select sp_input_select rule_modifier')
+	    	->setDecorators(array('viewHelper'));
+    	
+    	
+    	$criteriaModifers->setMultiOptions(array('0' => _('Select modifier')));
+ 
+    	//$criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
+    	//$criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
+    	
+    	$this->addElement($criteriaModifers);
+    	
+    	/****************** VALUE ***********/
+    	$criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_");
+    	$criteriaValue
+    		->setAttrib('class', 'input_text sp_input_text')
+    		->setDecorators(array('viewHelper'));
+    	
+    	$this->addElement($criteriaValue);
+    	
+    	/****************** EXTRA ***********/
+    	$criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_");
+    	$criteriaExtra
+    		->setAttrib('class', 'input_text sp_extra_input_text')
+    		->setDecorators(array('viewHelper'));
+    	
+    	$this->addElement($criteriaExtra);
     }
 }
