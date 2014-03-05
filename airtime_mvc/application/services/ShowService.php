@@ -183,6 +183,7 @@ class Application_Service_ShowService
             if (!$currentUser->isAdminOrPM()) {
                 throw new Exception("Permission denied");
             }
+
             //update ccShow
             $this->setCcShow($showData);
 
@@ -224,8 +225,8 @@ class Application_Service_ShowService
                  * We need to do this so we get the correct time diff for
                  * updating show content. CC-5696
                  */
-                $showData["add_show_start_date"] = $this->ccShow->getFirstCcShowDay()->getDbFirstShow();
-                $showData["add_show_start_time"] = $this->ccShow->getFirstCcShowDay()->getDbStartTime();
+                //$showData["add_show_start_date"] = $this->ccShow->getFirstCcShowDay()->getDbFirstShow();
+                //$showData["add_show_start_time"] = $this->ccShow->getFirstCcShowDay()->getDbStartTime();
 
                 $this->adjustSchedule($showData);
             }

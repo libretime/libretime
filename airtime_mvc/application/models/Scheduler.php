@@ -590,10 +590,10 @@ class Application_Model_Scheduler
                  * to that show
                  */
                 if ($linked) {
-                    $instance_sql = "SELECT * FROM cc_show_instances ".
-                        "WHERE show_id = ".$ccShow["id"];
-                    $instances = Application_Common_Database::prepareAndExecute(
-                        $instance_sql);
+                    $instances = CcShowInstancesQuery::create()
+                        ->filterByDbShowId($ccShow["id"])
+                        ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+                        ->find();
                 } else {
                     $instance_sql = "SELECT * FROM cc_show_instances ".
                         "WHERE id = ".$schedule["instance"];
@@ -606,7 +606,8 @@ class Application_Model_Scheduler
                     //reset
                     $this->applyCrossfades = true;
 
-                    $instanceId = $instance["id"];
+                    //$instanceId = $instance["id"];
+                    $instanceId = $instance->getDbId();
                     if ($id !== 0) {
                         /* We use the selected cursor's position to find the same
                          * positions in every other linked instance
@@ -632,7 +633,7 @@ class Application_Model_Scheduler
                             //show instance has no scheduled tracks
                             if (empty($pos)) {
                                 $pos = 0;
-                                $nextStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
+                                $nextStartDT = new DateTime($instance->getDbStarts(), new DateTimeZone("UTC"));
                             } else {
 
                                 $linkedItem_sql = "SELECT ends FROM cc_schedule ".
@@ -658,7 +659,7 @@ class Application_Model_Scheduler
                     }
                     //selected empty row to add after
                     else {
-                        $showStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
+                        $showStartDT = new DateTime($instance->getDbStarts(), new DateTimeZone("UTC"));
                         $nextStartDT = $this->findNextStartTime($showStartDT, $instanceId);
 
                         //first item in show so start position counter at 0
