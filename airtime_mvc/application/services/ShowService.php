@@ -221,12 +221,15 @@ class Application_Service_ShowService
             $this->delegateInstanceCreation($daysAdded);
 
             if ($this->isUpdate) {
-                /* Set the show's start date to the start date of the first instance.
-                 * We need to do this so we get the correct time diff for
-                 * updating show content. CC-5696
+
+                /* If the show is repeating and the start date changes we need
+                 * to ignore that difference when re-calculating schedule start times.
+                 * Otherwise it might calculate a difference of a week, for example.
                  */
-                //$showData["add_show_start_date"] = $this->ccShow->getFirstCcShowDay()->getDbFirstShow();
-                //$showData["add_show_start_time"] = $this->ccShow->getFirstCcShowDay()->getDbStartTime();
+                if ($this->ccShow->isRepeating() && 
+                    $this->origCcShowDay->getLocalStartDateAndTime()->format("Y-m-d") != $showData["add_show_start_date"]) {
+                        $showData["add_show_start_date"] = $this->origCcShowDay->getLocalStartDateAndTime()->format("Y-m-d");
+                }
 
                 $this->adjustSchedule($showData);
             }
