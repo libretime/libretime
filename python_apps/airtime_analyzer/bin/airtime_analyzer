@@ -1,0 +1,21 @@
+#!/usr/bin/env python
+
+import daemon
+import argparse
+import airtime_analyzer as aa
+
+VERSION = "1.0"
+
+print "Airtime Analyzer " + VERSION
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
+args = parser.parse_args()
+
+if args.daemon:
+    with daemon.DaemonContext():
+        analyzer = aa.AirtimeAnalyzerServer()
+else: 
+    # Run without daemonizing
+    analyzer = aa.AirtimeAnalyzerServer()
+
