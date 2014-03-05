@@ -16,7 +16,10 @@ var AIRTIME = (function(AIRTIME){
 			'</select>' +
 			'<input class="input_text sp_input_text"></input>' +
 			'<% if (range) { %>' +
-				'<input class="input_text sp_extra_input_text"></input>' +
+				'<span class="sp_text_font" id="extra_criteria">' +	            	
+					$.i18n._("to") + 
+					'<input class="input_text sp_extra_input_text"></input>' +
+				'</span>' +
 			'<% } %>' +
 			'<a class="btn btn-small btn-danger">' +
 				'<i class="icon-white icon-remove"></i>' +
@@ -206,7 +209,7 @@ var AIRTIME = (function(AIRTIME){
     	var modifierHtml = makeSelectOptions(modifier, modifierValue);
     	
     	defaults = {
-    		range: false,
+    		range: modifierValue === "11" ? true : false,
     		showCriteria: true,
     		options: modifierHtml,
     		criteria: fullCriteria
@@ -272,6 +275,20 @@ var AIRTIME = (function(AIRTIME){
 			
 			$select = $(this);
 			$el = createCriteriaRow($select.val(), "");
+			$select.parent().replaceWith($el);	
+		});
+		
+		$criteriaEl.on("change", ".rule_modifier", function(e) {
+			var $select,
+				$modifier,
+				$el;
+			
+			e.preventDefault();
+			
+			$modifier = $(this);
+			$select = $modifier.parent().find(".rule_criteria");
+			
+			$el = createCriteriaRow($select.val(), $modifier.val());
 			$select.parent().replaceWith($el);	
 		});
 	};
