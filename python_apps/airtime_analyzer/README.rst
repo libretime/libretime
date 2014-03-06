@@ -1,23 +1,49 @@
 
 Ghetto temporary installation instructions
+==========
 
-set up a virtualenv
-activate it
-pip install mutagen python-magic pika
+    $ sudo python setup.py install
 
-You will need to allow the "airtime" RabbitMQ user to access the airtime-uploads exchange and queue:
+You will need to allow the "airtime" RabbitMQ user to access all exchanges and queues within the /airtime vhost:
 
-    sudo rabbitmqctl set_permissions -p /airtime airtime airtime-uploads airtime-uploads airtime-uploads
+    sudo rabbitmqctl set_permissions -p /airtime airtime .* .* .* 
+
+
+Usage
+==========
+
+To print usage instructions, run:
+
+    $ airtime_analyzer --help
+
+This application can be run as a daemon by running:
+
+    $ airtime_analyzer -d
+
 
 
 Developers
 ==========
 
-For development, you want to install AAQ system-wide but with everything symlinked back to the source 
-directory (for convenience), so run:
+For development, you want to install airtime_analyzer system-wide but with everything symlinked back to the source 
+directory for convenience. This is super easy to do, just run:
     
     $ sudo python setup.py develop
 
+To send an test message to airtime_analyzer, you can use the message_sender.php script in the tools directory.
+For example, run:
+
+    $ php tools/message_sender.php '{ "tmp_file_path" : "foo.mp3" }'
+
+
+Logging
+=========
+
+By default, logs are saved to:
+
+    /var/log/airtime/airtime_analyzer.log
+
+This application takes care of rotating logs for you.
 
 
 Unit Tests

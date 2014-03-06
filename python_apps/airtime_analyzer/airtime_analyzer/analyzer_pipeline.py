@@ -1,17 +1,31 @@
+import logging
+import multiprocessing 
 from metadata_analyzer import MetadataAnalyzer
 
 class AnalyzerPipeline:
 
+    # Constructor
     def __init__(self):
         pass
 
-    #TODO: Take a JSON message and perform the necessary analysis.
-    #TODO: Comment the shit out of this
+    # Take message dictionary and perform the necessary analysis.
     @staticmethod
-    def run_analysis(json_msg, queue):
-        # TODO: Pass the JSON along to each analyzer??
-        #print MetadataAnalyzer.analyze("foo.mp3")
+    def run_analysis(queue, audio_file_path, final_directory):
+
+        if not isinstance(queue, multiprocessing.queues.Queue):
+            raise TypeError("queue must be a multiprocessing.Queue()")
+        if not isinstance(audio_file_path, unicode):
+            raise TypeError("audio_file_path must be a string. Was of type " + type(audio_file_path).__name__ + " instead.")
+        if not isinstance(final_directory, unicode):
+            raise TypeError("final_directory must be a string. Was of type " + type(final_directory).__name__ + " instead.")
+
+
+        # Analyze the audio file we were told to analyze:
+        # First, we extract the ID3 tags and other metadata:
+        queue.put(MetadataAnalyzer.analyze(audio_file_path)) 
+
+        # Note that the queue we're putting the results into is our interprocess communication 
+        # back to the main process.
+
         #print ReplayGainAnalyzer.analyze("foo.mp3")
-        #raise Exception("Test Crash")
-        queue.put(MetadataAnalyzer.analyze("foo.mp3"))
 

@@ -1,5 +1,5 @@
 from nose.tools import *
-import airtime_analyzer_queue
+import airtime_analyzer
 
 def setup():
     print "SETUP!"

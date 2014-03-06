@@ -1,7 +1,11 @@
 import sys
 import pika
+import json
+import time
+import logging 
 import multiprocessing 
 from analyzer_pipeline import AnalyzerPipeline
+from status_reporter import StatusReporter
 
 EXCHANGE = "airtime-uploads"
 EXCHANGE_TYPE = "topic"
@@ -13,21 +17,38 @@ QUEUE = "airtime-uploads"
     - round robin messaging
     - acking
     - why we use the multiprocess architecture
+    - in general, how it works and why it works this way
 '''
 class MessageListener:
 
     def __init__(self, config):
 
+        # Read the RabbitMQ connection settings from the config file
+        # The exceptions throw here by default give good error messages. 
         RMQ_CONFIG_SECTION = "rabbitmq"
-        if not config.has_section(RMQ_CONFIG_SECTION):
-            print "Error: rabbitmq section not found in config file at " + config_path
-            exit(-1)
-
         self._host = config.get(RMQ_CONFIG_SECTION, 'host')
         self._port = config.getint(RMQ_CONFIG_SECTION, 'port')
         self._username = config.get(RMQ_CONFIG_SECTION, 'user')
         self._password = config.get(RMQ_CONFIG_SECTION, 'password')
         self._vhost = config.get(RMQ_CONFIG_SECTION, 'vhost')
+
+        while True:
+            try:
+                self.connect_to_messaging_server()
+                self.wait_for_messages()
+            except KeyboardInterrupt:
+                self.disconnect_from_messaging_server()
+                break
+            except pika.exceptions.AMQPError as e:
+                logging.error("Connection to message queue failed. ")
+                logging.error(e)
+                logging.info("Retrying in 5 seconds...")
+                time.sleep(5)
+
+        self._connection.close()
+
+
+    def connect_to_messaging_server(self):
 
         self._connection = pika.BlockingConnection(pika.ConnectionParameters(host=self._host, 
             port=self._port, virtual_host=self._vhost, 
@@ -38,21 +59,21 @@ class MessageListener:
 
         self._channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
          
-        print " Listening for messages..."
+        logging.info(" Listening for messages...")
         self._channel.basic_consume(MessageListener.msg_received_callback, 
                                     queue=QUEUE, no_ack=False)
 
-        try:
-            self._channel.start_consuming()
-        except KeyboardInterrupt:
-            self._channel.stop_consuming()
+    def wait_for_messages(self):
+        self._channel.start_consuming()
 
-        self._connection.close()
+    def disconnect_from_messaging_server(self):
+        self._channel.stop_consuming()
+
 
     # consume callback function
     @staticmethod
     def msg_received_callback(channel, method_frame, header_frame, body):
-        print " - Received '%s' on routing_key '%s'" % (body, method_frame.routing_key)
+        logging.info(" - Received '%s' on routing_key '%s'" % (body, method_frame.routing_key))
 
         # Spin up a worker process. We use the multiprocessing module and multiprocessing.Queue 
         # to pass objects between the processes so that if the analyzer process crashes, it does not
@@ -60,8 +81,22 @@ class MessageListener:
         # propagated to other airtime_analyzer daemons (eg. running on other servers). 
         # We avoid cascading failure this way.
         try:
-            MessageListener.spawn_analyzer_process(body)
-        except Exception:
+            msg_dict = json.loads(body)
+            audio_file_path = msg_dict["tmp_file_path"]
+            final_directory = msg_dict["final_directory"]
+            callback_url    = msg_dict["callback_url"]
+            api_key         = msg_dict["api_key"]
+            
+            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, final_directory)
+            StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
+
+        except KeyError as e:
+            logging.exception("A mandatory airtime_analyzer message field was missing from the message.")
+            # See the huge comment about NACK below.
+            channel.basic_nack(delivery_tag=method_frame.delivery_tag, multiple=False,
+                               requeue=False) #Important that it doesn't requeue the message
+        
+        except Exception as e:
             #If ANY exception happens while processing a file, we're going to NACK to the 
             #messaging server and tell it to remove the message from the queue. 
             #(NACK is a negative acknowledgement. We could use ACK instead, but this might come
@@ -72,31 +107,32 @@ class MessageListener:
             channel.basic_nack(delivery_tag=method_frame.delivery_tag, multiple=False,
                                requeue=False) #Important that it doesn't requeue the message
 
-            #TODO: Report this as a failed upload to the File Upload REST API.
+            # TODO: Report this as a failed upload to the File Upload REST API.
             #
-            #
+            # TODO: If the JSON was invalid, then don't report to the REST API 
+            
+            StatusReporter.report_failure_to_callback_url(callback_url, api_key, error_status=1,
+                                                          reason=u'An error occurred while importing this file')
+            
+            logging.error(e)
 
         else:
             # ACK at the very end, after the message has been successfully processed.
-            # If we don't ack, then RabbitMQ will redeliver a message in the future.
+            # If we don't ack, then RabbitMQ will redeliver the message in the future.
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
-
-        # Anything else could happen here:
-        # Send an email alert, send an xmnp message, trigger another process, etc
     
     @staticmethod
-    def spawn_analyzer_process(json_msg):
+    def spawn_analyzer_process(audio_file_path, final_directory):
 
         q = multiprocessing.Queue()
-        p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis, args=(json_msg, q))
+        p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis, 
+                        args=(q, audio_file_path, final_directory))
         p.start()
         p.join()
         if p.exitcode == 0:
             results = q.get()
-            print "Server received results: "
-            print results
+            logging.info("Main process received results from child: ")
+            logging.info(results)
         else:
-            print "Analyzer process terminated unexpectedly."
-            raise AnalyzerException()
-
+            raise Exception("Analyzer process terminated unexpectedly.")
 

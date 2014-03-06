@@ -10,12 +10,13 @@ print "Airtime Analyzer " + VERSION
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
+parser.add_argument("--debug", help="log full debugging output", action="store_true")
 args = parser.parse_args()
 
 if args.daemon:
     with daemon.DaemonContext():
-        analyzer = aa.AirtimeAnalyzerServer()
+        analyzer = aa.AirtimeAnalyzerServer(debug=args.debug)
 else: 
     # Run without daemonizing
-    analyzer = aa.AirtimeAnalyzerServer()
+    analyzer = aa.AirtimeAnalyzerServer(debug=args.debug)
 
