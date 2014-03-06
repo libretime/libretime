@@ -1547,8 +1547,8 @@ SQL;
                     if ($this->isUpdate) {
                         $showDay = CcShowDaysQuery::create()
                            ->filterByDbShowId($showId)
-                           ->filterByDbRepeatType($this->repeatType)
-                           ->filterByDbDay($day)
+                           ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
+                           ->filterByDbDay($this->origCcShowDay->getDbDay())
                            ->findOne();
                         if (!$showDay) {
                             //if no show day object was found it is because a new
