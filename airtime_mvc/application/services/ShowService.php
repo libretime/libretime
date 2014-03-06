@@ -1545,15 +1545,23 @@ SQL;
                 if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
 
                     if ($this->isUpdate) {
-                        $showDay = CcShowDaysQuery::create()
-                           ->filterByDbShowId($showId)
-                           ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
-                           ->filterByDbDay($this->origCcShowDay->getDbDay())
-                           ->findOne();
-                        if (!$showDay) {
-                            //if no show day object was found it is because a new
-                            //repeating day of the week was added
-                            $showDay = new CcShowDays();
+                        if ($this->repeatType >= 0) {
+                            $showDay = CcShowDaysQuery::create()
+                               ->filterByDbShowId($showId)
+                               ->filterByDbRepeatType($this->repeatType)
+                               ->filterByDbDay($day)
+                               ->findOne();
+                            if (!$showDay) {
+                                //if no show day object was found it is because a new
+                                //repeating day of the week was added
+                                $showDay = new CcShowDays();
+                            }
+                        } else {
+                            $showDay = CcShowDaysQuery::create()
+                                ->filterByDbShowId($showId)
+                                ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
+                                ->filterByDbDay($this->origCcShowDay->getDbDay())
+                                ->findOne();
                         }
                     } else {
                         $showDay = new CcShowDays();
