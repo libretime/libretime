@@ -129,6 +129,9 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
      */
     public function setRules($v)
     {
+    	$v[self::RULE_REPEAT_TRACKS] = ($v[self::RULE_REPEAT_TRACKS] === "true") ? true : false;
+    	$v[self::RULE_USERS_TRACKS_ONLY] = ($v[self::RULE_USERS_TRACKS_ONLY] === "true") ? true : false;
+
     	$rules = json_encode($v);
     
     	if ($rules === false) {
