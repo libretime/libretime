@@ -14,8 +14,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->appendBody(json_encode(CcFilesQuery::create()->find()->toArray()));
+            ->appendBody(json_encode(CcFilesQuery::create()->find()->toArray(/*BasePeer::TYPE_FIELDNAME*/)));
     }
+    
     public function getAction()
     {
         if (!$this->verifyApiKey()) {
@@ -30,7 +31,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         if ($file) {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($file->toArray()));
+                ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -56,7 +57,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $this->getResponse()
             ->setHttpResponseCode(201)
-            ->appendBody(json_encode($file->toArray()));
+            ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
     }
 
     public function putAction()
@@ -72,11 +73,11 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file = CcFilesQuery::create()->findPk($id);
         if ($file)
         {
-            $file->fromArray(json_decode($this->getRequest()->getRawBody(), true));
+            $file->fromArray(json_decode($this->getRequest()->getRawBody(), true), BasePeer::TYPE_FIELDNAME);
             $file->save();
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($file->toArray()));
+                ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -119,9 +120,13 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $CC_CONFIG = Config::getConfig();
 
+        //Decode the API key that was passed to us in the HTTP request.
         $authHeader = $this->getRequest()->getHeader("Authorization");
-
-        if (in_array($authHeader, $CC_CONFIG["apiKey"])) {
+        $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
+        $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
+        
+        if ($encodedRequestApiKey === $encodedStoredApiKey) 
+        {
             return true;
         } else {
             $resp = $this->getResponse();

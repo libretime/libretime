@@ -19,18 +19,34 @@ class MetadataAnalyzer(Analyzer):
         info = audio_file.info
         metadata["sample_rate"] = info.sample_rate
         metadata["length_seconds"] = info.length
-        metadata["bitrate"] = info.bitrate
+        metadata["bit_rate"] = info.bitrate
+        #metadata["channels"] = info.channels
       
         #Use the python-magic module to get the MIME type.
         mime_magic = magic.Magic(mime=True)
         metadata["mime_type"] = mime_magic.from_file(filename)
 
+        #Try to get the number of channels if mutagen can...
+        try:
+            #Special handling for getting the # of channels from MP3s. It's in the "mode" field
+            #which is 0=Stereo, 1=Joint Stereo, 2=Dual Channel, 3=Mono. Part of the ID3 spec...
+            if metadata["mime_type"] == "audio/mpeg":
+                if info.mode == 3:
+                    metadata["channels"] = 1
+                else:
+                    metadata["channels"] = 2
+            else:
+                metadata["channels"] = info.channels
+        except (AttributeError, KeyError):
+            #If mutagen can't figure out the number of channels, we'll just leave it out...
+            pass
+
         #We normalize the mutagen tags slightly here, so in case mutagen changes,
         #we find the 
-        mutagen_to_analyzer_mapping = {
-            'title':        'title',
-            'artist':       'artist',
-            'album':        'album',
+        mutagen_to_airtime_mapping = {
+            'title':        'track_title',
+            'artist':       'artist_name',
+            'album':        'album_title',
             'bpm':          'bpm',
             'composer':     'composer',
             'conductor':    'conductor',
@@ -43,20 +59,21 @@ class MetadataAnalyzer(Analyzer):
             'last_modified':'last_modified',
             'mood':         'mood',
             'replay_gain':  'replaygain',
-            'track_number': 'tracknumber',
-            'track_total':  'tracktotal',
+            'track_number': 'track_number',
+            'track_total':  'track_total',
             'website':      'website',
             'year':         'year',
+            'mime_type':    'mime',
         }
 
-        for mutagen_tag, analyzer_tag in mutagen_to_analyzer_mapping.iteritems():
+        for mutagen_tag, airtime_tag in mutagen_to_airtime_mapping.iteritems():
             try:
-                metadata[analyzer_tag] = audio_file[mutagen_tag]
+                metadata[airtime_tag] = audio_file[mutagen_tag]
 
                 # Some tags are returned as lists because there could be multiple values.
                 # This is unusual so we're going to always just take the first item in the list.
-                if isinstance(metadata[analyzer_tag], list):
-                    metadata[analyzer_tag] = metadata[analyzer_tag][0]
+                if isinstance(metadata[airtime_tag], list):
+                    metadata[airtime_tag] = metadata[airtime_tag][0]
 
             except KeyError:
                 pass

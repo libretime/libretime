@@ -12,8 +12,9 @@ class StatusReporter():
     def report_success_to_callback_url(self, callback_url, api_key, audio_metadata):
 
         # Encode the audio metadata as JSON and post it back to the callback_url
-        post_payload = json.dumps(audio_metadata)
-        r = requests.put(callback_url, data=post_payload, 
+        put_payload = json.dumps(audio_metadata)
+        logging.debug("Sending HTTP PUT with payload: " + put_payload)
+        r = requests.put(callback_url, data=put_payload, 
                          auth=requests.auth.HTTPBasicAuth(api_key, ''),
                          timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
         logging.debug("HTTP request returned status: " + str(r.status_code))

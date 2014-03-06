@@ -136,3 +136,5 @@ class MessageListener:
         else:
             raise Exception("Analyzer process terminated unexpectedly.")
 
+        return results
+
