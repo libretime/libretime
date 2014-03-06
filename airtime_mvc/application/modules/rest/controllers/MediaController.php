@@ -12,9 +12,22 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$this->verifyApiKey()) {
             return;
         }
+        
+        $files_array = [];
+        foreach (CcFilesQuery::create()->find() as $file)
+        {
+            array_push($files_array, $file->toArray(BasePeer::TYPE_FIELDNAME));
+        }
+        
+        $this->getResponse()
+        ->setHttpResponseCode(200)
+        ->appendBody(json_encode($files_array));       
+        
+        /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->appendBody(json_encode(CcFilesQuery::create()->find()->toArray(/*BasePeer::TYPE_FIELDNAME*/)));
+            ->appendBody(json_encode(CcFilesQuery::create()->find()->toArray(BasePeer::TYPE_FIELDNAME)));
+        */
     }
     
     public function getAction()
