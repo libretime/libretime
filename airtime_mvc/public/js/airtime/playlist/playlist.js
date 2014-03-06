@@ -106,6 +106,36 @@ var AIRTIME = (function(AIRTIME){
 		return data;
 	}
 	
+	function getCriteriaDetails() {
+		
+		var $andBlocks = $("#rule_criteria").find(".pl-criteria-and"),
+			criteria = [],
+			i, lenAnd,
+			j, lenOr,
+			$nodes,
+			$row,
+			$extra;
+		
+		for (i = 0, lenAnd = $andBlocks.length; i < lenAnd; i++) {
+			criteria[i] = [];
+			$nodes = $($andBlocks[i]).children();
+			
+			for (j = 0, lenOr = $nodes.length; j < lenOr; j++) {
+				$row = $($nodes[j]);
+				$extra = $row.find("input.sp_extra_input_text");
+				
+				criteria[i].push({
+					"criteria": $row.find("select.rule_criteria").val(),
+					"modifier": $row.find("select.rule_modifier").val(),
+					"input1": $row.find("input.sp_input_text").val(),
+					"input2": $extra ? $extra.val() : null
+				});
+			}
+		}
+		
+		return criteria;
+	}
+	
 	function serializePlaylist(order) {
 		var i, len,
 			info = {},
@@ -125,7 +155,8 @@ var AIRTIME = (function(AIRTIME){
 			"limit": {
 				"value": $("#pl_limit_value").val(),
 				"unit":  $("#pl_limit_options").val()
-			}
+			},
+			"criteria": getCriteriaDetails()
 		};
 		
 		return info;

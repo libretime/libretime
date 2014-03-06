@@ -2,11 +2,13 @@
 
 class Application_Form_PlaylistRules extends Zend_Form
 {
+	private $_suffixes;
+	private $_populateHelp;
 	/* We need to know if the criteria value will be a string
 	 * or numeric value in order to populate the modifier
 	* select list
 	*/
-	private $criteriaTypes = array(
+	private $_criteriaTypes = array(
 		""  => "",
 		"AlbumTitle" => "s",
 		"BitRate" => "n",
@@ -78,6 +80,13 @@ class Application_Form_PlaylistRules extends Zend_Form
     		return $this->criteriaOptions[$option];
     	}
     }
+    
+    private function getDefaultCriteriaOptions()
+    {
+    	return array(
+    		0 => _("Select modifier")
+    	);
+    }
 		
 	private function getStringCriteriaOptions()
 	{
@@ -114,16 +123,22 @@ class Application_Form_PlaylistRules extends Zend_Form
 			"items"   => _("items")
 		);
 	}
+	
+	public function __construct()
+	{
+		parent::__construct();
+		
+		$this->_suffixes = array();
+		$this->_populateHelp = array();
+	}
 
     public function init()
     {
-    	//$this->criteriaOptions = self::getCriteriaOptions();
-    	//$this->stringOptions = self::getStringCriteriaOptions();
-    	//$this->numericOptions = self::getNumericCriteriaOptions();
-    	//$this->limitOptions = self::getLimitOptions();
-    	
     	$this->setDecorators(array(
-    		array('ViewScript', array('viewScript' => 'form/playlist-rules.phtml'))
+    		array('ViewScript', array(
+    				'viewScript' => 'form/playlist-rules.phtml',
+    				'suffixes' => &$this->_suffixes
+    			))
     	));
     	
     	$repeatTracks = new Zend_Form_Element_Checkbox('pl_repeat_tracks');
@@ -153,46 +168,139 @@ class Application_Form_PlaylistRules extends Zend_Form
     	$this->addElement($limitValue);
     }
     
-    public function buildCriteria($criteria = null)
-    {
-    	$criteria = new Zend_Form_Element_Select("sp_criteria_field_");
+    private function getModifierOptions($criteria) {
+    	
+    	$type = $this->_criteriaTypes[$criteria];
+    	
+    	switch ($type) {
+    		
+    		case "n":
+    			return $this->getNumericCriteriaOptions();
+    			break;
+    		case "s":
+    			return $this->getStringCriteriaOptions();
+    			break;
+    		default:
+    			return $this->getDefaultCriteriaOptions();
+    	}
+    }
+    
+    private function buildRuleCriteria($suffix) {
+    	
+    	$criteria = new Zend_Form_Element_Select("sp_criteria_field_{$suffix}");
     	$criteria
-    		->setAttrib('class', 'input_select sp_input_select rule_criteria')
+	    	->setAttrib('class', 'input_select sp_input_select rule_criteria')
 	    	->setValue('Select criteria')
 	    	->setDecorators(array('viewHelper'))
 	    	->setMultiOptions($this->getCriteriaOptions());
-    	
+    	 
     	$this->addElement($criteria);
     	
-    	/****************** MODIFIER ***********/
-    	$criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_");
+    	return $criteria->getId();
+    }
+    
+    private function buildRuleModifier($suffix, $options) {
+    	
+    	$criteriaModifers = new Zend_Form_Element_Select("sp_criteria_modifier_{$suffix}");
     	$criteriaModifers
-    		->setValue('Select modifier')
+	    	->setValue('Select modifier')
 	    	->setAttrib('class', 'input_select sp_input_select rule_modifier')
 	    	->setDecorators(array('viewHelper'));
-    	
-    	
-    	$criteriaModifers->setMultiOptions(array('0' => _('Select modifier')));
- 
-    	//$criteriaModifers->setMultiOptions($this->getStringCriteriaOptions());
-    	//$criteriaModifers->setMultiOptions($this->getNumericCriteriaOptions());
+    	 
+    	$criteriaModifers->setMultiOptions($options);
     	
     	$this->addElement($criteriaModifers);
     	
-    	/****************** VALUE ***********/
-    	$criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_");
-    	$criteriaValue
-    		->setAttrib('class', 'input_text sp_input_text')
-    		->setDecorators(array('viewHelper'));
+    	return $criteriaModifers->getId();
+    }
+    
+    private function buildRuleInput($suffix) {
     	
+    	$criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_{$suffix}");
+    	$criteriaValue
+	    	->setAttrib('class', 'input_text sp_input_text')
+	    	->setDecorators(array('viewHelper'));
+    	 
     	$this->addElement($criteriaValue);
     	
-    	/****************** EXTRA ***********/
-    	$criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_");
-    	$criteriaExtra
-    		->setAttrib('class', 'input_text sp_extra_input_text')
-    		->setDecorators(array('viewHelper'));
+    	return $criteriaValue->getId();
+    }
+    
+    private function buildRuleExtra($suffix) {
     	
+    	$criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_{$suffix}");
+    	$criteriaExtra
+	    	->setAttrib('class', 'input_text sp_extra_input_text')
+	    	->setDecorators(array('viewHelper'));
+    	 
     	$this->addElement($criteriaExtra);
+    	
+    	return $criteriaExtra->getId();
+    }
+    
+    private function buildRuleCriteriaRow($info = null) {
+    	$suffix = mt_rand(10000, 99999);
+    	
+    	if (is_null($info)) {
+    		$criteria = "";
+    	}
+    	else {
+    		$criteria = $info["criteria"];
+    	}
+    	
+    	$options = self::getModifierOptions($criteria);
+    	
+    	$critKey = self::buildRuleCriteria($suffix);
+    	$modKey = self::buildRuleModifier($suffix, $options);
+    	$inputKey = self::buildRuleInput($suffix);
+    	
+    	if (isset($info)) {
+    		
+    		if (isset($info["criteria"])) {
+    			$this->_populateHelp[$critKey] = $info["criteria"];
+    		}
+    		
+    		if (isset($info["modifier"])) {
+    			$this->_populateHelp[$modKey] = $info["modifier"];
+    		}
+
+    		if (isset($info["input1"])) {
+    			$this->_populateHelp[$inputKey] = $info["input1"];
+    		}
+    	}
+    	
+    	//this extra field is only required for range conditions.
+    	if (isset($info) && intval($info["modifier"]) === 11) {
+    		$extraKey = self::buildRuleExtra($suffix);
+    		
+    		if (isset($info["input2"])) {
+    			$this->_populateHelp[$extraKey] = $info["input2"];
+    		}
+    	}
+    	
+    	return $suffix;
+    }
+    
+    public function buildCriteriaOptions($criteria = null)
+    {
+    	Logging::info($criteria);
+    	
+    	if (is_null($criteria)) {
+    		$this->_suffixes[0][0] = self::buildRuleCriteriaRow();
+    		return;
+    	}
+    	
+    	for ($i = 0; $i < count($criteria); $i++) {
+    		for ($j = 0; $j < count($criteria[$i]); $j++) {
+    			$this->_suffixes[$i][$j] = self::buildRuleCriteriaRow($criteria[$i][$j]);
+    		}
+    	}
+    	
+    	return $this->_suffixes;
+    }
+    
+    public function getPopulateHelp()
+    {
+    	return $this->_populateHelp;
     }
 }

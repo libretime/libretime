@@ -5,13 +5,13 @@
 	padding: 0.3em 0.2em 0 0.4em;
 	margin: 0 -0.4em 0;
 }
-.btn-small [class^="icon-"] {
+.ui-dialog .btn-small [class^="icon-"] {
 	margin: 1px 5px 0 -3px;
 }
-.btn {
+.ui-dialog .btn {
 	margin-right: 3px;
 }
-.btn-small {
+.ui-dialog .btn-small {
 	/*line-height: 20px;*/
 }
 

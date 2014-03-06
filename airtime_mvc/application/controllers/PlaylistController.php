@@ -142,9 +142,12 @@ class PlaylistController extends Zend_Controller_Action
     			$playlist->setDescription($info["description"]);
     		}
     		
-    		//if (isset($info["rules"])) {
-    		//	$playlist->setRules($info["rules"]);
-    		//}
+    		$form = new Application_Form_PlaylistRules();
+    		$form->buildCriteriaOptions($info["rules"]["criteria"]);
+    		
+    		if (isset($info["rules"])) {
+    			$playlist->setRules($info["rules"]);
+    		}
     		
     		$content = isset($info["content"]) ? $info["content"] : array();
     		$playlist->savePlaylistContent($content, true);

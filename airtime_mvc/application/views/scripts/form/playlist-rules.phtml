@@ -25,22 +25,34 @@
     </dd>
     
     <dd id='rule_criteria'>
+    <?php $option = $this->element->getDecorator('ViewScript')->getOptions();?>
+    
+    	<?php for ($i = 0; $i < count($option["suffixes"]); $i++): ?>
     	<div class="pl-criteria-and">
-	    	<div class="pl-criteria-row">
-	        	<?php echo $this->element->getElement("sp_criteria_field_") ?>
-	            <?php echo $this->element->getElement("sp_criteria_modifier_") ?>
-	            <?php echo $this->element->getElement("sp_criteria_value_") ?>  
+    		<?php for ($j = 0; $j < count($option["suffixes"][$i]); $j++): ?>
+    		<div class="pl-criteria-row">
+    			<?php $suffix = $option["suffixes"][$i][$j]; ?>
+	        	<?php echo $this->element->getElement("sp_criteria_field_{$suffix}") ?>
+	            <?php echo $this->element->getElement("sp_criteria_modifier_{$suffix}") ?>
+	            <?php echo $this->element->getElement("sp_criteria_value_{$suffix}") ?>
+	            <?php $extra = $this->element->getElement("sp_criteria_extra_{$suffix}") ?>
+	            <?php if(isset($extra)): ?>
 	            <span class='sp_text_font' id="extra_criteria"><?php echo _("to"); ?>
-	            	<?php echo $this->element->getElement('sp_criteria_extra_') ?>
+	            	<?php echo $extra; ?>
 	            </span>
+	            <?php endif; ?>
 	            <a class='btn btn-small btn-danger'>
 	                <i class='icon-white icon-remove'></i>
 	            </a>
 	            <a class="btn btn-small pl-or-criteria">
 	                <span><?php echo _("OR"); ?></span>
-	            </a>  
+	            </a> 
 	    	</div>
+    		<?php endfor; ?>
+	    	
 	    </div>
+    	<?php endfor; ?>
+    	
 	    <button class="btn" title="Create AND Block" type="button" id="spl_AND"><?php echo _("AND"); ?></button>
     </dd>
 </dl>

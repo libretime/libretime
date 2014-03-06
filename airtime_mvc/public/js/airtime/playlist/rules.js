@@ -264,7 +264,7 @@ var AIRTIME = (function(AIRTIME){
 			
 			var $el = createCriteriaRow("", "");
 			
-			$(this).parent().after($el);
+			$(this).parents("div.pl-criteria-row").after($el);
 		});
 		
 		$criteriaEl.on("change", ".rule_criteria", function(e) {
@@ -275,7 +275,7 @@ var AIRTIME = (function(AIRTIME){
 			
 			$select = $(this);
 			$el = createCriteriaRow($select.val(), "");
-			$select.parent().replaceWith($el);	
+			$select.parents("div.pl-criteria-row").replaceWith($el);	
 		});
 		
 		$criteriaEl.on("change", ".rule_modifier", function(e) {
@@ -286,10 +286,27 @@ var AIRTIME = (function(AIRTIME){
 			e.preventDefault();
 			
 			$modifier = $(this);
-			$select = $modifier.parent().find(".rule_criteria");
+			$select = $modifier.parents("div.pl-criteria-row").find(".rule_criteria");
 			
 			$el = createCriteriaRow($select.val(), $modifier.val());
-			$select.parent().replaceWith($el);	
+			$select.parents("div.pl-criteria-row").replaceWith($el);	
+		});
+		
+		$criteriaEl.on("click", ".btn-danger", function(e) {
+			var $row,
+				$andBlock;
+			
+			e.preventDefault();
+			
+			$row = $(this).parents("div.pl-criteria-row");
+			$andBlock = $row.parent();
+			
+			if ($andBlock.children().length === 1) {
+				$andBlock.remove();
+			}
+			else {
+				$row.remove();
+			}
 		});
 	};
 

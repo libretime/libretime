@@ -25,8 +25,75 @@ use \Propel;
  */
 abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 {
-	const RULE_REPEAT_TRACKS = 0;
-	const RULE_USERS_TRACKS_ONLY = 1;
+	const RULE_REPEAT_TRACKS = "repeat-tracks";
+	const RULE_USERS_TRACKS_ONLY = "my-tracks";
+	const RULE_CRITERIA = "criteria";
+	
+	private function getPrefix() {
+		return mt_rand(10000, 99999);
+	}
+	
+	protected function getCriteriaRules($query) {
+		
+		//$pattern is like "%VALUE%", or just "VALUE" if % is not needed.
+		function createRule($comparison, $pattern = "VALUE") {
+			return function($col, $value) use (&$query, $comparison, $pattern) {
+				
+				$name = self::getPrefix();
+				$cond = "{$col} {$comparison} ?";
+				$param = str_replace("VALUE", $value, $pattern);
+				$query->condition($name, $cond, $param);
+					
+				return $name;
+			};
+		}
+		
+		$range = function ($col, $value1, $value2) use (&$query) {
+			
+			$name1 = self::getPrefix();
+			$name2 = self::getPrefix();
+			$name3 = self::getPrefix();
+			
+			$comparison1 = Criteria::GREATER_EQUAL;
+			$comparison2 = Criteria::LESS_EQUAL;
+			
+			$cond = "{$col} {$comparison1} ?";
+			$query->condition($name1, $cond, $value1);
+			
+			$cond = "{$col} {$comparison2} ?";
+			$query->condition($name2, $cond, $value2);
+			
+			$query->combine(array($name1, $name2), 'and', $name3);
+				
+			return $name3;
+		};
+		
+		$contains = createRule(Criteria::ILIKE, "%VALUE%");
+		$doesntContain = createRule(Criteria::NOT_ILIKE, "%VALUE%");
+		$is = createRule(Criteria::EQUAL);
+		$isNot = createRule(Criteria::NOT_EQUAL);
+		$startsWith = createRule(Criteria::ILIKE, "VALUE%");
+		$endsWith = createRule(Criteria::ILIKE, "%VALUE");
+		$isGreaterThan = createRule(Criteria::GREATER_THAN);
+		$isLessThan = createRule(Criteria::LESS_THAN);
+		$isGreaterThanEqualTo = createRule(Criteria::GREATER_EQUAL);
+		$isLessThanEqualTo = createRule(Criteria::LESS_EQUAL);
+		
+		array(
+			null,
+			$contains,
+			$doesntContain,
+			$is,
+			$isNot,
+			$startsWith,
+			$endsWith,
+			$isGreaterThan,
+			$isLessThan,
+			$isGreaterThanEqualTo,
+			$isLessThanEqualTo,
+			$range
+		);
+	}
 	
 	public function applyDefaultValues() {
 		parent::applyDefaultValues();
