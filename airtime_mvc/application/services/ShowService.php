@@ -415,6 +415,13 @@ SQL;
             ':timestamp'  => gmdate("Y-m-d H:i:s")), 'execute');
     }
 
+    private function deleteAllShowDays($showId)
+    {
+        CcShowDaysQuery::create()
+            ->filterByDbShowId($showId)
+            ->delete();
+    }
+
     /**
      * TODO: This function is messy. Needs refactoring
      *
@@ -436,8 +443,14 @@ SQL;
         //CcShowDay object
         if ($this->ccShow->isRepeating()) {
             $currentShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+
+            //all cc_show_days
+            $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
         } else {
             $currentShowDay = $this->ccShow->getFirstCcShowDay();
+
+            //all cc_show_days
+            $ccShowDays = $this->ccShow->getCcShowDayss();
         }
 
         //new end date in the show's timezone (from the select box)
@@ -446,6 +459,7 @@ SQL;
         //repeat option was toggled
         if ($showData['add_show_repeats'] != $currentShowDay->isRepeating()) {
             $this->deleteAllRepeatInstances($currentShowDay, $showId);
+
             //if repeat option was checked we need to treat the current show day
             //as a new show day so the repeat instances get created properly
             //in createWeeklyRepeatInstances()
@@ -477,16 +491,12 @@ SQL;
             //and the repeat type changed
             if ($currentRepeatType != -1 && $this->repeatType != $currentRepeatType) {
                 $this->deleteAllInstances($showId);
+                $this->deleteAllShowDays($showId);
+
             // when repeating by day of the month (1st, 2nd, etc.) we do not store the repeat week days
             } elseif ($currentRepeatType != 2) {
                 //repeat type is the same, check if the days of the week are the same
                 $repeatingDaysChanged = false;
-
-                if ($this->ccShow->isRepeating()) {
-                    $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
-                } else {
-                    $ccShowDays = $this->ccShow->getCcShowDayss();
-                }
 
                 $showDays = array();
                 foreach ($ccShowDays as $day) {
@@ -560,11 +570,14 @@ SQL;
 
     private function preserveLinkedShowContent()
     {
-        /* Get show content from any linekd instance. It doesn't
+        /* Get show content from any linked instance. It doesn't
          * matter which instance since content is the same in all.
          */
         $ccShowInstance = $this->ccShow->getCcShowInstancess()->getFirst();
 
+        if (!$ccShowInstance) {
+            return;
+        }
         $ccSchedules = CcScheduleQuery::create()
             ->filterByDbInstanceId($ccShowInstance->getDbId())
             ->find();
@@ -1512,8 +1525,12 @@ SQL;
             if ($this->isUpdate) {
                 $showDay = CcShowDaysQuery::create()
                     ->filterByDbShowId($showId)
-                    ->filterByDbRepeatType($showData['add_show_repeat_type'])
+                    ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
                     ->findOne();
+                if (!$showDay) {
+                    //repeat type changed so we have to create a new show_day rule
+                    $showDay = new CcShowDays();
+                }
             } else {
                 $showDay = new CcShowDays();
             }
@@ -1545,23 +1562,20 @@ SQL;
                 if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
 
                     if ($this->isUpdate) {
-                        if ($this->repeatType >= 0) {
-                            $showDay = CcShowDaysQuery::create()
-                               ->filterByDbShowId($showId)
-                               ->filterByDbRepeatType($this->repeatType)
-                               ->filterByDbDay($day)
-                               ->findOne();
-                            if (!$showDay) {
-                                //if no show day object was found it is because a new
-                                //repeating day of the week was added
-                                $showDay = new CcShowDays();
-                            }
-                        } else {
-                            $showDay = CcShowDaysQuery::create()
-                                ->filterByDbShowId($showId)
-                                ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
-                                ->filterByDbDay($this->origCcShowDay->getDbDay())
-                                ->findOne();
+                        if ($this->origCcShowDay->getDbRepeatType() == 2 ||
+                            $this->origCcShowDay->getDbRepeatType() == 3) {
+                            $day = null;
+                        }
+                        $showDay = CcShowDaysQuery::create()
+                           ->filterByDbShowId($showId)
+                           ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
+                           ->filterByDbDay($day)
+                           ->findOne();
+                        if (!$showDay) {
+                            //if no show day object was found it is because a new
+                            //repeating day of the week was added OR the repeat
+                            //type has changed
+                            $showDay = new CcShowDays();
                         }
                     } else {
                         $showDay = new CcShowDays();
