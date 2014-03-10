@@ -165,6 +165,23 @@ class PlaylistStatic extends Playlist {
     
     public function generate() {
     	
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	$con->beginTransaction();
+    	 
+    	try {
+    		
+    		$ruleSet = $this->getRules();
+    		
+    		$query = AudioFileQuery::create();
+    		$criteriaRules = parent::getCriteriaRules($query);
+    		 
+    		$con->commit();
+    	}
+    	catch (Exception $e) {
+    		$con->rollBack();
+    		Logging::error($e->getMessage());
+    		throw $e;
+    	}
     }
     
     public function shuffle() {
