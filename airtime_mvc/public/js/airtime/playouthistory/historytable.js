@@ -703,17 +703,16 @@ var AIRTIME = (function(AIRTIME) {
     	});
     	
     	$('body').on("click", "#his_instance_retrieve", function(e) {
-    		var startPicker = $hisDialogEl.find('#his_item_starts_datetimepicker').data('datetimepicker'),
-				endPicker = $hisDialogEl.find('#his_item_ends_datetimepicker').data('datetimepicker'),
+    		var startPicker = $hisDialogEl.find('#his_item_starts'),
+				endPicker = $hisDialogEl.find('#his_item_ends'),
 				url = baseUrl+"playouthistory/show-history-feed",
-				startDate = startPicker.getLocalDate(),
-				endDate = endPicker.getLocalDate(),
-				getEpochSeconds = AIRTIME.utilities.fnGetSecondsEpoch,
+				startDate = startPicker.val(),
+				endDate = endPicker.val(),
 				data;
     		
     		data = {
-    			start: getEpochSeconds(startDate),
-    			end: getEpochSeconds(endDate),
+    			start: startDate,
+    			end: endDate,
     			format: "json"
     		};
     		
