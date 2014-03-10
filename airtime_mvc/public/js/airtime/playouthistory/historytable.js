@@ -401,13 +401,12 @@ var AIRTIME = (function(AIRTIME) {
         return oTable;
     }
     
-    function showSummaryList() {
+    function showSummaryList(start, end) {
     	var url = baseUrl+"playouthistory/show-history-feed",
-    		oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId),
     		data = {
     			format: "json",
-	    		start: oRange.start,
-	    	    end: oRange.end
+	    		start: start,
+	    	    end: end
 	    	};
     	
     	$.post(url, data, function(json) {
@@ -460,7 +459,9 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	always: function() {
     		    		inShowsTab = true;
-    		    		showSummaryList();
+    		    		
+    		    		var info = getStartEnd();
+    		    		showSummaryList(info.start, info.end);
     		    		emptySelectedLogItems();
     		    	}
     		    }
@@ -710,18 +711,49 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	});
     	
+    	function getStartEnd() {
+    		var start,
+				end,
+				time;
+			
+			start = $(dateStartId).val();
+			start = start === "" ? null : start;
+			
+			time = $(timeStartId).val();
+			time = time === "" ? "00:00" : time;
+			
+			if (start) {
+				start = start + " " + time;
+			}
+			
+			end = $(dateEndId).val();
+			end = end === "" ? null : end;
+			
+			time = $(timeEndId).val();
+			time = time === "" ? "00:00" : time;
+			
+			if (end) {
+				end = end + " " + time;
+			}
+			
+			return {
+				start: start,
+				end: end
+			};
+    	}
+    	
     	$historyContentDiv.find("#his_submit").click(function(ev){
     		var fn,
-    			oRange;
+    			info;
     		
-    		oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+    		info = getStartEnd();
     		
     		fn = fnServerData;
-    	    fn.start = oRange.start;
-    	    fn.end = oRange.end;
+    	    fn.start = info.start;
+    	    fn.end = info.end;
     	    
     	    if (inShowsTab) {
-    	    	showSummaryList();
+    	    	showSummaryList(info.start, info.end);
     	    }
     	    else {
     	    	redrawTables();
