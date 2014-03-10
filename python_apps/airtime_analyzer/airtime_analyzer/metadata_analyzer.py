@@ -40,6 +40,20 @@ class MetadataAnalyzer(Analyzer):
         except (AttributeError, KeyError):
             #If mutagen can't figure out the number of channels, we'll just leave it out...
             pass
+        
+        #Try to extract the number of tracks on the album if we can (the "track total")
+        try:
+            track_number = audio_file["tracknumber"]
+            if isinstance(track_number, list): # Sometimes tracknumber is a list, ugh 
+                track_number = track_number[0]
+            track_number_tokens = track_number.split(u'/')
+            track_number = track_number_tokens[0]
+            metadata["track_number"] = track_number
+            track_total = track_number_tokens[1]
+            metadata["track_total"] = track_total
+        except (AttributeError, KeyError, IndexError):
+            #If we couldn't figure out the track_number or track_total, just ignore it...
+            pass
 
         #We normalize the mutagen tags slightly here, so in case mutagen changes,
         #we find the 
@@ -51,6 +65,7 @@ class MetadataAnalyzer(Analyzer):
             'composer':     'composer',
             'conductor':    'conductor',
             'copyright':    'copyright',
+            'comment':      'comment',
             'encoded_by':   'encoder',
             'genre':        'genre',
             'isrc':         'isrc',
@@ -59,10 +74,10 @@ class MetadataAnalyzer(Analyzer):
             'last_modified':'last_modified',
             'mood':         'mood',
             'replay_gain':  'replaygain',
-            'track_number': 'track_number',
-            'track_total':  'track_total',
+            #'tracknumber':  'track_number',
+            #'track_total':  'track_total',
             'website':      'website',
-            'year':         'year',
+            'date':         'year',
             'mime_type':    'mime',
         }
 

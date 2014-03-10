@@ -53,4 +53,9 @@ To run the unit tests, execute:
 
     $ nosetests
 
+If you care about seeing console output (stdout), like when you're debugging or developing
+a test, run:
+
+    $ nosetests -s
+
 

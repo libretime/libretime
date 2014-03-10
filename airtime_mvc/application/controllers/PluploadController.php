@@ -35,6 +35,20 @@ class PluploadController extends Zend_Controller_Action
         $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
     }
 
+    public function uploadFinishedAction()
+    {
+        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $filename = $this->_getParam('name');
+        $tempname = $this->_getParam('tempname');
+        $result = Application_Model_StoredFile::importUploadedFile($upload_dir, $filename, $tempname);
+        if (!is_null($result))
+            $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "error" => $result));
+        
+        $this->_helper->json->sendJson(array("jsonrpc" => "2.0"));
+        
+    }
+    /* FIXME: I renamed this guy to uploadFinishedAction and am just starting to rewrite it to use the new File API.
+     *        -- Albert March 10, 2014
     public function copyfileAction()
     {
         $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
@@ -46,5 +60,5 @@ class PluploadController extends Zend_Controller_Action
            $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "error" => $result));
 
         $this->_helper->json->sendJson(array("jsonrpc" => "2.0"));
-    }
+    }*/
 }

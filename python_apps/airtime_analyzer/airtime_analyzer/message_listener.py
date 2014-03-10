@@ -91,6 +91,7 @@ class MessageListener:
             StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
 
         except KeyError as e:
+            # A field in msg_dict that we needed was missing (eg. audio_file_path)
             logging.exception("A mandatory airtime_analyzer message field was missing from the message.")
             # See the huge comment about NACK below.
             channel.basic_nack(delivery_tag=method_frame.delivery_tag, multiple=False,

@@ -1,5 +1,7 @@
 import logging
 import multiprocessing 
+import shutil
+import os
 from metadata_analyzer import MetadataAnalyzer
 
 class AnalyzerPipeline:
@@ -15,9 +17,9 @@ class AnalyzerPipeline:
         if not isinstance(queue, multiprocessing.queues.Queue):
             raise TypeError("queue must be a multiprocessing.Queue()")
         if not isinstance(audio_file_path, unicode):
-            raise TypeError("audio_file_path must be a string. Was of type " + type(audio_file_path).__name__ + " instead.")
+            raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__ + " instead.")
         if not isinstance(final_directory, unicode):
-            raise TypeError("final_directory must be a string. Was of type " + type(final_directory).__name__ + " instead.")
+            raise TypeError("final_directory must be unicode. Was of type " + type(final_directory).__name__ + " instead.")
 
 
         # Analyze the audio file we were told to analyze:
@@ -28,4 +30,10 @@ class AnalyzerPipeline:
         # back to the main process.
 
         #print ReplayGainAnalyzer.analyze("foo.mp3")
+
+        final_audio_file_path = final_directory + os.sep + os.path.basename(audio_file_path)
+        if os.path.exists(final_audio_file_path) and not os.path.samefile(audio_file_path, final_audio_file_path):
+            os.remove(final_audio_file_path)
+
+        shutil.move(audio_file_path, final_audio_file_path)
 

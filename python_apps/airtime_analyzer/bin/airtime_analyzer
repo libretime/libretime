@@ -2,7 +2,7 @@
 
 import daemon
 import argparse
-import airtime_analyzer as aa
+import airtime_analyzer.airtime_analyzer as aa
 
 VERSION = "1.0"
 

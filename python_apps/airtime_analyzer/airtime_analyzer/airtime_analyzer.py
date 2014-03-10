@@ -33,6 +33,11 @@ class AirtimeAnalyzerServer:
    
         if debug:
             self._log_level = logging.DEBUG
+        else:
+            #Disable most pika/rabbitmq logging:
+            pika_logger = logging.getLogger('pika')
+            pika_logger.setLevel(logging.CRITICAL)
+        
         #self.log = logging.getLogger(__name__)
 
         # Set up logging
