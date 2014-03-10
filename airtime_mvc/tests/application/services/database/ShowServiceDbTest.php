@@ -611,7 +611,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
 
         $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $data["add_show_start_date"] = "2016-01-29";
-        $data["add_show_day_check"] = array(5);
+        $data["add_show_day_check"] = array(5, 6);
         $data["add_show_linked"] = 1;
         $showService = new Application_Service_ShowService(null, $data);
         $showService->addUpdateShow($data);

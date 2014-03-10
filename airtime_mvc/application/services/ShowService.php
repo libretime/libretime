@@ -20,6 +20,7 @@ class Application_Service_ShowService
     private $localShowStartHour;
     private $localShowStartMin;
     private $origCcShowDay;
+    private $origShowRepeatStatus;
     private $instanceIdsForScheduleUpdates;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
@@ -158,8 +159,10 @@ class Application_Service_ShowService
     {
         if ($this->ccShow->isRepeating()) {
             $this->origCcShowDay = clone $this->ccShow->getFirstRepeatingCcShowDay();
+            $this->origShowRepeatStatus = true;
         } else {
             $this->origCcShowDay = clone $this->ccShow->getFirstCcShowDay();
+            $this->origShowRepeatStatus = false;
         }
 
         $this->oldShowTimezone = $this->origCcShowDay->getDbTimezone();
@@ -1565,6 +1568,10 @@ SQL;
                         if ($this->origCcShowDay->getDbRepeatType() == 2 ||
                             $this->origCcShowDay->getDbRepeatType() == 3) {
                             $day = null;
+                        } else if (!$this->origShowRepeatStatus) {
+                            //keep current show day to use for updating cc_show_day rule
+                            $keepDay = $day;
+                            $day = $this->origCcShowDay->getDbDay();
                         }
                         $showDay = CcShowDaysQuery::create()
                            ->filterByDbShowId($showId)
@@ -1576,6 +1583,10 @@ SQL;
                             //repeating day of the week was added OR the repeat
                             //type has changed
                             $showDay = new CcShowDays();
+                        }
+
+                        if (isset($keepDay)) {
+                            $day = $keepDay;
                         }
                     } else {
                         $showDay = new CcShowDays();
