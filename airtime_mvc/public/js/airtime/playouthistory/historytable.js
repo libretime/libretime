@@ -60,6 +60,30 @@ var AIRTIME = (function(AIRTIME) {
 		oTableShow,
 		inShowsTab = false;
     
+    function validateTimeRange() {
+    	var oRange,
+    		inputs = $('.his-timerange > input'),
+    		start, end;
+ 
+    	oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+ 
+    	start = oRange.start;
+    	end = oRange.end;
+    
+    	if (end >= start) {
+    		inputs.removeClass('error');
+    	}
+    	else {
+    		inputs.addClass('error');
+		}
+        
+        return {
+        	start: start,
+       	 	end: end,
+       	 	isValid: end >= start
+        };
+   }
+    
     function getSelectedLogItems() {
     	var items = Object.keys(selectedLogItems);
     	
@@ -545,7 +569,8 @@ var AIRTIME = (function(AIRTIME) {
             dayNamesMin: i18n_days_short,
     		onSelect: function(sDate, oDatePicker) {		
     			$(this).datepicker( "setDate", sDate );
-    		}
+    		},
+    		onClose: validateTimeRange
     	};
     	
     	oBaseTimePickerSettings = {
@@ -555,13 +580,25 @@ var AIRTIME = (function(AIRTIME) {
     		showLeadingZero: false,
     		defaultTime: '0:00',
             hourText: $.i18n._("Hour"),
-            minuteText: $.i18n._("Minute")
+            minuteText: $.i18n._("Minute"),
+            onClose: validateTimeRange
     	};
 
-    	$historyContentDiv.find(dateStartId).datepicker(oBaseDatePickerSettings);
-    	$historyContentDiv.find(timeStartId).timepicker(oBaseTimePickerSettings);
-    	$historyContentDiv.find(dateEndId).datepicker(oBaseDatePickerSettings);
-    	$historyContentDiv.find(timeEndId).timepicker(oBaseTimePickerSettings);
+    	$historyContentDiv.find(dateStartId)
+    		.datepicker(oBaseDatePickerSettings)
+    		.blur(validateTimeRange);
+    	
+    	$historyContentDiv.find(timeStartId)
+    		.timepicker(oBaseTimePickerSettings)
+    		.blur(validateTimeRange);
+    	
+    	$historyContentDiv.find(dateEndId)
+    		.datepicker(oBaseDatePickerSettings)
+    		.blur(validateTimeRange);
+    	
+    	$historyContentDiv.find(timeEndId)
+    		.timepicker(oBaseTimePickerSettings)
+    		.blur(validateTimeRange);
     	
     	$historyContentDiv.on("click", "#his_create", function(e) {
     		var url = baseUrl+"playouthistory/edit-list-item/format/json"	;
@@ -711,35 +748,9 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	});
     	
-    	function getStartEnd() {
-    		var start,
-				end,
-				time;
+    	function getStartEnd() {  		
 			
-			start = $(dateStartId).val();
-			start = start === "" ? null : start;
-			
-			time = $(timeStartId).val();
-			time = time === "" ? "00:00" : time;
-			
-			if (start) {
-				start = start + " " + time;
-			}
-			
-			end = $(dateEndId).val();
-			end = end === "" ? null : end;
-			
-			time = $(timeEndId).val();
-			time = time === "" ? "00:00" : time;
-			
-			if (end) {
-				end = end + " " + time;
-			}
-			
-			return {
-				start: start,
-				end: end
-			};
+			return AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
     	}
     	
     	$historyContentDiv.find("#his_submit").click(function(ev){

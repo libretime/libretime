@@ -90,20 +90,34 @@ var AIRTIME = (function(AIRTIME){
 	 * 
 	 * @return Object {"start", "end", "range"}
 	 */
-	mod.fnGetScheduleRange = function(dateStart, timeStart, dateEnd, timeEnd) {
-		var iStart, 
-			iEnd, 
-			iRange;
+	mod.fnGetScheduleRange = function(dateStartId, timeStartId, dateEndId, timeEndId) {
+		var start,
+			end,
+			time;
 		
-		iStart = AIRTIME.utilities.fnGetTimestamp(dateStart, timeStart);
-		iEnd = AIRTIME.utilities.fnGetTimestamp(dateEnd, timeEnd);
+		start = $(dateStartId).val();
+		start = start === "" ? null : start;
 		
-		iRange = iEnd - iStart;
+		time = $(timeStartId).val();
+		time = time === "" ? "00:00" : time;
+		
+		if (start) {
+			start = start + " " + time;
+		}
+		
+		end = $(dateEndId).val();
+		end = end === "" ? null : end;
+		
+		time = $(timeEndId).val();
+		time = time === "" ? "00:00" : time;
+		
+		if (end) {
+			end = end + " " + time;
+		}
 		
 		return {
-			start: iStart,
-			end: iEnd,
-			range: iRange
+			start: start,
+			end: end
 		};
 	};
 	
