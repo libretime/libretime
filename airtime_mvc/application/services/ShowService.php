@@ -463,6 +463,10 @@ SQL;
         if ($showData['add_show_repeats'] != $currentShowDay->isRepeating()) {
             $this->deleteAllRepeatInstances($currentShowDay, $showId);
 
+            if (!$showData["add_show_repeats"]) {
+                $this->deleteAllShowDays($showId);
+            }
+
             //if repeat option was checked we need to treat the current show day
             //as a new show day so the repeat instances get created properly
             //in createWeeklyRepeatInstances()
@@ -1573,6 +1577,7 @@ SQL;
                             $keepDay = $day;
                             $day = $this->origCcShowDay->getDbDay();
                         }
+
                         $showDay = CcShowDaysQuery::create()
                            ->filterByDbShowId($showId)
                            ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
