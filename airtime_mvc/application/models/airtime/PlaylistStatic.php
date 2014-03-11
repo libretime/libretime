@@ -171,9 +171,14 @@ class PlaylistStatic extends Playlist {
     	try {
     		
     		$ruleSet = $this->getRules();
+    		$criteria = isset($ruleSet["criteria"]) ? $ruleSet["criteria"] : array();
     		
     		$query = AudioFileQuery::create();
     		$criteriaRules = parent::getCriteriaRules($query);
+    		
+    		foreach ($criteria as $andBock) {
+    			
+    		}
     		 
     		$con->commit();
     	}

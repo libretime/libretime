@@ -319,7 +319,7 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 			),
 			"TrackNumber" => array(
 				"isColumn" => true,
-				"title" => _("Track number"),
+				"title" => _("Track"),
 				"width" => "65px",
 				"class" => "library_track",
 				"visible" => false,
