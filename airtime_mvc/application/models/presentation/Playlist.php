@@ -59,7 +59,10 @@ class Presentation_Playlist {
 		$form = new Application_Form_PlaylistRules();
 
 		$rules = $this->playlist->getRules();
-		$form->buildCriteriaOptions($rules[Playlist::RULE_CRITERIA]);
+		
+		if (isset($rules[Playlist::RULE_CRITERIA])) {
+			$form->buildCriteriaOptions($rules[Playlist::RULE_CRITERIA]);
+		}
 		
 		$criteriaFields = $form->getPopulateHelp();
 		
