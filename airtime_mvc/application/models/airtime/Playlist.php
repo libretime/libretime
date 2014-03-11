@@ -29,19 +29,17 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 	const RULE_USERS_TRACKS_ONLY = "my-tracks";
 	const RULE_CRITERIA = "criteria";
 	
-	private function getPrefix() {
-		return mt_rand(10000, 99999);
-	}
-	
 	protected function getCriteriaRules($query) {
 		
 		//$pattern is like "%VALUE%", or just "VALUE" if % is not needed.
-		function createRule($comparison, $pattern = "VALUE") {
-			return function($col, $value) use (&$query, $comparison, $pattern) {
+		function createRule(&$query, $comparison, $pattern = "VALUE") {
+			return function($col, $value1, $value2 = null) use (&$query, $comparison, $pattern) {
 				
-				$name = self::getPrefix();
-				$cond = "{$col} {$comparison} ?";
-				$param = str_replace("VALUE", $value, $pattern);
+				$m = $query->getModelName();
+				
+				$name = mt_rand(10000, 99999);
+				$cond = "{$m}.{$col} {$comparison} ?";
+				$param = str_replace("VALUE", $value1, $pattern);
 				$query->condition($name, $cond, $param);
 					
 				return $name;
@@ -50,17 +48,19 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 		
 		$range = function ($col, $value1, $value2) use (&$query) {
 			
-			$name1 = self::getPrefix();
-			$name2 = self::getPrefix();
-			$name3 = self::getPrefix();
+			$name1 = mt_rand(10000, 99999);
+			$name2 = mt_rand(10000, 99999);
+			$name3 = mt_rand(10000, 99999);
+			
+			$m = $query->getModelName();
 			
 			$comparison1 = Criteria::GREATER_EQUAL;
 			$comparison2 = Criteria::LESS_EQUAL;
 			
-			$cond = "{$col} {$comparison1} ?";
+			$cond = "{$m}.{$col} {$comparison1} ?";
 			$query->condition($name1, $cond, $value1);
 			
-			$cond = "{$col} {$comparison2} ?";
+			$cond = "{$m}.{$col} {$comparison2} ?";
 			$query->condition($name2, $cond, $value2);
 			
 			$query->combine(array($name1, $name2), 'and', $name3);
@@ -68,18 +68,18 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			return $name3;
 		};
 		
-		$contains = createRule(Criteria::ILIKE, "%VALUE%");
-		$doesntContain = createRule(Criteria::NOT_ILIKE, "%VALUE%");
-		$is = createRule(Criteria::EQUAL);
-		$isNot = createRule(Criteria::NOT_EQUAL);
-		$startsWith = createRule(Criteria::ILIKE, "VALUE%");
-		$endsWith = createRule(Criteria::ILIKE, "%VALUE");
-		$isGreaterThan = createRule(Criteria::GREATER_THAN);
-		$isLessThan = createRule(Criteria::LESS_THAN);
-		$isGreaterThanEqualTo = createRule(Criteria::GREATER_EQUAL);
-		$isLessThanEqualTo = createRule(Criteria::LESS_EQUAL);
+		$contains = createRule($query, Criteria::ILIKE, "%VALUE%");
+		$doesntContain = createRule($query, Criteria::NOT_ILIKE, "%VALUE%");
+		$is = createRule($query, Criteria::EQUAL);
+		$isNot = createRule($query, Criteria::NOT_EQUAL);
+		$startsWith = createRule($query, Criteria::ILIKE, "VALUE%");
+		$endsWith = createRule($query, Criteria::ILIKE, "%VALUE");
+		$isGreaterThan = createRule($query, Criteria::GREATER_THAN);
+		$isLessThan = createRule($query, Criteria::LESS_THAN);
+		$isGreaterThanEqualTo = createRule($query, Criteria::GREATER_EQUAL);
+		$isLessThanEqualTo = createRule($query, Criteria::LESS_EQUAL);
 		
-		array(
+		return array(
 			null,
 			$contains,
 			$doesntContain,

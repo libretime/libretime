@@ -17,6 +17,7 @@ class PlaylistController extends Zend_Controller_Action
             ->addActionContext('close-playlist', 'json')
             ->addActionContext('save', 'json')
             ->addActionContext('shuffle', 'json')
+            ->addActionContext('generate', 'json')
             ->addActionContext('clear', 'json')
             ->initContext();
         
@@ -107,6 +108,7 @@ class PlaylistController extends Zend_Controller_Action
     		$this->createUpdateResponse($playlist);
     	}
     	catch (Exception $e) {
+    		Logging::error($e->getMessage());
     		$this->view->error = $e->getMessage();
     	}
     }

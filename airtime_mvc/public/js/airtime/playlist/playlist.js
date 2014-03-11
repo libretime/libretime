@@ -361,6 +361,18 @@ var AIRTIME = (function(AIRTIME){
 		$playlist.on("blur", ".spl_fade_in span, .spl_fade_out span", changeFade);
 		$playlist.on("blur", ".spl_cue_in span, .spl_cue_out span", changeCue);
 		
+		$playlist.on("click", "#spl_generate", function(e) {
+			
+			var url = baseUrl+"playlist/generate",
+				data;
+			
+			data = {format: "json"};
+			
+			$.post(url, data, function(json) {
+				mod.redrawPlaylist(json);
+			});
+		});
+		
 		$playlist.on("click", "#spl_shuffle", function(e) {
 			
 			var url = baseUrl+"playlist/shuffle",
