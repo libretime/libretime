@@ -194,3 +194,7 @@
 #history_content .ui-tabs .ui-tabs-panel {
 	padding-top: 10px;
 }
+
+div.his-timerange input.error {
+    background-color: rgba(255,0,0,0.2);
+}

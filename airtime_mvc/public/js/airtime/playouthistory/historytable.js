@@ -63,6 +63,30 @@ var AIRTIME = (function(AIRTIME) {
 		oTableShow,
 		inShowsTab = false;
     
+    function validateTimeRange() {
+    	var oRange,
+    		inputs = $('.his-timerange > input'),
+    		start, end;
+ 
+    	oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+ 
+    	start = oRange.start;
+    	end = oRange.end;
+    
+    	if (end >= start) {
+    		inputs.removeClass('error');
+    	}
+    	else {
+    		inputs.addClass('error');
+		}
+        
+        return {
+        	start: start,
+       	 	end: end,
+       	 	isValid: end >= start
+        };
+   }
+    
     function getSelectedLogItems() {
     	var items = Object.keys(selectedLogItems);
     	
@@ -404,13 +428,12 @@ var AIRTIME = (function(AIRTIME) {
         return oTable;
     }
     
-    function showSummaryList() {
+    function showSummaryList(start, end) {
     	var url = baseUrl+"playouthistory/show-history-feed",
-    		oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId),
     		data = {
     			format: "json",
-	    		start: oRange.start,
-	    	    end: oRange.end
+	    		start: start,
+	    	    end: end
 	    	};
     	
     	$.post(url, data, function(json) {
@@ -463,7 +486,9 @@ var AIRTIME = (function(AIRTIME) {
     		    	},
     		    	always: function() {
     		    		inShowsTab = true;
-    		    		showSummaryList();
+    		    		
+    		    		var info = getStartEnd();
+    		    		showSummaryList(info.start, info.end);
     		    		emptySelectedLogItems();
     		    	}
     		    }
@@ -549,7 +574,8 @@ var AIRTIME = (function(AIRTIME) {
             dayNamesMin: i18n_days_short,
     		onSelect: function(sDate, oDatePicker) {		
     			$(this).datepicker( "setDate", sDate );
-    		}
+    		},
+    		onClose: validateTimeRange
     	};
     	
     	oBaseTimePickerSettings = {
@@ -559,13 +585,25 @@ var AIRTIME = (function(AIRTIME) {
     		showLeadingZero: false,
     		defaultTime: '0:00',
             hourText: $.i18n._("Hour"),
-            minuteText: $.i18n._("Minute")
+            minuteText: $.i18n._("Minute"),
+            onClose: validateTimeRange
     	};
 
-    	$historyContentDiv.find(dateStartId).datepicker(oBaseDatePickerSettings);
-    	$historyContentDiv.find(timeStartId).timepicker(oBaseTimePickerSettings);
-    	$historyContentDiv.find(dateEndId).datepicker(oBaseDatePickerSettings);
-    	$historyContentDiv.find(timeEndId).timepicker(oBaseTimePickerSettings);
+    	$historyContentDiv.find(dateStartId)
+    		.datepicker(oBaseDatePickerSettings)
+    		.blur(validateTimeRange);
+    	
+    	$historyContentDiv.find(timeStartId)
+    		.timepicker(oBaseTimePickerSettings)
+    		.blur(validateTimeRange);
+    	
+    	$historyContentDiv.find(dateEndId)
+    		.datepicker(oBaseDatePickerSettings)
+    		.blur(validateTimeRange);
+    	
+    	$historyContentDiv.find(timeEndId)
+    		.timepicker(oBaseTimePickerSettings)
+    		.blur(validateTimeRange);
     	
     	$historyContentDiv.on("click", "#his_create", function(e) {
     		var url = baseUrl+"playouthistory/edit-list-item/format/json"	;
@@ -670,17 +708,17 @@ var AIRTIME = (function(AIRTIME) {
     	});
     	
     	$('body').on("click", "#his_instance_retrieve", function(e) {
-    		var startPicker = $hisDialogEl.find('#'+historyStartsDatetimeId).data('datetimepicker'),
-				endPicker = $hisDialogEl.find('#'+historyEndsDatetimeId).data('datetimepicker'),
+
+    		var startPicker = $hisDialogEl.find('#his_item_starts'),
+				endPicker = $hisDialogEl.find('#his_item_ends'),
 				url = baseUrl+"playouthistory/show-history-feed",
-				startDate = startPicker.getLocalDate(),
-				endDate = endPicker.getLocalDate(),
-				getEpochSeconds = AIRTIME.utilities.fnGetSecondsEpoch,
+				startDate = startPicker.val(),
+				endDate = endPicker.val(),
 				data;
     		
     		data = {
-    			start: getEpochSeconds(startDate),
-    			end: getEpochSeconds(endDate),
+    			start: startDate,
+    			end: endDate,
     			format: "json"
     		};
     		
@@ -715,18 +753,23 @@ var AIRTIME = (function(AIRTIME) {
     		});
     	});
     	
+    	function getStartEnd() {  		
+			
+			return AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+    	}
+    	
     	$historyContentDiv.find("#his_submit").click(function(ev){
     		var fn,
-    			oRange;
+    			info;
     		
-    		oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+    		info = getStartEnd();
     		
     		fn = fnServerData;
-    	    fn.start = oRange.start;
-    	    fn.end = oRange.end;
+    	    fn.start = info.start;
+    	    fn.end = info.end;
     	    
     	    if (inShowsTab) {
-    	    	showSummaryList();
+    	    	showSummaryList(info.start, info.end);
     	    }
     	    else {
     	    	redrawTables();

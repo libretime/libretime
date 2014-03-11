@@ -46,7 +46,8 @@ AIRTIME = (function(AIRTIME) {
         showLeadingZero: false,
         defaultTime: '0:00',
         hourText: $.i18n._("Hour"),
-        minuteText: $.i18n._("Minute")
+        minuteText: $.i18n._("Minute"),
+        onClose: validateTimeRange
     };
     
     function setWidgetSize() {
