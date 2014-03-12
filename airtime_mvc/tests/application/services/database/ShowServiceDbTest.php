@@ -687,7 +687,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
         
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createNoRepeatNoRRShow.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_weeklyToNoRepeat.xml"),
             $ds
         );
     }

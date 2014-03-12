@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-02-12 10:53+0000\n"
+"PO-Revision-Date: 2014-02-12 11:00+0000\n"
 "Last-Translator: danielhjames <daniel@64studio.com>\n"
 "Language-Team: German (Germany) (http://www.transifex.com/projects/p/airtime/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -2211,7 +2211,7 @@ msgstr "Admin Benutzer und Passwort, wird zur Abfrage der Zuhörerdaten in Iceca
 #: airtime_mvc/application/controllers/LocaleController.php:180
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
-msgstr ""
+msgstr "Warnung: Dieses Feld kann nicht geändert werden, während die Sendung wiedergegeben wird."
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
 msgid "No result found"
