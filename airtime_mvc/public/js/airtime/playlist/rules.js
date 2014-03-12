@@ -14,12 +14,19 @@ var AIRTIME = (function(AIRTIME){
 			'<select class="input_select sp_input_select rule_modifier">'+
 				'<%= options %>'+
 			'</select>' +
-			'<input class="input_text sp_input_text"></input>' +
+			'<% if (input) { %>' +
+				'<input class="input_text sp_input_text"></input>' +
+			'<% } %>' +
 			'<% if (range) { %>' +
 				'<span class="sp_text_font" id="extra_criteria">' +	            	
 					$.i18n._("to") + 
 					'<input class="input_text sp_extra_input_text"></input>' +
 				'</span>' +
+			'<% } %>' +
+			'<% if (relDateOptions) { %>' +
+				'<select class="input_select sp_input_select">'+
+					'<%= relDateOptions %>'+
+				'</select>' +
 			'<% } %>' +
 			'<a class="btn btn-small btn-danger">' +
 				'<i class="icon-white icon-remove"></i>' +
@@ -58,6 +65,31 @@ var AIRTIME = (function(AIRTIME){
 	    11 : $.i18n._("is in the range")
 	};
 	
+	var relativeDateCriteriaOptions = {
+	    12 : $.i18n._("today"),
+	    13 : $.i18n._("yesterday"),
+	    14 : $.i18n._("this week"),
+		15 : $.i18n._("last week"),
+		16 : $.i18n._("this month"),
+		17 : $.i18n._("last month"),
+		18 : $.i18n._("this year"),
+		19 : $.i18n._("last year"),
+		20 : $.i18n._("in the last"),
+		21 : $.i18n._("not in the last")
+	};
+	
+	var relativeDateUnitOptions = {
+		0 : $.i18n._("-----"),
+		1 : $.i18n._("seconds"),
+	    2 : $.i18n._("minutes"),
+	    3 : $.i18n._("hours"),
+	    4 : $.i18n._("days"),
+		5 : $.i18n._("weeks"),
+		6 : $.i18n._("months"),
+		7 : $.i18n._("years"),
+		8 : $.i18n._("hh:mm(:ss)")
+	};
+	
 	// We need to know if the criteria value will be a string
 	// or numeric value in order to populate the modifier
 	// select list
@@ -90,14 +122,6 @@ var AIRTIME = (function(AIRTIME){
 	    	type: "s",
 	    	name: $.i18n._("Copyright")
 	    },
-	    "Cuein": {
-	    	type: "n",
-	    	name: $.i18n._("Cue In")
-	    },
-	    "Cueout": {
-	    	type: "n",
-	    	name: $.i18n._("Cue Out")
-	    },
 	    "ArtistName": {
 	    	type: "s",
 	    	name: $.i18n._("Creator")
@@ -107,15 +131,15 @@ var AIRTIME = (function(AIRTIME){
 	    	name: $.i18n._("Encoded By")
 	    },
 	    "CreatedAt": {
-	    	type: "n",
+	    	type: "d",
 	    	name: $.i18n._("Uploaded")
 	    },
 	    "UpdatedAt": {
-	    	type: "n",
+	    	type: "d",
 	    	name: $.i18n._("Last Modified")
 	    },
 	    "LastPlayedTime": {
-	    	type: "n",
+	    	type: "d",
 	    	name: $.i18n._("Last Played")
 	    },
 	    "Genre": {
@@ -201,18 +225,26 @@ var AIRTIME = (function(AIRTIME){
     	var $el,
     		defaults,
     		settings,
-    		showCriteria;
+    		showCriteria,
+    		noInput = ["12", "13", "14", "15", "16", "17", "18", "19"],
+    		hasRange = ["11"],
+    		hasRelDateOptions = ["20", "21"],
+    		type = criteriaTypes[criteria].type;
     	
     	var fullCriteria = makeSelectOptions(criteriaOptions, criteria);
+    	var relDateSelect = makeSelectOptions(relativeDateUnitOptions);
     	
     	var modifier = setCorrectModifier(criteria);
     	var modifierHtml = makeSelectOptions(modifier, modifierValue);
     	
     	defaults = {
-    		range: modifierValue === "11" ? true : false,
+    		input: noInput.indexOf(modifierValue) === -1 ? true : false,
+    		range: hasRange.indexOf(modifierValue) !== -1 ? true : false,
     		showCriteria: true,
     		options: modifierHtml,
-    		criteria: fullCriteria
+    		criteria: fullCriteria,
+    		relDate: type === "d" ? true : false,
+    		relDateOptions: hasRelDateOptions.indexOf(modifierValue) === -1 ? null : relDateSelect
     	};
     	
     	settings = $.extend({}, defaults, options);
@@ -221,9 +253,12 @@ var AIRTIME = (function(AIRTIME){
     	
     	$el = $(template({
     		showCriteria: showCriteria,
+    		input: settings.input,
     		range: settings.range,
     		options: settings.options,
-    		criteria: settings.criteria
+    		criteria: settings.criteria,
+    		relDate: settings.relDate,
+    		relDateOptions: settings.relDateOptions
     	}));
     	
     	return $el;
@@ -237,6 +272,9 @@ var AIRTIME = (function(AIRTIME){
 		}
 		else if (type === "n") {
 			return numericCriteriaOptions;
+		}
+		else if (type === "d") {
+			return $.extend({}, numericCriteriaOptions, relativeDateCriteriaOptions);
 		}
 		else {
 			return emptyCriteriaOptions;
@@ -308,10 +346,25 @@ var AIRTIME = (function(AIRTIME){
 				$row.remove();
 			}
 		});
+		
+		$("#pl_order_column").change(function(e) {
+			var $orderCol,
+				$orderDir;
+			
+			e.preventDefault();
+			
+			$orderCol = $(this);
+			$orderDir = $("#pl_order_direction");
+			
+			if ($orderCol.val() === "") {
+				$orderDir.hide();
+			}
+			else {
+				$orderDir.show();
+			}	
+		});
 	};
 
 return AIRTIME;
 	
 }(AIRTIME || {}));
-
-$(document).ready(AIRTIME.rules.onReady);

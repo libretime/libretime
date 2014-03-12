@@ -114,6 +114,7 @@ var AIRTIME = (function(AIRTIME){
 			j, lenOr,
 			$nodes,
 			$row,
+			$input,
 			$extra;
 		
 		for (i = 0, lenAnd = $andBlocks.length; i < lenAnd; i++) {
@@ -122,12 +123,13 @@ var AIRTIME = (function(AIRTIME){
 			
 			for (j = 0, lenOr = $nodes.length; j < lenOr; j++) {
 				$row = $($nodes[j]);
+				$input = $row.find("input.sp_input_text");
 				$extra = $row.find("input.sp_extra_input_text");
 				
 				criteria[i].push({
 					"criteria": $row.find("select.rule_criteria").val(),
 					"modifier": $row.find("select.rule_modifier").val(),
-					"input1": $row.find("input.sp_input_text").val(),
+					"input1": $input ? $input.val() : null,
 					"input2": $extra ? $extra.val() : null
 				});
 			}
@@ -434,4 +436,7 @@ return AIRTIME;
 	
 }(AIRTIME || {}));
 
-$(document).ready(AIRTIME.playlist.onReady);
+$(document).ready(function() {
+	AIRTIME.playlist.onReady();
+	AIRTIME.rules.onReady();
+});

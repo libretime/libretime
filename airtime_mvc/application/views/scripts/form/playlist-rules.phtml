@@ -1,27 +1,12 @@
 <dl class='zend_form search-criteria'>
-    <dd id='rule_repeat_tracks'>
+    <dd id='track_rules'>
 		<span class='sp_text_font'><?php echo $this->element->getElement('pl_repeat_tracks')->getLabel() ?></span>
         <span class='repeat_tracks_help_icon'></span>
         <?php echo $this->element->getElement('pl_repeat_tracks')?>
-    </dd>
-    
-    <dd id='rule_my_tracks'>
+
 		<span class='sp_text_font'><?php echo $this->element->getElement('pl_my_tracks')->getLabel() ?></span>
         <span class='repeat_tracks_help_icon'></span>
         <?php echo $this->element->getElement('pl_my_tracks')?>
-    </dd>
-    
-    <dd id='rule_limit' class="criteria-element">
-    	<span class='sp_text_font'><?php echo $this->element->getElement('pl_limit_value')->getLabel() ?></span>
-        <?php echo $this->element->getElement('pl_limit_value')?>
-        <?php echo $this->element->getElement('pl_limit_options') ?>
-        <?php if($this->element->getElement("pl_limit_value")->hasErrors()) : ?>
-            <?php foreach($this->element->getElement("pl_limit_value")->getMessages() as $error): ?>
-            <span class='errors sp-errors'>
-                <?php echo $error; ?>
-            </span>
-            <?php endforeach; ?>
-        <?php endif; ?>
     </dd>
     
     <dd id='rule_criteria'>
@@ -54,5 +39,31 @@
     	<?php endfor; ?>
     	
 	    <button class="btn" title="Create AND Block" type="button" id="spl_AND"><?php echo _("AND"); ?></button>
+    </dd>
+    
+    <dd id='rule_order' class="criteria-element">
+    	<?php 
+    	$order = $this->element->getElement('pl_order_column'); 
+    	$direction = $this->element->getElement('pl_order_direction');	
+    	?>
+    	<span class='sp_text_font'><?php echo $order->getLabel() ?></span>
+        <?php echo $order ?>
+        <?php if ($order->getValue() == "") {
+        	$direction->setAttrib('style', 'display:none;');
+        } ?>
+        <?php echo $direction ?>
+    </dd>
+    
+    <dd id='rule_limit' class="criteria-element">
+    	<span class='sp_text_font'><?php echo $this->element->getElement('pl_limit_value')->getLabel() ?></span>
+        <?php echo $this->element->getElement('pl_limit_value')?>
+        <?php echo $this->element->getElement('pl_limit_options') ?>
+        <?php if($this->element->getElement("pl_limit_value")->hasErrors()) : ?>
+            <?php foreach($this->element->getElement("pl_limit_value")->getMessages() as $error): ?>
+            <span class='errors sp-errors'>
+                <?php echo $error; ?>
+            </span>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </dd>
 </dl>

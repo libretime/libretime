@@ -16,13 +16,11 @@ class Application_Form_PlaylistRules extends Zend_Form
 		"Composer" => "s",
 		"Conductor" => "s",
 		"Copyright" => "s",
-		"Cuein" => "n",
-		"Cueout" => "n",
 		"ArtistName" => "s",
 		"EncodedBy" => "s",
-		"CreatedAt" => "n",
-		"UpdatedAt" => "n",
-		"LastPlayedTime" => "n",
+		"CreatedAt" => "d",
+		"UpdatedAt" => "d",
+		"LastPlayedTime" => "d",
 		"Genre" => "s",
 		"IsrcNumber" => "s",
 		"Label" => "s",
@@ -48,8 +46,6 @@ class Application_Form_PlaylistRules extends Zend_Form
             "Composer" => _("Composer"),
             "Conductor" => _("Conductor"),
             "Copyright" => _("Copyright"),
-            "Cuein" => _("Cue In"),
-            "Cueout" => _("Cue Out"),
             "ArtistName" => _("Creator"),
             "EncodedBy" => _("Encoded By"),
             "Genre" => _("Genre"),
@@ -104,7 +100,7 @@ class Application_Form_PlaylistRules extends Zend_Form
 	private function getNumericCriteriaOptions()
 	{
 		return array(
-			0  => _("Select modifier"),
+			0 => _("Select modifier"),
 			3 => _("is"),
 			4 => _("is not"),
 			7 => _("is greater than"),
@@ -113,6 +109,30 @@ class Application_Form_PlaylistRules extends Zend_Form
 			10 => _("is less than or equal to"),
 			11 => _("is in the range")
 		);
+	}
+	
+	private function getRelativeDateCriteriaOptions()
+	{
+		return array(
+			12 => _("today"),
+		    13 => _("yesterday"),
+			14 => _("this week"),
+			15 => _("last week"),
+			16 => _("this month"),
+			17 => _("last month"),
+			18 => _("this year"),
+			19 => _("last year"),
+			20 => _("in the last"),
+			21 => _("not in the last")
+		);
+	}
+	
+	private function getOrderOptions()
+	{
+		$criteria =  $this->getCriteriaOptions();
+		$criteria[""] = _("Random");
+		
+		return $criteria;
 	}
 	
 	private function getLimitOptions()
@@ -166,6 +186,24 @@ class Application_Form_PlaylistRules extends Zend_Form
 	    	->setLabel(_('Limit to'))
 	    	->setDecorators(array('ViewHelper'));
     	$this->addElement($limitValue);
+    	
+    	$orderby = new Zend_Form_Element_Select('pl_order_column');
+    	$orderby
+	    	->setAttrib('class', 'sp_input_select')
+	    	->setDecorators(array('ViewHelper'))
+	    	->setMultiOptions($this->getOrderOptions())
+	    	->setLabel(_('Order By:'));
+    	$this->addElement($orderby);
+    	
+    	$orderbyDirection = new Zend_Form_Element_Select('pl_order_direction');
+    	$orderbyDirection
+	    	->setAttrib('class', 'sp_input_select')
+	    	->setDecorators(array('ViewHelper'))
+	    	->setMultiOptions(array(
+				"asc" => _("acending"),
+				"desc" => _("descending")
+			));
+    	$this->addElement($orderbyDirection);
     }
     
     private function getModifierOptions($criteria) {
@@ -179,6 +217,9 @@ class Application_Form_PlaylistRules extends Zend_Form
     			break;
     		case "s":
     			return $this->getStringCriteriaOptions();
+    			break;
+    		case "d":
+    			return array_push($this->getNumericCriteriaOptions(), $this->getRelativeDateCriteriaOptions());
     			break;
     		default:
     			return $this->getDefaultCriteriaOptions();
