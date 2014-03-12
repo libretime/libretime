@@ -230,8 +230,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $end_time = $end->format("Y-m-d H:i:s");
 
         $this->view->title = "{$show_name}:    {$start_time} - {$end_time}";
-        $this->view->start = $instance->getDbStarts("U");
-        $this->view->end = $instance->getDbEnds("U");
+        $this->view->start = $start_time;
+        $this->view->end = $end_time;
 
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
