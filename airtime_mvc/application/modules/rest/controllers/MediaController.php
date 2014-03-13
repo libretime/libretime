@@ -69,6 +69,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         //TODO: Strip or sanitize the JSON output
         $file = new CcFiles();
         $file->fromArray($this->getRequest()->getPost());
+        $file->setDbOwnerId($this->getOwnerId());
         $file->save();
 
         $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
@@ -199,6 +200,29 @@ class Rest_MediaController extends Zend_Rest_Controller
         Application_Model_RabbitMq::SendMessageToAnalyzer($tempFilePath,
                  $finalDestinationDir, $callbackUrl, $apiKey);
         
+    }
+
+    private function getOwnerId()
+    {
+        try {
+            if ($this->verifySession()) {
+                $service_user = new Application_Service_UserService();
+                return $service_user->getCurrentUser()->getDbId();
+            } else {
+                $defaultOwner = CcSubjsQuery::create()
+                    ->filterByDbType('A')
+                    ->orderByDbId()
+                    ->findOne();
+                if (!$defaultOwner) {
+                    // what to do if there is no admin user?
+                    // should we handle this case?
+                    return null;
+                }
+                return $defaultOwner->getDbId();
+            }
+        } catch(Exception $e) {
+            Logging::info($e->getMessage());
+        }
     }
 }
 
