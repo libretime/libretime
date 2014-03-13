@@ -1,0 +1,564 @@
+@CHARSET "UTF-8";
+
+div.jp-audio,
+div.jp-video {
+
+	/* Edit the font-size to counteract inherited font sizing.
+	 * Eg. 1.25em = 1 / 0.8em
+	 */
+
+	font-size:1em; /* 1.25em for testing in site pages */ /* No parent CSS that can effect the size in the demos ZIP */
+
+	font-family: Arial,Helvetica,sans-serif;
+	line-height:1.6;
+	color: #9B9B9B;
+	position:relative;
+	border-color: #262526 #262526 #5E5E5E;
+    border-style: solid;
+    border-width: 1px;
+}
+
+div.jp-audio {
+	width:420px;
+}
+div.jp-video-270p {
+	width: 100%;
+	margin: 0px;
+	background: #393939; /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(57,57,57,0.9) 0%, rgba(57,57,57,0.9) 1%, rgba(53,53,53,0.9) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(57,57,57,0.9)), color-stop(1%,rgba(57,57,57,0.9)), color-stop(100%,rgba(53,53,53,0.9))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(57,57,57,0.9) 0%,rgba(57,57,57,0.9) 1%,rgba(53,53,53,0.9) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(57,57,57,0.9) 0%,rgba(57,57,57,0.9) 1%,rgba(53,53,53,0.9) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(57,57,57,0.9) 0%,rgba(57,57,57,0.9) 1%,rgba(53,53,53,0.9) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(57,57,57,0.9) 0%,rgba(57,57,57,0.9) 1%,rgba(53,53,53,0.9) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6393939', endColorstr='#e6353535',GradientType=0 ); /* IE6-9 */
+	position: fixed;
+	z-index: 9999;
+	left: 0px;
+	bottom: 0px;
+}
+div.jp-video-360p {
+	width:640px;
+}
+
+div.jp-interface {
+	position: relative;
+    width: 100%;
+}
+
+div.jp-audio div.jp-type-single div.jp-interface {
+	height:80px;
+}
+div.jp-audio div.jp-type-playlist div.jp-interface {
+	min-height: 50px;
+	margin: 10px auto;
+	max-width: 670px;
+	background: rgba(53, 53, 53, 0.9);
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+	-moz-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+}
+
+.jp-time-wrap {
+	margin-top: 8px;
+	position: relative;
+	float: left;
+	width: 100%;
+	max-width: 350px;
+}
+
+.jp-time-wrap .jp-current {
+	font-size: 12px;
+	color: #fff;
+	text-decoration: none;
+}
+
+.jp-time-wrap .jp-current .jp-artist {
+	color: #aaaaaa;
+	font-size: 100%;
+}
+
+/* @group CONTROLS */
+
+div.jp-interface ul.jp-controls {
+	float: left;
+    padding: 0;
+    margin: 13px 20px 13px 20px;
+    cursor: pointer;
+    position: relative;
+}
+
+div.jp-interface ul.jp-controls li {
+	list-style-type: none;
+    float: left;
+    margin-right: 7px;
+	text-indent: -9999px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	background: rgb(100,100,100); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(107, 107, 107, 1) 0%, rgba(88,88,88,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(100,100,100,1)), color-stop(100%,rgba(88,88,88,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#646464', endColorstr='#585858',GradientType=0 ); /* IE6-9 */
+
+	-webkit-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+	-moz-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+	box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+}
+
+div.jp-interface ul.jp-controls li:hover {
+	background: rgb(147,147,147); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(147,147,147,1) 0%, rgba(117,117,117,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(147,147,147,1)), color-stop(100%,rgba(117,117,117,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#939393', endColorstr='#757575',GradientType=0 ); /* IE6-9 */
+}
+
+div.jp-interface ul.jp-controls li span {
+	width: 24px;
+	height: 24px;
+	display: block;
+}
+
+.jp-audio jp-video-270p .ui-state-default .ui-icon {
+	background-image: none;
+}
+
+.jp-play span {
+    background: url("images/player/play_icon.png") center no-repeat;
+}
+
+.jp-pause span {
+    background: url("images/player/pause_icon.png") center no-repeat;
+}
+
+.jp-next span {
+    background: url("images/player/next_icon.png") center no-repeat;
+}
+
+.jp-previous span {
+    background: url("images/player/previous_icon.png") center no-repeat;
+}
+
+.jp-volume-block span {
+	cursor: pointer;
+}
+
+.jp-mute {
+	text-indent: -9999px;
+	margin: 0 auto;
+	width: 12px;
+}
+
+.jp-mute span {
+    background: url("images/player/volume_icon.png") center no-repeat;
+	background-size: 100%;
+    display: block;
+    width: 12px;
+    height: 11px;
+}
+
+.playlist_icon {
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	right: -40px;
+	top: 13px;
+	cursor: pointer;
+	text-indent: -9999px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	background: rgb(100,100,100);
+	background: -moz-linear-gradient(top, rgba(107, 107, 107, 1) 0%, rgba(88,88,88,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(100,100,100,1)), color-stop(100%,rgba(88,88,88,1)));
+	background: -webkit-linear-gradient(top, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+	background: -o-linear-gradient(top, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+	background: -ms-linear-gradient(top, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+	background: linear-gradient(to bottom, rgba(107, 107, 107, 1) 0%,rgba(88,88,88,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#646464', endColorstr='#585858',GradientType=0 );
+	-webkit-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+	-moz-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+	box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2) inset;
+}
+
+.playlist_icon:hover {
+	background: rgb(147,147,147); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(147,147,147,1) 0%, rgba(117,117,117,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(147,147,147,1)), color-stop(100%,rgba(117,117,117,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(147,147,147,1) 0%,rgba(117,117,117,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#939393', endColorstr='#757575',GradientType=0 ); /* IE6-9 */
+}
+
+.playlist_icon span {
+    background: url("images/player/playlist_open.png") center no-repeat;
+    display: block;
+    width: 24px;
+    height: 24px;
+}
+
+.playlist_icon.selected {
+	background: rgb(73,73,73); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(73,73,73,1) 0%, rgba(58,58,58,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(73,73,73,1)), color-stop(100%,rgba(58,58,58,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(73,73,73,1) 0%,rgba(58,58,58,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(73,73,73,1) 0%,rgba(58,58,58,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(73,73,73,1) 0%,rgba(58,58,58,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(73,73,73,1) 0%,rgba(58,58,58,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#494949', endColorstr='#3a3a3a',GradientType=0 ); /* IE6-9 */
+
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+
+	border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.playlist_arrows a {
+	display: block;
+	text-indent: -9999px;
+	width: 20px;
+	height: 21px;
+	z-index: 9999;
+	position: absolute;
+	opacity: 0.7;
+}
+
+.playlist_arrows a:hover {
+	opacity: 1;
+}
+
+.playlist_arrows #playlist_next {
+    background: url("images/player/playlist_next.png") center no-repeat;
+	right: 10px;
+	top: 28px;
+}
+
+.playlist_arrows #playlist_prev {
+    background: url("images/player/playlist_prev.png") center no-repeat;
+	left: 10px;
+	top: 28px;
+}
+
+div.jp-unmute span {
+    background: url("jplayer.png") -60px -90px no-repeat;
+}
+div.jp-unmute span:hover {
+    background: url("jplayer.png") -90px -90px no-repeat;
+}
+
+div.jp-volume-max span {
+    background: url("jplayer.png") 0 -112px no-repeat;
+}
+div.jp-volume-max span:hover {
+    background: url("jplayer.png") -30px -112px no-repeat;
+}
+
+
+/* @end */
+
+/* @group progress bar */
+
+div.jp-time-block {
+	margin-top: 3px;
+}
+
+div.jp-progress {
+	overflow:hidden;
+	background-color: #393939;
+}
+div.jp-audio div.jp-progress {
+	height: 5px;
+	border-color: #262526 #262526 #5E5E5E;
+    border-style: solid;
+    border-width: 1px;
+}
+/*
+div.jp-audio div.jp-type-single div.jp-progress {
+	left:110px;
+	width:186px;
+}
+*/
+div.jp-audio div.jp-type-playlist div.jp-progress {
+	width: 100%;
+}
+
+div.jp-seek-bar {
+	background-color: #393939;
+	width:0px;
+	height:100%;
+	cursor: pointer;
+}
+div.jp-play-bar {
+	background-color: #FF6F01;
+	width:0px;
+	height:100%;
+}
+
+/* The seeking class is added/removed inside jPlayer */
+div.jp-seeking-bg {
+	background: url("pbar-ani.gif");
+}
+
+/* @end */
+
+/* @group volume controls */
+
+li.jp-mute,
+li.jp-unmute,
+li.jp-volume-max {
+    margin-top: 2px;
+}
+
+/*
+div.jp-audio div.jp-type-single a.jp-mute,
+div.jp-audio div.jp-type-single a.jp-unmute {
+	margin-left: 210px;	
+}
+*/
+
+div.jp-volume-block {
+	float: right;
+	margin-top: 12px;
+	margin-right: 22px;
+	width: 72px;
+}
+
+div.jp-volume-bar {
+	overflow: hidden;
+	background-color: #393939;
+	width: 70px;
+	height: 5px;
+	cursor: pointer;
+	margin-top: 8px;
+}
+div.jp-audio div.jp-volume-bar {
+	border-color: #262526 #262526 #5E5E5E;
+    border-style: solid;
+    border-width: 1px;
+}
+
+div.jp-volume-bar-value {
+	background-color: #FF6F01;
+	width:0px;
+	height:5px;
+}
+
+div.jp-volume-max {
+	margin-left: 65px;
+}
+
+/* @end */
+
+/* @group current time and duration */
+
+div.jp-current-time,
+div.jp-duration {
+	font-size: 1em;
+}
+div.jp-current-time {
+	display: inline;
+	position: absolute;
+	right: -50px;
+	top: 19px;
+	color: #fff;
+}
+div.jp-duration {
+	float: right;
+	display: inline;
+	text-align: right;
+	color: #9B9B9B;
+}
+
+/* @end */
+
+/* @group playlist */
+
+div.jp-title {
+	font-weight:bold;
+	text-align:center;
+}
+
+div.jp-playlist {
+	width:100%;
+	height: 75px;
+	background-color: rgba(39, 39, 39, 0.9);
+	text-align: center;
+	overflow: hidden;
+	height: 0px;
+	display: none;
+	position: relative;
+}
+
+div.jp-playlist.open {
+	display: block;
+	height: 75px;
+}
+
+div.jp-type-single div.jp-title,
+div.jp-type-playlist div.jp-title,
+div.jp-type-single div.jp-playlist {
+	border-top:none;
+}
+div.jp-title ul,
+div.jp-playlist ul {
+	list-style-type:none;
+	margin:0;
+	padding:0 20px;
+}
+
+div.jp-title li {
+	padding:5px 0;
+	font-weight:bold;
+}
+
+div.jp-playlist li {
+	display: inline-block;
+	width: 125px;
+	margin: 10px 10px;
+	overflow: hidden;
+	text-align: left;
+}
+
+div.jp-playlist li .jp-playlist-item {
+	height: 52px;
+	width: 125px;
+	display: inline-block;
+	background: rgba(0, 0, 0, 0.4);
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	-webkit-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+	-moz-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+	box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+	color: #fff;
+	overflow: hidden;
+	margin-right: 20px;
+	font-size: 12px;
+	padding: 6px 10px 0px 20px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	border: 1px solid transparent;
+}
+
+div.jp-playlist li .jp-playlist-item span {
+	display: block;
+	margin-left: 0px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+div.jp-playlist li .jp-playlist-item:hover {
+	background-color: rgba(0, 0, 0, 0.2);
+	background-image: url("images/player/play_hover.png");
+	background-repeat: no-repeat;
+	background-position: 5px 8px;
+}
+
+div.jp-playlist li div {
+	display:inline;
+}
+
+/* Note that the first-child (IE6) and last-child (IE6/7/8) selectors do not work on IE */
+
+div.jp-type-playlist div.jp-playlist a {
+	color: #fff;
+	text-decoration: none;
+}
+
+div.jp-type-playlist div.jp-playlist a.jp-playlist-current {
+	color: #fff;
+}
+
+div.jp-type-playlist div.jp-playlist li.jp-playlist-current .jp-playlist-item {
+	border: 1px solid rgba(255, 111, 1, 0.5);
+	background-image: url("images/player/play_current.png");
+	background-repeat: no-repeat;
+	background-position: 5px 8px;
+}
+
+span.jp-artist {
+	font-size: 90%;
+	color:#9B9B9B;
+	margin-left: 5px;
+}
+
+/* @end */
+
+div.jp-video-270p div.jp-video-play {
+	height:270px;
+}
+div.jp-video-360p div.jp-video-play {
+	height:360px;
+}
+div.jp-video-full div.jp-video-play {
+	height:100%;
+	z-index:1000;
+}
+
+div.jp-jplayer audio,
+div.jp-jplayer {
+	width:0px;
+	height:0px;
+}
+
+div.jp-jplayer {
+	background-color: #000000;
+}
+
+/* @group NO SOLUTION error feedback */
+
+.jp-no-solution {
+	position:absolute;
+	width:390px;
+	margin-left:-202px;
+	left:50%;
+	top: 10px;
+
+	padding:5px;
+	font-size:.8em;
+	background-color:#eee;
+	border:2px solid #FF6F01;
+	color:#000;
+	display:none;
+}
+
+.jp-no-solution a {
+	color:#000;
+}
+
+.jp-no-solution span {
+	font-size:1em;
+	display:block;
+	text-align:center;
+	font-weight:bold;
+}
+
+@media (max-width: 768px) {
+	div.jp-audio div.jp-type-playlist div.jp-interface {
+		max-width: 500px;
+	}
+
+	.jp-time-wrap {
+		max-width: 200px;
+	}
+}
+
+
+/* @end */

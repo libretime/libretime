@@ -32,13 +32,8 @@
 <?php echo $this->navigation()->menu() ?>
 </div>
 
-<div id="MainContent">
-	<div class="wrapper" id="content">
-		<?php echo $this->layout()->content ?>
-	</div>
-</div>
-
-<div id="BottomBar">
+<div class="wrapper" id="content">
+	<?php echo $this->layout()->content ?>
 	<?php echo $this->partial('partialviews/jplayer.phtml') ?>
 </div>
 

@@ -8,14 +8,6 @@ var AIRTIME = (function(AIRTIME) {
     
     function changePlaylist(data) {
     	
-    	
-    	if (data.hasMultiple) {
-    		$(".jp-previous, .jp-next").show();
-    	}
-    	else {
-    		$(".jp-previous, .jp-next").hide();
-    	}
-    	
     	if (data.hasDuration) {
     		$(".jp-duration").show();
     	}
@@ -76,16 +68,24 @@ var AIRTIME = (function(AIRTIME) {
             error: function(e) {
             	console.log("error");
             	console.error(e);
+            },
+            play: function(e) {
+            	var title = e.jPlayer.status.media.title,
+            		artist = e.jPlayer.status.media.artist,
+            		html;
+            	
+            	html = title + " <span class='jp-artist'>" + artist + "</span>";
+            	
+            	$(".jp-current").html(html);
             }
         });
+    	
 
-        $("#jp_container_1").on("mouseenter", "ul.jp-controls li", function(ev) {
-        	$(this).addClass("ui-state-hover");
-        });
-        
-        $("#jp_container_1").on("mouseleave", "ul.jp-controls li", function(ev) {
-        	$(this).removeClass("ui-state-hover");
-        });
+    	$( "#open_playlist" ).click(function() {
+    	  $(".jp-playlist").toggleClass( "open" );
+    	  $( this ).toggleClass( "selected" );
+    	});
+
     };
     
 return AIRTIME;

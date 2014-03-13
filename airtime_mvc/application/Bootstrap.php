@@ -79,7 +79,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headLink()->appendStylesheet($baseUrl.'css/tipsy/jquery.tipsy.css?'.$CC_CONFIG['airtime_version']);
 
         //jPlayer css.
-        $view->headLink()->appendStylesheet($baseUrl.'js/jplayer/skin/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
+        $view->headLink()->appendStylesheet($baseUrl.'css/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
     }
 
     protected function _initHeadScript()
