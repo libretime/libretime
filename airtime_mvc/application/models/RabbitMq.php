@@ -13,7 +13,7 @@ class Application_Model_RabbitMq
         self::$doPush = true;
     }
 
-    private static function sendMessage($exchange, $data)
+    private static function sendMessage($exchange, $exchangeType, $autoDeleteExchange, $data, $queue="")
     {
         $CC_CONFIG = Config::getConfig();
 
@@ -31,7 +31,9 @@ class Application_Model_RabbitMq
         $channel->access_request($CC_CONFIG["rabbitmq"]["vhost"], false, false,
             true, true);
 
-        $channel->exchange_declare($exchange, 'direct', false, true);
+        //I'm pretty sure we DON'T want to autodelete ANY exchanges but I'm keeping the code
+        //the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
+        $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
 
         $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
 
@@ -46,7 +48,7 @@ class Application_Model_RabbitMq
 
         $exchange = 'airtime-pypo';
         $data = json_encode($md, JSON_FORCE_OBJECT);
-        self::sendMessage($exchange, $data);
+        self::sendMessage($exchange, 'direct', true, $data);
     }
 
     public static function SendMessageToMediaMonitor($event_type, $md)
@@ -55,7 +57,7 @@ class Application_Model_RabbitMq
 
         $exchange = 'airtime-media-monitor';
         $data = json_encode($md);
-        self::sendMessage($exchange, $data);
+        self::sendMessage($exchange, 'direct', true, $data);
     }
 
     public static function SendMessageToShowRecorder($event_type)
@@ -74,14 +76,18 @@ class Application_Model_RabbitMq
         }
         $data = json_encode($temp);
 
-        self::sendMessage($exchange, $data);
+        self::sendMessage($exchange, 'direct', true, $data);
     }
     
-    public static function SendMessageToAnalyzer()
+    public static function SendMessageToAnalyzer($tmpFilePath, $finalDirectory, $callbackUrl, $apiKey)
     {
         $exchange = 'airtime-uploads';
-        //$data = json_encode($md);
-        //TODO: Finish me
-        //self::sendMessage($exchange, $data);
+        $data['tmp_file_path'] = $tmpFilePath;
+        $data['final_directory'] = $finalDirectory;
+        $data['callback_url'] = $callbackUrl;
+        $data['api_key'] = $apiKey;
+        
+        $jsonData = json_encode($data);
+        self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
     }
 }

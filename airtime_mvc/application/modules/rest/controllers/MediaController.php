@@ -66,7 +66,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        $this->processUploadedFile();
+        $this->processUploadedFile($this->getRequest()->getRequestUri());
         
         //TODO: Strip or sanitize the JSON output
         $file = new CcFiles();
@@ -179,13 +179,24 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp->appendBody("ERROR: Media not found."); 
     }
     
-    private function processUploadedFile()
+    private function processUploadedFile($callbackUrl)
     {
+        $CC_CONFIG = Config::getConfig();
+        $apiKey = $CC_CONFIG["apiKey"][0];
+        
         $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
         $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
         $tempFileName = basename($tempFilePath);
         
-        //TODO: Dispatch a message to airtime_analyzer through RabbitMQ!
+        //TODO: Remove copyFileToStor from StoredFile...
+        
+        $storDir = Application_Model_MusicDir::getStorDir();
+        $finalDestinationDir = $storDir->getDirectory() . "/organize";
+        
+        //Dispatch a message to airtime_analyzer through RabbitMQ, 
+        //notifying it that there's a new upload to process!
+        Application_Model_RabbitMq::SendMessageToAnalyzer($tempFilePath,
+                 $finalDestinationDir, $callbackUrl, $apiKey);
         
     }
 }

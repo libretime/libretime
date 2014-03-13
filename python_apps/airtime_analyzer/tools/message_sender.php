@@ -36,7 +36,7 @@ $channel = $connection->channel();
 $channel->queue_declare($queue, false, true, false, false);
   
 // declare/create the exchange as a topic exchange.
-$channel->exchange_declare($exchange, $exchangeType, false, false, false);
+$channel->exchange_declare($exchange, $exchangeType, false, true, false);
 
 $msg = new AMQPMessage($message, array("content_type" => "text/plain"));
 

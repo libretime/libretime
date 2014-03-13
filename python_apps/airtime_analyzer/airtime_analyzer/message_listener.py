@@ -54,7 +54,7 @@ class MessageListener:
             port=self._port, virtual_host=self._vhost, 
             credentials=pika.credentials.PlainCredentials(self._username, self._password)))
         self._channel = self._connection.channel()
-        self._channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE)
+        self._channel.exchange_declare(exchange=EXCHANGE, type=EXCHANGE_TYPE, durable=True)
         result = self._channel.queue_declare(queue=QUEUE, durable=True)
 
         self._channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
