@@ -1,3 +1,5 @@
+import time
+import datetime
 import mutagen
 import magic # For MIME type detection
 from analyzer import Analyzer
@@ -18,19 +20,21 @@ class MetadataAnalyzer(Analyzer):
         #in the file header. Mutagen breaks that out into a separate "info" object:
         info = audio_file.info
         metadata["sample_rate"] = info.sample_rate
-        metadata["length_seconds"] = info.length
+        #Converting the length in seconds (float) to a formatted time string
+        track_length = datetime.timedelta(seconds=info.length)
+        metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
         metadata["bit_rate"] = info.bitrate
         #metadata["channels"] = info.channels
       
         #Use the python-magic module to get the MIME type.
         mime_magic = magic.Magic(mime=True)
-        metadata["mime_type"] = mime_magic.from_file(filename)
+        metadata["mime"] = mime_magic.from_file(filename)
 
         #Try to get the number of channels if mutagen can...
         try:
             #Special handling for getting the # of channels from MP3s. It's in the "mode" field
             #which is 0=Stereo, 1=Joint Stereo, 2=Dual Channel, 3=Mono. Part of the ID3 spec...
-            if metadata["mime_type"] == "audio/mpeg":
+            if metadata["mime"] == "audio/mpeg":
                 if info.mode == 3:
                     metadata["channels"] = 1
                 else:
@@ -70,6 +74,7 @@ class MetadataAnalyzer(Analyzer):
             'genre':        'genre',
             'isrc':         'isrc',
             'label':        'label',
+            'length':       'length',
             'language':     'language',
             'last_modified':'last_modified',
             'mood':         'mood',
@@ -78,7 +83,7 @@ class MetadataAnalyzer(Analyzer):
             #'track_total':  'track_total',
             'website':      'website',
             'date':         'year',
-            'mime_type':    'mime',
+            #'mime_type':    'mime',
         }
 
         for mutagen_tag, airtime_tag in mutagen_to_airtime_mapping.iteritems():
@@ -91,7 +96,11 @@ class MetadataAnalyzer(Analyzer):
                     metadata[airtime_tag] = metadata[airtime_tag][0]
 
             except KeyError:
-                pass
+                continue 
+
+        #Airtime <= 2.5.x nonsense:
+        metadata["ftype"] = "audioclip"
+        metadata["cueout"] = metadata["length"] 
 
         return metadata
 
