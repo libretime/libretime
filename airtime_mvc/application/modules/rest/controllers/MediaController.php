@@ -66,13 +66,14 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        $this->processUploadedFile($this->getRequest()->getRequestUri());
-        
         //TODO: Strip or sanitize the JSON output
         $file = new CcFiles();
         $file->fromArray($this->getRequest()->getPost());
         $file->save();
 
+        $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
+        $this->processUploadedFile($callbackUrl);
+        
         $this->getResponse()
             ->setHttpResponseCode(201)
             ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
@@ -193,10 +194,11 @@ class Rest_MediaController extends Zend_Rest_Controller
         $storDir = Application_Model_MusicDir::getStorDir();
         $finalDestinationDir = $storDir->getDirectory() . "/organize";
         
-        //Dispatch a message to airtime_analyzer through RabbitMQ, 
+        //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
         Application_Model_RabbitMq::SendMessageToAnalyzer($tempFilePath,
                  $finalDestinationDir, $callbackUrl, $apiKey);
         
     }
 }
+
