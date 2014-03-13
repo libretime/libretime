@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Sourcefabric <contact@sourcefabric.org>, 2012
+# vmcarranza <victor.carranza@sourcefabric.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-01-29 15:11+0000\n"
-"Last-Translator: andrey.podshivalov\n"
+"PO-Revision-Date: 2014-03-12 16:10+0000\n"
+"Last-Translator: vmcarranza <victor.carranza@sourcefabric.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/projects/p/airtime/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +121,7 @@ msgstr "Álbum"
 #: airtime_mvc/application/controllers/LocaleController.php:81
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
 msgid "Length"
-msgstr "Duración:"
+msgstr "Duración"
 
 #: airtime_mvc/application/services/HistoryService.php:1109
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:10
@@ -136,7 +137,7 @@ msgstr "Género"
 #: airtime_mvc/application/controllers/LocaleController.php:83
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:67
 msgid "Mood"
-msgstr "Estado de ánimo/estilo (mood)"
+msgstr "Estilo (mood)"
 
 #: airtime_mvc/application/services/HistoryService.php:1111
 #: airtime_mvc/application/models/Block.php:1353
@@ -184,7 +185,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:72
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:53
 msgid "Conductor"
-msgstr "Conductor"
+msgstr "Director"
 
 #: airtime_mvc/application/services/HistoryService.php:1118
 #: airtime_mvc/application/models/Block.php:1354
@@ -228,7 +229,7 @@ msgstr "Cargar a SoundCloud"
 #: airtime_mvc/application/services/CalendarService.php:70
 #: airtime_mvc/application/controllers/LibraryController.php:286
 msgid "Re-upload to SoundCloud"
-msgstr "Recargar a SoundCloud"
+msgstr "Volver a cargar a SoundCloud"
 
 #: airtime_mvc/application/services/CalendarService.php:77
 #: airtime_mvc/application/services/CalendarService.php:121
@@ -298,11 +299,11 @@ msgstr "No es posible arrastrar y soltar shows que se repiten"
 
 #: airtime_mvc/application/services/CalendarService.php:263
 msgid "Can't move a past show"
-msgstr "No puedes mover un show pasado"
+msgstr "No se puede mover un show pasado"
 
 #: airtime_mvc/application/services/CalendarService.php:281
 msgid "Can't move show into past"
-msgstr "No puedes mover un show al pasado"
+msgstr "No se puede mover un show al pasado"
 
 #: airtime_mvc/application/services/CalendarService.php:288
 #: airtime_mvc/application/forms/AddShowWhen.php:280
@@ -311,19 +312,19 @@ msgstr "No puedes mover un show al pasado"
 #: airtime_mvc/application/forms/AddShowWhen.php:324
 #: airtime_mvc/application/forms/AddShowWhen.php:329
 msgid "Cannot schedule overlapping shows"
-msgstr "No puedes programar shows traslapados"
+msgstr "No se pueden programar shows traslapados"
 
 #: airtime_mvc/application/services/CalendarService.php:301
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
-msgstr "No puedes mover shows grabados menos de 1 hora antes de su retransmisión."
+msgstr "No se pueden mover shows grabados a menos de 1 hora antes de su retransmisión."
 
 #: airtime_mvc/application/services/CalendarService.php:311
 msgid "Show was deleted because recorded show does not exist!"
-msgstr "El show se eliminó porque el show grabado no existe."
+msgstr "El show se eliminó porque el show grabado no existe!"
 
 #: airtime_mvc/application/services/CalendarService.php:318
 msgid "Must wait 1 hour to rebroadcast."
-msgstr "Debes esperar 1 hora para retransmitir"
+msgstr "Debe esperar 1 hora para retransmitir."
 
 #: airtime_mvc/application/views/scripts/preference/index.phtml:2
 #: airtime_mvc/application/configs/navigation.php:45
@@ -354,7 +355,7 @@ msgstr "Administrar las Carpetas de Medios"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:2
 msgid "Stream Settings"
-msgstr "Configuración del stream"
+msgstr "Configuración de stream"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:12
 msgid "Global Settings"
@@ -371,11 +372,11 @@ msgstr "Configuración de los streams de salida"
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:9
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:27
 msgid "Choose folder"
-msgstr "Elige carpeta"
+msgstr "Elija la carpeta"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:10
 msgid "Set"
-msgstr "Crear"
+msgstr "Fijar"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:19
 msgid "Current Import Folder:"
@@ -386,13 +387,13 @@ msgstr "Carpeta actual de importación:"
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:41
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:75
 msgid "Add"
-msgstr "Añadir:"
+msgstr "Añadir"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:43
 msgid ""
 "Rescan watched directory (This is useful if it is network mount and may be "
 "out of sync with Airtime)"
-msgstr "Re escanear el directorio monitoreado (esto es útil si está instalado en una red o si no está sincronizado con Airtime)"
+msgstr "Re-escanear el directorio monitoreado (esto es útil si es un directorio montado sobre una red y pudiera no estar en sincronía con Airtime)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
@@ -400,11 +401,11 @@ msgstr "Remover el directorio monitoreado"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:50
 msgid "You are not watching any media folders."
-msgstr "No estás monitoreando ninguna carpeta de medios."
+msgstr "No está monitoreando ninguna carpeta de medios."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:1
 msgid "Register Airtime"
-msgstr "Registra Airtime"
+msgstr "Registrar Airtime"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:6
 #, php-format
@@ -413,7 +414,7 @@ msgid ""
 " be collected regularly in order to enhance your user experience.%sClick "
 "'Yes, help Airtime' and we'll make sure the features you use are constantly "
 "improving."
-msgstr "Ayuda a Airtime dándonos a conocer cómo lo estas usado.  Esta información se recopila con regularidad para mejorar la experiencia de los usuarios.%s Da clic a 'Sí, ayudar a Airtime' y nos aseguraremos de que las funciones que más utilizas se mantengan bajo constante mejora."
+msgstr "Ayúdenos a mejorar Airtime dándonos a conocer cómo lo está usando.  Esta información se recopila con regularidad para mejorar la experiencia de los usuarios.%s Haga clic en 'Sí, ayudar a Airtime' y nos aseguraremos de que las funciones que más utiliza se mantengan bajo constante mejora."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:25
 #, php-format
