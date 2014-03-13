@@ -6,7 +6,7 @@ Ghetto temporary installation instructions
 
 You will need to allow the "airtime" RabbitMQ user to access all exchanges and queues within the /airtime vhost:
 
-    sudo rabbitmqctl set_permissions -p /airtime airtime .* .* .* 
+    sudo rabbitmqctl set_permissions -p /airtime airtime .\* .\* .\* 
 
 
 Usage
