@@ -28,6 +28,9 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 	const RULE_REPEAT_TRACKS = "repeat-tracks";
 	const RULE_USERS_TRACKS_ONLY = "my-tracks";
 	const RULE_CRITERIA = "criteria";
+	const RULE_ORDER = "order";
+	const RULE_ORDER_COLUMN = "column";
+	const RULE_ORDER_DIRECTION = "direction";
 	
 	protected function getCriteriaRules($query) {
 		
@@ -103,7 +106,15 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 		
 		$defaultRules = array(
 			self::RULE_REPEAT_TRACKS => true,
-			self::RULE_USERS_TRACKS_ONLY => false
+			self::RULE_USERS_TRACKS_ONLY => false,
+			"order" => array(
+				"column" => "",
+				"direction" => "acs"
+			),
+			"limit" => array(
+				"value" => "",
+				"unit" => "hours"
+			)
 		);
 		
 		$this->setRules($defaultRules);

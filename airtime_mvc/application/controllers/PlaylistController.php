@@ -156,8 +156,8 @@ class PlaylistController extends Zend_Controller_Action
     			$playlist->setDescription($info["description"]);
     		}
     		
-    		$form = new Application_Form_PlaylistRules();
-    		$form->buildCriteriaOptions($info["rules"]["criteria"]);
+    		//$form = new Application_Form_PlaylistRules();
+    		//$form->buildCriteriaOptions($info["rules"]["criteria"]);
     		
     		if (isset($info["rules"])) {
     			$playlist->setRules($info["rules"]);

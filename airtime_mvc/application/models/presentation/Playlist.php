@@ -68,7 +68,11 @@ class Presentation_Playlist {
 		
 		$playlistRules = array(
 			"pl_repeat_tracks" => $rules[Playlist::RULE_REPEAT_TRACKS],
-			"pl_my_tracks" => $rules[Playlist::RULE_USERS_TRACKS_ONLY]
+			"pl_my_tracks" => $rules[Playlist::RULE_USERS_TRACKS_ONLY],
+			"pl_order_column" => $rules[Playlist::RULE_ORDER][Playlist::RULE_ORDER_COLUMN],
+			"pl_order_direction" => $rules[Playlist::RULE_ORDER][Playlist::RULE_ORDER_DIRECTION],
+			"pl_limit_value" => $rules["limit"]["value"],
+			"pl_limit_options" => $rules["limit"]["unit"]
 		);
 		
 		$data = array_merge($criteriaFields, $playlistRules);

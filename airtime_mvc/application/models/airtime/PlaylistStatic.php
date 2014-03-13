@@ -205,6 +205,12 @@ class PlaylistStatic extends Playlist {
     		
     		$query->where($conditionAnd, 'and');
     		
+    		$order = $ruleSet["order"];
+    		if ($order["column"] != "") {
+    			
+    			$query->orderBy($order["column"], $order["direction"]);
+    		}
+    		
     		$files = $query->find();
 
     		Logging::disablePropelLogging();

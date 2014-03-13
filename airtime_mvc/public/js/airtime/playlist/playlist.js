@@ -115,7 +115,8 @@ var AIRTIME = (function(AIRTIME){
 			$nodes,
 			$row,
 			$input,
-			$extra;
+			$extra,
+			$unit;
 		
 		for (i = 0, lenAnd = $andBlocks.length; i < lenAnd; i++) {
 			criteria[i] = [];
@@ -125,12 +126,14 @@ var AIRTIME = (function(AIRTIME){
 				$row = $($nodes[j]);
 				$input = $row.find("input.sp_input_text");
 				$extra = $row.find("input.sp_extra_input_text");
+				$unit = $row.find("select.sp_rule_unit");
 				
 				criteria[i].push({
 					"criteria": $row.find("select.rule_criteria").val(),
 					"modifier": $row.find("select.rule_modifier").val(),
 					"input1": $input ? $input.val() : null,
-					"input2": $extra ? $extra.val() : null
+					"input2": $extra ? $extra.val() : null,
+					"unit": $unit ? $unit.val() : null,
 				});
 			}
 		}
@@ -152,13 +155,17 @@ var AIRTIME = (function(AIRTIME){
 		info["content"] = entries;
 		
 		info["rules"] = {
-			"repeat-tracks": $("#rule_repeat_tracks").find("input:checkbox").is(":checked"),
-			"my-tracks": $("#rule_my_tracks").find("input:checkbox").is(":checked"),
+			"repeat-tracks": $("#pl_repeat_tracks").is(":checked"),
+			"my-tracks": $("#pl_my_tracks").is(":checked"),
 			"limit": {
 				"value": $("#pl_limit_value").val(),
 				"unit":  $("#pl_limit_options").val()
 			},
-			"criteria": getCriteriaDetails()
+			"criteria": getCriteriaDetails(),
+			"order": {
+				"column": $("#pl_order_column").val(),
+				"direction": $("#pl_order_direction").val()
+			}
 		};
 		
 		return info;

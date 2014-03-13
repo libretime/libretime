@@ -24,7 +24,7 @@ var AIRTIME = (function(AIRTIME){
 				'</span>' +
 			'<% } %>' +
 			'<% if (relDateOptions) { %>' +
-				'<select class="input_select sp_input_select">'+
+				'<select class="input_select sp_input_select sp_rule_unit">'+
 					'<%= relDateOptions %>'+
 				'</select>' +
 			'<% } %>' +
