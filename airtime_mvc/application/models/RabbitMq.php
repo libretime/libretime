@@ -76,4 +76,12 @@ class Application_Model_RabbitMq
 
         self::sendMessage($exchange, $data);
     }
+    
+    public static function SendMessageToAnalyzer()
+    {
+        $exchange = 'airtime-uploads';
+        //$data = json_encode($md);
+        //TODO: Finish me
+        //self::sendMessage($exchange, $data);
+    }
 }

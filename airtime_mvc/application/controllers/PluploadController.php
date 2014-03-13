@@ -6,8 +6,8 @@ class PluploadController extends Zend_Controller_Action
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('upload', 'json')
-                    ->addActionContext('copyfile', 'json')
+        $ajaxContext->addActionContext('upload',            'json')
+                    ->addActionContext('uploadFinished',    'json')
                     ->initContext();
     }
 

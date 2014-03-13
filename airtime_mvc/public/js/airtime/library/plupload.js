@@ -5,8 +5,9 @@ $(document).ready(function() {
 	$("#plupload_files").pluploadQueue({
 		// General settings
 		runtimes        : 'gears, html5, html4',
-		url             :  baseUrl+'Plupload/upload/format/json',
-		chunk_size      : '5mb',
+		//url             :  baseUrl+'Plupload/upload/format/json',
+		url             :  baseUrl+'rest/media',
+		//chunk_size      : '5mb', //Disabling chunking since we're using the File Upload REST API now
 		unique_names    : 'true',
 		multiple_queues : 'true',
 		filters : [
@@ -17,16 +18,21 @@ $(document).ready(function() {
 	uploader = $("#plupload_files").pluploadQueue();
 
 	uploader.bind('FileUploaded', function(up, file, json) {
+
+		/*
 		var j = jQuery.parseJSON(json.response);
-		
-		if(j.error !== undefined) {
+
+		console.log(json.response);
+		if (j.error !== undefined) {
 			var row = $("<tr/>")
 				.append('<td>' + file.name +'</td>')
 				.append('<td>' + j.error.message + '</td>');
-				
+
 			$("#plupload_error").find("table").append(row);
 			$("#plupload_error table").css("display", "inline-table");
-		}else{
+		} else {
+			//FIXME: This should just update something in the GUI, not communicate with the backend -- Albert
+			/*
 		    var tempFileName = j.tempfilepath;
 		    $.get(baseUrl+'Plupload/copyfile/format/json/name/'+
 		          encodeURIComponent(file.name)+'/tempname/' +
@@ -35,12 +41,12 @@ $(document).ready(function() {
 		            var row = $("<tr/>")
 		                .append('<td>' + file.name +'</td>')
 		                .append('<td>' + jr.error.message + '</td>');
-		                
+
 		            $("#plupload_error").find("table").append(row);
 		            $("#plupload_error table").css("display", "inline-table");
 		        }
 		    });
-		}
+		}*/
 	});
 	
 	var uploadProgress = false;

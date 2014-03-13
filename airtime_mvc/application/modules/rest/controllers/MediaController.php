@@ -9,7 +9,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     public function indexAction()
     {
-        if (!$this->verifyApiKey()) {
+        if (!$this->verifyApiKey() && !$this->verifySession()) {
             return;
         }
         
@@ -32,7 +32,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function getAction()
     {
-        if (!$this->verifyApiKey()) {
+        if (!$this->verifyApiKey() && !$this->verifySession()) {
             return;
         }
         $id = $this->getId();
@@ -42,6 +42,8 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
+            //TODO: Strip or sanitize the JSON output
+            
             $this->getResponse()
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
@@ -52,7 +54,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function postAction()
     {
-        if (!$this->verifyApiKey()) {
+        if (!$this->verifyApiKey() && !$this->verifySession()) {
             return;
         }
         //If we do get an ID on a POST, then that doesn't make any sense
@@ -60,10 +62,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         if ($id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for show creation, and an ID will be chosen by Airtime"); 
+            $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for file creation, and an ID will be chosen by Airtime"); 
             return;
         }
 
+        $this->processUpload();
+        
+        //TODO: Strip or sanitize the JSON output
         $file = new CcFiles();
         $file->fromArray($this->getRequest()->getPost());
         $file->save();
@@ -75,7 +80,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     public function putAction()
     {
-        if (!$this->verifyApiKey()) {
+        if (!$this->verifyApiKey() && !$this->verifySession()) {
             return;
         }
         $id = $this->getId();
@@ -86,6 +91,8 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file = CcFilesQuery::create()->findPk($id);
         if ($file)
         {
+            //TODO: Strip or sanitize the JSON output
+            
             $file->fromArray(json_decode($this->getRequest()->getRawBody(), true), BasePeer::TYPE_FIELDNAME);
             $file->save();
             $this->getResponse()
@@ -98,7 +105,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     public function deleteAction()
     {
-        if (!$this->verifyApiKey()) {
+        if (!$this->verifyApiKey() && !$this->verifySession()) {
             return;
         }
         $id = $this->getId();
@@ -107,6 +114,8 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
+            $storedFile = Application_Model_StoredFile($file);
+            $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
             $file->delete();
             $this->getResponse()
                 ->setHttpResponseCode(204);
@@ -148,11 +157,35 @@ class Rest_MediaController extends Zend_Rest_Controller
             return false;
         }
     }
+    
+    private function verifySession()
+    {
+        $auth = Zend_Auth::getInstance();
+        if ($auth->hasIdentity())
+        {
+            return true;
+        }
+        
+        //Token checking stub code. We'd need to change LoginController.php to generate a token too, but
+        //but luckily all the token code already exists and works.
+        //$auth = new Application_Model_Auth();
+        //$auth->checkToken(Application_Model_Preference::getUserId(), $token);
+    }
 
     private function fileNotFoundResponse()
     {
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
         $resp->appendBody("ERROR: Media not found."); 
+    }
+    
+    private function processUpload()
+    {
+        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
+        $tempFileName = basename($tempFilePath);
+        
+        //TODO: Dispatch a message to airtime_analyzer through RabbitMQ!
+        
     }
 }
