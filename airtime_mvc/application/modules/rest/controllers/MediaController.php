@@ -66,7 +66,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        $this->processUpload();
+        $this->processUploadedFile();
         
         //TODO: Strip or sanitize the JSON output
         $file = new CcFiles();
@@ -179,7 +179,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp->appendBody("ERROR: Media not found."); 
     }
     
-    private function processUpload()
+    private function processUploadedFile()
     {
         $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
         $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);

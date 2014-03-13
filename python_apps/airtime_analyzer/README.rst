@@ -33,8 +33,7 @@ directory for convenience. This is super easy to do, just run:
 To send an test message to airtime_analyzer, you can use the message_sender.php script in the tools directory.
 For example, run:
 
-    $ php tools/message_sender.php '{ "tmp_file_path" : "foo.mp3" }'
-
+    $ php tools/message_sender.php '{ "tmp_file_path" : "foo.mp3", "final_directory" : ".", "callback_url" : "http://airtime.localhost/rest/media/1", "api_key" : "YOUR_API_KEY" }'
 
 Logging
 =========
