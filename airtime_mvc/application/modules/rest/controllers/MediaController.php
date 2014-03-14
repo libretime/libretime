@@ -36,7 +36,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $files_array = array();
         foreach (CcFilesQuery::create()->find() as $file)
         {
-            array_push($files_array, $this->sanitize($file));
+            array_push($files_array, $this->sanitizeResponse($file));
         }
         
         $this->getResponse()
@@ -65,7 +65,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($this->sanitize($file)));
+                ->appendBody(json_encode($this->sanitizeResponse($file)));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -98,7 +98,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $this->getResponse()
             ->setHttpResponseCode(201)
-            ->appendBody(json_encode($this->sanitize($file)));
+            ->appendBody(json_encode($this->sanitizeResponse($file)));
     }
 
     public function putAction()
@@ -114,14 +114,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file = CcFilesQuery::create()->findPk($id);
         if ($file)
         {
-            //TODO: Strip or sanitize the JSON output
             $file->fromArray($this->validateRequestData(json_decode($this->getRequest()->getRawBody(), true)), BasePeer::TYPE_FIELDNAME);
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);
             $file->save();
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($this->sanitize($file)));
+                ->appendBody(json_encode($this->sanitizeResponse($file)));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -267,7 +266,7 @@ class Rest_MediaController extends Zend_Rest_Controller
      * Strips out the private fields we do not want to send back in API responses
      */
     //TODO: rename this function?
-    public function sanitize($file)
+    public function sanitizeResponse($file)
     {
         $response = $file->toArray(BasePeer::TYPE_FIELDNAME);
 
