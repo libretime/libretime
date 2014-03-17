@@ -73,7 +73,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file->save();
 
         $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
-        $this->processUploadedFile($callbackUrl);
+        $this->processUploadedFile($callbackUrl, $_FILES["file"]["name"], $this->getOwnerId());
         
         $this->getResponse()
             ->setHttpResponseCode(201)
@@ -95,7 +95,27 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             //TODO: Strip or sanitize the JSON output
             
-            $file->fromArray(json_decode($this->getRequest()->getRawBody(), true), BasePeer::TYPE_FIELDNAME);
+            $fileFromJson = json_decode($this->getRequest()->getRawBody(), true);        
+            
+            //Our RESTful API takes "full_path" as a field, which we then split and translate to match
+            //our internal schema. Internally, file path is stored relative to a directory, with the directory
+            //as a foreign key to cc_music_dirs.
+            if ($fileFromJson["full_path"]) {
+                
+                $fullPath = $fileFromJson["full_path"];
+                $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
+                $pos = strpos($fullPath, $storDir);
+                
+                if ($pos !== FALSE)
+                {
+                    assert($pos == 0); //Path must start with the stor directory path
+                    
+                    $filePathRelativeToStor = substr($fullPath, strlen($storDir));
+                    $fileFromJson["filepath"] = $filePathRelativeToStor;
+                    $fileFromJson["directory"] = 1; //1 corresponds to the default stor/imported directory.       
+                }
+            }    
+            $file->fromArray($fileFromJson, BasePeer::TYPE_FIELDNAME);
             $file->save();
             $this->getResponse()
                 ->setHttpResponseCode(200)
@@ -181,7 +201,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp->appendBody("ERROR: Media not found."); 
     }
     
-    private function processUploadedFile($callbackUrl)
+    private function processUploadedFile($callbackUrl, $originalFilename, $ownerId)
     {
         $CC_CONFIG = Config::getConfig();
         $apiKey = $CC_CONFIG["apiKey"][0];
@@ -192,14 +212,32 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         //TODO: Remove copyFileToStor from StoredFile...
         
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $finalDestinationDir = $storDir->getDirectory() . "/organize";
+        //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon?
         
+        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
+        $tempFilePath = $upload_dir . "/" . $tempFileName;
+ 
+        $storDir = Application_Model_MusicDir::getStorDir();
+        //$finalFullFilePath = $storDir->getDirectory() . "/imported/" . $ownerId . "/" . $originalFilename;
+        $importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;
+        
+        
+        try {
+            //Copy the temporary file over to the "organize" folder so that it's off our webserver
+            //and accessible by airtime_analyzer which could be running on a different machine.
+            $newTempFilePath = Application_Model_StoredFile::copyFileToStor($tempFilePath, $originalFilename);
+        } catch (Exception $e) {
+            Logging::error($e->getMessage());
+        }
+        
+        //Logging::info("New temporary file path: " . $newTempFilePath);
+        //Logging::info("Final file path: " . $finalFullFilePath);
+
         //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
-        Application_Model_RabbitMq::SendMessageToAnalyzer($tempFilePath,
-                 $finalDestinationDir, $callbackUrl, $apiKey);
-        
+        Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
+                 $importedStorageDirectory, $originalFilename,
+                 $callbackUrl, $apiKey);
     }
 
     private function getOwnerId()

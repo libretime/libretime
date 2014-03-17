@@ -988,48 +988,69 @@ SQL;
         return $freeSpace >= $fileSize;
     }
 
-    public static function copyFileToStor($p_targetDir, $fileName, $tempname)
+    /** 
+     * Copy a newly uploaded audio file from its temporary upload directory 
+     * on the local disk (like /tmp) over to Airtime's "stor" directory, 
+     * which is where all ingested music/media live.
+     * 
+     * This is done in PHP here on the web server rather than in airtime_analyzer because
+     * the airtime_analyzer might be running on a different physical computer than the web server,
+     * and it probably won't have access to the web server's /tmp folder. The stor/organize directory
+     * is, however, both accessible to the machines running airtime_analyzer and the web server 
+     * on Airtime Pro.
+     * 
+     * The file is actually copied to "stor/organize", which is a staging directory where files go
+     * before they're processed by airtime_analyzer, which then moves them to "stor/imported" in the final
+     * step.
+     * 
+     * TODO: Implement better error handling here...
+     *
+     * @param string $tempFilePath
+     * @param string $originalFilename
+     * @throws Exception
+     * @return Ambigous <unknown, string>
+     */
+    public static function copyFileToStor($tempFilePath, $originalFilename)
     {
-        $audio_file = $p_targetDir . DIRECTORY_SEPARATOR . $tempname;
+        $audio_file = $tempFilePath;
         Logging::info('copyFileToStor: moving file '.$audio_file);
-
+    
         $storDir = Application_Model_MusicDir::getStorDir();
         $stor    = $storDir->getDirectory();
         // check if "organize" dir exists and if not create one
         if (!file_exists($stor."/organize")) {
             if (!mkdir($stor."/organize", 0777)) {
-                return array(
-                    "code"    => 109,
-                    "message" => _("Failed to create 'organize' directory."));
+                throw new Exception("Failed to create organize directory.");
             }
         }
-
+    
         if (chmod($audio_file, 0644) === false) {
             Logging::info("Warning: couldn't change permissions of $audio_file to 0644");
         }
-
+    
         // Check if we have enough space before copying
         if (!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
             $freeSpace = disk_free_space($stor);
             $fileSize = filesize($audio_file);
-
-            return array("code" => 107,
-                "message" => sprintf(_("The file was not uploaded, there is "
-                ."%s MB of disk space left and the file you are "
-                ."uploading has a size of %s MB."), $freeSpace, $fileSize));
+    
+            throw new Exception(sprintf(_("The file was not uploaded, there is "
+                            ."%s MB of disk space left and the file you are "
+                            ."uploading has a size of %s MB."), $freeSpace, $fileSize));
         }
-
+    
         // Check if liquidsoap can play this file
+        // TODO: Move this to airtime_analyzer
         if (!self::liquidsoapFilePlayabilityTest($audio_file)) {
             return array(
-                "code"    => 110,
-                "message" => _("This file appears to be corrupted and will not "
-                ."be added to media library."));
+                    "code"    => 110,
+                    "message" => _("This file appears to be corrupted and will not "
+                            ."be added to media library."));
         }
 
+    
         // Did all the checks for real, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize",
-            $fileName);
+                $originalFilename);
         $user = Application_Model_User::getCurrentUser();
         if (is_null($user)) {
             $uid = Application_Model_User::getFirstAdminId();
@@ -1044,7 +1065,7 @@ SQL;
                 written)");
         } else {
             Logging::info("Successfully written identification file for
-                uploaded '$audio_stor'");
+            uploaded '$audio_stor'");
         }
         //if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
         //encoding is ISO-8859-1
@@ -1059,18 +1080,14 @@ SQL;
             //is enough disk space                                     .
             unlink($audio_file); //remove the file after failed rename
             unlink($id_file); // Also remove the identifier file
-
-            return array(
-                "code"    => 108,
-                "message" => _("The file was not uploaded, this error can occur if the computer "
-                ."hard drive does not have enough disk space or the stor "
-                ."directory does not have correct write permissions."));
+    
+            throw new Exception("The file was not uploaded, this error can occur if the computer "
+                            ."hard drive does not have enough disk space or the stor "
+                            ."directory does not have correct write permissions.");
         }
-        // Now that we successfully added this file, we will add another tag
-        // file that will identify the user that owns it
-        return null;
+        return $audio_stor;
     }
-
+    
     /*
      * Pass the file through Liquidsoap and test if it is readable. Return True if readable, and False otherwise.
      */
