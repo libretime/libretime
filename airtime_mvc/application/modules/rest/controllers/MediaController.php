@@ -114,16 +114,16 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         $file = CcFilesQuery::create()->findPk($id);
         if ($file)
-        {           
-            $fileFromJson = $file->fromArray($this->validateRequestData(json_decode($this->getRequest()->getRawBody(), true)), 
-                                                BasePeer::TYPE_FIELDNAME);
-            
+        {
+            $requestData = json_decode($this->getRequest()->getRawBody(), true);
+            $file->fromArray($this->validateRequestData($requestData), BasePeer::TYPE_FIELDNAME);
+
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
             //our internal schema. Internally, file path is stored relative to a directory, with the directory
             //as a foreign key to cc_music_dirs.
-            if ($fileFromJson["full_path"]) {
+            if ($requestData["full_path"]) {
                 
-                $fullPath = $fileFromJson["full_path"];
+                $fullPath = $requestData["full_path"];
                 $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
                 $pos = strpos($fullPath, $storDir);
                 
@@ -132,8 +132,8 @@ class Rest_MediaController extends Zend_Rest_Controller
                     assert($pos == 0); //Path must start with the stor directory path
                     
                     $filePathRelativeToStor = substr($fullPath, strlen($storDir));
-                    $fileFromJson["filepath"] = $filePathRelativeToStor;
-                    $fileFromJson["directory"] = 1; //1 corresponds to the default stor/imported directory.       
+                    $file->setDbFilepath($filePathRelativeToStor);
+                    $file->setDbDirectory(1); //1 corresponds to the default stor/imported directory.
                 }
             }    
 
