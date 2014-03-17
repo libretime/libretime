@@ -12,6 +12,15 @@ You will need to allow the "airtime" RabbitMQ user to access all exchanges and q
 Usage
 ==========
 
+This program must run as a user with permissions to write to your Airtime music library
+directory. For standard Airtime installations, run it as the www-data user:
+
+    $ sudo -u www-data airtime_analyzer --debug
+   
+Or during development, add the --debug flag for more verbose output:
+
+    $ sudo -u www-data airtime_analyzer --debug
+
 To print usage instructions, run:
 
     $ airtime_analyzer --help
@@ -34,6 +43,8 @@ To send an test message to airtime_analyzer, you can use the message_sender.php 
 For example, run:
 
     $ php tools/message_sender.php '{ "tmp_file_path" : "foo.mp3", "final_directory" : ".", "callback_url" : "http://airtime.localhost/rest/media/1", "api_key" : "YOUR_API_KEY" }'
+
+    $ php tools/message_sender.php '{"tmp_file_path":"foo.mp3", "import_directory":"/srv/airtime/stor/imported/1","original_filename":"foo.mp3","callback_url": "http://airtime.localhost/rest/media/1", "api_key":"YOUR_API_KEY"}'
 
 Logging
 =========

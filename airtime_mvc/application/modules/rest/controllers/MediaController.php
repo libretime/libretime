@@ -1,5 +1,6 @@
 <?php
 
+
 class Rest_MediaController extends Zend_Rest_Controller
 {
     //fields that are not modifiable via our RESTful API
@@ -26,10 +27,11 @@ class Rest_MediaController extends Zend_Rest_Controller
     {
         $this->view->layout()->disableLayout();
     }
-
+    
     public function indexAction()
     {
-        if (!$this->verifyApiKey() && !$this->verifySession()) {
+        if (!$this->verifyAuth(true, true))
+        {
             return;
         }
         
@@ -52,9 +54,11 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function getAction()
     {
-        if (!$this->verifyApiKey() && !$this->verifySession()) {
+        if (!$this->verifyAuth(true, true))
+                {
             return;
         }
+        
         $id = $this->getId();
         if (!$id) {
             return;
@@ -73,9 +77,11 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function postAction()
     {
-        if (!$this->verifyApiKey() && !$this->verifySession()) {
+        if (!$this->verifyAuth(true, true))
+        {
             return;
         }
+        
         //If we do get an ID on a POST, then that doesn't make any sense
         //since POST is only for creating.
         if ($id = $this->_getParam('id', false)) {
@@ -104,9 +110,11 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     public function putAction()
     {
-        if (!$this->verifyApiKey() && !$this->verifySession()) {
+        if (!$this->verifyAuth(true, true))
+        {
             return;
         }
+        
         $id = $this->getId();
         if (!$id) {
             return;
@@ -150,9 +158,11 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     public function deleteAction()
     {
-        if (!$this->verifyApiKey() && !$this->verifySession()) {
+        if (!$this->verifyAuth(true, true))
+        {
             return;
         }
+            
         $id = $this->getId();
         if (!$id) {
             return;
@@ -179,6 +189,27 @@ class Rest_MediaController extends Zend_Rest_Controller
         } 
         return $id;
     }
+    
+    private function verifyAuth($checkApiKey, $checkSession)
+    {
+        //Session takes precedence over API key for now:
+        if ($checkSession && $this->verifySession()) 
+        {
+            return true;
+        }
+        
+        if ($checkApiKey && $this->verifyAPIKey())
+        {
+            return true;
+        }
+        
+        $resp = $this->getResponse();
+        $resp->setHttpResponseCode(401);
+        $resp->appendBody("ERROR: Incorrect API key.");
+               
+        return false;
+    }
+    
 
     private function verifyAPIKey()
     {
@@ -196,11 +227,10 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             return true;
         } else {
-            $resp = $this->getResponse();
-            $resp->setHttpResponseCode(401);
-            $resp->appendBody("ERROR: Incorrect API key."); 
             return false;
         }
+        
+        return false;
     }
     
     private function verifySession()
@@ -210,6 +240,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             return true;
         }
+        return false;
         
         //Token checking stub code. We'd need to change LoginController.php to generate a token too, but
         //but luckily all the token code already exists and works.

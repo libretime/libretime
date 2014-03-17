@@ -112,12 +112,13 @@ class MessageListener:
 
             # TODO: Report this as a failed upload to the File Upload REST API.
             #
-            # TODO: If the JSON was invalid, then don't report to the REST API 
+            # TODO: If the JSON was invalid or the web server is down, 
+            #       then don't report that failure to the REST API
             
             StatusReporter.report_failure_to_callback_url(callback_url, api_key, error_status=1,
                                                           reason=u'An error occurred while importing this file')
             
-            logging.error(e)
+            logging.exception(e)
 
         else:
             # ACK at the very end, after the message has been successfully processed.

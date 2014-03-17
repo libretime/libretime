@@ -19,9 +19,9 @@ class StatusReporter():
                          timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
         logging.debug("HTTP request returned status: " + str(r.status_code))
         logging.debug(r.text) # Log the response body
-        r.raise_for_status() # Raise an exception if there was an HTTP error code returned
 
         #TODO: Queue up failed requests and try them again later.
+        r.raise_for_status() # Raise an exception if there was an HTTP error code returned
 
     @classmethod
     def report_failure_to_callback_url(self, callback_url, api_key, error_status, reason):
