@@ -2,6 +2,26 @@
 
 class Rest_MediaController extends Zend_Rest_Controller
 {
+    //fields that are not modifiable via our RESTful API
+    private $blackList = array(
+        'id',
+        'file_exists',
+        'hidden',
+        'silan_check',
+        'soundcloud_id',
+        'is_scheduled',
+        'is_playlist'
+    );
+
+    //fields we should never expose through our RESTful API
+    private $privateFields = array(
+        'file_exists',
+        'hidden',
+        'silan_check',
+        'is_scheduled',
+        'is_playlist'
+    );
+
     public function init()
     {
         $this->view->layout()->disableLayout();
@@ -13,10 +33,10 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
         
-        $files_array = [];
+        $files_array = array();
         foreach (CcFilesQuery::create()->find() as $file)
         {
-            array_push($files_array, $file->toArray(BasePeer::TYPE_FIELDNAME));
+            array_push($files_array, $this->sanitizeResponse($file));
         }
         
         $this->getResponse()
@@ -42,11 +62,10 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
-            //TODO: Strip or sanitize the JSON output
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
+                ->appendBody(json_encode($this->sanitizeResponse($file)));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -66,18 +85,21 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        //TODO: Strip or sanitize the JSON output
         $file = new CcFiles();
-        $file->fromArray($this->getRequest()->getPost());
+        $file->fromArray($this->validateRequestData($this->getRequest()->getPost()));
         $file->setDbOwnerId($this->getOwnerId());
+        $now  = new DateTime("now", new DateTimeZone("UTC"));
+        $file->setDbUtime($now);
+        $file->setDbMtime($now);
         $file->save();
-
-        $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
-        $this->processUploadedFile($callbackUrl, $_FILES["file"]["name"], $this->getOwnerId());
         
+        $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
+
+        $this->processUploadedFile($callbackUrl, $_FILES["file"]["name"], $this->getOwnerId());
+
         $this->getResponse()
             ->setHttpResponseCode(201)
-            ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
+            ->appendBody(json_encode($this->sanitizeResponse($file)));
     }
 
     public function putAction()
@@ -92,9 +114,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         $file = CcFilesQuery::create()->findPk($id);
         if ($file)
-        {
-            //TODO: Strip or sanitize the JSON output
-            
+        {           
             $fileFromJson = json_decode($this->getRequest()->getRawBody(), true);        
             
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
@@ -115,11 +135,14 @@ class Rest_MediaController extends Zend_Rest_Controller
                     $fileFromJson["directory"] = 1; //1 corresponds to the default stor/imported directory.       
                 }
             }    
-            $file->fromArray($fileFromJson, BasePeer::TYPE_FIELDNAME);
+
+            $file->fromArray($this->validateRequestData(json_decode($fileFromJson, true)), BasePeer::TYPE_FIELDNAME);
+            $now  = new DateTime("now", new DateTimeZone("UTC"));
+            $file->setDbMtime($now);
             $file->save();
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($file->toArray(BasePeer::TYPE_FIELDNAME)));
+                ->appendBody(json_encode($this->sanitizeResponse($file)));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -261,6 +284,37 @@ class Rest_MediaController extends Zend_Rest_Controller
         } catch(Exception $e) {
             Logging::info($e->getMessage());
         }
+    }
+
+    /**
+     * 
+     * Strips out fields from incoming request data that should never be modified
+     * from outside of Airtime
+     * @param array $data
+     */
+    private function validateRequestData($data)
+    {
+        foreach ($this->blackList as $key) {
+            unset($data[$key]);
+            }
+    
+            return $data;
+        }
+
+    /**
+     * 
+     * Strips out the private fields we do not want to send back in API responses
+     */
+    //TODO: rename this function?
+    public function sanitizeResponse($file)
+    {
+        $response = $file->toArray(BasePeer::TYPE_FIELDNAME);
+
+        foreach ($this->privateFields as $key) {
+            unset($response[$key]);
+        }
+
+        return $response;
     }
 }
 
