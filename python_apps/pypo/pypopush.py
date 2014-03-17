@@ -153,8 +153,10 @@ class PypoPush(Thread):
             self.telnet_lock.release()
 
     def run(self):
-        try: self.main()
-        except Exception, e:
-            top = traceback.format_exc()
-            self.logger.error('Pypo Push Exception: %s', top)
+        while True:
+            try: self.main()
+            except Exception, e:
+                top = traceback.format_exc()
+                self.logger.error('Pypo Push Exception: %s', top)
+                time.sleep(5)
 

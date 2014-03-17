@@ -20,6 +20,8 @@ class Application_Service_ShowService
     private $localShowStartHour;
     private $localShowStartMin;
     private $origCcShowDay;
+    private $origShowRepeatStatus;
+    private $instanceIdsForScheduleUpdates;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
     {
@@ -39,6 +41,7 @@ class Application_Service_ShowService
         $this->isRecorded = (isset($showData['add_show_record']) && $showData['add_show_record']) ? 1 : 0;
         $this->isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
         $this->isUpdate = $isUpdate;
+        $this->instanceIdsForScheduleUpdates = array();
     }
 
     public function editRepeatingShowInstance($showData) {
@@ -156,8 +159,10 @@ class Application_Service_ShowService
     {
         if ($this->ccShow->isRepeating()) {
             $this->origCcShowDay = clone $this->ccShow->getFirstRepeatingCcShowDay();
+            $this->origShowRepeatStatus = true;
         } else {
             $this->origCcShowDay = clone $this->ccShow->getFirstCcShowDay();
+            $this->origShowRepeatStatus = false;
         }
 
         $this->oldShowTimezone = $this->origCcShowDay->getDbTimezone();
@@ -181,15 +186,18 @@ class Application_Service_ShowService
             if (!$currentUser->isAdminOrPM()) {
                 throw new Exception("Permission denied");
             }
+
             //update ccShow
             $this->setCcShow($showData);
 
             $daysAdded = array();
 
             if ($this->isUpdate) {
-                $daysAdded = $this->delegateInstanceCleanup($showData);
+                if (!$this->ccShow->getCcShowDayss()->isEmpty()) {
+                    $this->storeOrigLocalShowInfo();
+                }
 
-                $this->storeOrigLocalShowInfo();
+                $daysAdded = $this->delegateInstanceCleanup($showData);
 
                 $this->deleteRebroadcastInstances();
 
@@ -199,6 +207,8 @@ class Application_Service_ShowService
                     //delete entry in cc_show_rebroadcast
                     $this->deleteCcShowRebroadcasts();
                 }
+
+                $this->storeInstanceIds();
             }
 
             //update ccShowDays
@@ -214,6 +224,16 @@ class Application_Service_ShowService
             $this->delegateInstanceCreation($daysAdded);
 
             if ($this->isUpdate) {
+
+                /* If the show is repeating and the start date changes we need
+                 * to ignore that difference when re-calculating schedule start times.
+                 * Otherwise it might calculate a difference of a week, for example.
+                 */
+                if ($this->ccShow->isRepeating() && 
+                    $this->origCcShowDay->getLocalStartDateAndTime()->format("Y-m-d") != $showData["add_show_start_date"]) {
+                        $showData["add_show_start_date"] = $this->origCcShowDay->getLocalStartDateAndTime()->format("Y-m-d");
+                }
+
                 $this->adjustSchedule($showData);
             }
 
@@ -227,15 +247,28 @@ class Application_Service_ShowService
         }
     }
 
+    /**
+     * 
+     * Returns an array of instance ids that already exist
+     * We need this if a show is being updated so we can separate the 
+     * instances that already exist and any new instances that
+     * get created (by adding a new repeat show day)
+     */
+    private function storeInstanceIds()
+    {
+        $instances = $this->ccShow->getCcShowInstancess();
+        foreach ($instances as $instance) {
+            $this->instanceIdsForScheduleUpdates[] = $instance->getDbId();
+        }
+    }
+
     private function adjustSchedule($showData)
     {
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
-        $ccShowInstances = CcShowInstancesQuery::create()
-            ->filterByDbShowId($this->ccShow->getDbId())
-            ->find();
 
         $this->updateScheduleStartEndTimes($showData);
 
+        $ccShowInstances = $this->ccShow->getCcShowInstancess();
         foreach ($ccShowInstances as $instance) {
             $instance->updateScheduleStatus($con);
         }
@@ -385,6 +418,13 @@ SQL;
             ':timestamp'  => gmdate("Y-m-d H:i:s")), 'execute');
     }
 
+    private function deleteAllShowDays($showId)
+    {
+        CcShowDaysQuery::create()
+            ->filterByDbShowId($showId)
+            ->delete();
+    }
+
     /**
      * TODO: This function is messy. Needs refactoring
      *
@@ -406,8 +446,14 @@ SQL;
         //CcShowDay object
         if ($this->ccShow->isRepeating()) {
             $currentShowDay = $this->ccShow->getFirstRepeatingCcShowDay();
+
+            //all cc_show_days
+            $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
         } else {
             $currentShowDay = $this->ccShow->getFirstCcShowDay();
+
+            //all cc_show_days
+            $ccShowDays = $this->ccShow->getCcShowDayss();
         }
 
         //new end date in the show's timezone (from the select box)
@@ -416,6 +462,11 @@ SQL;
         //repeat option was toggled
         if ($showData['add_show_repeats'] != $currentShowDay->isRepeating()) {
             $this->deleteAllRepeatInstances($currentShowDay, $showId);
+
+            if (!$showData["add_show_repeats"]) {
+                $this->deleteAllShowDays($showId);
+            }
+
             //if repeat option was checked we need to treat the current show day
             //as a new show day so the repeat instances get created properly
             //in createWeeklyRepeatInstances()
@@ -447,16 +498,12 @@ SQL;
             //and the repeat type changed
             if ($currentRepeatType != -1 && $this->repeatType != $currentRepeatType) {
                 $this->deleteAllInstances($showId);
+                $this->deleteAllShowDays($showId);
+
             // when repeating by day of the month (1st, 2nd, etc.) we do not store the repeat week days
             } elseif ($currentRepeatType != 2) {
                 //repeat type is the same, check if the days of the week are the same
                 $repeatingDaysChanged = false;
-
-                if ($this->ccShow->isRepeating()) {
-                    $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
-                } else {
-                    $ccShowDays = $this->ccShow->getCcShowDayss();
-                }
 
                 $showDays = array();
                 foreach ($ccShowDays as $day) {
@@ -508,12 +555,11 @@ SQL;
             //check if this is null if "no end"
             $currentShowEndDateTime = $this->getRepeatingEndDate();
             
-            if ($currentShowEndDateTime != $endDateTime) {
-            	
+            if ($endDateTime && $currentShowEndDateTime != $endDateTime) {
             	$endDate = clone $endDateTime;
             	$endDate->setTimezone(new DateTimeZone("UTC"));
             	
-                //show "No End" option was toggled
+                //show's "No End" option was toggled
                 //or the end date comes earlier
                 if (is_null($currentShowEndDateTime) || ($endDateTime < $currentShowEndDateTime)) {
                     //"No End" option was unchecked so we need to delete the
@@ -531,11 +577,14 @@ SQL;
 
     private function preserveLinkedShowContent()
     {
-        /* Get show content from any linekd instance. It doesn't
+        /* Get show content from any linked instance. It doesn't
          * matter which instance since content is the same in all.
          */
         $ccShowInstance = $this->ccShow->getCcShowInstancess()->getFirst();
 
+        if (!$ccShowInstance) {
+            return;
+        }
         $ccSchedules = CcScheduleQuery::create()
             ->filterByDbInstanceId($ccShowInstance->getDbId())
             ->find();
@@ -881,7 +930,6 @@ SQL;
     private function updateScheduleStartEndTimes($showData)
     {
         $showId = $this->ccShow->getDbId();
-
         //DateTime in show's local time
         $newStartDateTime = new DateTime($showData["add_show_start_date"]." ".
         $showData["add_show_start_time"],
@@ -890,12 +938,9 @@ SQL;
         $diff = $this->calculateShowStartDiff($newStartDateTime,
             $this->origCcShowDay->getLocalStartDateAndTime());
 
-        $ccShowInstances = $this->ccShow->getFutureCcShowInstancess();
-        $instanceIds = array();
-        foreach ($ccShowInstances as $ccShowInstance) {
-            array_push($instanceIds, $ccShowInstance->getDbId());
-        }
-        Application_Service_SchedulerService::updateScheduleStartTime($instanceIds, $diff);
+        Application_Service_SchedulerService::updateScheduleStartTime(
+            $this->instanceIdsForScheduleUpdates,
+            $diff);
     }
 
     /**
@@ -1487,8 +1532,12 @@ SQL;
             if ($this->isUpdate) {
                 $showDay = CcShowDaysQuery::create()
                     ->filterByDbShowId($showId)
-                    ->filterByDbRepeatType($showData['add_show_repeat_type'])
+                    ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
                     ->findOne();
+                if (!$showDay) {
+                    //repeat type changed so we have to create a new show_day rule
+                    $showDay = new CcShowDays();
+                }
             } else {
                 $showDay = new CcShowDays();
             }
@@ -1520,15 +1569,29 @@ SQL;
                 if (is_null($endDate) || $startDateTimeClone->getTimestamp() <= $endDateTime->getTimestamp()) {
 
                     if ($this->isUpdate) {
+                        if ($this->origCcShowDay->getDbRepeatType() == 2 ||
+                            $this->origCcShowDay->getDbRepeatType() == 3) {
+                            $day = null;
+                        } else if (!$this->origShowRepeatStatus) {
+                            //keep current show day to use for updating cc_show_day rule
+                            $keepDay = $day;
+                            $day = $this->origCcShowDay->getDbDay();
+                        }
+
                         $showDay = CcShowDaysQuery::create()
                            ->filterByDbShowId($showId)
-                           ->filterByDbRepeatType($this->repeatType)
+                           ->filterByDbRepeatType($this->origCcShowDay->getDbRepeatType())
                            ->filterByDbDay($day)
                            ->findOne();
                         if (!$showDay) {
                             //if no show day object was found it is because a new
-                            //repeating day of the week was added
+                            //repeating day of the week was added OR the repeat
+                            //type has changed
                             $showDay = new CcShowDays();
+                        }
+
+                        if (isset($keepDay)) {
+                            $day = $keepDay;
                         }
                     } else {
                         $showDay = new CcShowDays();

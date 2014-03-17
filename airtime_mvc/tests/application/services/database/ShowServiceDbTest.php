@@ -25,7 +25,7 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         TestHelper::setupZendBootstrap();
 
         //$this->_nowDT = new DateTime("now", new DateTimeZone("UTC"));
-        
+
         parent::setUp();
     }
 
@@ -37,10 +37,10 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
             $connection = Zend_Db::factory('pdo_pgsql', $config);
 
             $this->_connectionMock = $this->createZendDbConnection(
-                $connection,
+            $connection,
                 'airtimeunittests'
-            );
-            Zend_Db_Table_Abstract::setDefaultAdapter($connection);
+                );
+                Zend_Db_Table_Abstract::setDefaultAdapter($connection);
         }
         return $this->_connectionMock;
     }
@@ -51,12 +51,12 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function getDataSet()
     {
         $xml_dataset = $this->createXmlDataSet(
-            dirname(__FILE__) . '/datasets/seed_show_service.xml'
+        dirname(__FILE__) . '/datasets/seed_show_service.xml'
         );
         /*$xml_dataset_fixed = new PHPUnit_Extensions_Database_DataSet_ReplacementDataSet(
-            $xml_dataset, array('SIX_WEEKS' => $this->_nowDT->add(new DateInterval("P42D"))->format("Y-m-d H:i:s")));
+         $xml_dataset, array('SIX_WEEKS' => $this->_nowDT->add(new DateInterval("P42D"))->format("Y-m-d H:i:s")));
 
-        return $xml_dataset_fixed;*/
+         return $xml_dataset_fixed;*/
         return $xml_dataset;
     }
 
@@ -421,26 +421,26 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
     public function testLinkedShow()
     {
         TestHelper::loginUser();
-        
+
         /** Test creating a linked show **/
         $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
         $data["add_show_linked"] = 1;
         $showService = new Application_Service_ShowService(null, $data);
-        
+
         $showService->addUpdateShow($data);
-        
+
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
-                $this->getConnection()
+            $this->getConnection()
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
         $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
-        
+
         $this->assertDataSetsEqual(
             $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createLinkedShow.xml"),
-            $ds
+        $ds
         );
 
         /** Test unlinking a show **/
@@ -450,17 +450,17 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService->addUpdateShow($data);
 
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
-                $this->getConnection()
+            $this->getConnection()
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
         $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances order by id');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
-        
+
         $this->assertDataSetsEqual(
-                $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_unlinkLinkedShow.xml"),
-                $ds
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_unlinkLinkedShow.xml"),
+            $ds
         );
     }
 
@@ -474,14 +474,14 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService->addUpdateShow($data);
 
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
-                $this->getConnection()
+            $this->getConnection()
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
         $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
-        
+
         $this->assertDataSetsEqual(
             $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createNoRepeatRRShow.xml"),
             $ds
@@ -498,14 +498,14 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService->addUpdateShow($data);
 
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
-                $this->getConnection()
+            $this->getConnection()
         );
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
         $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
         $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
-        
+
         $this->assertDataSetsEqual(
             $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_createWeeklyRepeatRRShow.xml"),
             $ds
@@ -529,8 +529,157 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $showService->addUpdateShow($data);
 
         $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_editRepeatingShowChangeNoEndOption.xml"),
+            $ds
+        );
+    }
+
+    /**
+     * Tests that when you remove the first repeat show day, which changes
+     * the show's first instance start date, updates the scheduled content
+     * correctly
+     */
+    public function testRemoveFirstRepeatShowDayUpdatesScheduleCorrectly()
+    {
+        TestHelper::loginUser();
+
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
+        $data["add_show_start_date"] = "2016-01-29";
+        $data["add_show_day_check"] = array(5,6);
+        $data["add_show_linked"] = 1;
+        $showService = new Application_Service_ShowService(null, $data);
+        $showService->addUpdateShow($data);
+
+        //insert some fake tracks into cc_schedule table
+        $ccFiles = new CcFiles();
+        $ccFiles
+            ->setDbCueIn("00:00:00")
+            ->setDbCueOut("00:04:32")
+            ->save();
+
+        $scheduleItems = array(
+            0 => array(
+                "id" => 0,
+                "instance" => 1,
+                "timestamp" => time()
+            )
+        );
+        $mediaItems = array(
+            0 => array(
+                "id" => 1,
+                "type" => "audioclip"
+            )
+        );
+        $scheduler = new Application_Model_Scheduler();
+        $scheduler->scheduleAfter($scheduleItems, $mediaItems);
+
+        //delete the first repeat day
+        $data["add_show_day_check"] = array(6);
+        $data["add_show_id"] = 1;
+        $showService = new Application_Service_ShowService(null, $data, true);
+        $showService->addUpdateShow($data);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+        $ds->addTable('cc_schedule', 'select id, starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, instance_id, playout_status from cc_schedule');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_removeFirstRepeatShowDayUpdatesScheduleCorrectly.xml"),
+            $ds
+        );
+    }
+
+    public function testChangeRepeatDayUpdatesScheduleCorrectly()
+    {
+        TestHelper::loginUser();
+
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
+        $data["add_show_start_date"] = "2016-01-29";
+        $data["add_show_day_check"] = array(5, 6);
+        $data["add_show_linked"] = 1;
+        $showService = new Application_Service_ShowService(null, $data);
+        $showService->addUpdateShow($data);
+
+        //insert some fake tracks into cc_schedule table
+        $ccFiles = new CcFiles();
+        $ccFiles
+            ->setDbCueIn("00:00:00")
+            ->setDbCueOut("00:04:32")
+            ->save();
+
+        $scheduleItems = array(
+            0 => array(
+                "id" => 0,
+                "instance" => 1,
+                "timestamp" => time()
+            )
+        );
+        $mediaItems = array(
+            0 => array(
+                "id" => 1,
+                "type" => "audioclip"
+            )
+        );
+        $scheduler = new Application_Model_Scheduler();
+        $scheduler->scheduleAfter($scheduleItems, $mediaItems);
+
+        //delete the first repeat day
+        $data["add_show_day_check"] = array(6);
+        $data["add_show_id"] = 1;
+        $showService = new Application_Service_ShowService(null, $data, true);
+        $showService->addUpdateShow($data);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+            $this->getConnection()
+        );
+
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+        $ds->addTable('cc_schedule', 'select id, starts, ends, file_id, clip_length, fade_in, fade_out, cue_in, cue_out, instance_id, playout_status from cc_schedule');
+
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_changeRepeatDayUpdatesScheduleCorrectly.xml"),
+            $ds
+        );
+    }
+
+    public function testChangeRepeatTypeFromWeeklyToNoRepeat()
+    {
+        TestHelper::loginUser();
+
+        //test change repeat type from weekly to no-repeat
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
+        $showService = new Application_Service_ShowService(null, $data);
+        $showService->addUpdateShow($data);
+
+        $data["add_show_repeats"] = 0;
+        $data["add_show_id"] = 1;
+        $showService = new Application_Service_ShowService(null, $data, true);
+        $showService->addUpdateShow($data);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
                 $this->getConnection()
         );
+
         $ds->addTable('cc_show', 'select * from cc_show');
         $ds->addTable('cc_show_days', 'select * from cc_show_days');
         $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
@@ -538,8 +687,43 @@ class ShowServiceDbTest extends Zend_Test_PHPUnit_DatabaseTestCase
         $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
         
         $this->assertDataSetsEqual(
-            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_editRepeatingShowChangeNoEndOption.xml"),
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_weeklyToNoRepeat.xml"),
             $ds
         );
+    }
+
+    public function testChangeRepeatTypeFromWeeklyToBiWeekly()
+    {
+        TestHelper::loginUser();
+
+        //test change repeat type weekly to bi-weekly
+        $data = ShowServiceData::getWeeklyRepeatNoEndNoRRData();
+        $showService = new Application_Service_ShowService(null, $data);
+        $showService->addUpdateShow($data);
+
+        $data["add_show_id"] = 1;
+        $data["add_show_repeat_type"] = 1;
+        $showService = new Application_Service_ShowService(null, $data, true);
+        $showService->addUpdateShow($data);
+
+        $ds = new Zend_Test_PHPUnit_Db_DataSet_QueryDataSet(
+                $this->getConnection()
+        );
+
+        $ds->addTable('cc_show', 'select * from cc_show');
+        $ds->addTable('cc_show_days', 'select * from cc_show_days');
+        $ds->addTable('cc_show_instances', 'select id, starts, ends, show_id, record, rebroadcast, instance_id, modified_instance from cc_show_instances');
+        $ds->addTable('cc_show_rebroadcast', 'select * from cc_show_rebroadcast');
+        $ds->addTable('cc_show_hosts', 'select * from cc_show_hosts');
+        
+        $this->assertDataSetsEqual(
+            $this->createXmlDataSet(dirname(__FILE__)."/datasets/test_weeklyToBiWeekly.xml"),
+            $ds
+        );
+    }
+
+    public function testChangeRepeatTypeFromMonthlyWeeklyToNoRepeat()
+    {
+        
     }
 }
