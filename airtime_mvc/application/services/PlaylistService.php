@@ -10,46 +10,6 @@ use Airtime\MediaItem\MediaContent;
 
 class Application_Service_PlaylistService
 {
-
-	/*
-	 * @param $playlist playlist item to add the files to.
-	 * @param $ids list of media ids to add to the end of the playlist.
-	 */
-	public function addMedia($playlist, $ids, $doSave = false) {
-
-		$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
-		$con->beginTransaction();
-		
-		Logging::enablePropelLogging();
-		
-		try {
-			$position = $playlist->countMediaContents(null, false, $con);
-			$mediaToAdd = MediaItemQuery::create()->findPks($ids, $con);
-			
-			foreach ($mediaToAdd as $media) {
-				$info = $media->getSchedulingInfo();
-
-				$mediaContent = $this->buildContentItem($info, $position);
-				$mediaContent->setPlaylist($playlist);
-				$mediaContent->save($con);
-				
-				$position++;
-			}
-
-			if ($doSave) {
-				$playlist->save($con);
-				$con->commit();
-			}
-		}
-		catch (Exception $e) {
-			$con->rollBack();
-			Logging::error($e->getMessage());
-			throw $e;
-		}
-		
-		Logging::disablePropelLogging();
-	}
-	
 	public function createContextMenu($playlist) {
 	
 		$id = $playlist->getId();

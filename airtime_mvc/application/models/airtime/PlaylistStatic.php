@@ -165,20 +165,18 @@ class PlaylistStatic extends Playlist {
     	return $items;
     }
     
-    public function generate() {
-    	
-    	Logging::enablePropelLogging();
-    	
-    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
-    	$con->beginTransaction();
+    public function generateContent(PropelPDO $con) {
     	 
     	try {
+    		
+    		self::clearContent($con);
     		
     		$ruleSet = $this->getRules();
     		$criteria = isset($ruleSet["criteria"]) ? $ruleSet["criteria"] : array();
     		Logging::info($criteria);
     		
     		$query = AudioFileQuery::create();
+    		
     		$criteriaRules = parent::getCriteriaRules($query);
     		
     		$conditionAnd = array();
@@ -210,23 +208,30 @@ class PlaylistStatic extends Playlist {
     			
     			$query->orderBy($order["column"], $order["direction"]);
     		}
+    		else {
+    			$query->addAscendingOrderByColumn('random()');
+    		}
     		
     		$files = $query->find();
+    		
+    		$ids = array();
+    		foreach ($files as $file) {
+    			$ids[] = $file->getId();
+    		}
 
-    		Logging::disablePropelLogging();
-    		 
-    		//$con->commit();
+    		Logging::info($ids);
+    		
+    		return $ids;	
     	}
     	catch (Exception $e) {
-    		//$con->rollBack();
+    		Logging::error($e->getFile().$e->getLine());
     		Logging::error($e->getMessage());
     		throw $e;
     	}
     }
     
-    public function shuffle() {
-    	
-    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    public function shuffleContent(PropelPDO $con) {
+
     	$con->beginTransaction();
     	
     	try {
@@ -257,9 +262,8 @@ class PlaylistStatic extends Playlist {
     	}
     }
     
-    public function clear() {
-    	
-    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    public function clearContent(PropelPDO $con) {
+
     	$con->beginTransaction();
     	
     	try {
@@ -268,6 +272,106 @@ class PlaylistStatic extends Playlist {
 	    		->delete($con);
     			
     		$this->save($con);
+    		$con->commit();
+    	}
+    	catch (Exception $e) {
+    		$con->rollBack();
+    		Logging::error($e->getMessage());
+    		throw $e;
+    	}
+    }
+    
+   /*
+    * @param $ids list of media ids to add to the end of the playlist.
+    */
+    public function addMedia(PropelPDO $con, $ids) {
+
+    	$con->beginTransaction();
+
+    	try {
+    		$position = $this->countMediaContents(null, false, $con);
+    		//run this just for the single query.
+    		$mediaToAdd = MediaItemQuery::create()->findPks($ids, $con);
+    		
+    		//need to maintain the order of the id, objects will be preloaded.
+    		foreach ($ids as $id) {
+    			
+    			$mediaItem = MediaItemQuery::create()->findPk($id, $con);
+    			$info = $mediaItem->getSchedulingInfo();
+    
+    			$cuein = $info["cuein"];
+    			$cueout = $info["cueout"];
+    			$fadein = $info["fadein"];
+    			$fadeout = $info["fadeout"];
+    			
+    			$mediaContent = $this->buildContentItem($mediaItem, $position, $cuein, $cueout, $fadein, $fadeout);
+    			$mediaContent->setPlaylist($this);
+    			$mediaContent->save($con);
+    
+    			$position++;
+    		}
+
+    		$this->save($con);
+    		$con->commit();
+    	}
+    	catch (Exception $e) {
+    		$con->rollBack();
+    		Logging::error($e->getMessage());
+    		throw $e;
+    	}
+    
+    	Logging::disablePropelLogging();
+    }
+    
+    public function savePlaylistContent($content, $replace=false)
+    {
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	$con->beginTransaction();
+    
+    	try {
+    			
+    		$m = array();
+    		$currentContent = $this->getMediaContents(null, $con);
+    			
+    		if ($replace) {
+    			$currentContent->delete($con);
+    			$position = 0;
+    		}
+    		else {
+    			$position = count($currentContent);
+    		}
+    			
+    		foreach ($content as $item) {
+    
+    			$mediaId = $item["id"];
+    			$cuein = isset($item["cuein"]) ? $item["cuein"] : null;
+    			$cueout = isset($item["cueout"]) ? $item["cueout"] : null;
+    			$fadein = isset($item["fadein"]) ? $item["fadein"] : null;
+    			$fadeout = isset($item["fadeout"]) ? $item["fadeout"] : null;
+    
+    			$mediaItem = MediaItemQuery::create()->findPK($mediaId, $con);
+    			$mediaContent = $this->buildContentItem($mediaItem, $position, $cuein, $cueout, $fadein, $fadeout);
+    			$mediaContent->setPlaylist($this);
+    
+    			$res = $mediaContent->validate();
+    			if ($res === true) {
+    				$m[] = $mediaContent;
+    			}
+    			else {
+    				Logging::info($res);
+    				throw new Exception("invalid media content");
+    			}
+    
+    			$position++;
+    
+    			//save each content item in the transaction
+    			//first so that Playlist preSave can calculate
+    			//the new playlist length properly.
+    			$mediaContent->save($con);
+    		}
+    			
+    		$this->save($con);
+    			
     		$con->commit();
     	}
     	catch (Exception $e) {

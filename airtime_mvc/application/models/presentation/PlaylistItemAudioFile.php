@@ -20,7 +20,7 @@ class Presentation_PlaylistItemAudioFile extends Presentation_PlaylistItem
 	}
 	
 	public function getCreator() {
-		return $this->item->getCreator();
+		return $this->item->getCreator() ." - ". $this->item->getAlbumTitle();
 	}
 	
 	public function getUrl() {

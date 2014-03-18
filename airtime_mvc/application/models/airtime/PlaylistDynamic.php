@@ -3,6 +3,7 @@
 namespace Airtime\MediaItem;
 
 use \PropelException;
+use \PropelPDO;
 
 /**
  * Skeleton subclass for representing a row from one of the subclasses of the 'media_playlist' table.
@@ -49,15 +50,15 @@ class PlaylistDynamic extends Playlist {
     	//TODO generate content based on the saved rules.
     }
     
-    public function generate() {
+    public function generateContent(PropelPDO $con) {
     	throw new PropelException("Cannot generate a dynamic playlist");
     }
     
-    public function shuffle() {
+    public function shuffleContent(PropelPDO $con) {
     	throw new PropelException("Cannot shuffle a dynamic playlist");
     }
     
-    public function clear() {
+    public function clearContent(PropelPDO $con) {
     	throw new PropelException("Cannot clear a dynamic playlist");
     }
 
