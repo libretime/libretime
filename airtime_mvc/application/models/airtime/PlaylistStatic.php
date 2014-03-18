@@ -176,6 +176,9 @@ class PlaylistStatic extends Playlist {
     		Logging::info($criteria);
     		
     		$query = AudioFileQuery::create();
+    		$m = $query->getModelName();
+    		
+    		$query->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
     		
     		$criteriaRules = parent::getCriteriaRules($query);
     		
@@ -203,24 +206,35 @@ class PlaylistStatic extends Playlist {
     		
     		$query->where($conditionAnd, 'and');
     		
+    		//order by a chosen column or by random.
     		$order = $ruleSet["order"];
     		if ($order["column"] != "") {
-    			
     			$query->orderBy($order["column"], $order["direction"]);
     		}
     		else {
     			$query->addAscendingOrderByColumn('random()');
     		}
     		
-    		$files = $query->find();
+    		//filter length using the subquery to take advantage of window columns 
+    		//added for length selection purposes.
+    		//using window function on subquery so that the ORDER BY statement can be run
+    		//(need this incase it's order by random())
+    		$windowedQuery = AudioFileQuery::create()
+    			->addSelectQuery($query, "mainfilter")
+    			->withColumn("SUM(mainfilter.cuelength) OVER (rows between unbounded preceding and current row)", "agglength");
     		
+    		$limitedQuery = AudioFileQuery::create()
+    			->addSelectQuery($windowedQuery, "windowedfilter");
+    		
+    		$this->addLimitRule($limitedQuery);
+    		
+    		$files = $limitedQuery->find();
+
     		$ids = array();
     		foreach ($files as $file) {
     			$ids[] = $file->getId();
     		}
 
-    		Logging::info($ids);
-    		
     		return $ids;	
     	}
     	catch (Exception $e) {

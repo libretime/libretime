@@ -123,8 +123,6 @@ class PlaylistController extends Zend_Controller_Action
     		
     		$this->createUpdateResponse($playlist);
     		
-    		//$playlist->save($con);
-
     		Logging::disablePropelLogging();
     	}
     	catch (Exception $e) {

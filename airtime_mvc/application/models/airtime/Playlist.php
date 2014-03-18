@@ -32,7 +32,54 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 	const RULE_ORDER_COLUMN = "column";
 	const RULE_ORDER_DIRECTION = "direction";
 	
-	protected function getCriteriaRules($query) {
+	protected function addLimitRule(&$query) {
+		
+		$ruleSet = $this->getRules();
+		
+		$limitValue = $ruleSet["limit"]["value"];
+		$limitUnit = $ruleSet["limit"]["unit"];
+		
+		if ($limitUnit === "items") {
+			$query->limit($limitValue);
+		}
+		else {
+			 $duration = "1:00:00";
+			 
+			 switch($limitUnit) {
+			 	
+			 	case "minutes":
+			 		if (isset($limitValue)) {
+			 			$secs = $limitValue * 60;
+			 			
+			 			$hour = floor($secs / 3600);
+			 			
+			 			$leftover = $secs - $hour*3600;
+			 			$min = floor($leftover / 60);
+			 			
+			 			$leftover = $secs - $min*60;
+			 			$sec = floor($leftover);
+			 			
+			 			$duration = "{$hour}:{$min}:{$sec}";
+			 		}
+			 		break;
+			 	case "hours":
+			 		if (isset($limitValue)) {
+			 			
+			 			$mins = $limitValue * 60;
+			 			
+			 			$hour = floor($mins / 60);
+			 			$min = floor($mins % 60);
+			 			
+			 			$duration = "{$hour}:{$min}";
+			 		}
+			 		break;
+			 }
+			 
+			 $query->where("windowedfilter.agglength < '$duration'");
+		}
+	}
+	
+	protected function getCriteriaRules(&$query) {
 		
 		//$pattern is like "%VALUE%", or just "VALUE" if % is not needed.
 		function createRule(&$query, $comparison, $pattern = "VALUE") {
