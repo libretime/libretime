@@ -1,28 +1,5 @@
 @CHARSET "UTF-8";
 
-/* Used to hide non-ui fields **/
-span.audioFileID {
-    display:none; 
-}
-span.audioFileTitle {
-    display:none; 
-}
-span.audioFileArtist {
-    display:none; 
-}
-span.playlistID {
-    display:none; 
-}
-span.playlistIndex {
-    display:none; 
-}
-span.showID {
-    display:none; 
-}
-span.showIndex {
-    display:none; 
-}
-
 /* End of non-ui fields **/
 
 div.jp-audio,
@@ -155,7 +132,7 @@ div.jp-interface ul.jp-controls li span {
 	display: block;
 }
 
-.ui-state-default .ui-icon {
+.jp-audio .ui-state-default .ui-icon {
 	background-image: none;
 }
 
