@@ -51,6 +51,32 @@ class Rest_MediaController extends Zend_Rest_Controller
             ->appendBody(json_encode(CcFilesQuery::create()->find()->toArray(BasePeer::TYPE_FIELDNAME)));
         */
     }
+
+    public function downloadAction()
+    {
+        if (!$this->verifyAuth(true, true))
+        {
+            return;
+        }
+
+        $id = $this->getId();
+        if (!$id) {
+            return;
+        }
+
+        $file = CcFilesQuery::create()->findPk($id);
+        if ($file) {
+            $con = Propel::getConnection();
+            $storedFile = new Application_Model_StoredFile($file, $con);
+            $baseUrl = Application_Common_OsPath::getBaseDir();
+
+            $this->getResponse()
+                ->setHttpResponseCode(200)
+                ->appendBody($this->_redirect($storedFile->getRelativeFileUrl($baseUrl).'/download/true'));
+        } else {
+            $this->fileNotFoundResponse();
+        }
+    }
     
     public function getAction()
     {
