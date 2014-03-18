@@ -1,5 +1,30 @@
 @CHARSET "UTF-8";
 
+/* Used to hide non-ui fields **/
+span.audioFileID {
+    display:none; 
+}
+span.audioFileTitle {
+    display:none; 
+}
+span.audioFileArtist {
+    display:none; 
+}
+span.playlistID {
+    display:none; 
+}
+span.playlistIndex {
+    display:none; 
+}
+span.showID {
+    display:none; 
+}
+span.showIndex {
+    display:none; 
+}
+
+/* End of non-ui fields **/
+
 div.jp-audio,
 div.jp-video {
 
@@ -130,7 +155,7 @@ div.jp-interface ul.jp-controls li span {
 	display: block;
 }
 
-.jp-audio jp-video-270p .ui-state-default .ui-icon {
+.ui-state-default .ui-icon {
 	background-image: none;
 }
 
@@ -156,11 +181,43 @@ div.jp-interface ul.jp-controls li span {
 
 .jp-mute {
 	text-indent: -9999px;
-	margin: 0 auto;
 	width: 12px;
+	position: absolute;
+	left: 0px;
 }
 
 .jp-mute span {
+    background: url("images/player/mute_icon.png") center no-repeat;
+	background-size: 100%;
+    display: block;
+    width: 12px;
+    height: 11px;
+}
+
+.jp-unmute {
+	text-indent: -9999px;
+	width: 12px;
+	position: absolute;
+	left: 0px;
+}
+
+div.jp-unmute > span {
+    background: url("images/player/unmute_icon.png") center no-repeat;
+	background-size: 100%;
+    display: block;
+    width: 12px;
+    height: 11px;
+}
+
+.jp-volume-max {
+	text-indent: -9999px;
+	width: 12px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+div.jp-volume-max > span {
     background: url("images/player/volume_icon.png") center no-repeat;
 	background-size: 100%;
     display: block;
@@ -253,20 +310,6 @@ div.jp-interface ul.jp-controls li span {
 	top: 28px;
 }
 
-div.jp-unmute span {
-    background: url("jplayer.png") -60px -90px no-repeat;
-}
-div.jp-unmute span:hover {
-    background: url("jplayer.png") -90px -90px no-repeat;
-}
-
-div.jp-volume-max span {
-    background: url("jplayer.png") 0 -112px no-repeat;
-}
-div.jp-volume-max span:hover {
-    background: url("jplayer.png") -30px -112px no-repeat;
-}
-
 
 /* @end */
 
@@ -332,9 +375,10 @@ div.jp-audio div.jp-type-single a.jp-unmute {
 
 div.jp-volume-block {
 	float: right;
-	margin-top: 12px;
+	margin-top: 13px;
 	margin-right: 22px;
 	width: 72px;
+	position: relative;
 }
 
 div.jp-volume-bar {
@@ -343,7 +387,7 @@ div.jp-volume-bar {
 	width: 70px;
 	height: 5px;
 	cursor: pointer;
-	margin-top: 8px;
+	margin-top: 17px;
 }
 div.jp-audio div.jp-volume-bar {
 	border-color: #262526 #262526 #5E5E5E;
@@ -357,9 +401,6 @@ div.jp-volume-bar-value {
 	height:5px;
 }
 
-div.jp-volume-max {
-	margin-left: 65px;
-}
 
 /* @end */
 
@@ -399,12 +440,14 @@ div.jp-playlist {
 	text-align: center;
 	overflow: hidden;
 	height: 0px;
-	display: none;
 	position: relative;
+	-webkit-transition: all 200ms ease;
+    -moz-transition: all 200ms ease;
+    -o-transition: all 200ms ease;
+    transition: all 200ms ease;
 }
 
 div.jp-playlist.open {
-	display: block;
 	height: 75px;
 }
 
