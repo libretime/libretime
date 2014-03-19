@@ -9,18 +9,14 @@ abstract class Presentation_JPlayerItem {
 		$this->media = $mediaItem;
 	}
 	
-	abstract protected function hasMultiple();
-	abstract protected function hasDuration();
 	abstract protected function compute();
 	
 	/*
 	 * @return string a MIME that jPlayer will understand.
 	 */
-	protected function convertMime() {
+	protected function convertMime($mime) {
 	
 		$key = null;
-		
-		$mime = $this->media->getMime();
 		
 		if (preg_match("/mp3/i", $mime) || preg_match("/mpeg/i", $mime)) {
 			$key = "mp3";

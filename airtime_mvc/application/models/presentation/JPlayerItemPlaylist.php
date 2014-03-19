@@ -2,13 +2,22 @@
 
 class Presentation_JPlayerItemPlaylist extends Presentation_JPlayerItem
 {
-	public function hasMultiple() {
-		return true;
-	}
+	protected function compute() {
+		
+		$playlist = $this->media->getChildObject();
+		$contents = $playlist->getContents();
+		$jPlayerContents = array();
+		
+		foreach ($contents as $content) {
+			
+			$mediaItem = $content->getMediaItem();
+			$type = $mediaItem->getType();
+			$class = "Presentation_JPlayerItem{$type}";
+			
+			$jPlayerItem = new $class($mediaItem);
+			$jPlayerContents = array_merge($jPlayerContents, $jPlayerItem->compute());
+		}
 	
-	public function hasDuration() {
-		//TODO check if something in it actually has duration.
-		//what happens if it only contains webstreams?
-		return true;
+		return $jPlayerContents;
 	}
 }

@@ -32,6 +32,10 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 	const RULE_ORDER_COLUMN = "column";
 	const RULE_ORDER_DIRECTION = "direction";
 	
+	public function isStatic() {
+		return $this->getClassKey() === intval(PlaylistPeer::CLASSKEY_0);
+	}
+	
 	protected function getCriteriaRules(&$query) {
 		
 		//$pattern is like "%VALUE%", or just "VALUE" if % is not needed.

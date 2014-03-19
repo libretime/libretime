@@ -16,13 +16,15 @@ class Application_Service_PlaylistService
 		
 		$menu = array();
 	
-		$menu["preview"] = array(
-			"name" => _("Preview"),
-			"icon" => "play",
-			"id" => $id,
-			"callback" => "previewItem"
-		);
-		
+		if ($playlist->isStatic()) {
+			$menu["preview"] = array(
+				"name" => _("Preview"),
+				"icon" => "play",
+				"id" => $id,
+				"callback" => "previewItem"
+			);
+		}
+
 		$menu["edit"] = array(
 			"name"=> _("Edit"),
 			"icon" => "edit",
@@ -77,7 +79,7 @@ class Application_Service_PlaylistService
 			}
 			
 			//only save content for static playlists
-			if ($playlist->getClassKey() === PlaylistPeer::CLASSKEY_0) {
+			if ($playlist->isStatic()) {
 				$content = isset($info["content"]) ? $info["content"] : array();
 				$playlist->savePlaylistContent($con, $content, true);
 			}

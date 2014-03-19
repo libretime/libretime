@@ -66,6 +66,10 @@ class PlaylistStatic extends Playlist {
      * returns a list of media contents.
     */
     public function getContents(PropelPDO $con = null) {
+    	
+    	if (is_null($con)) {
+    		$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	}
     
     	$q = MediaContentQuery::create();
     	$m = $q->getModelName();

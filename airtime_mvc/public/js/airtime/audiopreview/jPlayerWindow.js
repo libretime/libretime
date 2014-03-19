@@ -8,15 +8,7 @@ var AIRTIME = (function(AIRTIME) {
     
     function changePlaylist(data) {
     	
-    	if (data.hasDuration) {
-    		$(".jp-duration").show();
-    	}
-    	else {
-    		$(".jp-duration").hide();
-    	}
-    	
     	playlistJPlayer.setPlaylist(data.playlist);
-    	//playlistJPlayer.option("autoPlay", true);
     	playlistJPlayer.play(0);
     }
     
@@ -54,8 +46,8 @@ var AIRTIME = (function(AIRTIME) {
             playlistOptions: {
                 autoPlay: false,
                 loopOnPrevious: false,
-                shuffleOnLoop: true,
-                enableRemoveControls: false,
+                shuffleOnLoop: false,
+                enableRemoveControls: true,
                 displayTime: 0,
                 addTime: 0,
                 removeTime: 0,
@@ -82,8 +74,8 @@ var AIRTIME = (function(AIRTIME) {
     	
 
     	$( "#open_playlist" ).click(function() {
-    	  $(".jp-playlist").toggleClass( "open" );
-    	  $( this ).toggleClass( "selected" );
+    	    $(".jp-playlist").toggleClass( "open" );
+    	    $( this ).toggleClass( "selected" );
     	});
 
     };
