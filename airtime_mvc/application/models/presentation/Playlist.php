@@ -51,7 +51,9 @@ class Presentation_Playlist {
 	
 	public function getContent() {
 		
-		return $this->playlist->getContents();
+		if ($this->hasContent()) {
+			return $this->playlist->getContents();
+		}
 	}
 	
 	public function getRules() {

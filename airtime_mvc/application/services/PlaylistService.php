@@ -55,4 +55,39 @@ class Application_Service_PlaylistService
 				
 		}
 	}
+	
+	public function savePlaylist($playlist, $info, $con) {
+		
+		$con->beginTransaction();
+		 
+		try {
+			if (isset($info["name"])) {
+				$playlist->setName($info["name"]);
+			}
+			
+			if (isset($info["description"])) {
+				$playlist->setDescription($info["description"]);
+			}
+			
+			//$form = new Application_Form_PlaylistRules();
+			//$form->buildCriteriaOptions($info["rules"]["criteria"]);
+			
+			if (isset($info["rules"])) {
+				$playlist->setRules($info["rules"]);
+			}
+			
+			//only save content for static playlists
+			if ($playlist->getClassKey() === PlaylistPeer::CLASSKEY_0) {
+				$content = isset($info["content"]) ? $info["content"] : array();
+				$playlist->savePlaylistContent($con, $content, true);
+			}
+			
+			$playlist->save($con); 
+			$con->commit();
+		}
+		catch (Exception $e) {
+			$con->rollBack();
+			throw $e;
+		}	
+	}
 }

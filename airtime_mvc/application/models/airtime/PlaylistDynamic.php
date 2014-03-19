@@ -46,10 +46,6 @@ class PlaylistDynamic extends Playlist {
     	throw new PropelException("Dynamic playlist does not have content");
     }
     
-    public function getScheduledContent() {
-    	//TODO generate content based on the saved rules.
-    }
-    
     public function generateContent(PropelPDO $con) {
     	throw new PropelException("Cannot generate a dynamic playlist");
     }
@@ -60,6 +56,27 @@ class PlaylistDynamic extends Playlist {
     
     public function clearContent(PropelPDO $con) {
     	throw new PropelException("Cannot clear a dynamic playlist");
+    }
+    
+    public function getScheduledContent(PropelPDO $con) {
+    	 
+    	$ids = parent::generateContent($con);
+    	$scheduled = array();
+
+    	foreach ($ids as $id) {
+    		$audioFile = AudioFileQuery::create()->findPK($id);
+    		
+    		$scheduled[] = array (
+    			"id" => $audioFile->getId(),
+				"cliplength" => $audioFile->getSchedulingLength(),
+				"cuein" => $audioFile->getSchedulingCueIn(),
+				"cueout" => $audioFile->getSchedulingCueOut(),
+				"fadein" => $audioFile->getSchedulingFadeIn(),
+				"fadeout" => $audioFile->getSchedulingFadeOut(),
+    		);
+    	}
+    	 
+    	return $scheduled;
     }
 
 } // PlaylistDynamic

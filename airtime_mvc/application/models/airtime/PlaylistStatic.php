@@ -145,26 +145,6 @@ class PlaylistStatic extends Playlist {
     	return true;
     }
     
-    public function getScheduledContent() {
-    
-    	$contents = $this->getMediaContents();
-    	$items = array();
-    
-    	foreach ($contents as $content) {
-    		$data = array();
-    		$data["id"] = $content->getMediaId();
-    		$data["cliplength"] = $content->getCliplength();
-    		$data["cuein"] = $content->getCuein();
-    		$data["cueout"] = $content->getCueout();
-    		$data["fadein"] = $content->getFadein();
-    		$data["fadeout"] = $content->getFadeout();
-    
-    		$items[] = $data;
-    	}
-    
-    	return $items;
-    }
-    
     public function shuffleContent(PropelPDO $con) {
 
     	$con->beginTransaction();
@@ -258,9 +238,8 @@ class PlaylistStatic extends Playlist {
     	Logging::disablePropelLogging();
     }
     
-    public function savePlaylistContent($content, $replace=false)
+    public function savePlaylistContent(PropelPDO $con, $content, $replace=false)
     {
-    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
     	$con->beginTransaction();
     
     	try {
@@ -304,9 +283,7 @@ class PlaylistStatic extends Playlist {
     			//the new playlist length properly.
     			$mediaContent->save($con);
     		}
-    			
-    		$this->save($con);
-    			
+	
     		$con->commit();
     	}
     	catch (Exception $e) {
@@ -314,6 +291,25 @@ class PlaylistStatic extends Playlist {
     		Logging::error($e->getMessage());
     		throw $e;
     	}
+    }
+    
+    public function getScheduledContent(PropelPDO $con) {
+    	
+    	$contents = self::getContents($con);
+    	$scheduled = array();
+    	
+    	foreach ($contents as $content) {
+    		$scheduled[] = array (
+				"id" => $content->getMediaId(),
+				"cliplength" => $content->getCliplength(),
+				"cuein" => $content->getCuein(),
+				"cueout" => $content->getCueout(),
+				"fadein" => $content->getFadein(),
+				"fadeout" => $content->getFadeout(),
+			);
+    	}
+    	
+    	return $scheduled;
     }
     
 } // PlaylistStatic

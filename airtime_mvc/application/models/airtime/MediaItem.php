@@ -101,10 +101,10 @@ class MediaItem extends BaseMediaItem implements \Interface_Schedulable
 	 * TODO remove this method and just rely on method getSchedulingInfo
 	 * in the future if we don't unroll playlists/blocks when scheduling them.
 	 */
-	public function getScheduledContent() {
+	public function getScheduledContent(PropelPDO $con) {
 		$obj = $this->getChildObject();
 		
-		return $obj->getScheduledContent();
+		return $obj->getScheduledContent($con);
 	}
 	
 	public function isSchedulable() {

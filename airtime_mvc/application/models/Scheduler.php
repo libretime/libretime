@@ -203,7 +203,7 @@ class Application_Model_Scheduler
     	$media = MediaItemQuery::create()->findPK($id, $this->con);
     	
     	//content could be an unrolled playlist or a single file/webstream.
-    	$content = $media->getScheduledContent();
+    	$content = $media->getScheduledContent($this->con);
     	
     	//merge in any defaults or extra things needed by the scheduler.
     	for ($i = 0, $len = count($content); $i < $len; $i++) {

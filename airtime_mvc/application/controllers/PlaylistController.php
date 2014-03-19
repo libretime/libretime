@@ -117,6 +117,7 @@ class PlaylistController extends Zend_Controller_Action
     	try {
 
     		$playlist = $this->getPlaylist();
+    		$playlist->clearContent($con);
     		$mediaIds = $playlist->generateContent($con);
     		$playlist->addMedia($con, $mediaIds);
     		$con->commit();
@@ -168,33 +169,20 @@ class PlaylistController extends Zend_Controller_Action
     public function saveAction()
     {
     	$info = $this->_getParam('serialized');
-    	
     	Logging::info($info);
+    	
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	$con->beginTransaction();
     	
     	try {
     		$playlist = $this->getPlaylist();
-    		
-    		if (isset($info["name"])) {
-    			$playlist->setName($info["name"]);
-    		}
-    		
-    		if (isset($info["description"])) {
-    			$playlist->setDescription($info["description"]);
-    		}
-    		
-    		//$form = new Application_Form_PlaylistRules();
-    		//$form->buildCriteriaOptions($info["rules"]["criteria"]);
-    		
-    		if (isset($info["rules"])) {
-    			$playlist->setRules($info["rules"]);
-    		}
-    		
-    		$content = isset($info["content"]) ? $info["content"] : array();
-    		$playlist->savePlaylistContent($content, true);
-
+    		$this->playlistService->savePlaylist($playlist, $info, $con);
     		$this->createUpdateResponse($playlist);
+    		
+    		$con->commit();
     	}
     	catch (Exception $e) {
+    		$con->rollBack();
     		$this->view->error = $e->getMessage();
     	}
     } 

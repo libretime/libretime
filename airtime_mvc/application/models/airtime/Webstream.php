@@ -100,7 +100,7 @@ class Webstream extends BaseWebstream
 		return \Application_Model_Preference::GetDefaultFadeOut();
 	}
 	
-	public function getScheduledContent() {
+	public function getScheduledContent(PropelPDO $con = null) {
 	
 		return array(
 			array (

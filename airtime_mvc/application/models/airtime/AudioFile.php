@@ -357,7 +357,7 @@ class AudioFile extends BaseAudioFile
 		return \Application_Model_Preference::GetDefaultFadeOut();
 	}
 
-	public function getScheduledContent() {
+	public function getScheduledContent(PropelPDO $con = null) {
 
 		return array (
 			array (

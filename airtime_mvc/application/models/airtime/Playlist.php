@@ -172,9 +172,7 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
     public function generateContent(PropelPDO $con) {
     
     	try {
-    
-    		$this->clearContent($con);
-    
+    		
     		$ruleSet = $this->getRules();
     		$criteria = isset($ruleSet["criteria"]) ? $ruleSet["criteria"] : array();
     		Logging::info($criteria);
