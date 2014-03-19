@@ -73,9 +73,14 @@ div.jp-audio div.jp-type-playlist div.jp-interface {
 }
 
 .jp-time-wrap .jp-current {
-	font-size: 12px;
-	color: #fff;
-	text-decoration: none;
+    font-size: 12px;
+    color: #fff;
+    text-decoration: none;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    height: 19px;
+    white-space: nowrap;
 }
 
 .jp-time-wrap .jp-current .jp-artist {
@@ -259,6 +264,10 @@ div.jp-volume-max > span {
 	box-shadow: none;
 
 	border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.playlist_icon.selected span {
+    background: url("images/player/playlist_close.png") center no-repeat;
 }
 
 .playlist_arrows a {
