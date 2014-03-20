@@ -361,6 +361,59 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		);
 	}
 	
+	/*
+	 * add display only columns such as checkboxs to the datatables response.
+	* these should not be columns that could be calculated in the DB query.
+	*/
+	protected function enhanceDatatablesColumns(&$datatablesColumns) {
+	
+		$checkbox = array(
+			"sTitle" =>	"",
+			"mDataProp" => "Checkbox",
+			"bSortable" => false,
+			"bSearchable" => false,
+			"bVisible" => true,
+			"sWidth" => "25px",
+			"sClass" => "library_checkbox",
+		);
+	
+		//add the checkbox to the beginning.
+		array_unshift($datatablesColumns, $checkbox);
+	}
+	
+	
+	
+	protected function enhanceDatatablesOutput(&$output) {
+		
+		//add in data for the display columns.
+		foreach ($output as &$row) {
+			$row["Checkbox"] = '<input type="checkbox">';
+			
+			$formatter = new Format_HHMMSSULength($row["Cuein"]);
+			$row["Cuein"] = $formatter->format();
+			
+			$formatter = new Format_HHMMSSULength($row["Cueout"]);
+			$row["Cueout"] = $formatter->format();
+			
+			$formatter = new Format_HHMMSSULength($row["CueLength"]);
+			$row["CueLength"] = $formatter->format();
+			
+			$formatter = new Format_Samplerate($row['SampleRate']);
+			$row['SampleRate'] = $formatter->format();
+			
+			$formatter = new Format_Bitrate($row['BitRate']);
+			$row['BitRate'] = $formatter->format();
+			
+			$row['CreatedAt'] = $this->enhanceRowDate($row['CreatedAt']);
+			$row['UpdatedAt'] = $this->enhanceRowDate($row['UpdatedAt']);
+			
+			if (isset($row["LastPlayedTime"])) {
+				$row['LastPlayedTime'] = $this->enhanceRowDate($row['LastPlayedTime']);
+			}
+		}
+		
+	}
+	
 	public function getDatatables($params) {
 	
 		Logging::enablePropelLogging();

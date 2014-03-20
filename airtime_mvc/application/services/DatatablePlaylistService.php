@@ -104,6 +104,44 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 		);
 	}
 	
+	/*
+	 * add display only columns such as checkboxs to the datatables response.
+	* these should not be columns that could be calculated in the DB query.
+	*/
+	protected function enhanceDatatablesColumns(&$datatablesColumns) {
+	
+		$checkbox = array(
+			"sTitle" =>	"",
+			"mDataProp" => "Checkbox",
+			"bSortable" => false,
+			"bSearchable" => false,
+			"bVisible" => true,
+			"sWidth" => "25px",
+			"sClass" => "library_checkbox",
+		);
+	
+		//add the checkbox to the beginning.
+		array_unshift($datatablesColumns, $checkbox);
+	}
+	
+	
+	protected function enhanceDatatablesOutput(&$output) {
+	
+		//add in data for the display columns.
+		foreach ($output as &$row) {
+			$row["Checkbox"] = '<input type="checkbox">';
+			
+			//static playlist
+			if ($row["ClassKey"] === 0) {
+				$formatter = new Format_HHMMSSULength($row["Length"]);
+				$row["Length"] = $formatter->format();
+			}
+			
+			$row['CreatedAt'] = $this->enhanceRowDate($row['CreatedAt']);
+			$row['UpdatedAt'] = $this->enhanceRowDate($row['UpdatedAt']);
+		}
+	}
+	
 	public function getDatatables($params) {
 	
 		Logging::enablePropelLogging();

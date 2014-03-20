@@ -20,6 +20,9 @@ abstract class Application_Service_DatatableService
 		$this->settings = $this->getSettings();
 		
 		$this->columnKeys = array_keys($this->columns);
+		
+		$this->displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+		$this->utcTimezone = new DateTimeZone("UTC");
 	}
 	
 	//used for creating media search.
@@ -38,35 +41,6 @@ abstract class Application_Service_DatatableService
 		PropelColumnTypes::LONGVARCHAR,
 		PropelColumnTypes::CHAR
 	);
-	
-	protected function enhanceDatatablesColumns(&$datatablesColumns) {
-	
-		$checkbox = array(
-			"sTitle" =>	"",
-			"mDataProp" => "Checkbox",
-			"bSortable" => false,
-			"bSearchable" => false,
-			"bVisible" => true,
-			"sWidth" => "25px",
-			"sClass" => "library_checkbox",
-		);
-	
-		//add the checkbox to the beginning.
-		array_unshift($datatablesColumns, $checkbox);
-	}
-	
-	/*
-	 * add display only columns such as checkboxs to the datatables response.
-	* these should not be columns that could be calculated in the DB query.
-	*/
-	protected function enhanceDatatablesOutput(&$output) {
-	
-		//add in data for the display columns.
-		foreach ($output as &$row) {
-			$row["Checkbox"] = '<input type="checkbox">';
-		}
-	}
-	
 	
 	public function makeDatatablesColumns() {
 	
@@ -91,7 +65,7 @@ abstract class Application_Service_DatatableService
 			);
 		}
 	
-		self::enhanceDatatablesColumns($datatablesColumns);
+		$this->enhanceDatatablesColumns($datatablesColumns);
 	
 		return $datatablesColumns;
 	}
@@ -370,9 +344,16 @@ abstract class Application_Service_DatatableService
 			$output[] = $item;
 		}
 	
-		self::enhanceDatatablesOutput($output);
+		$this->enhanceDatatablesOutput($output);
 	
 		return $output;
+	}
+	
+	protected function enhanceRowDate($utcDateTimeString) {
+		
+		$date = new DateTime($utcDateTimeString, $this->utcTimezone);
+		$date->setTimeZone($this->displayTimezone);
+		return $date->format('Y-m-d H:i:s');
 	}
 	
 	protected abstract function getColumns();
