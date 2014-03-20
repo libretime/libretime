@@ -34,7 +34,7 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		"Language",
 		"UpdatedAt",
 		"LastPlayedTime",
-		"CueLength", //this is a custom function in AudioFile
+		"CueLength",
 		"Mime",
 		"Mood",
 		"CcSubjs.DbLogin",
@@ -381,8 +381,6 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		array_unshift($datatablesColumns, $checkbox);
 	}
 	
-	
-	
 	protected function enhanceDatatablesOutput(&$output) {
 		
 		//add in data for the display columns.
@@ -414,6 +412,62 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		
 	}
 	
+	//params is given from datatables
+	//need to format data correctly for search,
+	//datetimes should be in UTC etc.
+	//pretty much undoing things that have been done in function enhanceDatatablesOutput
+	protected function filterSearchParams(&$params) {
+
+		//advanced search has not been initialized yet.
+		if (empty($params["sRangeSeparator"])) {
+			return;
+		}
+		
+		$len = intval($params["iColumns"]);
+		$separator = $params["sRangeSeparator"];
+		
+		for ($i = 0; $i < $len; $i++) {
+		
+			$prop = $params["mDataProp_{$i}"];
+			$search = $params["sSearch_{$i}"];
+			
+			if ($search === "") {
+				continue;
+			}
+			
+			switch ($prop) {
+				
+				case "Bpm":
+				case "ReplayGain":
+				case "Year":
+					$filtered = array();
+					$range = explode($separator, $search);
+					$filtered["from"] = isset($range[0]) && $range[0] !== "" ? intval($range[0]) : null;
+					$filtered["to"] = isset($range[1]) && $range[1] !== "" ? intval($range[1]) : null;
+					$params["sSearch_{$i}"] = $filtered;
+					break;
+				case "BitRate":
+				case "SampleRate":
+					$filtered = array();
+					$range = explode($separator, $search);
+					$filtered["from"] = isset($range[0]) && $range[0] !== "" ? floatval($range[0])* 1000 : null;
+					$filtered["to"] = isset($range[1]) && $range[1] !== "" ? floatval($range[1])* 1000 : null;
+					$params["sSearch_{$i}"] = $filtered;
+					break;
+				case "CreatedAt":
+				case "UpdatedAt":
+				case "LastPlayedTime":
+					$filtered = array();
+					$range = explode($separator, $search);
+					Logging::info($range);
+					$filtered["from"] = isset($range[0]) && $range[0] !== "" ? $this->filterDate($range[0]) : null;
+					$filtered["to"] = isset($range[1]) && $range[1] !== "" ? $this->filterDate($range[1]) : null;
+					$params["sSearch_{$i}"] = $filtered;
+					break;
+			}
+		}
+	}
+	
 	public function getDatatables($params) {
 	
 		Logging::enablePropelLogging();
@@ -423,6 +477,8 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		$m = $q->getModelName();
 		$q->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
 		$q->joinWith("CcSubjs");
+		
+		$this->filterSearchParams($params);
 	
 		$results = self::buildQuery($q, $params);
 	

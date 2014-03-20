@@ -1,13 +1,9 @@
 AIRTIME = (function(AIRTIME) {
     
-    var viewport,
-        $lib,
+    var $lib,
         $libWrapper,
         $builder,
         $fs,
-        widgetHeight,
-        screenWidth,
-        resizeTimeout,
         oBaseDatePickerSettings,
         oBaseTimePickerSettings,
         oRange,
@@ -49,48 +45,6 @@ AIRTIME = (function(AIRTIME) {
         minuteText: $.i18n._("Minute"),
         onClose: validateTimeRange
     };
-    
-    function setWidgetSize() {
-        viewport = AIRTIME.utilities.findViewportDimensions();
-        widgetHeight = viewport.height - 180;
-        screenWidth = Math.floor(viewport.width - 40);
-        
-        var libTableHeight = widgetHeight - 175,
-            builderTableHeight = widgetHeight - 95,
-            oTable;
-        
-        if ($fs.is(':visible')) {
-            builderTableHeight = builderTableHeight - 40;
-        }
-        
-        //set the heights of the main widgets.
-        $builder.height(widgetHeight)
-            .find(".dataTables_scrolling")
-                    .css("max-height", builderTableHeight)
-                    .end()
-            .width(screenWidth);
-        
-        $lib.height(widgetHeight)
-            .find(".dataTables_scrolling")
-                .css("max-height", libTableHeight)
-                .end();
-        
-        if ($lib.filter(':visible').length > 0) {
-            
-            $lib.width(Math.floor(screenWidth * 0.48));
-                
-            $builder.width(Math.floor(screenWidth * 0.48))
-                .find("#sb_edit")
-                    .remove()
-                    .end()
-                .find("#sb_date_start")
-                    .css("margin-left", 0)
-                    .end();
-            
-            oTable = $('#show_builder_table').dataTable();
-            //oTable.fnDraw();
-        }   
-    }
     
     function validateTimeRange() {
     	 var oRange,
@@ -155,16 +109,6 @@ AIRTIME = (function(AIRTIME) {
         $builder = $("#show_builder");
         $fs = $builder.find('fieldset');
 
-        /*
-         * Icon hover states for search.
-         */
-        $builder.on("mouseenter", ".sb-timerange .ui-button", function(ev) {
-            $(this).addClass("ui-state-hover");
-        });
-        $builder.on("mouseleave", ".sb-timerange .ui-button", function(ev) {
-            $(this).removeClass("ui-state-hover");
-        });
-
         $builder.find(dateStartId)
         	.datepicker(oBaseDatePickerSettings)
         	.blur(validateTimeRange);
@@ -181,19 +125,15 @@ AIRTIME = (function(AIRTIME) {
         	.timepicker(oBaseTimePickerSettings)
         	.blur(validateTimeRange);
         
-
         oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId,
                 dateEndId, timeEndId);
+        
         AIRTIME.showbuilder.fnServerData.start = oRange.start;
         AIRTIME.showbuilder.fnServerData.end = oRange.end;
         AIRTIME.showbuilder.builderDataTable();
-        setWidgetSize();
 
-        $libWrapper = $lib.find("#library_display_wrapper");
-        $libWrapper.prepend($libClose);
-
-        $builder.find('.dataTables_scrolling').css("max-height",
-                widgetHeight - 95);
+        $libWrapper = $lib.find(".ui-tabs-nav");
+        $libWrapper.append($libClose);
 
         $builder.on("click", "#sb_submit", showSearchSubmit);
 
@@ -202,12 +142,6 @@ AIRTIME = (function(AIRTIME) {
 
             // reset timestamp to redraw the cursors.
             AIRTIME.showbuilder.resetTimestamp();
-
-            $lib.show().width(Math.floor(screenWidth * 0.48));
-
-            $builder.width(Math.floor(screenWidth * 0.48)).find("#sb_edit")
-                    .remove().end().find("#sb_date_start")
-                    .css("margin-left", 0).end();
 
             schedTable.fnDraw();
 
@@ -229,12 +163,8 @@ AIRTIME = (function(AIRTIME) {
         $lib.on("click", "#sb_lib_close", function() {
             var schedTable = $("#show_builder_table").dataTable();
 
-            $lib.hide();
-            $builder.width(screenWidth).find(".sb-timerange").prepend(
-                    $toggleLib).find("#sb_date_start").css("margin-left", 30)
-                    .end().end();
-
-            $toggleLib.removeClass("ui-state-hover");
+            //$lib.hide();
+            
             schedTable.fnDraw();
 
             $.ajax( {
@@ -252,25 +182,20 @@ AIRTIME = (function(AIRTIME) {
             });
         });
 
-        $builder.find('legend').click(
-                function(ev, item) {
+        $builder.find('legend').click(function(ev, item) {
 
-                    if ($fs.hasClass("closed")) {
+            if ($fs.hasClass("closed")) {
 
-                        $fs.removeClass("closed");
-                        $builder.find('.dataTables_scrolling').css(
-                                "max-height", widgetHeight - 150);
-                    } else {
-                        $fs.addClass("closed");
+                $fs.removeClass("closed");
+            } 
+            else {
+                $fs.addClass("closed");
 
-                        // set defaults for the options.
-                        $fs.find('select').val(0);
-                        $fs.find('input[type="checkbox"]').attr("checked",
-                                false);
-                        $builder.find('.dataTables_scrolling').css(
-                                "max-height", widgetHeight - 110);
-                    }
-                });
+                // set defaults for the options.
+                $fs.find('select').val(0);
+                $fs.find('input[type="checkbox"]').attr("checked", false);
+            }
+        });
 
         // set click event for all my shows checkbox.
         $builder.on("click", "#sb_my_shows", function(ev) {
@@ -286,17 +211,20 @@ AIRTIME = (function(AIRTIME) {
         $builder.on("change", '#sb_show_filter', function(ev) {
 
             if ($(this).val() !== 0) {
-                $(ev.delegateTarget).find('#sb_my_shows')
-                        .attr("checked", false);
+                $(ev.delegateTarget)
+                	.find('#sb_my_shows')
+                    .attr("checked", false);
             }
 
             showSearchSubmit();
-
         });
 
         function checkScheduleUpdates() {
-            var data = {}, oTable = $('#show_builder_table').dataTable(), fn = oTable
-                    .fnSettings().fnServerData, start = fn.start, end = fn.end;
+            var data = {},
+            	oTable = $('#show_builder_table').dataTable(),
+            	fn = oTable.fnSettings().fnServerData,
+            	start = fn.start,
+            	end = fn.end;
 
             data["format"] = "json";
             data["start"] = start;
@@ -325,13 +253,7 @@ AIRTIME = (function(AIRTIME) {
         }
 
         //check if the timeline view needs updating.
-        //checkScheduleUpdates();
-    };
-
-    mod.onResize = function() {
-
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(setWidgetSize, 100);
+        checkScheduleUpdates();
     };
 
     return AIRTIME;
@@ -339,4 +261,3 @@ AIRTIME = (function(AIRTIME) {
 } (AIRTIME || {}));
 
 $(document).ready(AIRTIME.builderMain.onReady);
-$(window).resize(AIRTIME.builderMain.onResize);

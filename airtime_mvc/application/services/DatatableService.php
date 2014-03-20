@@ -149,17 +149,15 @@ abstract class Application_Service_DatatableService
 			$name = "{$prefix}_{$col}_from";
 			$cond = "{$col} >= ?";
 	
-			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($from);
-			$query->condition($name, $cond, $date);
+			$query->condition($name, $cond, $from);
 			$num++;
 		}
 	
 		if (isset($to) && preg_match_all('/(\d{4}-\d{2}-\d{2})/', $to)) {
 			$name = "{$prefix}_{$col}_to";
 			$cond = "{$col} <= ?";
-	
-			$date = Application_Common_DateHelper::UserTimezoneStringToUTCString($to);
-			$query->condition($name, $cond, $date);
+
+			$query->condition($name, $cond, $to);
 			$num++;
 		}
 	
@@ -223,18 +221,15 @@ abstract class Application_Service_DatatableService
 				
 				if ($params["sSearch_{$i}"] != "") {
 					$value = $params["sSearch_{$i}"];
-					$separator = $params["sRangeSeparator"];
 					
 					switch($type) {
 						case PropelColumnTypes::DATE:
 						case PropelColumnTypes::TIMESTAMP:
-							list($from, $to) = explode($separator, $value);
-							$advConds[] = self::searchDate($query, $searchCol, $from, $to);
+							$advConds[] = self::searchDate($query, $searchCol, $value["from"], $value["to"]);
 							break;
 						case PropelColumnTypes::NUMERIC:
 						case PropelColumnTypes::INTEGER:
-							list($from, $to) = explode($separator, $value);
-							$advConds[] = self::searchNumber($query, $searchCol, $from, $to);
+							$advConds[] = self::searchNumber($query, $searchCol,$value["from"], $value["to"]);
 							break;
 						default:
 							$advConds[] = self::searchString($query, $searchCol, $value);
@@ -354,6 +349,20 @@ abstract class Application_Service_DatatableService
 		$date = new DateTime($utcDateTimeString, $this->utcTimezone);
 		$date->setTimeZone($this->displayTimezone);
 		return $date->format('Y-m-d H:i:s');
+	}
+	
+	//return null or a formatted datetime string in UTC
+	protected function filterDate($userDateTimeString) {
+	
+		$filtered = null;
+	
+		if (isset($userDateTimeString)) {
+			$date = new DateTime($userDateTimeString, $this->displayTimezone);
+			$date->setTimeZone($this->utcTimezone);
+			$filtered = $date->format('Y-m-d H:i:s');
+		}
+	
+		return $filtered;
 	}
 	
 	protected abstract function getColumns();
