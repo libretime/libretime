@@ -18,6 +18,49 @@ class ShowbuilderController extends Zend_Controller_Action
                     ->addActionContext('context-menu', 'json')
                     ->initContext();
     }
+    
+    private function getStartEnd()
+    {
+    	$request = $this->getRequest();
+    
+    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+    	$utcTimezone = new DateTimeZone("UTC");
+    	$utcNow = new DateTime("now", $utcTimezone);
+    
+    	$start = $request->getParam("start");
+    	$end = $request->getParam("end");
+    
+    	if (empty($start) || empty($end)) {
+    		$startsDT = clone $utcNow;
+    		$startsDT->sub(new DateInterval("P1D"));
+    		$endsDT = clone $utcNow;
+    	}
+    	else {
+    		 
+    		try {
+    			$startsDT = new DateTime($start, $userTimezone);
+    			$startsDT->setTimezone($utcTimezone);
+    
+    			$endsDT = new DateTime($end, $userTimezone);
+    			$endsDT->setTimezone($utcTimezone);
+    
+    			if ($startsDT > $endsDT) {
+    				throw new Exception("start greater than end");
+    			}
+    		}
+    		catch (Exception $e) {
+    			Logging::info($e);
+    			Logging::info($e->getMessage());
+    
+    			$startsDT = clone $utcNow;
+    			$startsDT->sub(new DateInterval("P1D"));
+    			$endsDT = clone $utcNow;
+    		}
+    		 
+    	}
+    
+    	return array($startsDT, $endsDT);
+    }
 
     public function indexAction()
     {
@@ -125,6 +168,12 @@ class ShowbuilderController extends Zend_Controller_Action
         }
         $this->view->disableLib = $disableLib;
         $this->view->showLib    = $showLib;
+        
+        //TODO remove this when it's implemented.
+        $disableLib = false;
+        $showLib = true;
+        $this->view->disableLib = $disableLib;
+        $this->view->showLib    = $showLib;
 
         //only include library things on the page if the user can see it.
         if (!$disableLib) {
@@ -146,25 +195,18 @@ class ShowbuilderController extends Zend_Controller_Action
             $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', null );");
         }
 
-        //populate date range form for show builder.
-        $now  = time();
-        $from = $request->getParam("from", $now);
-        $to   = $request->getParam("to", $now + (24*60*60));
-
-        $utcTimezone = new DateTimeZone("UTC");
-        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
-
-        $start = DateTime::createFromFormat("U", $from, $utcTimezone);
-        $start->setTimezone($displayTimeZone);
-        $end = DateTime::createFromFormat("U", $to, $utcTimezone);
-        $end->setTimezone($displayTimeZone);
+        list($startsDT, $endsDT) = $this->getStartEnd();
+        
+        $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $startsDT->setTimezone($userTimezone);
+        $endsDT->setTimezone($userTimezone);
 
         $form = new Application_Form_ShowBuilder();
         $form->populate(array(
-            'sb_date_start' => $start->format("Y-m-d"),
-            'sb_time_start' => $start->format("H:i"),
-            'sb_date_end'   => $end->format("Y-m-d"),
-            'sb_time_end'   => $end->format("H:i")
+            'sb_date_start' => $startsDT->format("Y-m-d"),
+            'sb_time_start' => $startsDT->format("H:i"),
+            'sb_date_end'   => $endsDT->format("Y-m-d"),
+            'sb_time_end'   => $endsDT->format("H:i")
         ));
 
         $this->view->sb_form = $form;
@@ -235,49 +277,6 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->end = $end_time;
 
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
-    }
-    
-    private function getStartEnd()
-    {
-    	$request = $this->getRequest();
-    
-    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-    	$utcTimezone = new DateTimeZone("UTC");
-    	$utcNow = new DateTime("now", $utcTimezone);
-    
-    	$start = $request->getParam("start");
-    	$end = $request->getParam("end");
-    
-    	if (empty($start) || empty($end)) {
-    		$startsDT = clone $utcNow;
-    		$startsDT->sub(new DateInterval("P1D"));
-    		$endsDT = clone $utcNow;
-    	}
-    	else {
-    		 
-    		try {
-    			$startsDT = new DateTime($start, $userTimezone);
-    			$startsDT->setTimezone($utcTimezone);
-    
-    			$endsDT = new DateTime($end, $userTimezone);
-    			$endsDT->setTimezone($utcTimezone);
-    
-    			if ($startsDT > $endsDT) {
-    				throw new Exception("start greater than end");
-    			}
-    		}
-    		catch (Exception $e) {
-    			Logging::info($e);
-    			Logging::info($e->getMessage());
-    
-    			$startsDT = clone $utcNow;
-    			$startsDT->sub(new DateInterval("P1D"));
-    			$endsDT = clone $utcNow;
-    		}
-    		 
-    	}
-    
-    	return array($startsDT, $endsDT);
     }
 
     public function checkBuilderFeedAction()
