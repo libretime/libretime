@@ -412,7 +412,7 @@ class Application_Model_ShowBuilder
     {
         $outdated = false;
         $shows = Application_Model_Show::getShows($this->startDT, $this->endDT);
-
+       
         $include = array();
         if ($this->opts["showFilter"] !== 0) {
             $include[] = $this->opts["showFilter"];
@@ -421,7 +421,6 @@ class Application_Model_ShowBuilder
 
             $include = $this->getUsersShows();
         }
-
 
         $currentInstances = array();
 
@@ -455,8 +454,7 @@ class Application_Model_ShowBuilder
             $outdated = true;
         }
 
-        //return $outdated;
-        return false;
+        return $outdated;
     }
 
     public function getItems()

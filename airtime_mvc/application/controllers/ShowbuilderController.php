@@ -289,7 +289,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $instances = $request->getParam("instances", array());
 
         list($startsDT, $endsDT) = $this->getStartEnd();
-
+        
         $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
