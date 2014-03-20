@@ -56,6 +56,8 @@ def get_file_type(file_path):
         file_type = 'mp3'
     elif re.search(r'og(g|a)$', file_path, re.IGNORECASE):
         file_type = 'vorbis'
+    elif re.search(r'm4a$', file_path, re.IGNORECASE):
+        file_type = 'mp4'
     elif re.search(r'flac$', file_path, re.IGNORECASE):
         file_type = 'flac'
     else:
@@ -64,6 +66,8 @@ def get_file_type(file_path):
             file_type = 'mp3'
         elif 'ogg' in mime_type:
             file_type = 'vorbis'
+        elif 'mp4' in mime_type:
+            file_type = 'mp4'
         elif 'flac' in mime_type:
             file_type = 'flac'
 
@@ -111,6 +115,14 @@ def calculate_replay_gain(file_path):
                     search = re.search(r'REPLAYGAIN_TRACK_GAIN=(.*) dB', out)
                 else:
                     logger.warn("vorbisgain/ogginfo not found")
+            elif file_type == 'mp4':
+                if run_process(['which', 'aacgain']) == 0:
+                    command = ['nice', '-n', nice_level, 'aacgain', '-q', temp_file_path]
+                    out = get_process_output(command)
+                    search = re.search(r'Recommended "Track" dB change: (.*)', \
+                                       out)
+                else:
+                    logger.warn("aacgain not found")
             elif file_type == 'flac':
                 if run_process(['which', 'metaflac']) == 0:
 
