@@ -218,13 +218,14 @@ class Application_Model_Systemstatus
         //connect to DB and find how much total space user has allocated.
         $totalSpace = Application_Model_Preference::GetDiskQuota();
 
-        $path = $_SERVER['AIRTIME_BASE']."etc/airtime/num_bytes.ini";
+        $usedSpace = Application_Model_Preference::getDiskUsage();
+        /* $path = $_SERVER['AIRTIME_BASE']."etc/airtime/num_bytes.ini";
         $arr = parse_ini_file($path);
 
         $usedSpace = 0;
         if ($arr !== false) {
             $usedSpace = $arr['num_bytes'];
-        }
+        } */
         
         $partitions[$totalSpace] = new stdClass();
         $partitions[$totalSpace]->totalSpace = $totalSpace;
