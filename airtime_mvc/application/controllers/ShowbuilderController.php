@@ -32,8 +32,8 @@ class ShowbuilderController extends Zend_Controller_Action
     
     	if (empty($start) || empty($end)) {
     		$startsDT = clone $utcNow;
-    		$startsDT->sub(new DateInterval("P1D"));
     		$endsDT = clone $utcNow;
+    		$endsDT->add(new DateInterval("P1D"));
     	}
     	else {
     		 

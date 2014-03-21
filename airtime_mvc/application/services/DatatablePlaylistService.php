@@ -22,6 +22,11 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 	protected $aliases = array(
 	);
 	
+	//format classes used to manipulate data for presentation.
+	protected $_formatters = array(
+		"Length" => "Format_PlaylistLength"
+	);
+	
 	public function __construct() {
 	
 		parent::__construct();
@@ -130,13 +135,7 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 		//add in data for the display columns.
 		foreach ($output as &$row) {
 			$row["Checkbox"] = '<input type="checkbox">';
-			
-			//static playlist
-			if ($row["ClassKey"] === 0) {
-				$formatter = new Format_HHMMSSULength($row["Length"]);
-				$row["Length"] = $formatter->format();
-			}
-			
+
 			$row['CreatedAt'] = $this->enhanceRowDate($row['CreatedAt']);
 			$row['UpdatedAt'] = $this->enhanceRowDate($row['UpdatedAt']);
 		}

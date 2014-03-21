@@ -156,9 +156,9 @@ class Application_Form_PlaylistRules extends Zend_Form
     {
     	$this->setDecorators(array(
     		array('ViewScript', array(
-    				'viewScript' => 'form/playlist-rules.phtml',
-    				'suffixes' => &$this->_suffixes
-    			))
+    			'viewScript' => 'form/playlist-rules.phtml',
+    			'suffixes' => &$this->_suffixes
+    		))
     	));
     	
     	$repeatTracks = new Zend_Form_Element_Checkbox('pl_repeat_tracks');
@@ -214,13 +214,10 @@ class Application_Form_PlaylistRules extends Zend_Form
     		
     		case "n":
     			return $this->getNumericCriteriaOptions();
-    			break;
     		case "s":
     			return $this->getStringCriteriaOptions();
-    			break;
     		case "d":
-    			return array_push($this->getNumericCriteriaOptions(), $this->getRelativeDateCriteriaOptions());
-    			break;
+    			return $this->getNumericCriteriaOptions() + $this->getRelativeDateCriteriaOptions();
     		default:
     			return $this->getDefaultCriteriaOptions();
     	}

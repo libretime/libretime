@@ -388,15 +388,16 @@ class Application_Service_HistoryService
 					$scheduledItem->setDbBroadcasted(1);
 					
 					$mediaItem = $scheduledItem->getMediaItem($this->con);
+					$media = $mediaItem->getChildObject();
 						
 					//set a 'last played' timestamp for media item
 					$utcNow = new DateTime("now", new DateTimeZone("UTC"));
-					$mediaItem->setLastPlayedTime($utcNow);
+					$media->setLastPlayedTime($utcNow);
 					
 					$playcount = $mediaItem->getPlayCount();
-					$mediaItem->setPlayCount($playcount + 1);
+					$media->setPlayCount($playcount + 1);
 					
-					$mediaItem->save($this->con);
+					$media->save($this->con);
 					$scheduledItem->save($this->con);
 					
 					$type = $mediaItem->getType();

@@ -12,6 +12,11 @@ use Airtime\MediaItemQuery;
 
 abstract class Application_Service_DatatableService
 {
+	//format classes used to manipulate data for presentation.
+	protected $_formatters = array(
+
+	);
+	
 	public function __construct() {
 		
 		$this->columns = $this->getColumns();
@@ -300,13 +305,21 @@ abstract class Application_Service_DatatableService
 		);
 	}
 	
-	protected function makeArray(&$array, &$getters, $obj) {
+	protected function makeArray(&$array, &$getters, $obj, $formatter=null) {
 	
 		$key = array_shift($getters);
 		$method = "get{$key}";
 	
 		if (count($getters) == 0) {
-			$array[$key] = $obj->$method();
+			
+			if (is_null($formatter)) {
+				$array[$key] = $obj->$method();
+			}
+			else {
+				$class = new $formatter($obj);
+				$array[$key] = $class->$method();
+			}
+
 			return;
 		}
 	
@@ -316,7 +329,7 @@ abstract class Application_Service_DatatableService
 		$a =& $array[$key];
 		$nextObj = $obj->$method();
 	
-		return self::makeArray($a, $getters, $nextObj);
+		return self::makeArray($a, $getters, $nextObj, $formatter);
 	}
 	
 	/*
@@ -332,8 +345,12 @@ abstract class Application_Service_DatatableService
 			$item = array();
 			foreach ($columns as $column) {
 	
+				$formatter = null;
+				if (isset($this->_formatters[$column])) {
+					$formatter = $this->_formatters[$column];
+				}
 				$getters = explode(".", $column);
-				self::makeArray($item, $getters, $media);
+				self::makeArray($item, $getters, $media, $formatter);
 			}
 	
 			$output[] = $item;

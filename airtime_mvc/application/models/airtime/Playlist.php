@@ -10,6 +10,9 @@ use \PropelPDO;
 use \Exception;
 use \Logging;
 use \Propel;
+use \DateTime;
+use \DateTimeZone;
+use \DateInterval;
 
 
 /**
@@ -36,7 +39,35 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 		return $this->getClassKey() === intval(PlaylistPeer::CLASSKEY_0);
 	}
 	
+	/*
+	0 => _("Select modifier"),
+	1 => _("contains"),
+	2 => _("does not contain"),
+	3 => _("is"),
+	4 => _("is not"),
+	5 => _("starts with"),
+	6 => _("ends with")
+	7 => _("is greater than"),
+	8 => _("is less than"),
+	9 => _("is greater than or equal to"),
+	10 => _("is less than or equal to"),
+	11 => _("is in the range")
+	12 => _("today"),
+    13 => _("yesterday"),
+	14 => _("this week"),
+	15 => _("last week"),
+	16 => _("this month"),
+	17 => _("last month"),
+	18 => _("this year"),
+	19 => _("last year"),
+	20 => _("in the last"),
+	21 => _("not in the last")
+	 */
+	
 	protected function getCriteriaRules(&$query) {
+		
+		$displayTimezone = new DateTimeZone(\Application_Model_Preference::GetUserTimezone());
+		$utcTimezone = new DateTimeZone("UTC");
 		
 		//$pattern is like "%VALUE%", or just "VALUE" if % is not needed.
 		function createRule(&$query, $comparison, $pattern = "VALUE") {
@@ -75,6 +106,72 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			return $name3;
 		};
 		
+		$today = function($col) use (&$query, $displayTimezone, $utcTimezone, $range) {
+			
+			$now = new DateTime("now", $displayTimezone);
+			$now->setTime(0, 0, 0);
+			
+			$interval = new DateInterval("P1D");
+			
+			$tomorrow = clone $now;
+			$tomorrow->add($interval);
+			
+			$now->setTimezone($utcTimezone);
+			$tomorrow->setTimezone($utcTimezone);
+			
+			$from = $now->format('Y-m-d H:i:s');
+			$to = $tomorrow->format('Y-m-d H:i:s');
+			
+			return $range($col, $from, $to);
+		};
+		
+		$yesterday = function($col) use (&$query, $displayTimezone, $utcTimezone, $range) {
+				
+			$now = new DateTime("now", $displayTimezone);
+			$now->setTime(0, 0, 0);
+				
+			$interval = new DateInterval("P1D");
+				
+			$yesterday = clone $now;
+			$yesterday->sub($interval);
+				
+			$now->setTimezone($utcTimezone);
+			$yesterday->setTimezone($utcTimezone);
+				
+			$from = $yesterday->format('Y-m-d H:i:s');
+			$to = $now->format('Y-m-d H:i:s');
+				
+			return $range($col, $from, $to);
+		};
+		
+		$thisWeek = function($col) use (&$query, $displayTimezone, $utcTimezone, $range) {
+			
+			//sunday = 0
+			$weekStartDay = intval(\Application_Model_Preference::GetWeekStartDay());
+				
+			$now = new DateTime("now", $displayTimezone);
+			$dofw = intval($now->format("w"));
+			
+			$daysSub = $dofw - $weekStartDay;
+			if ($daysSub < 0) {
+				$daysSub += 7;
+			}
+			
+			$interval = new DateInterval("P{$daysSub}D");
+			
+			$weekStart = clone $now;
+			$weekStart->setTime(0, 0, 0);
+			$weekStart->sub($interval);
+			
+			$now->setTimezone($utcTimezone);
+			$weekStart->setTimezone($utcTimezone);
+			
+			$from = $weekStart->format('Y-m-d H:i:s');
+			$to = $now->format('Y-m-d H:i:s');
+			
+			return $range($col, $from, $to);
+		};
+		
 		$contains = createRule($query, Criteria::ILIKE, "%VALUE%");
 		$doesntContain = createRule($query, Criteria::NOT_ILIKE, "%VALUE%");
 		$is = createRule($query, Criteria::EQUAL);
@@ -98,7 +195,10 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			$isLessThan,
 			$isGreaterThanEqualTo,
 			$isLessThanEqualTo,
-			$range
+			$range,
+			$today,
+			$yesterday,
+			$thisWeek
 		);
 	}
 	
@@ -204,7 +304,7 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
     				$rule = $criteriaRules[$orBlock["modifier"]];
     
     				$column = $orBlock["criteria"];
-    				$input1 = $orBlock["input1"];
+    				$input1 = isset($orBlock["input1"]) ? $orBlock["input1"] : null;
     				$input2 = isset($orBlock["input2"]) ? $orBlock["input2"] : null;
     
     				$condition = $rule($column, $input1, $input2);

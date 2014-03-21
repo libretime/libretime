@@ -54,5 +54,4 @@ class Format_HHMMSSULength
 
         return $time;
     }
-
 }

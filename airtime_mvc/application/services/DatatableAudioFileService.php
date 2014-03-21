@@ -50,6 +50,11 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		"CueLength",
 	);
 	
+	//format classes used to manipulate data for presentation.
+	protected $_formatters = array(
+		"BitRate" => "Format_AudioFileBitRate"	
+	);
+	
 	public function __construct() {
 		
 		parent::__construct();
@@ -386,7 +391,7 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		//add in data for the display columns.
 		foreach ($output as &$row) {
 			$row["Checkbox"] = '<input type="checkbox">';
-			
+
 			$formatter = new Format_HHMMSSULength($row["Cuein"]);
 			$row["Cuein"] = $formatter->format();
 			
@@ -398,9 +403,6 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 			
 			$formatter = new Format_Samplerate($row['SampleRate']);
 			$row['SampleRate'] = $formatter->format();
-			
-			$formatter = new Format_Bitrate($row['BitRate']);
-			$row['BitRate'] = $formatter->format();
 			
 			$row['CreatedAt'] = $this->enhanceRowDate($row['CreatedAt']);
 			$row['UpdatedAt'] = $this->enhanceRowDate($row['UpdatedAt']);
