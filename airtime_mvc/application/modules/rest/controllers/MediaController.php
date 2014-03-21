@@ -156,7 +156,8 @@ class Rest_MediaController extends Zend_Rest_Controller
             //our internal schema. Internally, file path is stored relative to a directory, with the directory
             //as a foreign key to cc_music_dirs.
             if ($requestData["full_path"]) {
-                
+                Application_Model_Preference::updateDiskUsage(filesize($requestData["full_path"]));
+
                 $fullPath = $requestData["full_path"];
                 $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
                 $pos = strpos($fullPath, $storDir);
@@ -196,6 +197,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
             $storedFile = Application_Model_StoredFile($file);
+            Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($storedFile->getFilePath())));
             $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
             $file->delete();
             $this->getResponse()
@@ -373,5 +375,6 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         return $response;
     }
+
 }
 
