@@ -100,7 +100,9 @@ class MetadataAnalyzer(Analyzer):
 
         #Airtime <= 2.5.x nonsense:
         metadata["ftype"] = "audioclip"
+        #Other fields we'll want to set for Airtime:
         metadata["cueout"] = metadata["length"] 
+        metadata["hidden"] = False
 
         return metadata
 

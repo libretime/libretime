@@ -43,7 +43,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         $this->getResponse()
         ->setHttpResponseCode(200)
-        ->appendBody(json_encode($files_array));       
+        ->appendBody(json_encode($files_array));
         
         /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
         $this->getResponse()
@@ -121,8 +121,10 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file->fromArray($this->validateRequestData($this->getRequest()->getPost()));
         $file->setDbOwnerId($this->getOwnerId());
         $now  = new DateTime("now", new DateTimeZone("UTC"));
+        $file->setDbTrackTitle($_FILES["file"]["name"]);
         $file->setDbUtime($now);
         $file->setDbMtime($now);
+        $file->setDbHidden(true);
         $file->save();
         
         $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
@@ -170,7 +172,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                     $file->setDbDirectory(1); //1 corresponds to the default stor/imported directory.
                 }
             }    
-
+            
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);
             $file->save();

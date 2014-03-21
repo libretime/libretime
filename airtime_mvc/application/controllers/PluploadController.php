@@ -2,12 +2,11 @@
 
 class PluploadController extends Zend_Controller_Action
 {
-
     public function init()
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('upload',            'json')
-                    ->addActionContext('uploadFinished',    'json')
+                    ->addActionContext('recent-uploads',     'json')
                     ->initContext();
     }
 
@@ -18,12 +17,14 @@ class PluploadController extends Zend_Controller_Action
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $locale = Application_Model_Preference::GetLocale();
 
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/plupload/plupload.full.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/plupload/jquery.plupload.queue.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/plupload.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/plupload/i18n/'.$locale.'.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headLink()->appendStylesheet($baseUrl.'css/plupload.queue.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/addmedia.css?'.$CC_CONFIG['airtime_version']);
     }
 
     public function uploadAction()
@@ -34,31 +35,43 @@ class PluploadController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
     }
-
-    public function uploadFinishedAction()
+    
+    public function recentUploadsAction()
     {
-        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $filename = $this->_getParam('name');
-        $tempname = $this->_getParam('tempname');
-        $result = Application_Model_StoredFile::importUploadedFile($upload_dir, $filename, $tempname);
-        if (!is_null($result))
-            $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "error" => $result));
+        //$this->dis
+        //( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+        $limit = isset($_GET['iDisplayLength']) ? $_GET['iDisplayLength'] : 10;
+        $rowStart = isset($_GET['iDisplayStart']) ? $_GET['iDisplayStart'] : 0;
         
-        $this->_helper->json->sendJson(array("jsonrpc" => "2.0"));
+        $recentUploads = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
+                            ->orderByDbUtime(Criteria::DESC)
+                            ->offset($rowStart)
+                            ->limit($limit)
+                            ->find();
         
+        $numRecentUploads = $limit;
+        
+        $numTotalRecentUploads = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
+            ->count();
+        
+        //$this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
+        
+        $uploadsArray = array();
+        
+        foreach ($recentUploads as $upload)
+        {
+            $upload->toArray(BasePeer::TYPE_FIELDNAME);
+            //array_push($uploadsArray, $upload); //TODO: $this->sanitizeResponse($upload));
+            
+            //$this->_helper->json->sendJson($upload->asJson());
+            array_push($uploadsArray, $upload->toArray(BasePeer::TYPE_FIELDNAME));
+        }
+        
+
+        $this->view->sEcho = intval($this->getRequest()->getParam('sEcho'));
+        $this->view->iTotalDisplayRecords = $numTotalRecentUploads;
+        //$this->view->iTotalDisplayRecords = $numRecentUploads; //$r["iTotalDisplayRecords"];
+        $this->view->iTotalRecords = $numTotalRecentUploads; //$r["iTotalRecords"];
+        $this->view->files = $uploadsArray; //$r["aaData"];
     }
-    /* FIXME: I renamed this guy to uploadFinishedAction and am just starting to rewrite it to use the new File API.
-     *        -- Albert March 10, 2014
-    public function copyfileAction()
-    {
-        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $filename = $this->_getParam('name');
-        $tempname = $this->_getParam('tempname');
-        $result = Application_Model_StoredFile::copyFileToStor($upload_dir,
-            $filename, $tempname);
-        if (!is_null($result))
-           $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "error" => $result));
-
-        $this->_helper->json->sendJson(array("jsonrpc" => "2.0"));
-    }*/
 }

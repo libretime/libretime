@@ -1,6 +1,7 @@
 $(document).ready(function() {
 	
     var uploader;
+	var self = this;
 
 	$("#plupload_files").pluploadQueue({
 		// General settings
@@ -18,6 +19,13 @@ $(document).ready(function() {
 	uploader = $("#plupload_files").pluploadQueue();
 
 	uploader.bind('FileUploaded', function(up, file, json) {
+
+		var j = jQuery.parseJSON(json.response);
+		console.log(j);
+		console.log(file.name);
+
+		self.recentUploadsTable.fnDraw(); //Only works because we're using bServerSide
+		//In DataTables 1.10 and greater, we can use .fnAjaxReload()
 
 		/*
 		var j = jQuery.parseJSON(json.response);
@@ -52,7 +60,7 @@ $(document).ready(function() {
 	var uploadProgress = false;
 	
 	uploader.bind('QueueChanged', function(){
-        uploadProgress = (uploader.files.length > 0)
+        uploadProgress = (uploader.files.length > 0);
  	});
 	
 	uploader.bind('UploadComplete', function(){
@@ -65,5 +73,32 @@ $(document).ready(function() {
                     "\n", "\n");
 		}
 	});
+	
+	self.setupRecentUploadsTable = function() {
+		return recentUploadsTable = $("#recent_uploads_table").dataTable({
+            "bJQueryUI": true,
+			"bProcessing": false,
+			"bServerSide": true,
+			"sAjaxSource": '/Plupload/recent-uploads/format/json',
+			"sAjaxDataProp": 'files',
+			"bSearchable": false,
+			"bInfo": true,
+			"sScrollY": "200px",
+			"bFilter": false,
+			"bSort": false,
+			"sDom": '<"H"l>frtip',
+			"bPaginate" : true,
+            "sPaginationType": "full_numbers",
+			"aoColumns": [
+	   		   { "mData" : "artist_name", "sTitle" : $.i18n._("Creator") },
+			   { "mData" : "track_title", "sTitle" : $.i18n._("Title") },
+			   { "mData" : "state", "sTitle" : $.i18n._("Import Status")},
+			   { "mData" : "utime", "sTitle" : $.i18n._("Uploaded") }
+			 ]
+		});
+	};
+	self.recentUploadsTable = self.setupRecentUploadsTable();
+
+	$("#recent_uploads_table.div.fg-toolbar").prepend('<b>Custom tool bar! Text/images etc.</b>');
 
 });
