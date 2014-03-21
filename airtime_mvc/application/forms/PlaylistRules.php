@@ -36,6 +36,10 @@ class Application_Form_PlaylistRules extends Zend_Form
 		"Year" => "n"
 	);
 	
+	private $_zeroInputRule = array(0, 12, 13, 14, 15, 16, 17, 18, 19);
+	private $_oneInputRule = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 21);
+	private $_twoInputRule = array(11);
+	
 	private function getCriteriaOptions()
     {
 		return array(
@@ -290,7 +294,6 @@ class Application_Form_PlaylistRules extends Zend_Form
     	
     	$critKey = self::buildRuleCriteria($suffix);
     	$modKey = self::buildRuleModifier($suffix, $options);
-    	$inputKey = self::buildRuleInput($suffix);
     	
     	if (isset($info)) {
     		
@@ -301,14 +304,19 @@ class Application_Form_PlaylistRules extends Zend_Form
     		if (isset($info["modifier"])) {
     			$this->_populateHelp[$modKey] = $info["modifier"];
     		}
-
+    	}
+    	
+    	//this extra field is only required for range conditions.
+    	if (isset($info) && in_array($info["modifier"], $this->_oneInputRule)) {
+    		$inputKey = self::buildRuleInput($suffix);
+    	
     		if (isset($info["input1"])) {
     			$this->_populateHelp[$inputKey] = $info["input1"];
     		}
     	}
     	
     	//this extra field is only required for range conditions.
-    	if (isset($info) && intval($info["modifier"]) === 11) {
+    	if (isset($info) && in_array($info["modifier"], $this->_twoInputRule)) {
     		$extraKey = self::buildRuleExtra($suffix);
     		
     		if (isset($info["input2"])) {

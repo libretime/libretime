@@ -19,7 +19,12 @@
     			<?php $suffix = $option["suffixes"][$i][$j]; ?>
 	        	<?php echo $this->element->getElement("sp_criteria_field_{$suffix}") ?>
 	            <?php echo $this->element->getElement("sp_criteria_modifier_{$suffix}") ?>
-	            <?php echo $this->element->getElement("sp_criteria_value_{$suffix}") ?>
+
+	            <?php $input = $this->element->getElement("sp_criteria_value_{$suffix}") ?>
+	            <?php if(isset($input)): ?>
+	            <?php echo $input; ?>
+	            <?php endif; ?>
+	            
 	            <?php $extra = $this->element->getElement("sp_criteria_extra_{$suffix}") ?>
 	            <?php if(isset($extra)): ?>
 	            <span class='sp_text_font' id="extra_criteria"><?php echo _("to"); ?>
