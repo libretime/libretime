@@ -141,8 +141,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             if (Application_Model_Preference::GetLiveChatEnabled()) {
                 $client_id = Application_Model_Preference::GetClientId();
                 $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
+                $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');  
             }
-            $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         }
 
         if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) {
