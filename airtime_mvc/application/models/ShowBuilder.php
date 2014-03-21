@@ -331,9 +331,13 @@ class Application_Model_ShowBuilder
     			$row["album"] = htmlspecialchars($mediaItem->getSource());
     			$row["mime"] = $mediaItem->getMime();
     		
-    			$row["cuein"] = $scheduledItem->getDbCueIn();
-    			$row["cueout"] = $scheduledItem->getDbCueOut();
-    			$row['runtime'] = $scheduledItem->getDbClipLength();
+    			$formatter = new Format_HHMMSSULength($scheduledItem->getDbCueIn());
+    			$row["cuein"] = $formatter->format();
+    			$formatter = new Format_HHMMSSULength($scheduledItem->getDbCueOut());
+    			$row["cueout"] = $formatter->format();
+    			$formatter = new Format_HHMMSSULength($scheduledItem->getDbClipLength());
+    			$row["runtime"] = $formatter->format();
+    			
     			$row["fadein"] = $scheduledItem->getDbFadeIn();
     			$row["fadeout"] = $scheduledItem->getDbFadeOut();
     			

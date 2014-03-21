@@ -121,7 +121,7 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkTrimButton = function() {
-        var $over = $sbTable.find(".sb-over.sb-allowed"),
+        var $over = $sbTable.find(".sb-over.sb-allowed").not(".sb-past"),
         	$button = $(".sb-overbooked");
         
         if ($over.length !== 0) {
