@@ -38,19 +38,28 @@ class PluploadController extends Zend_Controller_Action
     
     public function recentUploadsAction()
     {
-        //$this->dis
-        //( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+        if (isset($_GET['uploadFilter'])) {
+            $filter = $_GET['uploadFilter'];
+        } else {
+            $filter = "all";
+        }
+        
         $limit = isset($_GET['iDisplayLength']) ? $_GET['iDisplayLength'] : 10;
         $rowStart = isset($_GET['iDisplayStart']) ? $_GET['iDisplayStart'] : 0;
         
-        $recentUploads = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
+        $recentUploadsQuery = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
                             ->orderByDbUtime(Criteria::DESC)
                             ->offset($rowStart)
-                            ->limit($limit)
-                            ->find();
+                            ->limit($limit);
+        
+        if ($filter == "pending") {
+            $recentUploadsQuery->filterByDbImportStatus("1");
+        } else if ($filter == "failed") {
+            $recentUploadsQuery->filterByDbImportStatus(array('min' => 100));
+        }
+        $recentUploads = $recentUploadsQuery->find();
         
         $numRecentUploads = $limit;
-        
         $numTotalRecentUploads = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
             ->count();
         
@@ -64,6 +73,7 @@ class PluploadController extends Zend_Controller_Action
             //array_push($uploadsArray, $upload); //TODO: $this->sanitizeResponse($upload));
             
             //$this->_helper->json->sendJson($upload->asJson());
+            //TODO: Invoke sanitization here
             array_push($uploadsArray, $upload->toArray(BasePeer::TYPE_FIELDNAME));
         }
         

@@ -36,7 +36,7 @@ CREATE TABLE "cc_files"
 	"ftype" VARCHAR(128) default '' NOT NULL,
 	"directory" INTEGER,
 	"filepath" TEXT default '',
-	"state" VARCHAR(128) default 'empty' NOT NULL,
+	"import_status" INTEGER default 0 NOT NULL,
 	"currentlyaccessing" INTEGER default 0 NOT NULL,
 	"editedby" INTEGER,
 	"mtime" TIMESTAMP(6),

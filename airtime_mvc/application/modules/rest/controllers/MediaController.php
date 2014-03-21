@@ -198,7 +198,8 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
-            $storedFile = Application_Model_StoredFile($file);
+            $con = Propel::getConnection();
+            $storedFile = new Application_Model_StoredFile($file, $con);
             Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($storedFile->getFilePath())));
             $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
             $file->delete();

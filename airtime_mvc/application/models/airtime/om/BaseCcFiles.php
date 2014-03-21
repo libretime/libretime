@@ -65,11 +65,11 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $filepath;
 
 	/**
-	 * The value for the state field.
-	 * Note: this column has a database default value of: 'empty'
-	 * @var        string
+	 * The value for the import_status field.
+	 * Note: this column has a database default value of: 0
+	 * @var        int
 	 */
-	protected $state;
+	protected $import_status;
 
 	/**
 	 * The value for the currentlyaccessing field.
@@ -524,7 +524,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->mime = '';
 		$this->ftype = '';
 		$this->filepath = '';
-		$this->state = 'empty';
+		$this->import_status = 0;
 		$this->currentlyaccessing = 0;
 		$this->length = '00:00:00';
 		$this->file_exists = true;
@@ -607,13 +607,13 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	}
 
 	/**
-	 * Get the [state] column value.
+	 * Get the [import_status] column value.
 	 * 
-	 * @return     string
+	 * @return     int
 	 */
-	public function getDbState()
+	public function getDbImportStatus()
 	{
-		return $this->state;
+		return $this->import_status;
 	}
 
 	/**
@@ -1463,24 +1463,24 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbFilepath()
 
 	/**
-	 * Set the value of [state] column.
+	 * Set the value of [import_status] column.
 	 * 
-	 * @param      string $v new value
+	 * @param      int $v new value
 	 * @return     CcFiles The current object (for fluent API support)
 	 */
-	public function setDbState($v)
+	public function setDbImportStatus($v)
 	{
 		if ($v !== null) {
-			$v = (string) $v;
+			$v = (int) $v;
 		}
 
-		if ($this->state !== $v || $this->isNew()) {
-			$this->state = $v;
-			$this->modifiedColumns[] = CcFilesPeer::STATE;
+		if ($this->import_status !== $v || $this->isNew()) {
+			$this->import_status = $v;
+			$this->modifiedColumns[] = CcFilesPeer::IMPORT_STATUS;
 		}
 
 		return $this;
-	} // setDbState()
+	} // setDbImportStatus()
 
 	/**
 	 * Set the value of [currentlyaccessing] column.
@@ -2892,7 +2892,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return false;
 			}
 
-			if ($this->state !== 'empty') {
+			if ($this->import_status !== 0) {
 				return false;
 			}
 
@@ -2960,7 +2960,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->ftype = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
 			$this->directory = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
 			$this->filepath = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-			$this->state = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+			$this->import_status = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
 			$this->currentlyaccessing = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
 			$this->editedby = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
 			$this->mtime = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
@@ -3502,7 +3502,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return $this->getDbFilepath();
 				break;
 			case 6:
-				return $this->getDbState();
+				return $this->getDbImportStatus();
 				break;
 			case 7:
 				return $this->getDbCurrentlyaccessing();
@@ -3723,7 +3723,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[3] => $this->getDbFtype(),
 			$keys[4] => $this->getDbDirectory(),
 			$keys[5] => $this->getDbFilepath(),
-			$keys[6] => $this->getDbState(),
+			$keys[6] => $this->getDbImportStatus(),
 			$keys[7] => $this->getDbCurrentlyaccessing(),
 			$keys[8] => $this->getDbEditedby(),
 			$keys[9] => $this->getDbMtime(),
@@ -3848,7 +3848,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->setDbFilepath($value);
 				break;
 			case 6:
-				$this->setDbState($value);
+				$this->setDbImportStatus($value);
 				break;
 			case 7:
 				$this->setDbCurrentlyaccessing($value);
@@ -4069,7 +4069,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[3], $arr)) $this->setDbFtype($arr[$keys[3]]);
 		if (array_key_exists($keys[4], $arr)) $this->setDbDirectory($arr[$keys[4]]);
 		if (array_key_exists($keys[5], $arr)) $this->setDbFilepath($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbState($arr[$keys[6]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbImportStatus($arr[$keys[6]]);
 		if (array_key_exists($keys[7], $arr)) $this->setDbCurrentlyaccessing($arr[$keys[7]]);
 		if (array_key_exists($keys[8], $arr)) $this->setDbEditedby($arr[$keys[8]]);
 		if (array_key_exists($keys[9], $arr)) $this->setDbMtime($arr[$keys[9]]);
@@ -4150,7 +4150,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::FTYPE)) $criteria->add(CcFilesPeer::FTYPE, $this->ftype);
 		if ($this->isColumnModified(CcFilesPeer::DIRECTORY)) $criteria->add(CcFilesPeer::DIRECTORY, $this->directory);
 		if ($this->isColumnModified(CcFilesPeer::FILEPATH)) $criteria->add(CcFilesPeer::FILEPATH, $this->filepath);
-		if ($this->isColumnModified(CcFilesPeer::STATE)) $criteria->add(CcFilesPeer::STATE, $this->state);
+		if ($this->isColumnModified(CcFilesPeer::IMPORT_STATUS)) $criteria->add(CcFilesPeer::IMPORT_STATUS, $this->import_status);
 		if ($this->isColumnModified(CcFilesPeer::CURRENTLYACCESSING)) $criteria->add(CcFilesPeer::CURRENTLYACCESSING, $this->currentlyaccessing);
 		if ($this->isColumnModified(CcFilesPeer::EDITEDBY)) $criteria->add(CcFilesPeer::EDITEDBY, $this->editedby);
 		if ($this->isColumnModified(CcFilesPeer::MTIME)) $criteria->add(CcFilesPeer::MTIME, $this->mtime);
@@ -4280,7 +4280,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbFtype($this->ftype);
 		$copyObj->setDbDirectory($this->directory);
 		$copyObj->setDbFilepath($this->filepath);
-		$copyObj->setDbState($this->state);
+		$copyObj->setDbImportStatus($this->import_status);
 		$copyObj->setDbCurrentlyaccessing($this->currentlyaccessing);
 		$copyObj->setDbEditedby($this->editedby);
 		$copyObj->setDbMtime($this->mtime);
@@ -5328,7 +5328,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->ftype = null;
 		$this->directory = null;
 		$this->filepath = null;
-		$this->state = null;
+		$this->import_status = null;
 		$this->currentlyaccessing = null;
 		$this->editedby = null;
 		$this->mtime = null;

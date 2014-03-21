@@ -15,7 +15,7 @@ Usage
 This program must run as a user with permissions to write to your Airtime music library
 directory. For standard Airtime installations, run it as the www-data user:
 
-    $ sudo -u www-data airtime_analyzer --debug
+    $ sudo -u www-data airtime_analyzer --daemon
    
 Or during development, add the --debug flag for more verbose output:
 
