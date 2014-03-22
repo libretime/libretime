@@ -10,9 +10,12 @@ class MetadataAnalyzer(Analyzer):
         pass
 
     @staticmethod
-    def analyze(filename):
+    def analyze(filename, metadata):
+        if not isinstance(filename, unicode):
+            raise TypeError("filename must be unicode. Was of type " + type(filename).__name__)
+        if not isinstance(metadata, dict):
+            raise TypeError("metadata must be a dict. Was of type " + type(metadata).__name__)
 
-        metadata = dict()
         #Extract metadata from an audio file using mutagen
         audio_file = mutagen.File(filename, easy=True)
 

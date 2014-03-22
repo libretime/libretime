@@ -48,20 +48,20 @@ class PluploadController extends Zend_Controller_Action
         $rowStart = isset($_GET['iDisplayStart']) ? $_GET['iDisplayStart'] : 0;
         
         $recentUploadsQuery = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
-                            ->orderByDbUtime(Criteria::DESC)
-                            ->offset($rowStart)
-                            ->limit($limit);
+                            ->orderByDbUtime(Criteria::DESC);
+        
+        $numTotalRecentUploads = $recentUploadsQuery->find()->count();
         
         if ($filter == "pending") {
             $recentUploadsQuery->filterByDbImportStatus("1");
         } else if ($filter == "failed") {
             $recentUploadsQuery->filterByDbImportStatus(array('min' => 100));
         }
-        $recentUploads = $recentUploadsQuery->find();
+        
+        $recentUploads = $recentUploadsQuery->offset($rowStart)->limit($limit)->find();
         
         $numRecentUploads = $limit;
-        $numTotalRecentUploads = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
-            ->count();
+        //CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
         
         //$this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
         

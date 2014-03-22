@@ -114,8 +114,8 @@ class MessageListener:
             #
             # TODO: If the JSON was invalid or the web server is down, 
             #       then don't report that failure to the REST API
-            
-            StatusReporter.report_failure_to_callback_url(callback_url, api_key, error_status=1,
+            #TODO: Catch exceptions from this HTTP request too:
+            StatusReporter.report_failure_to_callback_url(callback_url, api_key, import_status=2,
                                                           reason=u'An error occurred while importing this file')
             
             logging.exception(e)

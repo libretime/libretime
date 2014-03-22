@@ -3,6 +3,16 @@ $(document).ready(function() {
     var uploader;
 	var self = this;
 	self.uploadFilter = "all";
+	
+	self.IMPORT_STATUS_CODES = {
+		0 : { message: $.i18n._("Successfully imported")},
+		1 : { message: $.i18n._("Pending import")},
+		2 : { message: $.i18n._("Import failed.")},
+		UNKNOWN : { message: $.i18n._("Unknown")}
+	};
+	if (Object.freeze) {
+		Object.freeze(self.IMPORT_STATUS_CODES);
+	}
 
 	$("#plupload_files").pluploadQueue({
 		// General settings
@@ -47,17 +57,13 @@ $(document).ready(function() {
 			console.log("Invalid data type for the import_status.");
 			return;
 		}
-		var statusStr = $.i18n._("Unknown");
-		if (data == 0)
-		{
-			statusStr = $.i18n._("Successfully imported");
-		} 
-		else if (data == 1)
-		{
-			statusStr = $.i18n._("Pending import");
-		}
+		var statusStr = self.IMPORT_STATUS_CODES.UNKNOWN.message;
+		var importStatusCode = data;
+		if (self.IMPORT_STATUS_CODES[importStatusCode]) {
+			statusStr = self.IMPORT_STATUS_CODES[importStatusCode].message;
+		};
 	
-         return statusStr;
+        return statusStr;
     };
     
 	self.renderFileActions = function ( data, type, full ) {
@@ -114,11 +120,47 @@ $(document).ready(function() {
 				aoData.push( { "name": "uploadFilter", "value": self.uploadFilter } );
 				$.getJSON( sSource, aoData, function (json) { 
 					fnCallback(json);
+					if (json.files) {
+						var areAnyFileImportsPending = false;
+						for (var i = 0; i < json.files.length; i++) {
+							//console.log(file);
+							var file = json.files[i];
+							if (file.import_status == 1)
+							{
+								areAnyFileImportsPending = true;
+							}
+						}
+						if (areAnyFileImportsPending) {
+							//alert("pending uploads, starting refresh on timer");
+							self.startRefreshingRecentUploads();
+						} else {
+							self.stopRefreshingRecentUploads();
+						}
+					}
 				} );
 			 }
 		});
 		
 		return recentUploadsTable;
+	};
+	
+	self.startRefreshingRecentUploads = function()
+	{
+		if (self.isRecentUploadsRefreshTimerActive()) { //Prevent multiple timers from running
+			return;
+		}
+		self.recentUploadsRefreshTimer = setTimeout("self.recentUploadsTable.fnDraw()", 3000);
+	};
+	
+	self.isRecentUploadsRefreshTimerActive = function()
+	{
+		return (self.recentUploadsRefreshTimer != null);
+	};
+	
+	self.stopRefreshingRecentUploads = function()
+	{
+		clearTimeout(self.recentUploadsRefreshTimer);
+		self.recentUploadsRefreshTimer = null;
 	};
 	
 	$("#upload_status_all").click(function() {

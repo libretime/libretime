@@ -7,7 +7,6 @@ class Rest_MediaController extends Zend_Rest_Controller
     private $blackList = array(
         'id',
         'file_exists',
-        'hidden',
         'silan_check',
         'soundcloud_id',
         'is_scheduled',
@@ -17,7 +16,6 @@ class Rest_MediaController extends Zend_Rest_Controller
     //fields we should never expose through our RESTful API
     private $privateFields = array(
         'file_exists',
-        'hidden',
         'silan_check',
         'is_scheduled',
         'is_playlist'
