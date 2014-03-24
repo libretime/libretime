@@ -301,7 +301,9 @@ SQL;
     public static function getDirByPK($pk)
     {
         $dir = CcMusicDirsQuery::create()->findPK($pk);
-
+        if (!$dir) {
+            return null;
+        }
         $mus_dir = new Application_Model_MusicDir($dir);
 
         return $mus_dir;
