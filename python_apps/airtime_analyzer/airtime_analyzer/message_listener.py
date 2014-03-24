@@ -100,6 +100,7 @@ class MessageListener:
                                requeue=False) #Important that it doesn't requeue the message
         
         except Exception as e:
+            logging.exception(e)
             #If ANY exception happens while processing a file, we're going to NACK to the 
             #messaging server and tell it to remove the message from the queue. 
             #(NACK is a negative acknowledgement. We could use ACK instead, but this might come
@@ -118,7 +119,6 @@ class MessageListener:
             StatusReporter.report_failure_to_callback_url(callback_url, api_key, import_status=2,
                                                           reason=u'An error occurred while importing this file')
             
-            logging.exception(e)
 
         else:
             # ACK at the very end, after the message has been successfully processed.

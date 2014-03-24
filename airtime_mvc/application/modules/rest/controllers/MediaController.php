@@ -155,7 +155,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
             //our internal schema. Internally, file path is stored relative to a directory, with the directory
             //as a foreign key to cc_music_dirs.
-            if ($requestData["full_path"]) {
+            if (isset($requestData["full_path"])) {
                 Application_Model_Preference::updateDiskUsage(filesize($requestData["full_path"]));
 
                 $fullPath = $requestData["full_path"];

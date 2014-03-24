@@ -15,9 +15,9 @@ class StatusReporter():
         put_payload = json.dumps(audio_metadata)
         logging.debug("sending http put with payload: " + put_payload)
         r = requests.put(callback_url, data=put_payload, 
-                         auth=requests.auth.httpbasicauth(api_key, ''),
-                         timeout=statusreporter._http_request_timeout)
-        logging.debug("http request returned status: " + str(r.status_code))
+                         auth=requests.auth.HTTPBasicAuth(api_key, ''),
+                         timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
+        logging.debug("HTTP request returned status: " + str(r.status_code))
         logging.debug(r.text) # log the response body
 
         #todo: queue up failed requests and try them again later.
@@ -28,16 +28,17 @@ class StatusReporter():
         # TODO: Make import_status is an int?
       
         logging.debug("Reporting import failure to Airtime REST API...")
+        audio_metadata = dict()
         audio_metadata["import_status"] = import_status
         audio_metadata["comment"] = reason  # hack attack
         put_payload = json.dumps(audio_metadata)
         logging.debug("sending http put with payload: " + put_payload)
         r = requests.put(callback_url, data=put_payload, 
-                         auth=requests.auth.httpbasicauth(api_key, ''),
-                         timeout=statusreporter._http_request_timeout)
-        logging.debug("http request returned status: " + str(r.status_code))
+                         auth=requests.auth.HTTPBasicAuth(api_key, ''),
+                         timeout=StatusReporter._HTTP_REQUEST_TIMEOUT)
+        logging.debug("HTTP request returned status: " + str(r.status_code))
         logging.debug(r.text) # log the response body
 
-        #todo: queue up failed requests and try them again later.
+        #TODO: queue up failed requests and try them again later.
         r.raise_for_status() # raise an exception if there was an http error code returned
 
