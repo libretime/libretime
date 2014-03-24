@@ -356,7 +356,6 @@ class LibraryController extends Zend_Controller_Action
 
             if (isset($file)) {
                 try {
-                    Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($file->getFilePath())));
                     $res = $file->delete();
                 } catch (FileNoPermissionException $e) {
                     $message = $noPermissionMsg;

@@ -346,6 +346,21 @@ SQL;
             return array();
         }
     }
+    
+    /** 
+     * Check if the file (on disk) corresponding to this class exists or not.
+     * @return boolean true if the file exists, false otherwise.
+     */
+    public function existsOnDisk()
+    {
+        $exists = false;
+        try {
+            $exists = file_exists($this->getFilePath());
+        } catch (Exception $e) {
+            return false;
+        }
+        return $exists;
+    }
 
     /**
      * Delete stored virtual file
@@ -355,8 +370,11 @@ SQL;
      */
     public function delete()
     {
-
         $filepath = $this->getFilePath();
+        
+        //Update the user's disk usage
+        Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($filepath)));
+        
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
@@ -370,8 +388,10 @@ SQL;
         }
 
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        assert($music_dir);
         $type = $music_dir->getType();
-
+        
+        
         if (file_exists($filepath) && $type == "stor") {
             $data = array("filepath" => $filepath, "delete" => 1);
             try {
@@ -473,8 +493,13 @@ SQL;
      */
     public function getFilePath()
     {
+        assert($this->_file);
+        
         $music_dir = Application_Model_MusicDir::getDirByPK($this->
             _file->getDbDirectory());
+        if (!$music_dir) {
+            throw new Exception("Invalid music_dir for file in database.");
+        }
         $directory = $music_dir->getDirectory();
         $filepath  = $this->_file->getDbFilepath();
 

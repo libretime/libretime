@@ -198,8 +198,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         if ($file) {
             $con = Propel::getConnection();
             $storedFile = new Application_Model_StoredFile($file, $con);
-            Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($storedFile->getFilePath())));
-            $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
+            if ($storedFile->existsOnDisk()) {
+                $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
+            }
             $file->delete();
             $this->getResponse()
                 ->setHttpResponseCode(204);
