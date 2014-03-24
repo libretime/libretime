@@ -25,12 +25,23 @@
 	            <?php echo $input; ?>
 	            <?php endif; ?>
 	            
+	            <?php $unit1 = $this->element->getElement("sp_rel_date_unit_1_{$suffix}") ?>
+	            <?php if(isset($unit1)): ?>
+	            <?php echo $unit1; ?>
+	            <?php endif; ?>
+	            
 	            <?php $extra = $this->element->getElement("sp_criteria_extra_{$suffix}") ?>
 	            <?php if(isset($extra)): ?>
 	            <span class='sp_text_font' id="extra_criteria"><?php echo _("to"); ?>
 	            	<?php echo $extra; ?>
 	            </span>
 	            <?php endif; ?>
+	            
+	            <?php $unit2 = $this->element->getElement("sp_rel_date_unit_2_{$suffix}") ?>
+	            <?php if(isset($unit2)): ?>
+	            <?php echo $unit2; ?>
+	            <?php endif; ?>
+	            
 	            <a class='btn btn-small btn-danger'>
 	                <i class='icon-white icon-remove'></i>
 	            </a>

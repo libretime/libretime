@@ -17,16 +17,26 @@ var AIRTIME = (function(AIRTIME){
 			'<% if (input) { %>' +
 				'<input class="input_text sp_input_text"></input>' +
 			'<% } %>' +
+			'<% if (relDateOptions) { %>' +
+				'<select class="input_select sp_input_select sp_rule_unit sp_rule_unit_1">'+
+					'<%= relDateOptions %>'+
+				'</select>' +
+				'<% if (relDateOptions && !range) { %>' +
+					'<a class="btn btn-small btn-range">' +
+					    '<span>'+$.i18n._("TO")+'</span>' +
+					'</a>' +
+				'<% } %>' +
+			'<% } %>' +
 			'<% if (range) { %>' +
 				'<span class="sp_text_font" id="extra_criteria">' +	            	
 					$.i18n._("to") + 
 					'<input class="input_text sp_extra_input_text"></input>' +
 				'</span>' +
-			'<% } %>' +
-			'<% if (relDateOptions) { %>' +
-				'<select class="input_select sp_input_select sp_rule_unit">'+
-					'<%= relDateOptions %>'+
-				'</select>' +
+				'<% if (relDateOptions) { %>' +
+					'<select class="input_select sp_input_select sp_rule_unit sp_rule_unit_2">'+
+						'<%= relDateOptions %>'+
+					'</select>' +
+				'<% } %>' +
 			'<% } %>' +
 			'<a class="btn btn-small btn-danger">' +
 				'<i class="icon-white icon-remove"></i>' +
@@ -86,8 +96,7 @@ var AIRTIME = (function(AIRTIME){
 	    4 : $.i18n._("days"),
 		5 : $.i18n._("weeks"),
 		6 : $.i18n._("months"),
-		7 : $.i18n._("years"),
-		8 : $.i18n._("hh:mm(:ss)")
+		7 : $.i18n._("years")
 	};
 	
 	// We need to know if the criteria value will be a string
@@ -391,7 +400,8 @@ var AIRTIME = (function(AIRTIME){
 			$row,
 			$input,
 			$extra,
-			$unit;
+			$unit1,
+			$unit2;
 		
 		for (i = 0, lenAnd = $andBlocks.length; i < lenAnd; i++) {
 			criteria[i] = [];
@@ -401,14 +411,16 @@ var AIRTIME = (function(AIRTIME){
 				$row = $($nodes[j]);
 				$input = $row.find("input.sp_input_text");
 				$extra = $row.find("input.sp_extra_input_text");
-				$unit = $row.find("select.sp_rule_unit");
+				$unit1 = $row.find("select.sp_rule_unit_1");
+				$unit2 = $row.find("select.sp_rule_unit_2");
 				
 				criteria[i].push({
 					"criteria": $row.find("select.rule_criteria").val(),
 					"modifier": $row.find("select.rule_modifier").val(),
 					"input1": $input ? $input.val() : null,
 					"input2": $extra ? $extra.val() : null,
-					"unit": $unit ? $unit.val() : null,
+					"unit1": $unit1 ? $unit1.val() : null,
+					"unit2": $unit2 ? $unit2.val() : null
 				});
 			}
 		}
@@ -640,8 +652,23 @@ var AIRTIME = (function(AIRTIME){
 			
 			$modifier = $(this);
 			$select = $modifier.parents("div.pl-criteria-row").find(".rule_criteria");
-			
+
 			$el = createCriteriaRow($select.val(), $modifier.val());
+			$select.parents("div.pl-criteria-row").replaceWith($el);	
+		});
+		
+		$playlist.on("click", ".btn-range", function(e) {
+			var $select,
+				$modifier,
+				$el,
+				$row = $(this).parents("div.pl-criteria-row");
+			
+			e.preventDefault();
+			
+			$modifier = $row.find(".rule_modifier");
+			$select = $row.find(".rule_criteria");
+			
+			$el = createCriteriaRow($select.val(), $modifier.val(), {range: true});
 			$select.parents("div.pl-criteria-row").replaceWith($el);	
 		});
 		

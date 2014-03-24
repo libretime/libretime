@@ -66,8 +66,59 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 	
 	protected function getCriteriaRules(&$query) {
 		
+		/*
+		 * @param DateTime $now
+		*/
+		$getWeekStartDateTime = function ($now) {
+			//sunday = 0
+			$weekStartDay = intval(\Application_Model_Preference::GetWeekStartDay());
+		
+			$dofw = intval($now->format("w"));
+				
+			$daysSub = $dofw - $weekStartDay;
+			if ($daysSub < 0) {
+				$daysSub += 7;
+			}
+				
+			$interval = new DateInterval("P{$daysSub}D");
+				
+			$weekStart = clone $now;
+			$weekStart->setTime(0, 0, 0);
+			$weekStart->sub($interval);
+		
+			return $weekStart;
+		};
+		
+		/*
+		 * @param DateTime $now
+		*/
+		$getMonthStartDateTime = function ($now) {
+			$monthStart = clone $now;
+			
+			$year = intval($monthStart->format("Y"));
+			$month = intval($monthStart->format("m"));
+			$monthStart->setDate($year, $month, 1);
+			$monthStart->setTime(0, 0, 0);
+		
+			return $monthStart;
+		};
+		
+		/*
+		 * @param DateTime $now
+		*/
+		$getYearStartDateTime = function ($now) {
+			$yearStart = clone $now;
+				
+			$year = intval($yearStart->format("Y"));
+			$yearStart->setDate($year, 1, 1);
+			$yearStart->setTime(0, 0, 0);
+		
+			return $yearStart;
+		};
+		
 		$displayTimezone = new DateTimeZone(\Application_Model_Preference::GetUserTimezone());
 		$utcTimezone = new DateTimeZone("UTC");
+		$now = new DateTime("now", $displayTimezone);
 		
 		//$pattern is like "%VALUE%", or just "VALUE" if % is not needed.
 		function createRule(&$query, $comparison, $pattern = "VALUE") {
@@ -83,6 +134,17 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 				return $name;
 			};
 		}
+		
+		$contains = createRule($query, Criteria::ILIKE, "%VALUE%");
+		$doesntContain = createRule($query, Criteria::NOT_ILIKE, "%VALUE%");
+		$is = createRule($query, Criteria::EQUAL);
+		$isNot = createRule($query, Criteria::NOT_EQUAL);
+		$startsWith = createRule($query, Criteria::ILIKE, "VALUE%");
+		$endsWith = createRule($query, Criteria::ILIKE, "%VALUE");
+		$isGreaterThan = createRule($query, Criteria::GREATER_THAN);
+		$isLessThan = createRule($query, Criteria::LESS_THAN);
+		$isGreaterThanEqualTo = createRule($query, Criteria::GREATER_EQUAL);
+		$isLessThanEqualTo = createRule($query, Criteria::LESS_EQUAL);
 		
 		$range = function ($col, $value1, $value2) use (&$query) {
 			
@@ -106,11 +168,9 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			return $name3;
 		};
 		
-		$today = function($col) use (&$query, $displayTimezone, $utcTimezone, $range) {
+		$today = function($col) use (&$query, $utcTimezone, $now, $range) {
 			
-			$now = new DateTime("now", $displayTimezone);
 			$now->setTime(0, 0, 0);
-			
 			$interval = new DateInterval("P1D");
 			
 			$tomorrow = clone $now;
@@ -125,11 +185,9 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			return $range($col, $from, $to);
 		};
 		
-		$yesterday = function($col) use (&$query, $displayTimezone, $utcTimezone, $range) {
-				
-			$now = new DateTime("now", $displayTimezone);
-			$now->setTime(0, 0, 0);
-				
+		$yesterday = function($col) use (&$query, $utcTimezone, $now, $range) {
+			
+			$now->setTime(0, 0, 0);	
 			$interval = new DateInterval("P1D");
 				
 			$yesterday = clone $now;
@@ -144,24 +202,9 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			return $range($col, $from, $to);
 		};
 		
-		$thisWeek = function($col) use (&$query, $displayTimezone, $utcTimezone, $range) {
+		$thisWeek = function($col) use (&$query, $utcTimezone, $now, $range, $getWeekStartDateTime) {
 			
-			//sunday = 0
-			$weekStartDay = intval(\Application_Model_Preference::GetWeekStartDay());
-				
-			$now = new DateTime("now", $displayTimezone);
-			$dofw = intval($now->format("w"));
-			
-			$daysSub = $dofw - $weekStartDay;
-			if ($daysSub < 0) {
-				$daysSub += 7;
-			}
-			
-			$interval = new DateInterval("P{$daysSub}D");
-			
-			$weekStart = clone $now;
-			$weekStart->setTime(0, 0, 0);
-			$weekStart->sub($interval);
+			$weekStart = $getWeekStartDateTime($now);
 			
 			$now->setTimezone($utcTimezone);
 			$weekStart->setTimezone($utcTimezone);
@@ -172,16 +215,102 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			return $range($col, $from, $to);
 		};
 		
-		$contains = createRule($query, Criteria::ILIKE, "%VALUE%");
-		$doesntContain = createRule($query, Criteria::NOT_ILIKE, "%VALUE%");
-		$is = createRule($query, Criteria::EQUAL);
-		$isNot = createRule($query, Criteria::NOT_EQUAL);
-		$startsWith = createRule($query, Criteria::ILIKE, "VALUE%");
-		$endsWith = createRule($query, Criteria::ILIKE, "%VALUE");
-		$isGreaterThan = createRule($query, Criteria::GREATER_THAN);
-		$isLessThan = createRule($query, Criteria::LESS_THAN);
-		$isGreaterThanEqualTo = createRule($query, Criteria::GREATER_EQUAL);
-		$isLessThanEqualTo = createRule($query, Criteria::LESS_EQUAL);
+		$lastWeek = function($col) use (&$query, $utcTimezone, $now, $range, $getWeekStartDateTime) {
+			
+			$weekStart = $getWeekStartDateTime($now);
+			$weekEnd = clone $weekStart;
+			
+			$interval = new DateInterval("P7D");
+			$weekStart->sub($interval);
+			
+			$weekStart->setTimezone($utcTimezone);
+			$weekEnd->setTimezone($utcTimezone);
+			
+			$from = $weekStart->format('Y-m-d H:i:s');
+			$to = $weekEnd->format('Y-m-d H:i:s');
+			
+			return $range($col, $from, $to);
+		};
+		
+		$thisMonth = function($col) use (&$query, $utcTimezone, $now, $range, $getMonthStartDateTime) {
+		
+			$monthStart = $getMonthStartDateTime($now);
+				
+			$monthStart->setTimezone($utcTimezone);
+			$now->setTimezone($utcTimezone);
+				
+			$from = $monthStart->format('Y-m-d H:i:s');
+			$to = $now->format('Y-m-d H:i:s');
+				
+			return $range($col, $from, $to);
+		};
+		
+		$lastMonth = function($col) use (&$query, $utcTimezone, $now, $range, $getMonthStartDateTime) {
+		
+			$monthStart = $getMonthStartDateTime($now);
+			$monthEnd = clone $monthStart;
+			
+			$interval = new DateInterval("P1M");
+			$monthStart->sub($interval);
+		
+			$monthStart->setTimezone($utcTimezone);
+			$monthEnd->setTimezone($utcTimezone);
+		
+			$from = $monthStart->format('Y-m-d H:i:s');
+			$to = $monthEnd->format('Y-m-d H:i:s');
+		
+			return $range($col, $from, $to);
+		};
+		
+		$thisYear = function($col) use (&$query, $utcTimezone, $now, $range, $getYearStartDateTime) {
+		
+			$yearStart = $getYearStartDateTime($now);
+			
+			$yearStart->setTimezone($utcTimezone);
+			$now->setTimezone($utcTimezone);
+		
+			$from = $yearStart->format('Y-m-d H:i:s');
+			$to = $now->format('Y-m-d H:i:s');
+		
+			return $range($col, $from, $to);
+		};
+		
+		$lastYear = function($col) use (&$query, $utcTimezone, $now, $range, $getYearStartDateTime) {
+		
+			$yearStart = $getYearStartDateTime($now);
+			$yearEnd = clone $yearStart;
+			
+			$interval = new DateInterval("P1Y");
+			$yearStart->sub($interval);
+				
+			$yearStart->setTimezone($utcTimezone);
+			$yearEnd->setTimezone($utcTimezone);
+		
+			$from = $yearStart->format('Y-m-d H:i:s');
+			$to = $yearEnd->format('Y-m-d H:i:s');
+		
+			return $range($col, $from, $to);
+		};
+		
+		//time is like hh:mm(:ss)
+		$inTheLast = function($col, $value, $unit) use (&$query, $utcTimezone, $now, $range) {
+		
+			$info = explode(":", $now);
+			$hours = $info[0];
+			$minutes = isset($info[1]) ? intval($info[1]) : 0;
+			$seconds = isset($info[2]) ? intval($info[2]) : 0;
+			
+			$timespan = $seconds + $minutes*60 + $hours*3600;
+			
+			$interval = new DateInterval("PT{$timespan}S");
+			$last = clone $now;
+			$last->sub($interval);
+		
+			$from = $last->format('Y-m-d H:i:s');
+			$to = $now->format('Y-m-d H:i:s');
+		
+			return $range($col, $from, $to);
+		};
 		
 		return array(
 			null,
@@ -198,7 +327,13 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 			$range,
 			$today,
 			$yesterday,
-			$thisWeek
+			$thisWeek,
+			$lastWeek,
+			$thisMonth,
+			$lastMonth,
+			$thisYear,
+			$lastYear,
+			$inTheLast
 		);
 	}
 	

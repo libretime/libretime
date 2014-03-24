@@ -37,8 +37,9 @@ class Application_Form_PlaylistRules extends Zend_Form
 	);
 	
 	private $_zeroInputRule = array(0, 12, 13, 14, 15, 16, 17, 18, 19);
-	private $_oneInputRule = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 21);
+	private $_oneInputRule = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 21);
 	private $_twoInputRule = array(11);
+	private $_relDateRule = array(20, 21);
 	
 	private function getCriteriaOptions()
     {
@@ -128,6 +129,20 @@ class Application_Form_PlaylistRules extends Zend_Form
 			19 => _("last year"),
 			20 => _("in the last"),
 			21 => _("not in the last")
+		);
+	}
+	
+	private function getRelativeDateUnitOptions()
+	{
+		return array(
+			0 => "-------",
+			1 => _("seconds"),
+			2 => _("minutes"),
+			3 => _("hours"),
+			4 => _("days"),
+			5 => _("weeks"),
+			6 => _("months"),
+			7 => _("years"),
 		);
 	}
 	
@@ -280,6 +295,23 @@ class Application_Form_PlaylistRules extends Zend_Form
     	return $criteriaExtra->getId();
     }
     
+    private function buildRelativeDateUnit($suffix, $num) {
+    	
+    	$options = $this->getRelativeDateUnitOptions();
+    	
+    	$relativeUnit = new Zend_Form_Element_Select("sp_rel_date_unit_{$num}_{$suffix}");
+    	$relativeUnit
+	    	->setValue('Select modifier')
+	    	->setAttrib('class', "input_select sp_rule_unit sp_rule_unit_{$num}")
+	    	->setDecorators(array('viewHelper'));
+    	
+    	$relativeUnit->setMultiOptions($options);
+    	 
+    	$this->addElement($relativeUnit);
+    	 
+    	return $relativeUnit->getId();
+    }
+    
     private function buildRuleCriteriaRow($info = null) {
     	$suffix = mt_rand(10000, 99999);
     	
@@ -291,7 +323,6 @@ class Application_Form_PlaylistRules extends Zend_Form
     	}
     	
     	$options = self::getModifierOptions($criteria);
-    	
     	$critKey = self::buildRuleCriteria($suffix);
     	$modKey = self::buildRuleModifier($suffix, $options);
     	
@@ -303,24 +334,37 @@ class Application_Form_PlaylistRules extends Zend_Form
     		
     		if (isset($info["modifier"])) {
     			$this->_populateHelp[$modKey] = $info["modifier"];
-    		}
-    	}
-    	
-    	//this extra field is only required for range conditions.
-    	if (isset($info) && in_array($info["modifier"], $this->_oneInputRule)) {
-    		$inputKey = self::buildRuleInput($suffix);
-    	
-    		if (isset($info["input1"])) {
-    			$this->_populateHelp[$inputKey] = $info["input1"];
-    		}
-    	}
-    	
-    	//this extra field is only required for range conditions.
-    	if (isset($info) && in_array($info["modifier"], $this->_twoInputRule)) {
-    		$extraKey = self::buildRuleExtra($suffix);
     		
-    		if (isset($info["input2"])) {
-    			$this->_populateHelp[$extraKey] = $info["input2"];
+		    	if (in_array($info["modifier"], $this->_oneInputRule)) {
+		    		$inputKey = self::buildRuleInput($suffix);
+		    		
+		    		if (in_array($info["modifier"], $this->_relDateRule)) {
+		    			$unit1Key = $this->buildRelativeDateUnit($suffix, 1);
+		    			
+		    			if (isset($info["unit1"])) {
+		    				$this->_populateHelp[$unit1Key] = $info["unit1"];
+		    			}
+		    		}
+		    	
+		    		if (isset($info["input1"])) {
+		    			$this->_populateHelp[$inputKey] = $info["input1"];
+		    		}
+		    	}
+		    	
+		    	//this extra field is only required for range conditions.
+		    	if ((isset($info["input2"]) || in_array($info["modifier"], $this->_twoInputRule))) {
+		    		$extraKey = self::buildRuleExtra($suffix);
+		    		
+		    		$this->_populateHelp[$extraKey] = $info["input2"];
+
+		    		if (in_array($info["modifier"], $this->_relDateRule)) {
+		    			$unit2Key = $this->buildRelativeDateUnit($suffix, 2);
+		    			
+		    			if (isset($info["unit2"])) {
+		    				$this->_populateHelp[$unit2Key] = $info["unit2"];
+		    			}
+		    		}
+		    	}
     		}
     	}
     	
