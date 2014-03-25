@@ -2,7 +2,7 @@
 class Analyzer:
 
     @staticmethod
-    def analyze(filename, results):
+    def analyze(filename, metadata):
         raise NotImplementedError
 
 class AnalyzerError(Exception):

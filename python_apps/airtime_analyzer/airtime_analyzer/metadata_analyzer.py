@@ -23,6 +23,7 @@ class MetadataAnalyzer(Analyzer):
         #in the file header. Mutagen breaks that out into a separate "info" object:
         info = audio_file.info
         metadata["sample_rate"] = info.sample_rate
+        metadata["length_seconds"] = info.length 
         #Converting the length in seconds (float) to a formatted time string
         track_length = datetime.timedelta(seconds=info.length)
         metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
