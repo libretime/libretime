@@ -156,12 +156,18 @@ class PlaylistController extends Zend_Controller_Action
     {
     	$content = $this->_getParam('content');
     	
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	$con->beginTransaction();
+    	
     	try {
     		$playlist = $this->getPlaylist();
-    		$playlist->savePlaylistContent($content);
+    		$playlist->savePlaylistContent($con, $content);
     		$this->createUpdateResponse($playlist);
+    		
+    		$con->commit();
     	}
     	catch (Exception $e) {
+    		$con->rollBack();
     		$this->view->error = $e->getMessage();
     	}
     }

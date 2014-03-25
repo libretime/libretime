@@ -20,25 +20,33 @@
 	        	<?php echo $this->element->getElement("sp_criteria_field_{$suffix}") ?>
 	            <?php echo $this->element->getElement("sp_criteria_modifier_{$suffix}") ?>
 
-	            <?php $input = $this->element->getElement("sp_criteria_value_{$suffix}") ?>
-	            <?php if(isset($input)): ?>
-	            <?php echo $input; ?>
+	            <?php 
+	            	$input1 = $this->element->getElement("sp_criteria_value_{$suffix}");
+	            	$input2 = $this->element->getElement("sp_criteria_extra_{$suffix}");
+	            	$unit1 = $this->element->getElement("sp_rel_date_unit_1_{$suffix}");
+	            	$unit2 = $this->element->getElement("sp_rel_date_unit_2_{$suffix}")
+	            ?>
+	            
+	            <?php if (isset($input1)): ?>
+	            <?php echo $input1; ?>
 	            <?php endif; ?>
 	            
-	            <?php $unit1 = $this->element->getElement("sp_rel_date_unit_1_{$suffix}") ?>
-	            <?php if(isset($unit1)): ?>
+	            <?php if (isset($unit1)): ?>
 	            <?php echo $unit1; ?>
 	            <?php endif; ?>
 	            
-	            <?php $extra = $this->element->getElement("sp_criteria_extra_{$suffix}") ?>
-	            <?php if(isset($extra)): ?>
-	            <span class='sp_text_font' id="extra_criteria"><?php echo _("to"); ?>
-	            	<?php echo $extra; ?>
+	            <?php if (isset($input2)): ?>
+	            <span class='sp_text_font' id="extra_criteria">
+	                <?php echo _("to"); ?>
+	            	<?php echo $input2; ?>
 	            </span>
+	            <?php else: ?>
+	            <a class="btn btn-small btn-range">
+	            	<span>TO</span>
+	            </a>
 	            <?php endif; ?>
 	            
-	            <?php $unit2 = $this->element->getElement("sp_rel_date_unit_2_{$suffix}") ?>
-	            <?php if(isset($unit2)): ?>
+	            <?php if (isset($unit2)): ?>
 	            <?php echo $unit2; ?>
 	            <?php endif; ?>
 	            
