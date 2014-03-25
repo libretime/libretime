@@ -67,8 +67,15 @@ $(document).ready(function() {
     };
     
 	self.renderFileActions = function ( data, type, full ) {
-		return '<a class="deleteFileAction">Delete</a>';
-    };
+		if (full.import_status == 0) {
+			return '<a class="deleteFileAction">' + $.i18n._('Delete from Library') + '</a>';			
+		} else if (full.import_status == 1) {
+			//No actions for pending files
+			return $.i18n._('N/A'); 
+		} else { //Failed downloads
+			return '<a class="deleteFileAction">' + $.i18n._('Clear') + '</a>';			
+		}
+	};
 	 
     $("#recent_uploads_table").on("click", "a.deleteFileAction", function () {
     	//Grab the file object for the row that was clicked.
