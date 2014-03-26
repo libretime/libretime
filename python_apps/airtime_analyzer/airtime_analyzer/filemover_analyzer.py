@@ -10,9 +10,6 @@ from analyzer import Analyzer
 
 class FileMoverAnalyzer(Analyzer):
     
-    def __init__(self):
-        pass
-    
     @staticmethod
     def analyze(audio_file_path, metadata):
         raise Exception("Use FileMoverAnalyzer.move() instead.")
@@ -35,8 +32,8 @@ class FileMoverAnalyzer(Analyzer):
         final_file_path = import_directory
         if metadata.has_key("artist_name"):
             final_file_path += "/" + metadata["artist_name"]
-        if metadata.has_key("album"):
-            final_file_path += "/" + metadata["album"]
+        if metadata.has_key("album_title"):
+            final_file_path += "/" + metadata["album_title"]
         final_file_path += "/" + original_filename
 
         #Ensure any redundant slashes are stripped
@@ -71,6 +68,8 @@ class FileMoverAnalyzer(Analyzer):
         return metadata
     
 def mkdir_p(path):
+    if path == "":
+        return
     try:
         os.makedirs(path)
     except OSError as exc: # Python >2.5
