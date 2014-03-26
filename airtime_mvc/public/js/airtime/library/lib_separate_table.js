@@ -302,7 +302,7 @@ var AIRTIME = (function(AIRTIME) {
 			"bJQueryUI": true,
 			"bAutoWidth": true,
 			
-			"sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
+			"sDom": 'Rlf<"btn-table-search"><"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
 			
 			"oColVis": {
 				"sAlign": "right",
@@ -332,6 +332,8 @@ var AIRTIME = (function(AIRTIME) {
 	        "fnDrawCallback": datatablesDrawCallback,
 	        
 	        "fnInitComplete": function(oSettings, json) {
+	        	var $panel = $(table[0]).parents("div.ui-tabs-panel");
+	        	
 	        	//fnStateLoadParams will have already run.
 	        	//fix up advanced search from saved settings.
 	        	for (i = 0, len = abVisible.length; i < len; i++) {
@@ -341,6 +343,20 @@ var AIRTIME = (function(AIRTIME) {
 	        	table.columnFilter({
 	        		aoColumns: searchConfig,
 	        		sPlaceHolder: "head:before"
+	        	});
+	        	
+	        	//append a search button
+	        	$panel.find(".dataTables_filter").append('<button class="btn btn-search" type="button">Search</button>');
+	        	
+	        	//only search on enter.
+	        	$panel.on("keypress", ".advanced_search input", function(e) {
+	        		 if (e.which === 13) {
+	        			 table.fnDraw();
+	                 }
+	        	});
+	        	
+	        	$panel.on("click", ".btn-search", function(e) {
+	        		table.fnDraw();
 	        	});
 	        }
 		});

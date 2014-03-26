@@ -25,7 +25,7 @@ jQuery.fn.dataTableExt.oApi.fnFilterOnReturn = function (oSettings) {
         var $this = this;
         var anControl = $('input', _that.fnSettings().aanFeatures.f);
         anControl.unbind('keyup').bind('keypress', function (e) {
-            if (e.which == 13) {
+            if (e.which === 13) {
                 $.fn.dataTableExt.iApiIndex = i;
                 _that.fnFilter(anControl.val());
             }

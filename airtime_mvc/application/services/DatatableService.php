@@ -94,10 +94,12 @@ abstract class Application_Service_DatatableService
 		$propelMap = $class::getTableMap();
 		$col = $propelMap->getColumn($field);
 		$type = $col->getType();
+		$searchType = $this->columns[$prop]["advancedSearch"]["type"];
 		
 		return array(
 			"type" => $type,
-			"column" => "{$base}.{$column}"
+			"column" => "{$base}.{$column}",
+			"searchType" => $searchType
 		);
 	}
 	
@@ -106,7 +108,7 @@ abstract class Application_Service_DatatableService
 	    return substr(sha1(rand()), 0, $length);
 	}
 	
-	private function searchNumber($query, $col, $from, $to) {
+	private function searchNumberRange($query, $col, $from, $to) {
 		$prefix = self::generateRandomString(5);
 		$num = 0;
 	
@@ -133,6 +135,17 @@ abstract class Application_Service_DatatableService
 		return $name;
 	}
 	
+	private function searchNumber($query, $col, $value) {
+		$prefix = self::generateRandomString(5);
+		
+		$name = "{$prefix}_{$col}";
+		$cond = "{$col} = ?";
+		$query->condition($name, $cond, $value);
+		
+		//returns the final query condition to combine with other columns.
+		return $name;
+	}
+	
 	//need to return name of condition so that
 	//all advanced search fields can be combined into an AND.
 	private function searchString($query, $col, $value) {
@@ -146,7 +159,7 @@ abstract class Application_Service_DatatableService
 		return $name;
 	}
 	
-	private function searchDate($query, $col, $from, $to) {
+	private function searchDateRange($query, $col, $from, $to) {
 		$num = 0;
 		$prefix = self::generateRandomString(5);
 	
@@ -223,6 +236,7 @@ abstract class Application_Service_DatatableService
 				$info = self::getColumnType($prop, $modelName);
 				$searchCol = $info["column"];
 				$type = $info["type"];
+				$searchType = $info["searchType"];
 				
 				if ($params["sSearch_{$i}"] != "") {
 					$value = $params["sSearch_{$i}"];
@@ -230,11 +244,16 @@ abstract class Application_Service_DatatableService
 					switch($type) {
 						case PropelColumnTypes::DATE:
 						case PropelColumnTypes::TIMESTAMP:
-							$advConds[] = self::searchDate($query, $searchCol, $value["from"], $value["to"]);
+							$advConds[] = self::searchDateRange($query, $searchCol, $value["from"], $value["to"]);
 							break;
 						case PropelColumnTypes::NUMERIC:
 						case PropelColumnTypes::INTEGER:
-							$advConds[] = self::searchNumber($query, $searchCol,$value["from"], $value["to"]);
+							if ($searchType == "number-range") {
+								$advConds[] = self::searchNumberRange($query, $searchCol, $value["from"], $value["to"]);
+							}
+							else {
+								$advConds[] = self::searchNumber($query, $searchCol, $value);
+							}
 							break;
 						default:
 							$advConds[] = self::searchString($query, $searchCol, $value);

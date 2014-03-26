@@ -48,8 +48,11 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 				"width" => "25px",
 				"class" => "library_type",
 				"advancedSearch" => array(
-						"type" => "select",
-						"values" => array("static", "dynamic")
+					"type" => "select",
+					"values" => array(
+						"0" => "static", 
+						"1" => "dynamic"
+					)
 				)
 			),
 			"Name" => array(
@@ -58,7 +61,7 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 				"width" => "170px",
 				"class" => "library_title",
 				"advancedSearch" => array(
-						"type" => "text"
+					"type" => "text"
 				)
 			),
 			"Description" => array(
@@ -67,7 +70,7 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 				"width" => "200px",
 				"class" => "library_description",
 				"advancedSearch" => array(
-						"type" => "text"
+					"type" => "text"
 				)
 			),
 			"Length" => array(
@@ -84,7 +87,7 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 				"class" => "library_upload_time",
 				"visible" => false,
 				"advancedSearch" => array(
-						"type" => "date-range"
+					"type" => "date-range"
 				)
 			),
 			"UpdatedAt" => array(
@@ -94,7 +97,7 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 				"class" => "library_modified_time",
 				"visible" => false,
 				"advancedSearch" => array(
-						"type" => "date-range"
+					"type" => "date-range"
 				)
 			),
 			"CcSubjs.DbLogin" => array(
@@ -103,7 +106,7 @@ class Application_Service_DatatablePlaylistService extends Application_Service_D
 				"width" => "160px",
 				"class" => "library_owner",
 				"advancedSearch" => array(
-						"type" => "text"
+					"type" => "text"
 				)
 			),
 		);
