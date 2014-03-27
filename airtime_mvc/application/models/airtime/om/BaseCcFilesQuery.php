@@ -12,7 +12,7 @@
  * @method     CcFilesQuery orderByDbFtype($order = Criteria::ASC) Order by the ftype column
  * @method     CcFilesQuery orderByDbDirectory($order = Criteria::ASC) Order by the directory column
  * @method     CcFilesQuery orderByDbFilepath($order = Criteria::ASC) Order by the filepath column
- * @method     CcFilesQuery orderByDbState($order = Criteria::ASC) Order by the state column
+ * @method     CcFilesQuery orderByDbImportStatus($order = Criteria::ASC) Order by the import_status column
  * @method     CcFilesQuery orderByDbCurrentlyaccessing($order = Criteria::ASC) Order by the currentlyaccessing column
  * @method     CcFilesQuery orderByDbEditedby($order = Criteria::ASC) Order by the editedby column
  * @method     CcFilesQuery orderByDbMtime($order = Criteria::ASC) Order by the mtime column
@@ -83,7 +83,7 @@
  * @method     CcFilesQuery groupByDbFtype() Group by the ftype column
  * @method     CcFilesQuery groupByDbDirectory() Group by the directory column
  * @method     CcFilesQuery groupByDbFilepath() Group by the filepath column
- * @method     CcFilesQuery groupByDbState() Group by the state column
+ * @method     CcFilesQuery groupByDbImportStatus() Group by the import_status column
  * @method     CcFilesQuery groupByDbCurrentlyaccessing() Group by the currentlyaccessing column
  * @method     CcFilesQuery groupByDbEditedby() Group by the editedby column
  * @method     CcFilesQuery groupByDbMtime() Group by the mtime column
@@ -193,7 +193,7 @@
  * @method     CcFiles findOneByDbFtype(string $ftype) Return the first CcFiles filtered by the ftype column
  * @method     CcFiles findOneByDbDirectory(int $directory) Return the first CcFiles filtered by the directory column
  * @method     CcFiles findOneByDbFilepath(string $filepath) Return the first CcFiles filtered by the filepath column
- * @method     CcFiles findOneByDbState(string $state) Return the first CcFiles filtered by the state column
+ * @method     CcFiles findOneByDbImportStatus(int $import_status) Return the first CcFiles filtered by the import_status column
  * @method     CcFiles findOneByDbCurrentlyaccessing(int $currentlyaccessing) Return the first CcFiles filtered by the currentlyaccessing column
  * @method     CcFiles findOneByDbEditedby(int $editedby) Return the first CcFiles filtered by the editedby column
  * @method     CcFiles findOneByDbMtime(string $mtime) Return the first CcFiles filtered by the mtime column
@@ -264,7 +264,7 @@
  * @method     array findByDbFtype(string $ftype) Return CcFiles objects filtered by the ftype column
  * @method     array findByDbDirectory(int $directory) Return CcFiles objects filtered by the directory column
  * @method     array findByDbFilepath(string $filepath) Return CcFiles objects filtered by the filepath column
- * @method     array findByDbState(string $state) Return CcFiles objects filtered by the state column
+ * @method     array findByDbImportStatus(int $import_status) Return CcFiles objects filtered by the import_status column
  * @method     array findByDbCurrentlyaccessing(int $currentlyaccessing) Return CcFiles objects filtered by the currentlyaccessing column
  * @method     array findByDbEditedby(int $editedby) Return CcFiles objects filtered by the editedby column
  * @method     array findByDbMtime(string $mtime) Return CcFiles objects filtered by the mtime column
@@ -574,25 +574,34 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 	}
 
 	/**
-	 * Filter the query on the state column
+	 * Filter the query on the import_status column
 	 * 
-	 * @param     string $dbState The value to use as filter.
-	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     int|array $dbImportStatus The value to use as filter.
+	 *            Accepts an associative array('min' => $minValue, 'max' => $maxValue)
 	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
 	 *
 	 * @return    CcFilesQuery The current query, for fluid interface
 	 */
-	public function filterByDbState($dbState = null, $comparison = null)
+	public function filterByDbImportStatus($dbImportStatus = null, $comparison = null)
 	{
-		if (null === $comparison) {
-			if (is_array($dbState)) {
+		if (is_array($dbImportStatus)) {
+			$useMinMax = false;
+			if (isset($dbImportStatus['min'])) {
+				$this->addUsingAlias(CcFilesPeer::IMPORT_STATUS, $dbImportStatus['min'], Criteria::GREATER_EQUAL);
+				$useMinMax = true;
+			}
+			if (isset($dbImportStatus['max'])) {
+				$this->addUsingAlias(CcFilesPeer::IMPORT_STATUS, $dbImportStatus['max'], Criteria::LESS_EQUAL);
+				$useMinMax = true;
+			}
+			if ($useMinMax) {
+				return $this;
+			}
+			if (null === $comparison) {
 				$comparison = Criteria::IN;
-			} elseif (preg_match('/[\%\*]/', $dbState)) {
-				$dbState = str_replace('*', '%', $dbState);
-				$comparison = Criteria::LIKE;
 			}
 		}
-		return $this->addUsingAlias(CcFilesPeer::STATE, $dbState, $comparison);
+		return $this->addUsingAlias(CcFilesPeer::IMPORT_STATUS, $dbImportStatus, $comparison);
 	}
 
 	/**

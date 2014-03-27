@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import daemon
+import argparse
+import os
+import airtime_analyzer.airtime_analyzer as aa
+
+VERSION = "1.0"
+
+print "Airtime Analyzer " + VERSION
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
+parser.add_argument("--debug", help="log full debugging output", action="store_true")
+args = parser.parse_args()
+
+'''Ensure media_monitor isn't running before we start, because it'll move newly uploaded
+   files into the library on us and screw up the operation of airtime_analyzer.
+   media_monitor is deprecated.
+'''
+def check_if_media_monitor_is_running():
+    pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
+
+    for pid in pids:
+        try:
+            process_name = open(os.path.join('/proc', pid, 'cmdline'), 'rb').read()
+            if 'media_monitor.py' in process_name:
+                print "Error: This process conflicts with media_monitor, and media_monitor is running."
+                print "       Please terminate the running media_monitor.py process and try again."
+                exit(1)
+        except IOError: # proc has already terminated
+            continue
+
+check_if_media_monitor_is_running()
+
+if args.daemon:
+    with daemon.DaemonContext():
+        analyzer = aa.AirtimeAnalyzerServer(debug=args.debug)
+else: 
+    # Run without daemonizing
+    analyzer = aa.AirtimeAnalyzerServer(debug=args.debug)
+

@@ -49,6 +49,29 @@ $application = new Zend_Application(
     APPLICATION_ENV,
     $_SERVER["AIRTIME_APPINI"]
 );
-$application->bootstrap()
-            ->run();
 
+require_once (APPLICATION_PATH."/logging/Logging.php");
+Logging::setLogPath('/var/log/airtime/zendphp.log');
+
+// Create application, bootstrap, and run
+try {
+    $sapi_type = php_sapi_name();
+    if (substr($sapi_type, 0, 3) == 'cli') {
+        set_include_path(APPLICATION_PATH . PATH_SEPARATOR . get_include_path());
+        require_once("Bootstrap.php");
+    } else {
+        $application->bootstrap()->run();
+    }
+} catch (Exception $e) {
+    echo $e->getMessage();
+    echo "<pre>";
+    echo $e->getTraceAsString();
+    echo "</pre>";
+    Logging::info($e->getMessage());
+    if (VERBOSE_STACK_TRACE) {
+        Logging::info($e->getTraceAsString());
+    } else {
+        Logging::info($e->getTrace());
+    }
+    throw $e;
+}
