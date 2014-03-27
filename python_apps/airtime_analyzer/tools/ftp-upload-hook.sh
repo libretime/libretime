@@ -23,4 +23,4 @@ instance_conf_path=$base_instance_path$instance_path$airtime_conf_path
 
 api_key=$(sudo awk -F "=" '/api_key/ {print $2}' $instance_conf_path)
 
-#curl $url -u $api_key":" -X POST -F "file=@$file_path" -F "name=$filename"
+curl $url -u $api_key":" -X POST -F "file=@$file_path" -F "name=$filename"
