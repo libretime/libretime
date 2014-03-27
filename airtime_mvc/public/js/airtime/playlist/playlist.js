@@ -8,7 +8,7 @@ var AIRTIME = (function(AIRTIME){
 	
 	var template = 
 		'<div class="pl-criteria-row">' +
-			'<select class="input_select sp_input_select rule_criteria <%= showCriteria %>">' +
+			'<select class="input_select sp_input_select rule_criteria">' +
 				'<%= criteria %>' + 
 			'</select>' +
 			'<select class="input_select sp_input_select rule_modifier">'+
@@ -50,12 +50,8 @@ var AIRTIME = (function(AIRTIME){
 	
 	var criteriaOptions = {};
 	
-	var emptyCriteriaOptions = {
-		0 : $.i18n._("Select modifier")	
-	};
-	
 	var stringCriteriaOptions = {
-	    0 : $.i18n._("Select modifier"),
+	    //0 : $.i18n._("Select modifier"),
 	    1 : $.i18n._("contains"),
 	    2 : $.i18n._("does not contain"),
 	    3 : $.i18n._("is"),
@@ -65,7 +61,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	    
 	var numericCriteriaOptions = {
-	    0 : $.i18n._("Select modifier"),
+	    //0 : $.i18n._("Select modifier"),
 	    3 : $.i18n._("is"),
 	    4 : $.i18n._("is not"),
 	    7 : $.i18n._("is greater than"),
@@ -89,7 +85,7 @@ var AIRTIME = (function(AIRTIME){
 	};
 	
 	var relativeDateUnitOptions = {
-		0 : $.i18n._("-----"),
+		//0 : $.i18n._("-----"),
 		1 : $.i18n._("seconds"),
 	    2 : $.i18n._("minutes"),
 	    3 : $.i18n._("hours"),
@@ -103,10 +99,6 @@ var AIRTIME = (function(AIRTIME){
 	// or numeric value in order to populate the modifier
 	// select list
 	var criteriaTypes = {
-		"": {
-			type: "",
-			name: $.i18n._("Select criteria")
-		},
 	    "AlbumTitle": {
 	    	type: "s",
 	    	name: $.i18n._("Album")
@@ -179,6 +171,10 @@ var AIRTIME = (function(AIRTIME){
 	    	type: "s",
 	    	name: $.i18n._("Mood")
 	    },
+	    "PlayCount": {
+	    	type: "n",
+	    	name: $.i18n._("PlayCount")
+	    },
 	    "ReplayGain": {
 	    	type: "n",
 	    	name: $.i18n._("Replay Gain")
@@ -214,10 +210,17 @@ var AIRTIME = (function(AIRTIME){
 	}
 	
 	function makeSelectOptions(options, selected) {
-		var key;
+		var keys = Object.keys(options);
+		var i, len, key;
 		var modifier = "";
 		
-		for (key in options) {
+		if (selected === "") {
+			selected = keys[0];
+		}
+		
+		for (i = 0, len = keys.length; i < len; i++) {
+			
+			key = keys[i];
 			
 			if (key === selected) {
 				modifier += '<option value="'+key+'" label="'+options[key]+'" selected="selected">'+options[key]+'</option>';
@@ -227,41 +230,46 @@ var AIRTIME = (function(AIRTIME){
 			}
 		}
 		
-		return modifier;
+		return {
+			options: modifier,
+			selected: selected
+		};
 	}
 	
 	function createCriteriaRow(criteria, modifierValue, options) {
     	var $el,
     		defaults,
     		settings,
-    		showCriteria,
-    		noInput = ["12", "13", "14", "15", "16", "17", "18", "19"],
+    		noInput = ["", "12", "13", "14", "15", "16", "17", "18", "19"],
     		hasRange = ["11"],
     		hasRelDateOptions = ["20", "21"],
-    		type = criteriaTypes[criteria].type;
+    		type,
+    		fullCriteriaSelect, 
+    		relDateSelect, 
+    		modifier, 
+    		modifierSelect;
     	
-    	var fullCriteria = makeSelectOptions(criteriaOptions, criteria);
-    	var relDateSelect = makeSelectOptions(relativeDateUnitOptions);
+    	fullCriteriaSelect = makeSelectOptions(criteriaOptions, criteria);
+    	criteria = fullCriteriaSelect["selected"];
+    	relDateSelect = makeSelectOptions(relativeDateUnitOptions);
     	
-    	var modifier = setCorrectModifier(criteria);
-    	var modifierHtml = makeSelectOptions(modifier, modifierValue);
+		modifier = setCorrectModifier(criteria);
+    	modifierSelect = makeSelectOptions(modifier, modifierValue);
+    	type = criteriaTypes[criteria].type;
+    	modifierValue = modifierSelect["selected"];
     	
     	defaults = {
     		input: noInput.indexOf(modifierValue) === -1 ? true : false,
     		range: hasRange.indexOf(modifierValue) !== -1 ? true : false,
-    		showCriteria: true,
-    		options: modifierHtml,
-    		criteria: fullCriteria,
+    		options: modifierSelect["options"],
+    		criteria: fullCriteriaSelect["options"],
     		relDate: type === "d" ? true : false,
-    		relDateOptions: hasRelDateOptions.indexOf(modifierValue) === -1 ? null : relDateSelect
+    		relDateOptions: hasRelDateOptions.indexOf(modifierValue) === -1 ? null : relDateSelect["options"]
     	};
     	
     	settings = $.extend({}, defaults, options);
     	
-    	showCriteria = settings.showCriteria ? "" : "sp-invisible";
-    	
     	$el = $(template({
-    		showCriteria: showCriteria,
     		input: settings.input,
     		range: settings.range,
     		options: settings.options,
@@ -269,6 +277,11 @@ var AIRTIME = (function(AIRTIME){
     		relDate: settings.relDate,
     		relDateOptions: settings.relDateOptions
     	}));
+    	
+    	var datepickerOptions = Object.keys(numericCriteriaOptions);
+    	if (type === "d" && datepickerOptions.indexOf(modifierValue) !== -1) {
+    		$el.find(".input_text").datepicker();
+    	}
     	
     	return $el;
     }
@@ -284,9 +297,6 @@ var AIRTIME = (function(AIRTIME){
 		}
 		else if (type === "d") {
 			return $.extend({}, numericCriteriaOptions, relativeDateCriteriaOptions);
-		}
-		else {
-			return emptyCriteriaOptions;
 		}
 	}
 	
@@ -409,6 +419,7 @@ var AIRTIME = (function(AIRTIME){
 			
 			for (j = 0, lenOr = $nodes.length; j < lenOr; j++) {
 				$row = $($nodes[j]);
+				$modifier = $row.find("select.rule_modifier");
 				$input = $row.find("input.sp_input_text");
 				$extra = $row.find("input.sp_extra_input_text");
 				$unit1 = $row.find("select.sp_rule_unit_1");
@@ -416,7 +427,7 @@ var AIRTIME = (function(AIRTIME){
 				
 				criteria[i].push({
 					"criteria": $row.find("select.rule_criteria").val(),
-					"modifier": $row.find("select.rule_modifier").val(),
+					"modifier": $modifier ? $modifier.val() : null,
 					"input1": $input ? $input.val() : null,
 					"input2": $extra ? $extra.val() : null,
 					"unit1": $unit1 ? $unit1.val() : null,

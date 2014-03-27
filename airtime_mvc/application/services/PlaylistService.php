@@ -1,12 +1,10 @@
 <?php
 
 use Airtime\MediaItem\MediaContentQuery;
-
-use Airtime\MediaItem\PlaylistPeer;
-
-use Airtime\MediaItemQuery;
-
 use Airtime\MediaItem\MediaContent;
+use Airtime\MediaItem\PlaylistPeer;
+use Airtime\MediaItem\Playlist;
+use Airtime\MediaItemQuery;
 
 class Application_Service_PlaylistService
 {
@@ -71,11 +69,38 @@ class Application_Service_PlaylistService
 				$playlist->setDescription($info["description"]);
 			}
 			
-			//$form = new Application_Form_PlaylistRules();
-			//$form->buildCriteriaOptions($info["rules"]["criteria"]);
-			
 			if (isset($info["rules"])) {
-				$playlist->setRules($info["rules"]);
+				
+				$rules = $info["rules"];
+				
+				$form = new Application_Form_PlaylistRules();
+				
+				if (isset($info["rules"]["criteria"])) {
+					$form->buildCriteriaOptions($info["rules"]["criteria"]);
+				}
+				
+				$criteriaFields = $form->getPopulateHelp();
+				
+				$playlistRules = array(
+					"pl_repeat_tracks" => $rules[Playlist::RULE_REPEAT_TRACKS],
+					"pl_my_tracks" => $rules[Playlist::RULE_USERS_TRACKS_ONLY],
+					"pl_order_column" => $rules[Playlist::RULE_ORDER][Playlist::RULE_ORDER_COLUMN],
+					"pl_order_direction" => $rules[Playlist::RULE_ORDER][Playlist::RULE_ORDER_DIRECTION],
+					"pl_limit_value" => $rules["limit"]["value"],
+					"pl_limit_options" => $rules["limit"]["unit"]
+				);
+				
+				$data = array_merge($criteriaFields, $playlistRules);
+				
+				if ($form->isValid($data)) {
+					Logging::info("playlist rules are valid");
+					Logging::info($form->getValues());
+					$playlist->setRules($info["rules"]);
+				}
+				else {
+					Logging::info("invalid playlist rules");
+					Logging::info($form->getMessages());
+				}
 			}
 			
 			//only save content for static playlists

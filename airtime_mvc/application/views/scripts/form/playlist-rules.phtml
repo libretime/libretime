@@ -17,16 +17,19 @@
     		<?php for ($j = 0; $j < count($option["suffixes"][$i]); $j++): ?>
     		<div class="pl-criteria-row">
     			<?php $suffix = $option["suffixes"][$i][$j]; ?>
-	        	<?php echo $this->element->getElement("sp_criteria_field_{$suffix}") ?>
-	            <?php echo $this->element->getElement("sp_criteria_modifier_{$suffix}") ?>
-
-	            <?php 
+    			
+    			<?php
+    				$criteria = $this->element->getElement("sp_criteria_field_{$suffix}");
+    				$modifier = $this->element->getElement("sp_criteria_modifier_{$suffix}");
 	            	$input1 = $this->element->getElement("sp_criteria_value_{$suffix}");
 	            	$input2 = $this->element->getElement("sp_criteria_extra_{$suffix}");
 	            	$unit1 = $this->element->getElement("sp_rel_date_unit_1_{$suffix}");
 	            	$unit2 = $this->element->getElement("sp_rel_date_unit_2_{$suffix}")
 	            ?>
-	            
+    			
+	        	<?php echo $criteria; ?>
+	            <?php echo $modifier; ?>
+
 	            <?php if (isset($input1)): ?>
 	            <?php echo $input1; ?>
 	            <?php endif; ?>
@@ -40,7 +43,7 @@
 	                <?php echo _("to"); ?>
 	            	<?php echo $input2; ?>
 	            </span>
-	            <?php else: ?>
+	            <?php elseif (in_array ($modifier->getValue(), array(20, 21))): ?>
 	            <a class="btn btn-small btn-range">
 	            	<span>TO</span>
 	            </a>

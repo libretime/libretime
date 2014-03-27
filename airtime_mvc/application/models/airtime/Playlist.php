@@ -480,7 +480,7 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
 				"direction" => "acs"
 			),
 			"limit" => array(
-				"value" => "",
+				"value" => 1,
 				"unit" => "hours"
 			)
 		);

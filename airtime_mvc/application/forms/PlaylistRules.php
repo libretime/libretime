@@ -4,12 +4,12 @@ class Application_Form_PlaylistRules extends Zend_Form
 {
 	private $_suffixes;
 	private $_populateHelp;
+	private $_validateMode = false;
 	/* We need to know if the criteria value will be a string
 	 * or numeric value in order to populate the modifier
 	* select list
 	*/
 	private $_criteriaTypes = array(
-		""  => "",
 		"AlbumTitle" => "s",
 		"BitRate" => "n",
 		"Bpm" => "n",
@@ -30,6 +30,7 @@ class Application_Form_PlaylistRules extends Zend_Form
 		"Mood" => "s",
 		"ReplayGain" => "n",
 		"SampleRate" => "n",
+		"PlayCount" => "n",
 		"TrackTitle" => "s",
 		"TrackNumber" => "n",
 		"InfoUrl" => "s",
@@ -43,8 +44,7 @@ class Application_Form_PlaylistRules extends Zend_Form
 	
 	private function getCriteriaOptions()
     {
-		return array(
-        	""  => _("Select criteria"),
+		$options =  array(
             "AlbumTitle" => _("Album"),
             "BitRate" => _("Bit Rate (Kbps)"),
             "Bpm" => _("BPM"),
@@ -62,6 +62,7 @@ class Application_Form_PlaylistRules extends Zend_Form
             "Length" => _("Length"),
             "Mime" => _("Mime"),
             "Mood" => _("Mood"),
+			"PlayCount" => _("PlayCount"),
             "ReplayGain" => _("Replay Gain"),
             "SampleRate" => _("Sample Rate (kHz)"),
             "TrackTitle" => _("Title"),
@@ -70,6 +71,13 @@ class Application_Form_PlaylistRules extends Zend_Form
             "InfoUrl" => _("Website"),
             "Year" => _("Year")
         );
+		
+		if ($this->_validateMode) {
+			//don't want empty criteria to validate.
+			array_shift($options);
+		}
+		
+		return $options;
     }
     
     private function getOption($option = null)
@@ -81,18 +89,11 @@ class Application_Form_PlaylistRules extends Zend_Form
     		return $this->criteriaOptions[$option];
     	}
     }
-    
-    private function getDefaultCriteriaOptions()
-    {
-    	return array(
-    		0 => _("Select modifier")
-    	);
-    }
-		
+    	
 	private function getStringCriteriaOptions()
 	{
 		return array(
-			0 => _("Select modifier"),
+			//0 => _("Select modifier"),
 			1 => _("contains"),
 			2 => _("does not contain"),
 			3 => _("is"),
@@ -105,7 +106,7 @@ class Application_Form_PlaylistRules extends Zend_Form
 	private function getNumericCriteriaOptions()
 	{
 		return array(
-			0 => _("Select modifier"),
+			//0 => _("Select modifier"),
 			3 => _("is"),
 			4 => _("is not"),
 			7 => _("is greater than"),
@@ -135,7 +136,7 @@ class Application_Form_PlaylistRules extends Zend_Form
 	private function getRelativeDateUnitOptions()
 	{
 		return array(
-			0 => "-------",
+			//0 => "-------",
 			1 => _("seconds"),
 			2 => _("minutes"),
 			3 => _("hours"),
@@ -203,6 +204,7 @@ class Application_Form_PlaylistRules extends Zend_Form
     	$limitValue
     		->setAttrib('class', 'sp_input_text_limit')
 	    	->setLabel(_('Limit to'))
+	    	->setRequired(true)
 	    	->setDecorators(array('ViewHelper'));
     	$this->addElement($limitValue);
     	
@@ -211,7 +213,7 @@ class Application_Form_PlaylistRules extends Zend_Form
 	    	->setAttrib('class', 'sp_input_select')
 	    	->setDecorators(array('ViewHelper'))
 	    	->setMultiOptions($this->getOrderOptions())
-	    	->setLabel(_('Order By:'));
+	    	->setLabel(_('Order By'));
     	$this->addElement($orderby);
     	
     	$orderbyDirection = new Zend_Form_Element_Select('pl_order_direction');
@@ -238,7 +240,34 @@ class Application_Form_PlaylistRules extends Zend_Form
     		case "d":
     			return $this->getNumericCriteriaOptions() + $this->getRelativeDateCriteriaOptions();
     		default:
-    			return $this->getDefaultCriteriaOptions();
+    			throw new Exception("criteria type does not exist");
+    	}
+    }
+    
+    private function addInputValidatorAndFilter($input, $type) {
+    	
+    	switch ($type) {
+    	
+    		case "n":
+    			$input->setValidators(array(
+    				new Zend_Validate_NotEmpty(),
+					new Zend_Validate_Int(),
+				));
+				break;
+    		case "s":
+    			$input->addFilter('StringTrim');
+    			$input->setValidators(array(
+    				new Zend_Validate_NotEmpty()
+    			));
+    			break;
+    		case "d":
+    			$input->setValidators(array(
+    				new Zend_Validate_NotEmpty(),
+					new Zend_Validate_Date(),
+				));
+				break;
+    		default:
+    			break;
     	}
     }
     
@@ -271,12 +300,15 @@ class Application_Form_PlaylistRules extends Zend_Form
     	return $criteriaModifers->getId();
     }
     
-    private function buildRuleInput($suffix) {
+    private function buildRuleInput($suffix, $critType) {
     	
     	$criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_{$suffix}");
     	$criteriaValue
+    		->setRequired(true)
 	    	->setAttrib('class', 'input_text sp_input_text')
 	    	->setDecorators(array('viewHelper'));
+    	
+    	$this->addInputValidatorAndFilter($criteriaValue, $critType);
     	 
     	$this->addElement($criteriaValue);
     	
@@ -287,6 +319,7 @@ class Application_Form_PlaylistRules extends Zend_Form
     	
     	$criteriaExtra = new Zend_Form_Element_Text("sp_criteria_extra_{$suffix}");
     	$criteriaExtra
+    		->setRequired(true)
 	    	->setAttrib('class', 'input_text sp_extra_input_text')
 	    	->setDecorators(array('viewHelper'));
     	 
@@ -322,9 +355,8 @@ class Application_Form_PlaylistRules extends Zend_Form
     		$criteria = $info["criteria"];
     	}
     	
-    	$options = self::getModifierOptions($criteria);
+    	$critType = $this->_criteriaTypes[$criteria];
     	$critKey = self::buildRuleCriteria($suffix);
-    	$modKey = self::buildRuleModifier($suffix, $options);
     	
     	if (isset($info)) {
     		
@@ -333,19 +365,26 @@ class Application_Form_PlaylistRules extends Zend_Form
     		}
     		
     		if (isset($info["modifier"])) {
+    			
+    			$options = self::getModifierOptions($criteria);
+    			$modKey = self::buildRuleModifier($suffix, $options);
+    			
     			$this->_populateHelp[$modKey] = $info["modifier"];
     		
 		    	if (in_array($info["modifier"], $this->_oneInputRule)) {
-		    		$inputKey = self::buildRuleInput($suffix);
 		    		
 		    		if (in_array($info["modifier"], $this->_relDateRule)) {
+		    			$inputKey = self::buildRuleInput($suffix, "n");
 		    			$unit1Key = $this->buildRelativeDateUnit($suffix, 1);
 		    			
 		    			if (isset($info["unit1"])) {
 		    				$this->_populateHelp[$unit1Key] = $info["unit1"];
 		    			}
 		    		}
-		    	
+		    		else {
+		    			$inputKey = self::buildRuleInput($suffix, $critType);
+		    		}
+		    		
 		    		if (isset($info["input1"])) {
 		    			$this->_populateHelp[$inputKey] = $info["input1"];
 		    		}
@@ -353,16 +392,21 @@ class Application_Form_PlaylistRules extends Zend_Form
 		    	
 		    	//this extra field is only required for range conditions.
 		    	if ((isset($info["input2"]) || in_array($info["modifier"], $this->_twoInputRule))) {
-		    		$extraKey = self::buildRuleExtra($suffix);
-		    		
-		    		$this->_populateHelp[$extraKey] = $info["input2"];
 
 		    		if (in_array($info["modifier"], $this->_relDateRule)) {
+		    			$extraKey = self::buildRuleExtra($suffix, "n");
 		    			$unit2Key = $this->buildRelativeDateUnit($suffix, 2);
 		    			
 		    			if (isset($info["unit2"])) {
 		    				$this->_populateHelp[$unit2Key] = $info["unit2"];
 		    			}
+		    		}
+		    		else {
+		    			$extraKey = self::buildRuleExtra($suffix, $critType);
+		    		}
+		    		
+		    		if (isset($info["input2"])) {
+		    			$this->_populateHelp[$extraKey] = $info["input2"];
 		    		}
 		    	}
     		}
@@ -385,8 +429,6 @@ class Application_Form_PlaylistRules extends Zend_Form
     			$this->_suffixes[$i][$j] = self::buildRuleCriteriaRow($criteria[$i][$j]);
     		}
     	}
-    	
-    	return $this->_suffixes;
     }
     
     public function getPopulateHelp()

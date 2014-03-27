@@ -44,6 +44,7 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 		"CreatedAt",
 		"InfoUrl",
 		"Year",
+		"PlayCount"
 	);
 	
 	protected $aliases = array(
@@ -363,6 +364,16 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 					"type" => "number-range"
 				)
 			),
+			"PlayCount" => array(
+				"isColumn" => true,
+				"title" => _("Play Count"),
+				"width" => "60px",
+				"class" => "library_playcount",
+				"visible" => false,
+				"advancedSearch" => array(
+					"type" => "number-range"
+				)
+			),
 		);
 	}
 	
@@ -442,6 +453,7 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 				case "Bpm":
 				case "ReplayGain":
 				case "Year":
+				case "PlayCount":
 					$filtered = array();
 					$range = explode($separator, $search);
 					$filtered["from"] = isset($range[0]) && $range[0] !== "" ? intval($range[0]) : null;

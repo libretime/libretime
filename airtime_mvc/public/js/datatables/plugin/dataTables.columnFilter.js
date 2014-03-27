@@ -114,7 +114,7 @@
             label = label.replace(/(^\s*)|(\s*$)/g, "");
             var search_init = 'search_init ';
             
-            var input = $('<input id = '+id+' type="text" class="' + search_init + sCSSClass + '" placeholder="' + label + '" rel="' + index + '"/>');
+            var input = $('<input id = '+id+' type="text" class="input_text ' + search_init + sCSSClass + '" placeholder="' + label + '" rel="' + index + '"/>');
             if (iMaxLength != undefined && iMaxLength != -1) {
                 input.attr('maxlength', iMaxLength);
             }
@@ -135,11 +135,11 @@
 
             th.html(_fnRangeLabelPart(0));
             var sFromId = oTable.attr("id") + '_range_from_' + i;
-            var from = $('<input type="text" class="number_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
+            var from = $('<input type="text" class="input_text number_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
             th.append(from);
             th.append(_fnRangeLabelPart(1));
             var sToId = oTable.attr("id") + '_range_to_' + i;
-            var to = $('<input type="text" class="number_range_filter" id="' + sToId + '" rel="' + i + '"/>');
+            var to = $('<input type="text" class="input_text number_range_filter" id="' + sToId + '" rel="' + i + '"/>');
             th.append(to);
             th.append(_fnRangeLabelPart(2));
             th.wrapInner('<span class="filter_column filter_number_range" />');
@@ -188,11 +188,11 @@
 
             th.html("");
             var sFromId = oTable.attr("id") + '_range_from_' + i;
-            var from = $('<input type="text" class="date_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
+            var from = $('<input type="text" class="input_text date_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
             from.datepicker();
            
             var sToId = oTable.attr("id") + '_range_to_' + i;
-            var to = $('<input type="text" class="date_range_filter" id="' + sToId + '" rel="' + i + '"/>');
+            var to = $('<input type="text" class="input_text date_range_filter" id="' + sToId + '" rel="' + i + '"/>');
             
             for (ti = 0; ti < aoFragments.length; ti++) {
 
