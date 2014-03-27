@@ -5,7 +5,7 @@ post_file() {
     max_retry=360
     retry_count=0
 
-    file_path=$1
+    file_path=${1}
     filename="${file_path##*/}"
 	
     #base_instance_path and airtime_conf_path are common to all saas instances
@@ -14,7 +14,7 @@ post_file() {
 	
     #maps the instance_path to the url
     vhost_file=/mnt/airtimepro/system/vhost.map
-	
+
     #instance_path will look like 1/1384, for example
     instance_path=$(echo $file_path | grep -Po "(?<=($base_instance_path)).*?(?=/srv)")
 	
@@ -27,8 +27,8 @@ post_file() {
     instance_conf_path=$base_instance_path$instance_path$airtime_conf_path
 	
     api_key=$(sudo awk -F "=" '/api_key/ {print $2}' $instance_conf_path)
-	
-    until curl --max-time 30 $url -u $api_key":" -X POST -F "file=@$file_path" -F "name=$filename"
+
+    until curl --max-time 30 $url -u $api_key":" -X POST -F "file=@${file_path}" -F "name=${filename}"
     do
         retry_count=$[$retry_count+1]
         if [ $retry_count -ge $max_retry ]; then
@@ -38,4 +38,4 @@ post_file() {
     done
 }
 
-post_file "$1" &
+post_file "${1}" &
