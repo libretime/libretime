@@ -68,4 +68,6 @@ a test, run:
 
     $ nosetests -s
 
+To run the unit tests and generate a code coverage report, run:
 
+    $ nosetests --with-coverage --cover-package=airtime_analyzer

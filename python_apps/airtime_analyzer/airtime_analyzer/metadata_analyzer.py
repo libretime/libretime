@@ -6,9 +6,6 @@ from analyzer import Analyzer
 
 class MetadataAnalyzer(Analyzer):
 
-    def __init__(self):
-        pass
-
     @staticmethod
     def analyze(filename, metadata):
         if not isinstance(filename, unicode):
@@ -33,6 +30,9 @@ class MetadataAnalyzer(Analyzer):
         #Use the python-magic module to get the MIME type.
         mime_magic = magic.Magic(mime=True)
         metadata["mime"] = mime_magic.from_file(filename)
+   
+        if isinstance(info, mutagen.mp3.MPEGInfo):
+            print "mode is: " + str(info.mode)
 
         #Try to get the number of channels if mutagen can...
         try:

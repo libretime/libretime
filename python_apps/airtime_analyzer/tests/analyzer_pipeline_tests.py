@@ -2,11 +2,12 @@ from nose.tools import *
 import os
 import shutil
 import multiprocessing
+import Queue
 import datetime
 from airtime_analyzer.analyzer_pipeline import AnalyzerPipeline
 
 DEFAULT_AUDIO_FILE = u'tests/test_data/44100Hz-16bit-mono.mp3'
-DEFAULT_IMPORT_DEST = u'Test Artist/44100Hz-16bit-mono.mp3'
+DEFAULT_IMPORT_DEST = u'Test Artist/Test Album/44100Hz-16bit-mono.mp3'
 
 def setup():
     pass
@@ -31,4 +32,20 @@ def test_basic():
     assert results['length_seconds'] == 3.90925
     assert results["length"] == str(datetime.timedelta(seconds=results["length_seconds"]))
     assert os.path.exists(DEFAULT_IMPORT_DEST)
+
+@raises(TypeError)
+def test_wrong_type_queue_param():
+    AnalyzerPipeline.run_analysis(Queue.Queue(), u'', u'', u'')
+
+@raises(TypeError)
+def test_wrong_type_string_param2():
+    AnalyzerPipeline.run_analysis(multiprocessing.queues.Queue(), '', u'', u'')
+
+@raises(TypeError)
+def test_wrong_type_string_param3():
+    AnalyzerPipeline.run_analysis(multiprocessing.queues.Queue(), u'', '', u'')
+
+@raises(TypeError)
+def test_wrong_type_string_param4():
+    AnalyzerPipeline.run_analysis(multiprocessing.queues.Queue(), u'', u'', '')
 

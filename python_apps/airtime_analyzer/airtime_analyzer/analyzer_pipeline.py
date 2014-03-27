@@ -5,10 +5,6 @@ from filemover_analyzer import FileMoverAnalyzer
 
 class AnalyzerPipeline:
 
-    # Constructor
-    def __init__(self):
-        pass
-
     # Take message dictionary and perform the necessary analysis.
     @staticmethod
     def run_analysis(queue, audio_file_path, import_directory, original_filename):

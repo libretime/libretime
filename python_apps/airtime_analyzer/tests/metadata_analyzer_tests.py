@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
+import mutagen
+import mock
 from nose.tools import *
 from airtime_analyzer.metadata_analyzer import MetadataAnalyzer 
 
@@ -112,3 +114,36 @@ def test_mp3_utf8():
     assert metadata['mime'] == 'audio/mpeg'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
+# Make sure the parameter checking works
+@raises(TypeError)
+def test_move_wrong_string_param1():
+    not_unicode = 'asdfasdf'
+    MetadataAnalyzer.analyze(not_unicode, dict())
+
+@raises(TypeError)
+def test_move_wrong_metadata_dict():
+    not_a_dict = list()
+    MetadataAnalyzer.analyze(u'asdfasdf', not_a_dict)
+
+# Test an mp3 file where the number of channels is invalid or missing:
+def test_mp3_bad_channels():
+    filename = u'tests/test_data/44100Hz-16bit-mono.mp3'
+    ''' 
+        It'd be a pain in the ass to construct a real MP3 with an invalid number
+        of channels by hand because that value is stored in every MP3 frame in the file
+    '''
+    print "testing bad channels..."
+    audio_file = mutagen.File(filename, easy=True)
+    audio_file.info.mode = 1777
+    with mock.patch('airtime_analyzer.metadata_analyzer.mutagen') as mock_mutagen:
+        mock_mutagen.File.return_value = audio_file
+        #mock_mutagen.side_effect = lambda *args, **kw: audio_file #File(*args, **kw)
+
+    metadata = MetadataAnalyzer.analyze(filename, dict())
+    check_default_metadata(metadata)
+    assert metadata['channels'] == 1
+    assert metadata['bit_rate'] == 64000
+    assert metadata['length_seconds'] == 3.90925 
+    assert metadata['mime'] == 'audio/mpeg' # Not unicode because MIMEs aren't.
+    assert metadata['track_total'] == u'10' # MP3s can have a track_total
+    #Mutagen doesn't extract comments from mp3s it seems
