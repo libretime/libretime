@@ -16,7 +16,7 @@ post_file() {
     vhost_file=/mnt/airtimepro/system/vhost.map
 
     #instance_path will look like 1/1384, for example
-    instance_path=$(echo $file_path | grep -Po "(?<=($base_instance_path)).*?(?=/srv)")
+    instance_path=$(echo ${file_path} | grep -Po "(?<=($base_instance_path)).*?(?=/srv)")
 	
     #post request url - http://bananas.airtime.pro/rest/media, for example
     url=http://
