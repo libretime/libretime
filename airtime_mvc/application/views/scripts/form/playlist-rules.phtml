@@ -1,9 +1,11 @@
 <dl class='zend_form search-criteria'>
-    <dd id='track_rules'>
+    <dd>
 		<span class='sp_text_font'><?php echo $this->element->getElement('pl_repeat_tracks')->getLabel() ?></span>
         <span class='repeat_tracks_help_icon'></span>
         <?php echo $this->element->getElement('pl_repeat_tracks')?>
 
+    </dd>
+    <dd>
 		<span class='sp_text_font'><?php echo $this->element->getElement('pl_my_tracks')->getLabel() ?></span>
         <span class='repeat_tracks_help_icon'></span>
         <?php echo $this->element->getElement('pl_my_tracks')?>
@@ -24,14 +26,18 @@
 	            	$input1 = $this->element->getElement("sp_criteria_value_{$suffix}");
 	            	$input2 = $this->element->getElement("sp_criteria_extra_{$suffix}");
 	            	$unit1 = $this->element->getElement("sp_rel_date_unit_1_{$suffix}");
-	            	$unit2 = $this->element->getElement("sp_rel_date_unit_2_{$suffix}")
+	            	$unit2 = $this->element->getElement("sp_rel_date_unit_2_{$suffix}");
+	            	
+	            	$checkErrors = array($criteria, $modifier, $input1, $input2, $unit1, $unit2);
 	            ?>
     			
 	        	<?php echo $criteria; ?>
-	            <?php echo $modifier; ?>
-
 	            <?php if (isset($input1)): ?>
 	            <?php echo $input1; ?>
+	            <?php endif; ?>
+
+	            <?php if (isset($modifier)): ?>
+	            <?php echo $modifier; ?>
 	            <?php endif; ?>
 	            
 	            <?php if (isset($unit1)): ?>
@@ -43,7 +49,7 @@
 	                <?php echo _("to"); ?>
 	            	<?php echo $input2; ?>
 	            </span>
-	            <?php elseif (in_array ($modifier->getValue(), array(20, 21))): ?>
+	            <?php elseif (isset($modifier) && in_array ($modifier->getValue(), array(20, 21))): ?>
 	            <a class="btn btn-small btn-range">
 	            	<span>TO</span>
 	            </a>
@@ -60,6 +66,17 @@
 	                <span><?php echo _("OR"); ?></span>
 	            </a> 
 	    	</div>
+	    	
+	    	<?php foreach($checkErrors as $field): ?>
+	    	<?php if (isset($field) && $field->hasErrors()) : ?>
+	            <?php foreach($field->getMessages() as $error): ?>
+	            <span class='errors sp-errors'>
+	                <?php echo $error; ?>
+	            </span>
+	            <?php endforeach; ?>
+	        <?php endif; ?>
+	    	<?php endforeach; ?>
+	    	
     		<?php endfor; ?>
 	    	
 	    </div>
@@ -71,7 +88,9 @@
     <dd id='rule_order' class="criteria-element">
     	<?php 
     	$order = $this->element->getElement('pl_order_column'); 
-    	$direction = $this->element->getElement('pl_order_direction');	
+    	$direction = $this->element->getElement('pl_order_direction');
+
+    	$checkErrors = array($order, $direction);
     	?>
     	<span class='sp_text_font'><?php echo $order->getLabel() ?></span>
         <?php echo $order ?>
@@ -79,18 +98,37 @@
         	$direction->setAttrib('style', 'display:none;');
         } ?>
         <?php echo $direction ?>
-    </dd>
-    
-    <dd id='rule_limit' class="criteria-element">
-    	<span class='sp_text_font'><?php echo $this->element->getElement('pl_limit_value')->getLabel() ?></span>
-        <?php echo $this->element->getElement('pl_limit_value')?>
-        <?php echo $this->element->getElement('pl_limit_options') ?>
-        <?php if($this->element->getElement("pl_limit_value")->hasErrors()) : ?>
-            <?php foreach($this->element->getElement("pl_limit_value")->getMessages() as $error): ?>
+        
+        <?php foreach($checkErrors as $field): ?>
+    	<?php if (isset($field) && $field->hasErrors()) : ?>
+            <?php foreach($field->getMessages() as $error): ?>
             <span class='errors sp-errors'>
                 <?php echo $error; ?>
             </span>
             <?php endforeach; ?>
         <?php endif; ?>
+    	<?php endforeach; ?>
+    </dd>
+    
+    <dd id='rule_limit' class="criteria-element">
+    	<?php 
+    		$value = $this->element->getElement('pl_limit_value');
+    		$options = $this->element->getElement('pl_limit_options');
+    		
+    		$checkErrors = array($value, $options);
+    	?>
+    	<span class='sp_text_font'><?php echo $value->getLabel() ?></span>
+        <?php echo $value ?>
+        <?php echo  $options ?>
+        
+        <?php foreach($checkErrors as $field): ?>
+    	<?php if (isset($field) && $field->hasErrors()) : ?>
+            <?php foreach($field->getMessages() as $error): ?>
+            <span class='errors sp-errors'>
+                <?php echo $error; ?>
+            </span>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    	<?php endforeach; ?>
     </dd>
 </dl>

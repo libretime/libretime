@@ -20,6 +20,7 @@ class PlaylistController extends Zend_Controller_Action
             ->addActionContext('shuffle', 'json')
             ->addActionContext('generate', 'json')
             ->addActionContext('clear', 'json')
+            ->addActionContext('save-rules', 'json')
             ->initContext();
         
 	
@@ -163,6 +164,55 @@ class PlaylistController extends Zend_Controller_Action
     		$playlist = $this->getPlaylist();
     		$playlist->savePlaylistContent($con, $content);
     		$this->createUpdateResponse($playlist);
+    		
+    		$con->commit();
+    	}
+    	catch (Exception $e) {
+    		$con->rollBack();
+    		$this->view->error = $e->getMessage();
+    	}
+    }
+    
+    public function saveRulesAction()
+    {
+    	$rules = $this->_getParam('rules');
+    	Logging::info($rules);
+    	
+    	$con = Propel::getConnection(PlaylistPeer::DATABASE_NAME);
+    	$con->beginTransaction();
+    	 
+    	try {
+    		$playlist = $this->getPlaylist();
+    		
+    		$form = new Application_Form_PlaylistRules();
+    		
+    		if (isset($rules["criteria"])) {
+    			$form->buildCriteriaOptions($rules["criteria"]);
+    		}
+    		
+    		$criteriaFields = $form->getPopulateHelp();
+    		
+    		$playlistRules = array(
+    			"pl_repeat_tracks" => $rules[Playlist::RULE_REPEAT_TRACKS],
+    			"pl_my_tracks" => $rules[Playlist::RULE_USERS_TRACKS_ONLY],
+    			"pl_order_column" => $rules[Playlist::RULE_ORDER][Playlist::RULE_ORDER_COLUMN],
+    			"pl_order_direction" => $rules[Playlist::RULE_ORDER][Playlist::RULE_ORDER_DIRECTION],
+    			"pl_limit_value" => $rules["limit"]["value"],
+    			"pl_limit_options" => $rules["limit"]["unit"]
+    		);
+    		
+    		$data = array_merge($criteriaFields, $playlistRules);
+    		
+    		if ($form->isValid($data)) {
+    			Logging::info("playlist rules are valid");
+    			Logging::info($form->getValues());
+    			$playlist->setRules($rules);
+    		}
+    		else {
+    			Logging::info("invalid playlist rules");
+    			Logging::info($form->getMessages());
+    			$this->view->form = $form->render();
+    		}
     		
     		$con->commit();
     	}

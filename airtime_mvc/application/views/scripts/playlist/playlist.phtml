@@ -33,6 +33,18 @@
 <?php if (isset($this->obj)):?>
 	<input id="playlist_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"></input>
 	<input id="playlist_lastmod" type="hidden" value="<?php echo $this->obj->getLastModifiedEpoch(); ?>"></input>
+	
+	<fieldset class="toggle">
+		<legend style="cursor: pointer;">
+			<span class="ui-icon ui-icon-triangle-2-n-s"></span>
+			<?php echo _("Options") ?>
+		</legend>
+		<?php echo $this->obj->getRules(); ?>
+		<div class='btn-group pull-right'>
+	        <button id="spl_rules_save" class="btn" role="button" aria-disabled="false"><?php echo _("Save") ?></button>
+	    </div>
+	</fieldset>
+	
 	<div class="playlist_title">
 	    <h3 id="playlist_name">
 	        <a id="playlist_name_display" contenteditable="true">
@@ -60,14 +72,6 @@
 	            </textarea>
 	        </dd>
 	    </dl>
-	</fieldset>
-	
-	<fieldset class="toggle">
-		<legend style="cursor: pointer;">
-			<span class="ui-icon ui-icon-triangle-2-n-s"></span>
-			<?php echo _("Options") ?>
-		</legend>
-		<?php echo $this->obj->getRules(); ?>
 	</fieldset>
 	
 	<?php if($this->obj->hasContent()):?>

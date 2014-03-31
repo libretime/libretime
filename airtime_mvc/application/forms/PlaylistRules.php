@@ -205,7 +205,12 @@ class Application_Form_PlaylistRules extends Zend_Form
     		->setAttrib('class', 'sp_input_text_limit')
 	    	->setLabel(_('Limit to'))
 	    	->setRequired(true)
-	    	->setDecorators(array('ViewHelper'));
+	    	->setDecorators(array('ViewHelper'))
+	    	->setValidators(array(
+    			new Zend_Validate_NotEmpty(),
+    			new Zend_Validate_Int(),
+    			new Zend_Validate_Between(array('min' => 1, 'max' => PHP_INT_MAX))
+	    	));
     	$this->addElement($limitValue);
     	
     	$orderby = new Zend_Form_Element_Select('pl_order_column');
@@ -252,6 +257,7 @@ class Application_Form_PlaylistRules extends Zend_Form
     			$input->setValidators(array(
     				new Zend_Validate_NotEmpty(),
 					new Zend_Validate_Int(),
+					new Zend_Validate_Between(array('min' => 0, 'max' => PHP_INT_MAX))
 				));
 				break;
     		case "s":
@@ -276,7 +282,6 @@ class Application_Form_PlaylistRules extends Zend_Form
     	$criteria = new Zend_Form_Element_Select("sp_criteria_field_{$suffix}");
     	$criteria
 	    	->setAttrib('class', 'input_select sp_input_select rule_criteria')
-	    	->setValue('Select criteria')
 	    	->setDecorators(array('viewHelper'))
 	    	->setMultiOptions($this->getCriteriaOptions());
     	 
@@ -348,22 +353,25 @@ class Application_Form_PlaylistRules extends Zend_Form
     private function buildRuleCriteriaRow($info = null) {
     	$suffix = mt_rand(10000, 99999);
     	
-    	if (is_null($info)) {
-    		$criteria = "";
-    	}
-    	else {
-    		$criteria = $info["criteria"];
-    	}
-    	
-    	$critType = $this->_criteriaTypes[$criteria];
     	$critKey = self::buildRuleCriteria($suffix);
-    	
+
     	if (isset($info)) {
-    		
+
     		if (isset($info["criteria"])) {
-    			$this->_populateHelp[$critKey] = $info["criteria"];
+    			
+    			$criteria = $info["criteria"];
+    			$this->_populateHelp[$critKey] = $criteria;
     		}
     		
+    		//check that a valid criteria was passed to build the rest of the row with.
+    		try {
+    			$critType = $this->_criteriaTypes[$criteria];
+    		}
+    		catch (Exception $e) {
+    			$this->getElement("sp_criteria_field_{$suffix}")->addError("Invalid criteria {$criteria}");
+    			return $suffix;
+    		}
+
     		if (isset($info["modifier"])) {
     			
     			$options = self::getModifierOptions($criteria);

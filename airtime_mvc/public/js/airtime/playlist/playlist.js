@@ -439,20 +439,9 @@ var AIRTIME = (function(AIRTIME){
 		return criteria;
 	}
 	
-	function serializePlaylist(order) {
-		var i, len,
-			info = {},
-			entries = [];
+	function serializeRules() {
 		
-		for (i = 0, len = order.length; i < len; i++) {
-			entries.push(getEntryDetails(order[i]));
-		}
-		
-		info["name"] = cleanString($("#playlist_name").text());
-		info["description"] = cleanString($("#playlist_description").val());
-		info["content"] = entries;
-		
-		info["rules"] = {
+		var rules = {
 			"repeat-tracks": $("#pl_repeat_tracks").is(":checked"),
 			"my-tracks": $("#pl_my_tracks").is(":checked"),
 			"limit": {
@@ -465,6 +454,22 @@ var AIRTIME = (function(AIRTIME){
 				"direction": $("#pl_order_direction").val()
 			}
 		};
+		
+		return rules;
+	}
+	
+	function serializePlaylist(order) {
+		var i, len,
+			info = {},
+			entries = [];
+		
+		for (i = 0, len = order.length; i < len; i++) {
+			entries.push(getEntryDetails(order[i]));
+		}
+		
+		info["name"] = cleanString($("#playlist_name").text());
+		info["description"] = cleanString($("#playlist_description").val());
+		info["content"] = entries;
 		
 		return info;
 	}
@@ -796,6 +801,19 @@ var AIRTIME = (function(AIRTIME){
 			
 			$.post(url, data, function(json) {
 				mod.redrawPlaylist(json);
+			});
+		});
+		
+		$playlist.on("click", "#spl_rules_save", function(e) {
+			var url = baseUrl+"playlist/save-rules",
+				data;
+
+			data = {format: "json", rules: serializeRules()};
+			
+			$.post(url, data, function(json) {
+				if (json.form !== undefined) {
+					$(".search-criteria").replaceWith(json.form);
+				}
 			});
 		});
 		
