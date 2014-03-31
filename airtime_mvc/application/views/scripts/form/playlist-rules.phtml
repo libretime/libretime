@@ -32,14 +32,15 @@
 	            ?>
     			
 	        	<?php echo $criteria; ?>
+	        	
+	        	<?php if (isset($modifier)): ?>
+	            <?php echo $modifier; ?>
+	            <?php endif; ?>
+	        	
 	            <?php if (isset($input1)): ?>
 	            <?php echo $input1; ?>
 	            <?php endif; ?>
 
-	            <?php if (isset($modifier)): ?>
-	            <?php echo $modifier; ?>
-	            <?php endif; ?>
-	            
 	            <?php if (isset($unit1)): ?>
 	            <?php echo $unit1; ?>
 	            <?php endif; ?>
