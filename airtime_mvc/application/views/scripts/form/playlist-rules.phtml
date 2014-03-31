@@ -64,21 +64,20 @@
 	            </a>
 	            <a class="btn btn-small pl-or-criteria">
 	                <span><?php echo _("OR"); ?></span>
-	            </a> 
+	            </a>
+	            
+	            <?php foreach($checkErrors as $field): ?>
+		    	<?php if (isset($field) && $field->hasErrors()) : ?>
+		            <?php foreach($field->getMessages() as $error): ?>
+		            <span class='errors sp-errors'>
+		                <?php echo $error; ?>
+		            </span>
+		            <?php endforeach; ?>
+		        <?php endif; ?>
+		    	<?php endforeach; ?>
+		    	
+	    		<?php endfor; ?>
 	    	</div>
-	    	
-	    	<?php foreach($checkErrors as $field): ?>
-	    	<?php if (isset($field) && $field->hasErrors()) : ?>
-	            <?php foreach($field->getMessages() as $error): ?>
-	            <span class='errors sp-errors'>
-	                <?php echo $error; ?>
-	            </span>
-	            <?php endforeach; ?>
-	        <?php endif; ?>
-	    	<?php endforeach; ?>
-	    	
-    		<?php endfor; ?>
-	    	
 	    </div>
     	<?php endfor; ?>
     	
