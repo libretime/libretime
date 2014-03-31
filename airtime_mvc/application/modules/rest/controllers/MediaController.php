@@ -6,7 +6,13 @@ class Rest_MediaController extends Zend_Rest_Controller
     //fields that are not modifiable via our RESTful API
     private $blackList = array(
         'id',
+        'directory',
+        'filepath',
         'file_exists',
+        'hidden',
+        'mtime',
+        'utime',
+        'lptime',
         'silan_check',
         'soundcloud_id',
         'is_scheduled',
@@ -147,9 +153,18 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         
         $file = CcFilesQuery::create()->findPk($id);
-        if ($file)
+        //validate fields
+        $requestData = json_decode($this->getRequest()->getRawBody(), true);
+        //TODO: rename EditAudioMD form?
+        $fileForm = new Application_Form_EditAudioMD();
+        $fileForm->startForm($file->getDbId());
+        $fileForm->populate($requestData);
+
+        if (!$fileForm->isValidPartial($requestData)) {
+            $file->setDbImportStatus(2)->save();
+            $this->invalidDataResponse();
+        } else if ($file)
         {
-            $requestData = json_decode($this->getRequest()->getRawBody(), true);
             $file->fromArray($this->validateRequestData($requestData), BasePeer::TYPE_FIELDNAME);
 
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
@@ -179,6 +194,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode($this->sanitizeResponse($file)));
         } else {
+            $file->setDbImportStatus(2)->save();
             $this->fileNotFoundResponse();
         }
     }
@@ -283,6 +299,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
         $resp->appendBody("ERROR: Media not found."); 
+    }
+
+    private function invalidDataResponse()
+    {
+        $resp = $this->getResponse();
+        $resp->setHttpResponseCode(400);
+        $resp->appendBody("ERROR: Invalid data");
     }
     
     private function processUploadedFile($callbackUrl, $originalFilename, $ownerId)
