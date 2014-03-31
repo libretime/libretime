@@ -307,10 +307,12 @@ class Application_Form_PlaylistRules extends Zend_Form
     
     private function buildRuleInput($suffix, $critType) {
     	
+    	$class = ($critType == "d") ? "input_date" : "";
+    	
     	$criteriaValue = new Zend_Form_Element_Text("sp_criteria_value_{$suffix}");
     	$criteriaValue
     		->setRequired(true)
-	    	->setAttrib('class', 'input_text sp_input_text')
+	    	->setAttrib('class', "input_text sp_input_text {$class}")
 	    	->setDecorators(array('viewHelper'));
     	
     	$this->addInputValidatorAndFilter($criteriaValue, $critType);
