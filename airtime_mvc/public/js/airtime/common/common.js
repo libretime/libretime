@@ -50,10 +50,14 @@ var i18n_days_short = [
 
 //set jQuery datepicker to match Airtime date format.
 $.datepicker.regional[""].dateFormat = 'yy-mm-dd';
-$.datepicker.regional[""].monthNames = i18n_months,
-$.datepicker.regional[""].dayNamesMin = i18n_days_short,
-$.datepicker.regional[""].closeText = $.i18n._('Close'),
+$.datepicker.regional[""].monthNames = i18n_months;
+$.datepicker.regional[""].dayNamesMin = i18n_days_short;
+$.datepicker.regional[""].closeText = $.i18n._('Close');
 $.datepicker.setDefaults($.datepicker.regional[""]);
+
+$.datetimepicker.regional[""].timeFormat = "HH:mm:ss";
+$.datetimepicker.regional[""].controlType = "select";
+$.datetimepicker.setDefaults($.datetimepicker.regional[""]);
 
 function adjustDateToServerDate(date, serverTimezoneOffset){
     //date object stores time in the browser's localtime. We need to artificially shift 

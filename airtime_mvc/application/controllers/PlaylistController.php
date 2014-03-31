@@ -207,6 +207,7 @@ class PlaylistController extends Zend_Controller_Action
     			Logging::info("playlist rules are valid");
     			Logging::info($form->getValues());
     			$playlist->setRules($rules);
+    			$playlist->save($con);
     		}
     		else {
     			Logging::info("invalid playlist rules");

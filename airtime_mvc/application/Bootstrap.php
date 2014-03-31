@@ -80,6 +80,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         //jPlayer css.
         $view->headLink()->appendStylesheet($baseUrl.'css/jplayer.airtime.audio.preview.css?'.$CC_CONFIG['airtime_version']);
+        $view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
     }
 
     protected function _initHeadScript()
@@ -104,6 +105,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'locale/general-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendFile($baseUrl.'locale/datatables-translation-table?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $view->headScript()->appendScript("$.i18n.setDictionary(general_dict)");
+        
+        $view->headScript()->appendFile($baseUrl.'js/timepicker/jquery-ui-timepicker-addon.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        
+        
         $view->headScript()->appendScript("var baseUrl='$baseUrl'");
 
 		//These timezones are needed to adjust javascript Date objects on the client to make sense to the user's set timezone

@@ -144,39 +144,6 @@
             th.append(_fnRangeLabelPart(2));
             th.wrapInner('<span class="filter_column filter_number_range" />');
             var index = i;
-            
-            //------------start range filtering function
-
-
-            /* 	Custom filtering function which will filter data in column four between two values
-            *	Author: 	Allan Jardine, Modified by Jovan Popovic
-            */
-            oTable.dataTableExt.afnFiltering.push(
-		        function (oSettings, aData, iDataIndex) {
-		            if (oTable.attr("id") != oSettings.sTableId)
-		                return true;
-		            // Try to handle missing nodes more gracefully
-		            if (document.getElementById(sFromId) == null)
-		                return true;
-		            var iMin = document.getElementById(sFromId).value * 1;
-		            var iMax = document.getElementById(sToId).value * 1;
-		            var iValue = aData[_fnColumnIndex(index)] == "-" ? 0 : aData[_fnColumnIndex(index)] * 1;
-		            if (iMin == "" && iMax == "") {
-		                return true;
-		            }
-		            else if (iMin == "" && iValue <= iMax) {
-		                return true;
-		            }
-		            else if (iMin <= iValue && "" == iMax) {
-		                return true;
-		            }
-		            else if (iMin <= iValue && iValue <= iMax) {
-		                return true;
-		            }
-		            return false;
-		        }
-	        );
-            //------------end range filtering function
 
             aiCustomSearch_Indexes.push(index);
             afnSearch_.push(createCustomRangeSearch(index));
@@ -189,7 +156,7 @@
             th.html("");
             var sFromId = oTable.attr("id") + '_range_from_' + i;
             var from = $('<input type="text" class="input_text date_range_filter" id="' + sFromId + '" rel="' + i + '"/>');
-            from.datepicker();
+            from.datetimepicker();
            
             var sToId = oTable.attr("id") + '_range_to_' + i;
             var to = $('<input type="text" class="input_text date_range_filter" id="' + sToId + '" rel="' + i + '"/>');
@@ -210,48 +177,7 @@
             };
 
             th.wrapInner('<span class="filter_column filter_date_range" />');
-            to.datepicker();
-
-            //------------start date range filtering function
-
-            oTable.dataTableExt.afnFiltering.push(
-		        function (oSettings, aData, iDataIndex) {
-		            if (oTable.attr("id") != oSettings.sTableId)
-		                return true;
-	
-		            var dStartDate = from.datepicker("getDate");
-	
-		            var dEndDate = to.datepicker("getDate");
-	
-		            if (dStartDate == null && dEndDate == null) {
-		                return true;
-		            }
-	
-		            var dCellDate = null;
-		            try {
-		                if (aData[_fnColumnIndex(index)] == null || aData[_fnColumnIndex(index)] == "")
-		                    return false;
-		                dCellDate = $.datepicker.parseDate($.datepicker.regional[""].dateFormat, aData[_fnColumnIndex(index)]);
-		            } catch (ex) {
-		                return false;
-		            }
-		            if (dCellDate == null)
-		                return false;
-	
-	
-		            if (dStartDate == null && dCellDate <= dEndDate) {
-		                return true;
-		            }
-		            else if (dStartDate <= dCellDate && dEndDate == null) {
-		                return true;
-		            }
-		            else if (dStartDate <= dCellDate && dCellDate <= dEndDate) {
-		                return true;
-		            }
-		            return false;
-		        }
-	        );
-            //------------end date range filtering function
+            to.datetimepicker();
 
             aiCustomSearch_Indexes.push(index);
             afnSearch_.push(createCustomRangeSearch(index));

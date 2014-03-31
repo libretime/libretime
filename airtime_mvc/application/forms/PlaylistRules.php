@@ -269,7 +269,7 @@ class Application_Form_PlaylistRules extends Zend_Form
     		case "d":
     			$input->setValidators(array(
     				new Zend_Validate_NotEmpty(),
-					new Zend_Validate_Date(),
+					new Zend_Validate_Date(array('format' => 'yyyy-MM-dd HH:mm:ss')),
 				));
 				break;
     		default:

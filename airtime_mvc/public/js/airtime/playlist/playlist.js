@@ -483,6 +483,10 @@ var AIRTIME = (function(AIRTIME){
 		});
 	}
 	
+	function addDatePickers() {
+		$(".input_date").datetimepicker();
+	}
+	
 	mod.redrawPlaylist = function redrawPlaylist(data) {
 		var $wrapper = $("div.wrapper"),
 			$playlist = $("#side_playlist");
@@ -629,7 +633,7 @@ var AIRTIME = (function(AIRTIME){
 		
 		setupCriteriaOptions();
 		
-		$playlist.find(".input_date").datepicker();
+		addDatePickers();
 		
 		$playlist.on("click", "#spl_AND", function(e) {
 			e.preventDefault();
@@ -815,7 +819,7 @@ var AIRTIME = (function(AIRTIME){
 			$.post(url, data, function(json) {
 				if (json.form !== undefined) {
 					$(".search-criteria").replaceWith(json.form);
-					$(".input_date").datepicker();
+					addDatePickers();
 				}
 			});
 		});
