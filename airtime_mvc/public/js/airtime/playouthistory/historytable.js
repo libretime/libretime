@@ -803,11 +803,22 @@ var AIRTIME = (function(AIRTIME) {
 			}
     	});
     	
+    	//shortcut to open edit dialog.
+    	$historyContentDiv.on("dblclick", "tr", function(e) {
+    		var editUrl = $(this).data('url-edit');
+    		
+    		$.post(editUrl, {format: "json"}, function(json) {
+    			
+    			makeHistoryDialog(json.dialog);
+    			
+    		}, "json");
+    	});
+    	
     	// begin context menu initialization.
         $.contextMenu({
             selector: '#history_content td:not(.his_checkbox)',
-            trigger: "left",
-            ignoreRightClick: true,
+            trigger: "right",
+            ignoreRightClick: false,
             
             build: function($el, e) {
                 var items = {}, 
