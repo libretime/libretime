@@ -26,8 +26,8 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	    $starts->setValidators(array(
 	    	new Zend_Validate_Date(self::VALIDATE_DATETIME_FORMAT)
 	    ));
-	    $starts->setAttrib('class', self::TEXT_INPUT_CLASS." datepicker");
-	    $starts->setAttrib('data-format', self::TIMEPICKER_DATETIME_FORMAT);
+	    $starts->setAttrib('class', self::TEXT_INPUT_CLASS);
+	    //$starts->setAttrib('data-format', self::TIMEPICKER_DATETIME_FORMAT);
 	    $starts->addFilter('StringTrim');
 	    $starts->setLabel(_('Start Time'));
 	    $starts->setDecorators(array('ViewHelper'));
@@ -38,8 +38,8 @@ class Application_Form_EditHistoryItem extends Application_Form_EditHistory
 	    $ends->setValidators(array(
 	    	new Zend_Validate_Date(self::VALIDATE_DATETIME_FORMAT)
 	    ));
-	    $ends->setAttrib('class', self::TEXT_INPUT_CLASS." datepicker");
-	    $ends->setAttrib('data-format', self::TIMEPICKER_DATETIME_FORMAT);
+	    $ends->setAttrib('class', self::TEXT_INPUT_CLASS);
+	    //$ends->setAttrib('data-format', self::TIMEPICKER_DATETIME_FORMAT);
 	    $ends->addFilter('StringTrim');
 	    $ends->setLabel(_('End Time'));
 	    $ends->setDecorators(array('ViewHelper'));

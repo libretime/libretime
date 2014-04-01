@@ -22,14 +22,7 @@
     <label for="<?php echo $name;?>"><?php echo $form->getElement($name)->getLabel() ?></label>
   </dt>
   <dd id="<?php echo $name;?>-element">
-    <div class="well">
-      <div id="<?php echo $name;?>_datetimepicker" class="input-append date">
-        <?php echo $form->getElement($name) ?>
-        <span class="add-on">
-          <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-        </span>
-      </div>
-    </div>
+    <?php echo $form->getElement($name) ?>   
     <?php if ($form->getElement($name)->hasErrors()) : ?>
     <ul class='errors'>
     <?php foreach ($form->getElement($name)->getMessages() as $error): ?>

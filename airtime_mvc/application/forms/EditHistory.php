@@ -3,9 +3,6 @@
 class Application_Form_EditHistory extends Zend_Form
 {
 	const VALIDATE_DATETIME_FORMAT = 'yyyy-MM-dd HH:mm:ss';
-	//this is used by the javascript widget, unfortunately h/H is opposite from Zend.
-	const TIMEPICKER_DATETIME_FORMAT = 'yyyy-MM-dd hh:mm:ss';
-
 	const VALIDATE_DATE_FORMAT = 'yyyy-MM-dd';
 	const VALIDATE_TIME_FORMAT = 'HH:mm:ss';
 

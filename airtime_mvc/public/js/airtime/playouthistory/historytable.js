@@ -8,8 +8,8 @@ var AIRTIME = (function(AIRTIME) {
     
     var $historyContentDiv;
     
-    var historyStartsDatetimeId = "his_item_HISTORY_ITEM_STARTS_datetimepicker";
-    var historyEndsDatetimeId = "his_item_HISTORY_ITEM_ENDS_datetimepicker";
+    var historyStartsDatetimeId = "his_item_HISTORY_ITEM_STARTS";
+    var historyEndsDatetimeId = "his_item_HISTORY_ITEM_ENDS";
     
     var oTableTools = {
         "sSwfPath": baseUrl+"js/datatables/plugin/TableTools-2.1.5/swf/copy_csv_xls_pdf.swf",
@@ -285,7 +285,6 @@ var AIRTIME = (function(AIRTIME) {
 		    	createShowTable($div);
 		    	selectedLogItems = {};
 		    }
-		    //changestart: function( event, ui ) {}
 		});
     }
     
@@ -353,7 +352,6 @@ var AIRTIME = (function(AIRTIME) {
             "sDom": sDom, 
             "oTableTools": oTableTools
         });
-        oTable.fnSetFilteringDelay(350);
        
         return oTable;
     }
@@ -420,7 +418,6 @@ var AIRTIME = (function(AIRTIME) {
             "sDom": sDom, 
             "oTableTools": oTableTools
         });
-        oTable.fnSetFilteringDelay(350);
         
         $toolbar = $historyTableDiv.parents(".dataTables_wrapper").find(".fg-toolbar:first");
         createToolbarButtons($toolbar);
@@ -494,14 +491,6 @@ var AIRTIME = (function(AIRTIME) {
     		    }
     		];
     	
-    	//set the locale names for the bootstrap calendar.
-    	$.fn.datetimepicker.dates = {
-    		daysMin: i18n_days_short,
-    		months: i18n_months,
-    		monthsShort: i18n_months_short
-    	};
-    	
-    	
     	$historyContentDiv = $("#history_content");
     	
     	function redrawTables() {
@@ -519,15 +508,21 @@ var AIRTIME = (function(AIRTIME) {
     		var $startPicker = $hisDialogEl.find('#'+historyStartsDatetimeId),
     			$endPicker = $hisDialogEl.find('#'+historyEndsDatetimeId);
     		
-        	$startPicker.datetimepicker();
-
-        	$endPicker.datetimepicker({
-        		showTimeFirst: true
+        	$startPicker.datetimepicker({
+        		onSelect: function (selectedDateTime){
+        			$endPicker.datetimepicker('option', 'minDate', $startPicker.datetimepicker('getDate') );
+        			$endPicker.val(selectedDateTime);
+        		}
         	});
         	
-        	$startPicker.on('changeDate', function(e) {
-        		$endPicker.data('datetimepicker').setLocalDate(e.localDate);	
-    		});
+        	$endPicker.datetimepicker({
+        		onSelect: function (selectedDateTime){
+        			$startPicker.datetimepicker('option', 'maxDate', $endPicker.datetimepicker('getDate') );
+        		}
+        	});
+        	
+        	//problem with date picker opening if it's already focused on opening.
+        	$startPicker.blur();
     	}
     	
     	function processDialogHtml($el) {
