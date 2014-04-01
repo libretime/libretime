@@ -1,0 +1,19 @@
+﻿//Serbian Latin
+
+{
+"sProcessing": "Obrada...",
+"sLengthMenu": "_MENU_ Rezultati po stranici",
+"sZeroRecords": "Ništa nije pronađeno",
+"sInfo": "Rezultati: _START_ - _END_ Ukupno: _TOTAL_",
+"sInfoEmpty": "Nula Rezultat",
+"sInfoFiltered": "(filtrirano iz _MAX_ ukupnih rezultata)",
+"sInfoPostFix": "",
+"sSearch": "Filter",
+"sUrl": "",
+"oPaginate": {
+"sFirst": "Prva",
+"sPrevious": "Nazad",
+"sNext": "Napred",
+"sLast": "Zadnja"
+}
+}
