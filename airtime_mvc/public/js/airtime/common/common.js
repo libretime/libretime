@@ -57,6 +57,10 @@ $.datepicker.setDefaults($.datepicker.regional[""]);
 
 $.datetimepicker.regional[""].timeFormat = "HH:mm:ss";
 $.datetimepicker.regional[""].controlType = "select";
+$.datetimepicker.regional[""].hourText = "";
+$.datetimepicker.regional[""].minuteText = "";
+$.datetimepicker.regional[""].secondText = "";
+$.datetimepicker.regional[""].showTime = false;
 $.datetimepicker.setDefaults($.datetimepicker.regional[""]);
 
 function adjustDateToServerDate(date, serverTimezoneOffset){

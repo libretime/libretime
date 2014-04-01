@@ -280,7 +280,7 @@ var AIRTIME = (function(AIRTIME){
     	
     	var datepickerOptions = Object.keys(numericCriteriaOptions);
     	if (type === "d" && datepickerOptions.indexOf(modifierValue) !== -1) {
-    		$el.find(".input_text").datepicker();
+    		$el.find(".input_text").datetimepicker();
     	}
     	
     	return $el;
