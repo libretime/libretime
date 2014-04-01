@@ -18,7 +18,7 @@
     <column name="ftype" phpName="DbFtype" type="VARCHAR" size="128" required="true" defaultValue=""/>
     <column name="directory" phpName="DbDirectory" type="INTEGER" required="false"/>
     <column name="filepath" phpName="DbFilepath" type="LONGVARCHAR" required="false" defaultValue=""/>
-    <column name="import_status" phpName="DbImportStatus" type="INTEGER" required="true" defaultValue="0"/>
+    <column name="import_status" phpName="DbImportStatus" type="INTEGER" required="true" defaultValue="1"/>
     <column name="currentlyaccessing" phpName="DbCurrentlyaccessing" type="INTEGER" required="true" defaultValue="0"/>
     <column name="editedby" phpName="DbEditedby" type="INTEGER" required="false"/>
     <column name="mtime" phpName="DbMtime" type="TIMESTAMP" size="6" required="false"/>
