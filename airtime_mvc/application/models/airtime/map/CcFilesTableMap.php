@@ -44,7 +44,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('FTYPE', 'DbFtype', 'VARCHAR', true, 128, '');
 		$this->addForeignKey('DIRECTORY', 'DbDirectory', 'INTEGER', 'cc_music_dirs', 'ID', false, null, null);
 		$this->addColumn('FILEPATH', 'DbFilepath', 'LONGVARCHAR', false, null, '');
-		$this->addColumn('IMPORT_STATUS', 'DbImportStatus', 'INTEGER', true, null, 0);
+		$this->addColumn('IMPORT_STATUS', 'DbImportStatus', 'INTEGER', true, null, 1);
 		$this->addColumn('CURRENTLYACCESSING', 'DbCurrentlyaccessing', 'INTEGER', true, null, 0);
 		$this->addForeignKey('EDITEDBY', 'DbEditedby', 'INTEGER', 'cc_subjs', 'ID', false, null, null);
 		$this->addColumn('MTIME', 'DbMtime', 'TIMESTAMP', false, 6, null);

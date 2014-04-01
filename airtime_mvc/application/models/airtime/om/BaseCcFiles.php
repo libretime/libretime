@@ -66,7 +66,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 
 	/**
 	 * The value for the import_status field.
-	 * Note: this column has a database default value of: 0
+	 * Note: this column has a database default value of: 1
 	 * @var        int
 	 */
 	protected $import_status;
@@ -524,7 +524,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->mime = '';
 		$this->ftype = '';
 		$this->filepath = '';
-		$this->import_status = 0;
+		$this->import_status = 1;
 		$this->currentlyaccessing = 0;
 		$this->length = '00:00:00';
 		$this->file_exists = true;
@@ -2892,7 +2892,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				return false;
 			}
 
-			if ($this->import_status !== 0) {
+			if ($this->import_status !== 1) {
 				return false;
 			}
 
