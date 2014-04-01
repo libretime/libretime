@@ -534,9 +534,79 @@ var AIRTIME = (function(AIRTIME) {
     		return $el;
     	}
     	
-    	function makeHistoryDialog(html) {
-    		$hisDialogEl = $(html);
+    	function fileSave() {
+    		var data = $hisDialogEl.serializeArray();
+    		var url = baseUrl+"Playouthistory/update-file-item/format/json";
+    		
+    		$.post(url, data, function(json) {
+    			
+    			//TODO put errors on form.
+    			if (json.error !== undefined) {
+    				//makeHistoryDialog(json.dialog);
+    			}
+    			else {
+    				removeHistoryDialog();
+    				redrawTables();
+    			}
+    		    	
+    		}, "json");
+    		
+    	}
+    	
+    	function itemSave() {
+    		
+    		var data = $hisDialogEl.serializeArray(),
+    			id = data[0].value,
+    			createUrl = baseUrl+"Playouthistory/create-list-item/format/json",
+    			updateUrl = baseUrl+"Playouthistory/update-list-item/format/json",
+    			url,
+    			$select = $hisDialogEl.find("#his_instance_select"),
+    			instance;
+    		
+    		url = (id === "") ? createUrl : updateUrl;
+    		
+    		if (fnServerData.instance !== undefined) {
+    			data.push({
+    				name: "instance_id",
+    				value: fnServerData.instance
+    			});
+    		}
+    		else if ($select.length > 0) {
+    			instance = $select.val();
+    			
+    			if (instance > 0) {
+    				data.push({
+        				name: "instance_id",
+        				value: instance
+        			});
+    			}		
+    		}
+    				
+    		$.post(url, data, function(json) {
+    			
+    			if (json.form !== undefined) {
+    				var $newForm = $(json.form);
+    				$newForm = processDialogHtml($newForm);
+    				$hisDialogEl.html($newForm.html());
+    				initializeDialog();
+    			}
+    			else {
+    				removeHistoryDialog();
+    				redrawTables();
+    			}
+    		    	
+    		}, "json");
+    		
+    	}
+    	
+    	function makeHistoryDialog(json) {
+    		$hisDialogEl = $(json.dialog);
     		$hisDialogEl = processDialogHtml($hisDialogEl);
+    		
+    		var saveCallback = {
+    			"his_item_": itemSave,
+    			"his_file_": fileSave
+    		};
     		
     		$hisDialogEl.dialog({	       
     	        title: $.i18n._("Edit History Record"),
@@ -544,11 +614,11 @@ var AIRTIME = (function(AIRTIME) {
     	        open: function( event, ui ) {
     	        	initializeDialog();	
     	        },
-    	        close: removeHistoryDialog
-    	       // buttons: [
-	  			//	{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeDialog},
-	  			//	{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveDialog}
-	  			//]
+    	        close: removeHistoryDialog,
+    	        buttons: [
+	  				{text: $.i18n._("Cancel"), class: "btn btn-small", click: removeHistoryDialog},
+	  				{text: $.i18n._("Save"),  class: "btn btn-small btn-inverse", click: saveCallback[json.prefix]}
+	  			]
     	    });
     	}
     	
@@ -607,7 +677,7 @@ var AIRTIME = (function(AIRTIME) {
     		
     		$.get(url, function(json) {
     			
-    			makeHistoryDialog(json.dialog);
+    			makeHistoryDialog(json);
     			
     		}, "json");
     	});
@@ -615,80 +685,6 @@ var AIRTIME = (function(AIRTIME) {
     	$('body').on("click", ".his_file_cancel, .his_item_cancel", function(e) {
     		removeHistoryDialog();
     	});
-    	
-    	$('body').on("click", ".his_file_save", function(e) {
-    		
-    		e.preventDefault();
-    		
-    		var $form = $(this).parents("form");
-    		var data = $form.serializeArray();
-    		
-    		var url = baseUrl+"Playouthistory/update-file-item/format/json";
-    		
-    		$.post(url, data, function(json) {
-    			
-    			//TODO put errors on form.
-    			if (json.error !== undefined) {
-    				//makeHistoryDialog(json.dialog);
-    			}
-    			else {
-    				removeHistoryDialog();
-    				redrawTables();
-    			}
-    		    	
-    		}, "json");
-    		
-    	});
-    	
-    	$('body').on("click", ".his_item_save", function(e) {
-    		
-    		e.preventDefault();
-    		
-    		var $form = $(this).parents("form"),
-    			data = $form.serializeArray(),
-    			id = data[0].value,
-    			createUrl = baseUrl+"Playouthistory/create-list-item/format/json",
-    			updateUrl = baseUrl+"Playouthistory/update-list-item/format/json",
-    			url,
-    			$select = $hisDialogEl.find("#his_instance_select"),
-    			instance;
-    		
-    		url = (id === "") ? createUrl : updateUrl;
-    		
-    		if (fnServerData.instance !== undefined) {
-    			data.push({
-    				name: "instance_id",
-    				value: fnServerData.instance
-    			});
-    		}
-    		else if ($select.length > 0) {
-    			instance = $select.val();
-    			
-    			if (instance > 0) {
-    				data.push({
-        				name: "instance_id",
-        				value: instance
-        			});
-    			}		
-    		}
-    				
-    		$.post(url, data, function(json) {
-    			
-    			if (json.form !== undefined) {
-    				var $newForm = $(json.form);
-    				$newForm = processDialogHtml($newForm);
-    				$hisDialogEl.html($newForm.html());
-    				initializeDialog();
-    			}
-    			else {
-    				removeHistoryDialog();
-    				redrawTables();
-    			}
-    		    	
-    		}, "json");
-    		
-    	});
-    	
     	
     	$historyContentDiv.on("click", ".his_checkbox input", function(e) {
     		var checked = e.currentTarget.checked,
@@ -809,7 +805,7 @@ var AIRTIME = (function(AIRTIME) {
     		
     		$.post(editUrl, {format: "json"}, function(json) {
     			
-    			makeHistoryDialog(json.dialog);
+    			makeHistoryDialog(json);
     			
     		}, "json");
     	});
@@ -836,7 +832,7 @@ var AIRTIME = (function(AIRTIME) {
                 	callback = function() {
                     	$.post(editUrl, {format: "json"}, function(json) {
                 			
-                			makeHistoryDialog(json.dialog);
+                			makeHistoryDialog(json);
                 			
                 		}, "json");
                     };

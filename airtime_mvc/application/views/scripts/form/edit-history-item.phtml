@@ -46,7 +46,7 @@
         <option value="0"><?php echo _("No Show") ?></option>
       </select>
       <?php endif; ?>
-      <button class="btn" type="button" id="his_instance_retrieve"><?php echo _("Find") ?></button>
+      <button class="btn btn-small" type="button" id="his_instance_retrieve"><?php echo _("Find") ?></button>
     </div>
   </dd>
 
@@ -67,12 +67,6 @@
     <?php endif; ?>
   </dd>
 <?php endforeach; ?>
-
-<dd id="submitButtons-element">
-<?php foreach (array("his_item_save", "his_item_cancel") as $name): ?>
-<?php echo $form->getElement($name); ?>
-<?php endforeach;?>
-</dd>
 
 </dl>
 

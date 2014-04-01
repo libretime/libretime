@@ -120,26 +120,6 @@ class Application_Form_EditHistory extends Zend_Form
 		
 		$dynamic_attrs = new Zend_Form_SubForm();
 		$this->addSubForm($dynamic_attrs, $this::ID_PREFIX.'template');
-		
-		// Add the submit button
-		$this->addElement('button', $this::ID_PREFIX.'save', array(
-			'ignore'   => true,
-			'class'    => 'btn '.$this::ID_PREFIX.'save',
-			'label'    => _('Save'),
-			'decorators' => array(
-				'ViewHelper'
-			)
-		));
-		
-		// Add the cancel button
-		$this->addElement('button', $this::ID_PREFIX.'cancel', array(
-			'ignore'   => true,
-			'class'    => 'btn '.$this::ID_PREFIX.'cancel',
-			'label'    => _('Cancel'),
-			'decorators' => array(
-				'ViewHelper'
-			)
-		));
 	}
 	
 	protected function getTemplateSubForm() {

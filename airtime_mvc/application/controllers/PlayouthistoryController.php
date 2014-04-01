@@ -187,6 +187,7 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     	$this->view->form = $form;
     	$this->view->dialog = $this->view->render('playouthistory/dialog.phtml');
+    	$this->view->prefix = $form::ID_PREFIX;
 
     	unset($this->view->form);
     }
@@ -227,6 +228,7 @@ class PlayouthistoryController extends Zend_Controller_Action
 
         $this->view->form = $form;
         $this->view->dialog = $this->view->render('playouthistory/dialog.phtml');
+        $this->view->prefix = $form::ID_PREFIX;
 
         unset($this->view->form);
     }
