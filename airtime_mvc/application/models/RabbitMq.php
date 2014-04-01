@@ -82,7 +82,19 @@ class Application_Model_RabbitMq
     public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
                                                 $callbackUrl, $apiKey)
     {
+        //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
+        //and shared between all instances on Airtime Pro.
+        $config = parse_ini_file("/etc/airtime-saas/rabbitmq-analyzer.ini", true);
+        $conn = new AMQPConnection($config["rabbitmq"]["host"],
+                $config["rabbitmq"]["port"],
+                $config["rabbitmq"]["user"],
+                $config["rabbitmq"]["password"],
+                $config["rabbitmq"]["vhost"]);
+        
         $exchange = 'airtime-uploads';
+        $exchangeType = 'topic';
+        $queue = 'airtime-uploads';
+        $autoDeleteExchange = false;
         $data['tmp_file_path'] = $tmpFilePath;
         $data['import_directory'] = $importedStorageDirectory;
         $data['original_filename'] = $originalFilename;
@@ -90,7 +102,26 @@ class Application_Model_RabbitMq
         $data['api_key'] = $apiKey;
         
         $jsonData = json_encode($data);
-        self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
+        //self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
+                
+        if (!isset($conn)) {
+            throw new Exception("Cannot connect to RabbitMQ server");
+        }
+        
+        $channel = $conn->channel();
+        $channel->access_request($config["rabbitmq"]["vhost"], false, false,
+                true, true);
+        
+        //I'm pretty sure we DON'T want to autodelete ANY exchanges but I'm keeping the code
+        //the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
+        $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
+        
+        $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
+        
+        $channel->basic_publish($msg, $exchange);
+                $channel->close();
+                $conn->close();
+        
     }
     
     public static function SendMessageToHaproxyConfigDaemon($md){
