@@ -126,7 +126,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->setDbTrackTitle($_FILES["file"]["name"]);
             $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
-            $file->setDbHidden(true);
             $file->save();
             return;
         } else {
