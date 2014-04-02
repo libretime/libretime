@@ -603,7 +603,7 @@ var AIRTIME = (function(AIRTIME){
                     //check if the file exists.
                     if (aData.image === true) {
                         $nRow.addClass("lib-audio");
-                        if (!isAudioSupported(aData.mime)) {
+                        if (!AIRTIME.playerPreview.isAudioSupported(aData.mime)) {
                             $image.html('<span class="ui-icon ui-icon-locked"></span>');
                         } 
                         else {
