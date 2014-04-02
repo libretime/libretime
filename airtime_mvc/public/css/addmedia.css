@@ -1,0 +1,66 @@
+@CHARSET "UTF-8";
+
+#recent_uploads_wrapper
+{
+	width: 100%;
+}
+	/*
+	position: absolute;
+	left: 5px;
+	right: 5px;
+    bottom: 5px;
+    margin: 0px;
+    height: 350px;
+}
+.dataTables_scrollHeadInner > table:nth-child(1)
+{
+	margin: 0px;
+}
+*/
+
+#recent_uploads h2
+{
+	font-size: 1.7em;
+}
+
+#recent_uploads_table
+{
+	width: 100%;
+}
+
+#recent_uploads_table_wrapper
+{
+	width: 100%;
+}
+
+table#recent_uploads_table td
+{
+	cursor: auto;
+}
+
+#recent_uploads_filter
+{
+	float: right;
+	margin-top: 10px;
+	margin-right: 3px;
+}
+#recent_uploads_table_length
+{
+	margin: 5px;
+}
+
+/** Vertically align radio buttons with the labels */
+#recent_uploads_filter input[type='radio'] {
+    vertical-align: middle;
+    margin-top: -3px;
+}
+
+#recent_uploads_filter label {
+	padding: 0px;
+}
+
+#recent_uploads_table .deleteFileAction
+{
+	text-decoration: underline;
+	cursor: pointer;
+}

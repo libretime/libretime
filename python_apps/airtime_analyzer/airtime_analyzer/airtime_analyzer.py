@@ -10,19 +10,18 @@ from message_listener import MessageListener
 class AirtimeAnalyzerServer:
 
     # Constants 
-    _CONFIG_PATH = '/etc/airtime/airtime.conf'
     _LOG_PATH = "/var/log/airtime/airtime_analyzer.log"
    
     # Variables
     _log_level = logging.INFO
 
-    def __init__(self, debug=False):
+    def __init__(self, config_path, debug=False):
 
         # Configure logging
         self.setup_logging(debug)
 
         # Read our config file
-        rabbitmq_config = self.read_config_file()
+        rabbitmq_config = self.read_config_file(config_path)
 
         # Start listening for RabbitMQ messages telling us about newly
         # uploaded files.
@@ -55,9 +54,8 @@ class AirtimeAnalyzerServer:
         rootLogger.addHandler(consoleHandler)
 
 
-    def read_config_file(self):
+    def read_config_file(self, config_path):
         config = ConfigParser.SafeConfigParser()
-        config_path = AirtimeAnalyzerServer._CONFIG_PATH 
         try:
             config.readfp(open(config_path))
         except IOError as e:
