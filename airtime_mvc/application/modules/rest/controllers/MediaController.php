@@ -9,7 +9,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         'directory',
         'filepath',
         'file_exists',
-        'hidden',
         'mtime',
         'utime',
         'lptime',
@@ -122,22 +121,30 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
 
         $file = new CcFiles();
-        $file->fromArray($this->validateRequestData($this->getRequest()->getPost()));
-        $file->setDbOwnerId($this->getOwnerId());
-        $now  = new DateTime("now", new DateTimeZone("UTC"));
-        $file->setDbTrackTitle($_FILES["file"]["name"]);
-        $file->setDbUtime($now);
-        $file->setDbMtime($now);
-        $file->setDbHidden(true);
-        $file->save();
-        
-        $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
+        $whiteList = $this->removeBlacklistedFieldsFromRequestData($this->getRequest()->getPost());
 
-        $this->processUploadedFile($callbackUrl, $_FILES["file"]["name"], $this->getOwnerId());
+        if (!$this->validateRequestData($file, $whiteList)) {
+            $file->setDbTrackTitle($_FILES["file"]["name"]);
+            $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
+            $file->save();
+            return;
+        } else {
 
-        $this->getResponse()
-            ->setHttpResponseCode(201)
-            ->appendBody(json_encode($this->sanitizeResponse($file)));
+            $file->fromArray($whiteList);
+            $file->setDbOwnerId($this->getOwnerId());
+            $now  = new DateTime("now", new DateTimeZone("UTC"));
+            $file->setDbTrackTitle($_FILES["file"]["name"]);
+            $file->setDbUtime($now);
+            $file->save();
+
+            $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
+    
+            $this->processUploadedFile($callbackUrl, $_FILES["file"]["name"], $this->getOwnerId());
+    
+            $this->getResponse()
+                ->setHttpResponseCode(201)
+                ->appendBody(json_encode($this->sanitizeResponse($file)));
+        }
     }
 
     public function putAction()
@@ -153,19 +160,15 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         
         $file = CcFilesQuery::create()->findPk($id);
-        //validate fields
-        $requestData = json_decode($this->getRequest()->getRawBody(), true);
-        //TODO: rename EditAudioMD form?
-        $fileForm = new Application_Form_EditAudioMD();
-        $fileForm->startForm($file->getDbId());
-        $fileForm->populate($requestData);
 
-        if (!$fileForm->isValidPartial($requestData)) {
-            $file->setDbImportStatus(2)->save();
-            $this->invalidDataResponse();
-        } else if ($file)
-        {
-            $file->fromArray($this->validateRequestData($requestData), BasePeer::TYPE_FIELDNAME);
+        $requestData = json_decode($this->getRequest()->getRawBody(), true);
+        $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
+
+        if (!$this->validateRequestData($file, $whiteList)) {
+            $file->save();
+            return;
+        } else if ($file) {
+            $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
 
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
             //our internal schema. Internally, file path is stored relative to a directory, with the directory
@@ -307,7 +310,23 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp->setHttpResponseCode(400);
         $resp->appendBody("ERROR: Invalid data");
     }
-    
+
+    private function validateRequestData($file, $whiteList)
+    {
+        // EditAudioMD form is used here for validation
+        $fileForm = new Application_Form_EditAudioMD();
+        $fileForm->startForm($file->getDbId());
+        $fileForm->populate($whiteList);
+
+        if (!$fileForm->isValidPartial($whiteList)) {
+            $file->setDbImportStatus(2);
+            $file->setDbHidden(true);
+            $this->invalidDataResponse();
+            return false;
+        }
+        return true;
+    }
+
     private function processUploadedFile($callbackUrl, $originalFilename, $ownerId)
     {
         $CC_CONFIG = Config::getConfig();
@@ -376,11 +395,11 @@ class Rest_MediaController extends Zend_Rest_Controller
      * from outside of Airtime
      * @param array $data
      */
-    private function validateRequestData($data)
+    private function removeBlacklistedFieldsFromRequestData($data)
     {
         foreach ($this->blackList as $key) {
             unset($data[$key]);
-            }
+        }
     
             return $data;
         }
