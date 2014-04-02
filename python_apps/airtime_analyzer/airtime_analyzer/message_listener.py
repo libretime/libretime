@@ -74,6 +74,14 @@ class MessageListener:
     @staticmethod
     def msg_received_callback(channel, method_frame, header_frame, body):
         logging.info(" - Received '%s' on routing_key '%s'" % (body, method_frame.routing_key))
+        
+        #Declare all variables here so they exist in the exception handlers below, no matter what.
+        audio_file_path = ""
+        #final_file_path = ""
+        import_directory = ""
+        original_filename = ""
+        callback_url    = ""
+        api_key         = ""
 
         # Spin up a worker process. We use the multiprocessing module and multiprocessing.Queue 
         # to pass objects between the processes so that if the analyzer process crashes, it does not
