@@ -487,25 +487,46 @@ var AIRTIME = (function(AIRTIME){
 		$(".input_date").datetimepicker();
 	}
 	
+	function checkPlayability($contents) {
+		
+		$contents.each(function(index, element) {
+			var $el = $(element),
+				mime = $el.data("mimeType");
+			
+			if (!AIRTIME.playerPreview.isAudioSupported(mime)) {
+				$el.find(".big_play").attr("class", "big_play_disabled dark_class");
+			}	
+		});
+	}
+	
 	mod.redrawPlaylist = function redrawPlaylist(data) {
 		var $wrapper = $("div.wrapper"),
-			$playlist = $("#side_playlist");
+			$playlist = $("#side_playlist"),
+			$newContent = $(data.html),
+			$contents;
 		
 		$playlist.detach();
-		
+
 		$playlist.find("#playlist_lastmod").val(data.modified);
 		$playlist.find("#playlist_length").text(data.length);
-		$playlist.find("#spl_sortable").html(data.html).sortable("refresh");
+		$playlist.find("#spl_sortable").html($newContent).sortable("refresh");
+		
+		$contents = $playlist.find("#spl_sortable").find("li");
+		checkPlayability($contents);
 		
 		$wrapper.append($playlist);
 	};
 	
 	mod.drawPlaylist = function drawPlaylist(data) {
-		var $playlist = $("#side_playlist");
+		var $playlist = $("#side_playlist"),
+			$newContent = $(data.html),
+			$contents = $newContent.find("#spl_sortable").find("li");
+		
+		checkPlayability($contents);
 		
 		$playlist
 			.empty()
-			.append(data.html);
+			.append($newContent);
 		
 		makeSortable();
 	};
@@ -629,11 +650,12 @@ var AIRTIME = (function(AIRTIME){
 	
 	mod.onReady = function() {
 		
-		var $playlist = $("#side_playlist");
+		var $playlist = $("#side_playlist"),
+			$contents = $("#spl_sortable").find("li");
 		
 		setupCriteriaOptions();
-		
 		addDatePickers();
+		checkPlayability($contents);
 		
 		$playlist.on("click", "#spl_AND", function(e) {
 			e.preventDefault();

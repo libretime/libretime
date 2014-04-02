@@ -2,7 +2,6 @@
 $items = $this->contents;
 if (count($items)) : ?>
 <?php foreach($items as $item):
-
 	$media = $item->getMediaItem();
 	$class = "Presentation_PlaylistItem" . $media->getType();
 	$p = new $class($item);
@@ -21,7 +20,6 @@ if (count($items)) : ?>
         </div>
         <?php endif; ?>
         <div class="list-item-container">
-
             <?php if ($p->canPreview()):?>
             <div class="big_play">
                 <span class="ui-icon ui-icon-play"></span>
@@ -31,24 +29,20 @@ if (count($items)) : ?>
                 <span class="ui-icon ui-icon-alert"></span>
             </div>
             <?php endif; ?>
-
             <div class="text-row top">
                 <span class="spl_playlength"><?php echo $p->getCliplength(); ?></span>
-
                 <?php if ($p->canEditCues()):?>
                 <span class="spl_cue ui-state-default"></span>
                 <?php endif; ?>
                 <?php if ($p->canEditFades()):?>
                 <span class="spl_fade spl_cue ui-state-default">fade</span>
                 <?php endif; ?>
-
                 <span class="spl_title"><?php echo $p->getTitle(); ?></span>
             </div>
             <div class="text-row">
                 <span class="spl_artist"><?php echo $p->getCreator(); ?></span>
                 <span class="spl_offset"><?php echo $p->getOffset(); ?></span>
             </div>
-
             <div id="fade_0" class="spl_fade_control ui-state-default"></div>
             <span class="ui-icon ui-icon-closethick"></span>
         </div>
@@ -77,7 +71,6 @@ if (count($items)) : ?>
         <?php endif; ?>
     </li>
 <?php endforeach; ?>
-
 <?php else: ?>
 <li class="spl_empty">
 <?php echo _("Empty playlist"); ?>
