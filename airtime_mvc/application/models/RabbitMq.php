@@ -116,11 +116,11 @@ class Application_Model_RabbitMq
         //the way it is just so I don't accidentally break anything when I add the Analyzer code in. -- Albert, March 13, 2014
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
         
-        $msg = new AMQPMessage($data, array('content_type' => 'text/plain'));
+        $msg = new AMQPMessage($jsonData, array('content_type' => 'text/plain'));
         
         $channel->basic_publish($msg, $exchange);
-                $channel->close();
-                $conn->close();
+        $channel->close();
+        $conn->close();
         
     }
     
