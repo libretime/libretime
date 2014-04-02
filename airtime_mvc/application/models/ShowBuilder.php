@@ -290,7 +290,6 @@ class Application_Model_ShowBuilder
     	$rows = array();
     	$row = $this->defaultRowArray;
     	
-    	$position = 0;
     	$instance = $showInstance->getDbId();
     	$showStartDT = $showInstance->getDbStarts(null);
     	$showEndDT = $showInstance->getDbEnds(null);
@@ -326,6 +325,7 @@ class Application_Model_ShowBuilder
     			$row["ends"] = $schedEndDT->format("H:i:s");
     		
     			$mediaItem = $scheduledItem->getMediaItem();
+    			$row["mediaId"] = $mediaItem->getId();
     			$row["title"] = htmlspecialchars($mediaItem->getName());
     			$row["creator"] = htmlspecialchars($mediaItem->getCreator());
     			$row["album"] = htmlspecialchars($mediaItem->getSource());
@@ -340,8 +340,6 @@ class Application_Model_ShowBuilder
     			
     			$row["fadein"] = $scheduledItem->getDbFadeIn();
     			$row["fadeout"] = $scheduledItem->getDbFadeOut();
-    			
-    			$row["pos"] = $position++;
     			
     			self::itemRowCheck($showInstance, $row);
     		

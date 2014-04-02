@@ -6,21 +6,53 @@ var AIRTIME = (function(AIRTIME) {
     var mod = AIRTIME.playerPreview,
     	playlistJPlayer;
     
-    function changePlaylist(data) {
+    function addToPlaylist(data) {
+    	var playNow = false;
     	
-    	playlistJPlayer.setPlaylist(data.playlist);
-    	playlistJPlayer.play(0);
+    	if (playlistJPlayer.playlist.length === 0) {
+    		playNow = true;
+    	}
+    	
+    	data.playlist.forEach(function(mediaObject, index, mediaArray) {
+
+    		if (mod.isAudioSupported(mediaObject.mime)) {
+    			playlistJPlayer.add(mediaObject, playNow);
+        		playNow = false;
+    		}
+    	});
     }
     
     function fetchMedia(mediaId) {
     	var url = baseUrl+"audiopreview/media-preview";
     	
-    	$.get(url, {format: "json", id: mediaId}, changePlaylist);
+    	$.get(url, {format: "json", id: mediaId}, addToPlaylist);
     }
     
     mod.previewMedia = function(mediaId) {
     	
     	fetchMedia(mediaId);
+    };
+    
+    mod.isAudioSupported = function(mime){
+        var audio = new Audio();
+
+        var bMime = null;
+        if (mime.indexOf("ogg") != -1 || mime.indexOf("vorbis") != -1) {
+           bMime = 'audio/ogg; codecs="vorbis"'; 
+        } else {
+            bMime = mime;
+        }
+
+        var x = audio.canPlayType(bMime);
+        
+        //return a true of the browser can play this file natively, or if the
+        //file is an mp3 and flash is installed (jPlayer will fall back to flash to play mp3s).
+        //Note that checking the navigator.mimeTypes value does not work for IE7, but the alternative
+        //is adding a javascript library to do the work for you, which seems like overkill....
+        return (!!audio.canPlayType && audio.canPlayType(bMime) != "") || 
+            (mime.indexOf("mp3") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined) ||
+            (mime.indexOf("mp4") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined) ||
+            (mime.indexOf("mpeg") != -1 && navigator.mimeTypes ["application/x-shockwave-flash"] != undefined);
     };
     
     mod.initPlayer = function() {
@@ -72,7 +104,6 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
     	
-
     	$( "#open_playlist" ).click(function() {
     	    $(".jp-playlist").toggleClass( "open" );
     	    $( this ).toggleClass( "selected" );

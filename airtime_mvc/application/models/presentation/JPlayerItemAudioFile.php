@@ -13,8 +13,8 @@ class Presentation_JPlayerItemAudioFile extends Presentation_JPlayerItem
 		$item =  array(
 			"title" => $this->media->getName(),
 			"artist" => $this->media->getCreator(),
-			$mime => $this->media->getURI()
-		    //"mp3" => "http://sourcefabric.airtime.pro/airtime_web_241/public/api/get-media/file/6864.mp3"
+			$mime => $this->media->getURI(),
+			"mime" => $this->media->getMime()
 		);
 
 		return array($item);

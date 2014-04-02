@@ -748,6 +748,13 @@ var AIRTIME = (function(AIRTIME){
     		});
     	});
 		
+		$playlist.on("click", ".big_play", function(e) {
+			var $li = $(this).parents("li");
+				mediaId = $li.data("mediaId");
+				
+			AIRTIME.playerPreview.previewMedia(mediaId);
+		});
+		
 		$playlist.on("click", ".ui-icon-closethick", function(e) {
 			var $li = $(this).parents("li");
 				$li.remove();

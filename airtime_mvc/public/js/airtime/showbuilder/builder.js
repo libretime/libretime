@@ -69,7 +69,7 @@ var AIRTIME = (function(AIRTIME){
                 .find(".fc-event-inner")
                 .append('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
         }
-    }
+    };
     
     mod.getTimestamp = function() {
         
@@ -605,10 +605,11 @@ var AIRTIME = (function(AIRTIME){
                         $nRow.addClass("lib-audio");
                         if (!isAudioSupported(aData.mime)) {
                             $image.html('<span class="ui-icon ui-icon-locked"></span>');
-                        } else {
+                        } 
+                        else {
                             $image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>')
                             .click(function() {
-                                open_show_preview(aData.instance, aData.pos);
+                            	AIRTIME.playerPreview.previewMedia(aData.mediaId);
                                 return false;
                             });
                         }

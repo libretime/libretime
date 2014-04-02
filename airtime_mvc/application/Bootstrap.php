@@ -133,8 +133,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendFile($baseUrl.'js/tipsy/jquery.tipsy.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $view->headScript()->appendFile($baseUrl.'js/airtime/common/common.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $view->headScript()->appendFile($baseUrl.'js/airtime/common/audioplaytest.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
+        
         //scripts for the jPlayer preview bar.
         $view->headScript()->appendFile($baseUrl.'js/jplayer/jplayer.playlist.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $view->headScript()->appendFile($baseUrl.'js/airtime/audiopreview/jPlayerWindow.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
