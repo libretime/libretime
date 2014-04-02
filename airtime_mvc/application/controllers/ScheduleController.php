@@ -20,7 +20,6 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('show-content-dialog', 'json')
                     ->addActionContext('clear-show', 'json')
                     ->addActionContext('get-current-playlist', 'json')
-                    ->addActionContext('remove-group', 'json')
                     ->addActionContext('populate-show-form', 'json')
                     ->addActionContext('populate-repeating-show-instance-form', 'json')
                     ->addActionContext('delete-show', 'json')
@@ -351,13 +350,13 @@ class ScheduleController extends Zend_Controller_Action
                     $originalDateTime->format("l, F jS"),
                     $originalDateTime->format("G:i"));
         }
-        $this->view->showLength = $show->getShowLength();
-        $this->view->timeFilled = $show->getTimeScheduled();
-        $this->view->percentFilled = $show->getPercentScheduled();
-        $this->view->showContent = $show->getShowListContent();
+        //$this->view->showLength = $show->getShowLength();
+        //$this->view->timeFilled = $show->getTimeScheduled();
+        //$this->view->percentFilled = $show->getPercentScheduled();
+        //$this->view->showContent = $show->getShowListContent();
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         $this->view->showTitle = htmlspecialchars($show->getName());
-        unset($this->view->showContent);
+        //unset($this->view->showContent);
     }
 
     public function populateRepeatingShowInstanceFormAction()

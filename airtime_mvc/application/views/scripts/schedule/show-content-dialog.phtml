@@ -1,31 +1,3 @@
 <div id="show_content_dialog">
-<div><?php echo $this->additionalShowInfo; ?></div>
-<table width="100%" border="0" cellspacing="0" cellpadding="0" class="datatable">
-    <tr>
-        <th><?php echo _("Start") ?></th>
-        <th><?php echo _("Title") ?></th>
-        <th><?php echo _("Creator") ?></th>
-        <th><?php echo _("Album") ?></th>
-        <th><?php echo _("Length") ?></th>
-        <th><?php echo _("Genre") ?></th>
-    </tr>
-<?php $i=0; ?>
-<?php foreach($this->showContent as $row): ?>
-    <tr id="au_<?php echo $row["item_id"] ?>" class="<?php if($i&1){echo "even";}else{echo "odd";}?>">
-        <td><?php echo $row["starts"] ?></td>
-        <td><?php echo $this->escape($row["track_title"]) ?></td>
-        <td><?php echo $this->escape($row["creator"]) ?></td>
-        <td><?php echo $this->escape($row["album"]) ?></td>
-        <td class="library_length"><?php echo $row["length"] ?></td>
-        <td><?php echo $row["genre"] ?></td>
-    </tr>
-<?php $i=$i+1; ?>
-<?php endforeach; ?>
-</table>
-<br/>
-<div id="show_time_info">
-    <span id="show_time_filled" class="time"><?php echo $this->timeFilled; ?></span>
-    <div id="show_progressbar"></div>
-    <span id="show_length" class="time"><?php echo $this->showLength; ?></span>
-</div>
+	<div><?php echo $this->additionalShowInfo; ?></div>
 </div>

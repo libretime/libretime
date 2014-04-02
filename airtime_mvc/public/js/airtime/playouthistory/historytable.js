@@ -393,7 +393,7 @@ var AIRTIME = (function(AIRTIME) {
         	
         	for (b in booleans) {
             	
-            	text = aData[b] ? checkedCheckBox : emptyCheckBox;
+            	text = aData[b] === "1" ? checkedCheckBox : emptyCheckBox;
             	text = text + " " + booleans[b];
             	
             	$nRow.find(".his_"+b).html(text);

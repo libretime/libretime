@@ -171,9 +171,7 @@ function buildScheduleDialog (json, instance_id) {
             {
                 text: $.i18n._("Ok"),
                 "class": "btn",
-                click: function() {
-                    $(this).dialog("close");
-                }
+                click: closeDialogCalendar
             }
         ]
     });
@@ -211,10 +209,6 @@ function buildContentDialog (json){
         alertShowErrorAndReload();
     }
           
-    dialog.find("#show_progressbar").progressbar({
-        value: json.percentFilled
-    });
-     
     dialog.dialog({
         autoOpen: false,
         title: $.i18n._("Contents of Show") +" '" + json.showTitle + "'",
@@ -226,9 +220,7 @@ function buildContentDialog (json){
             {
                 text: $.i18n._("Ok"),
                 "class": "btn",
-                click: function() {
-                    dialog.remove();
-                }
+                click: closeDialogCalendar
             }
         ]
     });
@@ -416,7 +408,7 @@ $(document).ready(function() {
                     
                     callback = function() {
                         $.get(oItems.content.url, {format: "json", id: data.id}, function(json){
-                            buildContentDialog(json);
+                            buildContentDialog(json, data.id);
                         });
                     };
                     oItems.content.callback = callback;
