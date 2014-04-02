@@ -72,13 +72,9 @@ class Application_Service_HistoryService
 	}
 
 	//opts is from datatables.
-	 public function getPlayedItemData($startDT, $endDT, $opts, $instanceId=null)
+	 public function getPlayedItemData($startDT, $endDT, $instanceId=null, $offset = 0, $limit = -1)
 	 {
 	 	$this->con->beginTransaction();
-
-	 	//LIMIT OFFSET statements
-	 	$limit = intval($opts["iDisplayLength"]);
-	 	$offset = intval($opts["iDisplayStart"]);
 
 	 	$query = CcPlayoutHistoryQuery::create()
 		 	->_if(isset($instanceId))
@@ -143,7 +139,6 @@ class Application_Service_HistoryService
 		}
 
 	 	return array(
- 			"sEcho" => intval($opts["sEcho"]),
  			"iTotalDisplayRecords" => intval($totalCount),
  			"iTotalRecords" => intval($totalCount),
  			"history" => $datatables

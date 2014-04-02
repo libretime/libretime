@@ -46,19 +46,21 @@ class Application_Service_CalendarService
         if ($now > $end) {
             if ($this->ccShowInstance->isRecorded()) {
 
-                $ccFile = $this->ccShowInstance->getCcFiles();
-                if (!isset($ccFile)) {
+                $media = $this->ccShowInstance->getMediaItem();
+                if (!isset($media)) {
                      $menu["error when recording"] = array (
                          "name" => _("Record file doesn't exist"),
                          "icon" => "error");
-                }else {
+                }
+                else {
                     $menu["view_recorded"] = array(
                         "name" => _("View Recorded File Metadata"),
                         "icon" => "overview",
-                        "url" => $baseUrl."library/edit-file-md/id/".$ccFile->getDbId());
+                        "url" => $baseUrl."library/edit-file-md/id/".$media->getId());
                 }
 
                 //recorded show can be uploaded to soundcloud
+                //TODO fix this to work with new media items.
                 if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
                     $scid = $ccFile->getDbSoundcloudId();
 
@@ -74,13 +76,15 @@ class Application_Service_CalendarService
                         "name"=> $text,
                         "icon" => "soundcloud");
                 }
-            } else {
+            } 
+            else {
                 $menu["content"] = array(
                     "name"=> _("Show Content"),
                     "icon" => "overview",
                     "url" => $baseUrl."schedule/show-content-dialog");
             }
-        } else {
+        }
+        else {
             // Show content can be modified from the calendar if:
             // the user is admin or hosting the show,
             // the show is not recorded
@@ -96,7 +100,8 @@ class Application_Service_CalendarService
                         "icon" => "add-remove-content",
                         "url" => $baseUrl."showbuilder/builder-dialog/");
                 //if the show is linked and it's not currently playing the user can add/remove content
-                } elseif ($showIsLinked  && $currentShowId != $this->ccShow->getDbId()) {
+                }
+                elseif ($showIsLinked  && $currentShowId != $this->ccShow->getDbId()) {
 
                     $menu["schedule"] = array(
                         "name"=> _("Add / Remove Content"),
@@ -115,16 +120,6 @@ class Application_Service_CalendarService
             			"url" => $baseUrl."schedule/clear-show");
             }
 
-            //"Show Content" should be a menu item at all times except when
-            //the show is recorded
-            if (!$this->ccShowInstance->isRecorded()) {
-
-                $menu["content"] = array(
-                    "name"=> _("Show Content"),
-                    "icon" => "overview",
-                    "url" => $baseUrl."schedule/show-content-dialog");
-            }
-
             //show is currently playing and user is admin
             if ($start <= $now && $now < $end && $isAdminOrPM) {
 
@@ -132,7 +127,8 @@ class Application_Service_CalendarService
                     $menu["cancel_recorded"] = array(
                         "name"=> _("Cancel Current Show"),
                         "icon" => "delete");
-                } else {
+                }
+                else {
                     $menu["cancel"] = array(
                         "name"=> _("Cancel Current Show"),
                         "icon" => "delete");
@@ -154,7 +150,8 @@ class Application_Service_CalendarService
                             "name" => _("Edit This Instance"),
                             "icon" => "edit",
                             "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
-                    } else {
+                    }
+                    else {
                         $menu["edit"] = array(
                             "name" => _("Edit"),
                             "icon" => "edit",
@@ -170,7 +167,8 @@ class Application_Service_CalendarService
                             "icon" => "edit",
                             "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
                         }
-                } else {
+                }
+                else {
                     $menu["edit"] = array(
                         "name"=> _("Edit Show"),
                         "icon" => "edit",
@@ -198,12 +196,14 @@ class Application_Service_CalendarService
                         "name"=> _("Delete This Instance and All Following"),
                         "icon" => "delete",
                         "url" => $baseUrl."schedule/delete-show");
-                } elseif ($populateInstance) {
+                }
+                elseif ($populateInstance) {
                     $menu["del"] = array(
                         "name"=> _("Delete"),
                         "icon" => "delete",
                         "url" => $baseUrl."schedule/delete-show-instance");
-                } else {
+                }
+                else {
                     $menu["del"] = array(
                         "name"=> _("Delete"),
                         "icon" => "delete",

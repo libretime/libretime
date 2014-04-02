@@ -1,3 +1,43 @@
 <div id="show_content_dialog">
 	<div><?php echo $this->additionalShowInfo; ?></div>
+	
+	<table class="datatable">
+		<thead>
+			<tr>
+				<?php foreach ($this->itemColumns as $column): ?>
+					<th class="ui-state-default"><?php echo $column["sTitle"]; ?></th>
+				<?php endforeach; ?>
+			</tr>
+		</thead>
+		<tbody>
+			<?php for ($i = 0; $i < count($this->itemContents["history"]); $i++): ?>
+				<?php 
+					$item = $this->itemContents["history"][$i]; 
+					$trclass = $i&1 ? "even" : "odd"; 
+				?>
+				<tr class="<?php echo $trclass; ?>">
+					<?php foreach ($this->itemColumns as $column): ?>
+						<td>
+						<?php
+							$index =  $column["mDataProp"];
+
+							if ($column["sDataType"] == "boolean") {
+								if ($item[$index] == "1") {
+									$unicodeChar = '\u2612';
+								}
+								else {
+									$unicodeChar = '\u2610';
+								}
+								echo json_decode('"'.$unicodeChar.'"') ." ".$column["sTitle"];
+							}
+							else {
+								echo $item[$index];
+							}
+						?>
+						</td>
+					<?php endforeach; ?>
+				</tr>
+			<?php endfor;?>
+		</tbody>
+	</table>
 </div>

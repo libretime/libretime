@@ -533,14 +533,6 @@ SQL;
         return $isFilled;
     }
 
-    //TODO get rid of this
-    public function getShowListContent()
-    {
-        $con = Propel::getConnection();
-
-        return $results;
-    }
-
     public function getLastAudioItemEnd()
     {
         $con = Propel::getConnection();

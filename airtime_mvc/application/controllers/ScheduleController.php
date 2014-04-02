@@ -26,7 +26,6 @@ class ScheduleController extends Zend_Controller_Action
                     ->addActionContext('cancel-current-show', 'json')
                     ->addActionContext('get-form', 'json')
                     ->addActionContext('upload-to-sound-cloud', 'json')
-                    ->addActionContext('content-context-menu', 'json')
                     ->addActionContext('set-time-scale', 'json')
                     ->addActionContext('set-time-interval', 'json')
                     ->addActionContext('edit-repeating-show-instance', 'json')
@@ -350,13 +349,22 @@ class ScheduleController extends Zend_Controller_Action
                     $originalDateTime->format("l, F jS"),
                     $originalDateTime->format("G:i"));
         }
-        //$this->view->showLength = $show->getShowLength();
-        //$this->view->timeFilled = $show->getTimeScheduled();
-        //$this->view->percentFilled = $show->getPercentScheduled();
-        //$this->view->showContent = $show->getShowListContent();
+        
+        $historyService = new Application_Service_HistoryService();
+        $columns = $historyService->getDatatablesLogSheetColumns();
+        $contents = $historyService->getPlayedItemData(null, null, $showInstanceId);
+        
+        //remove the checkbox column.
+        array_shift($columns);
+        
+        $this->view->itemColumns = $columns;
+        $this->view->itemContents = $contents;
+
         $this->view->dialog = $this->view->render('schedule/show-content-dialog.phtml');
         $this->view->showTitle = htmlspecialchars($show->getName());
-        //unset($this->view->showContent);
+        
+        unset($this->view->columns);
+        unset($this->view->contents);
     }
 
     public function populateRepeatingShowInstanceFormAction()
@@ -599,30 +607,6 @@ class ScheduleController extends Zend_Controller_Action
                 Logging::info($e->getMessage());
             }
         }
-    }
-
-    public function contentContextMenuAction()
-    {
-        $id = $this->_getParam('id');
-
-        $params = '/format/json/id/#id#/';
-
-        $paramsPop = str_replace('#id#', $id, $params);
-
-        // added for downlaod
-        $id = $this->_getParam('id');
-
-        $file_id = $this->_getParam('id', null);
-        $file = Application_Model_StoredFile::RecallById($file_id);
-
-        $baseUrl = $this->getRequest()->getBaseUrl();
-        $url = $file->getRelativeFileUrl($baseUrl).'download/true';
-        $menu = array();
-        $menu[] = array('action' => array('type' => 'gourl', 'url' => $url),
-                            'title' => _('Download'));
-
-        //returns format jjmenu is looking for.
-        $this->_helper->json->sendJson($menu);
     }
 
     /**
