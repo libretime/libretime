@@ -17,9 +17,9 @@ var AIRTIME = (function(AIRTIME) {
     mod.checkAddButton = function($pane) {
     	var $selected = $pane.find("."+mod.LIB_SELECTED_CLASS),
     		$button = $pane.find("." + mod.LIB_ADD_CLASS),
-    		$playlistIdEl = $("#playlist_id");
+    		$playlistContentEl = $("#spl_sortable");
     	
-    	if ($selected.length > 0 && $playlistIdEl.length > 0) {
+    	if ($selected.length > 0 && $playlistContentEl.length > 0) {
     		AIRTIME.button.enableButton($button);
     	}
     	else {
