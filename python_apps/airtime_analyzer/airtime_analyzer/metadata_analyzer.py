@@ -8,6 +8,12 @@ class MetadataAnalyzer(Analyzer):
 
     @staticmethod
     def analyze(filename, metadata):
+        ''' Extract audio metadata from tags embedded in the file (eg. ID3 tags)
+        
+            Keyword arguments:
+                filename: The path to the audio file to extract metadata from.
+                metadata: A dictionary that the extracted metadata will be added to. 
+        '''
         if not isinstance(filename, unicode):
             raise TypeError("filename must be unicode. Was of type " + type(filename).__name__)
         if not isinstance(metadata, dict):
@@ -25,7 +31,6 @@ class MetadataAnalyzer(Analyzer):
         track_length = datetime.timedelta(seconds=info.length)
         metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
         metadata["bit_rate"] = info.bitrate
-        #metadata["channels"] = info.channels
       
         #Use the python-magic module to get the MIME type.
         mime_magic = magic.Magic(mime=True)

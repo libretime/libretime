@@ -1,5 +1,14 @@
+airtime_analyzer
+==========
 
-Ghetto temporary installation instructions
+airtime_analyzer is a daemon that processes Airtime file uploads as background jobs.
+It performs metadata extraction using Mutagen and moves uploads into Airtime's 
+music library directory (stor/imported).
+
+airtime_analyzer uses process isolation to make it resilient to crashes and runs in 
+a multi-tenant environment with no modifications.
+
+Installation
 ==========
 
     $ sudo python setup.py install
@@ -71,3 +80,9 @@ a test, run:
 To run the unit tests and generate a code coverage report, run:
 
     $ nosetests --with-coverage --cover-package=airtime_analyzer
+
+    
+ History and Design Motivation
+ ===========
+ 
+ 

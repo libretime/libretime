@@ -1,3 +1,5 @@
+"""Contains the main application class for airtime_analyzer.
+"""
 import ConfigParser
 import logging
 import logging.handlers
@@ -8,6 +10,8 @@ from message_listener import MessageListener
 
 
 class AirtimeAnalyzerServer:
+    """A server for importing uploads to Airtime as background jobs.
+    """
 
     # Constants 
     _LOG_PATH = "/var/log/airtime/airtime_analyzer.log"
@@ -29,7 +33,12 @@ class AirtimeAnalyzerServer:
     
 
     def setup_logging(self, debug):
-   
+        """Set up nicely formatted logging and log rotation.
+        
+        Keyword arguments:
+        debug -- a boolean indicating whether to enable super verbose logging
+                 to the screen and disk.
+        """
         if debug:
             self._log_level = logging.DEBUG
         else:
@@ -37,8 +46,6 @@ class AirtimeAnalyzerServer:
             pika_logger = logging.getLogger('pika')
             pika_logger.setLevel(logging.CRITICAL)
         
-        #self.log = logging.getLogger(__name__)
-
         # Set up logging
         logFormatter = logging.Formatter("%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s")
         rootLogger = logging.getLogger()
@@ -55,6 +62,7 @@ class AirtimeAnalyzerServer:
 
 
     def read_config_file(self, config_path):
+        """Parse the application's config file located at config_path."""
         config = ConfigParser.SafeConfigParser()
         try:
             config.readfp(open(config_path))
@@ -67,11 +75,3 @@ class AirtimeAnalyzerServer:
 
         return config
         
-
-''' When being run from the command line, analyze a file passed
-    as an argument. '''
-if __name__ == "__main__":
-    import sys
-    analyzers = AnalyzerPipeline()
-
-

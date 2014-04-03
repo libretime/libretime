@@ -899,107 +899,6 @@ SQL;
         return $results;
     }
 
-    public static function uploadFile($p_targetDir)
-    {
-        // HTTP headers for no cache etc
-        header('Content-type: text/plain; charset=UTF-8');
-        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-store, no-cache, must-revalidate");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-
-        // Settings
-        $cleanupTargetDir = false; // Remove old files
-        $maxFileAge       = 60 * 60; // Temp file age in seconds
-
-        // 5 minutes execution time
-        @set_time_limit(5 * 60);
-        // usleep(5000);
-
-        // Get parameters
-        $chunk = isset($_REQUEST["chunk"]) ? $_REQUEST["chunk"] : 0;
-        $chunks = isset($_REQUEST["chunks"]) ? $_REQUEST["chunks"] : 0;
-        $fileName = isset($_REQUEST["name"]) ? $_REQUEST["name"] : '';
-        # TODO : should not log __FILE__ itself. there is general logging for
-        #  this
-        Logging::info(__FILE__.":uploadFile(): filename=$fileName to $p_targetDir");
-        // Clean the fileName for security reasons
-        //this needs fixing for songs not in ascii.
-        //$fileName = preg_replace('/[^\w\._]+/', '', $fileName);
-
-        // Create target dir
-        if (!file_exists($p_targetDir))
-            @mkdir($p_targetDir);
-
-        // Remove old temp files
-        if (is_dir($p_targetDir) && ($dir = opendir($p_targetDir))) {
-            while (($file = readdir($dir)) !== false) {
-                $filePath = $p_targetDir . DIRECTORY_SEPARATOR . $file;
-
-                // Remove temp files if they are older than the max age
-                if (preg_match('/\.tmp$/', $file) && (filemtime($filePath) < time() - $maxFileAge))
-                    @unlink($filePath);
-            }
-
-            closedir($dir);
-        } else
-            die('{"jsonrpc" : "2.0", "error" : {"code": 100, "message": _("Failed to open temp directory.")}, "id" : "id"}');
-
-        // Look for the content type header
-        if (isset($_SERVER["HTTP_CONTENT_TYPE"]))
-            $contentType = $_SERVER["HTTP_CONTENT_TYPE"];
-
-        if (isset($_SERVER["CONTENT_TYPE"]))
-            $contentType = $_SERVER["CONTENT_TYPE"];
-
-        // create temp file name (CC-3086)
-        // we are not using mktemp command anymore.
-        // plupload support unique_name feature.
-        $tempFilePath= $p_targetDir . DIRECTORY_SEPARATOR . $fileName;
-
-        // Old IBM code...
-        if (strpos($contentType, "multipart") !== false) {
-            if (isset($_FILES['file']['tmp_name']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
-                // Open temp file
-                $out = fopen($tempFilePath, $chunk == 0 ? "wb" : "ab");
-                if ($out) {
-                    // Read binary input stream and append it to temp file
-                    $in = fopen($_FILES['file']['tmp_name'], "rb");
-
-                    if ($in) {
-                        while (($buff = fread($in, 4096)))
-                            fwrite($out, $buff);
-                    } else
-                        die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
-
-                    fclose($out);
-                    unlink($_FILES['file']['tmp_name']);
-                } else
-                    die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": _("Failed to open output stream.")}, "id" : "id"}');
-            } else
-                die('{"jsonrpc" : "2.0", "error" : {"code": 103, "message": _("Failed to move uploaded file.")}, "id" : "id"}');
-        } else {
-            // Open temp file
-            $out = fopen($tempFilePath, $chunk == 0 ? "wb" : "ab");
-            if ($out) {
-                // Read binary input stream and append it to temp file
-                $in = fopen("php://input", "rb");
-
-                if ($in) {
-                    while (($buff = fread($in, 4096)))
-                        fwrite($out, $buff);
-                } else
-                    die('{"jsonrpc" : "2.0", "error" : {"code": 101, "message": _("Failed to open input stream.")}, "id" : "id"}');
-
-                fclose($out);
-            } else
-                die('{"jsonrpc" : "2.0", "error" : {"code": 102, "message": _("Failed to open output stream.")}, "id" : "id"}');
-        }
-
-        return $tempFilePath;
-    }
-
     /**
      * Check, using disk_free_space, the space available in the $destination_folder folder to see if it has
      * enough space to move the $audio_file into and report back to the user if not.
@@ -1065,12 +964,13 @@ SQL;
     
         // Check if liquidsoap can play this file
         // TODO: Move this to airtime_analyzer
+        /*
         if (!self::liquidsoapFilePlayabilityTest($audio_file)) {
             return array(
                     "code"    => 110,
                     "message" => _("This file appears to be corrupted and will not "
                             ."be added to media library."));
-        }
+        }*/
 
     
         // Did all the checks for real, now trying to copy
