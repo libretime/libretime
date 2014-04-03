@@ -15,8 +15,6 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 	protected $columns; 
 	
 	protected $order = array (
-		"IsScheduled",
-		"IsPlaylist",
 		"TrackTitle",
 		"ArtistName",
 		"AlbumTitle",
@@ -72,26 +70,6 @@ class Application_Service_DatatableAudioFileService extends Application_Service_
 				"isColumn" => false,
 				"advancedSearch" => array(
 					"type" => null
-				)
-			),
-			"IsScheduled" => array(
-				"isColumn" => true,
-				"title" => _("Scheduled"),
-				"width" => "90px",
-				"class" => "library_is_scheduled",
-				"searchable" => false,
-				"advancedSearch" => array(
-					"type" => "checkbox"
-				)
-			),
-			"IsPlaylist" => array(
-				"isColumn" => true,
-				"title" => _("Playlist"),
-				"width" => "90px",
-				"class" => "library_is_playlist",
-				"searchable" => false,
-				"advancedSearch" => array(
-					"type" => "checkbox"
 				)
 			),
 			"TrackTitle" => array(

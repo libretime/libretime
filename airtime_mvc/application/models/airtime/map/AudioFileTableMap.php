@@ -71,8 +71,6 @@ class AudioFileTableMap extends TableMap
         $this->addColumn('silan_check', 'IsSilanChecked', 'BOOLEAN', false, null, false);
         $this->addColumn('file_exists', 'FileExists', 'BOOLEAN', false, null, true);
         $this->addColumn('hidden', 'FileHidden', 'BOOLEAN', false, null, false);
-        $this->addColumn('is_scheduled', 'IsScheduled', 'BOOLEAN', false, null, false);
-        $this->addColumn('is_playlist', 'IsPlaylist', 'BOOLEAN', false, null, false);
         $this->addForeignPrimaryKey('id', 'Id', 'INTEGER' , 'media_item', 'id', true, null, null);
         $this->addColumn('name', 'Name', 'VARCHAR', false, 512, null);
         $this->addColumn('creator', 'Creator', 'VARCHAR', false, 512, null);

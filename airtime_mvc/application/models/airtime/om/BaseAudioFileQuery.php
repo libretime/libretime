@@ -53,8 +53,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery orderByIsSilanChecked($order = Criteria::ASC) Order by the silan_check column
  * @method AudioFileQuery orderByFileExists($order = Criteria::ASC) Order by the file_exists column
  * @method AudioFileQuery orderByFileHidden($order = Criteria::ASC) Order by the hidden column
- * @method AudioFileQuery orderByIsScheduled($order = Criteria::ASC) Order by the is_scheduled column
- * @method AudioFileQuery orderByIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
  * @method AudioFileQuery orderById($order = Criteria::ASC) Order by the id column
  * @method AudioFileQuery orderByName($order = Criteria::ASC) Order by the name column
  * @method AudioFileQuery orderByCreator($order = Criteria::ASC) Order by the creator column
@@ -97,8 +95,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFileQuery groupByIsSilanChecked() Group by the silan_check column
  * @method AudioFileQuery groupByFileExists() Group by the file_exists column
  * @method AudioFileQuery groupByFileHidden() Group by the hidden column
- * @method AudioFileQuery groupByIsScheduled() Group by the is_scheduled column
- * @method AudioFileQuery groupByIsPlaylist() Group by the is_playlist column
  * @method AudioFileQuery groupById() Group by the id column
  * @method AudioFileQuery groupByName() Group by the name column
  * @method AudioFileQuery groupByCreator() Group by the creator column
@@ -160,8 +156,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method AudioFile findOneByIsSilanChecked(boolean $silan_check) Return the first AudioFile filtered by the silan_check column
  * @method AudioFile findOneByFileExists(boolean $file_exists) Return the first AudioFile filtered by the file_exists column
  * @method AudioFile findOneByFileHidden(boolean $hidden) Return the first AudioFile filtered by the hidden column
- * @method AudioFile findOneByIsScheduled(boolean $is_scheduled) Return the first AudioFile filtered by the is_scheduled column
- * @method AudioFile findOneByIsPlaylist(boolean $is_playlist) Return the first AudioFile filtered by the is_playlist column
  * @method AudioFile findOneByName(string $name) Return the first AudioFile filtered by the name column
  * @method AudioFile findOneByCreator(string $creator) Return the first AudioFile filtered by the creator column
  * @method AudioFile findOneBySource(string $source) Return the first AudioFile filtered by the source column
@@ -203,8 +197,6 @@ use Airtime\MediaItem\AudioFileQuery;
  * @method array findByIsSilanChecked(boolean $silan_check) Return AudioFile objects filtered by the silan_check column
  * @method array findByFileExists(boolean $file_exists) Return AudioFile objects filtered by the file_exists column
  * @method array findByFileHidden(boolean $hidden) Return AudioFile objects filtered by the hidden column
- * @method array findByIsScheduled(boolean $is_scheduled) Return AudioFile objects filtered by the is_scheduled column
- * @method array findByIsPlaylist(boolean $is_playlist) Return AudioFile objects filtered by the is_playlist column
  * @method array findById(int $id) Return AudioFile objects filtered by the id column
  * @method array findByName(string $name) Return AudioFile objects filtered by the name column
  * @method array findByCreator(string $creator) Return AudioFile objects filtered by the creator column
@@ -324,7 +316,7 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "conductor", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "is_scheduled", "is_playlist", "id", "name", "creator", "source", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_audiofile" WHERE "id" = :p0';
+        $sql = 'SELECT "directory", "filepath", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "album_title", "genre", "comments", "year", "track_number", "channels", "bpm", "encoded_by", "mood", "label", "composer", "copyright", "conductor", "isrc_number", "info_url", "language", "replay_gain", "cuein", "cueout", "silan_check", "file_exists", "hidden", "id", "name", "creator", "source", "owner_id", "description", "last_played", "play_count", "length", "mime", "created_at", "updated_at" FROM "media_audiofile" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -1352,60 +1344,6 @@ abstract class BaseAudioFileQuery extends MediaItemQuery
         }
 
         return $this->addUsingAlias(AudioFilePeer::HIDDEN, $fileHidden, $comparison);
-    }
-
-    /**
-     * Filter the query on the is_scheduled column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByIsScheduled(true); // WHERE is_scheduled = true
-     * $query->filterByIsScheduled('yes'); // WHERE is_scheduled = true
-     * </code>
-     *
-     * @param     boolean|string $isScheduled The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return AudioFileQuery The current query, for fluid interface
-     */
-    public function filterByIsScheduled($isScheduled = null, $comparison = null)
-    {
-        if (is_string($isScheduled)) {
-            $isScheduled = in_array(strtolower($isScheduled), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-        }
-
-        return $this->addUsingAlias(AudioFilePeer::IS_SCHEDULED, $isScheduled, $comparison);
-    }
-
-    /**
-     * Filter the query on the is_playlist column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByIsPlaylist(true); // WHERE is_playlist = true
-     * $query->filterByIsPlaylist('yes'); // WHERE is_playlist = true
-     * </code>
-     *
-     * @param     boolean|string $isPlaylist The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return AudioFileQuery The current query, for fluid interface
-     */
-    public function filterByIsPlaylist($isPlaylist = null, $comparison = null)
-    {
-        if (is_string($isPlaylist)) {
-            $isPlaylist = in_array(strtolower($isPlaylist), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-        }
-
-        return $this->addUsingAlias(AudioFilePeer::IS_PLAYLIST, $isPlaylist, $comparison);
     }
 
     /**

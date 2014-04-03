@@ -478,8 +478,6 @@ CREATE TABLE "media_audiofile"
     "silan_check" BOOLEAN DEFAULT 'f',
     "file_exists" BOOLEAN DEFAULT 't',
     "hidden" BOOLEAN DEFAULT 'f',
-    "is_scheduled" BOOLEAN DEFAULT 'f',
-    "is_playlist" BOOLEAN DEFAULT 'f',
     "id" INTEGER NOT NULL,
     "name" VARCHAR(512),
     "creator" VARCHAR(512),

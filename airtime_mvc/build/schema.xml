@@ -354,8 +354,6 @@
     <column name="silan_check" phpName="IsSilanChecked" type="BOOLEAN" defaultValue="false"/>
     <column name="file_exists" phpName="FileExists" type="BOOLEAN" required="false" defaultValue="true"/>
     <column name="hidden" phpName="FileHidden" type="BOOLEAN" defaultValue="false"/>
-    <column name="is_scheduled" phpName="IsScheduled" type="BOOLEAN" defaultValue="false"/>
-    <column name="is_playlist" phpName="IsPlaylist" type="BOOLEAN" defaultValue="false"/>
     
     <foreign-key foreignTable="cc_music_dirs" name="audio_file_music_dir_fkey">
       <reference local="directory" foreign="id"/>
