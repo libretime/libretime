@@ -78,7 +78,7 @@ class MetadataAnalyzer(Analyzer):
             'genre':        'genre',
             'isrc':         'isrc',
             'label':        'label',
-            'length':       'length',
+            #'length':       'length',
             'language':     'language',
             'last_modified':'last_modified',
             'mood':         'mood',
