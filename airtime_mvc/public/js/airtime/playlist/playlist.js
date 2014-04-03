@@ -489,12 +489,13 @@ var AIRTIME = (function(AIRTIME){
 	
 	function checkPlayability($contents) {
 		
-		$contents.each(function(index, element) {
+		$contents.find(".big_play").each(function(index, element) {
 			var $el = $(element),
-				mime = $el.data("mimeType");
+				$li = $el.parents("li"),
+				mime = $li.data("mimeType");
 			
 			if (!AIRTIME.playerPreview.isAudioSupported(mime)) {
-				$el.find(".big_play").attr("class", "big_play_disabled dark_class");
+				$el.attr("class", "big_play_disabled dark_class");
 			}	
 		});
 	}
