@@ -568,6 +568,11 @@ var AIRTIME = (function(AIRTIME){
                     $node = $(nRow.children[0]);
                     $node.html('');
                     
+                    //putting the cursor on the screen
+                	if (aData.allowed && $lib.length > 0 && $lib.filter(":visible").length > 0) {
+                		$node.append('<div class="marker"></div>');
+                	}
+                    
                     sSeparatorHTML = '<span>'+$.i18n._("Show Empty")+'</span>';
                     cl = cl + " sb-empty odd";
                     
@@ -622,11 +627,9 @@ var AIRTIME = (function(AIRTIME){
                         $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
                         
                         //putting the cursor on the screen
-                        if (aData.scheduled == 2) {
-                        	if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
-                        		$node.append('<div class="marker"></div>');
-                        	}                       	
-                        }
+                    	if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
+                    		$node.append('<div class="marker"></div>');
+                    	}                       	
                     }
                     else {
                         $node.html('');

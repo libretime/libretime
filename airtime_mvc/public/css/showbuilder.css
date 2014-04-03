@@ -120,7 +120,6 @@ div.sb-timerange input.error {
 }
 .marker {
     background: url(images/tl-arrow.png) no-repeat scroll 3px 4px;
-    top: -9px;
     display: block;
     height: 9px;
     left: -13px;
@@ -140,7 +139,7 @@ tr.cursor-selected-row .marker {
 }
 
 table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-row th {
-    border-top: 1px solid rgba(215, 0, 0, 1) !important;
+    border-bottom: 1px solid rgba(215, 0, 0, 1) !important;
 }
 
 .sb-content .sb-past {
@@ -256,7 +255,7 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 	margin-right:5px;
 }
 
-.sb-checkbox {
+.sb-checkbox, .sb-empty td {
 	position: relative;
 }
 

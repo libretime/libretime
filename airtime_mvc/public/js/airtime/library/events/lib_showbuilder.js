@@ -40,7 +40,7 @@ var AIRTIME = (function(AIRTIME) {
 	
     	// process selected schedule rows to add media after.
 	    $("#show_builder_table tr.cursor-selected-row").each(function(i, el) {
-	    	var data = $(el).prev().data("aData");
+	    	var data = $(el).data("aData");
 	    	
 	    	aSchedIds.push( {
 	            "id" : data.id,
