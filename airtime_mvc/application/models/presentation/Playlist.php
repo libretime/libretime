@@ -35,11 +35,8 @@ class Presentation_Playlist {
 	
 	public function getLength() {
 		
-		$length = $this->playlist->getLength();
-		$class = self::LENGTH_FORMATTER_CLASS;
-		$formatter = new $class($length);
-		
-		return $formatter->format(3);
+		$formatter = new Format_PlaylistLength($this->playlist);
+		return $formatter->getLength();
 	}
 	
 	public function hasContent() {
