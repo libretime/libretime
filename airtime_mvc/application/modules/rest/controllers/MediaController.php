@@ -135,6 +135,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbTrackTitle($_FILES["file"]["name"]);
             $file->setDbUtime($now);
+            $file->setDbHidden(true);
             $file->save();
 
             $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
