@@ -6,7 +6,7 @@ use Airtime\MediaItem\om\BasePlaylistQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'playlist' table.
+ * Skeleton subclass for performing query and update operations on the 'media_playlist' table.
  *
  *
  *

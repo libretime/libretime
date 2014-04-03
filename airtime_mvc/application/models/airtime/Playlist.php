@@ -557,28 +557,30 @@ abstract class Playlist extends BasePlaylist implements \Interface_Playlistable
     		$m = $query->getModelName();
     		$query->withColumn("({$m}.Cueout - {$m}.Cuein)", "cuelength");
     
-    		$criteriaRules = self::getCriteriaRules($query);
-    
-    		$conditionAnd = array();
-    		$conNum = 0;
-    		foreach ($criteria as $andBlock) {
-    			$conditionOr = array();
-    			 
-    			foreach ($andBlock as $orBlock) {
-    				$rule = $criteriaRules[$orBlock["modifier"]];
-    
-    				$column = $orBlock["criteria"];
-    				$condition = $rule($column, $orBlock);
-    
-    				$conditionOr[] = $condition;
+    		//only add to where clause if criteria exist.
+    		if (count($criteria) > 0) {
+    			$criteriaRules = self::getCriteriaRules($query);
+    			$conditionAnd = array();
+    			$conNum = 0;
+    			foreach ($criteria as $andBlock) {
+    				$conditionOr = array();
+    			
+    				foreach ($andBlock as $orBlock) {
+    					$rule = $criteriaRules[$orBlock["modifier"]];
+    			
+    					$column = $orBlock["criteria"];
+    					$condition = $rule($column, $orBlock);
+    			
+    					$conditionOr[] = $condition;
+    				}
+    			
+    				$query->combine($conditionOr, 'or', $conNum);
+    				$conditionAnd[] = $conNum;
+    				$conNum++;
     			}
-    			 
-    			$query->combine($conditionOr, 'or', $conNum);
-    			$conditionAnd[] = $conNum;
-    			$conNum++;
-    		}
-    
-    		$query->where($conditionAnd, 'and');
+    			
+    			$query->where($conditionAnd, 'and');
+    		}   		
     
     		//order by a chosen column or by random.
     		$order = $ruleSet["order"];
