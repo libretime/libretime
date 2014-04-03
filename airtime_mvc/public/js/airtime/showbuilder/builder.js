@@ -92,18 +92,7 @@ var AIRTIME = (function(AIRTIME){
     mod.refresh = function(schedId) {
         mod.resetTimestamp();
 
-        // once a track plays out we need to check if we can update
-        // the is_scheduled flag in cc_files
         if (schedId > 0) {
-        	//TODO work on this
-        	/*
-            $.post(baseUrl+"schedule/update-future-is-scheduled", 
-                    {"format": "json", "schedId": schedId}, function(data) {
-                        if (data.redrawLibTable !== undefined && data.redrawLibTable) {
-                            $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
-                        }
-                    });
-                    */
             oSchedTable.fnDraw();
         }
     };
@@ -631,6 +620,13 @@ var AIRTIME = (function(AIRTIME){
                     $node = $(nRow.children[0]);
                     if (aData.allowed === true && aData.scheduled >= 1) {
                         $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
+                        
+                        //putting the cursor on the screen
+                        if (aData.scheduled == 2) {
+                        	if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
+                        		$node.append('<div class="marker"></div>');
+                        	}                       	
+                        }
                     }
                     else {
                         $node.html('');
@@ -708,6 +704,7 @@ var AIRTIME = (function(AIRTIME){
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
                 var isInitialized = false;
+				//var timer1 = new Date().getTime();
 
                 if (!isInitialized) {
                     //when coming to 'Now Playing' page we want the page
@@ -718,58 +715,22 @@ var AIRTIME = (function(AIRTIME){
                 }
 
                 isInitialized = true;
-                var wrapperDiv,
-                    markerDiv,
-                    $td,
+                var $td,
                     aData,
                     elements,
                     i, length, temp,
                     $cursorRows,
-                    $table = $(this),
-                    $parent = $table.parent(),
-                    $tr,
-                    //use this array to cache DOM heights then we can detach the table to manipulate it to increase speed.
-                    heights = [];
+                    $table = $(this);
                 
                 clearTimeout(mod.timeout);
                 
                 //only create the cursor arrows if the library is on the page.
-                if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
+                if ($lib.length > 0 && $lib.filter(":visible").length > 0) {  	
 
-                    $cursorRows = $sbTable.find("tbody tr.sb-future.sb-allowed:not(.sb-header, .sb-empty)");
-                    
-                    //need to get heights of tds while elements are still in the DOM.
-                    for (i = 0, length = $cursorRows.length; i < length; i++) {
-                        $td = $($cursorRows.get(i)).find("td:first");
-                        heights.push($td.height());
-                    }
-                    
-                    //detach the table to increase speed.
-                    $table.detach();
-                    
-                    for (i = 0, length = $cursorRows.length; i < length; i++) {
-                        
-                        $td = $($cursorRows.get(i)).find("td:first");
-                        if ($td.hasClass("dataTables_empty")) {
-                            $parent.append($table);
-                            return false;
-                        }
-                        
-                        wrapperDiv = $("<div />", {
-                            "class": "innerWrapper",
-                            "css": {
-                                "height": heights[i]
-                            }
-                        });
-                        markerDiv = $("<div />", {
-                            "class": "marker"
-                        });
-                        
-                        $td.append(markerDiv).wrapInner(wrapperDiv);
-                        
-                    }
+                    $cursorRows = $sbTable.find("tbody tr.sb-future.sb-allowed:not(.sb-header, .sb-empty)");      
                     
                     //re-highlight selected cursors before draw took place
+                    /*
                     for (i = 0; i < cursorIds.length; i++) {
                         if (headerFooter[i] == "f") {
                             $tr = $table.find("tbody tr.sb-footer[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
@@ -777,23 +738,24 @@ var AIRTIME = (function(AIRTIME){
                             $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
                         }
 						
-                        /* If the currently playing track's cursor is selected, 
-                         * and that track is deleted, the cursor position becomes
-                         * unavailble. We have to check the position is available
-                         * before re-highlighting it.
-                         */
+                        // If the currently playing track's cursor is selected, 
+                        //and that track is deleted, the cursor position becomes
+                        //unavailble. We have to check the position is available
+                        // before re-highlighting it.
+                        //
                         if ($tr.find(".sb-checkbox").children().hasClass("innerWrapper")) {
                             mod.selectCursor($tr);
                             
-                        /* If the selected cursor is the footer row we need to
-                         * explicitly select it because that row does not have
-                         * innerWrapper class
-                         */     
+                        // If the selected cursor is the footer row we need to
+                        //explicitly select it because that row does not have
+                         // innerWrapper class
+                         //     
                         } else if ($tr.hasClass("sb-footer")) {
                             mod.selectCursor($tr);	
                         }
                     }
-                    
+                    */
+
                     //if there is only 1 cursor on the page highlight it by default.
                     if ($cursorRows.length === 1) {
                         $td = $cursorRows.find("td:first");
@@ -801,10 +763,8 @@ var AIRTIME = (function(AIRTIME){
                             $cursorRows.addClass("cursor-selected-row");
                         }
                     }
-                    
-                    $parent.append($table);
                 }
-                
+
                 //order of importance of elements for setting the next timeout.
                 elements = [
                     $sbTable.find("tr."+NOW_PLAYING_CLASS),
@@ -830,6 +790,10 @@ var AIRTIME = (function(AIRTIME){
                 }
                 
                 mod.checkToolBarIcons();
+                
+                //var timer2 = new Date().getTime();
+                
+                //console.log(timer2 - timer1);
             },
             
             // R = ColReorder, C = ColVis

@@ -120,10 +120,10 @@ div.sb-timerange input.error {
 }
 .marker {
     background: url(images/tl-arrow.png) no-repeat scroll 3px 4px;
-    top: -14px;
+    top: -9px;
     display: block;
     height: 9px;
-    left: -17px;
+    left: -13px;
     padding: 4px 0 4px 3px;
     position: absolute;
     width: 9px;
@@ -162,7 +162,8 @@ table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-ro
 .sb-boundry td.sb-cue-in, 
 .sb-boundry td.sb-cue-out, 
 .sb-boundry td.sb-fade-in, 
-.sb-boundry td.sb-fade-out {
+.sb-boundry td.sb-fade-out,
+.sb-boundry td.sb-mime {
     background-color: rgba(230, 106, 49, 0.5);
 }
 
@@ -176,7 +177,8 @@ table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-ro
 .sb-over td.sb-cue-in, 
 .sb-over td.sb-cue-out, 
 .sb-over td.sb-fade-in, 
-.sb-over td.sb-fade-out {
+.sb-over td.sb-fade-out,
+.sb-over td.sb-mime {
     background-color: rgba(255, 0, 0, 0.5);
 }
 
@@ -252,6 +254,10 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 .push-right {
 	float:right;
 	margin-right:5px;
+}
+
+.sb-checkbox {
+	position: relative;
 }
 
 /*
