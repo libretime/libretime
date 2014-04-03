@@ -42,7 +42,11 @@ var AIRTIME = (function(AIRTIME) {
     
     //data is the aData of the tr element.
     mod.dblClickAdd = function(data) {
-    	addToPlaylist([data.Id]);
+    	var $playlistContentEl = $("#spl_sortable");
+    	
+    	if ($playlistContentEl.length > 0) {
+    		addToPlaylist([data.Id]);
+    	}
     };
     
     mod.addButtonClick = function() {
