@@ -332,16 +332,11 @@ class Rest_MediaController extends Zend_Rest_Controller
     {
         $CC_CONFIG = Config::getConfig();
         $apiKey = $CC_CONFIG["apiKey"][0];
-        
-        //$upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        //$tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
-        
+                
         $tempFilePath = $_FILES['file']['tmp_name'];
         $tempFileName = basename($tempFilePath);
-        
-        //TODO: Remove copyFileToStor from StoredFile...
-        
-        //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon?
+                
+        //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon...
          
         $storDir = Application_Model_MusicDir::getStorDir();
         $importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;

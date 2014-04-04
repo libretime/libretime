@@ -19,9 +19,20 @@ class MetadataAnalyzer(Analyzer):
         if not isinstance(metadata, dict):
             raise TypeError("metadata must be a dict. Was of type " + type(metadata).__name__)
 
+        #Airtime <= 2.5.x nonsense:
+        metadata["ftype"] = "audioclip"
+        #Other fields we'll want to set for Airtime:
+        metadata["cueout"] = metadata["length"] 
+        metadata["hidden"] = False
+
         #Extract metadata from an audio file using mutagen
         audio_file = mutagen.File(filename, easy=True)
 
+        #Bail if the file couldn't be parsed. The title should stay as the filename
+        #inside Airtime.
+        if not audio_file:
+            return metadata
+        
         #Grab other file information that isn't encoded in a tag, but instead usually
         #in the file header. Mutagen breaks that out into a separate "info" object:
         info = audio_file.info
@@ -53,7 +64,7 @@ class MetadataAnalyzer(Analyzer):
         except (AttributeError, KeyError):
             #If mutagen can't figure out the number of channels, we'll just leave it out...
             pass
-        
+    
         #Try to extract the number of tracks on the album if we can (the "track total")
         try:
             track_number = audio_file["tracknumber"]
@@ -106,12 +117,6 @@ class MetadataAnalyzer(Analyzer):
 
             except KeyError:
                 continue 
-
-        #Airtime <= 2.5.x nonsense:
-        metadata["ftype"] = "audioclip"
-        #Other fields we'll want to set for Airtime:
-        metadata["cueout"] = metadata["length"] 
-        metadata["hidden"] = False
 
         return metadata
 
