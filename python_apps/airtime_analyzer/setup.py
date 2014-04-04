@@ -6,6 +6,7 @@ import sys
 # on Airtime Pro:
 if '--no-init-script' in sys.argv:
     data_files = []
+    sys.argv.remove('--no-init-script') # super hax
 else:
     data_files = [('/etc/init', ['install/upstart/airtime_analyzer.conf'])]
     print data_files
