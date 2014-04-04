@@ -1,4 +1,14 @@
 from setuptools import setup
+from subprocess import call
+import sys
+
+# Allows us to avoid installing the upstart init script when deploying airtime_analyzer
+# on Airtime Pro:
+if '--no-init-script' in sys.argv:
+    data_files = []
+else:
+    data_files = [('/etc/init', ['install/upstart/airtime_analyzer.conf'])]
+    print data_files
 
 setup(name='airtime_analyzer',
       version='0.1',
@@ -19,4 +29,14 @@ setup(name='airtime_analyzer',
           'python-daemon',
           'requests',
       ],
-      zip_safe=False)
+      zip_safe=False,
+      data_files=data_files)
+
+# Reload the initctl config so that "service start airtime_analyzer" works
+if data_files:
+    print "Reloading initctl configuration"
+    call(['initctl', 'reload-configuration'])
+    print "Run \"sudo service airtime_analyzer restart\" now."
+
+
+# TODO: Should we start the analyzer here or not?
