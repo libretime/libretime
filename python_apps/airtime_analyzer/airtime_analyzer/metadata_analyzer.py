@@ -8,14 +8,31 @@ class MetadataAnalyzer(Analyzer):
 
     @staticmethod
     def analyze(filename, metadata):
+        ''' Extract audio metadata from tags embedded in the file (eg. ID3 tags)
+        
+            Keyword arguments:
+                filename: The path to the audio file to extract metadata from.
+                metadata: A dictionary that the extracted metadata will be added to. 
+        '''
         if not isinstance(filename, unicode):
             raise TypeError("filename must be unicode. Was of type " + type(filename).__name__)
         if not isinstance(metadata, dict):
             raise TypeError("metadata must be a dict. Was of type " + type(metadata).__name__)
 
+        #Airtime <= 2.5.x nonsense:
+        metadata["ftype"] = "audioclip"
+        #Other fields we'll want to set for Airtime:
+        metadata["cueout"] = metadata["length"] 
+        metadata["hidden"] = False
+
         #Extract metadata from an audio file using mutagen
         audio_file = mutagen.File(filename, easy=True)
 
+        #Bail if the file couldn't be parsed. The title should stay as the filename
+        #inside Airtime.
+        if not audio_file:
+            return metadata
+        
         #Grab other file information that isn't encoded in a tag, but instead usually
         #in the file header. Mutagen breaks that out into a separate "info" object:
         info = audio_file.info
@@ -25,7 +42,6 @@ class MetadataAnalyzer(Analyzer):
         track_length = datetime.timedelta(seconds=info.length)
         metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
         metadata["bit_rate"] = info.bitrate
-        #metadata["channels"] = info.channels
       
         #Use the python-magic module to get the MIME type.
         mime_magic = magic.Magic(mime=True)
@@ -48,7 +64,7 @@ class MetadataAnalyzer(Analyzer):
         except (AttributeError, KeyError):
             #If mutagen can't figure out the number of channels, we'll just leave it out...
             pass
-        
+    
         #Try to extract the number of tracks on the album if we can (the "track total")
         try:
             track_number = audio_file["tracknumber"]
@@ -101,12 +117,6 @@ class MetadataAnalyzer(Analyzer):
 
             except KeyError:
                 continue 
-
-        #Airtime <= 2.5.x nonsense:
-        metadata["ftype"] = "audioclip"
-        #Other fields we'll want to set for Airtime:
-        metadata["cueout"] = metadata["length"] 
-        metadata["hidden"] = False
 
         return metadata
 

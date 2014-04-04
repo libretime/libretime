@@ -1,3 +1,5 @@
+"""Runs the airtime_analyzer application.
+"""
 #!/usr/bin/env python
 
 import daemon
@@ -8,19 +10,37 @@ import airtime_analyzer.airtime_analyzer as aa
 VERSION = "1.0"
 DEFAULT_CONFIG_PATH = '/etc/airtime/airtime.conf'
 
-print "Airtime Analyzer " + VERSION
+def run():
+    '''Entry-point for this application'''
+    print "Airtime Analyzer " + VERSION
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
+    parser.add_argument("--debug", help="log full debugging output", action="store_true")
+    parser.add_argument("--rmq-config-file", help="specify a configuration file with RabbitMQ settings (default is /etc/airtime/airtime.conf)")
+    args = parser.parse_args()
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
-parser.add_argument("--debug", help="log full debugging output", action="store_true")
-parser.add_argument("--rmq-config-file", help="specify a configuration file with RabbitMQ settings (default is /etc/airtime/airtime.conf)")
-args = parser.parse_args()
+    check_if_media_monitor_is_running()
 
-'''Ensure media_monitor isn't running before we start, because it'll move newly uploaded
-   files into the library on us and screw up the operation of airtime_analyzer.
-   media_monitor is deprecated.
-'''
+    #Default config file path
+    config_path = DEFAULT_CONFIG_PATH
+    if args.rmq_config_file:
+        config_path = args.rmq_config_file
+
+    if args.daemon:
+        with daemon.DaemonContext():
+            aa.AirtimeAnalyzerServer(config_path=config_path, debug=args.debug)
+    else: 
+        # Run without daemonizing
+        aa.AirtimeAnalyzerServer(config_path=config_path, debug=args.debug)
+
+
 def check_if_media_monitor_is_running():
+    """Ensure media_monitor isn't running before we start.
+    
+       We do this because media_monitor will move newly uploaded
+       files into the library on us and screw up the operation of airtime_analyzer.
+       media_monitor is deprecated.
+    """
     pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
 
     for pid in pids:
@@ -33,17 +53,6 @@ def check_if_media_monitor_is_running():
         except IOError: # proc has already terminated
             continue
 
-check_if_media_monitor_is_running()
+run()
 
-#Default config file path
-config_path = DEFAULT_CONFIG_PATH
-if args.rmq_config_file:
-    config_path = args.rmq_config_file
-
-if args.daemon:
-    with daemon.DaemonContext():
-        analyzer = aa.AirtimeAnalyzerServer(config_path=config_path, debug=args.debug)
-else: 
-    # Run without daemonizing
-    analyzer = aa.AirtimeAnalyzerServer(config_path=config_path, debug=args.debug)
 

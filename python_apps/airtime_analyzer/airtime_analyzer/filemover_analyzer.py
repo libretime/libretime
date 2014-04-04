@@ -9,13 +9,26 @@ import uuid
 from analyzer import Analyzer
 
 class FileMoverAnalyzer(Analyzer):
-    
+    """This analyzer copies a file over from a temporary directory (stor/organize) 
+       into the Airtime library (stor/imported).
+    """
     @staticmethod
     def analyze(audio_file_path, metadata):
+        """Dummy method because we need more info than analyze gets passed to it"""
         raise Exception("Use FileMoverAnalyzer.move() instead.")
     
     @staticmethod
     def move(audio_file_path, import_directory, original_filename, metadata):
+        """Move the file at audio_file_path over into the import_directory/import,
+           renaming it to original_filename.
+           
+           Keyword arguments:
+               audio_file_path: Path to the file to be imported.
+               import_directory: Path to the "import" directory inside the Airtime stor directory.
+                                 (eg. /srv/airtime/stor/import)
+               original_filename: The filename of the file when it was uploaded to Airtime.
+               metadata: A dictionary where the "full_path" of where the file is moved to will be added.
+        """
         if not isinstance(audio_file_path, unicode):
             raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__)
         if not isinstance(import_directory, unicode):
@@ -68,6 +81,7 @@ class FileMoverAnalyzer(Analyzer):
         return metadata
     
 def mkdir_p(path):
+    """ Make all directories in a tree (like mkdir -p)"""
     if path == "":
         return
     try:

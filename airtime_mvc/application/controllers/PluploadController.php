@@ -27,15 +27,6 @@ class PluploadController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/addmedia.css?'.$CC_CONFIG['airtime_version']);
     }
 
-    public function uploadAction()
-    {
-        $upload_dir = ini_get("upload_tmp_dir") . DIRECTORY_SEPARATOR . "plupload";
-        $tempFilePath = Application_Model_StoredFile::uploadFile($upload_dir);
-        $tempFileName = basename($tempFilePath);
-
-        $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
-    }
-    
     public function recentUploadsAction()
     {
         if (isset($_GET['uploadFilter'])) {
