@@ -130,6 +130,7 @@ AIRTIME = (function(AIRTIME) {
         
         AIRTIME.showbuilder.fnServerData.start = oRange.start;
         AIRTIME.showbuilder.fnServerData.end = oRange.end;
+        console.log("calling builder datatable");
         AIRTIME.showbuilder.builderDataTable();
 
         $libWrapper = $lib.find(".ui-tabs-nav");
@@ -218,42 +219,6 @@ AIRTIME = (function(AIRTIME) {
 
             showSearchSubmit();
         });
-
-        function checkScheduleUpdates() {
-            var data = {},
-            	oTable = $('#show_builder_table').dataTable(),
-            	fn = oTable.fnSettings().fnServerData,
-            	start = fn.start,
-            	end = fn.end;
-
-            data["format"] = "json";
-            data["start"] = start;
-            data["end"] = end;
-            data["timestamp"] = AIRTIME.showbuilder.getTimestamp();
-            data["instances"] = AIRTIME.showbuilder.getShowInstances();
-
-            if (fn.hasOwnProperty("ops")) {
-                data["myShows"] = fn.ops.myShows;
-                data["showFilter"] = fn.ops.showFilter;
-                data["showInstanceFilter"] = fn.ops.showInstanceFilter;
-            }
-
-            $.ajax( {
-                "dataType" : "json",
-                "type" : "GET",
-                "url" : baseUrl+"showbuilder/check-builder-feed",
-                "data" : data,
-                "success" : function(json) {
-                    if (json.update === true) {
-                        oTable.fnDraw();
-                    }
-                    setTimeout(checkScheduleUpdates, 5000);
-                }
-            });
-        }
-
-        //check if the timeline view needs updating.
-        checkScheduleUpdates();
     };
 
     return AIRTIME;
