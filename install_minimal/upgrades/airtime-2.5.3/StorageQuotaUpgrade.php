@@ -1,4 +1,6 @@
 <?php
+require_once 'propel/runtime/lib/Propel.php';
+
 class StorageQuotaUpgrade
 {
     public static function startUpgrade()
