@@ -10,10 +10,10 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library')
 )));
 
-/*set_include_path(implode(PATH_SEPARATOR, array(
+set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
     realpath(APPLICATION_PATH . '/../library/propel/runtime/lib')
-)));*/
+)));
 
 class StorageQuotaUpgrade
 {
