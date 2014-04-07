@@ -15,6 +15,9 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library/propel/runtime/lib')
 )));
 
+//Propel classes.
+set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
+
 class StorageQuotaUpgrade
 {
     public static function startUpgrade()
