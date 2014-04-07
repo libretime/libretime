@@ -12,6 +12,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 //Propel classes.
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . '/models/airtime' . PATH_SEPARATOR . get_include_path());
 
 require_once 'CcMusicDirsQuery.php';
 
