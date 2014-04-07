@@ -10,13 +10,19 @@ set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library')
 )));
 
+/*set_include_path(implode(PATH_SEPARATOR, array(
+    get_include_path(),
+    realpath(APPLICATION_PATH . '/../library/propel/runtime/lib')
+)));*/
+
 //Propel classes.
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 set_include_path(APPLICATION_PATH . '/models/airtime' . PATH_SEPARATOR . get_include_path());
 set_include_path(APPLICATION_PATH . '/models/om' . PATH_SEPARATOR . get_include_path());
 
+require_once 'propel/runtime/lib/Propel.php';
 require_once 'CcMusicDirsQuery.php';
-require_once 'BaseCcMusicDirsQuery.php';
+#require_once 'BaseCcMusicDirsQuery.php';
 
 class StorageQuotaUpgrade
 {
