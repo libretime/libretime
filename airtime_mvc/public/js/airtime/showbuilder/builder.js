@@ -10,7 +10,9 @@ var AIRTIME = (function(AIRTIME){
         $lib,
         internalTimestamp = -1,
         internalShowInstances = [],
-        hasGottenFirstAjax = false;
+        hasGottenFirstAjax = false,
+        //check to see if preferences have actually changed or not for datatables
+        currentDatatablesSettings = {};
     
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -76,12 +78,9 @@ var AIRTIME = (function(AIRTIME){
         });
     }
     
-    mod.refresh = function(schedId) {
-        resetTimestamp();
-
-        if (schedId > 0) {
-            oSchedTable.fnDraw();
-        }
+    mod.refresh = function() {
+       
+    	oSchedTable.fnDraw();
     };
     
     mod.checkSelectButton = function() {
@@ -292,7 +291,7 @@ var AIRTIME = (function(AIRTIME){
             temp,
             aItems = [];
 
-        for (i=0, length = aData.length; i < length; i++) {
+        for (i = 0, length = aData.length; i < length; i++) {
             temp = aData[i];
             aItems.push({"id": temp.id, "instance": temp.instance, "timestamp": temp.timestamp});   
         }
@@ -358,6 +357,21 @@ var AIRTIME = (function(AIRTIME){
         $scroll.scrollTop(currentTop - scrollingTop + scrolled);
     };
     
+    function stackTrace() {
+        var err = new Error();
+        console.log(err.stack);
+    }
+    
+    function builderNeedSave(oData) {
+    	
+    	if (currentDatatablesSettings["abVisCols"].join() === oData.abVisCols.join()
+    			&& currentDatatablesSettings["ColReorder"].join() === oData.ColReorder.join()) {
+    		return false;
+    	}
+    	
+    	return true;
+    }
+    
     mod.builderDataTable = function() {
         $sbContent = $('#show_builder');
         $lib = $("#library_content"),
@@ -393,26 +407,33 @@ var AIRTIME = (function(AIRTIME){
                 //remove oData components we don't want to save.
                 delete oData.oSearch;
                 delete oData.aoSearchCols;
+                
             },
             "fnStateSave": function fnStateSave(oSettings, oData) {
-               
-                localStorage.setItem('datatables-timeline', JSON.stringify(oData));
-                
-                $.ajax({
-                  url: baseUrl+"usersettings/set-timeline-datatable",
-                  type: "POST",
-                  data: {settings : oData, format: "json"},
-                  dataType: "json"
-                });
+            	
+            	if (builderNeedSave(oData)) {
+            		console.log("saving timeline");
+            		
+            		localStorage.setItem('datatables-timeline', JSON.stringify(oData));
+                    
+                    $.ajax({
+                        url: baseUrl+"usersettings/set-timeline-datatable",
+                        type: "POST",
+                        data: {settings : oData, format: "json"},
+                        dataType: "json"
+                    });
+            	}  
             },
             "fnStateLoad": function fnBuilderStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-timeline');
                 
-                if (settings !== "") {
+                if (settings !== "") {      	
                     return JSON.parse(settings);
                 }   
             },
             "fnStateLoadParams": function (oSettings, oData) {
+            	
+            	console.log("loading timeline");
                 var i,
                     length,
                     a = oData.abVisCols;
@@ -425,12 +446,16 @@ var AIRTIME = (function(AIRTIME){
                     }
                 }
                 
+                currentDatatablesSettings["abVisCols"] = a.slice(0);
+                
                 a = oData.ColReorder;
                 for (i = 0, length = a.length; i < length; i++) {   
                     if (typeof(a[i]) === "string") {
                         a[i] = parseInt(a[i], 10);
                     }
                 }
+                
+                currentDatatablesSettings["ColReorder"] = a.slice(0);
                
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },
@@ -715,7 +740,7 @@ var AIRTIME = (function(AIRTIME){
 						if (refreshInterval > maxRefreshInterval){
 							refreshInterval = maxRefreshInterval;
 						}
-						mod.timeout = setTimeout(function() {mod.refresh(aData.id)}, refreshInterval); //need refresh in milliseconds
+						mod.timeout = setTimeout(mod.refresh, refreshInterval); //need refresh in milliseconds
                         break;
                     }
                 }

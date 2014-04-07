@@ -306,6 +306,9 @@ SQL;
     
     public static function getDashboardInfo()
     {
+    	
+    	//TODO better to split this into 2 queries, 1 for shows, 1 for items.
+    	
     	$sql = <<<SQL
 select
 
