@@ -9,6 +9,15 @@ class StorageQuotaUpgrade
 
     private static function setStorageUsage()
     {
-        
+        $musicDir = CcMusicDirsQuery::create()
+            ->filterByDbType('stor')
+            ->filterByDbExists(true)
+            ->findOne();
+        $storPath = $musicDir->getDbDirectory();
+
+        $freeSpace = disk_free_space($storPath);
+        $totalSpace = disk_total_space($storPath);
+
+        Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
     }
 }
