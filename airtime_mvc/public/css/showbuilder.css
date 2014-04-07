@@ -115,14 +115,16 @@ div.sb-timerange input.error {
 }
 
 .innerWrapper {
-    position:relative;
-    width:100%;
+    position: relative;
+    width: 100%;
+    height: 100%;
 }
 .marker {
     background: url(images/tl-arrow.png) no-repeat scroll 3px 4px;
     display: block;
     height: 9px;
-    left: -13px;
+    left: -18px;
+    bottom: -14px;
     padding: 4px 0 4px 3px;
     position: absolute;
     width: 9px;
@@ -253,10 +255,6 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 .push-right {
 	float:right;
 	margin-right:5px;
-}
-
-.sb-checkbox, .sb-empty td {
-	position: relative;
 }
 
 /*

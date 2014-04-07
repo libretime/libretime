@@ -481,7 +481,16 @@ var AIRTIME = (function(AIRTIME){
                     $nRow = $(nRow),
                     $image,
                     $div,
-                    headerIcon;
+                    headerIcon,
+                    $wrapper;
+                
+                //http://stackoverflow.com/a/6119684
+                $wrapper = $("<div/>", {
+                	"class": "innerWrapper"
+                });
+                
+                $node = $(nRow.children[0]);
+                $node.html($wrapper);
 
                 fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
                     $node = $(nRow.children[iNodeIndex]);
@@ -499,9 +508,6 @@ var AIRTIME = (function(AIRTIME){
                 if (aData.header === true) {
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
-                    
-                    $node = $(nRow.children[0]);
-                    $node.html("");
                     cl = 'sb-header';
                     
                     if (aData.record === true) {
@@ -511,13 +517,13 @@ var AIRTIME = (function(AIRTIME){
                         $div = $("<div/>", {
                             "class": "small-icon " + headerIcon
                         });
-                        $node.append($div);
+                        $wrapper.append($div);
                     }
                     else if (aData.rebroadcast === true) {
                         $div = $("<div/>", {
                             "class": "small-icon rebroadcast"
                         });
-                        $node.append($div);
+                        $wrapper.append($div);
                     }
                     
                     sSeparatorHTML = '<span class="show-title">'+aData.title+'</span>';
@@ -544,17 +550,15 @@ var AIRTIME = (function(AIRTIME){
                 else if (aData.footer === true) {
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
-                    
-                    $node = $(nRow.children[0]);
                     cl = 'sb-footer';
                     
                     //check the show's content status.
                     if (aData.runtime >= 0) {
-                        $node.html('<span class="ui-icon ui-icon-check"></span>');
+                        $wrapper.html('<span class="ui-icon ui-icon-check"></span>');
                         cl = cl + ' ui-state-highlight';
                     }
                     else {
-                        $node.html('<span class="ui-icon ui-icon-notice"></span>');
+                        $wrapper.html('<span class="ui-icon ui-icon-notice"></span>');
                         cl = cl + ' ui-state-error';
                     }
                         
@@ -564,13 +568,10 @@ var AIRTIME = (function(AIRTIME){
                 else if (aData.empty === true) {
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
-                    
-                    $node = $(nRow.children[0]);
-                    $node.html('');
-                    
+
                     //putting the cursor on the screen
                 	if (aData.allowed && $lib.length > 0 && $lib.filter(":visible").length > 0) {
-                		$node.append('<div class="marker"></div>');
+                		$wrapper.append('<div class="marker"></div>');
                 	}
                     
                     sSeparatorHTML = '<span>'+$.i18n._("Show Empty")+'</span>';
@@ -581,9 +582,6 @@ var AIRTIME = (function(AIRTIME){
                 else if (aData.record === true) {
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
-                    
-                    $node = $(nRow.children[0]);
-                    $node.html('');
                     
                     sSeparatorHTML = '<span>'+$.i18n._("Recording From Line In")+'</span>';
                     cl = cl + " sb-record odd";
@@ -622,17 +620,13 @@ var AIRTIME = (function(AIRTIME){
                         });
                     }
                     
-                    $node = $(nRow.children[0]);
                     if (aData.allowed === true && aData.scheduled >= 1) {
-                        $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
+                    	$wrapper.html('<input type="checkbox" name="'+aData.id+'"></input>');
                         
                         //putting the cursor on the screen
                     	if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
-                    		$node.append('<div class="marker"></div>');
+                    		$wrapper.append('<div class="marker"></div>');
                     	}                       	
-                    }
-                    else {
-                        $node.html('');
                     }
                 }
                 
@@ -675,8 +669,6 @@ var AIRTIME = (function(AIRTIME){
                 }
                 else {
                     $nRow.addClass("sb-allowed");
-                    $nRow.attr("id", aData.id);
-                    $nRow.attr("si_id", aData.instance);
                 }
                 
                 //status used to colour tracks.
@@ -718,8 +710,7 @@ var AIRTIME = (function(AIRTIME){
                 }
 
                 isInitialized = true;
-                var $td,
-                    aData,
+                var aData,
                     elements,
                     i, length, temp,
                     $cursorRows,
@@ -730,7 +721,8 @@ var AIRTIME = (function(AIRTIME){
                 //only create the cursor arrows if the library is on the page.
                 if ($lib.length > 0 && $lib.filter(":visible").length > 0) {  	
 
-                    $cursorRows = $sbTable.find("tbody tr.sb-future.sb-allowed:not(.sb-header, .sb-empty)");      
+                    //$cursorRows = $sbTable.find("tbody tr.sb-future.sb-allowed:not(.sb-header, .sb-empty)");
+                	$cursorRows = $sbTable.find("div.marker").parents("tr");
                     
                     //re-highlight selected cursors before draw took place
                     /*
@@ -761,10 +753,7 @@ var AIRTIME = (function(AIRTIME){
 
                     //if there is only 1 cursor on the page highlight it by default.
                     if ($cursorRows.length === 1) {
-                        $td = $cursorRows.find("td:first");
-                        if (!$td.hasClass("dataTables_empty")) {
-                            $cursorRows.addClass("cursor-selected-row");
-                        }
+                        $cursorRows.addClass("cursor-selected-row");
                     }
                 }
 
