@@ -1,5 +1,19 @@
 <?php
-require_once 'propel/runtime/lib/Propel.php';
+
+// Define path to application directory
+defined('APPLICATION_PATH')
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../install_minimal/../airtime_mvc/application'));
+
+// Ensure library/ is on include_path
+set_include_path(implode(PATH_SEPARATOR, array(
+    get_include_path(),
+    realpath(APPLICATION_PATH . '/../library')
+)));
+
+/*set_include_path(implode(PATH_SEPARATOR, array(
+    get_include_path(),
+    realpath(APPLICATION_PATH . '/../library/propel/runtime/lib')
+)));*/
 
 class StorageQuotaUpgrade
 {
