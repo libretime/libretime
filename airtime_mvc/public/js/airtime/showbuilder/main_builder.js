@@ -81,10 +81,7 @@ AIRTIME = (function(AIRTIME) {
         check = validateTimeRange();
         
         if (check.isValid) {
-        	
-	        //reset timestamp value since input values could have changed.
-	        AIRTIME.showbuilder.resetTimestamp();
-	            
+        	    
 	        fn = oTable.fnSettings().fnServerData;
 	        fn.start = check.start;
 	        fn.end = check.end;
@@ -140,9 +137,6 @@ AIRTIME = (function(AIRTIME) {
 
         $builder.on("click", "#sb_edit", function(ev) {
             var schedTable = $("#show_builder_table").dataTable();
-
-            // reset timestamp to redraw the cursors.
-            AIRTIME.showbuilder.resetTimestamp();
 
             schedTable.fnDraw();
 
