@@ -1087,7 +1087,7 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.preview !== undefined) {
                         
                         callback = function() {
-                            open_show_preview(data.instance, data.pos);
+                        	AIRTIME.playerPreview.previewMedia(data.mediaId);
                         };
                         
                         oItems.preview.callback = callback;
@@ -1097,7 +1097,7 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.selCurs !== undefined) {
                         
                         callback = function() {
-                            var $tr = $(this).parents('tr').next();
+                            var $tr = $(this).parents('tr');
                             
                             mod.selectCursor($tr);
                         };
@@ -1109,7 +1109,7 @@ var AIRTIME = (function(AIRTIME){
                     if (oItems.delCurs !== undefined) {
                         
                         callback = function() {
-                            var $tr = $(this).parents('tr').next();
+                            var $tr = $(this).parents('tr');
                             
                             mod.removeCursor($tr);
                         };
@@ -1132,7 +1132,7 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     //only show the cursor selecting options if the library is visible on the page.
-                    if ($tr.find('.marker').length === 0) {
+                    if ($tr.find('div.marker').length === 0) {
                         delete oItems.selCurs;
                         delete oItems.delCurs;
                     }
