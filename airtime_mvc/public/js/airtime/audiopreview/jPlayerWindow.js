@@ -8,8 +8,10 @@ var AIRTIME = (function(AIRTIME) {
     
     function addToPlaylist(data) {
     	var playNow = false;
+    	var jPlayerData = $("#jquery_jplayer_1").data();
     	
-    	if (playlistJPlayer.playlist.length === 0) {
+    	//if (playlistJPlayer.playlist.length === 0) {
+    	if (jPlayerData.jPlayer.status.paused === true) {
     		playNow = true;
     	}
     	
@@ -65,10 +67,9 @@ var AIRTIME = (function(AIRTIME) {
         {
             swfPath: baseUrl+"js/jplayer",
             supplied: "mp3, oga, m4a, wav, flac",
-            //solution: "flash, html",
             preload: "none",
             wmode: "window",
-            remainingDuration: true,
+            //remainingDuration: true,
             size: {
                 width: "0px",
                 height: "0px",
@@ -104,8 +105,8 @@ var AIRTIME = (function(AIRTIME) {
         });
     	
     	$( "#open_playlist" ).click(function() {
-    	    $(".jp-playlist").toggleClass( "open" );
-    	    $( this ).toggleClass( "selected" );
+    	    $(".jp-playlist").toggleClass("open");
+    	    $(this).toggleClass("selected");
     	});
 
     };
