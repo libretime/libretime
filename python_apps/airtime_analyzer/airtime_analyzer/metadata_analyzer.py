@@ -22,7 +22,6 @@ class MetadataAnalyzer(Analyzer):
         #Airtime <= 2.5.x nonsense:
         metadata["ftype"] = "audioclip"
         #Other fields we'll want to set for Airtime:
-        metadata["cueout"] = metadata["length"] 
         metadata["hidden"] = False
 
         #Extract metadata from an audio file using mutagen
@@ -42,6 +41,9 @@ class MetadataAnalyzer(Analyzer):
         track_length = datetime.timedelta(seconds=info.length)
         metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
         metadata["bit_rate"] = info.bitrate
+        
+        # Other fields for Airtime
+        metadata["cueout"] = metadata["length"] 
       
         #Use the python-magic module to get the MIME type.
         mime_magic = magic.Magic(mime=True)
