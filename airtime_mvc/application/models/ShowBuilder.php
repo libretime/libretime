@@ -298,7 +298,7 @@ class Application_Model_ShowBuilder
     	
     	foreach ($scheduledItems as $scheduledItem) {
     		
-    		//if there's a filler row it's status is -1, don't display it.
+    		//if there's a filler row its status is -1, don't display it.
     		if ($scheduledItem->getDbPlayoutStatus() >= 0) {
 
     			$schedStartDT = $scheduledItem->getDbStarts(null);
@@ -353,7 +353,20 @@ class Application_Model_ShowBuilder
     	//empty normal show.
     	if (count($scheduledItems) === 0 && !$showInstance->isRecorded()) {
     		$row["empty"] = true;
-    		$row["id"] = 0 ;
+    		$row["id"] = 0;
+    		$row["instance"] = $instance;
+    		
+    		self::itemRowCheck($showInstance, $row);
+    		
+    		$rows[] = $row;
+    	}
+    	//a show that's currently played all its scheduled content but is now empty, needs an empty row.
+    	else if (count($scheduledItems) > 0 
+    			&& $this->epoch_now < floatval($showEndDT->format("U.u"))
+    			&& $this->epoch_now > floatval($schedEndDT->format("U.u"))) {
+    		
+    		$row["empty"] = true;
+    		$row["id"] = $scheduledItem->getDbId();
     		$row["instance"] = $instance;
     		
     		self::itemRowCheck($showInstance, $row);
