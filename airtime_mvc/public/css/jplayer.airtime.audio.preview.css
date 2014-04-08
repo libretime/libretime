@@ -419,17 +419,38 @@ div.jp-title {
 	text-align:center;
 }
 
-div.jp-playlist {
-	width:100%;
-	height: 75px;
-	background-color: rgba(39, 39, 39, 0.9);
-	overflow: hidden;
-	height: 0px;
-	position: relative;
-	-webkit-transition: all 200ms ease;
-    -moz-transition: all 200ms ease;
-    -o-transition: all 200ms ease;
-    transition: all 200ms ease;
+div.jp-playlist { 
+	width: 100%; 
+	background-color: rgba(39, 39, 39, 0.9); 
+	overflow: hidden; 
+	height: 0px; 
+	position: relative; 
+	-webkit-transition: all 200ms ease; 
+	-moz-transition: all 200ms ease; 
+	-o-transition: all 200ms ease; 
+	transition: all 200ms ease; 
+	white-space: nowrap; 
+	overflow-x: scroll; 
+}
+
+div.jp-playlist::-webkit-scrollbar { 
+	width: 8px; 
+	height: 8px; 
+}
+
+div.jp-playlist::-webkit-scrollbar-track { 
+	background-color: transparent; 
+}
+
+div.jp-playlist::-webkit-scrollbar-thumb { 
+	background-color: #797979; 
+	-webkit-border-radius: 10px; 
+	-moz-border-radius: 10px; 
+	border-radius: 10px; 
+}
+
+div.jp-playlist::-webkit-scrollbar-thumb:hover { 
+	background-color: #9B9B9B; 
 }
 
 div.jp-playlist.open {
@@ -454,11 +475,28 @@ div.jp-title li {
 }
 
 div.jp-playlist li {
+	position: relative;
 	display: inline-block;
 	width: 125px;
-	margin: 10px 10px;
-	overflow: hidden;
+	margin: 10px 10px 0px 10px;
 	text-align: left;
+}
+
+.jp-playlist ul li .jp-playlist-item-remove {
+	display: none !important;
+}
+
+.jp-playlist ul li:hover .jp-playlist-item-remove {
+	display: inline !important;
+	position: absolute; 
+	right: -4px; 
+	top: -4px; 
+	width: 13px; 
+	height: 13px; 
+	text-align: center; 
+	display: block; 
+	text-indent: -9999px; 
+	background-image: url("images/player/remove_icon.png");
 }
 
 div.jp-playlist li .jp-playlist-item {
