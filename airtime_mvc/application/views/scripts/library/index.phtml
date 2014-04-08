@@ -2,14 +2,6 @@
     <?php echo $this->render('library/library.phtml') ?>
 </div>
 
-<?php 
-if ($this->showPlaylist) {
-    $display = "";
-} else {
-    //$display = "display:none";
-	$display = "";
-}
-?>
 <div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded">
 <?php echo $this->render('playlist/playlist.phtml') ?>
 </div>

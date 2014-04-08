@@ -7,6 +7,7 @@ var AIRTIME = (function(AIRTIME) {
     
     //stored in format chosenItems[tabname] = object of chosen ids for the tab.
     var chosenItems = {},
+    	datatablesSettings = {},
     	$library,
     	LIB_SELECTED_CLASS = "lib-selected",
     	LIB_ADD_CLASS = "lib-add",
@@ -203,10 +204,20 @@ var AIRTIME = (function(AIRTIME) {
     }
     
     function datatablesDrawCallback(oSettings) {
-    	var tabId = getActiveTabId();
     	
     	highlightChosen();
     	mod.checkToolBarIcons();
+    }
+    
+    function libraryNeedSave(oData) {
+    	var settings = getCurrentDatatableSettings();
+    	
+    	if (settings["abVisCols"].join() === oData.abVisCols.join()
+    			&& settings["ColReorder"].join() === oData.ColReorder.join()) {
+    		return false;
+    	}
+    	
+    	return true;
     }
     	
     function createDatatable(config) {
@@ -244,14 +255,17 @@ var AIRTIME = (function(AIRTIME) {
                 delete oData.aoSearchCols;
             },
             "fnStateSave": function (oSettings, oData) {
-                localStorage.setItem('datatables-'+ config.type, JSON.stringify(oData));
-                
-                $.ajax({
-                    url: baseUrl+"usersettings/set-"+ config.type + "-datatable",
-                    type: "POST",
-                    data: {settings : oData, format: "json"},
-                    dataType: "json"
-                  }); 
+            	
+            	if (libraryNeedSave(oData)) {
+            		localStorage.setItem('datatables-'+ config.type, JSON.stringify(oData));
+                    
+                    $.ajax({
+                        url: baseUrl+"usersettings/set-"+ config.type + "-datatable",
+                        type: "POST",
+                        data: {settings : oData, format: "json"},
+                        dataType: "json"
+                    });
+            	}   
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-'+ config.type);
@@ -265,26 +279,27 @@ var AIRTIME = (function(AIRTIME) {
             "fnStateLoadParams": function (oSettings, oData) {
                 var i,
                     length,
-                    a = oData.abVisCols;
+                    a = oData.abVisCols,
+                    settings = getCurrentDatatableSettings();
                 
-                if (a) {
-                    // putting serialized data back into the correct js type to make
-                    // sure everything works properly.
-                    for (i = 0, length = a.length; i < length; i++) {
-                        if (typeof(a[i]) === "string") {
-                            a[i] = (a[i] === "true") ? true : false;
-                        } 
-                    }
+                // putting serialized data back into the correct js type to make
+                // sure everything works properly.
+                for (i = 0, length = a.length; i < length; i++) {
+                    if (typeof(a[i]) === "string") {
+                        a[i] = (a[i] === "true") ? true : false;
+                    } 
                 }
+                
+                settings["abVisCols"] = a.slice(0);
                     
                 a = oData.ColReorder;
-                if (a) {
-                    for (i = 0, length = a.length; i < length; i++) {
-                        if (typeof(a[i]) === "string") {
-                            a[i] = parseInt(a[i], 10);
-                        }
+                for (i = 0, length = a.length; i < length; i++) {
+                    if (typeof(a[i]) === "string") {
+                        a[i] = parseInt(a[i], 10);
                     }
                 }
+                
+                settings["ColReorder"] = a.slice(0);
                 
                 //abVisible indices belong to the original column order.
                 //use to fix up advanced search.
@@ -346,13 +361,17 @@ var AIRTIME = (function(AIRTIME) {
 	        	});
 	        	
 	        	//append a search button
-	        	$panel.find(".dataTables_filter").append('<button class="btn btn-small btn-search" type="button">Search</button>');
+	        	//$panel.find(".dataTables_filter").append('<button class="btn btn-small btn-search" type="button">Search</button>');
 	        	
 	        	//only search on enter.
 	        	$panel.on("keypress", ".advanced_search input", function(e) {
 	        		 if (e.which === 13) {
 	        			 table.fnDraw();
 	                 }
+	        	});
+	        	
+	        	$panel.on("click", ".btn-clear", function(e) {
+	        		$panel.find(".advanced_search input").val("");
 	        	});
 	        	
 	        	$panel.on("click", ".btn-search", function(e) {
@@ -409,6 +428,16 @@ var AIRTIME = (function(AIRTIME) {
     }
     
     mod.getActiveTabId = getActiveTabId;
+    
+    function getCurrentDatatableSettings() {
+    	var tabId = getActiveTabId();
+    	
+        if (datatablesSettings[tabId] === undefined) {
+        	datatablesSettings[tabId] = {};
+        }
+        
+        return datatablesSettings[tabId];
+    }
     
     function getActiveDatatable() {
     	var tabId = getActiveTabId();

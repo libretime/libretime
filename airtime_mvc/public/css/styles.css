@@ -2388,7 +2388,7 @@ fieldset.sb-criteria-fieldset{
     overflow-x:auto;
 }
 
-fieldset.closed dl, fieldset.closed textarea, fieldset.closed div, fieldset.closed h2 {
+fieldset.closed dl, fieldset.closed textarea, fieldset.closed div, fieldset.closed h2, fieldset.closed button {
 	display:none;
 }
 

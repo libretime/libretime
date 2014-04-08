@@ -8,6 +8,7 @@ var AIRTIME = (function(AIRTIME){
         $sbTable,
         $toolbar,
         $lib,
+        builderCheckTimeout,
         internalTimestamp = -1,
         internalShowInstances = [],
         hasGottenFirstAjax = false,
@@ -73,7 +74,7 @@ var AIRTIME = (function(AIRTIME){
                 	console.log("need to update builder table.");
                     oTable.fnDraw();
                 }
-                setTimeout(checkScheduleUpdates, 5000);
+                builderCheckTimeout = setTimeout(checkScheduleUpdates, 5000);
             }
         });
     }
@@ -339,7 +340,7 @@ var AIRTIME = (function(AIRTIME){
                     	
                     	//start this timeout
                     	//check if the timeline view needs updating.
-                        checkScheduleUpdates();
+                    	builderCheckTimeout = setTimeout(checkScheduleUpdates, 5000);
                     }
             	}   
             }
@@ -692,24 +693,22 @@ var AIRTIME = (function(AIRTIME){
             //remove any selected nodes before the draw.
             "fnPreDrawCallback": function( oSettings ) {
                 
+            	clearTimeout(mod.timeout);
+                clearTimeout(builderCheckTimeout);
+                
                 //make sure any dragging helpers are removed or else they'll be stranded on the screen.
                 $("#draggingContainer").remove();
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
-				//var timer1 = new Date().getTime();
-            	
-            	var aData,
+				var aData,
 	                elements,
 	                i, length, temp,
-	                $cursorRows,
-	                $table = $(this);
+	                $cursorRows;
 
                 if ($(this).find("."+NOW_PLAYING_CLASS).length > 0) {
                     mod.jumpToCurrentTrack();
                 }                
-                
-                clearTimeout(mod.timeout);
-                
+
                 //only create the cursor arrows if the library is on the page.
                 if ($lib.length > 0 && $lib.filter(":visible").length > 0) {  	
 
@@ -747,9 +746,7 @@ var AIRTIME = (function(AIRTIME){
                 
                 mod.checkToolBarIcons();
                 
-                //var timer2 = new Date().getTime();
-                
-                //console.log(timer2 - timer1);
+                builderCheckTimeout = setTimeout(checkScheduleUpdates, 5000);
             },
             
             // R = ColReorder, C = ColVis
