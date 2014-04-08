@@ -588,7 +588,6 @@ var AIRTIME = (function(AIRTIME){
                     fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
                 }
                 else {
-                    
                      //add the play function if the file exists on disk.
                     $image = $nRow.find('td.sb-image');
                     //check if the file exists.
@@ -598,11 +597,7 @@ var AIRTIME = (function(AIRTIME){
                             $image.html('<span class="ui-icon ui-icon-locked"></span>');
                         } 
                         else {
-                            $image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>')
-                            .click(function() {
-                            	AIRTIME.playerPreview.previewMedia(aData.mediaId);
-                                return false;
-                            });
+                            $image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>');
                         }
                     }
                     else {
@@ -649,9 +644,6 @@ var AIRTIME = (function(AIRTIME){
                     
                     $nRow.find('td:first').css('background', 'rgba('+r+', '+g+', '+b+', '+a+')');
                 }
-                
-                //save some info for reordering purposes.
-                $nRow.data({"aData": aData});
 
                 if (aData.scheduled === 1) {
                     $nRow.addClass(NOW_PLAYING_CLASS);
@@ -681,14 +673,9 @@ var AIRTIME = (function(AIRTIME){
                 if (aData.currentShow === true) {
                     $nRow.addClass("sb-current-show");
                 }
-              
-                //call the context menu so we can prevent the event from propagating.
-                $nRow.find('td:gt(1)').click(function(e){
-                    
-                    $(this).contextMenu({x: e.pageX, y: e.pageY});
-                    
-                    return false;
-                });
+                
+                //save some info for reordering purposes.
+                $nRow.data({"aData": aData});
             },
             //remove any selected nodes before the draw.
             "fnPreDrawCallback": function( oSettings ) {
@@ -1045,7 +1032,7 @@ var AIRTIME = (function(AIRTIME){
         });
         
         //add events to cursors.
-        $sbTable.find("tbody").on("click", "div.marker", function(event) {
+        $sbTable.on("click", "div.marker", function(event) {
             var $tr = $(this).parents("tr"),
                 $trs;
             
@@ -1064,11 +1051,33 @@ var AIRTIME = (function(AIRTIME){
             return false;
         });
         
+        //call the context menu so we can prevent the event from propagating.
+        $sbTable.on("mousedown", "td:gt(1)", function(e) {
+    		//only trigger context menu on right click.
+    		if (e.which === 3) {
+    			e.preventDefault();
+        		e.stopPropagation();
+        		
+    			var $el = $(this);
+    			
+    			$el.contextMenu({x: e.pageX, y: e.pageY});
+    		}
+        });
+        
+        //preview the media item with jPlayer.
+        $sbTable.on("click", "td.sb-image img", function(event) {
+        	var $tr = $(this).parents("tr"),
+        		aData = $tr.data("aData");
+        	
+        	AIRTIME.playerPreview.previewMedia(aData.mediaId);
+            return false;
+        });
+        
         //begin context menu initialization.
         $.contextMenu({
             selector: '.sb-content table tbody tr:not(.sb-empty, .sb-footer, .sb-header, .sb-record) td:not(.sb-checkbox, .sb-image)',
-            trigger: "left",
-            ignoreRightClick: true,
+            trigger: "none",
+            ignoreRightClick: false,
             
             build: function($el, e) {
                 var items,  
