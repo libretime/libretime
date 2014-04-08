@@ -944,7 +944,7 @@ var AIRTIME = (function(AIRTIME){
         //start setup of the builder toolbar.
         $toolbar = $(".sb-content .fg-toolbar");
 
-        $menu = $("<div class='btn-toolbar'/>");
+        var $menu = $("<div class='btn-toolbar'/>");
         $menu.append("<div class='btn-group'>" +
                      "<button class='btn btn-small dropdown-toggle sb-select'  id='timeline-select' data-toggle='dropdown'>" +
                          $.i18n._("Select")+" <span class='caret'></span>" +
@@ -961,20 +961,15 @@ var AIRTIME = (function(AIRTIME){
                     "<button title='"+$.i18n._("Remove selected scheduled items")+"' class='ui-state-disabled btn btn-small sb-trash' disabled='disabled'>" +
                     "<i class='icon-white icon-trash'></i></button></div>");
 
-        //if 'Add/Remove content' was chosen from the context menu
-        //in the Calendar do not append these buttons
-        if ($(".ui-dialog-content").length === 0) {
             $menu.append("<div class='btn-group'>" +
                     "<button  title='"+$.i18n._("Jump to the current playing track")+"' class='ui-state-disabled btn btn-small sb-current' disabled='disabled'>" +
                     "<i class='icon-white icon-step-forward'></i></button></div>")
             .append("<div class='btn-group'>" +
                     "<button title='"+$.i18n._("Cancel current show")+"' class='ui-state-disabled btn btn-small btn-danger sb-cancel' disabled='disabled'>" +
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
-        }
 
         $toolbar.append($menu);
-        $menu = undefined;
-        
+       
         $('#timeline-sa').click(mod.selectAll);
         $('#timeline-sn').click(mod.selectNone);
         
