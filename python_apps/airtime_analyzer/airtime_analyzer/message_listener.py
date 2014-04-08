@@ -2,6 +2,8 @@ import sys
 import pika
 import json
 import time
+import select
+import signal
 import logging 
 import multiprocessing 
 from analyzer_pipeline import AnalyzerPipeline
@@ -59,6 +61,8 @@ class MessageListener:
             Keyword arguments:
                 config: A ConfigParser object containing the [rabbitmq] configuration.
         '''
+    
+        self._shutdown = False
 
         # Read the RabbitMQ connection settings from the config file
         # The exceptions throw here by default give good error messages. 
@@ -68,21 +72,31 @@ class MessageListener:
         self._username = config.get(RMQ_CONFIG_SECTION, 'user')
         self._password = config.get(RMQ_CONFIG_SECTION, 'password')
         self._vhost = config.get(RMQ_CONFIG_SECTION, 'vhost')
+        
+        # Set up a signal handler so we can shutdown gracefully
+        # For some reason, this signal handler must be set up here. I'd rather 
+        # put it in AirtimeAnalyzerServer, but it doesn't work there (something to do
+        # with pika's SIGTERM handler interfering with it, I think...)
+        signal.signal(signal.SIGTERM, self.graceful_shutdown)
 
-        while True:
+        while not self._shutdown:
             try:
                 self.connect_to_messaging_server()
                 self.wait_for_messages()
-            except KeyboardInterrupt:
-                self.disconnect_from_messaging_server()
-                break
+            except (KeyboardInterrupt, SystemExit):
+                break # Break out of the while loop and exit the application
+            except select.error:
+                pass 
             except pika.exceptions.AMQPError as e:
+                if self._shutdown:
+                    break
                 logging.error("Connection to message queue failed. ")
                 logging.error(e)
                 logging.info("Retrying in 5 seconds...")
                 time.sleep(5)
 
-        self._connection.close()
+        self.disconnect_from_messaging_server()
+        logging.info("Exiting cleanly.")
 
 
     def connect_to_messaging_server(self):
@@ -107,7 +121,12 @@ class MessageListener:
     def disconnect_from_messaging_server(self):
         '''Stop consuming RabbitMQ messages and disconnect'''
         self._channel.stop_consuming()
-
+        self._connection.close()
+   
+    def graceful_shutdown(self, signum, frame):
+        '''Disconnect and break out of the message listening loop'''
+        self._shutdown = True
+        self.disconnect_from_message_listener()
 
     @staticmethod
     def msg_received_callback(channel, method_frame, header_frame, body):
