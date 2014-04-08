@@ -1,5 +1,11 @@
 <?php
 
+// Define path to application directory
+defined('APPLICATION_PATH')
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../../install_minimal/../airtime_mvc/application'));
+//include index.php so we can use propel classes
+require_once APPLICATION_PATH.'/../public/index.php';
+
 require_once 'DbUpgrade.php';
 require_once 'StorageQuotaUpgrade.php';
 
