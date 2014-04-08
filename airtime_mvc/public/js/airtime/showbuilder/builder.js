@@ -226,6 +226,8 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.disableUI = function() {
+    	//don't bother checking to update schedule while action is being performed.
+    	clearTimeout(builderCheckTimeout);
 
         $lib.block({ 
             message: "",
@@ -244,6 +246,8 @@ var AIRTIME = (function(AIRTIME){
         
         $lib.unblock();
         $sbContent.unblock();
+        
+        builderCheckTimeout = setTimeout(checkScheduleUpdates, 5000);
     };
     
     mod.fnRedrawSchedule = function(json) {
@@ -302,6 +306,8 @@ var AIRTIME = (function(AIRTIME){
     
     mod.fnServerData = function fnBuilderServerData( sSource, aoData, fnCallback ) {
     	
+    	clearTimeout(mod.timeout);
+
     	console.log("getting builder feed.");
        
         aoData.push( { name: "timestamp", value: getTimestamp()} );
@@ -463,7 +469,8 @@ var AIRTIME = (function(AIRTIME){
             
             "fnServerData": mod.fnServerData,
             "fnRowCallback": function fnRowCallback( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                var i, length,
+            	//console.time("datatablessinglerowrender");
+            	var i, length,
                     sSeparatorHTML,
                     fnPrepareSeparatorRow,
                     $node,
@@ -592,13 +599,15 @@ var AIRTIME = (function(AIRTIME){
                     $image = $nRow.find('td.sb-image');
                     //check if the file exists.
                     if (aData.image === true) {
-                        $nRow.addClass("lib-audio");
+                    	//$image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>');
+                    	
                         if (!AIRTIME.playerPreview.isAudioSupported(aData.mime)) {
                             $image.html('<span class="ui-icon ui-icon-locked"></span>');
                         } 
                         else {
                             $image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>');
                         }
+						
                     }
                     else {
                         $image.html('<span class="ui-icon ui-icon-alert"></span>');
@@ -676,17 +685,22 @@ var AIRTIME = (function(AIRTIME){
                 
                 //save some info for reordering purposes.
                 $nRow.data({"aData": aData});
+                
+                //console.timeEnd("datatablessinglerowrender");
             },
             //remove any selected nodes before the draw.
             "fnPreDrawCallback": function( oSettings ) {
-                
-            	clearTimeout(mod.timeout);
-                clearTimeout(builderCheckTimeout);
-                
+            	
+            	console.time("datatablesrender");
+
                 //make sure any dragging helpers are removed or else they'll be stranded on the screen.
                 $("#draggingContainer").remove();
+                
+                console.time("datatablesrowrender");
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
+            	console.timeEnd("datatablesrowrender");
+            	
 				var aData,
 	                elements,
 	                i, length, temp,
@@ -733,7 +747,7 @@ var AIRTIME = (function(AIRTIME){
                 
                 mod.checkToolBarIcons();
                 
-                builderCheckTimeout = setTimeout(checkScheduleUpdates, 5000);
+                console.timeEnd("datatablesrender");
             },
             
             // R = ColReorder, C = ColVis
