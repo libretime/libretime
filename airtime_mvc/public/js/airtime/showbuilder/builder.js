@@ -370,9 +370,19 @@ var AIRTIME = (function(AIRTIME){
     }
     
     function builderNeedSave(oData) {
+    	var settings = currentDatatablesSettings;
     	
-    	if (currentDatatablesSettings["abVisCols"].join() === oData.abVisCols.join()
-    			&& currentDatatablesSettings["ColReorder"].join() === oData.ColReorder.join()) {
+    	//This will happen when we have nothing saved in cc_pref for this table.
+    	if (settings["abVisCols"] === undefined || settings["ColReorder"] === undefined) {
+    		
+    		settings["abVisCols"] = oData.abVisCols;
+    		settings["ColReorder"] = oData.ColReorder;
+    		
+    		return true;
+    	}
+    	
+    	if (settings["abVisCols"].join() === oData.abVisCols.join()
+    			&& settings["ColReorder"].join() === oData.ColReorder.join()) {
     		return false;
     	}
     	
@@ -434,8 +444,11 @@ var AIRTIME = (function(AIRTIME){
             "fnStateLoad": function fnBuilderStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-timeline');
                 
-                if (settings !== "") {      	
+                try {
                     return JSON.parse(settings);
+                }
+                catch (e) {
+                    return null;
                 }   
             },
             "fnStateLoadParams": function (oSettings, oData) {

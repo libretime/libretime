@@ -50,9 +50,9 @@
         var properties = $.extend(defaults, options);
 
         function _fnColumnIndex(iColumnIndex) {
-        	var s = oTable.fnSettings(),
-        		order = s.oLoadedState.ColReorder,
-        		index = order.indexOf(iColumnIndex);
+        	var colOrder = new $.fn.dataTable.ColReorder(oTable);
+        	var order = colOrder.fnOrder();
+        	var index = order.indexOf(iColumnIndex);
         	
         	//iColumnIndex is the original column index.
         	//to match the rest of the data sent to the server it must give

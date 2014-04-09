@@ -209,8 +209,22 @@ var AIRTIME = (function(AIRTIME) {
     	mod.checkToolBarIcons();
     }
     
+    function stackTrace() {
+        var err = new Error();
+        console.log(err.stack);
+    }
+    
     function libraryNeedSave(oData) {
     	var settings = getCurrentDatatableSettings();
+    	
+    	//This will happen when we have nothing saved in cc_pref for this table.
+    	if (settings["abVisCols"] === undefined || settings["ColReorder"] === undefined) {
+    		
+    		settings["abVisCols"] = oData.abVisCols;
+    		settings["ColReorder"] = oData.ColReorder;
+    		
+    		return true;
+    	}
     	
     	if (settings["abVisCols"].join() === oData.abVisCols.join()
     			&& settings["ColReorder"].join() === oData.ColReorder.join()) {
@@ -223,7 +237,6 @@ var AIRTIME = (function(AIRTIME) {
     function createDatatable(config) {
     	var key = "datatables-"+config.type+"-aoColumns",
     		columns = JSON.parse(localStorage.getItem(key)),
-    		abVisible,
     		i, len,
     		searchConfig;
     	
@@ -250,7 +263,8 @@ var AIRTIME = (function(AIRTIME) {
             //save the tables based on tableId
             "bStateSave": true,
             "fnStateSaveParams": function (oSettings, oData) {
-                // remove oData components we don't want to save.
+            	
+            	// remove oData components we don't want to save.
                 delete oData.oSearch;
                 delete oData.aoSearchCols;
             },
@@ -272,12 +286,13 @@ var AIRTIME = (function(AIRTIME) {
                
                 try {
                     return JSON.parse(settings);
-                } catch (e) {
+                }
+                catch (e) {
                     return null;
                 }
             },
             "fnStateLoadParams": function (oSettings, oData) {
-                var i,
+            	var i,
                     length,
                     a = oData.abVisCols,
                     settings = getCurrentDatatableSettings();
@@ -300,10 +315,6 @@ var AIRTIME = (function(AIRTIME) {
                 }
                 
                 settings["ColReorder"] = a.slice(0);
-                
-                //abVisible indices belong to the original column order.
-                //use to fix up advanced search.
-                abVisible = oData.abVisCols;
                 
                 oData.iEnd = parseInt(oData.iEnd, 10);
                 oData.iLength = parseInt(oData.iLength, 10);
@@ -348,22 +359,18 @@ var AIRTIME = (function(AIRTIME) {
 	        
 	        "fnInitComplete": function(oSettings, json) {
 	        	var $panel = $(table[0]).parents("div.ui-tabs-panel");
+	        	var settings = getCurrentDatatableSettings();
 	        	
-	        	//fnStateLoadParams will have already run.
-	        	//fix up advanced search from saved settings.
-	        	for (i = 0, len = abVisible.length; i < len; i++) {
-	        		setAdvancedSearchColumnDisplay(i, abVisible[i], config.type);
+	        	for (i = 0, len = settings.abVisCols.length; i < len; i++) {
+	        		setAdvancedSearchColumnDisplay(i, settings.abVisCols[i], config.type);
 	        	}
 	        	
 	        	table.columnFilter({
 	        		aoColumns: searchConfig,
 	        		sPlaceHolder: "head:before"
 	        	});
-	        	
-	        	//append a search button
-	        	//$panel.find(".dataTables_filter").append('<button class="btn btn-small btn-search" type="button">Search</button>');
-	        	
-	        	//only search on enter.
+	        	 	
+	        	//search on enter.
 	        	$panel.on("keypress", ".advanced_search input", function(e) {
 	        		 if (e.which === 13) {
 	        			 table.fnDraw();
@@ -708,11 +715,11 @@ var AIRTIME = (function(AIRTIME) {
 			}
     	});
     	
-    	 $library.on("click", "legend", function() {
-    		 var $fs = $(this).parents("fieldset");
+    	$library.on("click", "legend", function() {
+    		var $fs = $(this).parents("fieldset");
     		 
-    		 $fs.toggleClass("closed");
-    	 });
+    		$fs.toggleClass("closed");
+    	});
     	
     	$library.on("click", "#lib_new_webstream", function(e) {
     		var url = baseUrl+"webstream/new/format/json";

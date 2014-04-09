@@ -104,7 +104,7 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
     	
-    	$( "#open_playlist" ).click(function() {
+    	$("#open_playlist").click(function() {
     	    $(".jp-playlist").toggleClass("open");
     	    $(this).toggleClass("selected");
     	});

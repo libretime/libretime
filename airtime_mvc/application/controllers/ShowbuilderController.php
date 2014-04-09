@@ -18,32 +18,32 @@ class ShowbuilderController extends Zend_Controller_Action
                     ->addActionContext('context-menu', 'json')
                     ->initContext();
     }
-    
+
     private function getStartEnd()
     {
     	$request = $this->getRequest();
-    
+
     	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
     	$utcTimezone = new DateTimeZone("UTC");
     	$utcNow = new DateTime("now", $utcTimezone);
-    
+
     	$start = $request->getParam("start");
     	$end = $request->getParam("end");
-    
+
     	if (empty($start) || empty($end)) {
     		$startsDT = clone $utcNow;
     		$endsDT = clone $utcNow;
     		$endsDT->add(new DateInterval("P1D"));
     	}
     	else {
-    		 
+
     		try {
     			$startsDT = new DateTime($start, $userTimezone);
     			$startsDT->setTimezone($utcTimezone);
-    
+
     			$endsDT = new DateTime($end, $userTimezone);
     			$endsDT->setTimezone($utcTimezone);
-    
+
     			if ($startsDT > $endsDT) {
     				throw new Exception("start greater than end");
     			}
@@ -51,14 +51,14 @@ class ShowbuilderController extends Zend_Controller_Action
     		catch (Exception $e) {
     			Logging::info($e);
     			Logging::info($e->getMessage());
-    
+
     			$startsDT = clone $utcNow;
     			$startsDT->sub(new DateInterval("P1D"));
     			$endsDT = clone $utcNow;
     		}
-    		 
+
     	}
-    
+
     	return array($startsDT, $endsDT);
     }
 
@@ -91,7 +91,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/dataTables.colVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/dataTables.colReorder.css?'.$CC_CONFIG['airtime_version']);
-        
+
         $refer_sses = new Zend_Session_Namespace('referrer');
 
         if ($request->isPost()) {
@@ -167,7 +167,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
         $this->view->disableLib = $disableLib;
         $this->view->showLib    = $showLib;
-        
+
         //TODO remove this when it's implemented.
         $disableLib = false;
         $showLib = true;
@@ -177,13 +177,13 @@ class ShowbuilderController extends Zend_Controller_Action
         //only include library things on the page if the user can see it.
         if (!$disableLib) {
 
+            //set media columns for display of data.
+            $mediaService = new Application_Service_MediaService();
+            $this->view->headScript()->appendScript($mediaService->createLibraryColumnsJavascript());
+            $this->view->headScript()->appendScript($mediaService->createLibraryColumnSettingsJavascript());
+
             $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/lib_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         	$this->view->headScript()->appendFile($baseUrl.'js/airtime/library/lib_separate_table.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        	
-        	//set media columns for display of data.
-        	$mediaService = new Application_Service_MediaService();
-        	$this->view->headScript()->appendScript($mediaService->createLibraryColumnsJavascript());
-            $this->view->headScript()->appendScript($mediaService->createLibraryColumnSettingsJavascript());
         }
 
         $data = Application_Model_Preference::getTimelineDatatableSetting();
@@ -195,7 +195,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
 
         list($startsDT, $endsDT) = $this->getStartEnd();
-        
+
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $startsDT->setTimezone($userTimezone);
         $endsDT->setTimezone($userTimezone);
@@ -261,7 +261,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
 
         $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
-        
+
         $start = $instance->getDbStarts(null);
         $start->setTimezone($displayTimeZone);
         $end = $instance->getDbEnds(null);
@@ -287,7 +287,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $instances = $request->getParam("instances", array());
 
         list($startsDT, $endsDT) = $this->getStartEnd();
-        
+
         $opts = array("myShows" => $my_shows, "showFilter" => $show_filter);
         $showBuilder = new Application_Model_ShowBuilder($startsDT, $endsDT, $opts);
 
@@ -300,7 +300,7 @@ class ShowbuilderController extends Zend_Controller_Action
     public function builderFeedAction()
     {
     	$current_time = time();
-    	
+
         $request = $this->getRequest();
         $show_filter = intval($request->getParam("showFilter", 0));
         $show_instance_filter = intval($request->getParam("showInstanceFilter", 0));

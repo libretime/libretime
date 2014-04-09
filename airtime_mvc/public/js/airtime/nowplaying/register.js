@@ -112,8 +112,8 @@ $(document).ready(function(){
         button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
     }
     
-    $('.toggle legend').live('click',function() {
-        $('.toggle').toggleClass('closed');
+    $('#register_popup .toggle legend').live('click',function() {
+        $('#register_popup .toggle').toggleClass('closed');
         return false;
     });
     
