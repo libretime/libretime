@@ -227,7 +227,8 @@ var AIRTIME = (function(AIRTIME) {
     	}
     	
     	if (settings["abVisCols"].join() === oData.abVisCols.join()
-    			&& settings["ColReorder"].join() === oData.ColReorder.join()) {
+    			&& settings["ColReorder"].join() === oData.ColReorder.join()
+    			&& settings["aaSorting"].join() === oData.aaSorting.join()) {
     		return false;
     	}
     	
@@ -315,6 +316,8 @@ var AIRTIME = (function(AIRTIME) {
                 }
                 
                 settings["ColReorder"] = a.slice(0);
+                
+                settings["aaSorting"] = oData.aaSorting;
                 
                 oData.iEnd = parseInt(oData.iEnd, 10);
                 oData.iLength = parseInt(oData.iLength, 10);
