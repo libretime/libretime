@@ -982,6 +982,7 @@ SQL;
         } else {
             $uid = $user->getId();
         }
+        /*
         $id_file = "$audio_stor.identifier";
         if (file_put_contents($id_file, $uid) === false) {
             Logging::info("Could not write file to identify user: '$uid'");
@@ -991,7 +992,8 @@ SQL;
         } else {
             Logging::info("Successfully written identification file for
             uploaded '$audio_stor'");
-        }
+        }*/
+        
         //if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
         //encoding is ISO-8859-1
         $audio_stor = mb_detect_encoding($audio_stor, "UTF-8") == "UTF-8" ? $audio_stor : utf8_encode($audio_stor);
@@ -1004,7 +1006,7 @@ SQL;
             //the file wasn't uploaded and they should check if there  .
             //is enough disk space                                     .
             unlink($audio_file); //remove the file after failed rename
-            unlink($id_file); // Also remove the identifier file
+            //unlink($id_file); // Also remove the identifier file
     
             throw new Exception("The file was not uploaded, this error can occur if the computer "
                             ."hard drive does not have enough disk space or the stor "

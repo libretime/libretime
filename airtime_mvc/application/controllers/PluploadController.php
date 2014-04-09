@@ -60,12 +60,17 @@ class PluploadController extends Zend_Controller_Action
         
         foreach ($recentUploads as $upload)
         {
-            $upload->toArray(BasePeer::TYPE_FIELDNAME);
-            //array_push($uploadsArray, $upload); //TODO: $this->sanitizeResponse($upload));
+            $upload = $upload->toArray(BasePeer::TYPE_FIELDNAME);
+            //TODO: $this->sanitizeResponse($upload));
+            $utcTimezone = new DateTimeZone("UTC");
+            $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+            $upload['utime'] = new DateTime($upload['utime'], $utcTimezone);
+            $upload['utime']->setTimeZone($displayTimezone);
+            $upload['utime'] = $upload['utime']->format('Y-m-d H:i:s');
             
             //$this->_helper->json->sendJson($upload->asJson());
             //TODO: Invoke sanitization here
-            array_push($uploadsArray, $upload->toArray(BasePeer::TYPE_FIELDNAME));
+            array_push($uploadsArray, $upload);
         }
         
 

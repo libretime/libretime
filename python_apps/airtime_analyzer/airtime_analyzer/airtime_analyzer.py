@@ -4,6 +4,7 @@ import ConfigParser
 import logging
 import logging.handlers
 import sys
+from functools import partial
 from metadata_analyzer import MetadataAnalyzer
 from replaygain_analyzer import ReplayGainAnalyzer
 from message_listener import MessageListener
@@ -26,7 +27,7 @@ class AirtimeAnalyzerServer:
 
         # Read our config file
         rabbitmq_config = self.read_config_file(config_path)
-
+        
         # Start listening for RabbitMQ messages telling us about newly
         # uploaded files.
         self._msg_listener = MessageListener(rabbitmq_config)
@@ -74,4 +75,4 @@ class AirtimeAnalyzerServer:
             exit(-1)
 
         return config
-        
+    

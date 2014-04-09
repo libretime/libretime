@@ -15,12 +15,12 @@
     
             <div id="recent_uploads_filter">
             <form>
-                <input type="radio" name="upload_status" id="upload_status_all" checked></input><label for="upload_status_all">All</label>
-                <input type="radio" name="upload_status" id="upload_status_failed"></input><label for="upload_status_failed">Failed</label>
-                <input type="radio" name="upload_status" id="upload_status_pending"></input><label for="upload_status_pending">Pending</label>
+                <input type="radio" name="upload_status" id="upload_status_all" checked></input><label for="upload_status_all"><?php echo _("All")?></label>
+                <input type="radio" name="upload_status" id="upload_status_failed"></input><label for="upload_status_failed"><?php echo _("Failed")?></label>
+                <input type="radio" name="upload_status" id="upload_status_pending"></input><label for="upload_status_pending"><?php echo _("Pending")?></label>
             </form>        
         </div>
-        <H2>Recent Uploads</H2>
+        <H2><?php echo _("Recent Uploads")?></H2>
         <table id="recent_uploads_table" class="lib-content ui-widget ui-widget-content block-shadow alpha-block "></table>
     </div>
     <div style="clear: both;"></div>
