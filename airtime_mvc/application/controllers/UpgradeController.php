@@ -17,10 +17,11 @@ class UpgradeController extends Zend_Controller_Action
         
         //Decode the API key that was passed to us in the HTTP request.
         $authHeader = $this->getRequest()->getHeader("Authorization");
+
         $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
         $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
-        
-        if (!$encodedRequestApiKey === $encodedStoredApiKey)
+
+        if ($encodedRequestApiKey !== $encodedStoredApiKey)
         {
             $this->getResponse()
                 ->setHttpResponseCode(401)
@@ -46,8 +47,7 @@ class UpgradeController extends Zend_Controller_Action
         $database = $values['database']['dbname'];
         $dir = __DIR__;
         
-        passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
-        
+        passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_upgrade_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
         
         $musicDir = CcMusicDirsQuery::create()
             ->filterByType('stor')
