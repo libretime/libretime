@@ -10,7 +10,7 @@ class UpgradeController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
         
         if (!$this->verifyAuth()) {
-            retrun;
+            return;
         }
         
         if (!$this->verifyAirtimeVersion()) {
