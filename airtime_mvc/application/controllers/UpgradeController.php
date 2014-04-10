@@ -9,35 +9,15 @@ class UpgradeController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
-        //TODO: check api key
-        //The API key is passed in via HTTP "basic authentication":
-        //http://en.wikipedia.org/wiki/Basic_access_authentication
+        if (!$this->verifyAuth()) {
+            retrun;
+        }
         
-        $CC_CONFIG = Config::getConfig();
-        
-        //Decode the API key that was passed to us in the HTTP request.
-        $authHeader = $this->getRequest()->getHeader("Authorization");
-
-        $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
-        $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
-
-        if ($encodedRequestApiKey !== $encodedStoredApiKey)
-        {
-            $this->getResponse()
-                ->setHttpResponseCode(401)
-                ->appendBody("Bad Authorization.");
+        if (!$this->verifyAirtimeVersion()) {
             return;
         }
         
-        //check current airtime version
-        $airtime_version = Application_Model_Preference::GetAirtimeVersion();
-        if ($airtime_version != '2.5.2') {
-            $this->getResponse()
-                ->setHttpResponseCode(400)
-                ->appendBody("Upgrade to Airtime 2.5.3 FAILED. You must be using Airtime 2.5.2 to upgrade.");
-            return;
-        }
-        
+        //Begin upgrade
         $filename = "/etc/airtime/airtime.conf";
         $values = parse_ini_file($filename, true);
         
@@ -65,5 +45,42 @@ class UpgradeController extends Zend_Controller_Action
             ->appendBody("Upgrade to Airtime 2.5.3 OK");
     }
 
-    
+    private function verifyAuth()
+    {
+        //The API key is passed in via HTTP "basic authentication":
+        //http://en.wikipedia.org/wiki/Basic_access_authentication
+        
+        $CC_CONFIG = Config::getConfig();
+        
+        //Decode the API key that was passed to us in the HTTP request.
+        $authHeader = $this->getRequest()->getHeader("Authorization");
+
+        $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
+        $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
+
+        if ($encodedRequestApiKey !== $encodedStoredApiKey)
+        {
+            $this->getResponse()
+                ->setHttpResponseCode(401)
+                ->appendBody("Error: Incorrect API key.");
+            return false;
+        }
+        return true;
+    }
+
+    private function verifyAirtimeVersion()
+    {
+        $pref = CcPrefQuery::create()
+            ->filterByKeystr('system_version')
+            ->findOne();
+        $airtime_version = $pref->getValStr();
+
+        if ($airtime_version != '2.5.2') {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody("Upgrade to Airtime 2.5.3 FAILED. You must be using Airtime 2.5.2 to upgrade.");
+            return false;
+        }
+        return true;
+    }
 }
