@@ -240,7 +240,7 @@ class Application_Model_Systemstatus
         $diskInfo = self::GetDiskInfo();
         $diskInfo = $diskInfo[0];
         $diskUsage = $diskInfo->totalSpace - $diskInfo->totalFreeSpace;
-        if ($diskUsage > $diskInfo->totalSpace) {
+        if ($diskUsage >= $diskInfo->totalSpace) {
             return true;
         }
 
