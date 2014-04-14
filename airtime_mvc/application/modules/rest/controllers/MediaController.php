@@ -110,13 +110,20 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             return;
         }
-        
+
         //If we do get an ID on a POST, then that doesn't make any sense
         //since POST is only for creating.
         if ($id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
             $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for file creation, and an ID will be chosen by Airtime"); 
+            return;
+        }
+
+        if (!$this->isEnoughDiskSpace()) {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody("ERROR: Disk Quota limit reached.");
             return;
         }
 
@@ -421,6 +428,20 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
 
         return $response;
+    }
+
+    /**
+     * 
+     * Checks if there is enough disk space to upload the file in question
+     * We allow one file to exceed to the disk quota so it is possible for the
+     * disk usage to be greater than the disk usage value
+     */
+    private function isEnoughDiskSpace()
+    {
+        if (Application_Model_Preference::getDiskUsage() < Application_Model_Preference::GetDiskQuota()) {
+            return true;
+        }
+        return false;
     }
 
 }
