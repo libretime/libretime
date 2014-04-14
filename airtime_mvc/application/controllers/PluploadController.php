@@ -27,7 +27,7 @@ class PluploadController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/addmedia.css?'.$CC_CONFIG['airtime_version']);
 
         $this->view->quotaLimitReached = false;
-        if (Application_Model_Preference::getDiskUsage() > Application_Model_Preference::getDiskQuota()) {
+        if (Application_Model_Systemstatus::isDiskOverQuota()) {
             $this->view->quotaLimitReached = true;
         }
     }
