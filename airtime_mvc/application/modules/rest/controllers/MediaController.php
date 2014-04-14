@@ -120,10 +120,10 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        if (!$this->isDiskOverQuota()) {
+        if (Application_Model_Systemstatus::isDiskOverQuota()) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody("ERROR: Disk Quota limit reached.");
+                ->appendBody("ERROR: Disk Quota reached.");
             return;
         }
 
@@ -428,14 +428,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
 
         return $response;
-    }
-
-    private function isDiskOverQuota()
-    {
-        if (Application_Model_Systemstatus::isDiskOverQuota()) {
-            return true;
-        }
-        return false;
     }
 
 }
