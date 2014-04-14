@@ -3087,3 +3087,5 @@ dd .stream-status {
 #popup-share-link {
     width: 320px;
 }
+.quota-reached {
+    font-size: 14px !important;
