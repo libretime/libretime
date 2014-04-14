@@ -120,7 +120,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        if (!$this->isEnoughDiskSpace()) {
+        if (!$this->isDiskOverQuota()) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
                 ->appendBody("ERROR: Disk Quota limit reached.");
@@ -430,15 +430,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         return $response;
     }
 
-    /**
-     * 
-     * Checks if there is enough disk space to upload the file in question
-     * We allow one file to exceed to the disk quota so it is possible for the
-     * disk usage to be greater than the disk usage value
-     */
-    private function isEnoughDiskSpace()
+    private function isDiskOverQuota()
     {
-        if (Application_Model_Preference::getDiskUsage() < Application_Model_Preference::GetDiskQuota()) {
+        if (Application_Model_Systemstatus::isDiskOverQuota()) {
             return true;
         }
         return false;
