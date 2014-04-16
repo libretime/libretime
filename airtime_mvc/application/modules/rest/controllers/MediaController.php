@@ -110,13 +110,20 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             return;
         }
-        
+
         //If we do get an ID on a POST, then that doesn't make any sense
         //since POST is only for creating.
         if ($id = $this->_getParam('id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
             $resp->appendBody("ERROR: ID should not be specified when using POST. POST is only used for file creation, and an ID will be chosen by Airtime"); 
+            return;
+        }
+
+        if (Application_Model_Systemstatus::isDiskOverQuota()) {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody("ERROR: Disk Quota reached.");
             return;
         }
 

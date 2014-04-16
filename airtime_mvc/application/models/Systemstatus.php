@@ -235,4 +235,16 @@ class Application_Model_Systemstatus
 
         return array_values($partitions);
     }
+
+    public static function isDiskOverQuota()
+    {
+        $diskInfo = self::GetDiskInfo();
+        $diskInfo = $diskInfo[0];
+        $diskUsage = $diskInfo->totalSpace - $diskInfo->totalFreeSpace;
+        if ($diskUsage >= $diskInfo->totalSpace) {
+            return true;
+        }
+
+        return false;
+    }
 }

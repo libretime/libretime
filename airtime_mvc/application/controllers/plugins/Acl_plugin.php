@@ -117,7 +117,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             return;
         }
 
-        if (in_array($controller, array("api", "auth", "locale"))) {
+        if (in_array($controller, array("api", "auth", "locale", "upgrade"))) {
 
             $this->setRoleName("G");
         } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
