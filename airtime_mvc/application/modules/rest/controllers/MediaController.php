@@ -356,7 +356,8 @@ Logging::info("POST --- file saved");
         //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon...
          
         $storDir = Application_Model_MusicDir::getStorDir();
-        $importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;
+        //$importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;
+        $importedStorageDirectory = $storDir->getDirectory() . "/imported";
         
         try {
             //Copy the temporary file over to the "organize" folder so that it's off our webserver
