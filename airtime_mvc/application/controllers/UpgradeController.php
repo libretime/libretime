@@ -9,9 +9,9 @@ class UpgradeController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
-        if (!$this->verifyAuth()) {
+        /*if (!$this->verifyAuth()) {
             return;
-        }
+        }*/
         
         /*if (!$this->verifyAirtimeVersion()) {
             return;
