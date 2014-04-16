@@ -976,6 +976,8 @@ SQL;
         // Did all the checks for real, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize",
                 $originalFilename);
+                Logging::info($originalFilename);
+                Logging::info($audio_stor);
         $user = Application_Model_User::getCurrentUser();
         if (is_null($user)) {
             $uid = Application_Model_User::getFirstAdminId();
