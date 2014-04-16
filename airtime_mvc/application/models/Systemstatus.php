@@ -213,6 +213,20 @@ class Application_Model_Systemstatus
 
     public static function GetDiskInfo()
     {
+        //testing purposes only
+        $musicDir = CcMusicDirsQuery::create()
+            ->filterByType('stor')
+            ->filterByExists(true)
+            ->findOne();
+        $storPath = $musicDir->getDirectory();
+        
+        $freeSpace = disk_free_space($storPath);
+        $totalSpace = disk_total_space($storPath);
+        Logging::info($totalSpace = $freeSpace);
+        
+        
+        
+        
         $partitions = array();
 
         //connect to DB and find how much total space user has allocated.
