@@ -25,7 +25,7 @@ def test_mp3_mono():
     check_default_metadata(metadata)
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 64000
-    assert metadata['length_seconds'] == 3.90925 
+    assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mpeg' # Not unicode because MIMEs aren't.
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
     #Mutagen doesn't extract comments from mp3s it seems
@@ -35,7 +35,7 @@ def test_mp3_jointstereo():
     check_default_metadata(metadata)
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
-    assert metadata['length_seconds'] == 3.90075 
+    assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mpeg'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
@@ -44,7 +44,7 @@ def test_mp3_simplestereo():
     check_default_metadata(metadata)
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
-    assert metadata['length_seconds'] == 3.90075 
+    assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mpeg'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
@@ -53,7 +53,7 @@ def test_mp3_dualmono():
     check_default_metadata(metadata)
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
-    assert metadata['length_seconds'] == 3.90075 
+    assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mpeg'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
@@ -63,7 +63,7 @@ def test_ogg_mono():
     check_default_metadata(metadata)
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 80000
-    assert metadata['length_seconds'] == 3.8394104308390022
+    assert abs(metadata['length_seconds'] - 3.8) < 0.1
     assert metadata['mime'] == 'application/ogg'
     assert metadata['comment'] == u'Test Comment'
 
@@ -72,7 +72,7 @@ def test_ogg_stereo():
     check_default_metadata(metadata)
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 112000
-    assert metadata['length_seconds'] == 3.8394104308390022
+    assert abs(metadata['length_seconds'] - 3.8) < 0.1
     assert metadata['mime'] == 'application/ogg'
     assert metadata['comment'] == u'Test Comment'
 
@@ -84,7 +84,7 @@ def test_aac_mono():
     check_default_metadata(metadata)
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 80000
-    assert metadata['length_seconds'] == 3.8394104308390022
+    assert abs(metadata['length_seconds'] - 3.8) < 0.1
     assert metadata['mime'] == 'video/mp4'
     assert metadata['comment'] == u'Test Comment'
 '''
@@ -94,7 +94,7 @@ def test_aac_stereo():
     check_default_metadata(metadata)
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 102619
-    assert metadata['length_seconds'] == 3.8626303854875284 
+    assert abs(metadata['length_seconds'] - 3.8) < 0.1
     assert metadata['mime'] == 'video/mp4'
     assert metadata['comment'] == u'Test Comment'
 
@@ -110,7 +110,7 @@ def test_mp3_utf8():
     assert metadata['track_number'] == u'1'
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
-    assert metadata['length_seconds'] == 3.90075 
+    assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mpeg'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
@@ -143,7 +143,11 @@ def test_mp3_bad_channels():
     check_default_metadata(metadata)
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 64000
-    assert metadata['length_seconds'] == 3.90925 
+    print metadata['length_seconds']
+    assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mpeg' # Not unicode because MIMEs aren't.
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
     #Mutagen doesn't extract comments from mp3s it seems
+
+def test_unparsable_file():
+    MetadataAnalyzer.analyze(u'README.rst', dict())
