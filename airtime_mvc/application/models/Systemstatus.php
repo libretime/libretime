@@ -223,7 +223,9 @@ class Application_Model_Systemstatus
         $freeSpace = disk_free_space($storPath);
         $totalSpace = disk_total_space($storPath);
         //Logging::info($totalSpace - $freeSpace);
-        Logging::info($_SERVER);
+        $storDir = $_SERVER['AIRTIME_BASE']."srv/airtime/stor";
+        $diskUsage = shell_exec("du -s $storDir | awk '{print $1}'");
+        Logging::info($diskUsage);
         
         
         $partitions = array();
