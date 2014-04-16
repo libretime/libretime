@@ -30,27 +30,33 @@ class AnalyzerPipeline:
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
         """
-        if not isinstance(queue, multiprocessing.queues.Queue):
-            raise TypeError("queue must be a multiprocessing.Queue()")
-        if not isinstance(audio_file_path, unicode):
-            raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__ + " instead.")
-        if not isinstance(import_directory, unicode):
-            raise TypeError("import_directory must be unicode. Was of type " + type(import_directory).__name__ + " instead.")
-        if not isinstance(original_filename, unicode):
-            raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
+        try:
+            if not isinstance(queue, multiprocessing.queues.Queue):
+                raise TypeError("queue must be a multiprocessing.Queue()")
+            if not isinstance(audio_file_path, unicode):
+                raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__ + " instead.")
+            if not isinstance(import_directory, unicode):
+                raise TypeError("import_directory must be unicode. Was of type " + type(import_directory).__name__ + " instead.")
+            if not isinstance(original_filename, unicode):
+                raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
 
-        # Analyze the audio file we were told to analyze:
-        # First, we extract the ID3 tags and other metadata:
-        metadata = dict()
-        metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
-        metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
-        metadata["import_status"] = 0 # imported
 
-        # Note that the queue we're putting the results into is our interprocess communication 
-        # back to the main process.
+            # Analyze the audio file we were told to analyze:
+            # First, we extract the ID3 tags and other metadata:
+            metadata = dict()
+            metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
+            metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+            metadata["import_status"] = 0 # imported
 
-        # Pass all the file metadata back to the main analyzer process, which then passes
-        # it back to the Airtime web application.
-        queue.put(metadata)
+            # Note that the queue we're putting the results into is our interprocess communication 
+            # back to the main process.
+
+            # Pass all the file metadata back to the main analyzer process, which then passes
+            # it back to the Airtime web application.
+            queue.put(metadata)
+        except Exception as e:
+            # Ensures the traceback for this child process gets written to our log files:
+            logging.exception(e) 
+            raise e
 
 
