@@ -105,8 +105,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     }
     
     public function postAction()
-    {Logging::info("POST --- start");
-    Logging::info($_FILES);
+    {
         if (!$this->verifyAuth(true, true))
         {
             return;
@@ -145,7 +144,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();
-Logging::info("POST --- file saved");
+
             $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
     
             $this->processUploadedFile($callbackUrl, $_FILES["file"]["name"], $this->getOwnerId());
@@ -338,13 +337,12 @@ Logging::info("POST --- file saved");
 
     private function processUploadedFile($callbackUrl, $originalFilename, $ownerId)
     {
-        Logging::info("POST --- process uploaded file begin");
         $CC_CONFIG = Config::getConfig();
         $apiKey = $CC_CONFIG["apiKey"][0];
                 
         $tempFilePath = $_FILES['file']['tmp_name'];
         $tempFileName = basename($tempFilePath);
-        Logging::info("POST --- ".$tempFilePath);
+
         //Only accept files with a file extension that we support.
         $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
         if (!in_array(strtolower($fileExtension), explode(",", "ogg,mp3,oga,flac,wav,m4a,mp4,opus")))
@@ -352,7 +350,7 @@ Logging::info("POST --- file saved");
             @unlink($tempFilePath);
             throw new Exception("Bad file extension.");
         }
-        Logging::info("POST --- ".$fileExtension);
+
         //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon...
          
         $storDir = Application_Model_MusicDir::getStorDir();
@@ -368,7 +366,6 @@ Logging::info("POST --- file saved");
             return;
         }
         
-        Logging::info($newTempFilePath);
         //Logging::info("Old temp file path: " . $tempFilePath);
 
         //Dispatch a message to airtime_analyzer through RabbitMQ,
