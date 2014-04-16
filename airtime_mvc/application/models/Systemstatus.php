@@ -223,7 +223,7 @@ class Application_Model_Systemstatus
         $freeSpace = disk_free_space($storPath);
         $totalSpace = disk_total_space($storPath);
         //Logging::info($totalSpace - $freeSpace);
-        Logging::info($_SERVER['AIRTIME_CONF']);
+        Logging::info($_SERVER);
         
         
         $partitions = array();
