@@ -49,9 +49,6 @@ class MetadataAnalyzer(Analyzer):
         mime_magic = magic.Magic(mime=True)
         metadata["mime"] = mime_magic.from_file(filename)
    
-        if isinstance(info, mutagen.mp3.MPEGInfo):
-            print "mode is: " + str(info.mode)
-
         #Try to get the number of channels if mutagen can...
         try:
             #Special handling for getting the # of channels from MP3s. It's in the "mode" field
