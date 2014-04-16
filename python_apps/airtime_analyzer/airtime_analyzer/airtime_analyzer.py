@@ -7,6 +7,7 @@ import sys
 from functools import partial
 from metadata_analyzer import MetadataAnalyzer
 from replaygain_analyzer import ReplayGainAnalyzer
+from status_reporter import StatusReporter 
 from message_listener import MessageListener
 
 
@@ -20,17 +21,22 @@ class AirtimeAnalyzerServer:
     # Variables
     _log_level = logging.INFO
 
-    def __init__(self, config_path, debug=False):
+    def __init__(self, rmq_config_path, http_retry_queue_path, debug=False):
 
         # Configure logging
         self.setup_logging(debug)
 
         # Read our config file
-        rabbitmq_config = self.read_config_file(config_path)
-        
+        rabbitmq_config = self.read_config_file(rmq_config_path)
+       
+        # Start up the StatusReporter process
+        StatusReporter.start_child_process(http_retry_queue_path)
+
         # Start listening for RabbitMQ messages telling us about newly
         # uploaded files.
         self._msg_listener = MessageListener(rabbitmq_config)
+
+        StatusReporter.stop_child_process()
     
 
     def setup_logging(self, debug):

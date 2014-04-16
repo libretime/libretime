@@ -38,6 +38,9 @@ This application can be run as a daemon by running:
 
     $ airtime_analyzer -d
 
+Other runtime flags can be listed by running:
+
+    $ airtime_analyzer --help
 
 
 Developers
@@ -81,8 +84,12 @@ To run the unit tests and generate a code coverage report, run:
 
     $ nosetests --with-coverage --cover-package=airtime_analyzer
 
+
+Running in a Multi-Tenant Environment
+===========
+
     
- History and Design Motivation
- ===========
+History and Design Motivation
+===========
  
  
