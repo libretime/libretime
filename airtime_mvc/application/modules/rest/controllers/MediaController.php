@@ -106,6 +106,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function postAction()
     {Logging::info("POST --- start");
+    Logging::info($_FILES);
         if (!$this->verifyAuth(true, true))
         {
             return;
