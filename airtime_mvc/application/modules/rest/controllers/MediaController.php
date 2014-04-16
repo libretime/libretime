@@ -105,7 +105,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     }
     
     public function postAction()
-    {
+    {Logging::info("POST --- start");
         if (!$this->verifyAuth(true, true))
         {
             return;
@@ -126,7 +126,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->appendBody("ERROR: Disk Quota reached.");
             return;
         }
-Logging::info("POST --- start");
+
         $file = new CcFiles();
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($this->getRequest()->getPost());
 
