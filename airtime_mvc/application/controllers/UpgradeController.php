@@ -9,13 +9,13 @@ class UpgradeController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
-        /*if (!$this->verifyAuth()) {
+        if (!$this->verifyAuth()) {
             return;
-        }*/
+        }
         
-        /*if (!$this->verifyAirtimeVersion()) {
+        if (!$this->verifyAirtimeVersion()) {
             return;
-        }*/
+        }
         
         //Begin upgrade
         $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
