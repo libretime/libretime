@@ -26,7 +26,7 @@ post_file() {
     #path to specific instance's airtime.conf
     instance_conf_path=$base_instance_path$instance_path$airtime_conf_path
 	
-    api_key=$(sudo awk -F "=" '/api_key/ {print $2}' $instance_conf_path)
+    api_key=$(awk -F "= " '/api_key/ {print $2}' $instance_conf_path)
 
     until curl --max-time 30 $url -u $api_key":" -X POST -F "file=@${file_path}" -F "name=${filename}"
     do
