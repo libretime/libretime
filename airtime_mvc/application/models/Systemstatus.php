@@ -213,21 +213,6 @@ class Application_Model_Systemstatus
 
     public static function GetDiskInfo()
     {
-        //testing purposes only
-        $musicDir = CcMusicDirsQuery::create()
-            ->filterByType('stor')
-            ->filterByExists(true)
-            ->findOne();
-        $storPath = $musicDir->getDirectory();
-        
-        $freeSpace = disk_free_space($storPath);
-        $totalSpace = disk_total_space($storPath);
-        //Logging::info($totalSpace - $freeSpace);
-        $storDir = $_SERVER['AIRTIME_BASE']."srv/airtime/stor";
-        $diskUsage = shell_exec("du -s $storDir | awk '{print $1}'");
-        Logging::info($diskUsage);
-        
-        
         $partitions = array();
 
         //connect to DB and find how much total space user has allocated.
