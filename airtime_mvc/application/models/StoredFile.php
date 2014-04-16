@@ -899,19 +899,6 @@ SQL;
         return $results;
     }
 
-    /**
-     * Check, using disk_free_space, the space available in the $destination_folder folder to see if it has
-     * enough space to move the $audio_file into and report back to the user if not.
-     **/
-    public static function isEnoughDiskSpaceToCopy($destination_folder, $audio_file)
-    {
-        //check to see if we have enough space in the /organize directory to copy the file
-        $freeSpace = disk_free_space($destination_folder);
-        $fileSize = filesize($audio_file);
-
-        return $freeSpace >= $fileSize;
-    }
-
     /** 
      * Copy a newly uploaded audio file from its temporary upload directory 
      * on the local disk (like /tmp) over to Airtime's "stor" directory, 
@@ -950,16 +937,6 @@ SQL;
     
         if (chmod($audio_file, 0644) === false) {
             Logging::info("Warning: couldn't change permissions of $audio_file to 0644");
-        }
-    
-        // Check if we have enough space before copying
-        if (!self::isEnoughDiskSpaceToCopy($stor, $audio_file)) {
-            $freeSpace = disk_free_space($stor);
-            $fileSize = filesize($audio_file);
-    
-            throw new Exception(sprintf(_("The file was not uploaded, there is "
-                            ."%s MB of disk space left and the file you are "
-                            ."uploading has a size of %s MB."), $freeSpace, $fileSize));
         }
     
         // Check if liquidsoap can play this file
