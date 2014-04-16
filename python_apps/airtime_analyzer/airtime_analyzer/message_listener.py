@@ -183,12 +183,12 @@ class MessageListener:
             channel.basic_nack(delivery_tag=method_frame.delivery_tag, multiple=False,
                                requeue=False) #Important that it doesn't requeue the message
 
-            # TODO: Report this as a failed upload to the File Upload REST API.
             #
             # TODO: If the JSON was invalid or the web server is down, 
             #       then don't report that failure to the REST API
             #TODO: Catch exceptions from this HTTP request too:
             if callback_url: # If we got an invalid message, there might be no callback_url in the JSON
+                # Report this as a failed upload to the File Upload REST API.
                 StatusReporter.report_failure_to_callback_url(callback_url, api_key, import_status=2,
                                                               reason=u'An error occurred while importing this file')
             
