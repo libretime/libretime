@@ -393,6 +393,7 @@ SQL;
         
         
         if (file_exists($filepath) && $type == "stor") {
+            Logging::info($filepath);
             try {
                 unlink($filepath);
             } catch (Exception $e) {
