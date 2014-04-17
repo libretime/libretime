@@ -30,7 +30,7 @@ class UpgradeController extends Zend_Controller_Action
         passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_upgrade_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
         
         $storDir = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."srv/airtime/stor" : "/srv/airtime/stor";
-        $diskUsage = shell_exec("du -s $storDir | awk '{print $1}'");
+        $diskUsage = shell_exec("du -sb $storDir | awk '{print $1}'");
         
         Application_Model_Preference::setDiskUsage($diskUsage);
 
