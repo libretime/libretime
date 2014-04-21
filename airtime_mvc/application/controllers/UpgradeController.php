@@ -18,7 +18,7 @@ class UpgradeController extends Zend_Controller_Action
         }
         
         //Begin upgrade
-        $filename = "/etc/airtime/airtime.conf";
+        $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
         $values = parse_ini_file($filename, true);
         
         $username = $values['database']['dbuser'];
