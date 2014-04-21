@@ -3,31 +3,19 @@ in this file.
 
 The following function has been modified:
 
-_fnDomBaseButton
+_fnConstruct
 
-The new _fnDomBaseButton looks like this:
+this.dom.button has been changed like this:
 
-    "_fnDomBaseButton": function ( text )
-    {
-        var
-            that = this,
-            nButton = document.createElement('button'),
-            nSpan = document.createElement('span'),
-            sEvent = this.s.activate=="mouseover" ? "mouseover" : "click";
-        
-        //nButton.className = !this.s.dt.bJUI ? "ColVis_Button TableTools_Button" :
-            //"ColVis_Button TableTools_Button ui-button ui-state-default";
-        nButton.className = "btn-toolbar btn btn-small dropdown-toggle ColVis_MasterButton";
-        
-        nButton.appendChild( nSpan );
-        $(nButton).append("<span class='caret'></span>");
-        nSpan.innerHTML = text;
-        
-        $(nButton).bind( 'click', function (e) {
-            that._fnCollectionShow();
-            e.preventDefault();
-        } );
-        
-        return nButton;
-    },
+    this.dom.button = $( '<button />', {
+        'class': !this.s.dt.bJUI ?
+            "ColVis_Button ColVis_MasterButton" :
+            "btn-toolbar btn btn-small dropdown-toggle ColVis_MasterButton"
+    } )
+    .append( '<span>'+this.s.buttonText+'</span><span class="caret"></span>' )
+    .bind( this.s.activate=="mouseover" ? "mouseover" : "click", function (e) {
+        e.preventDefault();
+        that._fnCollectionShow();
+    } )
+    .appendTo( this.dom.wrapper )[0];
     
