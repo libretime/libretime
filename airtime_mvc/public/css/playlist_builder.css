@@ -581,6 +581,39 @@ li.spl_empty {
     border-top: 1px solid #5B5B5B;
 }
 
-.pl-criteria-and {
-	border: 2px solid;
+.pl-content .pl-criteria-and { 
+	border: 1px solid #949494; 
+	margin-bottom: 25px; 
+	padding: 10px; 
+	-webkit-border-radius: 2px; 
+	-moz-border-radius: 2px; 
+	border-radius: 2px; 
+	display: table; 
+	clear: both; 
 }
+
+.pl-content .pl-criteria-and:last-of-type { 
+	margin-bottom: 20px; 
+}
+
+.pl-content .pl-criteria-and:after { 
+	content: " and "; 
+	display: inline-block; 
+	position: absolute; 
+	margin: 13px 0px 0px 0px; 
+	font-size: 13px; 
+}
+
+div.pl-criteria-and:last-of-type:after { 
+	display: none; 
+	content: " ";
+}
+
+.pl-content .pl-criteria-row { 
+	margin-bottom: 4px; 
+}
+
+#rule_criteria .btn-small.btn-danger { 
+	margin-right: 10px; 
+}
+

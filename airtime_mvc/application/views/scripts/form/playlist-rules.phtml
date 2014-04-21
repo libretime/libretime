@@ -13,7 +13,7 @@
     
     <dd id='rule_criteria'>
     <?php $option = $this->element->getDecorator('ViewScript')->getOptions();?>
-    
+
     	<?php for ($i = 0; $i < count($option["suffixes"]); $i++): ?>
     	<div class="pl-criteria-and">
     		<?php for ($j = 0; $j < count($option["suffixes"][$i]); $j++): ?>
@@ -77,8 +77,8 @@
 		        <?php endif; ?>
 		    	<?php endforeach; ?>
 		    	
-	    		<?php endfor; ?>
 	    	</div>
+    		<?php endfor; ?>
 	    </div>
     	<?php endfor; ?>
     	
