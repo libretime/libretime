@@ -46,8 +46,11 @@ class MetadataAnalyzer(Analyzer):
         metadata["cueout"] = metadata["length"] 
       
         #Use the python-magic module to get the MIME type.
-        mime_magic = magic.Magic(mime=True)
-        metadata["mime"] = mime_magic.from_file(filename)
+        if audio_file.mime:
+            metadata["mime"] = audio_file.mime[0]
+        else:
+            mime_magic = magic.Magic(mime=True)
+            metadata["mime"] = mime_magic.from_file(filename)
    
         #Try to get the number of channels if mutagen can...
         try:
