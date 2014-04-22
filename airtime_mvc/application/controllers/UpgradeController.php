@@ -34,6 +34,20 @@ class UpgradeController extends Zend_Controller_Action
         
         Application_Model_Preference::setDiskUsage($diskUsage);
 
+        $iniFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."application.ini" : "/usr/share/airtime/application/configs/application.ini";
+        
+        //update application.ini
+        $newLines = "resources.frontController.moduleDirectory = APPLICATION_PATH '/modules'\n".
+                    "resources.frontController.plugins.putHandler = 'Zend_Controller_Plugin_PutHandler'".
+                    ";load everything in the modules directory including models".
+                    "resources.modules[] = ''";
+
+        $file = fopen($iniFile, "r+");
+        //set pointer to line after '[production]' - kind of hacky but will do for now
+        fseek($file, -1, SEEK_CUR);
+        fwrite($file, $newLines);
+        fclose($file);
+
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->appendBody("Upgrade to Airtime 2.5.3 OK");
