@@ -84,7 +84,11 @@ class Application_Model_RabbitMq
     {
         //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
         //and shared between all instances on Airtime Pro.
-        $config = parse_ini_file("/etc/airtime-saas/rabbitmq-analyzer.ini", true);
+        $devEnv = "production"; //Default
+        if (array_key_exists("dev_env", $config["general"])) {
+            $devEnv = $config["general"]["dev_env"];
+        }
+        $config = parse_ini_file("/etc/airtime-saas/rabbitmq-analyzer-" . $devEnv . ".ini", true);
         $conn = new AMQPConnection($config["rabbitmq"]["host"],
                 $config["rabbitmq"]["port"],
                 $config["rabbitmq"]["user"],
