@@ -126,7 +126,7 @@ class MessageListener:
     def graceful_shutdown(self, signum, frame):
         '''Disconnect and break out of the message listening loop'''
         self._shutdown = True
-        self.disconnect_from_message_listener()
+        self.disconnect_from_messaging_server()
 
     @staticmethod
     def msg_received_callback(channel, method_frame, header_frame, body):
