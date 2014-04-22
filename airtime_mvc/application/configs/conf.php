@@ -35,7 +35,11 @@ class Config {
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
         $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
-        $CC_CONFIG['dev_env'] = $values['general']['dev_env'];
+        if (isset($values['general']['dev_env'])) {
+            $CC_CONFIG['dev_env'] == $values['general']['dev_env'];
+        } else {
+            $CC_CONFIG['dev_env'] = 'production';
+        }
         
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
         
