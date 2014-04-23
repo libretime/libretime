@@ -52,7 +52,7 @@ class MetadataAnalyzer(Analyzer):
         try:
             #Special handling for getting the # of channels from MP3s. It's in the "mode" field
             #which is 0=Stereo, 1=Joint Stereo, 2=Dual Channel, 3=Mono. Part of the ID3 spec...
-            if metadata["mime"] == "audio/mpeg":
+            if metadata["mime"] in ["audio/mpeg", 'audio/mp3']:
                 if info.mode == 3:
                     metadata["channels"] = 1
                 else:

@@ -98,7 +98,8 @@ def send_http_request(picklable_request, retry_queue):
         logging.error("HTTP request failed with unhandled exception. %s" % str(e))
         # Don't put the request into the retry queue, just give up on this one.
         # I'm doing this to protect against us getting some pathological request
-        # that breaks our code. I don't want us having 
+        # that breaks our code. I don't want us pickling data that potentially
+        # breaks airtime_analyzer.
 
 
 

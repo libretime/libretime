@@ -26,7 +26,7 @@ def test_mp3_mono():
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 64000
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
-    assert metadata['mime'] == 'audio/mpeg' # Not unicode because MIMEs aren't.
+    assert metadata['mime'] == 'audio/mp3' # Not unicode because MIMEs aren't.
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
     #Mutagen doesn't extract comments from mp3s it seems
 
@@ -36,7 +36,7 @@ def test_mp3_jointstereo():
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
-    assert metadata['mime'] == 'audio/mpeg'
+    assert metadata['mime'] == 'audio/mp3'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
 def test_mp3_simplestereo():
@@ -45,7 +45,7 @@ def test_mp3_simplestereo():
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
-    assert metadata['mime'] == 'audio/mpeg'
+    assert metadata['mime'] == 'audio/mp3'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
 def test_mp3_dualmono():
@@ -54,7 +54,7 @@ def test_mp3_dualmono():
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
-    assert metadata['mime'] == 'audio/mpeg'
+    assert metadata['mime'] == 'audio/mp3'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
 
@@ -64,7 +64,7 @@ def test_ogg_mono():
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 80000
     assert abs(metadata['length_seconds'] - 3.8) < 0.1
-    assert metadata['mime'] == 'application/ogg'
+    assert metadata['mime'] == 'audio/vorbis'
     assert metadata['comment'] == u'Test Comment'
 
 def test_ogg_stereo():
@@ -73,7 +73,7 @@ def test_ogg_stereo():
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 112000
     assert abs(metadata['length_seconds'] - 3.8) < 0.1
-    assert metadata['mime'] == 'application/ogg'
+    assert metadata['mime'] == 'audio/vorbis'
     assert metadata['comment'] == u'Test Comment'
 
 ''' faac and avconv can't seem to create a proper mono AAC file... ugh
@@ -85,7 +85,7 @@ def test_aac_mono():
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 80000
     assert abs(metadata['length_seconds'] - 3.8) < 0.1
-    assert metadata['mime'] == 'video/mp4'
+    assert metadata['mime'] == 'audio/mp4'
     assert metadata['comment'] == u'Test Comment'
 '''
 
@@ -95,7 +95,7 @@ def test_aac_stereo():
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 102619
     assert abs(metadata['length_seconds'] - 3.8) < 0.1
-    assert metadata['mime'] == 'video/mp4'
+    assert metadata['mime'] == 'audio/mp4'
     assert metadata['comment'] == u'Test Comment'
 
 def test_mp3_utf8():
@@ -111,7 +111,7 @@ def test_mp3_utf8():
     assert metadata['channels'] == 2
     assert metadata['bit_rate'] == 128000
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
-    assert metadata['mime'] == 'audio/mpeg'
+    assert metadata['mime'] == 'audio/mp3'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
 # Make sure the parameter checking works
@@ -145,7 +145,7 @@ def test_mp3_bad_channels():
     assert metadata['bit_rate'] == 64000
     print metadata['length_seconds']
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
-    assert metadata['mime'] == 'audio/mpeg' # Not unicode because MIMEs aren't.
+    assert metadata['mime'] == 'audio/mp3' # Not unicode because MIMEs aren't.
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
     #Mutagen doesn't extract comments from mp3s it seems
 
