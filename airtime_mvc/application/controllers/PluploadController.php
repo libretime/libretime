@@ -49,9 +49,10 @@ class PluploadController extends Zend_Controller_Action
         $numTotalRecentUploads = $recentUploadsQuery->find()->count();
         
         if ($filter == "pending") {
-            $recentUploadsQuery->filterByDbImportStatus("1");
+            $recentUploadsQuery->filterByDbImportStatus(1);
         } else if ($filter == "failed") {
-            $recentUploadsQuery->filterByDbImportStatus(array('min' => 100));
+            $recentUploadsQuery->filterByDbImportStatus(2); 
+            //TODO: Consider using array('min' => 200)) or something if we have multiple errors codes for failure.
         }
         
         $recentUploads = $recentUploadsQuery->offset($rowStart)->limit($limit)->find();
