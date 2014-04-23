@@ -35,75 +35,39 @@ var AIRTIME = (function(AIRTIME){
 		};
 	};
 	
-	mod.fnGetSecondsEpoch = function(oDate) {
-		var iTime,
-			iUserOffset,
-			iClientOffset;
-		
-		iTime = oDate.getTime(); //value is in millisec.
-		iTime = Math.round(iTime / 1000);
-		iUserOffset = userTimezoneOffset;
-		iClientOffset = oDate.getTimezoneOffset() * -60;//function returns minutes
-		
-		//adjust for the fact the the Date object is in client time.
-		iTime = iTime + iClientOffset + iUserOffset;
-		
-		return iTime;
-	};
-	
-	 /*
-	 * Get the schedule range start in unix timestamp form (in seconds).
-	 * defaults to NOW if nothing is selected.
-	 * 
-	 * @param String sDatePickerId
-	 * 
-	 * @param String sTimePickerId
-	 * 
-	 * @return Number iTime
-	 */
-	mod.fnGetTimestamp = function(sDateId, sTimeId) {
-		var date, 
-			time,
-			temp;
-	
-		temp = $(sDateId).val();
-		if ( temp === "") {
-			return 0;
-		}
-		else {
-			date = temp;
-		}
-		
-		time = $(sTimeId).val();
-		
-		date = date.split("-");
-		time = time.split(":");
-		
-		//0 based month in js.
-		oDate = new Date(date[0], date[1]-1, date[2], time[0], time[1]);
-		
-		return mod.fnGetSecondsEpoch(oDate);
-	};
-	
 	/*
 	 * Returns an object containing a unix timestamp in seconds for the start/end range
 	 * 
 	 * @return Object {"start", "end", "range"}
 	 */
-	mod.fnGetScheduleRange = function(dateStart, timeStart, dateEnd, timeEnd) {
-		var iStart, 
-			iEnd, 
-			iRange;
+	mod.fnGetScheduleRange = function(dateStartId, timeStartId, dateEndId, timeEndId) {
+		var start,
+			end,
+			time;
 		
-		iStart = AIRTIME.utilities.fnGetTimestamp(dateStart, timeStart);
-		iEnd = AIRTIME.utilities.fnGetTimestamp(dateEnd, timeEnd);
+		start = $(dateStartId).val();
+		start = start === "" ? null : start;
 		
-		iRange = iEnd - iStart;
+		time = $(timeStartId).val();
+		time = time === "" ? "00:00" : time;
+		
+		if (start) {
+			start = start + " " + time;
+		}
+		
+		end = $(dateEndId).val();
+		end = end === "" ? null : end;
+		
+		time = $(timeEndId).val();
+		time = time === "" ? "00:00" : time;
+		
+		if (end) {
+			end = end + " " + time;
+		}
 		
 		return {
-			start: iStart,
-			end: iEnd,
-			range: iRange
+			start: start,
+			end: end
 		};
 	};
 	

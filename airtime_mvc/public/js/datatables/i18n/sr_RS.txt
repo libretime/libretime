@@ -1,0 +1,19 @@
+//Serbian Cyrillic
+
+{
+    "sProcessing":   "Обрада...",
+    "sLengthMenu":   "_MENU_ Резултати по страници",
+    "sZeroRecords":  "Ништа није пронађено",
+    "sInfo":         "Резултати: _START_ - _END_ Укупно: _TOTAL_",
+    "sInfoEmpty":    "Нула Резултат",
+    "sInfoFiltered": "(филтрирано из _MAX_ укупних резултата)",
+    "sInfoPostFix":  "",
+    "sSearch":       "Филтер",
+    "sUrl":          "",
+    "oPaginate": {
+        "sFirst":    "Прва",
+        "sPrevious": "Назад",
+        "sNext":     "Напред",
+        "sLast":     "Задња"
+    }
+}

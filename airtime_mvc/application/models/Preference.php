@@ -641,6 +641,11 @@ class Application_Model_Preference
     {
         return self::getValue("logoImage");
     }
+    
+    public static function SetUniqueId($id)
+    {
+    	self::setValue("uniqueId", $id);
+    }
 
     public static function GetUniqueId()
     {
@@ -895,6 +900,11 @@ class Application_Model_Preference
         }
 
         return self::getValue("enable_stream_conf");
+    }
+    
+    public static function SetAirtimeVersion($version)
+    {
+    	self::setValue("system_version", $version);
     }
 
     public static function GetAirtimeVersion()

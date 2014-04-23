@@ -47,8 +47,8 @@ class CcShow extends BaseCcShow {
      */
     public function getFirstCcShowDay($criteria = null, PropelPDO $con = null)
     {
-        CcShowPeer::clearInstancePool();
-        CcShowPeer::clearRelatedInstancePool();
+        /*CcShowPeer::clearInstancePool();
+        CcShowPeer::clearRelatedInstancePool();*/
 
         if(null === $this->collCcShowDayss || null !== $criteria) {
             if ($this->isNew() && null === $this->collCcShowDayss) {

@@ -27,5 +27,11 @@ export RABBITMQ_PASSWORD
 export RABBITMQ_VHOST
 
 export AIRTIME_UNIT_TEST="1"
+
+#Change the working directory to this script's directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+
+#Run the unit tests
 phpunit --log-junit test_results.xml
 
