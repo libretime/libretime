@@ -64,8 +64,10 @@ echo "* Creating /usr/lib/airtime"
 if [ "$python_service" -eq "0" ]; then
     python $AIRTIMEROOT/python_apps/api_clients/install/api_client_install.py
     
-    if [ "$mediamonitor" = "t" ]; then
-        python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-copy-files.py
+    if [ "$airtime_analyzer" = "t" ]; then
+        pushd $AIRTIMEROOT/python_apps/airtime_analyzer/
+        python setup.py install
+        popd
     fi
     if [ "$pypo" = "t" ]; then
         python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
