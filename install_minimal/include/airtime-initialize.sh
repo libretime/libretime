@@ -42,7 +42,9 @@ fi
 
 chmod 600 /etc/monit/conf.d/monit-airtime-generic.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-liquidsoap.cfg
-chmod 600 /etc/monit/conf.d/monit-airtime-media-monitor.cfg
+if [ "$mediamonitor" = "t" ]; then
+    chmod 600 /etc/monit/conf.d/monit-airtime-media-monitor.cfg
+fi
 chmod 600 /etc/monit/conf.d/monit-airtime-playout.cfg
 chmod 600 /etc/monit/conf.d/monit-airtime-liquidsoap.cfg
 
