@@ -22,7 +22,6 @@ setup(name='airtime_analyzer',
       scripts=['bin/airtime_analyzer'],
       install_requires=[
           'mutagen',
-          'python-magic',
           'pika',
           'nose',
           'coverage',

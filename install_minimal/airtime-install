@@ -38,6 +38,7 @@ rabbitmq_install () {
     rabbitmqctl add_vhost $RABBITMQ_VHOST
     rabbitmqctl add_user $RABBITMQ_USER $RABBITMQ_PASSWORD
     rabbitmqctl set_permissions -p $RABBITMQ_VHOST $RABBITMQ_USER "$EXCHANGES" "$EXCHANGES" "$EXCHANGES"
+    rabbitmqctl set_permissions -p $RABBITMQ_VHOST $RABBITMQ_USER .\* .\* .\*
 
     export RABBITMQ_USER
     export RABBITMQ_PASSWORD
@@ -49,6 +50,7 @@ preserve="f"
 nodb="f"
 reinstall="f"
 mediamonitor="f"
+airtime_analyzer="f"
 pypo="f"
 showrecorder="f"
 web="f"
@@ -64,6 +66,7 @@ do
     (-n|--no-db) nodb="t";;
     (-r|--reinstall) reinstall="t";;
     (-m|--media-monitor) mediamonitor="t";;
+    (-a|--airtime-analyzer) airtime_analyzer="t";;
     (-y|--pypo) pypo="t";;
     (-w|--web) web="t";;
     (-d|--disable-deb-check) disable_deb_check="t";;
@@ -75,11 +78,12 @@ do
     shift
 done
 
-if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$web" = "f" ]; then
+if [ "$mediamonitor" = "f" -a "$pypo" = "f" -a "$web" = "f" -a "$airtime_analyzer" = "f" ]; then
     #none of these install parameters were specified, so by default we install all of them
-    mediamonitor="t"
+    mediamonitor="f" #  FIXME: Remove media_monitor! -- Albert
     pypo="t"
     showrecorder="t"
+    airtime_analyzer="t"
     web="t"
 fi
 
@@ -181,6 +185,7 @@ fi
 #export these variables to make them available in sub bash scripts
 export DO_UPGRADE
 export mediamonitor
+export airtime_analyzer
 export pypo
 export showrecorder
 export web
@@ -235,6 +240,9 @@ if [ "$mediamonitor" = "t" -o "$pypo" = "t" ]; then
     #deactivate virtualenv
     deactivate
 fi
+
+# Restart airtime_analyzer (or start it)
+service airtime_analyzer restart
 
 
 #An attempt to force apache to realize that files are updated on upgrade...

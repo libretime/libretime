@@ -1,7 +1,6 @@
 import time
 import datetime
 import mutagen
-import magic # For MIME type detection
 from analyzer import Analyzer
 
 class MetadataAnalyzer(Analyzer):
@@ -45,12 +44,9 @@ class MetadataAnalyzer(Analyzer):
         # Other fields for Airtime
         metadata["cueout"] = metadata["length"] 
       
-        #Use the python-magic module to get the MIME type.
+        #Use the mutagen to get the MIME type.
         if audio_file.mime:
             metadata["mime"] = audio_file.mime[0]
-        else:
-            mime_magic = magic.Magic(mime=True)
-            metadata["mime"] = mime_magic.from_file(filename)
    
         #Try to get the number of channels if mutagen can...
         try:

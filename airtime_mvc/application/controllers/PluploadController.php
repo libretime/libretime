@@ -34,55 +34,53 @@ class PluploadController extends Zend_Controller_Action
 
     public function recentUploadsAction()
     {
-        if (isset($_GET['uploadFilter'])) {
-            $filter = $_GET['uploadFilter'];
-        } else {
-            $filter = "all";
-        }
+    	$request = $this->getRequest();
+    	
+        $filter = $request->getParam('uploadFilter', "all");
+        $limit = intval($request->getParam('iDisplayLength', 10));
+        $rowStart = intval($request->getParam('iDisplayStart', 0));
         
-        $limit = isset($_GET['iDisplayLength']) ? $_GET['iDisplayLength'] : 10;
-        $rowStart = isset($_GET['iDisplayStart']) ? $_GET['iDisplayStart'] : 0;
+        $recentUploadsQuery = CcFilesQuery::create();
+        //old propel 1.5 to reuse this query item (for counts/finds)
+        $recentUploadsQuery->keepQuery(true);
         
-        $recentUploadsQuery = CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
-                            ->orderByDbUtime(Criteria::DESC);
-        
-        $numTotalRecentUploads = $recentUploadsQuery->find()->count();
+        $numTotalRecentUploads = $recentUploadsQuery->count();
+        $numTotalDisplayUploads = $numTotalRecentUploads;
         
         if ($filter == "pending") {
-            $recentUploadsQuery->filterByDbImportStatus("1");
+            $recentUploadsQuery->filterByDbImportStatus(1);
+            $numTotalDisplayUploads = $recentUploadsQuery->count();
         } else if ($filter == "failed") {
-            $recentUploadsQuery->filterByDbImportStatus(array('min' => 100));
+            $recentUploadsQuery->filterByDbImportStatus(2);
+            $numTotalDisplayUploads = $recentUploadsQuery->count();
+            //TODO: Consider using array('min' => 200)) or something if we have multiple errors codes for failure.
         }
         
-        $recentUploads = $recentUploadsQuery->offset($rowStart)->limit($limit)->find();
-        
-        $numRecentUploads = $limit;
-        //CcFilesQuery::create()->filterByDbUtime(array('min' => time() - 30 * 24 * 60 * 60))
-        
-        //$this->_helper->json->sendJson(array("jsonrpc" => "2.0", "tempfilepath" => $tempFileName));
+        $recentUploads = $recentUploadsQuery
+        	->orderByDbUtime(Criteria::DESC)
+        	->offset($rowStart)
+        	->limit($limit)
+        	->find();
         
         $uploadsArray = array();
+        $utcTimezone = new DateTimeZone("UTC");
+        $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         
         foreach ($recentUploads as $upload)
         {
             $upload = $upload->toArray(BasePeer::TYPE_FIELDNAME);
             //TODO: $this->sanitizeResponse($upload));
-            $utcTimezone = new DateTimeZone("UTC");
-            $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
             $upload['utime'] = new DateTime($upload['utime'], $utcTimezone);
             $upload['utime']->setTimeZone($displayTimezone);
             $upload['utime'] = $upload['utime']->format('Y-m-d H:i:s');
-            
-            //$this->_helper->json->sendJson($upload->asJson());
+
             //TODO: Invoke sanitization here
             array_push($uploadsArray, $upload);
         }
         
-
-        $this->view->sEcho = intval($this->getRequest()->getParam('sEcho'));
-        $this->view->iTotalDisplayRecords = $numTotalRecentUploads;
-        //$this->view->iTotalDisplayRecords = $numRecentUploads; //$r["iTotalDisplayRecords"];
-        $this->view->iTotalRecords = $numTotalRecentUploads; //$r["iTotalRecords"];
-        $this->view->files = $uploadsArray; //$r["aaData"];
+        $this->view->sEcho = intval($request->getParam('sEcho'));
+        $this->view->iTotalDisplayRecords = $numTotalDisplayUploads;
+        $this->view->iTotalRecords = $numTotalRecentUploads;
+        $this->view->files = $uploadsArray;
     }
 }
