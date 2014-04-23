@@ -308,61 +308,14 @@ class AirtimeInstall
         $sql = "DELETE FROM cc_pref WHERE keystr = 'system_version'";
         $con->exec($sql);
 
-        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('system_version', '$p_version')";
-        $result = $con->exec($sql);
-        if ($result < 1) {
-            return false;
-        }
-        return true;
+        Application_Model_Preference::SetAirtimeVersion($p_version);
     }
 
     public static function SetUniqueId()
     {
-        $con = Propel::getConnection();
         $uniqueId = md5(uniqid("", true));
-
-        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('uniqueId', '$uniqueId')";
-        $result = $con->exec($sql);
-        if ($result < 1) {
-            return false;
-        }
-        return true;
+        Application_Model_Preference::SetUniqueId($uniqueId);
     }
-
-    public static function SetDefaultTimezone()
-    {
-        $con = Propel::getConnection();
-        // we need to run php as commandline because we want to get the timezone in cli php.ini file
-        //$defaultTimezone = exec("php -r 'echo date_default_timezone_get().PHP_EOL;'");
-        $defaultTimezone = exec("cat /etc/timezone");
-        $defaultTimezone = trim($defaultTimezone);
-        if((!in_array($defaultTimezone, DateTimeZone::listIdentifiers()))){
-        	$defaultTimezone = "UTC";
-        }
-        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', '$defaultTimezone')";
-        $result = $con->exec($sql);
-        if ($result < 1) {
-            return false;
-        }
-        $sql = "INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', '$defaultTimezone')";
-        $result = $con->exec($sql);
-        if ($result < 1) {
-            return false;
-        }
-        return true;
-    }
-
-    public static function SetImportTimestamp()
-    {
-        $con = Propel::getConnection();
-        $sql = "INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0')";
-        $result = $con->exec($sql);
-        if ($result < 1) {
-            return false;
-        }
-        return true;
-    }
-
 
     public static function GetAirtimeVersion()
     {

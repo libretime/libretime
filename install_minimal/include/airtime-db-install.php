@@ -10,9 +10,18 @@ require_once(__DIR__.'/AirtimeInstall.php');
 require_once(__DIR__.'/airtime-constants.php');
 
 require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
+
+
+//Propel classes.
+set_include_path(AirtimeInstall::GetAirtimeSrcDir().'/application/models' . PATH_SEPARATOR . get_include_path());
+
 $CC_CONFIG = Config::getConfig();
 require_once 'propel/runtime/lib/Propel.php';
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
+
+//use this class to set new values in the cache as well.
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/common/Database.php');
+require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/models/Preference.php');
 
 echo PHP_EOL."* Database Installation".PHP_EOL;
 
@@ -56,10 +65,8 @@ AirtimeInstall::SetAirtimeVersion(AIRTIME_VERSION);
 
 
 if (AirtimeInstall::$databaseTablesCreated) {
-    AirtimeInstall::SetDefaultTimezone();
     // set up some keys in DB
     AirtimeInstall::SetUniqueId();
-    AirtimeInstall::SetImportTimestamp();
 
     $ini = parse_ini_file(__DIR__."/airtime-install.ini");
 

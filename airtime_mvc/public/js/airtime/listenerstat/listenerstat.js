@@ -14,15 +14,17 @@ $(document).ready(function() {
     getDataAndPlot();
     
     listenerstat_content.find("#his_submit").click(function(){
-        startTimestamp = AIRTIME.utilities.fnGetTimestamp(dateStartId, timeStartId);
-        endTimestamp = AIRTIME.utilities.fnGetTimestamp(dateEndId, timeEndId);
-        getDataAndPlot(startTimestamp, endTimestamp);
+    	var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+   	 	var start = oRange.start;
+        var end = oRange.end;
+
+        getDataAndPlot(start, end);
     });
 });
 
 function getDataAndPlot(startTimestamp, endTimestamp){
     // get data
-    $.get(baseUrl+'Listenerstat/get-data', {startTimestamp: startTimestamp, endTimestamp: endTimestamp}, function(data){
+    $.get(baseUrl+'Listenerstat/get-data', {start: startTimestamp, end: endTimestamp}, function(data){
         out = new Object();
         $.each(data, function(mpName, v){
             plotData = new Object();
