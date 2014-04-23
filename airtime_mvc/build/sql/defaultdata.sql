@@ -346,3 +346,12 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('sr_RS@latin', 'Srpski 
 INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文');
 
 -- end of added in 2.3
+
+-- added in 2.5.2
+
+INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', 'UTC');
+INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', 'UTC');
+
+INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0');
+
+--end added in 2.5.2
