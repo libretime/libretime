@@ -65,6 +65,9 @@ if ($return_code == 0) {
     exit(1);
 }
 
+// Stop media-monitor
+service media-monitor stop-with-monit
+
 //convert strings like 1.9.0-devel to 1.9.0
 $version = substr($version, 0, 5);
 

@@ -195,19 +195,20 @@ class AirtimeCheck {
                 $log = "/var/log/airtime/pypo-liquidsoap/ls_script.log";
                 self::show_log_file($log);
             }
-            if (isset($services->media_monitor) && $services->media_monitor->process_id != "FAILED") {
-                self::output_status("MEDIA_MONITOR_PROCESS_ID", $data->services->media_monitor->process_id);
-                self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $data->services->media_monitor->uptime_seconds);
-                self::output_status("MEDIA_MONITOR_MEM_PERC", $data->services->media_monitor->memory_perc);
-                self::output_status("MEDIA_MONITOR_CPU_PERC", $data->services->media_monitor->cpu_perc);
-            } else {
-                self::output_status("MEDIA_MONITOR_PROCESS_ID", "FAILED");
-                self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", "0");
-                self::output_status("MEDIA_MONITOR_MEM_PERC", "0%");
-                self::output_status("MEDIA_MONITOR_CPU_PERC", "0%");
-                $log = "/var/log/airtime/media-monitor/media-monitor.log";
-                self::show_log_file($log);
-            }
+            
+            #if (isset($services->media_monitor) && $services->media_monitor->process_id != "FAILED") {
+            #    self::output_status("MEDIA_MONITOR_PROCESS_ID", $data->services->media_monitor->process_id);
+            #    self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", $data->services->media_monitor->uptime_seconds);
+            #    self::output_status("MEDIA_MONITOR_MEM_PERC", $data->services->media_monitor->memory_perc);
+            #    self::output_status("MEDIA_MONITOR_CPU_PERC", $data->services->media_monitor->cpu_perc);
+            #} else {
+            #    self::output_status("MEDIA_MONITOR_PROCESS_ID", "FAILED");
+            #    self::output_status("MEDIA_MONITOR_RUNNING_SECONDS", "0");
+            #    self::output_status("MEDIA_MONITOR_MEM_PERC", "0%");
+            #    self::output_status("MEDIA_MONITOR_CPU_PERC", "0%");
+            #    $log = "/var/log/airtime/media-monitor/media-monitor.log";
+            #    self::show_log_file($log);
+            #}
         }
 
         if (self::$AIRTIME_STATUS_OK){
