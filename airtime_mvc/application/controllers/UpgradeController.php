@@ -17,6 +17,12 @@ class UpgradeController extends Zend_Controller_Action
             return;
         }
         
+        //Disable Airtime UI
+        //create a temporary maintenance notification file
+        $maintenanceFile = '/tmp/maintenance.txt';
+        $file = fopen($maintenanceFile, 'w');
+        fclose($file);
+        
         //Begin upgrade
         $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
         $values = parse_ini_file($filename, true);
@@ -74,6 +80,8 @@ class UpgradeController extends Zend_Controller_Action
         }
         $file = new SplFileObject($iniFile, "w");
         $file->fwrite($beginning."\n".$newLines.$end);
+
+        unlink($maintenanceFile);
 
         $this->getResponse()
             ->setHttpResponseCode(200)

@@ -18,4 +18,9 @@ class IndexController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('layout');
     }
 
+    public function maintenanceAction()
+    {
+        $this->getResponse()->setHttpResponseCode(503);
+    }
+
 }
