@@ -38,15 +38,36 @@ class UpgradeController extends Zend_Controller_Action
         
         //update application.ini
         $newLines = "resources.frontController.moduleDirectory = APPLICATION_PATH '/modules'\n".
-                    "resources.frontController.plugins.putHandler = 'Zend_Controller_Plugin_PutHandler'".
-                    ";load everything in the modules directory including models".
-                    "resources.modules[] = ''";
+                    "resources.frontController.plugins.putHandler = 'Zend_Controller_Plugin_PutHandler'\n".
+                    ";load everything in the modules directory including models\n".
+                    "resources.modules[] = ''\n";
 
-        $file = fopen($iniFile, "r+");
-        //set pointer to line after '[production]' - kind of hacky but will do for now
-        fseek($file, -1, SEEK_CUR);
-        fwrite($file, $newLines);
-        fclose($file);
+        $currentIniFile = file_get_contents($iniFile);
+
+        /* We want to add the new lines immediately after the first line, '[production]'
+         * We read the first line into $beginning, and the rest of the file into $end.
+         * Then overwrite the current application.ini file with $beginning, $newLines, and $end
+         */
+        $lines = explode("\n", $currentIniFile);
+        $beginning = implode("\n", array_slice($lines, 0,1));
+
+        //check that first line is '[production]'
+        if ($beginning != '[production]') {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini');
+            return;
+        }
+        $end = implode("\n", array_slice($lines, 1));
+        
+        if (!is_writeable($iniFile)) {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini');
+            return;
+        }
+        $file = new SplFileObject($iniFile, "w");
+        $file->fwrite($beginning."\n".$newLines.$end);
 
         $this->getResponse()
             ->setHttpResponseCode(200)
