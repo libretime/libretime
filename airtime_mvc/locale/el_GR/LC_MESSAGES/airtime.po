@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-09 11:22-0400\n"
+"POT-Creation-Date: 2014-04-24 12:53-0400\n"
 "PO-Revision-Date: 2014-02-04 10:31+0000\n"
 "Last-Translator: danielhjames <daniel@64studio.com>\n"
 "Language-Team: Greek (Greece) (http://www.transifex.com/projects/p/airtime/language/el_GR/)\n"
@@ -129,26 +129,22 @@ msgstr "Διακομιστής"
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:31
 #: airtime_mvc/application/forms/DateRange.php:35
 #: airtime_mvc/application/forms/DateRange.php:63
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:99
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:118
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:26
 msgid "Invalid character entered"
 msgstr "Εισαγωγή άκυρου χαρακτήρα"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:109
-#: airtime_mvc/application/forms/EmailServerPreferences.php:100
+#: airtime_mvc/application/forms/EmailServerPreferences.php:99
 msgid "Port"
 msgstr "Θύρα"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:112
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:90
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:109
 msgid "Only numbers are allowed."
 msgstr "Επιτρέπονται μόνο αριθμοί."
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:120
 #: airtime_mvc/application/forms/PasswordChange.php:17
-#: airtime_mvc/application/forms/EmailServerPreferences.php:82
+#: airtime_mvc/application/forms/EmailServerPreferences.php:81
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
 
@@ -294,7 +290,7 @@ msgstr "Γλώσσα:"
 #: airtime_mvc/application/forms/EditAudioMD.php:135
 #: airtime_mvc/application/forms/AddUser.php:106
 #: airtime_mvc/application/forms/EditHistory.php:131
-#: airtime_mvc/application/forms/SupportSettings.php:158
+#: airtime_mvc/application/forms/SupportSettings.php:143
 #: airtime_mvc/application/controllers/LocaleController.php:285
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:160
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:85
@@ -344,7 +340,7 @@ msgid "Lastname:"
 msgstr "Επώνυμο:"
 
 #: airtime_mvc/application/forms/AddUser.php:63
-#: airtime_mvc/application/forms/SupportSettings.php:46
+#: airtime_mvc/application/forms/SupportSettings.php:45
 #: airtime_mvc/application/forms/RegisterAirtime.php:51
 #: airtime_mvc/application/forms/EditUser.php:78
 msgid "Email:"
@@ -470,86 +466,86 @@ msgstr "Σύνδεση"
 msgid "Type the characters you see in the picture below."
 msgstr "Πληκτρολογήστε τους χαρακτήρες που βλέπετε στην παρακάτω εικόνα."
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:21
-#: airtime_mvc/application/forms/SupportSettings.php:21
+#: airtime_mvc/application/forms/GeneralPreferences.php:20
+#: airtime_mvc/application/forms/SupportSettings.php:20
 #: airtime_mvc/application/forms/RegisterAirtime.php:30
 msgid "Station Name"
 msgstr "Όνομα Σταθμού"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:33
+#: airtime_mvc/application/forms/GeneralPreferences.php:32
 msgid "Default Crossfade Duration (s):"
 msgstr "Προεπιλεγμένη Διάρκεια Crossfade (s):"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:40
-#: airtime_mvc/application/forms/GeneralPreferences.php:59
-#: airtime_mvc/application/forms/GeneralPreferences.php:78
+#: airtime_mvc/application/forms/GeneralPreferences.php:39
+#: airtime_mvc/application/forms/GeneralPreferences.php:58
+#: airtime_mvc/application/forms/GeneralPreferences.php:77
 msgid "enter a time in seconds 0{.0}"
 msgstr "εισάγετε ένα χρόνο σε δευτερόλεπτα 0{.0}"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:52
+#: airtime_mvc/application/forms/GeneralPreferences.php:51
 msgid "Default Fade In (s):"
 msgstr "Προεπιλεγμένο Fade In (s):"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:71
+#: airtime_mvc/application/forms/GeneralPreferences.php:70
 msgid "Default Fade Out (s):"
 msgstr "Προεπιλεγμένο Fade Out (s):"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:89
+#: airtime_mvc/application/forms/GeneralPreferences.php:88
 #, php-format
 msgid "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make front-end widgets work.)"
 msgstr "Επιτρέψτε την Πρόσβαση \"Πρόγραμμα\" Πληροφορίες;%s σε Ιστοσελίδες με Απομακρυσμένη Πρόσβαση (Ενεργοποιήστε το για να λειτουργήσουν τα front-end widgets.)"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:90
+#: airtime_mvc/application/forms/GeneralPreferences.php:89
 msgid "Disabled"
 msgstr "Απενεργοποιημένο"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:91
+#: airtime_mvc/application/forms/GeneralPreferences.php:90
 msgid "Enabled"
 msgstr "Ενεργοποιημένο"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:97
+#: airtime_mvc/application/forms/GeneralPreferences.php:110
 msgid "Default Interface Language"
 msgstr "Προεπιλογή Γλώσσας Interface"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:105
+#: airtime_mvc/application/forms/GeneralPreferences.php:118
 msgid "Station Timezone"
 msgstr "Ζώνη Ώρας Σταθμού"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:113
+#: airtime_mvc/application/forms/GeneralPreferences.php:126
 msgid "Week Starts On"
 msgstr "Η Εβδομάδα αρχίζει "
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:123
+#: airtime_mvc/application/forms/GeneralPreferences.php:172
 #: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Sunday"
 msgstr "Κυριακή"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:124
+#: airtime_mvc/application/forms/GeneralPreferences.php:173
 #: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "Monday"
 msgstr "Δευτέρα"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:125
+#: airtime_mvc/application/forms/GeneralPreferences.php:174
 #: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Tuesday"
 msgstr "Τρίτη"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:126
+#: airtime_mvc/application/forms/GeneralPreferences.php:175
 #: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "Wednesday"
 msgstr "Τετάρτη"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:127
+#: airtime_mvc/application/forms/GeneralPreferences.php:176
 #: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "Thursday"
 msgstr "Πέμπτη"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:128
+#: airtime_mvc/application/forms/GeneralPreferences.php:177
 #: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "Friday"
 msgstr "Παρασκευή"
 
-#: airtime_mvc/application/forms/GeneralPreferences.php:129
+#: airtime_mvc/application/forms/GeneralPreferences.php:178
 #: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "Saturday"
 msgstr "Σάββατο"
@@ -1024,80 +1020,54 @@ msgstr "URL Σύνδεσης Κύριας Πηγής "
 msgid "Show Source Connection URL"
 msgstr "Εμφάνιση URL Σύνδεσης Πηγής "
 
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:87
-msgid "Master Source Port"
-msgstr "Κύριο Port Πηγής"
-
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:96
-msgid "Master Source Mount Point"
-msgstr "Κύριο Σημείο Προσάρτησης Πηγής"
-
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:106
-msgid "Show Source Port"
-msgstr "Εμφάνιση Port Πηγής"
-
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:115
-msgid "Show Source Mount Point"
-msgstr "Εμφάνιση Σημείου Προσάρτησης Πηγής"
-
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:153
-msgid "You cannot use same port as Master DJ port."
-msgstr "Δεν μπορείτε να χρησιμοποιήσετε το ίδιο port ως Master DJ Show port."
-
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:164
-#: airtime_mvc/application/forms/LiveStreamingPreferences.php:182
-#, php-format
-msgid "Port %s is not available"
-msgstr "Μη διαθέσιμο Port %s "
-
-#: airtime_mvc/application/forms/SupportSettings.php:34
+#: airtime_mvc/application/forms/SupportSettings.php:33
 #: airtime_mvc/application/forms/RegisterAirtime.php:39
 msgid "Phone:"
 msgstr "Τηλέφωνο:"
 
-#: airtime_mvc/application/forms/SupportSettings.php:57
+#: airtime_mvc/application/forms/SupportSettings.php:56
 #: airtime_mvc/application/forms/RegisterAirtime.php:62
 msgid "Station Web Site:"
 msgstr "Ιστοσελίδα Σταθμού:"
 
-#: airtime_mvc/application/forms/SupportSettings.php:68
+#: airtime_mvc/application/forms/SupportSettings.php:67
 #: airtime_mvc/application/forms/RegisterAirtime.php:73
 msgid "Country:"
 msgstr "Χώρα"
 
-#: airtime_mvc/application/forms/SupportSettings.php:79
+#: airtime_mvc/application/forms/SupportSettings.php:78
 #: airtime_mvc/application/forms/RegisterAirtime.php:84
 msgid "City:"
 msgstr "Πόλη"
 
-#: airtime_mvc/application/forms/SupportSettings.php:91
+#: airtime_mvc/application/forms/SupportSettings.php:90
 #: airtime_mvc/application/forms/RegisterAirtime.php:96
 msgid "Station Description:"
 msgstr "Περιγραφή Σταθμού:"
 
-#: airtime_mvc/application/forms/SupportSettings.php:101
+#: airtime_mvc/application/forms/SupportSettings.php:100
 #: airtime_mvc/application/forms/RegisterAirtime.php:106
 msgid "Station Logo:"
 msgstr "Λογότυπο Σταθμού:"
 
-#: airtime_mvc/application/forms/SupportSettings.php:112
+#: airtime_mvc/application/forms/SupportSettings.php:111
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "Send support feedback"
 msgstr "Αποστολή Σχολίων Υποστήριξης"
 
-#: airtime_mvc/application/forms/SupportSettings.php:122
+#: airtime_mvc/application/forms/SupportSettings.php:121
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 msgid "Promote my station on Sourcefabric.org"
 msgstr "Προώθηση του σταθμού μου στην ιστοσελίδα  Sourcefabric.org"
 
-#: airtime_mvc/application/forms/SupportSettings.php:148
+#: airtime_mvc/application/forms/SupportSettings.php:133
 #: airtime_mvc/application/forms/RegisterAirtime.php:149
 #, php-format
 msgid "By checking this box, I agree to Sourcefabric's %sprivacy policy%s."
 msgstr "Με την επιλογή του πλαισίου, συμφωνώ με την %sπολιτική απορρήτου%s της Sourcefabric."
 
-#: airtime_mvc/application/forms/SupportSettings.php:171
+#: airtime_mvc/application/forms/SupportSettings.php:155
 #: airtime_mvc/application/forms/RegisterAirtime.php:166
 msgid "You have to agree to privacy policy."
 msgstr "Πρέπει να συμφωνείτε με την πολιτική προστασίας προσωπικών δεδομένων."
@@ -1164,42 +1134,34 @@ msgid "Restore password"
 msgstr "Επαναφορά κωδικού πρόσβασης"
 
 #: airtime_mvc/application/forms/StreamSetting.php:22
-msgid "Hardware Audio Output"
-msgstr "Έξοδος Hardware Ήχου"
-
-#: airtime_mvc/application/forms/StreamSetting.php:33
-msgid "Output Type"
-msgstr "Τύπος Εξόδου"
-
-#: airtime_mvc/application/forms/StreamSetting.php:44
 msgid "Icecast Vorbis Metadata"
 msgstr "Μεταδεδομένα Icecast Vorbis "
 
-#: airtime_mvc/application/forms/StreamSetting.php:54
+#: airtime_mvc/application/forms/StreamSetting.php:32
 msgid "Stream Label:"
 msgstr "Stream Label:"
 
-#: airtime_mvc/application/forms/StreamSetting.php:55
+#: airtime_mvc/application/forms/StreamSetting.php:33
 msgid "Artist - Title"
 msgstr "Καλλιτέχνης - Τίτλος"
 
-#: airtime_mvc/application/forms/StreamSetting.php:56
+#: airtime_mvc/application/forms/StreamSetting.php:34
 msgid "Show - Artist - Title"
 msgstr "Εκπομπή - Καλλιτέχνης - Τίτλος"
 
-#: airtime_mvc/application/forms/StreamSetting.php:57
+#: airtime_mvc/application/forms/StreamSetting.php:35
 msgid "Station name - Show name"
 msgstr "Όνομα Σταθμού - Όνομα Εκπομπής"
 
-#: airtime_mvc/application/forms/StreamSetting.php:63
+#: airtime_mvc/application/forms/StreamSetting.php:41
 msgid "Off Air Metadata"
 msgstr "Μεταδεδομένα Off Air"
 
-#: airtime_mvc/application/forms/StreamSetting.php:69
+#: airtime_mvc/application/forms/StreamSetting.php:47
 msgid "Enable Replay Gain"
 msgstr "Ενεργοποίηση Επανάληψη Κέρδους"
 
-#: airtime_mvc/application/forms/StreamSetting.php:75
+#: airtime_mvc/application/forms/StreamSetting.php:53
 msgid "Replay Gain Modifier"
 msgstr "Τροποποιητής Επανάληψης Κέρδους"
 
@@ -1276,11 +1238,9 @@ msgstr "Δεν μπορεί να έχει διάρκεια 00h 00m"
 msgid "Cannot have duration greater than 24h"
 msgstr "Δεν μπορεί να έχει διάρκεια μεγαλύτερη από 24 ώρες"
 
-#: airtime_mvc/application/forms/AddShowWhen.php:287
-#: airtime_mvc/application/forms/AddShowWhen.php:301
-#: airtime_mvc/application/forms/AddShowWhen.php:325
-#: airtime_mvc/application/forms/AddShowWhen.php:331
-#: airtime_mvc/application/forms/AddShowWhen.php:336
+#: airtime_mvc/application/forms/AddShowWhen.php:274
+#: airtime_mvc/application/forms/AddShowWhen.php:288
+#: airtime_mvc/application/forms/AddShowWhen.php:294
 #: airtime_mvc/application/services/CalendarService.php:305
 msgid "Cannot schedule overlapping shows"
 msgstr "Δεν είναι δυνατός ο προγραμματισμός αλληλοεπικαλυπτόμενων εκπομπών"
@@ -1307,122 +1267,118 @@ msgid "Description:"
 msgstr "Περιγραφή:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:16
-msgid "Automatically Upload Recorded Shows"
-msgstr "Αυτόματο Ανέβασμα Ηχογραφημένων Εκπομπών"
-
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:26
 msgid "Enable SoundCloud Upload"
 msgstr "Ενεργοποίηση Ανεβάσματος SoundCloud"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:36
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:26
 msgid "Automatically Mark Files \"Downloadable\" on SoundCloud"
 msgstr "Αυτόματη Σήμανση Αρχείων \"για λήψη \" στο SoundCloud"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:47
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:37
 msgid "SoundCloud Email"
 msgstr "SoundCloud Email"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:67
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:57
 msgid "SoundCloud Password"
 msgstr "Κωδικός πρόσβασης SoundCloud"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:87
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:77
 msgid "SoundCloud Tags: (separate tags with spaces)"
 msgstr "SoundCloud Ετικέτες: (διαχωρίσετε ετικέτες με κενά)"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:99
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:89
 msgid "Default Genre:"
 msgstr "Προεπιλεγμένο Είδος:"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:109
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:99
 msgid "Default Track Type:"
 msgstr "Προεπιλεγμένος Τύπος Κομματιού:"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:113
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:103
 msgid "Original"
 msgstr "Πρώτυπο"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:114
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:104
 msgid "Remix"
 msgstr "Remix"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:115
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:105
 msgid "Live"
 msgstr "Live"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:116
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:106
 msgid "Recording"
 msgstr "Εγγραφή"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:117
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:107
 msgid "Spoken"
 msgstr "Ομιλούμενο"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:118
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:108
 msgid "Podcast"
 msgstr "Podcast"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:119
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:109
 msgid "Demo"
 msgstr "Demo"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:120
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:110
 msgid "Work in progress"
 msgstr "Εργασία σε εξέλιξη"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:121
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:111
 msgid "Stem"
 msgstr "Στέλεχος"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:122
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:112
 msgid "Loop"
 msgstr "Loop"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:123
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:113
 msgid "Sound Effect"
 msgstr "Εφέ Ήχου"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:124
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:114
 msgid "One Shot Sample"
 msgstr "Δείγμα Shot"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:125
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:115
 msgid "Other"
 msgstr "Άλλο"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:133
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:123
 msgid "Default License:"
 msgstr "Προεπιλεγμένη Άδεια :"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:137
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:127
 msgid "The work is in the public domain"
 msgstr "Εργασία δημόσιας χρήσης"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:138
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:128
 msgid "All rights are reserved"
 msgstr "Διατήρηση όλων των δικαιωμάτων"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:139
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:129
 msgid "Creative Commons Attribution"
 msgstr "Απόδοση Creative Commons"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:140
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:130
 msgid "Creative Commons Attribution Noncommercial"
 msgstr "Απόδοση Creative Commons Μη Εμπορική Χρήση"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:141
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:131
 msgid "Creative Commons Attribution No Derivative Works"
 msgstr "Απόδοση Creative Commons Όχι Παράγωγα Έργα"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:142
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:132
 msgid "Creative Commons Attribution Share Alike"
 msgstr "Απόδοση Creative Commons Share Alike"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:143
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:133
 msgid "Creative Commons Attribution Noncommercial Non Derivate Works"
 msgstr "Απόδοση Creative Commons Μη Εμπορική Χρήση Όχι Παράγωγα Έργα"
 
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:144
+#: airtime_mvc/application/forms/SoundcloudPreferences.php:134
 msgid "Creative Commons Attribution Noncommercial Share Alike"
 msgstr "Απόδοση Creative Commons Μη Εμπορική Χρήση Share Alike"
 
@@ -1430,31 +1386,31 @@ msgstr "Απόδοση Creative Commons Μη Εμπορική Χρήση Share A
 msgid "Interface Timezone:"
 msgstr "Interface Ζώνης ώρας:"
 
-#: airtime_mvc/application/forms/EmailServerPreferences.php:17
+#: airtime_mvc/application/forms/EmailServerPreferences.php:16
 msgid "Enable System Emails (Password Reset)"
 msgstr "Ενεργοποίηση Emails Συστήματος (Επαναφορά κωδικού πρόσβασης)"
 
-#: airtime_mvc/application/forms/EmailServerPreferences.php:27
+#: airtime_mvc/application/forms/EmailServerPreferences.php:26
 msgid "Reset Password 'From' Email"
 msgstr "Επαναφορά Κωδικού πρόσβασης 'Από' E-mail"
 
-#: airtime_mvc/application/forms/EmailServerPreferences.php:34
+#: airtime_mvc/application/forms/EmailServerPreferences.php:33
 msgid "Configure Mail Server"
 msgstr "Διαμόρφωση Διακομιστή Αλληλογραφίας"
 
-#: airtime_mvc/application/forms/EmailServerPreferences.php:43
+#: airtime_mvc/application/forms/EmailServerPreferences.php:42
 msgid "Requires Authentication"
 msgstr "Απαιτείται Έλεγχος Ταυτότητας"
 
-#: airtime_mvc/application/forms/EmailServerPreferences.php:53
+#: airtime_mvc/application/forms/EmailServerPreferences.php:52
 msgid "Mail Server"
 msgstr "Διακομιστής Αλληλογραφίας"
 
-#: airtime_mvc/application/forms/EmailServerPreferences.php:67
+#: airtime_mvc/application/forms/EmailServerPreferences.php:66
 msgid "Email Address"
 msgstr "Διεύθυνση Ηλεκτρονικού Ταχυδρομείου"
 
-#: airtime_mvc/application/controllers/ListenerstatController.php:56
+#: airtime_mvc/application/controllers/ListenerstatController.php:91
 msgid "Please make sure admin user/password is correct on System->Streams page."
 msgstr "Παρακαλούμε σιγουρευτείτε ότι ο χρήστης/κωδικός πρόσβασης διαχειριστή είναι σωστός στη σελίδα Σύστημα>Streams."
 
@@ -1642,7 +1598,7 @@ msgstr "Φόρτωση..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:92
 #: airtime_mvc/application/controllers/LocaleController.php:392
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:18
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:25
 msgid "All"
 msgstr "Όλα"
 
@@ -2646,28 +2602,28 @@ msgstr "Αφαίρεση cursor"
 msgid "show does not exist"
 msgstr "η εκπομπή δεν υπάρχει"
 
-#: airtime_mvc/application/controllers/PreferenceController.php:74
+#: airtime_mvc/application/controllers/PreferenceController.php:62
 msgid "Preferences updated."
 msgstr "Οι προτιμήσεις ενημερώθηκαν."
 
-#: airtime_mvc/application/controllers/PreferenceController.php:125
+#: airtime_mvc/application/controllers/PreferenceController.php:104
 msgid "Support setting updated."
 msgstr "Η ρύθμιση υποστήριξης ενημερώθηκε."
 
-#: airtime_mvc/application/controllers/PreferenceController.php:137
+#: airtime_mvc/application/controllers/PreferenceController.php:116
 #: airtime_mvc/application/configs/navigation.php:70
 msgid "Support Feedback"
 msgstr "Σχόλια Υποστήριξης"
 
-#: airtime_mvc/application/controllers/PreferenceController.php:332
+#: airtime_mvc/application/controllers/PreferenceController.php:273
 msgid "Stream Setting Updated."
 msgstr "Η Ρύθμιση Stream Ενημερώθηκε."
 
-#: airtime_mvc/application/controllers/PreferenceController.php:365
+#: airtime_mvc/application/controllers/PreferenceController.php:306
 msgid "path should be specified"
 msgstr "η διαδρομή πρέπει να καθοριστεί"
 
-#: airtime_mvc/application/controllers/PreferenceController.php:460
+#: airtime_mvc/application/controllers/PreferenceController.php:401
 msgid "Problem with Liquidsoap..."
 msgstr "Πρόβλημα με Liquidsoap ..."
 
@@ -2767,10 +2723,6 @@ msgid "Disk Space"
 msgstr "Χώρος δίσκου"
 
 #: airtime_mvc/application/views/scripts/form/preferences.phtml:5
-msgid "Email / Mail Server Settings"
-msgstr "Ρυθμίσεις Δακομιστή Email / Αλληλογραφίας"
-
-#: airtime_mvc/application/views/scripts/form/preferences.phtml:10
 msgid "SoundCloud Settings"
 msgstr "Ρυθμίσεις SoundCloud"
 
@@ -2798,39 +2750,31 @@ msgstr "URL Σύνδεσης: "
 msgid "Input Stream Settings"
 msgstr "Ρυθμίσεις Stream Εισόδου"
 
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:109
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:81
 msgid "Master Source Connection URL:"
 msgstr "URL Σύνδεσης Κυρίαρχης Πηγής:"
 
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:115
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:159
-msgid "Override"
-msgstr "Παράκαμψη"
-
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:87
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:98
 msgid "OK"
 msgstr "ΟΚ"
 
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:87
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:98
 msgid "RESET"
 msgstr "ΕΠΑΝΑΦΟΡΑ"
 
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:92
 msgid "Show Source Connection URL:"
 msgstr "Εμφάνιση Πηγής URL Σύνδεσης:"
 
-#: airtime_mvc/application/views/scripts/form/preferences_email_server.phtml:44
-#: airtime_mvc/application/views/scripts/form/preferences_email_server.phtml:74
-#: airtime_mvc/application/views/scripts/form/preferences_email_server.phtml:90
-#: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:44
-#: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:59
+#: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:31
+#: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:46
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:47
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:34
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:48
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
-#: airtime_mvc/application/views/scripts/form/preferences_general.phtml:97
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
+#: airtime_mvc/application/views/scripts/form/preferences_general.phtml:115
 msgid "(Required)"
 msgstr "(Απαιτείται)"
 
@@ -2850,18 +2794,17 @@ msgstr "Κάντε κλικ στο παρακάτω πλαίσιο για να �
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:65
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:79
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:61
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:76
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:20
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:35
 msgid "(for verification purposes only, will not be published)"
 msgstr "(Μόνο για σκοπούς επαλήθευσης, δεν θα δημοσιευθεί)"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:150
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:151
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:110
 msgid "Note: Anything larger than 600x600 will be resized."
 msgstr "Σημείωση: Οτιδήποτε μεγαλύτερο από 600x600 θα αλλάξει μέγεθος."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:164
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:164
 msgid "Show me what I am sending "
 msgstr "Δείξε μου τι στέλνω "
 
@@ -2935,24 +2878,6 @@ msgstr "Φιλτράρισμα βάσει Εκπομπών:"
 #, php-format
 msgid "%s's Settings"
 msgstr "%s's Ρυθμίσεις"
-
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
-#, php-format
-msgid "Help Airtime improve by letting Sourcefabric know how you are using it. This information will be collected regularly in order to enhance your user experience.%sClick the 'Send support feedback' box and we'll make sure the features you use are constantly improving."
-msgstr "Βοηθείστε το Airtime ενημερώνοντας τη Sourcefabric για τη χρήση που του κάνετε. Αυτές οι πληροφορίες θα συλλέγονται τακτικά, προκειμένου να ενισχύσουν την εμπειρία των χρηστών σας. %s Κάντε κλικ στο πλαίσιο Αποστολή σχολίων υποστήριξης» και θα βεβαιωθείτε ότι οι λειτουργίες που χρησιμοποιείτε βελτιώνοται συνεχώς."
-
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:23
-#, php-format
-msgid "Click the box below to promote your station on %sSourcefabric.org%s."
-msgstr "Κάντε κλικ στο παρακάτω πλαίσιο για να προωθήσετε τον σταθμό σας στην ιστοσελίδα %sSourcefabric.org%s ."
-
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:41
-msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
-msgstr "(Για να προωθήσετε τον σταθμό σας, η 'Αποστολή σχολίων υποστήριξης» πρέπει να είναι ενεργοποιημένη)."
-
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:186
-msgid "Sourcefabric Privacy Policy"
-msgstr "Πολιτική Προστασίας Προσωπικών Δεδομένων της Sourcefabric"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
@@ -3197,15 +3122,15 @@ msgstr "Κριτήρια Δυναμικών Smart Block: "
 msgid "Limit to "
 msgstr "Όριο για "
 
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:19
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:26
 msgid "Failed"
 msgstr ""
 
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:20
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:27
 msgid "Pending"
 msgstr ""
 
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:23
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:30
 msgid "Recent Uploads"
 msgstr ""
 
@@ -3480,12 +3405,12 @@ msgid "Original Length:"
 msgstr "Αρχική Διάρκεια:"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:40
+#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:34
 msgid "Add this show"
 msgstr "Προσθήκη αυτής της εκπομπής "
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:40
+#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:34
 msgid "Update show"
 msgstr "Ενημέρωση εκπομπής"
 
@@ -3502,14 +3427,10 @@ msgid "Live Stream Input"
 msgstr "Είσοδος Live Stream "
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:23
-msgid "Record & Rebroadcast"
-msgstr "Εγγραφή και Αναμετάδοση"
-
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:29
 msgid "Who"
 msgstr "Ποιός"
 
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:33
+#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:27
 msgid "Style"
 msgstr "Στυλ"
 
@@ -3673,11 +3594,6 @@ msgstr "Το cue out δεν μπορεί να είναι μεγαλύτερο α
 msgid "Can't set cue out to be smaller than cue in."
 msgstr "Το cue out δεν μπορεί να είναι μικρότερο από το cue in."
 
-#: airtime_mvc/application/models/StoredFile.php:960
-#, php-format
-msgid "The file was not uploaded, there is %s MB of disk space left and the file you are uploading has a size of %s MB."
-msgstr "Το αρχείο δεν ανέβηκε, υπάρχει %s MB ελεύθερου χώρου στο δίσκο και το αρχείο που ανεβάζετε έχει μέγεθος %s MB."
-
 #: airtime_mvc/application/models/Show.php:180
 msgid "Shows can have a max length of 24 hours."
 msgstr "Η μέγιστη διάρκει εκπομπών είναι 24 ώρες."
@@ -3803,6 +3719,57 @@ msgstr "Παρακαλούμε επιλέξτε μια επιλογή"
 #: airtime_mvc/library/propel/contrib/pear/HTML_QuickForm_Propel/Propel.php:531
 msgid "No Records"
 msgstr "Κανένα Αρχείο"
+
+#~ msgid "Master Source Port"
+#~ msgstr "Κύριο Port Πηγής"
+
+#~ msgid "Master Source Mount Point"
+#~ msgstr "Κύριο Σημείο Προσάρτησης Πηγής"
+
+#~ msgid "Show Source Port"
+#~ msgstr "Εμφάνιση Port Πηγής"
+
+#~ msgid "Show Source Mount Point"
+#~ msgstr "Εμφάνιση Σημείου Προσάρτησης Πηγής"
+
+#~ msgid "You cannot use same port as Master DJ port."
+#~ msgstr "Δεν μπορείτε να χρησιμοποιήσετε το ίδιο port ως Master DJ Show port."
+
+#~ msgid "Port %s is not available"
+#~ msgstr "Μη διαθέσιμο Port %s "
+
+#~ msgid "Hardware Audio Output"
+#~ msgstr "Έξοδος Hardware Ήχου"
+
+#~ msgid "Output Type"
+#~ msgstr "Τύπος Εξόδου"
+
+#~ msgid "Automatically Upload Recorded Shows"
+#~ msgstr "Αυτόματο Ανέβασμα Ηχογραφημένων Εκπομπών"
+
+#~ msgid "Email / Mail Server Settings"
+#~ msgstr "Ρυθμίσεις Δακομιστή Email / Αλληλογραφίας"
+
+#~ msgid "Override"
+#~ msgstr "Παράκαμψη"
+
+#~ msgid "Help Airtime improve by letting Sourcefabric know how you are using it. This information will be collected regularly in order to enhance your user experience.%sClick the 'Send support feedback' box and we'll make sure the features you use are constantly improving."
+#~ msgstr "Βοηθείστε το Airtime ενημερώνοντας τη Sourcefabric για τη χρήση που του κάνετε. Αυτές οι πληροφορίες θα συλλέγονται τακτικά, προκειμένου να ενισχύσουν την εμπειρία των χρηστών σας. %s Κάντε κλικ στο πλαίσιο Αποστολή σχολίων υποστήριξης» και θα βεβαιωθείτε ότι οι λειτουργίες που χρησιμοποιείτε βελτιώνοται συνεχώς."
+
+#~ msgid "Click the box below to promote your station on %sSourcefabric.org%s."
+#~ msgstr "Κάντε κλικ στο παρακάτω πλαίσιο για να προωθήσετε τον σταθμό σας στην ιστοσελίδα %sSourcefabric.org%s ."
+
+#~ msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
+#~ msgstr "(Για να προωθήσετε τον σταθμό σας, η 'Αποστολή σχολίων υποστήριξης» πρέπει να είναι ενεργοποιημένη)."
+
+#~ msgid "Sourcefabric Privacy Policy"
+#~ msgstr "Πολιτική Προστασίας Προσωπικών Δεδομένων της Sourcefabric"
+
+#~ msgid "Record & Rebroadcast"
+#~ msgstr "Εγγραφή και Αναμετάδοση"
+
+#~ msgid "The file was not uploaded, there is %s MB of disk space left and the file you are uploading has a size of %s MB."
+#~ msgstr "Το αρχείο δεν ανέβηκε, υπάρχει %s MB ελεύθερου χώρου στο δίσκο και το αρχείο που ανεβάζετε έχει μέγεθος %s MB."
 
 #~ msgid "can't resize a past show"
 #~ msgstr "Δεν είναι δυνατή η αλλαγή μεγέθους παρελθοντικής εκπομπής"
