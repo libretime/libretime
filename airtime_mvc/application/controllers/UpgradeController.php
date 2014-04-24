@@ -19,6 +19,8 @@ class UpgradeController extends Zend_Controller_Action
         
         //Disable Airtime UI
         //create a temporary maintenance notification file
+        //when this file is on the server, zend framework redirects all
+        //requests to the maintenance page and sets a 503 response code
         $maintenanceFile = '/tmp/maintenance.txt';
         $file = fopen($maintenanceFile, 'w');
         fclose($file);
@@ -81,7 +83,10 @@ class UpgradeController extends Zend_Controller_Action
         $file = new SplFileObject($iniFile, "w");
         $file->fwrite($beginning."\n".$newLines.$end);
 
+        //delete maintenance.txt to give users access back to Airtime
         unlink($maintenanceFile);
+        
+        //TODO: clear out the cache
 
         $this->getResponse()
             ->setHttpResponseCode(200)
