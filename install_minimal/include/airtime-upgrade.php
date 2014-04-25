@@ -65,8 +65,10 @@ if ($return_code == 0) {
     exit(1);
 }
 
-// Stop media-monitor
-service media-monitor stop-with-monit
+// Stop media-monitor and disable it -- Airtime 2.5.3+
+@exec("service media-monitor stop-with-monit");
+@exec("rm /etc/init.d/airtime-media-monitor");
+
 
 //convert strings like 1.9.0-devel to 1.9.0
 $version = substr($version, 0, 5);
