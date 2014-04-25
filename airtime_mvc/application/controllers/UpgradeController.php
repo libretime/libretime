@@ -46,18 +46,20 @@ class UpgradeController extends Zend_Controller_Action
     
             $currentIniFile = file_get_contents($iniFile);
     
-            /* We want to add the new lines immediately after the first line, '[production]'
-             * We read the first line into $beginning, and the rest of the file into $end.
-             * Then overwrite the current application.ini file with $beginning, $newLines, and $end
+            /* We want to add the new lines after a specific line. So we must find read the file 
+             * into an array, find the key to which our desired line belongs, and use the key
+             * to split the file in two halves, $beginning and $end.
+             * The $newLines will go inbetween $beginning and $end
              */
             $lines = explode("\n", $currentIniFile);
-            $beginning = implode("\n", array_slice($lines, 0,1));
-    
-            //check that first line is '[production]'
-            if ($beginning != '[production]') {
-                throw new Exception('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini - Invalid format');
+
+            $key = array_search("resources.layout.layoutPath = APPLICATION_PATH \"/layouts/scripts/\"", $lines);
+            if (!$key) {
+                throw new Exception('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini');
             }
-            $end = implode("\n", array_slice($lines, 1));
+
+            $beginning = implode("\n", array_slice($lines, 0, $key));
+            $end = implode("\n", array_slice($lines, $key));
             
             if (!is_writeable($iniFile)) {
                 throw new Exception('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini - Permission denied.');
