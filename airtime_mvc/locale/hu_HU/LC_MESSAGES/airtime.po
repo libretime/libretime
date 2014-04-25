@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-04-11 13:09+0000\n"
-"Last-Translator: picizse <picizse@gmail.com>\n"
+"PO-Revision-Date: 2014-04-25 15:57+0000\n"
+"Last-Translator: danielhjames <daniel@64studio.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/airtime/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +105,7 @@ msgstr "Cím"
 #: airtime_mvc/application/controllers/LocaleController.php:67
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
 msgid "Creator"
-msgstr "Szerző"
+msgstr "Előadó/Szerző"
 
 #: airtime_mvc/application/services/HistoryService.php:1107
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:8
@@ -508,7 +508,7 @@ msgid ""
 " information will be collected regularly in order to enhance your user "
 "experience.%sClick the 'Send support feedback' box and we'll make sure the "
 "features you use are constantly improving."
-msgstr "Segítse az Airtime fejlesztését azáltal, hogy a Sourcefabric tudja, hogy Ön, hogyan használja azt. Információk összegyűjtése céljából, rendszerezve azokat, hogy fokozza a felhasználás élményét.%sKlikk a 'Támogatási Visszajelzés Küldése' mezőbe és győződjön meg arról, hogy a funkciók használatának minősége folyamatosan javul."
+msgstr "Segítse az Airtime fejlesztését azáltal, hogy a Sourcefabric tudja, hogy Ön, hogyan használja azt. Információk összegyűjtése céljából, rendszerezve azokat, hogy fokozza a felhasználás élményét.%sKlikkeljen a 'Támogatási Visszajelzés Küldése' mezőbe és győződjön meg arról, hogy a funkciók használatának minősége folyamatosan javul."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:23
 #, php-format
@@ -530,7 +530,7 @@ msgstr "Bemeneti Adásfolyam Beállítások"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:109
 msgid "Master Source Connection URL:"
-msgstr "Mester Kapcsolati Forrás URL:"
+msgstr "Mester Forrási URL Kapcsolat:"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:115
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:159
@@ -549,7 +549,7 @@ msgstr "NULLÁZÁS"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
 msgid "Show Source Connection URL:"
-msgstr "Műsor Kapcsolati Forrás URL:"
+msgstr "Műsor Forrási URL Kapcsolat:"
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:4
 msgid "Choose Days:"
@@ -629,20 +629,20 @@ msgstr "Itt van pár tipp, hogy hogyan is automatizálhatja adásait az Airtime 
 msgid ""
 "Begin by adding your files to the library using the 'Add Media' menu button."
 " You can drag and drop your files to this window too."
-msgstr "Kezdje médiafájlok hozzáadásával a 'Média Hozzáadása' menü gombon. A hozd és vidd fájlokat ugyanebben az ablakban szerkesztheti."
+msgstr "Kezdje médiafájlok hozzáadásával a 'Média Hozzáadása' menü gombon. A \"hozd és vidd\" fájlokat ugyanebben az ablakban szerkesztheti."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:8
 msgid ""
 "Create a show by going to 'Calendar' in the menu bar, and then clicking the "
 "'+ Show' icon. This can be either a one-time or repeating show. Only admins "
 "and program managers can add shows."
-msgstr "Hozzon létre egy műsort a 'Naptár' menüsorban, majd kattintson a '+ Műsor' ikonra. Ez lehet egyszeri vagy ismétlődő műsor. Csak az adminisztrátorok és a programok vezetői adhatnak hozzá műsort."
+msgstr "Hozzon létre egy műsort a 'Naptár' menüpontban, majd kattintson a '+ Műsor' ikonra. Ez lehet alkalmi vagy megismétlő műsor. Csak az adminisztrátorok és a programkezelők adhatnak hozzá műsort."
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:9
 msgid ""
 "Add media to the show by going to your show in the Schedule calendar, left-"
 "clicking on it and selecting 'Add / Remove Content'"
-msgstr "Adjon hozzá médiát, hogy a műsora futni tudjon, az Ütemezett naptárban, bal egérgombbal kattintva, és itt válassza ki a 'Tartalom Hozzáadása/Eltávolítása' opciót"
+msgstr "Adjon hozzá médiatartalmakat, hogy műsorokat tudjon ütemezni, a 'Naptár' menüpontban, bal egérgombbal kattintva, és itt válassza ki a 'Tartalom Hozzáadása/Eltávolítása' opciót"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:10
 msgid ""
@@ -1079,7 +1079,7 @@ msgstr "Összegzési Sablon Fájl Létrehozása"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:4
 msgid "Creating Log Sheet Template"
-msgstr "Bejelentkezési Adatlap Sablon Létrehozása"
+msgstr "Naplózási Sablon Létrehozása"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:9
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:153
@@ -1100,11 +1100,11 @@ msgstr "Alapértelmezett Sablon"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:4
 msgid "Log Sheet Templates"
-msgstr "Bejelentkezési Adatlap Sablonok"
+msgstr "Naplózási Sablonok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:7
 msgid "No Log Sheet Templates"
-msgstr "Nincsenek Bejelentkezési Adatlap Sablonok"
+msgstr "Nincsenek Naplózási Sablonok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:25
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:56
@@ -1114,7 +1114,7 @@ msgstr "Alapértelmezett"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:31
 msgid "New Log Sheet Template"
-msgstr "Nincs Bejelentkezési Adatlap Sablon"
+msgstr "Új Naplózási Sablon"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:35
 msgid "File Summary Templates"
@@ -1168,7 +1168,7 @@ msgstr "Cím:"
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:148
 #: airtime_mvc/application/forms/EditAudioMD.php:26
 msgid "Creator:"
-msgstr "Szerző:"
+msgstr "Előadó/Szerző:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:11
 #: airtime_mvc/application/forms/EditAudioMD.php:33
@@ -1308,15 +1308,15 @@ msgstr "URL:"
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:7
 msgid "Log Sheet"
-msgstr "Belépési Adatlap"
+msgstr "Napló"
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:8
 msgid "File Summary"
-msgstr "Fájl Összegzés"
+msgstr "Fájl Összegző"
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:10
 msgid "Show Summary"
-msgstr "Műsor Összegzés"
+msgstr "Műsor Összegző"
 
 #: airtime_mvc/application/models/Show.php:180
 msgid "Shows can have a max length of 24 hours."
@@ -2863,7 +2863,7 @@ msgstr "Hiba: Érvénytelen fájl kiterjesztés:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "Create Entry"
-msgstr "Belépés Létrehozása"
+msgstr "Napló Létrehozása"
 
 #: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "Edit History Record"
@@ -3122,7 +3122,7 @@ msgstr "Műsor Csatlakozás Forrása URL"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:87
 msgid "Master Source Port"
-msgstr "Mester Forrás Portja"
+msgstr "Mester Forrás Port"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:90
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:109
@@ -3132,7 +3132,7 @@ msgstr "Csak számok adhatók meg."
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:96
 msgid "Master Source Mount Point"
-msgstr "Mester Csatolási Pont Forrása"
+msgstr "Mester Forrási Csatolási Pont"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:99
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:118
@@ -3154,11 +3154,11 @@ msgstr "Érvénytelen bevitt karakterek"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:106
 msgid "Show Source Port"
-msgstr "Műsor Forrás Portja"
+msgstr "Műsor Forrás Port"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:115
 msgid "Show Source Mount Point"
-msgstr "Műsor Csatolási Pont Forrása"
+msgstr "Műsor Forrási Csatolási Pont"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:153
 msgid "You cannot use same port as Master DJ port."
@@ -3897,7 +3897,7 @@ msgstr "Lejátszási Előzmények"
 
 #: airtime_mvc/application/configs/navigation.php:104
 msgid "History Templates"
-msgstr "Előzményi Sablonok"
+msgstr "Naplózási Sablonok"
 
 #: airtime_mvc/application/configs/navigation.php:118
 msgid "Getting Started"
