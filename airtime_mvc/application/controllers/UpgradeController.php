@@ -27,19 +27,10 @@ class UpgradeController extends Zend_Controller_Action
             $maintenanceFile = '/tmp/maintenance.txt';
             $file = fopen($maintenanceFile, 'w');
             fclose($file);
-            
+
             //Begin upgrade
-            $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
-            $values = parse_ini_file($filename, true);
             
-            $username = $values['database']['dbuser'];
-            $password = $values['database']['dbpass'];
-            $host = $values['database']['host'];
-            $database = $values['database']['dbname'];
-            $dir = __DIR__;
-            
-            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_upgrade_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
-            
+            //Update disk_usage value in cc_pref
             $musicDir = CcMusicDirsQuery::create()
                 ->filterByType('stor')
                 ->filterByExists(true)
@@ -50,14 +41,14 @@ class UpgradeController extends Zend_Controller_Action
             $totalSpace = disk_total_space($storPath);
             
             Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
-    
+
             $iniFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."application.ini" : "/usr/share/airtime/application/configs/application.ini";
             
             //update application.ini
-            $newLines = "resources.frontController.moduleDirectory = APPLICATION_PATH '/modules'\n".
-                        "resources.frontController.plugins.putHandler = 'Zend_Controller_Plugin_PutHandler'\n".
+            $newLines = "resources.frontController.moduleDirectory = APPLICATION_PATH \"/modules\"\n".
+                        "resources.frontController.plugins.putHandler = \"Zend_Controller_Plugin_PutHandler\"\n".
                         ";load everything in the modules directory including models\n".
-                        "resources.modules[] = ''\n";
+                        "resources.modules[] = \"\"\n";
     
             $currentIniFile = file_get_contents($iniFile);
     
@@ -79,13 +70,27 @@ class UpgradeController extends Zend_Controller_Action
             }
             $file = new SplFileObject($iniFile, "w");
             $file->fwrite($beginning."\n".$newLines.$end);
-    
+
+            
             //delete maintenance.txt to give users access back to Airtime
             unlink($maintenanceFile);
             
             //TODO: clear out the cache
 
             $con->commit();
+
+            $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+            $values = parse_ini_file($airtimeConf, true);
+            
+            //update system_version in cc_pref and change some columns in cc_files
+            $username = $values['database']['dbuser'];
+            $password = $values['database']['dbpass'];
+            $host = $values['database']['host'];
+            $database = $values['database']['dbname'];
+            $dir = __DIR__;
+            
+            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_upgrade_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
+            
 
             $this->getResponse()
                 ->setHttpResponseCode(200)
