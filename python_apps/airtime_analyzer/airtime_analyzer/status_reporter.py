@@ -45,6 +45,13 @@ def process_http_requests(ipc_queue, http_retry_queue_path):
             pass
         else:
             raise e
+    except Exception as e:
+        # If we fail to unpickle a saved queue of failed HTTP requests, then we'll just log an error
+        # and continue because those HTTP requests are lost anyways. The pickled file will be
+        # overwritten the next time the analyzer is shut down too.
+        logging.error("Failed to unpickle %s. Continuing..." % http_retry_queue_path)
+        pass
+
     
     while not shutdown:
         try:
@@ -91,7 +98,8 @@ def send_http_request(picklable_request, retry_queue):
         logging.error("HTTP request failed with unhandled exception. %s" % str(e))
         # Don't put the request into the retry queue, just give up on this one.
         # I'm doing this to protect against us getting some pathological request
-        # that breaks our code. I don't want us having 
+        # that breaks our code. I don't want us pickling data that potentially
+        # breaks airtime_analyzer.
 
 
 

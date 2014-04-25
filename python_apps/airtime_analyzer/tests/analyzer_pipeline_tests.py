@@ -28,7 +28,7 @@ def test_basic():
     assert metadata['album_title'] == u'Test Album'
     assert metadata['year'] == u'1999'
     assert metadata['genre'] == u'Test Genre'
-    assert metadata['mime'] == 'audio/mpeg' # Not unicode because MIMEs aren't.
+    assert metadata['mime'] == 'audio/mp3' # Not unicode because MIMEs aren't.
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata["length"] == str(datetime.timedelta(seconds=metadata["length_seconds"]))
     assert os.path.exists(DEFAULT_IMPORT_DEST)

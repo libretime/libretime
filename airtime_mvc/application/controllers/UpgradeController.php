@@ -17,6 +17,14 @@ class UpgradeController extends Zend_Controller_Action
             return;
         }
         
+        //Disable Airtime UI
+        //create a temporary maintenance notification file
+        //when this file is on the server, zend framework redirects all
+        //requests to the maintenance page and sets a 503 response code
+        $maintenanceFile = '/tmp/maintenance.txt';
+        $file = fopen($maintenanceFile, 'w');
+        fclose($file);
+        
         //Begin upgrade
         $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
         $values = parse_ini_file($filename, true);
@@ -69,6 +77,46 @@ class UpgradeController extends Zend_Controller_Action
         $file = new SplFileObject($iniFile, "w");
         $file->fwrite($beginning."\n".$newLines.$end);
 
+        $iniFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."application.ini" : "/usr/share/airtime/application/configs/application.ini";
+        
+        //update application.ini
+        $newLines = "resources.frontController.moduleDirectory = APPLICATION_PATH '/modules'\n".
+                    "resources.frontController.plugins.putHandler = 'Zend_Controller_Plugin_PutHandler'\n".
+                    ";load everything in the modules directory including models\n".
+                    "resources.modules[] = ''\n";
+
+        $currentIniFile = file_get_contents($iniFile);
+
+        /* We want to add the new lines immediately after the first line, '[production]'
+         * We read the first line into $beginning, and the rest of the file into $end.
+         * Then overwrite the current application.ini file with $beginning, $newLines, and $end
+         */
+        $lines = explode("\n", $currentIniFile);
+        $beginning = implode("\n", array_slice($lines, 0,1));
+
+        //check that first line is '[production]'
+        if ($beginning != '[production]') {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini');
+            return;
+        }
+        $end = implode("\n", array_slice($lines, 1));
+        
+        if (!is_writeable($iniFile)) {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini');
+            return;
+        }
+        $file = new SplFileObject($iniFile, "w");
+        $file->fwrite($beginning."\n".$newLines.$end);
+
+        //delete maintenance.txt to give users access back to Airtime
+        unlink($maintenanceFile);
+        
+        //TODO: clear out the cache
+
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->appendBody("Upgrade to Airtime 2.5.3 OK");
@@ -104,10 +152,10 @@ class UpgradeController extends Zend_Controller_Action
             ->findOne();
         $airtime_version = $pref->getValStr();
 
-        if ($airtime_version != '2.5.2') {
+        if ($airtime_version != '2.5.2' || $airtime_version != '2.5.1') {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody("Upgrade to Airtime 2.5.3 FAILED. You must be using Airtime 2.5.2 to upgrade.");
+                ->appendBody("Upgrade to Airtime 2.5.3 FAILED. You must be using Airtime 2.5.1 or 2.5.2 to upgrade.");
             return false;
         }
         return true;
