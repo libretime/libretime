@@ -67,10 +67,6 @@ class UpgradeController extends Zend_Controller_Action
             $file = new SplFileObject($iniFile, "w");
             $file->fwrite($beginning."\n".$newLines.$end);
 
-            
-            //delete maintenance.txt to give users access back to Airtime
-            unlink($maintenanceFile);
-            
             //TODO: clear out the cache
 
             $con->commit();
@@ -87,6 +83,8 @@ class UpgradeController extends Zend_Controller_Action
             
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_upgrade_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
             
+            //delete maintenance.txt to give users access back to Airtime
+            unlink($maintenanceFile);
 
             $this->getResponse()
                 ->setHttpResponseCode(200)
