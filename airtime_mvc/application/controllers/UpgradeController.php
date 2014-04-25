@@ -42,9 +42,9 @@ class UpgradeController extends Zend_Controller_Action
             
             Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
 
+            //update application.ini
             $iniFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."application.ini" : "/usr/share/airtime/application/configs/application.ini";
             
-            //update application.ini
             $newLines = "resources.frontController.moduleDirectory = APPLICATION_PATH \"/modules\"\n".
                         "resources.frontController.plugins.putHandler = \"Zend_Controller_Plugin_PutHandler\"\n".
                         ";load everything in the modules directory including models\n".
@@ -79,10 +79,10 @@ class UpgradeController extends Zend_Controller_Action
 
             $con->commit();
 
+            //update system_version in cc_pref and change some columns in cc_files
             $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
             $values = parse_ini_file($airtimeConf, true);
             
-            //update system_version in cc_pref and change some columns in cc_files
             $username = $values['database']['dbuser'];
             $password = $values['database']['dbpass'];
             $host = $values['database']['host'];
