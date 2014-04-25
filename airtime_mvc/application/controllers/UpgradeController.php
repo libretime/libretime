@@ -123,7 +123,7 @@ class UpgradeController extends Zend_Controller_Action
             ->findOne();
         $airtime_version = $pref->getValStr();
 
-        if ($airtime_version != '2.5.2' || $airtime_version != '2.5.1') {
+        if (!in_array($airtime_version, ['2.5.1', '2.5.2']) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
                 ->appendBody("Upgrade to Airtime 2.5.3 FAILED. You must be using Airtime 2.5.1 or 2.5.2 to upgrade.");
