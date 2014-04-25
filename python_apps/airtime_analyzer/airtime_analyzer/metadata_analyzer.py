@@ -1,6 +1,7 @@
 import time
 import datetime
 import mutagen
+import logging
 from analyzer import Analyzer
 
 class MetadataAnalyzer(Analyzer):
@@ -92,6 +93,7 @@ class MetadataAnalyzer(Analyzer):
             'genre':        'genre',
             'isrc':         'isrc',
             'label':        'label',
+            'organization': 'label',
             #'length':       'length',
             'language':     'language',
             'last_modified':'last_modified',
