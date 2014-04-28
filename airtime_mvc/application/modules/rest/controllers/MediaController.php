@@ -176,6 +176,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $this->processUploadedFile($callbackUrl, $relativePath, $this->getOwnerId());
 
             if (!$pathToDelete) {
+                Logging::info($pathToDelete);
                 //delete the empty folder that was uploaded via ftp (if one)
                 rmdir($pathToDelete);
             }
