@@ -144,7 +144,8 @@ class Rest_MediaController extends Zend_Rest_Controller
             if (isset($whiteList["full_path"])) {
                 $fullPath = $whiteList["full_path"];
                 $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
-                $relativePath = substr($fullPath, strlen($basePath));
+                $relativePath = substr($fullPath, strlen($basePath)-1);
+
             } else {
                 $relativePath = $_FILES["file"]["name"];
             }
