@@ -144,11 +144,24 @@ class Rest_MediaController extends Zend_Rest_Controller
             if (isset($whiteList["full_path"])) {
                 $fullPath = $whiteList["full_path"];
                 $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
+                //$relativePath is the folder name(if one) + track name, that was uploaded via ftp
                 $relativePath = substr($fullPath, strlen($basePath)-1);
 
+                //after the file is moved from organize store it's parent folder so we can delete it after
+                if (dirname($relativePath) != '/') {
+                    $pathToDelete = Application_Common_OsPath::join(
+                        $basePath,
+                        dirname($relativePath)
+                    );
+                } else {
+                    //if the uploaded file was not in a folder, DO NOT delete
+                    $pathToDelete = False;
+                }
             } else {
                 $relativePath = $_FILES["file"]["name"];
+                $pathToDelete = False;
             }
+
             
             $file->fromArray($whiteList);
             $file->setDbOwnerId($this->getOwnerId());
@@ -161,6 +174,11 @@ class Rest_MediaController extends Zend_Rest_Controller
             $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
 
             $this->processUploadedFile($callbackUrl, $relativePath, $this->getOwnerId());
+
+            if (!$pathToDelete) {
+                //delete the empty folder that was uploaded via ftp (if one)
+                rmdir($pathToDelete);
+            }
     
             $this->getResponse()
                 ->setHttpResponseCode(201)
