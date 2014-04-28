@@ -29,8 +29,10 @@ class MetadataAnalyzer(Analyzer):
 
         #Bail if the file couldn't be parsed. The title should stay as the filename
         #inside Airtime.
-        if not audio_file:
+        if audio_file == None:  # Don't use "if not" here. It is wrong due to mutagen's design.
             return metadata
+        # Note that audio_file can equal {} if the file is valid but there's no metadata tags.
+        # We can still try to grab the info variables below. 
         
         #Grab other file information that isn't encoded in a tag, but instead usually
         #in the file header. Mutagen breaks that out into a separate "info" object:
