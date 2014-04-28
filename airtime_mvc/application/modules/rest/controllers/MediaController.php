@@ -136,7 +136,19 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
             return;
         } else {
-
+            /* If full_path is set, the post request came from ftp.
+             * Users are allowed to upload folders via ftp. If this is the case
+             * we need to include the folder name with the file name, otherwise
+             * files won't get removed from the organize folder.
+             */
+            if (isset($whiteList["full_path"])) {
+                $fullPath = $whiteList["full_path"];
+                $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
+                $relativePath = substr($fullPath, strlen($basePath));
+            } else {
+                $relativePath = $_FILES["file"]["name"];
+            }
+            
             $file->fromArray($whiteList);
             $file->setDbOwnerId($this->getOwnerId());
             $now  = new DateTime("now", new DateTimeZone("UTC"));
@@ -146,8 +158,8 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
 
             $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
-    
-            $this->processUploadedFile($callbackUrl, $_FILES["file"]["name"], $this->getOwnerId());
+
+            $this->processUploadedFile($callbackUrl, $relativePath, $this->getOwnerId());
     
             $this->getResponse()
                 ->setHttpResponseCode(201)
@@ -365,9 +377,6 @@ class Rest_MediaController extends Zend_Rest_Controller
             Logging::error($e->getMessage());
             return;
         }
-        
-        Logging::info($newTempFilePath);
-        //Logging::info("Old temp file path: " . $tempFilePath);
 
         //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
