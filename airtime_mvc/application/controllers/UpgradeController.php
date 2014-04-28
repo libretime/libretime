@@ -24,7 +24,7 @@ class UpgradeController extends Zend_Controller_Action
             //create a temporary maintenance notification file
             //when this file is on the server, zend framework redirects all
             //requests to the maintenance page and sets a 503 response code
-            $maintenanceFile = '/tmp/maintenance.txt';
+            $maintenanceFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."maintenance.txt" : "/tmp/maintenance.txt";
             $file = fopen($maintenanceFile, 'w');
             fclose($file);
 
