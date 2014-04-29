@@ -101,16 +101,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         exec("rm -rf $path");
 
         //update disk_usage value in cc_pref
-        $musicDir = CcMusicDirsQuery::create()
-            ->filterByType('stor')
-            ->filterByExists(true)
-            ->findOne();
-        $storPath = $musicDir->getDirectory();
-        
-        $freeSpace = disk_free_space($storPath);
-        $totalSpace = disk_total_space($storPath);
-        
-        Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
+        $storDir = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."srv/airtime/stor" : "/srv/airtime/stor";
+        $diskUsage = shell_exec("du -sb $storDir | awk '{print $1}'");
+        Application_Model_Preference::setDiskUsage($diskUsage);
 
         $this->getResponse()
             ->setHttpResponseCode(200)
