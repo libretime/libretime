@@ -23,5 +23,15 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
             )
         );
         $router->addRoute('download', $downloadRoute);
+
+        $clearLibraryRoute = new Zend_Controller_Router_Route(
+            'rest/media/clear',
+            array(
+                'controller' => 'media',
+                'action' => 'clear',
+                'module' => 'rest'
+            )
+        );
+        $router->addRoute('clear', $clearLibraryRoute);
     }
 }
