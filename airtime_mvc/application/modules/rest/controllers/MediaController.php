@@ -147,7 +147,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 //$relativePath is the folder name(if one) + track name, that was uploaded via ftp
                 $relativePath = substr($fullPath, strlen($basePath)-1);
 
-                //after the file is moved from organize store it's parent folder so we can delete it after
+                //after the file is moved from organize, store it's parent folder so we can delete it after
                 if (dirname($relativePath) != '/') {
                     $pathToDelete = Application_Common_OsPath::join(
                         $basePath,
@@ -155,11 +155,11 @@ class Rest_MediaController extends Zend_Rest_Controller
                     );
                 } else {
                     //if the uploaded file was not in a folder, DO NOT delete
-                    $pathToDelete = False;
+                    $pathToDelete = false;
                 }
             } else {
                 $relativePath = $_FILES["file"]["name"];
-                $pathToDelete = False;
+                $pathToDelete = false;
             }
 
             
@@ -175,7 +175,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
             $this->processUploadedFile($callbackUrl, $relativePath, $this->getOwnerId());
 
-            if (!$pathToDelete) {
+            if ($pathToDelete) {
                 Logging::info($pathToDelete);
                 //delete the empty folder that was uploaded via ftp (if one)
                 rmdir($pathToDelete);
