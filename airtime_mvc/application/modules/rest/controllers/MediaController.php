@@ -146,20 +146,8 @@ class Rest_MediaController extends Zend_Rest_Controller
                 $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
                 //$relativePath is the folder name(if one) + track name, that was uploaded via ftp
                 $relativePath = substr($fullPath, strlen($basePath)-1);
-
-                //after the file is moved from organize, store it's parent folder so we can delete it after
-                if (dirname($relativePath) != '/') {
-                    $pathToDelete = Application_Common_OsPath::join(
-                        $basePath,
-                        dirname($relativePath)
-                    );
-                } else {
-                    //if the uploaded file was not in a folder, DO NOT delete
-                    $pathToDelete = false;
-                }
             } else {
                 $relativePath = $_FILES["file"]["name"];
-                $pathToDelete = false;
             }
 
             
@@ -175,12 +163,6 @@ class Rest_MediaController extends Zend_Rest_Controller
 
             $this->processUploadedFile($callbackUrl, $relativePath, $this->getOwnerId());
 
-            if ($pathToDelete) {
-                Logging::info($pathToDelete);
-                //delete the empty folder that was uploaded via ftp (if one)
-                rmdir($pathToDelete);
-            }
-    
             $this->getResponse()
                 ->setHttpResponseCode(201)
                 ->appendBody(json_encode($this->sanitizeResponse($file)));
@@ -233,6 +215,10 @@ class Rest_MediaController extends Zend_Rest_Controller
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);
             $file->save();
+            
+            $this->removeEmptySubFolders(
+                isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/");
+            
             $this->getResponse()
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode($this->sanitizeResponse($file)));
@@ -457,6 +443,11 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
 
         return $response;
+    }
+
+    private function removeEmptySubFolders($path)
+    {
+        exec("find $path -empty -type d -delete");
     }
 
 }
