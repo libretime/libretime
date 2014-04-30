@@ -1,6 +1,8 @@
 import time
 import datetime
 import mutagen
+import magic
+import wave
 import logging
 from analyzer import Analyzer
 
@@ -24,6 +26,12 @@ class MetadataAnalyzer(Analyzer):
         #Other fields we'll want to set for Airtime:
         metadata["hidden"] = False
 
+        # Mutagen doesn't handle WAVE files so we use a different package 
+        mime_check = magic.from_file(filename, mime=True)
+        metadata["mime"] = mime_check
+        if mime_check == 'audio/x-wav':
+            return MetadataAnalyzer._analyze_wave(filename, metadata)
+
         #Extract metadata from an audio file using mutagen
         audio_file = mutagen.File(filename, easy=True)
 
@@ -37,17 +45,21 @@ class MetadataAnalyzer(Analyzer):
         #Grab other file information that isn't encoded in a tag, but instead usually
         #in the file header. Mutagen breaks that out into a separate "info" object:
         info = audio_file.info
-        metadata["sample_rate"] = info.sample_rate
-        metadata["length_seconds"] = info.length 
-        #Converting the length in seconds (float) to a formatted time string
-        track_length = datetime.timedelta(seconds=info.length)
-        metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
-        metadata["bit_rate"] = info.bitrate
-        
-        # Other fields for Airtime
-        metadata["cueout"] = metadata["length"] 
+        if hasattr(info, "sample_rate"): # Mutagen is annoying and inconsistent
+            metadata["sample_rate"] = info.sample_rate
+        if hasattr(info, "length"):
+            metadata["length_seconds"] = info.length 
+            #Converting the length in seconds (float) to a formatted time string
+            track_length = datetime.timedelta(seconds=info.length)
+            metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
+            # Other fields for Airtime
+            metadata["cueout"] = metadata["length"] 
       
-        #Use the mutagen to get the MIME type.
+        if hasattr(info, "bit_rate"):
+            metadata["bit_rate"] = info.bitrate
+        
+        # Use the mutagen to get the MIME type, if it has one. This is more reliable and
+        # consistent for certain types of MP3s or MPEG files than the MIMEs returned by magic.
         if audio_file.mime:
             metadata["mime"] = audio_file.mime[0]
    
@@ -122,33 +134,20 @@ class MetadataAnalyzer(Analyzer):
 
         return metadata
 
-
-
-'''
-For reference, the Airtime metadata fields are:
-            title
-            artist ("Creator" in Airtime)
-            album
-            bit rate
-            BPM
-            composer
-            conductor
-            copyright
-            cue in
-            cue out
-            encoded by
-            genre
-            ISRC
-            label
-            language
-            last modified
-            length
-            mime
-            mood
-            owner
-            replay gain
-            sample rate
-            track number
-            website
-            year
-'''
+    @staticmethod
+    def _analyze_wave(filename, metadata):
+        try:
+            reader = wave.open(filename, 'rb')
+            metadata["mime"] = magic.from_file(filename, mime=True)
+            metadata["channels"] = reader.getnchannels()
+            metadata["sample_rate"] = reader.getframerate()
+            length_seconds = float(reader.getnframes()) / float(metadata["channels"] * metadata["sample_rate"])
+            #Converting the length in seconds (float) to a formatted time string
+            track_length = datetime.timedelta(seconds=length_seconds)
+            metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
+            metadata["length_seconds"] = length_seconds
+            metadata["cueout"] = metadata["length"] 
+        except wave.Error:
+            logging.error("Invalid WAVE file.")
+            raise
+        return metadata
