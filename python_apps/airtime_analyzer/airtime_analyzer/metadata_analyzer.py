@@ -1,6 +1,8 @@
 import time
 import datetime
 import mutagen
+import magic
+import wave
 import logging
 from analyzer import Analyzer
 
@@ -23,6 +25,11 @@ class MetadataAnalyzer(Analyzer):
         metadata["ftype"] = "audioclip"
         #Other fields we'll want to set for Airtime:
         metadata["hidden"] = False
+
+        # Mutagen doesn't handle WAVE files so we use a different package 
+        mime_check = magic.from_file(filename, mime=True)
+        if mime_check == 'audio/x-wav':
+            return MetadataAnalyzer._analyze_wave(filename, metadata)
 
         #Extract metadata from an audio file using mutagen
         audio_file = mutagen.File(filename, easy=True)
@@ -122,33 +129,20 @@ class MetadataAnalyzer(Analyzer):
 
         return metadata
 
-
-
-'''
-For reference, the Airtime metadata fields are:
-            title
-            artist ("Creator" in Airtime)
-            album
-            bit rate
-            BPM
-            composer
-            conductor
-            copyright
-            cue in
-            cue out
-            encoded by
-            genre
-            ISRC
-            label
-            language
-            last modified
-            length
-            mime
-            mood
-            owner
-            replay gain
-            sample rate
-            track number
-            website
-            year
-'''
+    @staticmethod
+    def _analyze_wave(filename, metadata):
+        try:
+            reader = wave.open(filename, 'rb')
+            metadata["mime"] = magic.from_file(filename, mime=True)
+            metadata["channels"] = reader.getnchannels()
+            metadata["sample_rate"] = reader.getframerate()
+            length_seconds = float(reader.getnframes()) / float(metadata["channels"] * metadata["sample_rate"])
+            #Converting the length in seconds (float) to a formatted time string
+            track_length = datetime.timedelta(seconds=length_seconds)
+            metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
+            metadata["length_seconds"] = length_seconds
+            metadata["cueout"] = metadata["length"] 
+        except wave.Error:
+            logging.error("Invalid WAVE file.")
+            raise
+        return metadata
