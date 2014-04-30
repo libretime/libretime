@@ -28,6 +28,7 @@ class MetadataAnalyzer(Analyzer):
 
         # Mutagen doesn't handle WAVE files so we use a different package 
         mime_check = magic.from_file(filename, mime=True)
+        metadata["mime"] = mime_check
         if mime_check == 'audio/x-wav':
             return MetadataAnalyzer._analyze_wave(filename, metadata)
 
@@ -44,17 +45,21 @@ class MetadataAnalyzer(Analyzer):
         #Grab other file information that isn't encoded in a tag, but instead usually
         #in the file header. Mutagen breaks that out into a separate "info" object:
         info = audio_file.info
-        metadata["sample_rate"] = info.sample_rate
-        metadata["length_seconds"] = info.length 
-        #Converting the length in seconds (float) to a formatted time string
-        track_length = datetime.timedelta(seconds=info.length)
-        metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
-        metadata["bit_rate"] = info.bitrate
-        
-        # Other fields for Airtime
-        metadata["cueout"] = metadata["length"] 
+        if hasattr(info, "sample_rate"): # Mutagen is annoying and inconsistent
+            metadata["sample_rate"] = info.sample_rate
+        if hasattr(info, "length"):
+            metadata["length_seconds"] = info.length 
+            #Converting the length in seconds (float) to a formatted time string
+            track_length = datetime.timedelta(seconds=info.length)
+            metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
+            # Other fields for Airtime
+            metadata["cueout"] = metadata["length"] 
       
-        #Use the mutagen to get the MIME type.
+        if hasattr(info, "bit_rate"):
+            metadata["bit_rate"] = info.bitrate
+        
+        # Use the mutagen to get the MIME type, if it has one. This is more reliable and
+        # consistent for certain types of MP3s or MPEG files than the MIMEs returned by magic.
         if audio_file.mime:
             metadata["mime"] = audio_file.mime[0]
    
