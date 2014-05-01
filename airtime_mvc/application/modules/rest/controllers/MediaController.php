@@ -83,7 +83,6 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     public function clearAction()
     {
-        //TODO:: make this not accessible via public api??
         if (!$this->verifyAuth(true, true))
         {
             return;
@@ -97,6 +96,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $updateCriteria->add(CcFilesPeer::FILE_EXISTS, false);
         BasePeer::doUpdate($selectCriteria, $updateCriteria, $con);
 
+        //delete all files and directories under .../imported
         $path = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/imported/*" : "/srv/airtime/stor/imported/*";
         exec("rm -rf $path");
 
