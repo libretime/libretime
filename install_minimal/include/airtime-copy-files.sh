@@ -80,7 +80,6 @@ cp -R $AIRTIMEROOT/python_apps/std_err_override /usr/lib/airtime
 echo "* Creating symbolic links in /usr/bin"
 #create symbolic links
 ln -sf /usr/lib/airtime/utils/airtime-import/airtime-import /usr/bin/airtime-import
-ln -sf /usr/lib/airtime/utils/airtime-update-db-settings /usr/bin/airtime-update-db-settings
 ln -sf /usr/lib/airtime/utils/airtime-check-system /usr/bin/airtime-check-system
 ln -sf /usr/lib/airtime/utils/airtime-log /usr/bin/airtime-log
 ln -sf /usr/lib/airtime/utils/airtime-test-soundcard /usr/bin/airtime-test-soundcard
