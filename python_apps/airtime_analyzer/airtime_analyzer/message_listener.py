@@ -212,6 +212,10 @@ class MessageListener:
             logging.info(results)
         else:
             raise Exception("Analyzer process terminated unexpectedly.")
+       
+        # Ensure our queue doesn't fill up and block due to unexpected behaviour. Defensive code.
+        while not q.empty():
+            q.get()
 
         return results
 

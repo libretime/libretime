@@ -30,6 +30,10 @@ class AnalyzerPipeline:
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
         """
+        # Might be super critical to initialize a separate log file here so that we 
+        # don't inherit logging/locks from the parent process. Supposedly
+        # this can lead to Bad Things (deadlocks): http://bugs.python.org/issue6721
+        AnalyzerPipeline.setup_logging()
         try:
             if not isinstance(queue, multiprocessing.queues.Queue):
                 raise TypeError("queue must be a multiprocessing.Queue()")
@@ -59,4 +63,10 @@ class AnalyzerPipeline:
             logging.exception(e) 
             raise e
 
-
+    @staticmethod
+    def setup_logging():
+        _LOG_PATH = "/var/log/airtime/airtime_analyzer_pipeline.log"
+        FORMAT = "%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s"
+        logging.basicConfig(filename=_LOG_PATH,level=logging.DEBUG, format=FORMAT)
+        #rootLogger = logging.getLogger()
+        #rootLogger.setFormatter(logFormatter)
