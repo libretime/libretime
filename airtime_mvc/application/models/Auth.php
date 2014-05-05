@@ -74,8 +74,17 @@ class Application_Model_Auth
      */
     public static function getAuthAdapter()
     {
-        $dbAdapter = Zend_Db_Table::getDefaultAdapter();
-        $authAdapter = new Zend_Auth_Adapter_DbTable($dbAdapter);
+        $CC_CONFIG = Config::getConfig();
+        
+        // Database config        
+        $db = Zend_Db::factory('PDO_' . $CC_CONFIG['dsn']['phptype'], array(
+            'host'     => $CC_CONFIG['dsn']['hostspec'],
+            'username' => $CC_CONFIG['dsn']['username'],
+            'password' => $CC_CONFIG['dsn']['password'],
+            'dbname'   => $CC_CONFIG['dsn']['database']
+        ));
+        Zend_Db_Table_Abstract::setDefaultAdapter($db);
+        $authAdapter = new Zend_Auth_Adapter_DbTable($db);
 
         $authAdapter->setTableName('cc_subjs')
                     ->setIdentityColumn('login')
