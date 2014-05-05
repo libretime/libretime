@@ -55,7 +55,7 @@ class MetadataAnalyzer(Analyzer):
             # Other fields for Airtime
             metadata["cueout"] = metadata["length"] 
       
-        if hasattr(info, "bit_rate"):
+        if hasattr(info, "bitrate"):
             metadata["bit_rate"] = info.bitrate
         
         # Use the mutagen to get the MIME type, if it has one. This is more reliable and
