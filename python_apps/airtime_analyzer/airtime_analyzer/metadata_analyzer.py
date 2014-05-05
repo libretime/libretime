@@ -112,6 +112,7 @@ class MetadataAnalyzer(Analyzer):
             'language':     'language',
             'last_modified':'last_modified',
             'mood':         'mood',
+            'bit_rate':     'bit_rate',
             'replay_gain':  'replaygain',
             #'tracknumber':  'track_number',
             #'track_total':  'track_total',
