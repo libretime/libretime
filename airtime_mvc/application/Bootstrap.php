@@ -139,9 +139,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/audio-preview') === false
             && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/playlist-preview') === false
             && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/block-preview') === false) {
-            $client_id = Application_Model_Preference::GetClientId();
-            $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
-            $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+            if (Application_Model_Preference::GetLiveChatEnabled()) {
+                $client_id = Application_Model_Preference::GetClientId();
+                $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
+                $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');  
+            }
         }
 
         if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) {

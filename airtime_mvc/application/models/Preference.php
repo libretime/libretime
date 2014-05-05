@@ -1013,6 +1013,24 @@ class Application_Model_Preference
             Logging::warn("Attempting to set client_id to invalid value: $id");
         }
     }
+    
+    public static function GetLiveChatEnabled()
+    {
+        $liveChat = self::getValue("live_chat", false);
+        if (is_null($liveChat) || $liveChat == "" || $liveChat == "1") { //Defaults to on
+            return true;
+        }
+        return false;
+    }
+    
+    public static function SetLiveChatEnabled($toggle)
+    {
+        if (is_bool($toggle)) {
+            self::setValue("live_chat", $toggle ? "1" : "0");
+        } else {
+            Logging::warn("Attempting to set live_chat to invalid value: $toggle. Must be a bool.");
+        }
+    }
 
     /* User specific preferences start */
 
