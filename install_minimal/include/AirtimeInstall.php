@@ -340,10 +340,6 @@ class AirtimeInstall
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-import/airtime-import";
         exec("ln -s $dir /usr/bin/airtime-import");
 
-        echo "* Installing airtime-update-db-settings".PHP_EOL;
-        $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-update-db-settings";
-        exec("ln -s $dir /usr/bin/airtime-update-db-settings");
-
         echo "* Installing airtime-check-system".PHP_EOL;
         $dir = AirtimeInstall::CONF_DIR_BINARIES."/utils/airtime-check-system";
         exec("ln -s $dir /usr/bin/airtime-check-system");
@@ -360,7 +356,6 @@ class AirtimeInstall
     public static function RemoveSymlinks()
     {
         exec("rm -f /usr/bin/airtime-import");
-        exec("rm -f /usr/bin/airtime-update-db-settings");
         exec("rm -f /usr/bin/airtime-check-system");
         exec("rm -f /usr/bin/airtime-user");
         exec("rm -f /usr/bin/airtime-log");
