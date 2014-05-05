@@ -42,37 +42,6 @@ class UpgradeController extends Zend_Controller_Action
             
             Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
 
-            //update application.ini
-            $iniFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."application.ini" : "/usr/share/airtime/application/configs/application.ini";
-            
-            $newLines = "resources.frontController.moduleDirectory = APPLICATION_PATH \"/modules\"\n".
-                        "resources.frontController.plugins.putHandler = \"Zend_Controller_Plugin_PutHandler\"\n".
-                        ";load everything in the modules directory including models\n".
-                        "resources.modules[] = \"\"\n";
-    
-            $currentIniFile = file_get_contents($iniFile);
-    
-            /* We want to add the new lines after a specific line. So we must find read the file 
-             * into an array, find the key to which our desired line belongs, and use the key
-             * to split the file in two halves, $beginning and $end.
-             * The $newLines will go inbetween $beginning and $end
-             */
-            $lines = explode("\n", $currentIniFile);
-
-            $key = array_search("resources.layout.layoutPath = APPLICATION_PATH \"/layouts/scripts/\"", $lines);
-            if (!$key) {
-                throw new Exception('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini');
-            }
-
-            $beginning = implode("\n", array_slice($lines, 0, $key));
-            $end = implode("\n", array_slice($lines, $key));
-            
-            if (!is_writeable($iniFile)) {
-                throw new Exception('Upgrade to Airtime 2.5.3 FAILED. Could not upgrade application.ini - Permission denied.');
-            }
-            $file = new SplFileObject($iniFile, "w");
-            $file->fwrite($beginning."\n".$newLines.$end);
-
             //TODO: clear out the cache
 
             $con->commit();
