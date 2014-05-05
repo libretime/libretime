@@ -219,7 +219,7 @@ class Application_Model_Systemstatus
         $totalSpace = Application_Model_Preference::GetDiskQuota();
 
         $usedSpace = Application_Model_Preference::getDiskUsage();
-        if (!$usedSpace) {
+        if (empty($usedSpace)) {
             $usedSpace = 0;
         }
         /* $path = $_SERVER['AIRTIME_BASE']."etc/airtime/num_bytes.ini";
@@ -243,7 +243,7 @@ class Application_Model_Systemstatus
         $diskInfo = self::GetDiskInfo();
         $diskInfo = $diskInfo[0];
         $diskUsage = $diskInfo->totalSpace - $diskInfo->totalFreeSpace;
-        if ($diskUsage >= $diskInfo->totalSpace) {
+        if ($diskUsage > 0 && $diskUsage >= $diskInfo->totalSpace) {
             return true;
         }
 
