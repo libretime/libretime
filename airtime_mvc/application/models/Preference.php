@@ -1440,7 +1440,8 @@ class Application_Model_Preference
 
     public static function getDiskUsage()
     {
-        return self::getValue("disk_usage");
+        $val = self::getValue("disk_usage");
+        return (strlen($val) == 0) ? 0 : $val;
     }
 
     public static function setDiskUsage($value)
