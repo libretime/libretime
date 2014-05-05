@@ -219,6 +219,9 @@ class Application_Model_Systemstatus
         $totalSpace = Application_Model_Preference::GetDiskQuota();
 
         $usedSpace = Application_Model_Preference::getDiskUsage();
+        if (!$usedSpace) {
+            $usedSpace = 0;
+        }
         /* $path = $_SERVER['AIRTIME_BASE']."etc/airtime/num_bytes.ini";
         $arr = parse_ini_file($path);
 
