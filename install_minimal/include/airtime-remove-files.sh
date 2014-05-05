@@ -31,7 +31,6 @@ python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-remove-files
 
 #remove symlinks
 rm -f /usr/bin/airtime-import
-rm -f /usr/bin/airtime-update-db-settings
 rm -f /usr/bin/airtime-check-system
 rm -f /usr/bin/airtime-log
 rm -f /usr/bin/airtime-test-soundcard
