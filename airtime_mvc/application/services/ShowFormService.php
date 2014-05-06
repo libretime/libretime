@@ -393,7 +393,7 @@ class Application_Service_ShowFormService
 
         //if the show is repeating, set the start date to the next
         //repeating instance in the future
-        if ($currentShowDay->isRepeating()) {
+        if ($this->ccShow->isRepeating()) {
              list($originalShowStartDateTime,) = $this->getNextFutureRepeatShowTime();
         } else {
             $originalShowStartDateTime = $dt;

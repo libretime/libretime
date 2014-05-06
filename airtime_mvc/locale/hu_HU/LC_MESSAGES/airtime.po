@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-23 15:57-0400\n"
-"PO-Revision-Date: 2014-04-11 13:09+0000\n"
-"Last-Translator: picizse <picizse@gmail.com>\n"
+"POT-Creation-Date: 2013-12-13 12:58-0500\n"
+"PO-Revision-Date: 2014-04-25 15:57+0000\n"
+"Last-Translator: danielhjames <daniel@64studio.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/airtime/language/hu_HU/)\n"
 "Language: hu_HU\n"
 "MIME-Version: 1.0\n"
@@ -55,9 +55,21 @@ msgstr "Média Hozzáadása"
 msgid "Library"
 msgstr "Médiatár"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/configs/navigation.php:33
 msgid "Calendar"
 msgstr "Naptár"
+=======
+#: airtime_mvc/application/services/HistoryService.php:1106
+#: airtime_mvc/application/services/HistoryService.php:1146
+#: airtime_mvc/application/services/HistoryService.php:1163
+#: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:7
+#: airtime_mvc/application/models/Block.php:1349
+#: airtime_mvc/application/controllers/LocaleController.php:67
+#: airtime_mvc/application/forms/SmartBlockCriteria.php:57
+msgid "Creator"
+msgstr "Előadó/Szerző"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/configs/navigation.php:40
 msgid "System"
@@ -409,10 +421,21 @@ msgstr "Új Adásfolyam"
 msgid "Empty playlist content"
 msgstr "Üres lejátszási lista tartalom"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:21
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:21
 msgid "Clear"
 msgstr "Törlés"
+=======
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
+#, php-format
+msgid ""
+"Help Airtime improve by letting Sourcefabric know how you are using it. This"
+" information will be collected regularly in order to enhance your user "
+"experience.%sClick the 'Send support feedback' box and we'll make sure the "
+"features you use are constantly improving."
+msgstr "Segítse az Airtime fejlesztését azáltal, hogy a Sourcefabric tudja, hogy Ön, hogyan használja azt. Információk összegyűjtése céljából, rendszerezve azokat, hogy fokozza a felhasználás élményét.%sKlikkeljen a 'Támogatási Visszajelzés Küldése' mezőbe és győződjön meg arról, hogy a funkciók használatának minősége folyamatosan javul."
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:24
 msgid "Shuffle playlist"
@@ -444,10 +467,16 @@ msgstr "Lejátszási lista mentése"
 msgid "Save"
 msgstr "Mentés"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:34
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:31
 msgid "Playlist crossfade"
 msgstr "Lejátszási lista átúsztatása"
+=======
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:109
+msgid "Master Source Connection URL:"
+msgstr "Mester Forrási URL Kapcsolat:"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:53
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:55
@@ -468,11 +497,17 @@ msgstr "Leírás"
 msgid "Fade in: "
 msgstr "Felúsztatás:"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:70
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:6
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:75
 msgid "Fade out: "
 msgstr "Leúsztatás:"
+=======
+#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
+msgid "Show Source Connection URL:"
+msgstr "Műsor Forrási URL Kapcsolat:"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:85
 msgid "No open playlist"
@@ -550,6 +585,7 @@ msgid "Here's how you can get started using Airtime to automate your broadcasts:
 msgstr "Itt van pár tipp, hogy hogyan is automatizálhatja adásait az Airtime segítségével:"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
+<<<<<<< HEAD
 msgid "Begin by adding your files to the library using the 'Add Media' menu button. You can drag and drop your files to this window too."
 msgstr "Kezdje médiafájlok hozzáadásával a 'Média Hozzáadása' menü gombon. A hozd és vidd fájlokat ugyanebben az ablakban szerkesztheti."
 
@@ -560,6 +596,25 @@ msgstr "Hozzon létre egy műsort a 'Naptár' menüsorban, majd kattintson a '+ 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:9
 msgid "Add media to the show by going to your show in the Schedule calendar, left-clicking on it and selecting 'Add / Remove Content'"
 msgstr "Adjon hozzá médiát, hogy a műsora futni tudjon, az Ütemezett naptárban, bal egérgombbal kattintva, és itt válassza ki a 'Tartalom Hozzáadása/Eltávolítása' opciót"
+=======
+msgid ""
+"Begin by adding your files to the library using the 'Add Media' menu button."
+" You can drag and drop your files to this window too."
+msgstr "Kezdje médiafájlok hozzáadásával a 'Média Hozzáadása' menü gombon. A \"hozd és vidd\" fájlokat ugyanebben az ablakban szerkesztheti."
+
+#: airtime_mvc/application/views/scripts/dashboard/help.phtml:8
+msgid ""
+"Create a show by going to 'Calendar' in the menu bar, and then clicking the "
+"'+ Show' icon. This can be either a one-time or repeating show. Only admins "
+"and program managers can add shows."
+msgstr "Hozzon létre egy műsort a 'Naptár' menüpontban, majd kattintson a '+ Műsor' ikonra. Ez lehet alkalmi vagy megismétlő műsor. Csak az adminisztrátorok és a programkezelők adhatnak hozzá műsort."
+
+#: airtime_mvc/application/views/scripts/dashboard/help.phtml:9
+msgid ""
+"Add media to the show by going to your show in the Schedule calendar, left-"
+"clicking on it and selecting 'Add / Remove Content'"
+msgstr "Adjon hozzá médiatartalmakat, hogy műsorokat tudjon ütemezni, a 'Naptár' menüpontban, bal egérgombbal kattintva, és itt válassza ki a 'Tartalom Hozzáadása/Eltávolítása' opciót"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:10
 msgid "Select your media from the left pane and drag them to your show in the right pane."
@@ -1059,9 +1114,15 @@ msgstr "Adásfolyam/Patak Beállítások"
 msgid "Global Settings"
 msgstr "Általános Beállítások"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:87
 msgid "dB"
 msgstr "dB"
+=======
+#: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:4
+msgid "Creating Log Sheet Template"
+msgstr "Naplózási Sablon Létrehozása"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:106
 msgid "Output Stream Settings"
@@ -1086,11 +1147,11 @@ msgstr "Úgy néz ki, az oldal, amit keresett nem létezik!"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:4
 msgid "Log Sheet Templates"
-msgstr "Bejelentkezési Adatlap Sablonok"
+msgstr "Naplózási Sablonok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:7
 msgid "No Log Sheet Templates"
-msgstr "Nincsenek Bejelentkezési Adatlap Sablonok"
+msgstr "Nincsenek Naplózási Sablonok"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:25
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:56
@@ -1100,7 +1161,7 @@ msgstr "Alapértelmezett"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:31
 msgid "New Log Sheet Template"
-msgstr "Nincs Bejelentkezési Adatlap Sablon"
+msgstr "Új Naplózási Sablon"
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:35
 msgid "File Summary Templates"
@@ -1139,9 +1200,18 @@ msgstr "Új Mező Hozzáadása"
 msgid "Set Default Template"
 msgstr "Alapértelmezett Sablon"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
 msgstr "Új jelszó"
+=======
+#: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:10
+#: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:34
+#: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:148
+#: airtime_mvc/application/forms/EditAudioMD.php:26
+msgid "Creator:"
+msgstr "Előadó/Szerző:"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:6
 msgid "Please enter and confirm your new password in the fields below."
@@ -1259,6 +1329,7 @@ msgstr "id"
 msgid "Username"
 msgstr "Felhasználónév"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:19
 msgid "First Name"
 msgstr "Vezetéknév"
@@ -1270,6 +1341,19 @@ msgstr "Keresztnév"
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
 msgstr "Felhasználói Típus"
+=======
+#: airtime_mvc/application/views/scripts/playouthistory/index.phtml:7
+msgid "Log Sheet"
+msgstr "Napló"
+
+#: airtime_mvc/application/views/scripts/playouthistory/index.phtml:8
+msgid "File Summary"
+msgstr "Fájl Összegző"
+
+#: airtime_mvc/application/views/scripts/playouthistory/index.phtml:10
+msgid "Show Summary"
+msgstr "Műsor Összegző"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
@@ -2781,6 +2865,7 @@ msgstr "Válasszon Tároló Mappát"
 msgid "Choose Folder to Watch"
 msgstr "Válasszon Vizsgált Mappát"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/controllers/LocaleController.php:155
 msgid ""
 "Are you sure you want to change the storage folder?\n"
@@ -2788,6 +2873,11 @@ msgid ""
 msgstr ""
 "Biztos benne, hogy meg akarja változtatni a tároló mappát?\n"
 "Ezzel eltávolítja a fájlokat az Airtime médiatárából!"
+=======
+#: airtime_mvc/application/controllers/LocaleController.php:389
+msgid "Create Entry"
+msgstr "Napló Létrehozása"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/controllers/LocaleController.php:157
 msgid "Are you sure you want to remove the watched folder?"
@@ -3021,22 +3111,35 @@ msgstr "Nov"
 msgid "Dec"
 msgstr "Dec"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "today"
 msgstr "ma"
+=======
+#: airtime_mvc/application/forms/LiveStreamingPreferences.php:87
+msgid "Master Source Port"
+msgstr "Mester Forrás Port"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "day"
 msgstr "nap"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "week"
 msgstr "hét"
+=======
+#: airtime_mvc/application/forms/LiveStreamingPreferences.php:96
+msgid "Master Source Mount Point"
+msgstr "Mester Forrási Csatolási Pont"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "month"
 msgstr "hónap"
 
+<<<<<<< HEAD
 #: airtime_mvc/application/controllers/LocaleController.php:254
 msgid "Shows longer than their scheduled time will be cut off by a following show."
 msgstr "Ha egy műsor hosszabb az ütemezett időnél, meg lesz vágva és követi azt a következő műsor."
@@ -3044,6 +3147,15 @@ msgstr "Ha egy műsor hosszabb az ütemezett időnél, meg lesz vágva és köve
 #: airtime_mvc/application/controllers/LocaleController.php:255
 msgid "Cancel Current Show?"
 msgstr "A Jelenlegi Műsor Megszakítása?"
+=======
+#: airtime_mvc/application/forms/LiveStreamingPreferences.php:106
+msgid "Show Source Port"
+msgstr "Műsor Forrás Port"
+
+#: airtime_mvc/application/forms/LiveStreamingPreferences.php:115
+msgid "Show Source Mount Point"
+msgstr "Műsor Forrási Csatolási Pont"
+>>>>>>> 2.5.x
 
 #: airtime_mvc/application/controllers/LocaleController.php:256
 #: airtime_mvc/application/controllers/LocaleController.php:300
@@ -3802,8 +3914,14 @@ msgstr ""
 #~ msgid "can't resize a past show"
 #~ msgstr "elhangzott adást nem lehet átméretezni"
 
+<<<<<<< HEAD
 #~ msgid "Should not overlap shows"
 #~ msgstr "Nem kellene, hogy a műsorok fedjék egymást"
+=======
+#: airtime_mvc/application/configs/navigation.php:104
+msgid "History Templates"
+msgstr "Naplózási Sablonok"
+>>>>>>> 2.5.x
 
 #~ msgid "Failed to create 'organize' directory."
 #~ msgstr "Nem sikerült létrehozni 'szervező' könyvtárat."
