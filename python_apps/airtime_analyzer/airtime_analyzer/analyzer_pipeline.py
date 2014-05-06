@@ -1,6 +1,7 @@
 """ Analyzes and imports an audio file into the Airtime library. 
 """
 import logging
+import threading
 import multiprocessing 
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
@@ -30,10 +31,11 @@ class AnalyzerPipeline:
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
         """
-        # Might be super critical to initialize a separate log file here so that we 
+        # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
         # this can lead to Bad Things (deadlocks): http://bugs.python.org/issue6721
-        AnalyzerPipeline.setup_logging()
+        AnalyzerPipeline.python_logger_deadlock_workaround()
+
         try:
             if not isinstance(queue, multiprocessing.queues.Queue):
                 raise TypeError("queue must be a multiprocessing.Queue()")
@@ -64,9 +66,12 @@ class AnalyzerPipeline:
             raise e
 
     @staticmethod
-    def setup_logging():
-        _LOG_PATH = "/var/log/airtime/airtime_analyzer_pipeline.log"
-        FORMAT = "%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s"
-        logging.basicConfig(filename=_LOG_PATH,level=logging.DEBUG, format=FORMAT)
-        #rootLogger = logging.getLogger()
-        #rootLogger.setFormatter(logFormatter)
+    def python_logger_deadlock_workaround():
+        # Workaround for: http://bugs.python.org/issue6721#msg140215
+        logger_names = logging.Logger.manager.loggerDict.keys()
+        logger_names.append(None) # Root logger
+        for name in logger_names:
+            for handler in logging.getLogger(name).handlers:
+                handler.createLock()
+        logging._lock = threading.RLock()
+
