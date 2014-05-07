@@ -245,8 +245,8 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->setDbMtime($now);
             $file->save();
             
-            $this->removeEmptySubFolders(
-                isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/");
+            /* $this->removeEmptySubFolders(
+                isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/"); */
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
