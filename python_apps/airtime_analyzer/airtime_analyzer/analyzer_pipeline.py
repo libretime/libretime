@@ -34,7 +34,7 @@ class AnalyzerPipeline:
         # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
         # this can lead to Bad Things (deadlocks): http://bugs.python.org/issue6721
-        #AnalyzerPipeline.python_logger_deadlock_workaround()
+        AnalyzerPipeline.python_logger_deadlock_workaround()
 
         try:
             if not isinstance(queue, multiprocessing.queues.Queue):
