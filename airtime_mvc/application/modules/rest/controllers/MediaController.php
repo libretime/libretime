@@ -362,7 +362,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     private function invalidDataResponse()
     {
         $resp = $this->getResponse();
-        $resp->setHttpResponseCode(400);
+        $resp->setHttpResponseCode(422);
         $resp->appendBody("ERROR: Invalid data");
     }
 

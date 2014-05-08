@@ -91,9 +91,13 @@ def send_http_request(picklable_request, retry_queue):
         r.raise_for_status() # Raise an exception if there was an http error code returned
         logging.info("HTTP request sent successfully.")
     except requests.exceptions.RequestException as e:
-        # If the web server is having problems, retry the request later:
-        logging.error("HTTP request failed. Retrying later! Exception was: %s" % str(e))
-        retry_queue.append(picklable_request) 
+        if r.status_code != 422:
+            # If the web server is having problems, retry the request later:
+            logging.error("HTTP request failed. Retrying later! Exception was: %s" % str(e))
+            retry_queue.append(picklable_request)
+        else:
+            # Do no retry the request if there was a metadata validation error
+            logging.error("HTTP request failed. Exception was: %s" % str(e))
     except Exception as e:
         logging.error("HTTP request failed with unhandled exception. %s" % str(e))
         # Don't put the request into the retry queue, just give up on this one.
