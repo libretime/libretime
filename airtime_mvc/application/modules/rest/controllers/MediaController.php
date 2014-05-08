@@ -214,7 +214,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
-Logging::info($requestData);
+
         if (!$this->validateRequestData($file, $whiteList)) {
             Logging::info("Did not validate request data");
             $file->save();
@@ -373,7 +373,7 @@ Logging::info($requestData);
         $fileForm = new Application_Form_EditAudioMD();
         $fileForm->startForm($file->getDbId());
         $fileForm->populate($whiteList);
-Logging::info($file);
+
         if (!$fileForm->isValidPartial($whiteList)) {
             Logging::info($whiteList);
             Logging::info("----------------");
