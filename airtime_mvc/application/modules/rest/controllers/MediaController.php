@@ -373,7 +373,7 @@ Logging::info($requestData);
         $fileForm = new Application_Form_EditAudioMD();
         $fileForm->startForm($file->getDbId());
         $fileForm->populate($whiteList);
-Logging::info($fileForm);
+Logging::info($file);
         if (!$fileForm->isValidPartial($whiteList)) {
             Logging::info($whiteList);
             Logging::info("----------------");
