@@ -373,8 +373,10 @@ Logging::info($requestData);
         $fileForm = new Application_Form_EditAudioMD();
         $fileForm->startForm($file->getDbId());
         $fileForm->populate($whiteList);
-
+Logging::info($fileForm);
         if (!$fileForm->isValidPartial($whiteList)) {
+            Logging::info($whiteList);
+            Logging::info("----------------");
             $file->setDbImportStatus(2);
             $file->setDbHidden(true);
             $this->invalidDataResponse();
