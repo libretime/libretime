@@ -214,9 +214,8 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
-Logging::info($whiteList);
+
         if (!$this->validateRequestData($file, $whiteList)) {
-            Logging::info("Did not validate request data");
             $file->save();
             return;
         } else if ($file) {
@@ -375,7 +374,6 @@ Logging::info($whiteList);
         $fileForm->populate($whiteList);
 
         if (!$fileForm->isValidPartial($whiteList)) {
-            Logging::info("----------------");
             $file->setDbImportStatus(2);
             $file->setDbHidden(true);
             $this->invalidDataResponse();
