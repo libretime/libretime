@@ -221,6 +221,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
+        $whiteList = $this->stripTimeStampFromYearTag($whiteList);
 
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->save();
@@ -484,6 +485,22 @@ class Rest_MediaController extends Zend_Rest_Controller
     private function removeEmptySubFolders($path)
     {
         exec("find $path -empty -type d -delete");
+    }
+
+    /*
+     * It's possible that the year tag will be a timestamp but Airtime doesn't support this.
+     * The year field in cc_files can only be 16 chars max.
+     * 
+     * This functions strips the year field of it's timestamp, if one, and leaves just the year
+     */
+    private function stripTimeStampFromYearTag($metadata)
+    {
+        if (isset($metadata["year"])) {
+            if (preg_match("/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/", $metadata["year"])) {
+                $metadata["year"] = substr($metadata["year"], 0, 4);
+            }
+        }
+        return $metadata;
     }
 
 }
