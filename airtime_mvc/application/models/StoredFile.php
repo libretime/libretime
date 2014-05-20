@@ -401,7 +401,7 @@ SQL;
             }
         }
 
-
+        Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
         // set hidden flag to true
         $this->_file->setDbHidden(true);
         $this->_file->save();
