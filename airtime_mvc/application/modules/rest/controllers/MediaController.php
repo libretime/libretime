@@ -227,7 +227,14 @@ class Rest_MediaController extends Zend_Rest_Controller
             //our internal schema. Internally, file path is stored relative to a directory, with the directory
             //as a foreign key to cc_music_dirs.
             if (isset($requestData["full_path"])) {
-                Application_Model_Preference::updateDiskUsage(filesize($requestData["full_path"]));
+                $fileSizeBytes = filesize($requestData["full_path"]);
+                if ($fileSizeBytes === false)
+                {
+                    $file->setDbImportStatus(2)->save();
+                    $this->fileNotFoundResponse();
+                    return;
+                }
+                Application_Model_Preference::updateDiskUsage($fileSizeBytes);
 
                 $fullPath = $requestData["full_path"];
                 $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
