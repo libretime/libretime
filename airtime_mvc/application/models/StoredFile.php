@@ -403,7 +403,8 @@ SQL;
 
         Logging::info($_SERVER["HTTP_HOST"].": User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
         // set hidden flag to true
-        $this->_file->setDbHidden(true);
+        //$this->_file->setDbHidden(true);
+        $this->_file->setDbFileExists(false);
         $this->_file->save();
 
         // need to explicitly update any playlist's and block's length

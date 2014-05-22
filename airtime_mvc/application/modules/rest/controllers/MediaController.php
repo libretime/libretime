@@ -215,6 +215,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
         $whiteList = $this->stripTimeStampFromYearTag($whiteList);
+        $whiteList = $this->truncateGenreTag($whiteList);
 
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->save();
@@ -495,6 +496,20 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         return $metadata;
     }
-
+    
+    /** The genre tag in our cc_files schema is currently a varchar(64). It's possible for MP3 genre tags
+     *  to be longer than that, so we have to truncate longer genres. (We've seen ridiculously long genre tags.)
+     * @param string array $metadata
+     */
+    private function truncateGenreTag($metadata)
+    {
+        if (isset($metadata["genre"])) 
+        {
+            if (strlen($metadata["genre"]) >= 64) {
+                $metadata["genre"] = substr($metadata["genre"], 0, 64);
+            }
+        }
+        return $metadata;
+    }
 }
 
