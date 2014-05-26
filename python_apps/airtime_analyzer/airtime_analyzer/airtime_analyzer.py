@@ -4,6 +4,8 @@ import ConfigParser
 import logging
 import logging.handlers
 import sys
+import signal
+import traceback
 from functools import partial
 from metadata_analyzer import MetadataAnalyzer
 from replaygain_analyzer import ReplayGainAnalyzer
@@ -23,6 +25,9 @@ class AirtimeAnalyzerServer:
 
     def __init__(self, rmq_config_path, http_retry_queue_path, debug=False):
 
+        # Debug console. Access with 'kill -SIGUSR2 <PID>'
+        signal.signal(signal.SIGUSR2, lambda sig, frame: AirtimeAnalyzerServer.dump_stacktrace())
+
         # Configure logging
         self.setup_logging(debug)
 
@@ -30,13 +35,13 @@ class AirtimeAnalyzerServer:
         rabbitmq_config = self.read_config_file(rmq_config_path)
        
         # Start up the StatusReporter process
-        StatusReporter.start_child_process(http_retry_queue_path)
+        StatusReporter.start_thread(http_retry_queue_path)
 
         # Start listening for RabbitMQ messages telling us about newly
-        # uploaded files.
+        # uploaded files. This blocks until we recieve a shutdown signal.
         self._msg_listener = MessageListener(rabbitmq_config)
 
-        StatusReporter.stop_child_process()
+        StatusReporter.stop_thread()
     
 
     def setup_logging(self, debug):
@@ -81,4 +86,17 @@ class AirtimeAnalyzerServer:
             exit(-1)
 
         return config
-    
+   
+    @classmethod
+    def dump_stacktrace(stack):
+        ''' Dump a stacktrace for all threads '''
+        code = []
+        for threadId, stack in sys._current_frames().items():
+            code.append("\n# ThreadID: %s" % threadId)
+            for filename, lineno, name, line in traceback.extract_stack(stack):
+                code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
+                if line:
+                    code.append("  %s" % (line.strip()))
+        logging.info('\n'.join(code))
+
+
