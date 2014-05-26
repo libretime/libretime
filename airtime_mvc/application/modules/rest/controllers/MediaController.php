@@ -222,7 +222,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
         $whiteList = $this->stripTimeStampFromYearTag($whiteList);
-        $whiteList = $this->truncateGenreTag($whiteList);
 
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->save();
@@ -382,12 +381,29 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp->appendBody("ERROR: Invalid data");
     }
 
-    private function validateRequestData($file, $whiteList)
+    private function validateRequestData($file, &$whiteList)
     {
         // EditAudioMD form is used here for validation
         $fileForm = new Application_Form_EditAudioMD();
         $fileForm->startForm($file->getDbId());
         $fileForm->populate($whiteList);
+        
+        /*
+         * Here we are truncating metadata of any characters greater than the
+         * max string length set in the database. In the rare case a track's
+         * genre is more than 64 chars, for example, we don't want to reject
+         * tracks for that reason
+         */
+        foreach($whiteList as $tag => &$value) {
+            if ($fileForm->getElement($tag)) {
+                $stringLengthValidator = $fileForm->getElement($tag)->getValidator('StringLength');
+                //$stringLengthValidator will be false if the StringLength validator doesn't exist on the current element
+                //in which case we don't have to truncate the extra characters
+                if ($stringLengthValidator) {
+                    $value = substr($value, 0, $stringLengthValidator->getMax());
+                }
+            }
+        }
 
         if (!$fileForm->isValidPartial($whiteList)) {
             $file->setDbImportStatus(2);
@@ -506,21 +522,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (isset($metadata["year"])) {
             if (preg_match("/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/", $metadata["year"])) {
                 $metadata["year"] = substr($metadata["year"], 0, 4);
-            }
-        }
-        return $metadata;
-    }
-    
-    /** The genre tag in our cc_files schema is currently a varchar(64). It's possible for MP3 genre tags
-     *  to be longer than that, so we have to truncate longer genres. (We've seen ridiculously long genre tags.)
-     * @param string array $metadata
-     */
-    private function truncateGenreTag($metadata)
-    {
-        if (isset($metadata["genre"])) 
-        {
-            if (strlen($metadata["genre"]) >= 64) {
-                $metadata["genre"] = substr($metadata["genre"], 0, 64);
             }
         }
         return $metadata;
