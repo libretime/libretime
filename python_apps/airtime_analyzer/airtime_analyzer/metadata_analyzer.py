@@ -83,7 +83,11 @@ class MetadataAnalyzer(Analyzer):
             track_number = audio_file["tracknumber"]
             if isinstance(track_number, list): # Sometimes tracknumber is a list, ugh 
                 track_number = track_number[0]
-            track_number_tokens = track_number.split(u'/')
+            track_number_tokens = track_number 
+            if u'/' in track_number:
+                track_number_tokens = track_number.split(u'/')
+            elif u'-' in track_number:
+                track_number_tokens = track_number.split(u'-')
             track_number = track_number_tokens[0]
             metadata["track_number"] = track_number
             track_total = track_number_tokens[1]
