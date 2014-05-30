@@ -1118,6 +1118,41 @@ SQL;
         return $real_streams;
     }
 
+    /** Find out if a playlist contains any files that have been deleted from disk.
+     *  This function relies on the "file_exists" column in the database being accurate and true,
+     *  which it should.
+     * @return boolean true if there are missing files in this playlist, false otherwise.
+     */
+    public function containsMissingFiles()
+    {
+        $playlistContents = $this->pl->getCcPlaylistcontentss("type = 0"); //type=0 is only files, not other types of media
+        
+        //Slightly faster than the other Propel version below (this one does an INNER JOIN):
+        $missingFiles = CcFilesQuery::create()
+                            ->join("CcFiles.CcPlaylistcontents")
+                            ->where("CcPlaylistcontents.DbPlaylistId = ?", $this->pl->getDbId()) 
+                            ->where("CcFiles.DbFileExists = ?", 'false')
+                            ->find();
+        
+        //Nicer Propel version but slightly slower because it generates a LEFT JOIN:
+        /*
+        $missingFiles = CcPlaylistcontentsQuery::create()
+        ->filterByDbPlaylistId($this->pl->getDbId())
+        ->useCcFilesQuery()
+        ->filterByDbFileExists(false)
+        ->endUse()
+        ->find();
+        */
+        
+        if (!$missingFiles->isEmpty())
+        {
+            return true;
+        }
+        
+        return false;        
+    }
+    
+    
 } // class Playlist
 
 class PlaylistNotFoundException extends Exception {}
