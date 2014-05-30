@@ -182,6 +182,22 @@ class Application_Model_Scheduler
             }
         }
     }
+    
+    private function validateMediaItems($mediaItems)
+    {
+        foreach ($mediaItems as $mediaItem)
+        {
+            $id = $mediaItem["id"];
+            if ($mediaItem["type"] === "playlist")
+            {
+                $playlist = new Application_Model_Playlist($id, $this->con);
+                if ($playlist->containsMissingFiles()) {
+                    throw new Exception(_("Cannot schedule a playlist that contains missing files."));
+                }
+            }
+        }
+        return true;
+    }
 
     /*
      * @param $id
@@ -951,6 +967,7 @@ class Application_Model_Scheduler
         $this->con->beginTransaction();
 
         try {
+            $this->validateMediaItems($mediaItems); //Check for missing files, etc.
             $this->validateRequest($scheduleItems, true);
 
             /*
