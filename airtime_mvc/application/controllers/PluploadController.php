@@ -46,6 +46,9 @@ class PluploadController extends Zend_Controller_Action
         
         $numTotalRecentUploads = $recentUploadsQuery->count();
         $numTotalDisplayUploads = $numTotalRecentUploads;
+
+        //Hide deleted files
+        $recentUploadsQuery->filterByDbFileExists(true);
         
         if ($filter == "pending") {
             $recentUploadsQuery->filterByDbImportStatus(1);
@@ -74,7 +77,7 @@ class PluploadController extends Zend_Controller_Action
             $upload['utime']->setTimeZone($displayTimezone);
             $upload['utime'] = $upload['utime']->format('Y-m-d H:i:s');
 
-            //TODO: Invoke sanitization here
+            //TODO: Invoke sanitization here (MediaController's removeBlacklist stuff)
             array_push($uploadsArray, $upload);
         }
         
