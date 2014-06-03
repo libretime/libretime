@@ -383,31 +383,35 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     private function validateRequestData($file, &$whiteList)
     {
-        // EditAudioMD form is used here for validation
-        $fileForm = new Application_Form_EditAudioMD();
-        $fileForm->startForm($file->getDbId());
-        $fileForm->populate($whiteList);
-        
-        /*
-         * Here we are truncating metadata of any characters greater than the
-         * max string length set in the database. In the rare case a track's
-         * genre is more than 64 chars, for example, we don't want to reject
-         * tracks for that reason
-         */
-        foreach($whiteList as $tag => &$value) {
-            if ($fileForm->getElement($tag)) {
-                $stringLengthValidator = $fileForm->getElement($tag)->getValidator('StringLength');
-                //$stringLengthValidator will be false if the StringLength validator doesn't exist on the current element
-                //in which case we don't have to truncate the extra characters
-                if ($stringLengthValidator) {
-                    $value = substr($value, 0, $stringLengthValidator->getMax());
+        try {        
+            // EditAudioMD form is used here for validation
+            $fileForm = new Application_Form_EditAudioMD();
+            $fileForm->startForm($file->getDbId());
+            $fileForm->populate($whiteList);
+            
+            /*
+             * Here we are truncating metadata of any characters greater than the
+             * max string length set in the database. In the rare case a track's
+             * genre is more than 64 chars, for example, we don't want to reject
+             * tracks for that reason
+             */
+            foreach($whiteList as $tag => &$value) {
+                if ($fileForm->getElement($tag)) {
+                    $stringLengthValidator = $fileForm->getElement($tag)->getValidator('StringLength');
+                    //$stringLengthValidator will be false if the StringLength validator doesn't exist on the current element
+                    //in which case we don't have to truncate the extra characters
+                    if ($stringLengthValidator) {
+                        $value = substr($value, 0, $stringLengthValidator->getMax());
+                    }
+                    
+                    $value = $this->stripInvalidUtf8Characters($value);
                 }
-                
-                $value = $this->stripInvalidUtf8Characters($value);
             }
-        }
-
-        if (!$fileForm->isValidPartial($whiteList)) {
+    
+            if (!$fileForm->isValidPartial($whiteList)) {
+                throw Exception("Data validation failed");
+            }
+        } catch (Exception $e) {
             $errors = $fileForm->getErrors();
             $messages = $fileForm->getMessages();
             Logging::error($messages);

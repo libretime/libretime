@@ -132,7 +132,10 @@ class MetadataAnalyzer(Analyzer):
                 # Some tags are returned as lists because there could be multiple values.
                 # This is unusual so we're going to always just take the first item in the list.
                 if isinstance(metadata[airtime_tag], list):
-                    metadata[airtime_tag] = metadata[airtime_tag][0]
+                    if metadata[airtime_tag]: 
+                        metadata[airtime_tag] = metadata[airtime_tag][0]
+                    else: # Handle empty lists
+                        metadata[airtime_tag] = ""
 
             except KeyError:
                 continue 
