@@ -41,13 +41,15 @@ class FileMoverAnalyzer(Analyzer):
         #Import the file over to it's final location.
         # TODO: Also, handle the case where the move fails and write some code
         # to possibly move the file to problem_files.
-       
+      
+        max_dir_len = 32
+        max_file_len = 32
         final_file_path = import_directory
         if metadata.has_key("artist_name"):
-            final_file_path += "/" + metadata["artist_name"]
+            final_file_path += "/" + metadata["artist_name"][0:max_dir_len] # truncating with array slicing
         if metadata.has_key("album_title"):
-            final_file_path += "/" + metadata["album_title"]
-        final_file_path += "/" + original_filename
+            final_file_path += "/" + metadata["album_title"][0:max_dir_len] 
+        final_file_path += "/" + original_filename[0:max_file_len]
 
         #Ensure any redundant slashes are stripped
         final_file_path = os.path.normpath(final_file_path)
