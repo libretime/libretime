@@ -11,6 +11,7 @@ import traceback
 import os
 import pickle
 import threading 
+from urlparse import urlparse
 
 class PicklableHttpRequest:
     def __init__(self, method, url, data, api_key):
@@ -97,20 +98,48 @@ def send_http_request(picklable_request, retry_queue):
         t.cancel() # Watchdog no longer needed.
         r.raise_for_status() # Raise an exception if there was an http error code returned
         logging.info("HTTP request sent successfully.")
-    except requests.exceptions.RequestException as e:
-        if r.status_code != 422:
-            # If the web server is having problems, retry the request later:
-            logging.error("HTTP request failed. Retrying later! Exception was: %s" % str(e))
-            retry_queue.append(picklable_request)
-        else:
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 422:
             # Do no retry the request if there was a metadata validation error
+            logging.error("HTTP request failed due to an HTTP exception. Exception was: %s" % str(e))
+        else:
+            # The request failed with an error 500 probably, so let's check if Airtime and/or
+            # the web server are broken. If not, then our request was probably causing an
+            # error 500 in the media API (ie. a bug), so there's no point in retrying it.
             logging.error("HTTP request failed. Exception was: %s" % str(e))
+            parsed_url = urlparse(e.response.request.url)
+            if is_web_server_broken(parsed_url.scheme + "://" + parsed_url.netloc):
+                # If the web server is having problems, retry the request later:
+                retry_queue.append(picklable_request)
+                # Otherwise, if the request was bad, the request is never retried.
+                # You will have to find these bad requests in logs or you'll be
+                # notified by sentry.
+    except requests.exceptions.ConnectionError as e:
+        logging.error("HTTP request failed due to a connection error. Retrying later. %s" % str(e))
+        retry_queue.append(picklable_request) # Retry it later
     except Exception as e:
         logging.error("HTTP request failed with unhandled exception. %s" % str(e))
         # Don't put the request into the retry queue, just give up on this one.
         # I'm doing this to protect against us getting some pathological request
         # that breaks our code. I don't want us pickling data that potentially
         # breaks airtime_analyzer.
+
+def is_web_server_broken(url):
+    ''' Do a naive test to check if the web server we're trying to access is down.
+        We use this to try to differentiate between error 500s that are coming
+        from (for example) a bug in the Airtime Media REST API and error 500s 
+        caused by Airtime or the webserver itself being broken temporarily.
+    '''
+    try:
+        test_req = requests.get(url)
+        test_req.raise_for_status()
+    except Exception as e:
+        return true
+    else:
+        # The request worked fine, so the web server and Airtime are still up.
+        return false 
+    return false
+
 
 def alert_hung_request():
     ''' Temporary function to alert our Airtime developers when we have a request that's
