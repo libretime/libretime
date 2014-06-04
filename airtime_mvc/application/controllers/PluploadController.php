@@ -44,11 +44,11 @@ class PluploadController extends Zend_Controller_Action
         //old propel 1.5 to reuse this query item (for counts/finds)
         $recentUploadsQuery->keepQuery(true);
         
-        $numTotalRecentUploads = $recentUploadsQuery->count();
-        $numTotalDisplayUploads = $numTotalRecentUploads;
-
         //Hide deleted files
         $recentUploadsQuery->filterByDbFileExists(true);
+        
+        $numTotalRecentUploads = $recentUploadsQuery->count();
+        $numTotalDisplayUploads = $numTotalRecentUploads;
         
         if ($filter == "pending") {
             $recentUploadsQuery->filterByDbImportStatus(1);
