@@ -25,7 +25,7 @@ class AirtimeAnalyzerServer:
 
     def __init__(self, rmq_config_path, http_retry_queue_path, debug=False):
 
-        # Debug console. Access with 'kill -SIGUSR2 <PID>'
+        # Dump a stacktrace with 'kill -SIGUSR2 <PID>'
         signal.signal(signal.SIGUSR2, lambda sig, frame: AirtimeAnalyzerServer.dump_stacktrace())
 
         # Configure logging
