@@ -289,7 +289,15 @@ class Application_Service_ShowService
             if ($this->ccShow->isRepeating()) {
                 $ccShowDays = $this->ccShow->getRepeatingCcShowDays();
             } else {
-                $ccShowDays = $this->ccShow->getCcShowDayss();
+                //$ccShowDays = $this->ccShow->getCcShowDayss();
+                
+                /* Cannot use the above statement to get the cc_show_days
+                 * object because it's getting the old object before the
+                 * show was edited. clearInstancePool() didn't work.
+                 */
+                $ccShowDays = CcShowDaysQuery::create()
+                    ->filterByDbShowId($this->ccShow->getDbId())
+                    ->find();
             }
         }
 
