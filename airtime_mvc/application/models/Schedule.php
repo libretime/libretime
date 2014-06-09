@@ -303,10 +303,10 @@ SQL;
         $p_start_str = $p_start->format("Y-m-d H:i:s");
         $p_end_str = $p_end->format("Y-m-d H:i:s");
 
-        //We need to search 24 hours before and after the show times so that that we
+        //We need to search 48 hours before and after the show times so that that we
         //capture all of the show's contents.
-        $p_track_start= $p_start->sub(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
-        $p_track_end = $p_end->add(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
+        $p_track_start= $p_start->sub(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
+        $p_track_end = $p_end->add(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
 
         $templateSql = <<<SQL
 SELECT DISTINCT sched.starts AS sched_starts,
