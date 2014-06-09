@@ -545,7 +545,11 @@ class Application_Model_Preference
     // Returns station default timezone (from preferences)
     public static function GetDefaultTimezone()
     {
-        return self::getValue("timezone");
+        $stationTimezone = self::getValue("timezone");
+        if (is_null($stationTimezone) || $stationTimezone == "") {
+            $stationTimezone = "UTC";
+        }
+        return $stationTimezone;
     }
 
     public static function SetUserTimezone($timezone = null)
