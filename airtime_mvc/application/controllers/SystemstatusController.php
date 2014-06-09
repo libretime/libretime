@@ -16,7 +16,7 @@ class SystemstatusController extends Zend_Controller_Action
         $services = array(
             "pypo"=>Application_Model_Systemstatus::GetPypoStatus(),
             "liquidsoap"=>Application_Model_Systemstatus::GetLiquidsoapStatus(),
-            "media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus(),
+            //"media-monitor"=>Application_Model_Systemstatus::GetMediaMonitorStatus(),
         );
 
         $partitions = Application_Model_Systemstatus::GetDiskInfo();
