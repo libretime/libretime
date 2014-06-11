@@ -453,7 +453,8 @@ class ShowbuilderController extends Zend_Controller_Action
                 $accountDuration = $trialDurationDays - $interval->d;
             }
             
-            $code = "dataLayer.push({
+            $code = "$( document ).ready(function() {
+                    dataLayer.push({
                                     'ZipCode':  '" . $postcode . "',
                                     'UserID':  '" . $client->id . "',
                                     'Customer':  'Customer',
@@ -461,7 +462,8 @@ class ShowbuilderController extends Zend_Controller_Action
                                     'Trial':  '" . $isTrial . "',
                                     'Country':  '" . $country . "',
                                     'AccountDuration':  '" . strval($accountDuration) . "'
-                                    });";
+                                    });
+                     });";
             
         } 
         catch (Exception $e)
