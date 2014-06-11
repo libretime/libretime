@@ -425,12 +425,16 @@ class ShowbuilderController extends Zend_Controller_Action
             $client = $arr->client;
             $stats = $arr->stats;
             $currencyCode = $client->currency_code;
-            $incomeCents = NumberFormatter::parseCurrency($stats->income, $currencyCode);
+            //$incomeCents = NumberFormatter::parseCurrency($stats->income, $currencyCode);
             
             $isTrial = true;
-            if ($incomeCents > 0) {
+            if (strpos($stats->income, "0.00") === FALSE) {
                 $isTrial = false;
             }
+            /*
+            if ($incomeCents > 0) {
+                $isTrial = false;
+            }*/
             $plan = Application_Model_Preference::GetPlanLevel();
             $country = $client->country;
             $postcode = $client->postcode;
@@ -456,7 +460,7 @@ class ShowbuilderController extends Zend_Controller_Action
                                     'PlanType':  '" . $plan . "',
                                     'Trial':  '" . $isTrial . "',
                                     'Country':  '" . $country . "',
-                                    'AccountDuration':  '" . $accountDuration . "'
+                                    'AccountDuration':  '" . strval($accountDuration) . "'
                                     });";
             
         } 
