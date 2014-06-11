@@ -409,7 +409,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             }
     
             if (!$fileForm->isValidPartial($whiteList)) {
-                throw Exception("Data validation failed");
+                throw new Exception("Data validation failed");
             }
         } catch (Exception $e) {
             $errors = $fileForm->getErrors();
