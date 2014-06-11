@@ -446,11 +446,12 @@ class ShowbuilderController extends Zend_Controller_Action
             if ($trialEndDateStr == '') {
                 $accountDuration = 0;
             } else {
-                $trialDurationDays = 30;
                 $today = new DateTime();
-                $trialEndDate = new DateTime($trialEndDate);
-                $interval = $today->diff($trialEndDate);
-                $accountDuration = $trialDurationDays - $interval->d;
+                $trialEndDate = new DateTime($trialEndDateStr);
+                $trialDuration = new DateInterval("P30D"); //30 day trial duration
+                $accountCreationDate = $trialEndDate->sub($trialDuration);
+                $interval = $today->diff($accountCreationDate);
+                $accountDuration = $interval->days;
             }
             
             $code = "$( document ).ready(function() {
