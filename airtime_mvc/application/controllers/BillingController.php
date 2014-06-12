@@ -27,8 +27,7 @@ class BillingController extends Zend_Controller_Action {
             $postfields["password"] = md5($password);
             $postfields["action"] = "getclientsdetails";
             $postfields["stats"] = true;
-            //$postfields["clientid"] = Application_Model_Preference::GetClientId();
-            $postfields["clientid"] = 1822;
+            $postfields["clientid"] = Application_Model_Preference::GetClientId();
             $postfields["responsetype"] = "json";
             
             $query_string = "";
