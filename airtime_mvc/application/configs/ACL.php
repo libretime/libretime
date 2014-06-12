@@ -29,7 +29,8 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('audiopreview'))
       ->add(new Zend_Acl_Resource('webstream'))
       ->add(new Zend_Acl_Resource('locale'))
-      ->add(new Zend_Acl_Resource('upgrade'));
+      ->add(new Zend_Acl_Resource('upgrade'))
+      ->add(new Zend_Acl_Resource('billing'));
 
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
@@ -54,7 +55,8 @@ $ccAcl->allow('G', 'index')
       ->allow('A', 'listenerstat')
       ->allow('A', 'user')
       ->allow('A', 'systemstatus')
-      ->allow('A', 'preference');
+      ->allow('A', 'preference')
+      ->allow('A', 'billing');
       
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
