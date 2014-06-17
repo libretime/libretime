@@ -42,13 +42,15 @@ class BillingController extends Zend_Controller_Action {
             
             //$result = $this->makeRequest($url, $query_string);
             //$invoiceUrl = "https://account.sourcefabric.com/viewinvoice.php?id=".$result["invoiceid"];
+            
             $whmcsurl = "https://account.sourcefabric.com/dologin.php";
             $autoauthkey = "MabIttEtkac2";
             $timestamp = time(); //whmcs timezone?
             $client = self::getClientDetails();
             $email = $client["email"];
             $hash = sha1($email.$timestamp.$autoauthkey);
-            $goto="viewinvoice.php?id=5108";
+            //$goto="viewinvoice.php?id=5108";
+            $goto = "clientarea.php";
             $this->_redirect($whmcsurl."?email=$email&timestamp=$timestamp&hash=$hash&goto=$goto");
             
         } else {
@@ -85,7 +87,8 @@ class BillingController extends Zend_Controller_Action {
             foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
             
             $result = $this->makeRequest($url, $query_string);
-            Logging::info($result);
+            $form = new Application_Form_BillingClient();
+            $this->view->form = $form;
         } else {
             $this->view->form = $form;
         }
