@@ -167,6 +167,15 @@ class ScheduleController extends Zend_Controller_Action
         $deltaDay = $this->_getParam('day');
         $deltaMin = $this->_getParam('min');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/move-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $this->_getParam('showInstanceId');
+        $log_vars["params"]["delta day"] = $deltaDay;
+        $log_vars["params"]["delta minute"] = $deltaMin;
+        Logging::info($log_vars);
+
         try {
             $service_calendar = new Application_Service_CalendarService(
                 $this->_getParam('showInstanceId'));
@@ -174,7 +183,7 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->show_error = true;
             return false;
         }
-
+        
         $error = $service_calendar->moveShow($deltaDay, $deltaMin);
         if (isset($error)) {
             $this->view->error = $error;
@@ -188,6 +197,15 @@ class ScheduleController extends Zend_Controller_Action
         $showId = $this->_getParam('showId');
         $instanceId = $this->_getParam('instanceId');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/resize-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        $log_vars["params"]["delta day"] = $deltaDay;
+        $log_vars["params"]["delta minute"] = $deltaMin;
+        Logging::info($log_vars);
+        
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
@@ -211,6 +229,13 @@ class ScheduleController extends Zend_Controller_Action
     {
         $instanceId = $this->_getParam('id');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/delete-show-instance";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        Logging::info($log_vars);
+        
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId, true);
 
@@ -223,6 +248,7 @@ class ScheduleController extends Zend_Controller_Action
     public function uploadToSoundCloudAction()
     {
         $show_instance = $this->_getParam('id');
+        
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance);
         } catch (Exception $e) {
@@ -250,6 +276,13 @@ class ScheduleController extends Zend_Controller_Action
     public function clearShowAction()
     {
         $instanceId = $this->_getParam('id');
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/clear-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        Logging::info($log_vars);
 
         $service_scheduler = new Application_Service_SchedulerService();
 
@@ -425,6 +458,13 @@ class ScheduleController extends Zend_Controller_Action
 
         $data['add_show_hosts'] =  $this->_getParam('hosts');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/edit-repeating-show-instance";
+        $log_vars["params"] = array();
+        $log_vars["params"]["form_data"] = $data;
+        Logging::info($log_vars);
+        
         $service_showForm = new Application_Service_ShowFormService(
             $data["add_show_id"], $data["add_show_instance_id"]);
         $service_show = new Application_Service_ShowService(null, $data);
@@ -476,6 +516,13 @@ class ScheduleController extends Zend_Controller_Action
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/edit-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["form_data"] = $data;
+        Logging::info($log_vars);
 
         $forms = $this->createShowFormAction();
 
@@ -525,6 +572,13 @@ class ScheduleController extends Zend_Controller_Action
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/add-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["form_data"] = $data;
+        Logging::info($log_vars);
 
         $forms = $this->createShowFormAction();
 
@@ -572,10 +626,17 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $instanceId = $this->_getParam('id');
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/delete-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        Logging::info($log_vars);
 
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId);
-
+        
         if (!$showId) {
             $this->view->show_error = true;
         }
@@ -584,6 +645,13 @@ class ScheduleController extends Zend_Controller_Action
 
     public function cancelCurrentShowAction()
     {
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/cancel-current-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $this->_getParam('id');
+        Logging::info($log_vars);
+        
         $user = Application_Model_User::getCurrentUser();
 
         if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {

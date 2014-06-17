@@ -324,8 +324,17 @@ class ShowbuilderController extends Zend_Controller_Action
     public function scheduleAddAction()
     {
         $request = $this->getRequest();
+        
         $mediaItems = $request->getParam("mediaIds", array());
         $scheduledItems = $request->getParam("schedIds", array());
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "showbuilder/schedule-add";
+        $log_vars["params"] = array();
+        $log_vars["params"]["media_items"] = $mediaItems;
+        $log_vars["params"]["scheduled_items"] = $scheduledItems;
+        Logging::info($log_vars);
 
         try {
             $scheduler = new Application_Model_Scheduler();
@@ -343,6 +352,13 @@ class ShowbuilderController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $items = $request->getParam("items", array());
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "showbuilder/schedule-remove";
+        $log_vars["params"] = array();
+        $log_vars["params"]["removed_items"] = $items;
+        Logging::info($log_vars);
 
         try {
             $scheduler = new Application_Model_Scheduler();
@@ -361,6 +377,14 @@ class ShowbuilderController extends Zend_Controller_Action
         $request = $this->getRequest();
         $selectedItems = $request->getParam("selectedItem");
         $afterItem = $request->getParam("afterItem");
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "showbuilder/schedule-move";
+        $log_vars["params"] = array();
+        $log_vars["params"]["selected_items"] = $selectedItems;
+        $log_vars["params"]["destination_after_item"] = $afterItem;
+        Logging::info($log_vars);
 
         try {
             $scheduler = new Application_Model_Scheduler();
