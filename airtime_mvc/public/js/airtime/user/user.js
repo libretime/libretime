@@ -23,6 +23,12 @@ function populateForm(entries){
         $('#password').val("");
         $('#passwordVerify').val("");
     }
+    if (entries.login === 'admin')
+    {
+    	$('#type').attr('disabled', '1');
+    } else {
+    	$('#type').removeAttr('disabled');    	
+    }
 }
 
 function rowClickCallback(row_id){
@@ -57,6 +63,9 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     } else if ( aData['type'] == "P" )
     {
     	$('td:eq(3)', nRow).html( $.i18n._('Program Manager') );
+    } else if ( aData['type'] == "S" )
+    {
+    	$('td:eq(3)', nRow).html( $.i18n._('Super Admin') );
     }
     
     return nRow;
@@ -183,7 +192,7 @@ $(document).ready(function() {
     
     var newUser = {login:"", first_name:"", last_name:"", type:"G", id:""};
     
-    $('#add_user_button').live('click', function(){populateForm(newUser)});
+    $('#add_user_button').live('click', function(){populateForm(newUser);});
     
     $('#save_user').live('click', function(){
         var data = $('#user_form').serialize();

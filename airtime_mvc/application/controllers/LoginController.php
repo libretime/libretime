@@ -16,7 +16,6 @@ class LoginController extends Zend_Controller_Action
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
         if (Zend_Auth::getInstance()->hasIdentity())
         {
-
             $this->_redirect('Showbuilder');
         }
 
