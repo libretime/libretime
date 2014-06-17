@@ -1,13 +1,14 @@
 <?php
 require_once 'Zend/Locale.php';
 
-class Application_Form_BillingPurchase extends Zend_Form
+class Application_Form_BillingClient extends Zend_Form
 {
     public function init()
     {
         /*$this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/billing-purchase.phtml'))));*/
         $client = BillingController::getClientDetails();
+        Logging::info($client);
         
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
@@ -116,14 +117,18 @@ class Application_Form_BillingPurchase extends Zend_Form
             ->addFilter('StringTrim');
         $this->addElement($phonenumber);
 
-        //TODO: get list from whmcs
-        $securityqid = new Zend_Form_Element_Text('securityqid');
+        /*$securityqid = new Zend_Form_Element_Select('securityqid');
         $securityqid->setLabel(_('Please choose a security question:'))
             ->setValue($client["securityqid"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
-            ->addValidator($notEmptyValidator)
-            ->addFilter('StringTrim');
+            ->setMultiOptions(array(
+                "1" => _("What is the name of your favorite childhood friend?"),
+                "3" => _("What school did you attend for sixth grade?"),
+                "4" => _("In what city did you meet your spouse/significant other?"),
+                "5" => _("What street did you live on in third grade?"),
+                "6" => _("What is the first name of the boy or girl that you first kissed?"),
+                "7" => _("In what city or town was your first job?")));
         $this->addElement($securityqid);
 
         $securityqans = new Zend_Form_Element_Text('securityqans');
@@ -133,7 +138,7 @@ class Application_Form_BillingPurchase extends Zend_Form
             ->setRequired(true)
             ->addValidator($notEmptyValidator)
             ->addFilter('StringTrim');
-        $this->addElement($securityqans);
+        $this->addElement($securityqans);*/
 
         foreach ($client["customfields"] as $field) {
             if ($field["id"] == 7) {
@@ -143,7 +148,7 @@ class Application_Form_BillingPurchase extends Zend_Form
             }
         }
 
-        $vat = new Zend_Form_Element_Text('vat');
+        $vat = new Zend_Form_Element_Text('customfield7');
         $vat->setLabel(_('VAT/Tax ID (EU only)'))
             ->setValue($vatvalue)
             ->setAttrib('class', 'input_text')
@@ -152,7 +157,7 @@ class Application_Form_BillingPurchase extends Zend_Form
             ->addFilter('StringTrim');
         $this->addElement($vat);
 
-        $subscribe = new Zend_Form_Element_Checkbox('subscribe');
+        $subscribe = new Zend_Form_Element_Checkbox('customfield71');
         $subscribe->setLabel(_('Subscribe to Sourcefabric newsletter'))
             ->setValue($subscribevalue)
             ->setAttrib('class', 'input_text')
@@ -161,7 +166,7 @@ class Application_Form_BillingPurchase extends Zend_Form
             ->addFilter('StringTrim');
         $this->addElement($subscribe);
 
-        $password = new Zend_Form_Element_Password('whmcspassword');
+        $password = new Zend_Form_Element_Password('password2');
         $password->setLabel(_('Password:'));
         $password->setAttrib('class', 'input_text');
         $password->setRequired(true);
@@ -169,12 +174,17 @@ class Application_Form_BillingPurchase extends Zend_Form
         $password->addValidator($notEmptyValidator);
         $this->addElement($password);
 
-        $passwordVerify = new Zend_Form_Element_Password('whmcspasswordVerify');
+        $passwordVerify = new Zend_Form_Element_Password('password2verify');
         $passwordVerify->setLabel(_('Verify Password:'));
         $passwordVerify->setAttrib('class', 'input_text');
         $passwordVerify->setRequired(true);
         $passwordVerify->addFilter('StringTrim');
         $passwordVerify->addValidator($notEmptyValidator);
         $this->addElement($passwordVerify);
+
+        $submit = new Zend_Form_Element_Submit("submit");
+        $submit->setIgnore(true)
+                ->setLabel(_("Save"));
+        $this->addElement($submit);
     }
 }
