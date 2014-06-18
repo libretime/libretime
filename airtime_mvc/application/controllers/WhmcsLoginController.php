@@ -1,6 +1,7 @@
 <?php
 
 define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
+define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
 
 class WhmcsLoginController extends Zend_Controller_Action
 {
