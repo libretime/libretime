@@ -44,13 +44,12 @@ class BillingController extends Zend_Controller_Action {
             //$invoiceUrl = "https://account.sourcefabric.com/viewinvoice.php?id=".$result["invoiceid"];
             
             $whmcsurl = "https://account.sourcefabric.com/dologin.php";
-            $autoauthkey = "MabIttEtkac2";
+            $autoauthkey = "";
             $timestamp = time(); //whmcs timezone?
             $client = self::getClientDetails();
             $email = $client["email"];
             $hash = sha1($email.$timestamp.$autoauthkey);
-            //$goto="viewinvoice.php?id=5108";
-            $goto = "clientarea.php";
+            $goto="viewinvoice.php?id=5108";
             $this->_redirect($whmcsurl."?email=$email&timestamp=$timestamp&hash=$hash&goto=$goto");
             
         } else {
