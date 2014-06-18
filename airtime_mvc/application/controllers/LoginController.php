@@ -1,5 +1,7 @@
 <?php
 
+require_once('WhmcsLoginController.php');
+
 class LoginController extends Zend_Controller_Action
 {
 
@@ -73,11 +75,23 @@ class LoginController extends Zend_Controller_Action
 
                         $this->_redirect('Showbuilder');
                     } else {
-                        $message = _("Wrong username or password provided. Please try again.");
-                        Application_Model_Subjects::increaseLoginAttempts($username);
-                        Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
-                        $form = new Application_Form_Login();
-                        $error = true;
+                        $email = $form->getValue('username');
+                        $authAdapter = new WHMCS_Auth_Adapter("admin", $email, $password);
+                        $auth = Zend_Auth::getInstance();
+                        $result = $auth->authenticate($authAdapter);
+                        if ($result->isValid()) {
+                            //set the user locale in case user changed it in when logging in
+                            Application_Model_Preference::SetUserLocale($locale);
+                            
+                            $this->_redirect('Showbuilder');
+                        }
+                        else {
+                            $message = _("Wrong username or password provided. Please try again.");
+                            Application_Model_Subjects::increaseLoginAttempts($username);
+                            Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
+                            $form = new Application_Form_Login();
+                            $error = true;
+                        }
                     }
                 }
             }

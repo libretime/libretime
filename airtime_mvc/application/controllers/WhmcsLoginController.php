@@ -17,7 +17,7 @@ class WhmcsLoginController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
-        $username = "admin";
+        $username = "admin"; //This is just for appearance in your session. It shows up in the corner of the Airtime UI.
         $email = $_POST["email"];
         $password = $_POST["password"];
                 
@@ -84,6 +84,10 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
 
     function authenticate() {        
         if (!$this->validateCredentialsWithWHMCS($this->email, $this->password))
+        {
+            return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
+        }
+        if (!$this->verifyClientSubdomainOwnership())
         {
             return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
         }
@@ -172,5 +176,76 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         }
                 
         return true;
+    }
+    
+    function verifyClientSubdomainOwnership()
+    {
+        $client_postfields = array();
+        $client_postfields["username"] = $_SERVER['WHMCS_USERNAME'];
+        $client_postfields["password"] = md5($_SERVER['WHMCS_PASSWORD']);
+        $client_postfields["action"] ="getclientsproducts";
+        $client_postfields["responsetype"] = "json";
+    
+        $client_postfields["clientid"] = Application_Model_Preference::GetClientId();
+        //$client_postfields["stats"] = "true";
+    
+        $query_string = "";
+        foreach ($client_postfields as $k => $v) $query_string .= "$k=".urlencode($v)."&";
+    
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, WHMCS_API_URL);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $query_string);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $jsondata = curl_exec($ch);
+        if (curl_error($ch)) {
+            die(curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
+            //die("Connection Error: ".curl_errno($ch).' - '.curl_error($ch));
+        }
+        curl_close($ch);
+    
+        $arr = json_decode($jsondata, true); # Decode JSON String
+        //$client_id = $arr["clientid"];
+        //print_r($arr);
+        if ($arr["result"] != "success") {
+            die("Sorry, that email address or password was incorrect.");
+        }
+    
+        $doesAirtimeProductExist = false;
+        $isAirtimeAccountSuspended = true;
+        $airtimeProduct = null;
+    
+        foreach ($arr["products"] as $product)
+        {
+            if (strpos($product[0]["groupname"], "Airtime") === FALSE)
+            {
+                //Ignore non-Airtime products
+                continue;
+            }
+            else
+            {
+                if ($product[0]["status"] === "Active") {
+                    $airtimeProduct = $product[0];
+                    $subdomain = '';
+
+                    foreach ($airtimeProduct['customfields']['customfield'] as $customField)
+                    {
+                        if ($customField['name'] === SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME)
+                        {
+                            $subdomain = $customField['value'];
+                            if ($subdomain . ".airtime.pro" === $_SERVER['SERVER_NAME'])
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
