@@ -19,8 +19,6 @@ class BillingController extends Zend_Controller_Action {
             $password = $_SERVER["WHMCS_PASSWORD"];
             $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
             $url = "https://account.sourcefabric.com/includes/api.php";
-            $username = "api_access";
-            $password = "raditional69203";
             
             $postfields = array();
             $postfields["username"] = $username;
@@ -69,8 +67,6 @@ class BillingController extends Zend_Controller_Action {
             $password = $_SERVER["WHMCS_PASSWORD"];
             $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
             $url = "https://account.sourcefabric.com/includes/api.php";
-            $username = "api_access";
-            $password = "raditional69203";
             
             $postfields = array();
             $postfields["username"] = $username;
@@ -101,8 +97,6 @@ class BillingController extends Zend_Controller_Action {
         $password = $_SERVER["WHMCS_PASSWORD"];
         $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
         $url = "https://account.sourcefabric.com/includes/api.php";
-        $username = "api_access";
-        $password = "raditional69203";
         
         $postfields = array();
         $postfields["username"] = $username;
@@ -126,8 +120,6 @@ class BillingController extends Zend_Controller_Action {
         $password = $_SERVER["WHMCS_PASSWORD"];
         $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
         $url = "https://account.sourcefabric.com/includes/api.php";
-        $username = "api_access";
-        $password = "raditional69203";
         
         $postfields = array();
         $postfields["username"] = $username;
@@ -151,8 +143,6 @@ class BillingController extends Zend_Controller_Action {
             $password = $_SERVER["WHMCS_PASSWORD"];
             $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
             $url = "https://account.sourcefabric.com/includes/api.php";
-            $username = "api_access";
-            $password = "raditional69203";
             
             $postfields = array();
             $postfields["username"] = $username;
