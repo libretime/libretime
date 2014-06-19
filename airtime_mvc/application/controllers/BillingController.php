@@ -14,11 +14,10 @@ class BillingController extends Zend_Controller_Action {
         if ($request->isPost()) {
             $formData = $request->getPost();
             
-            /*$accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
+            $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
             $username = $_SERVER["WHMCS_USERNAME"];
             $password = $_SERVER["WHMCS_PASSWORD"];
-            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
-            $url = "https://account.sourcefabric.com/includes/api.php";
+            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;
             
             $postfields = array();
             $postfields["username"] = $username;
@@ -42,11 +41,12 @@ class BillingController extends Zend_Controller_Action {
             //$invoiceUrl = "https://account.sourcefabric.com/viewinvoice.php?id=".$result["invoiceid"];
             
             $whmcsurl = "https://account.sourcefabric.com/dologin.php";
-            $autoauthkey = "";
+            $autoauthkey = $_SERVER["WHMCS_AUTOAUTH_KEY"];
             $timestamp = time(); //whmcs timezone?
             $client = self::getClientDetails();
             $email = $client["email"];
             $hash = sha1($email.$timestamp.$autoauthkey);
+            //$goto = "viewinvoice.php?id=".$result["invoiceid"];
             $goto="viewinvoice.php?id=5108";
             $this->_redirect($whmcsurl."?email=$email&timestamp=$timestamp&hash=$hash&goto=$goto");
             
@@ -62,11 +62,10 @@ class BillingController extends Zend_Controller_Action {
         if ($request->isPost()) {
             $formData = $request->getPost();
             
-            /*$accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
+            $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
             $username = $_SERVER["WHMCS_USERNAME"];
             $password = $_SERVER["WHMCS_PASSWORD"];
-            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
-            $url = "https://account.sourcefabric.com/includes/api.php";
+            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;
             
             $postfields = array();
             $postfields["username"] = $username;
@@ -89,14 +88,26 @@ class BillingController extends Zend_Controller_Action {
         }
     }
 
+    public function invoiceAction()
+    {
+        $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
+        $username = $_SERVER["WHMCS_USERNAME"];
+        $password = $_SERVER["WHMCS_PASSWORD"];
+        $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;
+        
+        $postfields = array();
+        $postfields["username"] = $username;
+        $postfields["password"] = md5($password);
+        $postfields["action"] = "updateclient";
+    }
+
     //TODO: this does not return a service id. why?
     private static function getClientInstanceId()
     {
-        /*$accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
+        $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
         $username = $_SERVER["WHMCS_USERNAME"];
         $password = $_SERVER["WHMCS_PASSWORD"];
-        $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
-        $url = "https://account.sourcefabric.com/includes/api.php";
+        $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;
         
         $postfields = array();
         $postfields["username"] = $username;
@@ -115,11 +126,10 @@ class BillingController extends Zend_Controller_Action {
 
     public static function getProducts()
     {
-        /*$accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
+        $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
         $username = $_SERVER["WHMCS_USERNAME"];
         $password = $_SERVER["WHMCS_PASSWORD"];
-        $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
-        $url = "https://account.sourcefabric.com/includes/api.php";
+        $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;
         
         $postfields = array();
         $postfields["username"] = $username;
@@ -138,11 +148,10 @@ class BillingController extends Zend_Controller_Action {
     public static function getClientDetails()
     {
         try {
-            /*$accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
+            $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
             $username = $_SERVER["WHMCS_USERNAME"];
             $password = $_SERVER["WHMCS_PASSWORD"];
-            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;*/
-            $url = "https://account.sourcefabric.com/includes/api.php";
+            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;
             
             $postfields = array();
             $postfields["username"] = $username;
