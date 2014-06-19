@@ -12,47 +12,64 @@ class BillingController extends Zend_Controller_Action {
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
         if ($request->isPost()) {
+            //$formData = $form->getValues();
             $formData = $request->getPost();
-            
-            $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
-            $username = $_SERVER["WHMCS_USERNAME"];
-            $password = $_SERVER["WHMCS_PASSWORD"];
-            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey;
-            
-            $postfields = array();
-            $postfields["username"] = $username;
-            $postfields["password"] = md5($password);
-            $postfields["action"] = "upgradeproduct";
-            //$postfields["clientid"] = Application_Model_Preference::GetClientId();
-            $postfields["clientid"] = 1846;
-            //TODO: do not hardcode
-            //$postfields["serviceid"] = self::getClientInstanceId();
-            $postfields["serviceid"] = "1678";
-            $postfields["type"] = "product";
-            $postfields["newproductid"] = $formData["newproductid"];
-            $postfields["newproductbillingcycle"] = $formData["newproductbillingcycle"];
-            $postfields["paymentmethod"] = $formData["paymentmethod"];
-            $postfields["responsetype"] = "json";
-            
-            $query_string = "";
-            foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
-            
-            //$result = $this->makeRequest($url, $query_string);
-            //$invoiceUrl = "https://account.sourcefabric.com/viewinvoice.php?id=".$result["invoiceid"];
-            
-            $whmcsurl = "https://account.sourcefabric.com/dologin.php";
-            $autoauthkey = $_SERVER["WHMCS_AUTOAUTH_KEY"];
-            $timestamp = time(); //whmcs timezone?
-            $client = self::getClientDetails();
-            $email = $client["email"];
-            $hash = sha1($email.$timestamp.$autoauthkey);
-            //$goto = "viewinvoice.php?id=".$result["invoiceid"];
-            $goto="viewinvoice.php?id=5108";
-            $this->_redirect($whmcsurl."?email=$email&timestamp=$timestamp&hash=$hash&goto=$goto");
-            
+            if ($form->isValid($formData)) {
+                
+                $credentials = self::getAPICredentials();
+                
+                $postfields = array();
+                $postfields["username"] = $credentials["username"];
+                $postfields["password"] = md5($credentials["password"]);
+                $postfields["action"] = "upgradeproduct";
+                //$postfields["clientid"] = Application_Model_Preference::GetClientId();
+                $postfields["clientid"] = 1846;
+                //TODO: do not hardcode
+                //$postfields["serviceid"] = self::getClientInstanceId();
+                $postfields["serviceid"] = "1678";
+                $postfields["type"] = "product";
+                $postfields["newproductid"] = $formData["newproductid"];
+                $postfields["newproductbillingcycle"] = $formData["newproductbillingcycle"];
+                $postfields["paymentmethod"] = $formData["paymentmethod"];
+                $postfields["responsetype"] = "json";
+                
+                $query_string = "";
+                foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+                
+                //update client info
+                
+                
+                //$result = $this->makeRequest($credentials["url"], $query_string);
+                //self::viewInvoice($result["invoiceid"]);
+                self::viewInvoice(5108);
+            } else {
+                $this->view->form = $form;
+            }
         } else {
             $this->view->form = $form;
         }
+    }
+
+    private static function getAPICredentials()
+    {
+        return array(
+            "access_key" => $_SERVER["WHMCS_ACCESS_KEY"],
+            "username" => $_SERVER["WHMCS_USERNAME"],
+            "password" => $_SERVER["WHMCS_PASSWORD"],
+            "url" => "https://account.sourcefabric.com/includes/api.php?accesskey=".$_SERVER["WHMCS_ACCESS_KEY"],
+        );
+    }
+
+    private static function viewInvoice($invoice_id)
+    {
+        $whmcsurl = "https://account.sourcefabric.com/dologin.php";
+        $autoauthkey = $_SERVER["WHMCS_AUTOAUTH_KEY"];
+        $timestamp = time(); //whmcs timezone?
+        $client = self::getClientDetails();
+        $email = $client["email"];
+        $hash = sha1($email.$timestamp.$autoauthkey);
+        $goto = "viewinvoice.php?id=".$invoice_id;
+        header("Location: ".$whmcsurl."?email=$email&timestamp=$timestamp&hash=$hash&goto=$goto");
     }
 
     public function clientAction()
@@ -88,7 +105,7 @@ class BillingController extends Zend_Controller_Action {
         }
     }
 
-    public function invoiceAction()
+    public function invoicesAction()
     {
         $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
         $username = $_SERVER["WHMCS_USERNAME"];
@@ -98,7 +115,23 @@ class BillingController extends Zend_Controller_Action {
         $postfields = array();
         $postfields["username"] = $username;
         $postfields["password"] = md5($password);
-        $postfields["action"] = "updateclient";
+        $postfields["action"] = "getinvoices";
+        $postfields["responsetype"] = "json";
+        $postfields["userid"] = 1846;
+        //$postfields["clientid"] = Application_Model_Preference::GetClientId();
+        
+        $query_string = "";
+        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+        
+        $result = self::makeRequest($url, $query_string);
+        $this->view->invoices = $result["invoices"]["invoice"];
+    }
+    
+    public function invoiceAction()
+    {
+        $request = $this->getRequest();
+        $invoice_id = $request->getParam('invoiceid');
+        self::viewInvoice($invoice_id);
     }
 
     //TODO: this does not return a service id. why?

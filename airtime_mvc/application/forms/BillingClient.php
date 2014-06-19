@@ -116,7 +116,7 @@ class Application_Form_BillingClient extends Zend_Form
             ->addFilter('StringTrim');
         $this->addElement($phonenumber);
 
-        /*$securityqid = new Zend_Form_Element_Select('securityqid');
+        $securityqid = new Zend_Form_Element_Select('securityqid');
         $securityqid->setLabel(_('Please choose a security question:'))
             ->setValue($client["securityqid"])
             ->setAttrib('class', 'input_text')
@@ -137,7 +137,7 @@ class Application_Form_BillingClient extends Zend_Form
             ->setRequired(true)
             ->addValidator($notEmptyValidator)
             ->addFilter('StringTrim');
-        $this->addElement($securityqans);*/
+        $this->addElement($securityqans);
 
         foreach ($client["customfields"] as $field) {
             if ($field["id"] == 7) {
@@ -151,8 +151,8 @@ class Application_Form_BillingClient extends Zend_Form
         $vat->setLabel(_('VAT/Tax ID (EU only)'))
             ->setValue($vatvalue)
             ->setAttrib('class', 'input_text')
-            ->setRequired(true)
-            ->addValidator($notEmptyValidator)
+            //->setRequired(true)
+            //->addValidator($notEmptyValidator)
             ->addFilter('StringTrim');
         $this->addElement($vat);
 
@@ -168,6 +168,7 @@ class Application_Form_BillingClient extends Zend_Form
         $password = new Zend_Form_Element_Password('password2');
         $password->setLabel(_('Password:'));
         $password->setAttrib('class', 'input_text');
+        $password->setValue("xxxxxx");
         $password->setRequired(true);
         $password->addFilter('StringTrim');
         $password->addValidator($notEmptyValidator);
@@ -176,8 +177,11 @@ class Application_Form_BillingClient extends Zend_Form
         $passwordVerify = new Zend_Form_Element_Password('password2verify');
         $passwordVerify->setLabel(_('Verify Password:'));
         $passwordVerify->setAttrib('class', 'input_text');
+        $passwordVerify->setValue("xxxxxx");
         $passwordVerify->setRequired(true);
         $passwordVerify->addFilter('StringTrim');
+        //$passwordVerify->addValidator($notEmptyValidator);
+        $passwordVerify->addValidator('Identical', false, array('token' => 'password2'));
         $passwordVerify->addValidator($notEmptyValidator);
         $this->addElement($passwordVerify);
 

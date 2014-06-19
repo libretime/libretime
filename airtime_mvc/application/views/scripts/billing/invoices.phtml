@@ -1,0 +1,9 @@
+<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong">
+<?php
+foreach ($this->invoices as $invoice) {?>
+    <div>
+        <a href="invoice?invoiceid=<?php echo $invoice["id"]?>">View Invoice</a>
+    </div>
+    
+<?php }?>
+</div>

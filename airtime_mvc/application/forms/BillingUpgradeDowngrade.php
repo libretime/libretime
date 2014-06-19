@@ -41,9 +41,12 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
             ->setValue('paypal');
         $this->addElement($paymentmethod);
         
-        $submit = new Zend_Form_Element_Submit("submit");
+        /*$submit = new Zend_Form_Element_Submit("submit");
         $submit->setIgnore(true)
                 ->setLabel(_("Save"));
-        $this->addElement($submit);
+        $this->addElement($submit);*/
+        
+        $client = new Application_Form_BillingClient();
+        $this->addSubForm($client, 'billing_client_info');
     }
 }
