@@ -84,7 +84,7 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
     }
 
     function authenticate() {        
-        list($credentialsValid, $clientId) = $this->validateCredentialsWithWHMCS($this->email, $this->password))
+        list($credentialsValid, $clientId) = $this->validateCredentialsWithWHMCS($this->email, $this->password);
         if (!$credentialsValid)
         {
             return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
