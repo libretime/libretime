@@ -84,11 +84,12 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
     }
 
     function authenticate() {        
-        if (!$this->validateCredentialsWithWHMCS($this->email, $this->password))
+        list($credentialsValid, $clientId) = $this->validateCredentialsWithWHMCS($this->email, $this->password))
+        if (!$credentialsValid)
         {
             return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
         }
-        if (!$this->verifyClientSubdomainOwnership())
+        if (!$this->verifyClientSubdomainOwnership($clientId))
         {
             return new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
         }
@@ -139,7 +140,8 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         $identity["email"] = $this->email;
         return $identity;
     }
-        
+    
+    //Returns an array! Read the code carefully:
     private function validateCredentialsWithWHMCS($email, $password)
     {
         $client_postfields = array();
@@ -173,21 +175,28 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         $arr = json_decode($jsondata, true); # Decode JSON String
         
         if ($arr["result"] != "success") {
-            return false;
+            return array(false, -1);
         }
+        $clientId = $arr["userid"];
                 
-        return true;
+        return array(true, $clientId);
     }
     
-    function verifyClientSubdomainOwnership()
+    function verifyClientSubdomainOwnership($clientId)
     {
+        //Do a quick safety check to ensure the client ID we're authenticating
+        //matches up to the owner of this instance.
+        if ($clientId != Application_Model_Preference::GetClientId())
+        {
+            return false; 
+        }
         $client_postfields = array();
         $client_postfields["username"] = $_SERVER['WHMCS_USERNAME'];
         $client_postfields["password"] = md5($_SERVER['WHMCS_PASSWORD']);
         $client_postfields["action"] ="getclientsproducts";
         $client_postfields["responsetype"] = "json";
     
-        $client_postfields["clientid"] = Application_Model_Preference::GetClientId();
+        $client_postfields["clientid"] = $clientId;
         //$client_postfields["stats"] = "true";
     
         $query_string = "";
@@ -238,7 +247,7 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
                         if ($customField['name'] === SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME)
                         {
                             $subdomain = $customField['value'];
-                            if ($subdomain . ".airtime.pro" === $_SERVER['SERVER_NAME'])
+                            if (($subdomain . ".airtime.pro") === $_SERVER['SERVER_NAME'])
                             {
                                 return true;
                             }
