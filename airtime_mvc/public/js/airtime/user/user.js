@@ -4,6 +4,17 @@ function populateForm(entries){
     $('.errors').remove();
     $('.success').remove();
     
+    if (entries.type === 'S')
+    {	
+    	$("#user_details").hide();
+    	$("#user_details_superadmin_message").show();
+    	$('#type').attr('disabled', '1');
+    } else {
+    	$("#user_details").show();
+    	$("#user_details_superadmin_message").hide();
+    	$('#type').removeAttr('disabled');    	
+    }
+    
     $('#user_id').val(entries.id);
     $('#login').val(entries.login);
     $('#first_name').val(entries.first_name);
@@ -22,12 +33,6 @@ function populateForm(entries){
         $('#login').removeAttr('readonly');
         $('#password').val("");
         $('#passwordVerify').val("");
-    }
-    if (entries.login === 'admin')
-    {
-    	$('#type').attr('disabled', '1');
-    } else {
-    	$('#type').removeAttr('disabled');    	
     }
 }
 
@@ -66,6 +71,7 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     } else if ( aData['type'] == "S" )
     {
     	$('td:eq(3)', nRow).html( $.i18n._('Super Admin') );
+    	$('td:eq(4)', nRow).html(""); //Disable deleting the super admin
     }
     
     return nRow;
