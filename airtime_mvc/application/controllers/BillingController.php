@@ -54,6 +54,7 @@ class BillingController extends Zend_Controller_Action {
                 foreach ($clientfields AS $k=>$v) $client_query_string .= "$k=".urlencode($v)."&";
                 
                 $result = $this->makeRequest($credentials["url"], $client_query_string);
+                Logging::info($result);
                 if ($result["result"] == "error") {
                     $this->setErrorMessage();
                     $this->view->form = $form;
@@ -124,7 +125,7 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["password"] = md5($credentials["password"]);
                 $postfields["action"] = "updateclient";
                 //$postfields["clientid"] = Application_Model_Preference::GetClientId();
-                $postfields["clientid"] = 18460000000;
+                $postfields["clientid"] = 1846;
                 $postfields["responsetype"] = "json";
                 $postfields = array_merge($postfields, $formData);
                 unset($postfields["password2verify"]);
