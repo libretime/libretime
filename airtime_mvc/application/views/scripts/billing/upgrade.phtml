@@ -1,5 +1,7 @@
 <div class="ui-widget ui-widget-content block-shadow clearfix padded-strong">
-<?php //echo $this->successMessage ?>
+<?php if (isset($this->errorMessage)) {?>
+<div class="errors"><?php echo $this->errorMessage ?></div>
+<?php }?>
 <div>Plan Level: <?php echo Application_Model_Preference::GetPlanLevel();?></div>
 <?php echo $this->form ?>
 <br><br><br><br>

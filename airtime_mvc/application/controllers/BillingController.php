@@ -15,7 +15,6 @@ class BillingController extends Zend_Controller_Action {
             //$formData = $form->getValues();
             $formData = $request->getPost();
             if ($form->isValid($formData)) {
-                
                 $credentials = self::getAPICredentials();
                 
                 $postfields = array();
@@ -33,15 +32,36 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["paymentmethod"] = $formData["paymentmethod"];
                 $postfields["responsetype"] = "json";
                 
-                $query_string = "";
-                foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+                $upgrade_query_string = "";
+                foreach ($postfields AS $k=>$v) $upgrade_query_string .= "$k=".urlencode($v)."&";
                 
                 //update client info
+                $clientfields = array();
+                $clientfields["username"] = $credentials["username"];
+                $clientfields["password"] = md5($credentials["password"]);
+                $clientfields["action"] = "updateclient";
+                //$clientfields["clientid"] = Application_Model_Preference::GetClientId();
+                $clientfields["clientid"] = 1846;
+                $clientfields["responsetype"] = "json";
+                unset($formData["newproductid"]);
+                unset($formData["newproductbillingcycle"]);
+                unset($formData["paymentmethod"]);
+                unset($formData["action"]);
+                $clientfields = array_merge($clientfields, $formData);
+                unset($clientfields["password2verify"]);
+                unset($clientfields["submit"]);
+                $client_query_string = "";
+                foreach ($clientfields AS $k=>$v) $client_query_string .= "$k=".urlencode($v)."&";
                 
-                
-                //$result = $this->makeRequest($credentials["url"], $query_string);
-                //self::viewInvoice($result["invoiceid"]);
-                self::viewInvoice(5108);
+                $result = $this->makeRequest($credentials["url"], $client_query_string);
+                if ($result["result"] == "error") {
+                    $this->view->errorMessage = "An error occurred and we could not upgrade your account. Please contact support for help";
+                    $this->view->form = $form;
+                } else {
+                    //$result = $this->makeRequest($credentials["url"], $upgrade_query_string);
+                    //self::viewInvoice($result["invoiceid"]);
+                    self::viewInvoice(5108);
+                }
             } else {
                 $this->view->form = $form;
             }
