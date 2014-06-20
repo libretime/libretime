@@ -134,6 +134,34 @@ $pages = array(
                 'resource'   =>    'dashboard'
             )
         )
+    ),
+    array(
+        'label' => _('Billing'),
+        'uri' => '#',
+        'resource' => 'billing',
+        'pages' => array(
+            array(
+                'label' => _('Account Details'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'client',
+                'resource' => 'billing'
+            ),
+            array(
+                'label' => _('Account Plans'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'upgrade',
+                'resource' => 'billing'
+            ),
+            array(
+                'label' => _('View Invocices'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'invoices',
+                'resource' => 'billing'
+            )
+        )
     )
 );
 

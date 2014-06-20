@@ -59,7 +59,7 @@ $ccAcl->allow('G', 'index')
       ->allow('A', 'user')
       ->allow('A', 'systemstatus')
       ->allow('A', 'preference')
-      ->allow('A', 'billing');
+      ->allow('S', 'billing');
       
 
 $aclPlugin = new Zend_Controller_Plugin_Acl($ccAcl);
