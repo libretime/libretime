@@ -88,7 +88,7 @@ class WebstreamController extends Zend_Controller_Action
     public function isAuthorized($webstream_id)
     {
         $user = Application_Model_User::getCurrentUser();
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             return true;
         }
 

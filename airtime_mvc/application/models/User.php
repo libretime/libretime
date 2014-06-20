@@ -60,8 +60,9 @@ class Application_Model_User
         $type = $this->getType();
         $result = false;
 
-        if ($type === UTYPE_ADMIN ||
-            $type === UTYPE_PROGRAM_MANAGER ||
+        if ($this->isAdmin() ||
+            $this->isSuperAdmin() ||
+            $this->isPM() ||
             self::isHostOfShow($p_showId)) {
             $result = true;
         }
