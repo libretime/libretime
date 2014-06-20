@@ -49,7 +49,12 @@ class Application_Model_User
     {
         return $this->isUserType(UTYPE_ADMIN);
     }
-
+    
+    public function isSuperAdmin()
+    {
+        return $this->isUserType(UTYPE_SUPERADMIN);
+    }
+    
     public function canSchedule($p_showId)
     {
         $type = $this->getType();

@@ -7,13 +7,15 @@ $ccAcl = new Zend_Acl();
 $ccAcl->addRole(new Zend_Acl_Role('G'))
       ->addRole(new Zend_Acl_Role('H'), 'G')
       ->addRole(new Zend_Acl_Role('P'), 'H')
-      ->addRole(new Zend_Acl_Role('A'), 'P');
+      ->addRole(new Zend_Acl_Role('A'), 'P')
+      ->addRole(new Zend_Acl_Role('S'), 'A');
 
 $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('index'))
       ->add(new Zend_Acl_Resource('user'))
       ->add(new Zend_Acl_Resource('error'))
       ->add(new Zend_Acl_Resource('login'))
+      ->add(new Zend_Acl_Resource('whmcs-login'))
       ->add(new Zend_Acl_Resource('playlist'))
       ->add(new Zend_Acl_Resource('plupload'))
       ->add(new Zend_Acl_Resource('schedule'))
@@ -35,6 +37,7 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
       ->allow('G', 'login')
+      ->allow('G', 'whmcs-login')
       ->allow('G', 'error')
       ->allow('G', 'user', 'edit-user')
       ->allow('G', 'showbuilder')

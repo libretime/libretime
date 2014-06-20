@@ -41,6 +41,7 @@ define('UI_MDATA_VALUE_FORMAT_STREAM' , 'live stream');
 //User types
 define('UTYPE_HOST'            , 'H');
 define('UTYPE_ADMIN'           , 'A');
+define('UTYPE_SUPERADMIN'      , 'S');
 define('UTYPE_GUEST'           , 'G');
 define('UTYPE_PROGRAM_MANAGER' , 'P');
 

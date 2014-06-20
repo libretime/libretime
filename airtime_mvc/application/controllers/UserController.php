@@ -62,7 +62,11 @@ class UserController extends Zend_Controller_Action
                     if ($formData['password'] != "xxxxxx") {
                         $user->setPassword($formData['password']);
                     }
-                    $user->setType($formData['type']);
+                    if (array_key_exists('type', $formData)) {
+                        if ($formData['type'] != UTYPE_SUPERADMIN) { //Don't allow any other user to be promoted to Super Admin
+                            $user->setType($formData['type']);
+                        }
+                    }
                     $user->setEmail($formData['email']);
                     $user->setCellPhone($formData['cell_phone']);
                     $user->setSkype($formData['skype']);
@@ -187,6 +191,12 @@ class UserController extends Zend_Controller_Action
         }
 
         $user = new Application_Model_User($delId);
+        
+        // Don't allow super admins to be deleted.
+        if ($user->isSuperAdmin())
+        {
+            return;
+        }
 
         # Take care of the user's files by either assigning them to somebody
         # or deleting them all
