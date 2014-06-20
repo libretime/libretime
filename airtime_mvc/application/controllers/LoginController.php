@@ -15,6 +15,16 @@ class LoginController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         
+        //Allow AJAX requests from www.airtime.pro. We use this to automatically login users
+        //after they sign up from the microsite.
+        $response = $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*');
+        $origin = $request->getHeader('Origin');
+        if (($origin != "") && (!in_array($origin, array("http://www.airtime.pro", "https://www.airtime.pro"))))
+        {
+            //Don't allow CORS from other domains to prevent XSS.
+            throw new Zend_Controller_Action_Exception('Forbidden', 403);
+        }
+        
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
         if (Zend_Auth::getInstance()->hasIdentity())
         {
