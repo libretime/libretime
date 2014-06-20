@@ -155,7 +155,7 @@ $pages = array(
                 'resource' => 'billing'
             ),
             array(
-                'label' => _('View Invocices'),
+                'label' => _('View Invoices'),
                 'module' => 'default',
                 'controller' => 'billing',
                 'action' => 'invoices',
