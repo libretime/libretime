@@ -21,11 +21,12 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["username"] = $credentials["username"];
                 $postfields["password"] = md5($credentials["password"]);
                 $postfields["action"] = "upgradeproduct";
+                
                 //$postfields["clientid"] = Application_Model_Preference::GetClientId();
                 $postfields["clientid"] = 1846;
-                //TODO: do not hardcode
-                //$postfields["serviceid"] = self::getClientInstanceId();
-                $postfields["serviceid"] = "1678";
+                
+                $postfields["serviceid"] = self::getClientServiceId();
+                
                 $postfields["type"] = "product";
                 $postfields["newproductid"] = $formData["newproductid"];
                 $postfields["newproductbillingcycle"] = $formData["newproductbillingcycle"];
@@ -33,15 +34,17 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["responsetype"] = "json";
                 
                 $upgrade_query_string = "";
-                foreach ($postfields AS $k=>$v) $upgrade_query_string .= "$k=".urlencode($v)."&";
+                foreach ($postfields as $k=>$v) $upgrade_query_string .= "$k=".urlencode($v)."&";
                 
                 //update client info
                 $clientfields = array();
                 $clientfields["username"] = $credentials["username"];
                 $clientfields["password"] = md5($credentials["password"]);
                 $clientfields["action"] = "updateclient";
+                
                 //$clientfields["clientid"] = Application_Model_Preference::GetClientId();
                 $clientfields["clientid"] = 1846;
+                
                 $clientfields["responsetype"] = "json";
                 unset($formData["newproductid"]);
                 unset($formData["newproductbillingcycle"]);
@@ -51,17 +54,22 @@ class BillingController extends Zend_Controller_Action {
                 unset($clientfields["password2verify"]);
                 unset($clientfields["submit"]);
                 $client_query_string = "";
-                foreach ($clientfields AS $k=>$v) $client_query_string .= "$k=".urlencode($v)."&";
+                foreach ($clientfields as $k=>$v) $client_query_string .= "$k=".urlencode($v)."&";
                 
                 $result = $this->makeRequest($credentials["url"], $client_query_string);
-                Logging::info($result);
+
                 if ($result["result"] == "error") {
                     $this->setErrorMessage();
                     $this->view->form = $form;
                 } else {
-                    //$result = $this->makeRequest($credentials["url"], $upgrade_query_string);
-                    //self::viewInvoice($result["invoiceid"]);
-                    self::viewInvoice(5108);
+                    $result = $this->makeRequest($credentials["url"], $upgrade_query_string);
+                    if ($result["result"] == "error") {
+                        Logging::info($_SERVER['HTTP_HOST']." - Account upgrade failed. - ".$result["message"]);
+                        $this->setErrorMessage();
+                        $this->view->form = $form;
+                    } else {
+                        self::viewInvoice($result["invoiceid"]);
+                    }
                 }
             } else {
                 $this->view->form = $form;
@@ -102,7 +110,7 @@ class BillingController extends Zend_Controller_Action {
     {
         $whmcsurl = "https://account.sourcefabric.com/dologin.php";
         $autoauthkey = $_SERVER["WHMCS_AUTOAUTH_KEY"];
-        $timestamp = time(); //whmcs timezone?
+        $timestamp = time();
         $client = self::getClientDetails();
         $email = $client["email"];
         $hash = sha1($email.$timestamp.$autoauthkey);
@@ -124,15 +132,17 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["username"] = $credentials["username"];
                 $postfields["password"] = md5($credentials["password"]);
                 $postfields["action"] = "updateclient";
+                
                 //$postfields["clientid"] = Application_Model_Preference::GetClientId();
                 $postfields["clientid"] = 1846;
+                
                 $postfields["responsetype"] = "json";
                 $postfields = array_merge($postfields, $formData);
                 unset($postfields["password2verify"]);
                 unset($postfields["submit"]);
                 
                 $query_string = "";
-                foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+                foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
                 
                 $result = $this->makeRequest($credentials["url"], $query_string);
 
@@ -165,7 +175,7 @@ class BillingController extends Zend_Controller_Action {
         //$postfields["clientid"] = Application_Model_Preference::GetClientId();
         
         $query_string = "";
-        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+        foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
         
         $result = self::makeRequest($credentials["url"], $query_string);
         $this->view->invoices = $result["invoices"]["invoice"];
@@ -178,9 +188,10 @@ class BillingController extends Zend_Controller_Action {
         self::viewInvoice($invoice_id);
     }
 
-    //TODO: this does not return a service id. why?
-    private static function getClientInstanceId()
+    private static function getClientServiceId()
     {
+        $service_id = null;
+        
         $credentials = self::getAPICredentials();
         
         $postfields = array();
@@ -192,10 +203,21 @@ class BillingController extends Zend_Controller_Action {
         //$postfields["clientid"] = Application_Model_Preference::GetClientId();
         
         $query_string = "";
-        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+        foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
         
         $result = self::makeRequest($credentials["url"], $query_string);
-        Logging::info($result);
+        if (empty($result["products"])) {
+            Logging::info($_SERVER['HTTP_HOST']." - Account upgrade failed - Could not find service id");
+        } else {
+            foreach ($result["products"]["product"] as $product) {
+                if (array_key_exists("groupname", $product) && $product["groupname"] == "Airtime") {
+                    $service_id = $product["id"];
+                }
+                break;
+            }
+        }
+        
+        return $service_id;
     }
 
     public static function getProducts()
@@ -211,7 +233,7 @@ class BillingController extends Zend_Controller_Action {
         $postfields["gid"] = "15";
         
         $query_string = "";
-        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+        foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
         
         $result = self::makeRequest($credentials["url"], $query_string);
         return $result["products"]["product"];
@@ -232,7 +254,7 @@ class BillingController extends Zend_Controller_Action {
             $postfields["responsetype"] = "json";
             
             $query_string = "";
-            foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+            foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
             
             $arr = self::makeRequest($credentials["url"], $query_string);
             return $arr["client"];
