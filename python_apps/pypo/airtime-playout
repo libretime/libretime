@@ -26,6 +26,10 @@ export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\
 export TERM=xterm
 
 
+#Nothing to do with Pypo, but for container maintenance. Let's parse the IP address
+#so we may more easily manage our instance containers
+ifconfig eth0 | egrep -o 'inet addr:([0-9]{1,3}\.){3}[0-9]{1,3}' | cut -d':' -f2 > /etc/airtime_ip_addr
+
 exec python ${pypo_path}/${pypo_script} > /var/log/airtime/pypo/py-interpreter.log 2>&1
 
 # EOF

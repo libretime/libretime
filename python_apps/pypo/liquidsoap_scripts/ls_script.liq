@@ -50,6 +50,7 @@ def create_source()
     l = crossfade_airtime(l)
 
     l = on_metadata(notify_queue, l)
+
     sources := list.append([l], !sources)
     server.register(namespace="queues",
                 "s#{!source_id}_skip",
@@ -71,7 +72,6 @@ create_source()
 create_source()
 
 queue = add(!sources, normalize=false)
-
 pair = insert_metadata(queue)
 dynamic_metadata_callback := fst(pair)
 queue = snd(pair)

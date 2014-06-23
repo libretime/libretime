@@ -66,7 +66,7 @@ SQL;
     public static function GetPlayOrderRange($p_prev = 1, $p_next = 1)
     {
         //Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
-        
+
         if (!is_int($p_prev) || !is_int($p_next)) {
             //must enter integers to specify ranges
             Logging::info("Invalid range parameters: $p_prev or $p_next");
@@ -75,7 +75,7 @@ SQL;
         }
 
         $utcNow = new DateTime("now", new DateTimeZone("UTC"));
-        
+
         $shows = Application_Model_Show::getPrevCurrentNext($utcNow);
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
@@ -111,7 +111,7 @@ SQL;
         $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
         assert(get_class($utcNow) === "DateTime");
         assert($utcNow->getTimeZone() == $timeZone);
-        
+
         if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null) {
             return;
         }
@@ -170,15 +170,15 @@ SQL;
         $results['next']     = null;
 
         for ($i = 0; $i < $numberOfRows; ++$i) {
-            
+
             // if the show is overbooked, then update the track end time to the end of the show time.
             if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
-            
+
             $curShowStartTime = new DateTime($rows[$i]['starts'], $timeZone);
             $curShowEndTime   = new DateTime($rows[$i]['ends'], $timeZone);
-            
+
             if (($curShowStartTime <= $utcNow) && ($curShowEndTime >= $utcNow)) {
                 if ($i - 1 >= 0) {
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
@@ -830,7 +830,7 @@ SQL;
         $CC_CONFIG = Config::getConfig();
 
         $utcTimeZone = new DateTimeZone('UTC');
-        
+
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
             then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
@@ -890,13 +890,13 @@ SQL;
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $uri = $storedFile->getFilePath();
                 self::createFileScheduleEvent($data, $item, $media_id, $uri);
-            } 
+            }
             elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
                 self::createStreamScheduleEvent($data, $item, $media_id, $uri);
-            } 
+            }
             else {
                 throw new Exception("Unknown schedule type: ".print_r($item, true));
             }

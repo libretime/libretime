@@ -23,9 +23,7 @@ class PreferenceController extends Zend_Controller_Action
     {
         $CC_CONFIG = Config::getConfig();
         $request = $this->getRequest();
-        
-        $isSaas = Application_Model_Preference::GetPlanLevel() == 'disabled'?false:true;
-        
+                
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/preferences.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -52,16 +50,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
 
-                Application_Model_Preference::SetEnableSystemEmail($values["enableSystemEmail"]);
-                Application_Model_Preference::SetSystemEmail($values["systemEmail"]);
-                Application_Model_Preference::SetMailServerConfigured($values["configureMailServer"]);
-                Application_Model_Preference::SetMailServer($values["mailServer"]);
-                Application_Model_Preference::SetMailServerEmailAddress($values["email"]);
-                Application_Model_Preference::SetMailServerPassword($values["ms_password"]);
-                Application_Model_Preference::SetMailServerPort($values["port"]);
-                Application_Model_Preference::SetMailServerRequiresAuth($values["msRequiresAuth"]);
-
-                Application_Model_Preference::SetAutoUploadRecordedShowToSoundcloud($values["UseSoundCloud"]);
                 Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
                 Application_Model_Preference::SetSoundCloudDownloadbleOption($values["SoundCloudDownloadbleOption"]);
                 Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
@@ -96,20 +84,11 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
             $values = $request->getPost();
-
-           if ($values["Publicise"] != 1) {
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                Application_Model_Preference::SetPublicise($values["Publicise"]);
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-            } else if ($form->isValid($values)) {
+        if ($form->isValid($values)) {
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetPhone($values["Phone"]);
                 Application_Model_Preference::SetEmail($values["Email"]);
                 Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-                Application_Model_Preference::SetPublicise($values["Publicise"]);
 
                 $form->Logo->receive();
                 $imagePath = $form->Logo->getFileName();
@@ -140,15 +119,6 @@ class PreferenceController extends Zend_Controller_Action
 
     public function directoryConfigAction()
     {
-        $CC_CONFIG = Config::getConfig();
-
-        $baseUrl = Application_Common_OsPath::getBaseDir();
-
-        $this->view->headScript()->appendFile($baseUrl.'js/serverbrowse/serverbrowser.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/musicdirs.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
-        $watched_dirs_pref = new Application_Form_WatchedDirPreferences();
-        $this->view->form = $watched_dirs_pref;
     }
 
     public function streamSettingAction()
@@ -250,8 +220,6 @@ class PreferenceController extends Zend_Controller_Action
 
             $error = false;
             if ($form->isValid($values)) {
-                    $values['output_sound_device'] = $form->getValue('output_sound_device');
-                    $values['output_sound_device_type'] = $form->getValue('output_sound_device_type');
 
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
                 $values['streamFormat'] = $form->getValue('streamFormat');
@@ -284,33 +252,6 @@ class PreferenceController extends Zend_Controller_Action
                     //Application_Model_RabbitMq::PushSchedule();
                 }
 
-                if (!Application_Model_Preference::GetMasterDjConnectionUrlOverride()) {
-                    $master_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["master_harbor_input_port"]."/".$values["master_harbor_input_mount_point"];
-                    if (empty($values["master_harbor_input_port"]) || empty($values["master_harbor_input_mount_point"])) {
-                        Application_Model_Preference::SetMasterDJSourceConnectionURL('N/A');
-                    } else {
-                        Application_Model_Preference::SetMasterDJSourceConnectionURL($master_connection_url);
-                    }
-                } else {
-                    Application_Model_Preference::SetMasterDJSourceConnectionURL($values["master_dj_connection_url"]);
-                }
-
-                if (!Application_Model_Preference::GetLiveDjConnectionUrlOverride()) {
-                    $live_connection_url = "http://".$_SERVER['SERVER_NAME'].":".$values["dj_harbor_input_port"]."/".$values["dj_harbor_input_mount_point"];
-                    if (empty($values["dj_harbor_input_port"]) || empty($values["dj_harbor_input_mount_point"])) {
-                        Application_Model_Preference::SetLiveDJSourceConnectionURL('N/A');
-                    } else {
-                        Application_Model_Preference::SetLiveDJSourceConnectionURL($live_connection_url);
-                    }
-                } else {
-                    Application_Model_Preference::SetLiveDJSourceConnectionURL($values["live_dj_connection_url"]);
-                }
-
-                // extra info that goes into cc_stream_setting
-                Application_Model_StreamSetting::setMasterLiveStreamPort($values["master_harbor_input_port"]);
-                Application_Model_StreamSetting::setMasterLiveStreamMountPoint($values["master_harbor_input_mount_point"]);
-                Application_Model_StreamSetting::setDjLiveStreamPort($values["dj_harbor_input_port"]);
-                Application_Model_StreamSetting::setDjLiveStreamMountPoint($values["dj_harbor_input_mount_point"]);
                 Application_Model_StreamSetting::setOffAirMeta($values['offAirMeta']);
 
                 // store stream update timestamp

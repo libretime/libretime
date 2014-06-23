@@ -24,6 +24,7 @@ class UpgradeController extends Zend_Controller_Action
             //create a temporary maintenance notification file
             //when this file is on the server, zend framework redirects all
             //requests to the maintenance page and sets a 503 response code
+
             $maintenanceFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."maintenance.txt" : "/tmp/maintenance.txt";
             $file = fopen($maintenanceFile, 'w');
             fclose($file);
@@ -31,16 +32,10 @@ class UpgradeController extends Zend_Controller_Action
             //Begin upgrade
             
             //Update disk_usage value in cc_pref
-            $musicDir = CcMusicDirsQuery::create()
-                ->filterByType('stor')
-                ->filterByExists(true)
-                ->findOne();
-            $storPath = $musicDir->getDirectory();
-            
-            $freeSpace = disk_free_space($storPath);
-            $totalSpace = disk_total_space($storPath);
-            
-            Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
+            $storDir = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."srv/airtime/stor" : "/srv/airtime/stor";
+            $diskUsage = shell_exec("du -sb $storDir | awk '{print $1}'");
+        
+            Application_Model_Preference::setDiskUsage($diskUsage);
 
             //TODO: clear out the cache
 

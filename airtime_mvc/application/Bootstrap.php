@@ -132,21 +132,24 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         } else {
             $userType = "";
         }
+        
         $view->headScript()->appendScript("var userType = '$userType';");
 
+        if (strpos($_SERVER['REQUEST_URI'], $baseUrl.'Dashboard/stream-player') === false
+            && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/audio-preview') === false
+            && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/playlist-preview') === false
+            && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/block-preview') === false) {
+            if (Application_Model_Preference::GetLiveChatEnabled()) {
+                $client_id = Application_Model_Preference::GetClientId();
+                $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
+                $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');  
+            }
+        }
+
+        /*
         if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) {
             $view->headScript()->appendFile($baseUrl.'js/libs/google-analytics.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        }
-
-        if (Application_Model_Preference::GetPlanLevel() != "disabled"
-                && !($_SERVER['REQUEST_URI'] == $baseUrl.'Dashboard/stream-player' ||
-                     strncmp($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/audio-preview', strlen($baseUrl.'audiopreview/audio-preview'))==0)) {
-
-            $client_id = Application_Model_Preference::GetClientId();
-            $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
-            $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
-        }
-
+        }*/
     }
 
     protected function _initViewHelpers()

@@ -215,23 +215,25 @@ class Application_Model_Systemstatus
     {
         $partitions = array();
 
-        /* First lets get all the watched directories. Then we can group them
-        * into the same partitions by comparing the partition sizes. */
-        $musicDirs = Application_Model_MusicDir::getWatchedDirs();
-        $musicDirs[] = Application_Model_MusicDir::getStorDir();
+        //connect to DB and find how much total space user has allocated.
+        $totalSpace = Application_Model_Preference::GetDiskQuota();
 
-        foreach ($musicDirs as $md) {
-            $totalSpace = disk_total_space($md->getDirectory());
-
-            if (!isset($partitions[$totalSpace])) {
-                $partitions[$totalSpace] = new StdClass;
-                $partitions[$totalSpace]->totalSpace = $totalSpace;
-                $partitions[$totalSpace]->totalFreeSpace = disk_free_space($md->getDirectory());
-
-            }
-
-            $partitions[$totalSpace]->dirs[] = $md->getDirectory();
+        $usedSpace = Application_Model_Preference::getDiskUsage();
+        if (empty($usedSpace)) {
+            $usedSpace = 0;
         }
+        /* $path = $_SERVER['AIRTIME_BASE']."etc/airtime/num_bytes.ini";
+        $arr = parse_ini_file($path);
+
+        $usedSpace = 0;
+        if ($arr !== false) {
+            $usedSpace = $arr['num_bytes'];
+        } */
+        
+        $partitions[$totalSpace] = new stdClass();
+        $partitions[$totalSpace]->totalSpace = $totalSpace;
+        $partitions[$totalSpace]->totalFreeSpace = $totalSpace - $usedSpace;
+        Logging::info($partitions[$totalSpace]->totalFreeSpace);
 
         return array_values($partitions);
     }
@@ -241,7 +243,7 @@ class Application_Model_Systemstatus
         $diskInfo = self::GetDiskInfo();
         $diskInfo = $diskInfo[0];
         $diskUsage = $diskInfo->totalSpace - $diskInfo->totalFreeSpace;
-        if ($diskUsage >= $diskInfo->totalSpace) {
+        if ($diskUsage > 0 && $diskUsage >= $diskInfo->totalSpace) {
             return true;
         }
 

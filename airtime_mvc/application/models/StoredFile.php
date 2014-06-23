@@ -401,7 +401,7 @@ SQL;
             }
         }
 
-        Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
+        Logging::info($_SERVER["HTTP_HOST"].": User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
         // set hidden flag to true
         //$this->_file->setDbHidden(true);
         $this->_file->setDbFileExists(false);
@@ -953,6 +953,8 @@ SQL;
         // Did all the checks for real, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize",
                 $originalFilename);
+                Logging::info($originalFilename);
+                Logging::info($audio_stor);
         $user = Application_Model_User::getCurrentUser();
         if (is_null($user)) {
             $uid = Application_Model_User::getFirstAdminId();

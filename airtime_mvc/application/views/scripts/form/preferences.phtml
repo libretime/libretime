@@ -1,14 +1,8 @@
 <form method="<?php echo $this->element->getMethod() ?>" enctype="multipart/form-data">
 
     <?php echo $this->element->getSubform('preferences_general') ?>
-    
-    <h3 class="collapsible-header" id="email-server-heading"><span class="arrow-icon"></span><?php echo _("Email / Mail Server Settings"); ?></h3>
-    <div class="collapsible-content" id="email-server-settings">
-        <?php echo $this->element->getSubform('preferences_email_server') ?>
-    </div>
 
-    <h3 class="collapsible-header" id="soundcloud-heading"><span class="arrow-icon"></span><?php echo _("SoundCloud Settings") ?></h3>
-
+    <h3 class="collapsible-header" id="soundcloud-heading"><span class="arrow-icon"></span><? echo _("SoundCloud Settings") ?></h3>
     <div class="collapsible-content" id="soundcloud-settings">
         <?php echo $this->element->getSubform('preferences_soundcloud') ?>
     </div>

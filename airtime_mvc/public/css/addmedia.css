@@ -3,20 +3,8 @@
 #recent_uploads_wrapper
 {
 	width: 100%;
+	margin-bottom: 40px;
 }
-	/*
-	position: absolute;
-	left: 5px;
-	right: 5px;
-    bottom: 5px;
-    margin: 0px;
-    height: 350px;
-}
-.dataTables_scrollHeadInner > table:nth-child(1)
-{
-	margin: 0px;
-}
-*/
 
 #recent_uploads h2
 {
