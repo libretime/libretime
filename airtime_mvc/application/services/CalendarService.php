@@ -85,32 +85,31 @@ class Application_Service_CalendarService
             $currentShow = Application_Model_Show::getCurrentShow();
             $currentShowId = count($currentShow) == 1 ? $currentShow[0]["id"] : null;
             $showIsLinked = $this->ccShow->isLinked();
-            if ($now < $end && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded()) {
-                //if the show is not linked the user can add/remove content
-                if (!$showIsLinked) {
 
-                    $menu["schedule"] = array(
-                        "name"=> _("Add / Remove Content"),
-                        "icon" => "add-remove-content",
-                        "url" => $baseUrl."showbuilder/builder-dialog/");
-                //if the show is linked and it's not currently playing the user can add/remove content
-                } elseif ($showIsLinked  && $currentShowId != $this->ccShow->getDbId()) {
+            //user can add/remove content if the show has not ended
+            if ($now < $end && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded()) {
+                //if the show is not linked OR if the show is linked AND not the current playing show
+                //the user can add/remove content
+                if (!$showIsLinked || ($showIsLinked  && $currentShowId != $this->ccShow->getDbId())) {
 
                     $menu["schedule"] = array(
                         "name"=> _("Add / Remove Content"),
                         "icon" => "add-remove-content",
                         "url" => $baseUrl."showbuilder/builder-dialog/");
                 }
-
             }
             
-            if ($now < $start && ($isAdminOrPM || $isHostOfShow) &&
-            		!$this->ccShowInstance->isRecorded() ) {
-            
-            	$menu["clear"] = array(
-            			"name"=> _("Remove All Content"),
-            			"icon" => "remove-all-content",
-            			"url" => $baseUrl."schedule/clear-show");
+            //user can remove all content if the show has not started
+            if ($now < $start && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded() ) {
+                //if the show is not linked OR if the show is linked AND not the current playing show
+                //the user can remove all content
+                if (!$showIsLinked || ($showIsLinked  && $currentShowId != $this->ccShow->getDbId())) {
+
+                   $menu["clear"] = array(
+                        "name"=> _("Remove All Content"),
+                        "icon" => "remove-all-content",
+                        "url" => $baseUrl."schedule/clear-show");
+                }
             }
 
             //"Show Content" should be a menu item at all times except when
