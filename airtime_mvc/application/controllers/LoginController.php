@@ -14,9 +14,11 @@ class LoginController extends Zend_Controller_Action
         $request = $this->getRequest();
         
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
-        if (Zend_Auth::getInstance()->hasIdentity())
+        $auth = Zend_Auth::getInstance();
+        Application_Model_Auth::pinSessionToClient($auth);
+        
+        if ($auth->hasIdentity())
         {
-
             $this->_redirect('Showbuilder');
         }
 
@@ -52,8 +54,7 @@ class LoginController extends Zend_Controller_Action
                     //pass to the adapter the submitted username and password
                     $authAdapter->setIdentity($username)
                                 ->setCredential($password);
-
-                    $auth = Zend_Auth::getInstance();
+                    
                     $result = $auth->authenticate($authAdapter);
                     if ($result->isValid()) {
                         //all info about this user from the login table omit only the password
@@ -66,14 +67,12 @@ class LoginController extends Zend_Controller_Action
                         Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
                         Application_Model_Subjects::resetLoginAttempts($username);
 
-                        $tempSess = new Zend_Session_Namespace("referrer");
-                        $tempSess->referrer = 'login';
-                        
                         //set the user locale in case user changed it in when logging in
                         Application_Model_Preference::SetUserLocale($locale);
 
                         $this->_redirect('Showbuilder');
                     } else {
+
                         $message = _("Wrong username or password provided. Please try again.");
                         Application_Model_Subjects::increaseLoginAttempts($username);
                         Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
@@ -96,7 +95,9 @@ class LoginController extends Zend_Controller_Action
 
     public function logoutAction()
     {
-        Zend_Auth::getInstance()->clearIdentity();
+        $auth = Zend_Auth::getInstance();
+        Application_Model_Auth::pinSessionToClient($auth);
+        $auth->clearIdentity();
         $this->_redirect('showbuilder/index');
     }
 
@@ -188,6 +189,7 @@ class LoginController extends Zend_Controller_Action
             $auth->invalidateTokens($user, 'password.restore');
 
             $zend_auth = Zend_Auth::getInstance();
+            Application_Model_Auth::pinSessionToClient($zend_auth);
             $zend_auth->clearIdentity();
 
             $authAdapter = Application_Model_Auth::getAuthAdapter();
