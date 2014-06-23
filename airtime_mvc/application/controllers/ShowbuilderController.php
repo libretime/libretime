@@ -28,6 +28,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $user = Application_Model_User::GetCurrentUser();
         $userType = $user->getType();
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
+        $this->view->headScript()->appendScript($this->generateGoogleTagManagerDataLayerJavaScript());
 
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -377,5 +378,99 @@ class ShowbuilderController extends Zend_Controller_Action
     {
         throw new Exception("this controller is/was a no-op please fix your
            code");
+    }
+    
+    /** Returns a string containing the JavaScript code to pass some billing account info 
+     *  into Google Tag Manager / Google Analytics, so we can track things like the plan type.
+     */
+    private static function generateGoogleTagManagerDataLayerJavaScript()
+    {
+        $code = "";
+        
+        try
+        {
+            $accessKey = $_SERVER["WHMCS_ACCESS_KEY"];
+            $username = $_SERVER["WHMCS_USERNAME"];
+            $password = $_SERVER["WHMCS_PASSWORD"];
+            $url = "https://account.sourcefabric.com/includes/api.php?accesskey=" . $accessKey; # URL to WHMCS API file goes here
+            
+            $postfields = array();
+            $postfields["username"] = $username;
+            $postfields["password"] = md5($password);
+            $postfields["action"] = "getclientsdetails";
+            $postfields["stats"] = true;
+            $postfields["clientid"] = Application_Model_Preference::GetClientId();
+            $postfields["responsetype"] = "json";
+            
+            $query_string = "";
+            foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5); //Aggressive 5 second timeout
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $query_string);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+            $jsondata = curl_exec($ch);
+            if (curl_error($ch)) {
+                //die("Connection Error: ".curl_errno($ch).' - '.curl_error($ch));
+                throw new Exception("WHMCS server down or invalid request.");
+            }
+            curl_close($ch);
+                    
+            $arr = json_decode($jsondata); # Decode JSON String
+            
+            $client = $arr->client;
+            $stats = $arr->stats;
+            $currencyCode = $client->currency_code;
+            //$incomeCents = NumberFormatter::parseCurrency($stats->income, $currencyCode);
+            
+            $isTrial = true;
+            if (strpos($stats->income, "0.00") === FALSE) {
+                $isTrial = false;
+            }
+            /*
+            if ($incomeCents > 0) {
+                $isTrial = false;
+            }*/
+            $plan = Application_Model_Preference::GetPlanLevel();
+            $country = $client->country;
+            $postcode = $client->postcode;
+            
+            //Figure out how long the customer has been around using a mega hack.
+            //(I'm avoiding another round trip to WHMCS for now...)
+            //We calculate it based on the trial end date...
+            $trialEndDateStr = Application_Model_Preference::GetTrialEndingDate();
+            if ($trialEndDateStr == '') {
+                $accountDuration = 0;
+            } else {
+                $today = new DateTime();
+                $trialEndDate = new DateTime($trialEndDateStr);
+                $trialDuration = new DateInterval("P30D"); //30 day trial duration
+                $accountCreationDate = $trialEndDate->sub($trialDuration);
+                $interval = $today->diff($accountCreationDate);
+                $accountDuration = $interval->days;
+            }
+            
+            $code = "$( document ).ready(function() {
+                    dataLayer.push({
+                                    'ZipCode':  '" . $postcode . "',
+                                    'UserID':  '" . $client->id . "',
+                                    'Customer':  'Customer',
+                                    'PlanType':  '" . $plan . "',
+                                    'Trial':  '" . $isTrial . "',
+                                    'Country':  '" . $country . "',
+                                    'AccountDuration':  '" . strval($accountDuration) . "'
+                                    });
+                     });";
+            
+        } 
+        catch (Exception $e)
+        {
+            return "";
+        }
+        return $code;
     }
 }

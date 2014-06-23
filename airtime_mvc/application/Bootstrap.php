@@ -146,9 +146,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             }
         }
 
+        /*
         if (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1) {
             $view->headScript()->appendFile($baseUrl.'js/libs/google-analytics.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        }
+        }*/
     }
 
     protected function _initViewHelpers()
