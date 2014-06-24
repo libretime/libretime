@@ -1,0 +1,33 @@
+@CHARSET "UTF-8";
+
+#upgrade-downgrade dl
+{
+	width: 300px;
+}
+
+#upgrade-downgrade dt, #upgrade-downgrade dd
+{
+	margin: 0px;
+}
+
+#upgrade-downgrade dd
+{
+	margin-bottom: 10px;
+}
+
+#plantype
+{
+	   float: left;
+	
+}
+
+#billingcycle
+{
+	float: left;
+}
+
+#paymentmethod
+{
+	   float: left;
+	
+}

@@ -1,8 +1,86 @@
+<?php 
+    $form = $this->form;
+    $form->setAttrib('id', 'upgrade-downgrade');
+?>
 <div class="ui-widget ui-widget-content block-shadow clearfix padded-strong">
+<H2>Account Plans</H2>
+<div class="pricing-grid">
+pricing grid here
+</div>
 <?php if (isset($this->errorMessage)) {?>
 <div class="errors"><?php echo $this->errorMessage ?></div>
 <?php }?>
 <div>Plan Level: <?php echo Application_Model_Preference::GetPlanLevel();?></div>
-<?php echo $this->form ?>
+<?php //echo $form ?>
+
+
+ <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
+    $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
+    
+    <div id="plantype">
+        <?php echo $form->newproductid ?>
+    </div>
+    <div id="billingcycle">
+        <?php echo $form->newproductbillingcycle ?>
+    </div>
+    <div id="paymentmethod">
+        <?php echo $form->paymentmethod ?>
+    </div>
+    
+    <div class="clearfix"></div>
+    <?php $billingForm = $form->getSubform("billing_client_info") ?>
+    <div>
+        <?=$billingForm->firstname?>
+    </div>
+    <div>
+        <?=$billingForm->lastname?>
+    </div>
+    <div>
+        <?=$billingForm->companyname?>
+    </div>        
+    <div>
+        <?=$billingForm->email?>
+    </div>        
+    <div>
+        <?=$billingForm->address1?>
+    </div>        
+    <div>
+        <?=$billingForm->address2?>
+    </div>        
+    <div>
+        <?=$billingForm->city?>
+    </div>        
+    <div>
+        <?=$billingForm->state?>
+    </div>   
+    <div>
+        <?=$billingForm->postcode?>
+    </div>        
+    <div>
+        <?=$billingForm->country?>
+    </div>    
+    <div>
+        <?=$billingForm->phonenumber?>
+    </div>        
+    <div>
+        <?=$billingForm->securityqid?>
+    </div>
+    <div>
+        <?=$billingForm->securityqans?>
+    </div>
+    <div>
+        <?=$billingForm->getElement("7"); ?>
+    </div>
+    <div>
+        <?=$billingForm->getElement("71"); ?>
+    </div>
+    <div>
+        <?=$billingForm->password2?>
+    </div>
+    <div>
+        <?=$billingForm->password2verify?>
+    </div>
+    <input type="submit" val="Submit">
+</form>
 <br><br><br><br>
 </div>

@@ -4,7 +4,7 @@ require_once 'Zend/Locale.php';
 class Application_Form_BillingClient extends Zend_Form
 {
     public function init()
-    {
+    {        
         /*$this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/billing-purchase.phtml'))));*/
         $client = BillingController::getClientDetails();
