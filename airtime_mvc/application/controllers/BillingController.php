@@ -45,6 +45,9 @@ class BillingController extends Zend_Controller_Action {
                 //$clientfields["clientid"] = Application_Model_Preference::GetClientId();
                 $clientfields["clientid"] = 1846;
                 
+                $clientfields["customfields"] = base64_encode(serialize($formData["customfields"]));
+                unset($formData["customfields"]);
+                
                 $clientfields["responsetype"] = "json";
                 unset($formData["newproductid"]);
                 unset($formData["newproductbillingcycle"]);
