@@ -12,7 +12,15 @@ class BillingController extends Zend_Controller_Action {
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
         if ($request->isPost()) {
-            //$formData = $form->getValues();
+            
+            /*
+             * TODO: determine if VAT shoould be charged on the invoice or not.
+             * We'll need to check if a VAT number was supplied in the form and if so,
+             * validate it somehow. We'll also need to make sure the country given is
+             * in the EU
+             */
+            $apply_vat = false;
+            
             $formData = $request->getPost();
             if ($form->isValid($formData)) {
                 $credentials = self::getAPICredentials();
@@ -22,8 +30,7 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["password"] = md5($credentials["password"]);
                 $postfields["action"] = "upgradeproduct";
                 
-                //$postfields["clientid"] = Application_Model_Preference::GetClientId();
-                $postfields["clientid"] = 1846;
+                $postfields["clientid"] = Application_Model_Preference::GetClientId();
                 
                 $postfields["serviceid"] = self::getClientServiceId();
                 
@@ -37,13 +44,13 @@ class BillingController extends Zend_Controller_Action {
                 foreach ($postfields as $k=>$v) $upgrade_query_string .= "$k=".urlencode($v)."&";
                 
                 //update client info
+
                 $clientfields = array();
                 $clientfields["username"] = $credentials["username"];
                 $clientfields["password"] = md5($credentials["password"]);
                 $clientfields["action"] = "updateclient";
                 
-                //$clientfields["clientid"] = Application_Model_Preference::GetClientId();
-                $clientfields["clientid"] = 1846;
+                $clientfields["clientid"] = Application_Model_Preference::GetClientId();
                 
                 $clientfields["customfields"] = base64_encode(serialize($formData["customfields"]));
                 unset($formData["customfields"]);
@@ -71,6 +78,9 @@ class BillingController extends Zend_Controller_Action {
                         $this->setErrorMessage();
                         $this->view->form = $form;
                     } else {
+                        if ($apply_vat) {
+                            $this->addVatToInvoice($result["invoiceid"]);
+                        }
                         self::viewInvoice($result["invoiceid"]);
                     }
                 }
@@ -80,6 +90,47 @@ class BillingController extends Zend_Controller_Action {
         } else {
             $this->view->form = $form;
         }
+    }
+
+    private function addVatToInvoice($invoice_id)
+    {
+        $credentials = self::getAPICredentials();
+        
+        //First we need to get the invoice details: sub total, and total
+        //so we can calcuate the amount of VAT to add
+        $invoicefields = array();
+        $invoicefields["username"] = $credentials["username"];
+        $invoicefields["password"] = md5($credentials["password"]);
+        $invoicefields["action"] = "getinvoice";
+        $invoicefields["invoiceid"] = $invoice_id;
+        $invoicefields["responsetype"] = "json";
+        
+        $invoice_query_string = "";
+        foreach ($invoicefields as $k=>$v) $invoice_query_string .= "$k=".urlencode($v)."&";
+        
+        //TODO: error checking
+        $result = $this->makeRequest($credentials["url"], $invoice_query_string);
+        
+        $vat_rate = 19.00;
+        $vat_amount = $result["subtotal"] * ($vat_rate/100);
+        $invoice_total = $result["total"] + $vat_amount;
+
+        //Second, update the invoice with the VAT amount and updated total
+        $postfields = array();
+        $postfields["username"] = $credentials["username"];
+        $postfields["password"] = md5($credentials["password"]);
+        $postfields["action"] = "updateinvoice";
+        $postfields["invoiceid"] = $invoice_id;
+        $postfields["tax"] = "$vat_amount";
+        $postfields["taxrate"] = "$vat_rate";
+        $postfields["total"] = "$invoice_total";
+        $postfields["responsetype"] = "json";
+        
+        $query_string = "";
+        foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+        
+        //TODO: error checking
+        $result = $this->makeRequest($credentials["url"], $query_string);
     }
 
     private function setErrorMessage($msg=null)
@@ -139,8 +190,7 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["customfields"] = base64_encode(serialize($formData["customfields"]));
                 unset($formData["customfields"]);
                 
-                //$postfields["clientid"] = Application_Model_Preference::GetClientId();
-                $postfields["clientid"] = 1846;
+                $postfields["clientid"] = Application_Model_Preference::GetClientId();
                 
                 $postfields["responsetype"] = "json";
                 $postfields = array_merge($postfields, $formData);
@@ -177,13 +227,13 @@ class BillingController extends Zend_Controller_Action {
         $postfields["password"] = md5($credentials["password"]);
         $postfields["action"] = "getinvoices";
         $postfields["responsetype"] = "json";
-        $postfields["userid"] = 1846;
-        //$postfields["clientid"] = Application_Model_Preference::GetClientId();
+        $postfields["clientid"] = Application_Model_Preference::GetClientId();
         
         $query_string = "";
         foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
         
         $result = self::makeRequest($credentials["url"], $query_string);
+        
         $this->view->invoices = $result["invoices"]["invoice"];
     }
     
@@ -205,8 +255,7 @@ class BillingController extends Zend_Controller_Action {
         $postfields["password"] = md5($credentials["password"]);
         $postfields["action"] = "getclientsproducts";
         $postfields["responsetype"] = "json";
-        $postfields["clientid"] = 1846;
-        //$postfields["clientid"] = Application_Model_Preference::GetClientId();
+        $postfields["clientid"] = Application_Model_Preference::GetClientId();
         
         $query_string = "";
         foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
@@ -255,8 +304,7 @@ class BillingController extends Zend_Controller_Action {
             $postfields["password"] = md5($credentials["password"]);
             $postfields["action"] = "getclientsdetails";
             $postfields["stats"] = true;
-            //$postfields["clientid"] = Application_Model_Preference::GetClientId();
-            $postfields["clientid"] = 1846;
+            $postfields["clientid"] = Application_Model_Preference::GetClientId();
             $postfields["responsetype"] = "json";
             
             $query_string = "";
