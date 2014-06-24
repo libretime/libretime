@@ -117,6 +117,6 @@ class Application_Model_Auth
      */
     public static function pinSessionToClient($auth)
     {
-        $auth->setStorage(new Zend_Auth_Storage_Session('Airtime' . $_SERVER['SERVER_NAME'] . Application_Model_Preference::GetClientId()));
+        //$auth->setStorage(new Zend_Auth_Storage_Session('Airtime' . $_SERVER['SERVER_NAME'] . Application_Model_Preference::GetClientId()));
     }
 }
