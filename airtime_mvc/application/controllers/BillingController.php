@@ -125,13 +125,16 @@ class BillingController extends Zend_Controller_Action {
         if ($request->isPost()) {
             $formData = $request->getPost();
             if ($form->isValid($formData)) {
-            
+
                 $credentials = self::getAPICredentials();
                 
                 $postfields = array();
                 $postfields["username"] = $credentials["username"];
                 $postfields["password"] = md5($credentials["password"]);
                 $postfields["action"] = "updateclient";
+
+                $postfields["customfields"] = base64_encode(serialize($formData["customfields"]));
+                unset($formData["customfields"]);
                 
                 //$postfields["clientid"] = Application_Model_Preference::GetClientId();
                 $postfields["clientid"] = 1846;
@@ -140,7 +143,7 @@ class BillingController extends Zend_Controller_Action {
                 $postfields = array_merge($postfields, $formData);
                 unset($postfields["password2verify"]);
                 unset($postfields["submit"]);
-                
+
                 $query_string = "";
                 foreach ($postfields as $k=>$v) $query_string .= "$k=".urlencode($v)."&";
                 
