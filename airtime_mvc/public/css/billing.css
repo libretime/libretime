@@ -1,0 +1,138 @@
+@CHARSET "UTF-8";
+
+.billing-panel
+{
+	width: 400px;
+	margin: 0 auto;
+	margin-bottom: 30px;
+}
+
+#upgrade-downgrade
+{
+	border: 0px solid #000;
+	margin: 0 auto;
+	color: #000;
+}
+
+#upgrade-downgrade label
+{
+	color: rgb(28,28,28);
+}
+#upgrade-downgrade label.disabled
+{
+	color: rgb(108,108,108);
+}
+
+#upgrade-downgrade dl
+{
+	width: 300px;
+}
+
+#upgrade-downgrade dt, #upgrade-downgrade dd
+{
+	margin: 0px;
+}
+
+#upgrade-downgrade dd
+{
+	margin-bottom: 10px;
+}
+
+.pricing-grid table
+{
+	border-spacing: 0px;
+    border-collapse: separate;
+	border: 1px solid #777;
+	width: 600px;
+	margin-left: -100px;
+	/*background-color: #555;*/
+	table-layout: fixed;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	box-shadow: 0px 5px 5px rgba(0,0,0,0.5);
+}
+
+.pricing-grid td, .pricing-grid th
+{
+	border-bottom: 1px solid #999;
+	border-right: 1px solid #bbb;
+	background-color: #ccc;
+	padding: 10px;
+}
+
+.pricing-grid th
+{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 0px;
+}
+
+
+.pricing-grid tr.price td
+{
+	text-align: right;
+    background-color: #ddd;
+    font-weight: bold;
+}
+
+#current_plan
+{
+	text-align: center;
+}
+
+#plantype
+{
+	float: left;
+}
+
+#billingcycle
+{
+	float: left;
+	margin-left: 30px;
+}
+
+#billingcycle_disclaimer
+{
+    float: left;
+    margin-left: 30px;
+    width: 200px;
+}
+
+#vat_disclaimer
+{
+	text-align: right;
+	font-size: 0.9em;
+	margin-bottom: 30px;
+}
+
+#total_box
+{
+	text-align: right;
+	margin-top: 30px;
+	margin-bottom: 10px;
+	border: 1px solid #777;
+	background: #ccc;
+	padding: 5px;
+}
+
+#paymentmethod
+{
+}
+
+.billing_col1, .billing_col2
+{
+	float: left;
+	margin-right: 10px;
+}
+
+.billing_checkbox
+{
+	float: left;
+	margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+#upgrade-downgrade input[type=submit]
+{
+	float: right;
+}

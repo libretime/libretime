@@ -4,7 +4,7 @@ require_once 'Zend/Locale.php';
 class Application_Form_BillingClient extends Zend_Form
 {
     public function init()
-    {
+    {        
         /*$this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/billing-purchase.phtml'))));*/
         $client = BillingController::getClientDetails();
@@ -34,7 +34,7 @@ class Application_Form_BillingClient extends Zend_Form
         $companyname->setLabel(_('Company Name:'))
             ->setValue($client["companyname"])
             ->setAttrib('class', 'input_text')
-            ->setRequired(true)
+            ->setRequired(false)
             ->addValidator($notEmptyValidator)
             ->addFilter('StringTrim');
         $this->addElement($companyname);
@@ -85,7 +85,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($state);
 
         $postcode = new Zend_Form_Element_Text('postcode');
-        $postcode->setLabel(_('Zip Code:'))
+        $postcode->setLabel(_('Zip Code / Postal Code:'))
             ->setValue($client["postcode"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -140,15 +140,16 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($securityqans);
 
         foreach ($client["customfields"] as $field) {
-            if ($field["id"] == 7) {
+            if ($field["id"] == "7") {
                 $vatvalue = $field["value"];
-            } elseif ($field["id"] == 71) {
+            } elseif ($field["id"] == "71") {
                 $subscribevalue = $field["value"];
             }
         }
 
-        $vat = new Zend_Form_Element_Text('customfield7');
+        $vat = new Zend_Form_Element_Text("7");
         $vat->setLabel(_('VAT/Tax ID (EU only)'))
+            ->setBelongsTo('customfields')
             ->setValue($vatvalue)
             ->setAttrib('class', 'input_text')
             //->setRequired(true)
@@ -156,9 +157,10 @@ class Application_Form_BillingClient extends Zend_Form
             ->addFilter('StringTrim');
         $this->addElement($vat);
 
-        $subscribe = new Zend_Form_Element_Checkbox('customfield71');
+        $subscribe = new Zend_Form_Element_Checkbox('71');
         $subscribe->setLabel(_('Subscribe to Sourcefabric newsletter'))
             ->setValue($subscribevalue)
+            ->setBelongsTo('customfields')
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
             ->addValidator($notEmptyValidator)

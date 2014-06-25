@@ -1,8 +1,255 @@
-<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong">
-<?php if (isset($this->errorMessage)) {?>
-<div class="errors"><?php echo $this->errorMessage ?></div>
-<?php }?>
-<div>Plan Level: <?php echo Application_Model_Preference::GetPlanLevel();?></div>
-<?php echo $this->form ?>
-<br><br><br><br>
+<?php 
+    $form = $this->form;
+    $form->setAttrib('id', 'upgrade-downgrade');
+
+?>
+<script type="text/javascript">
+<?php echo("var products = " . json_encode(BillingController::getProducts()) . ";");
+?>
+
+//Disable annual billing for hobbyist plan
+function validatePlan()
+{
+	if ($("#newproductid-25").is(":checked")) {
+		$("#newproductbillingcycle-annually").prop("disabled", "true");
+		$("label[for='newproductbillingcycle-annually']").addClass("disabled");
+		$("#newproductbillingcycle-monthly").prop("checked", "true");
+	} else {
+		$("#newproductbillingcycle-annually").removeProp("disabled");
+		$("label[for='newproductbillingcycle-annually']").removeClass("disabled");
+	}
+}
+
+function recalculateTotal()
+{
+    console.log(products);
+	
+	var newProductId = $("input[type='radio'][name='newproductid']:checked");
+	if (newProductId.length > 0) {
+	    newProductId = newProductId.val();
+	} else {
+		return;
+	}
+
+	var newProduct = null;  
+	for (var i = 0; i < products.length; i++)
+	{
+		if (products[i].pid == newProductId) {
+			newProduct = products[i];
+			break;
+		}
+	}
+
+	var total = "0";
+	if ($("#newproductbillingcycle-monthly").is(":checked")) {
+	    total = "$" + newProduct.pricing["USD"]["monthly"] + " per month";
+	} else if ($("#newproductbillingcycle-annually").is(":checked")) {
+		total = "$" + newProduct.pricing["USD"]["annually"] + " per year";
+	}
+	$("#total").text(total);
+}
+
+$(document).ready(function() {
+    recalculateTotal();
+	
+    $("input[name='newproductid']").change(function() {
+        validatePlan();
+        recalculateTotal();
+    });
+    $("input[name='newproductbillingcycle']").change(function() {
+        recalculateTotal();
+    });
+
+    $("#hobbyist_grid_price").text("$" + products[0].pricing["USD"]["monthly"] + " / month");
+    $("#starter_grid_price").text("$" + products[1].pricing["USD"]["monthly"] + " / month");
+    $("#plus_grid_price").text("$" + products[2].pricing["USD"]["monthly"] + " / month");
+    $("#premium_grid_price").text("$" + products[3].pricing["USD"]["monthly"] + " / month");
+});
+</script>
+
+<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
+<H2><?=_("Account Plans")?></H2>
+<H3><?=_("Upgrade today and get more listeners and storage space!")?></H3>
+<div class="pricing-grid">
+    <table>
+        <tr>
+            <th>Hobbyist</th>
+            <th>Starter</th>
+            <th>Plus</th>
+            <th>Premium</th>
+        </tr>
+        <tr>
+            <td>1 Stream
+            </td>
+            <td>2 Streams
+            </td>
+            <td>2 Streams
+            </td>
+            <td>3 Streams
+            </td>
+        </tr> 
+        <tr>
+            <td>64kbps Stream Quality
+            </td>
+            <td>64kbps and 128kbps Stream Quality
+            </td>
+            <td>64kbps and 196kbps Stream Quality
+            </td>
+            <td>64kbps, 128kbps, and 196kbps Stream Quality
+            </td>
+        </tr> 
+        <tr>
+            <td>5 Listeners
+            </td>
+            <td>40 Listeners per stream
+            </td>
+            <td>100 Listeners per stream
+            </td>
+            <td>500 Listeners per stream
+            </td>
+        </tr> 
+        <tr>
+            <td>2GB Storage
+            </td>
+            <td>5GB Storage
+            </td>
+            <td>30GB Storage
+            </td>
+            <td>150GB Storage
+            </td>
+        </tr> 
+        <tr>
+            <td>Ticket, Email, Forum Support
+            </td>
+            <td>Live Chat, Ticket, Email, Forum Support
+            </td>
+            <td>Live Chat, Ticket, Email, Forum Support
+            </td>
+            <td>Live Chat, Ticket, Email, Forum Support
+            </td>
+        </tr> 
+        <tr>
+            <td>
+            </td>
+            <td>Save 15% if paid annually
+            </td>
+            <td>Save 15% if paid annually
+            </td>
+            <td>Save 15% if paid annually
+            </td>
+        </tr> 
+        <tr class="price">
+            <td id="hobbyist_grid_price">
+            </td>
+            <td id="starter_grid_price">
+            </td>
+            <td id="plus_grid_price">
+            </td>
+            <td id="premium_grid_price">
+            </td>
+        </tr> 
+    </table>
+</div>
+<!-- 
+<p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_("View Plans")?></a> (Opens in a new window)</p>
+ -->
+<p id="current_plan"><b>Current Plan:</b> <?php echo Application_Model_Preference::GetPlanLevel();?>
+</p>
+
+<h3>Choose a plan:</h3>
+ <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
+    $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
+    
+    <div id="plantype">
+        <?php echo $form->newproductid ?>
+    </div>
+    <div id="billingcycle">
+        <?php echo $form->newproductbillingcycle ?>
+    </div>
+    <div id="billingcycle_disclaimer">
+    Save 15% on annual plans (Hobbyist plan excluded).
+    </div>
+    <div class="clearfix"></div>
+    <div id="total_box"><b>Total:</b><br><span id="total"></span></div>
+    
+    <div id="vat_disclaimer">
+    Plus VAT if you are an EU resident without a valid VAT number.
+    </div>
+    
+    <h3>Enter your payment details:</h3>
+    <?php if (isset($this->errorMessage)) {?>
+    <div class="errors"><?php echo $this->errorMessage ?></div>
+    <?php }?>
+    <?php //echo $form ?>
+    
+    <?php $billingForm = $form->getSubform("billing_client_info") ?>
+    <div class="billing_col1">
+        <?=$billingForm->firstname?>
+    </div>
+    <div class="billing_col2">
+        <?=$billingForm->lastname?>
+    </div>
+    <div class="clearfix"></div>
+    <div class="billing_col1">
+        <?=$billingForm->companyname?>
+    </div>        
+    <div class="billing_col2">
+        <?=$billingForm->email?>
+    </div>        
+    <div class="clearfix"></div>
+    <div class="billing_col1">
+        <?=$billingForm->address1?>
+    </div>        
+    <div class="billing_col2">
+        <?=$billingForm->address2?>
+    </div>      
+    <div class="clearfix"></div>
+    <div class="billing_col1">
+        <?=$billingForm->city?>
+    </div>        
+    <div class="billing_col2">
+        <?=$billingForm->state?>
+    </div>   
+    <div class="clearfix"></div>
+    <div>
+        <?=$billingForm->postcode?>
+    </div>        
+    <div>
+        <?=$billingForm->country?>
+    </div>    
+    <div>
+        <?=$billingForm->phonenumber?>
+    </div>        
+    <div>
+        <?=$billingForm->securityqid?>
+    </div>
+    <div>
+        <?=$billingForm->securityqans?>
+    </div>
+    <div style="float:right; width: 200px;"><p>VAT will be added to your invoice if you are an EU resident without a valid VAT number.</p>
+    </div>
+    <div>
+        <?=$billingForm->getElement("7"); ?>
+    </div>
+    <div class="clearfix"></div>
+    
+    <div>
+        <?php //$billingForm->getElement("71"); ?>
+        <div class="billing_checkbox">
+            <?=$billingForm->getElement("71")->renderViewHelper(); ?>
+        </div>
+        <?=$billingForm->getElement("71")->renderLabel(); ?>
+    </div>
+    <div class="clearfix"></div>
+    
+    <div style="float:right; width: 200px;"><p>After submitting your order, you will be redirected to an invoice with payment buttons.</p>
+    </div>
+    <div id="paymentmethod">
+        <?php echo $form->paymentmethod ?>
+    </div>
+    
+    <div class="clearfix"></div>
+    <input type="submit" value="Submit Order"></input>
+    <div class="clearfix"></div>
+</form>
 </div>
