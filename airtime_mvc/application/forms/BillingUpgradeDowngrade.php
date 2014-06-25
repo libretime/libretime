@@ -4,17 +4,9 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
     public function init()
     {
         $productPrices = array();
-        $productTypes = array();
-        $products = BillingController::getProducts();
-                
-        foreach ($products as $k => $p) {
-            $productPrices[$p["name"]] = array(
-                "monthly" => $p["pricing"]["USD"]["monthly"],
-                "annualy" => $p["pricing"]["USD"]["annually"]
-            );
-            $productTypes[$p["pid"]] = $p["name"];
-        }
-        
+        $productTypes = array();       
+        list($productPrices, $productTypes) = BillingController::getProductPricesAndTypes();
+               
         //$currentPlanType = ucfirst(Application_Model_Preference::GetPlanLevel());
         $currentPlanType = "Hobbyist";
         if (($key = array_search($currentPlanType, $productTypes)) !== false) {
@@ -30,7 +22,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         
         $billingcycle = new Zend_Form_Element_Radio('newproductbillingcycle');
         $billingcycle->setLabel(_('Billing cycle:'))
-            ->setMultiOptions(array('monthly' => 'monthly', 'annually' => 'annually'))
+            ->setMultiOptions(array('monthly' => 'Monthly', 'annually' => 'Annually'))
             ->setRequired(true)
             ->setValue('monthly');
         $this->addElement($billingcycle);
@@ -50,6 +42,8 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         $this->addElement($submit);*/
         
         $client = new Application_Form_BillingClient();
+        $client->removeElement("password2");
+        $client->removeElement("password2verify");
         $this->addSubForm($client, 'billing_client_info');
     }
 }

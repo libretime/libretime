@@ -64,3 +64,9 @@ define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 define('SOUNDCLOUD_NOT_UPLOADED_YET' , -1);
 define('SOUNDCLOUD_PROGRESS'         , -2);
 define('SOUNDCLOUD_ERROR'            , -3);
+
+
+//WHMCS integration
+define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
+define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
+

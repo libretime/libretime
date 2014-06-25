@@ -12,6 +12,7 @@ class BillingController extends Zend_Controller_Action {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
+        BillingController::ensureClientIdIsValid();
         
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
@@ -35,7 +36,7 @@ class BillingController extends Zend_Controller_Action {
                 $postfields["action"] = "upgradeproduct";
                 $postfields["clientid"] = Application_Model_Preference::GetClientId();
                 
-                $postfields["serviceid"] = self::getClientServiceId();
+                $postfields["serviceid"] = self::getClientInstanceId();
                 $postfields["type"] = "product";
                 $postfields["newproductid"] = $formData["newproductid"];
                 $postfields["newproductbillingcycle"] = $formData["newproductbillingcycle"];
@@ -175,6 +176,7 @@ class BillingController extends Zend_Controller_Action {
     {
         $request = $this->getRequest();
         $form = new Application_Form_BillingClient();
+        BillingController::ensureClientIdIsValid();
         if ($request->isPost()) {
             $formData = $request->getPost();
             if ($form->isValid($formData)) {
@@ -218,6 +220,7 @@ class BillingController extends Zend_Controller_Action {
 
     public function invoicesAction()
     {
+        BillingController::ensureClientIdIsValid();
         $credentials = self::getAPICredentials();
         
         $postfields = array();
@@ -237,6 +240,7 @@ class BillingController extends Zend_Controller_Action {
     
     public function invoiceAction()
     {
+        BillingController::ensureClientIdIsValid();
         $request = $this->getRequest();
         $invoice_id = $request->getParam('invoiceid');
         self::viewInvoice($invoice_id);
@@ -259,10 +263,52 @@ class BillingController extends Zend_Controller_Action {
         
         $result = self::makeRequest($credentials["url"], $query_string);
         Logging::info($result);
+        
+        if ($_SERVER['SERVER_NAME'] == "airtime.localhost") {
+            return "1384";
+        }
+        //This code must run on airtime.pro for it to work... it's trying to match
+        //the server's hostname with the client subdomain.
+        foreach ($result["products"] as $product)
+        {
+            if (strpos($product[0]["groupname"], "Airtime") === FALSE)
+            {
+                //Ignore non-Airtime products
+                continue;
+            }
+            else
+            {
+                if ($product[0]["status"] === "Active") {
+                    $airtimeProduct = $product[0];
+                    $subdomain = '';
+        
+                    foreach ($airtimeProduct['customfields']['customfield'] as $customField)
+                    {
+                        if ($customField['name'] === SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME)
+                        {
+                            $subdomain = $customField['value'];
+                            if (($subdomain . ".airtime.pro") === $_SERVER['SERVER_NAME'])
+                            {
+                                return $airtimeProduct['id'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        throw new Exception("Unable to match subdomain to a service ID");
     }
 
     public static function getProducts()
     {
+        //Making this static to cache the products during a single HTTP request. 
+        //This saves us roundtrips to WHMCS if getProducts() is called multiple times.
+        static $result = array();
+        if (!empty($result))
+        {
+            return $result["products"]["product"];
+        }
+        
         $credentials = self::getAPICredentials();
         
         $postfields = array();
@@ -279,6 +325,21 @@ class BillingController extends Zend_Controller_Action {
         $result = self::makeRequest($credentials["url"], $query_string);
         return $result["products"]["product"];
     }
+    
+    public static function getProductPricesAndTypes()
+    {
+        $products = BillingController::getProducts();
+        
+        foreach ($products as $k => $p) {
+            $productPrices[$p["name"]] = array(
+                    "monthly" => $p["pricing"]["USD"]["monthly"],
+                    "annually" => $p["pricing"]["USD"]["annually"]
+            );
+            $productTypes[$p["pid"]] = $p["name"] . " ($" . $productPrices[$p['name']]['monthly'] . "/mo)";
+        }
+        return array($productPrices, $productTypes);
+    }
+    
 
     public static function getClientDetails()
     {
@@ -323,6 +384,14 @@ class BillingController extends Zend_Controller_Action {
             return json_decode($jsondata, true);
         } catch (Exception $e) {
             Logging::info($e->getMessage());
+        }
+    }
+    
+    private static function ensureClientIdIsValid()
+    {
+        if (Application_Model_Preference::GetClientId() == null)
+        {
+            throw new Exception("Invalid client ID: " . Application_Model_Preference::GetClientId());
         }
     }
 }

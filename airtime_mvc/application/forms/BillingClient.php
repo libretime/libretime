@@ -34,7 +34,7 @@ class Application_Form_BillingClient extends Zend_Form
         $companyname->setLabel(_('Company Name:'))
             ->setValue($client["companyname"])
             ->setAttrib('class', 'input_text')
-            ->setRequired(true)
+            ->setRequired(false)
             ->addValidator($notEmptyValidator)
             ->addFilter('StringTrim');
         $this->addElement($companyname);
@@ -85,7 +85,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($state);
 
         $postcode = new Zend_Form_Element_Text('postcode');
-        $postcode->setLabel(_('Zip Code:'))
+        $postcode->setLabel(_('Zip Code / Postal Code:'))
             ->setValue($client["postcode"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
