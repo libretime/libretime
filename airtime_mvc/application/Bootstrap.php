@@ -14,8 +14,10 @@ require_once "DateHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
 require_once "Timezone.php";
+require_once "models/Auth.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
+ 
 
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
@@ -24,6 +26,8 @@ Config::setAirtimeVersion();
 require_once __DIR__."/configs/navigation.php";
 
 Zend_Validate::setDefaultNamespaces("Zend");
+
+Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());

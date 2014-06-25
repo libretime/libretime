@@ -103,11 +103,14 @@ class Application_Model_Auth
     }
     
     /** It is essential to do this before interacting with Zend_Auth otherwise sessions could be shared between
-     *  different copies of Airtime on the same webserver. This essentially pins this session to this hostname and client ID.
+     *  different copies of Airtime on the same webserver. This essentially pins this session to:
+     *   - The server hostname - including subdomain so we segment multiple Airtime installs on different subdomains
+     *   - The remote IP of the browser - to help prevent session hijacking
+     *   - The client ID - same reason as server hostname
      * @param Zend_Auth $auth Get this with Zend_Auth::getInstance().
      */
     public static function pinSessionToClient($auth)
     {
-        $auth->setStorage(new Zend_Auth_Storage_Session('Airtime' . $_SERVER['SERVER_NAME'] . Application_Model_Preference::GetClientId()));
+        $auth->setStorage(new Zend_Auth_Storage_Session('Airtime' . $_SERVER['SERVER_NAME'] . $_SERVER['REMOTE_ADDR'] . Application_Model_Preference::GetClientId()));
     }
 }
