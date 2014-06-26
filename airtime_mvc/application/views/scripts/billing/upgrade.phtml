@@ -4,8 +4,13 @@
 
 ?>
 <script type="text/javascript">
-<?php echo("var products = " . json_encode(BillingController::getProducts()) . ";");
+<?php echo("var products = " . json_encode(BillingController::getProducts()) . ";\n");
+      echo("var vatRate = " . json_encode(VAT_RATE) . ";");
 ?>
+
+var vatFieldId = "#customfields-7";
+var validVATNumber = false;
+var customerInEU = false;
 
 //Disable annual billing for hobbyist plan
 function validatePlan()
@@ -20,10 +25,25 @@ function validatePlan()
 	}
 }
 
-function recalculateTotal()
+function validateVATNumber()
 {
-    console.log(products);
+	$.post("/billing/vat-validator", { "vatnumber" : $(vatFieldId).val(), "country" : $("#country").val() })
+		.success(function(data, textStatus, jqXHR) {
+    	if (data["result"]) {
+        	$("#vaterror").html("&#10003; Your VAT number is valid.");
+        	window.validVATNumber = true;
+    	} else {
+        	$("#vaterror").text("Error: Your VAT number is invalid.");
+        	window.validVATNumber = false;
+    	}
+    	recalculateTotals();
+	});
 	
+}
+
+/* Recalculate subtotal and total */
+function recalculateTotals()
+{
 	var newProductId = $("input[type='radio'][name='newproductid']:checked");
 	if (newProductId.length > 0) {
 	    newProductId = newProductId.val();
@@ -40,24 +60,99 @@ function recalculateTotal()
 		}
 	}
 
-	var total = "0";
+	/** This calculation is all done on the server side too inside WHMCS so don't waste your time
+	    trying to hax0r it to get cheap Airtime Pro. */
+	var subtotal = "0";
+	var savings = "0";
+	var subtotalNumber = "0";
+	var billingPeriodString = "";
 	if ($("#newproductbillingcycle-monthly").is(":checked")) {
-	    total = "$" + newProduct.pricing["USD"]["monthly"] + " per month";
+		billingPeriodString = " per month";
+		subtotalNumber = newProduct.pricing["USD"]["monthly"];
+		subtotal = "$" + subtotalNumber + billingPeriodString;
+		$("#savings").text("");
+	    
 	} else if ($("#newproductbillingcycle-annually").is(":checked")) {
-		total = "$" + newProduct.pricing["USD"]["annually"] + " per year";
+		subtotalNumber = newProduct.pricing["USD"]["annually"];
+		billingPeriodString = " per year";
+		subtotal = "$" + subtotalNumber + billingPeriodString;
+				savings = "$" + (newProduct.pricing["USD"]["monthly"]*12 - subtotalNumber).toFixed(2);
+		$("#savings").html("You save: " + savings + " per year");
 	}
-	$("#total").text(total);
+	$("#subtotal").text(subtotal);
+
+	//Calculate total:
+	var vatAmount = 0; 
+	if (window.customerInEU && !window.validVATNumber) {
+		vatAmount = (parseFloat(subtotalNumber) * vatRate)/100.00;
+	}
+	var total = (vatAmount + parseFloat(subtotalNumber)).toFixed(2);
+	$(".subtotal").text(subtotal);
+	if (vatAmount > 0) {
+		$("#tax").text("Plus VAT at " + parseInt(vatRate) + "%: $" + vatAmount.toFixed(2) + billingPeriodString);
+	} else {
+		$("#tax").text("");
+	}
+	$("#total").text("$" + total + billingPeriodString);
+}
+
+function configureByCountry(countryCode)
+{
+	//Disable the VAT tax field if the country is not in the EU.
+	$.post("/billing/is-country-in-eu", { "country" : countryCode })
+	.success(function(data, textStatus, jqXHR) {
+    	if (data["result"]) {
+    		   $(vatFieldId).prop("disabled", false);
+           	   $(vatFieldId).prop("readonly", false);
+    		   $(vatFieldId + "-label").removeClass("disabled");
+    		   $("#vat_disclaimer2").fadeIn(300);
+    		   window.customerInEU = true;
+    	} else {
+        	$(vatFieldId).prop("disabled", true);
+        	$(vatFieldId).prop("readonly", true);
+        	$(vatFieldId).val("");
+ 		    $(vatFieldId + "-label").addClass("disabled");
+ 		    $("#vat_disclaimer2").fadeOut(0);
+ 		    window.customerInEU = false;
+    	}
+		recalculateTotals();
+	});
 }
 
 $(document).ready(function() {
-    recalculateTotal();
 	
+	configureByCountry($("#country").val());
+	recalculateTotals();
+    
     $("input[name='newproductid']").change(function() {
         validatePlan();
-        recalculateTotal();
+        recalculateTotals();
     });
     $("input[name='newproductbillingcycle']").change(function() {
-        recalculateTotal();
+    	recalculateTotals();
+    });
+
+    $("#country").change(function() {
+        configureByCountry($(this).val());
+    });
+
+    vatFieldChangeTimer = null;
+    $(vatFieldId).change(function() {
+    	if (vatFieldChangeTimer) {
+    		clearTimeout(vatFieldChangeTimer);
+        }
+        
+        if ($(this).val() == "") {
+            $("#vaterror").text("");
+            window.validVATNumber = false;
+            recalculateTotals();
+            return;
+        }
+    	vatFieldChangeTimer = setTimeout(function() {
+        	//TODO: validate VAT number
+        	validateVATNumber();
+        	recalculateTotals();
+    	}, 2000);
     });
 
     $("#hobbyist_grid_price").text("$" + products[0].pricing["USD"]["monthly"] + " / month");
@@ -69,7 +164,7 @@ $(document).ready(function() {
 
 <div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
 <H2><?=_("Account Plans")?></H2>
-<H3><?=_("Upgrade today and get more listeners and storage space!")?></H3>
+<H4><?=_("Upgrade today to get more listeners and storage space!")?></H4>
 <div class="pricing-grid">
     <table>
         <tr>
@@ -170,10 +265,14 @@ $(document).ready(function() {
     Save 15% on annual plans (Hobbyist plan excluded).
     </div>
     <div class="clearfix"></div>
-    <div id="total_box"><b>Total:</b><br><span id="total"></span></div>
+    <div id="subtotal_box">
+        <b>Subtotal:</b><br>
+        <span class="subtotal"></span><br>
+        <div id="savings"></div>
+    </div>
     
     <div id="vat_disclaimer">
-    Plus VAT if you are an EU resident without a valid VAT number.
+    VAT will be added below if you are an EU resident without a valid VAT number.
     </div>
     
     <h3>Enter your payment details:</h3>
@@ -226,16 +325,16 @@ $(document).ready(function() {
     <div>
         <?=$billingForm->securityqans?>
     </div>
-    <div style="float:right; width: 200px;"><p>VAT will be added to your invoice if you are an EU resident without a valid VAT number.</p>
+    <div id="vat_disclaimer2"><p>VAT will be added to your invoice if you are an EU resident without a valid company VAT number.</p>
     </div>
     <div>
         <?=$billingForm->getElement("7"); ?>
+        <div id="vaterror"></div>
     </div>
     <div class="clearfix"></div>
     
     <div>
-        <?php //$billingForm->getElement("71"); ?>
-        <div class="billing_checkbox">
+    <div class="billing_checkbox">
             <?=$billingForm->getElement("71")->renderViewHelper(); ?>
         </div>
         <?=$billingForm->getElement("71")->renderLabel(); ?>
@@ -249,6 +348,12 @@ $(document).ready(function() {
     </div>
     
     <div class="clearfix"></div>
+    <div id="total_box">
+        <b>Subtotal:</b> <span class="subtotal"></span><br>
+        <span id="tax"></span><br>
+        <b>Total:</b> <span id="total"></span>
+    </div>
+    
     <input type="submit" value="Submit Order"></input>
     <div class="clearfix"></div>
 </form>

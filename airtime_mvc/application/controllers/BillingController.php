@@ -1,7 +1,18 @@
 <?php
 
+define('VAT_RATE', 19.00);
+
 class BillingController extends Zend_Controller_Action {
 
+    public function init()
+    {
+        //Two of the actions in this controller return JSON because they're used for AJAX:
+        $ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext->addActionContext('vat-validator', 'json')
+                    ->addActionContext('is-country-in-eu', 'json')
+                    ->initContext();
+    }
+    
     public function indexAction()
     {
         
@@ -24,11 +35,12 @@ class BillingController extends Zend_Controller_Action {
              * validate it somehow. We'll also need to make sure the country given is
              * in the EU
              */
-            $apply_vat = false;
-            
+                        
             $formData = $request->getPost();
             if ($form->isValid($formData)) {
                 $credentials = self::getAPICredentials();
+                
+                $apply_vat = BillingController::checkIfVatShouldBeApplied($formData["customfields"]["7"], $formData["country"]);
                 
                 $postfields = array();
                 $postfields["username"] = $credentials["username"];
@@ -91,6 +103,124 @@ class BillingController extends Zend_Controller_Action {
             $this->view->form = $form;
         }
     }
+    
+    
+    public function isCountryInEuAction()
+    {
+        // Disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+ 
+        $request = $this->getRequest();
+        if (!$request->isPost()) {
+            throw new Exception("Must POST data to isCountryInEuAction.");
+        }
+        $formData = $request->getPost();
+    
+        //Set the return JSON value
+        $this->_helper->json(array("result"=>BillingController::isCountryInEU($formData["country"])));
+    }
+    
+    public function vatValidatorAction()
+    {
+        // Disable the view and the layout
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        
+        $request = $this->getRequest();
+        if (!$request->isPost()) {
+            throw new Exception("Must POST data to vatValidatorAction.");
+        }
+        $formData = $request->getPost();
+        
+        $vatNumber = trim($formData["vatnumber"]);
+        if (empty($vatNumber)) {
+            $this->_helper->json(array("result"=>false));
+        }
+        
+        //Set the return JSON value
+        $this->_helper->json(array("result"=>BillingController::checkIfVatShouldBeApplied($vatNumber, $formData["country"])));
+    }
+    
+    /**
+     * @return True if VAT should be applied to the order, false otherwise.
+     */
+    private static function checkIfVatShouldBeApplied($vatNumber, $countryCode)
+    {
+        if ($countryCode === 'UK') {
+            $countryCode = 'GB'; //VIES database has it as GB
+        }
+        //We don't charge you VAT if you're not in the EU
+        if (!BillingController::isCountryInEU($countryCode))
+        {
+            return false;
+        }
+        
+        //So by here, we know you're in the EU.
+        
+        //No VAT number? Then we charge you VAT.
+        if (empty($vatNumber)) {
+            return true;
+        }
+        //Check if VAT number is valid
+        return BillingController::validateVATNumber($vatNumber, $countryCode);
+    }
+    
+    private static function isCountryInEU($countryCode)
+    {
+        $euCountryCodes = array('BE', 'BG', 'CZ', 'DK', 'DE', 'EE', 'IE', 'EL', 'ES', 'FR',
+                'HR', 'IT', 'CY', 'LV', 'LT', 'LU', 'HU', 'MT', 'NL', 'AT',
+                'PL', 'PT', 'RO', 'SI', 'SK', 'FI', 'SE', 'UK', 'GB');
+
+        if (!in_array($countryCode, $euCountryCodes)) {
+            return false;
+        }
+        return true;
+    }
+    
+    /** 
+     * Check if an EU VAT number is valid, using the EU VIES validation web API.
+     * 
+     * @param string $vatNumber - A VAT identifier (number), with or without the two letter country code at the
+     *                            start (either one works) .
+     * @param string $countryCode - A two letter country code
+     * @return boolean true if the VAT number is valid, false otherwise.
+     */
+    private static function validateVATNumber($vatNumber, $countryCode)
+    {
+        $vatNumber = str_replace(array(' ', '.', '-', ',', ', '), '', trim($vatNumber));
+        
+        //If the first two letters are a country code, use that as the country code and remove those letters.
+        $firstTwoCharacters = substr($vatNumber, 0, 2);
+        if (preg_match("/[a-zA-Z][a-zA-Z]/", $firstTwoCharacters) === 1) {
+            $countryCode = strtoupper($firstTwoCharacters); //The country code from the VAT number overrides your country.
+            $vatNumber = substr($vatNumber, 2);
+        }
+        $client = new SoapClient("http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl");
+        
+        if($client){
+            $params = array('countryCode' => $countryCode, 'vatNumber' => $vatNumber);
+            try{
+                $r = $client->checkVat($params);
+                if($r->valid == true){
+                    // VAT-ID is valid
+                    return true;
+                } else {
+                    // VAT-ID is NOT valid
+                    return false;
+                }
+            } catch(SoapFault $e) {
+                Logging::error('VIES EU VAT validation error: '.$e->faultstring);
+                return false;
+            }
+        } else {
+            // Connection to host not possible, europe.eu down?
+            Logging::error('VIES EU VAT validation error: Host unreachable');
+            return false;
+        }
+        return false;
+    }
+    
 
     private function addVatToInvoice($invoice_id)
     {
@@ -111,8 +241,7 @@ class BillingController extends Zend_Controller_Action {
         //TODO: error checking
         $result = $this->makeRequest($credentials["url"], $invoice_query_string);
         
-        $vat_rate = 19.00;
-        $vat_amount = $result["subtotal"] * ($vat_rate/100);
+        $vat_amount = $result["subtotal"] * (VAT_RATE/100);
         $invoice_total = $result["total"] + $vat_amount;
 
         //Second, update the invoice with the VAT amount and updated total
@@ -254,7 +383,6 @@ class BillingController extends Zend_Controller_Action {
         self::viewInvoice($invoice_id);
     }
 
-    //TODO: this does not return a service id. why?
     private static function getClientInstanceId()
     {
         $credentials = self::getAPICredentials();
@@ -272,11 +400,15 @@ class BillingController extends Zend_Controller_Action {
         $result = self::makeRequest($credentials["url"], $query_string);
         Logging::info($result);
         
+        //XXX: Debugging / local testing
         if ($_SERVER['SERVER_NAME'] == "airtime.localhost") {
             return "1384";
         }
+        
         //This code must run on airtime.pro for it to work... it's trying to match
-        //the server's hostname with the client subdomain.
+        //the server's hostname with the client subdomain. Once it finds a match
+        //between the product and the server's hostname/subdomain, then it 
+        //returns the ID of that product (aka. the service ID of an Airtime instance)
         foreach ($result["products"] as $product)
         {
             if (strpos($product[0]["groupname"], "Airtime") === FALSE)
