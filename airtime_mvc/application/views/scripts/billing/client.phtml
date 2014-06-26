@@ -1,3 +1,8 @@
+<?php 
+$this->form->getElement("submit")->setAttrib("class", "right-align");
+$this->form->getElement("country")->setAttrib("class", "right-align");
+$this->form->getElement("securityqid")->setAttrib("class", "right-align");
+?>
 <div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
 <H2>Billing Account Details</H2>
 <?php if (isset($this->errorMessage)) {?>

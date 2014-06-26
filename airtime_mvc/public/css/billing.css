@@ -169,3 +169,21 @@
 {
 	color: #ff0000;
 }
+
+/** This form is the separate one on the Billing Account Details page (BillingClient.php) */
+#clientdetails_form dt {
+    float: left;
+    clear: both;
+    width: 50%;
+    margin-bottom: 10px;
+}
+#clientdetails_form dd {
+	float: left;
+	margin-left: 0px;
+	margin-bottom: 10px;
+}
+#clientdetails_form .right-align
+{
+	/*text-align: right;*/
+	width: 100%;
+}
