@@ -174,6 +174,10 @@ class BillingController extends Zend_Controller_Action {
 
     public function clientAction()
     {
+        $CC_CONFIG = Config::getConfig();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
+        
         $request = $this->getRequest();
         $form = new Application_Form_BillingClient();
         BillingController::ensureClientIdIsValid();
@@ -220,6 +224,10 @@ class BillingController extends Zend_Controller_Action {
 
     public function invoicesAction()
     {
+        $CC_CONFIG = Config::getConfig();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
+        
         BillingController::ensureClientIdIsValid();
         $credentials = self::getAPICredentials();
         

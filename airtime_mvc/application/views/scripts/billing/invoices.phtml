@@ -1,9 +1,22 @@
-<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong">
+<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
+<H2>Invoices</H2>
+<p style="text-align: center;"><?=_("Tip: To pay an invoice, click \"View Invoice\"<br> and look for the \"Checkout\" button.")?></p>
+<table id="invoices_table">
+    <tr class="header">
+        <th>Date Issued</th>
+        <th>Due Date</th>
+        <th>Link</th>
+        <th>Status</th>
+    </tr>
 <?php
 foreach ($this->invoices as $invoice) {?>
-    <div>
-        <a href="invoice?invoiceid=<?php echo $invoice["id"]?>">View Invoice</a>
-    </div>
+    <tr>
+        <td><?php echo $invoice["date"]?></td>
+        <td><?php echo $invoice["duedate"]?></td>
+        <td><a href="invoice?invoiceid=<?php echo $invoice["id"]?>">View Invoice</a></td>
+        <td class="<?=$invoice["status"]==="Unpaid" ? "unpaid" : "";?>"><?php echo $invoice["status"]?></td>
+    </tr>
     
-<?php }?>
+<?php };?>
+</table>
 </div>
