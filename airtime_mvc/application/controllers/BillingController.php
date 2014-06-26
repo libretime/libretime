@@ -369,7 +369,7 @@ class BillingController extends Zend_Controller_Action {
         $postfields["password"] = md5($credentials["password"]);
         $postfields["action"] = "getinvoices";
         $postfields["responsetype"] = "json";
-        $postfields["clientid"] = Application_Model_Preference::GetClientId();
+        $postfields["userid"] = Application_Model_Preference::GetClientId();
         
         $query_string = "";
         foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
