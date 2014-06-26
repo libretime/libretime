@@ -149,10 +149,8 @@ $(document).ready(function() {
             return;
         }
     	vatFieldChangeTimer = setTimeout(function() {
-        	//TODO: validate VAT number
-        	validateVATNumber();
-        	recalculateTotals();
-    	}, 2000);
+        	validateVATNumber(); //Validate and recalculate the totals
+    	}, 1500); //Wait 1.5 seconds before validating the VAT number
     });
 
     $("#hobbyist_grid_price").text("$" + products[0].pricing["USD"]["monthly"] + " / month");

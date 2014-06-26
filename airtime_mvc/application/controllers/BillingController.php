@@ -40,7 +40,11 @@ class BillingController extends Zend_Controller_Action {
             if ($form->isValid($formData)) {
                 $credentials = self::getAPICredentials();
                 
-                $apply_vat = BillingController::checkIfVatShouldBeApplied($formData["customfields"]["7"], $formData["country"]);
+                if (in_array("7", $formData["customfields"])) {
+                    $apply_vat = BillingController::checkIfVatShouldBeApplied($formData["customfields"]["7"], $formData["country"]);
+                } else {
+                    $apply_vat = false;
+                }
                 
                 $postfields = array();
                 $postfields["username"] = $credentials["username"];
@@ -251,7 +255,7 @@ class BillingController extends Zend_Controller_Action {
         $postfields["action"] = "updateinvoice";
         $postfields["invoiceid"] = $invoice_id;
         $postfields["tax"] = "$vat_amount";
-        $postfields["taxrate"] = "$vat_rate";
+        $postfields["taxrate"] = strval(VAT_RATE);
         $postfields["total"] = "$invoice_total";
         $postfields["responsetype"] = "json";
         
