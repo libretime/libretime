@@ -7,6 +7,19 @@
 	margin-bottom: 30px;
 }
 
+.billing-panel h3
+{
+	color: #222;
+}
+
+.billing-panel h4
+{
+    font-size: 1.25em;
+    margin: 0px;
+    color: #333;
+    font-weight: normal;
+}
+
 #upgrade-downgrade
 {
 	border: 0px solid #000;
@@ -105,14 +118,38 @@
 	margin-bottom: 30px;
 }
 
-#total_box
+#vat_disclaimer2
 {
+    float:right;
+    width: 200px;
+}
+
+#subtotal_box, #total_box
+{
+	position: relative;
 	text-align: right;
 	margin-top: 30px;
 	margin-bottom: 10px;
 	border: 1px solid #777;
 	background: #ccc;
 	padding: 5px;
+}
+#total_box
+{
+	margin-top: 10px;
+}
+
+#total
+{
+	border-bottom: 3px double;
+}
+
+#savings
+{
+	/*line-height: 30px;*/
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
 }
 
 #paymentmethod
