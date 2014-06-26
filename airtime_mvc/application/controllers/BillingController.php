@@ -215,12 +215,19 @@ class BillingController extends Zend_Controller_Action {
                 }
             } catch(SoapFault $e) {
                 Logging::error('VIES EU VAT validation error: '.$e->faultstring);
-                return false;
+                if ($e->faultstring == "INVALID_INPUT") {
+                    return false;
+                }
+                //If there was another error with the VAT validation service, we allow
+                //the VAT number to pass. (eg. SERVER_BUSY, MS_UNAVAILABLE, TIMEOUT, SERVICE_UNAVAILABLE)
+                return true;
             }
         } else {
             // Connection to host not possible, europe.eu down?
             Logging::error('VIES EU VAT validation error: Host unreachable');
-            return false;
+            //If there was an error with the VAT validation service, we allow
+            //the VAT number to pass.
+            return true;
         }
         return false;
     }
