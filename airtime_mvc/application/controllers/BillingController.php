@@ -5,7 +5,7 @@ define('VAT_RATE', 19.00);
 class BillingController extends Zend_Controller_Action {
 
     public function init()
-    {
+    {       
         //Two of the actions in this controller return JSON because they're used for AJAX:
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('vat-validator', 'json')
