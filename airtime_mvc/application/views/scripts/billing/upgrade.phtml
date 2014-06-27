@@ -138,6 +138,8 @@ $(document).ready(function() {
 
     vatFieldChangeTimer = null;
     $(vatFieldId).change(function() {
+		$("#vaterror").text("Please wait, checking VAT number...");
+        
     	if (vatFieldChangeTimer) {
     		clearTimeout(vatFieldChangeTimer);
         }
@@ -246,7 +248,10 @@ $(document).ready(function() {
 <!-- 
 <p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_("View Plans")?></a> (Opens in a new window)</p>
  -->
-<p id="current_plan"><b>Current Plan:</b> <?php echo Application_Model_Preference::GetPlanLevel();?>
+<p id="current_plan"><b>Current Plan:</b> 
+<?php echo(BillingController::getClientCurrentAirtimeProduct()["name"]);
+//echo Application_Model_Preference::GetPlanLevel();
+?>
 </p>
 
 <h3>Choose a plan:</h3>

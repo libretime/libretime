@@ -394,60 +394,11 @@ class BillingController extends Zend_Controller_Action {
         self::viewInvoice($invoice_id);
     }
 
+    /** Get the Airtime instance ID of the instance the customer is currently viewing. */
     private static function getClientInstanceId()
     {
-        $credentials = self::getAPICredentials();
-        
-        $postfields = array();
-        $postfields["username"] = $credentials["username"];
-        $postfields["password"] = md5($credentials["password"]);
-        $postfields["action"] = "getclientsproducts";
-        $postfields["responsetype"] = "json";
-        $postfields["clientid"] = Application_Model_Preference::GetClientId();
-        
-        $query_string = "";
-        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
-        
-        $result = self::makeRequest($credentials["url"], $query_string);
-        Logging::info($result);
-        
-        //XXX: Debugging / local testing
-        if ($_SERVER['SERVER_NAME'] == "airtime.localhost") {
-            return "1384";
-        }
-        
-        //This code must run on airtime.pro for it to work... it's trying to match
-        //the server's hostname with the client subdomain. Once it finds a match
-        //between the product and the server's hostname/subdomain, then it 
-        //returns the ID of that product (aka. the service ID of an Airtime instance)
-        foreach ($result["products"] as $product)
-        {
-            if (strpos($product[0]["groupname"], "Airtime") === FALSE)
-            {
-                //Ignore non-Airtime products
-                continue;
-            }
-            else
-            {
-                if ($product[0]["status"] === "Active") {
-                    $airtimeProduct = $product[0];
-                    $subdomain = '';
-        
-                    foreach ($airtimeProduct['customfields']['customfield'] as $customField)
-                    {
-                        if ($customField['name'] === SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME)
-                        {
-                            $subdomain = $customField['value'];
-                            if (($subdomain . ".airtime.pro") === $_SERVER['SERVER_NAME'])
-                            {
-                                return $airtimeProduct['id'];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        throw new Exception("Unable to match subdomain to a service ID");
+        $currentProduct = BillingController::getClientCurrentAirtimeProduct();
+        return $currentProduct["id"];
     }
 
     public static function getProducts()
@@ -491,6 +442,65 @@ class BillingController extends Zend_Controller_Action {
         return array($productPrices, $productTypes);
     }
     
+    /** Get the plan (or product in WHMCS lingo) that the customer is currently on.
+     *  @return An associative array containing the fields for the product
+     *  */
+    public static function getClientCurrentAirtimeProduct()
+    {
+        static $airtimeProduct = null;
+        //Ghetto caching to avoid multiple round trips to WHMCS
+        if ($airtimeProduct) { 
+            return $airtimeProduct;
+        }
+        $credentials = self::getAPICredentials();
+    
+        $postfields = array();
+        $postfields["username"] = $credentials["username"];
+        $postfields["password"] = md5($credentials["password"]);
+        $postfields["action"] = "getclientsproducts";
+        $postfields["responsetype"] = "json";
+        $postfields["clientid"] = Application_Model_Preference::GetClientId();
+    
+        $query_string = "";
+        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+    
+        $result = self::makeRequest($credentials["url"], $query_string);
+        
+        //XXX: Debugging / local testing
+        if ($_SERVER['SERVER_NAME'] == "airtime.localhost") {
+            $_SERVER['SERVER_NAME'] = "bananas.airtime.pro";
+        }
+        
+        //This code must run on airtime.pro for it to work... it's trying to match
+        //the server's hostname with the client subdomain. Once it finds a match
+        //between the product and the server's hostname/subdomain, then it
+        //returns the ID of that product (aka. the service ID of an Airtime instance)
+        foreach ($result["products"] as $product)
+        {
+            if (strpos($product[0]["groupname"], "Airtime") === FALSE)
+            {
+                //Ignore non-Airtime products
+                continue;
+            }
+            else
+            {
+                 if ($product[0]["status"] === "Active") {
+                    $airtimeProduct = $product[0];
+                    $subdomain = '';
+                    
+                    foreach ($airtimeProduct['customfields']['customfield'] as $customField) {
+                        if ($customField['name'] === SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME) {
+                            $subdomain = $customField['value'];
+                            if (($subdomain . ".airtime.pro") === $_SERVER['SERVER_NAME']) {
+                                return $airtimeProduct;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        throw new Exception("Unable to match subdomain to a service ID");
+    }
 
     public static function getClientDetails()
     {
