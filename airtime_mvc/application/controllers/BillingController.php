@@ -475,17 +475,17 @@ class BillingController extends Zend_Controller_Action {
         //the server's hostname with the client subdomain. Once it finds a match
         //between the product and the server's hostname/subdomain, then it
         //returns the ID of that product (aka. the service ID of an Airtime instance)
-        foreach ($result["products"] as $product)
+        foreach ($result["products"]["product"] as $product)
         {
-            if (strpos($product[0]["groupname"], "Airtime") === FALSE)
+            if (strpos($product["groupname"], "Airtime") === FALSE)
             {
                 //Ignore non-Airtime products
                 continue;
             }
             else
             {
-                 if ($product[0]["status"] === "Active") {
-                    $airtimeProduct = $product[0];
+                 if ($product["status"] === "Active") {
+                    $airtimeProduct = $product;
                     $subdomain = '';
                     
                     foreach ($airtimeProduct['customfields']['customfield'] as $customField) {
