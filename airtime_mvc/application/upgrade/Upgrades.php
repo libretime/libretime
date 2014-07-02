@@ -151,6 +151,7 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
             //First, ensure there are no superadmins already.
             $numberOfSuperAdmins = CcSubjsQuery::create()
             ->filterByDbType(UTYPE_SUPERADMIN)
+            ->filterByDbLogin("sourcefabric_admin", Criteria::NOT_EQUAL) //Ignore sourcefabric_admin users
             ->count();
             
             //Only create a super admin if there isn't one already.
@@ -177,7 +178,18 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
                 $adminUser = new Application_Model_User($adminUser->getDbId());
                 $adminUser->setType(UTYPE_SUPERADMIN);
                 $adminUser->save();
-                Logging::info($_SERVER['HTTP_HOST'] . ': ' . $newVersion . " Upgrade: Promoted user " . $adminUser->getLogin() . " to be a Super Admin.");    
+                Logging::info($_SERVER['HTTP_HOST'] . ': ' . $newVersion . " Upgrade: Promoted user " . $adminUser->getLogin() . " to be a Super Admin.");
+                
+                //Also try to promote the sourcefabric_admin user
+                $sofabAdminUser = CcSubjsQuery::create()
+                ->filterByDbLogin('sourcefabric_admin')
+                ->findOne();
+                if ($sofabAdminUser) {
+                    $sofabAdminUser = new Application_Model_User($sofabAdminUser->getDbId());
+                    $sofabAdminUser->setType(UTYPE_SUPERADMIN);
+                    $sofabAdminUser->save();
+                    Logging::info($_SERVER['HTTP_HOST'] . ': ' . $newVersion . " Upgrade: Promoted user " . $sofabAdminUser->getLogin() . " to be a Super Admin.");                  
+                }
             }
             
             //$con->commit();
