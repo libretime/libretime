@@ -38,7 +38,8 @@ class Cache
 
 	public static function clear()
 	{
-	    apc_clear_cache('user');
-	    apc_clear_cache();
+	   // Disabled on SaaS
+	   // apc_clear_cache('user');
+	   // apc_clear_cache();
 	}
 }
