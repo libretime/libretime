@@ -29,4 +29,10 @@ class Cache
 		$cacheKey = self::createCacheKey($key, $isUserValue, $userId);
 		return apc_fetch($cacheKey);
 	}
+	
+	public static function clear()
+	{
+	    apc_clear_cache('user');
+	    apc_clear_cache();
+	}
 }

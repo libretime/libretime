@@ -9,6 +9,8 @@ abstract class AirtimeUpgrader
 
     public static function getCurrentVersion()
     {
+        CcPrefPeer::clearInstancePool(); //Ensure we don't get a cached Propel object (cached DB results) 
+                                         //because we're updating this version number within this HTTP request as well.
         $pref = CcPrefQuery::create()
         ->filterByKeystr('system_version')
         ->findOne();
@@ -64,6 +66,7 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
     
     public function upgrade()
     {
+        Cache::clear();
         assert($this->checkIfUpgradeSupported());
         
         $con = Propel::getConnection();
@@ -71,6 +74,7 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
         try {
             
             $this->toggleMaintenanceScreen(true);
+            Cache::clear();
             
             //Begin upgrade
         
@@ -86,8 +90,9 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
         
             Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
         
-            //TODO: clear out the cache
-        
+            //clear out the cache
+            Cache::clear();
+            
             $con->commit();
         
             //update system_version in cc_pref and change some columns in cc_files
@@ -103,6 +108,8 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_upgrade_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
         
             Application_Model_Preference::SetAirtimeVersion($this->getNewVersion());
+            //clear out the cache
+            Cache::clear();
             
             $this->toggleMaintenanceScreen(false);
                     
@@ -126,18 +133,23 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
     
     public function upgrade()
     {
+        Cache::clear();
+        
         assert($this->checkIfUpgradeSupported());
-
+        
+        $newVersion = $this->getNewVersion();
+        
         $con = Propel::getConnection();
-        $con->beginTransaction();
+        //$con->beginTransaction();
         try {
             $this->toggleMaintenanceScreen(true);
+            Cache::clear();
             
             //Begin upgrade
 
             //First, ensure there are no superadmins already.
             $numberOfSuperAdmins = CcSubjsQuery::create()
-            ->filterByType(UTYPE_SUPERADMIN)
+            ->filterByDbType(UTYPE_SUPERADMIN)
             ->count();
             
             //Only create a super admin if there isn't one already.
@@ -145,14 +157,14 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
             {
                 //Find the "admin" user and promote them to superadmin.
                 $adminUser = CcSubjsQuery::create()
-                ->filterByLogin('admin')
+                ->filterByDbLogin('admin')
                 ->findOne();
                 if (!$adminUser)
                 {
                     //TODO: Otherwise get the user with the lowest ID that is of type administrator:
                     //
                     $adminUser = CcSubjsQuery::create()
-                    ->filterByType(UTYPE_ADMIN)
+                    ->filterByDbType(UTYPE_ADMIN)
                     ->orderByDbId(Criteria::ASC)
                     ->findOne();
                     
@@ -161,22 +173,22 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
                     }
                 }
                 
-                $adminUser = new Application_Model_User($adminUser);
+                $adminUser = new Application_Model_User($adminUser->getDbId());
                 $adminUser->setType(UTYPE_SUPERADMIN);
                 $adminUser->save();
-                Logging::info($this->getNewVersion() . " Upgrade: Promoted user " . $adminUser->getLogin() . " to be a Super Admin.");    
+                Logging::info($_SERVER['HTTP_HOST'] . ': ' . $newVersion . " Upgrade: Promoted user " . $adminUser->getLogin() . " to be a Super Admin.");    
             }
             
-            $con->commit();
+            //$con->commit();
+            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Cache::clear();
             
             $this->toggleMaintenanceScreen(false);
-            
-            Application_Model_Preference::SetAirtimeVersion($this->getNewVersion());
-            
+                        
             return true;
             
         } catch(Exception $e) {
-            $con->rollback();
+            //$con->rollback();
             $this->toggleMaintenanceScreen(false);
             throw $e; 
         }
