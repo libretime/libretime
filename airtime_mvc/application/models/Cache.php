@@ -15,7 +15,6 @@ class Cache
                 $cacheKey = "{$key}{$a}";
         }
 
-<<<<<<< HEAD
         return $cacheKey;
     }
     
@@ -36,27 +35,10 @@ class Cache
         //return apc_fetch($cacheKey);
         return false;
     }
-}
-=======
-		return $cacheKey;
-	}
-	
-	public function store($key, $value, $isUserValue, $userId = null) {
-		
-		$cacheKey = self::createCacheKey($key, $userId);
-		return apc_store($cacheKey, $value);
-	}
-	
-	public function fetch($key, $isUserValue, $userId = null) {
-		
-		$cacheKey = self::createCacheKey($key, $isUserValue, $userId);
-		return apc_fetch($cacheKey);
-	}
-	
+
 	public static function clear()
 	{
 	    apc_clear_cache('user');
 	    apc_clear_cache();
 	}
 }
->>>>>>> cc-5709-airtime-analyzer-buy-now
