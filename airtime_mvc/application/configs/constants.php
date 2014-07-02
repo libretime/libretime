@@ -41,6 +41,7 @@ define('UI_MDATA_VALUE_FORMAT_STREAM' , 'live stream');
 //User types
 define('UTYPE_HOST'            , 'H');
 define('UTYPE_ADMIN'           , 'A');
+define('UTYPE_SUPERADMIN'      , 'S');
 define('UTYPE_GUEST'           , 'G');
 define('UTYPE_PROGRAM_MANAGER' , 'P');
 
@@ -63,3 +64,9 @@ define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 define('SOUNDCLOUD_NOT_UPLOADED_YET' , -1);
 define('SOUNDCLOUD_PROGRESS'         , -2);
 define('SOUNDCLOUD_ERROR'            , -3);
+
+
+//WHMCS integration
+define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
+define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
+

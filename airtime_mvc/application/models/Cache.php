@@ -35,4 +35,11 @@ class Cache
         //return apc_fetch($cacheKey);
         return false;
     }
+
+	public static function clear()
+	{
+	   // Disabled on SaaS
+	   // apc_clear_cache('user');
+	   // apc_clear_cache();
+	}
 }

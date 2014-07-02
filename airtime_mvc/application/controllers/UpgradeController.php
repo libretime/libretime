@@ -1,71 +1,51 @@
 <?php
 
+require_once("Upgrades.php");
+
 class UpgradeController extends Zend_Controller_Action
 {
     public function indexAction()
     {
-        $airtime_upgrade_version = '2.5.3';
-        
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
         if (!$this->verifyAuth()) {
             return;
         }
+
+        $upgraders = array();
+        array_push($upgraders, new AirtimeUpgrader253());        
+        array_push($upgraders, new AirtimeUpgrader254());
         
-        if (!$this->verifyAirtimeVersion()) {
-            return;
-        }
-
-        $con = Propel::getConnection();
-        $con->beginTransaction();
-        try {
-            //Disable Airtime UI
-            //create a temporary maintenance notification file
-            //when this file is on the server, zend framework redirects all
-            //requests to the maintenance page and sets a 503 response code
-
-            $maintenanceFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."maintenance.txt" : "/tmp/maintenance.txt";
-            $file = fopen($maintenanceFile, 'w');
-            fclose($file);
-
-            //Begin upgrade
+        $didWePerformAnUpgrade = false;
+        try 
+        {
+            for ($i = 0; $i < count($upgraders); $i++)
+            {
+                $upgrader = $upgraders[$i];
+                if ($upgrader->checkIfUpgradeSupported())
+                {
+                    $upgrader->upgrade(); //This will throw an exception if the upgrade fails.
+                    $didWePerformAnUpgrade = true;
+                    $this->getResponse()
+                        ->setHttpResponseCode(200)
+                        ->appendBody("Upgrade to Airtime " . $upgrader->getNewVersion() . " OK<br>"); 
+                    $i = 0; //Start over, in case the upgrade handlers are not in ascending order.
+                }
+            }
             
-            //Update disk_usage value in cc_pref
-            $storDir = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."srv/airtime/stor" : "/srv/airtime/stor";
-            $diskUsage = shell_exec("du -sb $storDir | awk '{print $1}'");
-        
-            Application_Model_Preference::setDiskUsage($diskUsage);
-
-            //TODO: clear out the cache
-
-            $con->commit();
-
-            //update system_version in cc_pref and change some columns in cc_files
-            $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
-            $values = parse_ini_file($airtimeConf, true);
-            
-            $username = $values['database']['dbuser'];
-            $password = $values['database']['dbpass'];
-            $host = $values['database']['host'];
-            $database = $values['database']['dbname'];
-            $dir = __DIR__;
-            
-            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_$airtime_upgrade_version/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
-            
-            //delete maintenance.txt to give users access back to Airtime
-            unlink($maintenanceFile);
-
-            $this->getResponse()
+            if (!$didWePerformAnUpgrade)
+            {
+                $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody("Upgrade to Airtime 2.5.3 OK");
-
-        } catch(Exception $e) {
-            $con->rollback();
-            unlink($maintenanceFile);
+                ->appendBody("No upgrade was performed. The current Airtime version is " . AirtimeUpgrader::getCurrentVersion() . ".<br>");
+            }
+        } 
+        catch (Exception $e) 
+        {
             $this->getResponse()
-                ->setHttpResponseCode(400)
-                ->appendBody($e->getMessage());
+            ->setHttpResponseCode(400)
+            ->appendBody($e->getMessage());
         }
     }
 
@@ -86,25 +66,10 @@ class UpgradeController extends Zend_Controller_Action
         {
             $this->getResponse()
                 ->setHttpResponseCode(401)
-                ->appendBody("Error: Incorrect API key.");
+                ->appendBody("Error: Incorrect API key.<br>");
             return false;
         }
         return true;
     }
 
-    private function verifyAirtimeVersion()
-    {
-        $pref = CcPrefQuery::create()
-            ->filterByKeystr('system_version')
-            ->findOne();
-        $airtime_version = $pref->getValStr();
-
-        if (!in_array($airtime_version, array('2.5.1', '2.5.2'))) {
-            $this->getResponse()
-                ->setHttpResponseCode(400)
-                ->appendBody("Upgrade to Airtime 2.5.3 FAILED. You must be using Airtime 2.5.1 or 2.5.2 to upgrade.");
-            return false;
-        }
-        return true;
-    }
 }

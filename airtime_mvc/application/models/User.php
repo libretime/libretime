@@ -49,14 +49,20 @@ class Application_Model_User
     {
         return $this->isUserType(UTYPE_ADMIN);
     }
-
+    
+    public function isSuperAdmin()
+    {
+        return $this->isUserType(UTYPE_SUPERADMIN);
+    }
+    
     public function canSchedule($p_showId)
     {
         $type = $this->getType();
         $result = false;
 
-        if ($type === UTYPE_ADMIN ||
-            $type === UTYPE_PROGRAM_MANAGER ||
+        if ($this->isAdmin() ||
+            $this->isSuperAdmin() ||
+            $this->isPM() ||
             self::isHostOfShow($p_showId)) {
             $result = true;
         }

@@ -104,7 +104,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->createShowFormAction(true);
 
         $user = Application_Model_User::getCurrentUser();
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $this->view->preloadShowForm = true;
         }
 
@@ -133,7 +133,7 @@ class ScheduleController extends Zend_Controller_Action
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $editable = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
         Logging::info($calendar_interval);
@@ -209,7 +209,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             try {
                 $show = new Application_Model_Show($showId);
             } catch (Exception $e) {
@@ -654,7 +654,7 @@ class ScheduleController extends Zend_Controller_Action
         
         $user = Application_Model_User::getCurrentUser();
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $id = $this->_getParam('id');
 
             try {

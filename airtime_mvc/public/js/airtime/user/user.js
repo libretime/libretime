@@ -4,6 +4,17 @@ function populateForm(entries){
     $('.errors').remove();
     $('.success').remove();
     
+    if (entries.type === 'S')
+    {	
+    	$("#user_details").hide();
+    	$("#user_details_superadmin_message").show();
+    	$('#type').attr('disabled', '1');
+    } else {
+    	$("#user_details").show();
+    	$("#user_details_superadmin_message").hide();
+    	$('#type').removeAttr('disabled');    	
+    }
+    
     $('#user_id').val(entries.id);
     $('#login').val(entries.login);
     $('#first_name').val(entries.first_name);
@@ -57,6 +68,10 @@ function rowCallback( nRow, aData, iDisplayIndex ){
     } else if ( aData['type'] == "P" )
     {
     	$('td:eq(3)', nRow).html( $.i18n._('Program Manager') );
+    } else if ( aData['type'] == "S" )
+    {
+    	$('td:eq(3)', nRow).html( $.i18n._('Super Admin') );
+    	$('td:eq(4)', nRow).html(""); //Disable deleting the super admin
     }
     
     return nRow;
@@ -183,7 +198,7 @@ $(document).ready(function() {
     
     var newUser = {login:"", first_name:"", last_name:"", type:"G", id:""};
     
-    $('#add_user_button').live('click', function(){populateForm(newUser)});
+    $('#add_user_button').live('click', function(){populateForm(newUser);});
     
     $('#save_user').live('click', function(){
         var data = $('#user_form').serialize();

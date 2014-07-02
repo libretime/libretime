@@ -1,5 +1,7 @@
 <?php
 
+require_once('WhmcsLoginController.php');
+
 class LoginController extends Zend_Controller_Action
 {
 
@@ -12,6 +14,24 @@ class LoginController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
         
         $request = $this->getRequest();
+        
+        //Allow AJAX requests from www.airtime.pro. We use this to automatically login users
+        //after they sign up from the microsite.
+        //Chrome sends the Origin header for all requests, so we whitelist the webserver's hostname as well.
+        $response = $this->getResponse()->setHeader('Access-Control-Allow-Origin', '*');
+        $origin = $request->getHeader('Origin');
+        if (($origin != "") && 
+            (!in_array($origin, 
+                    array("http://www.airtime.pro", 
+                          "https://www.airtime.pro",
+                          "http://" . $_SERVER['SERVER_NAME'],
+                          "https://" . $_SERVER['SERVER_NAME']
+                ))
+            ))
+        {
+            //Don't allow CORS from other domains to prevent XSS.
+            throw new Zend_Controller_Action_Exception('Forbidden', 403);
+        }
         
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
         $auth = Zend_Auth::getInstance();
@@ -71,12 +91,23 @@ class LoginController extends Zend_Controller_Action
 
                         $this->_redirect('Showbuilder');
                     } else {
-
-                        $message = _("Wrong username or password provided. Please try again.");
-                        Application_Model_Subjects::increaseLoginAttempts($username);
-                        Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
-                        $form = new Application_Form_Login();
-                        $error = true;
+                        $email = $form->getValue('username');
+                        $authAdapter = new WHMCS_Auth_Adapter("admin", $email, $password);
+                        $auth = Zend_Auth::getInstance();
+                        $result = $auth->authenticate($authAdapter);
+                        if ($result->isValid()) {
+                            //set the user locale in case user changed it in when logging in
+                            Application_Model_Preference::SetUserLocale($locale);
+                            
+                            $this->_redirect('Showbuilder');
+                        }
+                        else {
+                            $message = _("Wrong username or password provided. Please try again.");
+                            Application_Model_Subjects::increaseLoginAttempts($username);
+                            Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
+                            $form = new Application_Form_Login();
+                            $error = true;
+                        }
                     }
                 }
             }
