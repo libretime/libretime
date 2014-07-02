@@ -15,6 +15,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         
         $currentPlanProduct = BillingController::getClientCurrentAirtimeProduct();
         $currentPlanProductId = $currentPlanProduct["pid"];
+        $currentPlanProductBillingCycle = $currentPlanProduct["billingcycle"];
         $pid = new Zend_Form_Element_Radio('newproductid');
         $pid->setLabel(_('Plan type:'))
             ->setMultiOptions($productTypes)
@@ -27,7 +28,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         $billingcycle->setLabel(_('Billing cycle:'))
             ->setMultiOptions(array('monthly' => 'Monthly', 'annually' => 'Annually'))
             ->setRequired(true)
-            ->setValue(BillingController::getClientCurrentAirtimeProduct()["billingcycle"]);
+            ->setValue($currentPlanProductBillingCycle);
             
         $this->addElement($billingcycle);
 
