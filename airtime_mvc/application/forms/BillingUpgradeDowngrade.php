@@ -13,11 +13,13 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
             //unset($productTypes[$key]);
         }
         
+        $currentPlanProduct = BillingController::getClientCurrentAirtimeProduct();
+        $currentPlanProductId = $currentPlanProduct["pid"];
         $pid = new Zend_Form_Element_Radio('newproductid');
         $pid->setLabel(_('Plan type:'))
             ->setMultiOptions($productTypes)
             ->setRequired(true)
-            ->setValue(BillingController::getClientCurrentAirtimeProduct()["pid"]);
+            ->setValue($currentPlanProductId);
         $this->addElement($pid);       
         
         Logging::info(BillingController::getClientCurrentAirtimeProduct());
