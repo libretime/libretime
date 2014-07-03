@@ -16,12 +16,12 @@ var customerInEU = false;
 function validatePlan()
 {
 	if ($("#newproductid-25").is(":checked")) {
-		$("#newproductbillingcycle-monthly").prop("checked", "true");
+		$("#newproductbillingcycle-monthly").attr("checked", "true");
 		//It's import that we switch the checked item first (because you can't disable a checked radio button in Chrome)
-		$("#newproductbillingcycle-annually").prop("disabled", "true");
+		$("#newproductbillingcycle-annually").attr("disabled", "disabled");
 		$("label[for='newproductbillingcycle-annually']").addClass("disabled");
 	} else {
-		$("#newproductbillingcycle-annually").removeProp("disabled");
+		$("#newproductbillingcycle-annually").removeAttr("disabled");
 		$("label[for='newproductbillingcycle-annually']").removeClass("disabled");
 	}
 }
