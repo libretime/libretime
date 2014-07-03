@@ -16,9 +16,10 @@ var customerInEU = false;
 function validatePlan()
 {
 	if ($("#newproductid-25").is(":checked")) {
+		$("#newproductbillingcycle-monthly").prop("checked", "true");
+		//It's import that we switch the checked item first (because you can't disable a checked radio button in Chrome)
 		$("#newproductbillingcycle-annually").prop("disabled", "true");
 		$("label[for='newproductbillingcycle-annually']").addClass("disabled");
-		$("#newproductbillingcycle-monthly").prop("checked", "true");
 	} else {
 		$("#newproductbillingcycle-annually").removeProp("disabled");
 		$("label[for='newproductbillingcycle-annually']").removeClass("disabled");
