@@ -47,6 +47,9 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 //Upgrade directory
 set_include_path(APPLICATION_PATH . '/upgrade/' . PATH_SEPARATOR . get_include_path());
 
+//Common directory
+set_include_path(APPLICATION_PATH . '/common/' . PATH_SEPARATOR . get_include_path());
+
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
