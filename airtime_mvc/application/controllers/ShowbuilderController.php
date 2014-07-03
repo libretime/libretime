@@ -1,5 +1,7 @@
 <?php
 
+require_once('CORSHelper.php');
+
 class ShowbuilderController extends Zend_Controller_Action
 {
 
@@ -22,7 +24,12 @@ class ShowbuilderController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
-
+        $response = $this->getResponse();
+        
+        //Enable AJAX requests from www.airtime.pro because the autologin during the seamless sign-up follows
+        //a redirect here.
+        CORSHelper::enableATProCrossOriginRequests($request, $response);
+        
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $user = Application_Model_User::GetCurrentUser();
