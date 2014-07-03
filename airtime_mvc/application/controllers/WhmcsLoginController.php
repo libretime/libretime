@@ -228,15 +228,15 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
     
         foreach ($arr["products"] as $product)
         {
-            if (strpos($product[0]["groupname"], "Airtime") === FALSE)
+            if (strpos($product["groupname"]["product"], "Airtime") === FALSE)
             {
                 //Ignore non-Airtime products
                 continue;
             }
             else
             {
-                if ($product[0]["status"] === "Active") {
-                    $airtimeProduct = $product[0];
+                if ($product["status"] === "Active") {
+                    $airtimeProduct = $product;
                     $subdomain = '';
 
                     foreach ($airtimeProduct['customfields']['customfield'] as $customField)
