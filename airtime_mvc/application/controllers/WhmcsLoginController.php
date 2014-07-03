@@ -226,9 +226,9 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         $isAirtimeAccountSuspended = true;
         $airtimeProduct = null;
     
-        foreach ($arr["products"] as $product)
+        foreach ($arr["products"]["product"] as $product)
         {
-            if (strpos($product["groupname"]["product"], "Airtime") === FALSE)
+            if (strpos($product["groupname"], "Airtime") === FALSE)
             {
                 //Ignore non-Airtime products
                 continue;
