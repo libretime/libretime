@@ -15,7 +15,7 @@ class BillingController extends Zend_Controller_Action {
     
     public function indexAction()
     {
-        
+        $this->_redirect('billing/upgrade');
     }
 
     public function upgradeAction()
