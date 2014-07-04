@@ -108,6 +108,7 @@ class CcFilesTableMap extends TableMap {
 		$this->addColumn('HIDDEN', 'DbHidden', 'BOOLEAN', false, null, false);
 		$this->addColumn('IS_SCHEDULED', 'DbIsScheduled', 'BOOLEAN', false, null, false);
 		$this->addColumn('IS_PLAYLIST', 'DbIsPlaylist', 'BOOLEAN', false, null, false);
+		$this->addColumn('RESOURCE_ID', 'DbResourceId', 'LONGVARCHAR', false, null, null);
 		// validators
 	} // initialize()
 

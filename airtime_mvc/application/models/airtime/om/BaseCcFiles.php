@@ -459,6 +459,12 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	protected $is_playlist;
 
 	/**
+	 * The value for the resource_id field.
+	 * @var        string
+	 */
+	protected $resource_id;
+
+	/**
 	 * @var        CcSubjs
 	 */
 	protected $aFkOwner;
@@ -1336,6 +1342,16 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	public function getDbIsPlaylist()
 	{
 		return $this->is_playlist;
+	}
+
+	/**
+	 * Get the [resource_id] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbResourceId()
+	{
+		return $this->resource_id;
 	}
 
 	/**
@@ -2867,6 +2883,26 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 	} // setDbIsPlaylist()
 
 	/**
+	 * Set the value of [resource_id] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcFiles The current object (for fluent API support)
+	 */
+	public function setDbResourceId($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->resource_id !== $v) {
+			$this->resource_id = $v;
+			$this->modifiedColumns[] = CcFilesPeer::RESOURCE_ID;
+		}
+
+		return $this;
+	} // setDbResourceId()
+
+	/**
 	 * Indicates whether the columns in this object are only set to default values.
 	 *
 	 * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -3024,6 +3060,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$this->hidden = ($row[$startcol + 67] !== null) ? (boolean) $row[$startcol + 67] : null;
 			$this->is_scheduled = ($row[$startcol + 68] !== null) ? (boolean) $row[$startcol + 68] : null;
 			$this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
+			$this->resource_id = ($row[$startcol + 70] !== null) ? (string) $row[$startcol + 70] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -3032,7 +3069,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 70; // 70 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 71; // 71 = CcFilesPeer::NUM_COLUMNS - CcFilesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcFiles object", $e);
@@ -3693,6 +3730,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 69:
 				return $this->getDbIsPlaylist();
 				break;
+			case 70:
+				return $this->getDbResourceId();
+				break;
 			default:
 				return null;
 				break;
@@ -3787,6 +3827,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			$keys[67] => $this->getDbHidden(),
 			$keys[68] => $this->getDbIsScheduled(),
 			$keys[69] => $this->getDbIsPlaylist(),
+			$keys[70] => $this->getDbResourceId(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aFkOwner) {
@@ -4039,6 +4080,9 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 			case 69:
 				$this->setDbIsPlaylist($value);
 				break;
+			case 70:
+				$this->setDbResourceId($value);
+				break;
 		} // switch()
 	}
 
@@ -4133,6 +4177,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if (array_key_exists($keys[67], $arr)) $this->setDbHidden($arr[$keys[67]]);
 		if (array_key_exists($keys[68], $arr)) $this->setDbIsScheduled($arr[$keys[68]]);
 		if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
+		if (array_key_exists($keys[70], $arr)) $this->setDbResourceId($arr[$keys[70]]);
 	}
 
 	/**
@@ -4214,6 +4259,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		if ($this->isColumnModified(CcFilesPeer::HIDDEN)) $criteria->add(CcFilesPeer::HIDDEN, $this->hidden);
 		if ($this->isColumnModified(CcFilesPeer::IS_SCHEDULED)) $criteria->add(CcFilesPeer::IS_SCHEDULED, $this->is_scheduled);
 		if ($this->isColumnModified(CcFilesPeer::IS_PLAYLIST)) $criteria->add(CcFilesPeer::IS_PLAYLIST, $this->is_playlist);
+		if ($this->isColumnModified(CcFilesPeer::RESOURCE_ID)) $criteria->add(CcFilesPeer::RESOURCE_ID, $this->resource_id);
 
 		return $criteria;
 	}
@@ -4344,6 +4390,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$copyObj->setDbHidden($this->hidden);
 		$copyObj->setDbIsScheduled($this->is_scheduled);
 		$copyObj->setDbIsPlaylist($this->is_playlist);
+		$copyObj->setDbResourceId($this->resource_id);
 
 		if ($deepCopy) {
 			// important: temporarily setNew(false) because this affects the behavior of
@@ -5392,6 +5439,7 @@ abstract class BaseCcFiles extends BaseObject  implements Persistent
 		$this->hidden = null;
 		$this->is_scheduled = null;
 		$this->is_playlist = null;
+		$this->resource_id = null;
 		$this->alreadyInSave = false;
 		$this->alreadyInValidation = false;
 		$this->clearAllReferences();

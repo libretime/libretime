@@ -76,6 +76,7 @@
  * @method     CcFilesQuery orderByDbHidden($order = Criteria::ASC) Order by the hidden column
  * @method     CcFilesQuery orderByDbIsScheduled($order = Criteria::ASC) Order by the is_scheduled column
  * @method     CcFilesQuery orderByDbIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
+ * @method     CcFilesQuery orderByDbResourceId($order = Criteria::ASC) Order by the resource_id column
  *
  * @method     CcFilesQuery groupByDbId() Group by the id column
  * @method     CcFilesQuery groupByDbName() Group by the name column
@@ -147,6 +148,7 @@
  * @method     CcFilesQuery groupByDbHidden() Group by the hidden column
  * @method     CcFilesQuery groupByDbIsScheduled() Group by the is_scheduled column
  * @method     CcFilesQuery groupByDbIsPlaylist() Group by the is_playlist column
+ * @method     CcFilesQuery groupByDbResourceId() Group by the resource_id column
  *
  * @method     CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -257,6 +259,7 @@
  * @method     CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
  * @method     CcFiles findOneByDbIsScheduled(boolean $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
  * @method     CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
+ * @method     CcFiles findOneByDbResourceId(string $resource_id) Return the first CcFiles filtered by the resource_id column
  *
  * @method     array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -328,6 +331,7 @@
  * @method     array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
  * @method     array findByDbIsScheduled(boolean $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
  * @method     array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
+ * @method     array findByDbResourceId(string $resource_id) Return CcFiles objects filtered by the resource_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -2098,6 +2102,28 @@ abstract class BaseCcFilesQuery extends ModelCriteria
 			$is_playlist = in_array(strtolower($dbIsPlaylist), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
 		}
 		return $this->addUsingAlias(CcFilesPeer::IS_PLAYLIST, $dbIsPlaylist, $comparison);
+	}
+
+	/**
+	 * Filter the query on the resource_id column
+	 * 
+	 * @param     string $dbResourceId The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcFilesQuery The current query, for fluid interface
+	 */
+	public function filterByDbResourceId($dbResourceId = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbResourceId)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbResourceId)) {
+				$dbResourceId = str_replace('*', '%', $dbResourceId);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcFilesPeer::RESOURCE_ID, $dbResourceId, $comparison);
 	}
 
 	/**

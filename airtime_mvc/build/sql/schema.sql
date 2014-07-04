@@ -100,6 +100,7 @@ CREATE TABLE "cc_files"
 	"hidden" BOOLEAN default 'f',
 	"is_scheduled" BOOLEAN default 'f',
 	"is_playlist" BOOLEAN default 'f',
+	"resource_id" TEXT,
 	PRIMARY KEY ("id")
 );
 
