@@ -17,28 +17,28 @@ def run():
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
     parser.add_argument("--debug", help="log full debugging output", action="store_true")
-    parser.add_argument("--rmq-config-file", help="specify a configuration file with RabbitMQ settings (default is %s)" % DEFAULT_CONFIG_PATH)
+    parser.add_argument("--config-file", help="specify a configuration file with RabbitMQ settings (default is %s)" % DEFAULT_CONFIG_PATH)
     parser.add_argument("--http-retry-queue-file", help="specify where incompleted HTTP requests will be serialized (default is %s)" % DEFAULT_HTTP_RETRY_PATH)
     args = parser.parse_args()
 
     check_if_media_monitor_is_running()
 
     #Default config file path
-    rmq_config_path = DEFAULT_CONFIG_PATH
+    config_path = DEFAULT_CONFIG_PATH
     http_retry_queue_path = DEFAULT_HTTP_RETRY_PATH
-    if args.rmq_config_file:
-        rmq_config_path = args.rmq_config_file
+    if args.config_file:
+        config_path = args.config_file
     if args.http_retry_queue_file:
         http_retry_queue_path = args.http_retry_queue_file
 
     if args.daemon:
         with daemon.DaemonContext():
-            aa.AirtimeAnalyzerServer(rmq_config_path=rmq_config_path, 
+            aa.AirtimeAnalyzerServer(config_path=config_path, 
                                      http_retry_queue_path=http_retry_queue_path, 
                                      debug=args.debug)
     else: 
         # Run without daemonizing
-        aa.AirtimeAnalyzerServer(rmq_config_path=rmq_config_path,
+        aa.AirtimeAnalyzerServer(config_path=config_path,
                                  http_retry_queue_path=http_retry_queue_path, 
                                  debug=args.debug)
 

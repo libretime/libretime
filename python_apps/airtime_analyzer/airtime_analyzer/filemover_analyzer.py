@@ -18,7 +18,8 @@ class FileMoverAnalyzer(Analyzer):
         raise Exception("Use FileMoverAnalyzer.move() instead.")
     
     @staticmethod
-    def move(audio_file_path, import_directory, original_filename, metadata):
+    def move(audio_file_path, import_directory, original_filename, metadata,
+             s3_bucket, s3_api_key, s3_api_key_secret):
         """Move the file at audio_file_path over into the import_directory/import,
            renaming it to original_filename.
            
@@ -41,10 +42,13 @@ class FileMoverAnalyzer(Analyzer):
         #Import the file over to it's final location.
         # TODO: Also, handle the case where the move fails and write some code
         # to possibly move the file to problem_files.
-      
+        
+        #cloud storage doesn't need this
+        '''
         max_dir_len = 32
         max_file_len = 32
         final_file_path = import_directory
+        
         if metadata.has_key("artist_name"):
             final_file_path += "/" + metadata["artist_name"][0:max_dir_len] # truncating with array slicing
         if metadata.has_key("album_title"):
@@ -60,6 +64,7 @@ class FileMoverAnalyzer(Analyzer):
         #the wrong information for the file we just overwrote (eg. the song length would be wrong!)
         #If the final file path is the same as the file we've been told to import (which
         #you often do when you're debugging), then don't move the file at all.
+        
         if os.path.exists(final_file_path):
             if os.path.samefile(audio_file_path, final_file_path):
                 metadata["full_path"] = final_file_path
@@ -74,12 +79,48 @@ class FileMoverAnalyzer(Analyzer):
 
         #Ensure the full path to the file exists
         mkdir_p(os.path.dirname(final_file_path))
+        '''
         
+        file_base_name = os.path.basename(audio_file_path)
+        file_name, extension = os.path.splitext(file_base_name)
+        object_name = "%s_%s%s" % (file_name, str(uuid.uuid4()), extension)
+        
+        from libcloud.storage.types import Provider, ContainerDoesNotExistError
+        from libcloud.storage.providers import get_driver
+        
+        cls = get_driver(Provider.S3)
+        driver = cls(s3_api_key, s3_api_key_secret)
+        
+        try:
+            container = driver.get_container(s3_bucket)
+        except ContainerDoesNotExistError:
+            container = driver.create_container(s3_bucket)
+        
+        extra = {'meta_data': {'filename': file_base_name}}
+        #libcloud complains when float objects are in metadata
+        #extra = {'meta_data': metadata}
+        
+        with open(audio_file_path, 'rb') as iterator:
+            obj = driver.upload_object_via_stream(iterator=iterator,
+                                                  container=container,
+                                                  object_name=object_name,
+                                                  extra=extra)
+
+        #remove file from organize directory
+        try:
+            os.remove(audio_file_path)
+        except OSError:
+            pass
+        
+        #cloud storage doesn't need this
+        '''
         #Move the file into its final destination directory 
         logging.debug("Moving %s to %s" % (audio_file_path, final_file_path))
         shutil.move(audio_file_path, final_file_path)
     
         metadata["full_path"] = final_file_path
+        '''
+        metadata["s3_object_name"] = object_name
         return metadata
     
 def mkdir_p(path):

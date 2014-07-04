@@ -17,7 +17,8 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename,
+                     s3_bucket, s3_api_key, s3_api_key_secret):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -51,7 +52,8 @@ class AnalyzerPipeline:
             # First, we extract the ID3 tags and other metadata:
             metadata = dict()
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
-            metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+            metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata,
+                                              s3_bucket, s3_api_key, s3_api_key_secret)
             metadata["import_status"] = 0 # imported
 
             # Note that the queue we're putting the results into is our interprocess communication 
