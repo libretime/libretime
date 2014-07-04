@@ -254,7 +254,13 @@ class Rest_MediaController extends Zend_Rest_Controller
                     $file->setDbFilepath($filePathRelativeToStor);
                     $file->setDbDirectory(1); //1 corresponds to the default stor/imported directory.
                 }
-            }    
+            } else if (isset($requestData["s3_object_name"])) {
+                $cloud_cc_music_dir = CcMusicDirsQuery::create()
+                    ->filterByType("cloud")
+                    ->findOne();
+                $file->setDbDirectory($cloud_cc_music_dir->getId());
+                $file->setDbResourceId($requestData["s3_object_name"]);
+            }
             
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);
