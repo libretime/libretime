@@ -156,6 +156,10 @@ $(document).ready(function() {
     	}, 1500); //Wait 1.5 seconds before validating the VAT number
     });
 
+    //We don't assume the VAT number we have in the database is valid.
+    //Let's force it to be rechecked and the total to be recalculated when the page loads.
+    validateVATNumber(); 
+
     $("#hobbyist_grid_price").text("$" + products[0].pricing["USD"]["monthly"] + " / month");
     $("#starter_grid_price").text("$" + products[1].pricing["USD"]["monthly"] + " / month");
     $("#plus_grid_price").text("$" + products[2].pricing["USD"]["monthly"] + " / month");
