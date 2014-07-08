@@ -245,10 +245,14 @@ class Application_Model_User
     }
 
     public static function getFirstAdmin() {
-        $admins = Application_Model_User::getUsersOfType('A');
-        if (count($admins) > 0) { // found admin => pick first one
-            return $admins[0];
+        $superAdmins = Application_Model_User::getUsersOfType('S');
+        if (count($superAdmins) > 0) { // found superadmin => pick first one
+            return $superAdmins[0];
         } else {
+            $admins = Application_Model_User::getUsersOfType('A');
+            if (count($admins) > 0) { // found admin => pick first one
+                return $admins[0];
+            }
             Logging::warn("Warning. no admins found in database");
             return null;
         }

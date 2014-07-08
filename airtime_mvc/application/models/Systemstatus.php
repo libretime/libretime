@@ -233,7 +233,7 @@ class Application_Model_Systemstatus
         $partitions[$totalSpace] = new stdClass();
         $partitions[$totalSpace]->totalSpace = $totalSpace;
         $partitions[$totalSpace]->totalFreeSpace = $totalSpace - $usedSpace;
-        Logging::info($partitions[$totalSpace]->totalFreeSpace);
+        //Logging::info($partitions[$totalSpace]->totalFreeSpace);
 
         return array_values($partitions);
     }
