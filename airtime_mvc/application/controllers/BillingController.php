@@ -40,6 +40,21 @@ class BillingController extends Zend_Controller_Action {
                     $apply_vat = false;
                 }
                 
+                $placeAnUpgradeOrder = true;
+                
+                $currentPlanProduct = BillingController::getClientCurrentAirtimeProduct();
+                $currentPlanProductId = $currentPlanProduct["pid"];
+                $currentPlanProductBillingCycle = strtolower($currentPlanProduct["billingcycle"]);
+                //If there's been no change in the plan or the billing cycle, we should not
+                //place an upgrade order. WHMCS doesn't allow this in its web interface,
+                //and it freaks out and does the wrong thing if we do it via the API
+                //so we have to do avoid that.
+                if (($currentPlanProductId == $formData["newproductid"]) &&
+                    ($currentPlanProductBillingCycle == $formData["newproductbillingcycle"]))
+                {
+                    $placeAnUpgradeOrder = false;
+                }
+                
                 $postfields = array();
                 $postfields["username"] = $credentials["username"];
                 $postfields["password"] = md5($credentials["password"]);
@@ -76,30 +91,39 @@ class BillingController extends Zend_Controller_Action {
                 $client_query_string = "";
                 foreach ($clientfields AS $k=>$v) $client_query_string .= "$k=".urlencode($v)."&";
                 
+                //Update the client details in WHMCS first
                 $result = $this->makeRequest($credentials["url"], $client_query_string);
                 Logging::info($result);
                 if ($result["result"] == "error") {
                     $this->setErrorMessage();
                     $this->view->form = $form;
+                    return;
+                }
+                
+                if (!$placeAnUpgradeOrder)
+                {
+                    $this->_redirect('billing/invoices');
+                    return;
+                }
+                
+                //Then place an upgrade order in WHMCS
+                $result = $this->makeRequest($credentials["url"], $upgrade_query_string);
+                if ($result["result"] == "error") {
+                    Logging::info($_SERVER['HTTP_HOST']." - Account upgrade failed. - ".$result["message"]);
+                    $this->setErrorMessage();
+                    $this->view->form = $form;
                 } else {
-                    $result = $this->makeRequest($credentials["url"], $upgrade_query_string);
-                    if ($result["result"] == "error") {
-                        Logging::info($_SERVER['HTTP_HOST']." - Account upgrade failed. - ".$result["message"]);
-                        $this->setErrorMessage();
-                        $this->view->form = $form;
-                    } else {
-                        Logging::info($_SERVER['HTTP_HOST']. "Account plan upgrade request:");
-                        Logging::info($result);
-                        
-                        // Disable the view and the layout here, squashes an error.
-                        $this->view->layout()->disableLayout();
-                        $this->_helper->viewRenderer->setNoRender(true);
-                        
-                        if ($apply_vat) {
-                            $this->addVatToInvoice($result["invoiceid"]);
-                        }
-                        self::viewInvoice($result["invoiceid"]);
+                    Logging::info($_SERVER['HTTP_HOST']. "Account plan upgrade request:");
+                    Logging::info($result);
+                    
+                    // Disable the view and the layout here, squashes an error.
+                    $this->view->layout()->disableLayout();
+                    $this->_helper->viewRenderer->setNoRender(true);
+                    
+                    if ($apply_vat) {
+                        $this->addVatToInvoice($result["invoiceid"]);
                     }
+                    self::viewInvoice($result["invoiceid"]);
                 }
             } else {
                 $this->view->form = $form;
@@ -384,7 +408,11 @@ class BillingController extends Zend_Controller_Action {
         
         $result = self::makeRequest($credentials["url"], $query_string);
         
-        $this->view->invoices = $result["invoices"]["invoice"];
+        if ($result["invoices"]) {
+            $this->view->invoices = $result["invoices"]["invoice"];;
+        } else {
+            $this->view->invoices = array();
+        }
     }
     
     public function invoiceAction()

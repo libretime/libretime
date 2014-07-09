@@ -6,13 +6,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         $productPrices = array();
         $productTypes = array();       
         list($productPrices, $productTypes) = BillingController::getProductPricesAndTypes();
-               
-        //$currentPlanType = ucfirst(Application_Model_Preference::GetPlanLevel());
-        $currentPlanType = "Hobbyist";
-        if (($key = array_search($currentPlanType, $productTypes)) !== false) {
-            //unset($productTypes[$key]);
-        }
-        
+                       
         $currentPlanProduct = BillingController::getClientCurrentAirtimeProduct();
         $currentPlanProductId = $currentPlanProduct["pid"];
         
