@@ -88,6 +88,9 @@ class BillingController extends Zend_Controller_Action {
                         $this->setErrorMessage();
                         $this->view->form = $form;
                     } else {
+                        Logging::info($_SERVER['HTTP_HOST']. "Account plan upgrade request:");
+                        Logging::info($result);
+                        
                         // Disable the view and the layout here, squashes an error.
                         $this->view->layout()->disableLayout();
                         $this->_helper->viewRenderer->setNoRender(true);
