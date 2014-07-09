@@ -28,18 +28,12 @@ class BillingController extends Zend_Controller_Action {
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
         if ($request->isPost()) {
-            
-            /*
-             * TODO: determine if VAT shoould be charged on the invoice or not.
-             * We'll need to check if a VAT number was supplied in the form and if so,
-             * validate it somehow. We'll also need to make sure the country given is
-             * in the EU
-             */
                         
             $formData = $request->getPost();
             if ($form->isValid($formData)) {
                 $credentials = self::getAPICredentials();
                 
+                //Check if VAT should be applied or not to this invoice.
                 if (in_array("7", $formData["customfields"])) {
                     $apply_vat = BillingController::checkIfVatShouldBeApplied($formData["customfields"]["7"], $formData["country"]);
                 } else {
@@ -94,6 +88,10 @@ class BillingController extends Zend_Controller_Action {
                         $this->setErrorMessage();
                         $this->view->form = $form;
                     } else {
+                        // Disable the view and the layout here, squashes an error.
+                        $this->view->layout()->disableLayout();
+                        $this->_helper->viewRenderer->setNoRender(true);
+                        
                         if ($apply_vat) {
                             $this->addVatToInvoice($result["invoiceid"]);
                         }
