@@ -100,9 +100,11 @@ class BillingController extends Zend_Controller_Action {
                     return;
                 }
                 
+                //If there were no changes to the plan or billing cycle, we just redirect you to the
+                //invoices screen and show a message.
                 if (!$placeAnUpgradeOrder)
                 {
-                    $this->_redirect('billing/invoices');
+                    $this->_redirect('billing/invoices?planupdated');
                     return;
                 }
                 
