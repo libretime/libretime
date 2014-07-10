@@ -473,7 +473,7 @@ SQL;
 
         $mime = $this->_file->getDbMime();
 
-        if ($mime == "audio/ogg" || $mime == "application/ogg") {
+        if ($mime == "audio/ogg" || $mime == "application/ogg" || $mime == "audio/vorbis") {
             return "ogg";
         } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg") {
             return "mp3";
@@ -495,15 +495,20 @@ SQL;
     {
         assert($this->_file);
         
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->
-            _file->getDbDirectory());
-        if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file in database.");
+        if ($this->isInCloud()) {
+            return $this->getCloudUrl();
+        } else {
+        
+            $music_dir = Application_Model_MusicDir::getDirByPK($this->
+                _file->getDbDirectory());
+            if (!$music_dir) {
+                throw new Exception("Invalid music_dir for file in database.");
+            }
+            $directory = $music_dir->getDirectory();
+            $filepath  = $this->_file->getDbFilepath();
+    
+            return Application_Common_OsPath::join($directory, $filepath);
         }
-        $directory = $music_dir->getDirectory();
-        $filepath  = $this->_file->getDbFilepath();
-
-        return Application_Common_OsPath::join($directory, $filepath);
     }
 
     /**
@@ -555,7 +560,37 @@ SQL;
     {
         return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
+    
+    public function isInCloud()
+    {
+        $location = CcMusicDirsQuery::create()->findPk($this->_file->getDbDirectory());
+        if ($location->getType() == "cloud") {
+            return true;
+        }
+        return false;
+    }
+    
+    public function getCloudUrl()
+    {
+        $CC_CONFIG = Config::getConfig();
+        return $CC_CONFIG["s3"]["host"]."/".$CC_CONFIG["s3"]["bucket"]."/" . urlencode($this->getResourceId());
+    }
+    
+    public function getResourceId()
+    {
+        return $this->_file->getDbResourceId();
+    }
 
+    public function getFileSize()
+    {
+        if ($this->isInCloud()) {
+            //TODO: error checking - 403 forbidden>
+            return strlen(file_get_contents($this->getCloudUrl()));
+        } else {
+            return filesize($this->getFilePath());
+        }
+    }
+    
     public static function Insert($md, $con)
     {
         // save some work by checking if filepath is given right away

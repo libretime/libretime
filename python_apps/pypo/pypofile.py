@@ -2,12 +2,14 @@
 
 from threading import Thread
 from Queue import Empty
+from cloud_storage_downloader import CloudStorageDownloader
 
 import logging
 import shutil
 import os
 import sys
 import stat
+
 
 from std_err_override import LogWriter
 
@@ -35,16 +37,21 @@ class PypoFile(Thread):
         """
         src = media_item['uri']
         dst = media_item['dst']
+        is_in_cloud = media_item['is_in_cloud']
 
         try:
-            src_size = os.path.getsize(src)
+            if is_in_cloud:
+                src_size = media_item['filesize']
+            else:
+                src_size = os.path.getsize(src)
         except Exception, e:
             self.logger.error("Could not get size of source file: %s", src)
             return
-
+        
         dst_exists = True
         try:
             dst_size = os.path.getsize(dst)
+            self.logger.debug(dst_size)
         except Exception, e:
             dst_exists = False
 
@@ -66,7 +73,11 @@ class PypoFile(Thread):
                 """
                 copy will overwrite dst if it already exists
                 """
-                shutil.copy(src, dst)
+                if is_in_cloud:
+                    csd = CloudStorageDownloader()
+                    csd.download_obj(dst, media_item['object_name'])
+                else:
+                    shutil.copy(src, dst)
 
                 #make file world readable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)

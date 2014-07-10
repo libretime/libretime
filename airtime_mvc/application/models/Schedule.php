@@ -724,7 +724,7 @@ SQL;
         }
     }
 
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri)
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize, $object_name, $isInCloud)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end   = self::AirtimeTimeToPypoTime($item["end"]);
@@ -756,6 +756,9 @@ SQL;
             'show_name'         => $item["show_name"],
             'replay_gain'       => $replay_gain,
             'independent_event' => $independent_event,
+            'filesize'          => $filesize,
+            'object_name'       => $object_name,
+            'is_in_cloud'       => $isInCloud
         );
 
         if ($schedule_item['cue_in'] > $schedule_item['cue_out']) {
@@ -889,7 +892,10 @@ SQL;
                 $media_id = $item['file_id'];
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $uri = $storedFile->getFilePath();
-                self::createFileScheduleEvent($data, $item, $media_id, $uri);
+                $object_name = $storedFile->getResourceId();
+                $filesize = $storedFile->getFileSize();
+                $isInCloud = $storedFile->isInCloud();
+                self::createFileScheduleEvent($data, $item, $media_id, $uri, $filesize, $object_name, $isInCloud);
             } 
             elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"

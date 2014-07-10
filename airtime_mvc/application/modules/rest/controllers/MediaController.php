@@ -232,7 +232,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
             //our internal schema. Internally, file path is stored relative to a directory, with the directory
             //as a foreign key to cc_music_dirs.
-            if (isset($requestData["full_path"])) {
+            /*if (isset($requestData["full_path"])) {
                 $fileSizeBytes = filesize($requestData["full_path"]);
                 if ($fileSizeBytes === false)
                 {
@@ -254,20 +254,25 @@ class Rest_MediaController extends Zend_Rest_Controller
                     $file->setDbFilepath($filePathRelativeToStor);
                     $file->setDbDirectory(1); //1 corresponds to the default stor/imported directory.
                 }
-            } else if (isset($requestData["s3_object_name"])) {
+            }*/
+            
+            if (isset($requestData["s3_object_name"])) {
                 $cloud_cc_music_dir = CcMusicDirsQuery::create()
                     ->filterByType("cloud")
                     ->findOne();
                 $file->setDbDirectory($cloud_cc_music_dir->getId());
                 $file->setDbResourceId($requestData["s3_object_name"]);
+                
+                //Application_Model_Preference::updateDiskUsage($requestData["filesize"]);
             }
             
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);
             $file->save();
             
-            /* $this->removeEmptySubFolders(
-                isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/"); */
+            //get the filesize and update disk_usage
+            $storedFile = Application_Model_StoredFile::RecallById($file->getDbId());
+            Application_Model_Preference::updateDiskUsage($storedFile->getFileSize());
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
