@@ -81,6 +81,18 @@ class ApiController extends Zend_Controller_Action
 
         $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media != null) {
+            
+            if ($media->isInCloud()) {
+                if ("true" == $this->_getParam('download')) {
+                    header('Content-type:'.$media->getPropelOrm()->getDbMime());
+                    header('Content-Disposition: attachment; filename="'.$media->getResourceId().'"');
+                    header('Content-length:'.$media->getFileSize());
+                    echo $media->getCloudUrl();
+                    exit;
+                } else {
+                    $this->_redirect($media->getCloudUrl());
+                }
+            }
 
             $filepath = $media->getFilePath();
             // Make sure we don't have some wrong result beecause of caching
