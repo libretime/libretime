@@ -5,7 +5,12 @@ post_file() {
     max_retry=360
     retry_count=0
 
-    file_path=${1}
+    file_path="${1}"
+    #We must remove commas because CURL can't upload files with commas in the name
+    # http://curl.haxx.se/mail/archive-2009-07/0029.html
+    stripped_file_path=${file_path//','/''}
+    mv "${file_path}" "${stripped_file_path}"
+    file_path="${stripped_file_path}"
     filename="${file_path##*/}"
 	
     #base_instance_path and airtime_conf_path are common to all saas instances
