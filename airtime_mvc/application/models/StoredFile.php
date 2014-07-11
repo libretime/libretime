@@ -573,7 +573,7 @@ SQL;
     public function getCloudUrl()
     {
         $CC_CONFIG = Config::getConfig();
-        return $CC_CONFIG["s3"]["host"]."/".$CC_CONFIG["s3"]["bucket"]."/" . urlencode($this->getResourceId());
+        return $CC_CONFIG["cloud_storage"]["host"]."/".$CC_CONFIG["cloud_storage"]["bucket"]."/" . urlencode($this->getResourceId());
     }
     
     public function getResourceId()

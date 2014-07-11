@@ -5,6 +5,7 @@ import threading
 import multiprocessing 
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
+from cloud_storage_uploader import CloudStorageUploader
 
 class AnalyzerPipeline:
     """ Analyzes and imports an audio file into the Airtime library. 
@@ -18,7 +19,7 @@ class AnalyzerPipeline:
     
     @staticmethod
     def run_analysis(queue, audio_file_path, import_directory, original_filename,
-                     s3_bucket, s3_api_key, s3_api_key_secret):
+                     cloud_provider, cloud_bucket, cloud_api_key, cloud_api_key_secret):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -52,8 +53,9 @@ class AnalyzerPipeline:
             # First, we extract the ID3 tags and other metadata:
             metadata = dict()
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
-            metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata,
-                                              s3_bucket, s3_api_key, s3_api_key_secret)
+            #metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+            csu = CloudStorageUploader(cloud_provider, cloud_bucket, cloud_api_key, cloud_api_key_secret)
+            metadata = csu.upload_obj(audio_file_path, metadata)
             metadata["import_status"] = 0 # imported
 
             # Note that the queue we're putting the results into is our interprocess communication 

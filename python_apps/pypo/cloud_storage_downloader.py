@@ -1,9 +1,8 @@
 import os
 import logging
 import ConfigParser
-import urllib2
 
-from libcloud.storage.types import Provider, ContainerDoesNotExistError, ObjectDoesNotExistError
+from libcloud.storage.types import Provider, ObjectDoesNotExistError
 from libcloud.storage.providers import get_driver
 
 CONFIG_PATH = '/etc/airtime/airtime.conf'
@@ -12,17 +11,18 @@ class CloudStorageDownloader:
     def __init__(self):
         config = self.read_config_file(CONFIG_PATH)
         
-        S3_CONFIG_SECTION = "s3"
-        self._s3_bucket = config.get(S3_CONFIG_SECTION, 'bucket')
-        self._s3_api_key = config.get(S3_CONFIG_SECTION, 'api_key')
-        self._s3_api_key_secret = config.get(S3_CONFIG_SECTION, 'api_key_secret')
+        CLOUD_STORAGE_CONFIG_SECTION = "cloud_storage"
+        self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
+        self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
+        self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
+        self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
     
     def download_obj(self, dst, obj_name):
-        cls = get_driver(Provider.S3)
-        driver = cls(self._s3_api_key, self._s3_api_key_secret)
-        #object_name = os.path.basename(urllib2.unquote(obj_url).decode('utf8'))
+        cls = get_driver(getattr(Provider, self._provider))
+        driver = cls(self._api_key, self._api_key_secret)
+
         try:
-            cloud_obj = driver.get_object(container_name=self._s3_bucket,
+            cloud_obj = driver.get_object(container_name=self._bucket,
                                     object_name=obj_name)
         except ObjectDoesNotExistError:
             logging.info("Could not find object: %s" % obj_name)

@@ -74,10 +74,11 @@ class MessageListener:
         self._vhost = config.get(RMQ_CONFIG_SECTION, 'vhost')
         
         # Read the S3 API setting from the config file
-        S3_CONFIG_SECTION = "s3"
-        self._s3_bucket = config.get(S3_CONFIG_SECTION, 'bucket')
-        self._s3_api_key = config.get(S3_CONFIG_SECTION, 'api_key')
-        self._s3_api_key_secret = config.get(S3_CONFIG_SECTION, 'api_key_secret')
+        CLOUD_STORAGE_CONFIG_SECTION = "cloud_storage"
+        self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
+        self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
+        self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
+        self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
         
         # Set up a signal handler so we can shutdown gracefully
         # For some reason, this signal handler must be set up here. I'd rather 
@@ -210,7 +211,7 @@ class MessageListener:
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis, 
                         args=(q, audio_file_path, import_directory, original_filename,
-                              self._s3_bucket, self._s3_api_key, self._s3_api_key_secret))
+                              self._provider, self._bucket, self._api_key, self._api_key_secret))
         p.start()
         p.join()
         if p.exitcode == 0:

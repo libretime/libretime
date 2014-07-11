@@ -31,7 +31,7 @@ class Config {
         $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
         $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
         
-        $CC_CONFIG['s3'] = $values['s3'];
+        $CC_CONFIG['cloud_storage'] = $values['cloud_storage'];
 
         $CC_CONFIG['baseDir'] = $values['general']['base_dir'];
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
