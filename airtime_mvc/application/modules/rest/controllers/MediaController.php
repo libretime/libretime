@@ -222,6 +222,12 @@ class Rest_MediaController extends Zend_Rest_Controller
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
         $whiteList = $this->stripTimeStampFromYearTag($whiteList);
+        
+        if ($requestData["import_status"] == 2) {
+            $file->setDbImportStatus(2)->save();
+            $this->importFailedResponse();
+            return;
+        }
 
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->save();
@@ -383,6 +389,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
         $resp->appendBody("ERROR: Media not found."); 
+    }
+    
+    private function importFailedResponse()
+    {
+        $resp = $this->getResponse();
+        $resp->setHttpResponseCode(200);
+        $resp->appendBody("ERROR: Import Failed.");
     }
 
     private function invalidDataResponse()
