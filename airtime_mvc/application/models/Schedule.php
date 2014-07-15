@@ -738,13 +738,16 @@ SQL;
         $replay_gain = is_null($item["replay_gain"]) ? "0": $item["replay_gain"];
         $replay_gain += Application_Model_Preference::getReplayGainModifier();
 
-        if ( !Application_Model_Preference::GetEnableReplayGain() ) {
+        if (!Application_Model_Preference::GetEnableReplayGain() ) {
             $replay_gain = 0;
         }
 
+        $fileMetadata = CcFiles::sanitizeResponse(CcFilesQuery::create()->findPk($media_id));
+        
         $schedule_item = array(
             'id'                => $media_id,
             'type'              => 'file',
+            'metadata'          => $fileMetadata,
             'row_id'            => $item["id"],
             'uri'               => $uri,
             'fade_in'           => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),
