@@ -307,7 +307,6 @@ class Rest_MediaController extends Zend_Rest_Controller
             if ($storedFile->existsOnDisk()) {
                 $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
             }
-            $file->delete();
             $this->getResponse()
                 ->setHttpResponseCode(204);
         } else {

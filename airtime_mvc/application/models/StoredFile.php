@@ -384,28 +384,28 @@ SQL;
             throw new FileNoPermissionException();
         }
 
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
-        assert($music_dir);
-        $type = $music_dir->getType();
+        $isInCloud = $this->isInCloud();
         
-        
-        if (file_exists($filepath) && $type == "stor") {
+        $filesize = $this->getFileSize();
+        if (file_exists($filepath) && !$isInCloud) {
             try {
-                //Update the user's disk usage
-                Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($filepath)));
-
                 unlink($filepath);
             } catch (Exception $e) {
                 Logging::error($e->getMessage());
                 return;
             }
+        } elseif ($isInCloud) {
+            //delete file from cloud
         }
+
+        //Update the user's disk usage
+        Application_Model_Preference::updateDiskUsage(-1 * $filesize);
 
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
         // set hidden flag to true
         //$this->_file->setDbHidden(true);
-        $this->_file->setDbFileExists(false);
-        $this->_file->save();
+        //$this->_file->setDbFileExists(false);
+        //$this->_file->save();
 
         // need to explicitly update any playlist's and block's length
         // that contains the file getting deleted
@@ -423,6 +423,8 @@ SQL;
             $bl->setDbLength($bl->computeDbLength(Propel::getConnection(CcBlockPeer::DATABASE_NAME)));
             $bl->save();
         }
+
+        $this->_file->delete();
     }
 
     /**

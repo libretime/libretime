@@ -8,6 +8,7 @@ import logging
 import multiprocessing 
 from analyzer_pipeline import AnalyzerPipeline
 from status_reporter import StatusReporter
+from cloud_storage_uploader import CloudStorageUploader
 
 EXCHANGE = "airtime-uploads"
 EXCHANGE_TYPE = "topic"
@@ -151,6 +152,7 @@ class MessageListener:
         original_filename = ""
         callback_url    = ""
         api_key         = ""
+        message_type = ""
 
         ''' Spin up a worker process. We use the multiprocessing module and multiprocessing.Queue 
             to pass objects between the processes so that if the analyzer process crashes, it does not
@@ -166,9 +168,13 @@ class MessageListener:
             original_filename = msg_dict["original_filename"]
             callback_url    = msg_dict["callback_url"]
             api_key         = msg_dict["api_key"]
+            message_type = msg_dict["message_type"]
             
-            audio_metadata = self.spawn_analyzer_process(audio_file_path, import_directory, original_filename)
-            StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
+            if event_type == "upload":
+                audio_metadata = self.spawn_analyzer_process(audio_file_path, import_directory, original_filename)
+                StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
+            elif event_type == "delete":
+                pass
 
         except KeyError as e:
             # A field in msg_dict that we needed was missing (eg. audio_file_path)

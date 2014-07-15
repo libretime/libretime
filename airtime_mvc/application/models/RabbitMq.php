@@ -80,9 +80,10 @@ class Application_Model_RabbitMq
     }
 
     public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
-                                                $callbackUrl, $apiKey)
+                                                $callbackUrl, $apiKey, $messageType)
     {
         $exchange = 'airtime-uploads';
+        $data['message_type'] = $messageType;
         $data['tmp_file_path'] = $tmpFilePath;
         $data['import_directory'] = $importedStorageDirectory;
         $data['original_filename'] = $originalFilename;

@@ -41,3 +41,6 @@ class CloudStorageUploader:
         
         metadata["s3_object_name"] = object_name
         return metadata
+
+    def delete_obj(self, object_name):
+        pass
