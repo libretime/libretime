@@ -44,5 +44,8 @@ while not successful:
             logging.error("traceback: %s", traceback.format_exc())
             sys.exit(1)
         else:
+            logging.error(str(e))
+            logging.error("traceback: %s", traceback.format_exc())
+            logging.info("Retrying in 3 seconds...")
             time.sleep(3)
     attempts += 1
