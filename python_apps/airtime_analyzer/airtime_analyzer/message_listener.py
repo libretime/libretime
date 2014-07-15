@@ -162,19 +162,26 @@ class MessageListener:
         '''
         try:
             msg_dict = json.loads(body)
-            audio_file_path = msg_dict["tmp_file_path"]
-            #final_file_path = msg_dict["final_file_path"]
-            import_directory = msg_dict["import_directory"]
-            original_filename = msg_dict["original_filename"]
-            callback_url    = msg_dict["callback_url"]
             api_key         = msg_dict["api_key"]
             message_type = msg_dict["message_type"]
+            callback_url    = msg_dict["callback_url"]
             
-            if event_type == "upload":
+            if message_type == "upload":
+                audio_file_path = msg_dict["tmp_file_path"]
+                import_directory = msg_dict["import_directory"]
+                original_filename = msg_dict["original_filename"]
+                
                 audio_metadata = self.spawn_analyzer_process(audio_file_path, import_directory, original_filename)
                 StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
-            elif event_type == "delete":
-                pass
+            elif message_type == "delete":
+                object_name = msg_dict["object_name"]
+                csu = CloudStorageUploader(self._provider, self._bucket, self._api_key, self._api_key_secret)
+                response = csu.delete_obj(object_name)
+                if response["success"]:
+                    audio_metadata = dict()
+                    audio_metadata["delete_success"] = True
+                    audio_metadata["filesize"] = response["filesize"]
+                    StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
 
         except KeyError as e:
             # A field in msg_dict that we needed was missing (eg. audio_file_path)

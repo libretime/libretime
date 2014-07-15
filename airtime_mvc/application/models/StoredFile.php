@@ -363,9 +363,7 @@ SQL;
     }
 
     /**
-     * Delete stored virtual file
-     *
-     * @param boolean $p_deleteFile
+     * Deletes the physical file from the local file system or from the cloud
      *
      */
     public function delete()
@@ -383,10 +381,11 @@ SQL;
         if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
             throw new FileNoPermissionException();
         }
+        $file_id = $this->_file->getDbId();
+        Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$file_id);
 
         $isInCloud = $this->isInCloud();
         
-        $filesize = $this->getFileSize();
         if (file_exists($filepath) && !$isInCloud) {
             try {
                 unlink($filepath);
@@ -394,23 +393,46 @@ SQL;
                 Logging::error($e->getMessage());
                 return;
             }
+            
+            $this->doFileDeletionCleanup($this->getFileSize());
+            
         } elseif ($isInCloud) {
-            //delete file from cloud
+            //Dispatch a message to airtime_analyzer through RabbitMQ,
+            //notifying it that we need to delete a file from the cloud
+            $CC_CONFIG = Config::getConfig();
+            $apiKey = $CC_CONFIG["apiKey"][0];
+            
+            $callbackUrl = 'http://'.$_SERVER['HTTP_HOST'].'/rest/media/'.$file_id.'/delete-success';
+            
+            Application_Model_RabbitMq::SendDeleteMessageToAnalyzer(
+                $callbackUrl, $this->_file->getDbResourceId(), $apiKey, 'delete');
         }
+    }
 
+    /*
+     * This function handles all the actions required when a file is deleted
+     */
+    public function doFileDeletionCleanup($filesize)
+    {
         //Update the user's disk usage
         Application_Model_Preference::updateDiskUsage(-1 * $filesize);
+        
+        //Explicitly update any playlist's and block's length that contains
+        //the file getting deleted
+        self::updateBlockAndPlaylistLength($this->_file->getDbId());
+        
+        //delete the file record from cc_files
+        $this->_file->delete();
+    }
 
-        Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
-        // set hidden flag to true
-        //$this->_file->setDbHidden(true);
-        //$this->_file->setDbFileExists(false);
-        //$this->_file->save();
-
-        // need to explicitly update any playlist's and block's length
-        // that contains the file getting deleted
-        $fileId = $this->_file->getDbId();
-        $plRows = CcPlaylistcontentsQuery::create()->filterByDbFileId()->find();
+    /*
+     * This function is meant to be called when a file is getting
+     * deleted from the library. It re-calculates the length of
+     * all blocks and playlists that contained the deleted file. 
+     */
+    public static function updateBlockAndPlaylistLength($fileId)
+    {
+        $plRows = CcPlaylistcontentsQuery::create()->filterByDbFileId($fileId)->find();
         foreach ($plRows as $row) {
             $pl = CcPlaylistQuery::create()->filterByDbId($row->getDbPlaylistId($fileId))->findOne();
             $pl->setDbLength($pl->computeDbLength(Propel::getConnection(CcPlaylistPeer::DATABASE_NAME)));
@@ -423,8 +445,6 @@ SQL;
             $bl->setDbLength($bl->computeDbLength(Propel::getConnection(CcBlockPeer::DATABASE_NAME)));
             $bl->save();
         }
-
-        $this->_file->delete();
     }
 
     /**

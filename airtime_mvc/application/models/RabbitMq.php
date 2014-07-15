@@ -79,16 +79,30 @@ class Application_Model_RabbitMq
         self::sendMessage($exchange, 'direct', true, $data);
     }
 
-    public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
+    public static function SendUploadMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
                                                 $callbackUrl, $apiKey, $messageType)
     {
         $exchange = 'airtime-uploads';
+        
         $data['message_type'] = $messageType;
         $data['tmp_file_path'] = $tmpFilePath;
         $data['import_directory'] = $importedStorageDirectory;
         $data['original_filename'] = $originalFilename;
         $data['callback_url'] = $callbackUrl;
         $data['api_key'] = $apiKey;
+        
+        $jsonData = json_encode($data);
+        self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
+    }
+
+    public static function SendDeleteMessageToAnalyzer($callbackUrl, $objectName, $apiKey, $messageType)
+    {
+        $exchange = 'airtime-uploads';
+        
+        $data['message_type'] = $messageType;
+        $data['api_key'] = $apiKey;
+        $data['object_name'] = $objectName;
+        $data['callback_url'] = $callbackUrl;
         
         $jsonData = json_encode($data);
         self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');

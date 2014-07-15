@@ -29,6 +29,9 @@ class Rest_MediaController extends Zend_Rest_Controller
     public function init()
     {
         $this->view->layout()->disableLayout();
+        
+        $ajaxContext = $this->_helper->getHelper('AjaxContext');
+        $ajaxContext->addActionContext('delete-success', 'json');
     }
     
     public function indexAction()
@@ -278,7 +281,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             
             //get the filesize and update disk_usage
             $storedFile = Application_Model_StoredFile::RecallById($file->getDbId());
-            Application_Model_Preference::updateDiskUsage($storedFile->getFileSize());
+            Application_Model_Preference::updateDiskUsage($requestData["filesize"]);
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
@@ -304,14 +307,33 @@ class Rest_MediaController extends Zend_Rest_Controller
         if ($file) {
             $con = Propel::getConnection();
             $storedFile = new Application_Model_StoredFile($file, $con);
-            if ($storedFile->existsOnDisk()) {
-                $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
-            }
+            $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
+            
             $this->getResponse()
                 ->setHttpResponseCode(204);
         } else {
             $this->fileNotFoundResponse();
         }
+    }
+
+    public function deleteSuccessAction()
+    {
+        if (!$this->verifyAuth(true, true))
+        {
+            return;
+        }
+
+        $id = $this->getId();
+        if (!$id) {
+            return;
+        }
+        
+        $requestData = json_decode($this->getRequest()->getRawBody(), true);
+        
+        $con = Propel::getConnection();
+        $storedFile = new Application_Model_StoredFile(CcFilesQuery::create()->findPk($id), $con);
+        
+        $storedFile->doFileDeletionCleanup($requestData["filesize"]);
     }
 
     private function getId()
@@ -479,9 +501,9 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
-        Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
+        Application_Model_RabbitMq::SendUploadMessageToAnalyzer($newTempFilePath,
                  $importedStorageDirectory, basename($originalFilename),
-                 $callbackUrl, $apiKey);
+                 $callbackUrl, $apiKey, 'upload');
     }
 
     private function getOwnerId()
