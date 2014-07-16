@@ -237,33 +237,6 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         } else if ($file) {
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
-
-            //Our RESTful API takes "full_path" as a field, which we then split and translate to match
-            //our internal schema. Internally, file path is stored relative to a directory, with the directory
-            //as a foreign key to cc_music_dirs.
-            /*if (isset($requestData["full_path"])) {
-                $fileSizeBytes = filesize($requestData["full_path"]);
-                if ($fileSizeBytes === false)
-                {
-                    $file->setDbImportStatus(2)->save();
-                    $this->fileNotFoundResponse();
-                    return;
-                }
-                Application_Model_Preference::updateDiskUsage($fileSizeBytes);
-
-                $fullPath = $requestData["full_path"];
-                $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
-                $pos = strpos($fullPath, $storDir);
-                
-                if ($pos !== FALSE)
-                {
-                    assert($pos == 0); //Path must start with the stor directory path
-                    
-                    $filePathRelativeToStor = substr($fullPath, strlen($storDir));
-                    $file->setDbFilepath($filePathRelativeToStor);
-                    $file->setDbDirectory(1); //1 corresponds to the default stor/imported directory.
-                }
-            }*/
             
             if (isset($requestData["s3_object_name"])) {
                 $cloud_cc_music_dir = CcMusicDirsQuery::create()
@@ -272,16 +245,12 @@ class Rest_MediaController extends Zend_Rest_Controller
                 $file->setDbDirectory($cloud_cc_music_dir->getId());
                 $file->setDbResourceId($requestData["s3_object_name"]);
                 
-                //Application_Model_Preference::updateDiskUsage($requestData["filesize"]);
+                Application_Model_Preference::updateDiskUsage($requestData["filesize"]);
             }
             
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);
             $file->save();
-            
-            //get the filesize and update disk_usage
-            $storedFile = Application_Model_StoredFile::RecallById($file->getDbId());
-            Application_Model_Preference::updateDiskUsage($requestData["filesize"]);
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
@@ -335,6 +304,9 @@ class Rest_MediaController extends Zend_Rest_Controller
             $storedFile = new Application_Model_StoredFile(CcFilesQuery::create()->findPk($id), $con);
             
             $storedFile->doFileDeletionCleanup($requestData["filesize"]);
+            
+            //refresh library table to remove the deleted file from it
+            //$this->view->headScript()->appendScript("oTable.fnStandingRedraw();");
         }
     }
 
