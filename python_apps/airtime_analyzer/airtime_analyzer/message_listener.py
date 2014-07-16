@@ -176,12 +176,11 @@ class MessageListener:
             elif message_type == "delete":
                 object_name = msg_dict["object_name"]
                 csu = CloudStorageUploader(self._provider, self._bucket, self._api_key, self._api_key_secret)
-                response = csu.delete_obj(object_name)
-                if response["success"]:
-                    audio_metadata = dict()
-                    audio_metadata["delete_success"] = True
-                    audio_metadata["filesize"] = response["filesize"]
-                    StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
+                filesize = csu.delete_obj(object_name)
+                return_data = dict()
+                return_data["filesize"] = filesize
+                return_data["import_status"] = 1
+                StatusReporter.report_success_to_callback_url(callback_url, api_key, return_data)
 
         except KeyError as e:
             # A field in msg_dict that we needed was missing (eg. audio_file_path)

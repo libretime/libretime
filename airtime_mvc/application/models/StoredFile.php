@@ -402,6 +402,8 @@ SQL;
             $CC_CONFIG = Config::getConfig();
             $apiKey = $CC_CONFIG["apiKey"][0];
             
+            //If the file was successfully deleted from the cloud the analyzer
+            //will make a request to the Media API to do the deletion cleanup.
             $callbackUrl = 'http://'.$_SERVER['HTTP_HOST'].'/rest/media/'.$file_id.'/delete-success';
             
             Application_Model_RabbitMq::SendDeleteMessageToAnalyzer(

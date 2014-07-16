@@ -330,10 +330,12 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         
-        $con = Propel::getConnection();
-        $storedFile = new Application_Model_StoredFile(CcFilesQuery::create()->findPk($id), $con);
-        
-        $storedFile->doFileDeletionCleanup($requestData["filesize"]);
+        if ($requestData["import_status"] == 1) {
+            $con = Propel::getConnection();
+            $storedFile = new Application_Model_StoredFile(CcFilesQuery::create()->findPk($id), $con);
+            
+            $storedFile->doFileDeletionCleanup($requestData["filesize"]);
+        }
     }
 
     private function getId()

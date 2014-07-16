@@ -17,7 +17,6 @@ class CloudStorageUploader:
         file_name, extension = os.path.splitext(file_base_name)
         object_name = "%s_%s%s" % (file_name, str(uuid.uuid4()), extension)
         
-        #cls = get_driver(getattr(Provider, self._provider))
         driver = self.get_cloud_driver()
         
         try:
@@ -49,16 +48,14 @@ class CloudStorageUploader:
     def delete_obj(self, obj_name):
         driver = self.get_cloud_driver()
         
-        return_msg = dict()
-        return_msg["success"] = False
         try:
             cloud_obj = driver.get_object(container_name=self._bucket,
                                     object_name=obj_name)
-            return_msg["filesize"] = getattr(cloud_obj, 'size')
-            return_msg["success"] = driver.delete_object(obj=cloud_obj)
-            return return_msg
+            filesize = getattr(cloud_obj, 'size')
+            driver.delete_object(obj=cloud_obj)
+            return filesize
         except ObjectDoesNotExistError:
-            logging.info("Could not find object on %s" % self._provider)
+            raise Exception("Could not find object on %s" % self._provider)
 
     def get_cloud_driver(self):
         cls = get_driver(getattr(Provider, self._provider))
