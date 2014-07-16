@@ -303,10 +303,10 @@ SQL;
         $p_start_str = $p_start->format("Y-m-d H:i:s");
         $p_end_str = $p_end->format("Y-m-d H:i:s");
 
-        //We need to search 24 hours before and after the show times so that that we
+        //We need to search 48 hours before and after the show times so that that we
         //capture all of the show's contents.
-        $p_track_start= $p_start->sub(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
-        $p_track_end = $p_end->add(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
+        $p_track_start= $p_start->sub(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
+        $p_track_end = $p_end->add(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
 
         $templateSql = <<<SQL
 SELECT DISTINCT sched.starts AS sched_starts,
@@ -738,13 +738,16 @@ SQL;
         $replay_gain = is_null($item["replay_gain"]) ? "0": $item["replay_gain"];
         $replay_gain += Application_Model_Preference::getReplayGainModifier();
 
-        if ( !Application_Model_Preference::GetEnableReplayGain() ) {
+        if (!Application_Model_Preference::GetEnableReplayGain() ) {
             $replay_gain = 0;
         }
 
+        $fileMetadata = CcFiles::sanitizeResponse(CcFilesQuery::create()->findPk($media_id));
+        
         $schedule_item = array(
             'id'                => $media_id,
             'type'              => 'file',
+            'metadata'          => $fileMetadata,
             'row_id'            => $item["id"],
             'uri'               => $uri,
             'fade_in'           => Application_Model_Schedule::WallTimeToMillisecs($item["fade_in"]),

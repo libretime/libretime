@@ -4,7 +4,7 @@
 class Rest_MediaController extends Zend_Rest_Controller
 {
     //fields that are not modifiable via our RESTful API
-    private $blackList = array(
+    private static $blackList = array(
         'id',
         'directory',
         'filepath',
@@ -14,14 +14,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         'lptime',
         'silan_check',
         'soundcloud_id',
-        'is_scheduled',
-        'is_playlist'
-    );
-
-    //fields we should never expose through our RESTful API
-    private $privateFields = array(
-        'file_exists',
-        'silan_check',
         'is_scheduled',
         'is_playlist'
     );
@@ -44,7 +36,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $files_array = array();
         foreach (CcFilesQuery::create()->find() as $file)
         {
-            array_push($files_array, $this->sanitizeResponse($file));
+            array_push($files_array, CcFiles::sanitizeResponse($file));
         }
         
         $this->getResponse()
@@ -137,7 +129,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($this->sanitizeResponse($file)));
+                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -204,7 +196,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($this->sanitizeResponse($file)));
+                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         }
     }
 
@@ -254,7 +246,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode($this->sanitizeResponse($file)));
+                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else {
             $file->setDbImportStatus(2)->save();
             $this->fileNotFoundResponse();
@@ -428,7 +420,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             }
     
             if (!$fileForm->isValidPartial($whiteList)) {
-                throw Exception("Data validation failed");
+                throw new Exception("Data validation failed");
             }
         } catch (Exception $e) {
             $errors = $fileForm->getErrors();
@@ -509,30 +501,15 @@ class Rest_MediaController extends Zend_Rest_Controller
      * from outside of Airtime
      * @param array $data
      */
-    private function removeBlacklistedFieldsFromRequestData($data)
+    private static function removeBlacklistedFieldsFromRequestData($data)
     {
-        foreach ($this->blackList as $key) {
+        foreach (self::$blackList as $key) {
             unset($data[$key]);
         }
     
             return $data;
         }
 
-    /**
-     * 
-     * Strips out the private fields we do not want to send back in API responses
-     */
-    //TODO: rename this function?
-    public function sanitizeResponse($file)
-    {
-        $response = $file->toArray(BasePeer::TYPE_FIELDNAME);
-
-        foreach ($this->privateFields as $key) {
-            unset($response[$key]);
-        }
-
-        return $response;
-    }
 
     private function removeEmptySubFolders($path)
     {

@@ -13,6 +13,14 @@
  */
 class CcFiles extends BaseCcFiles {
 	
+    //fields we should never expose through our RESTful API
+    private static $privateFields = array(
+            'file_exists',
+            'silan_check',
+            'is_scheduled',
+            'is_playlist'
+    );
+    
 	public function getCueLength()
 	{
 		$cuein = $this->getDbCuein();
@@ -46,4 +54,20 @@ class CcFiles extends BaseCcFiles {
         $this->save();
     }
 
+    /**
+     *
+     * Strips out the private fields we do not want to send back in API responses
+     * @param $file a CcFiles object
+     */
+    //TODO: rename this function?
+    public static function sanitizeResponse($file)
+    {
+        $response = $file->toArray(BasePeer::TYPE_FIELDNAME);
+    
+        foreach (self::$privateFields as $key) {
+            unset($response[$key]);
+        }
+    
+        return $response;
+    }
 } // CcFiles

@@ -109,7 +109,6 @@ class TestHelper
             //Create all the database tables
             AirtimeInstall::createDatabaseTables($dbuser, $dbpasswd, $dbname, $dbhost);
         }
-        AirtimeInstall::SetDefaultTimezone();
     }
 
     public static function setupZendBootstrap()

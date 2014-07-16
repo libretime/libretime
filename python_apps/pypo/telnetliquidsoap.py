@@ -3,17 +3,31 @@ from timeout import ls_timeout
 
 def create_liquidsoap_annotation(media):
     # We need liq_start_next value in the annotate. That is the value that controls overlap duration of crossfade.
-    return ('annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",' + \
+
+    filename = media['dst']
+    annotation = ('annotate:media_id="%s",liq_start_next="0",liq_fade_in="%s",' + \
             'liq_fade_out="%s",liq_cue_in="%s",liq_cue_out="%s",' + \
-            'schedule_table_id="%s",replay_gain="%s dB":%s') % \
-            (media['id'], 
-                    float(media['fade_in']) / 1000, 
-                    float(media['fade_out']) / 1000, 
-                    float(media['cue_in']), 
-                    float(media['cue_out']), 
-                    media['row_id'], 
-                    media['replay_gain'], 
-                    media['dst'])
+            'schedule_table_id="%s",replay_gain="%s dB"') % \
+            (media['id'],
+                    float(media['fade_in']) / 1000,
+                    float(media['fade_out']) / 1000,
+                    float(media['cue_in']),
+                    float(media['cue_out']),
+                    media['row_id'],
+                    media['replay_gain'])
+
+    # Override the the artist/title that Liquidsoap extracts from a file's metadata
+    # with the metadata we get from Airtime. (You can modify metadata in Airtime's library,
+    # which doesn't get saved back to the file.)
+    if 'metadata' in media:
+        if 'artist_name' in media['metadata']:
+            annotation += ',artist="%s"' % (media['metadata']['artist_name'])
+        if 'track_title' in media['metadata']:
+            annotation += ',title="%s"' % (media['metadata']['track_title'])
+
+    annotation += ":" + filename
+
+    return annotation
 
 class TelnetLiquidsoap:
 
