@@ -27,13 +27,12 @@ class CloudStorageUploader:
         extra = {'meta_data': {'filename': file_base_name},
                  'acl': 'public-read-write'}
         
-        with open(audio_file_path, 'rb') as iterator:
-            obj = driver.upload_object_via_stream(iterator=iterator,
-                                                  container=container,
-                                                  object_name=object_name,
-                                                  extra=extra)
+        obj = driver.upload_object(file_path=audio_file_path,
+                                   container=container,
+                                   object_name=object_name,
+                                   verify_hash=False,
+                                   extra=extra)
 
-        
         metadata["filesize"] = os.path.getsize(audio_file_path)
         
         '''remove file from organize directory'''
