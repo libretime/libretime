@@ -1,2 +1,6 @@
 .*
 *.pyc
+vendor/*
+composer.phar
+composer.lock
+
