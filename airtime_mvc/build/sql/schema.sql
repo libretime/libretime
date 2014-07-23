@@ -94,13 +94,26 @@ CREATE TABLE "cc_files"
     "hidden" BOOLEAN DEFAULT 'f',
     "is_scheduled" BOOLEAN DEFAULT 'f',
     "is_playlist" BOOLEAN DEFAULT 'f',
-    "resource_id" TEXT,
     PRIMARY KEY ("id")
 );
 
 CREATE INDEX "cc_files_md5_idx" ON "cc_files" ("md5");
 
 CREATE INDEX "cc_files_name_idx" ON "cc_files" ("name");
+
+-----------------------------------------------------------------------
+-- cloud_file
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "cloud_file" CASCADE;
+
+CREATE TABLE "cloud_file"
+(
+    "id" serial NOT NULL,
+    "resource_id" TEXT NOT NULL,
+    "cc_file_id" INTEGER,
+    PRIMARY KEY ("id")
+);
 
 -----------------------------------------------------------------------
 -- cc_perms
@@ -678,6 +691,10 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_editedby_fkey"
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey"
     FOREIGN KEY ("directory")
     REFERENCES "cc_music_dirs" ("id");
+
+ALTER TABLE "cloud_file" ADD CONSTRAINT "cloud_file_FK_1"
+    FOREIGN KEY ("cc_file_id")
+    REFERENCES "cc_files" ("id");
 
 ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey"
     FOREIGN KEY ("subj")

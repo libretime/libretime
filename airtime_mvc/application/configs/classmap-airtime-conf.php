@@ -103,6 +103,9 @@ return array (
   'BaseCcWebstreamMetadataQuery' => 'airtime/om/BaseCcWebstreamMetadataQuery.php',
   'BaseCcWebstreamPeer' => 'airtime/om/BaseCcWebstreamPeer.php',
   'BaseCcWebstreamQuery' => 'airtime/om/BaseCcWebstreamQuery.php',
+  'BaseCloudFile' => 'airtime/om/BaseCloudFile.php',
+  'BaseCloudFilePeer' => 'airtime/om/BaseCloudFilePeer.php',
+  'BaseCloudFileQuery' => 'airtime/om/BaseCloudFileQuery.php',
   'CcBlock' => 'airtime/CcBlock.php',
   'CcBlockPeer' => 'airtime/CcBlockPeer.php',
   'CcBlockQuery' => 'airtime/CcBlockQuery.php',
@@ -239,4 +242,8 @@ return array (
   'CcWebstreamPeer' => 'airtime/CcWebstreamPeer.php',
   'CcWebstreamQuery' => 'airtime/CcWebstreamQuery.php',
   'CcWebstreamTableMap' => 'airtime/map/CcWebstreamTableMap.php',
+  'CloudFile' => 'airtime/CloudFile.php',
+  'CloudFilePeer' => 'airtime/CloudFilePeer.php',
+  'CloudFileQuery' => 'airtime/CloudFileQuery.php',
+  'CloudFileTableMap' => 'airtime/map/CloudFileTableMap.php',
 );

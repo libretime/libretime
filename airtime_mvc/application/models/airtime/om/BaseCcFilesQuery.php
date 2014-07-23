@@ -76,7 +76,6 @@
  * @method CcFilesQuery orderByDbHidden($order = Criteria::ASC) Order by the hidden column
  * @method CcFilesQuery orderByDbIsScheduled($order = Criteria::ASC) Order by the is_scheduled column
  * @method CcFilesQuery orderByDbIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
- * @method CcFilesQuery orderByDbResourceId($order = Criteria::ASC) Order by the resource_id column
  *
  * @method CcFilesQuery groupByDbId() Group by the id column
  * @method CcFilesQuery groupByDbName() Group by the name column
@@ -148,7 +147,6 @@
  * @method CcFilesQuery groupByDbHidden() Group by the hidden column
  * @method CcFilesQuery groupByDbIsScheduled() Group by the is_scheduled column
  * @method CcFilesQuery groupByDbIsPlaylist() Group by the is_playlist column
- * @method CcFilesQuery groupByDbResourceId() Group by the resource_id column
  *
  * @method CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -165,6 +163,10 @@
  * @method CcFilesQuery leftJoinCcMusicDirs($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcMusicDirs relation
  * @method CcFilesQuery rightJoinCcMusicDirs($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcMusicDirs relation
  * @method CcFilesQuery innerJoinCcMusicDirs($relationAlias = null) Adds a INNER JOIN clause to the query using the CcMusicDirs relation
+ *
+ * @method CcFilesQuery leftJoinCloudFile($relationAlias = null) Adds a LEFT JOIN clause to the query using the CloudFile relation
+ * @method CcFilesQuery rightJoinCloudFile($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CloudFile relation
+ * @method CcFilesQuery innerJoinCloudFile($relationAlias = null) Adds a INNER JOIN clause to the query using the CloudFile relation
  *
  * @method CcFilesQuery leftJoinCcShowInstances($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcShowInstances relation
  * @method CcFilesQuery rightJoinCcShowInstances($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcShowInstances relation
@@ -258,7 +260,6 @@
  * @method CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
  * @method CcFiles findOneByDbIsScheduled(boolean $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
  * @method CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
- * @method CcFiles findOneByDbResourceId(string $resource_id) Return the first CcFiles filtered by the resource_id column
  *
  * @method array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -330,7 +331,6 @@
  * @method array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
  * @method array findByDbIsScheduled(boolean $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
  * @method array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
- * @method array findByDbResourceId(string $resource_id) Return CcFiles objects filtered by the resource_id column
  *
  * @package    propel.generator.airtime.om
  */
@@ -438,7 +438,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "resource_id" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -2792,35 +2792,6 @@ abstract class BaseCcFilesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the resource_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbResourceId('fooValue');   // WHERE resource_id = 'fooValue'
-     * $query->filterByDbResourceId('%fooValue%'); // WHERE resource_id LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbResourceId The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return CcFilesQuery The current query, for fluid interface
-     */
-    public function filterByDbResourceId($dbResourceId = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbResourceId)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbResourceId)) {
-                $dbResourceId = str_replace('*', '%', $dbResourceId);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(CcFilesPeer::RESOURCE_ID, $dbResourceId, $comparison);
-    }
-
-    /**
      * Filter the query by a related CcSubjs object
      *
      * @param   CcSubjs|PropelObjectCollection $ccSubjs The related object(s) to use as filter
@@ -3046,6 +3017,80 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         return $this
             ->joinCcMusicDirs($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcMusicDirs', 'CcMusicDirsQuery');
+    }
+
+    /**
+     * Filter the query by a related CloudFile object
+     *
+     * @param   CloudFile|PropelObjectCollection $cloudFile  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcFilesQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCloudFile($cloudFile, $comparison = null)
+    {
+        if ($cloudFile instanceof CloudFile) {
+            return $this
+                ->addUsingAlias(CcFilesPeer::ID, $cloudFile->getCcFileId(), $comparison);
+        } elseif ($cloudFile instanceof PropelObjectCollection) {
+            return $this
+                ->useCloudFileQuery()
+                ->filterByPrimaryKeys($cloudFile->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCloudFile() only accepts arguments of type CloudFile or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CloudFile relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function joinCloudFile($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CloudFile');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CloudFile');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CloudFile relation CloudFile object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CloudFileQuery A secondary query class using the current class as primary query
+     */
+    public function useCloudFileQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinCloudFile($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CloudFile', 'CloudFileQuery');
     }
 
     /**

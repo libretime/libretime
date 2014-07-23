@@ -464,12 +464,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $is_playlist;
 
     /**
-     * The value for the resource_id field.
-     * @var        string
-     */
-    protected $resource_id;
-
-    /**
      * @var        CcSubjs
      */
     protected $aFkOwner;
@@ -483,6 +477,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @var        CcMusicDirs
      */
     protected $aCcMusicDirs;
+
+    /**
+     * @var        PropelObjectCollection|CloudFile[] Collection to store aggregation of CloudFile objects.
+     */
+    protected $collCloudFiles;
+    protected $collCloudFilesPartial;
 
     /**
      * @var        PropelObjectCollection|CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
@@ -533,6 +533,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $cloudFilesScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -1462,17 +1468,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     {
 
         return $this->is_playlist;
-    }
-
-    /**
-     * Get the [resource_id] column value.
-     *
-     * @return string
-     */
-    public function getDbResourceId()
-    {
-
-        return $this->resource_id;
     }
 
     /**
@@ -3006,27 +3001,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbIsPlaylist()
 
     /**
-     * Set the value of [resource_id] column.
-     *
-     * @param  string $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbResourceId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->resource_id !== $v) {
-            $this->resource_id = $v;
-            $this->modifiedColumns[] = CcFilesPeer::RESOURCE_ID;
-        }
-
-
-        return $this;
-    } // setDbResourceId()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -3184,7 +3158,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->hidden = ($row[$startcol + 67] !== null) ? (boolean) $row[$startcol + 67] : null;
             $this->is_scheduled = ($row[$startcol + 68] !== null) ? (boolean) $row[$startcol + 68] : null;
             $this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
-            $this->resource_id = ($row[$startcol + 70] !== null) ? (string) $row[$startcol + 70] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3194,7 +3167,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 71; // 71 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 70; // 70 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcFiles object", $e);
@@ -3268,6 +3241,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->aFkOwner = null;
             $this->aCcSubjsRelatedByDbEditedby = null;
             $this->aCcMusicDirs = null;
+            $this->collCloudFiles = null;
+
             $this->collCcShowInstancess = null;
 
             $this->collCcPlaylistcontentss = null;
@@ -3426,6 +3401,24 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->cloudFilesScheduledForDeletion !== null) {
+                if (!$this->cloudFilesScheduledForDeletion->isEmpty()) {
+                    foreach ($this->cloudFilesScheduledForDeletion as $cloudFile) {
+                        // need to save related object because we set the relation to null
+                        $cloudFile->save($con);
+                    }
+                    $this->cloudFilesScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCloudFiles !== null) {
+                foreach ($this->collCloudFiles as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             if ($this->ccShowInstancessScheduledForDeletion !== null) {
@@ -3759,9 +3752,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::IS_PLAYLIST)) {
             $modifiedColumns[':p' . $index++]  = '"is_playlist"';
         }
-        if ($this->isColumnModified(CcFilesPeer::RESOURCE_ID)) {
-            $modifiedColumns[':p' . $index++]  = '"resource_id"';
-        }
 
         $sql = sprintf(
             'INSERT INTO "cc_files" (%s) VALUES (%s)',
@@ -3983,9 +3973,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     case '"is_playlist"':
                         $stmt->bindValue($identifier, $this->is_playlist, PDO::PARAM_BOOL);
                         break;
-                    case '"resource_id"':
-                        $stmt->bindValue($identifier, $this->resource_id, PDO::PARAM_STR);
-                        break;
                 }
             }
             $stmt->execute();
@@ -4101,6 +4088,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $failureMap = array_merge($failureMap, $retval);
             }
 
+
+                if ($this->collCloudFiles !== null) {
+                    foreach ($this->collCloudFiles as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
 
                 if ($this->collCcShowInstancess !== null) {
                     foreach ($this->collCcShowInstancess as $referrerFK) {
@@ -4387,9 +4382,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 69:
                 return $this->getDbIsPlaylist();
                 break;
-            case 70:
-                return $this->getDbResourceId();
-                break;
             default:
                 return null;
                 break;
@@ -4489,7 +4481,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[67] => $this->getDbHidden(),
             $keys[68] => $this->getDbIsScheduled(),
             $keys[69] => $this->getDbIsPlaylist(),
-            $keys[70] => $this->getDbResourceId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -4505,6 +4496,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             if (null !== $this->aCcMusicDirs) {
                 $result['CcMusicDirs'] = $this->aCcMusicDirs->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCloudFiles) {
+                $result['CloudFiles'] = $this->collCloudFiles->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
             if (null !== $this->collCcShowInstancess) {
                 $result['CcShowInstancess'] = $this->collCcShowInstancess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
@@ -4765,9 +4759,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 69:
                 $this->setDbIsPlaylist($value);
                 break;
-            case 70:
-                $this->setDbResourceId($value);
-                break;
         } // switch()
     }
 
@@ -4862,7 +4853,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[67], $arr)) $this->setDbHidden($arr[$keys[67]]);
         if (array_key_exists($keys[68], $arr)) $this->setDbIsScheduled($arr[$keys[68]]);
         if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
-        if (array_key_exists($keys[70], $arr)) $this->setDbResourceId($arr[$keys[70]]);
     }
 
     /**
@@ -4944,7 +4934,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::HIDDEN)) $criteria->add(CcFilesPeer::HIDDEN, $this->hidden);
         if ($this->isColumnModified(CcFilesPeer::IS_SCHEDULED)) $criteria->add(CcFilesPeer::IS_SCHEDULED, $this->is_scheduled);
         if ($this->isColumnModified(CcFilesPeer::IS_PLAYLIST)) $criteria->add(CcFilesPeer::IS_PLAYLIST, $this->is_playlist);
-        if ($this->isColumnModified(CcFilesPeer::RESOURCE_ID)) $criteria->add(CcFilesPeer::RESOURCE_ID, $this->resource_id);
 
         return $criteria;
     }
@@ -5077,7 +5066,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbHidden($this->getDbHidden());
         $copyObj->setDbIsScheduled($this->getDbIsScheduled());
         $copyObj->setDbIsPlaylist($this->getDbIsPlaylist());
-        $copyObj->setDbResourceId($this->getDbResourceId());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -5085,6 +5073,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
+
+            foreach ($this->getCloudFiles() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCloudFile($relObj->copy($deepCopy));
+                }
+            }
 
             foreach ($this->getCcShowInstancess() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
@@ -5333,6 +5327,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('CloudFile' == $relationName) {
+            $this->initCloudFiles();
+        }
         if ('CcShowInstances' == $relationName) {
             $this->initCcShowInstancess();
         }
@@ -5348,6 +5345,231 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ('CcPlayoutHistory' == $relationName) {
             $this->initCcPlayoutHistorys();
         }
+    }
+
+    /**
+     * Clears out the collCloudFiles collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return CcFiles The current object (for fluent API support)
+     * @see        addCloudFiles()
+     */
+    public function clearCloudFiles()
+    {
+        $this->collCloudFiles = null; // important to set this to null since that means it is uninitialized
+        $this->collCloudFilesPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCloudFiles collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCloudFiles($v = true)
+    {
+        $this->collCloudFilesPartial = $v;
+    }
+
+    /**
+     * Initializes the collCloudFiles collection.
+     *
+     * By default this just sets the collCloudFiles collection to an empty array (like clearcollCloudFiles());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCloudFiles($overrideExisting = true)
+    {
+        if (null !== $this->collCloudFiles && !$overrideExisting) {
+            return;
+        }
+        $this->collCloudFiles = new PropelObjectCollection();
+        $this->collCloudFiles->setModel('CloudFile');
+    }
+
+    /**
+     * Gets an array of CloudFile objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcFiles is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CloudFile[] List of CloudFile objects
+     * @throws PropelException
+     */
+    public function getCloudFiles($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCloudFilesPartial && !$this->isNew();
+        if (null === $this->collCloudFiles || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCloudFiles) {
+                // return empty collection
+                $this->initCloudFiles();
+            } else {
+                $collCloudFiles = CloudFileQuery::create(null, $criteria)
+                    ->filterByCcFiles($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCloudFilesPartial && count($collCloudFiles)) {
+                      $this->initCloudFiles(false);
+
+                      foreach ($collCloudFiles as $obj) {
+                        if (false == $this->collCloudFiles->contains($obj)) {
+                          $this->collCloudFiles->append($obj);
+                        }
+                      }
+
+                      $this->collCloudFilesPartial = true;
+                    }
+
+                    $collCloudFiles->getInternalIterator()->rewind();
+
+                    return $collCloudFiles;
+                }
+
+                if ($partial && $this->collCloudFiles) {
+                    foreach ($this->collCloudFiles as $obj) {
+                        if ($obj->isNew()) {
+                            $collCloudFiles[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCloudFiles = $collCloudFiles;
+                $this->collCloudFilesPartial = false;
+            }
+        }
+
+        return $this->collCloudFiles;
+    }
+
+    /**
+     * Sets a collection of CloudFile objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $cloudFiles A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setCloudFiles(PropelCollection $cloudFiles, PropelPDO $con = null)
+    {
+        $cloudFilesToDelete = $this->getCloudFiles(new Criteria(), $con)->diff($cloudFiles);
+
+
+        $this->cloudFilesScheduledForDeletion = $cloudFilesToDelete;
+
+        foreach ($cloudFilesToDelete as $cloudFileRemoved) {
+            $cloudFileRemoved->setCcFiles(null);
+        }
+
+        $this->collCloudFiles = null;
+        foreach ($cloudFiles as $cloudFile) {
+            $this->addCloudFile($cloudFile);
+        }
+
+        $this->collCloudFiles = $cloudFiles;
+        $this->collCloudFilesPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CloudFile objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CloudFile objects.
+     * @throws PropelException
+     */
+    public function countCloudFiles(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCloudFilesPartial && !$this->isNew();
+        if (null === $this->collCloudFiles || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCloudFiles) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCloudFiles());
+            }
+            $query = CloudFileQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCcFiles($this)
+                ->count($con);
+        }
+
+        return count($this->collCloudFiles);
+    }
+
+    /**
+     * Method called to associate a CloudFile object to this object
+     * through the CloudFile foreign key attribute.
+     *
+     * @param    CloudFile $l CloudFile
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function addCloudFile(CloudFile $l)
+    {
+        if ($this->collCloudFiles === null) {
+            $this->initCloudFiles();
+            $this->collCloudFilesPartial = true;
+        }
+
+        if (!in_array($l, $this->collCloudFiles->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCloudFile($l);
+
+            if ($this->cloudFilesScheduledForDeletion and $this->cloudFilesScheduledForDeletion->contains($l)) {
+                $this->cloudFilesScheduledForDeletion->remove($this->cloudFilesScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CloudFile $cloudFile The cloudFile object to add.
+     */
+    protected function doAddCloudFile($cloudFile)
+    {
+        $this->collCloudFiles[]= $cloudFile;
+        $cloudFile->setCcFiles($this);
+    }
+
+    /**
+     * @param	CloudFile $cloudFile The cloudFile object to remove.
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function removeCloudFile($cloudFile)
+    {
+        if ($this->getCloudFiles()->contains($cloudFile)) {
+            $this->collCloudFiles->remove($this->collCloudFiles->search($cloudFile));
+            if (null === $this->cloudFilesScheduledForDeletion) {
+                $this->cloudFilesScheduledForDeletion = clone $this->collCloudFiles;
+                $this->cloudFilesScheduledForDeletion->clear();
+            }
+            $this->cloudFilesScheduledForDeletion[]= $cloudFile;
+            $cloudFile->setCcFiles(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -6750,7 +6972,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->hidden = null;
         $this->is_scheduled = null;
         $this->is_playlist = null;
-        $this->resource_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -6774,6 +6995,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collCloudFiles) {
+                foreach ($this->collCloudFiles as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collCcShowInstancess) {
                 foreach ($this->collCcShowInstancess as $o) {
                     $o->clearAllReferences($deep);
@@ -6812,6 +7038,10 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collCloudFiles instanceof PropelCollection) {
+            $this->collCloudFiles->clearIterator();
+        }
+        $this->collCloudFiles = null;
         if ($this->collCcShowInstancess instanceof PropelCollection) {
             $this->collCcShowInstancess->clearIterator();
         }

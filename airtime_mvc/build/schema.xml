@@ -82,7 +82,6 @@
     <column name="hidden" phpName="DbHidden" type="BOOLEAN" defaultValue="false"/>
     <column name="is_scheduled" phpName="DbIsScheduled" type="BOOLEAN" defaultValue="false"/>
     <column name="is_playlist" phpName="DbIsPlaylist" type="BOOLEAN" defaultValue="false"/>
-    <column name="resource_id" phpName="DbResourceId" type="LONGVARCHAR" required="false"/>
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>
@@ -98,6 +97,18 @@
     <index name="cc_files_name_idx">
       <index-column name="name"/>
     </index>
+  </table>
+  <!-- Class Table Inheritance -->
+  <table name="cloud_file" phpName="CloudFile">
+    <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
+    <column name="resource_id" phpName="ResourceId" type="LONGVARCHAR" required="true"/>
+    <column name="cc_file_id" type="INTEGER"/>
+    <foreign-key foreignTable="cc_files">
+      <reference local="cc_file_id" foreign="id"/>
+    </foreign-key>
+    <behavior name="delegate">
+      <parameter name="to" value="cc_files"/>
+    </behavior>
   </table>
   <table name="cc_perms" phpName="CcPerms">
     <column name="permid" phpName="Permid" type="INTEGER" primaryKey="true" required="true"/>
