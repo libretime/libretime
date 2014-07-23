@@ -25,6 +25,9 @@ defined('APPLICATION_ENV')
 defined('VERBOSE_STACK_TRACE')
     || define('VERBOSE_STACK_TRACE', (getenv('VERBOSE_STACK_TRACE') ? getenv('VERBOSE_STACK_TRACE') : true));
 
+//Vendors
+set_include_path(realpath(dirname(__FILE__) . '/../../vendor'));
+
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
