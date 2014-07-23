@@ -14,60 +14,61 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcSubjsTableMap extends TableMap {
+class CcSubjsTableMap extends TableMap
+{
 
-	/**
-	 * The (dot-path) name of this class
-	 */
-	const CLASS_NAME = 'airtime.map.CcSubjsTableMap';
+    /**
+     * The (dot-path) name of this class
+     */
+    const CLASS_NAME = 'airtime.map.CcSubjsTableMap';
 
-	/**
-	 * Initialize the table attributes, columns and validators
-	 * Relations are not initialized by this method since they are lazy loaded
-	 *
-	 * @return     void
-	 * @throws     PropelException
-	 */
-	public function initialize()
-	{
-	  // attributes
-		$this->setName('cc_subjs');
-		$this->setPhpName('CcSubjs');
-		$this->setClassname('CcSubjs');
-		$this->setPackage('airtime');
-		$this->setUseIdGenerator(true);
-		$this->setPrimaryKeyMethodInfo('cc_subjs_id_seq');
-		// columns
-		$this->addPrimaryKey('ID', 'DbId', 'INTEGER', true, null, null);
-		$this->addColumn('LOGIN', 'DbLogin', 'VARCHAR', true, 255, '');
-		$this->addColumn('PASS', 'DbPass', 'VARCHAR', true, 255, '');
-		$this->addColumn('TYPE', 'DbType', 'CHAR', true, 1, 'U');
-		$this->addColumn('FIRST_NAME', 'DbFirstName', 'VARCHAR', true, 255, '');
-		$this->addColumn('LAST_NAME', 'DbLastName', 'VARCHAR', true, 255, '');
-		$this->addColumn('LASTLOGIN', 'DbLastlogin', 'TIMESTAMP', false, null, null);
-		$this->addColumn('LASTFAIL', 'DbLastfail', 'TIMESTAMP', false, null, null);
-		$this->addColumn('SKYPE_CONTACT', 'DbSkypeContact', 'VARCHAR', false, 255, null);
-		$this->addColumn('JABBER_CONTACT', 'DbJabberContact', 'VARCHAR', false, 255, null);
-		$this->addColumn('EMAIL', 'DbEmail', 'VARCHAR', false, 255, null);
-		$this->addColumn('CELL_PHONE', 'DbCellPhone', 'VARCHAR', false, 255, null);
-		$this->addColumn('LOGIN_ATTEMPTS', 'DbLoginAttempts', 'INTEGER', false, null, 0);
-		// validators
-	} // initialize()
+    /**
+     * Initialize the table attributes, columns and validators
+     * Relations are not initialized by this method since they are lazy loaded
+     *
+     * @return void
+     * @throws PropelException
+     */
+    public function initialize()
+    {
+        // attributes
+        $this->setName('cc_subjs');
+        $this->setPhpName('CcSubjs');
+        $this->setClassname('CcSubjs');
+        $this->setPackage('airtime');
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('cc_subjs_id_seq');
+        // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('login', 'DbLogin', 'VARCHAR', true, 255, '');
+        $this->addColumn('pass', 'DbPass', 'VARCHAR', true, 255, '');
+        $this->addColumn('type', 'DbType', 'CHAR', true, 1, 'U');
+        $this->addColumn('first_name', 'DbFirstName', 'VARCHAR', true, 255, '');
+        $this->addColumn('last_name', 'DbLastName', 'VARCHAR', true, 255, '');
+        $this->addColumn('lastlogin', 'DbLastlogin', 'TIMESTAMP', false, null, null);
+        $this->addColumn('lastfail', 'DbLastfail', 'TIMESTAMP', false, null, null);
+        $this->addColumn('skype_contact', 'DbSkypeContact', 'VARCHAR', false, null, null);
+        $this->addColumn('jabber_contact', 'DbJabberContact', 'VARCHAR', false, null, null);
+        $this->addColumn('email', 'DbEmail', 'VARCHAR', false, null, null);
+        $this->addColumn('cell_phone', 'DbCellPhone', 'VARCHAR', false, null, null);
+        $this->addColumn('login_attempts', 'DbLoginAttempts', 'INTEGER', false, null, 0);
+        // validators
+    } // initialize()
 
-	/**
-	 * Build the RelationMap objects for this table relationships
-	 */
-	public function buildRelations()
-	{
-    $this->addRelation('CcFilesRelatedByDbOwnerId', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null);
-    $this->addRelation('CcFilesRelatedByDbEditedby', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'editedby', ), null, null);
-    $this->addRelation('CcPerms', 'CcPerms', RelationMap::ONE_TO_MANY, array('id' => 'subj', ), 'CASCADE', null);
-    $this->addRelation('CcShowHosts', 'CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'subjs_id', ), 'CASCADE', null);
-    $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null);
-    $this->addRelation('CcBlock', 'CcBlock', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null);
-    $this->addRelation('CcPref', 'CcPref', RelationMap::ONE_TO_MANY, array('id' => 'subjid', ), 'CASCADE', null);
-    $this->addRelation('CcSess', 'CcSess', RelationMap::ONE_TO_MANY, array('id' => 'userid', ), 'CASCADE', null);
-    $this->addRelation('CcSubjsToken', 'CcSubjsToken', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', null);
-	} // buildRelations()
+    /**
+     * Build the RelationMap objects for this table relationships
+     */
+    public function buildRelations()
+    {
+        $this->addRelation('CcFilesRelatedByDbOwnerId', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'owner_id', ), null, null, 'CcFilessRelatedByDbOwnerId');
+        $this->addRelation('CcFilesRelatedByDbEditedby', 'CcFiles', RelationMap::ONE_TO_MANY, array('id' => 'editedby', ), null, null, 'CcFilessRelatedByDbEditedby');
+        $this->addRelation('CcPerms', 'CcPerms', RelationMap::ONE_TO_MANY, array('id' => 'subj', ), 'CASCADE', null, 'CcPermss');
+        $this->addRelation('CcShowHosts', 'CcShowHosts', RelationMap::ONE_TO_MANY, array('id' => 'subjs_id', ), 'CASCADE', null, 'CcShowHostss');
+        $this->addRelation('CcPlaylist', 'CcPlaylist', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcPlaylists');
+        $this->addRelation('CcBlock', 'CcBlock', RelationMap::ONE_TO_MANY, array('id' => 'creator_id', ), 'CASCADE', null, 'CcBlocks');
+        $this->addRelation('CcPref', 'CcPref', RelationMap::ONE_TO_MANY, array('id' => 'subjid', ), 'CASCADE', null, 'CcPrefs');
+        $this->addRelation('CcSess', 'CcSess', RelationMap::ONE_TO_MANY, array('id' => 'userid', ), 'CASCADE', null, 'CcSesss');
+        $this->addRelation('CcSubjsToken', 'CcSubjsToken', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', null, 'CcSubjsTokens');
+    } // buildRelations()
 
 } // CcSubjsTableMap
