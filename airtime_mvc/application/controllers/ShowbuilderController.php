@@ -453,6 +453,11 @@ class ShowbuilderController extends Zend_Controller_Action
                     
             $arr = json_decode($jsondata); # Decode JSON String
             
+            if ($arr->result !== "success") {
+                Logging::warning("WHMCS API call failed in " . __FUNCTION__); 
+                return;
+            }
+            
             $client = $arr->client;
             $stats = $arr->stats;
             $currencyCode = $client->currency_code;
