@@ -77,7 +77,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
      *
      * @return int
      */
-    public function getId()
+    public function getDbId()
     {
 
         return $this->id;
@@ -111,7 +111,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
      * @param  int $v new value
      * @return CloudFile The current object (for fluent API support)
      */
-    public function setId($v)
+    public function setDbId($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (int) $v;
@@ -124,7 +124,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
 
 
         return $this;
-    } // setId()
+    } // setDbId()
 
     /**
      * Set the value of [resource_id] column.
@@ -623,7 +623,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
+                return $this->getDbId();
                 break;
             case 1:
                 return $this->getResourceId();
@@ -660,7 +660,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
         $alreadyDumpedObjects['CloudFile'][$this->getPrimaryKey()] = true;
         $keys = CloudFilePeer::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getId(),
+            $keys[0] => $this->getDbId(),
             $keys[1] => $this->getResourceId(),
             $keys[2] => $this->getCcFileId(),
         );
@@ -708,7 +708,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
+                $this->setDbId($value);
                 break;
             case 1:
                 $this->setResourceId($value);
@@ -740,7 +740,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
     {
         $keys = CloudFilePeer::getFieldNames($keyType);
 
-        if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
+        if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setResourceId($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setCcFileId($arr[$keys[2]]);
     }
@@ -783,7 +783,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
      */
     public function getPrimaryKey()
     {
-        return $this->getId();
+        return $this->getDbId();
     }
 
     /**
@@ -794,7 +794,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
      */
     public function setPrimaryKey($key)
     {
-        $this->setId($key);
+        $this->setDbId($key);
     }
 
     /**
@@ -804,7 +804,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
     public function isPrimaryKeyNull()
     {
 
-        return null === $this->getId();
+        return null === $this->getDbId();
     }
 
     /**
@@ -836,7 +836,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
 
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
+            $copyObj->setDbId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 

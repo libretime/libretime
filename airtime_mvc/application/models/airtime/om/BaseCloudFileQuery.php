@@ -6,11 +6,11 @@
  *
  *
  *
- * @method CloudFileQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method CloudFileQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method CloudFileQuery orderByResourceId($order = Criteria::ASC) Order by the resource_id column
  * @method CloudFileQuery orderByCcFileId($order = Criteria::ASC) Order by the cc_file_id column
  *
- * @method CloudFileQuery groupById() Group by the id column
+ * @method CloudFileQuery groupByDbId() Group by the id column
  * @method CloudFileQuery groupByResourceId() Group by the resource_id column
  * @method CloudFileQuery groupByCcFileId() Group by the cc_file_id column
  *
@@ -28,7 +28,7 @@
  * @method CloudFile findOneByResourceId(string $resource_id) Return the first CloudFile filtered by the resource_id column
  * @method CloudFile findOneByCcFileId(int $cc_file_id) Return the first CloudFile filtered by the cc_file_id column
  *
- * @method array findById(int $id) Return CloudFile objects filtered by the id column
+ * @method array findByDbId(int $id) Return CloudFile objects filtered by the id column
  * @method array findByResourceId(string $resource_id) Return CloudFile objects filtered by the resource_id column
  * @method array findByCcFileId(int $cc_file_id) Return CloudFile objects filtered by the cc_file_id column
  *
@@ -121,7 +121,7 @@ abstract class BaseCloudFileQuery extends ModelCriteria
      * @return                 CloudFile A model object, or null if the key is not found
      * @throws PropelException
      */
-     public function findOneById($key, $con = null)
+     public function findOneByDbId($key, $con = null)
      {
         return $this->findPk($key, $con);
      }
@@ -232,13 +232,13 @@ abstract class BaseCloudFileQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterById(1234); // WHERE id = 1234
-     * $query->filterById(array(12, 34)); // WHERE id IN (12, 34)
-     * $query->filterById(array('min' => 12)); // WHERE id >= 12
-     * $query->filterById(array('max' => 12)); // WHERE id <= 12
+     * $query->filterByDbId(1234); // WHERE id = 1234
+     * $query->filterByDbId(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterByDbId(array('min' => 12)); // WHERE id >= 12
+     * $query->filterByDbId(array('max' => 12)); // WHERE id <= 12
      * </code>
      *
-     * @param     mixed $id The value to use as filter.
+     * @param     mixed $dbId The value to use as filter.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -246,16 +246,16 @@ abstract class BaseCloudFileQuery extends ModelCriteria
      *
      * @return CloudFileQuery The current query, for fluid interface
      */
-    public function filterById($id = null, $comparison = null)
+    public function filterByDbId($dbId = null, $comparison = null)
     {
-        if (is_array($id)) {
+        if (is_array($dbId)) {
             $useMinMax = false;
-            if (isset($id['min'])) {
-                $this->addUsingAlias(CloudFilePeer::ID, $id['min'], Criteria::GREATER_EQUAL);
+            if (isset($dbId['min'])) {
+                $this->addUsingAlias(CloudFilePeer::ID, $dbId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($id['max'])) {
-                $this->addUsingAlias(CloudFilePeer::ID, $id['max'], Criteria::LESS_EQUAL);
+            if (isset($dbId['max'])) {
+                $this->addUsingAlias(CloudFilePeer::ID, $dbId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -266,7 +266,7 @@ abstract class BaseCloudFileQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(CloudFilePeer::ID, $id, $comparison);
+        return $this->addUsingAlias(CloudFilePeer::ID, $dbId, $comparison);
     }
 
     /**
@@ -428,7 +428,7 @@ abstract class BaseCloudFileQuery extends ModelCriteria
     public function prune($cloudFile = null)
     {
         if ($cloudFile) {
-            $this->addUsingAlias(CloudFilePeer::ID, $cloudFile->getId(), Criteria::NOT_EQUAL);
+            $this->addUsingAlias(CloudFilePeer::ID, $cloudFile->getDbId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

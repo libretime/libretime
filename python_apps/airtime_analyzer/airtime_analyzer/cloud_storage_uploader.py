@@ -41,7 +41,7 @@ class CloudStorageUploader:
         except OSError:
             logging.info("Could not remove %s from organize directory" % audio_file_path)
         
-        metadata["s3_object_name"] = object_name
+        metadata["resource_id"] = object_name
         return metadata
 
     def delete_obj(self, obj_name):

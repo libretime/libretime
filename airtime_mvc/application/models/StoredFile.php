@@ -97,7 +97,7 @@ class Application_Model_StoredFile
     }
 
     public static function createWithFile($f, $con) {
-        $storedFile        = new Application_Model_StoredFile($f, $con);
+        $storedFile = new Application_Model_StoredFile($f, $con);
         return $storedFile;
     }
 
@@ -384,19 +384,16 @@ SQL;
         $file_id = $this->_file->getDbId();
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$file_id);
 
-        $isInCloud = $this->isInCloud();
-        
-        if (file_exists($filepath) && !$isInCloud) {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
+        if (!is_null($music_dir) && $music_dir->getType() == "stor" && file_exists($filepath)) {
             try {
+                $this->doFileDeletionCleanup($this->getFileSize());
                 unlink($filepath);
             } catch (Exception $e) {
                 Logging::error($e->getMessage());
                 return;
             }
-            
-            $this->doFileDeletionCleanup($this->getFileSize());
-            
-        } elseif ($isInCloud) {
+        } /*elseif ($isInCloud) {
             //Dispatch a message to airtime_analyzer through RabbitMQ,
             //notifying it that we need to delete a file from the cloud
             $CC_CONFIG = Config::getConfig();
@@ -408,7 +405,7 @@ SQL;
             
             Application_Model_RabbitMq::SendDeleteMessageToAnalyzer(
                 $callbackUrl, $this->_file->getDbResourceId(), $apiKey, 'delete');
-        }
+        }*/
     }
 
     /*
@@ -416,6 +413,9 @@ SQL;
      */
     public function doFileDeletionCleanup($filesize)
     {
+        if ($filesize <= 0) {
+            throw new Exception ("Could not delete file with ".$filesize." filesize");
+        }
         //Update the user's disk usage
         Application_Model_Preference::updateDiskUsage(-1 * $filesize);
         
@@ -432,7 +432,7 @@ SQL;
      * deleted from the library. It re-calculates the length of
      * all blocks and playlists that contained the deleted file. 
      */
-    public static function updateBlockAndPlaylistLength($fileId)
+    private static function updateBlockAndPlaylistLength($fileId)
     {
         $plRows = CcPlaylistcontentsQuery::create()->filterByDbFileId($fileId)->find();
         foreach ($plRows as $row) {
@@ -511,7 +511,7 @@ SQL;
     }
 
     /**
-     * Get real filename of raw media data
+     * Get the absolute filepath
      *
      * @return string
      */
@@ -519,20 +519,7 @@ SQL;
     {
         assert($this->_file);
         
-        if ($this->isInCloud()) {
-            return $this->getCloudUrl();
-        } else {
-        
-            $music_dir = Application_Model_MusicDir::getDirByPK($this->
-                _file->getDbDirectory());
-            if (!$music_dir) {
-                throw new Exception("Invalid music_dir for file in database.");
-            }
-            $directory = $music_dir->getDirectory();
-            $filepath  = $this->_file->getDbFilepath();
-    
-            return Application_Common_OsPath::join($directory, $filepath);
-        }
+        return $this->_file->getAbsoluteFilePath();
     }
 
     /**
@@ -585,21 +572,6 @@ SQL;
         return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
     }
     
-    public function isInCloud()
-    {
-        $location = CcMusicDirsQuery::create()->findPk($this->_file->getDbDirectory());
-        if ($location->getType() == "cloud") {
-            return true;
-        }
-        return false;
-    }
-    
-    public function getCloudUrl()
-    {
-        $CC_CONFIG = Config::getConfig();
-        return $CC_CONFIG["cloud_storage"]["host"]."/".$CC_CONFIG["cloud_storage"]["bucket"]."/" . urlencode($this->getResourceId());
-    }
-    
     public function getResourceId()
     {
         return $this->_file->getDbResourceId();
@@ -607,12 +579,7 @@ SQL;
 
     public function getFileSize()
     {
-        if ($this->isInCloud()) {
-            //TODO: error checking - 403 forbidden>
-            return strlen(file_get_contents($this->getCloudUrl()));
-        } else {
-            return filesize($this->getFilePath());
-        }
+        return $this->_file->getFileSize();
     }
     
     public static function Insert($md, $con)
@@ -653,8 +620,19 @@ SQL;
         }
 
         if (isset($p_id)) {
-            $f =  CcFilesQuery::create()->findPK(intval($p_id), $con);
-            return is_null($f) ? null : self::createWithFile($f, $con);
+            $storedFile =  CcFilesQuery::create()->findPK(intval($p_id), $con);
+            if (is_null($storedFile)) {
+                throw new Exception("Could not recall file with id: ".$p_id);
+            }
+            //Attempt to get the cloud file object and return it. If no cloud
+            //file object is found then we are dealing with a regular stored
+            //object so return that
+            $cloudFile = $storedFile->getCloudFiles()->getFirst();
+            if (is_null($cloudFile)) {
+                return self::createWithFile($storedFile, $con);
+            } else {
+                return self::createWithFile($cloudFile, $con);
+            }
         } else {
             throw new Exception("No arguments passed to RecallById");
         }
@@ -662,8 +640,7 @@ SQL;
 
     public function getName()
     {
-        $info = pathinfo($this->getFilePath());
-        return $info['filename'];
+        return $this->_file->getFilename();
     }
 
     /**

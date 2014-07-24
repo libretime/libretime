@@ -70,4 +70,34 @@ class CcFiles extends BaseCcFiles {
     
         return $response;
     }
+    
+    public function getFileSize()
+    {
+        return filesize($this->getAbsoluteFilePath());
+    }
+    
+    public function getFilename()
+    {
+        $info = pathinfo($this->getAbsoluteFilePath());
+        return $info['filename'];
+    }
+    
+    public function getAbsoluteFilePath()
+    {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->
+            _file->getDbDirectory());
+        if (!$music_dir) {
+            throw new Exception("Invalid music_dir for file in database.");
+        }
+        $directory = $music_dir->getDirectory();
+        $filepath  = $this->_file->getDbFilepath();
+
+        return Application_Common_OsPath::join($directory, $filepath);
+    }
+    
+    public function isValidFile()
+    {
+        return is_file($this->getAbsoluteFilePath());
+    }
+    
 } // CcFiles

@@ -15,4 +15,39 @@
  */
 class CloudFile extends BaseCloudFile
 {
+    public function getAbsoluteFilePath()
+    {
+        $CC_CONFIG = Config::getConfig();
+        return $CC_CONFIG["cloud_storage"]["host"]."/".$CC_CONFIG["cloud_storage"]["bucket"]."/" . urlencode($this->getResourceId());
+    }
+    
+    public function getFileSize()
+    {
+        return strlen(file_get_contents($this->getAbsoluteFilePath()));
+    }
+    
+    public function getFilename()
+    {
+        return $this->getResourceId();
+    }
+    
+    public function isValidFile()
+    {
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $this->getAbsoluteFilePath(),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_VERBOSE => false
+        ));
+        curl_exec($ch);
+        $http_status = curl_getinfo($ch);
+        
+        if ($http_status["http_code"] === 200)
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

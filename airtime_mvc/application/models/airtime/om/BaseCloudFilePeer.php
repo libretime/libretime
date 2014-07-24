@@ -60,8 +60,8 @@ abstract class BaseCloudFilePeer
      * e.g. CloudFilePeer::$fieldNames[CloudFilePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'ResourceId', 'CcFileId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'resourceId', 'ccFileId', ),
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'ResourceId', 'CcFileId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'resourceId', 'ccFileId', ),
         BasePeer::TYPE_COLNAME => array (CloudFilePeer::ID, CloudFilePeer::RESOURCE_ID, CloudFilePeer::CC_FILE_ID, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID', 'RESOURCE_ID', 'CC_FILE_ID', ),
         BasePeer::TYPE_FIELDNAME => array ('id', 'resource_id', 'cc_file_id', ),
@@ -75,8 +75,8 @@ abstract class BaseCloudFilePeer
      * e.g. CloudFilePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'ResourceId' => 1, 'CcFileId' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'resourceId' => 1, 'ccFileId' => 2, ),
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'ResourceId' => 1, 'CcFileId' => 2, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'resourceId' => 1, 'ccFileId' => 2, ),
         BasePeer::TYPE_COLNAME => array (CloudFilePeer::ID => 0, CloudFilePeer::RESOURCE_ID => 1, CloudFilePeer::CC_FILE_ID => 2, ),
         BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'RESOURCE_ID' => 1, 'CC_FILE_ID' => 2, ),
         BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'resource_id' => 1, 'cc_file_id' => 2, ),
@@ -287,7 +287,7 @@ abstract class BaseCloudFilePeer
     {
         if (Propel::isInstancePoolingEnabled()) {
             if ($key === null) {
-                $key = (string) $obj->getId();
+                $key = (string) $obj->getDbId();
             } // if key === null
             CloudFilePeer::$instances[$key] = $obj;
         }
@@ -310,7 +310,7 @@ abstract class BaseCloudFilePeer
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
             if (is_object($value) && $value instanceof CloudFile) {
-                $key = (string) $value->getId();
+                $key = (string) $value->getDbId();
             } elseif (is_scalar($value)) {
                 // assume we've been passed a primary key
                 $key = (string) $value;

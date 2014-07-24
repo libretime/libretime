@@ -217,12 +217,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
         $whiteList = $this->stripTimeStampFromYearTag($whiteList);
-        
-        if ($requestData["import_status"] == 2) {
-            $file->setDbImportStatus(2)->save();
-            $this->importFailedResponse();
-            return;
-        }
 
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->save();
@@ -230,15 +224,39 @@ class Rest_MediaController extends Zend_Rest_Controller
         } else if ($file) {
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
             
-            if (isset($requestData["s3_object_name"])) {
-                $cloud_cc_music_dir = CcMusicDirsQuery::create()
-                    ->filterByType("cloud")
-                    ->findOne();
-                $file->setDbDirectory($cloud_cc_music_dir->getId());
-                $file->setDbResourceId($requestData["s3_object_name"]);
+            //file is stored in the cloud
+            if (isset($requestData["resource_id"])) {
+                $fileSizeBytes = $requestData["filesize"];
+                $cloudFile = new CloudFile();
+                $cloudFile->setResourceId($requestData["resource_id"]);
+                $cloudFile->setCcFiles($file);
+                $cloudFile->save();
                 
-                Application_Model_Preference::updateDiskUsage($requestData["filesize"]);
+            //file is stored locally
+            } else if (isset($requestData["full_path"])) {
+                $fileSizeBytes = filesize($requestData["full_path"]);
+                if ($fileSizeBytes === false)
+                {
+                    $file->setDbImportStatus(2)->save();
+                    $this->fileNotFoundResponse();
+                    return;
+                }
+                
+                $fullPath = $requestData["full_path"];
+                $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
+                $pos = strpos($fullPath, $storDir);
+                
+                if ($pos !== FALSE)
+                {
+                    assert($pos == 0); //Path must start with the stor directory path
+                    
+                    $filePathRelativeToStor = substr($fullPath, strlen($storDir));
+                    $file->setDbFilepath($filePathRelativeToStor);
+                    $file->setDbDirectory(1); //1 corresponds to the default stor/imported directory.
+                }
             }
+            
+            Application_Model_Preference::updateDiskUsage($fileSizeBytes);
             
             $now  = new DateTime("now", new DateTimeZone("UTC"));
             $file->setDbMtime($now);

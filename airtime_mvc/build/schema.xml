@@ -100,7 +100,7 @@
   </table>
   <!-- Class Table Inheritance -->
   <table name="cloud_file" phpName="CloudFile">
-    <column name="id" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
+    <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
     <column name="resource_id" phpName="ResourceId" type="LONGVARCHAR" required="true"/>
     <column name="cc_file_id" type="INTEGER"/>
     <foreign-key foreignTable="cc_files">
