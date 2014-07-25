@@ -1,6 +1,7 @@
 <div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
 <H2>Invoices</H2>
 <?php 
+$topTextClass = "";
 if (array_key_exists("planupdated", $_GET))
 {
     $topText = _("<b>Thank you!</b> Your plan has been updated and you will be invoiced during your next billing cycle.");
