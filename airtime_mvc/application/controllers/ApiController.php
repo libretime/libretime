@@ -85,8 +85,7 @@ class ApiController extends Zend_Controller_Action
             clearstatcache();
             
             if ($media->getPropelOrm()->isValidFile()) {
-                //$filename = $media->getPropelOrm()->getFilename();
-                $filename = $media->getPropelOrm()->getDbFilepath();
+                $filename = $media->getPropelOrm()->getFilename();
 
                 //Download user left clicks a track and selects Download.
                 if ("true" == $this->_getParam('download')) {
