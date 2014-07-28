@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-07-28 11:49+0000\n"
+"PO-Revision-Date: 2014-07-28 13:37+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/airtime/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -4161,175 +4161,175 @@ msgstr "No Records"
 msgid ""
 "Airtime copyright &copy; Sourcefabric z.ú. All rights reserved.%sMaintained "
 "and distributed under the GNU GPL v.3 by %sSourcefabric z.ú.%s"
-msgstr ""
+msgstr "Airtime copyright &copy; Sourcefabric z.ú. All rights reserved.%sMaintained and distributed under the GNU GPL v.3 by %sSourcefabric z.ú.%s"
 
 #: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:15
 msgid "Plan type:"
-msgstr ""
+msgstr "Plan type:"
 
 #: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:27
 msgid "Billing cycle:"
-msgstr ""
+msgstr "Billing cycle:"
 
 #: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:35
 msgid "Payment method:"
-msgstr ""
+msgstr "Payment method:"
 
 #: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:38
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:39
 msgid "Credit Card via 2Checkout"
-msgstr ""
+msgstr "Credit Card via 2Checkout"
 
 #: airtime_mvc/application/forms/BillingClient.php:17
 msgid "First Name:"
-msgstr ""
+msgstr "First Name:"
 
 #: airtime_mvc/application/forms/BillingClient.php:26
 msgid "Last Name:"
-msgstr ""
+msgstr "Last Name:"
 
 #: airtime_mvc/application/forms/BillingClient.php:35
 msgid "Company Name:"
-msgstr ""
+msgstr "Company Name:"
 
 #: airtime_mvc/application/forms/BillingClient.php:44
 msgid "Email Address:"
-msgstr ""
+msgstr "Email Address:"
 
 #: airtime_mvc/application/forms/BillingClient.php:54
 msgid "Address 1:"
-msgstr ""
+msgstr "Address 1:"
 
 #: airtime_mvc/application/forms/BillingClient.php:63
 msgid "Address 2:"
-msgstr ""
+msgstr "Address 2:"
 
 #: airtime_mvc/application/forms/BillingClient.php:80
 msgid "State/Region:"
-msgstr ""
+msgstr "County:"
 
 #: airtime_mvc/application/forms/BillingClient.php:89
 msgid "Zip Code / Postal Code:"
-msgstr ""
+msgstr "Postcode:"
 
 #: airtime_mvc/application/forms/BillingClient.php:112
 msgid "Phone Number:"
-msgstr ""
+msgstr "Phone Number:"
 
 #: airtime_mvc/application/forms/BillingClient.php:121
 msgid "Please choose a security question:"
-msgstr ""
+msgstr "Please choose a security question:"
 
 #: airtime_mvc/application/forms/BillingClient.php:126
 msgid "What is the name of your favorite childhood friend?"
-msgstr ""
+msgstr "What is the name of your favourite childhood friend?"
 
 #: airtime_mvc/application/forms/BillingClient.php:127
 msgid "What school did you attend for sixth grade?"
-msgstr ""
+msgstr "What secondary school did you attend?"
 
 #: airtime_mvc/application/forms/BillingClient.php:128
 msgid "In what city did you meet your spouse/significant other?"
-msgstr ""
+msgstr "In what city did you meet your spouse/significant other?"
 
 #: airtime_mvc/application/forms/BillingClient.php:129
 msgid "What street did you live on in third grade?"
-msgstr ""
+msgstr "What street did you live on when at primary school?"
 
 #: airtime_mvc/application/forms/BillingClient.php:130
 msgid "What is the first name of the boy or girl that you first kissed?"
-msgstr ""
+msgstr "What is the first name of the boy or girl that you first kissed?"
 
 #: airtime_mvc/application/forms/BillingClient.php:131
 msgid "In what city or town was your first job?"
-msgstr ""
+msgstr "In what city or town was your first job?"
 
 #: airtime_mvc/application/forms/BillingClient.php:135
 msgid "Please enter an answer:"
-msgstr ""
+msgstr "Please enter an answer:"
 
 #: airtime_mvc/application/forms/BillingClient.php:152
 msgid "VAT/Tax ID (EU only)"
-msgstr ""
+msgstr "VAT/Tax ID (EU only)"
 
 #: airtime_mvc/application/forms/BillingClient.php:162
 msgid "Subscribe to Sourcefabric newsletter"
-msgstr ""
+msgstr "Subscribe to Sourcefabric newsletter"
 
 #: airtime_mvc/application/configs/navigation.php:139
 msgid "Billing"
-msgstr ""
+msgstr "Billing"
 
 #: airtime_mvc/application/configs/navigation.php:144
 msgid "Account Details"
-msgstr ""
+msgstr "Account Details"
 
 #: airtime_mvc/application/configs/navigation.php:151
 #: airtime_mvc/application/views/scripts/billing/upgrade.phtml:171
 msgid "Account Plans"
-msgstr ""
+msgstr "Account Plans"
 
 #: airtime_mvc/application/configs/navigation.php:158
 msgid "View Invoices"
-msgstr ""
+msgstr "View Invoices"
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:26
 msgid "Failed"
-msgstr ""
+msgstr "Failed"
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:27
 msgid "Pending"
-msgstr ""
+msgstr "Pending"
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:30
 msgid "Recent Uploads"
-msgstr ""
+msgstr "Recent Uploads"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:13
 #, php-format
 msgid "%sSourcefabric%s z.ú Airtime is distributed under the %sGNU GPL v.3%s"
-msgstr ""
+msgstr "%sSourcefabric%s z.ú Airtime is distributed under the %sGNU GPL v.3%s"
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:7
 msgid ""
 "Welcome to the Airtime demo! You can log in using the username 'admin' and "
 "the password 'admin'."
-msgstr ""
+msgstr "Welcome to the Airtime demo! You can log in using the username 'admin' and the password 'admin'."
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 msgid "Purchase an Airtime Pro plan!"
-msgstr ""
+msgstr "Purchase an Airtime Pro plan!"
 
 #: airtime_mvc/application/views/scripts/billing/invoices.phtml:6
 msgid ""
 "<b>Thank you!</b> Your plan has been updated and you will be invoiced during"
 " your next billing cycle."
-msgstr ""
+msgstr "<b>Thank you!</b> Your plan has been updated and you will be invoiced during your next billing cycle."
 
 #: airtime_mvc/application/views/scripts/billing/invoices.phtml:10
 msgid ""
 "Tip: To pay an invoice, click \"View Invoice\"<br> and look for the "
 "\"Checkout\" button."
-msgstr ""
+msgstr "Tip: To pay an invoice, click \"View Invoice\"<br> and look for the \"Checkout\" button."
 
 #: airtime_mvc/application/views/scripts/billing/upgrade.phtml:172
 msgid "Upgrade today to get more listeners and storage space!"
-msgstr ""
+msgstr "Upgrade today to get more listeners and storage space!"
 
 #: airtime_mvc/application/views/scripts/billing/upgrade.phtml:254
 msgid "View Plans"
-msgstr ""
+msgstr "View Plans"
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:30
 #, php-format
 msgid ""
 "Super Admin details can be changed in your <a href=\"%s\">Billing "
 "Settings</a>."
-msgstr ""
+msgstr "Super Admin details can be changed in your <a href=\"%s\">Billing Settings</a>."
 
 #: airtime_mvc/application/models/Scheduler.php:195
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Cannot schedule a playlist that contains missing files."
