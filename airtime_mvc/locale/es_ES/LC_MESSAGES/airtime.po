@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Sourcefabric <contact@sourcefabric.org>, 2012
-# vmcarranza <victor.carranza@sourcefabric.org>, 2014
+# Víctor Carranza <victor.carranza@sourcefabric.org>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-03-12 16:10+0000\n"
-"Last-Translator: vmcarranza <victor.carranza@sourcefabric.org>\n"
+"PO-Revision-Date: 2014-07-28 11:16+0000\n"
+"Last-Translator: Víctor Carranza <victor.carranza@sourcefabric.org>\n"
 "Language-Team: Spanish (Spain) (http://www.transifex.com/projects/p/airtime/language/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
