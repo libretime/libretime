@@ -83,8 +83,10 @@ class ApiController extends Zend_Controller_Action
         if ($media != null) {
             // Make sure we don't have some wrong result beecause of caching
             clearstatcache();
+            
             if ($media->getPropelOrm()->isValidFile()) {
-                $filename = $media->getPropelOrm()->getFilename();
+                //$filename = $media->getPropelOrm()->getFilename();
+                $filename = $media->getPropelOrm()->getDbFilepath();
 
                 //Download user left clicks a track and selects Download.
                 if ("true" == $this->_getParam('download')) {
@@ -94,11 +96,13 @@ class ApiController extends Zend_Controller_Action
                     //to the browser what name the file should be saved as.
                     header('Content-Disposition: attachment; filename="'.$filename.'"');
                 } else {
-                    //user clicks play button for track and downloads it.
+                    //user clicks play button for track preview
                     header('Content-Disposition: inline; filename="'.$filename.'"');
+                    $this->_redirect($media->getFilePath());
                 }
 
-                $this->_redirect($media->getFilePath());
+                $this->smartReadFile($media);
+                exit;
             } else {
                 header ("HTTP/1.1 404 Not Found");
             }
@@ -119,12 +123,13 @@ class ApiController extends Zend_Controller_Action
     * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
     * @link http://php.net/manual/en/function.readfile.php#86244
     */
-    public function smartReadFile($location, $mimeType = 'audio/mp3')
+    public function smartReadFile($media)
     {
-        $size= filesize($location);
-        $time= date('r', filemtime($location));
+        $filepath = $media->getFilePath();
+        $size= $media->getFileSize();
+        $mimeType = $media->getPropelOrm()->getDbMime();
 
-        $fm = @fopen($location, 'rb');
+        $fm = @fopen($filepath, 'rb');
         if (!$fm) {
             header ("HTTP/1.1 505 Internal server error");
 
@@ -157,19 +162,22 @@ class ApiController extends Zend_Controller_Action
             header("Content-Range: bytes $begin-$end/$size");
         }
         header("Content-Transfer-Encoding: binary");
-        header("Last-Modified: $time");
 
         //We can have multiple levels of output buffering. Need to
         //keep looping until all have been disabled!!!
         //http://www.php.net/manual/en/function.ob-end-flush.php
         while (@ob_end_flush());
 
-        $cur = $begin;
+        /*$cur = $begin;
         fseek($fm, $begin, 0);
 
         while (!feof($fm) && $cur <= $end && (connection_status() == 0)) {
             echo  fread($fm, min(1024 * 16, ($end - $cur) + 1));
             $cur += 1024 * 16;
+        }*/
+        
+        while(!feof($fm)) {
+            echo fread($fm, 1024 * 8);
         }
     }
 

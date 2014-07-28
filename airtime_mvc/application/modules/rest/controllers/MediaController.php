@@ -226,6 +226,9 @@ class Rest_MediaController extends Zend_Rest_Controller
             
             //file is stored in the cloud
             if (isset($requestData["resource_id"])) {
+                //store the original filename
+                $file->setDbFilepath($requestData["filename"]);
+                
                 $fileSizeBytes = $requestData["filesize"];
                 $cloudFile = new CloudFile();
                 $cloudFile->setResourceId($requestData["resource_id"]);

@@ -41,6 +41,9 @@ class CloudStorageUploader:
         except OSError:
             logging.info("Could not remove %s from organize directory" % audio_file_path)
         
+        '''pass original filename to Airtime so we can store it in the db'''
+        metadata["filename"] = file_base_name
+        
         metadata["resource_id"] = object_name
         return metadata
 
