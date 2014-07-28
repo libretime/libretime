@@ -124,11 +124,7 @@ class UserController extends Zend_Controller_Action
     }
     
     public function editUserAction()
-    {
-        if (Application_Model_User::getCurrentUser()->isSuperAdmin()) {
-            $this->_redirect('billing/client');
-        }
-        
+    {        
         $request = $this->getRequest();
         $form = new Application_Form_EditUser();
         if ($request->isPost()) {
