@@ -28,7 +28,7 @@ class CloudFile extends BaseCloudFile
     
     public function getFilename()
     {
-        return $this->getResourceId();
+        return $this->getDbFilepath();
     }
     
     public function isValidFile()

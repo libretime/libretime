@@ -84,8 +84,7 @@ class CcFiles extends BaseCcFiles {
     
     public function getAbsoluteFilePath()
     {
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->
-            _file->getDbDirectory());
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
         if (!$music_dir) {
             throw new Exception("Invalid music_dir for file in database.");
         }
