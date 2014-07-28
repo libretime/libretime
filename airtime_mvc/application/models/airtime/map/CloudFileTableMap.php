@@ -39,7 +39,7 @@ class CloudFileTableMap extends TableMap
         $this->setUseIdGenerator(true);
         $this->setPrimaryKeyMethodInfo('cloud_file_id_seq');
         // columns
-        $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
         $this->addColumn('resource_id', 'ResourceId', 'LONGVARCHAR', true, null, null);
         $this->addForeignKey('cc_file_id', 'CcFileId', 'INTEGER', 'cc_files', 'id', false, null, null);
         // validators
@@ -50,7 +50,7 @@ class CloudFileTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('cc_file_id' => 'id', ), null, null);
+        $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('cc_file_id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
     /**

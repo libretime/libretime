@@ -694,7 +694,8 @@ ALTER TABLE "cc_files" ADD CONSTRAINT "cc_music_dirs_folder_fkey"
 
 ALTER TABLE "cloud_file" ADD CONSTRAINT "cloud_file_FK_1"
     FOREIGN KEY ("cc_file_id")
-    REFERENCES "cc_files" ("id");
+    REFERENCES "cc_files" ("id")
+    ON DELETE CASCADE;
 
 ALTER TABLE "cc_perms" ADD CONSTRAINT "cc_perms_subj_fkey"
     FOREIGN KEY ("subj")

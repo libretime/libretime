@@ -103,7 +103,7 @@
     <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
     <column name="resource_id" phpName="ResourceId" type="LONGVARCHAR" required="true"/>
     <column name="cc_file_id" type="INTEGER"/>
-    <foreign-key foreignTable="cc_files">
+    <foreign-key foreignTable="cc_files" onDelete="CASCADE">
       <reference local="cc_file_id" foreign="id"/>
     </foreign-key>
     <behavior name="delegate">

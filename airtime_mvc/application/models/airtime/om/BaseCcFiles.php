@@ -3405,10 +3405,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
             if ($this->cloudFilesScheduledForDeletion !== null) {
                 if (!$this->cloudFilesScheduledForDeletion->isEmpty()) {
-                    foreach ($this->cloudFilesScheduledForDeletion as $cloudFile) {
-                        // need to save related object because we set the relation to null
-                        $cloudFile->save($con);
-                    }
+                    CloudFileQuery::create()
+                        ->filterByPrimaryKeys($this->cloudFilesScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
                     $this->cloudFilesScheduledForDeletion = null;
                 }
             }

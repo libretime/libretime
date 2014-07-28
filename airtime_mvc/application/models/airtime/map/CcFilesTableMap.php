@@ -120,7 +120,7 @@ class CcFilesTableMap extends TableMap
         $this->addRelation('FkOwner', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner_id' => 'id', ), null, null);
         $this->addRelation('CcSubjsRelatedByDbEditedby', 'CcSubjs', RelationMap::MANY_TO_ONE, array('editedby' => 'id', ), null, null);
         $this->addRelation('CcMusicDirs', 'CcMusicDirs', RelationMap::MANY_TO_ONE, array('directory' => 'id', ), null, null);
-        $this->addRelation('CloudFile', 'CloudFile', RelationMap::ONE_TO_MANY, array('id' => 'cc_file_id', ), null, null, 'CloudFiles');
+        $this->addRelation('CloudFile', 'CloudFile', RelationMap::ONE_TO_MANY, array('id' => 'cc_file_id', ), 'CASCADE', null, 'CloudFiles');
         $this->addRelation('CcShowInstances', 'CcShowInstances', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcShowInstancess');
         $this->addRelation('CcPlaylistcontents', 'CcPlaylistcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcPlaylistcontentss');
         $this->addRelation('CcBlockcontents', 'CcBlockcontents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcBlockcontentss');
