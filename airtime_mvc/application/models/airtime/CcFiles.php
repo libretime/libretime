@@ -99,4 +99,9 @@ class CcFiles extends BaseCcFiles {
         return is_file($this->getAbsoluteFilePath());
     }
     
+    public function deletePhysicalFile()
+    {
+        unlink($this->getAbsoluteFilePath());
+    }
+    
 } // CcFiles

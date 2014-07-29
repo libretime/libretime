@@ -387,44 +387,24 @@ SQL;
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
         if (!is_null($music_dir) && $music_dir->getType() == "stor" && file_exists($filepath)) {
             try {
-                $this->doFileDeletionCleanup($this->getFileSize());
-                unlink($filepath);
+                $filesize = $this->getFileSize();
+                
+                //Update the user's disk usage
+                Application_Model_Preference::updateDiskUsage(-1 * $filesize);
+                
+                //Explicitly update any playlist's and block's length that contain
+                //the file getting deleted
+                self::updateBlockAndPlaylistLength($this->_file->getDbId());
+                
+                $this->_file->deletePhysicalFile();
+                
+                //delete the file record from cc_files (and cloud_file, if applicable)
+                $this->_file->delete();
             } catch (Exception $e) {
                 Logging::error($e->getMessage());
                 return;
             }
-        } /*elseif ($isInCloud) {
-            //Dispatch a message to airtime_analyzer through RabbitMQ,
-            //notifying it that we need to delete a file from the cloud
-            $CC_CONFIG = Config::getConfig();
-            $apiKey = $CC_CONFIG["apiKey"][0];
-            
-            //If the file was successfully deleted from the cloud the analyzer
-            //will make a request to the Media API to do the deletion cleanup.
-            $callbackUrl = 'http://'.$_SERVER['HTTP_HOST'].'/rest/media/'.$file_id.'/delete-success';
-            
-            Application_Model_RabbitMq::SendDeleteMessageToAnalyzer(
-                $callbackUrl, $this->_file->getDbResourceId(), $apiKey, 'delete');
-        }*/
-    }
-
-    /*
-     * This function handles all the actions required when a file is deleted
-     */
-    public function doFileDeletionCleanup($filesize)
-    {
-        if ($filesize <= 0) {
-            throw new Exception ("Could not delete file with ".$filesize." filesize");
         }
-        //Update the user's disk usage
-        Application_Model_Preference::updateDiskUsage(-1 * $filesize);
-        
-        //Explicitly update any playlist's and block's length that contains
-        //the file getting deleted
-        self::updateBlockAndPlaylistLength($this->_file->getDbId());
-        
-        //delete the file record from cc_files
-        $this->_file->delete();
     }
 
     /*
@@ -574,12 +554,16 @@ SQL;
     
     public function getResourceId()
     {
-        return $this->_file->getDbResourceId();
+        return $this->_file->getResourceId();
     }
 
     public function getFileSize()
     {
-        return $this->_file->getFileSize();
+        $filesize = $this->_file->getFileSize();
+        if ($filesize <= 0) {
+            throw new Exception ("Could not determine filesize for file id: ".$this->_file->getDbId().". Filesize: ".$filesize);
+        }
+        return $filesize;
     }
     
     public static function Insert($md, $con)

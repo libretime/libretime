@@ -37,21 +37,11 @@ class PypoFile(Thread):
         """
         src = media_item['uri']
         dst = media_item['dst']
-        is_in_cloud = media_item['is_in_cloud']
-
-        try:
-            if is_in_cloud:
-                src_size = media_item['filesize']
-            else:
-                src_size = os.path.getsize(src)
-        except Exception, e:
-            self.logger.error("Could not get size of source file: %s", src)
-            return
+        src_size = media_item['filesize']
         
         dst_exists = True
         try:
             dst_size = os.path.getsize(dst)
-            self.logger.debug(dst_size)
         except Exception, e:
             dst_exists = False
 
@@ -73,7 +63,7 @@ class PypoFile(Thread):
                 """
                 copy will overwrite dst if it already exists
                 """
-                if is_in_cloud:
+                if 'object_name' in media_item:
                     csd = CloudStorageDownloader()
                     csd.download_obj(dst, media_item['object_name'])
                 else:
