@@ -1,11 +1,15 @@
+# LANGUAGE (xx_XX) translation for Airtime.
+# Copyright (C) 2012 Sourcefabric
+# This file is distributed under the same license as the Airtime package.
 # 
 # Translators:
 # Sourcefabric <contact@sourcefabric.org>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2014-07-28 11:49+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-12-13 12:58-0500\n"
+"PO-Revision-Date: 2014-07-29 09:55+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/projects/p/airtime/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
@@ -14,10 +18,6 @@ msgstr ""
 "Language: ko_KR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-# ENGLISH (en) original strings for Airtime.
-# Copyright (C) 2014 Sourcefabric z.ú.
-# This file is distributed under the same license as the Airtime package.
-# 
 #: airtime_mvc/application/layouts/scripts/login.phtml:16
 #, php-format
 msgid ""
@@ -27,7 +27,6 @@ msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/bare.phtml:5
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
-#: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 msgid "Live stream"
 msgstr "라이브 스트림"
 
@@ -37,21 +36,16 @@ msgid "Audio Player"
 msgstr "오디오 플레이어"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:27
-#: airtime_mvc/application/layouts/scripts/layout.phtml:38
 msgid "Logout"
 msgstr "로그아웃"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
-#: airtime_mvc/application/layouts/scripts/layout.phtml:53
-#: airtime_mvc/application/layouts/scripts/layout.phtml:79
 msgid "Play"
 msgstr "재생"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
-#: airtime_mvc/application/layouts/scripts/layout.phtml:54
-#: airtime_mvc/application/layouts/scripts/layout.phtml:80
 msgid "Stop"
 msgstr "정지"
 
@@ -59,12 +53,10 @@ msgstr "정지"
 #: airtime_mvc/application/models/Block.php:1347
 #: airtime_mvc/application/controllers/LocaleController.php:272
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
-#: airtime_mvc/application/layouts/scripts/layout.phtml:58
 msgid "Cue In"
 msgstr "큐 인"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:49
-#: airtime_mvc/application/layouts/scripts/layout.phtml:60
 msgid "Set Cue In"
 msgstr ""
 
@@ -72,29 +64,24 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1348
 #: airtime_mvc/application/controllers/LocaleController.php:273
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
-#: airtime_mvc/application/layouts/scripts/layout.phtml:65
 msgid "Cue Out"
 msgstr "큐 아웃"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
-#: airtime_mvc/application/layouts/scripts/layout.phtml:67
 msgid "Set Cue Out"
 msgstr "큐 아웃 설정"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
-#: airtime_mvc/application/layouts/scripts/layout.phtml:84
 msgid "Cursor"
 msgstr "커서"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:274
-#: airtime_mvc/application/layouts/scripts/layout.phtml:85
 msgid "Fade In"
 msgstr "페이드 인"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:75
 #: airtime_mvc/application/controllers/LocaleController.php:275
-#: airtime_mvc/application/layouts/scripts/layout.phtml:86
 msgid "Fade Out"
 msgstr "패이드 아웃"
 
@@ -105,9 +92,6 @@ msgstr "패이드 아웃"
 #: airtime_mvc/application/models/Block.php:1363
 #: airtime_mvc/application/controllers/LocaleController.php:66
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
-#: airtime_mvc/application/services/HistoryService.php:1108
-#: airtime_mvc/application/services/HistoryService.php:1148
-#: airtime_mvc/application/services/HistoryService.php:1165
 msgid "Title"
 msgstr "제목"
 
@@ -118,9 +102,6 @@ msgstr "제목"
 #: airtime_mvc/application/models/Block.php:1349
 #: airtime_mvc/application/controllers/LocaleController.php:67
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
-#: airtime_mvc/application/services/HistoryService.php:1109
-#: airtime_mvc/application/services/HistoryService.php:1149
-#: airtime_mvc/application/services/HistoryService.php:1166
 msgid "Creator"
 msgstr "제작자"
 
@@ -129,7 +110,6 @@ msgstr "제작자"
 #: airtime_mvc/application/models/Block.php:1341
 #: airtime_mvc/application/controllers/LocaleController.php:68
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:49
-#: airtime_mvc/application/services/HistoryService.php:1110
 msgid "Album"
 msgstr "앨범"
 
@@ -139,8 +119,6 @@ msgstr "앨범"
 #: airtime_mvc/application/models/Block.php:1357
 #: airtime_mvc/application/controllers/LocaleController.php:81
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
-#: airtime_mvc/application/services/HistoryService.php:1111
-#: airtime_mvc/application/services/HistoryService.php:1168
 msgid "Length"
 msgstr "길이"
 
@@ -150,7 +128,6 @@ msgstr "길이"
 #: airtime_mvc/application/controllers/LocaleController.php:75
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:132
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:59
-#: airtime_mvc/application/services/HistoryService.php:1112
 msgid "Genre"
 msgstr "장르"
 
@@ -158,7 +135,6 @@ msgstr "장르"
 #: airtime_mvc/application/models/Block.php:1359
 #: airtime_mvc/application/controllers/LocaleController.php:83
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:67
-#: airtime_mvc/application/services/HistoryService.php:1113
 msgid "Mood"
 msgstr "무드"
 
@@ -166,7 +142,6 @@ msgstr "무드"
 #: airtime_mvc/application/models/Block.php:1353
 #: airtime_mvc/application/controllers/LocaleController.php:77
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
-#: airtime_mvc/application/services/HistoryService.php:1114
 msgid "Label"
 msgstr "레이블"
 
@@ -175,8 +150,6 @@ msgstr "레이블"
 #: airtime_mvc/application/models/Block.php:1344
 #: airtime_mvc/application/controllers/LocaleController.php:71
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:52
-#: airtime_mvc/application/services/HistoryService.php:1115
-#: airtime_mvc/application/services/HistoryService.php:1169
 msgid "Composer"
 msgstr "작곡가"
 
@@ -184,7 +157,6 @@ msgstr "작곡가"
 #: airtime_mvc/application/models/Block.php:1352
 #: airtime_mvc/application/controllers/LocaleController.php:76
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:60
-#: airtime_mvc/application/services/HistoryService.php:1116
 msgid "ISRC"
 msgstr ""
 
@@ -193,8 +165,6 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1346
 #: airtime_mvc/application/controllers/LocaleController.php:73
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:54
-#: airtime_mvc/application/services/HistoryService.php:1117
-#: airtime_mvc/application/services/HistoryService.php:1170
 msgid "Copyright"
 msgstr "저작권"
 
@@ -202,12 +172,10 @@ msgstr "저작권"
 #: airtime_mvc/application/models/Block.php:1367
 #: airtime_mvc/application/controllers/LocaleController.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:75
-#: airtime_mvc/application/services/HistoryService.php:1118
 msgid "Year"
 msgstr "년도"
 
 #: airtime_mvc/application/services/HistoryService.php:1116
-#: airtime_mvc/application/services/HistoryService.php:1119
 msgid "Track"
 msgstr ""
 
@@ -215,7 +183,6 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1345
 #: airtime_mvc/application/controllers/LocaleController.php:72
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:53
-#: airtime_mvc/application/services/HistoryService.php:1120
 msgid "Conductor"
 msgstr "지휘자"
 
@@ -223,24 +190,20 @@ msgstr "지휘자"
 #: airtime_mvc/application/models/Block.php:1354
 #: airtime_mvc/application/controllers/LocaleController.php:78
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:62
-#: airtime_mvc/application/services/HistoryService.php:1121
 msgid "Language"
 msgstr "언어"
 
 #: airtime_mvc/application/services/HistoryService.php:1143
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
-#: airtime_mvc/application/services/HistoryService.php:1146
 msgid "Start Time"
 msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1144
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
-#: airtime_mvc/application/services/HistoryService.php:1147
 msgid "End Time"
 msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1164
-#: airtime_mvc/application/services/HistoryService.php:1167
 msgid "Played"
 msgstr "방송됨"
 
@@ -254,25 +217,21 @@ msgstr "녹음된 파일의 메타데이타 보기"
 
 #: airtime_mvc/application/services/CalendarService.php:65
 #: airtime_mvc/application/controllers/LibraryController.php:282
-#: airtime_mvc/application/controllers/LibraryController.php:280
 msgid "View on Soundcloud"
 msgstr "Soundcloud 보기"
 
 #: airtime_mvc/application/services/CalendarService.php:70
 #: airtime_mvc/application/controllers/LibraryController.php:288
-#: airtime_mvc/application/controllers/LibraryController.php:286
 msgid "Upload to SoundCloud"
 msgstr "Soundcloud에 업로드"
 
 #: airtime_mvc/application/services/CalendarService.php:70
 #: airtime_mvc/application/controllers/LibraryController.php:286
-#: airtime_mvc/application/controllers/LibraryController.php:284
 msgid "Re-upload to SoundCloud"
 msgstr "Soundcloud에 다시 업로드"
 
 #: airtime_mvc/application/services/CalendarService.php:77
 #: airtime_mvc/application/services/CalendarService.php:121
-#: airtime_mvc/application/services/CalendarService.php:120
 msgid "Show Content"
 msgstr "쇼 내용 보기"
 
@@ -280,42 +239,31 @@ msgstr "쇼 내용 보기"
 #: airtime_mvc/application/services/CalendarService.php:100
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 #: airtime_mvc/application/controllers/LocaleController.php:303
-#: airtime_mvc/application/services/CalendarService.php:96
 msgid "Add / Remove Content"
 msgstr "내용 추가/제거"
 
 #: airtime_mvc/application/services/CalendarService.php:111
-#: airtime_mvc/application/services/CalendarService.php:109
 msgid "Remove All Content"
 msgstr "내용 모두 삭제"
 
 #: airtime_mvc/application/services/CalendarService.php:131
 #: airtime_mvc/application/services/CalendarService.php:135
-#: airtime_mvc/application/services/CalendarService.php:130
-#: airtime_mvc/application/services/CalendarService.php:134
 msgid "Cancel Current Show"
 msgstr "현재 쇼 취소"
 
 #: airtime_mvc/application/services/CalendarService.php:152
 #: airtime_mvc/application/services/CalendarService.php:167
-#: airtime_mvc/application/services/CalendarService.php:151
-#: airtime_mvc/application/services/CalendarService.php:166
 msgid "Edit This Instance"
 msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:157
 #: airtime_mvc/application/controllers/LibraryController.php:241
 #: airtime_mvc/application/controllers/LibraryController.php:263
-#: airtime_mvc/application/controllers/LibraryController.php:239
-#: airtime_mvc/application/controllers/LibraryController.php:261
-#: airtime_mvc/application/services/CalendarService.php:156
 msgid "Edit"
 msgstr "수정"
 
 #: airtime_mvc/application/services/CalendarService.php:162
 #: airtime_mvc/application/services/CalendarService.php:173
-#: airtime_mvc/application/services/CalendarService.php:161
-#: airtime_mvc/application/services/CalendarService.php:172
 msgid "Edit Show"
 msgstr "쇼 수정"
 
@@ -329,43 +277,30 @@ msgstr "쇼 수정"
 #: airtime_mvc/application/controllers/LibraryController.php:246
 #: airtime_mvc/application/controllers/LibraryController.php:265
 #: airtime_mvc/application/controllers/ShowbuilderController.php:202
-#: airtime_mvc/application/controllers/LibraryController.php:215
-#: airtime_mvc/application/controllers/LibraryController.php:244
-#: airtime_mvc/application/controllers/LibraryController.php:263
-#: airtime_mvc/application/controllers/ShowbuilderController.php:210
-#: airtime_mvc/application/services/CalendarService.php:185
-#: airtime_mvc/application/services/CalendarService.php:200
-#: airtime_mvc/application/services/CalendarService.php:205
 msgid "Delete"
 msgstr "삭제"
 
 #: airtime_mvc/application/services/CalendarService.php:191
-#: airtime_mvc/application/services/CalendarService.php:190
 msgid "Delete This Instance"
 msgstr "이 인스턴스 삭제"
 
 #: airtime_mvc/application/services/CalendarService.php:196
-#: airtime_mvc/application/services/CalendarService.php:195
 msgid "Delete This Instance and All Following"
 msgstr "이 인스턴스와 이후에 모든 인스턴스 삭제"
 
 #: airtime_mvc/application/services/CalendarService.php:250
-#: airtime_mvc/application/services/CalendarService.php:249
 msgid "Permission denied"
 msgstr "권한이 부족합니다"
 
 #: airtime_mvc/application/services/CalendarService.php:254
-#: airtime_mvc/application/services/CalendarService.php:253
 msgid "Can't drag and drop repeating shows"
 msgstr "반복쇼는 드래그 앤 드롭 할수 없습니다"
 
 #: airtime_mvc/application/services/CalendarService.php:263
-#: airtime_mvc/application/services/CalendarService.php:262
 msgid "Can't move a past show"
 msgstr "지난 쇼는 이동할수 없습니다"
 
 #: airtime_mvc/application/services/CalendarService.php:281
-#: airtime_mvc/application/services/CalendarService.php:297
 msgid "Can't move show into past"
 msgstr "과거로 쇼를 이동할수 없습니다"
 
@@ -375,24 +310,18 @@ msgstr "과거로 쇼를 이동할수 없습니다"
 #: airtime_mvc/application/forms/AddShowWhen.php:318
 #: airtime_mvc/application/forms/AddShowWhen.php:324
 #: airtime_mvc/application/forms/AddShowWhen.php:329
-#: airtime_mvc/application/forms/AddShowWhen.php:274
-#: airtime_mvc/application/forms/AddShowWhen.php:288
-#: airtime_mvc/application/services/CalendarService.php:304
 msgid "Cannot schedule overlapping shows"
 msgstr "쇼를 중복되게 스케쥴할수 없습니다"
 
 #: airtime_mvc/application/services/CalendarService.php:301
-#: airtime_mvc/application/services/CalendarService.php:317
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
 msgstr "녹화 쇼를 재방송 시작 1시간 안으로 이동할수 없습니다"
 
 #: airtime_mvc/application/services/CalendarService.php:311
-#: airtime_mvc/application/services/CalendarService.php:327
 msgid "Show was deleted because recorded show does not exist!"
 msgstr "녹화 쇼가 없으로 쇼가 삭제 되었습니다"
 
 #: airtime_mvc/application/services/CalendarService.php:318
-#: airtime_mvc/application/services/CalendarService.php:334
 msgid "Must wait 1 hour to rebroadcast."
 msgstr "녹화 쇼와 재방송 사이에는 1시간의 간격이 필요합니다 "
 
@@ -415,10 +344,6 @@ msgstr "설정"
 #: airtime_mvc/application/forms/SupportSettings.php:158
 #: airtime_mvc/application/forms/EditHistory.php:131
 #: airtime_mvc/application/forms/EditAudioMD.php:135
-#: airtime_mvc/application/forms/EditAudioMD.php:182
-#: airtime_mvc/application/forms/BillingClient.php:193
-#: airtime_mvc/application/forms/SupportSettings.php:143
-#: airtime_mvc/application/views/scripts/form/edit-user.phtml:161
 msgid "Save"
 msgstr "저장"
 
@@ -508,10 +433,6 @@ msgstr "%sSourcefabric.org%s에 방송국을 홍보 하시려면 체크 하세�
 #: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:59
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:34
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:48
-#: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:31
-#: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:46
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
-#: airtime_mvc/application/views/scripts/form/preferences_general.phtml:115
 msgid "(Required)"
 msgstr "(*)"
 
@@ -519,14 +440,11 @@ msgstr "(*)"
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:79
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:61
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:76
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:20
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:35
 msgid "(for verification purposes only, will not be published)"
 msgstr "(확인을 위한것입니다, 이 정보는 어디에도 게시 되지 않습니다)"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:150
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:151
-#: airtime_mvc/application/views/scripts/form/support-setting.phtml:110
 msgid "Note: Anything larger than 600x600 will be resized."
 msgstr "주의: 600*600보다 큰 이미지는 사이즈가 수정 됩니다"
 
@@ -609,7 +527,6 @@ msgid "Input Stream Settings"
 msgstr "입력 스트림 설정"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:109
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:81
 msgid "Master Source Connection URL:"
 msgstr "마스터 소스 접속 URL:"
 
@@ -620,20 +537,15 @@ msgstr "덮어쓰기"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:87
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:98
 msgid "OK"
 msgstr "확인"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:87
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:98
 msgid "RESET"
 msgstr "초기화"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:153
-#: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:92
 msgid "Show Source Connection URL:"
 msgstr "쇼 소스 접속 URL:"
 
@@ -655,7 +567,6 @@ msgid "Email / Mail Server Settings"
 msgstr "이메일/메일 서버 설정"
 
 #: airtime_mvc/application/views/scripts/form/preferences.phtml:10
-#: airtime_mvc/application/views/scripts/form/preferences.phtml:5
 msgid "SoundCloud Settings"
 msgstr "SoundCloud 설정"
 
@@ -880,13 +791,11 @@ msgstr "닫기"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:40
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:34
 msgid "Add this show"
 msgstr "쇼 추가"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:40
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:34
 msgid "Update show"
 msgstr "쇼 업데이트"
 
@@ -907,12 +816,10 @@ msgid "Record & Rebroadcast"
 msgstr "녹음 & 재방송"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:29
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:23
 msgid "Who"
 msgstr "누구"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:33
-#: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:27
 msgid "Style"
 msgstr "스타일"
 
@@ -1251,7 +1158,6 @@ msgstr "사용자  유형"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:9
 #: airtime_mvc/application/forms/EditAudioMD.php:19
-#: airtime_mvc/application/forms/EditAudioMD.php:25
 msgid "Title:"
 msgstr "제목:"
 
@@ -1259,13 +1165,11 @@ msgstr "제목:"
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:34
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:148
 #: airtime_mvc/application/forms/EditAudioMD.php:26
-#: airtime_mvc/application/forms/EditAudioMD.php:40
 msgid "Creator:"
 msgstr "제작자:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:11
 #: airtime_mvc/application/forms/EditAudioMD.php:33
-#: airtime_mvc/application/forms/EditAudioMD.php:50
 msgid "Album:"
 msgstr "앨범:"
 
@@ -1292,50 +1196,42 @@ msgstr "비트 레이트:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:16
 #: airtime_mvc/application/forms/EditAudioMD.php:88
-#: airtime_mvc/application/forms/EditAudioMD.php:121
 msgid "Mood:"
 msgstr "무드"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:17
 #: airtime_mvc/application/forms/AddShowWhat.php:45
 #: airtime_mvc/application/forms/EditAudioMD.php:47
-#: airtime_mvc/application/forms/EditAudioMD.php:68
 msgid "Genre:"
 msgstr "장르:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:18
 #: airtime_mvc/application/forms/EditAudioMD.php:55
-#: airtime_mvc/application/forms/EditAudioMD.php:78
 msgid "Year:"
 msgstr "년도:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:19
 #: airtime_mvc/application/forms/EditAudioMD.php:67
-#: airtime_mvc/application/forms/EditAudioMD.php:91
 msgid "Label:"
 msgstr "상표:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:20
 #: airtime_mvc/application/forms/EditAudioMD.php:96
-#: airtime_mvc/application/forms/EditAudioMD.php:131
 msgid "BPM:"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:21
 #: airtime_mvc/application/forms/EditAudioMD.php:74
-#: airtime_mvc/application/forms/EditAudioMD.php:101
 msgid "Composer:"
 msgstr "작곡가:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:22
 #: airtime_mvc/application/forms/EditAudioMD.php:81
-#: airtime_mvc/application/forms/EditAudioMD.php:111
 msgid "Conductor:"
 msgstr "지휘자"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:23
 #: airtime_mvc/application/forms/EditAudioMD.php:105
-#: airtime_mvc/application/forms/EditAudioMD.php:141
 msgid "Copyright:"
 msgstr "저작권:"
 
@@ -1345,7 +1241,6 @@ msgstr "ISRC 넘버:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:25
 #: airtime_mvc/application/forms/EditAudioMD.php:119
-#: airtime_mvc/application/forms/EditAudioMD.php:161
 msgid "Website:"
 msgstr "웹사이트"
 
@@ -1353,7 +1248,6 @@ msgstr "웹사이트"
 #: airtime_mvc/application/forms/Login.php:48
 #: airtime_mvc/application/forms/EditUser.php:114
 #: airtime_mvc/application/forms/EditAudioMD.php:126
-#: airtime_mvc/application/forms/EditAudioMD.php:171
 msgid "Language:"
 msgstr "언어"
 
@@ -1446,7 +1340,6 @@ msgid "Should not overlap shows"
 msgstr "중복 스케쥴을 할수 없스니다"
 
 #: airtime_mvc/application/models/Preference.php:655
-#: airtime_mvc/application/models/Preference.php:666
 msgid "Select Country"
 msgstr "국가 선택"
 
@@ -1467,7 +1360,6 @@ msgstr "%s를 포함하는 폴더를 이미 모니터 중입니다: %s"
 
 #: airtime_mvc/application/models/MusicDir.php:189
 #: airtime_mvc/application/models/MusicDir.php:368
-#: airtime_mvc/application/models/MusicDir.php:370
 #, php-format
 msgid "%s is not a valid directory."
 msgstr "%s는 옳은 경로가 아닙니다."
@@ -1479,14 +1371,12 @@ msgid ""
 msgstr "%s는 이미 현재 저장 폴더로 지정이 되었거나 모니터중인 폴더 입니다."
 
 #: airtime_mvc/application/models/MusicDir.php:386
-#: airtime_mvc/application/models/MusicDir.php:388
 #, php-format
 msgid ""
 "%s is already set as the current storage dir or in the watched folders list."
 msgstr "%s는 이미 현재 저장 폴더로 지정이 되었거나 모니터중인 폴더 입니다."
 
 #: airtime_mvc/application/models/MusicDir.php:429
-#: airtime_mvc/application/models/MusicDir.php:431
 #, php-format
 msgid "%s doesn't exist in the watched list."
 msgstr "%s가 모니터 목록에 없습니다"
@@ -1740,8 +1630,6 @@ msgstr "현재 보고 계신 스케쥴이 맞지 않습니다(instance mismatch)
 #: airtime_mvc/application/models/Scheduler.php:132
 #: airtime_mvc/application/models/Scheduler.php:444
 #: airtime_mvc/application/models/Scheduler.php:482
-#: airtime_mvc/application/models/Scheduler.php:460
-#: airtime_mvc/application/models/Scheduler.php:498
 msgid "The schedule you're viewing is out of date!"
 msgstr "현재 보고 계신 스케쥴이 맞지 않습니다"
 
@@ -1772,8 +1660,6 @@ msgstr "링크 쇼의 내용은 이미 방송된 쇼의 전후에만 스케쥴 �
 
 #: airtime_mvc/application/models/Scheduler.php:200
 #: airtime_mvc/application/models/Scheduler.php:289
-#: airtime_mvc/application/models/Scheduler.php:216
-#: airtime_mvc/application/models/Scheduler.php:305
 msgid "A selected File does not exist!"
 msgstr "선택하신 파일이 존재 하지 않습니다"
 
@@ -1815,128 +1701,101 @@ msgid "You don't have permission to switch source."
 msgstr "소스를 바꿀수 있는 권한이 부족합니다"
 
 #: airtime_mvc/application/controllers/ScheduleController.php:350
-#: airtime_mvc/application/controllers/ScheduleController.php:383
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
 msgstr "%s의 재방송 %s부터 %s까지"
 
 #: airtime_mvc/application/controllers/ScheduleController.php:624
 #: airtime_mvc/application/controllers/LibraryController.php:222
-#: airtime_mvc/application/controllers/ScheduleController.php:692
-#: airtime_mvc/application/controllers/LibraryController.php:220
 msgid "Download"
 msgstr "다운로드"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:56
-#: airtime_mvc/application/controllers/ListenerstatController.php:91
 msgid ""
 "Please make sure admin user/password is correct on System->Streams page."
 msgstr "시스템->스트림 에서 관리자 아이디/암호를 다시 확인하세요."
 
 #: airtime_mvc/application/controllers/ApiController.php:60
-#: airtime_mvc/application/controllers/Apiv2Controller.php:77
 msgid "You are not allowed to access this resource."
 msgstr "권한이 부족합니다"
 
 #: airtime_mvc/application/controllers/ApiController.php:314
 #: airtime_mvc/application/controllers/ApiController.php:376
-#: airtime_mvc/application/controllers/ApiController.php:315
-#: airtime_mvc/application/controllers/ApiController.php:377
 msgid "You are not allowed to access this resource. "
 msgstr "권한이 부족합니다"
 
 #: airtime_mvc/application/controllers/ApiController.php:555
-#: airtime_mvc/application/controllers/ApiController.php:558
 msgid "File does not exist in Airtime."
 msgstr "파일이 존재 하지 않습니다"
 
 #: airtime_mvc/application/controllers/ApiController.php:575
-#: airtime_mvc/application/controllers/ApiController.php:578
 msgid "File does not exist in Airtime"
 msgstr "파일이 존재 하지 않습니다"
 
 #: airtime_mvc/application/controllers/ApiController.php:587
-#: airtime_mvc/application/controllers/ApiController.php:590
 msgid "File doesn't exist in Airtime."
 msgstr "파일이 존재 하지 않습니다"
 
 #: airtime_mvc/application/controllers/ApiController.php:638
-#: airtime_mvc/application/controllers/ApiController.php:641
 msgid "Bad request. no 'mode' parameter passed."
 msgstr ""
 
 #: airtime_mvc/application/controllers/ApiController.php:648
-#: airtime_mvc/application/controllers/ApiController.php:651
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:125
 #: airtime_mvc/application/controllers/PlaylistController.php:130
-#: airtime_mvc/application/controllers/LibraryController.php:123
 #, php-format
 msgid "%s not found"
 msgstr "%s를 찾을수 없습니다"
 
 #: airtime_mvc/application/controllers/LibraryController.php:134
 #: airtime_mvc/application/controllers/PlaylistController.php:151
-#: airtime_mvc/application/controllers/LibraryController.php:132
 msgid "Something went wrong."
 msgstr "알수없는 에러."
 
 #: airtime_mvc/application/controllers/LibraryController.php:189
 #: airtime_mvc/application/controllers/ShowbuilderController.php:194
-#: airtime_mvc/application/controllers/LibraryController.php:187
-#: airtime_mvc/application/controllers/ShowbuilderController.php:202
 msgid "Preview"
 msgstr "프리뷰"
 
 #: airtime_mvc/application/controllers/LibraryController.php:210
 #: airtime_mvc/application/controllers/LibraryController.php:234
 #: airtime_mvc/application/controllers/LibraryController.php:257
-#: airtime_mvc/application/controllers/LibraryController.php:208
-#: airtime_mvc/application/controllers/LibraryController.php:232
-#: airtime_mvc/application/controllers/LibraryController.php:255
 msgid "Add to Playlist"
 msgstr "재생 목록에 추가"
 
 #: airtime_mvc/application/controllers/LibraryController.php:212
-#: airtime_mvc/application/controllers/LibraryController.php:210
 msgid "Add to Smart Block"
 msgstr "스마트 블록에 추가"
 
 #: airtime_mvc/application/controllers/LibraryController.php:218
 #: airtime_mvc/application/controllers/LocaleController.php:57
-#: airtime_mvc/application/controllers/LibraryController.php:216
 msgid "Edit Metadata"
 msgstr "메타데이타 수정"
 
 #: airtime_mvc/application/controllers/LibraryController.php:226
-#: airtime_mvc/application/controllers/LibraryController.php:224
 msgid "Duplicate Playlist"
 msgstr "중복된 플레이 리스트"
 
 #: airtime_mvc/application/controllers/LibraryController.php:276
-#: airtime_mvc/application/controllers/LibraryController.php:274
 msgid "Soundcloud"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:295
-#: airtime_mvc/application/controllers/LibraryController.php:293
 msgid "No action available"
 msgstr "액션 없음"
 
 #: airtime_mvc/application/controllers/LibraryController.php:315
-#: airtime_mvc/application/controllers/LibraryController.php:313
 msgid "You don't have permission to delete selected items."
 msgstr "선택된 아이템을 지울수 있는 권한이 부족합니다."
 
 #: airtime_mvc/application/controllers/LibraryController.php:364
-#: airtime_mvc/application/controllers/LibraryController.php:362
 msgid "Could not delete some scheduled files."
 msgstr "스케쥴된 아이템들은 삭제 할수 없습니다"
 
 #: airtime_mvc/application/controllers/LibraryController.php:404
-#: airtime_mvc/application/controllers/LibraryController.php:402
 #, php-format
 msgid "Copy of %s"
 msgstr "%s의 사본"
@@ -2061,7 +1920,6 @@ msgstr "로딩..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:92
 #: airtime_mvc/application/controllers/LocaleController.php:392
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:25
 msgid "All"
 msgstr "전체"
 
@@ -2543,43 +2401,36 @@ msgstr "월별"
 
 #: airtime_mvc/application/controllers/LocaleController.php:240
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
-#: airtime_mvc/application/forms/GeneralPreferences.php:172
 msgid "Sunday"
 msgstr "일요일"
 
 #: airtime_mvc/application/controllers/LocaleController.php:241
 #: airtime_mvc/application/forms/GeneralPreferences.php:124
-#: airtime_mvc/application/forms/GeneralPreferences.php:173
 msgid "Monday"
 msgstr "월요일"
 
 #: airtime_mvc/application/controllers/LocaleController.php:242
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
-#: airtime_mvc/application/forms/GeneralPreferences.php:174
 msgid "Tuesday"
 msgstr "화요일"
 
 #: airtime_mvc/application/controllers/LocaleController.php:243
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
-#: airtime_mvc/application/forms/GeneralPreferences.php:175
 msgid "Wednesday"
 msgstr "수요일"
 
 #: airtime_mvc/application/controllers/LocaleController.php:244
 #: airtime_mvc/application/forms/GeneralPreferences.php:127
-#: airtime_mvc/application/forms/GeneralPreferences.php:176
 msgid "Thursday"
 msgstr "목요일"
 
 #: airtime_mvc/application/controllers/LocaleController.php:245
 #: airtime_mvc/application/forms/GeneralPreferences.php:128
-#: airtime_mvc/application/forms/GeneralPreferences.php:177
 msgid "Friday"
 msgstr "금요일"
 
 #: airtime_mvc/application/controllers/LocaleController.php:246
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
-#: airtime_mvc/application/forms/GeneralPreferences.php:178
 msgid "Saturday"
 msgstr "토요일"
 
@@ -2686,7 +2537,6 @@ msgstr "아이템 %s개 이동"
 #: airtime_mvc/application/forms/EditHistory.php:141
 #: airtime_mvc/application/forms/PasswordRestore.php:46
 #: airtime_mvc/application/forms/EditAudioMD.php:145
-#: airtime_mvc/application/forms/EditAudioMD.php:192
 msgid "Cancel"
 msgstr "취소"
 
@@ -2834,7 +2684,6 @@ msgstr "모니터 폴터 관리"
 #: airtime_mvc/application/controllers/LocaleController.php:332
 #: airtime_mvc/application/forms/SupportSettings.php:112
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
-#: airtime_mvc/application/forms/SupportSettings.php:111
 msgid "Send support feedback"
 msgstr "사용자 피드백을 보냄"
 
@@ -3031,70 +2880,57 @@ msgid ""
 msgstr "%sPrint view%s프린트를 하려면 브라우저의 프린트 기능을 사용하여주세요. 종료를 원하시면 ESC키를 누르세요"
 
 #: airtime_mvc/application/controllers/LoginController.php:34
-#: airtime_mvc/application/controllers/LoginController.php:42
 msgid "Please enter your user name and password"
 msgstr "아이디와 암호를 입력해주세요"
 
 #: airtime_mvc/application/controllers/LoginController.php:77
-#: airtime_mvc/application/controllers/LoginController.php:92
 msgid "Wrong username or password provided. Please try again."
 msgstr "아이디와 암호가 맞지 않습니다. 다시 시도해주세요"
 
 #: airtime_mvc/application/controllers/LoginController.php:142
-#: airtime_mvc/application/controllers/LoginController.php:159
 msgid ""
 "Email could not be sent. Check your mail server settings and ensure it has "
 "been configured properly."
 msgstr "이메일을 전송 할수 없습니다. 메일 서버 세팅을 다시 확인 하여 주세요"
 
 #: airtime_mvc/application/controllers/LoginController.php:145
-#: airtime_mvc/application/controllers/LoginController.php:162
 msgid "Given email not found."
 msgstr "이메일을 찾을수 없습니다"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:74
-#: airtime_mvc/application/controllers/PreferenceController.php:62
 msgid "Preferences updated."
 msgstr "설정이 업데이트 되었습니다"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:125
-#: airtime_mvc/application/controllers/PreferenceController.php:104
 msgid "Support setting updated."
 msgstr "지원 설정이 업데이트 되었습니다"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:137
 #: airtime_mvc/application/configs/navigation.php:70
-#: airtime_mvc/application/controllers/PreferenceController.php:116
 msgid "Support Feedback"
 msgstr "사용자 피드백"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:332
-#: airtime_mvc/application/controllers/PreferenceController.php:273
 msgid "Stream Setting Updated."
 msgstr "스트림 설정이 업데이트 되었습니다"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:365
-#: airtime_mvc/application/controllers/PreferenceController.php:306
 msgid "path should be specified"
 msgstr "경로를 입력해주세요"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:460
-#: airtime_mvc/application/controllers/PreferenceController.php:401
 msgid "Problem with Liquidsoap..."
 msgstr "Liquidsoap 문제..."
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:196
-#: airtime_mvc/application/controllers/ShowbuilderController.php:204
 msgid "Select cursor"
 msgstr "커서 선택"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:197
-#: airtime_mvc/application/controllers/ShowbuilderController.php:205
 msgid "Remove cursor"
 msgstr "커서 제거"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:216
-#: airtime_mvc/application/controllers/ShowbuilderController.php:224
 msgid "show does not exist"
 msgstr "쇼가 존재 하지 않음"
 
@@ -3150,17 +2986,14 @@ msgid "Application error"
 msgstr "Application 애러"
 
 #: airtime_mvc/application/controllers/UserController.php:82
-#: airtime_mvc/application/controllers/UserController.php:86
 msgid "User added successfully!"
 msgstr "사용자가 추가 되었습니다!"
 
 #: airtime_mvc/application/controllers/UserController.php:84
-#: airtime_mvc/application/controllers/UserController.php:88
 msgid "User updated successfully!"
 msgstr "사용자 정보가 업데이트 되었습니다!"
 
 #: airtime_mvc/application/controllers/UserController.php:154
-#: airtime_mvc/application/controllers/UserController.php:162
 msgid "Settings updated successfully!"
 msgstr "세팅이 성공적으로 업데이트 되었습니다!"
 
@@ -3204,13 +3037,11 @@ msgstr "아이디: "
 #: airtime_mvc/application/forms/AddUser.php:34
 #: airtime_mvc/application/forms/Login.php:34
 #: airtime_mvc/application/forms/EditUser.php:43
-#: airtime_mvc/application/forms/BillingClient.php:172
 msgid "Password:"
 msgstr "암호: "
 
 #: airtime_mvc/application/forms/AddUser.php:42
 #: airtime_mvc/application/forms/EditUser.php:52
-#: airtime_mvc/application/forms/BillingClient.php:181
 msgid "Verify Password:"
 msgstr "암호 확인:"
 
@@ -3228,7 +3059,6 @@ msgstr "성:"
 #: airtime_mvc/application/forms/SupportSettings.php:46
 #: airtime_mvc/application/forms/EditUser.php:78
 #: airtime_mvc/application/forms/RegisterAirtime.php:51
-#: airtime_mvc/application/forms/SupportSettings.php:45
 msgid "Email:"
 msgstr "이메일"
 
@@ -3452,7 +3282,6 @@ msgstr "이 필드는 비워둘수 없습니다."
 #: airtime_mvc/application/forms/PasswordChange.php:17
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:120
 #: airtime_mvc/application/forms/EmailServerPreferences.php:82
-#: airtime_mvc/application/forms/EmailServerPreferences.php:81
 msgid "Password"
 msgstr "암호"
 
@@ -3471,65 +3300,52 @@ msgstr "새 암호 받기"
 #: airtime_mvc/application/forms/SupportSettings.php:21
 #: airtime_mvc/application/forms/GeneralPreferences.php:21
 #: airtime_mvc/application/forms/RegisterAirtime.php:30
-#: airtime_mvc/application/forms/GeneralPreferences.php:20
-#: airtime_mvc/application/forms/SupportSettings.php:20
 msgid "Station Name"
 msgstr "방송국 이름"
 
 #: airtime_mvc/application/forms/SupportSettings.php:34
 #: airtime_mvc/application/forms/RegisterAirtime.php:39
-#: airtime_mvc/application/forms/SupportSettings.php:33
 msgid "Phone:"
 msgstr "전화"
 
 #: airtime_mvc/application/forms/SupportSettings.php:57
 #: airtime_mvc/application/forms/RegisterAirtime.php:62
-#: airtime_mvc/application/forms/SupportSettings.php:56
 msgid "Station Web Site:"
 msgstr "방송국 웹사이트"
 
 #: airtime_mvc/application/forms/SupportSettings.php:68
 #: airtime_mvc/application/forms/RegisterAirtime.php:73
-#: airtime_mvc/application/forms/BillingClient.php:102
-#: airtime_mvc/application/forms/SupportSettings.php:67
 msgid "Country:"
 msgstr "나라"
 
 #: airtime_mvc/application/forms/SupportSettings.php:79
 #: airtime_mvc/application/forms/RegisterAirtime.php:84
-#: airtime_mvc/application/forms/BillingClient.php:70
-#: airtime_mvc/application/forms/SupportSettings.php:78
 msgid "City:"
 msgstr "도시"
 
 #: airtime_mvc/application/forms/SupportSettings.php:91
 #: airtime_mvc/application/forms/RegisterAirtime.php:96
-#: airtime_mvc/application/forms/SupportSettings.php:90
 msgid "Station Description:"
 msgstr "방송국 설명"
 
 #: airtime_mvc/application/forms/SupportSettings.php:101
 #: airtime_mvc/application/forms/RegisterAirtime.php:106
-#: airtime_mvc/application/forms/SupportSettings.php:100
 msgid "Station Logo:"
 msgstr "방송국 로고"
 
 #: airtime_mvc/application/forms/SupportSettings.php:122
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
-#: airtime_mvc/application/forms/SupportSettings.php:121
 msgid "Promote my station on Sourcefabric.org"
 msgstr "내 방송국을 Sourcefabric.org에 홍보"
 
 #: airtime_mvc/application/forms/SupportSettings.php:148
 #: airtime_mvc/application/forms/RegisterAirtime.php:149
-#: airtime_mvc/application/forms/SupportSettings.php:133
 #, php-format
 msgid "By checking this box, I agree to Sourcefabric's %sprivacy policy%s."
 msgstr "이 박스에 체크함으로, Sourcefabric's %sprivacy policy%s에 동의합니다."
 
 #: airtime_mvc/application/forms/SupportSettings.php:171
 #: airtime_mvc/application/forms/RegisterAirtime.php:166
-#: airtime_mvc/application/forms/SupportSettings.php:155
 msgid "You have to agree to privacy policy."
 msgstr "사용자 약관에 동의 하십시오"
 
@@ -3588,7 +3404,6 @@ msgstr "서버"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:109
 #: airtime_mvc/application/forms/EmailServerPreferences.php:100
-#: airtime_mvc/application/forms/EmailServerPreferences.php:99
 msgid "Port"
 msgstr "포트"
 
@@ -3629,42 +3444,34 @@ msgid "Output Type"
 msgstr "출력 유형"
 
 #: airtime_mvc/application/forms/StreamSetting.php:44
-#: airtime_mvc/application/forms/StreamSetting.php:22
 msgid "Icecast Vorbis Metadata"
 msgstr "Icecast Vorbis 메타데이타"
 
 #: airtime_mvc/application/forms/StreamSetting.php:54
-#: airtime_mvc/application/forms/StreamSetting.php:32
 msgid "Stream Label:"
 msgstr "스트림 레이블"
 
 #: airtime_mvc/application/forms/StreamSetting.php:55
-#: airtime_mvc/application/forms/StreamSetting.php:33
 msgid "Artist - Title"
 msgstr "아티스트 - 제목"
 
 #: airtime_mvc/application/forms/StreamSetting.php:56
-#: airtime_mvc/application/forms/StreamSetting.php:34
 msgid "Show - Artist - Title"
 msgstr "쇼 - 아티스트 - 제목"
 
 #: airtime_mvc/application/forms/StreamSetting.php:57
-#: airtime_mvc/application/forms/StreamSetting.php:35
 msgid "Station name - Show name"
 msgstr "방송국 이름 - 쇼 이름"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
-#: airtime_mvc/application/forms/StreamSetting.php:41
 msgid "Off Air Metadata"
 msgstr "오프 에어 메타데이타"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69
-#: airtime_mvc/application/forms/StreamSetting.php:47
 msgid "Enable Replay Gain"
 msgstr "리플레이 게인 활성화"
 
 #: airtime_mvc/application/forms/StreamSetting.php:75
-#: airtime_mvc/application/forms/StreamSetting.php:53
 msgid "Replay Gain Modifier"
 msgstr "리플레이 게인 설정"
 
@@ -3685,32 +3492,26 @@ msgid "Rebroadcast?"
 msgstr "재방송?"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:17
-#: airtime_mvc/application/forms/EmailServerPreferences.php:16
 msgid "Enable System Emails (Password Reset)"
 msgstr "시스템 이메일 사용(암호 리셋)"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:27
-#: airtime_mvc/application/forms/EmailServerPreferences.php:26
 msgid "Reset Password 'From' Email"
 msgstr "암호 초기화에 보낸이 이메일 주소"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:34
-#: airtime_mvc/application/forms/EmailServerPreferences.php:33
 msgid "Configure Mail Server"
 msgstr "메일 서버 설정"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:43
-#: airtime_mvc/application/forms/EmailServerPreferences.php:42
 msgid "Requires Authentication"
 msgstr "인증 필요"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:53
-#: airtime_mvc/application/forms/EmailServerPreferences.php:52
 msgid "Mail Server"
 msgstr "메일 서버"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:67
-#: airtime_mvc/application/forms/EmailServerPreferences.php:66
 msgid "Email Address"
 msgstr "이메일 주소"
 
@@ -3763,31 +3564,24 @@ msgid "Date Start:"
 msgstr "시작"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
-#: airtime_mvc/application/forms/GeneralPreferences.php:32
 msgid "Default Crossfade Duration (s):"
 msgstr "기본 크로스페이드 길이(s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:40
 #: airtime_mvc/application/forms/GeneralPreferences.php:59
 #: airtime_mvc/application/forms/GeneralPreferences.php:78
-#: airtime_mvc/application/forms/GeneralPreferences.php:39
-#: airtime_mvc/application/forms/GeneralPreferences.php:58
-#: airtime_mvc/application/forms/GeneralPreferences.php:77
 msgid "enter a time in seconds 0{.0}"
 msgstr "초단위를 입력해주세요 0{.0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
-#: airtime_mvc/application/forms/GeneralPreferences.php:51
 msgid "Default Fade In (s):"
 msgstr "기본 페이드 인(s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
-#: airtime_mvc/application/forms/GeneralPreferences.php:70
 msgid "Default Fade Out (s):"
 msgstr "기본 페이드 아웃(s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
-#: airtime_mvc/application/forms/GeneralPreferences.php:88
 #, php-format
 msgid ""
 "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make "
@@ -3795,27 +3589,22 @@ msgid ""
 msgstr "리모트 웹사이트에서 스케쥴 정보에 접근을 허용? %s (위젯을 사용하려면 체크 하세요)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:90
-#: airtime_mvc/application/forms/GeneralPreferences.php:89
 msgid "Disabled"
 msgstr "미사용"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:91
-#: airtime_mvc/application/forms/GeneralPreferences.php:90
 msgid "Enabled"
 msgstr "사용"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:97
-#: airtime_mvc/application/forms/GeneralPreferences.php:110
 msgid "Default Interface Language"
 msgstr "기본 인터페이스 언어"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
-#: airtime_mvc/application/forms/GeneralPreferences.php:118
 msgid "Station Timezone"
 msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:113
-#: airtime_mvc/application/forms/GeneralPreferences.php:126
 msgid "Week Starts On"
 msgstr "주 시작일"
 
@@ -3929,7 +3718,6 @@ msgid "All My Shows:"
 msgstr "내 쇼:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:112
-#: airtime_mvc/application/forms/EditAudioMD.php:151
 msgid "ISRC Number:"
 msgstr "ISRC 넘버"
 
@@ -3938,147 +3726,118 @@ msgid "Automatically Upload Recorded Shows"
 msgstr "자동으로 녹음된 쇼 업로드 하기"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:26
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:16
 msgid "Enable SoundCloud Upload"
 msgstr "Soundcloud 업로드 사용"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:36
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:26
 msgid "Automatically Mark Files \"Downloadable\" on SoundCloud"
 msgstr "Soundcloud에 자동으로 파일을 \"Downloadable\"로 마크"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:47
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:37
 msgid "SoundCloud Email"
 msgstr "SoundCloud 이메일"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:67
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:57
 msgid "SoundCloud Password"
 msgstr "SoundCloud 암호"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:87
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:77
 msgid "SoundCloud Tags: (separate tags with spaces)"
 msgstr "SoundCloud 태그: (여려 태그 입력시 띄어쓰기로 구분)"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:99
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:89
 msgid "Default Genre:"
 msgstr "기본 장르:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:109
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:99
 msgid "Default Track Type:"
 msgstr "기본 트랙 타입:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:113
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:103
 msgid "Original"
 msgstr "오리지날"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:114
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:104
 msgid "Remix"
 msgstr "리믹스"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:115
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:105
 msgid "Live"
 msgstr "라이브"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:116
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:106
 msgid "Recording"
 msgstr "녹음"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:117
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:107
 msgid "Spoken"
 msgstr "인터뷰"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:118
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:108
 msgid "Podcast"
 msgstr "포드캐스트"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:119
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:109
 msgid "Demo"
 msgstr "데모"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:120
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:110
 msgid "Work in progress"
 msgstr "진행중"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:121
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:111
 msgid "Stem"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:122
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:112
 msgid "Loop"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:123
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:113
 msgid "Sound Effect"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:124
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:114
 msgid "One Shot Sample"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:125
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:115
 msgid "Other"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:133
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:123
 msgid "Default License:"
 msgstr "기본 라이센스:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:137
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:127
 msgid "The work is in the public domain"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:138
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:128
 msgid "All rights are reserved"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:139
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:129
 msgid "Creative Commons Attribution"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:140
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:130
 msgid "Creative Commons Attribution Noncommercial"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:141
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:131
 msgid "Creative Commons Attribution No Derivative Works"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:142
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:132
 msgid "Creative Commons Attribution Share Alike"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:143
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:133
 msgid "Creative Commons Attribution Noncommercial Non Derivate Works"
 msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:144
-#: airtime_mvc/application/forms/SoundcloudPreferences.php:134
 msgid "Creative Commons Attribution Noncommercial Share Alike"
 msgstr ""
 
@@ -4153,181 +3912,3 @@ msgstr "옵션을 선택 해주세요"
 #: airtime_mvc/library/propel/contrib/pear/HTML_QuickForm_Propel/Propel.php:531
 msgid "No Records"
 msgstr "레코드 없음"
-
-#: airtime_mvc/application/layouts/scripts/login.phtml:16
-#, php-format
-msgid ""
-"Airtime copyright &copy; Sourcefabric z.ú. All rights reserved.%sMaintained "
-"and distributed under the GNU GPL v.3 by %sSourcefabric z.ú.%s"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:15
-msgid "Plan type:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:27
-msgid "Billing cycle:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:35
-msgid "Payment method:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:38
-msgid "PayPal"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:39
-msgid "Credit Card via 2Checkout"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:17
-msgid "First Name:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:26
-msgid "Last Name:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:35
-msgid "Company Name:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:44
-msgid "Email Address:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:54
-msgid "Address 1:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:63
-msgid "Address 2:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:80
-msgid "State/Region:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:89
-msgid "Zip Code / Postal Code:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:112
-msgid "Phone Number:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:121
-msgid "Please choose a security question:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:126
-msgid "What is the name of your favorite childhood friend?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:127
-msgid "What school did you attend for sixth grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:128
-msgid "In what city did you meet your spouse/significant other?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:129
-msgid "What street did you live on in third grade?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:130
-msgid "What is the first name of the boy or girl that you first kissed?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:131
-msgid "In what city or town was your first job?"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:135
-msgid "Please enter an answer:"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:152
-msgid "VAT/Tax ID (EU only)"
-msgstr ""
-
-#: airtime_mvc/application/forms/BillingClient.php:162
-msgid "Subscribe to Sourcefabric newsletter"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:139
-msgid "Billing"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:144
-msgid "Account Details"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:151
-#: airtime_mvc/application/views/scripts/billing/upgrade.phtml:171
-msgid "Account Plans"
-msgstr ""
-
-#: airtime_mvc/application/configs/navigation.php:158
-msgid "View Invoices"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:26
-msgid "Failed"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:27
-msgid "Pending"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/plupload/index.phtml:30
-msgid "Recent Uploads"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/dashboard/about.phtml:13
-#, php-format
-msgid "%sSourcefabric%s z.ú Airtime is distributed under the %sGNU GPL v.3%s"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/login/index.phtml:7
-msgid ""
-"Welcome to the Airtime demo! You can log in using the username 'admin' and "
-"the password 'admin'."
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
-msgid "Purchase an Airtime Pro plan!"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/billing/invoices.phtml:6
-msgid ""
-"<b>Thank you!</b> Your plan has been updated and you will be invoiced during"
-" your next billing cycle."
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/billing/invoices.phtml:10
-msgid ""
-"Tip: To pay an invoice, click \"View Invoice\"<br> and look for the "
-"\"Checkout\" button."
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/billing/upgrade.phtml:172
-msgid "Upgrade today to get more listeners and storage space!"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/billing/upgrade.phtml:254
-msgid "View Plans"
-msgstr ""
-
-#: airtime_mvc/application/views/scripts/user/add-user.phtml:30
-#, php-format
-msgid ""
-"Super Admin details can be changed in your <a href=\"%s\">Billing "
-"Settings</a>."
-msgstr ""
-
-#: airtime_mvc/application/models/Scheduler.php:195
-msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
