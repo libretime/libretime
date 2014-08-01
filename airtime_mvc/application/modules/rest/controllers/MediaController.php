@@ -298,31 +298,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
-    public function deleteSuccessAction()
-    {
-        if (!$this->verifyAuth(true, true))
-        {
-            return;
-        }
-
-        $id = $this->getId();
-        if (!$id) {
-            return;
-        }
-        
-        $requestData = json_decode($this->getRequest()->getRawBody(), true);
-        
-        if ($requestData["import_status"] == 1) {
-            $con = Propel::getConnection();
-            $storedFile = new Application_Model_StoredFile(CcFilesQuery::create()->findPk($id), $con);
-            
-            $storedFile->doFileDeletionCleanup($requestData["filesize"]);
-            
-            //refresh library table to remove the deleted file from it
-            //$this->view->headScript()->appendScript("oTable.fnStandingRedraw();");
-        }
-    }
-
     private function getId()
     {
         if (!$id = $this->_getParam('id', false)) {
