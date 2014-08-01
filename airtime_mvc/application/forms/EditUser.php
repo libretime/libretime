@@ -131,6 +131,7 @@ class Application_Form_EditUser extends Zend_Form
             //$this->_redirect('billing/client');
                 $element->setAttrib('disabled', 'disabled');
                 $element->setAttrib('readonly', 'readonly');
+                $element->setRequired(false);
             }
         }
         

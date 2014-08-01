@@ -133,6 +133,14 @@ class UserController extends Zend_Controller_Action
             if ($form->isValid($formData) &&
                        $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
                 $user = new Application_Model_User($formData['cu_user_id']);
+                //Stupid hack because our schema enforces non-null first_name
+                //even though by default the admin user has no first name... (....)
+                if (Application_Model_User::getCurrentUser()->isSuperAdmin()) {
+                    if (empty($formData['cu_first_name'])) { 
+                        $formData['cu_first_name'] = "admin";
+                        $formData['cu_last_name'] = "admin"; //ditto, avoid non-null DB constraint
+                    }
+                }
                 $user->setFirstName($formData['cu_first_name']);
                 $user->setLastName($formData['cu_last_name']);
                 // We don't allow 6 x's as a password.
