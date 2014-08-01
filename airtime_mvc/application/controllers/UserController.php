@@ -147,7 +147,7 @@ class UserController extends Zend_Controller_Action
                 // The reason is because we use that as a password placeholder
                 // on the client side.
                 if (($formData['cu_password'] != "xxxxxx") &&
-                    (!empty($formData['cu_password'])) {
+                    (!empty($formData['cu_password']))) {
                     $user->setPassword($formData['cu_password']);
                 }
                 $user->setEmail($formData['cu_email']);
