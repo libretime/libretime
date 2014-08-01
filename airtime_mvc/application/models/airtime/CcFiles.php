@@ -101,7 +101,12 @@ class CcFiles extends BaseCcFiles {
     
     public function deletePhysicalFile()
     {
-        unlink($this->getAbsoluteFilePath());
+        $filepath = $this->getAbsoluteFilePath();
+        if (file_exists($filepath)) {
+            unlink($filepath);
+        } else {
+            throw new Exception("Could not locate file ".$filepath);
+        }
     }
     
 } // CcFiles

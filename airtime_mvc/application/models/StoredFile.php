@@ -384,27 +384,26 @@ SQL;
         $file_id = $this->_file->getDbId();
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$file_id);
 
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
-        if (!is_null($music_dir) && $music_dir->getType() == "stor" && file_exists($filepath)) {
-            try {
-                $filesize = $this->getFileSize();
-                
-                //Update the user's disk usage
-                Application_Model_Preference::updateDiskUsage(-1 * $filesize);
-                
-                //Explicitly update any playlist's and block's length that contain
-                //the file getting deleted
-                self::updateBlockAndPlaylistLength($this->_file->getDbId());
-                
-                $this->_file->deletePhysicalFile();
-                
-                //delete the file record from cc_files (and cloud_file, if applicable)
-                $this->_file->delete();
-            } catch (Exception $e) {
-                Logging::error($e->getMessage());
-                return;
-            }
-        }
+        //try {
+            //Delete the physical file from either the local stor directory
+            //or from the cloud
+            $this->_file->deletePhysicalFile();
+
+            $filesize = $this->getFileSize();
+            
+            //Update the user's disk usage
+            Application_Model_Preference::updateDiskUsage(-1 * $filesize);
+            
+            //Explicitly update any playlist's and block's length that contain
+            //the file getting deleted
+            self::updateBlockAndPlaylistLength($this->_file->getDbId());
+            
+            //delete the file record from cc_files (and cloud_file, if applicable)
+            $this->_file->delete();
+        //} catch (Exception $e) {
+            //Logging::error($e->getMessage());
+            //return;
+        //}
     }
 
     /*
@@ -611,7 +610,8 @@ SQL;
             //Attempt to get the cloud file object and return it. If no cloud
             //file object is found then we are dealing with a regular stored
             //object so return that
-            $cloudFile = $storedFile->getCloudFiles()->getFirst();
+            $cloudFile = CloudFileQuery::create()->findOneByCcFileId($p_id);
+            
             if (is_null($cloudFile)) {
                 return self::createWithFile($storedFile, $con);
             } else {

@@ -16,8 +16,9 @@ class CloudStorageUploader:
         file_base_name = os.path.basename(audio_file_path)
         file_name, extension = os.path.splitext(file_base_name)
         object_name = "%s_%s%s" % (file_name, str(uuid.uuid4()), extension)
-        
-        driver = self.get_cloud_driver()
+
+        cls = get_driver(getattr(Provider, self._provider))
+        driver = cls(self._api_key, self._api_key_secret)
         
         try:
             container = driver.get_container(self._bucket)
@@ -48,7 +49,8 @@ class CloudStorageUploader:
         return metadata
 
     def delete_obj(self, obj_name):
-        driver = self.get_cloud_driver()
+        cls = get_driver(getattr(Provider, self._provider))
+        driver = cls(self._api_key, self._api_key_secret)
         
         try:
             cloud_obj = driver.get_object(container_name=self._bucket,
@@ -59,6 +61,3 @@ class CloudStorageUploader:
         except ObjectDoesNotExistError:
             raise Exception("Could not find object on %s" % self._provider)
 
-    def get_cloud_driver(self):
-        cls = get_driver(getattr(Provider, self._provider))
-        return cls(self._api_key, self._api_key_secret)

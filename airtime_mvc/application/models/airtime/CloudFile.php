@@ -53,18 +53,27 @@ class CloudFile extends BaseCloudFile
     
     public function deletePhysicalFile()
     {
-        //TODO: execute a python script that deletes the file from the cloud
+        $CC_CONFIG = Config::getConfig();
+        //$pathToScript = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."cloud_storage_deleter.py" : "/home/denise/airtime/cloud_storage_deleter.py";
         
-        //Dispatch a message to airtime_analyzer through RabbitMQ,
-        //notifying it that we need to delete a file from the cloud
-        /*$CC_CONFIG = Config::getConfig();
-        $apiKey = $CC_CONFIG["apiKey"][0];
-        
-        //If the file was successfully deleted from the cloud the analyzer
-        //will make a request to the Media API to do the deletion cleanup.
-        $callbackUrl = 'http://'.$_SERVER['HTTP_HOST'].'/rest/media/'.$file_id.'/delete-success';
-        
-        Application_Model_RabbitMq::SendDeleteMessageToAnalyzer(
-            $callbackUrl, $this->_file->getDbResourceId(), $apiKey, 'delete');*/
+        $provider = escapeshellarg($CC_CONFIG["cloud_storage"]["provider"]);
+        $bucket = escapeshellarg($CC_CONFIG["cloud_storage"]["bucket"]);
+        $apiKey = escapeshellarg($CC_CONFIG["cloud_storage"]["api_key"]);
+        $apiSecret = escapeshellarg($CC_CONFIG["cloud_storage"]["api_key_secret"]);
+        $objName = $this->getResourceId();
+        //we will pass the cloud storage bucket and api key info to the script
+        //instead of the script reading from a config file beacuse on saas we
+        //might store this info in the apache vhost
+        $command = '/usr/lib/airtime/pypo/bin/cloud_storage_deleter.py "'
+                             .$provider.'" "'
+                             .$bucket.'" "'
+                             .$apiKey.'" "'
+                             .$apiSecret.'" "'
+                             .$this->getResourceId().'" 2>&1; echo $?';
+        $output = shell_exec($command);
+        if ($output != "0") {
+            Logging::info($output);
+            throw new Exception("Could not delete file from cloud storage");
+        }
     }
 }

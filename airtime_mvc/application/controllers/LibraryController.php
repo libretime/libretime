@@ -351,7 +351,6 @@ class LibraryController extends Zend_Controller_Action
         foreach ($files as $id) {
 
             $file = Application_Model_StoredFile::RecallById($id);
-
             if (isset($file)) {
                 try {
                     $res = $file->delete();
@@ -359,8 +358,9 @@ class LibraryController extends Zend_Controller_Action
                     $message = $noPermissionMsg;
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
-                    $message = _("Could not delete some scheduled files.");
+                    $message = _("Could not delete file(s).");
                     Logging::debug($e->getMessage());
+                    Logging::info($e->getMessage());
                 }
             }
         }

@@ -288,7 +288,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
             $con = Propel::getConnection();
-            $storedFile = new Application_Model_StoredFile($file, $con);
+            $storedFile = Application_Model_StoredFile::RecallById($id, $con);
             $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
             
             $this->getResponse()
