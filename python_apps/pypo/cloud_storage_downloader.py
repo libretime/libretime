@@ -26,7 +26,7 @@ class CloudStorageDownloader:
                                     object_name=obj_name)
         except ObjectDoesNotExistError:
             logging.info("Could not find object: %s" % obj_name)
-            exit(-1)
+
         logging.info('Downloading: %s to %s' % (cloud_obj.name, dst))
         cloud_obj.download(destination_path=dst)
 
