@@ -48,16 +48,3 @@ class CloudStorageUploader:
         metadata["resource_id"] = object_name
         return metadata
 
-    def delete_obj(self, obj_name):
-        cls = get_driver(getattr(Provider, self._provider))
-        driver = cls(self._api_key, self._api_key_secret)
-        
-        try:
-            cloud_obj = driver.get_object(container_name=self._bucket,
-                                    object_name=obj_name)
-            filesize = getattr(cloud_obj, 'size')
-            driver.delete_object(obj=cloud_obj)
-            return filesize
-        except ObjectDoesNotExistError:
-            raise Exception("Could not find object on %s" % self._provider)
-

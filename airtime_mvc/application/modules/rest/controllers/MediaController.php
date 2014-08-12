@@ -463,9 +463,9 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
-        Application_Model_RabbitMq::SendUploadMessageToAnalyzer($newTempFilePath,
+        Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
                  $importedStorageDirectory, basename($originalFilename),
-                 $callbackUrl, $apiKey, 'upload');
+                 $callbackUrl, $apiKey);
     }
 
     private function getOwnerId()
