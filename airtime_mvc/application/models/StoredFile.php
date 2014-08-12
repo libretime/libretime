@@ -597,16 +597,18 @@ SQL;
     /* TODO: Callers of this function should use a Propel transaction. Start
      * by creating $con outside the function with beingTransaction() */
     public static function RecallById($p_id=null, $con=null) {
+        $p_id = intval($p_id);
         //TODO
         if (is_null($con)) {
             $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
         }
 
         if (isset($p_id)) {
-            $storedFile =  CcFilesQuery::create()->findPK(intval($p_id), $con);
+            $storedFile =  CcFilesQuery::create()->findPK($p_id, $con);
             if (is_null($storedFile)) {
                 throw new Exception("Could not recall file with id: ".$p_id);
             }
+            
             //Attempt to get the cloud file object and return it. If no cloud
             //file object is found then we are dealing with a regular stored
             //object so return that
