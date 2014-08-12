@@ -51,6 +51,13 @@ class CloudFile extends BaseCloudFile
         }
     }
     
+    /**
+     * 
+     * Deletes the file from cloud storage by executing a python script
+     * that uses Apache Libcloud to connect with the cloud storage service
+     * 
+     * If the file was successfully deleted the filesize of that file is returned
+     */
     public function deletePhysicalFile()
     {
         $CC_CONFIG = Config::getConfig();
@@ -60,20 +67,29 @@ class CloudFile extends BaseCloudFile
         $bucket = escapeshellarg($CC_CONFIG["cloud_storage"]["bucket"]);
         $apiKey = escapeshellarg($CC_CONFIG["cloud_storage"]["api_key"]);
         $apiSecret = escapeshellarg($CC_CONFIG["cloud_storage"]["api_key_secret"]);
-        $objName = $this->getResourceId();
-        //we will pass the cloud storage bucket and api key info to the script
-        //instead of the script reading from a config file beacuse on saas we
-        //might store this info in the apache vhost
-        $command = '/usr/lib/airtime/pypo/bin/cloud_storage_deleter.py "'
-                             .$provider.'" "'
-                             .$bucket.'" "'
-                             .$apiKey.'" "'
-                             .$apiSecret.'" "'
-                             .$this->getResourceId().'" 2>&1; echo $?';
+        $objName = escapeshellarg($this->getResourceId());
+        
+        $command = "/usr/lib/airtime/pypo/bin/cloud_storage_deleter.py $provider $bucket $apiKey $apiSecret $objName 2>&1 echo $?";
+        
         $output = shell_exec($command);
-        if ($output != "0") {
-            Logging::info($output);
-            throw new Exception("Could not delete file from cloud storage");
+        if ($output != "") {
+            if (stripos($output, 'filesize') === false) {
+                Logging::info($output);
+                throw new Exception("Could not delete file from cloud storage");
+            }
         }
+        
+        $outputArr = json_decode($output, true);
+        return $outputArr["filesize"];
+    }
+    
+    /**
+     * 
+     * Deletes the cloud_file's 'parent' object before itself
+     */
+    public function delete(PropelPDO $con = NULL)
+    {
+        CcFilesQuery::create()->findPk($this->getCcFileId())->delete();
+        parent::delete();
     }
 }

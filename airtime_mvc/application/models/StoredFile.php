@@ -387,10 +387,8 @@ SQL;
         //try {
             //Delete the physical file from either the local stor directory
             //or from the cloud
-            $this->_file->deletePhysicalFile();
+            $filesize = $this->_file->deletePhysicalFile();
 
-            $filesize = $this->getFileSize();
-            
             //Update the user's disk usage
             Application_Model_Preference::updateDiskUsage(-1 * $filesize);
             

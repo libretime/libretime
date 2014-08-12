@@ -99,6 +99,12 @@ class CcFiles extends BaseCcFiles {
         return is_file($this->getAbsoluteFilePath());
     }
     
+    /**
+     * 
+     * Deletes the file from the stor directory
+     * 
+     * Returns the filesize of the deleted file
+     */
     public function deletePhysicalFile()
     {
         $filepath = $this->getAbsoluteFilePath();
@@ -107,6 +113,8 @@ class CcFiles extends BaseCcFiles {
         } else {
             throw new Exception("Could not locate file ".$filepath);
         }
+        
+        return $this->getFileSize();
     }
     
 } // CcFiles
