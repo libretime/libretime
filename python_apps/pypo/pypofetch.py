@@ -548,7 +548,8 @@ class PypoFetch(Thread):
         self.set_bootstrap_variables()
 
         # Bootstrap: since we are just starting up, we need to grab the
-        # most recent schedule.  After that we can just wait for updates.
+        # most recent schedule.  After that we fetch the schedule every 30
+        # minutes or wait for schedule updates to get pushed.
         success = self.persistent_manual_schedule_fetch(max_attempts=5)
 
         if success:
