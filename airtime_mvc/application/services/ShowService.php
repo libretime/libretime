@@ -287,7 +287,6 @@ class Application_Service_ShowService
      */
     public function delegateInstanceCreation($daysAdded=null, $end=null, $fillInstances=false)
     {
-        Logging::info(memory_get_usage()/(1024*1024));
         $populateUntil = $this->getPopulateShowUntilDateTIme();
 
         if (is_null($this->ccShow)) {
@@ -319,7 +318,6 @@ class Application_Service_ShowService
         $ccShows = array();
 
         foreach ($ccShowDays as $day) {
-            Logging::info(memory_get_usage()/(1024*1024));
 
             $this->ccShow = $day->getCcShow();
             $this->isRecorded = $this->ccShow->isRecorded();
@@ -334,7 +332,6 @@ class Application_Service_ShowService
                     $this->createNonRepeatingInstance($day, $populateUntil);
                     break;
                 case REPEAT_WEEKLY:
-                    Logging::info(memory_get_usage()/(1024*1024));
                     $this->createWeeklyRepeatInstances($day, $populateUntil, REPEAT_WEEKLY,
                         new DateInterval("P7D"), $daysAdded);
                     break;
@@ -358,7 +355,6 @@ class Application_Service_ShowService
                     break;
             }
         }
-        Logging::info(memory_get_usage()/(1024*1024));
 
         foreach ($ccShows as $ccShow) {
             if (($this->isUpdate || $fillInstances) && $ccShow->isLinked()) {
@@ -371,7 +367,6 @@ class Application_Service_ShowService
                 $this->ccShow, $this->linkedShowContent);
         }*/
 
-        Logging::info(memory_get_usage()/(1024*1024));
         return $this->ccShow;
     }
 
