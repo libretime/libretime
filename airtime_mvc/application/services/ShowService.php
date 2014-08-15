@@ -362,10 +362,10 @@ class Application_Service_ShowService
             }
         }
 
-        if (isset($this->linkedShowContent)) {
+        /*if (isset($this->linkedShowContent)) {
             Application_Service_SchedulerService::fillPreservedLinkedShowContent(
                 $this->ccShow, $this->linkedShowContent);
-        }
+        }*/
 
         return $this->ccShow;
     }
@@ -544,9 +544,9 @@ SQL;
                     if (count($daysRemoved) > 0) {
                         //delete repeating show instances for the repeating
                         //days that were removed
-                        if ($this->ccShow->isLinked()) {
+                        /*if ($this->ccShow->isLinked()) {
                             $this->preserveLinkedShowContent();
-                        }
+                        }*/
                         $this->deleteRemovedShowDayInstances($daysRemoved,
                             $ccShowDays, $showId);
                     }
@@ -589,11 +589,11 @@ SQL;
         return $daysAdded;
     }
 
-    private function preserveLinkedShowContent()
+    /*private function preserveLinkedShowContent()
     {
-        /* Get show content from any future linked instance. It doesn't
-         * matter which instance since content is the same in all.
-         */
+        // Get show content from any future linked instance. It doesn't
+        // matter which instance since content is the same in all.
+        //
         $ccShowInstance = $this->ccShow->getFutureCcShowInstancess()->getFirst();
 
         if (!$ccShowInstance) {
@@ -606,7 +606,7 @@ SQL;
        if (!$ccSchedules->isEmpty()) {
            $this->linkedShowContent = $ccSchedules;
        }
-    }
+    }*/
 
     /*
      * returns a DateTime of the current show end date set to the timezone of the show.
