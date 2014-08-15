@@ -287,6 +287,7 @@ class Application_Service_ShowService
      */
     public function delegateInstanceCreation($daysAdded=null, $end=null, $fillInstances=false)
     {
+        Logging::info(memory_get_usage()/(1024*1024));
         $populateUntil = $this->getPopulateShowUntilDateTIme();
 
         if (is_null($this->ccShow)) {
@@ -367,6 +368,7 @@ class Application_Service_ShowService
                 $this->ccShow, $this->linkedShowContent);
         }*/
 
+        Logging::info(memory_get_usage()/(1024*1024));
         return $this->ccShow;
     }
 
