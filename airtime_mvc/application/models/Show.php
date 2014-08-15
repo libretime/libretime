@@ -831,6 +831,16 @@ SQL;
         
     }
     
+    /**
+     * 
+     * Creates show instances that are scheduled after the shows_populated_until
+     * value in cc_pref. If the show instances are linked their show content will
+     * get filled.
+     * 
+     * This can occur when a user is viewing the next day/week/month in the
+     * calendar or when pypo is requesting the schedule after the shows_populated_until
+     * date and time.
+     */
     public static function createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil)
     {
         //UTC DateTime object
