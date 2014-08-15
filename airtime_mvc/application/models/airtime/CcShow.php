@@ -280,6 +280,14 @@ class CcShow extends BaseCcShow {
         }
         return $instanceIds;
     }
+    
+    public function getFutureInstanceIds() {
+        $instanceIds = array();
+        foreach ($this->getFutureCcShowInstancess() as $ccShowInstance) {
+            $instanceIds[] = $ccShowInstance->getDbId();
+        }
+        return $instanceIds;
+    }
 
     public function getOtherInstances($instanceId)
     {
