@@ -971,13 +971,7 @@ SQL;
             $needScheduleUntil = new DateTime("now", new DateTimeZone("UTC"));
             $needScheduleUntil->add(new DateInterval("P1D"));
         }
-        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-        //if application is requesting shows past our previous populated until date, generate shows up until this point.
-        if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $needScheduleUntil->getTimestamp()) {
-            $service_show = new Application_Service_ShowService();
-            $ccShow = $service_show->delegateInstanceCreation(null, $needScheduleUntil, true);
-            Application_Model_Preference::SetShowsPopulatedUntil($needScheduleUntil);
-        }
+        Application_Model_Show::createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil);
         
         list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
 
