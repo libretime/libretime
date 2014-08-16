@@ -250,7 +250,6 @@ class CcShow extends BaseCcShow {
         return CcShowInstancesQuery::create(null, $criteria)
                     ->filterByCcShow($this)
                     ->filterByDbModifiedInstance(false)
-                    ->filterByDbEnds(gmdate("Y-m-d H:i:s"), criteria::GREATER_THAN)
                     ->orderByDbId()
                     ->find($con);
 
