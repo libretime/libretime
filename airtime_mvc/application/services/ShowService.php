@@ -256,19 +256,25 @@ class Application_Service_ShowService
      */
     private function storeInstanceIds()
     {
-        $instances = $this->ccShow->getCcShowInstancess();
+        $instances = $this->ccShow->getFutureCcShowInstancess();
         foreach ($instances as $instance) {
             $this->instanceIdsForScheduleUpdates[] = $instance->getDbId();
         }
     }
 
+    /** 
+     * 
+     * Adjusts the items in cc_schedule to reflect the
+     * new (if one) start and end time of the show getting updated
+     * @param $showData
+     */
     private function adjustSchedule($showData)
     {
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $this->updateScheduleStartEndTimes($showData);
 
-        $ccShowInstances = $this->ccShow->getCcShowInstancess();
+        $ccShowInstances = $this->ccShow->getFutureCcShowInstancess();
         foreach ($ccShowInstances as $instance) {
             $instance->updateScheduleStatus($con);
         }
@@ -585,10 +591,10 @@ SQL;
 
     private function preserveLinkedShowContent()
     {
-        /* Get show content from any linked instance. It doesn't
+        /* Get show content from any future linked instance. It doesn't
          * matter which instance since content is the same in all.
          */
-        $ccShowInstance = $this->ccShow->getCcShowInstancess()->getFirst();
+        $ccShowInstance = $this->ccShow->getFutureCcShowInstancess()->getFirst();
 
         if (!$ccShowInstance) {
             return;

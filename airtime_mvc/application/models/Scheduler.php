@@ -952,7 +952,7 @@ class Application_Model_Scheduler
         $ccShowInstance = CcShowInstancesQuery::create()->findPk($instanceId);
         $ccShow = $ccShowInstance->getCcShow();
         if ($ccShow->isLinked()) {
-            return $ccShow->getCcShowInstancess();
+            return $ccShow->getFutureCcShowInstancess();
         } else {
             return array($ccShowInstance);
         }

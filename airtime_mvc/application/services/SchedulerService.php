@@ -335,7 +335,7 @@ class Application_Service_SchedulerService
             $instanceIds = array();
 
             if ($ccShowInstance->getCcShow()->isLinked()) {
-                foreach ($ccShowInstance->getCcShow()->getCcShowInstancess() as $instance) {
+                foreach ($ccShowInstance->getCcShow()->getFutureCcShowInstancess() as $instance) {
                     $instanceIds[] = $instance->getDbId();
                     $instances[] = $instance;
                 }
