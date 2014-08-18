@@ -288,7 +288,26 @@ class CcShow extends BaseCcShow {
         }
         return $instanceIds;
     }
+    
+    /*
+     * Returns all show instances ordered by 'starts' column in desc order.
+     */
+    public function getInstanceIdsSortedByMostRecentStartTime()
+    {
+        $instances = CcShowInstancesQuery::create()
+            ->filterByCcShow($this)
+            ->filterByDbModifiedInstance(false)
+            ->orderByDbStarts(Criteria::DESC)
+            ->find();
+            
+        $instanceIdsDescOrder = array();
+        foreach ($instances as $instance) {
+            $instanceIdsDescOrder[] = $instance->getDbId();
+        }
+        return $instanceIdsDescOrder;
+    }
 
+    //what is this??
     public function getOtherInstances($instanceId)
     {
         return CcShowInstancesQuery::create()
