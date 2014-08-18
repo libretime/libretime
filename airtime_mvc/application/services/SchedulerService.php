@@ -197,7 +197,7 @@ class Application_Service_SchedulerService
                  * (The show stamp is taken from the first show instance's content)
                  */
                 if (count($ccSchedules) < 1 || 
-                    self::replaceInstanceContentCheck($ccSchedules, $showStamp)) {
+                    self::replaceInstanceContentCheck($ccSchedules, $showStamp, $id)) {
 
                     $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
                         "WHERE id = {$id} ".
@@ -302,22 +302,32 @@ class Application_Service_SchedulerService
         }
     }
 
-    private static function replaceInstanceContentCheck($currentShowStamp, $showStamp)
+    private static function replaceInstanceContentCheck($currentShowStamp, $showStamp, $instance_id)
     {
         $counter = 0;
-        foreach ($showStamp as $item) {
-            if ($item["file_id"] != $currentShowStamp[$counter]["file_id"] ||
-                $item["stream_id"] != $currentShowStamp[$counter]["stream_id"]) {
-                /*CcScheduleQuery::create()
-                    ->filterByDbInstanceId($ccShowInstance->getDbId())
-                    ->delete();*/
-                $delete_sql = "DELETE FROM cc_schedule ".
-                    "WHERE instance_id = {$currentShowStamp[$counter]["instance_id"]}";
-                Application_Common_Database::prepareAndExecute(
-                    $delete_sql, array(), Application_Common_Database::EXECUTE);
-                return true;
-             }
-             $counter += 1;
+        $erraseShow = false;
+        if (count($currentShowStamp) != count($showStamp)) {
+            $erraseShow = true;
+        } else {
+            foreach ($showStamp as $item) {
+                if ($item["file_id"] != $currentShowStamp[$counter]["file_id"] ||
+                    $item["stream_id"] != $currentShowStamp[$counter]["stream_id"]) {
+                        $erraseShow = true;
+                        break;
+                    /*CcScheduleQuery::create()
+                        ->filterByDbInstanceId($ccShowInstance->getDbId())
+                        ->delete();*/
+                 }
+                 $counter += 1;
+            }
+        }
+        
+        if ($erraseShow) {
+            $delete_sql = "DELETE FROM cc_schedule ".
+                    "WHERE instance_id = {$instance_id}";
+            Application_Common_Database::prepareAndExecute(
+            $delete_sql, array(), Application_Common_Database::EXECUTE);
+            return true;
         }
 
         /* If we get here, the content in the show instance is the same
