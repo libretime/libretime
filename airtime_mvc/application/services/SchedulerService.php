@@ -152,15 +152,25 @@ class Application_Service_SchedulerService
 
     public static function fillNewLinkedInstances($ccShow)
     {
-        /* First check if any linked instances have content
-         * If all instances are empty then we don't need to fill
-         * any other instances with content
+        /* In order to get the linked show's schedule we need to retrieve
+         * every instance of the show, even if they are in the past in case
+         * no new instances were generated past the 'shows_populated_until'
+         * date in cc_pref - CC-5898
+         * 
+         * We retrieve the instances ids sorted by desc start date to ensure
+         * we always use the most up to date schedule when filling the new
+         * show instances with content
          */
-        $instanceIds = $ccShow->getInstanceIds();
+        
+        $instanceIds = $ccShow->getInstanceIdsSortedByMostRecentStartTime();
         if (count($instanceIds) == 0) {
             return;
         }
 
+        /* First check if any linked instances have content
+         * If all instances are empty then we don't need to fill
+         * any other instances with content
+         */
        $doesAnyShowInstanceHaveContent = false;
        foreach ($instanceIds as $instanceId)
        {
@@ -181,29 +191,31 @@ class Application_Service_SchedulerService
             return;
        }               
 
-    /* Find the show contents of just one of the instances. It doesn't
-     * matter which instance we use since all the content is the same
-     */
-    $ccSchedule = $ccSchedules[0];
-    $showStamp_sql = "SELECT * FROM cc_schedule ".
-       "WHERE instance_id = {$ccSchedule["instance_id"]} ".
-       "ORDER BY starts";
-    $showStamp = Application_Common_Database::prepareAndExecute(
-       $showStamp_sql);
-
-    //get time_filled so we can update cc_show_instances
-    $timeFilled_sql = "SELECT time_filled FROM cc_show_instances ".
-       "WHERE id = {$ccSchedule["instance_id"]}";
-    $timeFilled = Application_Common_Database::prepareAndExecute(
-       $timeFilled_sql, array(), Application_Common_Database::COLUMN);
-
-    //need to find out which linked instances are empty
-    $values = array();
-    $futureInstanceIds = $ccShow->getFutureInstanceIds();
-    $con = Propel::getConnection();
-    try {
-        $con->beginTransaction();
-           foreach ($instanceIds as $id) 
+        /* Find the show contents of just one of the instances. Because we
+         * sorted the instances by desc order, we are using the most recent
+         * instance, which will have the most up to date schedule.
+         */
+        $ccSchedule = $ccSchedules[0];
+        $showStamp_sql = "SELECT * FROM cc_schedule ".
+           "WHERE instance_id = {$ccSchedule["instance_id"]} ".
+           "ORDER BY starts";
+        $showStamp = Application_Common_Database::prepareAndExecute(
+           $showStamp_sql);
+           Logging::info(count($showStamp));
+           Logging::info($showStamp[0]);
+        //get time_filled so we can update cc_show_instances
+        $timeFilled_sql = "SELECT time_filled FROM cc_show_instances ".
+           "WHERE id = {$ccSchedule["instance_id"]}";
+        $timeFilled = Application_Common_Database::prepareAndExecute(
+           $timeFilled_sql, array(), Application_Common_Database::COLUMN);
+    
+        //need to find out which linked instances are empty
+        $values = array();
+        $futureInstanceIds = $ccShow->getFutureInstanceIds();
+        $con = Propel::getConnection();
+        try {
+            $con->beginTransaction();
+            foreach ($futureInstanceIds as $id) 
             {
                $instanceSched_sql = "SELECT * FROM cc_schedule ".
                    "WHERE instance_id = {$id} ".
@@ -217,7 +229,7 @@ class Application_Service_SchedulerService
                 * (The show stamp is taken from the first show instance's content)
                 */
                if (count($ccSchedules) < 1 || 
-                   self::replaceInstanceContentCheck($ccSchedules, $showStamp)) 
+                   self::replaceInstanceContentCheck($ccSchedules, $showStamp, $id)) 
                 {
 
                    $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
@@ -264,7 +276,6 @@ class Application_Service_SchedulerService
                             "clip_length, fade_in, fade_out, cue_in, cue_out, ".
                             "file_id, stream_id, instance_id, position)  VALUES ".
                             implode($values, ",");
-
                         Application_Common_Database::prepareAndExecute(
                             $insert_sql, array(), Application_Common_Database::EXECUTE);
                     }
