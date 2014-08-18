@@ -199,8 +199,10 @@ class Application_Service_SchedulerService
          * sorted the instances by desc order, we are using the most recent
          * instance, which will have the most up to date schedule.
          */
+       $showsPopulatedUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
         $showStamp_sql = "SELECT * FROM cc_schedule ".
-           "WHERE instance_id = $mostRecentInstanceId ".
+           "WHERE starts < '{$showsPopulatedUntil->format('Y-m-d H:i:s')}' ".
            "ORDER BY starts";
         $showStamp = Application_Common_Database::prepareAndExecute(
            $showStamp_sql);
@@ -232,7 +234,7 @@ class Application_Service_SchedulerService
                if (count($showInstanceContents) < 1 || 
                    self::replaceInstanceContentCheck($showInstanceContents, $showStamp, $id)) 
                 {
-
+Logging::info($showStamp_sql);
                    $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
                        "WHERE id = {$id} ".
                        "ORDER BY starts";
