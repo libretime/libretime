@@ -163,6 +163,8 @@ class Application_Service_SchedulerService
          */
         
         $instanceIds = $ccShow->getInstanceIdsSortedByMostRecentStartTime();
+        $mostRecentInstanceId = $instanceIds[0];
+        
         if (count($instanceIds) == 0) {
             return;
         }
@@ -183,6 +185,8 @@ class Application_Service_SchedulerService
                 break;
             }
        }
+       //variable out of scope outside foreach loop
+       unset($ccSchedules);
 
        if ($doesAnyShowInstanceHaveContent == false)
        {
@@ -195,17 +199,14 @@ class Application_Service_SchedulerService
          * sorted the instances by desc order, we are using the most recent
          * instance, which will have the most up to date schedule.
          */
-        $ccSchedule = $ccSchedules[0];
         $showStamp_sql = "SELECT * FROM cc_schedule ".
-           "WHERE instance_id = {$ccSchedule["instance_id"]} ".
+           "WHERE instance_id = $mostRecentInstanceId ".
            "ORDER BY starts";
         $showStamp = Application_Common_Database::prepareAndExecute(
            $showStamp_sql);
-           Logging::info(count($showStamp));
-           Logging::info($showStamp[0]);
         //get time_filled so we can update cc_show_instances
         $timeFilled_sql = "SELECT time_filled FROM cc_show_instances ".
-           "WHERE id = {$ccSchedule["instance_id"]}";
+           "WHERE id = $mostRecentInstanceId";
         $timeFilled = Application_Common_Database::prepareAndExecute(
            $timeFilled_sql, array(), Application_Common_Database::COLUMN);
     
@@ -221,15 +222,15 @@ class Application_Service_SchedulerService
                    "WHERE instance_id = {$id} ".
                    "ORDER by starts";
 
-               $ccSchedules = Application_Common_Database::prepareAndExecute(
+               $showInstanceContents = Application_Common_Database::prepareAndExecute(
                    $instanceSched_sql);
 
                /* If the show instance is empty OR it has different content than
                 * the first instance, we need to fill/replace with the show stamp
                 * (The show stamp is taken from the first show instance's content)
                 */
-               if (count($ccSchedules) < 1 || 
-                   self::replaceInstanceContentCheck($ccSchedules, $showStamp, $id)) 
+               if (count($showInstanceContents) < 1 || 
+                   self::replaceInstanceContentCheck($showInstanceContents, $showStamp, $id)) 
                 {
 
                    $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
