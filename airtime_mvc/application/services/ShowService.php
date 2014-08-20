@@ -15,13 +15,18 @@ class Application_Service_ShowService
     private $isRebroadcast;
     private $repeatType;
     private $isUpdate;
-    private $linkedShowContent;
+    /*private $linkedShowContent;*/
     private $oldShowTimezone;
     private $localShowStartHour;
     private $localShowStartMin;
     private $origCcShowDay;
     private $origShowRepeatStatus;
     private $instanceIdsForScheduleUpdates;
+    
+    //keeps track of which show instances are new from either adding a new show
+    //day or changing the repeat type day during a show edit, or when a user moves
+    //forward in the calendar
+    private $newInstanceIdsCreated;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
     {
@@ -42,6 +47,7 @@ class Application_Service_ShowService
         $this->isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
         $this->isUpdate = $isUpdate;
         $this->instanceIdsForScheduleUpdates = array();
+        $this->newInstanceIdsCreated = array();
     }
 
     public function editRepeatingShowInstance($showData) {
@@ -323,8 +329,15 @@ class Application_Service_ShowService
             $this->isRecorded = $this->ccShow->isRecorded();
             $this->isRebroadcast = $this->ccShow->isRebroadcast();
 
-            if (!isset($ccShows[$day->getDbShowId()])) {
-                $ccShows[$day->getDbShowId()] = $day->getccShow();
+            $show_id = $day->getDbShowId();
+            if (!isset($ccShows[$show_id])) {
+                $ccShows[$show_id] = $day->getccShow();
+            }
+            
+            //keep track of the new show instances getting created
+            //so we can fill their schedule after
+            if (!isset($this->newInstanceIdsCreated[$show_id])) {
+                $this->newInstanceIdsCreated[$show_id] = array();
             }
 
             switch ($day->getDbRepeatType()) {
@@ -358,7 +371,8 @@ class Application_Service_ShowService
 
         foreach ($ccShows as $ccShow) {
             if (($this->isUpdate || $fillInstances) && $ccShow->isLinked()) {
-                Application_Service_SchedulerService::fillNewLinkedInstances($ccShow);
+                Application_Service_SchedulerService::fillNewLinkedInstances(
+                    $ccShow, $this->newInstanceIdsCreated[$ccShow->getDbId()]);
             }
         }
 
@@ -1131,16 +1145,16 @@ SQL;
                     if ($this->hasInstance($utcStartDateTime)) {
                         $ccShowInstance = $this->getInstance($utcStartDateTime);
                         $newInstance = false;
-                        $updateScheduleStatus = true;
+                        //$updateScheduleStatus = true;
                     } else {
                         $newInstance = true;
                         $ccShowInstance = new CcShowInstances();
-                        $updateScheduleStatus = false;
+                        //$updateScheduleStatus = false;
                     }
                 }  else {
                     $newInstance = true;
                     $ccShowInstance = new CcShowInstances();
-                    $updateScheduleStatus = false;
+                    //$updateScheduleStatus = false;
                 }
 
                 /* When editing the start/end time of a repeating show, we don't want to
@@ -1152,6 +1166,10 @@ SQL;
                     $ccShowInstance->setDbEnds($utcEndDateTime);
                     $ccShowInstance->setDbRecord($record);
                     $ccShowInstance->save();
+                }
+                
+                if ($newInstance) {
+                    array_push($this->newInstanceIdsCreated[$show_id], $ccShowInstance->getDbId());
                 }
 
                 if ($this->isRebroadcast) {
@@ -1229,11 +1247,11 @@ SQL;
                 if ($this->isUpdate && $this->hasInstance($utcStartDateTime)) {
                     $ccShowInstance = $this->getInstance($utcStartDateTime);
                     $newInstance = false;
-                    $updateScheduleStatus = true;
+                    //$updateScheduleStatus = true;
                 } else {
                     $newInstance = true;
                     $ccShowInstance = new CcShowInstances();
-                    $updateScheduleStatus = false;
+                    //$updateScheduleStatus = false;
                 }
 
                 /* When editing the start/end time of a repeating show, we don't want to
@@ -1245,6 +1263,10 @@ SQL;
                     $ccShowInstance->setDbEnds($utcEndDateTime);
                     $ccShowInstance->setDbRecord($record);
                     $ccShowInstance->save();
+                }
+                
+                if ($newInstance) {
+                    array_push($this->newInstanceIdsCreated[$show_id], $ccShowInstance->getDbId());
                 }
 
                 if ($this->isRebroadcast) {
