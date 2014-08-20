@@ -150,7 +150,37 @@ class Application_Service_SchedulerService
     	return $dt;
     }
 
-    public static function fillNewLinkedInstances($ccShow)
+    public static function getLinkedShowSchedule($showId, $instancsIdsToFill)
+    {
+        $showsPopulatedUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+        $showInstanceWithMostRecentSchedule = CcShowInstancesQuery::create()
+            ->filterByDbShowId($showId)
+            ->filterByDbStarts($showsPopulatedUntil->format("Y-m-d H:i:s"), Criteria::LESS_THAN)
+            ->filterByDbId($instancsIdsToFill, Criteria::NOT_IN)
+            ->orderByDbStarts(Criteria::DESC)
+            ->limit(1)
+            ->findOne();
+
+        $con = Propel::getConnection();
+        $instanceId = $showInstanceWithMostRecentSchedule->getDbId();
+        $linkedShowSchedule_sql = $con->prepare(
+            "select * from cc_schedule where instance_id = :instance_id ".
+            "order by starts");
+        $linkedShowSchedule_sql->bindParam(':instance_id', $instanceId);
+        $linkedShowSchedule_sql->execute();
+        
+        return $linkedShowSchedule_sql->fetchAll();
+    }
+    
+    /**
+     * 
+     * Enter description here ...
+     * @param CcShow_type $ccShow
+     * @param array $instanceIdsToFill ids of the new linked cc_show_instances that
+     * were created and now need their schedules filled
+     */
+    public static function fillNewLinkedInstances($ccShow, $instanceIdsToFill)
     {
         /* In order to get the linked show's schedule we need to retrieve
          * every instance of the show, even if they are in the past in case
@@ -163,8 +193,6 @@ class Application_Service_SchedulerService
          */
         
         $instanceIds = $ccShow->getInstanceIdsSortedByMostRecentStartTime();
-        $mostRecentInstanceId = $instanceIds[0];
-        
         if (count($instanceIds) == 0) {
             return;
         }
@@ -195,30 +223,28 @@ class Application_Service_SchedulerService
             return;
        }               
 
-        /* Find the show contents of just one of the instances. Because we
-         * sorted the instances by desc order, we are using the most recent
-         * instance, which will have the most up to date schedule.
-         */
-       $showsPopulatedUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+        $linkedShowSchedule = self::getLinkedShowSchedule($ccShow->getDbId(), $instanceIdsToFill);
 
-        $showStamp_sql = "SELECT * FROM cc_schedule ".
-           "WHERE starts < '{$showsPopulatedUntil->format('Y-m-d H:i:s')}' ".
-           "ORDER BY starts";
-        $showStamp = Application_Common_Database::prepareAndExecute(
-           $showStamp_sql);
         //get time_filled so we can update cc_show_instances
-        $timeFilled_sql = "SELECT time_filled FROM cc_show_instances ".
-           "WHERE id = $mostRecentInstanceId";
-        $timeFilled = Application_Common_Database::prepareAndExecute(
-           $timeFilled_sql, array(), Application_Common_Database::COLUMN);
+        if (!empty($linkedShowSchedule)) {
+            $timeFilled_sql = "SELECT time_filled FROM cc_show_instances ".
+               "WHERE id = {$linkedShowSchedule[0]["instance_id"]}";
+            $timeFilled = Application_Common_Database::prepareAndExecute(
+               $timeFilled_sql, array(), Application_Common_Database::COLUMN);
+        } else {
+            $timeFilled = "00:00:00";
+        }
     
         //need to find out which linked instances are empty
         $values = array();
-        $futureInstanceIds = $ccShow->getFutureInstanceIds();
+        //pass in new criteria object so propel doesn't return cached results
+        //$futureInstanceIds = $ccShow->getFutureInstanceIds(new Criteria());
+
         $con = Propel::getConnection();
         try {
             $con->beginTransaction();
-            foreach ($futureInstanceIds as $id) 
+            //foreach ($futureInstanceIds as $id)
+            foreach ($instanceIdsToFill as $id) 
             {
                $instanceSched_sql = "SELECT * FROM cc_schedule ".
                    "WHERE instance_id = {$id} ".
@@ -228,13 +254,13 @@ class Application_Service_SchedulerService
                    $instanceSched_sql);
 
                /* If the show instance is empty OR it has different content than
-                * the first instance, we need to fill/replace with the show stamp
-                * (The show stamp is taken from the first show instance's content)
+                * the most recent instance, we need to fill/replace with the linked
+                * show schedule
                 */
                if (count($showInstanceContents) < 1 || 
-                   self::replaceInstanceContentCheck($showInstanceContents, $showStamp, $id)) 
+                   self::replaceInstanceContentCheck($showInstanceContents, $linkedShowSchedule, $id)) 
                 {
-Logging::info($showStamp_sql);
+
                    $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
                        "WHERE id = {$id} ".
                        "ORDER BY starts";
@@ -246,7 +272,7 @@ Logging::info($showStamp_sql);
                    $defaultCrossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
                    unset($values);
                    $values = array();
-                   foreach ($showStamp as $item) {
+                   foreach ($linkedShowSchedule as $item) {
                        $endTimeDT = self::findEndTime($nextStartDT, $item["clip_length"]);
 
                        if (is_null($item["file_id"])) {
@@ -283,16 +309,21 @@ Logging::info($showStamp_sql);
                             $insert_sql, array(), Application_Common_Database::EXECUTE);
                     }
                }
+               //update cc_schedule status column
+               $instance = CcShowInstancesQuery::create()->findPk($id);
+               $instance->updateScheduleStatus($con);
            } //foreach linked instance
 
-            //update time_filled in cc_show_instances
+            //update time_filled and last_scheduled in cc_show_instances
             $now = gmdate("Y-m-d H:i:s");
-            $update_sql = "UPDATE cc_show_instances SET ".
-                "time_filled = '{$timeFilled}', ".
-                "last_scheduled = '{$now}' ".
-                "WHERE show_id = {$ccShow->getDbId()}";
-            Application_Common_Database::prepareAndExecute(
-                $update_sql, array(), Application_Common_Database::EXECUTE);
+            $whereClause = new Criteria();
+            $whereClause->add(CcShowInstancesPeer::ID, $instanceIdsToFill, Criteria::IN);
+            
+            $updateClause = new Criteria();
+            $updateClause->add(CcShowInstancesPeer::TIME_FILLED, $timeFilled);
+            $updateClause->add(CcShowInstancesPeer::LAST_SCHEDULED, $now);
+            
+            BasePeer::doUpdate($whereClause, $updateClause, $con);
 
            $con->commit();
            Logging::info("finished fill");
@@ -366,7 +397,6 @@ Logging::info($showStamp_sql);
                  $counter += 1;
             }
         }
-        
         if ($erraseShow) {
             $delete_sql = "DELETE FROM cc_schedule ".
                     "WHERE instance_id = {$instance_id}";
