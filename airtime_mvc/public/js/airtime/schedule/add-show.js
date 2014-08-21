@@ -273,9 +273,16 @@ function setAddShowEvents(form) {
             }
             return false;
         }
-
-        if (!$(this).attr("checked") && $("#show-link-warning").length === 0) {
-            $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: Shows cannot be re-linked")+"</li></ul>");
+        
+        //only display the warning message if a show is being edited
+        if ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show") {
+            if ($(this).attr("checked") && $("#show-link-warning").length === 0) {
+                $(this).parent().after("<ul id='show-link-warning' class='errors'><li>"+$.i18n._("Warning: A copy of the schedule from the show clicked on to edit this show will get copied to every other show in the repeat series.")+"</li></ul>");
+            }
+            
+            if (!$(this).attr("checked") && $("#show-link-warning").length !== 0) {
+                $("#show-link-warning").remove();
+            }
         }
     });
 
