@@ -182,15 +182,7 @@ class Application_Service_SchedulerService
      */
     public static function fillNewLinkedInstances($ccShow, $instanceIdsToFill)
     {
-        /* In order to get the linked show's schedule we need to retrieve
-         * every instance of the show, even if they are in the past in case
-         * no new instances were generated past the 'shows_populated_until'
-         * date in cc_pref - CC-5898
-         * 
-         * We retrieve the instances ids sorted by desc start date to ensure
-         * we always use the most up to date schedule when filling the new
-         * show instances with content
-         */
+        //TODO can we remove the code until line 216 ??
         
         $instanceIds = $ccShow->getInstanceIdsSortedByMostRecentStartTime();
         if (count($instanceIds) == 0) {
@@ -221,7 +213,7 @@ class Application_Service_SchedulerService
             //The linked shows are all empty, so there's nothing for us to do.
             //(No content should be propagated to the other show instances...
             return;
-       }               
+       }
 
         $linkedShowSchedule = self::getLinkedShowSchedule($ccShow->getDbId(), $instanceIdsToFill);
 
