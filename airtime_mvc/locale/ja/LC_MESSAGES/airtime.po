@@ -3,13 +3,15 @@
 # This file is distributed under the same license as the Airtime package.
 # 
 # Translators:
+# Akemi Makino <akemi.makino@mail.rakuten.com>, 2014
+# Kazuhiro Shimbo <kazuhiro.shimbo@mail.rakuten.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-07-29 09:55+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2014-08-21 14:11+0000\n"
+"Last-Translator: Kazuhiro Shimbo <kazuhiro.shimbo@mail.rakuten.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/airtime/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"

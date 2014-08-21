@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the Airtime package.
 # 
 # Translators:
-# picizse <picizse@gmail.com>, 2014
-# picizse <picizse@gmail.com>, 2014
+# Zsolt Magyar <picizse@gmail.com>, 2014
+# Zsolt Magyar <picizse@gmail.com>, 2014
 # Sourcefabric <contact@sourcefabric.org>, 2012
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-07-29 09:55+0000\n"
+"PO-Revision-Date: 2014-08-21 14:11+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/airtime/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
