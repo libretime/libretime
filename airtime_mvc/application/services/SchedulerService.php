@@ -207,40 +207,6 @@ class Application_Service_SchedulerService
      */
     public static function fillLinkedInstances($ccShow, $instanceIdsToFill, $instanceId=null)
     {
-        //TODO can we remove the code until line 216 ??
-        
-        /*
-        $instanceIds = $ccShow->getInstanceIdsSortedByMostRecentStartTime();
-        if (count($instanceIds) == 0) {
-            return;
-        }
-
-       //First check if any linked instances have content
-       //If all instances are empty then we don't need to fill
-       //any other instances with content
-       $doesAnyShowInstanceHaveContent = false;
-       foreach ($instanceIds as $instanceId)
-       {
-            $schedule_sql = "SELECT instance_id FROM cc_schedule ".
-                "WHERE instance_id=$instanceId";//#IN (".implode($instanceIds, ",").")";
-            $ccSchedules = Application_Common_Database::prepareAndExecute(
-                $schedule_sql);
-            if (count($ccSchedules) > 0) {
-                $doesAnyShowInstanceHaveContent = true;
-                break;
-            }
-       }
-       //variable out of scope outside foreach loop
-       unset($ccSchedules);
-
-       if ($doesAnyShowInstanceHaveContent == false)
-       {
-            //The linked shows are all empty, so there's nothing for us to do.
-            //(No content should be propagated to the other show instances...
-            return;
-       }
-       */
-
         //Get the "template" schedule for the linked show (contents of the linked show) that will be 
         //copied into to all the new show instances.
         $linkedShowSchedule = self::getLinkedShowSchedule($ccShow->getDbId(), $instanceIdsToFill, $instanceId);
