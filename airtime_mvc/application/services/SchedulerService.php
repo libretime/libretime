@@ -153,46 +153,59 @@ class Application_Service_SchedulerService
     /**
      * 
      * Gets a copy of the linked show's schedule from cc_schedule table
-     * The schedule is taken from the most recent show instance that existed
-     * before new show instances were created.
+     * 
+     * If $instanceId is not null, we use that variable to grab the linked
+     * show's schedule from cc_schedule table. (This is likely to be the case
+     * if a user has edited a show and changed it from un-linked to linked, in
+     * which case we copy the show content from the show instance that was clicked
+     * on to edit the show in the calendar.) Otherwise the schedule is taken
+     * from the most recent show instance that existed before new show
+     * instances were created. (This is likely to be the case when a user edits a 
+     * show and a new repeat show day is added (i.e. mondays), or moves forward in the
+     * calendar triggering show creation)
      * 
      * @param integer $showId
      * @param array $instancsIdsToFill
+     * @param integer $instanceId
      */
-    public static function getLinkedShowSchedule($showId, $instancsIdsToFill)
+    private static function getLinkedShowSchedule($showId, $instancsIdsToFill, $instanceId)
     {
-        $showsPopulatedUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-
-        
-        $showInstanceWithMostRecentSchedule = CcShowInstancesQuery::create()
-            ->filterByDbShowId($showId)
-            ->filterByDbStarts($showsPopulatedUntil->format("Y-m-d H:i:s"), Criteria::LESS_THAN)
-            ->filterByDbId($instancsIdsToFill, Criteria::NOT_IN)
-            ->orderByDbStarts(Criteria::DESC)
-            ->limit(1)
-            ->findOne();
-
         $con = Propel::getConnection();
-        $instanceId = $showInstanceWithMostRecentSchedule->getDbId();
+        
+        if (is_null($instanceId)) {
+            $showsPopulatedUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+            $showInstanceWithMostRecentSchedule = CcShowInstancesQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbStarts($showsPopulatedUntil->format("Y-m-d H:i:s"), Criteria::LESS_THAN)
+                ->filterByDbId($instancsIdsToFill, Criteria::NOT_IN)
+                ->orderByDbStarts(Criteria::DESC)
+                ->limit(1)
+                ->findOne();
+
+            $instanceId = $showInstanceWithMostRecentSchedule->getDbId();
+        }
+
         $linkedShowSchedule_sql = $con->prepare(
             "select * from cc_schedule where instance_id = :instance_id ".
             "order by starts");
         $linkedShowSchedule_sql->bindParam(':instance_id', $instanceId);
         $linkedShowSchedule_sql->execute();
-        
+
         return $linkedShowSchedule_sql->fetchAll();
     }
     
     /**
      * 
-     * This function gets called after new linked show_instances are created.
+     * This function gets called after new linked show_instances are created, or after
+     * a show has been edited and went from being un-linked to linked.
      * It fills the new show instances' schedules.
      * 
      * @param CcShow_type $ccShow
      * @param array $instanceIdsToFill ids of the new linked cc_show_instances that
-     * were created and now need their schedules filled
+     * need their schedules filled
      */
-    public static function fillNewLinkedInstances($ccShow, $instanceIdsToFill)
+    public static function fillLinkedInstances($ccShow, $instanceIdsToFill, $instanceId=null)
     {
         //TODO can we remove the code until line 216 ??
         
@@ -230,7 +243,7 @@ class Application_Service_SchedulerService
 
         //Get the "template" schedule for the linked show (contents of the linked show) that will be 
         //copied into to all the new show instances.
-        $linkedShowSchedule = self::getLinkedShowSchedule($ccShow->getDbId(), $instanceIdsToFill);
+        $linkedShowSchedule = self::getLinkedShowSchedule($ccShow->getDbId(), $instanceIdsToFill, $instanceId);
 
         //get time_filled so we can update cc_show_instances
         if (!empty($linkedShowSchedule)) {
