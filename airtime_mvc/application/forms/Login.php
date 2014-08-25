@@ -76,7 +76,8 @@ class Application_Form_Login extends Zend_Form
         $pubKey = '6Ld4JsISAAAAAIxUKT4IjjOGi3DHqdoH2zk6WkYG';
         $privKey = '6Ld4JsISAAAAAJynYlXdrE4hfTReTSxYFe5szdyv';
 
-        $recaptcha = new Zend_Service_ReCaptcha($pubKey, $privKey);
+        $params= array('ssl' => true);
+        $recaptcha = new Zend_Service_ReCaptcha($pubKey, $privKey, $params);
 
         $captcha = new Zend_Form_Element_Captcha('captcha',
             array(
