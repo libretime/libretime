@@ -975,7 +975,6 @@ SQL;
             $needScheduleUntil->add(new DateInterval("P1D"));
         }
         Application_Model_Show::createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil);
-
         list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
 
         $data = array();
