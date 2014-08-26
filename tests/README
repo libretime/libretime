@@ -1,0 +1,13 @@
+Airtime Tests
+
+Selenium: 
+- No prerequisites required.
+- To set it up and run it, run: 
+    $ ./run_selenium.sh
+
+
+Airtime web app unit tests:
+- See airtime_mvc/tests/README
+
+Airtime Analyzer unit tests
+- See python_app/airtime_analyzer/README 
