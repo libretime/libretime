@@ -1,0 +1,5 @@
+[merge "pofile"]
+        name = Gettext merge driver
+        driver = git merge-po %O %A %B
+    
+
