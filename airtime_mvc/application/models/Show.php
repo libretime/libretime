@@ -830,6 +830,28 @@ SQL;
         }
         
     }
+    
+    /**
+     * 
+     * Creates show instances that are scheduled after the shows_populated_until
+     * value in cc_pref. If the show instances are linked their show content will
+     * get filled.
+     * 
+     * This can occur when a user is viewing the next day/week/month in the
+     * calendar or when pypo is requesting the schedule after the shows_populated_until
+     * date and time.
+     */
+    public static function createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil)
+    {
+        //UTC DateTime object
+        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+        //if application is requesting shows past our previous populated until date, generate shows up until this point.
+        if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $needScheduleUntil->getTimestamp()) {
+            $service_show = new Application_Service_ShowService();
+            $ccShow = $service_show->delegateInstanceCreation(null, $needScheduleUntil, true);
+            Application_Model_Preference::SetShowsPopulatedUntil($needScheduleUntil);
+        }
+    }
 
     /**
      * Get all the show instances in the given time range (inclusive).
@@ -844,14 +866,7 @@ SQL;
      */
     public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE)
     {
-        //UTC DateTime object
-        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-        //if application is requesting shows past our previous populated until date, generate shows up until this point.
-        if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $end_timestamp->getTimestamp()) {
-            $service_show = new Application_Service_ShowService();
-            $ccShow = $service_show->delegateInstanceCreation(null, $end_timestamp, true);
-            Application_Model_Preference::SetShowsPopulatedUntil($end_timestamp);
-        }
+        self::createAndFillShowInstancesPastPopulatedUntilDate($end_timestamp);
 
         $sql = <<<SQL
 SELECT si1.starts            AS starts,

@@ -303,10 +303,10 @@ SQL;
         $p_start_str = $p_start->format("Y-m-d H:i:s");
         $p_end_str = $p_end->format("Y-m-d H:i:s");
 
-        //We need to search 24 hours before and after the show times so that that we
+        //We need to search 48 hours before and after the show times so that that we
         //capture all of the show's contents.
-        $p_track_start= $p_start->sub(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
-        $p_track_end = $p_end->add(new DateInterval("PT24H"))->format("Y-m-d H:i:s");
+        $p_track_start= $p_start->sub(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
+        $p_track_end = $p_end->add(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
 
         $templateSql = <<<SQL
 SELECT DISTINCT sched.starts AS sched_starts,
@@ -964,6 +964,15 @@ SQL;
 
     public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
     {
+        //generate repeating shows if we are fetching the schedule
+        //for days beyond the shows_populated_until value in cc_pref
+        $needScheduleUntil = $p_toDateTime;
+        if (is_null($needScheduleUntil)) {
+            $needScheduleUntil = new DateTime("now", new DateTimeZone("UTC"));
+            $needScheduleUntil->add(new DateInterval("P1D"));
+        }
+        Application_Model_Show::createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil);
+        
         list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
 
         $data = array();

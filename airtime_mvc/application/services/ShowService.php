@@ -15,13 +15,17 @@ class Application_Service_ShowService
     private $isRebroadcast;
     private $repeatType;
     private $isUpdate;
-    private $linkedShowContent;
     private $oldShowTimezone;
     private $localShowStartHour;
     private $localShowStartMin;
     private $origCcShowDay;
     private $origShowRepeatStatus;
     private $instanceIdsForScheduleUpdates;
+    
+    //keeps track of which show instances are new from either adding a new show
+    //day or changing the repeat type day during a show edit, or when a user moves
+    //forward in the calendar
+    private $newInstanceIdsCreated;
 
     public function __construct($showId=null, $showData=null, $isUpdate=false)
     {
@@ -42,6 +46,7 @@ class Application_Service_ShowService
         $this->isRebroadcast = (isset($showData['add_show_rebroadcast']) && $showData['add_show_rebroadcast']) ? 1 : 0;
         $this->isUpdate = $isUpdate;
         $this->instanceIdsForScheduleUpdates = array();
+        $this->newInstanceIdsCreated = array();
     }
 
     public function editRepeatingShowInstance($showData) {
@@ -193,6 +198,7 @@ class Application_Service_ShowService
             $daysAdded = array();
 
             if ($this->isUpdate) {
+                
                 if (!$this->ccShow->getCcShowDayss()->isEmpty()) {
                     $this->storeOrigLocalShowInfo();
                 }
@@ -256,19 +262,25 @@ class Application_Service_ShowService
      */
     private function storeInstanceIds()
     {
-        $instances = $this->ccShow->getCcShowInstancess();
+        $instances = $this->ccShow->getFutureCcShowInstancess();
         foreach ($instances as $instance) {
             $this->instanceIdsForScheduleUpdates[] = $instance->getDbId();
         }
     }
 
+    /** 
+     * 
+     * Adjusts the items in cc_schedule to reflect the
+     * new (if one) start and end time of the show getting updated
+     * @param $showData
+     */
     private function adjustSchedule($showData)
     {
         $con = Propel::getConnection(CcSchedulePeer::DATABASE_NAME);
 
         $this->updateScheduleStartEndTimes($showData);
 
-        $ccShowInstances = $this->ccShow->getCcShowInstancess();
+        $ccShowInstances = $this->ccShow->getFutureCcShowInstancess();
         foreach ($ccShowInstances as $instance) {
             $instance->updateScheduleStatus($con);
         }
@@ -317,8 +329,15 @@ class Application_Service_ShowService
             $this->isRecorded = $this->ccShow->isRecorded();
             $this->isRebroadcast = $this->ccShow->isRebroadcast();
 
-            if (!isset($ccShows[$day->getDbShowId()])) {
-                $ccShows[$day->getDbShowId()] = $day->getccShow();
+            $show_id = $day->getDbShowId();
+            if (!isset($ccShows[$show_id])) {
+                $ccShows[$show_id] = $day->getccShow();
+            }
+            
+            //keep track of the new show instances getting created
+            //so we can fill their schedule after
+            if (!isset($this->newInstanceIdsCreated[$show_id])) {
+                $this->newInstanceIdsCreated[$show_id] = array();
             }
 
             switch ($day->getDbRepeatType()) {
@@ -352,14 +371,15 @@ class Application_Service_ShowService
 
         foreach ($ccShows as $ccShow) {
             if (($this->isUpdate || $fillInstances) && $ccShow->isLinked()) {
-                Application_Service_SchedulerService::fillNewLinkedInstances($ccShow);
+                Application_Service_SchedulerService::fillLinkedInstances(
+                    $ccShow, $this->newInstanceIdsCreated[$ccShow->getDbId()]);
             }
         }
 
-        if (isset($this->linkedShowContent)) {
+        /*if (isset($this->linkedShowContent)) {
             Application_Service_SchedulerService::fillPreservedLinkedShowContent(
                 $this->ccShow, $this->linkedShowContent);
-        }
+        }*/
 
         return $this->ccShow;
     }
@@ -538,9 +558,9 @@ SQL;
                     if (count($daysRemoved) > 0) {
                         //delete repeating show instances for the repeating
                         //days that were removed
-                        if ($this->ccShow->isLinked()) {
+                        /*if ($this->ccShow->isLinked()) {
                             $this->preserveLinkedShowContent();
-                        }
+                        }*/
                         $this->deleteRemovedShowDayInstances($daysRemoved,
                             $ccShowDays, $showId);
                     }
@@ -583,12 +603,12 @@ SQL;
         return $daysAdded;
     }
 
-    private function preserveLinkedShowContent()
+    /*private function preserveLinkedShowContent()
     {
-        /* Get show content from any linked instance. It doesn't
-         * matter which instance since content is the same in all.
-         */
-        $ccShowInstance = $this->ccShow->getCcShowInstancess()->getFirst();
+        // Get show content from any future linked instance. It doesn't
+        // matter which instance since content is the same in all.
+        //
+        $ccShowInstance = $this->ccShow->getFutureCcShowInstancess()->getFirst();
 
         if (!$ccShowInstance) {
             return;
@@ -600,7 +620,7 @@ SQL;
        if (!$ccSchedules->isEmpty()) {
            $this->linkedShowContent = $ccSchedules;
        }
-    }
+    }*/
 
     /*
      * returns a DateTime of the current show end date set to the timezone of the show.
@@ -1125,16 +1145,13 @@ SQL;
                     if ($this->hasInstance($utcStartDateTime)) {
                         $ccShowInstance = $this->getInstance($utcStartDateTime);
                         $newInstance = false;
-                        $updateScheduleStatus = true;
                     } else {
                         $newInstance = true;
                         $ccShowInstance = new CcShowInstances();
-                        $updateScheduleStatus = false;
                     }
                 }  else {
                     $newInstance = true;
                     $ccShowInstance = new CcShowInstances();
-                    $updateScheduleStatus = false;
                 }
 
                 /* When editing the start/end time of a repeating show, we don't want to
@@ -1146,6 +1163,10 @@ SQL;
                     $ccShowInstance->setDbEnds($utcEndDateTime);
                     $ccShowInstance->setDbRecord($record);
                     $ccShowInstance->save();
+                }
+                
+                if ($newInstance) {
+                    array_push($this->newInstanceIdsCreated[$show_id], $ccShowInstance->getDbId());
                 }
 
                 if ($this->isRebroadcast) {
@@ -1223,11 +1244,9 @@ SQL;
                 if ($this->isUpdate && $this->hasInstance($utcStartDateTime)) {
                     $ccShowInstance = $this->getInstance($utcStartDateTime);
                     $newInstance = false;
-                    $updateScheduleStatus = true;
                 } else {
                     $newInstance = true;
                     $ccShowInstance = new CcShowInstances();
-                    $updateScheduleStatus = false;
                 }
 
                 /* When editing the start/end time of a repeating show, we don't want to
@@ -1239,6 +1258,10 @@ SQL;
                     $ccShowInstance->setDbEnds($utcEndDateTime);
                     $ccShowInstance->setDbRecord($record);
                     $ccShowInstance->save();
+                }
+                
+                if ($newInstance) {
+                    array_push($this->newInstanceIdsCreated[$show_id], $ccShowInstance->getDbId());
                 }
 
                 if ($this->isRebroadcast) {
@@ -1492,10 +1515,14 @@ SQL;
         $ccShow->setDbLiveStreamUsingCustomAuth($showData['cb_custom_auth'] == 1);
         $ccShow->setDbLiveStreamUser($showData['custom_username']);
         $ccShow->setDbLiveStreamPass($showData['custom_password']);
-
-        // Once a show is unlinked it cannot be linked again
-        if ($ccShow->getDbLinked() && !$showData["add_show_linked"]) {
-            $ccShow->setDbIsLinkable(false);
+        
+        //Here a user has edited a show and linked it.
+        //We need to grab the existing show instances ids and fill their content
+        //with the content from the show instance that was clicked on to edit the show.
+        //We do this because linked show instances need to have the same content in each.
+        if ($this->isUpdate && (!$ccShow->getDbLinked() && $showData["add_show_linked"])) {
+            $existingShowInstanceIds = $ccShow->getFutureInstanceIds(new Criteria());
+            Application_Service_SchedulerService::fillLinkedInstances($ccShow, $existingShowInstanceIds, $showData["add_show_instance_id"]);
         }
         $ccShow->setDbLinked($showData["add_show_linked"]);
 

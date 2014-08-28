@@ -150,112 +150,163 @@ class Application_Service_SchedulerService
     	return $dt;
     }
 
-    public static function fillNewLinkedInstances($ccShow)
+    /**
+     * 
+     * Gets a copy of the linked show's schedule from cc_schedule table
+     * 
+     * If $instanceId is not null, we use that variable to grab the linked
+     * show's schedule from cc_schedule table. (This is likely to be the case
+     * if a user has edited a show and changed it from un-linked to linked, in
+     * which case we copy the show content from the show instance that was clicked
+     * on to edit the show in the calendar.) Otherwise the schedule is taken
+     * from the most recent show instance that existed before new show
+     * instances were created. (This is likely to be the case when a user edits a 
+     * show and a new repeat show day is added (i.e. mondays), or moves forward in the
+     * calendar triggering show creation)
+     * 
+     * @param integer $showId
+     * @param array $instancsIdsToFill
+     * @param integer $instanceId
+     */
+    private static function getLinkedShowSchedule($showId, $instancsIdsToFill, $instanceId)
     {
-        /* First check if any linked instances have content
-         * If all instances are empty then we don't need to fill
-         * any other instances with content
-         */
-        $instanceIds = $ccShow->getInstanceIds();
-        if (count($instanceIds) == 0) {
-            return;
+        $con = Propel::getConnection();
+        
+        if (is_null($instanceId)) {
+            $showsPopulatedUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+
+            $showInstanceWithMostRecentSchedule = CcShowInstancesQuery::create()
+                ->filterByDbShowId($showId)
+                ->filterByDbStarts($showsPopulatedUntil->format("Y-m-d H:i:s"), Criteria::LESS_THAN)
+                ->filterByDbId($instancsIdsToFill, Criteria::NOT_IN)
+                ->orderByDbStarts(Criteria::DESC)
+                ->limit(1)
+                ->findOne();
+
+            $instanceId = $showInstanceWithMostRecentSchedule->getDbId();
         }
 
-        $schedule_sql = "SELECT * FROM cc_schedule ".
-            "WHERE instance_id IN (".implode($instanceIds, ",").")";
-        $ccSchedules = Application_Common_Database::prepareAndExecute(
-            $schedule_sql);
+        $linkedShowSchedule_sql = $con->prepare(
+            "select * from cc_schedule where instance_id = :instance_id ".
+            "order by starts");
+        $linkedShowSchedule_sql->bindParam(':instance_id', $instanceId);
+        $linkedShowSchedule_sql->execute();
 
-        if (count($ccSchedules) > 0) {
-            /* Find the show contents of just one of the instances. It doesn't
-             * matter which instance we use since all the content is the same
-             */
-            $ccSchedule = $ccSchedules[0];
-            $showStamp_sql = "SELECT * FROM cc_schedule ".
-                "WHERE instance_id = {$ccSchedule["instance_id"]} ".
-                "ORDER BY starts";
-            $showStamp = Application_Common_Database::prepareAndExecute(
-                $showStamp_sql);
+        return $linkedShowSchedule_sql->fetchAll();
+    }
+    
+    /**
+     * 
+     * This function gets called after new linked show_instances are created, or after
+     * a show has been edited and went from being un-linked to linked.
+     * It fills the new show instances' schedules.
+     * 
+     * @param CcShow_type $ccShow
+     * @param array $instanceIdsToFill ids of the new linked cc_show_instances that
+     * need their schedules filled
+     */
+    public static function fillLinkedInstances($ccShow, $instanceIdsToFill, $instanceId=null)
+    {
+        //Get the "template" schedule for the linked show (contents of the linked show) that will be 
+        //copied into to all the new show instances.
+        $linkedShowSchedule = self::getLinkedShowSchedule($ccShow->getDbId(), $instanceIdsToFill, $instanceId);
 
-            //get time_filled so we can update cc_show_instances
+        //get time_filled so we can update cc_show_instances
+        if (!empty($linkedShowSchedule)) {
             $timeFilled_sql = "SELECT time_filled FROM cc_show_instances ".
-                "WHERE id = {$ccSchedule["instance_id"]}";
+               "WHERE id = {$linkedShowSchedule[0]["instance_id"]}";
             $timeFilled = Application_Common_Database::prepareAndExecute(
-                $timeFilled_sql, array(), Application_Common_Database::COLUMN);
+               $timeFilled_sql, array(), Application_Common_Database::COLUMN);
+        } else {
+            //We probably shouldn't return here because the code below will
+            //set this on each empty show instance...
+            $timeFilled = "00:00:00";
+        }
+    
+        $values = array();
 
-            //need to find out which linked instances are empty
-            $values = array();
-            foreach ($instanceIds as $id) {
-                $instanceSched_sql = "SELECT * FROM cc_schedule ".
-                    "WHERE instance_id = {$id} ".
-                    "ORDER by starts";
-                $ccSchedules = Application_Common_Database::prepareAndExecute(
-                    $instanceSched_sql);
-
-                /* If the show instance is empty OR it has different content than
-                 * the first instance, we need to fill/replace with the show stamp
-                 * (The show stamp is taken from the first show instance's content)
-                 */
-                if (count($ccSchedules) < 1 || 
-                    self::replaceInstanceContentCheck($ccSchedules, $showStamp)) {
-
-                    $instanceStart_sql = "SELECT starts FROM cc_show_instances ".
-                        "WHERE id = {$id} ".
-                        "ORDER BY starts";
-                    $nextStartDT = new DateTime(
+        $con = Propel::getConnection();
+        
+        //Here we begin to fill the new show instances (as specified by $instanceIdsToFill)
+        //with content from $linkedShowSchedule.
+        try {
+            $con->beginTransaction();
+            foreach ($instanceIdsToFill as $id) 
+            {
+                //Start by clearing the show instance that needs to be filling. This ensure
+                //we're not going to get in trouble in case there's an programming error somewhere else.
+                self::clearShowInstanceContents($id);
+                    
+                // Now fill the show instance with the same content that $linkedShowSchedule has.
+                $instanceStart_sql = "SELECT starts FROM cc_show_instances " .
+                         "WHERE id = {$id} " . "ORDER BY starts";
+                
+                //What's tricky here is that when we copy the content, we have to adjust
+                //the start and end times of each track so they're inside the new show instance's time slot.
+                $nextStartDT = new DateTime(
                         Application_Common_Database::prepareAndExecute(
-                            $instanceStart_sql, array(), Application_Common_Database::COLUMN),
+                                $instanceStart_sql, array(), 
+                                Application_Common_Database::COLUMN), 
                         new DateTimeZone("UTC"));
+                
+                $defaultCrossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
+                unset($values);
+                $values = array();
+                foreach ($linkedShowSchedule as $item) {
+                    $endTimeDT = self::findEndTime($nextStartDT, 
+                            $item["clip_length"]);
+                    
+                    if (is_null($item["file_id"])) {
+                        $item["file_id"] = "null";
+                    }
+                    if (is_null($item["stream_id"])) {
+                        $item["stream_id"] = "null";
+                    }
+                    
+                    $values[] = "(" . "'{$nextStartDT->format("Y-m-d H:i:s")}', " .
+                             "'{$endTimeDT->format("Y-m-d H:i:s")}', " .
+                             "'{$item["clip_length"]}', " .
+                             "'{$item["fade_in"]}', " . "'{$item["fade_out"]}', " .
+                             "'{$item["cue_in"]}', " . "'{$item["cue_out"]}', " .
+                             "{$item["file_id"]}, " . "{$item["stream_id"]}, " .
+                             "{$id}, " . "{$item["position"]})";
+                    
+                    $nextStartDT = self::findTimeDifference($endTimeDT, 
+                            $defaultCrossfadeDuration);
+                } //foreach show item
 
-                    foreach ($showStamp as $item) {
-                        $endTimeDT = self::findEndTime($nextStartDT, $item["clip_length"]);
-
-                        if (is_null($item["file_id"])) {
-                            $item["file_id"] = "null";
-                        } 
-                        if (is_null($item["stream_id"])) {
-                            $item["stream_id"] = "null";
-                        }
-
-                        $values[] = "(".
-                            "'{$nextStartDT->format("Y-m-d H:i:s")}', ".
-                            "'{$endTimeDT->format("Y-m-d H:i:s")}', ".
-                            "'{$item["clip_length"]}', ".
-                            "'{$item["fade_in"]}', ".
-                            "'{$item["fade_out"]}', ".
-                            "'{$item["cue_in"]}', ".
-                            "'{$item["cue_out"]}', ".
-                            "{$item["file_id"]}, ".
-                            "{$item["stream_id"]}, ".
-                            "{$id}, ".
-                            "{$item["position"]})";
-
-                        $nextStartDT = self::findTimeDifference($endTimeDT,
-                            Application_Model_Preference::GetDefaultCrossfadeDuration());
-                    } //foreach show item
+                if (!empty($values)) {
+                    $insert_sql = "INSERT INTO cc_schedule (starts, ends, ".
+                        "clip_length, fade_in, fade_out, cue_in, cue_out, ".
+                        "file_id, stream_id, instance_id, position)  VALUES ".
+                        implode($values, ",");
+                    Application_Common_Database::prepareAndExecute(
+                        $insert_sql, array(), Application_Common_Database::EXECUTE);
                 }
-            } //foreach linked instance
+               
+               //update cc_schedule status column
+               $instance = CcShowInstancesQuery::create()->findPk($id);
+               $instance->updateScheduleStatus($con);
+           } //foreach linked instance
 
-            if (!empty($values)) {
-                $insert_sql = "INSERT INTO cc_schedule (starts, ends, ".
-                    "clip_length, fade_in, fade_out, cue_in, cue_out, ".
-                    "file_id, stream_id, instance_id, position)  VALUES ".
-                    implode($values, ",");
+            //update time_filled and last_scheduled in cc_show_instances
+            $now = gmdate("Y-m-d H:i:s");
+            $whereClause = new Criteria();
+            $whereClause->add(CcShowInstancesPeer::ID, $instanceIdsToFill, Criteria::IN);
+            
+            $updateClause = new Criteria();
+            $updateClause->add(CcShowInstancesPeer::TIME_FILLED, $timeFilled);
+            $updateClause->add(CcShowInstancesPeer::LAST_SCHEDULED, $now);
+            
+            BasePeer::doUpdate($whereClause, $updateClause, $con);
 
-                Application_Common_Database::prepareAndExecute(
-                    $insert_sql, array(), Application_Common_Database::EXECUTE);
-
-                //update time_filled in cc_show_instances
-                $now = gmdate("Y-m-d H:i:s");
-                $update_sql = "UPDATE cc_show_instances SET ".
-                    "time_filled = '{$timeFilled}', ".
-                    "last_scheduled = '{$now}' ".
-                    "WHERE show_id = {$ccShow->getDbId()}";
-                Application_Common_Database::prepareAndExecute(
-                    $update_sql, array(), Application_Common_Database::EXECUTE);
-            }
-
-        } //if at least one linked instance has content
+           $con->commit();
+           Logging::info("finished fill");
+        } catch (Exception $e) {
+            $con->rollback();
+            Logging::info("Error filling linked shows: ".$e->getMessage());
+            exit();
+        }
     }
 
     public static function fillPreservedLinkedShowContent($ccShow, $showStamp)
@@ -302,29 +353,49 @@ class Application_Service_SchedulerService
         }
     }
 
-    private static function replaceInstanceContentCheck($currentShowStamp, $showStamp)
+    /** Clears a show instance's schedule (which is actually clearing cc_schedule during that show instance's time slot.) */
+    private static function clearShowInstanceContents($instanceId)
+    {
+        //Application_Common_Database::prepareAndExecute($delete_sql, array(), Application_Common_Database::EXECUTE);
+        $con = Propel::getConnection();
+        $query = $con->prepare("DELETE FROM cc_schedule WHERE instance_id = :instance_id");
+        $query->bindParam(':instance_id', $instanceId);
+        $query->execute();
+    }
+    
+    /*
+    private static function replaceInstanceContentCheck($currentShowStamp, $showStamp, $instance_id)
     {
         $counter = 0;
-        foreach ($showStamp as $item) {
-            if ($item["file_id"] != $currentShowStamp[$counter]["file_id"] ||
-                $item["stream_id"] != $currentShowStamp[$counter]["stream_id"]) {
-                /*CcScheduleQuery::create()
-                    ->filterByDbInstanceId($ccShowInstance->getDbId())
-                    ->delete();*/
-                $delete_sql = "DELETE FROM cc_schedule ".
-                    "WHERE instance_id = {$currentShowStamp[$counter]["instance_id"]}";
-                Application_Common_Database::prepareAndExecute(
-                    $delete_sql, array(), Application_Common_Database::EXECUTE);
-                return true;
-             }
-             $counter += 1;
+        $erraseShow = false;
+        if (count($currentShowStamp) != count($showStamp)) {
+            $erraseShow = true;
+        } else {
+            foreach ($showStamp as $item) {
+                if ($item["file_id"] != $currentShowStamp[$counter]["file_id"] ||
+                    $item["stream_id"] != $currentShowStamp[$counter]["stream_id"]) {
+                        $erraseShow = true;
+                        break;
+                    //CcScheduleQuery::create()
+                    //    ->filterByDbInstanceId($ccShowInstance->getDbId())
+                    //    ->delete();
+                 }
+                 $counter += 1;
+            }
+        }
+        if ($erraseShow) {
+            $delete_sql = "DELETE FROM cc_schedule ".
+                    "WHERE instance_id = :instance_id";
+            Application_Common_Database::prepareAndExecute(
+            $delete_sql, array(), Application_Common_Database::EXECUTE);
+            return true;
         }
 
-        /* If we get here, the content in the show instance is the same
-         * as what we want to replace it with, so we can leave as is
-         */
+        //If we get here, the content in the show instance is the same
+        // as what we want to replace it with, so we can leave as is
+         
         return false;
-    }
+    }*/
 
     public function emptyShowContent($instanceId)
     {
@@ -335,7 +406,7 @@ class Application_Service_SchedulerService
             $instanceIds = array();
 
             if ($ccShowInstance->getCcShow()->isLinked()) {
-                foreach ($ccShowInstance->getCcShow()->getCcShowInstancess() as $instance) {
+                foreach ($ccShowInstance->getCcShow()->getFutureCcShowInstancess() as $instance) {
                     $instanceIds[] = $instance->getDbId();
                     $instances[] = $instance;
                 }

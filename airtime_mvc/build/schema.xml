@@ -474,11 +474,6 @@
       <reference local="mount_name_id" foreign="id"/>
     </foreign-key>
   </table>
-  <table name="cc_locale" phpName="CcLocale">
-    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="locale_code" phpName="DbLocaleCode" type="VARCHAR" size="16" required="true" />
-    <column name="locale_lang" phpName="DbLocaleLang" type="VARCHAR" size="128" required="true" />
-  </table>
   <table name="cc_playout_history" phpName="CcPlayoutHistory">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="false" />

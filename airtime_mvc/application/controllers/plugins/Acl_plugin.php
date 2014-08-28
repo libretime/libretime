@@ -109,6 +109,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
         $controller = strtolower($request->getControllerName());
+        Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
+
 
         //Ignore authentication for all access to the rest API. We do auth via API keys for this
         //and/or by OAuth.
@@ -118,7 +120,6 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         }
 
         if (in_array($controller, array("api", "auth", "locale", "upgrade"))) {
-
             $this->setRoleName("G");
         } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
 
