@@ -1456,6 +1456,12 @@ msgstr "Cannot have duration greater than 24h"
 #: airtime_mvc/application/forms/AddShowWhen.php:318
 #: airtime_mvc/application/forms/AddShowWhen.php:324
 #: airtime_mvc/application/forms/AddShowWhen.php:329
+#: airtime_mvc/application/services/CalendarService.php:305
+#: airtime_mvc/application/forms/AddShowWhen.php:287
+#: airtime_mvc/application/forms/AddShowWhen.php:301
+#: airtime_mvc/application/forms/AddShowWhen.php:325
+#: airtime_mvc/application/forms/AddShowWhen.php:331
+#: airtime_mvc/application/forms/AddShowWhen.php:336
 msgid "Cannot schedule overlapping shows"
 msgstr "Cannot schedule overlapping shows"
 
@@ -3987,6 +3993,7 @@ msgstr "Rebroadcast of %s from %s"
 
 #: airtime_mvc/application/models/Preference.php:666
 #: airtime_mvc/application/models/Preference.php:655
+#: airtime_mvc/application/models/Preference.php:662
 msgid "Select Country"
 msgstr "Select Country"
 
@@ -4254,21 +4261,25 @@ msgstr "Can't move a past show"
 
 #: airtime_mvc/application/services/CalendarService.php:297
 #: airtime_mvc/application/services/CalendarService.php:281
+#: airtime_mvc/application/services/CalendarService.php:298
 msgid "Can't move show into past"
 msgstr "Can't move show into past"
 
 #: airtime_mvc/application/services/CalendarService.php:317
 #: airtime_mvc/application/services/CalendarService.php:301
+#: airtime_mvc/application/services/CalendarService.php:318
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
 msgstr "Can't move a recorded show less than 1 hour before its rebroadcasts."
 
 #: airtime_mvc/application/services/CalendarService.php:327
 #: airtime_mvc/application/services/CalendarService.php:311
+#: airtime_mvc/application/services/CalendarService.php:328
 msgid "Show was deleted because recorded show does not exist!"
 msgstr "Show was deleted because recorded show does not exist!"
 
 #: airtime_mvc/application/services/CalendarService.php:334
 #: airtime_mvc/application/services/CalendarService.php:318
+#: airtime_mvc/application/services/CalendarService.php:335
 msgid "Must wait 1 hour to rebroadcast."
 msgstr "Must wait 1 hour to rebroadcast."
 

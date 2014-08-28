@@ -1463,6 +1463,12 @@ msgstr "Die Dauer einer Sendung kann nicht länger als 24h sein"
 #: airtime_mvc/application/forms/AddShowWhen.php:318
 #: airtime_mvc/application/forms/AddShowWhen.php:324
 #: airtime_mvc/application/forms/AddShowWhen.php:329
+#: airtime_mvc/application/services/CalendarService.php:305
+#: airtime_mvc/application/forms/AddShowWhen.php:287
+#: airtime_mvc/application/forms/AddShowWhen.php:301
+#: airtime_mvc/application/forms/AddShowWhen.php:325
+#: airtime_mvc/application/forms/AddShowWhen.php:331
+#: airtime_mvc/application/forms/AddShowWhen.php:336
 msgid "Cannot schedule overlapping shows"
 msgstr "Sendungen können nicht überlappend geplant werden."
 
@@ -4035,6 +4041,7 @@ msgstr "Wiederholung von %s am %s"
 
 #: airtime_mvc/application/models/Preference.php:666
 #: airtime_mvc/application/models/Preference.php:655
+#: airtime_mvc/application/models/Preference.php:662
 msgid "Select Country"
 msgstr "Land wählen"
 
@@ -4314,11 +4321,13 @@ msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:297
 #: airtime_mvc/application/services/CalendarService.php:281
+#: airtime_mvc/application/services/CalendarService.php:298
 msgid "Can't move show into past"
 msgstr "Eine Sendung kann nicht in die Vergangenheit verschoben werden."
 
 #: airtime_mvc/application/services/CalendarService.php:317
 #: airtime_mvc/application/services/CalendarService.php:301
+#: airtime_mvc/application/services/CalendarService.php:318
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
 msgstr ""
 "Eine aufgezeichnete Sendung kann nicht verschoben werden, wenn der Zeitpunkt "
@@ -4326,12 +4335,14 @@ msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:327
 #: airtime_mvc/application/services/CalendarService.php:311
+#: airtime_mvc/application/services/CalendarService.php:328
 msgid "Show was deleted because recorded show does not exist!"
 msgstr ""
 "Die Sendung wurde gelöscht, weil die aufgezeichnete Sendung nicht existiert."
 
 #: airtime_mvc/application/services/CalendarService.php:334
 #: airtime_mvc/application/services/CalendarService.php:318
+#: airtime_mvc/application/services/CalendarService.php:335
 msgid "Must wait 1 hour to rebroadcast."
 msgstr ""
 "Das Wiederholen einer Sendung ist erst nach einer Stunde Wartezeit möglich."
