@@ -104,7 +104,7 @@ def test_double_duplicate_files():
 @raises(OSError)
 def test_bad_permissions_destination_dir():
     filename = os.path.basename(DEFAULT_AUDIO_FILE)
-    dest_dir = u'/var/foobar'
+    dest_dir = u'/sys/foobar' # /sys is using sysfs on Linux, which is unwritable
     FileMoverAnalyzer.move(DEFAULT_AUDIO_FILE, dest_dir, filename, dict()) 
     #Move the file back
     shutil.move(os.path.join(dest_dir, filename), DEFAULT_AUDIO_FILE)

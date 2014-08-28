@@ -111,7 +111,6 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $controller = strtolower($request->getControllerName());
         Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
-
         //Ignore authentication for all access to the rest API. We do auth via API keys for this
         //and/or by OAuth.
         if (strtolower($request->getModuleName()) == "rest")
