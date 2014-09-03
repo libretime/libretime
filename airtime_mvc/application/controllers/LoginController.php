@@ -52,48 +52,50 @@ class LoginController extends Zend_Controller_Action
                 $username = $form->getValue('username');
                 $password = $form->getValue('password');
                 $locale = $form->getValue('locale');
-                if (Application_Model_Subjects::getLoginAttempts($username) >= 3 && $form->getElement('captcha') == NULL) {
-                    $form->addRecaptcha();
-                } else {
-                    $authAdapter = Application_Model_Auth::getAuthAdapter();
 
-                    //pass to the adapter the submitted username and password
-                    $authAdapter->setIdentity($username)
-                                ->setCredential($password);
-                    
+                $authAdapter = Application_Model_Auth::getAuthAdapter();
+
+                //pass to the adapter the submitted username and password
+                $authAdapter->setIdentity($username)
+                            ->setCredential($password);
+                
+                $result = $auth->authenticate($authAdapter);
+                if ($result->isValid()) {
+                    //all info about this user from the login table omit only the password
+                    $userInfo = $authAdapter->getResultRowObject(null, 'password');
+
+                    //the default storage is a session with namespace Zend_Auth
+                    $authStorage = $auth->getStorage();
+                    $authStorage->write($userInfo);
+
+                    Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
+                    Application_Model_Subjects::resetLoginAttempts($username);
+
+                    //set the user locale in case user changed it in when logging in
+                    Application_Model_Preference::SetUserLocale($locale);
+
+                    $this->_redirect('Showbuilder');
+                } else {
+                    $email = $form->getValue('username');
+                    $authAdapter = new WHMCS_Auth_Adapter("admin", $email, $password);
+                    $auth = Zend_Auth::getInstance();
                     $result = $auth->authenticate($authAdapter);
                     if ($result->isValid()) {
-                        //all info about this user from the login table omit only the password
-                        $userInfo = $authAdapter->getResultRowObject(null, 'password');
-
-                        //the default storage is a session with namespace Zend_Auth
-                        $authStorage = $auth->getStorage();
-                        $authStorage->write($userInfo);
-
-                        Application_Model_LoginAttempts::resetAttempts($_SERVER['REMOTE_ADDR']);
-                        Application_Model_Subjects::resetLoginAttempts($username);
-
                         //set the user locale in case user changed it in when logging in
                         Application_Model_Preference::SetUserLocale($locale);
-
+                        
                         $this->_redirect('Showbuilder');
-                    } else {
-                        $email = $form->getValue('username');
-                        $authAdapter = new WHMCS_Auth_Adapter("admin", $email, $password);
-                        $auth = Zend_Auth::getInstance();
-                        $result = $auth->authenticate($authAdapter);
-                        if ($result->isValid()) {
-                            //set the user locale in case user changed it in when logging in
-                            Application_Model_Preference::SetUserLocale($locale);
-                            
-                            $this->_redirect('Showbuilder');
-                        }
-                        else {
-                            $message = _("Wrong username or password provided. Please try again.");
-                            Application_Model_Subjects::increaseLoginAttempts($username);
-                            Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
-                            $form = new Application_Form_Login();
-                            $error = true;
+                    }
+                    else {
+                        $message = _("Wrong username or password provided. Please try again.");
+                        Application_Model_Subjects::increaseLoginAttempts($username);
+                        Application_Model_LoginAttempts::increaseAttempts($_SERVER['REMOTE_ADDR']);
+                        $form = new Application_Form_Login();                            
+                        $error = true;
+                        //Only show the captcha if you get your login wrong 4 times in a row.
+                        if (Application_Model_Subjects::getLoginAttempts($username) > 3)
+                        {
+                            $form->addRecaptcha();
                         }
                     }
                 }
