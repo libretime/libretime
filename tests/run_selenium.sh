@@ -38,6 +38,10 @@ then
     sudo apt-get install xvfb
 fi
 
+# Livechat is very slow to load sometimes, which can make the tests fail. Here we tell Selenium to replace "livechatinc" in any HTML with
+# some non-existent domain.
+REMOVE_LIVECHAT_PARAMS="-userContentTransformation livechatinc foobar1234567testtest"
+
 # You must pass the full path to the HTML suite and the results file to Selenium:
-xvfb-run java -jar ${SELENIUM_BIN} -htmlSuite "*firefox" "${AIRTIME_URL}" "${PWD}"/selenium/Airtime.html "${PWD}"/results.html
+xvfb-run java -jar ${SELENIUM_BIN} -proxyInjectionMode ${REMOVE_LIVECHAT_PARAMS} -htmlSuite "*firefox" "${AIRTIME_URL}" "${PWD}"/selenium/Airtime.html "${PWD}"/results.html
 
