@@ -5,13 +5,14 @@
 # Translators:
 # Akemi Makino <akemi.makino@mail.rakuten.com>, 2014
 # Kazuhiro Shimbo <kazuhiro.shimbo@mail.rakuten.com>, 2014
+# shotaro <shotaro.suganuma@mail.rakuten.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-08-27 01:20+0000\n"
-"Last-Translator: Akemi Makino <akemi.makino@mail.rakuten.com>\n"
+"PO-Revision-Date: 2014-09-05 05:44+0000\n"
+"Last-Translator: Kazuhiro Shimbo <kazuhiro.shimbo@mail.rakuten.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/airtime/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +44,12 @@ msgstr "ログアウト"
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
-msgstr ""
+msgstr "再生"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
-msgstr ""
+msgstr "停止"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:47
 #: airtime_mvc/application/models/Block.php:1347
@@ -79,12 +80,12 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:274
 msgid "Fade In"
-msgstr ""
+msgstr "フェードイン"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:75
 #: airtime_mvc/application/controllers/LocaleController.php:275
 msgid "Fade Out"
-msgstr ""
+msgstr "フェードアウト"
 
 #: airtime_mvc/application/services/HistoryService.php:1105
 #: airtime_mvc/application/services/HistoryService.php:1145
@@ -94,7 +95,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:66
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
 msgid "Title"
-msgstr ""
+msgstr "タイトル"
 
 #: airtime_mvc/application/services/HistoryService.php:1106
 #: airtime_mvc/application/services/HistoryService.php:1146
@@ -112,7 +113,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:68
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:49
 msgid "Album"
-msgstr ""
+msgstr "アルバム"
 
 #: airtime_mvc/application/services/HistoryService.php:1108
 #: airtime_mvc/application/services/HistoryService.php:1165
@@ -130,7 +131,7 @@ msgstr ""
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:132
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:59
 msgid "Genre"
-msgstr ""
+msgstr "ジャンル"
 
 #: airtime_mvc/application/services/HistoryService.php:1110
 #: airtime_mvc/application/models/Block.php:1359
@@ -174,11 +175,11 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:75
 msgid "Year"
-msgstr ""
+msgstr "年"
 
 #: airtime_mvc/application/services/HistoryService.php:1116
 msgid "Track"
-msgstr ""
+msgstr "トラック"
 
 #: airtime_mvc/application/services/HistoryService.php:1117
 #: airtime_mvc/application/models/Block.php:1345
@@ -192,17 +193,17 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:78
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:62
 msgid "Language"
-msgstr ""
+msgstr "言語"
 
 #: airtime_mvc/application/services/HistoryService.php:1143
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
 msgid "Start Time"
-msgstr ""
+msgstr "開始時間"
 
 #: airtime_mvc/application/services/HistoryService.php:1144
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
 msgid "End Time"
-msgstr ""
+msgstr "終了時間"
 
 #: airtime_mvc/application/services/HistoryService.php:1164
 msgid "Played"
@@ -299,11 +300,11 @@ msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:263
 msgid "Can't move a past show"
-msgstr ""
+msgstr "過去の番組を移動することはできません。"
 
 #: airtime_mvc/application/services/CalendarService.php:281
 msgid "Can't move show into past"
-msgstr ""
+msgstr "番組を過去の日付に移動することはできません。"
 
 #: airtime_mvc/application/services/CalendarService.php:288
 #: airtime_mvc/application/forms/AddShowWhen.php:280
@@ -312,7 +313,7 @@ msgstr ""
 #: airtime_mvc/application/forms/AddShowWhen.php:324
 #: airtime_mvc/application/forms/AddShowWhen.php:329
 msgid "Cannot schedule overlapping shows"
-msgstr ""
+msgstr "番組を重複して予定することはできません。"
 
 #: airtime_mvc/application/services/CalendarService.php:301
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
@@ -452,7 +453,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:164
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:164
 msgid "Show me what I am sending "
-msgstr ""
+msgstr "送信中のものを表示"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:178
 msgid "Terms and Conditions"
@@ -460,11 +461,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/showbuilder.phtml:7
 msgid "Find Shows"
-msgstr ""
+msgstr "番組を探す"
 
 #: airtime_mvc/application/views/scripts/form/showbuilder.phtml:12
 msgid "Filter By Show:"
-msgstr ""
+msgstr "番組で絞り込む："
 
 #: airtime_mvc/application/views/scripts/form/login.phtml:34
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:3
@@ -584,7 +585,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:391
 #: airtime_mvc/application/forms/EditHistoryItem.php:57
 msgid "No Show"
-msgstr ""
+msgstr "番組はありません。"
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
@@ -798,7 +799,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:40
 msgid "Update show"
-msgstr ""
+msgstr "番組を更新"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:10
 msgid "What"
