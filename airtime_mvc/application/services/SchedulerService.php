@@ -183,6 +183,9 @@ class Application_Service_SchedulerService
                 ->limit(1)
                 ->findOne();
 
+            if (is_null($showInstanceWithMostRecentSchedule)) {
+                return null;
+            }
             $instanceId = $showInstanceWithMostRecentSchedule->getDbId();
         }
 
