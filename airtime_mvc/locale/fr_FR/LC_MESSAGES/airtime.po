@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-09-09 13:13+0000\n"
+"PO-Revision-Date: 2014-09-11 09:33+0000\n"
 "Last-Translator: AlbertFR <albert.bruc.ab@gmail.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/airtime/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -2210,7 +2210,7 @@ msgstr "C'est le nom d'utilisateur administrateur et mot de passe pour icecast /
 #: airtime_mvc/application/controllers/LocaleController.php:180
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
-msgstr ""
+msgstr "Attention: Vous ne pouvez pas modifier ce champ alors que l'émission est en cours de lecture"
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
 msgid "No result found"
