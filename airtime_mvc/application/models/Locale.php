@@ -15,7 +15,7 @@ class Application_Model_Locale
             "hr_HR" => "Hrvatski",
             "hu_HU" => "Magyar",
             "it_IT" => "Italiano",
-            "ja"    => "日本語",
+            "ja_JP"    => "日本語",
             "ko_KR" => "한국어",
             "pl_PL" => "Polski",
             "pt_BR" => "Português (Brasil)",
