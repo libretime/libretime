@@ -1,2 +1,8 @@
 .*
 *.pyc
+*~$
+*log.*
+**/airtime_analyzer.egg-info/*
+**/build/*
+**/dist/*
+*~

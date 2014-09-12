@@ -8,6 +8,8 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
+            $("#add-show-form").prop("enctype", "multipart/form-data");
+
             /*
             var windowWidth = $(window).width();
             // margin on showform are 16 px on each side
@@ -579,7 +581,7 @@ function setAddShowEvents(form) {
         }
     })
 
-	form.find("#schedule-show-style input").ColorPicker({
+	form.find("#schedule-show-style input .input_text").ColorPicker({
         onChange: function (hsb, hex, rgb, el) {
 		    $(el).val(hex);
 	    },

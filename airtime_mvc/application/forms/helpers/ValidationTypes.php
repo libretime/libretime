@@ -92,5 +92,42 @@ Class Application_Form_Helper_ValidationTypes {
 
         return $validator;
     }
+    
+	public static function overrideFileCountValidator($p_fileCount)
+    {
+    	$validator = new Zend_Validate_File_Count($p_fileCount);
+    
+    	$validator->setMessage(
+    			_("Please limit the upload to one file"),
+    			Zend_Validate_File_Count::TOO_MANY
+    	);
+    
+    	return $validator;
+    }
+    
+    public static function overrideFileSizeValidator($p_fileSize)
+    {
+    	$validator = new Zend_Validate_File_Size($p_fileSize);
+    
+    	$validator->setMessage(
+    			_("The uploaded file is too large. Please limit your upload to '%max%'"),
+    			Zend_Validate_File_Size::TOO_BIG
+    	);
+    
+    	return $validator;
+    }
+    
+    public static function overrideFileExtensionValidator($p_fileExtensions)
+    {
+    	$validator = new Zend_Validate_File_Extension($p_fileExtensions);
+    	$validator->setExtension($p_fileExtensions);
+    
+    	$validator->setMessage(
+    			_("'%value%' is not a valid file format"),
+    			Zend_Validate_File_Extension::FALSE_EXTENSION
+    	);
+    
+    	return $validator;
+    }
 
 }

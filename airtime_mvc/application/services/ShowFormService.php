@@ -478,12 +478,8 @@ class Application_Service_ShowFormService
             }
         }
 
-        if ($what && $live && $record && $who && $style && $when &&
-            $repeats && $absRebroadcast && $rebroadcast) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($what && $live && $record && $who && $style && $when &&
+            $repeats && $absRebroadcast && $rebroadcast);
     }
 
     public function calculateDuration($start, $end, $timezone)
