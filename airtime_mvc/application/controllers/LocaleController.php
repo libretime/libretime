@@ -12,12 +12,12 @@ class LocaleController extends Zend_Controller_Action
         $this->_helper->viewRenderer->setNoRender(true);
         header("Content-type: text/javascript");
 
-        $baseUrl = Application_Common_OsPath::getBaseDir();
         $locale = Application_Model_Preference::GetLocale();
         echo "var datatables_dict =" .
             file_get_contents(Application_Common_OsPath::join(
-                dirname(__file__),
-                "../../public/js/datatables/i18n/",
+                //$_SERVER["DOCUMENT_ROOT"],
+                dirname(__FILE__) . "/../../public/", // Fixing this... -- Albert
+                "js/datatables/i18n/",
                 $locale.".txt")
             );
     }
