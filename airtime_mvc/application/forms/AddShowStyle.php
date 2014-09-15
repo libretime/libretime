@@ -46,7 +46,6 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         
         // Add show image input
         $fileCountValidator = Application_Form_Helper_ValidationTypes::overrideFileCountValidator(1);
-        $fileSizeValidator = Application_Form_Helper_ValidationTypes::overrideFileSizeValidator(array('max' => '5120000'));
         $fileExtensionValidator = Application_Form_Helper_ValidationTypes::overrideFileExtensionValidator('jpg,png,gif');
         
         $upload = new Zend_Form_Element_File('upload');
@@ -58,31 +57,13 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         				'class'		 => 'big',
         	   			'placement'  => false
         		))))
-        	   ->addValidator('Count', false, 1)
-        	   ->addValidator('Extension', false, 'jpg,jpeg,png,gif')
+        	   ->addValidators(array(
+        	   		$fileCountValidator, 
+        	   		$fileExtensionValidator
+        	   ))
         	   ->addFilter('ImageSize');
+        	   
         $this->addElement($upload);
-        
-//         $this->addElement('file', 'add_show_image', array(
-//         		'disableLoadDefaultDecorators' => true,
-//         		'decorators'  => array('File', array('ViewScript', array(
-//         				'viewScript' => 'form/add-show-style.phtml',
-//         				'class'		 => 'big',
-//         				'placement'  => false
-//         		))),
-//         		'label'       => _('Show Image:'),
-//         		'class'       => 'input_file',
-//         		'required'    => false,
-//         		'validators'  => array(
-//         				$fileCountValidator,
-//         				$fileSizeValidator,
-//         				$fileExtensionValidator),
-//         		'destination' => '../public/images/upload',
-//         		'method'	  => 'post'
-//         ));
-        
-        // Change form enctype to accommodate file upload
-        $this->setEnctype(Zend_Form::ENCTYPE_MULTIPART);
     }
 
     public function disable()
