@@ -176,7 +176,7 @@ class Application_Service_ShowService
         $this->localShowStartHour = $origStartTime[0];
         $this->localShowStartMin = $origStartTime[1];
     }
-
+    
     public function addUpdateShow($showData)
     {
         $service_user = new Application_Service_UserService();
@@ -225,7 +225,7 @@ class Application_Service_ShowService
 
             //update ccShowHosts
             $this->setCcShowHosts($showData);
-
+            
             //create new ccShowInstances
             $this->delegateInstanceCreation($daysAdded);
 
@@ -251,6 +251,9 @@ class Application_Service_ShowService
             Logging::info("EXCEPTION: Show ".$action." failed.");
             Logging::info($e->getMessage());
         }
+        
+        // Added to pass along to the RESTful ShowController
+        return $this->ccShow->getDbId();
     }
 
     /**
@@ -732,6 +735,7 @@ SQL;
         $con = Propel::getConnection();
         $con->beginTransaction();
         try {
+        	
             if (!$currentUser->isAdminOrPM()) {
                 throw new Exception("Permission denied");
             }
@@ -743,6 +747,10 @@ SQL;
             }
 
             $showId = $ccShowInstance->getDbShowId();
+        	if (!Rest_ShowController::deleteFileFromStor($showId)) {
+        		throw new Exception("Error deleting show images");
+        	}
+        	
             if ($singleInstance) {
                 $ccShowInstances = array($ccShowInstance);
             } else {
@@ -772,7 +780,7 @@ SQL;
             return false;
         }
     }
-
+    
     public function deleteShowInstances($ccShowInstances, $showId)
     {
         foreach ($ccShowInstances as $ccShowInstance) {
@@ -1515,6 +1523,7 @@ SQL;
         $ccShow->setDbLiveStreamUsingCustomAuth($showData['cb_custom_auth'] == 1);
         $ccShow->setDbLiveStreamUser($showData['custom_username']);
         $ccShow->setDbLiveStreamPass($showData['custom_password']);
+        $ccShow->setDbImagePath($showData['image_path']);
         
         //Here a user has edited a show and linked it.
         //We need to grab the existing show instances ids and fill their content
@@ -1731,7 +1740,7 @@ SQL;
             }
         }
     }
-
+    
     /**
      *
      * Gets the date and time shows (particularly repeating shows)
