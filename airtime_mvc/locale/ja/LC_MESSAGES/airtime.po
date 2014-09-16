@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-09-12 00:50+0000\n"
+"PO-Revision-Date: 2014-09-16 00:11+0000\n"
 "Last-Translator: Kazuhiro Shimbo <kazuhiro.shimbo@mail.rakuten.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/airtime/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -145,7 +145,7 @@ msgstr "ムード"
 #: airtime_mvc/application/controllers/LocaleController.php:77
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
 msgid "Label"
-msgstr ""
+msgstr "レーベル"
 
 #: airtime_mvc/application/services/HistoryService.php:1112
 #: airtime_mvc/application/services/HistoryService.php:1166
@@ -394,7 +394,7 @@ msgstr "追加"
 msgid ""
 "Rescan watched directory (This is useful if it is network mount and may be "
 "out of sync with Airtime)"
-msgstr ""
+msgstr "同期済み一覧を再スキャンする (もしネットワーク実装であったりRakuten.FMと同期していないと思われる場合に便利です)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
@@ -402,7 +402,7 @@ msgstr "同期ディレクトリを削除する"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:50
 msgid "You are not watching any media folders."
-msgstr ""
+msgstr "いかなるメディアフォルダも見ていません"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:1
 msgid "Register Airtime"
@@ -819,7 +819,7 @@ msgstr "録音と再配信"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:29
 msgid "Who"
-msgstr ""
+msgstr "DJ"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:33
 msgid "Style"
@@ -1023,7 +1023,7 @@ msgstr "プレイリストを空にする"
 
 #: airtime_mvc/application/views/scripts/error/error.phtml:6
 msgid "Zend Framework Default Application"
-msgstr ""
+msgstr "Zend Framework Default Application"
 
 #: airtime_mvc/application/views/scripts/error/error.phtml:10
 msgid "Page not found!"
@@ -1215,7 +1215,7 @@ msgstr "年："
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:19
 #: airtime_mvc/application/forms/EditAudioMD.php:67
 msgid "Label:"
-msgstr ""
+msgstr "ラベル："
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:20
 #: airtime_mvc/application/forms/EditAudioMD.php:96
@@ -1348,17 +1348,17 @@ msgstr "国の選択"
 #: airtime_mvc/application/models/MusicDir.php:160
 #, php-format
 msgid "%s is already watched."
-msgstr ""
+msgstr "%sは同期済みです。"
 
 #: airtime_mvc/application/models/MusicDir.php:164
 #, php-format
 msgid "%s contains nested watched directory: %s"
-msgstr ""
+msgstr "%sは同期している次のフォルダを含んでいます： %s "
 
 #: airtime_mvc/application/models/MusicDir.php:168
 #, php-format
 msgid "%s is nested within existing watched directory: %s"
-msgstr ""
+msgstr "%sは同期している次のフォルダに含まれています： %s "
 
 #: airtime_mvc/application/models/MusicDir.php:189
 #: airtime_mvc/application/models/MusicDir.php:368
@@ -1370,18 +1370,18 @@ msgstr "%sは有効なディレクトリではありません。"
 #, php-format
 msgid ""
 "%s is already set as the current storage dir or in the watched folders list"
-msgstr ""
+msgstr "%sはすでに保存ディレクトリまたは同期フォルダに設定されています。"
 
 #: airtime_mvc/application/models/MusicDir.php:386
 #, php-format
 msgid ""
 "%s is already set as the current storage dir or in the watched folders list."
-msgstr ""
+msgstr "%sはすでに保存ディレクトリまたは同期フォルダに設定されています。"
 
 #: airtime_mvc/application/models/MusicDir.php:429
 #, php-format
 msgid "%s doesn't exist in the watched list."
-msgstr ""
+msgstr "%sは同期リストの中に存在しません。"
 
 #: airtime_mvc/application/models/Block.php:333
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:120
@@ -1623,17 +1623,17 @@ msgstr "リンクした番組の外に項目を移動することはできませ
 
 #: airtime_mvc/application/models/Scheduler.php:119
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
-msgstr ""
+msgstr "参照中のスケジュールはの有効ではありません。"
 
 #: airtime_mvc/application/models/Scheduler.php:124
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
-msgstr ""
+msgstr "参照中のスケジュールは有効ではありません。"
 
 #: airtime_mvc/application/models/Scheduler.php:132
 #: airtime_mvc/application/models/Scheduler.php:444
 #: airtime_mvc/application/models/Scheduler.php:482
 msgid "The schedule you're viewing is out of date!"
-msgstr ""
+msgstr "参照中のスケジュールは有効ではありません。"
 
 #: airtime_mvc/application/models/Scheduler.php:142
 #, php-format
@@ -2034,7 +2034,7 @@ msgid ""
 "Airtime is unsure about the status of this file. This can happen when the "
 "file is on a remote drive that is unaccessible or the file is in a directory"
 " that isn't 'watched' anymore."
-msgstr ""
+msgstr "このファイルのステータスが不明です。これは、ファイルがアクセス不能な外付けドライブに存在するか、またはファイルが同期されていないディレクトリに存在する場合に起こります。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:124
 #, php-format
@@ -2111,7 +2111,7 @@ msgstr "保存先のフォルダを変更しますか？Rakuten.FMライブラ�
 
 #: airtime_mvc/application/controllers/LocaleController.php:157
 msgid "Are you sure you want to remove the watched folder?"
-msgstr ""
+msgstr "同期されているフォルダを削除してもよろしいですか？"
 
 #: airtime_mvc/application/controllers/LocaleController.php:158
 msgid "This path is currently not accessible."
@@ -2233,20 +2233,20 @@ msgstr "この番組の配信回が存在しません。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:186
 msgid "Warning: Shows cannot be re-linked"
-msgstr ""
+msgstr "注意：番組は再度リンクできません。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:187
 msgid ""
 "By linking your repeating shows any media items scheduled in any repeat show"
 " will also get scheduled in the other repeat shows"
-msgstr ""
+msgstr "配信内容を同期すると、配信内容の変更が対応するすべての再配信にも反映されます。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:188
 msgid ""
 "Timezone is set to the station timezone by default. Shows in the calendar "
 "will be displayed in your local time defined by the Interface Timezone in "
 "your user settings."
-msgstr ""
+msgstr "タイムゾーンは初期設定ではステーション所在地に合わせて設定されています。タイムゾーンを変更するには、ユーザー設定からインターフェイスのタイムゾーンを変更して下さい。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:192
 msgid "Show"
@@ -2681,7 +2681,7 @@ msgstr "ユーザー管理"
 
 #: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "Manage watched folders"
-msgstr ""
+msgstr "同期されているフォルダを管理"
 
 #: airtime_mvc/application/controllers/LocaleController.php:332
 #: airtime_mvc/application/forms/SupportSettings.php:112
@@ -3024,7 +3024,7 @@ msgstr "インポートフォルダ："
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:25
 msgid "Watched Folders:"
-msgstr ""
+msgstr "同期フォルダ："
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:40
 msgid "Not a valid Directory"
@@ -3216,7 +3216,7 @@ msgstr "24時間を越える長さに設定することはできません。"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr "リンク："
+msgstr "配信内容を同期する："
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
