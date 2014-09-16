@@ -158,6 +158,7 @@ CREATE TABLE "cc_show"
 	"live_stream_pass" VARCHAR(255),
 	"linked" BOOLEAN default 'f' NOT NULL,
 	"is_linkable" BOOLEAN default 't' NOT NULL,
+	"image_path" VARCHAR(255),
 	PRIMARY KEY ("id")
 );
 
@@ -731,25 +732,6 @@ CREATE TABLE "cc_listener_count"
 );
 
 COMMENT ON TABLE "cc_listener_count" IS '';
-
-
-SET search_path TO public;
------------------------------------------------------------------------------
--- cc_locale
------------------------------------------------------------------------------
-
-DROP TABLE "cc_locale" CASCADE;
-
-
-CREATE TABLE "cc_locale"
-(
-	"id" serial  NOT NULL,
-	"locale_code" VARCHAR(16)  NOT NULL,
-	"locale_lang" VARCHAR(128)  NOT NULL,
-	PRIMARY KEY ("id")
-);
-
-COMMENT ON TABLE "cc_locale" IS '';
 
 
 SET search_path TO public;

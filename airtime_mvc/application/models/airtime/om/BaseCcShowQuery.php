@@ -19,6 +19,7 @@
  * @method     CcShowQuery orderByDbLiveStreamPass($order = Criteria::ASC) Order by the live_stream_pass column
  * @method     CcShowQuery orderByDbLinked($order = Criteria::ASC) Order by the linked column
  * @method     CcShowQuery orderByDbIsLinkable($order = Criteria::ASC) Order by the is_linkable column
+ * @method     CcShowQuery orderByDbImagePath($order = Criteria::ASC) Order by the image_path column
  *
  * @method     CcShowQuery groupByDbId() Group by the id column
  * @method     CcShowQuery groupByDbName() Group by the name column
@@ -33,6 +34,7 @@
  * @method     CcShowQuery groupByDbLiveStreamPass() Group by the live_stream_pass column
  * @method     CcShowQuery groupByDbLinked() Group by the linked column
  * @method     CcShowQuery groupByDbIsLinkable() Group by the is_linkable column
+ * @method     CcShowQuery groupByDbImagePath() Group by the image_path column
  *
  * @method     CcShowQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     CcShowQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -70,6 +72,7 @@
  * @method     CcShow findOneByDbLiveStreamPass(string $live_stream_pass) Return the first CcShow filtered by the live_stream_pass column
  * @method     CcShow findOneByDbLinked(boolean $linked) Return the first CcShow filtered by the linked column
  * @method     CcShow findOneByDbIsLinkable(boolean $is_linkable) Return the first CcShow filtered by the is_linkable column
+ * @method     CcShow findOneByDbImagePath(string $image_path) Return the first CcShow filtered by the image_path column
  *
  * @method     array findByDbId(int $id) Return CcShow objects filtered by the id column
  * @method     array findByDbName(string $name) Return CcShow objects filtered by the name column
@@ -84,6 +87,7 @@
  * @method     array findByDbLiveStreamPass(string $live_stream_pass) Return CcShow objects filtered by the live_stream_pass column
  * @method     array findByDbLinked(boolean $linked) Return CcShow objects filtered by the linked column
  * @method     array findByDbIsLinkable(boolean $is_linkable) Return CcShow objects filtered by the is_linkable column
+ * @method     array findByDbImagePath(string $image_path) Return CcShow objects filtered by the image_path column
  *
  * @package    propel.generator.airtime.om
  */
@@ -452,6 +456,28 @@ abstract class BaseCcShowQuery extends ModelCriteria
 			$is_linkable = in_array(strtolower($dbIsLinkable), array('false', 'off', '-', 'no', 'n', '0')) ? false : true;
 		}
 		return $this->addUsingAlias(CcShowPeer::IS_LINKABLE, $dbIsLinkable, $comparison);
+	}
+
+	/**
+	 * Filter the query on the image_path column
+	 * 
+	 * @param     string $dbImagePath The value to use as filter.
+	 *            Accepts wildcards (* and % trigger a LIKE)
+	 * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+	 *
+	 * @return    CcShowQuery The current query, for fluid interface
+	 */
+	public function filterByDbImagePath($dbImagePath = null, $comparison = null)
+	{
+		if (null === $comparison) {
+			if (is_array($dbImagePath)) {
+				$comparison = Criteria::IN;
+			} elseif (preg_match('/[\%\*]/', $dbImagePath)) {
+				$dbImagePath = str_replace('*', '%', $dbImagePath);
+				$comparison = Criteria::LIKE;
+			}
+		}
+		return $this->addUsingAlias(CcShowPeer::IMAGE_PATH, $dbImagePath, $comparison);
 	}
 
 	/**
