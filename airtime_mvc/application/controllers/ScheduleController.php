@@ -1,8 +1,5 @@
 <?php
 
-$filepath = realpath (dirname(__FILE__));
-require_once($filepath."/../modules/rest/controllers/MediaController.php");
-
 class ScheduleController extends Zend_Controller_Action
 {
 
@@ -594,7 +591,8 @@ class ScheduleController extends Zend_Controller_Action
         $forms["style"]->removeElement("upload");
         
         if ($service_showForm->validateShowForms($forms, $data)) {
-        	$service_show->addUpdateShow($data);
+        	// Get the show ID from the show service to pass as a parameter to the RESTful ShowController
+        	$this->view->showId = $service_show->addUpdateShow($data);
             
             //send new show forms to the user
             $this->createShowFormAction(true);
@@ -608,17 +606,6 @@ class ScheduleController extends Zend_Controller_Action
         	$this->view->form = $this->view->render('schedule/add-show-form.phtml');
             Logging::debug("Show creation failed");
         }
-    }
-    
-    /**
-     * Since the form is being submitted via jQuery, this function accepts
-     * a second AJAX request and writes the file (sent as a FormData object)
-     */
-    public function uploadImageAction()
-    {
-    	Rest_MediaController::processUploadedImage(
-    			$_FILES["show-image"]["tmp-name"],
-        		$_FILES["show-image"]["name"]);
     }
     
     public function createShowFormAction($populateDefaults=false)
