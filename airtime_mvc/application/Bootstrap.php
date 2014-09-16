@@ -18,6 +18,8 @@ require_once "Auth.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 require_once __DIR__.'/controllers/plugins/Maintenance.php';
+require_once __DIR__.'/modules/rest/controllers/ShowController.php';
+require_once __DIR__.'/modules/rest/controllers/MediaController.php';
 
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
