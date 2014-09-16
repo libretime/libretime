@@ -1,5 +1,8 @@
 <?php
 
+$filepath = realpath (dirname(__FILE__));
+require_once($filepath."/../modules/rest/controllers/MediaController.php");
+
 class ScheduleController extends Zend_Controller_Action
 {
 
