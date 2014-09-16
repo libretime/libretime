@@ -8,7 +8,6 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
-            $("#upload").prop("accept", "image/*");
 
             /*
             var windowWidth = $(window).width();
@@ -627,25 +626,30 @@ function setAddShowEvents(form) {
             }
         }).get();
 
-        var start_date = $("#add_show_start_date").val();
-        var end_date = $("#add_show_end_date").val();
-        var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
+        var start_date = $("#add_show_start_date").val(),
+        	end_date = $("#add_show_end_date").val(),
+        	action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
         
         var image = new FormData();
-        image.append('show-image', $('#upload')[0].files[0]);
-
+        image.append('file', $('#upload')[0].files[0]);
+        
         $.ajax({
         	url: action, 
         	data: {format: "json", data: data, hosts: hosts, days: days},
         	success: function(json) {
-		        $.ajax({
-		        	url: '/Schedule/upload-image',
-		        	data: image,
-		        	cache: false,
-		        	contentType: false,
-		        	processData: false,
-		        	type: 'POST'
-		        });
+        		if (json.showId) { // Successfully added the show
+        			var imageAction = '/rest/show/' + json.showId + '/upload-image';
+        			
+        			// perform a second post in order to send the show image
+        			$.ajax({
+        				url: imageAction,
+        				data: image,
+        				cache: false,
+        				contentType: false,
+        				processData: false,
+        				type: 'POST'
+        			});
+        		}
 
 		        $('#schedule-add-show').unblock();
 	            
@@ -781,6 +785,8 @@ function setAddShowEvents(form) {
 		});
 	}
     
+    // Since Zend's setAttrib won't apply through the wrapper, set accept=image/* here
+    $("#upload").prop("accept", "image/*");
     var bgColorEle = $("#add_show_background_color");
     var textColorEle = $("#add_show_color");
     $('#add_show_name').bind('input', 'change', function(){
