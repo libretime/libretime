@@ -21,6 +21,8 @@ class Rest_MediaController extends Zend_Rest_Controller
     public function init()
     {
         $this->view->layout()->disableLayout();
+		// Remove reliance on .phtml files to render requests
+   		$this->_helper->viewRenderer->setNoRender(true);
     }
     
     public function indexAction()
@@ -445,7 +447,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                  $importedStorageDirectory, basename($originalFilename),
                  $callbackUrl, $apiKey);
     }
-
+    
     private function getOwnerId()
     {
         try {
