@@ -1,5 +1,8 @@
 <?php
 
+$filepath = realpath (dirname(__FILE__));
+require_once($filepath."/../modules/rest/controllers/MediaController.php");
+
 class ScheduleController extends Zend_Controller_Action
 {
 
@@ -553,7 +556,6 @@ class ScheduleController extends Zend_Controller_Action
     public function addShowAction()
     {
         $service_showForm = new Application_Service_ShowFormService(null);
-        //$service_show = new Application_Service_ShowService();
         
         $js = $this->_getParam('data');
         $data = array();
@@ -566,9 +568,9 @@ class ScheduleController extends Zend_Controller_Action
         $service_show = new Application_Service_ShowService(null, $data);
 
         // TODO: move this to js
-        $data['add_show_hosts']     = $this->_getParam('hosts');
-        $data['add_show_day_check'] = $this->_getParam('days');
-
+		$data['add_show_hosts']     = $this->_getParam('hosts');
+		$data['add_show_day_check'] = $this->_getParam('days');
+        
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
@@ -580,13 +582,17 @@ class ScheduleController extends Zend_Controller_Action
         $log_vars["params"]["form_data"] = $data;
         Logging::info($log_vars);
         
-        $request = $this->getRequest();
-        Logging::info($request);
-        
         $forms = $this->createShowFormAction();
         
         $this->view->addNewShow = true;
-
+        
+        /* 
+         * hack to prevent validating the file upload field since it 
+         * isn't passed into $data
+         */
+        $upload = $forms["style"]->getElement("upload");
+        $forms["style"]->removeElement("upload");
+        
         if ($service_showForm->validateShowForms($forms, $data)) {
         	$service_show->addUpdateShow($data);
             
@@ -596,11 +602,25 @@ class ScheduleController extends Zend_Controller_Action
             
             Logging::debug("Show creation succeeded");
         } else {
+			// re-add the element
+        	$forms["style"]->addElement($upload);
+        	
         	$this->view->form = $this->view->render('schedule/add-show-form.phtml');
             Logging::debug("Show creation failed");
         }
     }
-
+    
+    /**
+     * Since the form is being submitted via jQuery, this function accepts
+     * a second AJAX request and writes the file (sent as a FormData object)
+     */
+    public function uploadImageAction()
+    {
+    	Rest_MediaController::processUploadedImage(
+    			$_FILES["show-image"]["tmp-name"],
+        		$_FILES["show-image"]["name"]);
+    }
+    
     public function createShowFormAction($populateDefaults=false)
     {
         $service_showForm = new Application_Service_ShowFormService();
@@ -682,7 +702,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $paramsPop = str_replace('#id#', $id, $params);
 
-        // added for downlaod
+        // added for download
         $id = $this->_getParam('id');
 
         $file_id = $this->_getParam('id', null);
@@ -707,7 +727,7 @@ class ScheduleController extends Zend_Controller_Action
         Application_Model_Preference::SetCalendarTimeScale($this->_getParam('timeScale'));
     }
 
-/**
+	/**
      * Sets the user specific preference for which time interval to use in Calendar.
      * This is only being used by schedule.js at the moment.
      */
@@ -753,4 +773,5 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson($localTime);
     }
+    
 }

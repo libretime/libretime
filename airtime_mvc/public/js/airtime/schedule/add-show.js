@@ -8,7 +8,7 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
-            $("#add-show-form").prop("enctype", "multipart/form-data");
+            $("#upload").prop("accept", "image/*");
 
             /*
             var windowWidth = $(window).width();
@@ -581,7 +581,7 @@ function setAddShowEvents(form) {
         }
     })
 
-	form.find("#schedule-show-style input .input_text").ColorPicker({
+	form.find("#schedule-show-style .input_text").ColorPicker({
         onChange: function (hsb, hex, rgb, el) {
 		    $(el).val(hex);
 	    },
@@ -630,37 +630,48 @@ function setAddShowEvents(form) {
         var start_date = $("#add_show_start_date").val();
         var end_date = $("#add_show_end_date").val();
         var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
+        
+        var image = new FormData();
+        image.append('show-image', $('#upload')[0].files[0]);
 
-        $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
-            
-            $('#schedule-add-show').unblock();
-            
-            var $addShowForm = $("#add-show-form");
-            
-            if (json.form) {
-            	
-            	redrawAddShowForm($addShowForm, json.form);
+        $.ajax({
+        	url: action, 
+        	data: {format: "json", data: data, hosts: hosts, days: days},
+        	success: function(json) {
+		        $.ajax({
+		        	url: '/Schedule/upload-image',
+		        	data: image,
+		        	cache: false,
+		        	contentType: false,
+		        	processData: false,
+		        	type: 'POST'
+		        });
 
-                $("#add_show_end_date").val(end_date);
-                $("#add_show_start_date").val(start_date);
-                showErrorSections();
-            }
-            else if (json.edit) {
-            	
-                $("#schedule_calendar").removeAttr("style")
-                	.fullCalendar('render');
-
-                $addShowForm.hide();
-                $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
-                	redrawAddShowForm($addShowForm, json.form);
-                });
-                makeAddShowButton();
-            }
-            else {
-
-                redrawAddShowForm($addShowForm, json.newForm);
-                scheduleRefetchEvents(json);
-            }
+		        $('#schedule-add-show').unblock();
+	            
+	            var $addShowForm = $("#add-show-form");
+	            
+	            if (json.form) {
+	            	
+	            	redrawAddShowForm($addShowForm, json.form);
+	
+	                $("#add_show_end_date").val(end_date);
+	                $("#add_show_start_date").val(start_date);
+	                showErrorSections();
+	            } else if (json.edit) {
+	                $("#schedule_calendar").removeAttr("style")
+	                	.fullCalendar('render');
+	
+	                $addShowForm.hide();
+	                $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
+	                	redrawAddShowForm($addShowForm, json.form);
+	                });
+	                makeAddShowButton();
+	            } else {
+	                redrawAddShowForm($addShowForm, json.newForm);
+	                scheduleRefetchEvents(json);
+	            }
+        	}
         });
 	});
 
