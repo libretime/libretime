@@ -879,6 +879,7 @@ SELECT si1.starts            AS starts,
        show.name             AS name,
        show.color            AS color,
        show.background_color AS background_color,
+       show.image_path       AS image_path,
        show.linked           AS linked,
        si1.file_id           AS file_id,
        si1.id                AS instance_id,
@@ -1080,6 +1081,7 @@ SELECT si.starts AS start_timestamp,
        si.id AS instance_id,
        si.record,
        s.url,
+       s.image_path,
        starts,
        ends
 FROM cc_show_instances si
@@ -1121,8 +1123,8 @@ SQL;
         
         $CC_CONFIG = Config::getConfig();
         $con = Propel::getConnection();
-        //
-        //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
+
+                //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = <<<SQL
 SELECT si.starts AS start_timestamp,
        si.ends AS end_timestamp,
@@ -1131,6 +1133,7 @@ SELECT si.starts AS start_timestamp,
        si.id AS instance_id,
        si.record,
        s.url,
+       s.image_path,
        starts,
        ends
 FROM cc_show_instances si
@@ -1181,6 +1184,7 @@ SQL;
                                 "starts"          => $rows[$i-1]['starts'],
                                 "ends"            => $rows[$i-1]['ends'],
                                 "record"          => $rows[$i-1]['record'],
+	                    		"image_path"      => $rows[$i-1]['image_path'],
                                 "type"            => "show");
                 }
 
@@ -1197,7 +1201,8 @@ SQL;
                                 "starts"          => $rows[$i+1]['starts'],
                                 "ends"            => $rows[$i+1]['ends'],
                                 "record"          => $rows[$i+1]['record'],
-                                "type"            => "show");
+	                    		"image_path"      => $rows[$i+1]['image_path'],
+                    			"type"            => "show");
                 }
                 break;
             }
@@ -1217,7 +1222,8 @@ SQL;
                                 "starts"          => $rows[$i]['starts'],
                                 "ends"            => $rows[$i]['ends'],
                                 "record"          => $rows[$i]['record'],
-                                "type"            => "show");
+	                    		"image_path"      => $rows[$i]['image_path'],
+                				"type"            => "show");
                 break;
             }
         }
@@ -1233,7 +1239,8 @@ SQL;
                     "starts"          => $rows[$previousShowIndex]['starts'],
                     "ends"            => $rows[$previousShowIndex]['ends'],
                     "record"          => $rows[$previousShowIndex]['record'],
-                    "type"            => "show");
+                    "image_path"      => $rows[$previousShowIndex]['image_path'],
+                	"type"            => "show");
         }
 
         return $results;
@@ -1268,7 +1275,8 @@ SELECT si.starts AS start_timestamp,
        si.id AS instance_id,
        si.record,
        s.url,
-       starts,
+	   s.image_path,
+	   starts,
        ends
 FROM cc_show_instances si
      LEFT JOIN cc_show s
