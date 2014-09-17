@@ -132,6 +132,7 @@ else
     echo "----------------------------------------------------"
     echo "2.1 Apache Config File"
     echo "----------------------------------------------------"
+
     if [ "$apacheversion" != "1" ]; then
 	airtimeconfigfile="airtime.conf"
     else
