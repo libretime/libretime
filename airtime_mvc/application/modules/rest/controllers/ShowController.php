@@ -190,9 +190,15 @@ class Rest_ShowController extends Zend_Rest_Controller
 		Logging::info("Deleting images from " . $importedStorageDirectory);
 		
 		// to be safe in case image uploading functionality is extended later
-		return Rest_ShowController::delTree($importedStorageDirectory);
+		if (!file_exists($importedStorageDirectory)) {
+			Logging::info("No uploaded images for show with id " . $showId);
+			return true;
+		} else {
+			return Rest_ShowController::delTree($importedStorageDirectory);
+		}
 	}
 
+	// from a comment @ http://php.net/manual/en/function.rmdir.php
 	private static function delTree($dir) {
 		$files = array_diff(scandir($dir), array('.','..'));
 		foreach ($files as $file) {
