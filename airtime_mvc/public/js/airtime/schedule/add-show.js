@@ -8,7 +8,7 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
-
+            
             /*
             var windowWidth = $(window).width();
             // margin on showform are 16 px on each side
@@ -232,6 +232,21 @@ function setAddShowEvents(form) {
 
     if(!form.find("#add_show_rebroadcast").attr('checked')) {
         form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
+    }
+
+    // If we're adding a new show, hide the "Current Logo" element/label
+    if ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show") {
+    	$("#show_logo_current-element").show();
+    	$("#show_logo_current-label").show();
+    	// Display the current show logo if it exists
+		if ($("#show_logo_current").attr("src") !== "") {
+			$("#show_logo_current").show();
+		} else {
+			$("#show_logo_current").hide();
+		}
+    } else {
+    	$("#show_logo_current-element").hide();
+    	$("#show_logo_current-label").hide();
     }
 
     form.find("#add_show_repeats").click(function(){
@@ -592,7 +607,25 @@ function setAddShowEvents(form) {
 			$(this).ColorPickerSetColor(this.value);
 		}
 	});
+	
+	// when an image is uploaded, we want to show it to the user
+	form.find("#upload").change(function(event) {
+		if (this.files && this.files[0]) {
+            $("#show_logo_preview").show();
+			var reader = new FileReader(); // browser compatibility?
+			
+            reader.onload = function (e) {
+                $("#show_logo_preview")
+                    .attr('src', e.target.result);
+            };
 
+            // read the image data as though it were a data URI
+            reader.readAsDataURL(this.files[0]);
+        } else {
+            $("#show_logo_preview").hide();
+        }
+	});
+	
     form.find("#add-show-close").click(closeAddShowForm);
 
 	form.find(".add-show-submit").click(function(event) {
@@ -630,17 +663,21 @@ function setAddShowEvents(form) {
         	end_date = $("#add_show_end_date").val(),
         	action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
         
-        var image = new FormData();
-        image.append('file', $('#upload')[0].files[0]);
+        var image;
+        if ($('#upload')[0] && $('#upload')[0].files
+        		&& $('#upload')[0].files[0]) {
+        	image = new FormData();
+        	image.append('file', $('#upload')[0].files[0]);
+        }
         
         $.ajax({
         	url: action, 
         	data: {format: "json", data: data, hosts: hosts, days: days},
         	success: function(json) {
-        		if (json.showId) { // Successfully added the show
+        		if (json.showId && image) { // Successfully added the show, and it contains an image to upload
         			var imageAction = '/rest/show/' + json.showId + '/upload-image';
         			
-        			// perform a second post in order to send the show image
+        			// perform a second xhttprequest in order to send the show image
         			$.ajax({
         				url: imageAction,
         				data: image,
