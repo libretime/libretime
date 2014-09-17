@@ -9,6 +9,7 @@ class Application_Service_ShowFormService
         if (!is_null($showId)) {
             $this->ccShow = CcShowQuery::create()->findPk($showId);
         }
+        
         $this->instanceId = $instanceId;
     }
 
@@ -284,10 +285,31 @@ class Application_Service_ShowFormService
 
     private function populateFormStyle($form)
     {
+    	$src = $this->imagePathToDataUri($this->ccShow->getDbImagePath());
+    	
         $form->populate(
             array(
                 'add_show_background_color' => $this->ccShow->getDbBackgroundColor(),
-                'add_show_color' => $this->ccShow->getDbColor()));
+                'add_show_color' => $this->ccShow->getDbColor(),
+        		'show_logo_current' => $src));
+    }
+    
+    /**
+     * Convert a static image from disk to a base64 data URI
+     * 
+     * @param unknown $path
+     * 		- the path to the image on the disk
+     * @return string
+     * 		- the data URI representation of the image
+     */
+    private function imagePathToDataUri($path) {
+    	ob_start();
+    	header("Content-type: image/*");
+    	readfile($path);
+    	$imageData = base64_encode(ob_get_contents());
+    	ob_end_clean();
+    	// Format the image SRC:  data:{mime};base64,{data};
+    	return 'data: '.mime_content_type($path).';base64,'.$imageData;
     }
 
     private function populateFormLive($form)
