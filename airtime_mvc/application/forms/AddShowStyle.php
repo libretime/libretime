@@ -44,13 +44,26 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
                 'Hex', $stringLengthValidator
         ));
         
+        // Show the current logo
+        $this->addElement('image', 'show_logo_current', array(
+        		'label'	=> _('Current Logo:'),
+        ));
+        
+        $logo = $this->getElement('show_logo_current');
+        $logo->setDecorators(array(array('ViewScript', array(
+        		'viewScript' => 'form/add-show-style.phtml',
+        		'class'      => 'big'
+        ))));
+        // Since we need to use a Zend_Form_Element_Image proto, disable it
+        $logo->setAttrib('disabled','disabled');
+        
         // Add show image input
         $fileCountValidator = Application_Form_Helper_ValidationTypes::overrideFileCountValidator(1);
         $fileExtensionValidator = Application_Form_Helper_ValidationTypes::overrideFileExtensionValidator('jpg,png,gif');
         
         $upload = new Zend_Form_Element_File('upload');
         
-        $upload->setLabel(_('Show Image:'))
+        $upload->setLabel(_('Show Logo:'))
         	   ->setRequired(false)
         	   ->setDecorators(array('File', array('ViewScript', array(
         				'viewScript' => 'form/add-show-style.phtml',
@@ -64,6 +77,18 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         	   ->addFilter('ImageSize');
         	   
         $this->addElement($upload);
+        
+        // Add image preview
+        $this->addElement('image', 'show_logo_preview', array(
+        	'label'	=> _('Logo Preview:'),
+        ));
+        
+        $preview = $this->getElement('show_logo_preview');
+        $preview->setDecorators(array(array('ViewScript', array(
+        		'viewScript' => 'form/add-show-style.phtml',
+        		'class'      => 'big'
+        ))));
+        $preview->setAttrib('disabled','disabled');
     }
 
     public function disable()
