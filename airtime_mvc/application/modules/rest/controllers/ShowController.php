@@ -55,8 +55,6 @@ class Rest_ShowController extends Zend_Rest_Controller
 	
 	public function uploadImageAction() 
 	{
-		Logging::info("Uploading image: " . $_FILES["file"]);
-		
 		if (!$this->restAuth->verifyAuth(true, true))
 		{
 			Logging::info("Authentication failed");
@@ -64,7 +62,6 @@ class Rest_ShowController extends Zend_Rest_Controller
 		}
 		
 		$showId = $this->getShowId();
-		Logging::info("Show Id " . $showId);
 		
 		if (!$showId) {
 			Logging::info("No show id provided");
@@ -162,8 +159,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 		
 		// Did all the checks for real, now trying to copy
 		$image_stor = Application_Common_OsPath::join($importedStorageDirectory, $newFileName);
-		Logging::info($newFileName);
-		Logging::info($image_stor);
+		Logging::info("Adding image: " . $image_stor);
 		Logging::info("copyFileToStor: moving file $image_file to $image_stor");
 
 		if (@rename($image_file, $image_stor) === false) {
@@ -181,14 +177,14 @@ class Rest_ShowController extends Zend_Rest_Controller
 		return $image_stor;
 	}
 	
-	public static function deleteFileFromStor($showId) {
+	public static function deleteFilesFromStor($showId) {
 		$auth = new RestAuth();
 		$ownerId = $auth->getOwnerId();
 		
 		$storDir = Application_Model_MusicDir::getStorDir();
 		$importedStorageDirectory = $storDir->getDirectory() . "imported/" . $ownerId . "/show-images/" . $showId;
 		
-		Logging::info($importedStorageDirectory);
+		Logging::info("Deleting images from " . $importedStorageDirectory);
 		
 		// to be safe in case image uploading functionality is extended later
 		return Rest_ShowController::delTree($importedStorageDirectory);

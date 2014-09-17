@@ -531,13 +531,24 @@ class ScheduleController extends Zend_Controller_Action
 
         list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
             $service_showForm->preEditShowValidationCheck($data);
+        
+        /*
+         * hack to prevent validating the file upload field since it
+        * isn't passed into $data
+        */
+        $upload = $forms["style"]->getElement("upload");
+        $forms["style"]->removeElement("upload");
+        
 
         if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
-
-            $service_show->addUpdateShow($data);
-
-            $this->view->addNewShow = true;
+            // Get the show ID from the show service to pass as a parameter to the RESTful ShowController
+            $this->view->showId = $service_show->addUpdateShow($data);
+            
+            // re-add the upload element
+        	$forms["style"]->addElement($upload);
+            
+        	$this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         } else {
             if (!$validateStartDate) {
@@ -547,6 +558,9 @@ class ScheduleController extends Zend_Controller_Action
                 $this->view->when->getElement('add_show_start_time')->setOptions(array('disabled' => true));
             }
             //$this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
+            // re-add the upload element
+            $forms["style"]->addElement($upload);
+            
             $this->view->addNewShow = false;
             $this->view->action = "edit-show";
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');

@@ -198,7 +198,13 @@ class Application_Service_ShowService
             $daysAdded = array();
 
             if ($this->isUpdate) {
-                
+            	
+            	// Delete previous show images
+            	$showId = $this->ccShow->getDbId();
+            	if (!Rest_ShowController::deleteFilesFromStor($showId)) {
+            		throw new Exception("Error deleting show images");
+            	}
+            	 
                 if (!$this->ccShow->getCcShowDayss()->isEmpty()) {
                     $this->storeOrigLocalShowInfo();
                 }
@@ -746,8 +752,9 @@ SQL;
                 throw new Exception("Could not find show instance");
             }
 
+            // Delete show images
             $showId = $ccShowInstance->getDbShowId();
-        	if (!Rest_ShowController::deleteFileFromStor($showId)) {
+        	if (!Rest_ShowController::deleteFilesFromStor($showId)) {
         		throw new Exception("Error deleting show images");
         	}
         	
