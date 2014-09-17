@@ -149,7 +149,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 
 		// check if "organize" dir exists and if not create one
 		if (!file_exists($importedStorageDirectory)) {
-			if (!mkdir($importedStorageDirectory, 0777)) {
+			if (!mkdir($importedStorageDirectory, 0777, true)) {
 				throw new Exception("Failed to create storage directory.");
 			}
 		}
