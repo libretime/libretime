@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-09-16 00:11+0000\n"
+"PO-Revision-Date: 2014-09-17 23:48+0000\n"
 "Last-Translator: Kazuhiro Shimbo <kazuhiro.shimbo@mail.rakuten.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/airtime/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -75,7 +75,7 @@ msgstr "キューアウトの設定"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
-msgstr ""
+msgstr "カーソル"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:274
@@ -535,7 +535,7 @@ msgstr "マスターソース接続URL："
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:115
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:159
 msgid "Override"
-msgstr ""
+msgstr "オーバーライド"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
@@ -779,7 +779,7 @@ msgstr "ON AIR"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:55
 msgid "Listen"
-msgstr ""
+msgstr "試聴"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:59
 msgid "Station time"
@@ -1415,7 +1415,7 @@ msgstr "キューアウトをキューインより小さく設定することは
 #: airtime_mvc/application/models/Block.php:1340
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:48
 msgid "Select criteria"
-msgstr "選択してください"
+msgstr "基準を選択してください"
 
 #: airtime_mvc/application/models/Block.php:1342
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:50
@@ -1495,19 +1495,19 @@ msgstr "ウェブサイト"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:366
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:404
 msgid "Select modifier"
-msgstr "選択してください"
+msgstr "条件を選択してください"
 
 #: airtime_mvc/application/models/Block.php:1372
 #: airtime_mvc/application/controllers/LocaleController.php:142
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:88
 msgid "contains"
-msgstr "含む"
+msgstr "以下を含む"
 
 #: airtime_mvc/application/models/Block.php:1373
 #: airtime_mvc/application/controllers/LocaleController.php:143
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:89
 msgid "does not contain"
-msgstr "含まない"
+msgstr "以下を含まない"
 
 #: airtime_mvc/application/models/Block.php:1374
 #: airtime_mvc/application/models/Block.php:1378
@@ -1515,7 +1515,7 @@ msgstr "含まない"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:104
 msgid "is"
-msgstr "一致する"
+msgstr "以下と一致する"
 
 #: airtime_mvc/application/models/Block.php:1375
 #: airtime_mvc/application/models/Block.php:1379
@@ -1523,19 +1523,19 @@ msgstr "一致する"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:91
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:105
 msgid "is not"
-msgstr "一致しない"
+msgstr "以下と一致しない"
 
 #: airtime_mvc/application/models/Block.php:1376
 #: airtime_mvc/application/controllers/LocaleController.php:146
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:92
 msgid "starts with"
-msgstr "始まる"
+msgstr "以下で始まる"
 
 #: airtime_mvc/application/models/Block.php:1377
 #: airtime_mvc/application/controllers/LocaleController.php:147
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:93
 msgid "ends with"
-msgstr "終る"
+msgstr "以下で終わる"
 
 #: airtime_mvc/application/models/Block.php:1380
 #: airtime_mvc/application/controllers/LocaleController.php:148
@@ -1874,7 +1874,7 @@ msgstr "プレイリストに追加できるのはトラック・スマートブ
 
 #: airtime_mvc/application/controllers/LocaleController.php:53
 msgid "Please select a cursor position on timeline."
-msgstr ""
+msgstr "タイムライン上のカーソル位置を選択して下さい。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:58
 msgid "Add to selected show"
@@ -2593,7 +2593,7 @@ msgstr "ディスク"
 
 #: airtime_mvc/application/controllers/LocaleController.php:308
 msgid "Look in"
-msgstr ""
+msgstr "閲覧"
 
 #: airtime_mvc/application/controllers/LocaleController.php:310
 msgid "Open"
@@ -2797,7 +2797,7 @@ msgstr "%d/%d ファイルをアップロードしました。"
 
 #: airtime_mvc/application/controllers/LocaleController.php:370
 msgid "N/A"
-msgstr ""
+msgstr "N/A"
 
 #: airtime_mvc/application/controllers/LocaleController.php:371
 msgid "Drag files here."
@@ -2926,11 +2926,11 @@ msgstr "Liquidsoapに問題があります。"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:196
 msgid "Select cursor"
-msgstr ""
+msgstr "カーソルを選択"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:197
 msgid "Remove cursor"
-msgstr ""
+msgstr "カーソルを削除"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:216
 msgid "show does not exist"
@@ -3289,15 +3289,15 @@ msgstr "パスワード"
 
 #: airtime_mvc/application/forms/PasswordChange.php:28
 msgid "Confirm new password"
-msgstr ""
+msgstr "新しいパスワードを確認してください。"
 
 #: airtime_mvc/application/forms/PasswordChange.php:36
 msgid "Password confirmation does not match your password."
-msgstr ""
+msgstr "パスワード確認がパスワードと一致しません。"
 
 #: airtime_mvc/application/forms/PasswordChange.php:43
 msgid "Get new password"
-msgstr ""
+msgstr "新しいパスワードを入手"
 
 #: airtime_mvc/application/forms/SupportSettings.php:21
 #: airtime_mvc/application/forms/GeneralPreferences.php:21
@@ -3439,7 +3439,7 @@ msgstr "Icecastサーバーを使用する際はマウント欄を入力して�
 
 #: airtime_mvc/application/forms/StreamSetting.php:22
 msgid "Hardware Audio Output"
-msgstr ""
+msgstr "オーディオ出力"
 
 #: airtime_mvc/application/forms/StreamSetting.php:33
 msgid "Output Type"
@@ -3495,7 +3495,7 @@ msgstr "再配信"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:17
 msgid "Enable System Emails (Password Reset)"
-msgstr ""
+msgstr "システムメールを有効化 (パスワードリセット)"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:27
 msgid "Reset Password 'From' Email"
@@ -3588,7 +3588,7 @@ msgstr "デフォルトフェードアウト（初期値）："
 msgid ""
 "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make "
 "front-end widgets work.)"
-msgstr ""
+msgstr "外部サイトからの「スケジュール」情報へのアクセスを許可しますか?%s （フロントエンドのウィジェットを機能させる場合は、これを有効にしてください）"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:90
 msgid "Disabled"
@@ -3620,7 +3620,7 @@ msgstr "メール"
 
 #: airtime_mvc/application/forms/PasswordRestore.php:36
 msgid "Restore password"
-msgstr ""
+msgstr "パスワードをリセット"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:118
 msgid "hours"
@@ -3681,7 +3681,7 @@ msgstr "設定できるアイテムの最大数は500です。"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:529
 msgid "You must select Criteria and Modifier"
-msgstr ""
+msgstr "「基準」と「条件」を選択してください。"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:536
 msgid "'Length' should be in '00:00:00' format"
@@ -3733,7 +3733,7 @@ msgstr "SoundCloudへのアップロードを有効化"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:36
 msgid "Automatically Mark Files \"Downloadable\" on SoundCloud"
-msgstr ""
+msgstr "自動的にSoundCloud上で「Downloadable」ファイルとしてアップロードする。"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:47
 msgid "SoundCloud Email"
@@ -3809,7 +3809,7 @@ msgstr "Other"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:133
 msgid "Default License:"
-msgstr "トライセンス（初期値）："
+msgstr "ライセンス（初期値）："
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:137
 msgid "The work is in the public domain"
@@ -3881,7 +3881,7 @@ msgstr "メディアフォルダ"
 
 #: airtime_mvc/application/configs/navigation.php:64
 msgid "Streams"
-msgstr "配信"
+msgstr "配信設定"
 
 #: airtime_mvc/application/configs/navigation.php:83
 msgid "Listener Stats"
@@ -3913,4 +3913,4 @@ msgstr "選択してください。"
 
 #: airtime_mvc/library/propel/contrib/pear/HTML_QuickForm_Propel/Propel.php:531
 msgid "No Records"
-msgstr ""
+msgstr "録画なし"
