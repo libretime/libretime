@@ -129,7 +129,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 		$storDir = Application_Model_MusicDir::getStorDir();
 		$importedStorageDirectory = $storDir->getDirectory() . "imported/" . $ownerId . "/show-images/" . $showId;
 
-		Logging::info("Stor directory: " . $storDir);
+		Logging::info("Stor directory: " . $storDir->getDirectory());
 		Logging::info("Show image directory: " . $importedStorageDirectory);
 		 
 		try {
