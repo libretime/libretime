@@ -69,6 +69,13 @@ SQL;
 
         return $show->getDbName();
     }
+    
+    public function getImagePath()
+    {
+    	$show = CcShowQuery::create()->findPK($this->getShowId());
+    
+    	return $show->getDbImagePath();
+    }
 
     public function getGenre()
     {
