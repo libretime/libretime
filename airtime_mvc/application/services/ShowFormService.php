@@ -308,8 +308,9 @@ class Application_Service_ShowFormService
     	readfile($path);
     	$imageData = base64_encode(ob_get_contents());
     	ob_end_clean();
-    	// Format the image SRC:  data:{mime};base64,{data};
-    	return 'data: '.mime_content_type($path).';base64,'.$imageData;
+    	// return the data URI - data:{mime};base64,{data}
+    	return ($imageData === null || $imageData === '') ? 
+    		'' : 'data: '.mime_content_type($path).';base64,'.$imageData;
     }
 
     private function populateFormLive($form)
