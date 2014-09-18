@@ -16,6 +16,7 @@ class UpgradeController extends Zend_Controller_Action
         $upgraders = array();
         array_push($upgraders, new AirtimeUpgrader253());        
         array_push($upgraders, new AirtimeUpgrader254());
+        array_push($upgraders, new AirtimeUpgrader255());
         
         $didWePerformAnUpgrade = false;
         try 
@@ -28,8 +29,8 @@ class UpgradeController extends Zend_Controller_Action
                     $upgrader->upgrade(); //This will throw an exception if the upgrade fails.
                     $didWePerformAnUpgrade = true;
                     $this->getResponse()
-                        ->setHttpResponseCode(200)
-                        ->appendBody("Upgrade to Airtime " . $upgrader->getNewVersion() . " OK<br>"); 
+                         ->setHttpResponseCode(200)
+                         ->appendBody("Upgrade to Airtime " . $upgrader->getNewVersion() . " OK<br>"); 
                     $i = 0; //Start over, in case the upgrade handlers are not in ascending order.
                 }
             }
@@ -37,15 +38,15 @@ class UpgradeController extends Zend_Controller_Action
             if (!$didWePerformAnUpgrade)
             {
                 $this->getResponse()
-                ->setHttpResponseCode(200)
-                ->appendBody("No upgrade was performed. The current Airtime version is " . AirtimeUpgrader::getCurrentVersion() . ".<br>");
+                	 ->setHttpResponseCode(200)
+                	 ->appendBody("No upgrade was performed. The current Airtime version is " . AirtimeUpgrader::getCurrentVersion() . ".<br>");
             }
         } 
         catch (Exception $e) 
         {
             $this->getResponse()
-            ->setHttpResponseCode(400)
-            ->appendBody($e->getMessage());
+            	 ->setHttpResponseCode(400)
+           		 ->appendBody($e->getMessage());
         }
     }
 
@@ -65,8 +66,8 @@ class UpgradeController extends Zend_Controller_Action
         if ($encodedRequestApiKey !== $encodedStoredApiKey)
         {
             $this->getResponse()
-                ->setHttpResponseCode(401)
-                ->appendBody("Error: Incorrect API key.<br>");
+                 ->setHttpResponseCode(401)
+                 ->appendBody("Error: Incorrect API key.<br>");
             return false;
         }
         return true;

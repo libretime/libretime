@@ -221,61 +221,35 @@ class AirtimeUpgrader255 extends AirtimeUpgrader {
 	
 	public function upgrade() {
 		Cache::clear();
-		assert ( $this->checkIfUpgradeSupported () );
+		assert($this->checkIfUpgradeSupported());
 		
-		$newVersion = $this->getNewVersion ();
+		$newVersion = $this->getNewVersion();
 		
-		$con = Propel::getConnection ();
-		// $con->beginTransaction();
 		try {
-			$this->toggleMaintenanceScreen ( true );
-			Cache::clear ();
+			$this->toggleMaintenanceScreen(true);
+			Cache::clear();
 			
 			// Begin upgrade
+			$airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+			$values = parse_ini_file($airtimeConf, true);
 			
-			// First, ensure there are no superadmins already.
-			$numberOfSuperAdmins = CcSubjsQuery::create ()->filterByDbType ( UTYPE_SUPERADMIN )->filterByDbLogin ( "sourcefabric_admin", Criteria::NOT_EQUAL )->			// Ignore sourcefabric_admin users
-			count ();
+			$username = $values['database']['dbuser'];
+			$password = $values['database']['dbpass'];
+			$host = $values['database']['host'];
+			$database = $values['database']['dbname'];
+			$dir = __DIR__;
 			
-			// Only create a super admin if there isn't one already.
-			if ($numberOfSuperAdmins == 0) {
-				// Find the "admin" user and promote them to superadmin.
-				$adminUser = CcSubjsQuery::create ()->filterByDbLogin ( 'admin' )->findOne ();
-				if (! $adminUser) {
-					// TODO: Otherwise get the user with the lowest ID that is of type administrator:
-					//
-					$adminUser = CcSubjsQuery::create ()->filterByDbType ( UTYPE_ADMIN )->orderByDbId ( Criteria::ASC )->findOne ();
-					
-					if (! $adminUser) {
-						throw new Exception ( "Failed to find any users of type 'admin' ('A')." );
-					}
-				}
-				
-				$adminUser = new Application_Model_User ( $adminUser->getDbId () );
-				$adminUser->setType ( UTYPE_SUPERADMIN );
-				$adminUser->save ();
-				Logging::info ( $_SERVER ['HTTP_HOST'] . ': ' . $newVersion . " Upgrade: Promoted user " . $adminUser->getLogin () . " to be a Super Admin." );
-				
-				// Also try to promote the sourcefabric_admin user
-				$sofabAdminUser = CcSubjsQuery::create ()->filterByDbLogin ( 'sourcefabric_admin' )->findOne ();
-				if ($sofabAdminUser) {
-					$sofabAdminUser = new Application_Model_User ( $sofabAdminUser->getDbId () );
-					$sofabAdminUser->setType ( UTYPE_SUPERADMIN );
-					$sofabAdminUser->save ();
-					Logging::info ( $_SERVER ['HTTP_HOST'] . ': ' . $newVersion . " Upgrade: Promoted user " . $sofabAdminUser->getLogin () . " to be a Super Admin." );
-				}
-			}
+			passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
+					.$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
 			
-			// $con->commit();
-			Application_Model_Preference::SetAirtimeVersion ( $newVersion );
-			Cache::clear ();
+			Application_Model_Preference::SetAirtimeVersion($newVersion);
+			Cache::clear();
 			
-			$this->toggleMaintenanceScreen ( false );
+			$this->toggleMaintenanceScreen(false);
 			
 			return true;
-		} catch ( Exception $e ) {
-			// $con->rollback();
-			$this->toggleMaintenanceScreen ( false );
+		} catch(Exception $e) {
+			$this->toggleMaintenanceScreen(false);
 			throw $e;
 		}
 	}
