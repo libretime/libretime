@@ -629,9 +629,8 @@ function setAddShowEvents(form) {
             	// read the image data as though it were a data URI
             	reader.readAsDataURL(this.files[0]);
 			} else {
-				// remove the element by replcaing it with a clone of itself
-				var el = $("#add_show_logo");
-				el.replaceWith(el = el.clone(true));
+				// remove the file element data
+				$(this).val('').replaceWith($(this).clone(true));
 				$("#show_logo_preview").hide();
 			}
         } else {
