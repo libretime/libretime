@@ -6,9 +6,10 @@
  * 
  * Changelog:
  * 16/09/2014 : v1.0 Created class skeleton, added image upload functionality
+ * 18/09/2014 : v1.1 Changed auth references to static calls
  * 
  * @author sourcefabric
- * @version 1.0
+ * @version 1.1
  *
  */
 
@@ -17,11 +18,8 @@ require_once($filepath."/../helpers/RestAuth.php");
 
 class Rest_ShowController extends Zend_Rest_Controller
 {
-	private $restAuth;
-	
 	public function init()
 	{
-		$this->restAuth = new RestAuth();
 		// Remove layout dependencies
 		$this->view->layout()->disableLayout();
 		// Remove reliance on .phtml files to render requests
@@ -55,7 +53,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 	
 	public function uploadImageAction() 
 	{
-		if (!$this->restAuth->verifyAuth(true, true))
+		if (!RestAuth::verifyAuth(true, true))
 		{
 			Logging::info("Authentication failed");
 			return;
@@ -75,7 +73,13 @@ class Rest_ShowController extends Zend_Rest_Controller
 			return;
 		}
 		
-		$path = $this->processUploadedImage($showId, $_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
+		try {
+			$path = $this->processUploadedImage($showId, $_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
+		} catch (Exception $e) {
+			$this->getResponse()
+				 ->setHttpResponseCode(400)
+				 ->appendBody("Error processing image: " . $e->getMessage());
+		}
 
 		$show = CcShowQuery::create()->findPk($showId);
 
@@ -90,7 +94,9 @@ class Rest_ShowController extends Zend_Rest_Controller
         	$con->commit();
 		} catch (Exception $e) {
         	$con->rollBack();
-			Logging::error("Couldn't add show image: " . $e->getMessage());
+        	$this->getResponse()
+        		 ->setHttpResponseCode(400)
+        		 ->appendBody("Couldn't add show image: " . $e->getMessage());
 		}
         
         $this->getResponse()
@@ -110,7 +116,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 	 */
 	private function processUploadedImage($showId, $tempFilePath, $originalFilename) 
 	{
-		$ownerId = $this->restAuth->getOwnerId();
+		$ownerId = RestAuth::getOwnerId();
 		 
 		$CC_CONFIG = Config::getConfig();
 		$apiKey = $CC_CONFIG["apiKey"][0];
@@ -118,36 +124,51 @@ class Rest_ShowController extends Zend_Rest_Controller
 		$tempFileName = basename($tempFilePath);
 		 
 		//Only accept files with a file extension that we support.
-		$fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+		$fileExtension = $this->getMimeExtension($originalFileName, $tempFilePath);
+
 		if (!in_array(strtolower($fileExtension), explode(",", "jpg,png,gif,jpeg")))
 		{
 			@unlink($tempFilePath);
-			// Should this be an HTTPResponse?
 			throw new Exception("Bad file extension.");
 		}
 		 
 		$storDir = Application_Model_MusicDir::getStorDir();
 		$importedStorageDirectory = $storDir->getDirectory() . "imported/" . $ownerId . "/show-images/" . $showId;
 
-		Logging::info("Stor directory: " . $storDir->getDirectory());
-		Logging::info("Show image directory: " . $importedStorageDirectory);
-		 
 		try {
 			$importedStorageDirectory = $this->copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension);
 		} catch (Exception $e) {
 			@unlink($tempFilePath);
-			Logging::error($e->getMessage());
-			return;
+			throw new Exception("Failed to copy file: " . $e->getMessage());
 		}
 		 
 		return $importedStorageDirectory;
+	}
+	
+	private function getMimeExtension($originalFileName, $tempFilePath) 
+	{
+		// Don't trust the extension - get the MIME-type instead
+		$fileInfo = finfo_open();
+		$mime = finfo_file($fileInfo, $tempFilePath, FILEINFO_MIME_TYPE);
+		return $this->getExtensionFromMime($mime);
+	}
+	
+	private function getExtensionFromMime($mime) 
+	{
+		$extensions = array(
+			'image/jpeg' => 'jpg',
+			'image/png'  => 'png',
+			'image/gif'  => 'gif'
+		);
+		
+		return $extensions[$mime];
 	}
 	
 	private function copyFileToStor($tempFilePath, $importedStorageDirectory, $fileExtension)
 	{
 		$image_file = $tempFilePath;
 
-		// check if "organize" dir exists and if not create one
+		// check if show image dir exists and if not, create one
 		if (!file_exists($importedStorageDirectory)) {
 			if (!mkdir($importedStorageDirectory, 0777, true)) {
 				throw new Exception("Failed to create storage directory.");
@@ -180,9 +201,9 @@ class Rest_ShowController extends Zend_Rest_Controller
 		return $image_stor;
 	}
 	
-	public static function deleteFilesFromStor($showId) {
-		$auth = new RestAuth();
-		$ownerId = $auth->getOwnerId();
+	// Should this be a POST endpoint instead?
+	public static function deleteShowImagesFromStor($showId) {
+		$ownerId = RestAuth::getOwnerId();
 		
 		$storDir = Application_Model_MusicDir::getStorDir();
 		$importedStorageDirectory = $storDir->getDirectory() . "imported/" . $ownerId . "/show-images/" . $showId;
@@ -198,7 +219,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 		}
 	}
 
-	// from a comment @ http://php.net/manual/en/function.rmdir.php
+	// from a note @ http://php.net/manual/en/function.rmdir.php
 	private static function delTree($dir) {
 		$files = array_diff(scandir($dir), array('.','..'));
 		foreach ($files as $file) {
