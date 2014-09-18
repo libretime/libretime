@@ -70,13 +70,6 @@ class Rest_ShowController extends Zend_Rest_Controller
 			return;
 		}
 		
-		if (Application_Model_Systemstatus::isDiskOverQuota()) {
-			$this->getResponse()
-				 ->setHttpResponseCode(413)
-				 ->appendBody("ERROR: Disk Quota reached.");
-			return;
-		}
-		
 		try {
 			$path = $this->processUploadedImage($showId, $_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
 		} catch (Exception $e) {
@@ -155,15 +148,17 @@ class Rest_ShowController extends Zend_Rest_Controller
 	}
 	
 	/**
-	 * Verify and process an uploaded image file, copying it first into .../stor/organize/
-	 * and then to RabbitMq to process. Processed image files end up in 
+	 * Verify and process an uploaded image file, copying it into 
 	 * .../stor/imported/:owner-id/show-images/:show-id/ to differentiate between 
 	 * individual users and shows
 	 * 
-	 * @param unknown $tempFilePath temporary filepath assigned to the upload
-	 * 	generally of the form /tmp/:tmp_name
-	 * @param unknown $originalFilename the file name at time of upload
-	 * @throws Exception when a file with an unsupported file extension is uploaded
+	 * @param unknown $tempFilePath 
+	 * 		- temporary filepath assigned to the upload generally of the form /tmp/:tmp_name
+	 * @param unknown 
+	 * 		- $originalFilename the file name at time of upload
+	 * @throws Exception 
+	 * 		- when a file with an unsupported file extension is uploaded or an 
+	 * 		  error occurs in copyFileToStor
 	 */
 	private function processUploadedImage($showId, $tempFilePath, $originalFilename) 
 	{
