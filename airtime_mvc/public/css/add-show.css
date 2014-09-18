@@ -117,7 +117,6 @@ label.wrapp-label input[type="checkbox"] {
 
 #add_show_end_date_no_repeat, #add_show_start_date  {
 	width: 89px;
-
 }
 
 #add_show_duration	{
@@ -127,8 +126,17 @@ label.wrapp-label input[type="checkbox"] {
 }
 
 #show_logo_current, #show_logo_preview {
-	width: 50px;
-	height: 50px;
+    border: 1px solid #5b5b5b;
+    -webkit-box-shadow: 0px 0px 2px 1px rgba(48,48,48,1);
+    -moz-box-shadow: 0px 0px 2px 1px rgba(48,48,48,1);
+    box-shadow: 0px 0px 2px 1px rgba(48,48,48,1);
+	width: 200px;
+	height: 200px;
 	display: none;
 	cursor: default;
+}
+
+#show_remove_logo {
+    display: none;
+	height: 28px;
 }

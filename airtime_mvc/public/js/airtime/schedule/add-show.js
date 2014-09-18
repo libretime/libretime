@@ -241,14 +241,17 @@ function setAddShowEvents(form) {
 			$("#show_logo_current-element").show();
 			$("#show_logo_current-label").show();
 			$("#show_logo_current").show();
+			$("#show_remove_logo").show();
 		} else {
 	    	$("#show_logo_current-element").hide();
 	    	$("#show_logo_current-label").hide();
 			$("#show_logo_current").hide();
+			$("#show_remove_logo").hide();
 		}
     } else {
     	$("#show_logo_current-element").hide();
     	$("#show_logo_current-label").hide();
+		$("#show_remove_logo").hide();
     }
 
     form.find("#add_show_repeats").click(function(){
@@ -611,7 +614,7 @@ function setAddShowEvents(form) {
 	});
 	
 	// when an image is uploaded, we want to show it to the user
-	form.find("#upload").change(function(event) {
+	form.find("#add_show_logo").change(function(event) {
 		if (this.files && this.files[0]) {
             $("#show_logo_preview").show();
 			var reader = new FileReader(); // browser compatibility?
@@ -621,11 +624,76 @@ function setAddShowEvents(form) {
                     .attr('src', e.target.result);
             };
 
-            // read the image data as though it were a data URI
-            reader.readAsDataURL(this.files[0]);
+            // check image size so we don't crash the page trying to render
+            if (validateImage(this.files[0], $("#add_show_logo"))) {
+            	// read the image data as though it were a data URI
+            	reader.readAsDataURL(this.files[0]);
+			} else {
+				// remove the element by replcaing it with a clone of itself
+				var el = $("#add_show_logo");
+				el.replaceWith(el = el.clone(true));
+				$("#show_logo_preview").hide();
+			}
         } else {
             $("#show_logo_preview").hide();
         }
+	});
+	
+	// validate on upload
+	function validateImage(img, el) {
+		// remove any existing error messages
+		if ($("#img-err")) { $("#img-err").remove(); }
+		
+        if (img.size > 2048000) { // 2MB - pull this from somewhere instead?
+            // hack way of inserting an error message
+            var err = $.i18n._("Selected file is too large");
+            el.parent().after(
+            	"<ul id='img-err' class='errors'>" +
+            		"<li>" + err + "</li>" +
+            	"</ul>");
+            return false;
+        } else if (validateMimeType(img.type) < 0) {
+        	var err = $.i18n._("File format is not supported");
+        	el.parent().after(
+            	"<ul id='img-err' class='errors'>" +
+            		"<li>" + err + "</li>" +
+            	"</ul>");
+        	return false;
+        }
+        return true;
+	}
+	
+	function validateMimeType(mime) {
+		var extensions = [
+			'image/jpeg',
+			'image/png',
+			'image/gif'
+			];
+		return $.inArray(mime, extensions);
+	}
+	
+	form.find("#show_remove_logo").click(function() {
+		var showId = $("#add_show_id").attr("value");
+		
+		console.log(showId);
+		console.log($("#show_logo_current").attr("src"));
+		
+		if (showId && $("#show_logo_current").attr("src") !== "") {
+			var action = '/rest/show/' + showId + '/delete-image';
+			
+			$.ajax({
+				url: action,
+				data: '',
+				type: 'POST',
+				success: function() {
+					$("#show_logo_current").prop("src", "")
+			    	$("#show_logo_current-element").hide();
+			    	$("#show_logo_current-label").hide();
+					$("#show_logo_current").hide();
+					$("#show_remove_logo").hide();
+				}
+			});
+		}
 	});
 	
     form.find("#add-show-close").click(closeAddShowForm);
@@ -666,11 +734,10 @@ function setAddShowEvents(form) {
         	action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
         
         var image;
-        if ($('#upload')[0] && $('#upload')[0].files
-        		&& $('#upload')[0].files[0]) {
+        if ($('#add_show_logo')[0] && $('#add_show_logo')[0].files
+        		&& $('#add_show_logo')[0].files[0]) {
         	image = new FormData();
-        	image.append('file', $('#upload')[0].files[0]);
-        	data['show_logo_name'] = $('#upload')[0].files[0].name;
+        	image.append('file', $('#add_show_logo')[0].files[0]);
         }
         
         $.ajax({
@@ -826,7 +893,7 @@ function setAddShowEvents(form) {
 	}
     
     // Since Zend's setAttrib won't apply through the wrapper, set accept=image/* here
-    $("#upload").prop("accept", "image/*");
+    $("#add_show_logo").prop("accept", "image/*");
     var bgColorEle = $("#add_show_background_color");
     var textColorEle = $("#add_show_color");
     $('#add_show_name').bind('input', 'change', function(){
