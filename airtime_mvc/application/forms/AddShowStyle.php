@@ -50,18 +50,24 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         ));
         
         $logo = $this->getElement('show_logo_current');
-        $logo->setDecorators(array(array('ViewScript', array(
+        $logo->setDecorators(array(
+        	array('ViewScript', array(
         		'viewScript' => 'form/add-show-style.phtml',
         		'class'      => 'big'
-        ))));
+        	))
+        ));
         // Since we need to use a Zend_Form_Element_Image proto, disable it
         $logo->setAttrib('disabled','disabled');
         
-        // Add show image input
-        $fileCountValidator = Application_Form_Helper_ValidationTypes::overrideFileCountValidator(1);
-        $fileExtensionValidator = Application_Form_Helper_ValidationTypes::overrideFileExtensionValidator('jpg,png,gif');
+        // Button to remove the current logo
+        $this->addElement('button', 'show_remove_logo', array(
+        		'label'	 => '<span class="ui-button-text">' . _('Remove') . '</span>',
+        		'class'  => 'ui-button ui-state-default ui-button-text-only',
+        		'escape' => false
+        ));
         
-        $upload = new Zend_Form_Element_File('upload');
+        // Add show image input
+        $upload = new Zend_Form_Element_File('add_show_logo');
         
         $upload->setLabel(_('Show Logo:'))
         	   ->setRequired(false)
@@ -70,10 +76,8 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         				'class'		 => 'big',
         	   			'placement'  => false
         		))))
-        	   ->addValidators(array(
-        	   		$fileCountValidator, 
-        	   		$fileExtensionValidator
-        	   ))
+               ->addValidator('Count', false, 1)
+               ->addValidator('Extension', false, 'jpg,jpeg,png,gif')
         	   ->addFilter('ImageSize');
         	   
         $this->addElement($upload);
