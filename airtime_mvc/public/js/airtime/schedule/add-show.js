@@ -236,12 +236,14 @@ function setAddShowEvents(form) {
 
     // If we're adding a new show, hide the "Current Logo" element/label
     if ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show") {
-    	$("#show_logo_current-element").show();
-    	$("#show_logo_current-label").show();
     	// Display the current show logo if it exists
 		if ($("#show_logo_current").attr("src") !== "") {
+			$("#show_logo_current-element").show();
+			$("#show_logo_current-label").show();
 			$("#show_logo_current").show();
 		} else {
+	    	$("#show_logo_current-element").hide();
+	    	$("#show_logo_current-label").hide();
 			$("#show_logo_current").hide();
 		}
     } else {
@@ -668,6 +670,7 @@ function setAddShowEvents(form) {
         		&& $('#upload')[0].files[0]) {
         	image = new FormData();
         	image.append('file', $('#upload')[0].files[0]);
+        	data['show_logo_name'] = $('#upload')[0].files[0].name;
         }
         
         $.ajax({

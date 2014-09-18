@@ -199,10 +199,13 @@ class Application_Service_ShowService
 
             if ($this->isUpdate) {
             	
-            	// Delete previous show images
             	$showId = $this->ccShow->getDbId();
-            	if (!Rest_ShowController::deleteFilesFromStor($showId)) {
-            		throw new Exception("Error deleting show images");
+            	
+            	// Only delete the previous logo if a new one is being uploaded
+            	if ($showData["show_logo"] && $showData["show_logo_name"] !== "") {
+            		if (!Rest_ShowController::deleteShowImagesFromStor($showId)) {
+            			throw new Exception("Error deleting show images");
+            		}
             	}
             	 
                 if (!$this->ccShow->getCcShowDayss()->isEmpty()) {
@@ -754,7 +757,7 @@ SQL;
 
             // Delete show images
             $showId = $ccShowInstance->getDbShowId();
-        	if (!Rest_ShowController::deleteFilesFromStor($showId)) {
+        	if (!Rest_ShowController::deleteShowImagesFromStor($showId)) {
         		throw new Exception("Error deleting show images");
         	}
         	
