@@ -202,7 +202,7 @@ class Application_Service_ShowService
             	$showId = $this->ccShow->getDbId();
             	
             	// Only delete the previous logo if a new one is being uploaded
-            	if ($showData["show_logo"] && $showData["show_logo_name"] !== "") {
+            	if (array_key_exists("add_show_logo_name", $showData) && $showData["add_show_logo_name"] !== "") {
             		if (!Rest_ShowController::deleteShowImagesFromStor($showId)) {
             			throw new Exception("Error deleting show images");
             		}
