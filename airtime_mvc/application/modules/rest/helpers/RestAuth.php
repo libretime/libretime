@@ -2,15 +2,11 @@
 
 class RestAuth
 {
-	public function verifyAuth($checkApiKey, $checkSession)
+	public static function verifyAuth($checkApiKey, $checkSession)
 	{
 		//Session takes precedence over API key for now:
-		if ($checkSession && $this->verifySession())
-		{
-			return true;
-		}
-	
-		if ($checkApiKey && $this->verifyAPIKey())
+		if ($checkSession && RestAuth::verifySession()
+			|| $checkApiKey && RestAuth::verifyAPIKey())
 		{
 			return true;
 		}
@@ -22,10 +18,10 @@ class RestAuth
 		return false;
 	}
 	
-	public function getOwnerId()
+	public static function getOwnerId()
 	{
 		try {
-			if ($this->verifySession()) {
+			if (RestAuth::verifySession()) {
 				$service_user = new Application_Service_UserService();
 				return $service_user->getCurrentUser()->getDbId();
 			} else {
@@ -45,17 +41,13 @@ class RestAuth
 		}
 	}
 	
-	private function verifySession()
+	private static function verifySession()
 	{
 		$auth = Zend_Auth::getInstance();
-		if ($auth->hasIdentity())
-		{
-			return true;
-		}
-		return false;
+		return $auth->hasIdentity();
 	}
 	
-	private function verifyAPIKey()
+	private static function verifyAPIKey()
 	{
 		//The API key is passed in via HTTP "basic authentication":
 		// http://en.wikipedia.org/wiki/Basic_access_authentication
@@ -66,14 +58,7 @@ class RestAuth
 		$encodedRequestApiKey = substr($authHeader, strlen("Basic "));
 		$encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
 	
-		if ($encodedRequestApiKey === $encodedStoredApiKey)
-		{
-			return true;
-		} else {
-			return false;
-		}
-	
-		return false;
+		return ($encodedRequestApiKey === $encodedStoredApiKey);
 	}
 	
 }
