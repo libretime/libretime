@@ -48,5 +48,18 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
         		)
         );
         $router->addRoute('upload-image', $uploadImageRoute);
+        
+        $deleteImageRoute = new Zend_Controller_Router_Route(
+        		'rest/show/:id/delete-image',
+        		array(
+        				'controller' => 'show',
+        				'action' => 'delete-image',
+        				'module' => 'rest'
+        		),
+        		array(
+        				'id' => '\d+'
+        		)
+        );
+        $router->addRoute('delete-image', $deleteImageRoute);
     }
 }

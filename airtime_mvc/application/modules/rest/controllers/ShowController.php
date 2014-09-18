@@ -13,7 +13,7 @@
  *
  */
 
-$filepath = realpath(dirname(__FILE__));
+$filepath = realpath(__DIR__);
 require_once($filepath."/../helpers/RestAuth.php");
 
 class Rest_ShowController extends Zend_Rest_Controller
@@ -55,20 +55,24 @@ class Rest_ShowController extends Zend_Rest_Controller
 	{
 		if (!RestAuth::verifyAuth(true, true))
 		{
-			Logging::info("Authentication failed");
+			$this->getResponse()
+				 ->setHttpResponseCode(401)
+				 ->appendBody("Authentication failed");
 			return;
 		}
 		
 		$showId = $this->getShowId();
 		
 		if (!$showId) {
-			Logging::info("No show id provided");
+			$this->getResponse()
+				 ->setHttpResponseCode(400)
+				 ->appendBody("No show ID provided");
 			return;
 		}
 		
 		if (Application_Model_Systemstatus::isDiskOverQuota()) {
 			$this->getResponse()
-				 ->setHttpResponseCode(400)
+				 ->setHttpResponseCode(413)
 				 ->appendBody("ERROR: Disk Quota reached.");
 			return;
 		}
@@ -77,7 +81,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 			$path = $this->processUploadedImage($showId, $_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
 		} catch (Exception $e) {
 			$this->getResponse()
-				 ->setHttpResponseCode(400)
+				 ->setHttpResponseCode(500)
 				 ->appendBody("Error processing image: " . $e->getMessage());
 		}
 
@@ -88,19 +92,66 @@ class Rest_ShowController extends Zend_Rest_Controller
 			$con->beginTransaction();
 			
         	$show->setDbImagePath($path);
-        	// TODO set linked show image paths
         	$show->save();
         	
         	$con->commit();
 		} catch (Exception $e) {
         	$con->rollBack();
         	$this->getResponse()
-        		 ->setHttpResponseCode(400)
+        		 ->setHttpResponseCode(500)
         		 ->appendBody("Couldn't add show image: " . $e->getMessage());
 		}
         
         $this->getResponse()
         	 ->setHttpResponseCode(201);
+	}
+	
+	public function deleteImageAction()
+	{
+		if (!RestAuth::verifyAuth(true, true))
+		{
+			$this->getResponse()
+				 ->setHttpResponseCode(401)
+				 ->appendBody("Authentication failed");
+			return;
+		}
+		
+		$showId = $this->getShowId();
+		
+		if (!$showId) {
+			$this->getResponse()
+				 ->setHttpResponseCode(400)
+				 ->appendBody("No show ID provided");
+			return;
+		}
+		
+		try {
+			Rest_ShowController::deleteShowImagesFromStor($showId);
+		} catch (Exception $e) {
+			$this->getResponse()
+				 ->setHttpResponseCode(500)
+				 ->appendBody("Error processing image: " . $e->getMessage());
+		}
+		
+		$show = CcShowQuery::create()->findPk($showId);
+		
+		try {
+			$con = Propel::getConnection();
+			$con->beginTransaction();
+				
+			$show->setDbImagePath(null);
+			$show->save();
+			 
+			$con->commit();
+		} catch (Exception $e) {
+			$con->rollBack();
+			$this->getResponse()
+				 ->setHttpResponseCode(500)
+				 ->appendBody("Couldn't remove show image: " . $e->getMessage());
+		}
+		
+		$this->getResponse()
+			 ->setHttpResponseCode(201);
 	}
 	
 	/**
@@ -124,7 +175,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 		$tempFileName = basename($tempFilePath);
 		 
 		//Only accept files with a file extension that we support.
-		$fileExtension = $this->getMimeExtension($originalFileName, $tempFilePath);
+		$fileExtension = $this->getFileExtension($originalFilename, $tempFilePath);
 
 		if (!in_array(strtolower($fileExtension), explode(",", "jpg,png,gif,jpeg")))
 		{
@@ -145,7 +196,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 		return $importedStorageDirectory;
 	}
 	
-	private function getMimeExtension($originalFileName, $tempFilePath) 
+	private function getFileExtension($originalFileName, $tempFilePath) 
 	{
 		// Don't trust the extension - get the MIME-type instead
 		$fileInfo = finfo_open();
@@ -201,7 +252,7 @@ class Rest_ShowController extends Zend_Rest_Controller
 		return $image_stor;
 	}
 	
-	// Should this be a POST endpoint instead?
+	// Should this be an endpoint instead?
 	public static function deleteShowImagesFromStor($showId) {
 		$ownerId = RestAuth::getOwnerId();
 		
