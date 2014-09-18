@@ -285,7 +285,8 @@ class Application_Service_ShowFormService
 
     private function populateFormStyle($form)
     {
-    	$src = $this->imagePathToDataUri($this->ccShow->getDbImagePath());
+    	$src = $this->ccShow->getDbImagePath() ? 
+    		$this->imagePathToDataUri($this->ccShow->getDbImagePath()) : '';
     	
         $form->populate(
             array(
@@ -463,7 +464,19 @@ class Application_Service_ShowFormService
         $live = $forms["live"]->isValid($formData);
         $record = $forms["record"]->isValid($formData);
         $who = $forms["who"]->isValid($formData);
+        
+        /*
+         * hack to prevent validating the file upload field since it
+         * isn't passed into $data
+         */
+        $upload = $forms["style"]->getElement("add_show_logo");
+        $forms["style"]->removeElement("add_show_logo");
+        
         $style = $forms["style"]->isValid($formData);
+        
+        // re-add the upload element
+        $forms["style"]->addElement($upload);
+        
         $when = $forms["when"]->isWhenFormValid($formData, $validateStartDate,
             $originalStartDate, $editShow, $instanceId);
 
@@ -504,7 +517,7 @@ class Application_Service_ShowFormService
         return ($what && $live && $record && $who && $style && $when &&
             $repeats && $absRebroadcast && $rebroadcast);
     }
-
+    
     public function calculateDuration($start, $end, $timezone)
     {
         try {
