@@ -64,7 +64,7 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
         return '2.5.3';
     }
     
-    public function upgrade()
+    public function upgrade($dir = __DIR__)
     {
         Cache::clear();
         assert($this->checkIfUpgradeSupported());
@@ -104,7 +104,6 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
             $password = $values['database']['dbpass'];
             $host = $values['database']['host'];
             $database = $values['database']['dbname'];
-            $dir = __DIR__;
         
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_".$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
         
@@ -219,7 +218,7 @@ class AirtimeUpgrader255 extends AirtimeUpgrader {
 		return '2.5.5';
 	}
 	
-	public function upgrade() {
+	public function upgrade($dir = __DIR__) {
 		Cache::clear();
 		assert($this->checkIfUpgradeSupported());
 		
@@ -237,8 +236,7 @@ class AirtimeUpgrader255 extends AirtimeUpgrader {
 			$password = $values['database']['dbpass'];
 			$host = $values['database']['host'];
 			$database = $values['database']['dbname'];
-			$dir = __DIR__;
-			
+				
 			passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
 					.$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
 			

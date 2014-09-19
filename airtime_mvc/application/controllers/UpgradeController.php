@@ -26,7 +26,8 @@ class UpgradeController extends Zend_Controller_Action
                 $upgrader = $upgraders[$i];
                 if ($upgrader->checkIfUpgradeSupported())
                 {
-                    $upgrader->upgrade(); //This will throw an exception if the upgrade fails.
+                	// pass __DIR__ to the upgrades, since __DIR__ returns parent dir of file, not executor
+                    $upgrader->upgrade(__DIR__); //This will throw an exception if the upgrade fails.
                     $didWePerformAnUpgrade = true;
                     $this->getResponse()
                          ->setHttpResponseCode(200)
