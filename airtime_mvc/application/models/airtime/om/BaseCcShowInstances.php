@@ -31,6 +31,12 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	protected $id;
 
 	/**
+	 * The value for the description field.
+	 * @var        string
+	 */
+	protected $description;
+
+	/**
 	 * The value for the starts field.
 	 * @var        string
 	 */
@@ -176,6 +182,16 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function getDbId()
 	{
 		return $this->id;
+	}
+
+	/**
+	 * Get the [description] column value.
+	 * 
+	 * @return     string
+	 */
+	public function getDbDescription()
+	{
+		return $this->description;
 	}
 
 	/**
@@ -399,6 +415,26 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 
 		return $this;
 	} // setDbId()
+
+	/**
+	 * Set the value of [description] column.
+	 * 
+	 * @param      string $v new value
+	 * @return     CcShowInstances The current object (for fluent API support)
+	 */
+	public function setDbDescription($v)
+	{
+		if ($v !== null) {
+			$v = (string) $v;
+		}
+
+		if ($this->description !== $v) {
+			$this->description = $v;
+			$this->modifiedColumns[] = CcShowInstancesPeer::DESCRIPTION;
+		}
+
+		return $this;
+	} // setDbDescription()
 
 	/**
 	 * Sets the value of [starts] column to a normalized version of the date/time value specified.
@@ -797,17 +833,18 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		try {
 
 			$this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-			$this->starts = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-			$this->ends = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-			$this->show_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-			$this->record = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
-			$this->rebroadcast = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
-			$this->instance_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-			$this->file_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
-			$this->time_filled = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-			$this->created = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-			$this->last_scheduled = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-			$this->modified_instance = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
+			$this->description = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+			$this->starts = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+			$this->ends = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+			$this->show_id = ($row[$startcol + 4] !== null) ? (int) $row[$startcol + 4] : null;
+			$this->record = ($row[$startcol + 5] !== null) ? (int) $row[$startcol + 5] : null;
+			$this->rebroadcast = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+			$this->instance_id = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+			$this->file_id = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
+			$this->time_filled = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+			$this->created = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+			$this->last_scheduled = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+			$this->modified_instance = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
 			$this->resetModified();
 
 			$this->setNew(false);
@@ -816,7 +853,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->ensureConsistency();
 			}
 
-			return $startcol + 12; // 12 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
+			return $startcol + 13; // 13 = CcShowInstancesPeer::NUM_COLUMNS - CcShowInstancesPeer::NUM_LAZY_LOAD_COLUMNS).
 
 		} catch (Exception $e) {
 			throw new PropelException("Error populating CcShowInstances object", $e);
@@ -1235,36 +1272,39 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				return $this->getDbId();
 				break;
 			case 1:
-				return $this->getDbStarts();
+				return $this->getDbDescription();
 				break;
 			case 2:
-				return $this->getDbEnds();
+				return $this->getDbStarts();
 				break;
 			case 3:
-				return $this->getDbShowId();
+				return $this->getDbEnds();
 				break;
 			case 4:
-				return $this->getDbRecord();
+				return $this->getDbShowId();
 				break;
 			case 5:
-				return $this->getDbRebroadcast();
+				return $this->getDbRecord();
 				break;
 			case 6:
-				return $this->getDbOriginalShow();
+				return $this->getDbRebroadcast();
 				break;
 			case 7:
-				return $this->getDbRecordedFile();
+				return $this->getDbOriginalShow();
 				break;
 			case 8:
-				return $this->getDbTimeFilled();
+				return $this->getDbRecordedFile();
 				break;
 			case 9:
-				return $this->getDbCreated();
+				return $this->getDbTimeFilled();
 				break;
 			case 10:
-				return $this->getDbLastScheduled();
+				return $this->getDbCreated();
 				break;
 			case 11:
+				return $this->getDbLastScheduled();
+				break;
+			case 12:
 				return $this->getDbModifiedInstance();
 				break;
 			default:
@@ -1292,17 +1332,18 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$keys = CcShowInstancesPeer::getFieldNames($keyType);
 		$result = array(
 			$keys[0] => $this->getDbId(),
-			$keys[1] => $this->getDbStarts(),
-			$keys[2] => $this->getDbEnds(),
-			$keys[3] => $this->getDbShowId(),
-			$keys[4] => $this->getDbRecord(),
-			$keys[5] => $this->getDbRebroadcast(),
-			$keys[6] => $this->getDbOriginalShow(),
-			$keys[7] => $this->getDbRecordedFile(),
-			$keys[8] => $this->getDbTimeFilled(),
-			$keys[9] => $this->getDbCreated(),
-			$keys[10] => $this->getDbLastScheduled(),
-			$keys[11] => $this->getDbModifiedInstance(),
+			$keys[1] => $this->getDbDescription(),
+			$keys[2] => $this->getDbStarts(),
+			$keys[3] => $this->getDbEnds(),
+			$keys[4] => $this->getDbShowId(),
+			$keys[5] => $this->getDbRecord(),
+			$keys[6] => $this->getDbRebroadcast(),
+			$keys[7] => $this->getDbOriginalShow(),
+			$keys[8] => $this->getDbRecordedFile(),
+			$keys[9] => $this->getDbTimeFilled(),
+			$keys[10] => $this->getDbCreated(),
+			$keys[11] => $this->getDbLastScheduled(),
+			$keys[12] => $this->getDbModifiedInstance(),
 		);
 		if ($includeForeignObjects) {
 			if (null !== $this->aCcShow) {
@@ -1349,36 +1390,39 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 				$this->setDbId($value);
 				break;
 			case 1:
-				$this->setDbStarts($value);
+				$this->setDbDescription($value);
 				break;
 			case 2:
-				$this->setDbEnds($value);
+				$this->setDbStarts($value);
 				break;
 			case 3:
-				$this->setDbShowId($value);
+				$this->setDbEnds($value);
 				break;
 			case 4:
-				$this->setDbRecord($value);
+				$this->setDbShowId($value);
 				break;
 			case 5:
-				$this->setDbRebroadcast($value);
+				$this->setDbRecord($value);
 				break;
 			case 6:
-				$this->setDbOriginalShow($value);
+				$this->setDbRebroadcast($value);
 				break;
 			case 7:
-				$this->setDbRecordedFile($value);
+				$this->setDbOriginalShow($value);
 				break;
 			case 8:
-				$this->setDbTimeFilled($value);
+				$this->setDbRecordedFile($value);
 				break;
 			case 9:
-				$this->setDbCreated($value);
+				$this->setDbTimeFilled($value);
 				break;
 			case 10:
-				$this->setDbLastScheduled($value);
+				$this->setDbCreated($value);
 				break;
 			case 11:
+				$this->setDbLastScheduled($value);
+				break;
+			case 12:
 				$this->setDbModifiedInstance($value);
 				break;
 		} // switch()
@@ -1406,17 +1450,18 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$keys = CcShowInstancesPeer::getFieldNames($keyType);
 
 		if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-		if (array_key_exists($keys[1], $arr)) $this->setDbStarts($arr[$keys[1]]);
-		if (array_key_exists($keys[2], $arr)) $this->setDbEnds($arr[$keys[2]]);
-		if (array_key_exists($keys[3], $arr)) $this->setDbShowId($arr[$keys[3]]);
-		if (array_key_exists($keys[4], $arr)) $this->setDbRecord($arr[$keys[4]]);
-		if (array_key_exists($keys[5], $arr)) $this->setDbRebroadcast($arr[$keys[5]]);
-		if (array_key_exists($keys[6], $arr)) $this->setDbOriginalShow($arr[$keys[6]]);
-		if (array_key_exists($keys[7], $arr)) $this->setDbRecordedFile($arr[$keys[7]]);
-		if (array_key_exists($keys[8], $arr)) $this->setDbTimeFilled($arr[$keys[8]]);
-		if (array_key_exists($keys[9], $arr)) $this->setDbCreated($arr[$keys[9]]);
-		if (array_key_exists($keys[10], $arr)) $this->setDbLastScheduled($arr[$keys[10]]);
-		if (array_key_exists($keys[11], $arr)) $this->setDbModifiedInstance($arr[$keys[11]]);
+		if (array_key_exists($keys[1], $arr)) $this->setDbDescription($arr[$keys[1]]);
+		if (array_key_exists($keys[2], $arr)) $this->setDbStarts($arr[$keys[2]]);
+		if (array_key_exists($keys[3], $arr)) $this->setDbEnds($arr[$keys[3]]);
+		if (array_key_exists($keys[4], $arr)) $this->setDbShowId($arr[$keys[4]]);
+		if (array_key_exists($keys[5], $arr)) $this->setDbRecord($arr[$keys[5]]);
+		if (array_key_exists($keys[6], $arr)) $this->setDbRebroadcast($arr[$keys[6]]);
+		if (array_key_exists($keys[7], $arr)) $this->setDbOriginalShow($arr[$keys[7]]);
+		if (array_key_exists($keys[8], $arr)) $this->setDbRecordedFile($arr[$keys[8]]);
+		if (array_key_exists($keys[9], $arr)) $this->setDbTimeFilled($arr[$keys[9]]);
+		if (array_key_exists($keys[10], $arr)) $this->setDbCreated($arr[$keys[10]]);
+		if (array_key_exists($keys[11], $arr)) $this->setDbLastScheduled($arr[$keys[11]]);
+		if (array_key_exists($keys[12], $arr)) $this->setDbModifiedInstance($arr[$keys[12]]);
 	}
 
 	/**
@@ -1429,6 +1474,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 		$criteria = new Criteria(CcShowInstancesPeer::DATABASE_NAME);
 
 		if ($this->isColumnModified(CcShowInstancesPeer::ID)) $criteria->add(CcShowInstancesPeer::ID, $this->id);
+		if ($this->isColumnModified(CcShowInstancesPeer::DESCRIPTION)) $criteria->add(CcShowInstancesPeer::DESCRIPTION, $this->description);
 		if ($this->isColumnModified(CcShowInstancesPeer::STARTS)) $criteria->add(CcShowInstancesPeer::STARTS, $this->starts);
 		if ($this->isColumnModified(CcShowInstancesPeer::ENDS)) $criteria->add(CcShowInstancesPeer::ENDS, $this->ends);
 		if ($this->isColumnModified(CcShowInstancesPeer::SHOW_ID)) $criteria->add(CcShowInstancesPeer::SHOW_ID, $this->show_id);
@@ -1501,6 +1547,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	 */
 	public function copyInto($copyObj, $deepCopy = false)
 	{
+		$copyObj->setDbDescription($this->description);
 		$copyObj->setDbStarts($this->starts);
 		$copyObj->setDbEnds($this->ends);
 		$copyObj->setDbShowId($this->show_id);
@@ -2186,6 +2233,7 @@ abstract class BaseCcShowInstances extends BaseObject  implements Persistent
 	public function clear()
 	{
 		$this->id = null;
+		$this->description = null;
 		$this->starts = null;
 		$this->ends = null;
 		$this->show_id = null;
