@@ -176,6 +176,7 @@ DROP TABLE "cc_show_instances" CASCADE;
 CREATE TABLE "cc_show_instances"
 (
 	"id" serial  NOT NULL,
+	"description" VARCHAR(512),
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"show_id" INTEGER  NOT NULL,
