@@ -91,6 +91,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
                                             _("Enabled")));
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDecorators(array('ViewHelper'));
+        $third_party_api->setValue(true);
         $this->addElement($third_party_api);
 
         $locale = new Zend_Form_Element_Select("locale");
