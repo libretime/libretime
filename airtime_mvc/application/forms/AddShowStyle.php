@@ -45,11 +45,11 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         ));
         
         // Show the current logo
-        $this->addElement('image', 'show_logo_current', array(
+        $this->addElement('image', 'add_show_logo_current', array(
         		'label'	=> _('Current Logo:'),
         ));
         
-        $logo = $this->getElement('show_logo_current');
+        $logo = $this->getElement('add_show_logo_current');
         $logo->setDecorators(array(
         	array('ViewScript', array(
         		'viewScript' => 'form/add-show-style.phtml',
@@ -60,7 +60,7 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         $logo->setAttrib('disabled','disabled');
         
         // Button to remove the current logo
-        $this->addElement('button', 'show_remove_logo', array(
+        $this->addElement('button', 'add_show_logo_current_remove', array(
         		'label'	 => '<span class="ui-button-text">' . _('Remove') . '</span>',
         		'class'  => 'ui-button ui-state-default ui-button-text-only',
         		'escape' => false
@@ -83,11 +83,11 @@ class Application_Form_AddShowStyle extends Zend_Form_SubForm
         $this->addElement($upload);
         
         // Add image preview
-        $this->addElement('image', 'show_logo_preview', array(
+        $this->addElement('image', 'add_show_logo_preview', array(
         	'label'	=> _('Logo Preview:'),
         ));
         
-        $preview = $this->getElement('show_logo_preview');
+        $preview = $this->getElement('add_show_logo_preview');
         $preview->setDecorators(array(array('ViewScript', array(
         		'viewScript' => 'form/add-show-style.phtml',
         		'class'      => 'big'
