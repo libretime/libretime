@@ -92,6 +92,7 @@ class Application_Service_ShowFormService
          * when the user edits a repeating instance
          */
         $forms["what"]->makeReadonly();
+        $forms["what"]->enableInstanceDesc();
         $forms["repeats"]->disable();
         $forms["who"]->disable();
         $forms["style"]->disable();
@@ -124,14 +125,17 @@ class Application_Service_ShowFormService
 
     private function populateFormWhat($form)
     {
-        $form->populate(
+        $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
+    	
+    	$form->populate(
             array(
                 'add_show_instance_id' => $this->instanceId,
                 'add_show_id' => $this->ccShow->getDbId(),
                 'add_show_name' => $this->ccShow->getDbName(),
                 'add_show_url' => $this->ccShow->getDbUrl(),
                 'add_show_genre' => $this->ccShow->getDbGenre(),
-                'add_show_description' => $this->ccShow->getDbDescription()));
+                'add_show_description' => $this->ccShow->getDbDescription(),
+        		'add_show_instance_description' => $ccShowInstance->getDbDescription()));
     }
 
     private function populateFormWhen($form)
@@ -292,7 +296,7 @@ class Application_Service_ShowFormService
             array(
                 'add_show_background_color' => $this->ccShow->getDbBackgroundColor(),
                 'add_show_color' => $this->ccShow->getDbColor(),
-        		'show_logo_current' => $src));
+        		'add_show_logo_current' => $src));
     }
     
     /**

@@ -141,9 +141,17 @@ class Application_Service_ShowService
 
             $ccShowInstance->updateDbTimeFilled($con);
             $ccShowInstance->updateScheduleStatus($con);
+            $ccShowInstance
+            	->setDbDescription($showData['add_show_instance_description'])
+            	->save();
+            
+            
 
             //delete the edited instance from the repeating sequence
-            $ccShowInstanceOrig->setDbModifiedInstance(true)->save();
+            $ccShowInstanceOrig
+            	->setDbModifiedInstance(true)
+            	->setDbDescription($showData['add_show_instance_description'])
+            	->save();
 
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
