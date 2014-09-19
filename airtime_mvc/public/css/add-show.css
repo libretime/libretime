@@ -21,6 +21,7 @@
 #schedule-add-show .ui-tabs-panel {
     padding-top: 8px;
 }
+
 #schedule-add-show fieldset {
 	padding:8px;
 	margin-bottom:8px;
@@ -33,6 +34,7 @@
 	padding:0;
 	width:100%;
 }
+
 #schedule-add-show dd {
     padding: 4px 0;
     float: left;
@@ -40,6 +42,7 @@
     margin: 0;
     padding: 4px 0 4px 15px;
 }
+
 #schedule-add-show dt, #schedule-add-show dt.big {
     clear: left;
     color: #666666;
@@ -52,9 +55,11 @@
 	min-width:103px;
 	clear:left;
 }
+
 #schedule-add-show dt.big {
 	min-width:130px;
 }
+
 #schedule-add-show dt.block-display, #schedule-add-show dd.block-display {
 	display:block;
 	float:none;
@@ -65,12 +70,14 @@
 #schedule-add-show dt label {
     padding-right:0;
 }
+
 .wrapp-label {
 	padding:0;
 	height:16px;
 	display:block;
 	line-height:18px;
 }
+
 label.wrapp-label input[type="checkbox"] {
 	float:left;
 	margin:-1px 2px 0 0;
@@ -79,18 +86,22 @@ label.wrapp-label input[type="checkbox"] {
 #schedule-add-show fieldset:last-child {
 	margin-bottom:0;
 }
+
 #schedule-add-show fieldset dd input[type="checkbox"] {
     margin-top:2px;
 }
+
 #add_show_day_check-element.block-display  {
 	margin-bottom:15px;
 	margin-top:7px;
 }
+
 #add_show_day_check-element.block-display label.wrapp-label {
 	font-size:12px;
 	float:left;
 	margin-right:10px;
 }
+
 #add_show_name-element .input_text {
 	/*width:99%;*/
 }
@@ -125,7 +136,12 @@ label.wrapp-label input[type="checkbox"] {
   	width: 65px;
 }
 
-#show_logo_current, #show_logo_preview {
+[id^=add_show_instance_description] {
+	display: none;
+}
+
+#add_show_logo_current, 
+#add_show_logo_preview {
     border: 1px solid #5b5b5b;
     -webkit-box-shadow: 0px 0px 2px 1px rgba(48,48,48,1);
     -moz-box-shadow: 0px 0px 2px 1px rgba(48,48,48,1);
@@ -136,7 +152,7 @@ label.wrapp-label input[type="checkbox"] {
 	cursor: default;
 }
 
-#show_remove_logo {
+#add_show_logo_current_remove {
     display: none;
 	height: 28px;
 }

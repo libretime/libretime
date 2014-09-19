@@ -27,7 +27,7 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'class'      => 'input_text',
             'required'   => true,
             'filters'    => array('StringTrim'),
-            'value'        => _('Untitled Show'),
+            'value'      => _('Untitled Show'),
             'validators' => array($notEmptyValidator, array('StringLength', false, array(0, $maxLens['name'])))
         ));
 
@@ -63,7 +63,33 @@ class Application_Form_AddShowWhat extends Zend_Form_SubForm
             'viewScript' => 'form/add-show-block.phtml',
             'class'      => 'block-display'
         ))));
-
+        
+        // Add the instance description
+        $this->addElement('textarea', 'add_show_instance_description', array(
+        		'label'      => _('Instance Description:'),
+        		'required'   => false,
+        		'class'      => 'input_text_area',
+        		'validators' => array(array('StringLength', false, array(0, $maxLens['description'])))
+        ));
+        
+        $instanceDesc = $this->getElement('add_show_instance_description');
+        
+        $instanceDesc->setDecorators(array(array('ViewScript', array(
+        		'viewScript' => 'form/add-show-block.phtml',
+        		'class'      => 'block-display'
+        ))));
+        $instanceDesc->setAttrib('disabled','disabled');
+    }
+    
+    /**
+     * Enable the instance description when editing a show instance
+     */
+    public function enableInstanceDesc()
+    {
+    	$el = $this->getElement('add_show_instance_description');
+    	Logging::info($el);
+    	$el->setAttrib('disabled', null);
+    	$el->setAttrib('readonly', null);
     }
 
     public function disable()
