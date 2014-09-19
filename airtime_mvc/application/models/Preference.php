@@ -443,7 +443,7 @@ class Application_Model_Preference
     public static function GetAllow3rdPartyApi()
     {
         $val = self::getValue("third_party_api");
-        return (strlen($val) == 0 ) ? "1" : $val;
+        return (strlen($val) == 0 ) ? "0" : $val;
     }
 
     public static function SetPhone($phone)
