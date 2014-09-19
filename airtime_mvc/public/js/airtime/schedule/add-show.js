@@ -233,26 +233,13 @@ function setAddShowEvents(form) {
     if(!form.find("#add_show_rebroadcast").attr('checked')) {
         form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
     }
-
-    // If we're adding a new show, hide the "Current Logo" element/label
-    if ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show") {
-    	// Display the current show logo if it exists
-		if ($("#show_logo_current").attr("src") !== "") {
-			$("#show_logo_current-element").show();
-			$("#show_logo_current-label").show();
-			$("#show_logo_current").show();
-			$("#show_remove_logo").show();
-		} else {
-	    	$("#show_logo_current-element").hide();
-	    	$("#show_logo_current-label").hide();
-			$("#show_logo_current").hide();
-			$("#show_remove_logo").hide();
-		}
-    } else {
-    	$("#show_logo_current-element").hide();
-    	$("#show_logo_current-label").hide();
-		$("#show_remove_logo").hide();
-    }
+    
+    // If we're adding a new show or the show has no logo, hide the "Current Logo" element tree
+	$("[id^=add_show_logo_current]").toggle(($("#add_show_logo_current").attr("src") !== "")
+			&& ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show"));
+	
+	var submitButton = $(".button-bar.bottom").find(".add-show-submit");
+	$("[id^=add_show_instance_description]").toggle(submitButton.attr("data-action") === "edit-repeating-show-instance");
 
     form.find("#add_show_repeats").click(function(){
         $(this).blur();
@@ -539,6 +526,7 @@ function setAddShowEvents(form) {
         showButtonPanel: true,
         firstDay: calendarPref.weekStart
 	});
+    
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
         defaultTime: '',
@@ -616,11 +604,11 @@ function setAddShowEvents(form) {
 	// when an image is uploaded, we want to show it to the user
 	form.find("#add_show_logo").change(function(event) {
 		if (this.files && this.files[0]) {
-            $("#show_logo_preview").show();
+            $("#add_show_logo_preview").show();
 			var reader = new FileReader(); // browser compatibility?
 			
             reader.onload = function (e) {
-                $("#show_logo_preview")
+                $("#add_show_logo_preview")
                     .attr('src', e.target.result);
             };
 
@@ -631,10 +619,10 @@ function setAddShowEvents(form) {
 			} else {
 				// remove the file element data
 				$(this).val('').replaceWith($(this).clone(true));
-				$("#show_logo_preview").hide();
+				$("#add_show_logo_preview").hide();
 			}
         } else {
-            $("#show_logo_preview").hide();
+            $("#add_show_logo_preview").hide();
         }
 	});
 	
@@ -662,36 +650,34 @@ function setAddShowEvents(form) {
         return true;
 	}
 	
+	// Duplicate of the function in ShowController - provide it as a GET endpoint?
 	function validateMimeType(mime) {
 		var extensions = [
 			'image/jpeg',
 			'image/png',
 			'image/gif'
+			// BMP?
 			];
 		return $.inArray(mime, extensions);
 	}
 	
-	form.find("#show_remove_logo").click(function() {
-		var showId = $("#add_show_id").attr("value");
-		
-		console.log(showId);
-		console.log($("#show_logo_current").attr("src"));
-		
-		if (showId && $("#show_logo_current").attr("src") !== "") {
-			var action = '/rest/show/' + showId + '/delete-image';
+	form.find("#add_show_logo_current_remove").click(function() {
+		if (confirm($.i18n._('Are you sure you want to delete the current logo?'))) {
+			var showId = $("#add_show_id").attr("value");
 			
-			$.ajax({
-				url: action,
-				data: '',
-				type: 'POST',
-				success: function() {
-					$("#show_logo_current").prop("src", "")
-			    	$("#show_logo_current-element").hide();
-			    	$("#show_logo_current-label").hide();
-					$("#show_logo_current").hide();
-					$("#show_remove_logo").hide();
-				}
-			});
+			if (showId && $("#add_show_logo_current").attr("src") !== "") {
+				var action = '/rest/show/' + showId + '/delete-image';
+				
+				$.ajax({
+					url: action,
+					data: '',
+					type: 'POST',
+					success: function() {
+						$("#add_show_logo_current").prop("src", "")
+						$("[id^=add_show_logo_current]").hide();
+					}
+				});
+			}
 		}
 	});
 	
