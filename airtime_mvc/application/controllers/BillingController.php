@@ -456,7 +456,19 @@ class BillingController extends Zend_Controller_Action {
         foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
         
         $result = self::makeRequest($credentials["url"], $query_string);
-        return $result["products"]["product"];
+        //Logging::info($result["products"]["product"]);
+        $products = $result["products"]["product"];
+        
+        //Blacklist all free plans
+        foreach ($products as $k => $p) {
+            Logging::info($p);
+            if ($p["paytype"] === "free")
+            {
+                unset($products[$k]);
+            }
+        }
+        
+        return $products;
     }
     
     public static function getProductPricesAndTypes()
