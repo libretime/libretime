@@ -56,6 +56,8 @@ class LoginController extends Zend_Controller_Action
                     
                     $result = $auth->authenticate($authAdapter);
                     if ($result->isValid()) {
+                        //  Regenerate session id on login to prevent session fixation.
+                        Zend_Session::regenerateId();
                         //all info about this user from the login table omit only the password
                         $userInfo = $authAdapter->getResultRowObject(null, 'password');
 
