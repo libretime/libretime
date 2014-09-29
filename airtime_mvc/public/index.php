@@ -1,5 +1,15 @@
 <?php
 
+//  Only enable cookie secure if we are supporting https.
+//  Ideally, this would always be on and we would force https,
+//  but the default installation configs are likely to be installed by
+//  amature users on the setup that does not have https.  Forcing
+//  cookie_secure on non https would result in confusing login problems.
+if(!empty($_SERVER['HTTPS'])){
+        ini_set('session.cookie_secure', '1');
+}
+ini_set('session.cookie_httponly', '1');
+
 error_reporting(E_ALL|E_STRICT);
 
 function exception_error_handler($errno, $errstr, $errfile, $errline)
