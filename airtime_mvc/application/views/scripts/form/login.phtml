@@ -27,6 +27,8 @@
     <dd id="locale-element">
       <?php echo $this->element->getElement('locale') ?>
     </dd>
+
+    <?php echo $this->element->getElement('csrf') ?>
     
     <?php if (Application_Model_Preference::GetEnableSystemEmail()): ?>
         <dt id="reset-label" class="hidden">&nbsp;</dt>
