@@ -1,5 +1,5 @@
 <form method="<?php echo $this->element->getMethod() ?>" enctype="multipart/form-data">
-
+    <?php echo $this->element->getElement('csrf') ?>
     <?php echo $this->element->getSubform('preferences_general') ?>
     
     <h3 class="collapsible-header" id="email-server-heading"><span class="arrow-icon"></span><?php echo _("Email / Mail Server Settings"); ?></h3>
