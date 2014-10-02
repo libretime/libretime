@@ -11,7 +11,10 @@ $(document).ready(function() {
 		multiple_queues : 'true',
 		filters : [
 			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,wav,m4a,mp4,opus"}
-		]
+		],
+                multipart_params : {
+                    "csrf_token" : $("#csrf").attr('value'),
+                }
 	});
 
 	uploader = $("#plupload_files").pluploadQueue();
