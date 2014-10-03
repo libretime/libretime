@@ -26,7 +26,7 @@ class PluploadController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/plupload.queue.css?'.$CC_CONFIG['airtime_version']);
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
-        $csrf_namespace->setExpirationSeconds(900);
+        $csrf_namespace->setExpirationSeconds(5*60*60);
         $csrf_namespace->authtoken = sha1(uniqid(rand(),1));
 
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
