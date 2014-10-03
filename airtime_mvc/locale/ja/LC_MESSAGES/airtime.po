@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-12-13 12:58-0500\n"
-"PO-Revision-Date: 2014-09-29 06:42+0000\n"
+"PO-Revision-Date: 2014-10-03 05:39+0000\n"
 "Last-Translator: Kazuhiro Shimbo <kazuhiro.shimbo@mail.rakuten.com>\n"
 "Language-Team: Japanese (http://www.transifex.com/projects/p/airtime/language/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -1007,11 +1007,11 @@ msgstr "オリジナルの長さ："
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:54
 msgid "Expand Static Block"
-msgstr ""
+msgstr "スマート・ブロックの拡張"
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:59
 msgid "Expand Dynamic Block"
-msgstr ""
+msgstr "自動生成スマート・ブロックを拡張する"
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:135
 msgid "Empty smart block"
@@ -1275,11 +1275,11 @@ msgstr "ウェブ配信"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:46
 msgid "Dynamic Smart Block"
-msgstr ""
+msgstr "自動生成スマート・ブロック"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:47
 msgid "Static Smart Block"
-msgstr ""
+msgstr "スマート・ブロック"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:48
 msgid "Audio Track"
@@ -1291,11 +1291,11 @@ msgstr "プレイリストの内容："
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:65
 msgid "Static Smart Block Contents: "
-msgstr ""
+msgstr "スマート・ブロックの内容："
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:104
 msgid "Dynamic Smart Block Criteria: "
-msgstr ""
+msgstr "自動生成スマート・ブロックの基準："
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:137
 msgid "Limit to "
@@ -2015,7 +2015,7 @@ msgstr "お使いのブラウザはこのファイル形式の再生に対応し
 
 #: airtime_mvc/application/controllers/LocaleController.php:117
 msgid "Dynamic block is not previewable"
-msgstr ""
+msgstr "自動生成スマート・ブロックはプレビューできません"
 
 #: airtime_mvc/application/controllers/LocaleController.php:118
 msgid "Limit to: "
@@ -2956,7 +2956,7 @@ msgstr "%sの古いバージョンを閲覧しています。"
 
 #: airtime_mvc/application/controllers/PlaylistController.php:123
 msgid "You cannot add tracks to dynamic blocks."
-msgstr ""
+msgstr "自動生成スマート・ブロックにトラックを追加することはできません。"
 
 #: airtime_mvc/application/controllers/PlaylistController.php:144
 #, php-format
@@ -3636,11 +3636,11 @@ msgstr "スマートブロックの形式："
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:170
 msgid "Static"
-msgstr ""
+msgstr "スマート･ブロック"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:171
 msgid "Dynamic"
-msgstr ""
+msgstr "自動生成スマート・ブロック"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:285
 msgid "Allow Repeat Tracks:"
