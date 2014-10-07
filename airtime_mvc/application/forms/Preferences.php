@@ -15,6 +15,14 @@ class Application_Form_Preferences extends Zend_Form
         ));
 
         $general_pref = new Application_Form_GeneralPreferences();
+
+        $this->addElement('hash', 'csrf', array(
+           'salt' => 'unique',
+           'decorators' => array(
+                'ViewHelper'
+            )
+        ));
+
         $this->addSubForm($general_pref, 'preferences_general');
 
             $email_pref = new Application_Form_EmailServerPreferences();

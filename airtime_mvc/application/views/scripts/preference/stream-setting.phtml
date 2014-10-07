@@ -4,6 +4,7 @@
     <?php if($this->enable_stream_conf == "true"){?>
     <form method="post" id="stream_form" enctype="application/x-www-form-urlencoded">
     <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><?php echo _("Save") ?></button>
+    <?php echo $this->form->getElement('csrf') ?>
     <div style="clear:both"></div>
     <?php }?>
   <?php echo $this->statusMsg;?>
