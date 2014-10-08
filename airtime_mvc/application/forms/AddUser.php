@@ -21,6 +21,10 @@ class Application_Form_AddUser extends Zend_Form
         $hidden->setDecorators(array('ViewHelper'));
         $this->addElement($hidden);
 
+        $this->addElement('hash', 'csrf', array(
+           'salt' => 'unique'
+        ));
+
         $login = new Zend_Form_Element_Text('login');
         $login->setLabel(_('Username:'));
         $login->setAttrib('class', 'input_text');

@@ -250,7 +250,6 @@ class CcShow extends BaseCcShow {
         return CcShowInstancesQuery::create(null, $criteria)
                     ->filterByCcShow($this)
                     ->filterByDbModifiedInstance(false)
-                    ->filterByDbEnds(gmdate("Y-m-d H:i:s"), criteria::GREATER_THAN)
                     ->orderByDbId()
                     ->find($con);
 
@@ -281,7 +280,23 @@ class CcShow extends BaseCcShow {
         }
         return $instanceIds;
     }
+    
+    /*
+     * Returns cc_show_instance ids where the start time is greater than
+     * the current time
+     * 
+     * If a Criteria object is passed in Propel will always fetch the 
+     * results from the database and not return a cached collection
+     */
+    public function getFutureInstanceIds($criteria = null) {
+        $instanceIds = array();
+        foreach ($this->getFutureCcShowInstancess($criteria) as $ccShowInstance) {
+            $instanceIds[] = $ccShowInstance->getDbId();
+        }
+        return $instanceIds;
+    }
 
+    //what is this??
     public function getOtherInstances($instanceId)
     {
         return CcShowInstancesQuery::create()

@@ -177,6 +177,7 @@ class AirtimeInstall
             }
 
             echo "* Giving Apache permission to access $rp".PHP_EOL;
+            $success = chown($rp, $CC_CONFIG["webServerUser"]);
             $success = chgrp($rp, $CC_CONFIG["webServerUser"]);
             $success = chmod($rp, 0775);
         }

@@ -976,6 +976,15 @@ SQL;
 
     public static function getSchedule($p_fromDateTime = null, $p_toDateTime = null)
     {
+        //generate repeating shows if we are fetching the schedule
+        //for days beyond the shows_populated_until value in cc_pref
+        $needScheduleUntil = $p_toDateTime;
+        if (is_null($needScheduleUntil)) {
+            $needScheduleUntil = new DateTime("now", new DateTimeZone("UTC"));
+            $needScheduleUntil->add(new DateInterval("P1D"));
+        }
+        Application_Model_Show::createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil);
+        
         list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
 
         $data = array();

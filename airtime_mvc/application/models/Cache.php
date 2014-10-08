@@ -2,7 +2,6 @@
 
 class Cache
 {
-	
 	private function createCacheKey($key, $isUserValue, $userId = null) {
 		
 		$CC_CONFIG = Config::getConfig();
@@ -20,13 +19,13 @@ class Cache
 	
 	public function store($key, $value, $isUserValue, $userId = null) {
 		
-		$cacheKey = self::createCacheKey($key, $userId);
-		return apc_store($cacheKey, $value);
+		//$cacheKey = self::createCacheKey($key, $userId);
+		return false; ///apc_store($cacheKey, $value);
 	}
 	
 	public function fetch($key, $isUserValue, $userId = null) {
 		
-		$cacheKey = self::createCacheKey($key, $isUserValue, $userId);
-		return apc_fetch($cacheKey);
+		//$cacheKey = self::createCacheKey($key, $isUserValue, $userId);
+		return false; //apc_fetch($cacheKey);
 	}
 }
