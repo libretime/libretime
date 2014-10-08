@@ -384,10 +384,10 @@ SQL;
             throw new FileNoPermissionException();
         }
 
+
         $music_dir = Application_Model_MusicDir::getDirByPK($this->_file->getDbDirectory());
         assert($music_dir);
         $type = $music_dir->getType();
-        
         
         if (file_exists($filepath) && $type == "stor") {
             try {
@@ -402,11 +402,7 @@ SQL;
         }
 
         Logging::info($_SERVER["HTTP_HOST"].": User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
-        // set hidden flag to true
-        //$this->_file->setDbHidden(true);
-        $this->_file->setDbFileExists(false);
-        $this->_file->save();
-
+        
         // need to explicitly update any playlist's and block's length
         // that contains the file getting deleted
         $fileId = $this->_file->getDbId();
@@ -423,6 +419,10 @@ SQL;
             $bl->setDbLength($bl->computeDbLength(Propel::getConnection(CcBlockPeer::DATABASE_NAME)));
             $bl->save();
         }
+
+        // We were setting file_exists to false and leaving it at that
+        // but we should actually delete the file
+        $this->_file->delete();
     }
 
     /**
