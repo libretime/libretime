@@ -193,7 +193,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $front = Zend_Controller_Front::getInstance();
         $router = $front->getRouter();
-
+        $front->setBaseUrl(Application_Common_OsPath::getBaseDir());
+        
         $router->addRoute(
             'password-change',
             new Zend_Controller_Router_Route('password-change/:user_id/:token', array(

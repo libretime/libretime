@@ -3096,6 +3096,8 @@ msgstr ""
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
 msgstr ""
+"Attention: Vous ne pouvez pas modifier ce champ alors que l'émission est en "
+"cours de lecture"
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
 msgid "No result found"
