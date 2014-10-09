@@ -6,3 +6,6 @@
 **/build/*
 **/dist/*
 *~
+/airtime_mvc/tests/test_results.xml
+/tests/results.html
+/tests/*.jar

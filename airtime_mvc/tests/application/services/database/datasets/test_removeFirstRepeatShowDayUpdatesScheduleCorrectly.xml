@@ -14,6 +14,7 @@
         <column>live_stream_pass</column>
         <column>linked</column>
         <column>is_linkable</column>
+        <column>image_path</column>
         <row>
             <value>1</value>
             <value>test show</value>
@@ -28,6 +29,7 @@
             <null />
             <value>1</value>
             <value>1</value>
+            <value></value>
         </row>
     </table>
 
