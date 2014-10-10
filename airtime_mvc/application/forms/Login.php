@@ -10,6 +10,10 @@ class Application_Form_Login extends Zend_Form
         // Set the method for the display form to POST
         $this->setMethod('post');
 
+        $this->addElement('hash', 'csrf', array(
+           'salt' => 'unique'
+        ));
+
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/login.phtml'))
         ));

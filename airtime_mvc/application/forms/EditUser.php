@@ -22,6 +22,10 @@ class Application_Form_EditUser extends Zend_Form
         $this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/edit-user.phtml', "currentUser" => $currentUser->getLogin()))));
         $this->setAttrib('id', 'current-user-form');
+
+        $this->addElement('hash', 'csrf', array(
+           'salt' => 'unique'
+        ));
         
         $hidden = new Zend_Form_Element_Hidden('cu_user_id');
         $hidden->setDecorators(array('ViewHelper'));
