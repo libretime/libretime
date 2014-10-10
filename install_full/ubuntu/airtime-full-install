@@ -29,8 +29,10 @@ echo "----------------------------------------------------"
 
 dist=`lsb_release -is`
 code=`lsb_release -cs`
+set +e
 apache2 -v | grep "2\.4" > /dev/null
 apacheversion=$?
+set -e
 
 #enable squeeze backports to get lame packages
 if [ "$dist" = "Debian" -a "$code" = "squeeze" ]; then
