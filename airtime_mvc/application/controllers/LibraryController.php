@@ -191,7 +191,6 @@ class LibraryController extends Zend_Controller_Action
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
 
         if ($type === "audioclip") {
-
             $file = Application_Model_StoredFile::RecallById($id);
 
             $menu["play"]["mime"] = $file->getPropelOrm()->getDbMime();
@@ -216,7 +215,11 @@ class LibraryController extends Zend_Controller_Action
                 $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
             }
 
-            $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
+            // It's important that we always return the parent id (cc_files id)
+            // and not the cloud_file id (if applicable) for track download.
+            // Our application logic (StoredFile.php) will determine if the track
+            // is a cloud_file and handle it appropriately.
+            $url = $baseUrl."api/get-media/file/".$id.".".$file->getFileExtension().'/download/true';
             $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {

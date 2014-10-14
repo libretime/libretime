@@ -1,6 +1,7 @@
 import os
 import logging
 import ConfigParser
+import sys
 
 from libcloud.storage.types import Provider, ObjectDoesNotExistError
 from libcloud.storage.providers import get_driver
@@ -37,9 +38,9 @@ class CloudStorageDownloader:
             config.readfp(open(config_path))
         except IOError as e:
             print "Failed to open config file at " + config_path + ": " + e.strerror 
-            exit(-1)
+            sys.exit()
         except Exception:
             print e.strerror 
-            exit(-1)
+            sys.exit()
 
         return config

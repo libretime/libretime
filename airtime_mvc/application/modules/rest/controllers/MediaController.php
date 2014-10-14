@@ -236,6 +236,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 $cloudFile->save();
                 
             //file is stored locally
+            //we should get rid of this since we're removing local file storage
             } else if (isset($requestData["full_path"])) {
                 $fileSizeBytes = filesize($requestData["full_path"]);
                 if ($fileSizeBytes === false)

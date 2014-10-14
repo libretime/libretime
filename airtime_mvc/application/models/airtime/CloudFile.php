@@ -1,6 +1,6 @@
 <?php
 
-
+require_once 'Zend/Service/Amazon/S3.php';
 
 /**
  * Skeleton subclass for representing a row from the 'cloud_file' table.
@@ -18,7 +18,32 @@ class CloudFile extends BaseCloudFile
     public function getAbsoluteFilePath()
     {
         $CC_CONFIG = Config::getConfig();
-        return $CC_CONFIG["cloud_storage"]["host"]."/".$CC_CONFIG["cloud_storage"]["bucket"]."/" . urlencode($this->getResourceId());
+        return $this->get_s3_signed_url(
+            $CC_CONFIG['cloud_storage']['api_key'],
+            $CC_CONFIG['cloud_storage']['api_key_secret'],
+            $CC_CONFIG['cloud_storage']['bucket']);
+    }
+    
+    private function get_s3_signed_url($s3_key, $s3_key_secret, $bucket)
+    {
+        //should be longer than track length
+        $expires = 120;
+        $resource = $this->getResourceId();
+        
+        $expires = time()+$expires;
+        $string_to_sign = "GET\n\n\n{$expires}\n/{$bucket}/{$resource}";
+        $signature = base64_encode((hash_hmac("sha1", utf8_encode($string_to_sign), $s3_key_secret, TRUE)));
+        
+        $authentication_params = "AWSAccessKeyId={$s3_key}&Expires={$expires}&Signature={$signature}";
+        
+        $s3 = new Zend_Service_Amazon_S3($s3_key, $s3_key_secret);
+        $endpoint = $s3->getEndpoint();
+        $scheme = $endpoint->getScheme();
+        $host = $endpoint->getHost();
+        
+        $url = "{$scheme}://{$host}/{$bucket}/".urlencode($resource)."?{$authentication_params}";
+        Logging::info($url);
+        return $url;
     }
     
     public function getFileSize()
@@ -61,8 +86,7 @@ class CloudFile extends BaseCloudFile
     public function deletePhysicalFile()
     {
         $CC_CONFIG = Config::getConfig();
-        //$pathToScript = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."cloud_storage_deleter.py" : "/home/denise/airtime/cloud_storage_deleter.py";
-        
+
         $provider = escapeshellarg($CC_CONFIG["cloud_storage"]["provider"]);
         $bucket = escapeshellarg($CC_CONFIG["cloud_storage"]["bucket"]);
         $apiKey = escapeshellarg($CC_CONFIG["cloud_storage"]["api_key"]);
@@ -91,5 +115,17 @@ class CloudFile extends BaseCloudFile
     {
         CcFilesQuery::create()->findPk($this->getCcFileId())->delete();
         parent::delete();
+    }
+    
+    public function downloadFile()
+    {
+        $CC_CONFIG = Config::getConfig();
+        
+        $s3 = new Zend_Service_Amazon_S3($CC_CONFIG['cloud_storage']['api_key'], $CC_CONFIG['cloud_storage']['api_key_secret']);
+        //$fileObj = $s3->getObject($CC_CONFIG['cloud_storage']['bucket']."/".$this->getResourceId());
+        
+        $response_stream = $s3->getObjectStream($CC_CONFIG['cloud_storage']['bucket']."/".$this->getResourceId());
+        copy($response_stream->getStreamName(), "/tmp/".$this->getResourceId());
+        Logging::info($response_stream);
     }
 }

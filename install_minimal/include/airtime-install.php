@@ -59,7 +59,7 @@ if ($overwrite) {
 if (!$iniExists){
     require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php');
     $CC_CONFIG = Config::getConfig();
-    require_once 'propel/runtime/lib/Propel.php';
+    require_once 'vendor/propel/propel1/runtime/lib/Propel.php';
     Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
 }
 
