@@ -150,10 +150,20 @@ class Application_Service_SchedulerService
     	return $dt;
     }
 
+    /**
+     * 
+     * Gets a copy of the linked show's schedule from cc_schedule table
+     * The schedule is taken from the most recent show instance that existed
+     * before new show instances were created.
+     * 
+     * @param integer $showId
+     * @param array $instancsIdsToFill
+     */
     public static function getLinkedShowSchedule($showId, $instancsIdsToFill)
     {
         $showsPopulatedUntil = Application_Model_Preference::GetShowsPopulatedUntil();
 
+        
         $showInstanceWithMostRecentSchedule = CcShowInstancesQuery::create()
             ->filterByDbShowId($showId)
             ->filterByDbStarts($showsPopulatedUntil->format("Y-m-d H:i:s"), Criteria::LESS_THAN)
@@ -175,7 +185,9 @@ class Application_Service_SchedulerService
     
     /**
      * 
-     * Enter description here ...
+     * This function gets called after new linked show_instances are created.
+     * It fills the new show instances' schedules.
+     * 
      * @param CcShow_type $ccShow
      * @param array $instanceIdsToFill ids of the new linked cc_show_instances that
      * were created and now need their schedules filled
@@ -229,13 +241,10 @@ class Application_Service_SchedulerService
     
         //need to find out which linked instances are empty
         $values = array();
-        //pass in new criteria object so propel doesn't return cached results
-        //$futureInstanceIds = $ccShow->getFutureInstanceIds(new Criteria());
 
         $con = Propel::getConnection();
         try {
             $con->beginTransaction();
-            //foreach ($futureInstanceIds as $id)
             foreach ($instanceIdsToFill as $id) 
             {
                $instanceSched_sql = "SELECT * FROM cc_schedule ".
@@ -249,6 +258,7 @@ class Application_Service_SchedulerService
                 * the most recent instance, we need to fill/replace with the linked
                 * show schedule
                 */
+               //TODO can this check be removed?
                if (count($showInstanceContents) < 1 || 
                    self::replaceInstanceContentCheck($showInstanceContents, $linkedShowSchedule, $id)) 
                 {
