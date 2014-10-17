@@ -28,21 +28,22 @@ class CloudFile extends BaseCloudFile
     {
         //should be longer than track length
         $expires = 120;
-        $resource = $this->getResourceId();
+        $resource_id = $this->getResourceId();
         
         $expires = time()+$expires;
-        $string_to_sign = "GET\n\n\n{$expires}\n/{$bucket}/{$resource}";
-        $signature = base64_encode((hash_hmac("sha1", utf8_encode($string_to_sign), $s3_key_secret, TRUE)));
+        $string_to_sign = utf8_encode("GET\n\n\n$expires\n/$bucket/$resource_id");
+        // We need to urlencode the entire signature in case the hashed signature
+        // has spaces. (NOTE: utf8_encode() does not work here because it turns
+        // spaces into non-breaking spaces)
+        $signature = urlencode(base64_encode((hash_hmac("sha1", $string_to_sign, $s3_key_secret, true))));
         
-        $authentication_params = "AWSAccessKeyId={$s3_key}&Expires={$expires}&Signature={$signature}";
+        $authentication_params = "AWSAccessKeyId=$s3_key&Expires=$expires&Signature=$signature";
         
         $s3 = new Zend_Service_Amazon_S3($s3_key, $s3_key_secret);
         $endpoint = $s3->getEndpoint();
         $scheme = $endpoint->getScheme();
         $host = $endpoint->getHost();
-        
-        $url = "{$scheme}://{$host}/{$bucket}/".urlencode($resource)."?{$authentication_params}";
-        Logging::info($url);
+        $url = "$scheme://$host/$bucket/".utf8_encode($resource_id)."?$authentication_params";
         return $url;
     }
     
@@ -78,33 +79,35 @@ class CloudFile extends BaseCloudFile
     
     /**
      * 
-     * Deletes the file from cloud storage by executing a python script
-     * that uses Apache Libcloud to connect with the cloud storage service
+     * Deletes the file from Amazon S3
      * 
      * If the file was successfully deleted the filesize of that file is returned
      */
     public function deletePhysicalFile()
     {
         $CC_CONFIG = Config::getConfig();
-
-        $provider = escapeshellarg($CC_CONFIG["cloud_storage"]["provider"]);
-        $bucket = escapeshellarg($CC_CONFIG["cloud_storage"]["bucket"]);
-        $apiKey = escapeshellarg($CC_CONFIG["cloud_storage"]["api_key"]);
-        $apiSecret = escapeshellarg($CC_CONFIG["cloud_storage"]["api_key_secret"]);
-        $objName = escapeshellarg($this->getResourceId());
         
-        $command = "/usr/lib/airtime/pypo/bin/cloud_storage_deleter.py $provider $bucket $apiKey $apiSecret $objName 2>&1 echo $?";
+        $s3 = new Zend_Service_Amazon_S3(
+            $CC_CONFIG['cloud_storage']['api_key'],
+            $CC_CONFIG['cloud_storage']['api_key_secret']);
         
-        $output = shell_exec($command);
-        if ($output != "") {
-            if (stripos($output, 'filesize') === false) {
-                Logging::info($output);
-                throw new Exception("Could not delete file from cloud storage");
-            }
+        $bucket = $CC_CONFIG['cloud_storage']['bucket'];
+        $resource_id = $this->getResourceId();
+        $amz_resource = utf8_encode("$bucket/$resource_id");
+        
+        if ($s3->isObjectAvailable($amz_resource)) {
+            $obj_info = $s3->getInfo($amz_resource);
+            $filesize = $obj_info["size"];
+            
+            // removeObject() returns true even if the object was not deleted (bug?)
+            // so that is not a good way to do error handling. isObjectAvailable()
+            // does however return the correct value; We have to assume that if the
+            // object is available the removeObject() function will work.
+            $s3->removeObject($amz_resource);
+            return $filesize;
+        } else {
+            throw new Exception("ERROR: Could not locate object on Amazon S3");
         }
-        
-        $outputArr = json_decode($output, true);
-        return $outputArr["filesize"];
     }
     
     /**
@@ -115,17 +118,5 @@ class CloudFile extends BaseCloudFile
     {
         CcFilesQuery::create()->findPk($this->getCcFileId())->delete();
         parent::delete();
-    }
-    
-    public function downloadFile()
-    {
-        $CC_CONFIG = Config::getConfig();
-        
-        $s3 = new Zend_Service_Amazon_S3($CC_CONFIG['cloud_storage']['api_key'], $CC_CONFIG['cloud_storage']['api_key_secret']);
-        //$fileObj = $s3->getObject($CC_CONFIG['cloud_storage']['bucket']."/".$this->getResourceId());
-        
-        $response_stream = $s3->getObjectStream($CC_CONFIG['cloud_storage']['bucket']."/".$this->getResourceId());
-        copy($response_stream->getStreamName(), "/tmp/".$this->getResourceId());
-        Logging::info($response_stream);
     }
 }

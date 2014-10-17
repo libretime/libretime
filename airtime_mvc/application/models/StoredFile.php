@@ -368,8 +368,6 @@ SQL;
      */
     public function delete()
     {
-        $filepath = $this->getFilePath();
-        
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
@@ -387,6 +385,8 @@ SQL;
         //try {
             //Delete the physical file from either the local stor directory
             //or from the cloud
+            // TODO: don't have deletePhysicalFile return the filesize.
+            // Instead, fetch that value before deleting the file.
             $filesize = $this->_file->deletePhysicalFile();
 
             //Update the user's disk usage

@@ -15,6 +15,13 @@ class CloudStorageUploader:
     def upload_obj(self, audio_file_path, metadata):
         file_base_name = os.path.basename(audio_file_path)
         file_name, extension = os.path.splitext(file_base_name)
+        
+        '''
+        With Amazon S3 you cannot create a signed url if there are spaces 
+        in the object name. URL encoding the object name doesn't solve the
+        problem. As a solution we will replace spaces with dashes.
+        '''
+        file_name = file_name.replace(" ", "-")
         object_name = "%s_%s%s" % (file_name, str(uuid.uuid4()), extension)
 
         cls = get_driver(getattr(Provider, self._provider))
@@ -25,8 +32,7 @@ class CloudStorageUploader:
         except ContainerDoesNotExistError:
             container = driver.create_container(self._bucket)
         
-        extra = {'meta_data': {'filename': file_base_name},
-                 'acl': 'public-read-write'}
+        extra = {'meta_data': {'filename': file_base_name}}
         
         obj = driver.upload_object(file_path=audio_file_path,
                                    container=container,

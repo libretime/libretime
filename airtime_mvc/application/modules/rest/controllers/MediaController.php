@@ -230,6 +230,12 @@ class Rest_MediaController extends Zend_Rest_Controller
                 $file->setDbFilepath($requestData["filename"]);
                 
                 $fileSizeBytes = $requestData["filesize"];
+                if ($fileSizeBytes === false)
+                {
+                    $file->setDbImportStatus(2)->save();
+                    $this->fileNotFoundResponse();
+                    return;
+                }
                 $cloudFile = new CloudFile();
                 $cloudFile->setResourceId($requestData["resource_id"]);
                 $cloudFile->setCcFiles($file);
