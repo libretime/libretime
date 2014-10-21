@@ -134,11 +134,11 @@ def is_web_server_broken(url):
         test_req = requests.get(url)
         test_req.raise_for_status()
     except Exception as e:
-        return true
+        return True
     else:
         # The request worked fine, so the web server and Airtime are still up.
-        return false 
-    return false
+        return False 
+    return False
 
 
 def alert_hung_request():
