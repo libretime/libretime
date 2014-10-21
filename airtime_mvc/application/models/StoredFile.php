@@ -382,26 +382,21 @@ SQL;
         $file_id = $this->_file->getDbId();
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$file_id);
 
-        //try {
-            //Delete the physical file from either the local stor directory
-            //or from the cloud
-            // TODO: don't have deletePhysicalFile return the filesize.
-            // Instead, fetch that value before deleting the file.
-            $filesize = $this->_file->deletePhysicalFile();
+        $filesize = $this->_file->getFileSize();
 
-            //Update the user's disk usage
-            Application_Model_Preference::updateDiskUsage(-1 * $filesize);
-            
-            //Explicitly update any playlist's and block's length that contain
-            //the file getting deleted
-            self::updateBlockAndPlaylistLength($this->_file->getDbId());
-            
-            //delete the file record from cc_files (and cloud_file, if applicable)
-            $this->_file->delete();
-        //} catch (Exception $e) {
-            //Logging::error($e->getMessage());
-            //return;
-        //}
+        //Delete the physical file from either the local stor directory
+        //or from the cloud
+        $this->_file->deletePhysicalFile();
+
+        //Update the user's disk usage
+        Application_Model_Preference::updateDiskUsage(-1 * $filesize);
+        
+        //Explicitly update any playlist's and block's length that contain
+        //the file getting deleted
+        self::updateBlockAndPlaylistLength($this->_file->getDbId());
+        
+        //delete the file record from cc_files (and cloud_file, if applicable)
+        $this->_file->delete();
     }
 
     /*
