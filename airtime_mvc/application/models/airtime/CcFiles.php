@@ -82,6 +82,11 @@ class CcFiles extends BaseCcFiles {
         return $info['filename'];
     }
     
+    public function getURLForTrackPreviewOrDownload()
+    {
+        return $this->getAbsoluteFilePath();
+    }
+    
     public function getAbsoluteFilePath()
     {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());

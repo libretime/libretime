@@ -895,9 +895,11 @@ SQL;
                 //row is from "file"
                 $media_id = $item['file_id'];
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
-                $uri = $storedFile->getFilePath();
+                $file = $storedFile->getPropelOrm();
+                $uri = $file->getAbsoluteFilePath();
+                
                 $object_name = null;
-                if ($storedFile->getPropelOrm() instanceof CloudFile) {
+                if ($file instanceof CloudFile) {
                     $object_name = $storedFile->getResourceId();
                 }
                 $filesize = $storedFile->getFileSize();

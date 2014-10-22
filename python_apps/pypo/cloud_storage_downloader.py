@@ -28,8 +28,11 @@ class CloudStorageDownloader:
         except ObjectDoesNotExistError:
             logging.info("Could not find object: %s" % obj_name)
 
-        logging.info('Downloading: %s to %s' % (cloud_obj.name, dst))
-        cloud_obj.download(destination_path=dst)
+        if os.path.isfile(dst) == False:
+            logging.info('Downloading: %s to %s' % (cloud_obj.name, dst))
+            cloud_obj.download(destination_path=dst)
+        else:
+            logging.info("Skipping download because %s already exists" % dst)
 
     def read_config_file(self, config_path):
         """Parse the application's config file located at config_path."""

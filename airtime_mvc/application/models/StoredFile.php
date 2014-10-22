@@ -491,7 +491,7 @@ SQL;
     {
         assert($this->_file);
         
-        return $this->_file->getAbsoluteFilePath();
+        return $this->_file->getURLForTrackPreviewOrDownload();
     }
 
     /**
