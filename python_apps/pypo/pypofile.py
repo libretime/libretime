@@ -37,8 +37,13 @@ class PypoFile(Thread):
         """
         src = media_item['uri']
         dst = media_item['dst']
-        src_size = media_item['filesize']
         
+        try:
+            src_size = os.path.getsize(src)
+        except Exception, e:
+            self.logger.error("Could not get size of source file: %s", src)
+            return
+
         dst_exists = True
         try:
             dst_size = os.path.getsize(dst)
@@ -63,11 +68,7 @@ class PypoFile(Thread):
                 """
                 copy will overwrite dst if it already exists
                 """
-                if 'object_name' in media_item:
-                    csd = CloudStorageDownloader()
-                    csd.download_obj(dst, media_item['object_name'])
-                else:
-                    shutil.copy(src, dst)
+                shutil.copy(src, dst)
 
                 #make file world readable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
@@ -132,7 +133,15 @@ class PypoFile(Thread):
 
                 media_item = self.get_highest_priority_media_item(self.media)
                 if media_item is not None:
-                    self.copy_file(media_item)
+                    """
+                    If an object_name exists the file is stored on Amazon S3
+                    """
+                    if 'object_name' in media_item:
+                        csd = CloudStorageDownloader()
+                        csd.download_obj(media_item['dst'], media_item['object_name'])
+                        media_item['file_ready'] = True
+                    else:
+                        self.copy_file(media_item)
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()

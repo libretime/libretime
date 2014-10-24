@@ -724,7 +724,7 @@ SQL;
         }
     }
 
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize, $object_name=null)
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $object_name=null)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end   = self::AirtimeTimeToPypoTime($item["end"]);
@@ -758,8 +758,7 @@ SQL;
             'end'               => $end,
             'show_name'         => $item["show_name"],
             'replay_gain'       => $replay_gain,
-            'independent_event' => $independent_event,
-            'filesize'          => $filesize
+            'independent_event' => $independent_event
         );
         if (!is_null($object_name)) {
             $schedule_item["object_name"] = $object_name;
@@ -902,8 +901,7 @@ SQL;
                 if ($file instanceof CloudFile) {
                     $object_name = $storedFile->getResourceId();
                 }
-                $filesize = $storedFile->getFileSize();
-                self::createFileScheduleEvent($data, $item, $media_id, $uri, $filesize, $object_name);
+                self::createFileScheduleEvent($data, $item, $media_id, $uri, $object_name);
             } 
             elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"

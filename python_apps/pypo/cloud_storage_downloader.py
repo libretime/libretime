@@ -2,6 +2,7 @@ import os
 import logging
 import ConfigParser
 import sys
+import hashlib
 
 from libcloud.storage.types import Provider, ObjectDoesNotExistError
 from libcloud.storage.providers import get_driver
@@ -26,9 +27,15 @@ class CloudStorageDownloader:
             cloud_obj = driver.get_object(container_name=self._bucket,
                                     object_name=obj_name)
         except ObjectDoesNotExistError:
-            logging.info("Could not find object: %s" % obj_name)
+            logging.info("%s does not exist on Amazon S3" % obj_name)
 
-        if os.path.isfile(dst) == False:
+        dst_exists = False
+        if (os.path.isfile(dst)):
+            dst_hash = hashlib.md5(open(dst).read()).hexdigest()
+            if dst_hash == cloud_obj.hash:
+                dst_exists = True
+
+        if dst_exists == False:
             logging.info('Downloading: %s to %s' % (cloud_obj.name, dst))
             cloud_obj.download(destination_path=dst)
         else:
