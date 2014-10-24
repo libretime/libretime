@@ -201,6 +201,10 @@ class PreferenceController extends Zend_Controller_Action
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
 
+        $form->addElement('hash', 'csrf', array(
+           'salt' => 'unique'
+        ));
+
         $form->setSetting($setting);
         $form->startFrom();
 
