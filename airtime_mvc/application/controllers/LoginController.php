@@ -61,6 +61,7 @@ class LoginController extends Zend_Controller_Action
                 
                 $result = $auth->authenticate($authAdapter);
                 if ($result->isValid()) {
+                    Zend_Session::regenerateId();
                     //all info about this user from the login table omit only the password
                     $userInfo = $authAdapter->getResultRowObject(null, 'password');
 
@@ -81,6 +82,7 @@ class LoginController extends Zend_Controller_Action
                     $auth = Zend_Auth::getInstance();
                     $result = $auth->authenticate($authAdapter);
                     if ($result->isValid()) {
+                        Zend_Session::regenerateId();
                         //set the user locale in case user changed it in when logging in
                         Application_Model_Preference::SetUserLocale($locale);
                         
