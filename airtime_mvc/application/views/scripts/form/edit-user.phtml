@@ -166,6 +166,10 @@
                 </ul>
             <?php endif; ?> 
         </dd>
+
+        <?php echo $this->element->getElement('csrf') ?>
+
+        <button type="submit" id="cu_save_user" class="btn btn-small right-floated"><?php echo _("Save")?></button>
     </dl>
     <button type="submit" id="cu_save_user" class="btn btn-small right-floated"><?php echo _("Save")?></button>
 </form>
