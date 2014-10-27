@@ -10,7 +10,7 @@ class CORSHelper
         //Chrome sends the Origin header for all requests, so we whitelist the webserver's hostname as well.
         $response = $response->setHeader('Access-Control-Allow-Origin', '*');
         $origin = $request->getHeader('Origin');
-        if (($origin != "") &&
+        if ((!(preg_match("/https?:\/\/localhost/", $origin) === 1)) && ($origin != "") &&
         (!in_array($origin,
                 array("http://www.airtime.pro",
                         "https://www.airtime.pro",
