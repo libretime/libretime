@@ -1201,6 +1201,7 @@ SQL;
      * @param $utcNow A DateTime object containing the current time in UTC.
      * @return An array (with stupid sub-arrays) containing the previous show id,
      *         current show id, and next show id.
+     * @deprecated
      */
     public static function getPrevCurrentNextOld($utcNow)
     {

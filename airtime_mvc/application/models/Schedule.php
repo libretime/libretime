@@ -104,6 +104,7 @@ SQL;
 
     /**
      * Old version of the function for backwards compatibility
+     * @deprecated
      */
     public static function GetPlayOrderRangeOld()
     {
