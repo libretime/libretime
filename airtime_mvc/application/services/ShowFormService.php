@@ -362,33 +362,22 @@ class Application_Service_ShowFormService
     }
 
     /**
-     * 
      * Before we send the form data in for validation, there
      * are a few fields we may need to adjust first
+     * 
      * @param $formData
      */
     public function preEditShowValidationCheck($formData)
     {
-        $validateStartDate = true;
-        $validateStartTime = true;
+        // If the start date or time were disabled, don't validate them
+        $validateStartDate = $formData['start_date_disabled'] === "false";
+        $validateStartTime = $formData['start_time_disabled'] === "false";
 
         //CcShowDays object of the show currently being edited
         $currentShowDay = $this->ccShow->getFirstCcShowDay();
 
         //DateTime object
         $dt = $currentShowDay->getLocalStartDateAndTime();
-
-        if (!array_key_exists('add_show_start_date', $formData)) {
-            //Changing the start date was disabled, since the
-            //array key does not exist. We need to repopulate this entry from the db.
-            $formData['add_show_start_date'] = $dt->format("Y-m-d");
-
-            if (!array_key_exists('add_show_start_time', $formData)) {
-                $formData['add_show_start_time'] = $dt->format("H:i");
-                $validateStartTime = false;
-            }
-            $validateStartDate = false;
-        }
         $formData['add_show_record'] = $currentShowDay->getDbRecord();
 
         //if the show is repeating, set the start date to the next
