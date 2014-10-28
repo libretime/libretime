@@ -1383,20 +1383,12 @@ SQL;
         $futureScheduledFilesSelectCriteria->add(CcSchedulePeer::ENDS, gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN);
         $stmt = CcSchedulePeer::doSelectStmt($futureScheduledFilesSelectCriteria);
         $filesScheduledInFuture = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-        $count = 0;
-        foreach ($filesScheduledInFuture as $f) {
-            $count += 1;
-        }
         
         $filesCurrentlySetWithIsScheduledSelectCriteria = new Criteria();
         $filesCurrentlySetWithIsScheduledSelectCriteria->addSelectColumn(CcFilesPeer::ID);
         $filesCurrentlySetWithIsScheduledSelectCriteria->add(CcFilesPeer::IS_SCHEDULED, true);
         $stmt = CcFilesPeer::doSelectStmt($filesCurrentlySetWithIsScheduledSelectCriteria);
         $filesCurrentlySetWithIsScheduled = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-        $count = 0;
-        foreach ($filesCurrentlySetWithIsScheduled as $t) {
-            $count += 1;
-        }
         
         $diff = array_diff($filesCurrentlySetWithIsScheduled, $filesScheduledInFuture);
         
