@@ -354,6 +354,8 @@ function setAddShowEvents(form) {
             startTimeField.val(json.start.time);
             endDateField.val(json.end.date);
             endTimeField.val(json.end.time);
+            // Change the timezone now that we've updated the times
+            currentTimezone = newTimezone;
         });
     });
 
