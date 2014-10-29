@@ -7,14 +7,20 @@ from libcloud.storage.types import Provider, ContainerDoesNotExistError, ObjectD
 
 class CloudStorageUploader:
     """ A class that uses Apache Libcloud's Storage API to upload objects into
-    various cloud storage backends.
+    a cloud storage backend. For this implementation all files will be uploaded
+    into a bucket on Amazon S3.
+    
+    It is important to note that every file, coming from different Airtime Pro
+    stations, will get uploaded into the same bucket on the same Amazon S3
+    account.
 
     Attributes:
         _provider: Storage backend. For exmaple, Amazon S3, Google Storage.
         _bucket: Name of container on provider where files will get uploaded into.
         _api_key: Access key to objects on the provider's storage backend.
         _api_key_secret: Secret access key to objects on the provider's storage backend.
-"""
+    """
+
     def __init__(self, provider, bucket, api_key, api_key_secret):
         self._provider = provider
         self._bucket = bucket
@@ -22,29 +28,36 @@ class CloudStorageUploader:
         self._api_key_secret = api_key_secret
 
     def upload_obj(self, audio_file_path, metadata):
-        '''Uploads a file into a provider's cloud object storage.
+        """Uploads a file into Amazon S3 object storage.
         
-        Generates a unique object name
+        Before a file is uploaded onto Amazon S3 we generate a unique object
+        name consisting of the filename and a unqiue string using the uuid4
+        module.
         
         Keyword arguments:
             audio_file_path: Path on disk to the audio file that is about to be
-                             uploaded to cloud object storage.
+                             uploaded to Amazon S3 object storage.
             metadata: ID3 tags and other metadata extracted from the audio file.
-        '''
+            
+        Returns:
+            The metadata dictionary it received with three new keys:
+                filesize: The file's filesize in bytes.
+                filename: The file's filename.
+                resource_id: The unique object name used to identify the objects
+                             on Amazon S3 
+        """
         
         file_base_name = os.path.basename(audio_file_path)
         file_name, extension = os.path.splitext(file_base_name)
         
-        '''
-        With Amazon S3 you cannot create a signed url if there are spaces 
-        in the object name. URL encoding the object name doesn't solve the
-        problem. As a solution we will replace spaces with dashes.
-        '''
+        # With Amazon S3 you cannot create a signed url if there are spaces 
+        # in the object name. URL encoding the object name doesn't solve the
+        # problem. As a solution we will replace spaces with dashes.
         file_name = file_name.replace(" ", "-")
         object_name = "%s_%s%s" % (file_name, str(uuid.uuid4()), extension)
 
-        cls = get_driver(getattr(Provider, self._provider))
-        driver = cls(self._api_key, self._api_key_secret)
+        provider_driver_class = get_driver(getattr(Provider, self._provider))
+        driver = provider_driver_class(self._api_key, self._api_key_secret)
         
         try:
             container = driver.get_container(self._bucket)
@@ -61,13 +74,13 @@ class CloudStorageUploader:
 
         metadata["filesize"] = os.path.getsize(audio_file_path)
         
-        '''remove file from organize directory'''
+        # Remove file from organize directory
         try:
             os.remove(audio_file_path)
         except OSError:
             logging.info("Could not remove %s from organize directory" % audio_file_path)
         
-        '''pass original filename to Airtime so we can store it in the db'''
+        # Pass original filename to Airtime so we can store it in the db
         metadata["filename"] = file_base_name
         
         metadata["resource_id"] = object_name

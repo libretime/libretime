@@ -10,6 +10,19 @@ from libcloud.storage.providers import get_driver
 CONFIG_PATH = '/etc/airtime/airtime.conf'
 
 class CloudStorageDownloader:
+    """ A class that uses Apache Libcloud's Storage API to download objects from
+    a cloud storage backend. For this implementation all files are stored on
+    Amazon S3 and will be downloaded from there.
+    
+    This class is used with Airtime's playout engine service, PYPO.
+
+    Attributes:
+        _provider: Storage backend. For exmaple, Amazon S3, Google Storage.
+        _bucket: Name of container on provider where files will get uploaded into.
+        _api_key: Access key to objects on the provider's storage backend.
+        _api_key_secret: Secret access key to objects on the provider's storage backend.
+    """
+
     def __init__(self):
         config = self.read_config_file(CONFIG_PATH)
         
@@ -20,8 +33,18 @@ class CloudStorageDownloader:
         self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
     
     def download_obj(self, dst, obj_name):
-        cls = get_driver(getattr(Provider, self._provider))
-        driver = cls(self._api_key, self._api_key_secret)
+        """Downloads a file from Amazon S3 object storage to disk.
+        
+        Downloads an object to PYPO's temporary cache directory on disk.
+        If the file already exists in the cache directory the object
+        downloading is skipped.
+        
+        Keyword arguments:
+            dst: PYPO's temporary cache directory on disk.
+            obj_name: Name of the object to download to disk
+        """
+        provider_driver_class = get_driver(getattr(Provider, self._provider))
+        driver = provider_driver_class(self._api_key, self._api_key_secret)
 
         try:
             cloud_obj = driver.get_object(container_name=self._bucket,
@@ -29,6 +52,11 @@ class CloudStorageDownloader:
         except ObjectDoesNotExistError:
             logging.info("%s does not exist on Amazon S3" % obj_name)
 
+        # If we detect the file path already exists in PYPO's cache directory
+        # we need to verify the contents of that file is the same (in case there
+        # was file corruption in a previous download for example) as the
+        # object's contents by comparing the hash. If the hash values are not
+        # equal we need to download the object to disk again.
         dst_exists = False
         if (os.path.isfile(dst)):
             dst_hash = hashlib.md5(open(dst).read()).hexdigest()
