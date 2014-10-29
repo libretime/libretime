@@ -89,7 +89,7 @@ $(document).ready(function() {
     	
     	$.ajax({
     		  type: 'DELETE',
-    		  url: '/rest/media/' + file.id,
+    		  url: 'rest/media/' + file.id + "?csrf_token=" + $("#csrf").attr('value'),
     		  success: function(resp) {
     			  self.recentUploadsTable.fnDraw();
     		  },
