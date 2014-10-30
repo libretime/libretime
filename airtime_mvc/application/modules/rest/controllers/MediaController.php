@@ -312,18 +312,21 @@ class Rest_MediaController extends Zend_Rest_Controller
         if($observed_csrf_token == $expected_csrf_token){
             return true;
         }else{
-            $resp = $this->getResponse();
-            $resp->setHttpResponseCode(401);
-            $resp->appendBody("ERROR: Token Missmatch."); 
             return false;
         }
     }
-    
+
     private function verifyAuth($checkApiKey, $checkSession)
     {
-        //Session takes precedence over API key for now:
-        if ($checkSession && $this->verifySession()) 
-        {
+        //  Session takes precedence over API key for now:
+        if ($checkSession && $this->verifySession()) {
+            //  CSRF token validation only applies to session based authorization.
+            if(!$this->verifyCSRFToken($this->_getParam('csrf_token'))){
+                $resp = $this->getResponse();
+                $resp->setHttpResponseCode(401);
+                $resp->appendBody("ERROR: Token Missmatch."); 
+                return false;
+            }
             return true;
         }
         
@@ -339,7 +342,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         return false;
     }
     
-
     private function verifyAPIKey()
     {
         //The API key is passed in via HTTP "basic authentication":
