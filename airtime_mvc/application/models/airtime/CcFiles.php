@@ -71,6 +71,9 @@ class CcFiles extends BaseCcFiles {
         return $response;
     }
     
+    /**
+     * Returns the file size in bytes.
+     */
     public function getFileSize()
     {
         return filesize($this->getAbsoluteFilePath());
@@ -82,11 +85,17 @@ class CcFiles extends BaseCcFiles {
         return $info['filename'];
     }
     
+    /**
+     * Returns the file's absolute file path stored on disk.
+     */
     public function getURLForTrackPreviewOrDownload()
     {
         return $this->getAbsoluteFilePath();
     }
     
+    /**
+     * Returns the file's absolute file path stored on disk.
+     */
     public function getAbsoluteFilePath()
     {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
@@ -99,6 +108,9 @@ class CcFiles extends BaseCcFiles {
         return Application_Common_OsPath::join($directory, $filepath);
     }
     
+    /**
+     * Checks if the file is a regular file that can be previewed and downloaded.
+     */
     public function isValidFile()
     {
         return is_file($this->getAbsoluteFilePath());
@@ -106,7 +118,7 @@ class CcFiles extends BaseCcFiles {
     
     /**
      * 
-     * Deletes the file from the stor directory
+     * Deletes the file from the stor directory on disk.
      */
     public function deletePhysicalFile()
     {
