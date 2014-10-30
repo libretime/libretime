@@ -56,43 +56,80 @@ SQL;
 
         return $real_streams;
     }
+    
     /**
      * Returns data related to the scheduled items.
-     *
-     * @param  int  $p_prev
-     * @param  int  $p_next
-     * @return date
      */
-    public static function GetPlayOrderRange($p_prev = 1, $p_next = 1)
+    public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
     {
-        //Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
-        
-        if (!is_int($p_prev) || !is_int($p_next)) {
-            //must enter integers to specify ranges
-            Logging::info("Invalid range parameters: $p_prev or $p_next");
+        // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
 
-            return array();
+        // when timeEnd is unspecified, return to the default behaviour - set a range of 48 hours from current time
+        if (!$utcTimeEnd) {
+            $end = new DateTime();
+            $end->add(new DateInterval("P2D")); // Add 2 days
+            $end->setTimezone(new DateTimeZone("UTC"));
+            $utcTimeEnd = $end->format("Y-m-d H:i:s");
         }
 
         $utcNow = new DateTime("now", new DateTimeZone("UTC"));
-        
-        $shows = Application_Model_Show::getPrevCurrentNext($utcNow);
+
+        $shows = Application_Model_Show::getPrevCurrentNext($utcNow, $utcTimeEnd, $showsToRetrieve);
+        $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
+        $currentShowID = count($shows['currentShow'])>0?$shows['currentShow']['instance_id']:null;
+        $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
+        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
+
+        $range = array(
+            "station" => array (
+                "env"           => APPLICATION_ENV,
+                "schedulerTime" => $utcNow->format("Y-m-d H:i:s")
+            ),
+            //Previous, current, next songs!
+            "tracks" => array(
+                "previous"  => $results['previous'],
+                "current"   => $results['current'],
+                "next"      => $results['next']
+            ),
+            //Current and next shows
+            "shows" => array (
+                "previous"  => $shows['previousShow'],
+                "current"   => $shows['currentShow'],
+                "next"      => $shows['nextShow']
+            )
+        );
+
+        return $range;
+    }
+
+    /**
+     * Old version of the function for backwards compatibility
+     * @deprecated
+     */
+    public static function GetPlayOrderRangeOld()
+    {
+        // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
+    
+        $utcNow = new DateTime("now", new DateTimeZone("UTC"));
+    
+        $shows = Application_Model_Show::getPrevCurrentNextOld($utcNow);
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
         $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
-
-        $range = array("env"=>APPLICATION_ENV,
-            "schedulerTime"=> $utcNow->format("Y-m-d H:i:s"),
-            //Previous, current, next songs!
-            "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
-            "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
-            "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
-            //Current and next shows
-            "currentShow"=>$shows['currentShow'],
-            "nextShow"=>$shows['nextShow'],
+    
+        $range = array(
+                "env" => APPLICATION_ENV,
+                "schedulerTime" => $utcNow->format("Y-m-d H:i:s"),
+                //Previous, current, next songs!
+                "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
+                "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
+                "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
+                //Current and next shows
+                "currentShow"=>$shows['currentShow'],
+                "nextShow"=>$shows['nextShow']
         );
-
+    
         return $range;
     }
 
@@ -111,7 +148,7 @@ SQL;
         $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
         assert(get_class($utcNow) === "DateTime");
         assert($utcNow->getTimeZone() == $timeZone);
-        
+
         if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null) {
             return;
         }
@@ -170,15 +207,15 @@ SQL;
         $results['next']     = null;
 
         for ($i = 0; $i < $numberOfRows; ++$i) {
-            
+
             // if the show is overbooked, then update the track end time to the end of the show time.
             if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
                 $rows[$i]['ends'] = $rows[$i]["show_ends"];
             }
-            
+
             $curShowStartTime = new DateTime($rows[$i]['starts'], $timeZone);
             $curShowEndTime   = new DateTime($rows[$i]['ends'], $timeZone);
-            
+
             if (($curShowStartTime <= $utcNow) && ($curShowEndTime >= $utcNow)) {
                 if ($i - 1 >= 0) {
                     $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],

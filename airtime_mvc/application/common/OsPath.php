@@ -80,4 +80,17 @@ class Application_Common_OsPath{
         
         return $baseUrl;
     }
+    
+    public static function formatDirectoryWithDirectorySeparators($dir)
+    {
+        if ($dir[0] != "/") {
+            $dir = "/".$dir;
+        }
+    
+        if ($dir[strlen($dir) -1] != "/") {
+            $dir = $dir."/";
+        }
+    
+        return $dir;
+    }
 }

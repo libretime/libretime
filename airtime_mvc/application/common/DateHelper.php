@@ -70,18 +70,18 @@ class Application_Common_DateHelper
     
     public static function getUserTimezoneOffset()
     {
-    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-    	$now = new DateTime("now", $userTimezone);
-    	
-    	return $now->format("Z");
+        $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $now = new DateTime("now", $userTimezone);
+        
+        return $now->format("Z");
     }
     
     public static function getStationTimezoneOffset()
     {
-    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
-    	$now = new DateTime("now", $stationTimezone);
-    	
-    	return $now->format("Z");
+        $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+        $now = new DateTime("now", $stationTimezone);
+        
+        return $now->format("Z");
     }
     
     /**
@@ -90,12 +90,12 @@ class Application_Common_DateHelper
      */
     public static function getTodayStationStartDateTime()
     {
-    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
-    	$now = new DateTime("now", $stationTimezone);
-    	
-    	$now->setTime(0, 0, 0);
-    	
-    	return $now;
+        $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+        $now = new DateTime("now", $stationTimezone);
+        
+        $now->setTime(0, 0, 0);
+        
+        return $now;
     }
     
     /**
@@ -104,13 +104,13 @@ class Application_Common_DateHelper
      */
     public static function getTodayStationEndDateTime()
     {
-    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
-    	$now = new DateTime("now", $stationTimezone);
-    	 
-    	$now->add(new DateInterval("P1D"));
-    	$now->setTime(0, 0, 0);
-    	 
-    	return $now;
+        $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+        $now = new DateTime("now", $stationTimezone);
+         
+        $now->add(new DateInterval("P1D"));
+        $now->setTime(0, 0, 0);
+         
+        return $now;
     }
     
     /** 
@@ -119,17 +119,17 @@ class Application_Common_DateHelper
      */
     public static function getWeekStartDateTime()
     {
-    	$now = self::getTodayStationStartDateTime();
-    	
+        $now = self::getTodayStationStartDateTime();
+        
         // our week starts on monday, but php week starts on sunday.
         $day = $now->format('w');
         if ($day == 0) {
-        	$day = 7;
+            $day = 7;
         }
         
         $dayDiff = $day - 1;
         if ($dayDiff > 0) {
-        	$now->sub(new DateInterval("P{$dayDiff}D"));
+            $now->sub(new DateInterval("P{$dayDiff}D"));
         }
         
         return $now;
@@ -250,13 +250,13 @@ class Application_Common_DateHelper
      * @return string in $format default Y-m-d H:i:s in station timezone
      */
     public static function UTCStringToStationTimezoneString($datetime, $format="Y-m-d H:i:s") {
-    	$stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
-    	$utcTimezone = new DateTimeZone("UTC");
-    	
-    	$d = new DateTime($datetime, $utcTimezone);
-    	$d->setTimezone($stationTimezone);
-    	
-    	return $d->format($format);
+        $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
+        $utcTimezone = new DateTimeZone("UTC");
+        
+        $d = new DateTime($datetime, $utcTimezone);
+        $d->setTimezone($stationTimezone);
+        
+        return $d->format($format);
     }
     
     /*
@@ -265,13 +265,13 @@ class Application_Common_DateHelper
     * @return string Y-m-d H:i:s in user's timezone
     */
     public static function UTCStringToUserTimezoneString($datetime, $format="Y-m-d H:i:s") {
-    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-    	$utcTimezone = new DateTimeZone("UTC");
-    	
-    	$d = new DateTime($datetime, $utcTimezone);
-    	$d->setTimezone($userTimezone);
-    	 
-    	return $d->format($format);
+        $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $utcTimezone = new DateTimeZone("UTC");
+        
+        $d = new DateTime($datetime, $utcTimezone);
+        $d->setTimezone($userTimezone);
+         
+        return $d->format($format);
     }
     
     /*
@@ -280,13 +280,13 @@ class Application_Common_DateHelper
     * @return string Y-m-d H:i:s in UTC timezone
     */
     public static function UserTimezoneStringToUTCString($datetime, $format="Y-m-d H:i:s") {
-    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-    	$utcTimezone = new DateTimeZone("UTC");
-    	 
-    	$d = new DateTime($datetime, $userTimezone);
-    	$d->setTimezone($utcTimezone);
+        $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $utcTimezone = new DateTimeZone("UTC");
+         
+        $d = new DateTime($datetime, $userTimezone);
+        $d->setTimezone($utcTimezone);
     
-    	return $d->format($format);
+        return $d->format($format);
     }
     
     /**
@@ -299,18 +299,98 @@ class Application_Common_DateHelper
      */
     public static function convertTimestamps(&$rows, $columnsToConvert, $domain="station")
     {
-    	if (!is_array($rows)) {
-    		return;
-    	}
-    	
-    	$converter = "UTCStringTo".ucfirst($domain)."TimezoneString";
-    	
-    	foreach ($rows as &$row) {
-    		foreach ($columnsToConvert as $column) {
-    			$row[$column] = self::$converter($row[$column]);
-    		}
-    	}
+        if (!is_array($rows)) {
+            return;
+        }
+        
+        $converter = "UTCStringTo".ucfirst($domain)."TimezoneString";
+        
+        foreach ($rows as &$row) {
+            foreach ($columnsToConvert as $column) {
+                $row[$column] = self::$converter($row[$column]);
+            }
+        }
     }
+    
+    /**
+     * Convert the columns given in the array $columnsToConvert in the
+     * database result $rows to local timezone.
+     *
+     * @param array $rows             arrays of arrays containing database query result
+     * @param array $columnsToConvert array of column names to convert
+     * @param string $timezone           convert to the given timezone.
+     * @param string $format           time format to convert to
+     */
+    public static function convertTimestampsToTimezone(&$rows, $columnsToConvert, $timezone, $format="Y-m-d H:i:s")
+    {
+        $timezone = strtolower($timezone);
+        // Check that the timezone is valid and rows is an array
+        if (!is_array($rows)) {
+            return;
+        }
+    
+        foreach ($rows as &$row) {
+            if (is_array($row)) {
+                foreach ($columnsToConvert as $column) {
+                    if (array_key_exists($column, $row)) {
+                        $newTimezone = new DateTimeZone($timezone);
+                        $utcTimezone = new DateTimeZone("UTC");
+                         
+                        $d = new DateTime($row[$column], $utcTimezone);
+                        $d->setTimezone($newTimezone);
+                        $row[$column] = $d->format($format);
+                    }
+                }
+                self::convertTimestampsToTimezone($row, $columnsToConvert, $timezone, $format);
+            }
+        }
+    }
+    
+    /**
+     * Return the end date time in the given timezone
+     *
+     * @return DateTime
+     */
+    public static function getEndDateTime($timezoneString, $days)
+    {
+        $timezone = new DateTimeZone($timezoneString);
+        $now = new DateTime("now", $timezone);
+    
+        $now->add(new DateInterval("P".$days."D"));
+        $now->setTime(0, 0, 0);
+    
+        return $now;
+    }
+    
+    /**
+     * Return a formatted string representing the
+     * given datetime in the given timezone
+     *
+     * @param unknown  $datetime   the time to convert
+     * @param unknown  $timezone   the timezone to convert to
+     * @param string   $format     the formatted string
+     */
+    public static function UTCStringToTimezoneString($datetime, $timezone, $format="Y-m-d H:i:s") {
+        $d = new DateTime($datetime, new DateTimeZone("UTC"));
+        $timezone = strtolower($timezone);
+        $newTimezone = new DateTimeZone($timezone);
+        $d->setTimezone($newTimezone);
+         
+        return $d->format($format);
+    }
+    
+    /**
+     * Return the timezone offset in seconds for the given timezone
+     *
+     * @param unknown $userDefinedTimezone the timezone used to determine the offset
+     */
+    public static function getTimezoneOffset($userDefinedTimezone) {
+        $now = new DateTimeZone($userDefinedTimezone);
+    
+        $d = new DateTime("now", $now);
+        return $d->format("Z");
+    }
+    
     
     /**
      * This function is used for calculations! Don't modify for display purposes!
