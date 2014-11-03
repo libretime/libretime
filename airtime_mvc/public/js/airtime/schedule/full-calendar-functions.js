@@ -35,7 +35,7 @@ function makeTimeStamp(date){
 function dayClick(date, allDay, jsEvent, view){
     // The show from will be preloaded if the user is admin or program manager.
     // Hence, if the user if DJ then it won't open anything.
-    if(userType == "A" || userType == "P"){
+    if(userType == "S" || userType == "A" || userType == "P"){
         var now, today, selected, chosenDate, chosenTime;
 
         now = adjustDateToServerDate(new Date(), serverTimezoneOffset);
@@ -163,7 +163,7 @@ function viewDisplay( view ) {
     if(($("#add-show-form").length == 1) && ($("#add-show-form").css('display')=='none') && ($('.fc-header-left > span').length == 5)) {
 
         //userType is defined in bootstrap.php, and is derived from the currently logged in user.
-        if(userType == "A" || userType == "P"){
+        if(userType == "S" || userType == "A" || userType == "P"){
             makeAddShowButton();
         }
     }

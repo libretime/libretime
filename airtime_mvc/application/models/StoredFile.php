@@ -375,7 +375,7 @@ SQL;
 
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
         if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
             throw new FileNoPermissionException();
         }
@@ -972,6 +972,8 @@ SQL;
         // Did all the checks for real, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize",
                 $originalFilename);
+                Logging::info($originalFilename);
+                Logging::info($audio_stor);
         $user = Application_Model_User::getCurrentUser();
         if (is_null($user)) {
             $uid = Application_Model_User::getFirstAdminId();

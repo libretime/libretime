@@ -15,7 +15,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="auto_switch-label">
             <label class="optional" for="auto_transition"><?php echo $this->element->getElement('auto_switch')->getLabel() ?> :
@@ -31,7 +31,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="transition_fade-label">
             <label class="optional" for="transition_fade"><?php echo $this->element->getElement('transition_fade')->getLabel() ?> :
@@ -45,7 +45,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="master_username-label">
             <label class="optional" for="master_username"><?php echo $this->element->getElement('master_username')->getLabel() ?> :
@@ -60,7 +60,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="master_password-label">
             <label class="optional" for="master_password"><?php echo $this->element->getElement('master_password')->getLabel() ?> :
@@ -74,36 +74,8 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
-            <dt id="master_harbor_input_port-label">
-                <label class="optional" for="master_harbor_input_port"><?php echo $this->element->getElement('master_harbor_input_port')->getLabel() ?> :
-                </label>
-            </dt>
-            <dd id="master_harbor_input_port-element">
-                <?php echo $this->element->getElement('master_harbor_input_port') ?>
-                <?php if($this->element->getElement('master_harbor_input_port')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('master_harbor_input_port')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?> 
-            </dd>
-            <dt id="master_harbor_input_mount_point-label">
-                <label class="optional" for="master_harbor_input_mount_point"><?php echo $this->element->getElement('master_harbor_input_mount_point')->getLabel() ?> :
-                </label>
-            </dt>
-            <dd id="master_harbor_input_mount_point-element">
-                <?php echo $this->element->getElement('master_harbor_input_mount_point') ?>
-                <?php if($this->element->getElement('master_harbor_input_mount_point')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('master_harbor_input_mount_point')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?> 
-            </dd>
         <dt id="master_dj_connection_url-label">
             <label class="optional" for="master_dj_connection_url" style="white-space: nowrap">
                 <?php echo _("Master Source Connection URL:")?>
@@ -111,43 +83,10 @@
         </dt>
         <dd id="master_dj_connection_url-element">
             <span id="stream_url"><?php echo $this->element->getElement('master_dj_connection_url')->setValue($this->master_dj_connection_url) ?></span>
-            <?php if(!$this->isDemo){?>
-                <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
-                <span class="override_help_icon">
-                </span><br>
-            <?php } ?>
             <div id="master_dj_connection_url_actions" style="display:none">
                 <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
             </div>
         </dd>
-            <dt id="dj_harbor_input_port-label">
-                <label class="optional" for="dj_harbor_input_port"><?php echo $this->element->getElement('dj_harbor_input_port')->getLabel() ?> :
-                </label>
-            </dt>
-            <dd id="dj_harbor_input_port-element">
-                <?php echo $this->element->getElement('dj_harbor_input_port') ?>
-                <?php if($this->element->getElement('dj_harbor_input_port')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('dj_harbor_input_port')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?> 
-            </dd>
-            <dt id="dj_harbor_input_mount_point-label">
-                <label class="optional" for="dj_harbor_input_mount_point"><?php echo $this->element->getElement('dj_harbor_input_mount_point')->getLabel() ?> :
-                </label>
-            </dt>
-            <dd id="dj_harbor_input_mount_point-element">
-                <?php echo $this->element->getElement('dj_harbor_input_mount_point') ?>
-                <?php if($this->element->getElement('dj_harbor_input_mount_point')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('dj_harbor_input_mount_point')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?> 
-            </dd>
         <dt id="live_dj_connection_url-label">
             <label class="optional" for="live_dj_connection_url" style="white-space: nowrap">
                 <?php echo _("Show Source Connection URL:")?>
@@ -155,11 +94,6 @@
         </dt>
         <dd id="live_dj_connection_url-element">
             <span id="stream_url"><?php echo $this->element->getElement('live_dj_connection_url')->setValue($this->live_dj_connection_url) ?></span>
-            <?php if( !$this->isDemo ){?>   
-                <a href=# id="connection_url_override" style="font-size: 12px;"><?php echo _("Override") ?></a>&nbsp;&nbsp;
-                <span class="override_help_icon">
-                </span><br>
-            <?php } ?>
             <div id="live_dj_connection_url_actions" style="display:none">
                 <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
             </div>

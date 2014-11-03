@@ -92,5 +92,5 @@ Class Application_Form_Helper_ValidationTypes {
 
         return $validator;
     }
-
+    
 }

@@ -62,7 +62,14 @@ SQL;
      */
     public static function GetPlayOrderRange($utcTimeEnd = null, $showsToRetrieve = 5)
     {
-        // Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
+        //Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
+
+        if (!is_int($p_prev) || !is_int($p_next)) {
+            //must enter integers to specify ranges
+            Logging::info("Invalid range parameters: $p_prev or $p_next");
+
+            return array();
+        }
 
         // when timeEnd is unspecified, return to the default behaviour - set a range of 48 hours from current time
         if (!$utcTimeEnd) {
@@ -873,7 +880,7 @@ SQL;
         $CC_CONFIG = Config::getConfig();
 
         $utcTimeZone = new DateTimeZone('UTC');
-        
+
         /* if $p_fromDateTime and $p_toDateTime function parameters are null,
             then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
@@ -931,6 +938,7 @@ SQL;
                 //row is from "file"
                 $media_id = $item['file_id'];
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
+
                 $file = $storedFile->getPropelOrm();
                 $uri = $file->getAbsoluteFilePath();
                 
@@ -939,13 +947,13 @@ SQL;
                     $object_name = $storedFile->getResourceId();
                 }
                 self::createFileScheduleEvent($data, $item, $media_id, $uri, $object_name);
-            } 
+            }
             elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"
                 $media_id = $item['stream_id'];
                 $uri = $item['url'];
                 self::createStreamScheduleEvent($data, $item, $media_id, $uri);
-            } 
+            }
             else {
                 throw new Exception("Unknown schedule type: ".print_r($item, true));
             }
@@ -1021,7 +1029,6 @@ SQL;
             $needScheduleUntil->add(new DateInterval("P1D"));
         }
         Application_Model_Show::createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil);
-        
         list($range_start, $range_end) = self::getRangeStartAndEnd($p_fromDateTime, $p_toDateTime);
 
         $data = array();

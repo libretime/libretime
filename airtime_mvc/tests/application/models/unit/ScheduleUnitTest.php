@@ -48,22 +48,9 @@ class ScheduleUnitTest extends Zend_Test_PHPUnit_ControllerTestCase //PHPUnit_Fr
         //$showService->setCcShow($testShowData); //Denise says this is not needed.
         $showService->addUpdateShow($testShowData); //Create show instances
 
-        //  Because files are stored relative to their watch directory, 
-        //  we need to set the "stor" path before we can successfully
-        //  create a fake file in the database.
-        //Copy paste from airtime-db-install.php:
-        $stor_dir = "/tmp";
-        $con = Propel::getConnection();
-        $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
-        try {
-            $con->exec($sql);
-        } catch (Exception $e) {
-            echo "  * Failed inserting {$stor_dir} in cc_music_dirs".PHP_EOL;
-            echo "  * Message {$e->getMessage()}".PHP_EOL;
-            return false;
-        }
-
-        //  Insert a fake file into the database
+        // Moved creation of stor directory to TestHelper for setup
+        
+        // Insert a fake file into the database
         $request = $this->getRequest();
         $params = $request->getParams();
         $params['action'] = '';

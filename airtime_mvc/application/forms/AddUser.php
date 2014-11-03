@@ -99,9 +99,9 @@ class Application_Form_AddUser extends Zend_Form
                 "G" => _("Guest"),
                 "H" => _("DJ"),
                 "P" => _("Program Manager"),
-                "A" => _("Admin")
+                "A" => _("Admin"),
             ));
-        $select->setRequired(true);
+        $select->setRequired(false);
         $this->addElement($select);
 
         $saveBtn = new Zend_Form_Element_Button('save_user');

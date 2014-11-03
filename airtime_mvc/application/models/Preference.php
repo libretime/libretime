@@ -6,7 +6,7 @@ class Application_Model_Preference
 {
 	
 	private static function getUserId()
-	{
+	{   
 		//pass in true so the check is made with the autoloader
 		//we need this check because saas calls this function from outside Zend
 		if (!class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
@@ -733,11 +733,7 @@ class Application_Model_Preference
         $outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(gmdate("Y-m-d H:i:s"));
         $outputArray['UNIQUE_ID'] = self::GetUniqueId();
         $outputArray['SAAS'] = self::GetPlanLevel();
-        if ($outputArray['SAAS'] != 'disabled') {
-            $outputArray['TRIAL_END_DATE'] = self::GetTrialEndingDate();
-        } else {
-            $outputArray['TRIAL_END_DATE'] = NULL;
-        }
+        $outputArray['TRIAL_END_DATE'] = self::GetTrialEndingDate();
         $outputArray['INSTALL_METHOD'] = self::GetInstallMethod();
         $outputArray['NUM_OF_STREAMS'] = self::GetNumOfStreams();
         $outputArray['STREAM_INFO'] = Application_Model_StreamSetting::getStreamInfoForDataCollection();
@@ -763,9 +759,7 @@ class Application_Model_Preference
                     $outputString .= $key." : FALSE\n";
                 }
             } elseif ($key == "SAAS") {
-                if (strcmp($out, 'disabled')!=0) {
-                    $outputString .= $key.' : '.$out."\n";
-                }
+                $outputString .= $key.' : '.$out."\n";
             } else {
                 $outputString .= $key.' : '.$out."\n";
             }
@@ -1021,6 +1015,24 @@ class Application_Model_Preference
             self::setValue("client_id", $id);
         } else {
             Logging::warn("Attempting to set client_id to invalid value: $id");
+        }
+    }
+    
+    public static function GetLiveChatEnabled()
+    {
+        $liveChat = self::getValue("live_chat", false);
+        if (is_null($liveChat) || $liveChat == "" || $liveChat == "1") { //Defaults to on
+            return true;
+        }
+        return false;
+    }
+    
+    public static function SetLiveChatEnabled($toggle)
+    {
+        if (is_bool($toggle)) {
+            self::setValue("live_chat", $toggle ? "1" : "0");
+        } else {
+            Logging::warn("Attempting to set live_chat to invalid value: $toggle. Must be a bool.");
         }
     }
 

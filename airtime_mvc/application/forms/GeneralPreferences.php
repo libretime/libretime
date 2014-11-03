@@ -5,7 +5,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
     public function init()
     {
-
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $rangeValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(0, 59.9);
         $this->setDecorators(array(
@@ -92,6 +91,20 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDecorators(array('ViewHelper'));
         $this->addElement($third_party_api);
+        //
+         // Add the description element
+        $this->addElement('textarea', 'widgetCode', array(
+            'label'      => 'Javascript Code:',
+            'required'   => false,
+            'readonly'   => true,
+            'style'      => 'font-family: Consolas, "Liberation Mono", Courier, 
+                monospace;',
+            'class'      => 'input_text_area',
+            'value' => self::getWidgetCode(), //$_SERVER["SERVER_NAME"],
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
 
         $locale = new Zend_Form_Element_Select("locale");
         $locale->setLabel(_("Default Interface Language"));
@@ -115,6 +128,42 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setValue(Application_Model_Preference::GetWeekStartDay());
         $week_start_day->setDecorators(array('ViewHelper'));
         $this->addElement($week_start_day);
+    }
+
+    private static function getWidgetCode() {
+        
+        $host = $_SERVER['SERVER_NAME'];
+        $code = <<<CODE
+<script src="http://$host/widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="http://$host/widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+<script src="http://$host/widgets/js/jquery.showinfo.js" type="text/javascript"></script>
+
+<div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
+<div id="onAirToday"></div>
+<div id="scheduleTabs"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#headerLiveHolder").airtimeLiveInfo({
+        sourceDomain: "http://$host",
+        updatePeriod: 20 //seconds
+    });
+
+    $("#onAirToday").airtimeShowSchedule({
+        sourceDomain: "http://$host",
+        updatePeriod: 5, //seconds
+        showLimit: 10
+    });
+
+    $("#scheduleTabs").airtimeWeekSchedule({
+        sourceDomain:"http://$host",
+        updatePeriod: 600 //seconds
+    });
+});
+</script>
+CODE;
+
+        return $code;
     }
 
     private function getWeekStartDays()

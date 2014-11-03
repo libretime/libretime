@@ -83,7 +83,7 @@ class LibraryController extends Zend_Controller_Action
                 $obj         = new $objInfo['className']($obj_sess->id);
                 $userInfo    = Zend_Auth::getInstance()->getStorage()->read();
                 $user        = new Application_Model_User($userInfo->id);
-                $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+                $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
                 if ($isAdminOrPM || $obj->getCreatorId() == $userInfo->id) {
                     $this->view->obj = $obj;
@@ -186,7 +186,7 @@ class LibraryController extends Zend_Controller_Action
         //Open a jPlayer window and play the audio clip.
         $menu["play"] = array("name"=> _("Preview"), "icon" => "play", "disabled" => false);
 
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
 
@@ -305,7 +305,7 @@ class LibraryController extends Zend_Controller_Action
         $mediaItems = $this->_getParam('media', null);
 
         $user = Application_Model_User::getCurrentUser();
-        //$isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        //$isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $files     = array();
         $playlists = array();
@@ -421,7 +421,7 @@ class LibraryController extends Zend_Controller_Action
     public function editFileMdAction()
     {
         $user = Application_Model_User::getCurrentUser();
-        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $request = $this->getRequest();
 

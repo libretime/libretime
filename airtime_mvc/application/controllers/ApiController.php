@@ -6,7 +6,7 @@ class ApiController extends Zend_Controller_Action
     public function init()
     {
         $ignoreAuth = array("live-info", "live-info-v2", "week-info", 
-                    "station-metadata", "station-logo");
+                    "station-metadata", "station-logo", "show-logo");
 
         $params = $this->getRequest()->getParams();
         if (!in_array($params['action'], $ignoreAuth)) {
@@ -218,7 +218,7 @@ class ApiController extends Zend_Controller_Action
 
         echo isset($_GET['callback']) ? $_GET['callback'].'('.json_encode($result).')' : json_encode($result);
     }
-
+    
     /**
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to
@@ -295,6 +295,8 @@ class ApiController extends Zend_Controller_Action
             $result["schedulerTime"] = Application_Common_DateHelper::UTCStringToTimezoneString($result["schedulerTime"], $timezone);
             $result["timezone"] = $upcase ? strtoupper($timezone) : $timezone;
             $result["timezoneOffset"] = Application_Common_DateHelper::getTimezoneOffset($timezone);
+            // convert image paths to point to api endpoints
+            $this->findAndConvertPaths($result);
     
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
@@ -313,7 +315,7 @@ class ApiController extends Zend_Controller_Action
             exit;
         }
     }
-    
+
     /**
      * Retrieve the currently playing show as well as upcoming shows.
      * Number of shows returned and the time interval in which to
@@ -333,18 +335,18 @@ class ApiController extends Zend_Controller_Action
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
-    
+
             $request = $this->getRequest();
-    
+            
             $utcTimeNow = gmdate("Y-m-d H:i:s");
             $utcTimeEnd = "";   // if empty, getNextShows will use interval instead of end of day
-    
+
             // default to the station timezone
             $timezone = Application_Model_Preference::GetDefaultTimezone();
             $userDefinedTimezone = strtolower($request->getParam('timezone'));
             $upcase = false; // only upcase the timezone abbreviations
             $this->checkTimezone($userDefinedTimezone, $timezone, $upcase);
-    
+            
             $daysToRetrieve = $request->getParam('days');
             $showsToRetrieve = $request->getParam('shows');
             if ($daysToRetrieve == "" || !is_numeric($daysToRetrieve)) {
@@ -353,25 +355,27 @@ class ApiController extends Zend_Controller_Action
             if ($showsToRetrieve == "" || !is_numeric($showsToRetrieve)) {
                 $showsToRetrieve = "5";
             }
-    
+            
             // set the end time to the day's start n days from now.
             // days=1 will return shows until the end of the current day,
             // days=2 will return shows until the end of tomorrow, etc.
             $end = Application_Common_DateHelper::getEndDateTime($timezone, $daysToRetrieve);
             $end->setTimezone(new DateTimeZone("UTC"));
             $utcTimeEnd = $end->format("Y-m-d H:i:s");
-    
+
             $result = Application_Model_Schedule::GetPlayOrderRange($utcTimeEnd, $showsToRetrieve);
-    
+            
             // XSS exploit prevention
             $this->convertSpecialChars($result, array("name", "url"));
             // apply user-defined timezone, or default to station
             $this->applyLiveTimezoneAdjustments($result, $timezone, $upcase);
-    
+            // convert image paths to point to api endpoints
+            $this->findAndConvertPaths($result);
+            
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result["station"]["AIRTIME_API_VERSION"] = AIRTIME_API_VERSION;
             header("Content-Type: application/json");
-    
+            
             if (version_compare(phpversion(), '5.4.0', '<')) {
                 $js = json_encode($result);
             } else {
@@ -387,15 +391,15 @@ class ApiController extends Zend_Controller_Action
     }
     
     /**
-     * Check that the value for the timezone the user gave is valid.
-     * If it is, override the default (station) timezone.
+     * Check that the value for the timezone the user gave is valid. 
+     * If it is, override the default (station) timezone. 
      * If it's an abbreviation (pst, edt) we upcase the output.
-     *
+     * 
      * @param string    $userDefinedTimezone    the requested timezone value
      * @param string    $timezone               the default timezone
      * @param boolean   $upcase                 whether the timezone output should be upcased
      */
-    private function checkTimezone($userDefinedTimezone, &$timezone, &$upcase)
+    private function checkTimezone($userDefinedTimezone, &$timezone, &$upcase) 
     {
         $delimiter = "/";
         // if the user passes in a timezone in standard form ("Continent/City")
@@ -413,26 +417,26 @@ class ApiController extends Zend_Controller_Action
     }
     
     /**
-     * If the user passed in a timezone parameter, adjust timezone-dependent
+     * If the user passed in a timezone parameter, adjust timezone-dependent 
      * variables in the result to reflect the given timezone.
-     *
+     * 
      * @param object    $result     reference to the object to send back to the user
      * @param string    $timezone    the user's timezone parameter value
      * @param boolean   $upcase     whether the timezone output should be upcased
      */
-    private function applyLiveTimezoneAdjustments(&$result, $timezone, $upcase)
+    private function applyLiveTimezoneAdjustments(&$result, $timezone, $upcase) 
     {
         Application_Common_DateHelper::convertTimestampsToTimezone(
-        $result,
-        array("starts", "ends", "start_timestamp","end_timestamp"),
-        $timezone
+            $result,
+            array("starts", "ends", "start_timestamp","end_timestamp"),
+            $timezone
         );
-    
-        //Convert the UTC scheduler time ("now") to the user-defined timezone.
-        $result["station"]["schedulerTime"] = Application_Common_DateHelper::UTCStringToTimezoneString($result["station"]["schedulerTime"], $timezone);
-        $result["station"]["timezone"] = $upcase ? strtoupper($timezone) : $timezone;
+        
+           //Convert the UTC scheduler time ("now") to the user-defined timezone.
+           $result["station"]["schedulerTime"] = Application_Common_DateHelper::UTCStringToTimezoneString($result["station"]["schedulerTime"], $timezone);
+           $result["station"]["timezone"] = $upcase ? strtoupper($timezone) : $timezone;
     }
-
+    
     public function weekInfoAction()
     {
         if (Application_Model_Preference::GetAllow3rdPartyApi()) {
@@ -461,7 +465,6 @@ class ApiController extends Zend_Controller_Action
             $weekStartDateTime->setTimezone($utcTimezone);
             $utcDayStart = $weekStartDateTime->format("Y-m-d H:i:s");
             for ($i = 0; $i < 14; $i++) {
-                
                 //have to be in station timezone when adding 1 day for daylight savings.
                 $weekStartDateTime->setTimezone(new DateTimeZone($timezone));
                 $weekStartDateTime->add(new DateInterval('P1D'));
@@ -485,12 +488,132 @@ class ApiController extends Zend_Controller_Action
 
             // XSS exploit prevention
             $this->convertSpecialChars($result, array("name", "url"));
+            // convert image paths to point to api endpoints
+            $this->findAndConvertPaths($result);
             
             //used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
             header("Content-type: text/javascript");
             
-            $js = json_encode($result, JSON_PRETTY_PRINT);
+            if (version_compare(phpversion(), '5.4.0', '<')) {
+                $js = json_encode($result);
+            } else {
+                $js = json_encode($result, JSON_PRETTY_PRINT);
+            }
+            // If a callback is not given, then just provide the raw JSON.
+            echo isset($_GET['callback']) ? $_GET['callback'].'('.$js.')' : $js;
+        } else {
+            header('HTTP/1.0 401 Unauthorized');
+            print _('You are not allowed to access this resource. ');
+            exit;
+        }
+    }
+    
+    /**
+     * Go through a given array and sanitize any potentially exploitable fields
+     * by passing them through htmlspecialchars
+     *
+     * @param unknown $arr    the array to sanitize
+     * @param unknown $keys    indexes of values to be sanitized
+     */
+    private function convertSpecialChars(&$arr, $keys) 
+    {
+        foreach ($arr as &$a) {
+            if (is_array($a)) {
+                foreach ($keys as &$key) {
+                    if (array_key_exists($key, $a)) {
+                        $a[$key] = htmlspecialchars($a[$key]);
+                    }
+                }
+                $this->convertSpecialChars($a, $keys);
+            }
+        }
+    }
+    
+    /**
+     * Recursively find image_path keys in the various $result subarrays,
+     * and convert them to point to the show-logo endpoint
+     *
+     * @param unknown $arr the array to search
+     */
+    private function findAndConvertPaths(&$arr) 
+    {
+        $CC_CONFIG = Config::getConfig();
+        $baseDir = Application_Common_OsPath::formatDirectoryWithDirectorySeparators($CC_CONFIG['baseDir']);
+        
+        foreach ($arr as &$a) {
+            if (is_array($a)) {
+                if (array_key_exists("image_path", $a)) {
+                    $a["image_path"] = $a["image_path"] && $a["image_path"] !== '' ?
+                        "http://".$_SERVER['HTTP_HOST'].$baseDir."api/show-logo?id=".$a["id"] : '';
+                } else {
+                    $this->findAndConvertPaths($a);
+                }
+            }
+        }
+    }
+    
+    /**
+     * API endpoint to display the show logo
+     */
+    public function showLogoAction() 
+    {
+        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+            $request = $this->getRequest();
+            $showId = $request->getParam('id');
+
+            // if no id is passed, just die - redirects to a 404
+            if (!$showId || $showId === '') {
+                return;
+            }
+
+            $show = CcShowQuery::create()->findPk($showId);
+            
+            // disable the view and the layout
+            $this->view->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+            
+            $path = $show->getDbImagePath();
+            $mime_type = mime_content_type($path);
+            
+            header("Content-type: " . $mime_type);
+            $this->smartReadFile($path, $mime_type);
+           } else {
+            header('HTTP/1.0 401 Unauthorized');
+            print _('You are not allowed to access this resource. ');
+            exit;
+        }    
+    }
+    
+    /**
+     * API endpoint to provide station metadata
+     */
+    public function stationMetadataAction()
+    {
+        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+            // disable the view and the layout
+            $this->view->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+            
+            $CC_CONFIG = Config::getConfig();
+            $baseDir = Application_Common_OsPath::formatDirectoryWithDirectorySeparators($CC_CONFIG['baseDir']);
+            $path = 'http://'.$_SERVER['HTTP_HOST'].$baseDir."api/station-logo";
+            
+            $result["name"] = Application_Model_Preference::GetStationName();
+            $result["logo"] = $path;
+            $result["description"] = Application_Model_Preference::GetStationDescription();
+            $result["timezone"] = Application_Model_Preference::GetDefaultTimezone();
+            $result["locale"] = Application_Model_Preference::GetDefaultLocale();
+            
+            // used by caller to determine if the airtime they are running or widgets in use is out of date.
+            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
+            header("Content-type: text/javascript");
+            
+            if (version_compare(phpversion(), '5.4.0', '<')) {
+                $js = json_encode($result);
+            } else {
+                $js = json_encode($result, JSON_PRETTY_PRINT);
+            }
             // If a callback is not given, then just provide the raw JSON.
             echo isset($_GET['callback']) ? $_GET['callback'].'('.$js.')' : $js;
         } else {
@@ -500,6 +623,39 @@ class ApiController extends Zend_Controller_Action
         }
     }
 
+    /**
+     * API endpoint to display the current station logo
+     */
+    public function stationLogoAction() 
+    {
+        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+            // disable the view and the layout
+            $this->view->layout()->disableLayout();
+            $this->_helper->viewRenderer->setNoRender(true);
+            
+            $logo = Application_Model_Preference::GetStationLogo();
+            // if there's no logo, just die - redirects to a 404
+            if (!$logo || $logo === '') {
+                return;
+            }
+            
+            // we're passing this as an image instead of using it in a data uri, so decode it
+            $blob = base64_decode($logo);
+            
+            // use finfo to get the mimetype from the decoded blob
+            $f = finfo_open();
+            $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
+            finfo_close($f);
+            
+            header("Content-type: " . $mime_type);
+            echo $blob;
+        } else {
+            header('HTTP/1.0 401 Unauthorized');
+            print _('You are not allowed to access this resource. ');
+            exit;
+        }    
+    }
+    
     public function scheduleAction()
     {
         $this->view->layout()->disableLayout();
@@ -515,6 +671,13 @@ class ApiController extends Zend_Controller_Action
     public function notifyMediaItemStartPlayAction()
     {
         $media_id = $this->_getParam("media_id");
+        
+        // We send a fake media id when playing on-demand ads;
+        // in this case, simply return
+        if ($media_id === '0' || $media_id === '-1') {
+            return;
+        }
+        
         Logging::debug("Received notification of new media item start: $media_id");
         Application_Model_Schedule::UpdateMediaPlayedStatus($media_id);
 
@@ -549,94 +712,6 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json->sendJson(array("status"=>1, "message"=>""));
     }
     
-    /**
-     * Go through a given array and sanitize any potentially exploitable fields
-     * by passing them through htmlspecialchars
-     *
-     * @param unknown $arr  the array to sanitize
-     * @param unknown $keys indexes of values to be sanitized
-     */
-    private function convertSpecialChars(&$arr, $keys)
-    {
-        foreach ($arr as &$a) {
-            if (is_array($a)) {
-                foreach ($keys as &$key) {
-                    if (array_key_exists($key, $a)) {
-                        $a[$key] = htmlspecialchars($a[$key]);
-                    }
-                }
-                $this->convertSpecialChars($a, $keys);
-            }
-        }
-    }
-    
-    /**
-     * API endpoint to provide station metadata
-     */
-    public function stationMetadataAction()
-    {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
-            // disable the view and the layout
-            $this->view->layout()->disableLayout();
-            $this->_helper->viewRenderer->setNoRender(true);
-    
-            $CC_CONFIG = Config::getConfig();
-            $baseDir = Application_Common_OsPath::formatDirectoryWithDirectorySeparators($CC_CONFIG['baseDir']);
-            $path = 'http://'.$_SERVER['HTTP_HOST'].$baseDir."api/station-logo";
-    
-            $result["name"] = Application_Model_Preference::GetStationName();
-            $result["logo"] = $path;
-            $result["description"] = Application_Model_Preference::GetStationDescription();
-            $result["timezone"] = Application_Model_Preference::GetDefaultTimezone();
-            $result["locale"] = Application_Model_Preference::GetDefaultLocale();
-    
-            // used by caller to determine if the airtime they are running or widgets in use is out of date.
-            $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;
-            header("Content-type: text/javascript");
-    
-            $js = json_encode($result, JSON_PRETTY_PRINT);
-            // If a callback is not given, then just provide the raw JSON.
-            echo isset($_GET['callback']) ? $_GET['callback'].'('.$js.')' : $js;
-        } else {
-            header('HTTP/1.0 401 Unauthorized');
-            print _('You are not allowed to access this resource. ');
-            exit;
-        }
-    }
-    
-    /**
-     * API endpoint to display the current station logo
-     */
-    public function stationLogoAction()
-    {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
-            // disable the view and the layout
-            $this->view->layout()->disableLayout();
-            $this->_helper->viewRenderer->setNoRender(true);
-    
-            $logo = Application_Model_Preference::GetStationLogo();
-            // if there's no logo, just die - redirects to a 404
-            if (!$logo || $logo === '') {
-                return;
-            }
-    
-            // we're passing this as an image instead of using it in a data uri, so decode it
-            $blob = base64_decode($logo);
-    
-            // use finfo to get the mimetype from the decoded blob
-            $f = finfo_open();
-            $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
-            finfo_close($f);
-    
-            header("Content-type: " . $mime_type);
-            echo $blob;
-        } else {
-            header('HTTP/1.0 401 Unauthorized');
-            print _('You are not allowed to access this resource. ');
-            exit;
-        }
-    }
-
     public function recordedShowsAction()
     {
         $utcTimezone = new DateTimeZone("UTC");
@@ -966,6 +1041,28 @@ class ApiController extends Zend_Controller_Action
         Logging::info("Registered Component: ".$component."@".$remoteAddr);
 
         Application_Model_ServiceRegister::Register($component, $remoteAddr);
+        
+        //send ip, subdomain
+        if ($component == "pypo"){
+            $split = explode('.', $_SERVER['SERVER_NAME']);
+            $subdomain = array();
+            foreach ($split as $value) {
+                if ($value == 'airtime') {
+                    break;
+                } else {
+                    $subdomain[] = $value;
+                }
+            }
+            if (count($subdomain) > 0){
+                $subDomain = implode('.',$subdomain);
+
+                $md = array();
+                $md["sub_domain"] = $subDomain;
+                $md["pypo_ip"] = $remoteAddr;
+
+                Application_Model_RabbitMq::SendMessageToHaproxyConfigDaemon($md);
+            }
+        }
     }
 
     public function updateLiquidsoapStatusAction()
@@ -1123,8 +1220,8 @@ class ApiController extends Zend_Controller_Action
             //check against show dj auth
             $showInfo = Application_Model_Show::getCurrentShow();
             // there is current playing show
-            if (isset($showInfo[0]['id'])) {
-                $current_show_id = $showInfo[0]['id'];
+            if (isset($showInfo['id'])) {
+                $current_show_id = $showInfo['id'];
                 $CcShow = CcShowQuery::create()->findPK($current_show_id);
 
                 // get custom pass info from the show

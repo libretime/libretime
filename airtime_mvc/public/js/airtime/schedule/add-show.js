@@ -8,6 +8,7 @@ function openAddShowForm() {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
             $("#add-show-form").show();
+            
             /*
             var windowWidth = $(window).width();
             // margin on showform are 16 px on each side
@@ -232,6 +233,13 @@ function setAddShowEvents(form) {
     if(!form.find("#add_show_rebroadcast").attr('checked')) {
         form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
     }
+    
+    // If we're adding a new show or the show has no logo, hide the "Current Logo" element tree
+	$("[id^=add_show_logo_current]").toggle(($("#add_show_logo_current").attr("src") !== "")
+			&& ($(".button-bar.bottom").find(".ui-button-text").text() === "Update show"));
+	
+	var submitButton = $(".button-bar.bottom").find(".add-show-submit");
+	$("[id^=add_show_instance_description]").toggle(submitButton.attr("data-action") === "edit-repeating-show-instance");
 
     form.find("#add_show_repeats").click(function(){
         $(this).blur();
@@ -520,6 +528,7 @@ function setAddShowEvents(form) {
         showButtonPanel: true,
         firstDay: calendarPref.weekStart
 	});
+    
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
         defaultTime: '',
@@ -581,7 +590,7 @@ function setAddShowEvents(form) {
         }
     })
 
-	form.find("#schedule-show-style input").ColorPicker({
+	form.find("#schedule-show-style .input_text").ColorPicker({
         onChange: function (hsb, hex, rgb, el) {
 		    $(el).val(hex);
 	    },
@@ -593,7 +602,87 @@ function setAddShowEvents(form) {
 			$(this).ColorPickerSetColor(this.value);
 		}
 	});
+	
+	// when an image is uploaded, we want to show it to the user
+	form.find("#add_show_logo").change(function(event) {
+		if (this.files && this.files[0]) {
+            $("#add_show_logo_preview").show();
+			var reader = new FileReader(); // browser compatibility?
+			
+            reader.onload = function (e) {
+                $("#add_show_logo_preview")
+                    .attr('src', e.target.result);
+            };
 
+            // check image size so we don't crash the page trying to render
+            if (validateImage(this.files[0], $("#add_show_logo"))) {
+            	// read the image data as though it were a data URI
+            	reader.readAsDataURL(this.files[0]);
+			} else {
+				// remove the file element data
+				$(this).val('').replaceWith($(this).clone(true));
+				$("#add_show_logo_preview").hide();
+			}
+        } else {
+            $("#add_show_logo_preview").hide();
+        }
+	});
+	
+	// validate on upload
+	function validateImage(img, el) {
+		// remove any existing error messages
+		if ($("#img-err")) { $("#img-err").remove(); }
+		
+        if (img.size > 2048000) { // 2MB - pull this from somewhere instead?
+            // hack way of inserting an error message
+            var err = $.i18n._("Selected file is too large");
+            el.parent().after(
+            	"<ul id='img-err' class='errors'>" +
+            		"<li>" + err + "</li>" +
+            	"</ul>");
+            return false;
+        } else if (validateMimeType(img.type) < 0) {
+        	var err = $.i18n._("File format is not supported");
+        	el.parent().after(
+            	"<ul id='img-err' class='errors'>" +
+            		"<li>" + err + "</li>" +
+            	"</ul>");
+        	return false;
+        }
+        return true;
+	}
+	
+	// Duplicate of the function in ShowController - provide it as a GET endpoint?
+	function validateMimeType(mime) {
+		var extensions = [
+			'image/jpeg',
+			'image/png',
+			'image/gif'
+			// BMP?
+			];
+		return $.inArray(mime, extensions);
+	}
+	
+	form.find("#add_show_logo_current_remove").click(function() {
+		if (confirm($.i18n._('Are you sure you want to delete the current logo?'))) {
+			var showId = $("#add_show_id").attr("value");
+			
+			if (showId && $("#add_show_logo_current").attr("src") !== "") {
+				var action = '/rest/show/' + showId + '/delete-image';
+				
+				$.ajax({
+					url: action,
+					data: '',
+					type: 'POST',
+					success: function() {
+						$("#add_show_logo_current").prop("src", "")
+						$("[id^=add_show_logo_current]").hide();
+					}
+				});
+			}
+		}
+	});
+	
     form.find("#add-show-close").click(closeAddShowForm);
 
 	form.find(".add-show-submit").click(function(event) {
@@ -627,40 +716,60 @@ function setAddShowEvents(form) {
             }
         }).get();
 
-        var start_date = $("#add_show_start_date").val();
-        var end_date = $("#add_show_end_date").val();
-        var action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
+        var start_date = $("#add_show_start_date").val(),
+        	end_date = $("#add_show_end_date").val(),
+        	action = baseUrl+"Schedule/"+String(addShowButton.attr("data-action"));
+        
+        var image;
+        if ($('#add_show_logo')[0] && $('#add_show_logo')[0].files
+        		&& $('#add_show_logo')[0].files[0]) {
+        	image = new FormData();
+        	image.append('file', $('#add_show_logo')[0].files[0]);
+        }
+        
+        $.ajax({
+        	url: action, 
+        	data: {format: "json", data: data, hosts: hosts, days: days},
+        	success: function(json) {
+        		if (json.showId && image) { // Successfully added the show, and it contains an image to upload
+        			var imageAction = '/rest/show/' + json.showId + '/upload-image';
+        			
+        			// perform a second xhttprequest in order to send the show image
+        			$.ajax({
+        				url: imageAction,
+        				data: image,
+        				cache: false,
+        				contentType: false,
+        				processData: false,
+        				type: 'POST'
+        			});
+        		}
 
-        $.post(action, {format: "json", data: data, hosts: hosts, days: days}, function(json){
-            
-            $('#schedule-add-show').unblock();
-            
-            var $addShowForm = $("#add-show-form");
-            
-            if (json.form) {
-            	
-            	redrawAddShowForm($addShowForm, json.form);
-
-                $("#add_show_end_date").val(end_date);
-                $("#add_show_start_date").val(start_date);
-                showErrorSections();
-            }
-            else if (json.edit) {
-            	
-                $("#schedule_calendar").removeAttr("style")
-                	.fullCalendar('render');
-
-                $addShowForm.hide();
-                $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
-                	redrawAddShowForm($addShowForm, json.form);
-                });
-                makeAddShowButton();
-            }
-            else {
-
-                redrawAddShowForm($addShowForm, json.newForm);
-                scheduleRefetchEvents(json);
-            }
+		        $('#schedule-add-show').unblock();
+	            
+	            var $addShowForm = $("#add-show-form");
+	            
+	            if (json.form) {
+	            	
+	            	redrawAddShowForm($addShowForm, json.form);
+	
+	                $("#add_show_end_date").val(end_date);
+	                $("#add_show_start_date").val(start_date);
+	                showErrorSections();
+	            } else if (json.edit) {
+	                $("#schedule_calendar").removeAttr("style")
+	                	.fullCalendar('render');
+	
+	                $addShowForm.hide();
+	                $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
+	                	redrawAddShowForm($addShowForm, json.form);
+	                });
+	                makeAddShowButton();
+	            } else {
+	                redrawAddShowForm($addShowForm, json.newForm);
+	                scheduleRefetchEvents(json);
+	            }
+        	}
         });
 	});
 
@@ -770,6 +879,8 @@ function setAddShowEvents(form) {
 		});
 	}
     
+    // Since Zend's setAttrib won't apply through the wrapper, set accept=image/* here
+    $("#add_show_logo").prop("accept", "image/*");
     var bgColorEle = $("#add_show_background_color");
     var textColorEle = $("#add_show_color");
     $('#add_show_name').bind('input', 'change', function(){

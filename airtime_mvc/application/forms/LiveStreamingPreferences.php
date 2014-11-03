@@ -80,44 +80,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                                  ->setDecorators(array('ViewHelper'));
         $this->addElement($live_dj_connection_url);
 
-        //liquidsoap harbor.input port
-            $betweenValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(1024, 49151);
-            $m_port = Application_Model_StreamSetting::getMasterLiveStreamPort();
-            $master_dj_port = new Zend_Form_Element_Text('master_harbor_input_port');
-            $master_dj_port->setLabel(_("Master Source Port"))
-                    ->setValue($m_port)
-                    ->setValidators(array($betweenValidator))
-                    ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))))
-                    ->setDecorators(array('ViewHelper'));
-            $this->addElement($master_dj_port);
-
-            $m_mount = Application_Model_StreamSetting::getMasterLiveStreamMountPoint();
-            $master_dj_mount = new Zend_Form_Element_Text('master_harbor_input_mount_point');
-            $master_dj_mount->setLabel(_("Master Source Mount Point"))
-                    ->setValue($m_mount)
-                    ->setValidators(array(
-                            array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
-                    ->setDecorators(array('ViewHelper'));
-            $this->addElement($master_dj_mount);
-
-            //liquidsoap harbor.input port
-            $l_port = Application_Model_StreamSetting::getDjLiveStreamPort();
-            $live_dj_port = new Zend_Form_Element_Text('dj_harbor_input_port');
-            $live_dj_port->setLabel(_("Show Source Port"))
-                    ->setValue($l_port)
-                    ->setValidators(array($betweenValidator))
-                    ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))))
-                    ->setDecorators(array('ViewHelper'));
-            $this->addElement($live_dj_port);
-
-            $l_mount = Application_Model_StreamSetting::getDjLiveStreamMountPoint();
-            $live_dj_mount = new Zend_Form_Element_Text('dj_harbor_input_mount_point');
-            $live_dj_mount->setLabel(_("Show Source Mount Point"))
-                    ->setValue($l_mount)
-                    ->setValidators(array(
-                            array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
-                    ->setDecorators(array('ViewHelper'));
-            $this->addElement($live_dj_mount);
         // demo only code
         if (!$isStreamConfigable) {
             $elements = $this->getElements();
@@ -145,49 +107,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     public function isValid($data)
     {
         $isValid = parent::isValid($data);
-            $master_harbor_input_port = $data['master_harbor_input_port'];
-            $dj_harbor_input_port = $data['dj_harbor_input_port'];
-
-            if ($master_harbor_input_port == $dj_harbor_input_port && $master_harbor_input_port != "") {
-                $element = $this->getElement("dj_harbor_input_port");
-                $element->addError(_("You cannot use same port as Master DJ port."));
-                $isValid = false;
-            }
-            if ($master_harbor_input_port != "") {
-                if (is_numeric($master_harbor_input_port)) {
-                    if ($master_harbor_input_port != Application_Model_StreamSetting::getMasterLiveStreamPort()) {
-                        $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                        try {
-                            socket_bind($sock, 0, $master_harbor_input_port);
-                        } catch (Exception $e) {
-                            $element = $this->getElement("master_harbor_input_port");
-                            $element->addError(sprintf(_("Port %s is not available"), $master_harbor_input_port));
-                            $isValid = false;
-                        }
-                        
-                        socket_close($sock);
-                    }
-                } else {
-                    $isValid = false;
-                }
-            }
-            if ($dj_harbor_input_port != "") {
-                if (is_numeric($dj_harbor_input_port)) {
-                    if ($dj_harbor_input_port != Application_Model_StreamSetting::getDjLiveStreamPort()) {
-                        $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-                        try {
-                            socket_bind($sock, 0, $dj_harbor_input_port);
-                        } catch (Exception $e) {
-                            $element = $this->getElement("dj_harbor_input_port");
-                            $element->addError(sprintf(_("Port %s is not available"), $dj_harbor_input_port));
-                            $isValid = false;
-                        }
-                        socket_close($sock);
-                    }
-                } else {
-                    $isValid = false;
-                }
-            }
 
         return $isValid;
     }

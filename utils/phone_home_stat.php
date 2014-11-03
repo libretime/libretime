@@ -82,7 +82,6 @@ if(Application_Model_Preference::GetSupportFeedback() == '1'){
     curl_close($ch);
 }
 
-
 // Get latest version from stat server and store to db
 if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
     $url = 'http://stat.sourcefabric.org/airtime-stats/airtime_latest_version';
@@ -107,4 +106,3 @@ if(Application_Model_Preference::GetPlanLevel() == 'disabled'){
 
     curl_close($ch);
 }
-

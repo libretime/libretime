@@ -9,6 +9,7 @@ class Application_Service_ShowFormService
         if (!is_null($showId)) {
             $this->ccShow = CcShowQuery::create()->findPk($showId);
         }
+        
         $this->instanceId = $instanceId;
     }
 
@@ -91,6 +92,7 @@ class Application_Service_ShowFormService
          * when the user edits a repeating instance
          */
         $forms["what"]->makeReadonly();
+        $forms["what"]->enableInstanceDesc();
         $forms["repeats"]->disable();
         $forms["who"]->disable();
         $forms["style"]->disable();
@@ -123,14 +125,17 @@ class Application_Service_ShowFormService
 
     private function populateFormWhat($form)
     {
-        $form->populate(
+        $ccShowInstance = CcShowInstancesQuery::create()->findPk($this->instanceId);
+    	
+    	$form->populate(
             array(
                 'add_show_instance_id' => $this->instanceId,
                 'add_show_id' => $this->ccShow->getDbId(),
                 'add_show_name' => $this->ccShow->getDbName(),
                 'add_show_url' => $this->ccShow->getDbUrl(),
                 'add_show_genre' => $this->ccShow->getDbGenre(),
-                'add_show_description' => $this->ccShow->getDbDescription()));
+                'add_show_description' => $this->ccShow->getDbDescription(),
+        		'add_show_instance_description' => $ccShowInstance->getDbDescription()));
     }
 
     private function populateFormWhen($form)
@@ -284,10 +289,33 @@ class Application_Service_ShowFormService
 
     private function populateFormStyle($form)
     {
+    	$src = $this->ccShow->getDbImagePath() ? 
+    		$this->imagePathToDataUri($this->ccShow->getDbImagePath()) : '';
+    	
         $form->populate(
             array(
                 'add_show_background_color' => $this->ccShow->getDbBackgroundColor(),
-                'add_show_color' => $this->ccShow->getDbColor()));
+                'add_show_color' => $this->ccShow->getDbColor(),
+        		'add_show_logo_current' => $src));
+    }
+    
+    /**
+     * Convert a static image from disk to a base64 data URI
+     * 
+     * @param unknown $path
+     * 		- the path to the image on the disk
+     * @return string
+     * 		- the data URI representation of the image
+     */
+    private function imagePathToDataUri($path) {
+    	ob_start();
+    	header("Content-type: image/*");
+    	readfile($path);
+    	$imageData = base64_encode(ob_get_contents());
+    	ob_end_clean();
+    	// return the data URI - data:{mime};base64,{data}
+    	return ($imageData === null || $imageData === '') ? 
+    		'' : 'data: '.mime_content_type($path).';base64,'.$imageData;
     }
 
     private function populateFormLive($form)
@@ -440,7 +468,19 @@ class Application_Service_ShowFormService
         $live = $forms["live"]->isValid($formData);
         $record = $forms["record"]->isValid($formData);
         $who = $forms["who"]->isValid($formData);
+        
+        /*
+         * hack to prevent validating the file upload field since it
+         * isn't passed into $data
+         */
+        $upload = $forms["style"]->getElement("add_show_logo");
+        $forms["style"]->removeElement("add_show_logo");
+        
         $style = $forms["style"]->isValid($formData);
+        
+        // re-add the upload element
+        $forms["style"]->addElement($upload);
+        
         $when = $forms["when"]->isWhenFormValid($formData, $validateStartDate,
             $originalStartDate, $editShow, $instanceId);
 
@@ -478,14 +518,10 @@ class Application_Service_ShowFormService
             }
         }
 
-        if ($what && $live && $record && $who && $style && $when &&
-            $repeats && $absRebroadcast && $rebroadcast) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($what && $live && $record && $who && $style && $when &&
+            $repeats && $absRebroadcast && $rebroadcast);
     }
-
+    
     public function calculateDuration($start, $end, $timezone)
     {
         try {

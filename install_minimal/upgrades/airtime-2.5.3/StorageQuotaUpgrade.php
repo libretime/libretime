@@ -16,9 +16,12 @@ class StorageQuotaUpgrade
             ->findOne();
         $storPath = $musicDir->getDirectory();
 
-        $freeSpace = disk_free_space($storPath);
-        $totalSpace = disk_total_space($storPath);
+        $f = $storPath;
+        $io = popen('/usr/bin/du -bs ' . $f, 'r');
+        $size = fgets($io, 4096);
+        $size = substr($size, 0, strpos($size, "\t"));
+        pclose($io);
 
-        Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
+        Application_Model_Preference::setDiskUsage($size);
     }
 }

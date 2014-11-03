@@ -141,9 +141,15 @@ class Application_Service_ShowService
 
             $ccShowInstance->updateDbTimeFilled($con);
             $ccShowInstance->updateScheduleStatus($con);
+            $ccShowInstance
+                ->setDbDescription($showData['add_show_instance_description'])
+                ->save();
 
             //delete the edited instance from the repeating sequence
-            $ccShowInstanceOrig->setDbModifiedInstance(true)->save();
+            $ccShowInstanceOrig
+                ->setDbModifiedInstance(true)
+                ->setDbDescription($showData['add_show_instance_description'])
+                ->save();
 
             $con->commit();
             Application_Model_RabbitMq::PushSchedule();
@@ -176,7 +182,7 @@ class Application_Service_ShowService
         $this->localShowStartHour = $origStartTime[0];
         $this->localShowStartMin = $origStartTime[1];
     }
-
+    
     public function addUpdateShow($showData)
     {
         $service_user = new Application_Service_UserService();
@@ -199,6 +205,15 @@ class Application_Service_ShowService
 
             if ($this->isUpdate) {
                 
+                $showId = $this->ccShow->getDbId();
+                
+                // Only delete the previous logo if a new one is being uploaded
+                if (array_key_exists("add_show_logo_name", $showData) && $showData["add_show_logo_name"] !== "") {
+                    if (!Rest_ShowController::deleteShowImagesFromStor($showId)) {
+                        throw new Exception("Error deleting show images");
+                    }
+                }
+                 
                 if (!$this->ccShow->getCcShowDayss()->isEmpty()) {
                     $this->storeOrigLocalShowInfo();
                 }
@@ -225,7 +240,7 @@ class Application_Service_ShowService
 
             //update ccShowHosts
             $this->setCcShowHosts($showData);
-
+            
             //create new ccShowInstances
             $this->delegateInstanceCreation($daysAdded);
 
@@ -251,6 +266,9 @@ class Application_Service_ShowService
             Logging::info("EXCEPTION: Show ".$action." failed.");
             Logging::info($e->getMessage());
         }
+        
+        // Added to pass along to the RESTful ShowController
+        return $this->ccShow->getDbId();
     }
 
     /**
@@ -584,17 +602,17 @@ SQL;
             $currentShowEndDateTime = $this->getRepeatingEndDate();
             
             if ($endDateTime && $currentShowEndDateTime != $endDateTime) {
-            	$endDate = clone $endDateTime;
-            	$endDate->setTimezone(new DateTimeZone("UTC"));
-            	
+                $endDate = clone $endDateTime;
+                $endDate->setTimezone(new DateTimeZone("UTC"));
+                
                 //show's "No End" option was toggled
                 //or the end date comes earlier
                 if (is_null($currentShowEndDateTime) || ($endDateTime < $currentShowEndDateTime)) {
                     //"No End" option was unchecked so we need to delete the
                     //repeat instances that are scheduled after the new end date
                     //OR
-                	//end date was pushed back so we have to delete any
-                	//instances of this show scheduled after the new end date
+                    //end date was pushed back so we have to delete any
+                    //instances of this show scheduled after the new end date
                     $this->deleteInstancesFromDate($endDate->format("Y-m-d"), $showId);
                 }
             }
@@ -641,10 +659,10 @@ SQL;
         $date = null;
         
         if ($query !== false && isset($query["last_show"])) {
-        	$date = new DateTime(
-        		$query["last_show"],
-        		new DateTimeZone($query["timezone"])	
-        	);
+            $date = new DateTime(
+                $query["last_show"],
+                new DateTimeZone($query["timezone"])    
+            );
         }
         
         return $date;
@@ -732,6 +750,7 @@ SQL;
         $con = Propel::getConnection();
         $con->beginTransaction();
         try {
+            
             if (!$currentUser->isAdminOrPM()) {
                 throw new Exception("Permission denied");
             }
@@ -742,7 +761,12 @@ SQL;
                 throw new Exception("Could not find show instance");
             }
 
+            // Delete show images
             $showId = $ccShowInstance->getDbShowId();
+            if (!Rest_ShowController::deleteShowImagesFromStor($showId)) {
+                throw new Exception("Error deleting show images");
+            }
+            
             if ($singleInstance) {
                 $ccShowInstances = array($ccShowInstance);
             } else {
@@ -772,7 +796,7 @@ SQL;
             return false;
         }
     }
-
+    
     public function deleteShowInstances($ccShowInstances, $showId)
     {
         foreach ($ccShowInstances as $ccShowInstance) {
@@ -931,23 +955,23 @@ SQL;
      */
     private function calculateEndDate($showData)
     {
-    	//if no end return null
+        //if no end return null
         if ($showData['add_show_no_end']) {
             $endDate = null;
         } 
         //if the show is repeating & ends, then return the end date
         elseif ($showData['add_show_repeats']) {
             $endDate = new DateTime(
-            	$showData['add_show_end_date'], 
-            	new DateTimeZone($showData["add_show_timezone"])
+                $showData['add_show_end_date'], 
+                new DateTimeZone($showData["add_show_timezone"])
             );
             $endDate->add(new DateInterval("P1D"));
         }
         //the show doesn't repeat, so add one day to the start date. 
         else {
             $endDate = new DateTime(
-            	$showData['add_show_start_date'],
-            	new DateTimeZone($showData["add_show_timezone"])
+                $showData['add_show_start_date'],
+                new DateTimeZone($showData["add_show_timezone"])
             );
             $endDate->add(new DateInterval("P1D"));
         }
@@ -1117,11 +1141,11 @@ SQL;
             $repeatInterval, $populateUntil);
 
         if ($last_show) {
-        	$utcLastShowDateTime = new DateTime($last_show, new DateTimeZone($timezone));
-        	$utcLastShowDateTime->setTimezone(new DateTimeZone("UTC"));
+            $utcLastShowDateTime = new DateTime($last_show, new DateTimeZone($timezone));
+            $utcLastShowDateTime->setTimezone(new DateTimeZone("UTC"));
         }
         else {
-        	$utcLastShowDateTime = null;
+            $utcLastShowDateTime = null;
         }
 
         $previousDate = clone $start;
@@ -1217,12 +1241,12 @@ SQL;
 
         $this->repeatType = $showDay->getDbRepeatType();
 
-    	if ($last_show) {
-        	$utcLastShowDateTime = new DateTime($last_show, new DateTimeZone($timezone));
-        	$utcLastShowDateTime->setTimezone(new DateTimeZone("UTC"));
+        if ($last_show) {
+            $utcLastShowDateTime = new DateTime($last_show, new DateTimeZone($timezone));
+            $utcLastShowDateTime->setTimezone(new DateTimeZone("UTC"));
         }
         else {
-        	$utcLastShowDateTime = null;
+            $utcLastShowDateTime = null;
         }
 
         while ($start->getTimestamp() < $end->getTimestamp()) {
@@ -1545,8 +1569,8 @@ SQL;
         $showId = $this->ccShow->getDbId();
 
         $startDateTime = new DateTime(
-        	$showData['add_show_start_date']." ".$showData['add_show_start_time'],
-        	new DateTimeZone($showData['add_show_timezone'])	
+            $showData['add_show_start_date']." ".$showData['add_show_start_time'],
+            new DateTimeZone($showData['add_show_timezone'])    
         );
 
         $endDateTime = $this->calculateEndDate($showData);
@@ -1554,7 +1578,7 @@ SQL;
             $endDate = $endDateTime->format("Y-m-d");
         }
         else {
-        	$endDate = null;
+            $endDate = null;
         }
 
         //Our calculated start DOW must be used for non repeating since a day has not been selected.
@@ -1731,7 +1755,7 @@ SQL;
             }
         }
     }
-
+    
     /**
      *
      * Gets the date and time shows (particularly repeating shows)

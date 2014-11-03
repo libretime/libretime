@@ -384,6 +384,7 @@ $(document).ready(function() {
                     if(oItems.edit.items !== undefined){
                         var edit = oItems.edit.items;
                         
+                        
                         //edit a single instance
                         callback = function() {
                             $.get(edit.instance.url, {format: "json", showId: data.showId, instanceId: data.id, type: "instance"}, function(json){

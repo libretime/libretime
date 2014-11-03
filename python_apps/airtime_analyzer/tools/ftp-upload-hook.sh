@@ -1,11 +1,16 @@
-#! /bin/bash
+#!/bin/bash -xv
 
 post_file() {
     #kill process after 30 minutes (360*5=30 minutes)
     max_retry=360
     retry_count=0
 
-    file_path=${1}
+    file_path="${1}"
+    #We must remove commas because CURL can't upload files with commas in the name
+    # http://curl.haxx.se/mail/archive-2009-07/0029.html
+    stripped_file_path=${file_path//','/''}
+    mv "${file_path}" "${stripped_file_path}"
+    file_path="${stripped_file_path}"
     filename="${file_path##*/}"
 	
     #base_instance_path and airtime_conf_path are common to all saas instances
@@ -28,7 +33,9 @@ post_file() {
 	
     api_key=$(awk -F "= " '/api_key/ {print $2}' $instance_conf_path)
 
-    until curl --max-time 30 $url -u $api_key":" -X POST -F "file=@${file_path}" -F "full_path=${file_path}"
+    # -f is needed to make curl fail if there's an HTTP error code
+    # -L is needed to follow redirects! (just in case)
+    until curl -fL --max-time 30 $url -u $api_key":" -X POST -F "file=@${file_path}" -F "full_path=${file_path}"
     do
         retry_count=$[$retry_count+1]
         if [ $retry_count -ge $max_retry ]; then

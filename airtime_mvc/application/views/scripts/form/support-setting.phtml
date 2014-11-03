@@ -1,46 +1,5 @@
 <fieldset class="padded">
-    <dl class="zend_form">
-        <dd id="SupportFeedback-element" style="width:90%;">
-            <div class="info-text">
-               <?php echo sprintf(_("Help Airtime improve by letting Sourcefabric know how you are using it. This information"
-                ." will be collected regularly in order to enhance your user experience.%s"
-                ."Click the 'Send support feedback' box and we'll make sure the features you use are constantly improving."), "<br />")?>
-            </div>
-            <label class="optional" for="SupportFeedback">
-                <?php echo $this->element->getElement('SupportFeedback') ?>
-                <strong><?php echo $this->element->getElement('SupportFeedback')->getLabel() ?></strong>
-            </label>
-            <?php if($this->element->getElement('SupportFeedback')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SupportFeedback')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dd id="publicize-element" style="width:90%;">
-            <div class="info-text">
-                <?php echo sprintf(_("Click the box below to promote your station on %sSourcefabric.org%s."), 
-                    "<a id='link_to_whos_using' href='http://www.sourcefabric.org/en/airtime/whosusing/' onclick='window.open(this.href); return false'>",
-                    "</a>")?>
-            </div>
-            <label class="optional" for="Publicise">
-                <?php echo $this->element->getElement('Publicise') ?>
-                <strong><?php echo $this->element->getElement('Publicise')->getLabel() ?></strong>
-            </label>
-            <?php if($this->element->getElement('Publicise')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('Publicise')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-    </dl>
-    <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;">
-        <?php echo _("(In order to promote your station, 'Send support feedback' must be enabled).")?><br /><br />
-    </div>
-    <dl id="public-info" style="display:<?php echo "none"?>;">
+    <dl id="public-info" style="display:<?php echo "block"?>;">
         <dt id="stationName-label" class="block-display">
             <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>
                 <span class="info-text-small"><?php echo _("(Required)")?></span>:
@@ -68,7 +27,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="Email-label" class="block-display">
             <label class="optional" for="Email"><?php echo $this->element->getElement('Email')->getLabel() ?></label>
@@ -84,7 +43,7 @@
                         <li><?php echo $error; ?></li>
                     <?php endforeach; ?>
                 </ul>
-            <?php endif; ?> 
+            <?php endif; ?>
         </dd>
         <dt id="StationWebSite-label" class="block-display">
             <label class="optional" for="StationWebSite"><?php echo $this->element->getElement('StationWebSite')->getLabel() ?></label>
@@ -145,7 +104,7 @@
             <?php if($this->element->getView()->logoImg){?>
             <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
             <?php }?>
-            
+
             <?php echo $this->element->getElement('Logo') ?>
             <div class="info-text">
                 <p><?php echo _("Note: Anything larger than 600x600 will be resized.")?></p>
@@ -159,31 +118,4 @@
             <?php endif; ?>
         </dd>
     </dl>
-    <div id="show_what_sending" style="display: block;">
-        <fieldset class="display_field toggle closed">
-        <legend style="cursor: pointer;"><span class="ui-icon ui-icon-triangle-2-n-s"></span><?php echo _("Show me what I am sending ") ?></legend>
-            <dl>
-                <?php echo $this->element->getElement('SendInfo') ?>
-            </dl>
-        </fieldset>
-    </div>
-    
-    <div>
-        <br>
-        <?php if(!$this->element->getView()->privacyChecked){?>
-            <label class="optional" for="Privacy">
-                <?php echo $this->element->getElement('Privacy') ?>
-                <?php echo $this->element->getElement('Privacy')->getLabel() ?>
-            </label>
-            <?php if($this->element->getElement('Privacy')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('Privacy')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        <?php }else{?>
-            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;"><?php echo _("Sourcefabric Privacy Policy") ?></a>
-        <?php }?>
-    </div>
 </fieldset>

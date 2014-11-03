@@ -289,7 +289,7 @@ if __name__ == '__main__':
     recorder.daemon = True
     recorder.start()
 
-    stat = ListenerStat()
+    stat = ListenerStat(config)
     stat.daemon = True
     stat.start()
 

@@ -1,5 +1,8 @@
 <?php
 
+$filepath = realpath (dirname(__FILE__));
+require_once($filepath."/../modules/rest/controllers/MediaController.php");
+
 class ScheduleController extends Zend_Controller_Action
 {
 
@@ -104,7 +107,7 @@ class ScheduleController extends Zend_Controller_Action
         $this->createShowFormAction(true);
 
         $user = Application_Model_User::getCurrentUser();
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $this->view->preloadShowForm = true;
         }
 
@@ -133,10 +136,10 @@ class ScheduleController extends Zend_Controller_Action
     {
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
-        $editable = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        $editable = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
 
         $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
-        Logging::info($calendar_interval);
+        // Logging::info($calendar_interval);
         if ($calendar_interval == "agendaDay") {
             list($start, $end) = Application_Model_Show::getStartEndCurrentDayView();
         } else if ($calendar_interval == "agendaWeek") {
@@ -167,6 +170,15 @@ class ScheduleController extends Zend_Controller_Action
         $deltaDay = $this->_getParam('day');
         $deltaMin = $this->_getParam('min');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/move-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $this->_getParam('showInstanceId');
+        $log_vars["params"]["delta day"] = $deltaDay;
+        $log_vars["params"]["delta minute"] = $deltaMin;
+        Logging::info($log_vars);
+
         try {
             $service_calendar = new Application_Service_CalendarService(
                 $this->_getParam('showInstanceId'));
@@ -174,7 +186,7 @@ class ScheduleController extends Zend_Controller_Action
             $this->view->show_error = true;
             return false;
         }
-
+        
         $error = $service_calendar->moveShow($deltaDay, $deltaMin);
         if (isset($error)) {
             $this->view->error = $error;
@@ -188,10 +200,19 @@ class ScheduleController extends Zend_Controller_Action
         $showId = $this->_getParam('showId');
         $instanceId = $this->_getParam('instanceId');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/resize-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        $log_vars["params"]["delta day"] = $deltaDay;
+        $log_vars["params"]["delta minute"] = $deltaMin;
+        Logging::info($log_vars);
+        
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             try {
                 $show = new Application_Model_Show($showId);
             } catch (Exception $e) {
@@ -211,6 +232,13 @@ class ScheduleController extends Zend_Controller_Action
     {
         $instanceId = $this->_getParam('id');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/delete-show-instance";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        Logging::info($log_vars);
+        
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId, true);
 
@@ -223,6 +251,7 @@ class ScheduleController extends Zend_Controller_Action
     public function uploadToSoundCloudAction()
     {
         $show_instance = $this->_getParam('id');
+        
         try {
             $show_inst = new Application_Model_ShowInstance($show_instance);
         } catch (Exception $e) {
@@ -250,6 +279,13 @@ class ScheduleController extends Zend_Controller_Action
     public function clearShowAction()
     {
         $instanceId = $this->_getParam('id');
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/clear-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        Logging::info($log_vars);
 
         $service_scheduler = new Application_Service_SchedulerService();
 
@@ -328,7 +364,7 @@ class ScheduleController extends Zend_Controller_Action
 
             return false;
         }
-
+        
         $originalShowId = $show->isRebroadcast();
         if (!is_null($originalShowId)) {
             try {
@@ -425,6 +461,13 @@ class ScheduleController extends Zend_Controller_Action
 
         $data['add_show_hosts'] =  $this->_getParam('hosts');
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/edit-repeating-show-instance";
+        $log_vars["params"] = array();
+        $log_vars["params"]["form_data"] = $data;
+        Logging::info($log_vars);
+        
         $service_showForm = new Application_Service_ShowFormService(
             $data["add_show_id"], $data["add_show_instance_id"]);
         $service_show = new Application_Service_ShowService(null, $data);
@@ -441,7 +484,7 @@ class ScheduleController extends Zend_Controller_Action
 
             $this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-        } else {
+                } else {
             if (!$validateStartDate) {
                 $this->view->when->getElement('add_show_start_date')->setOptions(array('disabled' => true));
             }
@@ -476,18 +519,25 @@ class ScheduleController extends Zend_Controller_Action
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/edit-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["form_data"] = $data;
+        Logging::info($log_vars);
 
         $forms = $this->createShowFormAction();
 
         list($data, $validateStartDate, $validateStartTime, $originalShowStartDateTime) =
             $service_showForm->preEditShowValidationCheck($data);
-
+        
         if ($service_showForm->validateShowForms($forms, $data, $validateStartDate,
                 $originalShowStartDateTime, true, $data["add_show_instance_id"])) {
-
-            $service_show->addUpdateShow($data);
-
-            $this->view->addNewShow = true;
+            // Get the show ID from the show service to pass as a parameter to the RESTful ShowController
+            $this->view->showId = $service_show->addUpdateShow($data);
+            
+        	$this->view->addNewShow = true;
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
         } else {
             if (!$validateStartDate) {
@@ -496,7 +546,8 @@ class ScheduleController extends Zend_Controller_Action
             if (!$validateStartTime) {
                 $this->view->when->getElement('add_show_start_time')->setOptions(array('disabled' => true));
             }
-            $this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
+            //$this->view->rr->getElement('add_show_record')->setOptions(array('disabled' => true));
+            
             $this->view->addNewShow = false;
             $this->view->action = "edit-show";
             $this->view->form = $this->view->render('schedule/add-show-form.phtml');
@@ -506,8 +557,7 @@ class ScheduleController extends Zend_Controller_Action
     public function addShowAction()
     {
         $service_showForm = new Application_Service_ShowFormService(null);
-        //$service_show = new Application_Service_ShowService();
-
+        
         $js = $this->_getParam('data');
         $data = array();
 
@@ -519,31 +569,39 @@ class ScheduleController extends Zend_Controller_Action
         $service_show = new Application_Service_ShowService(null, $data);
 
         // TODO: move this to js
-        $data['add_show_hosts']     = $this->_getParam('hosts');
-        $data['add_show_day_check'] = $this->_getParam('days');
-
+		$data['add_show_hosts']     = $this->_getParam('hosts');
+		$data['add_show_day_check'] = $this->_getParam('days');
+		
         if ($data['add_show_day_check'] == "") {
             $data['add_show_day_check'] = null;
         }
-
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/add-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["form_data"] = $data;
+        Logging::info($log_vars);
+        
         $forms = $this->createShowFormAction();
-
+        
         $this->view->addNewShow = true;
-
+        
         if ($service_showForm->validateShowForms($forms, $data)) {
-            $service_show->addUpdateShow($data);
-
+        	// Get the show ID from the show service to pass as a parameter to the RESTful ShowController
+        	$this->view->showId = $service_show->addUpdateShow($data);
+            
             //send new show forms to the user
             $this->createShowFormAction(true);
             $this->view->newForm = $this->view->render('schedule/add-show-form.phtml');
-
+            
             Logging::debug("Show creation succeeded");
         } else {
-            $this->view->form = $this->view->render('schedule/add-show-form.phtml');
+        	$this->view->form = $this->view->render('schedule/add-show-form.phtml');
             Logging::debug("Show creation failed");
         }
     }
-
+    
     public function createShowFormAction($populateDefaults=false)
     {
         $service_showForm = new Application_Service_ShowFormService();
@@ -572,10 +630,17 @@ class ScheduleController extends Zend_Controller_Action
     public function deleteShowAction()
     {
         $instanceId = $this->_getParam('id');
+        
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/delete-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $instanceId;
+        Logging::info($log_vars);
 
         $service_show = new Application_Service_ShowService();
         $showId = $service_show->deleteShow($instanceId);
-
+        
         if (!$showId) {
             $this->view->show_error = true;
         }
@@ -584,9 +649,16 @@ class ScheduleController extends Zend_Controller_Action
 
     public function cancelCurrentShowAction()
     {
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "schedule/cancel-current-show";
+        $log_vars["params"] = array();
+        $log_vars["params"]["instance id"] = $this->_getParam('id');
+        Logging::info($log_vars);
+        
         $user = Application_Model_User::getCurrentUser();
 
-        if ($user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
+        if ($user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER))) {
             $id = $this->_getParam('id');
 
             try {
@@ -611,7 +683,7 @@ class ScheduleController extends Zend_Controller_Action
 
         $paramsPop = str_replace('#id#', $id, $params);
 
-        // added for downlaod
+        // added for download
         $id = $this->_getParam('id');
 
         $file_id = $this->_getParam('id', null);
@@ -636,7 +708,7 @@ class ScheduleController extends Zend_Controller_Action
         Application_Model_Preference::SetCalendarTimeScale($this->_getParam('timeScale'));
     }
 
-/**
+	/**
      * Sets the user specific preference for which time interval to use in Calendar.
      * This is only being used by schedule.js at the moment.
      */
@@ -682,4 +754,5 @@ class ScheduleController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson($localTime);
     }
+    
 }

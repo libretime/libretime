@@ -42,7 +42,7 @@ class Application_Form_EditUser extends Zend_Form
         $login->addFilter('StringTrim');
         $login->setDecorators(array('viewHelper'));
         $this->addElement($login);
-
+        
         $password = new Zend_Form_Element_Password('cu_password');
         $password->setLabel(_('Password:'));
         $password->setAttrib('class', 'input_text');
@@ -127,6 +127,18 @@ class Application_Form_EditUser extends Zend_Form
         $timezone->setValue(Application_Model_Preference::GetUserTimezone($currentUserId));
         $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
+        
+        if (Application_Model_User::getCurrentUser()->isSuperAdmin()) {
+            $elemsToDisable = array($password, $passwordVerify, $email, $firstName, $lastName,
+                                    $cellPhone, $skype, $jabber);
+            foreach ($elemsToDisable as $element) {
+            //$this->_redirect('billing/client');
+                $element->setAttrib('disabled', 'disabled');
+                $element->setAttrib('readonly', 'readonly');
+                $element->setRequired(false);
+            }
+        }
+        
     }
 
     public function validateLogin($p_login, $p_userId) {

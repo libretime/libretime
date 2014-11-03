@@ -243,6 +243,7 @@ Class ShowServiceData
             "add_show_id" => 1,
             "add_show_instance_id" => 2,
             "add_show_name" => "test show",
+            "add_show_instance_description" => "",
             "add_show_url" => null,
             "add_show_genre" => null,
             "add_show_description" => null,

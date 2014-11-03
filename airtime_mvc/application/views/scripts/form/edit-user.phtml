@@ -1,5 +1,14 @@
 <h2><?php echo sprintf(_("%s's Settings"), $this->escape($this->currentUser)) ?></h2>
 <div id="current-user-container">
+
+  <?php if(Application_Model_User::getCurrentUser()->isSuperAdmin()) : ?>
+    <div class="user-data" id="user_details_superadmin_message" style="text-align: center;">
+        <?=sprintf(_("<b>Note:</b> You are a special \"Super Admin\" type of user.<br>Account details for Super Admins can be changed in your <a href=\"%s\">Billing Settings</a> instead."), "/billing/client");?>
+        <br><br>
+    </div>
+  <?php endif; ?>
+
+
 <form id="current-user-form" class="edit-user-global" method="post" enctype="application/x-www-form-urlencoded">
     <dl class="zend_form">
         <?php echo $this->element->getElement('cu_user_id') ?>
@@ -157,10 +166,8 @@
                 </ul>
             <?php endif; ?> 
         </dd>
-
         <?php echo $this->element->getElement('csrf') ?>
-
-        <button type="submit" id="cu_save_user" class="btn btn-small right-floated"><?php echo _("Save")?></button>
     </dl>
+    <button type="submit" id="cu_save_user" class="btn btn-small right-floated"><?php echo _("Save")?></button>
 </form>
 </div>

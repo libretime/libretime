@@ -22,7 +22,6 @@ function exception_error_handler($errno, $errstr, $errfile, $errline)
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
     return false;
 }
-set_error_handler("exception_error_handler");
 
 // Define path to application directory
 defined('APPLICATION_PATH')
@@ -60,10 +59,18 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 //amazon directory
 set_include_path(APPLICATION_PATH . '/amazon' . PATH_SEPARATOR . get_include_path());
 
+//Upgrade directory
+set_include_path(APPLICATION_PATH . '/upgrade/' . PATH_SEPARATOR . get_include_path());
+
+//Common directory
+set_include_path(APPLICATION_PATH . '/common/' . PATH_SEPARATOR . get_include_path());
+
+
 /** Zend_Application */
 require_once 'Zend/Application.php';
 $application = new Zend_Application(
     APPLICATION_ENV,
+    //$_SERVER["AIRTIME_APPINI"] // Old SaaS customization that's no longer needed -- Albert May 2, 2014
     APPLICATION_PATH . '/configs/application.ini'
 );
 
@@ -92,4 +99,3 @@ try {
     }
     throw $e;
 }
-

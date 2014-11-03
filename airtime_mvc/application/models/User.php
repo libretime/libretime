@@ -49,14 +49,20 @@ class Application_Model_User
     {
         return $this->isUserType(UTYPE_ADMIN);
     }
-
+    
+    public function isSuperAdmin()
+    {
+        return $this->isUserType(UTYPE_SUPERADMIN);
+    }
+    
     public function canSchedule($p_showId)
     {
         $type = $this->getType();
         $result = false;
 
-        if ($type === UTYPE_ADMIN ||
-            $type === UTYPE_PROGRAM_MANAGER ||
+        if ($this->isAdmin() ||
+            $this->isSuperAdmin() ||
+            $this->isPM() ||
             self::isHostOfShow($p_showId)) {
             $result = true;
         }
@@ -239,10 +245,14 @@ class Application_Model_User
     }
 
     public static function getFirstAdmin() {
-        $admins = Application_Model_User::getUsersOfType('A');
-        if (count($admins) > 0) { // found admin => pick first one
-            return $admins[0];
+        $superAdmins = Application_Model_User::getUsersOfType('S');
+        if (count($superAdmins) > 0) { // found superadmin => pick first one
+            return $superAdmins[0];
         } else {
+            $admins = Application_Model_User::getUsersOfType('A');
+            if (count($admins) > 0) { // found admin => pick first one
+                return $admins[0];
+            }
             Logging::warn("Warning. no admins found in database");
             return null;
         }
@@ -324,16 +334,26 @@ class Application_Model_User
         $res = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
 
         // mark record which is for the current user
-        foreach ($res['aaData'] as &$record) {
+        foreach($res['aaData'] as $key => &$record){
             if ($record['login'] == $username) {
                 $record['delete'] = "self";
             } else {
                 $record['delete'] = "";
             }
+            
+            if($record['login'] == 'sourcefabric_admin'){
+                //arrays in PHP are basically associative arrays that can be iterated in order.
+                //Deleting an earlier element does not change the keys of elements that come after it. --MK
+                unset($res['aaData'][$key]);
+                $res['iTotalDisplayRecords']--;
+                $res['iTotalRecords']--;
+            }
 
             $record = array_map('htmlspecialchars', $record);
         }
 
+        $res['aaData'] = array_values($res['aaData']);
+        
         return $res;
     }
 

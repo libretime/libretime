@@ -84,6 +84,21 @@ class TestHelper
             //Now that cc_files is empty, clearing cc_music_dirs should work
             $sql = "DELETE FROM cc_music_dirs";
             AirtimeInstall::InstallQuery($sql, false);
+            
+            //  Because files are stored relative to their watch directory,
+            //  we need to set the "stor" path before we can successfully
+            //  create a fake file in the database.
+            //Copy paste from airtime-db-install.php:
+            $stor_dir = "/tmp";
+            $con = Propel::getConnection();
+            $sql = "INSERT INTO cc_music_dirs (directory, type) VALUES ('$stor_dir', 'stor')";
+            try {
+                $con->exec($sql);
+            } catch (Exception $e) {
+                echo "  * Failed inserting {$stor_dir} in cc_music_dirs".PHP_EOL;
+                echo "  * Message {$e->getMessage()}".PHP_EOL;
+                return false;
+            }
 
             $con->commit();
             

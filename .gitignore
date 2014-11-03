@@ -3,4 +3,12 @@
 vendor/*
 composer.phar
 composer.lock
-
+*~$
+*log.*
+**/airtime_analyzer.egg-info/*
+**/build/*
+**/dist/*
+*~
+/airtime_mvc/tests/test_results.xml
+/tests/results.html
+/tests/*.jar

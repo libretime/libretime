@@ -24,6 +24,10 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('delete-success', 'json');
+
+		// Remove reliance on .phtml files to render requests
+   		$this->_helper->viewRenderer->setNoRender(true);
+
     }
     
     public function indexAction()
@@ -96,16 +100,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         exec("rm -rf $path");
 
         //update disk_usage value in cc_pref
-        $musicDir = CcMusicDirsQuery::create()
-            ->filterByType('stor')
-            ->filterByExists(true)
-            ->findOne();
-        $storPath = $musicDir->getDirectory();
-        
-        $freeSpace = disk_free_space($storPath);
-        $totalSpace = disk_total_space($storPath);
-        
-        Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
+        $storDir = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."srv/airtime/stor" : "/srv/airtime/stor";
+        $diskUsage = shell_exec("du -sb $storDir | awk '{print $1}'");
+        Application_Model_Preference::setDiskUsage($diskUsage);
 
         $this->getResponse()
             ->setHttpResponseCode(200)
@@ -137,6 +134,15 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function postAction()
     {
+        /*  If the user presents a valid API key, we don't check CSRF tokens.  
+            CSRF tokens are only used for session based authentication.
+        */
+        if(!$this->verifyAPIKey()){
+            if(!$this->verifyCSRFToken($this->_getParam('csrf_token'))){
+                return;
+            }
+        }
+
         if (!$this->verifyAuth(true, true))
         {
             return;
@@ -316,6 +322,18 @@ class Rest_MediaController extends Zend_Rest_Controller
         return $id;
     }
 
+    private function verifyCSRFToken($token){
+        $current_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $observed_csrf_token = $token;
+        $expected_csrf_token = $current_namespace->authtoken;
+
+        if($observed_csrf_token == $expected_csrf_token){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     private function verifyAuth($checkApiKey, $checkSession)
     {
         //  Session takes precedence over API key for now:
@@ -342,18 +360,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         return false;
     }
     
-    private function verifyCSRFToken($token){
-        $current_namespace = new Zend_Session_Namespace('csrf_namespace');
-        $observed_csrf_token = $token;
-        $expected_csrf_token = $current_namespace->authtoken;
-
-        if($observed_csrf_token == $expected_csrf_token){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
     private function verifyAPIKey()
     {
         //The API key is passed in via HTTP "basic authentication":
@@ -461,7 +467,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 
         $tempFilePath = $_FILES['file']['tmp_name'];
         $tempFileName = basename($tempFilePath);
-        
+
         //Only accept files with a file extension that we support.
         $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
         if (!in_array(strtolower($fileExtension), explode(",", "ogg,mp3,oga,flac,wav,m4a,mp4,opus")))
@@ -469,7 +475,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             @unlink($tempFilePath);
             throw new Exception("Bad file extension.");
         }
-            
+
         //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon...
          
         $storDir = Application_Model_MusicDir::getStorDir();
@@ -491,7 +497,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                  $importedStorageDirectory, basename($originalFilename),
                  $callbackUrl, $apiKey);
     }
-
+    
     private function getOwnerId()
     {
         try {

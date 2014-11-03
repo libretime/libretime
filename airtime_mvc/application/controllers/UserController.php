@@ -62,7 +62,11 @@ class UserController extends Zend_Controller_Action
                     if ($formData['password'] != "xxxxxx") {
                         $user->setPassword($formData['password']);
                     }
-                    $user->setType($formData['type']);
+                    if (array_key_exists('type', $formData)) {
+                        if ($formData['type'] != UTYPE_SUPERADMIN) { //Don't allow any other user to be promoted to Super Admin
+                            $user->setType($formData['type']);
+                        }
+                    }
                     $user->setEmail($formData['email']);
                     $user->setCellPhone($formData['cell_phone']);
                     $user->setSkype($formData['skype']);
@@ -120,7 +124,7 @@ class UserController extends Zend_Controller_Action
     }
     
     public function editUserAction()
-    {
+    {        
         $request = $this->getRequest();
         $form = new Application_Form_EditUser();
         if ($request->isPost()) {
@@ -129,12 +133,21 @@ class UserController extends Zend_Controller_Action
             if ($form->isValid($formData) &&
                        $form->validateLogin($formData['cu_login'], $formData['cu_user_id'])) {
                 $user = new Application_Model_User($formData['cu_user_id']);
+                //Stupid hack because our schema enforces non-null first_name
+                //even though by default the admin user has no first name... (....)
+                if (Application_Model_User::getCurrentUser()->isSuperAdmin()) {
+                    if (empty($formData['cu_first_name'])) { 
+                        $formData['cu_first_name'] = "admin";
+                        $formData['cu_last_name'] = "admin"; //ditto, avoid non-null DB constraint
+                    }
+                }
                 $user->setFirstName($formData['cu_first_name']);
                 $user->setLastName($formData['cu_last_name']);
                 // We don't allow 6 x's as a password.
                 // The reason is because we use that as a password placeholder
                 // on the client side.
-                if ($formData['cu_password'] != "xxxxxx") {
+                if (($formData['cu_password'] != "xxxxxx") &&
+                    (!empty($formData['cu_password']))) {
                     $user->setPassword($formData['cu_password']);
                 }
                 $user->setEmail($formData['cu_email']);
@@ -187,6 +200,12 @@ class UserController extends Zend_Controller_Action
         }
 
         $user = new Application_Model_User($delId);
+        
+        // Don't allow super admins to be deleted.
+        if ($user->isSuperAdmin())
+        {
+            return;
+        }
 
         # Take care of the user's files by either assigning them to somebody
         # or deleting them all

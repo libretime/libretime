@@ -15,7 +15,8 @@ class LocaleController extends Zend_Controller_Action
         $locale = Application_Model_Preference::GetLocale();
         echo "var datatables_dict =" .
             file_get_contents(Application_Common_OsPath::join(
-                $_SERVER["DOCUMENT_ROOT"],
+                //$_SERVER["DOCUMENT_ROOT"],
+                dirname(__FILE__) . "/../../public/", // Fixing this... -- Albert
                 "js/datatables/i18n/",
                 $locale.".txt")
             );
