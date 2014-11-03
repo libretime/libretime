@@ -34,19 +34,6 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
             )
         );
         $router->addRoute('clear', $clearLibraryRoute);
-
-        $deleteSuccessRoute = new Zend_Controller_Router_Route(
-            'rest/media/:id/delete-success',
-            array(
-                'controller' => 'media',
-                'action' => 'delete-success',
-                'module' => 'rest'
-            ),
-            array(
-                'id' => '\d+'
-            )
-        );
-        $router->addRoute('delete-success', $deleteSuccessRoute);
         
         /** ShowController Routes **/
         $uploadImageRoute = new Zend_Controller_Router_Route(

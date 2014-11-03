@@ -21,13 +21,9 @@ class Rest_MediaController extends Zend_Rest_Controller
     public function init()
     {
         $this->view->layout()->disableLayout();
-        
-        $ajaxContext = $this->_helper->getHelper('AjaxContext');
-        $ajaxContext->addActionContext('delete-success', 'json');
 
 		// Remove reliance on .phtml files to render requests
    		$this->_helper->viewRenderer->setNoRender(true);
-
     }
     
     public function indexAction()
