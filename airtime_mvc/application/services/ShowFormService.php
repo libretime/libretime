@@ -412,11 +412,9 @@ class Application_Service_ShowFormService
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())
             ->filterByDbModifiedInstance(false)
-            ->filterByDbEnds(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
-            ->orderByDbStarts()
-            ->limit(1)
+            ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
             ->findOne();
-
+        
         $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
         $ends = new DateTime($ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
         $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
@@ -426,6 +424,7 @@ class Application_Service_ShowFormService
 
         return array($starts, $ends);
     }
+
 
     /**
      * 
