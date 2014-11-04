@@ -260,7 +260,7 @@ class AirtimeUpgrader259 extends AirtimeUpgrader {
         );
     }
     
-    protected function getNewVersion() {
+    public function getNewVersion() {
         return '2.5.9';
     }
     
