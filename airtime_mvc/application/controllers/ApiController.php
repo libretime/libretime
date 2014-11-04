@@ -423,7 +423,7 @@ class ApiController extends Zend_Controller_Action
      * variables in the result to reflect the given timezone.
      *
      * @param object    $result     reference to the object to send back to the user
-     * @param string    $timezone    the user's timezone parameter value
+     * @param string    $timezone   the user's timezone parameter value
      * @param boolean   $upcase     whether the timezone output should be upcased
      */
     private function applyLiveTimezoneAdjustments(&$result, $timezone, $upcase)

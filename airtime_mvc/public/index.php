@@ -5,23 +5,21 @@
 //  but the default installation configs are likely to be installed by
 //  amature users on the setup that does not have https.  Forcing
 //  cookie_secure on non https would result in confusing login problems.
-if(!empty($_SERVER['HTTPS'])){
-        ini_set('session.cookie_secure', '1');
+if(!empty($_SERVER['HTTPS'])) {
+    ini_set('session.cookie_secure', '1');
 }
 ini_set('session.cookie_httponly', '1');
 
 error_reporting(E_ALL|E_STRICT);
 
-function exception_error_handler($errno, $errstr, $errfile, $errline)
-{
-    //Check if the statement that threw this error wanted its errors to be 
+function exception_error_handler($errno, $errstr, $errfile, $errline) {
+    //Check if the statement that threw this error wanted its errors to be
     //suppressed. If so then return without with throwing exception.
-    if (0 === error_reporting()) {
-        return;
-    }
+    if (0 === error_reporting()) return;
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
     return false;
 }
+
 set_error_handler("exception_error_handler");
 
 // Define path to application directory
@@ -57,8 +55,8 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 /** Zend_Application */
 require_once 'Zend/Application.php';
 $application = new Zend_Application(
-    APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
+        APPLICATION_ENV,
+        APPLICATION_PATH . '/configs/application.ini'
 );
 
 require_once (APPLICATION_PATH."/logging/Logging.php");
