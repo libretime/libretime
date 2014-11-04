@@ -2,6 +2,11 @@
 
 class Application_Model_Locale
 {
+    private static $domains = [
+        'airtime', 
+        'pro',
+    ];
+    
     public static $locales = array(
     	    "en_CA" => "English (Canada)",
             "en_GB" => "English (Britain)",
@@ -48,10 +53,14 @@ class Application_Model_Locale
             Logging::warn("Your system does not have the " . $lang . " locale installed. Run: sudo locale-gen " . $lang);
         }
         
-        $domain = 'airtime';
-        bindtextdomain($domain, '../locale');
-        textdomain($domain);
-        bind_textdomain_codeset($domain, $codeset);
+        // We need to run bindtextdomain and bind_textdomain_codeset for each domain we're using.
+        foreach (self::$domains as $domain) {
+            bindtextdomain($domain, '../locale');
+            bind_textdomain_codeset($domain, $codeset);
+        }
+        
+        textdomain('airtime');
     }
+    
 }
 
