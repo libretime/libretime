@@ -2,10 +2,10 @@
 
 class Application_Model_Locale
 {
-    private static $domains = [
+    private static $domains = array(
         'airtime', 
         'pro',
-    ];
+    );
     
     public static $locales = array(
     	    "en_CA" => "English (Canada)",
