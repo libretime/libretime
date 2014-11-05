@@ -1,9 +1,12 @@
 import os
 import logging
 import uuid
-
+import airtime_analyzer as aa
 from libcloud.storage.providers import get_driver
 from libcloud.storage.types import Provider, ContainerDoesNotExistError, ObjectDoesNotExistError
+
+
+CONFIG_PATH = '/etc/airtime-saas/amazon.conf'
 
 class CloudStorageUploader:
     """ A class that uses Apache Libcloud's Storage API to upload objects into
@@ -21,11 +24,14 @@ class CloudStorageUploader:
         _api_key_secret: Secret access key to objects on the provider's storage backend.
     """
 
-    def __init__(self, provider, bucket, api_key, api_key_secret):
-        self._provider = provider
-        self._bucket = bucket
-        self._api_key = api_key
-        self._api_key_secret = api_key_secret
+    def __init__(self):
+        config = aa.AirtimeAnalyzerServer.read_config_file(CONFIG_PATH)
+        
+        CLOUD_STORAGE_CONFIG_SECTION = "cloud_storage"
+        self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
+        self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
+        self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
+        self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
 
     def upload_obj(self, audio_file_path, metadata):
         """Uploads a file into Amazon S3 object storage.

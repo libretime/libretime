@@ -74,13 +74,6 @@ class MessageListener:
         self._password = config.get(RMQ_CONFIG_SECTION, 'password')
         self._vhost = config.get(RMQ_CONFIG_SECTION, 'vhost')
         
-        # Read the S3 API setting from the config file
-        CLOUD_STORAGE_CONFIG_SECTION = "cloud_storage"
-        self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
-        self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
-        self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
-        self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
-        
         # Set up a signal handler so we can shutdown gracefully
         # For some reason, this signal handler must be set up here. I'd rather 
         # put it in AirtimeAnalyzerServer, but it doesn't work there (something to do
@@ -119,7 +112,7 @@ class MessageListener:
         self._channel.queue_bind(exchange=EXCHANGE, queue=QUEUE, routing_key=ROUTING_KEY)
          
         logging.info(" Listening for messages...")
-        self._channel.basic_consume(self.msg_received_callback, 
+        self._channel.basic_consume(MessageListener.msg_received_callback, 
                                     queue=QUEUE, no_ack=False)
 
     def wait_for_messages(self):
@@ -141,8 +134,8 @@ class MessageListener:
         self._shutdown = True
         self.disconnect_from_messaging_server()
 
-    #@staticmethod
-    def msg_received_callback(self, channel, method_frame, header_frame, body):
+    @staticmethod
+    def msg_received_callback(channel, method_frame, header_frame, body):
         ''' A callback method that runs when a RabbitMQ message is received. 
         
             Here we parse the message, spin up an analyzer process, and report the 
@@ -173,7 +166,7 @@ class MessageListener:
             import_directory = msg_dict["import_directory"]
             original_filename = msg_dict["original_filename"]
             
-            audio_metadata = self.spawn_analyzer_process(audio_file_path, import_directory, original_filename)
+            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename)
             StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
 
         except KeyError as e:
@@ -211,13 +204,12 @@ class MessageListener:
             # If we don't ack, then RabbitMQ will redeliver the message in the future.
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
     
-    #@staticmethod
-    def spawn_analyzer_process(self, audio_file_path, import_directory, original_filename):
+    @staticmethod
+    def spawn_analyzer_process(audio_file_path, import_directory, original_filename):
         ''' Spawn a child process to analyze and import a new audio file. '''
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis, 
-                        args=(q, audio_file_path, import_directory, original_filename,
-                              self._provider, self._bucket, self._api_key, self._api_key_secret))
+                        args=(q, audio_file_path, import_directory, original_filename))
         p.start()
         p.join()
         if p.exitcode == 0:

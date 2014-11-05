@@ -25,13 +25,16 @@ class Config {
             $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
         }
         
+        // Parse separate conf file for Amazon S3 values
+        $amazonFilename = "/etc/airtime-saas/amazon.conf";
+        $amazonValues = parse_ini_file($amazonFilename, true);
+        $CC_CONFIG['cloud_storage'] = $amazonValues['cloud_storage'];
+        
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user
         $CC_CONFIG['webServerUser'] = $values['general']['web_server_user'];
         $CC_CONFIG['rabbitmq'] = $values['rabbitmq'];
-        
-        $CC_CONFIG['cloud_storage'] = $values['cloud_storage'];
 
         $CC_CONFIG['baseDir'] = $values['general']['base_dir'];
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];

@@ -18,8 +18,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename,
-                     cloud_provider, cloud_bucket, cloud_api_key, cloud_api_key_secret):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -54,7 +53,7 @@ class AnalyzerPipeline:
             metadata = dict()
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
             #metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
-            csu = CloudStorageUploader(cloud_provider, cloud_bucket, cloud_api_key, cloud_api_key_secret)
+            csu = CloudStorageUploader()
             metadata = csu.upload_obj(audio_file_path, metadata)
             metadata["import_status"] = 0 # imported
 

@@ -32,7 +32,7 @@ class AirtimeAnalyzerServer:
         self.setup_logging(debug)
 
         # Read our config file
-        config = self.read_config_file(config_path)
+        config = AirtimeAnalyzerServer.read_config_file(config_path)
        
         # Start up the StatusReporter process
         StatusReporter.start_thread(http_retry_queue_path)
@@ -73,7 +73,8 @@ class AirtimeAnalyzerServer:
         rootLogger.addHandler(consoleHandler)
 
 
-    def read_config_file(self, config_path):
+    @staticmethod
+    def read_config_file(config_path):
         """Parse the application's config file located at config_path."""
         config = ConfigParser.SafeConfigParser()
         try:
