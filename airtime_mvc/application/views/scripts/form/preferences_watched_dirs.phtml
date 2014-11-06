@@ -40,9 +40,8 @@
             <?php foreach($watched_dirs as $watched_dir): ?>
                 <dd class="block-display selected-item">
                     <?php echo ($watched_dir->getExistsFlag())?"":"<span class='ui-icon-alert'><img src='/css/images/warning-icon.png'></span>"?><span id="folderPath" style="display:block; width:350px"><?php echo htmlspecialchars($watched_dir->getDirectory());?></span></span>
-                    <span title="<?php echo _("Rescan watched directory (This is useful if it is network mount and may be out of sync with Airtime)")?>" class="ui-icon ui-icon-refresh"></span>
+                    <span title="<?php echo sprintf(_("Rescan watched directory (This is useful if it is network mount and may be out of sync with %s)"), PRODUCT_NAME)?>" class="ui-icon ui-icon-refresh"></span>
                     <span title="<?php echo _("Remove watched directory")?>" class="ui-icon ui-icon-close"></span>
-                    
                 </dd>
             <?php endforeach; ?>
         <?php else: ?>

@@ -768,7 +768,7 @@ class ApiController extends Zend_Controller_Action
 
                 //File is not in database anymore.
                 if (is_null($file)) {
-                    $return_hash['error'] = _("File does not exist in Airtime.");
+                    $return_hash['error'] = sprintf(_("File does not exist in %s"), PRODUCT_NAME);
                 }
                 //Updating a metadata change.
                 else {
@@ -788,7 +788,7 @@ class ApiController extends Zend_Controller_Action
                     $md['MDATA_KEY_ORIGINAL_PATH'], $con);
 
                 if (is_null($file)) {
-                    $return_hash['error'] = _('File does not exist in Airtime');
+                    $return_hash['error'] = sprintf(_('File does not exist in %s'), PRODUCT_NAME);
                 } else {
                     $filepath = $md['MDATA_KEY_FILEPATH'];
                     //$filepath = str_replace("\\", "", $filepath);
@@ -800,7 +800,7 @@ class ApiController extends Zend_Controller_Action
                 $file = Application_Model_StoredFile::RecallByFilepath($filepath, $con);
 
                 if (is_null($file)) {
-                    $return_hash['error'] = _("File doesn't exist in Airtime.");
+                    $return_hash['error'] = sprintf(_('File does not exist in %s'), PRODUCT_NAME);
                     Logging::warn("Attempt to delete file that doesn't exist.
                         Path: '$filepath'");
                 } else {
