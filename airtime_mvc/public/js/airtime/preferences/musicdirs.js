@@ -43,7 +43,7 @@ function setWatchedDirEvents() {
     $('#storageFolder-ok').click(function(){
         var url, chosen;
         
-        if(confirm($.i18n._("Are you sure you want to change the storage folder?\nThis will remove the files from your Airtime library!"))){
+        if(confirm(sprintf($.i18n._("Are you sure you want to change the storage folder?\nThis will remove the files from your %s library!"), PRODUCT_NAME))){
             url = baseUrl+"Preference/change-stor-directory";
             chosen = $('#storageFolder').val();
 

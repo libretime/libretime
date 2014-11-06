@@ -400,7 +400,7 @@ function setupUI() {
     
     $(".repeat_tracks_help_icon").qtip({
         content: {
-            text: $.i18n._("The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block.")
+            text: sprintf($.i18n._("The desired block length will not be reached if %s cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."), PRODUCT_NAME)
         },
         hide: {
             delay: 500,
