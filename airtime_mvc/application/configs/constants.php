@@ -1,5 +1,7 @@
 <?php
 
+define('APPLICATION_NAME' , 'Airtime');
+
 define('AIRTIME_COPYRIGHT_DATE' , '2010-2012');
 define('AIRTIME_REST_VERSION'   , '1.1');
 define('AIRTIME_API_VERSION'    , '1.1');
