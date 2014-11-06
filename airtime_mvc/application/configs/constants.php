@@ -1,6 +1,20 @@
 <?php
 
-define('APPLICATION_NAME' , 'Airtime');
+define('PRODUCT_NAME'       , 'Airtime');
+define('PRODUCT_SITE_URL'   , 'http://airtime.sourcefabric.org');
+
+define('COMPANY_NAME'       , 'Sourcefabric');
+define('COMPANY_SUFFIX'     , 'z.ú.');
+define('COMPANY_SITE'       , 'Sourcefabric.org');
+define('COMPANY_SITE_URL'   , 'http://sourcefabric.org/');
+
+define('WHOS_USING_URL'             , 'http://sourcefabric.org/en/airtime/whosusing');
+define('TERMS_AND_CONDITIONS_URL'   , 'http://www.sourcefabric.org/en/about/policy/');
+define('PRIVACY_POLICY_URL'         , 'http://www.sourcefabric.org/en/about/policy/');
+define('USER_MANUAL_URL'            , 'http://www.sourcefabric.org/en/airtime/manuals/');
+
+define('LICENSE_VERSION'    , 'GNU AGPL v.3');
+define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.html');
 
 define('AIRTIME_COPYRIGHT_DATE' , '2010-2012');
 define('AIRTIME_REST_VERSION'   , '1.1');
