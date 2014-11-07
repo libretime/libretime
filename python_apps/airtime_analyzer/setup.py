@@ -29,6 +29,7 @@ setup(name='airtime_analyzer',
           'mock',
           'python-daemon',
           'requests',
+          'apache-libcloud',
       ],
       zip_safe=False,
       data_files=data_files)
