@@ -7,7 +7,7 @@ import hashlib
 from libcloud.storage.types import Provider, ObjectDoesNotExistError
 from libcloud.storage.providers import get_driver
 
-CONFIG_PATH = '/etc/airtime/airtime.conf'
+CONFIG_PATH = '/etc/airtime-saas/amazon.conf'
 
 class CloudStorageDownloader:
     """ A class that uses Apache Libcloud's Storage API to download objects from
