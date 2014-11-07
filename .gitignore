@@ -2,7 +2,6 @@
 *.pyc
 vendor/*
 composer.phar
-composer.lock
 *~$
 *log.*
 **/airtime_analyzer.egg-info/*
