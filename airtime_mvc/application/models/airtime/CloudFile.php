@@ -41,7 +41,7 @@ class CloudFile extends BaseCloudFile
         $scheme = $endpoint->getScheme();
         $host = $endpoint->getHost();
         $s3_bucket = $amazon_s3->getBucket();
-        return "$scheme://$host/$s3_bucket/".utf8_encode($resource_id);
+        return "$scheme://$s3_bucket.$host/".utf8_encode($resource_id);
     }
     
     /**
