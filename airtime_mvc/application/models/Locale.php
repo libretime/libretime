@@ -2,6 +2,11 @@
 
 class Application_Model_Locale
 {
+    private static $domains = array(
+        'airtime', 
+        'pro',
+    );
+    
     public static $locales = array(
     	    "en_CA" => "English (Canada)",
             "en_GB" => "English (Britain)",
@@ -48,10 +53,31 @@ class Application_Model_Locale
             Logging::warn("Your system does not have the " . $lang . " locale installed. Run: sudo locale-gen " . $lang);
         }
         
-        $domain = 'airtime';
-        bindtextdomain($domain, '../locale');
-        textdomain($domain);
-        bind_textdomain_codeset($domain, $codeset);
+        // We need to run bindtextdomain and bind_textdomain_codeset for each domain we're using.
+        foreach (self::$domains as $domain) {
+            bindtextdomain($domain, '../locale');
+            bind_textdomain_codeset($domain, $codeset);
+        }
+        
+        textdomain('airtime');
     }
+    
+    /**
+     * We need this function for the case where a user has logged out, but 
+     * has an airtime_locale cookie containing their locale setting.
+     * 
+     * If the user does not have an airtime_locale cookie set, we default 
+     * to the station locale.
+     * 
+     * When the user logs in, the value set in the login form will be passed 
+     * into the airtime_locale cookie. This cookie is also updated when 
+     * a user updates their user settings.
+     */
+    public static function getUserLocale() {
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        $locale = $request->getCookie('airtime_locale', Application_Model_Preference::GetLocale());
+        return $locale;
+    }
+
 }
 

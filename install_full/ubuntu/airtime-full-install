@@ -29,10 +29,6 @@ echo "----------------------------------------------------"
 
 dist=`lsb_release -is`
 code=`lsb_release -cs`
-set +e
-apache2 -v | grep "2\.4" > /dev/null
-apacheversion=$?
-set -e
 
 #enable squeeze backports to get lame packages
 if [ "$dist" = "Debian" -a "$code" = "squeeze" ]; then
@@ -130,21 +126,27 @@ if [ "$server" = "nginx" ]; then
     fi
 else
     apt-get -y --force-yes install apache2 libapache2-mod-php5
+    set +e
+    apache2 -v | grep "2\.4" > /dev/null
+    apacheversion=$?
+    set -e
+    
+    
     # Apache Config File
     echo "----------------------------------------------------"
     echo "2.1 Apache Config File"
     echo "----------------------------------------------------"
 
     if [ "$apacheversion" != "1" ]; then
-	airtimeconfigfile="airtime.conf"
+        airtimeconfigfile="airtime.conf"
     else
-	airtimeconfigfile="airtime"
+        airtimeconfigfile="airtime"
     fi
 
     if [ ! -f /etc/apache2/sites-available/$airtimeconfigfile ]; then
         echo "Creating Apache config for Airtime..."
 
-	cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/$airtimeconfigfile
+    cp $SCRIPTPATH/../apache/airtime-vhost /etc/apache2/sites-available/$airtimeconfigfile
         a2dissite 000-default
         a2ensite airtime
     else

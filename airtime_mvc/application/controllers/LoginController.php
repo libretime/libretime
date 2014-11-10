@@ -16,15 +16,16 @@ class LoginController extends Zend_Controller_Action
         
         $request = $this->getRequest();
         $response = $this->getResponse();
+        $stationLocale = Application_Model_Preference::GetDefaultLocale();
         
         //Enable AJAX requests from www.airtime.pro for the sign-in process.
         CORSHelper::enableATProCrossOriginRequests($request, $response);
                 
-        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
+        
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
         $auth = Zend_Auth::getInstance();
         
-        if ($auth->hasIdentity())
-        {
+        if ($auth->hasIdentity()) {
             $this->_redirect('Showbuilder');
         }
 
@@ -130,7 +131,9 @@ class LoginController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $request = $this->getRequest();
-        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
+        $stationLocale = Application_Model_Preference::GetDefaultLocale();
+        
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         if (!Application_Model_Preference::GetEnableSystemEmail()) {
             $this->_redirect('login');
@@ -174,7 +177,9 @@ class LoginController extends Zend_Controller_Action
     public function passwordRestoreAfterAction()
     {
         $request = $this->getRequest();
-        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
+        $stationLocale = Application_Model_Preference::GetDefaultLocale();
+        
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         //uses separate layout without a navigation.
         $this->_helper->layout->setLayout('login');
@@ -192,8 +197,10 @@ class LoginController extends Zend_Controller_Action
         $form = new Application_Form_PasswordChange();
         $auth = new Application_Model_Auth();
         $user = CcSubjsQuery::create()->findPK($user_id);
+        
+        $stationLocale = Application_Model_Preference::GetDefaultLocale();
 
-        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
+        Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         //check validity of token
         if (!$auth->checkToken($user_id, $token, 'password.restore')) {

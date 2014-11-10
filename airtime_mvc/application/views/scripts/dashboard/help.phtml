@@ -1,7 +1,7 @@
 <div class="gray-logo"></div>
 <div class="text-content">
-  <h2><?php echo _("Welcome to Airtime!") ?></h2>
-<p><?php echo _("Here's how you can get started using Airtime to automate your broadcasts: ")?></p>
+  <h2><?php echo sprintf(_("Welcome to %s!"), PRODUCT_NAME) ?></h2>
+<p><?php echo sprintf(_("Here's how you can get started using %s to automate your broadcasts: "), PRODUCT_NAME)?></p>
 
 <ol>
     <li><?php echo _("Begin by adding your files to the library using the 'Add Media' menu button. You can drag and drop your files to this window too.")?></li>
@@ -10,8 +10,12 @@
     <li><?php echo _("Select your media from the left pane and drag them to your show in the right pane."); ?></li>
 </ol>
 <p><strong><?php echo _("Then you're good to go!")?></strong><br />
-<?php echo sprintf(_("For more detailed help, read the %suser manual%s."),
-    "<a href='http://www.sourcefabric.org/en/airtime/manuals/' target='_blank'>",
-    "</a>") ?></p>
+<?php 
+$userManualAnchorOpen = "<a href='" . USER_MANUAL_URL . "' target='_blank'>";
+echo sprintf(_("For more detailed help, read the %suser manual%s."),
+    $userManualAnchorOpen, "</a>") 
+
+?>
+</p>
 </div>
 

@@ -7,7 +7,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
     public function init()
     {
         $cb_airtime_auth = new Zend_Form_Element_Checkbox("cb_airtime_auth");
-        $cb_airtime_auth->setLabel(_("Use Airtime Authentication:"))
+        $cb_airtime_auth->setLabel(sprintf(_("Use %s Authentication:"), PRODUCT_NAME))
                           ->setRequired(false)
                           ->setDecorators(array('ViewHelper'));
         $this->addElement($cb_airtime_auth);
