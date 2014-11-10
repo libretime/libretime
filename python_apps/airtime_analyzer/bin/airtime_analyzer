@@ -26,8 +26,8 @@ def run():
     #Default config file path
     config_path = DEFAULT_CONFIG_PATH
     http_retry_queue_path = DEFAULT_HTTP_RETRY_PATH
-    if args.config_file:
-        config_path = args.config_file
+    if args.rmq_config_file:
+        config_path = args.rmq_config_file
     if args.http_retry_queue_file:
         http_retry_queue_path = args.http_retry_queue_file
 
