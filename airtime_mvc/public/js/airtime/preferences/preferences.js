@@ -110,7 +110,6 @@ $(document).ready(function() {
         
         $.post(url, {format: "json", data: data}, function(json){
             $('#content').empty().append(json.html);
-            $.cookie("default_airtime_locale", $('#locale').val(), {path: '/'});
             setTimeout(removeSuccessMsg, 5000);
             showErrorSections();
             setMailServerInputReadonly();

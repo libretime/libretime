@@ -25,7 +25,7 @@ $(document).ready(function(){
                         data: {format:"json"}
                     });
                     $(this).dialog("close");
-            	}
+                }
             },
             {
                 id: "remind_never",
@@ -41,12 +41,12 @@ $(document).ready(function(){
                 }
             },
             {
-            	id: "help_airtime",
-            	text: $.i18n._("Yes, help Airtime"),
-            	"class": "btn",
-            	click: function() {
-            	    $("#register-form").submit();
-            	}
+                id: "help_airtime",
+                text: sprintf($.i18n._("Yes, help %s"), PRODUCT_NAME),
+                "class": "btn",
+                click: function() {
+                    $("#register-form").submit();
+                }
             }
          ]
     });
@@ -97,12 +97,12 @@ $(document).ready(function(){
     }
     
     $("#Privacy").live('click', function(){
-    	var support = $("#SupportFeedback");
-    	var button = $("#help_airtime");
+        var support = $("#SupportFeedback");
+        var button = $("#help_airtime");
         if($(this).is(':checked') && support.is(':checked')){
-        	button.removeAttr('disabled').removeClass('ui-state-disabled');
+            button.removeAttr('disabled').removeClass('ui-state-disabled');
         }else{
-        	button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
+            button.attr('disabled', 'disabled' ).addClass('ui-state-disabled');
         }
     });
     
@@ -118,36 +118,36 @@ $(document).ready(function(){
     });
     
     $("#Logo").live('change', function(ev){
-    	var content, res, logoEl;
-    	
-    	content = $(this).val();
-    	res = content.match(/(jpg|jpeg|png|gif)$/gi);
-    	logoEl = $("#Logo-element");
-    	
-    	//not an accepted image extension.
-    	if (!res) {
-    		var ul, li; 
-    			
-    		ul = logoEl.find('.errors');
-    		li = $("<li/>").append($.i18n._("Image must be one of jpg, jpeg, png, or gif"));
-    		
-    		//errors ul has already been created.
-    		if (ul.length > 0) {
-    			ul.empty()
-    				.append(li);
-    		}
-    		else {
-    			logoEl
-    				.append('<ul class="errors"></ul>')
-    				.find(".errors")
-    					.append(li);
-    		}
-    		
-    		$(this).val("");
-    	}
-    	else {
-    		logoEl.find(".errors").remove();
-    	}
+        var content, res, logoEl;
+        
+        content = $(this).val();
+        res = content.match(/(jpg|jpeg|png|gif)$/gi);
+        logoEl = $("#Logo-element");
+        
+        //not an accepted image extension.
+        if (!res) {
+            var ul, li; 
+                
+            ul = logoEl.find('.errors');
+            li = $("<li/>").append($.i18n._("Image must be one of jpg, jpeg, png, or gif"));
+            
+            //errors ul has already been created.
+            if (ul.length > 0) {
+                ul.empty()
+                    .append(li);
+            }
+            else {
+                logoEl
+                    .append('<ul class="errors"></ul>')
+                    .find(".errors")
+                        .append(li);
+            }
+            
+            $(this).val("");
+        }
+        else {
+            logoEl.find(".errors").remove();
+        }
     });
 });
         

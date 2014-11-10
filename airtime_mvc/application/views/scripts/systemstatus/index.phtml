@@ -1,19 +1,19 @@
 <table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
-    	<thead>
-        	<tr class="ui-state-default strong">
-            	<td><?php echo _("Service") ?></td>
-            	<td><?php echo _("Status") ?></td>
-            	<td><?php echo _("Uptime") ?></td>
-            	<td><?php echo _("CPU") ?></td>
-            	<td><?php echo _("Memory") ?></td>
+        <thead>
+            <tr class="ui-state-default strong">
+                <td><?php echo _("Service") ?></td>
+                <td><?php echo _("Status") ?></td>
+                <td><?php echo _("Uptime") ?></td>
+                <td><?php echo _("CPU") ?></td>
+                <td><?php echo _("Memory") ?></td>
             </tr>
         </thead>
         <tbody>
             <!--
-        	<tr class="odd">
-            	<td><?php echo _("Airtime Version") ?></td>
-            	<td>1.9.3</td>
-            	<td>&nbsp;</td>
+            <tr class="odd">
+                <td><?php echo sprintf(_("%s Version"), PRODUCT_NAME) ?></td>
+                <td>1.9.3</td>
+                <td>&nbsp;</td>
             </tr>
             -->
             <?php $i=0; ?>
@@ -26,8 +26,8 @@
                     <td></td>
                 </tr>
             <?php endforeach; ?>
-        	<tr id="partitions" class="even">
-            	<th colspan="5"><?php echo _("Disk Space") ?></th>
+            <tr id="partitions" class="even">
+                <th colspan="5"><?php echo _("Disk Space") ?></th>
             </tr>
         </tbody>
     </table>

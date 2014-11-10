@@ -4,45 +4,44 @@ require_once 'Cache.php';
 
 class Application_Model_Preference
 {
-	
-	private static function getUserId()
-	{
-		//pass in true so the check is made with the autoloader
-		//we need this check because saas calls this function from outside Zend
-		if (!class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
-			$userId = null;
-		}
-		else {
-			$auth = Zend_Auth::getInstance();
-			$userId = $auth->getIdentity()->id;
-		}
-		
-		return $userId;
-	}
-	
+    
+    private static function getUserId()
+    {
+        //pass in true so the check is made with the autoloader
+        //we need this check because saas calls this function from outside Zend
+        if (!class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
+            $userId = null;
+        } else {
+            $auth = Zend_Auth::getInstance();
+            $userId = $auth->getIdentity()->id;
+        }
+        
+        return $userId;
+    }
+    
     /**
      *
      * @param boolean $isUserValue is true when we are setting a value for the current user
      */
     private static function setValue($key, $value, $isUserValue = false)
     {
-    	$cache = new Cache();
-    	
+        $cache = new Cache();
+        
         try {
+            
             $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
             $con->beginTransaction();
 
             $userId = self::getUserId();
             
-            if ($isUserValue && is_null($userId)) {
-            	throw new Exception("User id can't be null for a user preference {$key}.");
-            }
+            if ($isUserValue && is_null($userId))
+                throw new Exception("User id can't be null for a user preference {$key}.");
             
             Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
 
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
-            ." WHERE keystr = :key";
+                ." WHERE keystr = :key";
             
             $paramMap = array();
             $paramMap[':key'] = $key;
@@ -64,37 +63,33 @@ class Application_Model_Preference
                 //this case should not happen.
                 throw new Exception("Invalid number of results returned. Should be ".
                     "0 or 1, but is '$result' instead");
-            } 
-            elseif ($result == 1) {
-            	
+            } else if ($result == 1) {
+                
                 // result found
                 if (!$isUserValue) {
                     // system pref
                     $sql = "UPDATE cc_pref"
-                    ." SET subjid = NULL, valstr = :value"
-                    ." WHERE keystr = :key";
-                } 
-                else {
+                        ." SET subjid = NULL, valstr = :value"
+                        ." WHERE keystr = :key";
+                } else {
                     // user pref
                     $sql = "UPDATE cc_pref"
-                    . " SET valstr = :value"
-                    . " WHERE keystr = :key AND subjid = :id";
+                        . " SET valstr = :value"
+                        . " WHERE keystr = :key AND subjid = :id";
                    
                     $paramMap[':id'] = $userId;
                 }
-            } 
-            else {
-            	
+            } else {
+                
                 // result not found
                 if (!$isUserValue) {
                     // system pref
                     $sql = "INSERT INTO cc_pref (keystr, valstr)"
-                    ." VALUES (:key, :value)";
-                } 
-                else {
+                        ." VALUES (:key, :value)";
+                } else {
                     // user pref
                     $sql = "INSERT INTO cc_pref (subjid, keystr, valstr)"
-                    ." VALUES (:id, :key, :value)";
+                        ." VALUES (:id, :key, :value)";
                    
                     $paramMap[':id'] = $userId;
                 }
@@ -109,8 +104,7 @@ class Application_Model_Preference
                     $con);
 
             $con->commit();
-        } 
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $con->rollback();
             header('HTTP/1.0 503 Service Unavailable');
             Logging::info("Database error: ".$e->getMessage());
@@ -118,26 +112,22 @@ class Application_Model_Preference
         }
 
         $cache->store($key, $value, $isUserValue, $userId);
-        //Logging::info("SAVING {$key} {$userId} into cache. = {$value}");
     }
 
     private static function getValue($key, $isUserValue = false)
     {
-    	$cache = new Cache();
-    	
+        $cache = new Cache();
+        
         try {
-        	
-        	$userId = self::getUserId();
-        	
-        	if ($isUserValue && is_null($userId)) {
-        		throw new Exception("User id can't be null for a user preference.");
-        	}
+            
+            $userId = self::getUserId();
+            
+            if ($isUserValue && is_null($userId))
+                throw new Exception("User id can't be null for a user preference.");
 
-        	$res = $cache->fetch($key, $isUserValue, $userId);
-        	if ($res !== false) {
-        		//Logging::info("returning {$key} {$userId} from cache. = {$res}");
-        		return $res;
-        	}
+            // If the value is already cached, return it
+            $res = $cache->fetch($key, $isUserValue, $userId);
+            if ($res !== false) return $res;
            
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
@@ -147,7 +137,7 @@ class Application_Model_Preference
             $paramMap[':key'] = $key;
             
             //For user specific preference, check if id matches as well
-            if ($isUserValue) {                         
+            if ($isUserValue) {
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $userId;
             }
@@ -157,8 +147,7 @@ class Application_Model_Preference
             //return an empty string if the result doesn't exist.
             if ($result == 0) {
                 $res = "";
-            } 
-            else {
+            } else {
                 $sql = "SELECT valstr FROM cc_pref"
                 ." WHERE keystr = :key";
                 
@@ -248,53 +237,53 @@ class Application_Model_Preference
     
     public static function SetDefaultCrossfadeDuration($duration)
     {
-    	self::setValue("default_crossfade_duration", $duration);
+        self::setValue("default_crossfade_duration", $duration);
     }
     
     public static function GetDefaultCrossfadeDuration()
     {
-    	$duration = self::getValue("default_crossfade_duration");
+        $duration = self::getValue("default_crossfade_duration");
     
-    	if ($duration === "") {
-    		// the default value of the fade is 00.5
-    		return "0";
-    	}
+        if ($duration === "") {
+            // the default value of the fade is 00.5
+            return "0";
+        }
     
-    	return $duration;
+        return $duration;
     }
     
     public static function SetDefaultFadeIn($fade)
     {
-    	self::setValue("default_fade_in", $fade);
+        self::setValue("default_fade_in", $fade);
     }
     
     public static function GetDefaultFadeIn()
     {
-    	$fade = self::getValue("default_fade_in");
+        $fade = self::getValue("default_fade_in");
     
-    	if ($fade === "") {
-    		// the default value of the fade is 00.5
-    		return "00.5";
-    	}
+        if ($fade === "") {
+            // the default value of the fade is 00.5
+            return "00.5";
+        }
     
-    	return $fade;
+        return $fade;
     }
     
     public static function SetDefaultFadeOut($fade)
     {
-    	self::setValue("default_fade_out", $fade);
+        self::setValue("default_fade_out", $fade);
     }
     
     public static function GetDefaultFadeOut()
     {
-    	$fade = self::getValue("default_fade_out");
+        $fade = self::getValue("default_fade_out");
     
-    	if ($fade === "") {
-    		// the default value of the fade is 00.5
-    		return "00.5";
-    	}
+        if ($fade === "") {
+            // the default value of the fade is 00.5
+            return "00.5";
+        }
     
-    	return $fade;
+        return $fade;
     }
 
     public static function SetDefaultFade($fade)
@@ -556,9 +545,8 @@ class Application_Model_Preference
     {
         // When a new user is created they will get the default timezone
         // setting which the admin sets on preferences page
-        if (is_null($timezone)) {
+        if (is_null($timezone))
             $timezone = self::GetDefaultTimezone();
-        }
         self::setValue("user_timezone", $timezone, true);
     }
 
@@ -567,8 +555,7 @@ class Application_Model_Preference
         $timezone = self::getValue("user_timezone", true); 
         if (!$timezone) {
             return self::GetDefaultTimezone();
-        } 
-        else {
+        } else {
             return $timezone;
         }
     }
@@ -580,8 +567,7 @@ class Application_Model_Preference
         
         if (!is_null($userId)) {
             return self::GetUserTimezone();
-        } 
-        else {
+        } else {
             return self::GetDefaultTimezone();
         }
     }
@@ -612,9 +598,8 @@ class Application_Model_Preference
     {
         // When a new user is created they will get the default locale
         // setting which the admin sets on preferences page
-        if (is_null($locale)) {
+        if (is_null($locale))
             $locale = self::GetDefaultLocale();
-        }
         self::setValue("user_locale", $locale, true);
     }
 
@@ -624,8 +609,7 @@ class Application_Model_Preference
         
         if (!is_null($userId)) {
             return self::GetUserLocale();
-        } 
-        else {
+        } else {
             return self::GetDefaultLocale();
         }
     }
@@ -648,7 +632,7 @@ class Application_Model_Preference
     
     public static function SetUniqueId($id)
     {
-    	self::setValue("uniqueId", $id);
+        self::setValue("uniqueId", $id);
     }
 
     public static function GetUniqueId()
@@ -908,7 +892,7 @@ class Application_Model_Preference
     
     public static function SetAirtimeVersion($version)
     {
-    	self::setValue("system_version", $version);
+        self::setValue("system_version", $version);
     }
 
     public static function GetAirtimeVersion()
@@ -1404,12 +1388,11 @@ class Application_Model_Preference
         return self::getValue("enable_replay_gain", false);
     }
     
-    public static function getReplayGainModifier(){
+    public static function getReplayGainModifier() {
         $rg_modifier = self::getValue("replay_gain_modifier");
         
-        if ($rg_modifier === "") {
+        if ($rg_modifier === "")
             return "0";
-        }
         
         return $rg_modifier;
     }
@@ -1420,18 +1403,18 @@ class Application_Model_Preference
     }
     
     public static function SetHistoryItemTemplate($value) {
-    	self::setValue("history_item_template", $value);
+        self::setValue("history_item_template", $value);
     }
     
     public static function GetHistoryItemTemplate() {
-    	return self::getValue("history_item_template");
+        return self::getValue("history_item_template");
     }
     
     public static function SetHistoryFileTemplate($value) {
-    	self::setValue("history_file_template", $value);
+        self::setValue("history_file_template", $value);
     }
     
     public static function GetHistoryFileTemplate() {
-    	return self::getValue("history_file_template");
+        return self::getValue("history_file_template");
     }
 }

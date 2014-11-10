@@ -53,13 +53,11 @@ class Application_Form_Login extends Zend_Form
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
         $locale->setDecorators(array('ViewHelper'));
         $this->addElement($locale);
+        $this->setDefaults(array(
+            "locale" => Application_Model_Locale::getUserLocale()
+        ));
 
-        $recaptchaNeeded = false;
         if (Application_Model_LoginAttempts::getAttempts($_SERVER['REMOTE_ADDR']) >= 3) {
-            $recaptchaNeeded = true;
-        }
-        if ($recaptchaNeeded) {
-            // recaptcha
             $this->addRecaptcha();
         }
 
