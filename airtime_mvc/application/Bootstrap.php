@@ -54,8 +54,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $view->headScript()->appendScript("var baseUrl = '$baseUrl'");
-
+        $view->headScript()->appendScript("var baseUrl = '$baseUrl';");
+        $this->_initTranslationGlobals($view);
+        
         $user = Application_Model_User::GetCurrentUser();
         if (!is_null($user)){
             $userType = $user->getType();
@@ -63,7 +64,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
-
+    }
+    
+    /**
+     * Ideally, globals should be written to a single js file once 
+     * from a php init function. This will save us from having to 
+     * reinitialize them every request
+     */
+    private function _initTranslationGlobals($view) {
+        $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
+        $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
+        $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
     }
 
     protected function _initHeadLink()

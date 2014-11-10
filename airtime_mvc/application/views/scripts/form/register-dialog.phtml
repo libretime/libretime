@@ -3,10 +3,10 @@
         <fieldset>
             <dl class="zend_form">
                <dt class="block-display info-text">
-                    <?php echo sprintf(_("Help Airtime improve by letting us know how you are using it. This info "
-                    ."will be collected regularly in order to enhance your user experience.%s"
-                    ."Click 'Yes, help Airtime' and we'll make sure the features you use are "
-                    ."constantly improving."), "<br /><br />") ?>
+                    <?php echo sprintf(_('Help %1$s improve by letting us know how you are using it. This info '
+                    .'will be collected regularly in order to enhance your user experience.%2$s'
+                    .'Click \'Yes, help %1$s\' and we\'ll make sure the features you use are '
+                    .'constantly improving.'), PRODUCT_NAME, "<br /><br />") ?>
                 </dt>
                 <dd id="SupportFeedback-element" class="block-display">
                     <label class="optional" for="SupportFeedback">
@@ -22,10 +22,12 @@
                     <?php endif; ?>
                 </dd>
                 <dt class="block-display info-text">
-                    <?php echo sprintf(_("Click the box below to advertise your station on %sSourcefabric.org%s."
-                        ." In order to promote your station, 'Send support feedback' must be enabled. This data will be collected in addition to the support feedback."),
-                        "<a id='link_to_whos_using' href='http://sourcefabric.org/en/airtime/whosusing' onclick='window.open(this.href); return false'>",
-                        "</a>")?>
+                    <?php 
+                        $whosUsingAnchor = "<a id='link_to_whos_using' href='" . WHOS_USING_URL . "' onclick='window.open(this.href); return false'>"
+                                            . COMPANY_SITE
+                                        . "</a>";
+                        echo sprintf(_("Click the box below to promote your station on %s."), $whosUsingAnchor)
+                    ?>
                 </dt>
                 <dd id="publicize-element" class="block-display">
                     <label class="optional" for="Publicise">
@@ -175,7 +177,7 @@
                         <?php echo $this->element->getElement('Privacy')->getLabel() ?>
                     </label>
                 <?php }else{?>
-                    <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;"><?php echo _("Terms and Conditions") ?></a>
+                    <a id="link_to_terms_and_condition" href="<?php echo TERMS_AND_CONDITIONS_URL ?>" onclick="window.open(this.href); return false;"><?php echo _("Terms and Conditions") ?></a>
                 <?php }?>
             </div>
     </form>
