@@ -103,7 +103,7 @@ class CcFiles extends BaseCcFiles {
             throw new Exception("Invalid music_dir for file in database.");
         }
         $directory = $music_dir->getDirectory();
-        $filepath  = $this->_file->getDbFilepath();
+        $filepath  = $this->getDbFilepath();
 
         return Application_Common_OsPath::join($directory, $filepath);
     }
