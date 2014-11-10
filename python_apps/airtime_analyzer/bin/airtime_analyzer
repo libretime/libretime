@@ -17,7 +17,7 @@ def run():
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
     parser.add_argument("--debug", help="log full debugging output", action="store_true")
-    parser.add_argument("--config-file", help="specify a configuration file with RabbitMQ settings (default is %s)" % DEFAULT_CONFIG_PATH)
+    parser.add_argument("--rmq-config-file", help="specify a configuration file with RabbitMQ settings (default is %s)" % DEFAULT_CONFIG_PATH)
     parser.add_argument("--http-retry-queue-file", help="specify where incompleted HTTP requests will be serialized (default is %s)" % DEFAULT_HTTP_RETRY_PATH)
     args = parser.parse_args()
 
