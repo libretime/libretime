@@ -2224,6 +2224,7 @@ msgstr ""
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
 msgstr ""
+"Attention: Vous ne pouvez pas modifier ce champ alors que l'émission est en cours de lecture"
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
 msgid "No result found"
@@ -2503,15 +2504,10 @@ msgstr "Editeur de Point d'E/S"
 
 #: airtime_mvc/application/controllers/LocaleController.php:289
 msgid ""
-<<<<<<< HEAD
 "Waveform features are available in a browser supporting the Web Audio API"
 msgstr ""
 "Les caractéristiques de la forme d'onde sont disponibles dans un navigateur "
 "supportant l'API Web Audio"
-=======
-"Warning: You cannot change this field while the show is currently playing"
-msgstr "Attention: Vous ne pouvez pas modifier ce champ alors que l'émission est en cours de lecture"
->>>>>>> 2.5.x
 
 #: airtime_mvc/application/controllers/LocaleController.php:292
 msgid "Select all"
