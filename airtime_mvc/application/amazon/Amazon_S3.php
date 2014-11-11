@@ -19,24 +19,25 @@ class Amazon_S3
     
     function Amazon_S3()
     {
+        $this->initZendServiceAmazonS3();
+    }
+    
+    private function initZendServiceAmazonS3()
+    {
         $CC_CONFIG = Config::getConfig();
         
         $this->setBucket($CC_CONFIG['cloud_storage']['bucket']);
         $this->setAccessKey($CC_CONFIG['cloud_storage']['api_key']);
         $this->setSecretKey($CC_CONFIG['cloud_storage']['api_key_secret']);
-        $this->setZendServiceAmazonS3();
+        
+        $this->zendServiceAmazonS3 = new Zend_Service_Amazon_S3(
+            $this->getAccessKey(),
+            $this->getSecretKey());
     }
     
     public function getZendServiceAmazonS3()
     {
-        return $this->zendServiceAmazonS3;
-    }
-    
-    private function setZendServiceAmazonS3()
-    {
-        $this->zendServiceAmazonS3 = new Zend_Service_Amazon_S3(
-            $this->getAccessKey(),
-            $this->getSecretKey());
+    	return $this->zendServiceAmazonS3;
     }
     
     public function getBucket()
