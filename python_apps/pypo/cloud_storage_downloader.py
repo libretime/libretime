@@ -75,10 +75,10 @@ class CloudStorageDownloader:
         try:
             config.readfp(open(config_path))
         except IOError as e:
-            print "Failed to open config file at " + config_path + ": " + e.strerror 
+            logging.debug("Failed to open config file at %s: %s" % (config_path, e.strerror))
             sys.exit()
         except Exception:
-            print e.strerror 
+            logging.debug(e.strerror) 
             sys.exit()
 
         return config
