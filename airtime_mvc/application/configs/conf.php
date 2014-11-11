@@ -26,7 +26,7 @@ class Config {
         }
         
         // Parse separate conf file for Amazon S3 values
-        $amazonFilename = "/etc/airtime-saas/amazon.conf";
+        $amazonFilename = isset($_SERVER['AMAZONS3_CONF']) ? $_SERVER['AMAZONS3_CONF'] : "/etc/airtime-saas/amazon.conf";
         $amazonValues = parse_ini_file($amazonFilename, true);
         $CC_CONFIG['cloud_storage'] = $amazonValues['cloud_storage'];
         

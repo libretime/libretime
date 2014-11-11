@@ -362,8 +362,7 @@ class LibraryController extends Zend_Controller_Action
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
                     $message = _("Could not delete file(s).");
-                    Logging::debug($e->getMessage());
-                    Logging::info($e->getMessage());
+                    Logging::info($message.": ".$e->getMessage());
                 }
             }
         }
