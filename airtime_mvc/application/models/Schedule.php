@@ -761,7 +761,19 @@ SQL;
         }
     }
 
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $object_name=null)
+    /**
+     * 
+     * Appends schedule "events" to an array of schedule events that gets
+     * sent to PYPO. Each schedule event contains information PYPO and
+     * Liquidsoap need for playout.
+     * 
+     * @param Array $data array to be filled with schedule info - $item(s)
+     * @param Array $item schedule info about one track
+     * @param Integer $media_id scheduled item's cc_files id
+     * @param String $uri path to the scheduled item's physical location
+     * @param String $amazonS3ResourceId scheduled item's Amazon S3 resource id, if applicable
+     */
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $amazonS3ResourceId)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end   = self::AirtimeTimeToPypoTime($item["end"]);
@@ -797,8 +809,8 @@ SQL;
             'replay_gain'       => $replay_gain,
             'independent_event' => $independent_event
         );
-        if (!is_null($object_name)) {
-            $schedule_item["object_name"] = $object_name;
+        if (!is_null($amazonS3ResourceId)) {
+            $schedule_item["amazonS3_resource_id"] = $amazonS3ResourceId;
         }
 
         if ($schedule_item['cue_in'] > $schedule_item['cue_out']) {
@@ -934,11 +946,8 @@ SQL;
                 $file = $storedFile->getPropelOrm();
                 $uri = $file->getAbsoluteFilePath();
                 
-                $object_name = null;
-                if ($file instanceof CloudFile) {
-                    $object_name = $storedFile->getResourceId();
-                }
-                self::createFileScheduleEvent($data, $item, $media_id, $uri, $object_name);
+                $amazonS3ResourceId = $file->getResourceId();
+                self::createFileScheduleEvent($data, $item, $media_id, $uri, $amazonS3ResourceId);
             } 
             elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"

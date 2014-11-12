@@ -85,7 +85,7 @@ class ApiController extends Zend_Controller_Action
             // Make sure we don't have some wrong result beecause of caching
             clearstatcache();
             
-            if ($media->getPropelOrm()->isValidFile()) {
+            if ($media->getPropelOrm()->isValidPhysicalFile()) {
                 $filename = $media->getPropelOrm()->getFilename();
 
                 //Download user left clicks a track and selects Download.
@@ -168,15 +168,9 @@ class ApiController extends Zend_Controller_Action
         //http://www.php.net/manual/en/function.ob-end-flush.php
         while (@ob_end_flush());
 
-        /*$cur = $begin;
-        fseek($fm, $begin, 0);
-
-        while (!feof($fm) && $cur <= $end && (connection_status() == 0)) {
-            echo  fread($fm, min(1024 * 16, ($end - $cur) + 1));
-            $cur += 1024 * 16;
-        }*/
-        
-        while(!feof($fm)) {
+        // NOTE: We can't use fseek here because it does not work with streams
+        // (a.k.a. Files stored on Amazon S3)
+        while(!feof($fm) && (connection_status() == 0)) {
             echo fread($fm, 1024 * 8);
         }
     }
