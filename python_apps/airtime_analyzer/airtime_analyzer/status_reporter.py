@@ -98,13 +98,13 @@ def send_http_request(picklable_request, retry_queue):
     if not isinstance(picklable_request, PicklableHttpRequest):
         raise TypeError("picklable_request must be a PicklableHttpRequest. Was of type " + type(picklable_request).__name__)
     try: 
-        t = threading.Timer(60, alert_hung_request)
-        t.start()
+        #t = threading.Timer(60, alert_hung_request)
+        #t.start()
         bare_request = picklable_request.create_request()
         s = requests.Session()
         prepared_request = s.prepare_request(bare_request)
         r = s.send(prepared_request, timeout=StatusReporter._HTTP_REQUEST_TIMEOUT, verify=False) # SNI is a pain in the ass
-        t.cancel() # Watchdog no longer needed.
+        #t.cancel() # Watchdog no longer needed.
         r.raise_for_status() # Raise an exception if there was an http error code returned
         logging.info("HTTP request sent successfully.")
     except requests.exceptions.HTTPError as e:
