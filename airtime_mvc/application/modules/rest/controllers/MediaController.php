@@ -227,7 +227,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 $file->setDbFilepath($requestData["filename"]);
                 
                 $fileSizeBytes = $requestData["filesize"];
-                if ($fileSizeBytes === false)
+                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
                 {
                     $file->setDbImportStatus(2)->save();
                     $this->fileNotFoundResponse();
@@ -242,7 +242,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             //we should get rid of this since we're removing local file storage
             } else if (isset($requestData["full_path"])) {
                 $fileSizeBytes = filesize($requestData["full_path"]);
-                if ($fileSizeBytes === false)
+                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
                 {
                     $file->setDbImportStatus(2)->save();
                     $this->fileNotFoundResponse();
