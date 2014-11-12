@@ -237,7 +237,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             //as a foreign key to cc_music_dirs.
             if (isset($requestData["full_path"])) {
                 $fileSizeBytes = filesize($requestData["full_path"]);
-                if ($fileSizeBytes === false)
+                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
                 {
                     $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
                     $this->fileNotFoundResponse();
