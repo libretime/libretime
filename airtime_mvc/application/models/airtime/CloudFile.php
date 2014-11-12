@@ -93,7 +93,7 @@ class CloudFile extends BaseCloudFile
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
      */
-    public function isValidFile()
+    public function isValidPhysicalFile()
     {
         $ch = curl_init();
         curl_setopt_array($ch, array(

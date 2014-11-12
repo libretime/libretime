@@ -136,9 +136,9 @@ class PypoFile(Thread):
                     """
                     If an object_name exists the file is stored on Amazon S3
                     """
-                    if 'object_name' in media_item:
+                    if 'amazonS3_resource_id' in media_item:
                         csd = CloudStorageDownloader()
-                        csd.download_obj(media_item['dst'], media_item['object_name'])
+                        csd.download_obj(media_item['dst'], media_item['amazonS3_resource_id'])
                         media_item['file_ready'] = True
                     else:
                         self.copy_file(media_item)

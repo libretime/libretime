@@ -111,7 +111,7 @@ class CcFiles extends BaseCcFiles {
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
      */
-    public function isValidFile()
+    public function isValidPhysicalFile()
     {
         return is_file($this->getAbsoluteFilePath());
     }
@@ -128,6 +128,16 @@ class CcFiles extends BaseCcFiles {
         } else {
             throw new Exception("Could not locate file ".$filepath);
         }
+    }
+    
+    /**
+     * 
+     * This function refers to the file's Amazon S3 resource id.
+     * Returns null because cc_files are stored on local disk.
+     */
+    public function getResourceId()
+    {
+        return null;
     }
     
 } // CcFiles
