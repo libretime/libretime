@@ -227,7 +227,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 $file->setDbFilepath($requestData["filename"]);
                 
                 $fileSizeBytes = $requestData["filesize"];
-                if ($fileSizeBytes === false)
+                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
                 {
                     $file->setDbImportStatus(2)->save();
                     $this->fileNotFoundResponse();
@@ -237,30 +237,6 @@ class Rest_MediaController extends Zend_Rest_Controller
                 $cloudFile->setResourceId($requestData["resource_id"]);
                 $cloudFile->setCcFiles($file);
                 $cloudFile->save();
-                
-            //file is stored locally
-            //we should get rid of this since we're removing local file storage
-            } else if (isset($requestData["full_path"])) {
-                $fileSizeBytes = filesize($requestData["full_path"]);
-                if ($fileSizeBytes === false)
-                {
-                    $file->setDbImportStatus(2)->save();
-                    $this->fileNotFoundResponse();
-                    return;
-                }
-                
-                $fullPath = $requestData["full_path"];
-                $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
-                $pos = strpos($fullPath, $storDir);
-                
-                if ($pos !== FALSE)
-                {
-                    assert($pos == 0); //Path must start with the stor directory path
-                    
-                    $filePathRelativeToStor = substr($fullPath, strlen($storDir));
-                    $file->setDbFilepath($filePathRelativeToStor);
-                    $file->setDbDirectory(1); //1 corresponds to the default stor/imported directory.
-                }
             }
             
             Application_Model_Preference::updateDiskUsage($fileSizeBytes);
