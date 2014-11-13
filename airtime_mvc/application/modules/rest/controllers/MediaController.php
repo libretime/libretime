@@ -218,26 +218,23 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->save();
             return;
-        } else if ($file) {
+        } else if ($file && isset($requestData["resource_id"])) {
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
             
-            //file is stored in the cloud
-            if (isset($requestData["resource_id"])) {
-                //store the original filename
-                $file->setDbFilepath($requestData["filename"]);
-                
-                $fileSizeBytes = $requestData["filesize"];
-                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
-                {
-                    $file->setDbImportStatus(2)->save();
-                    $this->fileNotFoundResponse();
-                    return;
-                }
-                $cloudFile = new CloudFile();
-                $cloudFile->setResourceId($requestData["resource_id"]);
-                $cloudFile->setCcFiles($file);
-                $cloudFile->save();
+            //store the original filename
+            $file->setDbFilepath($requestData["filename"]);
+            
+            $fileSizeBytes = $requestData["filesize"];
+            if (!isset($fileSizeBytes) || $fileSizeBytes === false)
+            {
+                $file->setDbImportStatus(2)->save();
+                $this->fileNotFoundResponse();
+                return;
             }
+            $cloudFile = new CloudFile();
+            $cloudFile->setResourceId($requestData["resource_id"]);
+            $cloudFile->setCcFiles($file);
+            $cloudFile->save();
             
             Application_Model_Preference::updateDiskUsage($fileSizeBytes);
             
