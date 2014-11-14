@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2014-11-14 09:58+0000\n"
+"PO-Revision-Date: 2014-11-14 10:48+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/projects/p/airtime/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -1097,13 +1097,13 @@ msgstr "Send support feedback"
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 #, php-format
 msgid "Promote my station on %s"
-msgstr ""
+msgstr "Promote my station on %s"
 
 #: airtime_mvc/application/forms/SupportSettings.php:150
 #: airtime_mvc/application/forms/RegisterAirtime.php:151
 #, php-format
 msgid "By checking this box, I agree to %s's %sprivacy policy%s."
-msgstr ""
+msgstr "By checking this box, I agree to %s's %sprivacy policy%s."
 
 #: airtime_mvc/application/forms/SupportSettings.php:174
 #: airtime_mvc/application/forms/RegisterAirtime.php:169
@@ -1142,7 +1142,7 @@ msgstr "Rebroadcast?"
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr ""
+msgstr "Use %s Authentication:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
@@ -2614,7 +2614,7 @@ msgstr "You are not allowed to access this resource. "
 #: airtime_mvc/application/controllers/ApiController.php:803
 #, php-format
 msgid "File does not exist in %s"
-msgstr ""
+msgstr "File does not exist in %s"
 
 #: airtime_mvc/application/controllers/ApiController.php:854
 msgid "Bad request. no 'mode' parameter passed."
@@ -2825,7 +2825,7 @@ msgstr "Memory"
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:14
 #, php-format
 msgid "%s Version"
-msgstr ""
+msgstr "%s Version"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:30
 msgid "Disk Space"
@@ -2910,13 +2910,13 @@ msgid ""
 " collected regularly in order to enhance your user experience.%2$sClick "
 "'Yes, help %1$s' and we'll make sure the features you use are constantly "
 "improving."
-msgstr ""
+msgstr "Help %1$s improve by letting us know how you are using it. This info will be collected regularly in order to enhance your user experience.%2$sClick 'Yes, help %1$s' and we'll make sure the features you use are constantly improving."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:29
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:29
 #, php-format
 msgid "Click the box below to promote your station on %s."
-msgstr ""
+msgstr "Click the box below to promote your station on %s."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:67
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:81
@@ -2962,7 +2962,7 @@ msgstr "Current Import Folder:"
 msgid ""
 "Rescan watched directory (This is useful if it is network mount and may be "
 "out of sync with %s)"
-msgstr ""
+msgstr "Rescan watched directory (This is useful if it is a network mount and may be out of sync with %s)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
@@ -3017,7 +3017,7 @@ msgid ""
 "will be collected regularly in order to enhance your user experience.%sClick"
 " the 'Send support feedback' box and we'll make sure the features you use "
 "are constantly improving."
-msgstr ""
+msgstr "Help %s improve by letting %s know how you are using it. This information will be collected regularly in order to enhance your user experience.%sClick the 'Send support feedback' box and we'll make sure the features you use are constantly improving."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
 msgid ""
@@ -3280,12 +3280,12 @@ msgstr "Listener Count Over Time"
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:3
 #, php-format
 msgid "Welcome to %s!"
-msgstr ""
+msgstr "Welcome to %s!"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:4
 #, php-format
 msgid "Here's how you can get started using %s to automate your broadcasts: "
-msgstr ""
+msgstr "Here's how you can get started using %s to automate your broadcasts: "
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
 msgid ""
@@ -3334,12 +3334,12 @@ msgstr "Select stream:"
 msgid ""
 "%1$s %2$s, the open radio software for scheduling and remote station "
 "management."
-msgstr ""
+msgstr "%1$s %2$s, the open radio software for scheduling and remote station management."
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:22
 #, php-format
 msgid "%1$s %2$s is distributed under the %3$s"
-msgstr ""
+msgstr "%1$s %2$s is distributed under the %3$s"
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
@@ -3372,7 +3372,7 @@ msgstr "Back to login screen"
 msgid ""
 "Welcome to the %s demo! You can log in using the username 'admin' and the "
 "password 'admin'."
-msgstr ""
+msgstr "Welcome to the %s demo! You can log in using the username 'admin' and the password 'admin'."
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
@@ -3417,7 +3417,7 @@ msgstr "Your trial expires in"
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 #, php-format
 msgid "Purchase your copy of %s"
-msgstr ""
+msgstr "Purchase your copy of %s"
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 msgid "My Account"
@@ -3733,7 +3733,7 @@ msgstr "Content in linked shows must be scheduled before or after any one is bro
 
 #: airtime_mvc/application/models/Scheduler.php:195
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Cannot schedule a playlist that contains missing files."
 
 #: airtime_mvc/application/models/Scheduler.php:216
 #: airtime_mvc/application/models/Scheduler.php:305
@@ -3808,7 +3808,7 @@ msgstr "Hi %s, \n\nClick this link to reset your password: "
 #: airtime_mvc/application/models/Auth.php:36
 #, php-format
 msgid "%s Password Reset"
-msgstr ""
+msgstr "%s Password Reset"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
