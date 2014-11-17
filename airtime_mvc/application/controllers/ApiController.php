@@ -5,8 +5,16 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
-        $ignoreAuth = array("live-info", "live-info-v2", "week-info", 
-                    "station-metadata", "station-logo");
+        $ignoreAuth = array("live-info", 
+            "live-info-v2", 
+            "week-info", 
+            "station-metadata", 
+            "station-logo",
+            "show-history-feed", 
+            "item-history-feed",
+            "shows",
+            "show-schedules"
+        );
 
         $params = $this->getRequest()->getParams();
         if (!in_array($params['action'], $ignoreAuth)) {
@@ -47,6 +55,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-stream-setting-table'   , 'json')
                 ->addActionContext('update-replay-gain-value'      , 'json')
                 ->addActionContext('update-cue-values-by-silan'    , 'json')
+                ->addActionContext('show-preview'             , 'json')
                 ->initContext();
     }
 
@@ -274,10 +283,10 @@ class ApiController extends Zend_Controller_Action
                 $utcTimeEnd = $end->format("Y-m-d H:i:s");
                 
                 $result = array(
-                        "env" => APPLICATION_ENV,
-                        "schedulerTime" => $utcTimeNow,
-                        "currentShow" => Application_Model_Show::getCurrentShow($utcTimeNow),
-                        "nextShow" => Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
+                    "env" => APPLICATION_ENV,
+                    "schedulerTime" => $utcTimeNow,
+                    "currentShow" => Application_Model_Show::getCurrentShow($utcTimeNow),
+                    "nextShow" => Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
                 );
             } else {
                 $result = Application_Model_Schedule::GetPlayOrderRangeOld($limit);
@@ -484,9 +493,9 @@ class ApiController extends Zend_Controller_Action
                     $shows,
                     array("starts", "ends", "start_timestamp","end_timestamp"),
                     $timezone
-                  );
+                );
 
-                  $result[$dow[$i]] = $shows;
+                $result[$dow[$i]] = $shows;
             }
 
             // XSS exploit prevention
@@ -1320,4 +1329,194 @@ class ApiController extends Zend_Controller_Action
             Application_Model_StreamSetting::SetListenerStatError($k, $v);
         }
     }
+
+    /**
+     * display played items for a given time range and show instance_id
+     *
+     * @return json array
+     */
+    public function itemHistoryFeedAction()
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $instance = $request->getParam("instance_id", null);
+
+            list($startsDT, $endsDT) = $this->getStartEnd($request);
+
+            $historyService = new Application_Service_HistoryService();
+            $results = $historyService->getPlayedItemData($startsDT, $endsDT, $params, $instance);
+
+            $this->_helper->json->sendJson($results['history']);
+    }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+    }
+
+    /**
+     * display show schedules for a given time range and show instance_id
+     *
+     * @return json array
+     */
+    public function showHistoryFeedAction()
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $userId = $request->getParam("user_id", null);
+ 
+            list($startsDT, $endsDT) = $this->getStartEnd($request);
+            
+            $historyService = new Application_Service_HistoryService();
+            $shows = $historyService->getShowList($startsDT, $endsDT, $userId);
+
+            $this->_helper->json->sendJson($shows);
+        }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+    }
+
+    /**
+     * display show info (without schedule) for given show_id
+     *
+     * @return json array
+     */
+    public function showsAction()
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $showId = $request->getParam("show_id", null);
+ 
+            if (empty($showId)) {            
+                $shows = Application_Model_Show::getDistinctShows();
+            } else {
+                $show = new Application_Model_Show($showId);
+                $shows = $show->getShowInfo();
+            }
+
+            $this->_helper->json->sendJson($shows);
+        }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+    }
+   
+    /**
+     * display show schedule for given show_id
+     *
+     * @return json array
+     */
+    public function showSchedulesAction() 
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $showId = $request->getParam("show_id", null);
+ 
+            list($startsDT, $endsDT) = $this->getStartEnd($request);
+            
+            $shows = Application_Model_Show::getShows($startsDT, $endsDT, FALSE, $showId);
+
+            $this->_helper->json->sendJson($shows);
+        }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+
+    }
+    
+    public function showPreviewAction()
+    {
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $prefTimezone = Application_Model_Preference::GetTimezone();
+
+        $instanceId = $this->_getParam('instance_id');
+        $apiKey = $this->_getParam('api_key');
+
+        if (!isset($instanceId)) {
+            return;
+        }
+
+        $showInstance = new Application_Model_ShowInstance($instanceId);
+        $result = array();
+        $position = 0;
+        foreach ($showInstance->getShowListContent($prefTimezone) as $track) {
+
+            $elementMap = array(
+                'title' => isset($track['track_title']) ? $track['track_title'] : "",
+                'artist' => isset($track['creator']) ? $track['creator'] : "",
+                'position' => $position,
+                'id' => ++$position,
+                'mime' => isset($track['mime'])?$track['mime']:"",
+                'starts' => isset($track['starts']) ? $track['starts'] : "",
+                'length' => isset($track['length']) ? $track['length'] : "",
+                'file_id' => ($track['type'] == 0) ? $track['item_id'] :  $track['filepath']
+            );
+
+            $result[] = $elementMap;
+        }
+
+        $this->_helper->json($result);
+
+    }
+    
+    /**
+     * sets start and end vars from given params, or defauls to 
+     * yesterday - today using server timezone
+     */ 
+    private function getStartEnd($request)
+    {
+        $prefTimezone = Application_Model_Preference::GetTimezone();
+        $utcTimezone = new DateTimeZone("UTC");
+        $utcNow = new DateTime("now", $utcTimezone);
+         
+        $start = $request->getParam("start");
+        $end = $request->getParam("end");
+        $timezone = $request->getParam("timezone");
+
+        if (empty($timezone)) {
+            $userTimezone = new DateTimeZone($prefTimezone);
+        } else {
+            $userTimezone = new DateTimeZone($timezone);
+        }
+ 
+        if (empty($start) || empty($end)) {
+            $startsDT = clone $utcNow;
+            $startsDT->sub(new DateInterval("P1D"));
+            $endsDT = clone $utcNow;
+        }
+        else {
+             
+            try {
+                $startsDT = new DateTime($start, $userTimezone);
+                $startsDT->setTimezone($utcTimezone);
+    
+                $endsDT = new DateTime($end, $userTimezone);
+                $endsDT->setTimezone($utcTimezone);
+    
+                if ($startsDT > $endsDT) {
+                    throw new Exception("start greater than end");
+                }
+            }
+            catch (Exception $e) {
+                Logging::info($e);
+                Logging::info($e->getMessage());
+    
+                $startsDT = clone $utcNow;
+                $startsDT->sub(new DateInterval("P1D"));
+                $endsDT = clone $utcNow;
+            }
+             
+        }
+         
+        return array($startsDT, $endsDT);
+    }
+
 }

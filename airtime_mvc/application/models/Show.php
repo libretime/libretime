@@ -786,6 +786,34 @@ SQL;
         }
     }
 
+    /**
+     *  returns show specific info (not related to isntance)
+     */
+    public function getShowInfo()
+    {
+        $info = array();
+        if ($this->getId() == null) {
+            return $info;
+        } else {
+            $ccShow = CcShowQuery::create()->findPK($this->_showId);
+            $info['name'] = $ccShow->getDbName();
+            $info['id'] = $ccShow->getDbId();
+            $info['url'] = $ccShow->getDbUrl();
+            $info['genre'] = $ccShow->getDbGenre();
+            $info['description'] = $ccShow->getDbDescription();
+            $info['color'] = $ccShow->getDbColor();
+            $info['background_color'] = $ccShow->getDbBackgroundColor();
+            $info['custom_username'] = $ccShow->getDbLiveStreamUser();
+            $info['cb_airtime_auth'] = $ccShow->getDbLiveStreamUsingAirtimeAuth();
+            $info['cb_custom_auth']  = $ccShow->getDbLiveStreamUsingCustomAuth();
+            $info['custom_username'] = $ccShow->getDbLiveStreamUser();
+            $info['custom_password'] = $ccShow->getDbLiveStreamPass();
+            $info['linked'] = $ccShow->getDbLinked();
+            $info['is_linkable'] = $ccShow->getDbIsLinkable();
+            return $info;
+        }
+    }
+
     /* Only used for shows that are repeating. Note that this will return
      * true even for dates that only have a "modified" show instance (does not
      * check if the "modified_instance" column is set to true). This is intended
@@ -862,9 +890,10 @@ SQL;
      *      In UTC time.
      * @param  unknown_type $excludeInstance
      * @param  boolean      $onlyRecord
+     * @param  int          $showId
      * @return array
      */
-    public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE)
+    public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE, $showId=null)
     {
         self::createAndFillShowInstancesPastPopulatedUntilDate($end_timestamp);
 
@@ -895,13 +924,21 @@ SQL;
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
+
+        $params = array();
+
+        if ($showId) {
+            $sql .= " AND (si1.show_id = :show_id)";
+            $params[':show_id'] = $showId; 
+        }
+
         if ($onlyRecord) {
             $sql .= " AND (si1.starts >= :start::TIMESTAMP AND si1.starts < :end::TIMESTAMP)";
             $sql .= " AND (si1.record = 1)";
 
-            return Application_Common_Database::prepareAndExecute( $sql,
-                array( ':start' => $start_string,
-                       ':end'   => $end_string ), 'all');
+            $params[':start'] = $start_string;
+            $params[':end'] = $end_string;
+            return Application_Common_Database::prepareAndExecute( $sql, $params, 'all');
 
         } else {
             $sql .= " ". <<<SQL
@@ -910,15 +947,16 @@ AND ((si1.starts >= :start1::TIMESTAMP AND si1.starts < :end1::TIMESTAMP)
      OR (si1.starts <= :start3::TIMESTAMP AND si1.ends >= :end3::TIMESTAMP))
 ORDER BY si1.starts
 SQL;
-            return Application_Common_Database::prepareAndExecute( $sql,
-                array(
+            $params = array_merge($params, array(
                     'start1' => $start_string,
                     'start2' => $start_string,
                     'start3' => $start_string,
                     'end1'   => $end_string,
                     'end2'   => $end_string,
                     'end3'   => $end_string
-                ), 'all');
+                )
+            );
+            return Application_Common_Database::prepareAndExecute( $sql, $params, 'all');
         }
     }
 
@@ -1013,10 +1051,10 @@ SQL;
             
             //for putting the now playing icon on the show.
             if ($now > $startsDT && $now < $endsDT) {
-            	$event["nowPlaying"] = true;
+                $event["nowPlaying"] = true;
             }
             else {
-            	$event["nowPlaying"] = false;
+                $event["nowPlaying"] = false;
             }
 
             //event colouring
@@ -1045,9 +1083,9 @@ SQL;
      **/
     private static function getPercentScheduled($p_starts, $p_ends, $p_time_filled)
     {
-    	$utcTimezone = new DatetimeZone("UTC");
-    	$startDt = new DateTime($p_starts, $utcTimezone);
-    	$endDt = new DateTime($p_ends, $utcTimezone);
+        $utcTimezone = new DatetimeZone("UTC");
+        $startDt = new DateTime($p_starts, $utcTimezone);
+        $endDt = new DateTime($p_ends, $utcTimezone);
         $durationSeconds = intval($endDt->format("U")) - intval($startDt->format("U"));
         $time_filled = Application_Common_DateHelper::playlistTimeToSeconds($p_time_filled);
         if ($durationSeconds != 0) { //Prevent division by zero if the show duration somehow becomes zero.
@@ -1447,5 +1485,14 @@ SQL;
         $end = new DateTime("@".$tomorrow);
 
         return array($start, $end);
+    }
+
+    public static function getDistinctShows() {
+        $sql = <<<SQL
+SELECT * FROM cc_show
+SQL;
+        $shows = Application_Common_Database::prepareAndExecute($sql);
+        return $shows;
+
     }
 }
