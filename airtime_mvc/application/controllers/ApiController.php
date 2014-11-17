@@ -55,7 +55,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-stream-setting-table'   , 'json')
                 ->addActionContext('update-replay-gain-value'      , 'json')
                 ->addActionContext('update-cue-values-by-silan'    , 'json')
-                ->addActionContext('show-preview'             , 'json')
+                ->addActionContext('show-preview'                  , 'json')
                 ->initContext();
     }
 
