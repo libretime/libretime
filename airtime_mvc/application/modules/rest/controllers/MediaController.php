@@ -220,8 +220,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         
         $file = CcFilesQuery::create()->findPk($id);
-        // Since we check for this value when deleting files, set it first
-        $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
 
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
