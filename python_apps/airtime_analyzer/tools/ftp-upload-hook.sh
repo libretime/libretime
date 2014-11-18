@@ -18,7 +18,7 @@ post_file() {
     airtime_conf_path=/etc/airtime/airtime.conf
 	
     #maps the instance_path to the url
-    vhost_file=/mnt/airtimepro/system/vhost.map
+    vhost_file=/etc/apache2/airtime/vhost.map
 
     #instance_path will look like 1/1384, for example
     instance_path=$(echo ${file_path} | grep -Po "(?<=($base_instance_path)).*?(?=/srv)")
