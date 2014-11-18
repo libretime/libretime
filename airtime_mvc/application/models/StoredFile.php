@@ -355,7 +355,13 @@ SQL;
     {
         $exists = false;
         try {
-            $exists = file_exists($this->getFilePath());
+            //Explicitly check filepath because if it's blank, getFilePath() can
+            //still return a directory that exists.
+            if (!$this->_file->getDbFilepath()) {
+                $exists = false;
+            } else {
+                $exists = file_exists($this->getFilePath());
+            }
         } catch (Exception $e) {
             return false;
         }
