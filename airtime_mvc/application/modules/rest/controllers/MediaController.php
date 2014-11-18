@@ -276,8 +276,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             return;
         }
-        
-            
+             
         $id = $this->getId();
         if (!$id) {
             return;

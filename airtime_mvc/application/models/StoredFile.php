@@ -355,13 +355,8 @@ SQL;
     {
         $exists = false;
         try {
-            //Explicitly check filepath because if it's blank, getFilePath() can
-            //still return a directory that exists.
-            if (!$this->_file->getDbFilepath()) {
-                $exists = false;
-            } else {
-                $exists = file_exists($this->getFilePath());
-            }
+            $filePath = $this->getFilePath();
+            $exists = (file_exists($this->getFilePath()) && !is_dir($filePath));
         } catch (Exception $e) {
             return false;
         }
@@ -504,11 +499,15 @@ SQL;
         $music_dir = Application_Model_MusicDir::getDirByPK($this->
             _file->getDbDirectory());
         if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file in database.");
+            throw new Exception(_("Invalid music_dir for file in database."));
         }
+        
         $directory = $music_dir->getDirectory();
         $filepath  = $this->_file->getDbFilepath();
-
+        if (!$filepath) {
+            throw new Exception(sprintf(_("Blank file path for file %s (id: %s) in database."), $this->_file->getDbTrackTitle(), $this->getId()));
+        }
+        
         return Application_Common_OsPath::join($directory, $filepath);
     }
 
