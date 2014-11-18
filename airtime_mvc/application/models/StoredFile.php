@@ -387,7 +387,6 @@ SQL;
         assert($music_dir);
         $type = $music_dir->getType();
         
-        
         Logging::info($_SERVER["HTTP_HOST"].": User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
         
         try {
@@ -402,17 +401,7 @@ SQL;
             //If the file didn't exist on disk, that's fine, we still want to
             //remove it from the database, so we continue here.
         }
-<<<<<<< Updated upstream
 
-        Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
-        // set hidden flag to true
-        //$this->_file->setDbHidden(true);
-        $this->_file->setDbFileExists(false);
-        $this->_file->save();
-
-=======
-        
->>>>>>> Stashed changes
         // need to explicitly update any playlist's and block's length
         // that contains the file getting deleted
         $fileId = $this->_file->getDbId();
