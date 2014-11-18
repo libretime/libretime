@@ -1,8 +1,13 @@
 <?php
 
-
 class Rest_MediaController extends Zend_Rest_Controller
 {
+    const MUSIC_DIRS_STOR_PK = 1;
+    
+    const IMPORT_STATUS_SUCCESS = 0;
+    const IMPORT_STATUS_PENDING = 1;
+    const IMPORT_STATUS_FAILED = 2;
+    
     //fields that are not modifiable via our RESTful API
     private static $blackList = array(
         'id',
@@ -215,6 +220,8 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         
         $file = CcFilesQuery::create()->findPk($id);
+        // Since we check for this value when deleting files, set it first
+        $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
 
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
@@ -251,7 +258,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else {
-            $file->setDbImportStatus(2)->save();
+            $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
             $this->fileNotFoundResponse();
         }
     }
@@ -262,6 +269,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             return;
         }
+        
             
         $id = $this->getId();
         if (!$id) {

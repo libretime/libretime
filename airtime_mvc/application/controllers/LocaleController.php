@@ -2,10 +2,11 @@
 
 class LocaleController extends Zend_Controller_Action
 {
+
     public function init()
     {
     }
-
+    
     public function datatablesTranslationTableAction()
     {
         $this->view->layout()->disableLayout();

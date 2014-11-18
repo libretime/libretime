@@ -1,0 +1,7 @@
+#: airtime_mvc/application/views/scripts/billing/invoices.phtml:7
+msgid "<b>Thank you!</b> Your plan has been updated and you will be invoiced during your next billing cycle."
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/billing/invoices.phtml:11
+msgid "Tip: To pay an invoice, click \"View Invoice\"<br> and look for the \"Checkout\" button."
+msgstr ""
