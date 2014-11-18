@@ -370,9 +370,7 @@ SQL;
      *
      */
     public function delete()
-    {
-        $filepath = $this->getFilePath();
-        
+    {     
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
@@ -390,17 +388,21 @@ SQL;
         $type = $music_dir->getType();
         
         
-        if (file_exists($filepath) && $type == "stor") {
-            try {
+        Logging::info($_SERVER["HTTP_HOST"].": User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
+        
+        try {
+            if ($this->existsOnDisk() && $type == "stor") {
+                $filepath = $this->getFilePath();
                 //Update the user's disk usage
                 Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($filepath)));
-
                 unlink($filepath);
-            } catch (Exception $e) {
-                Logging::error($e->getMessage());
-                return;
             }
+        } catch (Exception $e) {
+            Logging::warning($e->getMessage());
+            //If the file didn't exist on disk, that's fine, we still want to
+            //remove it from the database, so we continue here.
         }
+<<<<<<< Updated upstream
 
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
         // set hidden flag to true
@@ -408,6 +410,9 @@ SQL;
         $this->_file->setDbFileExists(false);
         $this->_file->save();
 
+=======
+        
+>>>>>>> Stashed changes
         // need to explicitly update any playlist's and block's length
         // that contains the file getting deleted
         $fileId = $this->_file->getDbId();
@@ -424,6 +429,9 @@ SQL;
             $bl->setDbLength($bl->computeDbLength(Propel::getConnection(CcBlockPeer::DATABASE_NAME)));
             $bl->save();
         }
+        
+        //We actually do want to delete the file from the database here
+        $this->_file->delete();
     }
 
     /**
