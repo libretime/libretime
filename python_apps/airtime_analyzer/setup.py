@@ -29,6 +29,11 @@ setup(name='airtime_analyzer',
           'mock',
           'python-daemon',
           'requests',
+          # These next 3 are required for requests to support SSL with SNI. Learned this the hard way...
+          # What sucks is that GCC is required to pip install these. 
+          #'ndg-httpsclient',
+          #'pyasn1',
+          #'pyopenssl'
       ],
       zip_safe=False,
       data_files=data_files)

@@ -355,7 +355,8 @@ SQL;
     {
         $exists = false;
         try {
-            $exists = file_exists($this->getFilePath());
+            $filePath = $this->getFilePath();
+            $exists = (file_exists($this->getFilePath()) && !is_dir($filePath));
         } catch (Exception $e) {
             return false;
         }
@@ -369,9 +370,7 @@ SQL;
      *
      */
     public function delete()
-    {
-        $filepath = $this->getFilePath();
-        
+    {     
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
@@ -389,20 +388,21 @@ SQL;
         assert($music_dir);
         $type = $music_dir->getType();
         
-        if (file_exists($filepath) && $type == "stor") {
-            try {
-                //Update the user's disk usage
-                Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($filepath)));
-
-                unlink($filepath);
-            } catch (Exception $e) {
-                Logging::error($e->getMessage());
-                return;
-            }
-        }
-
         Logging::info($_SERVER["HTTP_HOST"].": User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$this->_file->getDbId());
         
+        try {
+            if ($this->existsOnDisk() && $type == "stor") {
+                $filepath = $this->getFilePath();
+                //Update the user's disk usage
+                Application_Model_Preference::updateDiskUsage(-1 * abs(filesize($filepath)));
+                unlink($filepath);
+            }
+        } catch (Exception $e) {
+            Logging::warning($e->getMessage());
+            //If the file didn't exist on disk, that's fine, we still want to
+            //remove it from the database, so we continue here.
+        }
+
         // need to explicitly update any playlist's and block's length
         // that contains the file getting deleted
         $fileId = $this->_file->getDbId();
@@ -420,8 +420,7 @@ SQL;
             $bl->save();
         }
 
-        // We were setting file_exists to false and leaving it at that
-        // but we should actually delete the file
+        //We actually do want to delete the file from the database here
         $this->_file->delete();
     }
 
@@ -498,11 +497,15 @@ SQL;
         $music_dir = Application_Model_MusicDir::getDirByPK($this->
             _file->getDbDirectory());
         if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file in database.");
+            throw new Exception(_("Invalid music_dir for file in database."));
         }
+        
         $directory = $music_dir->getDirectory();
         $filepath  = $this->_file->getDbFilepath();
-
+        if (!$filepath) {
+            throw new Exception(sprintf(_("Blank file path for file %s (id: %s) in database."), $this->_file->getDbTrackTitle(), $this->getId()));
+        }
+        
         return Application_Common_OsPath::join($directory, $filepath);
     }
 
