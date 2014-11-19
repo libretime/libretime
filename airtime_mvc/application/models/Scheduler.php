@@ -1119,6 +1119,7 @@ class Application_Model_Scheduler
 
             foreach ($removedItems as $removedItem) {
                 $instance = $removedItem->getCcShowInstances($this->con);
+                $effectedInstanceIds[] = $instance->getDbId();
 
                 //check if instance is linked and if so get the schedule items
                 //for all linked instances so we can delete them too
