@@ -4,21 +4,101 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<title>Billing Account Details</title>
+<title>Account Plans</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Billing Account Details</td></tr>
+<tr><td rowspan="1" colspan="3">Account Plans</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/billing/client</td>
+	<td>/billing/upgrade</td>
 	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Account Details</td>
+	<td>link=Account Plans</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=hobbyist_grid_price</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=starter_grid_price</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=plus_grid_price</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=premium_grid_price</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=hobbyist_grid_price</td>
+	<td>$9.95 / month</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=starter_grid_price</td>
+	<td>$39.95 / month</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=plus_grid_price</td>
+	<td>$64.95 / month</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=premium_grid_price</td>
+	<td>$99.95 / month</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=current_plan</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=newproductbillingcycle-monthly</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=newproductbillingcycle-annually</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=newproductid-25</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=newproductid-26</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=newproductid-27</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=newproductid-28</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=span.subtotal</td>
 	<td></td>
 </tr>
 <tr>
@@ -98,20 +178,19 @@
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>id=password2</td>
+	<td>id=paymentmethod-paypal</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>id=password2verify</td>
+	<td>//div[@id='total_box']/b[2]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>id=submit</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
