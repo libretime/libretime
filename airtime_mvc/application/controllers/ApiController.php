@@ -1225,6 +1225,8 @@ class ApiController extends Zend_Controller_Action
         } elseif ($djtype == "dj") {
             //check against show dj auth
             $showInfo = Application_Model_Show::getCurrentShow();
+            $showInfo = $showInfo[0]; //When did this change??? - Albert
+            
             // there is current playing show
             if (isset($showInfo['id'])) {
                 $current_show_id = $showInfo['id'];
