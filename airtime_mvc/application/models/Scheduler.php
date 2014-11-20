@@ -1112,35 +1112,36 @@ class Application_Model_Scheduler
 
             $removedItems = CcScheduleQuery::create()->findPks($scheduledIds);
 
-            //check to make sure all items selected are up to date
-            foreach ($removedItems as $removedItem) {
+            // This array is used to keep track of every show instance that was
+            // effected by the track deletion. It will be used later on to
+            // remove gaps in the schedule and adjust crossfade times.
+            $effectedInstanceIds = array();
 
+            foreach ($removedItems as $removedItem) {
                 $instance = $removedItem->getCcShowInstances($this->con);
+                $effectedInstanceIds[] = $instance->getDbId();
 
                 //check if instance is linked and if so get the schedule items
                 //for all linked instances so we can delete them too
                 if (!$cancelShow && $instance->getCcShow()->isLinked()) {
                     //returns all linked instances if linked
                     $ccShowInstances = $this->getInstances($instance->getDbId());
+
                     $instanceIds = array();
                     foreach ($ccShowInstances as $ccShowInstance) {
                         $instanceIds[] = $ccShowInstance->getDbId();
                     }
-                    /*
-                     * Find all the schedule items that are in the same position
-                     * as the selected item by the user.
-                     * The position of each track is the same across each linked instance
-                     */
+                    $effectedInstanceIds = array_merge($effectedInstanceIds, $instanceIds);
+                    
+                    // Delete the same track, represented by $removedItem, in
+                    // each linked show instance.
                     $itemsToDelete = CcScheduleQuery::create()
                         ->filterByDbPosition($removedItem->getDbPosition())
                         ->filterByDbInstanceId($instanceIds, Criteria::IN)
-                        ->find();
-                    foreach ($itemsToDelete as $item) {
-                        if (!$removedItems->contains($item)) {
-                            $removedItems->append($item);
-                        }
-                    }
+                        ->filterByDbId($removedItem->getDbId(), Criteria::NOT_EQUAL)
+                        ->delete($this->con);
                 }
+                
 
                 //check to truncate the currently playing item instead of deleting it.
                 if ($removedItem->isCurrentItem($this->epochNow)) {
@@ -1165,29 +1166,11 @@ class Application_Model_Scheduler
                 } else {
                     $removedItem->delete($this->con);
                 }
-
-                // update is_scheduled in cc_files but only if
-                // the file is not scheduled somewhere else
-                $fileId = $removedItem->getDbFileId();
-                // check if the removed item is scheduled somewhere else
-                $futureScheduledFiles = Application_Model_Schedule::getAllFutureScheduledFiles();
-                if (!is_null($fileId) && !in_array($fileId, $futureScheduledFiles)) {
-                     $db_file = CcFilesQuery::create()->findPk($fileId, $this->con);
-                     $db_file->setDbIsScheduled(false)->save($this->con);
-                }
             }
+            Application_Model_StoredFile::updatePastFilesIsScheduled();
 
             if ($adjustSched === true) {
-                //get the show instances of the shows we must adjust times for.
-                foreach ($removedItems as $item) {
-
-                    $instance = $item->getDBInstanceId();
-                    if (!in_array($instance, $showInstances)) {
-                        $showInstances[] = $instance;
-                    }
-                }
-
-                foreach ($showInstances as $instance) {
+                foreach ($effectedInstanceIds as $instance) {
                     $this->removeGaps($instance);
                     $this->calculateCrossfades($instance);
                 }
@@ -1195,7 +1178,7 @@ class Application_Model_Scheduler
 
             //update the status flag in cc_schedule.
             $instances = CcShowInstancesQuery::create()
-                ->filterByPrimaryKeys($showInstances)
+                ->filterByPrimaryKeys($effectedInstanceIds)
                 ->find($this->con);
 
             foreach ($instances as $instance) {
