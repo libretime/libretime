@@ -210,6 +210,13 @@ class Application_Model_StoredFile
                 if ($dbColumn == "track_title" && (is_null($mdValue) || $mdValue == "")) {
                     continue;
                 }
+                
+                // Bpm gets POSTed as a string type. With Propel 1.6 this value
+                // was casted to an integer type before saving it to the db. But
+                // Propel 1.7 does not do this
+                if ($dbColumn == "bpm") {
+                    $mdValue = (int) $mdValue;
+                }
                 # TODO : refactor string evals
                 if (isset($this->_dbMD[$dbColumn])) {
                     $propelColumn = $this->_dbMD[$dbColumn];
