@@ -98,7 +98,6 @@ class ApiController extends Zend_Controller_Action
                 } else {
                     //user clicks play button for track preview
                     header('Content-Disposition: inline; filename="'.$filename.'"');
-                    $this->_redirect($media->getFilePath());
                 }
 
                 $this->smartReadFile($media);
