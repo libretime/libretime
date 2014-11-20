@@ -78,6 +78,8 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
+/* This action is extremely dangerous and a horrible idea without CSRF protection.
+   
     public function clearAction()
     {
         if (!$this->verifyAuth(true, true))
@@ -113,6 +115,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             ->setHttpResponseCode(200)
             ->appendBody("Library has been cleared");
     }
+*/
     
     public function getAction()
     {
