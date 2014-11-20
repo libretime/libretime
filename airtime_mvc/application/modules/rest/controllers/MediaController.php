@@ -77,45 +77,6 @@ class Rest_MediaController extends Zend_Rest_Controller
             $this->fileNotFoundResponse();
         }
     }
-
-/* This action is extremely dangerous and a horrible idea without CSRF protection.
-   
-    public function clearAction()
-    {
-        if (!$this->verifyAuth(true, true))
-        {
-            return;
-        }
-
-        //set file_exists flag to false for every file
-        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
-        $selectCriteria = new Criteria();
-        $selectCriteria->add(CcFilesPeer::FILE_EXISTS, true);
-        $updateCriteria = new Criteria();
-        $updateCriteria->add(CcFilesPeer::FILE_EXISTS, false);
-        BasePeer::doUpdate($selectCriteria, $updateCriteria, $con);
-
-        //delete all files and directories under .../imported
-        $path = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/imported/*" : "/srv/airtime/stor/imported/*";
-        exec("rm -rf $path");
-
-        //update disk_usage value in cc_pref
-        $musicDir = CcMusicDirsQuery::create()
-            ->filterByType('stor')
-            ->filterByExists(true)
-            ->findOne();
-        $storPath = $musicDir->getDirectory();
-        
-        $freeSpace = disk_free_space($storPath);
-        $totalSpace = disk_total_space($storPath);
-        
-        Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
-
-        $this->getResponse()
-            ->setHttpResponseCode(200)
-            ->appendBody("Library has been cleared");
-    }
-*/
     
     public function getAction()
     {
