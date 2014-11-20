@@ -1394,13 +1394,12 @@ class ApiController extends Zend_Controller_Action
             $results = array();
  
             if (empty($showId)) {            
-                $shows = Application_Model_Show::getDistinctShows();
-                foreach($shows as $baseShow) {
-                    $show = new Application_Model_Show($baseShow->getDbId());
+                $shows = CcShowQuery::create()->find();
+                foreach($shows as $show) {
                     $results[] = $show->getShowInfo();
                 }
             } else {
-                $show = new Application_Model_Show($showId);
+                $show = CcShowQuery::create()->findPK($showId);
                 $results[] = $show->getShowInfo();
             }
 

@@ -786,28 +786,6 @@ SQL;
         }
     }
 
-    /**
-     *  returns show specific info (not related to isntance)
-     */
-    public function getShowInfo()
-    {
-        $info = array();
-        if ($this->getId() == null) {
-            return $info;
-        } else {
-            $ccShow = CcShowQuery::create()->findPK($this->_showId);
-            $info['name'] = $ccShow->getDbName();
-            $info['id'] = $ccShow->getDbId();
-            $info['url'] = $ccShow->getDbUrl();
-            $info['genre'] = $ccShow->getDbGenre();
-            $info['description'] = $ccShow->getDbDescription();
-            $info['color'] = $ccShow->getDbColor();
-            $info['background_color'] = $ccShow->getDbBackgroundColor();
-            $info['linked'] = $ccShow->getDbLinked();
-            return $info;
-        }
-    }
-
     /* Only used for shows that are repeating. Note that this will return
      * true even for dates that only have a "modified" show instance (does not
      * check if the "modified_instance" column is set to true). This is intended
@@ -1482,8 +1460,4 @@ SQL;
         return array($start, $end);
     }
 
-    public static function getDistinctShows() {
-        $shows = CcShowQuery::create()->find();
-        return $shows;
-    }
 }
