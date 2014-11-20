@@ -13,6 +13,7 @@ class ApiController extends Zend_Controller_Action
             "show-history-feed", 
             "item-history-feed",
             "shows",
+            "show-tracks",
             "show-schedules"
         );
 
@@ -55,7 +56,6 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-stream-setting-table'   , 'json')
                 ->addActionContext('update-replay-gain-value'      , 'json')
                 ->addActionContext('update-cue-values-by-silan'    , 'json')
-                ->addActionContext('show-preview'                  , 'json')
                 ->initContext();
     }
 
@@ -1342,7 +1342,7 @@ class ApiController extends Zend_Controller_Action
             $params = $request->getParams();
             $instance = $request->getParam("instance_id", null);
 
-            list($startsDT, $endsDT) = $this->getStartEnd($request);
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
             $historyService = new Application_Service_HistoryService();
             $results = $historyService->getPlayedItemData($startsDT, $endsDT, $params, $instance);
@@ -1367,7 +1367,7 @@ class ApiController extends Zend_Controller_Action
             $params = $request->getParams();
             $userId = $request->getParam("user_id", null);
  
-            list($startsDT, $endsDT) = $this->getStartEnd($request);
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
             
             $historyService = new Application_Service_HistoryService();
             $shows = $historyService->getShowList($startsDT, $endsDT, $userId);
@@ -1391,15 +1391,20 @@ class ApiController extends Zend_Controller_Action
             $request = $this->getRequest();
             $params = $request->getParams();
             $showId = $request->getParam("show_id", null);
+            $results = array();
  
             if (empty($showId)) {            
                 $shows = Application_Model_Show::getDistinctShows();
+                foreach($shows as $baseShow) {
+                    $show = new Application_Model_Show($baseShow->getDbId());
+                    $results[] = $show->getShowInfo();
+                }
             } else {
                 $show = new Application_Model_Show($showId);
-                $shows = $show->getShowInfo();
+                $results[] = $show->getShowInfo();
             }
 
-            $this->_helper->json->sendJson($shows);
+            $this->_helper->json->sendJson($results);
         }
         catch (Exception $e) {
             Logging::info($e);
@@ -1419,7 +1424,7 @@ class ApiController extends Zend_Controller_Action
             $params = $request->getParams();
             $showId = $request->getParam("show_id", null);
  
-            list($startsDT, $endsDT) = $this->getStartEnd($request);
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
             
             $shows = Application_Model_Show::getShows($startsDT, $endsDT, FALSE, $showId);
 
@@ -1432,13 +1437,17 @@ class ApiController extends Zend_Controller_Action
 
     }
     
-    public function showPreviewAction()
+    /**
+     * displays track listing for given instance_id
+     *
+     * @return json array
+     */
+    public function showTracksAction()
     {
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $prefTimezone = Application_Model_Preference::GetTimezone();
 
         $instanceId = $this->_getParam('instance_id');
-        $apiKey = $this->_getParam('api_key');
 
         if (!isset($instanceId)) {
             return;
@@ -1467,56 +1476,4 @@ class ApiController extends Zend_Controller_Action
 
     }
     
-    /**
-     * sets start and end vars from given params, or defauls to 
-     * yesterday - today using server timezone
-     */ 
-    private function getStartEnd($request)
-    {
-        $prefTimezone = Application_Model_Preference::GetTimezone();
-        $utcTimezone = new DateTimeZone("UTC");
-        $utcNow = new DateTime("now", $utcTimezone);
-         
-        $start = $request->getParam("start");
-        $end = $request->getParam("end");
-        $timezone = $request->getParam("timezone");
-
-        if (empty($timezone)) {
-            $userTimezone = new DateTimeZone($prefTimezone);
-        } else {
-            $userTimezone = new DateTimeZone($timezone);
-        }
- 
-        if (empty($start) || empty($end)) {
-            $startsDT = clone $utcNow;
-            $startsDT->sub(new DateInterval("P1D"));
-            $endsDT = clone $utcNow;
-        }
-        else {
-             
-            try {
-                $startsDT = new DateTime($start, $userTimezone);
-                $startsDT->setTimezone($utcTimezone);
-    
-                $endsDT = new DateTime($end, $userTimezone);
-                $endsDT->setTimezone($utcTimezone);
-    
-                if ($startsDT > $endsDT) {
-                    throw new Exception("start greater than end");
-                }
-            }
-            catch (Exception $e) {
-                Logging::info($e);
-                Logging::info($e->getMessage());
-    
-                $startsDT = clone $utcNow;
-                $startsDT->sub(new DateInterval("P1D"));
-                $endsDT = clone $utcNow;
-            }
-             
-        }
-         
-        return array($startsDT, $endsDT);
-    }
-
 }

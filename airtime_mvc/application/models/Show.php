@@ -803,13 +803,7 @@ SQL;
             $info['description'] = $ccShow->getDbDescription();
             $info['color'] = $ccShow->getDbColor();
             $info['background_color'] = $ccShow->getDbBackgroundColor();
-            $info['custom_username'] = $ccShow->getDbLiveStreamUser();
-            $info['cb_airtime_auth'] = $ccShow->getDbLiveStreamUsingAirtimeAuth();
-            $info['cb_custom_auth']  = $ccShow->getDbLiveStreamUsingCustomAuth();
-            $info['custom_username'] = $ccShow->getDbLiveStreamUser();
-            $info['custom_password'] = $ccShow->getDbLiveStreamPass();
             $info['linked'] = $ccShow->getDbLinked();
-            $info['is_linkable'] = $ccShow->getDbIsLinkable();
             return $info;
         }
     }
@@ -891,6 +885,7 @@ SQL;
      * @param  unknown_type $excludeInstance
      * @param  boolean      $onlyRecord
      * @param  int          $showId
+     *      limits the results to instances of a given showId only
      * @return array
      */
     public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE, $showId=null)
@@ -1488,11 +1483,7 @@ SQL;
     }
 
     public static function getDistinctShows() {
-        $sql = <<<SQL
-SELECT * FROM cc_show
-SQL;
-        $shows = Application_Common_Database::prepareAndExecute($sql);
+        $shows = CcShowQuery::create()->find();
         return $shows;
-
     }
 }

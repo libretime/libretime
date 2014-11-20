@@ -279,14 +279,14 @@ class Application_Service_HistoryService
 		foreach ($fields as $index=>$field) {
 
 			if ($field["type"] == TEMPLATE_BOOLEAN) {
-				$boolCast[] = $field["name"];
+				$boolCast[] = $field;
 			}
 		}
 
 		foreach ($rows as $index => &$result) {
 
-			foreach ($boolCast as $name) {
-				$result[$name] = (bool) $result[$name];
+			foreach ($boolCast as $field) {
+				$result[$field['label']] = (bool) $result[$field['name']];
 			}
 
 			//need to display the results in the station's timezone.

@@ -443,5 +443,59 @@ class Application_Common_DateHelper
     
         return $res;
     }
+
+    /**
+     * Returns date fields from give start and end teimstamp strings
+     * if no start or end parameter is passed start will be set to 1 
+     * in the past and end to now
+     *
+     * @param  string  startTimestamp Y-m-d H:i:s
+     * @param  string  endTImestamp Y-m-d H:i:s
+     * @param  string  timezone (ex UTC) of the start and end parameters
+     * @return array (start DateTime, end DateTime) in UTC timezone
+     */
+    public static function getStartEnd($startTimestamp, $endTimestamp, $timezone)
+    {
+        $prefTimezone = Application_Model_Preference::GetTimezone();
+        $utcTimezone = new DateTimeZone("UTC");
+        $utcNow = new DateTime("now", $utcTimezone);
+
+        if (empty($timezone)) {
+            $userTimezone = new DateTimeZone($prefTimezone);
+        } else {
+            $userTimezone = new DateTimeZone($timezone);
+        }
+
+        // default to 1 day
+        if (empty($startTimestamp) || empty($endTimestamp)) {
+            $startsDT = clone $utcNow;
+            $startsDT->sub(new DateInterval("P1D"));
+            $endsDT = clone $utcNow;
+        } else {
+             
+            try {
+                $startsDT = new DateTime($startTimestamp, $userTimezone);
+                $startsDT->setTimezone($utcTimezone);
+    
+                $endsDT = new DateTime($endTimestamp, $userTimezone);
+                $endsDT->setTimezone($utcTimezone);
+    
+                if ($startsDT > $endsDT) {
+                    throw new Exception("start greater than end");
+                }
+            }
+            catch (Exception $e) {
+                Logging::info($e);
+                Logging::info($e->getMessage());
+    
+                $startsDT = clone $utcNow;
+                $startsDT->sub(new DateInterval("P1D"));
+                $endsDT = clone $utcNow;
+            }
+             
+        }
+         
+        return array($startsDT, $endsDT);
+    }
 }
 
