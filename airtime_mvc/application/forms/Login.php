@@ -1,5 +1,7 @@
 <?php
 
+include('../library/phing/util/StringHelper.php');
+
 class Application_Form_Login extends Zend_Form
 {
 
@@ -10,9 +12,25 @@ class Application_Form_Login extends Zend_Form
         // Set the method for the display form to POST
         $this->setMethod('post');
 
-        $this->addElement('hash', 'csrf', array(
-           'salt' => 'unique'
-        ));
+        //If the request comes from an origin we consider safe, we disable the CSRF
+        //token checking ONLY for the login page. We do this to allow logins from WHMCS to work.
+        $request = Zend_Controller_Front::getInstance()->getRequest();
+        if ($request) {
+            $refererUrl = $request->getHeader('referer');
+            $originIsSafe = false;
+            foreach (CORSHelper::getAllowedOrigins() as $safeOrigin) {
+                if (StringHelper::startsWith($safeOrigin, $refererUrl)) {
+                    $originIsSafe = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$originIsSafe) {
+            $this->addElement('hash', 'csrf', array(
+               'salt' => 'unique'
+            ));
+        }
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/login.phtml'))
