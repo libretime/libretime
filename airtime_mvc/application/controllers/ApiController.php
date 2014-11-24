@@ -1449,7 +1449,9 @@ class ApiController extends Zend_Controller_Action
         $instanceId = $this->_getParam('instance_id');
 
         if (!isset($instanceId)) {
-            return;
+            $this->_helper->json->sendJson(
+                array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing required instance_id parameter"))
+            );
         }
 
         $showInstance = new Application_Model_ShowInstance($instanceId);
