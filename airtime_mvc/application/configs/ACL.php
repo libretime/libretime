@@ -32,7 +32,9 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('webstream'))
       ->add(new Zend_Acl_Resource('locale'))
       ->add(new Zend_Acl_Resource('upgrade'))
-      ->add(new Zend_Acl_Resource('billing'));
+      ->add(new Zend_Acl_Resource('billing'))
+      ->add(new Zend_Acl_Resource('provisioning'));
+        
 
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
@@ -48,6 +50,7 @@ $ccAcl->allow('G', 'index')
       ->allow('G', 'webstream')
       ->allow('G', 'locale')
       ->allow('G', 'upgrade')
+      ->allow('G', 'provisioning')
       ->allow('H', 'preference', 'is-import-in-progress')
       ->allow('H', 'usersettings')
       ->allow('H', 'plupload')
