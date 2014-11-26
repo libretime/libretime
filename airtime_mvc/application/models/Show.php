@@ -1311,7 +1311,6 @@ SQL;
                 $results['nextShow'][0] = array(
                         "id"                      => $rows[$i]['id'],
                         "instance_id"             => $rows[$i]['instance_id'],
-                        "instance_description"    => $rows[$i]['instance_description'],
                         "name"                    => $rows[$i]['name'],
                         "description"             => $rows[$i]['description'],
                         "url"                     => $rows[$i]['url'],
