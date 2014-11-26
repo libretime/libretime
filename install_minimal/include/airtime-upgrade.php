@@ -13,7 +13,7 @@ if (posix_geteuid() != 0) {
 require_once(__DIR__.'/airtime-constants.php');
 require_once(__DIR__.'/AirtimeIni.php');
 require_once(__DIR__.'/AirtimeInstall.php');
-require_once 'propel/runtime/lib/Propel.php';
+require_once 'vendor/propel/propel1/runtime/lib/Propel.php';
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/db-conf.php");
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
 
