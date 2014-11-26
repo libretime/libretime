@@ -362,33 +362,22 @@ class Application_Service_ShowFormService
     }
 
     /**
-     * 
      * Before we send the form data in for validation, there
      * are a few fields we may need to adjust first
+     * 
      * @param $formData
      */
     public function preEditShowValidationCheck($formData)
     {
-        $validateStartDate = true;
-        $validateStartTime = true;
+        // If the start date or time were disabled, don't validate them
+        $validateStartDate = $formData['start_date_disabled'] === "false";
+        $validateStartTime = $formData['start_time_disabled'] === "false";
 
         //CcShowDays object of the show currently being edited
         $currentShowDay = $this->ccShow->getFirstCcShowDay();
 
         //DateTime object
         $dt = $currentShowDay->getLocalStartDateAndTime();
-
-        if (!array_key_exists('add_show_start_date', $formData)) {
-            //Changing the start date was disabled, since the
-            //array key does not exist. We need to repopulate this entry from the db.
-            $formData['add_show_start_date'] = $dt->format("Y-m-d");
-
-            if (!array_key_exists('add_show_start_time', $formData)) {
-                $formData['add_show_start_time'] = $dt->format("H:i");
-                $validateStartTime = false;
-            }
-            $validateStartDate = false;
-        }
         $formData['add_show_record'] = $currentShowDay->getDbRecord();
 
         //if the show is repeating, set the start date to the next
@@ -412,11 +401,9 @@ class Application_Service_ShowFormService
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())
             ->filterByDbModifiedInstance(false)
-            ->filterByDbEnds(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
-            ->orderByDbStarts()
-            ->limit(1)
+            ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
             ->findOne();
-
+        
         $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
         $ends = new DateTime($ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
         $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
@@ -426,6 +413,7 @@ class Application_Service_ShowFormService
 
         return array($starts, $ends);
     }
+
 
     /**
      * 

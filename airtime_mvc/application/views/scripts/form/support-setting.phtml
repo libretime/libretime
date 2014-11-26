@@ -2,9 +2,10 @@
     <dl class="zend_form">
         <dd id="SupportFeedback-element" style="width:90%;">
             <div class="info-text">
-               <?php echo sprintf(_("Help Airtime improve by letting Sourcefabric know how you are using it. This information"
+               <?php echo sprintf(_("Help %s improve by letting %s know how you are using it. This information"
                 ." will be collected regularly in order to enhance your user experience.%s"
-                ."Click the 'Send support feedback' box and we'll make sure the features you use are constantly improving."), "<br />")?>
+                ."Click the 'Send support feedback' box and we'll make sure the features you use are constantly improving."), 
+                       PRODUCT_NAME, COMPANY_NAME, "<br />")?>
             </div>
             <label class="optional" for="SupportFeedback">
                 <?php echo $this->element->getElement('SupportFeedback') ?>
@@ -20,9 +21,13 @@
         </dd>
         <dd id="publicize-element" style="width:90%;">
             <div class="info-text">
-                <?php echo sprintf(_("Click the box below to promote your station on %sSourcefabric.org%s."), 
-                    "<a id='link_to_whos_using' href='http://www.sourcefabric.org/en/airtime/whosusing/' onclick='window.open(this.href); return false'>",
-                    "</a>")?>
+                <?php 
+                
+                $whosUsingAnchor = "<a id='link_to_whos_using' href='" . WHOS_USING_URL . "' onclick='window.open(this.href); return false'>"
+                                    . COMPANY_SITE
+                                . "</a>";
+                echo sprintf(_("Click the box below to promote your station on %s."), $whosUsingAnchor)
+                ?>
             </div>
             <label class="optional" for="Publicise">
                 <?php echo $this->element->getElement('Publicise') ?>
@@ -183,7 +188,7 @@
                 </ul>
             <?php endif; ?>
         <?php }else{?>
-            <a id="link_to_terms_and_condition" href="http://www.sourcefabric.org/en/about/policy/" onclick="window.open(this.href); return false;"><?php echo _("Sourcefabric Privacy Policy") ?></a>
+            <a id="link_to_terms_and_condition" href="<?php echo PRIVACY_POLICY_URL ?>" onclick="window.open(this.href); return false;"><?php echo _("Sourcefabric Privacy Policy") ?></a>
         <?php }?>
     </div>
 </fieldset>

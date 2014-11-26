@@ -2,19 +2,25 @@
     <h2><?php echo _("About") ?></h2>
 <p>
 <?php 
-echo sprintf(_("%sAirtime%s %s, the open radio software for scheduling and remote station management. %s"),
-    "<a href='http://airtime.sourcefabric.org' target='_blank'>",
-    "</a>",
-     $this->airtime_version,
-    "<br />")
+
+$productSiteAnchor = "<a href='" . PRODUCT_SITE_URL . "' target='_blank'>"
+                        . PRODUCT_NAME
+                    . "</a>";
+echo sprintf(_('%1$s %2$s, the open radio software for scheduling and remote station management.'),
+    $productSiteAnchor,
+    $this->airtime_version)
 ?>
-<br>© 2013 
+<br />
+<br />© 2013 
 <?php 
-echo sprintf(_("%sSourcefabric%s z.ú Airtime is distributed under the %sGNU GPL v.3%s"),
-    "<a href='http://www.sourcefabric.org' target='_blank'>",
-    "</a>",
-    "<a href='http://www.gnu.org/licenses/gpl-3.0-standalone.html' target='_blank'>",
-    "</a>")
+$companySiteAnchor = "<a href='" . COMPANY_SITE_URL . "' target='_blank'>"
+                        . COMPANY_NAME . " " . COMPANY_SUFFIX
+                    . "</a>";
+$licenseAnchor = "<a href='" . LICENSE_URL . "' target='_blank'>"
+                    . LICENSE_VERSION
+                . "</a>";
+echo sprintf(_('%1$s %2$s is distributed under the %3$s'),
+    $companySiteAnchor, PRODUCT_NAME, $licenseAnchor)
 ?>
 </p>
 </div>

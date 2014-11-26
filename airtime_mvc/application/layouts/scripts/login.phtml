@@ -1,11 +1,11 @@
 <?php echo $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<?php echo $this->headTitle() ?>
-	<?php echo $this->headLink() ?>
-	<?php echo $this->headScript() ?>
-	<?php echo isset($this->google_analytics)?$this->google_analytics:"" ?>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <?php echo $this->headTitle() ?>
+    <?php echo $this->headLink() ?>
+    <?php echo $this->headScript() ?>
+    <?php echo isset($this->google_analytics)?$this->google_analytics:"" ?>
 </head>
 <body>
 
@@ -13,9 +13,20 @@
         <?php echo $this->layout()->content ?>
     </div>
     <div class="footer">
-      <?php echo sprintf(_("Airtime copyright &copy; Sourcefabric z.ú. All rights reserved.%s"
-      ."Maintained and distributed under the GNU GPL v.3 by %sSourcefabric z.ú.%s"),
-      "<br>", "<a href='http://www.sourcefabric.org'>" ,"</a>");?> 
+        <?php 
+            $company = COMPANY_NAME . " " . COMPANY_SUFFIX;
+            $licenseSiteAnchor = "<a href='" . LICENSE_URL . "'>" 
+                                  . LICENSE_VERSION 
+                              . "</a>";
+            $companySiteAnchor = "<a href='" . COMPANY_SITE_URL . "'>"
+                                  . $company
+                                . "</a>";
+            echo sprintf(_('%1$s copyright &copy; %2$s All rights reserved.%3$s'
+                . 'Maintained and distributed under the %4$s by %5$s'), 
+            PRODUCT_NAME, $company, "<br>",
+            $licenseSiteAnchor,
+            $companySiteAnchor);
+        ?> 
     </div>
  
 </body>

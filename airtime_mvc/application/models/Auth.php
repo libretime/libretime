@@ -33,7 +33,8 @@ class Application_Model_Auth
         $message = sprintf(_("Hi %s, \n\nClick this link to reset your password: "), $user->getDbLogin());
         $message .= "{$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
 
-        $success = Application_Model_Email::send(_('Airtime Password Reset'), $message, $user->getDbEmail());
+        $str = sprintf(_('%s Password Reset'), PRODUCT_NAME);
+        $success = Application_Model_Email::send($str, $message, $user->getDbEmail());
 
         return $success;
     }
