@@ -131,7 +131,9 @@ chown -R www-data:www-data /var/log/airtime
 
 apt-get -y --force-yes install postgresql php5-pgsql php5-mysql
 
-# TODO copy files over to /usr/share/airtime
+# Copy files to /usr/share/airtime
+export airtime_service_start='t'
+airtime/airtime-copy-files.sh $@
 
 echo -e "\n-----------------------------------------------------"
 echo    "                * Basic Setup DONE! *                "
