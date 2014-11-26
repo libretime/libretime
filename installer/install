@@ -92,6 +92,7 @@ fi
 
 # Enable modules
 a2enmod rewrite php5
+service apache2 restart
 
 echo -e "\n-----------------------------------------------------"
 echo    "                  * Installing PHP *                 "
@@ -130,9 +131,12 @@ chown -R www-data:www-data /var/log/airtime
 
 apt-get -y --force-yes install postgresql php5-pgsql php5-mysql
 
+# TODO copy files over to /usr/share/airtime
+
 echo -e "\n-----------------------------------------------------"
 echo    "                * Basic Setup DONE! *                "
 echo    "                                                     "
 echo    "  To get started with Airtime, visit localhost:5000  "
 echo    "            in your web browser of choice            "
 echo    "-----------------------------------------------------"
+
