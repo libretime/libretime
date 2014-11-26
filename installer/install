@@ -7,12 +7,6 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-#Current dir
-# Absolute path to this script, e.g. /home/user/bin/foo.sh
-SCRIPT=`readlink -f $0`
-# Absolute path this script is in, thus /home/user/bin
-SCRIPTPATH=`dirname ${SCRIPT}`
-
 showhelp () {
     echo "Usage: airtime-install [options]
 --help|-h                         Displays usage information."
@@ -31,7 +25,9 @@ do
     shift
 done
 
-echo -e "                 \n****************************************************************"
+dist=`lsb_release -is`
+
+echo -e "\n               ****************************************************************"
 echo    "                 *    _____  .________________________.___   _____  ___________ *"
 echo    "                 *   /  _  \ |   \______   \__    ___/|   | /     \ \_   _____/ *"
 echo    "                 *  /  /_\  \|   ||       _/ |    |   |   |/  \ /  \ |    __)_  *"
@@ -72,7 +68,7 @@ fi
 if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
     echo "Creating Apache config for Airtime..."
 
-    cp ${SCRIPTPATH}/../apache/airtime-vhost /etc/apache2/sites-available/${airtimeconfigfile}
+    cp apache/airtime-vhost /etc/apache2/sites-available/${airtimeconfigfile}
     a2dissite 000-default
     a2ensite airtime
 else
@@ -89,7 +85,7 @@ fi
 # PHP Config File for Apache
 if [ ! -f /etc/php5/apache2/airtime.ini ]; then
     echo "Creating Airtime PHP config for Apache..."
-    cp ${SCRIPTPATH}/../php5/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
+    cp php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
 else
     echo "Airtime PHP config for Apache already exists, skipping"
 fi
