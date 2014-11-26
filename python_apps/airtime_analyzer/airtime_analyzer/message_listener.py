@@ -27,7 +27,7 @@ QUEUE = "airtime-uploads"
     Airtime's music library directory. Lastly, the extracted metadata is 
     reported back to the Airtime web application.
     
-    There's a couple of Very Important technical details and contraints that you
+    There's a couple of Very Important technical details and constraints that you
     need to know if you're going to work on this code:
     
     1) airtime_analyzer is designed so it doesn't have to run on the same 

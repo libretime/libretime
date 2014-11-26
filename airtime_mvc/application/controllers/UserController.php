@@ -69,12 +69,6 @@ class UserController extends Zend_Controller_Action
                     $user->setJabber($formData['jabber']);
                     $user->save();
 
-                    // Language and timezone settings are saved on a per-user basis
-                    // By default, the default language, and timezone setting on
-                    // preferences page is what gets assigned.
-                    Application_Model_Preference::SetUserLocale();
-                    Application_Model_Preference::SetUserTimezone();
-
                     $form->reset();
                     $this->view->form = $form;
 
@@ -83,7 +77,7 @@ class UserController extends Zend_Controller_Action
                     } else {
                         $this->view->successMessage = "<div class='success'>"._("User updated successfully!")."</div>";
                     }
-                    
+
                     $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('user/add-user.phtml')));
                 } else {
                     $this->view->form = $form;

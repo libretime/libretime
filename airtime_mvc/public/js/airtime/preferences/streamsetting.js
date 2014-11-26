@@ -250,12 +250,14 @@ function setupEventListeners() {
     showErrorSections();
     checkLiquidsoapStatus();
     
+    var userManualAnchorOpen = "<a target='_blank' href='" + USER_MANUAL_URL + "'>";
+    
     // qtip for help text
     $(".override_help_icon").qtip({
         content: {
-            text: $.i18n._("If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151.")+" "+
+            text: sprintf($.i18n._("If %s is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."), PRODUCT_NAME)+" "+
                 sprintf($.i18n._(
-                    "For more details, please read the %sAirtime Manual%s"), "<a target='_blank' href='http://www.sourcefabric.org/en/airtime/manuals/'>", "</a>")
+                    "For more details, please read the %s%s Manual%s"), userManualAnchorOpen, PRODUCT_NAME, "</a>")
         },
         hide: {
             delay: 500,
@@ -465,7 +467,7 @@ $(document).ready(function() {
     getAdminPasswordStatus();
     
     $('#stream_save').live('click', function(){
-        var confirm_pypo_restart_text = $.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted.");
+        var confirm_pypo_restart_text = sprintf($.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If %s is recording, and if the change causes a playout engine restart, the recording will be interrupted."), PRODUCT_NAME);
         if (confirm(confirm_pypo_restart_text)) {
             var data = $('#stream_form').serialize();
             var url = baseUrl+'Preference/stream-setting';

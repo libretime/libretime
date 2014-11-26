@@ -362,7 +362,8 @@ SQL;
     {
         $exists = false;
         try {
-            $exists = file_exists($this->getFilePath());
+            $filePath = $this->getFilePath();
+            $exists = (file_exists($this->getFilePath()) && !is_dir($filePath));
         } catch (Exception $e) {
             return false;
         }

@@ -38,7 +38,7 @@ class PlaylistController extends Zend_Controller_Action
         $obj = null;
         $objInfo = Application_Model_Library::getObjInfo($p_type);
 
-        $obj_sess = new Zend_Session_Namespace( UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+        $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
         if (isset($obj_sess->id)) {
             $obj = new $objInfo['className']($obj_sess->id);
 
@@ -422,29 +422,29 @@ class PlaylistController extends Zend_Controller_Action
     
     public function setCrossfadeAction()
     {
-    	$id1 = $this->_getParam('id1', null);
-    	$id2 = $this->_getParam('id2', null);
-    	$type = $this->_getParam('type');
-    	$fadeIn = $this->_getParam('fadeIn', 0);
-    	$fadeOut = $this->_getParam('fadeOut', 0);
-    	$offset = $this->_getParam('offset', 0);
+        $id1 = $this->_getParam('id1', null);
+        $id2 = $this->_getParam('id2', null);
+        $type = $this->_getParam('type');
+        $fadeIn = $this->_getParam('fadeIn', 0);
+        $fadeOut = $this->_getParam('fadeOut', 0);
+        $offset = $this->_getParam('offset', 0);
     
-    	try {
-    		$obj = $this->getPlaylist($type);
-    		$response = $obj->createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset);
+        try {
+            $obj = $this->getPlaylist($type);
+            $response = $obj->createCrossfade($id1, $fadeOut, $id2, $fadeIn, $offset);
     
-    		if (!isset($response["error"])) {
-    			$this->createUpdateResponse($obj);
-    		} else {
-    			$this->view->error = $response["error"];
-    		}
-    	} catch (PlaylistOutDatedException $e) {
-    		$this->playlistOutdated($e);
-    	} catch (PlaylistNotFoundException $e) {
-    		$this->playlistNotFound($type);
-    	} catch (Exception $e) {
-    		$this->playlistUnknownError($e);
-    	}
+            if (!isset($response["error"])) {
+                $this->createUpdateResponse($obj);
+            } else {
+                $this->view->error = $response["error"];
+            }
+        } catch (PlaylistOutDatedException $e) {
+            $this->playlistOutdated($e);
+        } catch (PlaylistNotFoundException $e) {
+            $this->playlistNotFound($type);
+        } catch (Exception $e) {
+            $this->playlistUnknownError($e);
+        }
     }
 
     public function getPlaylistFadesAction()

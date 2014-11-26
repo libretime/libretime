@@ -119,7 +119,7 @@ class Application_Form_SupportSettings extends Zend_Form
 
             // checkbox for publicise
             $checkboxPublicise = new Zend_Form_Element_Checkbox("Publicise");
-            $checkboxPublicise->setLabel(_('Promote my station on Sourcefabric.org'))
+            $checkboxPublicise->setLabel(sprintf(_('Promote my station on %s'), COMPANY_SITE))
                               ->setRequired(false)
                               ->setDecorators(array('ViewHelper'))
                               ->setValue(Application_Model_Preference::GetPublicise());
@@ -142,11 +142,14 @@ class Application_Form_SupportSettings extends Zend_Form
                 )
             ));
 
+            $privacyPolicyAnchorOpen = "<a id='link_to_privacy' href='" . PRIVACY_POLICY_URL 
+                . "' onclick='window.open(this.href); return false;'>";
             // checkbox for privacy policy
             $checkboxPrivacy = new Zend_Form_Element_Checkbox("Privacy");
             $checkboxPrivacy->setLabel(
-                sprintf(_("By checking this box, I agree to Sourcefabric's %sprivacy policy%s."),
-                    "<a id='link_to_privacy' href='http://www.sourcefabric.org/en/about/policy/' onclick='window.open(this.href); return false;'>",
+                sprintf(_('By checking this box, I agree to %s\'s %sprivacy policy%s.'),
+                    COMPANY_NAME,
+                    $privacyPolicyAnchorOpen,
                     "</a>"))
                 ->setDecorators(array('ViewHelper'));
             $this->addElement($checkboxPrivacy);

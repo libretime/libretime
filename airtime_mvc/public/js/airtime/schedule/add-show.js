@@ -1,6 +1,6 @@
 /**
 *
-*	Schedule Dialog creation methods.
+*    Schedule Dialog creation methods.
 *
 */
 
@@ -53,14 +53,14 @@ function removeAddShowButton(){
 //$el is DOM element #add-show-form
 //form is the new form contents to append to $el
 function redrawAddShowForm($el, form) {
-	
-	//need to clean up the color picker.
+    
+    //need to clean up the color picker.
     $el.find("#schedule-show-style input").each(function(i, el){
-    	var $input = $(this), 
-    		colId = $input.data("colorpickerId");
-    	
-    	$("#"+colId).remove();
-    	$input.removeData();
+        var $input = $(this), 
+            colId = $input.data("colorpickerId");
+        
+        $("#"+colId).remove();
+        $input.removeData();
     });
     
     $el.empty().append(form);
@@ -74,12 +74,12 @@ function closeAddShowForm(event) {
 
     var $el = $("#add-show-form");
     
-	$el.hide();
+    $el.hide();
     windowResize();
 
     $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json) {
-    	
-    	redrawAddShowForm($el, json.form);
+        
+        redrawAddShowForm($el, json.form);
     });
     
     makeAddShowButton();
@@ -87,29 +87,29 @@ function closeAddShowForm(event) {
 
 //dateText mm-dd-yy
 function startDpSelect(dateText, inst) {
-	var time, date;
+    var time, date;
 
-	time = dateText.split("-");
-	date = new Date(time[0], time[1] - 1, time[2]);
+    time = dateText.split("-");
+    date = new Date(time[0], time[1] - 1, time[2]);
 
     if (inst.input)
         inst.input.trigger('input');
 }
 
 function endDpSelect(dateText, inst) {
-	var time, date;
+    var time, date;
     
-	time = dateText.split("-");
-	date = new Date(time[0], time[1] - 1, time[2]);
+    time = dateText.split("-");
+    date = new Date(time[0], time[1] - 1, time[2]);
 
-	if (inst.input)
+    if (inst.input)
         inst.input.trigger('input');
 }
 
 function createDateInput(el, onSelect) {
-	var date;
+    var date;
 
-	el.datepicker({
+    el.datepicker({
         minDate: adjustDateToServerDate(new Date(), timezoneOffset),
         onSelect: onSelect,
         dateFormat: 'yy-mm-dd',
@@ -119,42 +119,42 @@ function createDateInput(el, onSelect) {
         closeText: $.i18n._('Close'),
         //showButtonPanel: true,
         firstDay: calendarPref.weekStart
-		});
+        });
 }
 
 function autoSelect(event, ui) {
 
     $("#add_show_hosts-"+ui.item.index).attr("checked", "checked");
-	event.preventDefault();
+    event.preventDefault();
 }
 
 function findHosts(request, callback) {
-	var search, url;
+    var search, url;
 
-	url = baseUrl+"User/get-hosts";
-	search = request.term;
+    url = baseUrl+"User/get-hosts";
+    search = request.term;
 
-	var noResult = new Array();
+    var noResult = new Array();
     noResult[0] = new Array();
     noResult[0]['value'] = $("#add_show_hosts_autocomplete").val();
     noResult[0]['label'] = $.i18n._("No result found");
     noResult[0]['index'] = null;
     
-	$.post(url,
-		{format: "json", term: search},
+    $.post(url,
+        {format: "json", term: search},
 
-		function(json) {
-		    if(json.hosts.length<1){
-	            callback(noResult);
-	        }else{
-	            callback(json.hosts);
-	        }
-		});
+        function(json) {
+            if(json.hosts.length<1){
+                callback(noResult);
+            }else{
+                callback(json.hosts);
+            }
+        });
 
 }
 
 function beginEditShow(data){
-	
+    
     if (data.show_error == true){
         alertShowErrorAndReload();
         return false;
@@ -201,11 +201,11 @@ function stringToColor(s)
 }
 
 function getContrastYIQ(hexcolor){
-	var r = parseInt(hexcolor.substr(0,2),16);
-	var g = parseInt(hexcolor.substr(2,2),16);
-	var b = parseInt(hexcolor.substr(4,2),16);
-	var yiq = ((r*299)+(g*587)+(b*114))/1000;
-	return (yiq >= 128) ? '000000' : 'ffffff';
+    var r = parseInt(hexcolor.substr(0,2),16);
+    var g = parseInt(hexcolor.substr(2,2),16);
+    var b = parseInt(hexcolor.substr(4,2),16);
+    var yiq = ((r*299)+(g*587)+(b*114))/1000;
+    return (yiq >= 128) ? '000000' : 'ffffff';
 }
 
 
@@ -213,7 +213,7 @@ function setAddShowEvents(form) {
 
     //var form = $("#add-show-form");
 
-	form.find("h3").click(function(){
+    form.find("h3").click(function(){
         $(this).next().toggle();
     });
 
@@ -308,16 +308,16 @@ function setAddShowEvents(form) {
     form.find("#add_show_rebroadcast").click(function(){
         $(this).blur();
         if(form.find("#add_show_record").attr('checked')){
-	        if($(this).attr('checked') && !form.find("#add_show_repeats").attr('checked')) {
-	            form.find("#add_show_rebroadcast_absolute").show();
-	        }
-	        else if($(this).attr('checked') && form.find("#add_show_repeats").attr('checked')) {
-	            form.find("#add_show_rebroadcast_relative").show();
-	        }
-	        else {
-	            form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
-	        }
-    	}
+            if($(this).attr('checked') && !form.find("#add_show_repeats").attr('checked')) {
+                form.find("#add_show_rebroadcast_absolute").show();
+            }
+            else if($(this).attr('checked') && form.find("#add_show_repeats").attr('checked')) {
+                form.find("#add_show_rebroadcast_relative").show();
+            }
+            else {
+                form.find("#schedule-record-rebroadcast > fieldset:not(:first-child)").hide();
+            }
+        }
     });
 
     // in case user is creating a new show, there will be
@@ -492,9 +492,9 @@ function setAddShowEvents(form) {
     endDateVisibility();
     form.find("#add_show_no_end").click(endDateVisibility);
 
-	createDateInput(form.find("#add_show_start_date"), startDpSelect);
-	createDateInput(form.find("#add_show_end_date_no_repeat"), endDpSelect);
-	createDateInput(form.find("#add_show_end_date"), endDpSelect);
+    createDateInput(form.find("#add_show_start_date"), startDpSelect);
+    createDateInput(form.find("#add_show_end_date_no_repeat"), endDpSelect);
+    createDateInput(form.find("#add_show_end_date"), endDpSelect);
 
     $("#add_show_start_time").timepicker({
         amPmText: ['', ''],
@@ -519,7 +519,7 @@ function setAddShowEvents(form) {
         closeText: 'Close',
         showButtonPanel: true,
         firstDay: calendarPref.weekStart
-	});
+    });
     form.find('input[name^="add_show_rebroadcast_time"]').timepicker({
         amPmText: ['', ''],
         defaultTime: '',
@@ -569,36 +569,36 @@ function setAddShowEvents(form) {
         list.next().show();
     });
 
-	form.find("#add_show_hosts_autocomplete").autocomplete({
-		source: findHosts,
-		select: autoSelect,
+    form.find("#add_show_hosts_autocomplete").autocomplete({
+        source: findHosts,
+        select: autoSelect,
         delay: 200
-	});
-	
-	form.find("#add_show_hosts_autocomplete").keypress(function(e){
+    });
+    
+    form.find("#add_show_hosts_autocomplete").keypress(function(e){
         if( e.which == 13 ){
             return false;
         }
     })
 
-	form.find("#schedule-show-style input").ColorPicker({
+    form.find("#schedule-show-style input").ColorPicker({
         onChange: function (hsb, hex, rgb, el) {
-		    $(el).val(hex);
-	    },
-		onSubmit: function(hsb, hex, rgb, el) {
-			$(el).val(hex);
-			$(el).ColorPickerHide();
-		},
-		onBeforeShow: function () {
-			$(this).ColorPickerSetColor(this.value);
-		}
-	});
+            $(el).val(hex);
+        },
+        onSubmit: function(hsb, hex, rgb, el) {
+            $(el).val(hex);
+            $(el).ColorPickerHide();
+        },
+        onBeforeShow: function () {
+            $(this).ColorPickerSetColor(this.value);
+        }
+    });
 
     form.find("#add-show-close").click(closeAddShowForm);
 
-	form.find(".add-show-submit").click(function(event) {
-		event.preventDefault();
-		
+    form.find(".add-show-submit").click(function(event) {
+        event.preventDefault();
+        
         var addShowButton = $(this);
         
         $('#schedule-add-show').block({ 
@@ -612,9 +612,25 @@ function setAddShowEvents(form) {
         if (form.find("#add_show_record").attr("disabled", true)) {
             form.find("#add_show_record").attr("disabled", false);
         }
+        
+        var startDateDisabled = false,
+            startTimeDisabled = false;
+        
+        // Similarly, we need to re-enable start date and time if they're disabled
+        if (form.find("#add_show_start_date").prop("disabled") === true) {
+            form.find("#add_show_start_date").attr("disabled", false);
+            startDateDisabled = true;
+        }
+        if (form.find("#add_show_start_time").prop("disabled") === true) {
+            form.find("#add_show_start_time").attr("disabled", false);
+            startTimeDisabled = true;
+        }
 
-		var data = $("form").serializeArray();
-
+        var data = $("form").serializeArray();
+        // We need to notify the application if date and time were disabled
+        data.push({name: 'start_date_disabled', value: startDateDisabled});
+        data.push({name: 'start_time_disabled', value: startTimeDisabled});
+        
         var hosts = $('#add_show_hosts-element input').map(function() {
             if($(this).attr("checked")) {
                 return $(this).val();
@@ -638,21 +654,21 @@ function setAddShowEvents(form) {
             var $addShowForm = $("#add-show-form");
             
             if (json.form) {
-            	
-            	redrawAddShowForm($addShowForm, json.form);
+                
+                redrawAddShowForm($addShowForm, json.form);
 
                 $("#add_show_end_date").val(end_date);
                 $("#add_show_start_date").val(start_date);
                 showErrorSections();
             }
             else if (json.edit) {
-            	
+                
                 $("#schedule_calendar").removeAttr("style")
-                	.fullCalendar('render');
+                    .fullCalendar('render');
 
                 $addShowForm.hide();
                 $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
-                	redrawAddShowForm($addShowForm, json.form);
+                    redrawAddShowForm($addShowForm, json.form);
                 });
                 makeAddShowButton();
             }
@@ -662,60 +678,60 @@ function setAddShowEvents(form) {
                 scheduleRefetchEvents(json);
             }
         });
-	});
+    });
 
     var regDate = new RegExp(/^[0-9]{4}-[0-1][0-9]-[0-3][0-9]$/);
     var regTime = new RegExp(/^[0-2][0-9]:[0-5][0-9]$/);
     
-	// when start date/time changes, set end date/time to start date/time+1 hr
-	$('#add_show_start_date, #add_show_start_time').bind('input', 'change', function(){
-	    var startDateString = $('#add_show_start_date').val();
-	    var startTimeString = $('#add_show_start_time').val();
-	    
-	    if(regDate.test(startDateString) && regTime.test(startTimeString)){
-    		var startDate = startDateString.split('-');
-    		var startTime = startTimeString.split(':');
+    // when start date/time changes, set end date/time to start date/time+1 hr
+    $('#add_show_start_date, #add_show_start_time').bind('input', 'change', function(){
+        var startDateString = $('#add_show_start_date').val();
+        var startTimeString = $('#add_show_start_time').val();
+        
+        if(regDate.test(startDateString) && regTime.test(startTimeString)){
+            var startDate = startDateString.split('-');
+            var startTime = startTimeString.split(':');
             var startDateTime = new Date(startDate[0], parseInt(startDate[1], 10)-1, startDate[2], startTime[0], startTime[1], 0, 0);
     
             var endDateString = $('#add_show_end_date_no_repeat').val();
             var endTimeString = $('#add_show_end_time').val()
-    		var endDate = endDateString.split('-');
-    		var endTime = endTimeString.split(':');
+            var endDate = endDateString.split('-');
+            var endTime = endTimeString.split(':');
             var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
     
-    		if(startDateTime.getTime() >= endDateTime.getTime()){
-    		    var duration = $('#add_show_duration').val();
-    	        // parse duration
-    		    var time = 0;
-    		    var info = duration.split(' ');
-    		    var h = parseInt(info[0], 10);
-    		    time += h * 60 * 60* 1000;
-    		    if(info.length >1 && $.trim(info[1]) !== ''){
-    		        var m = parseInt(info[1], 10);
-    		        time += m * 60 * 1000;
-    		    }
-    			endDateTime = new Date(startDateTime.getTime() + time);
-    		}
+            if(startDateTime.getTime() >= endDateTime.getTime()){
+                var duration = $('#add_show_duration').val();
+                // parse duration
+                var time = 0;
+                var info = duration.split(' ');
+                var h = parseInt(info[0], 10);
+                time += h * 60 * 60* 1000;
+                if(info.length >1 && $.trim(info[1]) !== ''){
+                    var m = parseInt(info[1], 10);
+                    time += m * 60 * 1000;
+                }
+                endDateTime = new Date(startDateTime.getTime() + time);
+            }
     
-    		var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
-    		var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
+            var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
+            var endTimeFormat = pad(endDateTime.getHours(),2) + ':' + pad(endDateTime.getMinutes(),2);
     
-    		$('#add_show_end_date_no_repeat').val(endDateFormat);
-    		$('#add_show_end_time').val(endTimeFormat);
+            $('#add_show_end_date_no_repeat').val(endDateFormat);
+            $('#add_show_end_time').val(endTimeFormat);
     
-    		// calculate duration
-    		var startDateTimeString = startDateString + " " + startTimeString;
-    		var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
-    		var timezone = $("#add_show_timezone").val();
-    		calculateDuration(startDateTimeString, endDateTimeString, timezone);
-	    }
-	});
+            // calculate duration
+            var startDateTimeString = startDateString + " " + startTimeString;
+            var endDateTimeString = $('#add_show_end_date_no_repeat').val() + " " + $('#add_show_end_time').val();
+            var timezone = $("#add_show_timezone").val();
+            calculateDuration(startDateTimeString, endDateTimeString, timezone);
+        }
+    });
 
-	// when end date/time changes, check if the changed date is in past of start date/time
-	$('#add_show_end_date_no_repeat, #add_show_end_time').bind('input', 'change', function(){
-	    var endDateString = $('#add_show_end_date_no_repeat').val();
+    // when end date/time changes, check if the changed date is in past of start date/time
+    $('#add_show_end_date_no_repeat, #add_show_end_time').bind('input', 'change', function(){
+        var endDateString = $('#add_show_end_date_no_repeat').val();
         var endTimeString = $('#add_show_end_time').val()
-	    
+        
         if(regDate.test(endDateString) && regTime.test(endTimeString)){
             var startDateString = $('#add_show_start_date').val();
             var startTimeString = $('#add_show_start_time').val();
@@ -727,21 +743,21 @@ function setAddShowEvents(form) {
             var endTime = endTimeString.split(':');
             var endDateTime = new Date(endDate[0], parseInt(endDate[1], 10)-1, endDate[2], endTime[0], endTime[1], 0, 0);
     
-    		if(startDateTime.getTime() > endDateTime.getTime()){
-    			$('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
-    			$('#add_show_end_time').css('background-color', '#F49C9C');
-    		}else{
-    			$('#add_show_end_date_no_repeat').css('background-color', '');
-    			$('#add_show_end_time').css('background-color', '');
-    		}
+            if(startDateTime.getTime() > endDateTime.getTime()){
+                $('#add_show_end_date_no_repeat').css('background-color', '#F49C9C');
+                $('#add_show_end_time').css('background-color', '#F49C9C');
+            }else{
+                $('#add_show_end_date_no_repeat').css('background-color', '');
+                $('#add_show_end_time').css('background-color', '');
+            }
     
-    		// calculate duration
-    		var startDateTimeString = startDateString + " " + startTimeString;
+            // calculate duration
+            var startDateTimeString = startDateString + " " + startTimeString;
             var endDateTimeString = endDateString + " " + endTimeString;
             var timezone = $("#add_show_timezone").val();
             calculateDuration(startDateTimeString, endDateTimeString, timezone);
         }
-	});
+    });
 
     if($('#cb_custom_auth').attr('checked')){
         $('#custom_auth_div').show()
@@ -757,18 +773,18 @@ function setAddShowEvents(form) {
         }
     })
 
-	function calculateDuration(startDateTime, endDateTime, timezone){
-		var loadingIcon = $('#icon-loader-small');
-		
-		loadingIcon.show();
-		$.post(
-			baseUrl+"Schedule/calculate-duration", 
-			{startTime: startDateTime, endTime: endDateTime, timezone: timezone}, 
-			function(data) {
-			    $('#add_show_duration').val(JSON.parse(data));
-			    loadingIcon.hide();
-		});
-	}
+    function calculateDuration(startDateTime, endDateTime, timezone){
+        var loadingIcon = $('#icon-loader-small');
+        
+        loadingIcon.show();
+        $.post(
+            baseUrl+"Schedule/calculate-duration", 
+            {startTime: startDateTime, endTime: endDateTime, timezone: timezone}, 
+            function(data) {
+                $('#add_show_duration').val(JSON.parse(data));
+                loadingIcon.hide();
+        });
+    }
     
     var bgColorEle = $("#add_show_background_color");
     var textColorEle = $("#add_show_color");

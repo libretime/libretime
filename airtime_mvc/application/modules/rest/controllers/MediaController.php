@@ -1,8 +1,13 @@
 <?php
 
-
 class Rest_MediaController extends Zend_Rest_Controller
 {
+    const MUSIC_DIRS_STOR_PK = 1;
+    
+    const IMPORT_STATUS_SUCCESS = 0;
+    const IMPORT_STATUS_PENDING = 1;
+    const IMPORT_STATUS_FAILED = 2;
+    
     //fields that are not modifiable via our RESTful API
     private static $blackList = array(
         'id',
@@ -71,42 +76,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         } else {
             $this->fileNotFoundResponse();
         }
-    }
-
-    public function clearAction()
-    {
-        if (!$this->verifyAuth(true, true))
-        {
-            return;
-        }
-
-        //set file_exists flag to false for every file
-        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
-        $selectCriteria = new Criteria();
-        $selectCriteria->add(CcFilesPeer::FILE_EXISTS, true);
-        $updateCriteria = new Criteria();
-        $updateCriteria->add(CcFilesPeer::FILE_EXISTS, false);
-        BasePeer::doUpdate($selectCriteria, $updateCriteria, $con);
-
-        //delete all files and directories under .../imported
-        $path = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/imported/*" : "/srv/airtime/stor/imported/*";
-        exec("rm -rf $path");
-
-        //update disk_usage value in cc_pref
-        $musicDir = CcMusicDirsQuery::create()
-            ->filterByType('stor')
-            ->filterByExists(true)
-            ->findOne();
-        $storPath = $musicDir->getDirectory();
-        
-        $freeSpace = disk_free_space($storPath);
-        $totalSpace = disk_total_space($storPath);
-        
-        Application_Model_Preference::setDiskUsage($totalSpace - $freeSpace);
-
-        $this->getResponse()
-            ->setHttpResponseCode(200)
-            ->appendBody("Library has been cleared");
     }
     
     public function getAction()
@@ -210,6 +179,8 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
         
         $file = CcFilesQuery::create()->findPk($id);
+        // Since we check for this value when deleting files, set it first
+        $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
 
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
@@ -246,7 +217,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else {
-            $file->setDbImportStatus(2)->save();
+            $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
             $this->fileNotFoundResponse();
         }
     }
@@ -257,7 +228,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         {
             return;
         }
-            
+             
         $id = $this->getId();
         if (!$id) {
             return;
