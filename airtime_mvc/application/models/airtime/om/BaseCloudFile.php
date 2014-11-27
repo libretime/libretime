@@ -36,6 +36,12 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
     protected $id;
 
     /**
+     * The value for the storage_backend field.
+     * @var        string
+     */
+    protected $storage_backend;
+
+    /**
      * The value for the resource_id field.
      * @var        string
      */
@@ -84,6 +90,17 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [storage_backend] column value.
+     *
+     * @return string
+     */
+    public function getStorageBackend()
+    {
+
+        return $this->storage_backend;
+    }
+
+    /**
      * Get the [resource_id] column value.
      *
      * @return string
@@ -125,6 +142,27 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
 
         return $this;
     } // setDbId()
+
+    /**
+     * Set the value of [storage_backend] column.
+     *
+     * @param  string $v new value
+     * @return CloudFile The current object (for fluent API support)
+     */
+    public function setStorageBackend($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->storage_backend !== $v) {
+            $this->storage_backend = $v;
+            $this->modifiedColumns[] = CloudFilePeer::STORAGE_BACKEND;
+        }
+
+
+        return $this;
+    } // setStorageBackend()
 
     /**
      * Set the value of [resource_id] column.
@@ -205,8 +243,9 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->resource_id = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->cc_file_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->storage_backend = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->resource_id = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->cc_file_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -216,7 +255,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 3; // 3 = CloudFilePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = CloudFilePeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CloudFile object", $e);
@@ -457,6 +496,9 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
         if ($this->isColumnModified(CloudFilePeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '"id"';
         }
+        if ($this->isColumnModified(CloudFilePeer::STORAGE_BACKEND)) {
+            $modifiedColumns[':p' . $index++]  = '"storage_backend"';
+        }
         if ($this->isColumnModified(CloudFilePeer::RESOURCE_ID)) {
             $modifiedColumns[':p' . $index++]  = '"resource_id"';
         }
@@ -476,6 +518,9 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '"id"':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '"storage_backend"':
+                        $stmt->bindValue($identifier, $this->storage_backend, PDO::PARAM_STR);
                         break;
                     case '"resource_id"':
                         $stmt->bindValue($identifier, $this->resource_id, PDO::PARAM_STR);
@@ -626,9 +671,12 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
                 return $this->getDbId();
                 break;
             case 1:
-                return $this->getResourceId();
+                return $this->getStorageBackend();
                 break;
             case 2:
+                return $this->getResourceId();
+                break;
+            case 3:
                 return $this->getCcFileId();
                 break;
             default:
@@ -661,8 +709,9 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
         $keys = CloudFilePeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getDbId(),
-            $keys[1] => $this->getResourceId(),
-            $keys[2] => $this->getCcFileId(),
+            $keys[1] => $this->getStorageBackend(),
+            $keys[2] => $this->getResourceId(),
+            $keys[3] => $this->getCcFileId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -711,9 +760,12 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
                 $this->setDbId($value);
                 break;
             case 1:
-                $this->setResourceId($value);
+                $this->setStorageBackend($value);
                 break;
             case 2:
+                $this->setResourceId($value);
+                break;
+            case 3:
                 $this->setCcFileId($value);
                 break;
         } // switch()
@@ -741,8 +793,9 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
         $keys = CloudFilePeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setResourceId($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setCcFileId($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setStorageBackend($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setResourceId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setCcFileId($arr[$keys[3]]);
     }
 
     /**
@@ -755,6 +808,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
         $criteria = new Criteria(CloudFilePeer::DATABASE_NAME);
 
         if ($this->isColumnModified(CloudFilePeer::ID)) $criteria->add(CloudFilePeer::ID, $this->id);
+        if ($this->isColumnModified(CloudFilePeer::STORAGE_BACKEND)) $criteria->add(CloudFilePeer::STORAGE_BACKEND, $this->storage_backend);
         if ($this->isColumnModified(CloudFilePeer::RESOURCE_ID)) $criteria->add(CloudFilePeer::RESOURCE_ID, $this->resource_id);
         if ($this->isColumnModified(CloudFilePeer::CC_FILE_ID)) $criteria->add(CloudFilePeer::CC_FILE_ID, $this->cc_file_id);
 
@@ -820,6 +874,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setStorageBackend($this->getStorageBackend());
         $copyObj->setResourceId($this->getResourceId());
         $copyObj->setCcFileId($this->getCcFileId());
 
@@ -938,6 +993,7 @@ abstract class BaseCloudFile extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
+        $this->storage_backend = null;
         $this->resource_id = null;
         $this->cc_file_id = null;
         $this->alreadyInSave = false;

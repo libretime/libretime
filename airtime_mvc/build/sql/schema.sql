@@ -110,6 +110,7 @@ DROP TABLE IF EXISTS "cloud_file" CASCADE;
 CREATE TABLE "cloud_file"
 (
     "id" serial NOT NULL,
+    "storage_backend" VARCHAR(512) NOT NULL,
     "resource_id" TEXT NOT NULL,
     "cc_file_id" INTEGER,
     PRIMARY KEY ("id")
@@ -604,8 +605,6 @@ CREATE TABLE "cc_listener_count"
 );
 
 -----------------------------------------------------------------------
--- cc_locale
------------------------------------------------------------------------
 
 DROP TABLE IF EXISTS "cc_locale" CASCADE;
 
@@ -617,7 +616,6 @@ CREATE TABLE "cc_locale"
     PRIMARY KEY ("id")
 );
 
------------------------------------------------------------------------
 -- cc_playout_history
 -----------------------------------------------------------------------
 
