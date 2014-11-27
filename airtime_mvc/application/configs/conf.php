@@ -27,7 +27,13 @@ class Config {
         
         // Parse separate conf file for Amazon S3 values
         $amazonFilename = isset($_SERVER['AMAZONS3_CONF']) ? $_SERVER['AMAZONS3_CONF'] : "/etc/airtime-saas/amazon.conf";
-        $amazonValues = parse_ini_file($amazonFilename, true);
+        try {
+            $amazonValues = parse_ini_file($amazonFilename, true);
+        } catch (ErrorException $e) {
+            //This file gets loaded before the Zend bootstrap even runs so our exception handlers aren't installed yet.
+            //Just die with an error here then instead or handling the error any other way.
+            die("Error: Invalid or missing $amazonFilename.");
+        }
         $CC_CONFIG['cloud_storage'] = $amazonValues['cloud_storage'];
         
         $values = parse_ini_file($filename, true);
