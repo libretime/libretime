@@ -78,6 +78,10 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
+        // Close the session so other HTTP requests can be completed while
+        // tracks are read for previewing or downloading.
+        session_write_close();
+
         $fileId = $this->_getParam("file");
 
         $media = Application_Model_StoredFile::RecallById($fileId);
@@ -168,10 +172,11 @@ class ApiController extends Zend_Controller_Action
         while (@ob_end_flush());
 
         // NOTE: We can't use fseek here because it does not work with streams
-        // (a.k.a. Files stored on Amazon S3)
+        // (a.k.a. Files stored in the cloud)
         while(!feof($fm) && (connection_status() == 0)) {
             echo fread($fm, 1024 * 8);
         }
+        fclose($fm);
     }
 
     //Used by the SaaS monitoring
