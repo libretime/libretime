@@ -71,7 +71,8 @@ class CloudStorageUploader:
         except ContainerDoesNotExistError:
             container = driver.create_container(self._bucket)
         
-        extra = {'meta_data': {'filename': file_base_name}}
+        extra = {'meta_data': {'filename': file_base_name,
+                               'station_domain': metadata["station_domain"]}}
         
         obj = driver.upload_object(file_path=audio_file_path,
                                    container=container,
