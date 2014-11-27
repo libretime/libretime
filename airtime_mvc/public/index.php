@@ -1,86 +1,44 @@
 <?php
 
-//  Only enable cookie secure if we are supporting https.
-//  Ideally, this would always be on and we would force https,
-//  but the default installation configs are likely to be installed by
-//  amature users on the setup that does not have https.  Forcing
-//  cookie_secure on non https would result in confusing login problems.
-if(!empty($_SERVER['HTTPS'])) {
-    ini_set('session.cookie_secure', '1');
-}
-ini_set('session.cookie_httponly', '1');
-
-error_reporting(E_ALL|E_STRICT);
-
-function exception_error_handler($errno, $errstr, $errfile, $errline) {
-    //Check if the statement that threw this error wanted its errors to be
-    //suppressed. If so then return without with throwing exception.
-    if (0 === error_reporting()) return;
-    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
-    return false;
-}
-
-set_error_handler("exception_error_handler");
+define('ROOT_PATH', dirname( __DIR__) . '/');
+define('WEB_ROOT_PATH', __DIR__ . '/');
+define('LIB_PATH', ROOT_PATH . 'library/');
+define('BUILD_PATH', ROOT_PATH . 'build/');
+define('SETUP_DIR', 'airtime-setup/');
 
 // Define path to application directory
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+define('APPLICATION_PATH', ROOT_PATH . 'application');
 
-// Define application environment
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+define('AIRTIME_CONFIG', 'airtime.conf');
 
-defined('VERBOSE_STACK_TRACE')
-    || define('VERBOSE_STACK_TRACE', (getenv('VERBOSE_STACK_TRACE') ? getenv('VERBOSE_STACK_TRACE') : true));
+require_once(APPLICATION_PATH . "/configs/conf.php");
+require_once(BUILD_PATH . SETUP_DIR . 'load.php');
 
-// Ensure library/ is on include_path
-set_include_path(implode(PATH_SEPARATOR, array(
-    get_include_path(),
-    realpath(APPLICATION_PATH . '/../library')
-)));
+function showConfigCheckPage() {
+    airtimeConfigureDatabase();
 
-set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
-
-//Propel classes.
-set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
-
-//Controller plugins.
-set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
-
-//Zend framework
-if (file_exists('/usr/share/php/libzend-framework-php')) {
-    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
+    require_once(WEB_ROOT_PATH . 'config-check.php');
+    die();
 }
 
-/** Zend_Application */
-require_once 'Zend/Application.php';
-$application = new Zend_Application(
-        APPLICATION_ENV,
-        APPLICATION_PATH . '/configs/application.ini'
-);
+if (array_key_exists('config', $_GET)) {
+    showConfigCheckPage();
+}
 
-require_once (APPLICATION_PATH."/logging/Logging.php");
-Logging::setLogPath('/var/log/airtime/zendphp.log');
+// If a configuration file exists, forward to our boot script
+if (file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
+    airtimeConfigureDatabase();
 
-// Create application, bootstrap, and run
-try {
-    $sapi_type = php_sapi_name();
-    if (substr($sapi_type, 0, 3) == 'cli') {
-        set_include_path(APPLICATION_PATH . PATH_SEPARATOR . get_include_path());
-        require_once("Bootstrap.php");
-    } else {
-        $application->bootstrap()->run();
+    // If the database doesn't exist, or is improperly configured,
+    // show the user a configuration error page so they know what went wrong
+    if (!airtimeCheckDatabase()) {
+        showConfigCheckPage();
     }
-} catch (Exception $e) {
-    echo $e->getMessage();
-    echo "<pre>";
-    echo $e->getTraceAsString();
-    echo "</pre>";
-    Logging::info($e->getMessage());
-    if (VERBOSE_STACK_TRACE) {
-        Logging::info($e->getTraceAsString());
-    } else {
-        Logging::info($e->getTrace());
-    }
+
+    require_once(WEB_ROOT_PATH . 'airtime-boot.php');
+}
+// Otherwise, we'll need to run our configuration setup
+else {
+    require_once(BUILD_PATH . SETUP_DIR . 'setup-config.php');
 }
 
