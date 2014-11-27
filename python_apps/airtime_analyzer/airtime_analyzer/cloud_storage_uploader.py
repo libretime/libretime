@@ -6,7 +6,7 @@ from libcloud.storage.providers import get_driver
 from libcloud.storage.types import Provider, ContainerDoesNotExistError, ObjectDoesNotExistError
 
 
-CONFIG_PATH = '/etc/airtime-saas/amazon.conf'
+CONFIG_PATH = '/etc/airtime-saas/cloud_storage.conf'
 
 class CloudStorageUploader:
     """ A class that uses Apache Libcloud's Storage API to upload objects into
@@ -27,7 +27,8 @@ class CloudStorageUploader:
     def __init__(self):
         config = aa.AirtimeAnalyzerServer.read_config_file(CONFIG_PATH)
         
-        CLOUD_STORAGE_CONFIG_SECTION = "cloud_storage"
+        CLOUD_STORAGE_CONFIG_SECTION = config.get("current_backend", "storage_backend")
+        self._storage_backend = CLOUD_STORAGE_CONFIG_SECTION
         self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
         self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
         self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
@@ -90,5 +91,6 @@ class CloudStorageUploader:
         metadata["filename"] = file_base_name
         
         metadata["resource_id"] = object_name
+        metadata["storage_backend"] = self._storage_backend
         return metadata
 

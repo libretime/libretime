@@ -26,9 +26,9 @@ class Amazon_S3
     {
         $CC_CONFIG = Config::getConfig();
         
-        $this->setBucket($CC_CONFIG['cloud_storage']['bucket']);
-        $this->setAccessKey($CC_CONFIG['cloud_storage']['api_key']);
-        $this->setSecretKey($CC_CONFIG['cloud_storage']['api_key_secret']);
+        $this->setBucket($CC_CONFIG['storage_backend']['bucket']);
+        $this->setAccessKey($CC_CONFIG['storage_backend']['api_key']);
+        $this->setSecretKey($CC_CONFIG['storage_backend']['api_key_secret']);
         
         $this->zendServiceAmazonS3 = new Zend_Service_Amazon_S3(
             $this->getAccessKey(),
