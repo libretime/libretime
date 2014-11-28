@@ -1,7 +1,17 @@
 <?php
 
-
 require_once(LIB_PATH . "propel/runtime/lib/Propel.php");
+
+/**
+ * Check to see if Airtime is properly configured.
+ *
+ * @return boolean true if all Airtime dependencies and services are
+ *                 properly configured and running
+ */
+function airtimeCheckConfiguration() {
+    return airtimeCheckDatabase()
+           && airtimeCheckDependencies();
+}
 
 function airtimeCheckDependencies() {
     $deps = array();
@@ -16,6 +26,8 @@ function airtimeCheckDependencies() {
  * @return boolean true if the database exists and is configured correctly, false otherwise
  */
 function airtimeCheckDatabase() {
+    airtimeConfigureDatabase();
+
     if (!file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
         return false;
     }
@@ -32,7 +44,5 @@ function airtimeCheckDatabase() {
 }
 
 function airtimeConfigureDatabase() {
-
     Propel::init(APPLICATION_PATH . "/configs/airtime-conf-production.php");
-
 }
