@@ -2,11 +2,11 @@
 
 ?>
 
-<html style="background-color:darkgray;">
+<html style="background-color:#111141;">
     <head>
         <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.1.min.css">
     </head>
-    <body style="background-color:black;color:white;padding: 2em 0; min-width: 400px; width: 30%; text-align: center; margin: 3em auto;">
+    <body style="background-color:#111141;color:white;padding: 2em 0; min-width: 400px; width: 30%; text-align: center; margin: 3em auto;">
         <img src="css/images/airtime_logo_jp.png" style="margin-bottom: .5em;" /><br/>
         <form role="form" style="margin-top: 2em;">
             <h2>Database Settings</h2>
