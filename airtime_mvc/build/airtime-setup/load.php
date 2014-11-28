@@ -9,33 +9,60 @@ require_once(LIB_PATH . "propel/runtime/lib/Propel.php");
  *                 properly configured and running
  */
 function airtimeCheckConfiguration() {
-    return airtimeCheckDatabase()
-           && airtimeCheckDependencies();
-}
-
-function airtimeCheckDependencies() {
-    $deps = array();
-    $deps["zend"] = file_exists('/usr/share/php/libzend-framework-php');
-
-    return $deps;
+    return airtimeCheckPhpDependencies()
+        && airtimeCheckDatabaseConfiguration();
 }
 
 /**
- * Check that the database exists and is configured correctly
+ * Check for Airtime's PHP dependencies and return an associative
+ * array with the results
  *
- * @return boolean true if the database exists and is configured correctly, false otherwise
+ * @return array associative array of dependency check results
  */
-function airtimeCheckDatabase() {
+function airtimeCheckPhpDependencies() {
+    return array(
+        "zend" => airtimeCheckMvcDependencies(),
+        "postgres" => airtimeCheckDatabaseDependencies()
+    );
+}
+
+/**
+ * Check that the Zend framework libraries are installed
+ *
+ * @return boolean true if Zend exists in /usr/share/php
+ */
+function airtimeCheckMvcDependencies() {
+    return file_exists('/usr/share/php/libzend-framework-php')
+        || file_exists('/usr/share/php/zendframework'); // Debian version
+}
+
+/**
+ * Check that the PHP dependencies for the database exist
+ *
+ * @return boolean true if the database dependencies exist
+ */
+function airtimeCheckDatabaseDependencies() {
+    if (!isset($extensions)) {
+        $extensions = get_loaded_extensions();
+    }
+    // Check the PHP extension list for the Postgres db extensions
+    return (in_array('pdo_pgsql', $extensions)
+        && in_array('pgsql', $extensions));
+}
+
+/**
+ * Check the database configuration by fetching a connection from Propel
+ *
+ * @return boolean true if a connection is made to the database
+ */
+function airtimeCheckDatabaseConfiguration() {
     airtimeConfigureDatabase();
 
-    if (!file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
-        return false;
-    }
-
-    $config = parse_ini_file(BUILD_PATH . AIRTIME_CONFIG, true);
-
     try {
-        Propel::getConnection($config["database"]["dbname"]);
+        // Try to establish a database connection. If something goes
+        // wrong, the database is improperly configured
+        Propel::getConnection();
+        Propel::close();
     } catch (Exception $e) {
         return false;
     }
@@ -43,6 +70,9 @@ function airtimeCheckDatabase() {
     return true;
 }
 
+/**
+ * Initialize Propel to configure the Airtime database
+ */
 function airtimeConfigureDatabase() {
-    Propel::init(APPLICATION_PATH . "/configs/airtime-conf-production.php");
+    Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
 }

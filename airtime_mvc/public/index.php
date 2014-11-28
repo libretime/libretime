@@ -1,6 +1,7 @@
 <?php
 
 global $configRun;
+global $extensions;
 
 function showConfigCheckPage() {
     if (!isset($configRun) || !$configRun) {
@@ -9,24 +10,25 @@ function showConfigCheckPage() {
         airtimeCheckConfiguration();
     }
 
-    require_once(WEB_ROOT_PATH . 'config-check.php');
+    require_once(CONFIG_PATH . 'config-check.php');
     die();
 }
 
+// Define application path constants
 define('ROOT_PATH', dirname( __DIR__) . '/');
-define('WEB_ROOT_PATH', __DIR__ . '/');
 define('LIB_PATH', ROOT_PATH . 'library/');
 define('BUILD_PATH', ROOT_PATH . 'build/');
-define('SETUP_DIR', 'airtime-setup/');
-
-// Define path to application directory
-define('APPLICATION_PATH', ROOT_PATH . 'application');
+define('SETUP_PATH', BUILD_PATH . 'airtime-setup/');
+define('APPLICATION_PATH', ROOT_PATH . 'application/');
+define('CONFIG_PATH', APPLICATION_PATH . 'configs/');
 
 define('AIRTIME_CONFIG', 'airtime.conf');
 
-require_once(APPLICATION_PATH . "/configs/conf.php");
-require_once(BUILD_PATH . SETUP_DIR . 'load.php');
+require_once(CONFIG_PATH . 'conf.php');
+require_once(SETUP_PATH . 'load.php');
 
+// This allows us to pass ?config as a parameter to any page
+// and get to the config checklist.
 if (array_key_exists('config', $_GET)) {
     showConfigCheckPage();
 }
@@ -47,10 +49,10 @@ if (file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
         showConfigCheckPage();
     }
 
-    require_once(WEB_ROOT_PATH . 'airtime-boot.php');
+    require_once(APPLICATION_PATH . 'airtime-boot.php');
 }
 // Otherwise, we'll need to run our configuration setup
 else {
-    require_once(BUILD_PATH . SETUP_DIR . 'setup-config.php');
+    require_once(SETUP_PATH . 'setup-config.php');
 }
 

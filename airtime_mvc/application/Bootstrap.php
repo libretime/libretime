@@ -1,13 +1,17 @@
 <?php
-require_once __DIR__."/configs/conf.php";
+require_once CONFIG_PATH . "conf.php";
 $CC_CONFIG = Config::getConfig();
 
-require_once __DIR__."/configs/ACL.php";
+require_once CONFIG_PATH . "ACL.php";
 require_once 'propel/runtime/lib/Propel.php';
 
-Propel::init(__DIR__."/configs/airtime-conf-production.php");
+// Since we initialize the database during the configuration check,
+// check the $configRun global to avoid reinitializing unnecessarily
+if (!isset($configRun) || !$configRun) {
+    Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+}
 
-require_once __DIR__."/configs/constants.php";
+require_once CONFIG_PATH . "constants.php";
 require_once 'Preference.php';
 require_once 'Locale.php';
 require_once "DateHelper.php";
@@ -15,14 +19,14 @@ require_once "OsPath.php";
 require_once "Database.php";
 require_once "Timezone.php";
 require_once "Auth.php";
-require_once __DIR__.'/forms/helpers/ValidationTypes.php';
-require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
+require_once __DIR__ . '/forms/helpers/ValidationTypes.php';
+require_once __DIR__ . '/controllers/plugins/RabbitMqPlugin.php';
 
-require_once (APPLICATION_PATH."/logging/Logging.php");
+require_once (APPLICATION_PATH . "logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 Config::setAirtimeVersion();
-require_once __DIR__."/configs/navigation.php";
+require_once (CONFIG_PATH . 'navigation.php');
 
 Zend_Validate::setDefaultNamespaces("Zend");
 
@@ -165,7 +169,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initViewHelpers()
     {
         $view = $this->getResource('view');
-        $view->addHelperPath('../application/views/helpers', 'Airtime_View_Helper');
+        $view->addHelperPath(APPLICATION_PATH . 'views/helpers', 'Airtime_View_Helper');
     }
 
     protected function _initTitle()

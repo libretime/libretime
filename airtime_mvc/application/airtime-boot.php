@@ -32,16 +32,16 @@ defined('VERBOSE_STACK_TRACE')
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
-    realpath(APPLICATION_PATH . '/../library')
+    realpath(LIB_PATH)
 )));
 
-set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . 'common' . PATH_SEPARATOR . get_include_path());
 
 //Propel classes.
-set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . 'models' . PATH_SEPARATOR . get_include_path());
 
 //Controller plugins.
-set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
+set_include_path(APPLICATION_PATH . 'controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
 //Zend framework
 if (file_exists('/usr/share/php/libzend-framework-php')) {
@@ -52,10 +52,10 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
 require_once 'Zend/Application.php';
 $application = new Zend_Application(
         APPLICATION_ENV,
-        APPLICATION_PATH . '/configs/application.ini'
+        CONFIG_PATH . 'application.ini'
 );
 
-require_once(APPLICATION_PATH . "/logging/Logging.php");
+require_once(APPLICATION_PATH . "logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 // Create application, bootstrap, and run
