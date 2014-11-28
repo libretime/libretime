@@ -10,15 +10,15 @@
         <img src="css/images/airtime_logo_jp.png" style="margin-bottom: .5em;" /><br/>
         <form role="form">
             <h2>Database Settings</h2>
-            <div class="form-group">
+            <div class="form-group col-xs-4">
                 <label class="sr-only" for="dbUser">Database Username</label>
-                <input type="text"  id="dbUser" placeholder="Username"/>
+                <input class="form-control" type="text"  id="dbUser" placeholder="Username"/>
                 <label class="sr-only" for="dbPass">Database Password</label>
-                <input type="password" id="dbPass" placeholder="Password"/>
+                <input class="form-control" type="password" id="dbPass" placeholder="Password"/>
                 <label class="sr-only" for="dbName">Database Name</label>
-                <input type="text" id="dbName" placeholder="Name"/>
+                <input class="form-control" type="text" id="dbName" placeholder="Name"/>
                 <label class="sr-only" for="dbHost">Database Host</label>
-                <input type="text" id="dbHost" placeholder="Host" value="localhost"/>
+                <input class="form-control" type="text" id="dbHost" placeholder="Host" value="localhost"/>
                 <input type="submit" class="btn btn-default"/>
             </div>
         </form>
