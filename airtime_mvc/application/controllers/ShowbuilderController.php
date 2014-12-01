@@ -35,7 +35,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $user = Application_Model_User::GetCurrentUser();
         $userType = $user->getType();
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
-        $this->view->headScript()->appendScript($this->generateGoogleTagManagerDataLayerJavaScript());
+        //$this->view->headScript()->appendScript($this->generateGoogleTagManagerDataLayerJavaScript());
 
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
