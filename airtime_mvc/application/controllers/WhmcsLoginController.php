@@ -155,6 +155,7 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, WHMCS_API_URL);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 ); // WHMCS IP whitelist doesn't support IPv6
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
@@ -164,7 +165,8 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $jsondata = curl_exec($ch);
         if (curl_error($ch)) {
-            die(curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
+            Logging::error("Failed to reach WHMCS server in " . __FUNCTION__ . ": "
+                            . curl_errno($ch) . ' - ' . curl_error($ch) . ' - ' . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
             //die("Connection Error: ".curl_errno($ch).' - '.curl_error($ch));
         }
         curl_close($ch);
@@ -201,6 +203,7 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
     
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, WHMCS_API_URL);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 ); // WHMCS IP whitelist doesn't support IPv6
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_FAILONERROR, 1);
@@ -210,7 +213,8 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         $jsondata = curl_exec($ch);
         if (curl_error($ch)) {
-            die(curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
+            Logging::error("Failed to reach WHMCS server in " . __FUNCTION__ . ": "
+                            . curl_errno($ch) . ' - ' . curl_error($ch) . ' - ' . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
             //die("Connection Error: ".curl_errno($ch).' - '.curl_error($ch));
         }
         curl_close($ch);

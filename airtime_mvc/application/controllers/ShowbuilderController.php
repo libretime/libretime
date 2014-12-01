@@ -35,7 +35,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $user = Application_Model_User::GetCurrentUser();
         $userType = $user->getType();
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
-        //$this->view->headScript()->appendScript($this->generateGoogleTagManagerDataLayerJavaScript());
+        $this->view->headScript()->appendScript($this->generateGoogleTagManagerDataLayerJavaScript());
 
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -439,6 +439,7 @@ class ShowbuilderController extends Zend_Controller_Action
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 ); // WHMCS IP whitelist doesn't support IPv6
             curl_setopt($ch, CURLOPT_TIMEOUT, 5); //Aggressive 5 second timeout
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query_string);
