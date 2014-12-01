@@ -1,10 +1,12 @@
 <?php
 
-global $configRun;
-global $extensions;
+$configRun = false;
+$extensions = get_loaded_extensions();
+$airtimeSetup = false;
 
 function showConfigCheckPage() {
-    if (!isset($configRun) || !$configRun) {
+    global $configRun;
+    if (!$configRun) {
         // This will run any necessary setup we need if
         // configuration hasn't been initialized
         airtimeCheckConfiguration();
@@ -24,6 +26,7 @@ define('CONFIG_PATH', APPLICATION_PATH . 'configs/');
 
 define('AIRTIME_CONFIG', 'airtime.conf');
 
+require_once(LIB_PATH . "propel/runtime/lib/Propel.php");
 require_once(CONFIG_PATH . 'conf.php');
 require_once(SETUP_PATH . 'load.php');
 
@@ -53,6 +56,7 @@ if (file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
 }
 // Otherwise, we'll need to run our configuration setup
 else {
+    $airtimeSetup = true;
     require_once(SETUP_PATH . 'setup-config.php');
 }
 

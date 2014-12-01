@@ -167,15 +167,10 @@ $result = $r && $database;
             </h3>
             <p>
                 <?php
-
-                    if (!isset($extensions)) {
-                        $extensions = get_loaded_extensions();
-                    }
-
+                    global $extensions;
                     foreach ($extensions as $ext) {
                         echo $ext . " | ";
                     }
-
                 ?>
             </p>
         </div>

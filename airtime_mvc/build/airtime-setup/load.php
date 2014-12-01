@@ -1,7 +1,5 @@
 <?php
 
-require_once(LIB_PATH . "propel/runtime/lib/Propel.php");
-
 /**
  * Check to see if Airtime is properly configured.
  *
@@ -42,9 +40,7 @@ function airtimeCheckMvcDependencies() {
  * @return boolean true if the database dependencies exist
  */
 function airtimeCheckDatabaseDependencies() {
-    if (!isset($extensions)) {
-        $extensions = get_loaded_extensions();
-    }
+    global $extensions;
     // Check the PHP extension list for the Postgres db extensions
     return (in_array('pdo_pgsql', $extensions)
         && in_array('pgsql', $extensions));
@@ -75,4 +71,18 @@ function airtimeCheckDatabaseConfiguration() {
  */
 function airtimeConfigureDatabase() {
     Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+}
+
+function airtimeValidateDatabaseSettings($settings) {
+    global $airtimeSetup;
+    if (!$airtimeSetup) {
+        return false;
+    }
+
+    $dbUser = $settings["dbUser"];
+    $dbPass = $settings["dbPass"];
+    $dbName = $settings["dbName"];
+    $dbHost = $settings["dbHost"];
+
+    return true;
 }
