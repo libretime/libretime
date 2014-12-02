@@ -1,5 +1,7 @@
 <?php
 
+require_once ROOT_PATH . 'public/setup/functions.php';
+
 ?>
 
 <html style="background-color: #111141;">
@@ -36,8 +38,36 @@
             $("#dbSettingsForm").submit(function(e) {
                 e.preventDefault();
                 var d  = $('#dbSettingsForm').serializeArray();
-                $.post('setup/functions.php?fn=airtimeValidateDatabaseSettings', d, function(data) {
-                    console.log(data);
+                // First, check if the db user exists (if not, we're done)
+                $.post('setup/functions.php?fn=airtimeValidateDatabaseUser', d, function(result) {
+                    if (result == true) {
+                        // We know that the user credentials check out, so check if the database exists
+                        $.post('setup/functions.php?fn=airtimeValidateDatabaseSettings', d, function(result) {
+                            if (result == true) {
+                                // The database already exists, so we can just set up the schema
+                                // TODO change alerts to actually useful things
+                                alert("Setting up airtime schema...");
+                            } else {
+                                // The database doesn't exist, so check if the user can create databases
+                                $.post('setup/functions.php?fn=airtimeCheckUserCanCreateDb', d, function(result) {
+                                    if (result == true) {
+                                        // The user can create a database, so ask if they want to create it
+                                        if (confirm("Create database '" + $("#dbName").val() + "' on " + $("#dbHost").val()
+                                            + " as user " + $("#dbUser").val() + "?")) {
+                                            // TODO create the database...
+                                            alert("Creating airtime database...");
+                                        }
+                                    } else {
+                                        // The user can't create databases, so we're done
+                                        alert("No database " + $("#dbName").val() + " exists; user " + $("#dbUser").val()
+                                            + " does not have permission to create databases on " + $("#dbHost").val());
+                                    }
+                                }, "json");
+                            }
+                        }, "json");
+                    } else {
+                        alert("User credentials are invalid!");
+                    }
                 }, "json");
             });
         </script>

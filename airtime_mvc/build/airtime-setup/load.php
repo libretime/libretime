@@ -72,17 +72,3 @@ function airtimeCheckDatabaseConfiguration() {
 function airtimeConfigureDatabase() {
     Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
 }
-
-function airtimeValidateDatabaseSettings($settings) {
-    global $airtimeSetup;
-    if (!$airtimeSetup) {
-        return false;
-    }
-
-    $dbUser = $settings["dbUser"];
-    $dbPass = $settings["dbPass"];
-    $dbName = $settings["dbName"];
-    $dbHost = $settings["dbHost"];
-
-    return true;
-}
