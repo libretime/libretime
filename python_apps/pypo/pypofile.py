@@ -9,9 +9,13 @@ import shutil
 import os
 import sys
 import stat
-
+import urllib2
+import base64
+import ConfigParser
 
 from std_err_override import LogWriter
+
+CONFIG_PATH = '/etc/airtime/airtime.conf'
 
 # configure logging
 logging.config.fileConfig("logging.cfg")
@@ -38,11 +42,14 @@ class PypoFile(Thread):
         src = media_item['uri']
         dst = media_item['dst']
         
+        """
         try:
             src_size = os.path.getsize(src)
         except Exception, e:
             self.logger.error("Could not get size of source file: %s", src)
             return
+        """
+        src_size = media_item['filesize']
 
         dst_exists = True
         try:
@@ -68,7 +75,18 @@ class PypoFile(Thread):
                 """
                 copy will overwrite dst if it already exists
                 """
-                shutil.copy(src, dst)
+                #shutil.copy(src, dst)                
+                config = self.read_config_file(CONFIG_PATH)
+                CONFIG_SECTION = "general"
+                username = config.get(CONFIG_SECTION, 'api_key')
+                url = media_item['download_url']
+                
+                """
+                Make HTTP request here
+                """
+                
+                with open(dst, "wb") as code:
+                    code.write(file.read())
 
                 #make file world readable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
@@ -108,6 +126,19 @@ class PypoFile(Thread):
 
         return media_item
 
+    def read_config_file(self, config_path):
+        """Parse the application's config file located at config_path."""
+        config = ConfigParser.SafeConfigParser()
+        try:
+            config.readfp(open(config_path))
+        except IOError as e:
+            logging.debug("Failed to open config file at %s: %s" % (config_path, e.strerror))
+            sys.exit()
+        except Exception:
+            logging.debug(e.strerror) 
+            sys.exit()
+
+        return config
 
     def main(self):
         while True:
@@ -133,15 +164,7 @@ class PypoFile(Thread):
 
                 media_item = self.get_highest_priority_media_item(self.media)
                 if media_item is not None:
-                    """
-                    If an object_name exists the file is stored on Amazon S3
-                    """
-                    if 'amazonS3_resource_id' in media_item:
-                        csd = CloudStorageDownloader()
-                        csd.download_obj(media_item['dst'], media_item['amazonS3_resource_id'])
-                        media_item['file_ready'] = True
-                    else:
-                        self.copy_file(media_item)
+                    self.copy_file(media_item)
             except Exception, e:
                 import traceback
                 top = traceback.format_exc()

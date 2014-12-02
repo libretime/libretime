@@ -85,7 +85,7 @@ class CloudFile extends BaseCloudFile
     
     /**
      * 
-     * Deletes the file from Amazon S3
+     * Deletes the file from cloud storage
      */
     public function deletePhysicalFile()
     {
