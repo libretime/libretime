@@ -1,13 +1,13 @@
 <?php
 
-require_once 'Amazon_S3.php';
+require_once 'ProxyStorageBackend.php';
 
 /**
  * Skeleton subclass for representing a row from the 'cloud_file' table.
  *
  * Each cloud_file has a corresponding cc_file referenced as a foreign key.
  * The file's metadata is stored in the cc_file table. This, cloud_file,
- * table represents files that are stored on Amazon S3.
+ * table represents files that are stored in the cloud.
  *
  * You should add additional methods to this class to meet the
  * application requirements.  This class will only be generated as
@@ -17,6 +17,7 @@ require_once 'Amazon_S3.php';
  */
 class CloudFile extends BaseCloudFile
 {
+    private $proxyStorageBackend;
 
     /**
      * Returns a signed URL to the file's object on Amazon S3. Since we are
@@ -25,7 +26,10 @@ class CloudFile extends BaseCloudFile
      */
     public function getURLForTrackPreviewOrDownload()
     {
-        return $this->getAbsoluteFilePath()."?".$this->getAuthenticationParams();
+        if ($this->proxyStorageBackend == null) {
+            $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
+        }
+        return $this->proxyStorageBackend->getSignedURL($this->getResourceId());
     }
     
     /**
@@ -34,39 +38,10 @@ class CloudFile extends BaseCloudFile
      */
     public function getAbsoluteFilePath()
     {
-        $amazon_s3 = new Amazon_S3();
-        $zend_s3 = $amazon_s3->getZendServiceAmazonS3();
-        $resource_id = $this->getResourceId();
-        $endpoint = $zend_s3->getEndpoint();
-        $scheme = $endpoint->getScheme();
-        $host = $endpoint->getHost();
-        $s3_bucket = $amazon_s3->getBucket();
-        return "$scheme://$s3_bucket.$host/".utf8_encode($resource_id);
-    }
-    
-    /**
-     * 
-     * Returns a string of authentication paramaters to append to the cloud
-     * object's URL. We need this for track preview and download because the
-     * objects are privately stored on Amazon S3.
-     */
-    public function getAuthenticationParams()
-    {
-        $expires = time()+120;
-        $resource_id = $this->getResourceId();
-
-        $amazon_s3 = new Amazon_S3();
-        $s3_bucket = $amazon_s3->getBucket();
-        $s3_secret_key = $amazon_s3->getSecretKey();
-        $s3_access_key = $amazon_s3->getAccessKey();
-        
-        $string_to_sign = utf8_encode("GET\n\n\n$expires\n/$s3_bucket/$resource_id");
-        // We need to urlencode the entire signature in case the hashed signature
-        // has spaces. (NOTE: utf8_encode() does not work here because it turns
-        // spaces into non-breaking spaces)
-        $signature = urlencode(base64_encode((hash_hmac("sha1", $string_to_sign, $s3_secret_key, true))));
-        
-        return "AWSAccessKeyId=$s3_access_key&Expires=$expires&Signature=$signature";
+        if ($this->proxyStorageBackend == null) {
+            $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
+        }
+        return $this->proxyStorageBackend->getAbsoluteFilePath($this->getResourceId());
     }
     
     /**
@@ -74,15 +49,10 @@ class CloudFile extends BaseCloudFile
      */
     public function getFileSize()
     {
-        $amazon_s3 = new Amazon_S3();
-        
-        $zend_s3 = $amazon_s3->getZendServiceAmazonS3();
-        $bucket = $amazon_s3->getBucket();
-        $resource_id = $this->getResourceId();
-        
-        $amz_resource = utf8_encode("$bucket/$resource_id");
-        $amz_resource_info = $zend_s3->getInfo($amz_resource);
-        return $amz_resource_info["size"];
+        if ($this->proxyStorageBackend == null) {
+            $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
+        }
+        return $this->proxyStorageBackend->getFileSize($this->getResourceId());
     }
     
     public function getFilename()
@@ -119,21 +89,10 @@ class CloudFile extends BaseCloudFile
      */
     public function deletePhysicalFile()
     {
-        $amazon_s3 = new Amazon_S3();
-        $zend_s3 = $amazon_s3->getZendServiceAmazonS3();
-        $bucket = $amazon_s3->getBucket();
-        $resource_id = $this->getResourceId();
-        $amz_resource = utf8_encode("$bucket/$resource_id");
-        
-        if ($zend_s3->isObjectAvailable($amz_resource)) {
-            // removeObject() returns true even if the object was not deleted (bug?)
-            // so that is not a good way to do error handling. isObjectAvailable()
-            // does however return the correct value; We have to assume that if the
-            // object is available the removeObject() function will work.
-            $zend_s3->removeObject($amz_resource);
-        } else {
-            throw new Exception("ERROR: Could not locate object on Amazon S3");
+        if ($this->proxyStorageBackend == null) {
+            $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
         }
+        $this->proxyStorageBackend->deletePhysicalFile($this->getResourceId());
     }
     
     /**

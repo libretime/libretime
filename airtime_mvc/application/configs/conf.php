@@ -29,6 +29,7 @@ class Config {
         $cloudStorageConfig = isset($_SERVER['CLOUD_STORAGE_CONF']) ? $_SERVER['CLOUD_STORAGE_CONF'] : "/etc/airtime-saas/cloud_storage.conf";
         $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
         $currentStorageBackend = $cloudStorageValues['current_backend']['storage_backend'];
+        $CC_CONFIG['current_backend'] = $cloudStorageValues['current_backend']['storage_backend'];
         $CC_CONFIG['storage_backend'] = $cloudStorageValues[$currentStorageBackend];
         
         $values = parse_ini_file($filename, true);
