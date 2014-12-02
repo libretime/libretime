@@ -18,7 +18,9 @@ class ProxyStorageBackend extends StorageBackend
      */
     public function ProxyStorageBackend($storageBackend)
     {
-        $this->storageBackend = new $storageBackend();
+        $CC_CONFIG = Config::getConfig();
+        
+        $this->storageBackend = new $storageBackend($CC_CONFIG[$storageBackend]);
     }
     
     public function getAbsoluteFilePath($resourceId)

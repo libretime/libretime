@@ -6,13 +6,11 @@ class Amazon_S3 extends StorageBackend
 {
     private $zendServiceAmazonS3;
     
-    public function Amazon_S3()
+    public function Amazon_S3($securityCredentials)
     {
-        $CC_CONFIG = Config::getConfig();
-        
-        $this->setBucket($CC_CONFIG['storage_backend']['bucket']);
-        $this->setAccessKey($CC_CONFIG['storage_backend']['api_key']);
-        $this->setSecretKey($CC_CONFIG['storage_backend']['api_key_secret']);
+        $this->setBucket($securityCredentials['bucket']);
+        $this->setAccessKey($securityCredentials['api_key']);
+        $this->setSecretKey($securityCredentials['api_key_secret']);
         
         $this->zendServiceAmazonS3 = new Zend_Service_Amazon_S3(
             $this->getAccessKey(),
