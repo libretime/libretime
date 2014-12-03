@@ -9,7 +9,7 @@ function showConfigCheckPage() {
     if (!$configRun) {
         // This will run any necessary setup we need if
         // configuration hasn't been initialized
-        airtimeCheckConfiguration();
+        checkConfiguration();
     }
 
     require_once(CONFIG_PATH . 'config-check.php');
@@ -47,7 +47,7 @@ if (file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
      * If something is improperly configured, show the user a
      * configuration checklist page so they know what went wrong
      */
-    if (!airtimeCheckConfiguration()) {
+    if (!checkConfiguration()) {
         $configRun = true;
         showConfigCheckPage();
     }

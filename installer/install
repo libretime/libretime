@@ -9,14 +9,18 @@ fi
 
 showhelp () {
     echo "Usage: airtime-install [options]
---help|-h                         Displays usage information."
+--help|-h                         Displays usage information.
+--apache|-a                       Installs apache and deploys a basic configuration for Airtime."
     exit 0
 }
+
+apache="f"
 
 while [ $# -gt 0 ]
 do
     case "$1" in
     (-h|--help) showhelp; exit 0;;
+    (-a|--apache) apache="t";;
 
     (--) shift; break;;
     (-*) echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
@@ -37,54 +41,72 @@ echo    "                 *         \/            \/                       \/   
 echo    "                 ****************************************************************"
 
 echo    "               ____ ______   ____   ____     __________  __ _________   ____  ____    "
-echo    "              /  _ \\\\____ \_/ __ \ /    \   /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \ "
+echo -e "              /  _ \\\\____ \_/ __ \ /    \   /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \ "
 echo    "             (  <_> )  |_> >  ___/|   |  \  \___ (  <_> )  |  /|  | \/\  \__\  ___/   "
 echo    "              \____/|   __/ \___  >___|  / /____  >____/|____/ |__|    \___  >___  >  "
 echo    "                    |__|        \/     \/       \/                         \/    \/   "
 echo    "                   .___.__                        __                         __  .__                    "
 echo    "____________     __| _/|__| ____   _____   __ ___/  |_  ____   _____ _____ _/  |_|__| ____   ____       "
-echo    "\_  __ \__  \   / __ | |  |/  _ \  \__  \ |  |  \   __\/  _ \ /     \\\\__  \\\\   __\  |/  _ \ /    \  "
+echo -e "\_  __ \__  \   / __ | |  |/  _ \  \__  \ |  |  \   __\/  _ \ /     \\\\__  \\\\   __\  |/  _ \ /    \  "
 echo    " |  | \// __ \_/ /_/ | |  (  <_> )  / __ \|  |  /|  | (  <_> )  Y Y  \/ __ \|  | |  (  <_> )   |  \     "
 echo    " |__|  (____  /\____ | |__|\____/  (____  /____/ |__|  \____/|__|_|  (____  /__| |__|\____/|___|  /     "
 echo    "            \/      \/                  \/                         \/     \/                    \/      "
 
+if [ apache = "t" ]; then
+    echo -e "\n-----------------------------------------------------"
+    echo    "                * Installing Apache *                "
+    echo    "-----------------------------------------------------"
+
+    apt-get -y --force-yes install apache2 libapache2-mod-php5
+    set +e
+    apache2 -v | grep "2\.4" > /dev/null
+    apacheversion=$?
+    set -e
+
+    # Apache Config File
+    if [ "$apacheversion" != "1" ]; then
+        airtimeconfigfile="airtime.conf"
+    else
+        airtimeconfigfile="airtime"
+    fi
+
+    if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
+        echo " ## Creating Apache config for Airtime..."
+
+        cp apache/airtime-vhost /etc/apache2/sites-available/${airtimeconfigfile}
+        a2dissite 000-default
+        a2ensite airtime
+    else
+        echo "Apache config for Airtime already exists, skipping"
+    fi
+
+    if [ ! -d /usr/share/airtime/public ]; then
+        echo " ## Creating Apache web root directory..."
+        mkdir -p /usr/share/airtime/public/
+    else
+        echo "Airtime web root directory already exists, skipping"
+    fi
+fi
+
 echo -e "\n-----------------------------------------------------"
-echo    "                * Installing Apache *                "
+echo    "                  * Installing PHP *                 "
 echo    "-----------------------------------------------------"
 
-apt-get -y --force-yes install apache2 libapache2-mod-php5
-set +e
-apache2 -v | grep "2\.4" > /dev/null
-apacheversion=$?
-set -e
+apt-get -y --force-yes install php5
 
-# Apache Config File
-if [ "$apacheversion" != "1" ]; then
-    airtimeconfigfile="airtime.conf"
+echo " ## Installing Zend framework..."
+#Debian Squeeze only has zendframework package. Newer versions of Ubuntu have zend-framework package.
+#Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
+#1.10 and zend-framework is 1.11
+if [ "$dist" = "Debian" ]; then
+    apt-get -y --force-yes install zendframework
 else
-    airtimeconfigfile="airtime"
-fi
-
-if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
-    echo "Creating Apache config for Airtime..."
-
-    cp apache/airtime-vhost /etc/apache2/sites-available/${airtimeconfigfile}
-    a2dissite 000-default
-    a2ensite airtime
-else
-    echo "Apache config for Airtime already exists, skipping"
-fi
-
-if [ ! -d /usr/share/airtime/public ]; then
-    echo "Creating Apache web root directory..."
-    mkdir -p /usr/share/airtime/public/
-else
-    echo "Airtime web root directory already exists, skipping"
+    apt-get -y --force-yes install libzend-framework-php
 fi
 
 # PHP Config File for Apache
 if [ ! -f /etc/php5/apache2/airtime.ini ]; then
-    echo "Creating Airtime PHP config for Apache..."
+    echo " ## Creating Airtime PHP config for Apache..."
     cp php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
 else
     echo "Airtime PHP config for Apache already exists, skipping"
@@ -95,44 +117,38 @@ a2enmod rewrite php5
 service apache2 restart
 
 echo -e "\n-----------------------------------------------------"
-echo    "                  * Installing PHP *                 "
+echo    "              * Installing PostgreSQL *              "
 echo    "-----------------------------------------------------"
 
-apt-get -y --force-yes install php5
-
-#Debian Squeeze only has zendframework package. Newer versions of Ubuntu have zend-framework package.
-#Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
-#1.10 and zend-framework is 1.11
-if [ "$dist" = "Debian" ]; then
-    apt-get -y --force-yes install zendframework
-else
-    apt-get -y --force-yes install libzend-framework-php
-fi
+apt-get -y --force-yes install postgresql php5-pgsql
 
 echo -e "\n-----------------------------------------------------"
-echo    "                * Setting up Airtime *               "
+echo    "               * Setting up RabbitMQ *               "
 echo    "-----------------------------------------------------"
 
-# Clear any previous configuration files
-if [ -d "/etc/airtime/" ]; then
-    rm -rf /etc/airtime/*
-else
-    mkdir /etc/airtime
+apt-get -y --force-yes install rabbitmq-server
+
+RABBITMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
+RABBITMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
+RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
+EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
+
+rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST}
+RESULT="$?"
+
+if [ ${RESULT} != "0" ]; then
+    echo " ## Creating RabbitMQ user $RABBITMQ_USER"
+
+    rabbitmqctl add_vhost ${RABBITMQ_VHOST}
+    rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
+    rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} "$EXCHANGES" "$EXCHANGES" "$EXCHANGES"
 fi
-
-cp airtime/airtime.conf /etc/airtime/airtime.conf
-chown -R www-data:www-data /etc/airtime
-
-if [ ! -d "/var/log/airtime" ]; then
-    mkdir /var/log/airtime
-fi
-
-chown -R www-data:www-data /var/log/airtime
-apt-get -y --force-yes install postgresql php5-pgsql php5-mysql
 
 echo -e "\n-----------------------------------------------------"
 echo    "                * Basic Setup DONE! *                "
 echo    "                                                     "
 echo    "  To get started with Airtime, visit localhost:5000  "
+echo    "   or, if you've set up your own web configuration,  "
+echo    "        the Airtime webroot on your webserver        "
 echo    "            in your web browser of choice            "
 echo    "-----------------------------------------------------"

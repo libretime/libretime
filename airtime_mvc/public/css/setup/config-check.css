@@ -1,0 +1,23 @@
+.checklist {
+    overflow: auto;
+    height: 50%;
+}
+
+.caption {
+    padding-left: .5em;
+}
+
+.component {
+    font-weight: bold;
+    width: 20%;
+}
+
+.description, .solution {
+    width: 40%;
+}
+
+.footer {
+    margin: inherit;
+    width: inherit;
+    bottom: 0;
+}

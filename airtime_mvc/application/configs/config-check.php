@@ -7,10 +7,10 @@
  * along with steps to fix them if they're not found or misconfigured.
  */
 
-$phpDependencies = airtimeCheckPhpDependencies();
+$phpDependencies = checkPhpDependencies();
 $zend = $phpDependencies["zend"];
 $postgres = $phpDependencies["postgres"];
-$database = airtimeCheckDatabaseConfiguration();
+$database = checkDatabaseConfiguration();
 
 function booleanReduce($a, $b) {
     return $a && $b;
@@ -23,31 +23,7 @@ $result = $r && $database;
 <html style="background-color: #f5f5f5">
     <head>
         <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.1.min.css">
-        <style>
-            .checklist {
-                overflow: auto;
-                height: 50%;
-            }
-
-            .caption {
-                padding-left: .5em;
-            }
-
-            .component {
-                font-weight: bold;
-                width: 20%;
-            }
-
-            .description, .solution {
-                width: 40%;
-            }
-
-            .footer {
-                margin: inherit;
-                width: inherit;
-                bottom: 0;
-            }
-        </style>
+        <link rel="stylesheet" type="text/css" href="css/setup/config-check.css">
     </head>
 
     <body style="padding: 2em 0; min-width: 600px; width: 50%; text-align: center; margin: 3em auto;

@@ -6,9 +6,9 @@
  * @return boolean true if all Airtime dependencies and services are
  *                 properly configured and running
  */
-function airtimeCheckConfiguration() {
-    return airtimeCheckPhpDependencies()
-        && airtimeCheckDatabaseConfiguration();
+function checkConfiguration() {
+    return checkPhpDependencies()
+        && checkDatabaseConfiguration();
 }
 
 /**
@@ -17,10 +17,10 @@ function airtimeCheckConfiguration() {
  *
  * @return array associative array of dependency check results
  */
-function airtimeCheckPhpDependencies() {
+function checkPhpDependencies() {
     return array(
-        "zend" => airtimeCheckMvcDependencies(),
-        "postgres" => airtimeCheckDatabaseDependencies()
+        "zend" => checkMvcDependencies(),
+        "postgres" => checkDatabaseDependencies()
     );
 }
 
@@ -29,7 +29,7 @@ function airtimeCheckPhpDependencies() {
  *
  * @return boolean true if Zend exists in /usr/share/php
  */
-function airtimeCheckMvcDependencies() {
+function checkMvcDependencies() {
     return file_exists('/usr/share/php/libzend-framework-php')
         || file_exists('/usr/share/php/zendframework'); // Debian version
 }
@@ -39,7 +39,7 @@ function airtimeCheckMvcDependencies() {
  *
  * @return boolean true if the database dependencies exist
  */
-function airtimeCheckDatabaseDependencies() {
+function checkDatabaseDependencies() {
     global $extensions;
     // Check the PHP extension list for the Postgres db extensions
     return (in_array('pdo_pgsql', $extensions)
@@ -51,8 +51,8 @@ function airtimeCheckDatabaseDependencies() {
  *
  * @return boolean true if a connection is made to the database
  */
-function airtimeCheckDatabaseConfiguration() {
-    airtimeConfigureDatabase();
+function checkDatabaseConfiguration() {
+    configureDatabase();
 
     try {
         // Try to establish a database connection. If something goes
@@ -69,6 +69,10 @@ function airtimeCheckDatabaseConfiguration() {
 /**
  * Initialize Propel to configure the Airtime database
  */
-function airtimeConfigureDatabase() {
+function configureDatabase() {
     Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+}
+
+function validateDatabaseSchema() {
+
 }
