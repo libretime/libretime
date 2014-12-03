@@ -771,6 +771,9 @@ SQL;
      * @param Array $item schedule info about one track
      * @param Integer $media_id scheduled item's cc_files id
      * @param String $uri path to the scheduled item's physical location
+     * @param String $downloadURL URL PYPO makes to the REST API to download the file for playout
+     * @param Integer $filsize The file's file size in bytes
+     * 
      */
     private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $downloadURL, $filesize)
     {
@@ -943,8 +946,9 @@ SQL;
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $file = $storedFile->getPropelOrm();
                 $uri = $file->getAbsoluteFilePath();
-                // TODO: fix this URL
-                $downloadURL = "http://localhost/rest/media/$media_id/download";
+                
+                $baseUrl = Application_Common_OsPath::getBaseDir();
+                $downloadURL = "http://".$_SERVER['HTTP_HOST'].$baseUrl."rest/media/$media_id/download";
                 $filesize = $file->getFileSize();
                 
                 self::createFileScheduleEvent($data, $item, $media_id, $uri, $downloadURL, $filesize);

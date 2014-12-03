@@ -2,15 +2,13 @@
 
 from threading import Thread
 from Queue import Empty
-from cloud_storage_downloader import CloudStorageDownloader
 
 import logging
 import shutil
 import os
 import sys
 import stat
-import urllib2
-import base64
+import requests
 import ConfigParser
 
 from std_err_override import LogWriter
@@ -41,14 +39,7 @@ class PypoFile(Thread):
         """
         src = media_item['uri']
         dst = media_item['dst']
-        
-        """
-        try:
-            src_size = os.path.getsize(src)
-        except Exception, e:
-            self.logger.error("Could not get size of source file: %s", src)
-            return
-        """
+
         src_size = media_item['filesize']
 
         dst_exists = True
@@ -81,12 +72,17 @@ class PypoFile(Thread):
                 username = config.get(CONFIG_SECTION, 'api_key')
                 url = media_item['download_url']
                 
-                """
-                Make HTTP request here
-                """
-                
-                with open(dst, "wb") as code:
-                    code.write(file.read())
+                with open(dst, "wb") as handle:
+                    response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True)
+                    
+                    if not response.ok:
+                        raise Exception("%s - Error occurred downloading file" % response.status_code)
+                    
+                    for chunk in response.iter_content(1024):
+                        if not chunk:
+                            break
+                        
+                        handle.write(chunk)
 
                 #make file world readable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
