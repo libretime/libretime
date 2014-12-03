@@ -73,7 +73,7 @@ class PypoFile(Thread):
                 url = media_item['download_url']
                 
                 with open(dst, "wb") as handle:
-                    response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True)
+                    response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
                     
                     if not response.ok:
                         raise Exception("%s - Error occurred downloading file" % response.status_code)

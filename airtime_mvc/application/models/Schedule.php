@@ -955,7 +955,7 @@ SQL;
                 $uri = $file->getAbsoluteFilePath();
                 
                 $baseUrl = Application_Common_OsPath::getBaseDir();
-                $downloadURL = "https://".$_SERVER['HTTP_HOST'].$baseUrl."rest/media/$media_id/download?verify=False";
+                $downloadURL = "https://".$_SERVER['HTTP_HOST'].$baseUrl."rest/media/$media_id/download";
                 $filesize = $file->getFileSize();
                 
                 self::createFileScheduleEvent($data, $item, $media_id, $uri, $downloadURL, $filesize);
