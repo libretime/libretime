@@ -56,8 +56,8 @@ if (file_exists('/usr/share/php/libzend-framework-php')) {
     set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
 }
 
-//amazon directory
-set_include_path(APPLICATION_PATH . '/amazon' . PATH_SEPARATOR . get_include_path());
+//cloud storage directory
+set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
 //Upgrade directory
 set_include_path(APPLICATION_PATH . '/upgrade/' . PATH_SEPARATOR . get_include_path());

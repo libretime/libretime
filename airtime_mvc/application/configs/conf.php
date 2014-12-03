@@ -25,10 +25,14 @@ class Config {
             $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
         }
         
-        // Parse separate conf file for Amazon S3 values
-        $amazonFilename = isset($_SERVER['AMAZONS3_CONF']) ? $_SERVER['AMAZONS3_CONF'] : "/etc/airtime-saas/amazon.conf";
-        $amazonValues = parse_ini_file($amazonFilename, true);
-        $CC_CONFIG['cloud_storage'] = $amazonValues['cloud_storage'];
+        // Parse separate conf file for cloud storage values
+        $cloudStorageConfig = isset($_SERVER['CLOUD_STORAGE_CONF']) ? $_SERVER['CLOUD_STORAGE_CONF'] : "/etc/airtime-saas/cloud_storage.conf";
+        $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
+        
+        $supportedStorageBackends = array('amazon_S3');
+        foreach ($supportedStorageBackends as $backend) {
+            $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
+        }
         
         $values = parse_ini_file($filename, true);
 

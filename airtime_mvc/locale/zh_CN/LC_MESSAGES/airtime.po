@@ -100,6 +100,7 @@ msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
+#: airtime_mvc/application/layouts/scripts/bare.phtml:5
 msgid "Live stream"
 msgstr "插播流"
 
@@ -180,6 +181,7 @@ msgstr "密码"
 #: airtime_mvc/application/models/Block.php:1351
 #: airtime_mvc/application/services/HistoryService.php:1112
 #: airtime_mvc/application/controllers/LocaleController.php:73
+#: airtime_mvc/application/services/HistoryService.php:1109
 msgid "Genre"
 msgstr "风格"
 
@@ -320,6 +322,8 @@ msgstr "网站："
 #: airtime_mvc/application/forms/EditUser.php:118
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:26
 #: airtime_mvc/application/forms/EditAudioMD.php:126
+#: airtime_mvc/application/forms/Login.php:48
+#: airtime_mvc/application/forms/EditUser.php:114
 msgid "Language:"
 msgstr "语言："
 
@@ -342,6 +346,10 @@ msgstr "语言："
 #: airtime_mvc/application/forms/SupportSettings.php:161
 #: airtime_mvc/application/controllers/LocaleController.php:283
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:163
+#: airtime_mvc/application/views/scripts/form/edit-user.phtml:160
+#: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:115
+#: airtime_mvc/application/forms/AddUser.php:106
+#: airtime_mvc/application/forms/SupportSettings.php:158
 msgid "Save"
 msgstr "保存"
 
@@ -359,6 +367,9 @@ msgstr "取消"
 #: airtime_mvc/application/forms/AddUser.php:29
 #: airtime_mvc/application/forms/Login.php:23
 #: airtime_mvc/application/forms/EditUser.php:36
+#: airtime_mvc/application/forms/Login.php:19
+#: airtime_mvc/application/forms/EditUser.php:32
+#: airtime_mvc/application/forms/AddUser.php:25
 msgid "Username:"
 msgstr "用户名："
 
@@ -366,22 +377,31 @@ msgstr "用户名："
 #: airtime_mvc/application/forms/Login.php:38
 #: airtime_mvc/application/forms/BillingClient.php:172
 #: airtime_mvc/application/forms/EditUser.php:47
+#: airtime_mvc/application/forms/Login.php:34
+#: airtime_mvc/application/forms/EditUser.php:43
+#: airtime_mvc/application/forms/AddUser.php:34
 msgid "Password:"
 msgstr "密码："
 
 #: airtime_mvc/application/forms/AddUser.php:46
 #: airtime_mvc/application/forms/BillingClient.php:181
 #: airtime_mvc/application/forms/EditUser.php:56
+#: airtime_mvc/application/forms/EditUser.php:52
+#: airtime_mvc/application/forms/AddUser.php:42
 msgid "Verify Password:"
 msgstr "再次输入密码："
 
 #: airtime_mvc/application/forms/AddUser.php:55
 #: airtime_mvc/application/forms/EditUser.php:66
+#: airtime_mvc/application/forms/EditUser.php:62
+#: airtime_mvc/application/forms/AddUser.php:51
 msgid "Firstname:"
 msgstr "名："
 
 #: airtime_mvc/application/forms/AddUser.php:61
 #: airtime_mvc/application/forms/EditUser.php:74
+#: airtime_mvc/application/forms/EditUser.php:70
+#: airtime_mvc/application/forms/AddUser.php:57
 msgid "Lastname:"
 msgstr "姓："
 
@@ -390,55 +410,70 @@ msgstr "姓："
 #: airtime_mvc/application/forms/RegisterAirtime.php:51
 #: airtime_mvc/application/forms/EditUser.php:82
 #: airtime_mvc/application/forms/SupportSettings.php:46
+#: airtime_mvc/application/forms/EditUser.php:78
+#: airtime_mvc/application/forms/AddUser.php:63
 msgid "Email:"
 msgstr "电邮："
 
 #: airtime_mvc/application/forms/AddUser.php:76
 #: airtime_mvc/application/forms/EditUser.php:93
+#: airtime_mvc/application/forms/EditUser.php:89
+#: airtime_mvc/application/forms/AddUser.php:72
 msgid "Mobile Phone:"
 msgstr "手机："
 
 #: airtime_mvc/application/forms/AddUser.php:82
 #: airtime_mvc/application/forms/EditUser.php:101
+#: airtime_mvc/application/forms/EditUser.php:97
+#: airtime_mvc/application/forms/AddUser.php:78
 msgid "Skype:"
 msgstr "Skype帐号："
 
 #: airtime_mvc/application/forms/AddUser.php:88
 #: airtime_mvc/application/forms/EditUser.php:109
+#: airtime_mvc/application/forms/EditUser.php:105
+#: airtime_mvc/application/forms/AddUser.php:84
 msgid "Jabber:"
 msgstr "Jabber帐号："
 
 #: airtime_mvc/application/forms/AddUser.php:95
+#: airtime_mvc/application/forms/AddUser.php:91
 msgid "User Type:"
 msgstr "用户类型："
 
 #: airtime_mvc/application/forms/AddUser.php:99
 #: airtime_mvc/application/controllers/LocaleController.php:315
 #: airtime_mvc/application/controllers/LocaleController.php:313
+#: airtime_mvc/application/forms/AddUser.php:95
 msgid "Guest"
 msgstr "游客"
 
 #: airtime_mvc/application/forms/AddUser.php:100
 #: airtime_mvc/application/controllers/LocaleController.php:313
 #: airtime_mvc/application/controllers/LocaleController.php:311
+#: airtime_mvc/application/forms/AddUser.php:96
 msgid "DJ"
 msgstr "节目编辑"
 
 #: airtime_mvc/application/forms/AddUser.php:101
 #: airtime_mvc/application/controllers/LocaleController.php:314
 #: airtime_mvc/application/controllers/LocaleController.php:312
+#: airtime_mvc/application/forms/AddUser.php:97
 msgid "Program Manager"
 msgstr "节目主管"
 
 #: airtime_mvc/application/forms/AddUser.php:102
 #: airtime_mvc/application/controllers/LocaleController.php:312
 #: airtime_mvc/application/controllers/LocaleController.php:310
+#: airtime_mvc/application/forms/AddUser.php:98
 msgid "Admin"
 msgstr "系统管理员"
 
 #: airtime_mvc/application/forms/AddUser.php:120
 #: airtime_mvc/application/forms/EditUser.php:151
 #: airtime_mvc/application/forms/EditUser.php:139
+#: airtime_mvc/application/forms/EditUser.php:135
+#: airtime_mvc/application/forms/AddUser.php:116
 msgid "Login name is not unique."
 msgstr "帐号重名。"
 
@@ -531,10 +566,12 @@ msgstr "选择节目编辑："
 
 #: airtime_mvc/application/forms/Login.php:67
 #: airtime_mvc/application/views/scripts/login/index.phtml:3
+#: airtime_mvc/application/forms/Login.php:65
 msgid "Login"
 msgstr "登录"
 
 #: airtime_mvc/application/forms/Login.php:86
+#: airtime_mvc/application/forms/Login.php:83
 msgid "Type the characters you see in the picture below."
 msgstr "请输入图像里的字符。"
 
@@ -883,6 +920,7 @@ msgstr "选择属性"
 #: airtime_mvc/application/models/Block.php:1341
 #: airtime_mvc/application/services/HistoryService.php:1110
 #: airtime_mvc/application/controllers/LocaleController.php:66
+#: airtime_mvc/application/services/HistoryService.php:1107
 msgid "Album"
 msgstr "专辑"
 
@@ -904,6 +942,8 @@ msgstr "每分钟拍子数"
 #: airtime_mvc/application/services/HistoryService.php:1115
 #: airtime_mvc/application/services/HistoryService.php:1169
 #: airtime_mvc/application/controllers/LocaleController.php:69
+#: airtime_mvc/application/services/HistoryService.php:1112
+#: airtime_mvc/application/services/HistoryService.php:1166
 msgid "Composer"
 msgstr "作曲"
 
@@ -912,6 +952,7 @@ msgstr "作曲"
 #: airtime_mvc/application/models/Block.php:1345
 #: airtime_mvc/application/services/HistoryService.php:1120
 #: airtime_mvc/application/controllers/LocaleController.php:70
+#: airtime_mvc/application/services/HistoryService.php:1117
 msgid "Conductor"
 msgstr "指挥"
 
@@ -921,6 +962,8 @@ msgstr "指挥"
 #: airtime_mvc/application/services/HistoryService.php:1117
 #: airtime_mvc/application/services/HistoryService.php:1170
 #: airtime_mvc/application/controllers/LocaleController.php:71
+#: airtime_mvc/application/services/HistoryService.php:1114
+#: airtime_mvc/application/services/HistoryService.php:1167
 msgid "Copyright"
 msgstr "版权"
 
@@ -932,6 +975,9 @@ msgstr "版权"
 #: airtime_mvc/application/services/HistoryService.php:1149
 #: airtime_mvc/application/services/HistoryService.php:1166
 #: airtime_mvc/application/controllers/LocaleController.php:65
+#: airtime_mvc/application/services/HistoryService.php:1106
+#: airtime_mvc/application/services/HistoryService.php:1146
+#: airtime_mvc/application/services/HistoryService.php:1163
 msgid "Creator"
 msgstr "作者"
 
@@ -947,6 +993,7 @@ msgstr "编曲"
 #: airtime_mvc/application/models/Block.php:1352
 #: airtime_mvc/application/services/HistoryService.php:1116
 #: airtime_mvc/application/controllers/LocaleController.php:74
+#: airtime_mvc/application/services/HistoryService.php:1113
 msgid "ISRC"
 msgstr "ISRC码"
 
@@ -955,6 +1002,7 @@ msgstr "ISRC码"
 #: airtime_mvc/application/models/Block.php:1353
 #: airtime_mvc/application/services/HistoryService.php:1114
 #: airtime_mvc/application/controllers/LocaleController.php:75
+#: airtime_mvc/application/services/HistoryService.php:1111
 msgid "Label"
 msgstr "标签"
 
@@ -963,6 +1011,7 @@ msgstr "标签"
 #: airtime_mvc/application/models/Block.php:1354
 #: airtime_mvc/application/services/HistoryService.php:1121
 #: airtime_mvc/application/controllers/LocaleController.php:76
+#: airtime_mvc/application/services/HistoryService.php:1118
 msgid "Language"
 msgstr "语种"
 
@@ -987,6 +1036,8 @@ msgstr "上次播放于"
 #: airtime_mvc/application/services/HistoryService.php:1111
 #: airtime_mvc/application/services/HistoryService.php:1168
 #: airtime_mvc/application/controllers/LocaleController.php:79
+#: airtime_mvc/application/services/HistoryService.php:1108
+#: airtime_mvc/application/services/HistoryService.php:1165
 msgid "Length"
 msgstr "时长"
 
@@ -1002,6 +1053,7 @@ msgstr "MIME信息"
 #: airtime_mvc/application/models/Block.php:1359
 #: airtime_mvc/application/services/HistoryService.php:1113
 #: airtime_mvc/application/controllers/LocaleController.php:81
+#: airtime_mvc/application/services/HistoryService.php:1110
 msgid "Mood"
 msgstr "风格"
 
@@ -1032,6 +1084,9 @@ msgstr "样本率（KHz）"
 #: airtime_mvc/application/services/HistoryService.php:1148
 #: airtime_mvc/application/services/HistoryService.php:1165
 #: airtime_mvc/application/controllers/LocaleController.php:64
+#: airtime_mvc/application/services/HistoryService.php:1105
+#: airtime_mvc/application/services/HistoryService.php:1145
+#: airtime_mvc/application/services/HistoryService.php:1162
 msgid "Title"
 msgstr "标题"
 
@@ -1061,6 +1116,7 @@ msgstr "网址"
 #: airtime_mvc/application/models/Block.php:1367
 #: airtime_mvc/application/services/HistoryService.php:1118
 #: airtime_mvc/application/controllers/LocaleController.php:88
+#: airtime_mvc/application/services/HistoryService.php:1115
 msgid "Year"
 msgstr "年代"
 
@@ -1322,6 +1378,8 @@ msgstr ""
 #: airtime_mvc/application/forms/SupportSettings.php:156
 #: airtime_mvc/application/forms/RegisterAirtime.php:169
 #: airtime_mvc/application/forms/SupportSettings.php:174
+#: airtime_mvc/application/forms/RegisterAirtime.php:166
+#: airtime_mvc/application/forms/SupportSettings.php:171
 msgid "You have to agree to privacy policy."
 msgstr "请先接受隐私策略"
 
@@ -1332,11 +1390,13 @@ msgstr "不能为空"
 
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
 #: airtime_mvc/application/services/HistoryService.php:1146
+#: airtime_mvc/application/services/HistoryService.php:1143
 msgid "Start Time"
 msgstr "开始时间"
 
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
 #: airtime_mvc/application/services/HistoryService.php:1147
+#: airtime_mvc/application/services/HistoryService.php:1144
 msgid "End Time"
 msgstr "结束时间"
 
@@ -1511,6 +1571,12 @@ msgstr "节目时长不能超过24小时"
 #: airtime_mvc/application/forms/AddShowWhen.php:325
 #: airtime_mvc/application/forms/AddShowWhen.php:331
 #: airtime_mvc/application/forms/AddShowWhen.php:336
+#: airtime_mvc/application/services/CalendarService.php:305
+#: airtime_mvc/application/services/CalendarService.php:288
+#: airtime_mvc/application/forms/AddShowWhen.php:280
+#: airtime_mvc/application/forms/AddShowWhen.php:318
+#: airtime_mvc/application/forms/AddShowWhen.php:324
+#: airtime_mvc/application/forms/AddShowWhen.php:329
 msgid "Cannot schedule overlapping shows"
 msgstr "节目时间设置与其他节目有冲突"
 
@@ -1685,6 +1751,7 @@ msgid "Creative Commons Attribution Noncommercial Share Alike"
 msgstr "知识共享署名-非商业应用且相同方式共享"
 
 #: airtime_mvc/application/forms/EditUser.php:125
+#: airtime_mvc/application/forms/EditUser.php:121
 msgid "Interface Timezone:"
 msgstr "用户界面使用的时区："
 
@@ -1719,6 +1786,7 @@ msgid "Email Address"
 msgstr "邮件地址"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:91
+#: airtime_mvc/application/controllers/ListenerstatController.php:56
 msgid ""
 "Please make sure admin user/password is correct on System->Streams page."
 msgstr "请检查系统->媒体流设置中，管理员用户/密码的设置是否正确。"
@@ -1738,6 +1806,7 @@ msgstr "无效的表格内容。"
 
 #: airtime_mvc/application/controllers/LoginController.php:43
 #: airtime_mvc/application/controllers/LoginController.php:35
+#: airtime_mvc/application/controllers/LoginController.php:34
 msgid "Please enter your user name and password"
 msgstr "请输入用户名和密码"
 
@@ -1748,6 +1817,7 @@ msgstr "用户名或密码错误，请重试。"
 
 #: airtime_mvc/application/controllers/LoginController.php:166
 #: airtime_mvc/application/controllers/LoginController.php:145
+#: airtime_mvc/application/controllers/LoginController.php:142
 msgid ""
 "Email could not be sent. Check your mail server settings and ensure it has "
 "been configured properly."
@@ -1755,6 +1825,7 @@ msgstr "邮件发送失败。请检查邮件服务器设置，并确定设置无
 
 #: airtime_mvc/application/controllers/LoginController.php:169
 #: airtime_mvc/application/controllers/LoginController.php:148
+#: airtime_mvc/application/controllers/LoginController.php:145
 msgid "Given email not found."
 msgstr "邮件地址没有找到。"
 
@@ -1773,16 +1844,19 @@ msgstr "下载"
 
 #: airtime_mvc/application/controllers/UserController.php:80
 #: airtime_mvc/application/controllers/UserController.php:76
+#: airtime_mvc/application/controllers/UserController.php:82
 msgid "User added successfully!"
 msgstr "用户已添加成功！"
 
 #: airtime_mvc/application/controllers/UserController.php:82
 #: airtime_mvc/application/controllers/UserController.php:78
+#: airtime_mvc/application/controllers/UserController.php:84
 msgid "User updated successfully!"
 msgstr "用于已成功更新！"
 
 #: airtime_mvc/application/controllers/UserController.php:161
 #: airtime_mvc/application/controllers/UserController.php:148
+#: airtime_mvc/application/controllers/UserController.php:154
 msgid "Settings updated successfully!"
 msgstr "设置更新成功！"
 
@@ -1953,6 +2027,7 @@ msgstr "加载中..."
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:26
 #: airtime_mvc/application/controllers/LocaleController.php:90
 #: airtime_mvc/application/controllers/LocaleController.php:390
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:25
 msgid "All"
 msgstr "全部"
 
@@ -2710,6 +2785,8 @@ msgstr "打开媒体库，添加或者删除节目内容"
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:15
 #: airtime_mvc/application/services/CalendarService.php:96
 #: airtime_mvc/application/controllers/LocaleController.php:301
+#: airtime_mvc/application/services/CalendarService.php:93
+#: airtime_mvc/application/services/CalendarService.php:100
 msgid "Add / Remove Content"
 msgstr "添加 / 删除内容"
 
@@ -3137,6 +3214,7 @@ msgstr "位置播放列表"
 
 #: airtime_mvc/application/controllers/ApiController.php:61
 #: airtime_mvc/application/controllers/Apiv2Controller.php:77
+#: airtime_mvc/application/controllers/ApiController.php:60
 msgid "You are not allowed to access this resource."
 msgstr "你没有访问该资源的权限"
 
@@ -3151,6 +3229,10 @@ msgstr "你没有访问该资源的权限"
 #: airtime_mvc/application/controllers/ApiController.php:504
 #: airtime_mvc/application/controllers/ApiController.php:608
 #: airtime_mvc/application/controllers/ApiController.php:641
+#: airtime_mvc/application/controllers/ApiController.php:315
+#: airtime_mvc/application/controllers/ApiController.php:377
+#: airtime_mvc/application/controllers/ApiController.php:314
+#: airtime_mvc/application/controllers/ApiController.php:376
 msgid "You are not allowed to access this resource. "
 msgstr "你没有访问该资源的权限"
 
@@ -3166,11 +3248,15 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/ApiController.php:931
 #: airtime_mvc/application/controllers/ApiController.php:854
+#: airtime_mvc/application/controllers/ApiController.php:641
+#: airtime_mvc/application/controllers/ApiController.php:638
 msgid "Bad request. no 'mode' parameter passed."
 msgstr "请求错误。没有提供‘模式’参数。"
 
 #: airtime_mvc/application/controllers/ApiController.php:941
 #: airtime_mvc/application/controllers/ApiController.php:864
+#: airtime_mvc/application/controllers/ApiController.php:651
+#: airtime_mvc/application/controllers/ApiController.php:648
 msgid "Bad request. 'mode' parameter is invalid"
 msgstr "请求错误。提供的‘模式’参数无效。"
 
@@ -3209,6 +3295,9 @@ msgstr "添加到智能模块"
 #: airtime_mvc/application/controllers/LibraryController.php:246
 #: airtime_mvc/application/controllers/LibraryController.php:265
 #: airtime_mvc/application/controllers/ShowbuilderController.php:202
+#: airtime_mvc/application/services/CalendarService.php:186
+#: airtime_mvc/application/services/CalendarService.php:201
+#: airtime_mvc/application/services/CalendarService.php:206
 msgid "Delete"
 msgstr "删除"
 
@@ -3222,6 +3311,7 @@ msgstr "复制播放列表"
 #: airtime_mvc/application/services/CalendarService.php:156
 #: airtime_mvc/application/controllers/LibraryController.php:241
 #: airtime_mvc/application/controllers/LibraryController.php:263
+#: airtime_mvc/application/services/CalendarService.php:157
 msgid "Edit"
 msgstr "编辑"
 
@@ -3302,16 +3392,19 @@ msgstr "意见反馈"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:277
 #: airtime_mvc/application/controllers/PreferenceController.php:336
+#: airtime_mvc/application/controllers/PreferenceController.php:332
 msgid "Stream Setting Updated."
 msgstr "流设置已更新。"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:310
 #: airtime_mvc/application/controllers/PreferenceController.php:369
+#: airtime_mvc/application/controllers/PreferenceController.php:365
 msgid "path should be specified"
 msgstr "请指定路径"
 
 #: airtime_mvc/application/controllers/PreferenceController.php:405
 #: airtime_mvc/application/controllers/PreferenceController.php:464
+#: airtime_mvc/application/controllers/PreferenceController.php:460
 msgid "Problem with Liquidsoap..."
 msgstr "Liquidsoap出错..."
 
@@ -3490,6 +3583,8 @@ msgstr "节目定制输入流的链接地址："
 #: airtime_mvc/application/views/scripts/form/preferences_soundcloud.phtml:59
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:51
 #: airtime_mvc/application/views/scripts/form/preferences_general.phtml:97
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:47
 msgid "(Required)"
 msgstr "（必填）"
 
@@ -3517,26 +3612,36 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:35
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:66
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:81
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:61
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:76
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:65
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:79
 msgid "(for verification purposes only, will not be published)"
 msgstr "（仅作为验证目的使用，不会用于发布）"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:152
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:110
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:156
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:151
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:150
 msgid "Note: Anything larger than 600x600 will be resized."
 msgstr "注意：大于600x600的图片将会被缩放"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:166
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:169
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:164
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:164
 msgid "Show me what I am sending "
 msgstr "显示我所发送的信息"
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:180
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:178
 msgid "Terms and Conditions"
 msgstr "使用条款"
 
 #: airtime_mvc/application/views/scripts/form/login.phtml:36
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:3
+#: airtime_mvc/application/views/scripts/form/login.phtml:34
 msgid "Reset password"
 msgstr "重置密码"
 
@@ -3565,6 +3670,7 @@ msgid "Remove watched directory"
 msgstr "移除监控文件夹"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:49
+#: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:50
 msgid "You are not watching any media folders."
 msgstr "你没有正在监控的文件夹。"
 
@@ -3742,14 +3848,17 @@ msgid "Stream Settings"
 msgstr "流设定"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:13
+#: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:12
 msgid "Global Settings"
 msgstr "全局设定"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:88
+#: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:87
 msgid "dB"
 msgstr "分贝"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:107
+#: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:106
 msgid "Output Stream Settings"
 msgstr "输出流设定"
 
@@ -3866,14 +3975,17 @@ msgid "Limit to "
 msgstr "限制到"
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:27
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:26
 msgid "Failed"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:28
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:27
 msgid "Pending"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:31
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:30
 msgid "Recent Uploads"
 msgstr ""
 
@@ -3927,6 +4039,7 @@ msgid "Then you're good to go!"
 msgstr "然后就大功告成啦！"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:15
+#: airtime_mvc/application/views/scripts/dashboard/help.phtml:13
 #, php-format
 msgid "For more detailed help, read the %suser manual%s."
 msgstr "详细的指导，可以参考%s用户手册%s。"
@@ -4229,6 +4342,8 @@ msgid "Rebroadcast of %s from %s"
 msgstr "%s是%s的重播"
 
 #: airtime_mvc/application/models/Preference.php:650
+#: airtime_mvc/application/models/Preference.php:662
+#: airtime_mvc/application/models/Preference.php:655
 msgid "Select Country"
 msgstr "选择国家"
 
@@ -4333,6 +4448,8 @@ msgstr "当前节目内容表（节目已更改）需要刷新"
 #: airtime_mvc/application/models/Scheduler.php:132
 #: airtime_mvc/application/models/Scheduler.php:460
 #: airtime_mvc/application/models/Scheduler.php:498
+#: airtime_mvc/application/models/Scheduler.php:444
+#: airtime_mvc/application/models/Scheduler.php:482
 msgid "The schedule you're viewing is out of date!"
 msgstr "当前节目内容需要刷新！"
 
@@ -4367,6 +4484,8 @@ msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:216
 #: airtime_mvc/application/models/Scheduler.php:305
+#: airtime_mvc/application/models/Scheduler.php:200
+#: airtime_mvc/application/models/Scheduler.php:289
 msgid "A selected File does not exist!"
 msgstr "某个选中的文件不存在。"
 
@@ -4432,69 +4551,92 @@ msgstr "查看录制文件的元数据"
 
 #: airtime_mvc/application/services/CalendarService.php:77
 #: airtime_mvc/application/services/CalendarService.php:120
+#: airtime_mvc/application/services/CalendarService.php:121
 msgid "Show Content"
 msgstr "显示内容"
 
 #: airtime_mvc/application/services/CalendarService.php:109
+#: airtime_mvc/application/services/CalendarService.php:111
 msgid "Remove All Content"
 msgstr "清空全部内容"
 
 #: airtime_mvc/application/services/CalendarService.php:130
 #: airtime_mvc/application/services/CalendarService.php:134
+#: airtime_mvc/application/services/CalendarService.php:131
+#: airtime_mvc/application/services/CalendarService.php:135
 msgid "Cancel Current Show"
 msgstr "取消当前节目"
 
 #: airtime_mvc/application/services/CalendarService.php:151
 #: airtime_mvc/application/services/CalendarService.php:166
+#: airtime_mvc/application/services/CalendarService.php:152
+#: airtime_mvc/application/services/CalendarService.php:167
 msgid "Edit This Instance"
 msgstr "编辑此节目"
 
 #: airtime_mvc/application/services/CalendarService.php:161
 #: airtime_mvc/application/services/CalendarService.php:172
+#: airtime_mvc/application/services/CalendarService.php:162
+#: airtime_mvc/application/services/CalendarService.php:173
 msgid "Edit Show"
 msgstr "编辑节目"
 
 #: airtime_mvc/application/services/CalendarService.php:190
+#: airtime_mvc/application/services/CalendarService.php:191
 msgid "Delete This Instance"
 msgstr "删除当前节目"
 
 #: airtime_mvc/application/services/CalendarService.php:195
+#: airtime_mvc/application/services/CalendarService.php:196
 msgid "Delete This Instance and All Following"
 msgstr "删除当前以及随后的系列节目"
 
 #: airtime_mvc/application/services/CalendarService.php:249
+#: airtime_mvc/application/services/CalendarService.php:250
 msgid "Permission denied"
 msgstr "没有编辑权限"
 
 #: airtime_mvc/application/services/CalendarService.php:253
+#: airtime_mvc/application/services/CalendarService.php:254
 msgid "Can't drag and drop repeating shows"
 msgstr "系列中的节目无法拖拽"
 
 #: airtime_mvc/application/services/CalendarService.php:262
+#: airtime_mvc/application/services/CalendarService.php:263
 msgid "Can't move a past show"
 msgstr "已经结束的节目无法更改时间"
 
 #: airtime_mvc/application/services/CalendarService.php:297
+#: airtime_mvc/application/services/CalendarService.php:298
+#: airtime_mvc/application/services/CalendarService.php:281
 msgid "Can't move show into past"
 msgstr "节目不能设置到已过去的时间点"
 
 #: airtime_mvc/application/services/CalendarService.php:317
+#: airtime_mvc/application/services/CalendarService.php:318
+#: airtime_mvc/application/services/CalendarService.php:301
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
 msgstr "录音和重播节目之间的间隔必须大于等于1小时。"
 
 #: airtime_mvc/application/services/CalendarService.php:327
+#: airtime_mvc/application/services/CalendarService.php:328
+#: airtime_mvc/application/services/CalendarService.php:311
 msgid "Show was deleted because recorded show does not exist!"
 msgstr "录音节目不存在，节目已删除！"
 
 #: airtime_mvc/application/services/CalendarService.php:334
+#: airtime_mvc/application/services/CalendarService.php:335
+#: airtime_mvc/application/services/CalendarService.php:318
 msgid "Must wait 1 hour to rebroadcast."
 msgstr "重播节目必须设置于1小时之后。"
 
 #: airtime_mvc/application/services/HistoryService.php:1119
+#: airtime_mvc/application/services/HistoryService.php:1116
 msgid "Track"
 msgstr "曲目"
 
 #: airtime_mvc/application/services/HistoryService.php:1167
+#: airtime_mvc/application/services/HistoryService.php:1164
 msgid "Played"
 msgstr "已播放"
 
@@ -4522,11 +4664,13 @@ msgid "No Records"
 msgstr "无记录"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:41
 msgid ""
 "(In order to promote your station, 'Send support feedback' must be enabled)."
 msgstr "（为了推广您的电台，请启用‘发送支持反馈’）"
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:191
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:186
 msgid "Sourcefabric Privacy Policy"
 msgstr "Sourcefabric隐私策略"
 
@@ -4618,98 +4762,133 @@ msgstr ""
 msgid "Purchase your copy of %s"
 msgstr ""
 
-#~ msgid "Promote my station on Sourcefabric.org"
-#~ msgstr "在Sourcefabric.org上推广我的电台"
+#: airtime_mvc/application/forms/RegisterAirtime.php:126
+#: airtime_mvc/application/forms/SupportSettings.php:122
+msgid "Promote my station on Sourcefabric.org"
+msgstr "在Sourcefabric.org上推广我的电台"
 
-#~ msgid "By checking this box, I agree to Sourcefabric's %sprivacy policy%s."
-#~ msgstr "我同意Sourcefabric的%s隐私策略%s"
+#: airtime_mvc/application/forms/RegisterAirtime.php:149
+#: airtime_mvc/application/forms/SupportSettings.php:148
+#, php-format
+msgid "By checking this box, I agree to Sourcefabric's %sprivacy policy%s."
+msgstr "我同意Sourcefabric的%s隐私策略%s"
 
-#~ msgid "Use Airtime Authentication:"
-#~ msgstr "使用Airtime的用户认证："
+#: airtime_mvc/application/forms/AddShowLiveStream.php:10
+msgid "Use Airtime Authentication:"
+msgstr "使用Airtime的用户认证："
 
-#~ msgid "File does not exist in Airtime."
-#~ msgstr "Airtime中不存在该文件。"
+#: airtime_mvc/application/controllers/ApiController.php:558
+#: airtime_mvc/application/controllers/ApiController.php:555
+msgid "File does not exist in Airtime."
+msgstr "Airtime中不存在该文件。"
 
-#~ msgid "File does not exist in Airtime"
-#~ msgstr "Airtime中不存在该文件。"
+#: airtime_mvc/application/controllers/ApiController.php:578
+#: airtime_mvc/application/controllers/ApiController.php:575
+msgid "File does not exist in Airtime"
+msgstr "Airtime中不存在该文件。"
 
-#~ msgid "File doesn't exist in Airtime."
-#~ msgstr "Airtime中不存在该文件。"
+#: airtime_mvc/application/controllers/ApiController.php:590
+#: airtime_mvc/application/controllers/ApiController.php:587
+msgid "File doesn't exist in Airtime."
+msgstr "Airtime中不存在该文件。"
 
-#~ msgid "Airtime Version"
-#~ msgstr "Airtime版本"
+#: airtime_mvc/application/views/scripts/systemstatus/index.phtml:14
+msgid "Airtime Version"
+msgstr "Airtime版本"
 
-#~ msgid ""
-#~ "Help Airtime improve by letting us know how you are using it. This info "
-#~ "will be collected regularly in order to enhance your user experience."
-#~ "%sClick 'Yes, help Airtime' and we'll make sure the features you use are "
-#~ "constantly improving."
-#~ msgstr ""
-#~ "通过告诉我们您使用Airtime的方式，可以帮助我们改进Airtime。这些信息会周期性"
-#~ "的收集起来，并且提高您的用户体验。%s点击‘是的，帮助Airtime’，就能让我们确"
-#~ "保你所使用的功能持续地得到改进。"
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:6
+#, php-format
+msgid ""
+"Help Airtime improve by letting us know how you are using it. This info will "
+"be collected regularly in order to enhance your user experience.%sClick "
+"'Yes, help Airtime' and we'll make sure the features you use are constantly "
+"improving."
+msgstr ""
+"通过告诉我们您使用Airtime的方式，可以帮助我们改进Airtime。这些信息会周期性的"
+"收集起来，并且提高您的用户体验。%s点击‘是的，帮助Airtime’，就能让我们确保你所"
+"使用的功能持续地得到改进。"
 
-#~ msgid ""
-#~ "Click the box below to advertise your station on %sSourcefabric.org%s. In "
-#~ "order to promote your station, 'Send support feedback' must be enabled. "
-#~ "This data will be collected in addition to the support feedback."
-#~ msgstr ""
-#~ "勾选下面的选项，就可以在%sSourcefabric.org%s上推广您的电台。前提是‘发送支"
-#~ "持反馈’选项已经启用。这些数据将会被收集起来以作为支持反馈的信息。"
+#: airtime_mvc/application/views/scripts/form/register-dialog.phtml:25
+#, php-format
+msgid ""
+"Click the box below to advertise your station on %sSourcefabric.org%s. In "
+"order to promote your station, 'Send support feedback' must be enabled. This "
+"data will be collected in addition to the support feedback."
+msgstr ""
+"勾选下面的选项，就可以在%sSourcefabric.org%s上推广您的电台。前提是‘发送支持反"
+"馈’选项已经启用。这些数据将会被收集起来以作为支持反馈的信息。"
 
-#~ msgid ""
-#~ "Rescan watched directory (This is useful if it is network mount and may "
-#~ "be out of sync with Airtime)"
-#~ msgstr "重新扫描监控的文件夹（针对于需要手动更新的网络存储路径）"
+#: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:43
+msgid ""
+"Rescan watched directory (This is useful if it is network mount and may be "
+"out of sync with Airtime)"
+msgstr "重新扫描监控的文件夹（针对于需要手动更新的网络存储路径）"
 
-#~ msgid "Welcome to Airtime!"
-#~ msgstr "欢迎使用Airtime！"
+#: airtime_mvc/application/views/scripts/dashboard/help.phtml:3
+msgid "Welcome to Airtime!"
+msgstr "欢迎使用Airtime！"
 
-#~ msgid ""
-#~ "Here's how you can get started using Airtime to automate your broadcasts: "
-#~ msgstr "简单介绍如何使用Airtime来自动完成播放："
+#: airtime_mvc/application/views/scripts/dashboard/help.phtml:4
+msgid ""
+"Here's how you can get started using Airtime to automate your broadcasts: "
+msgstr "简单介绍如何使用Airtime来自动完成播放："
 
-#~ msgid ""
-#~ "%sAirtime%s %s, the open radio software for scheduling and remote station "
-#~ "management. %s"
-#~ msgstr "%sAirtime%s %s， 提供内容编排及远程管理的开源电台软件。%s"
+#: airtime_mvc/application/views/scripts/dashboard/about.phtml:5
+#, php-format
+msgid ""
+"%sAirtime%s %s, the open radio software for scheduling and remote station "
+"management. %s"
+msgstr "%sAirtime%s %s， 提供内容编排及远程管理的开源电台软件。%s"
 
-#~ msgid "Airtime Password Reset"
-#~ msgstr "Airtime密码重置"
+#: airtime_mvc/application/models/Auth.php:36
+msgid "Airtime Password Reset"
+msgstr "Airtime密码重置"
 
-#~ msgid ""
-#~ "Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved."
-#~ "%sMaintained and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"
-#~ msgstr "Airtime 遵循GPL第三版协议，%s由%sSourcefabric o.p.s%s版权所有。"
+#: airtime_mvc/application/layouts/scripts/login.phtml:16
+#, php-format
+msgid ""
+"Airtime Copyright &copy;Sourcefabric o.p.s. All rights reserved.%sMaintained "
+"and distributed under GNU GPL v.3 by %sSourcefabric o.p.s%s"
+msgstr "Airtime 遵循GPL第三版协议，%s由%sSourcefabric o.p.s%s版权所有。"
 
-#~ msgid ""
-#~ "Help Airtime improve by letting Sourcefabric know how you are using it. "
-#~ "This information will be collected regularly in order to enhance your "
-#~ "user experience.%sClick the 'Send support feedback' box and we'll make "
-#~ "sure the features you use are constantly improving."
-#~ msgstr ""
-#~ "通过告诉Sourcefabric您是如何使用Airtime的，可以帮助我们改进Airtime。这些信"
-#~ "息将会被手机起来用于提高您的客户体验。%s只要勾选‘发送支持反馈’，就能确保让"
-#~ "我们持续改进您所使用"
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
+#, php-format
+msgid ""
+"Help Airtime improve by letting Sourcefabric know how you are using it. This "
+"information will be collected regularly in order to enhance your user "
+"experience.%sClick the 'Send support feedback' box and we'll make sure the "
+"features you use are constantly improving."
+msgstr ""
+"通过告诉Sourcefabric您是如何使用Airtime的，可以帮助我们改进Airtime。这些信息"
+"将会被手机起来用于提高您的客户体验。%s只要勾选‘发送支持反馈’，就能确保让我们"
+"持续改进您所使用"
 
-#~ msgid "Click the box below to promote your station on %sSourcefabric.org%s."
-#~ msgstr "勾选随后的选项就可以在%sSourcefabric.org%s上推广您的电台。"
+#: airtime_mvc/application/views/scripts/form/support-setting.phtml:23
+#, php-format
+msgid "Click the box below to promote your station on %sSourcefabric.org%s."
+msgstr "勾选随后的选项就可以在%sSourcefabric.org%s上推广您的电台。"
 
-#~ msgid ""
-#~ "%sSourcefabric%s o.p.s. Airtime is distributed under the %sGNU GPL v.3%s"
-#~ msgstr "%sSourcefabric%s o.p.s. Airtime遵循%sGNU GPL v.3%s"
+#: airtime_mvc/application/views/scripts/dashboard/about.phtml:13
+#, php-format
+msgid ""
+"%sSourcefabric%s o.p.s. Airtime is distributed under the %sGNU GPL v.3%s"
+msgstr "%sSourcefabric%s o.p.s. Airtime遵循%sGNU GPL v.3%s"
 
-#~ msgid ""
-#~ "Welcome to the online Airtime demo! You can log in using the username "
-#~ "'admin' and the password 'admin'."
-#~ msgstr ""
-#~ "欢迎来到在线Airtime演示！你可以用‘admin’和‘admin’作为用户名和密码登录。"
+#: airtime_mvc/application/views/scripts/login/index.phtml:7
+msgid ""
+"Welcome to the online Airtime demo! You can log in using the username "
+"'admin' and the password 'admin'."
+msgstr ""
+"欢迎来到在线Airtime演示！你可以用‘admin’和‘admin’作为用户名和密码登录。"
 
-#~ msgid "Purchase your copy of Airtime"
-#~ msgstr "购买你使用的Airtime"
+#: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
+msgid "Purchase your copy of Airtime"
+msgstr "购买你使用的Airtime"
 
-#~ msgid "can't resize a past show"
-#~ msgstr "已结束的节目不能调整时长"
+#: airtime_mvc/application/models/ShowInstance.php:257
+msgid "can't resize a past show"
+msgstr "已结束的节目不能调整时长"
 
-#~ msgid "Should not overlap shows"
-#~ msgstr "节目时间不能有重合"
+#: airtime_mvc/application/models/ShowInstance.php:279
+msgid "Should not overlap shows"
+msgstr "节目时间不能有重合"

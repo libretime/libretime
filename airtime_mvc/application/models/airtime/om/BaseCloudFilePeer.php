@@ -24,16 +24,19 @@ abstract class BaseCloudFilePeer
     const TM_CLASS = 'CloudFileTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
     const ID = 'cloud_file.id';
+
+    /** the column name for the storage_backend field */
+    const STORAGE_BACKEND = 'cloud_file.storage_backend';
 
     /** the column name for the resource_id field */
     const RESOURCE_ID = 'cloud_file.resource_id';
@@ -60,12 +63,12 @@ abstract class BaseCloudFilePeer
      * e.g. CloudFilePeer::$fieldNames[CloudFilePeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'ResourceId', 'CcFileId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'resourceId', 'ccFileId', ),
-        BasePeer::TYPE_COLNAME => array (CloudFilePeer::ID, CloudFilePeer::RESOURCE_ID, CloudFilePeer::CC_FILE_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'RESOURCE_ID', 'CC_FILE_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'resource_id', 'cc_file_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'StorageBackend', 'ResourceId', 'CcFileId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'storageBackend', 'resourceId', 'ccFileId', ),
+        BasePeer::TYPE_COLNAME => array (CloudFilePeer::ID, CloudFilePeer::STORAGE_BACKEND, CloudFilePeer::RESOURCE_ID, CloudFilePeer::CC_FILE_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'STORAGE_BACKEND', 'RESOURCE_ID', 'CC_FILE_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'storage_backend', 'resource_id', 'cc_file_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -75,12 +78,12 @@ abstract class BaseCloudFilePeer
      * e.g. CloudFilePeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'ResourceId' => 1, 'CcFileId' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'resourceId' => 1, 'ccFileId' => 2, ),
-        BasePeer::TYPE_COLNAME => array (CloudFilePeer::ID => 0, CloudFilePeer::RESOURCE_ID => 1, CloudFilePeer::CC_FILE_ID => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'RESOURCE_ID' => 1, 'CC_FILE_ID' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'resource_id' => 1, 'cc_file_id' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'StorageBackend' => 1, 'ResourceId' => 2, 'CcFileId' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'storageBackend' => 1, 'resourceId' => 2, 'ccFileId' => 3, ),
+        BasePeer::TYPE_COLNAME => array (CloudFilePeer::ID => 0, CloudFilePeer::STORAGE_BACKEND => 1, CloudFilePeer::RESOURCE_ID => 2, CloudFilePeer::CC_FILE_ID => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'STORAGE_BACKEND' => 1, 'RESOURCE_ID' => 2, 'CC_FILE_ID' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'storage_backend' => 1, 'resource_id' => 2, 'cc_file_id' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -155,10 +158,12 @@ abstract class BaseCloudFilePeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(CloudFilePeer::ID);
+            $criteria->addSelectColumn(CloudFilePeer::STORAGE_BACKEND);
             $criteria->addSelectColumn(CloudFilePeer::RESOURCE_ID);
             $criteria->addSelectColumn(CloudFilePeer::CC_FILE_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.storage_backend');
             $criteria->addSelectColumn($alias . '.resource_id');
             $criteria->addSelectColumn($alias . '.cc_file_id');
         }

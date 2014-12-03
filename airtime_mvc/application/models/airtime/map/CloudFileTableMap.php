@@ -40,6 +40,7 @@ class CloudFileTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('cloud_file_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('storage_backend', 'StorageBackend', 'VARCHAR', true, 512, null);
         $this->addColumn('resource_id', 'ResourceId', 'LONGVARCHAR', true, null, null);
         $this->addForeignKey('cc_file_id', 'CcFileId', 'INTEGER', 'cc_files', 'id', false, null, null);
         // validators

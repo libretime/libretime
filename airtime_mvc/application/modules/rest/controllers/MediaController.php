@@ -73,9 +73,10 @@ class Rest_MediaController extends Zend_Rest_Controller
             $storedFile = new Application_Model_StoredFile($file, $con);
             $baseUrl = Application_Common_OsPath::getBaseDir();
 
+            $CC_CONFIG = Config::getConfig();
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody($this->_redirect($storedFile->getRelativeFileUrl($baseUrl).'/download/true'));
+                ->appendBody($this->_redirect($storedFile->getRelativeFileUrl($baseUrl).'/download/true/api_key/'.$CC_CONFIG["apiKey"][0]));
         } else {
             $this->fileNotFoundResponse();
         }
@@ -192,6 +193,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         $file = CcFilesQuery::create()->findPk($id);
 
+        // Since we check for this value when deleting files, set it first
+        //$file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
+
         $requestData = json_decode($this->getRequest()->getRawBody(), true);
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
         $whiteList = $this->stripTimeStampFromYearTag($whiteList);
@@ -213,6 +217,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 return;
             }
             $cloudFile = new CloudFile();
+            $cloudFile->setStorageBackend($requestData["storage_backend"]);
             $cloudFile->setResourceId($requestData["resource_id"]);
             $cloudFile->setCcFiles($file);
             $cloudFile->save();
@@ -316,7 +321,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         $authHeader = $this->getRequest()->getHeader("Authorization");
         $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
         $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
-        
         if ($encodedRequestApiKey === $encodedStoredApiKey) 
         {
             return true;

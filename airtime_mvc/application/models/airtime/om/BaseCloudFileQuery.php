@@ -7,10 +7,12 @@
  *
  *
  * @method CloudFileQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method CloudFileQuery orderByStorageBackend($order = Criteria::ASC) Order by the storage_backend column
  * @method CloudFileQuery orderByResourceId($order = Criteria::ASC) Order by the resource_id column
  * @method CloudFileQuery orderByCcFileId($order = Criteria::ASC) Order by the cc_file_id column
  *
  * @method CloudFileQuery groupByDbId() Group by the id column
+ * @method CloudFileQuery groupByStorageBackend() Group by the storage_backend column
  * @method CloudFileQuery groupByResourceId() Group by the resource_id column
  * @method CloudFileQuery groupByCcFileId() Group by the cc_file_id column
  *
@@ -25,10 +27,12 @@
  * @method CloudFile findOne(PropelPDO $con = null) Return the first CloudFile matching the query
  * @method CloudFile findOneOrCreate(PropelPDO $con = null) Return the first CloudFile matching the query, or a new CloudFile object populated from the query conditions when no match is found
  *
+ * @method CloudFile findOneByStorageBackend(string $storage_backend) Return the first CloudFile filtered by the storage_backend column
  * @method CloudFile findOneByResourceId(string $resource_id) Return the first CloudFile filtered by the resource_id column
  * @method CloudFile findOneByCcFileId(int $cc_file_id) Return the first CloudFile filtered by the cc_file_id column
  *
  * @method array findByDbId(int $id) Return CloudFile objects filtered by the id column
+ * @method array findByStorageBackend(string $storage_backend) Return CloudFile objects filtered by the storage_backend column
  * @method array findByResourceId(string $resource_id) Return CloudFile objects filtered by the resource_id column
  * @method array findByCcFileId(int $cc_file_id) Return CloudFile objects filtered by the cc_file_id column
  *
@@ -138,7 +142,7 @@ abstract class BaseCloudFileQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "resource_id", "cc_file_id" FROM "cloud_file" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "storage_backend", "resource_id", "cc_file_id" FROM "cloud_file" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -267,6 +271,35 @@ abstract class BaseCloudFileQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CloudFilePeer::ID, $dbId, $comparison);
+    }
+
+    /**
+     * Filter the query on the storage_backend column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByStorageBackend('fooValue');   // WHERE storage_backend = 'fooValue'
+     * $query->filterByStorageBackend('%fooValue%'); // WHERE storage_backend LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $storageBackend The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CloudFileQuery The current query, for fluid interface
+     */
+    public function filterByStorageBackend($storageBackend = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($storageBackend)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $storageBackend)) {
+                $storageBackend = str_replace('*', '%', $storageBackend);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CloudFilePeer::STORAGE_BACKEND, $storageBackend, $comparison);
     }
 
     /**

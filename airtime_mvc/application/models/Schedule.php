@@ -778,9 +778,11 @@ SQL;
      * @param Array $item schedule info about one track
      * @param Integer $media_id scheduled item's cc_files id
      * @param String $uri path to the scheduled item's physical location
-     * @param String $amazonS3ResourceId scheduled item's Amazon S3 resource id, if applicable
+     * @param String $downloadURL URL PYPO makes to the REST API to download the file for playout
+     * @param Integer $filsize The file's file size in bytes
+     * 
      */
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $amazonS3ResourceId)
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $downloadURL, $filesize)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end   = self::AirtimeTimeToPypoTime($item["end"]);
@@ -814,11 +816,10 @@ SQL;
             'end'               => $end,
             'show_name'         => $item["show_name"],
             'replay_gain'       => $replay_gain,
-            'independent_event' => $independent_event
+            'independent_event' => $independent_event,
+            'download_url'      => $downloadURL,
+            'filesize'          => $filesize,
         );
-        if (!is_null($amazonS3ResourceId)) {
-            $schedule_item["amazonS3_resource_id"] = $amazonS3ResourceId;
-        }
 
         if ($schedule_item['cue_in'] > $schedule_item['cue_out']) {
             $schedule_item['cue_in'] = $schedule_item['cue_out'];
@@ -952,10 +953,14 @@ SQL;
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $file = $storedFile->getPropelOrm();
                 $uri = $file->getAbsoluteFilePath();
-                $amazonS3ResourceId = $file->getResourceId();
                 
-                self::createFileScheduleEvent($data, $item, $media_id, $uri, $amazonS3ResourceId);
-            }
+                $baseUrl = Application_Common_OsPath::getBaseDir();
+                $downloadURL = "http://".$_SERVER['HTTP_HOST'].$baseUrl."rest/media/$media_id/download";
+                $filesize = $file->getFileSize();
+                
+                self::createFileScheduleEvent($data, $item, $media_id, $uri, $downloadURL, $filesize);
+            } 
+
             elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"
                 $media_id = $item['stream_id'];

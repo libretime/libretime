@@ -18,7 +18,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, station_domain):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -31,6 +31,7 @@ class AnalyzerPipeline:
                                preserve. The file at audio_file_path typically has a 
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
+            station_domain: The Airtime Pro account's domain name. i.e. bananas
         """
         # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
@@ -52,6 +53,7 @@ class AnalyzerPipeline:
             # First, we extract the ID3 tags and other metadata:
             metadata = dict()
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
+            metadata["station_domain"] = station_domain
             #metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
             csu = CloudStorageUploader()
             metadata = csu.upload_obj(audio_file_path, metadata)
