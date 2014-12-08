@@ -70,7 +70,9 @@ class PypoFile(Thread):
                 config = self.read_config_file(CONFIG_PATH)
                 CONFIG_SECTION = "general"
                 username = config.get(CONFIG_SECTION, 'api_key')
-                url = media_item['download_url']
+                host = config.get(CONFIG_SECTION, 'base_url')
+                #url = media_item['download_url']
+                url = "http://%s/rest/media/%s/download" % (host, media_item["id"])
                 
                 with open(dst, "wb") as handle:
                     self.logger.info("----------")
