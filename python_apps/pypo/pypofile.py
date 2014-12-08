@@ -62,15 +62,12 @@ class PypoFile(Thread):
         if do_copy:
             self.logger.debug("copying from %s to local cache %s" % (src, dst))
             try:
-
-                """
-                copy will overwrite dst if it already exists
-                """
-                #shutil.copy(src, dst)                
                 config = self.read_config_file(CONFIG_PATH)
                 CONFIG_SECTION = "general"
                 username = config.get(CONFIG_SECTION, 'api_key')
-                url = media_item['download_url']
+
+                host = config.get(CONFIG_SECTION, 'base_url')
+                url = "http://%s/rest/media/%s/download" % (host, media_item["id"])
                 
                 with open(dst, "wb") as handle:
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True)
