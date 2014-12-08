@@ -51,7 +51,7 @@ class Amazon_S3 extends StorageBackend
         
         $amz_resource = utf8_encode("$bucket/$resourceId");
         $amz_resource_info = $this->zendServiceAmazonS3->getInfo($amz_resource);
-        return $amz_resource_info["size"];
+        return (int)$amz_resource_info["size"];
     }
     
     public function deletePhysicalFile($resourceId)
