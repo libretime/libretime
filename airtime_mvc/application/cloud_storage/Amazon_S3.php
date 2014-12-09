@@ -2,71 +2,60 @@
 
 require_once 'StorageBackend.php';
 
+use Aws\S3\S3Client;
+
 class Amazon_S3 extends StorageBackend
 {
-    private $zendServiceAmazonS3;
+    
+    private $s3Client;
     
     public function Amazon_S3($securityCredentials)
     {
         $this->setBucket($securityCredentials['bucket']);
         $this->setAccessKey($securityCredentials['api_key']);
         $this->setSecretKey($securityCredentials['api_key_secret']);
-        
-        $this->zendServiceAmazonS3 = new Zend_Service_Amazon_S3(
-            $this->getAccessKey(),
-            $this->getSecretKey());
+
+        $this->s3Client = S3Client::factory(array(
+            'key' => $securityCredentials['api_key'],
+            'secret' => $securityCredentials['api_key_secret'],
+        ));
     }
     
     public function getAbsoluteFilePath($resourceId)
     {
-        $endpoint = $this->zendServiceAmazonS3->getEndpoint();
-        $scheme = $endpoint->getScheme();
-        $host = $endpoint->getHost();
-        $bucket = $this->getBucket();
-        return "$scheme://$bucket.$host/".utf8_encode($resourceId);
+        return $this->s3Client->getObjectUrl($this->getBucket(), $resourceId);
     }
 
     public function getSignedURL($resourceId)
     {
-        //URL will be active for 30 minutes
-        $expires = time()+1800;
-        
-        $bucket = $this->getBucket();
-        $secretKey = $this->getSecretKey();
-        $accessKey = $this->getAccessKey();
-        
-        $string_to_sign = utf8_encode("GET\n\n\n$expires\n/$bucket/$resourceId");
-        // We need to urlencode the entire signature in case the hashed signature
-        // has spaces. (NOTE: utf8_encode() does not work here because it turns
-        // spaces into non-breaking spaces)
-        $signature = urlencode(base64_encode((hash_hmac("sha1", $string_to_sign, $secretKey, true))));
-        
-        $resourceURL = $this->getAbsoluteFilePath($resourceId);
-        return $resourceURL."?AWSAccessKeyId=$accessKey&Expires=$expires&Signature=$signature";
+        return $this->s3Client->getObjectUrl($this->getBucket(), $resourceId, '+60 minutes');
     }
     
     public function getFileSize($resourceId)
     {
-        $bucket = $this->getBucket();
-        
-        $amz_resource = utf8_encode("$bucket/$resourceId");
-        $amz_resource_info = $this->zendServiceAmazonS3->getInfo($amz_resource);
-        return (int)$amz_resource_info["size"];
+        $obj = $this->s3Client->getObject(array(
+            'Bucket' => $this->getBucket(),
+            'Key' => $resourceId,
+        ));
+        if (isset($obj["ContentLength"])) {
+            return (int)$obj["ContentLength"];
+        } else {
+            return 0;
+        }
     }
     
     public function deletePhysicalFile($resourceId)
     {
         $bucket = $this->getBucket();
-        $amz_resource = utf8_encode("$bucket/$resourceId");
-        
-        if ($this->zendServiceAmazonS3->isObjectAvailable($amz_resource)) {
-           // removeObject() returns true even if the object was not deleted (bug?)
-           // so that is not a good way to do error handling. isObjectAvailable()
-           // does however return the correct value; We have to assume that if the
-           // object is available the removeObject() function will work.
-           $this->zendServiceAmazonS3->removeObject($amz_resource);
-           } else {
-               throw new Exception("ERROR: Could not locate object on Amazon S3");
-           }
+
+        if ($this->s3Client->doesObjectExist($bucket, $resourceId)) {
+
+            $result = $this->s3Client->deleteObject(array(
+                'Bucket' => $bucket,
+                'Key' => $resourceId,
+            ));
+        } else {
+            throw new Exception("ERROR: Could not locate file to delete.");
+        }
     }
 }

@@ -10,6 +10,9 @@ if (!@include_once('propel/propel1/runtime/lib/Propel.php'))
 
 Propel::init(__DIR__."/configs/airtime-conf-production.php");
 
+//Composer's autoloader
+require_once 'autoload.php';
+
 require_once __DIR__."/configs/constants.php";
 require_once 'Preference.php';
 require_once 'Locale.php';
