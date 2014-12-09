@@ -24,6 +24,8 @@ define('SETUP_PATH', BUILD_PATH . 'airtime-setup/');
 define('APPLICATION_PATH', ROOT_PATH . 'application/');
 define('CONFIG_PATH', APPLICATION_PATH . 'configs/');
 
+define("AIRTIME_CONFIG_STOR", "/etc/airtime/");
+
 define('AIRTIME_CONFIG', 'airtime.conf');
 
 require_once(LIB_PATH . "propel/runtime/lib/Propel.php");
@@ -37,7 +39,7 @@ if (array_key_exists('config', $_GET)) {
 }
 
 // If a configuration file exists, forward to our boot script
-if (file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
+if (file_exists(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG)) {
     /*
      * Even if the user has been through the setup process and
      * created an airtime.conf file (or they may have simply

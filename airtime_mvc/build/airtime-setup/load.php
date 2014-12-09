@@ -1,5 +1,8 @@
 <?php
 
+define("RMQ_INI_SECTION", "rabbitmq");
+require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
+
 /**
  * Check to see if Airtime is properly configured.
  *
@@ -8,7 +11,8 @@
  */
 function checkConfiguration() {
     return checkPhpDependencies()
-        && checkDatabaseConfiguration();
+        && checkDatabaseConfiguration()
+        && checkRMQConnection();
 }
 
 /**
@@ -73,6 +77,23 @@ function configureDatabase() {
     Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
 }
 
-function validateDatabaseSchema() {
+/**
+ * Check that we can connect to RabbitMQ
+ */
+function checkRMQConnection() {
+    // Check for airtime.conf in /etc/airtime/ first, then check in the build directory,
+    if (file_exists(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG)) {
+        $ini = parse_ini_file(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG, true);
+    } else if (file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
+        $ini = parse_ini_file(BUILD_PATH . AIRTIME_CONFIG, true);
+    } else {
+        $ini = parse_ini_file(BUILD_PATH . "airtime.example.conf", true);
+    }
 
+    $conn = new AMQPConnection($ini[RMQ_INI_SECTION]["host"],
+                               $ini[RMQ_INI_SECTION]["port"],
+                               $ini[RMQ_INI_SECTION]["user"],
+                               $ini[RMQ_INI_SECTION]["password"],
+                               $ini[RMQ_INI_SECTION]["vhost"]);
+    return isset($conn);
 }

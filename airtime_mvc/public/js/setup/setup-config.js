@@ -2,6 +2,7 @@
  * Do some cleanup when we get a success response from a POST request
  * during setup
  * @param data the POST request return data
+ * @param e the jquery event
  */
 function cleanupStep(data, e) {
     showFeedback(data);
@@ -19,15 +20,15 @@ function cleanupStep(data, e) {
  * @param data the POST request return data
  */
 function showFeedback(data) {
-    if (data.errors.length > 0) {
-        $(".help-message").addClass("has-error");
-        $(".form-control-feedback").show();
-    } else {
-        $(".help-message").addClass("has-success");
-    }
     toggleMessage(data.message);
     for (var i = 0; i < data.errors.length; i++) {
         $("#" + data.errors[i]).parent().addClass("has-error has-feedback");
+    }
+    if (data.errors.length > 0) {
+        $(".help-message").addClass("has-error");
+        $(".has-error .form-control-feedback").show();
+    } else {
+        $(".help-message").addClass("has-success");
     }
 }
 
@@ -36,8 +37,7 @@ function showFeedback(data) {
  */
 function resetFeedback() {
     $(".form-control-feedback").hide();
-    $("#helpBlock").html("");
-    $(".has-error, .has-feedback").removeClass("has-error has-feedback");
+    $(".has-success, .has-error, .has-feedback").removeClass("has-success has-error has-feedback");
 }
 
 /**
@@ -47,16 +47,12 @@ function resetFeedback() {
 function toggleMessage(msg) {
     /*
      * Since setting display:none; on this element causes odd behaviour
-     * with bootstrap, hide() the element so we can slide it in.
+     * with bootstrap, hide() the element so we can formSlide it in.
      * This is only really only necessary the first time this
      * function is called after page load.
      */
-    $(".help-message").hide();
-    $(".help-message").html(msg);
-    $(".help-message").slideDown(200);
-    window.setTimeout(function() {
-        $(".help-message").slideUp(200);
-    }, 3000);
+    var help = $(".help-message");
+    help.html(msg).show();
 }
 
 /**
@@ -77,37 +73,60 @@ function removeOverlay() {
     });
 }
 
+function formSlide(dir) {
+    var delta = (dir == "next") ? "-=100%" : "+=100%";
+    $(".btn").attr("disabled", "disabled");
+    $(".form-slider").animate({left: delta}, 500, function() {
+        $(".btn").removeAttr("disabled");
+    });
+    var stepCount = $("#stepCount"),
+        steps = parseInt(stepCount.html());
+    stepCount.html((dir == "next") ? (steps + 1) : (steps - 1));
+    hideRMQForm();
+}
+
 /**
  * Fade out the previous setup step and fade in the next one
  */
 function nextSlide() {
-    $(".btn").attr("disabled", "disabled");
-    $(".form-slider").animate({left: "-=100%"}, 500, function() {
-        $(".btn").removeAttr("disabled");
-    });
-    var stepCount = parseInt($("#stepCount").html());
-    $("#stepCount").html(stepCount + 1);
+    formSlide("next");
 }
 
 /**
  * Fade out the current setup step and fade in the previous one
  */
 function prevSlide() {
-    $(".btn").attr("disabled", "disabled");
-    $(".form-slider").animate({left: "+=100%"}, 500, function() {
-        $(".btn").removeAttr("disabled");
+    formSlide("prev");
+}
+
+/**
+ * Hide the RMQ form when the slider is called to avoid showing
+ * scrollbars on slider panels that fit vertically
+ */
+function hideRMQForm() {
+    $("#rmqFormBody").slideUp(500);
+    $("#advCaret").removeClass("caret-up");
+}
+
+function submitForm(e, obj) {
+    resetFeedback();
+    e.preventDefault();
+    var d = $(e.target).serializeArray();
+    addOverlay();
+    // Append .promise().done() rather than using a
+    // callback to avoid weird alert duplication
+    $("#overlay, #loadingImage").fadeIn(500).promise().done(function() {
+        // Proxy function for passing the event to the cleanup function
+        var cleanupProxy = function(data) {
+            cleanupStep.call(this, data, e);
+        };
+        $.post('setup/setup-functions.php?obj=' + obj, d, cleanupProxy, "json");
     });
-    var stepCount = parseInt($("#stepCount").html());
-    $("#stepCount").html(stepCount - 1);
 }
 
 $(function() {
-    $(".form-slider").draggable({
-        revert: true,
-        axis: 'x',
-        snap: ".viewport",
-        snapMode: "both",
-    });
+    // Stop the user from dragging the slider
+    $(".form-slider").draggable('disable');
 
     window.onresize = function() {
         var headerHeight = $(".header").outerHeight(),

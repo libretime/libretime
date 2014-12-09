@@ -1,5 +1,4 @@
 <?php
-
 ?>
 
 <html>
@@ -17,7 +16,7 @@
                 <img src="css/images/airtime_logo_jp.png" id="airtimeLogo" /><br/>
                 <strong>Setup</strong>
             </h3>
-            <strong>Step <span id="stepCount">1</span> of 4</strong>
+            <strong>Step <span id="stepCount">1</span> of 5</strong>
         </div>
 
         <div class="viewport">
@@ -30,6 +29,21 @@
                 <div id="rabbitmqSettings" class="form-wrapper">
                     <?php
                         require_once SETUP_PATH . "forms/rabbitmq-settings.php";
+                    ?>
+                </div>
+                <div id="generalSettings" class="form-wrapper">
+                    <?php
+                        require_once SETUP_PATH . "forms/general-settings.php";
+                    ?>
+                </div>
+                <div id="mediaSettings" class="form-wrapper">
+                    <?php
+                        require_once SETUP_PATH . "forms/media-settings.php";
+                    ?>
+                </div>
+                <div id="finishSettings" class="form-wrapper">
+                    <?php
+                        require_once SETUP_PATH . "forms/finish-settings.php";
                     ?>
                 </div>
             </div>

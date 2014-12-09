@@ -33,10 +33,12 @@
         <div class="form-group">
             <label class="control-label" for="rmqHost">Host</label>
             <input required class="form-control" type="text" name="rmqHost" id="rmqHost" placeholder="Host" value="127.0.0.1"/>
+            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         </div>
         <div class="form-group">
             <label class="control-label" for="rmqPort">Port</label>
             <input required class="form-control" type="text" name="rmqPort" id="rmqPort" placeholder="Port" value="5672"/>
+            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
         </div>
         <div class="form-group">
             <label class="control-label" for="rmqVHost">Virtual Host</label>
@@ -59,18 +61,6 @@
     });
 
     $("#rmqSettingsForm").submit(function(e) {
-        resetFeedback();
-        e.preventDefault();
-        var d = $('#rmqSettingsForm').serializeArray();
-        addOverlay();
-        // Append .promise().done() rather than using a
-        // callback to avoid weird alert duplication
-        $("#overlay, #loadingImage").fadeIn(500).promise().done(function() {
-            // Proxy function for passing the event to the cleanup function
-            var cleanupProxy = function(data) {
-                cleanupStep.call(this, data, e);
-            };
-            $.post('setup/setup-functions.php?obj=RabbitMQSetup', d, cleanupProxy, "json");
-        });
+        submitForm(e, "RabbitMQSetup");
     });
 </script>

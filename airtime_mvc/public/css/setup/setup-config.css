@@ -47,8 +47,12 @@ body {
  * ############################################################################ */
 
 form {
-    width: 80%;
     margin: auto;
+    top: 0;
+    width: 99%;
+    position: absolute;
+    float: right;
+
 }
 
 form p {
@@ -67,6 +71,10 @@ form .form-group {
     height: 89%; /* Keep 1% off of 100 to avoid overflow */
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+.form-wrapper {
+    overflow: auto;
 }
 
 .form-title {
@@ -168,39 +176,44 @@ form .form-group {
 
 /* ############################################################################
  *
- * Database Settings Form Styles
- *
- * ############################################################################ */
-
-#dbSettingsForm {
-    top: 0;
-    width: 99%;
-    position: absolute;
-    float: right;
-}
-
-#dbSettings {
-    overflow: auto;
-}
-
-/* ############################################################################
- *
  * RabbitMQ Settings Form Styles
  *
  * ############################################################################ */
 
 #rmqSettingsForm {
-    top: 0;
     left: 100%;
-    width: 99%;
-    position: absolute;
-    float: right;
-}
-
-#rmqSettings {
-    overflow: auto;
 }
 
 #rmqFormBody {
     display: none;
+}
+
+/* ############################################################################
+ *
+ * General Settings Form Styles
+ *
+ * ############################################################################ */
+
+#generalSettingsForm {
+    left: 200%;
+}
+
+/* ############################################################################
+ *
+ * Media Settings Form Styles
+ *
+ * ############################################################################ */
+
+#mediaSettingsForm {
+    left: 300%;
+}
+
+/* ############################################################################
+ *
+ * Finish Settings Form Styles
+ *
+ * ############################################################################ */
+
+#finishSettingsForm {
+    left: 400%;
 }

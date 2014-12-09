@@ -20,19 +20,18 @@ $r = array_reduce($phpDependencies, "booleanReduce", true);
 $result = $r && $database;
 
 ?>
-<html style="background-color: #f5f5f5">
+<html>
     <head>
         <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.1.min.css">
         <link rel="stylesheet" type="text/css" href="css/setup/config-check.css">
     </head>
 
-    <body style="padding: 2em 0; min-width: 600px; width: 50%; text-align: center; margin: 3em auto;
-                 border: 1px solid lightgray; border-radius: 5em;">
+    <body>
         <h2>
-            <img src="css/images/airtime_logo_jp.png" style="margin-bottom: .5em;" /><br/>
+            <img class="logo" src="css/images/airtime_logo_jp.png" /><br/>
             <strong>Configuration Checklist</strong>
         </h2>
-        <table class="table" style="padding: 0; margin: 3em 0 0 0; font-weight: bold">
+        <table class="table">
             <thead>
                 <tr>
                     <td class="component">
@@ -61,10 +60,10 @@ $result = $r && $database;
                         <td class="description">
                             Zend MVC Framework
                         </td>
-                        <td class="solution" <?php if ($zend) {echo 'style="background: #dff0d8 url(css/images/accept.png) no-repeat center"';?>>
+                        <td class="solution <?php if ($zend) {echo 'check';?>">
                             <?php
                                 } else {
-                                    ?>>
+                                    ?>">
                                     <b>Ubuntu</b>: try running <code>sudo apt-get install libzend-framework-php</code>
                                     <br/><b>Debian</b>: try running <code>sudo apt-get install zendframework</code>
                                 <?php
@@ -79,10 +78,10 @@ $result = $r && $database;
                         <td class="description">
                             PDO and PostgreSQL libraries
                         </td>
-                        <td class="solution" <?php if ($postgres) {echo 'style="background: #dff0d8 url(css/images/accept.png) no-repeat center"';?>>
+                        <td class="solution <?php if ($postgres) {echo 'check';?>">
                             <?php
                                 } else {
-                                    ?>>
+                                    ?>">
                                     Try running <code>sudo apt-get install php5-pgsql</code>
                                 <?php
                                 }
@@ -104,10 +103,10 @@ $result = $r && $database;
                     <td class="description">
                         Database configuration for Airtime
                     </td>
-                    <td class="solution" <?php if ($database) {echo 'style="background: #dff0d8 url(css/images/accept.png) no-repeat center"';?>>
+                    <td class="solution <?php if ($database) {echo 'check';?>">
                         <?php
                         } else {
-                            ?>>
+                            ?>">
                             Make sure you aren't missing any of the Postgres dependencies in the table above.
                             If your dependencies check out, make sure your database configuration settings in
                             <code>airtime.conf</code> is correct and the Airtime database was installed correctly.
@@ -118,6 +117,7 @@ $result = $r && $database;
                 </tr>
                 </tbody>
             </table>
+        </div>
 <?php
     if (!$result) {
         ?>
@@ -135,8 +135,6 @@ $result = $r && $database;
     <?php
     }
 ?>
-        </div>
-
         <div class="footer">
             <h3>
                 PHP Extension List
