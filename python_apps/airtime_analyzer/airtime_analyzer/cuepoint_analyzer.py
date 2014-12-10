@@ -1,26 +1,33 @@
 import subprocess
+import logging
+import traceback
+import json
+import datetime
 from analyzer import Analyzer
 
 
-class ReplayGainAnalyzer(Analyzer):
+class CuePointAnalyzer(Analyzer):
     ''' This class extracts the cue-in time, cue-out time, and length of a track using silan. '''
 
-    BG1770GAIN_EXECUTABLE = 'bg1770gain'
+    SILAN_EXECUTABLE = 'silan'
 
     def __init__(self):
         pass
 
     @staticmethod
     def analyze(filename, metadata):
-        ''' Extracts the Replaygain loudness normalization factor of a track.
+        ''' Extracts the cue-in and cue-out times along and sets the file duration based on that.
+            The cue points are there to skip the silence at the start and end of a track, and are determined
+            using "silan", which analyzes the loudness in a track.
         :param filename: The full path to the file to analyzer
         :param metadata: A metadata dictionary where the results will be put
         :return: The metadata dictionary
         '''
-        ''' The -d 00:01:00 flag means it will let the decoding run for a maximum of 1 minute. This is a safeguard
-            in case the libavcodec decoder gets stuck in an infinite loop.
+        ''' The silan -F 0.99 parameter tweaks the highpass filter. The default is 0.98, but at that setting,
+            the unit test on the short m4a file fails. With the new setting, it gets the correct cue-in time and
+            all the unit tests pass.
         '''
-        command = [ReplayGainAnalyzer.BG1770GAIN_EXECUTABLE, '--replaygain', '-d', '00:01:00', '-f', 'JSON', filename]
+        command = [CuePointAnalyzer.SILAN_EXECUTABLE, '-b', '-F', '0.99', '-f', 'JSON', filename]
         try:
             results_json = subprocess.check_output(command)
             silan_results = json.loads(results_json)

@@ -114,6 +114,18 @@ def test_mp3_utf8():
     assert metadata['mime'] == 'audio/mp3'
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
 
+def test_invalid_wma():
+    metadata = MetadataAnalyzer.analyze(u'tests/test_data/44100Hz-16bit-stereo-invalid.wma', dict())
+    assert metadata['mime'] == 'audio/x-ms-wma'
+
+def test_wav_stereo():
+    metadata = MetadataAnalyzer.analyze(u'tests/test_data/44100Hz-16bit-stereo.wav', dict())
+    assert metadata['mime'] == 'audio/x-wav'
+    assert abs(metadata['length_seconds'] - 3.9) < 0.1
+    assert metadata['channels'] == 2
+    assert metadata['sample_rate'] == 44100
+
+
 # Make sure the parameter checking works
 @raises(TypeError)
 def test_move_wrong_string_param1():
@@ -132,7 +144,6 @@ def test_mp3_bad_channels():
         It'd be a pain in the ass to construct a real MP3 with an invalid number
         of channels by hand because that value is stored in every MP3 frame in the file
     '''
-    print "testing bad channels..."
     audio_file = mutagen.File(filename, easy=True)
     audio_file.info.mode = 1777
     with mock.patch('airtime_analyzer.metadata_analyzer.mutagen') as mock_mutagen:
@@ -143,7 +154,6 @@ def test_mp3_bad_channels():
     check_default_metadata(metadata)
     assert metadata['channels'] == 1
     assert metadata['bit_rate'] == 64000
-    print metadata['length_seconds']
     assert abs(metadata['length_seconds'] - 3.9) < 0.1
     assert metadata['mime'] == 'audio/mp3' # Not unicode because MIMEs aren't.
     assert metadata['track_total'] == u'10' # MP3s can have a track_total
