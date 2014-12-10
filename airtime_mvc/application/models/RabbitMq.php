@@ -106,9 +106,9 @@ class Application_Model_RabbitMq
         $data['callback_url'] = $callbackUrl;
         $data['api_key'] = $apiKey;
         // Pass station name to the analyzer so we can set it with the file's metadata
-        // before uploading it to the cloud. This isn't a requirement for cloud storage,
-        // but put there as a safeguard, since all Airtime Pro stations will share the
-        // same bucket.
+        // and prefix the object name with it before uploading it to the cloud. This
+        // isn't a requirement for cloud storage, but put there as a safeguard, since
+        // all Airtime Pro stations will share the same bucket.
         $data['station_domain'] = $stationDomain = Application_Model_Preference::GetStationName();
         
         $jsonData = json_encode($data);
