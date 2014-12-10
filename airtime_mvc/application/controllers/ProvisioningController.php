@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Zend/Service/Amazon/S3.php';
+use Aws\S3\S3Client;
 
 class ProvisioningController extends Zend_Controller_Action
 {
@@ -19,16 +19,43 @@ class ProvisioningController extends Zend_Controller_Action
             return;
         }
         
-        $amazon_s3 = new Amazon_S3();
-        $zend_s3 = $amazon_s3->getZendServiceAmazonS3();
-        $bucket = $amazon_s3->getBucket();
+        //TODO - don't hardcode this here. maybe set it in $CC_CONFIG
+        $cloudFiles = array(
+            "amazon_S3" => array()
+        );
         
-        // Get all files stored on Amazon S3
-        $cloudFiles = CloudFilesQuery::create()->find();
-        foreach ($cloudFiles as $cloudFile) {
-            $resource_id = $this->getResourceId();
-            $amz_resource = utf8_encode("$bucket/$resource_id");
-            $zend_s3->removeObject($amz_resource);
+        $CC_CONFIG = Config::getConfig();
+        
+        //TODO - dynamically select the storage backend credentials here
+        $s3Client = S3Client::factory(array(
+            'key' => $CC_CONFIG["amazon_S3"]['api_key'],
+            'secret' => $CC_CONFIG["amazon_S3"]['api_key_secret'],
+        ));
+        
+        $cloudFilePager = CloudFileQuery::create()
+            ->paginate($page=1, $maxPerPage=1000);
+        
+        if ($cloudFilePager->haveToPaginate()) {
+            $numPages = $cloudFilePager->getLastPage();
+            $currentPage = 1;
+            while ($currentPage <= $numPages) {
+                $cloudFilePager = CloudFileQuery::create()
+                    ->paginate($page = $currentPage, $maxPerPage = 1000);
+                
+                //TODO - delete objects here
+                
+                $currentPage += 1;
+            }
+        } else {
+            //TODO - move this into function so it can be reused above
+            foreach ($cloudFilePager->getResults() as $cloudFile) {
+                array_push($cloudFiles[$cloudFile->getStorageBackend()],
+                    array("Key" => $cloudFile->getResourceId()));
+
+                $result = $s3Client->deleteObjects(array(
+                    "Bucket" => $CC_CONFIG["amazon_S3"]["bucket"],
+                    "Objects" => $cloudFiles["amazon_S3"]));
+            }
         }
     }
     
