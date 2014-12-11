@@ -7,7 +7,7 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-AIRTIMEROOT=./..
+AIRTIMEROOT=$(readlink -f ./..)
 
 showhelp () {
     echo "Usage: sudo bash install [options]
@@ -165,15 +165,15 @@ if [ "$apache" = "t" ]; then
     if [ "$in_place" = "t" ]; then
         verbose "\n * Setting current Airtime directory as web root..."
         install_directory=${AIRTIMEROOT}/airtime_mvc/public
-        chomod -R 755 ${AIRTIMEROOT}
+        chmod -R 755 ${AIRTIMEROOT}
     elif [ -n "$install_directory" ]; then
         verbose "\n * Creating Apache web root directory..."
         mkdir -p ${install_directory}/airtime/public/
         cp -R ${AIRTIMEROOT}/airtime_mvc/* ${install_directory}/airtime/
-        chomod -R 755 ${install_directory}
+        chmod -R 755 ${install_directory}
     fi
 
-    sed "/s/WEB_ROOT/${install_directory}" apache/airtime-vhost > apache/airtime-vhost.tmp
+    sed -e "s@WEB_ROOT@${install_directory}@g" apache/airtime-vhost > apache/airtime-vhost.tmp
 
     loud "`apt-get -y --force-yes install apache2 libapache2-mod-php5`"
     set +e
@@ -251,9 +251,9 @@ loud "-----------------------------------------------------"
 
 loud "`apt-get -y --force-yes install rabbitmq-server`"
 
-RABBITMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
-RABBITMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
-RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
+RABBITMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
+RABBITMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
+RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
 EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
 rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST} > /dev/null
