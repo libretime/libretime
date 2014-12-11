@@ -7,16 +7,61 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
+AIRTIMEROOT=./..
+
 showhelp () {
-    echo "Usage: airtime-install [options]
--h, --help                         Displays usage information.
--w, --web-user=WEB_USER            Set the default apache web user.
--a, --apache                       Installs apache and deploys a basic configuration for Airtime."
+    echo "Usage: sudo bash install [options]
+    -h, --help
+                Display usage information
+    -V, --version
+                Display version information
+    -v, --verbose
+                More output
+    -q, --quiet, --silent
+                No output except errors
+    -w, --web-user=WEB_USER
+                Set the default apache web user
+    -i, --in-place
+                Set the current Airtime root as the working directory for
+                Airtime
+                Note that you will need to give your web user permissions on
+                these directories
+    -d, --install-directory=INSTALL_PATH
+                Set the web root for Airtime files
+                This will copy the Airtime application files and make them
+                accessible to the web user
+                If no directory or an empty string is given, this defaults to
+                an in-place installation, and will give the web user
+                permissions on the current Airtime root
+    -a, --apache
+                Install apache and deploys a basic configuration for Airtime"
+    exit 0
+}
+
+showversion () {
+    . ${AIRTIMEROOT}/VERSION > /dev/null
+    echo "Airtime Version ${PRODUCT_RELEASE}"
     exit 0
 }
 
 web_user="www-data"
+install_directory=""
 apache="f"
+in_place="f"
+_v=0
+_q=0
+
+function verbose() {
+    if [[ ${_v} -eq 1 ]]; then
+        echo -e "$@"
+    fi
+}
+
+function loud() {
+    if [[ ${_q} -eq 0 ]]; then
+        echo -e "$@"
+    fi
+}
 
 while :; do
     case "$1" in
@@ -24,8 +69,20 @@ while :; do
             showhelp
             exit
             ;;
+        -V|--version)
+            showversion
+            ;;
+        -v|--verbose)
+            _v=1
+            ;;
+        -q|--quiet|--silent)
+            _q=1
+            ;;
         -a|--apache)
             apache="t"
+            ;;
+        -i|--in-place)
+            in_place="t"
             ;;
         -w|--web-user)
             if [ "$2" ]; then
@@ -41,7 +98,24 @@ while :; do
             web_user=${1#*=} # Delete everything up to "=" and assign the remainder.
             ;;
         --web-user=)
-            echo 'ERROR: Must specify a non-empty "--web-user WEB_USER" argument.' >&2
+            echo 'ERROR: Must specify a non-empty "--web-user=WEB_USER" argument.' >&2
+            exit 1
+            ;;
+        -d|--install-directory)
+            if [ "$2" ]; then
+                install_directory=$2
+                shift 2
+                continue
+            else
+                echo 'ERROR: Must specify a non-empty "--install-directory INSTALL_DIRECTORY" argument.' >&2
+                exit 1
+            fi
+            ;;
+        --install-directory=?*)
+            install_directory=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --install-directory=)
+            echo 'ERROR: Must specify a non-empty "--install-directory=INSTALL_DIRECTORY" argument.' >&2
             exit 1
             ;;
         --)
@@ -57,41 +131,56 @@ while :; do
     shift
 done
 
+if [ -z install_directory -a ! -d install_directory ]; then
+    echo "$install_directory doesn't exist!"
+    exit 1
+fi
+
 dist=`lsb_release -is`
 
-echo -e "\n                 ****************************************************************"
-echo    "                 *    _____  .________________________.___   _____  ___________ *"
-echo    "                 *   /  _  \ |   \______   \__    ___/|   | /     \ \_   _____/ *"
-echo    "                 *  /  /_\  \|   ||       _/ |    |   |   |/  \ /  \ |    __)_  *"
-echo    "                 * /    |    \   ||    |   \ |    |   |   /    Y    \|        \ *"
-echo    "                 * \____|__  /___||____|_  / |____|   |___\____|__  /_______  / *"
-echo    "                 *         \/            \/                       \/        \/  *"
-echo    "                 ****************************************************************"
+echo -e "\n   _____  .________________________.___   _____  ___________   "
+echo    "  /  _  \ |   \______   \__    ___/|   | /     \ \_   _____/     "
+echo    " /  /_\  \|   ||       _/ |    |   |   |/  \ /  \ |    __)_      "
+echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
+echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
+echo -e "        \/            \/                       \/        \/    \n"
 
-echo    "               ____ ______   ____   ____     __________  __ _________   ____  ____    "
-echo -e "              /  _ \\\\____ \_/ __ \ /    \   /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \ "
-echo    "             (  <_> )  |_> >  ___/|   |  \  \___ (  <_> )  |  /|  | \/\  \__\  ___/   "
-echo    "              \____/|   __/ \___  >___|  / /____  >____/|____/ |__|    \___  >___  >  "
-echo    "                    |__|        \/     \/       \/                         \/    \/   "
-echo    "                   .___.__                        __                         __  .__                    "
-echo    "____________     __| _/|__| ____   _____   __ ___/  |_  ____   _____ _____ _/  |_|__| ____   ____       "
-echo -e "\_  __ \__  \   / __ | |  |/  _ \  \__  \ |  |  \   __\/  _ \ /     \\\\__  \\\\   __\  |/  _ \ /    \  "
-echo    " |  | \// __ \_/ /_/ | |  (  <_> )  / __ \|  |  /|  | (  <_> )  Y Y  \/ __ \|  | |  (  <_> )   |  \     "
-echo    " |__|  (____  /\____ | |__|\____/  (____  /____/ |__|  \____/|__|_|  (____  /__| |__|\____/|___|  /     "
-echo    "            \/      \/                  \/                         \/     \/                    \/      "
+echo    "  ____ ______   ____   ____     __________  __ _________   ____  ____    "
+echo    " /  _ \\\\____ \_/ __ \ /    \   /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \ "
+echo    "(  <_> )  |_> >  ___/|   |  \  \___ (  <_> )  |  /|  | \/\  \__\  ___/   "
+echo    " \____/|   __/ \___  >___|  / /____  >____/|____/ |__|    \___  >___  >  "
+echo    "       |__|        \/     \/       \/                         \/    \/   "
+echo    "                   .___.__                        __                         __  .__                      "
+echo    "____________     __| _/|__| ____   _____   __ ___/  |_  ____   _____ _____ _/  |_|__| ____   ____         "
+echo    "\_  __ \__  \   / __ | |  |/  _ \  \__  \ |  |  \   __\/  _ \ /     \\\\__  \\\\   __\  |/  _ \ /    \    "
+echo    " |  | \// __ \_/ /_/ | |  (  <_> )  / __ \|  |  /|  | (  <_> )  Y Y  \/ __ \|  | |  (  <_> )   |  \       "
+echo    " |__|  (____  /\____ | |__|\____/  (____  /____/ |__|  \____/|__|_|  (____  /__| |__|\____/|___|  /       "
+echo -e "            \/      \/                  \/                         \/     \/                    \/      \n"
 
-if [ apache = "t" ]; then
-    echo -e "\n-----------------------------------------------------"
-    echo    "                * Installing Apache *                "
-    echo    "-----------------------------------------------------"
+if [ "$apache" = "t" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "                * Installing Apache *                "
+    loud "-----------------------------------------------------"
 
-    apt-get -y --force-yes install apache2 libapache2-mod-php5
+    if [ "$in_place" = "t" ]; then
+        verbose "\n * Setting current Airtime directory as web root..."
+        install_directory=${AIRTIMEROOT}/airtime_mvc/public
+        chomod -R 755 ${AIRTIMEROOT}
+    elif [ -n "$install_directory" ]; then
+        verbose "\n * Creating Apache web root directory..."
+        mkdir -p ${install_directory}/airtime/public/
+        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${install_directory}/airtime/
+        chomod -R 755 ${install_directory}
+    fi
+
+    sed "/s/WEB_ROOT/${install_directory}" apache/airtime-vhost > apache/airtime-vhost.tmp
+
+    loud "`apt-get -y --force-yes install apache2 libapache2-mod-php5`"
     set +e
     apache2 -v | grep "2\.4" > /dev/null
     apacheversion=$?
     set -e
 
-    # Apache Config File
     if [ "$apacheversion" != "1" ]; then
         airtimeconfigfile="airtime.conf"
     else
@@ -99,90 +188,102 @@ if [ apache = "t" ]; then
     fi
 
     if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
-        echo " ## Creating Apache config for Airtime..."
+        verbose "\n * Creating Apache config for Airtime..."
 
-        cp apache/airtime-vhost /etc/apache2/sites-available/${airtimeconfigfile}
-        a2dissite 000-default
-        a2ensite airtime
+        mv apache/airtime-vhost.tmp /etc/apache2/sites-available/${airtimeconfigfile}
+        loud "`a2dissite 000-default`"
+        loud "`a2ensite airtime`"
     else
-        echo "Apache config for Airtime already exists, skipping"
-    fi
-
-    if [ ! -d /usr/share/airtime/public ]; then
-        echo " ## Creating Apache web root directory..."
-        mkdir -p /usr/share/airtime/public/
-    else
-        echo "Airtime web root directory already exists, skipping"
+        verbose "\nApache config for Airtime already exists, skipping"
+        rm -f apache/airtime-vhost.tmp
     fi
 fi
 
-echo -e "\n-----------------------------------------------------"
-echo    "                  * Installing PHP *                 "
-echo    "-----------------------------------------------------"
+if [ ! -d /var/log/airtime ]; then
+    loud "\n-----------------------------------------------------"
+    loud "              * Installing Log Files *               "
+    loud "-----------------------------------------------------"
 
-apt-get -y --force-yes install php5
+    verbose "\n * Creating /var/log/airtime..."
+    mkdir -p /var/log/airtime
+    chmod a+x /var/log/airtime
+    chown ${web_user}:${web_user} /var/log/airtime/
 
-echo " ## Installing Zend framework..."
+    cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
+fi
+
+loud "\n-----------------------------------------------------"
+loud "                  * Installing PHP *                 "
+loud "-----------------------------------------------------"
+
+loud "`apt-get -y --force-yes install php5`"
+
+verbose "\n * Installing Zend framework..."
 #Debian Squeeze only has zendframework package. Newer versions of Ubuntu have zend-framework package.
 #Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
 #1.10 and zend-framework is 1.11
 if [ "$dist" = "Debian" ]; then
-    apt-get -y --force-yes install zendframework
+    loud "`apt-get -y --force-yes install zendframework`"
 else
-    apt-get -y --force-yes install libzend-framework-php
+    loud "`apt-get -y --force-yes install libzend-framework-php`"
 fi
 
 # PHP Config File for Apache
-if [ ! -f /etc/php5/apache2/airtime.ini ]; then
-    echo " ## Creating Airtime PHP config for Apache..."
+if [ ! -f "/etc/php5/apache2/conf.d/airtime.ini" ]; then
+    verbose "\n * Creating Airtime PHP config for Apache..."
     cp php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
 else
-    echo "Airtime PHP config for Apache already exists, skipping"
+    verbose "\nAirtime PHP config for Apache already exists, skipping"
 fi
 
 # Enable modules
-a2enmod rewrite php5
-service apache2 restart
+loud "`a2enmod rewrite php5`"
 
-echo -e "\n-----------------------------------------------------"
-echo    "              * Installing PostgreSQL *              "
-echo    "-----------------------------------------------------"
+loud "\n-----------------------------------------------------"
+loud "              * Installing PostgreSQL *              "
+loud "-----------------------------------------------------"
 
-apt-get -y --force-yes install postgresql php5-pgsql
+loud "`apt-get -y --force-yes install postgresql php5-pgsql`"
 
-echo -e "\n-----------------------------------------------------"
-echo    "               * Setting up RabbitMQ *               "
-echo    "-----------------------------------------------------"
+loud "\n-----------------------------------------------------"
+loud "               * Setting up RabbitMQ *               "
+loud "-----------------------------------------------------"
 
-apt-get -y --force-yes install rabbitmq-server
+loud "`apt-get -y --force-yes install rabbitmq-server`"
 
 RABBITMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
 RABBITMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
 RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' ../airtime_mvc/build/airtime.example.conf)
 EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
-rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST}
+rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST} > /dev/null
 RESULT="$?"
 
 # Only run these if the user doesn't exist
-if [ ${RESULT} != "0" ]; then
-    echo " ## Creating RabbitMQ user ${RABBITMQ_USER}..."
+if [ "${RESULT}" != "0" ]; then
+    verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
 
     rabbitmqctl add_vhost ${RABBITMQ_VHOST}
     rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
 else
-    echo "RabbitMQ user already exists, skipping creation"
+    verbose "\nRabbitMQ user already exists, skipping creation"
 fi
 
-echo " ## Setting RabbitMQ user permissions..."
-rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} "$EXCHANGES" "$EXCHANGES" "$EXCHANGES"
+verbose "\n * Setting RabbitMQ user permissions..."
+loud "`rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} "$EXCHANGES" "$EXCHANGES" "$EXCHANGES"`"
 
-echo -e "\n-----------------------------------------------------"
-echo    "                * Installing Airtime *               "
-echo    "-----------------------------------------------------"
+if [ ! -d "/etc/airtime" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "                * Installing Airtime *               "
+    loud "-----------------------------------------------------"
 
-mkdir /etc/airtime
-chown -R ${web_user}:${web_user} /etc/airtime
+    verbose "\n * Creating /etc/airtime/ directory..."
+    mkdir /etc/airtime
+    chown -R ${web_user}:${web_user} /etc/airtime
+fi
+
+verbose "\n * Restarting apache..."
+loud "`service apache2 restart 2>/dev/null`"
 
 echo -e "\n-----------------------------------------------------"
 echo    "                * Basic Setup DONE! *                "

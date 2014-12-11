@@ -1,9 +1,9 @@
 <VirtualHost *:80>
    ServerAdmin foo@bar.org
-   DocumentRoot /usr/share/airtime/public
+   DocumentRoot WEB_ROOT
    php_admin_value upload_tmp_dir /tmp
 
-  <Directory /usr/share/airtime/public>
+  <Directory WEB_ROOT>
       DirectoryIndex index.php
       AllowOverride all
       Order allow,deny
