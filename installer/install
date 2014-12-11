@@ -11,7 +11,7 @@ AIRTIMEROOT=$(readlink -f ./..)
 
 showhelp () {
     echo "Usage: sudo bash install [options]
-    -h, --help
+    -h, --help, -?
                 Display usage information
     -V, --version
                 Display version information
@@ -19,6 +19,8 @@ showhelp () {
                 More output
     -q, --quiet, --silent
                 No output except errors
+    -n, --non-interactive
+                Turn off interactive prompts
     -w, --web-user=WEB_USER
                 Set the default apache web user
     -i, --in-place
@@ -33,6 +35,9 @@ showhelp () {
                 If no directory or an empty string is given, this defaults to
                 an in-place installation, and will give the web user
                 permissions on the current Airtime root
+    -p, --postgres-init
+                Create a default postgres user named 'airtime' with password
+                'airtime'
     -a, --apache
                 Install apache and deploys a basic configuration for Airtime"
     exit 0
@@ -48,7 +53,12 @@ web_user="www-data"
 install_directory=""
 apache="f"
 in_place="f"
+create_postgres_user="f"
+# Interactive
+_i=1
+# Verbose
 _v=0
+# Quiet
 _q=0
 
 function verbose() {
@@ -62,6 +72,16 @@ function loud() {
         echo -e "$@"
     fi
 }
+
+# Evaluate commands silently if quiet
+function loudCmd() {
+    if [[ ${_q} -eq 0 ]]; then
+        eval $@
+    else
+        eval $@ > /dev/null
+    fi
+}
+
 
 while :; do
     case "$1" in
@@ -78,12 +98,18 @@ while :; do
         -q|--quiet|--silent)
             _q=1
             ;;
+        -n|--non-interactive)
+            _i=0
+            ;;
         -a|--apache)
             apache="t"
             ;;
         -i|--in-place)
             in_place="t"
             ;;
+        -p|--postgres-init)
+            create_postgres_user="t"
+        ;;
         -w|--web-user)
             if [ "$2" ]; then
                 web_user=$2
@@ -103,7 +129,7 @@ while :; do
             ;;
         -d|--install-directory)
             if [ "$2" ]; then
-                install_directory=$2
+                install_directory=$(readlink -f $2)
                 shift 2
                 continue
             else
@@ -124,6 +150,8 @@ while :; do
             ;;
         -?*)
             echo "$0: error - unrecognized option $1" 1>&2;
+            echo "Try 'install --help' for more information."
+            exit 1
             ;;
         *)
             break
@@ -157,6 +185,14 @@ echo    " |  | \// __ \_/ /_/ | |  (  <_> )  / __ \|  |  /|  | (  <_> )  Y Y  \/
 echo    " |__|  (____  /\____ | |__|\____/  (____  /____/ |__|  \____/|__|_|  (____  /__| |__|\____/|___|  /       "
 echo -e "            \/      \/                  \/                         \/     \/                    \/      \n"
 
+if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
+    echo -e "Install default Airtime apache configuration? (Y/n): \c"
+    read IN
+    if [ "${IN}" = "y" -o "${IN}" = "Y" ]; then
+        apache="t"
+    fi
+fi
+
 if [ "$apache" = "t" ]; then
     loud "\n-----------------------------------------------------"
     loud "                * Installing Apache *                "
@@ -171,11 +207,16 @@ if [ "$apache" = "t" ]; then
         mkdir -p ${install_directory}/airtime/public/
         cp -R ${AIRTIMEROOT}/airtime_mvc/* ${install_directory}/airtime/
         chmod -R 755 ${install_directory}
+    else
+        verbose "\n * Creating default Apache web root directory /usr/share/airtime/..."
+        install_directory="/usr/share"
+        mkdir -p ${install_directory}/airtime/public/
+        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${install_directory}/airtime/
     fi
 
     sed -e "s@WEB_ROOT@${install_directory}@g" apache/airtime-vhost > apache/airtime-vhost.tmp
 
-    loud "`apt-get -y --force-yes install apache2 libapache2-mod-php5`"
+    loudCmd "apt-get -y --force-yes install apache2 libapache2-mod-php5"
     set +e
     apache2 -v | grep "2\.4" > /dev/null
     apacheversion=$?
@@ -191,8 +232,8 @@ if [ "$apache" = "t" ]; then
         verbose "\n * Creating Apache config for Airtime..."
 
         mv apache/airtime-vhost.tmp /etc/apache2/sites-available/${airtimeconfigfile}
-        loud "`a2dissite 000-default`"
-        loud "`a2ensite airtime`"
+        loudCmd "a2dissite 000-default"
+        loudCmd "a2ensite airtime"
     else
         verbose "\nApache config for Airtime already exists, skipping"
         rm -f apache/airtime-vhost.tmp
@@ -216,16 +257,16 @@ loud "\n-----------------------------------------------------"
 loud "                  * Installing PHP *                 "
 loud "-----------------------------------------------------"
 
-loud "`apt-get -y --force-yes install php5`"
+loudCmd "apt-get -y --force-yes install php5"
 
 verbose "\n * Installing Zend framework..."
 #Debian Squeeze only has zendframework package. Newer versions of Ubuntu have zend-framework package.
 #Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
 #1.10 and zend-framework is 1.11
 if [ "$dist" = "Debian" ]; then
-    loud "`apt-get -y --force-yes install zendframework`"
+    loudCmd "apt-get -y --force-yes install zendframework"
 else
-    loud "`apt-get -y --force-yes install libzend-framework-php`"
+    loudCmd "apt-get -y --force-yes install libzend-framework-php"
 fi
 
 # PHP Config File for Apache
@@ -237,19 +278,34 @@ else
 fi
 
 # Enable modules
-loud "`a2enmod rewrite php5`"
+loudCmd "a2enmod rewrite php5"
 
 loud "\n-----------------------------------------------------"
 loud "              * Installing PostgreSQL *              "
 loud "-----------------------------------------------------"
 
-loud "`apt-get -y --force-yes install postgresql php5-pgsql`"
+loudCmd "apt-get -y --force-yes install postgresql php5-pgsql"
+
+setupAirtimePostgresUser() {
+    su postgres
+    psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+}
+
+if [ ${create_postgres_user} = "t" ]; then
+    setupAirtimePostgresUser
+elif [ ${_i} -eq 1 ]; then
+    echo -e "Create default airtime postgres user? (Y/n): \c"
+    read IN
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+        setupAirtimePostgresUser
+    fi
+fi
 
 loud "\n-----------------------------------------------------"
 loud "               * Setting up RabbitMQ *               "
 loud "-----------------------------------------------------"
 
-loud "`apt-get -y --force-yes install rabbitmq-server`"
+loudCmd "apt-get -y --force-yes install rabbitmq-server"
 
 RABBITMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
 RABBITMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
@@ -270,7 +326,7 @@ else
 fi
 
 verbose "\n * Setting RabbitMQ user permissions..."
-loud "`rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} "$EXCHANGES" "$EXCHANGES" "$EXCHANGES"`"
+loudCmd 'rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} "$EXCHANGES" "$EXCHANGES" "$EXCHANGES"'
 
 if [ ! -d "/etc/airtime" ]; then
     loud "\n-----------------------------------------------------"
@@ -283,7 +339,7 @@ if [ ! -d "/etc/airtime" ]; then
 fi
 
 verbose "\n * Restarting apache..."
-loud "`service apache2 restart 2>/dev/null`"
+loudCmd "service apache2 restart 2>/dev/null"
 
 echo -e "\n-----------------------------------------------------"
 echo    "                * Basic Setup DONE! *                "
