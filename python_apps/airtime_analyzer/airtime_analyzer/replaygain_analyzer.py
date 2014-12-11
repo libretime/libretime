@@ -24,7 +24,7 @@ class ReplayGainAnalyzer(Analyzer):
             rg_pos = results.find(filename_token, results.find("Calculating Replay Gain information")) + len(filename_token)
             db_pos = results.find(" dB", rg_pos)
             replaygain = results[rg_pos:db_pos]
-            metadata['replaygain'] = float(replaygain)
+            metadata['replay_gain'] = float(replaygain)
 
         except OSError as e: # replaygain was not found
             logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have python-rgain installed?"))

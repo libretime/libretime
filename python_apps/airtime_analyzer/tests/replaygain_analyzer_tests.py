@@ -13,8 +13,8 @@ def check_default_metadata(metadata):
     '''
     tolerance = 0.30
     expected_replaygain = 5.0
-    print metadata['replaygain']
-    assert abs(metadata['replaygain'] - expected_replaygain) < tolerance
+    print metadata['replay_gain']
+    assert abs(metadata['replay_gain'] - expected_replaygain) < tolerance
 
 def test_missing_replaygain():
     old_rg = ReplayGainAnalyzer.REPLAYGAIN_EXECUTABLE

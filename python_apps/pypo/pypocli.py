@@ -27,9 +27,6 @@ from pypomessagehandler import PypoMessageHandler
 from pypoliquidsoap import PypoLiquidsoap
 from timeout import ls_timeout
 
-from media.update.replaygainupdater import ReplayGainUpdater
-from media.update.silananalyzer import SilanAnalyzer
-
 from configobj import ConfigObj
 
 # custom imports
@@ -249,10 +246,6 @@ if __name__ == '__main__':
     if options.test:
         g.test_api()
         sys.exit(0)
-
-
-    ReplayGainUpdater.start_reply_gain(api_client)
-    SilanAnalyzer.start_silan(api_client, logger)
 
     pypoFetch_q = Queue()
     recorder_q = Queue()
