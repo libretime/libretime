@@ -19,7 +19,7 @@ showhelp () {
                 More output
     -q, --quiet, --silent
                 No output except errors
-    -n, --non-interactive
+    -f, --force
                 Turn off interactive prompts
     -w, --web-user=WEB_USER
                 Set the default apache web user
@@ -98,7 +98,7 @@ while :; do
         -q|--quiet|--silent)
             _q=1
             ;;
-        -n|--non-interactive)
+        -f|--force)
             _i=0
             ;;
         -a|--apache)
@@ -287,11 +287,12 @@ loud "-----------------------------------------------------"
 loudCmd "apt-get -y --force-yes install postgresql php5-pgsql"
 
 setupAirtimePostgresUser() {
-    su postgres
+    su postgres <<'EOF'
     psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+EOF
 }
 
-if [ ${create_postgres_user} = "t" ]; then
+if [ "$create_postgres_user" = "t" ]; then
     setupAirtimePostgresUser
 elif [ ${_i} -eq 1 ]; then
     echo -e "Create default airtime postgres user? (Y/n): \c"
@@ -312,7 +313,7 @@ RABBITMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' ${
 RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
 EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
-rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST} > /dev/null
+rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST}
 RESULT="$?"
 
 # Only run these if the user doesn't exist
@@ -334,7 +335,9 @@ if [ ! -d "/etc/airtime" ]; then
     loud "-----------------------------------------------------"
 
     verbose "\n * Creating /etc/airtime/ directory..."
+    mkdir -p /srv/airtime
     mkdir /etc/airtime
+    chown -R ${web_user}:${web_user} /srv/airtime
     chown -R ${web_user}:${web_user} /etc/airtime
 fi
 
