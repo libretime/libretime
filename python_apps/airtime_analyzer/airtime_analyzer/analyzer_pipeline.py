@@ -6,6 +6,7 @@ import multiprocessing
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
 from cuepoint_analyzer import CuePointAnalyzer
+from replaygain_analyzer import ReplayGainAnalyzer
 
 class AnalyzerPipeline:
     """ Analyzes and imports an audio file into the Airtime library. 
@@ -53,6 +54,7 @@ class AnalyzerPipeline:
             metadata = dict()
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
             metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
+            metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
             metadata["import_status"] = 0 # Successfully imported
 

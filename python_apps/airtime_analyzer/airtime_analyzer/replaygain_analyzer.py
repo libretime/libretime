@@ -1,14 +1,12 @@
 import subprocess
+import logging
 from analyzer import Analyzer
 
 
 class ReplayGainAnalyzer(Analyzer):
-    ''' This class extracts the cue-in time, cue-out time, and length of a track using silan. '''
+    ''' This class extracts the ReplayGain using a tool from the python-rgain package. '''
 
-    BG1770GAIN_EXECUTABLE = 'bg1770gain'
-
-    def __init__(self):
-        pass
+    REPLAYGAIN_EXECUTABLE = 'replaygain' # From the python-rgain package
 
     @staticmethod
     def analyze(filename, metadata):
@@ -17,23 +15,20 @@ class ReplayGainAnalyzer(Analyzer):
         :param metadata: A metadata dictionary where the results will be put
         :return: The metadata dictionary
         '''
-        ''' The -d 00:01:00 flag means it will let the decoding run for a maximum of 1 minute. This is a safeguard
-            in case the libavcodec decoder gets stuck in an infinite loop.
+        ''' The -d flag means do a dry-run, ie. don't modify the file directly.
         '''
-        command = [ReplayGainAnalyzer.BG1770GAIN_EXECUTABLE, '--replaygain', '-d', '00:01:00', '-f', 'JSON', filename]
+        command = [ReplayGainAnalyzer.REPLAYGAIN_EXECUTABLE, '-d', filename]
         try:
-            results_json = subprocess.check_output(command)
-            silan_results = json.loads(results_json)
-            metadata['length_seconds'] = float(silan_results['file duration'])
-            # Conver the length into a formatted time string
-            track_length = datetime.timedelta(seconds=metadata['length_seconds'])
-            metadata["length"] = str(track_length)
-            metadata['cuein'] = silan_results['sound'][0][0]
-            metadata['cueout'] = silan_results['sound'][0][1]
+            results = subprocess.check_output(command, stderr=subprocess.STDOUT)
+            filename_token = "%s: " % filename
+            rg_pos = results.find(filename_token, results.find("Calculating Replay Gain information")) + len(filename_token)
+            db_pos = results.find(" dB", rg_pos)
+            replaygain = results[rg_pos:db_pos]
+            metadata['replaygain'] = float(replaygain)
 
-        except OSError as e: # silan was not found
-            logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))
-        except subprocess.CalledProcessError as e: # silan returned an error code
+        except OSError as e: # replaygain was not found
+            logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have python-rgain installed?"))
+        except subprocess.CalledProcessError as e: # replaygain returned an error code
             logging.warn("%s %s %s", e.cmd, e.message, e.returncode)
         except Exception as e:
             logging.warn(e)

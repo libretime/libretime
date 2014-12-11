@@ -1,10 +1,6 @@
 from nose.tools import *
 from airtime_analyzer.cuepoint_analyzer import CuePointAnalyzer
 
-def test_constructor():
-    cpa = CuePointAnalyzer()
-
-
 def check_default_metadata(metadata):
     ''' Check that the values extract by Silan/CuePointAnalyzer on our test audio files match what we expect.
     :param metadata: a metadata dictionary
@@ -65,12 +61,3 @@ def test_m4a_stereo():
 def test_wav_stereo():
     metadata = CuePointAnalyzer.analyze(u'tests/test_data/44100Hz-16bit-stereo.wav', dict())
     check_default_metadata(metadata)
-
-    # FFMPEG / libav detect the AAC file as slightly shorter...
-'''
-    tolerance_seconds = 0.2
-    length_seconds = 3.8
-    assert abs(metadata['length_seconds'] - length_seconds) < tolerance_seconds
-    assert abs(metadata['cuein']) < tolerance_seconds
-    assert abs(metadata['cueout'] - length_seconds) < tolerance_seconds
-'''
