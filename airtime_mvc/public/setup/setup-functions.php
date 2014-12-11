@@ -61,6 +61,22 @@ abstract class Setup {
 
 }
 
+class AirtimeDatabaseException extends Exception {
+
+    protected $message = "Unknown Airtime database exception";
+    protected $errors = array();
+
+    public function __construct($message = null, $errors = array(), $code = 0, Exception $previous = null) {
+        parent::__construct($message, $code, $previous);
+        $this->errors = $errors;
+    }
+
+    public function getErrorFields() {
+        return $this->errors;
+    }
+
+}
+
 // Import Setup subclasses
 
 require_once('database-setup.php');
@@ -74,7 +90,16 @@ if (!file_exists("/etc/airtime/airtime.conf")) {
     if (isset($_GET["obj"]) && $objType = $_GET["obj"]) {
         $obj = new $objType($_POST);
         if ($obj instanceof Setup) {
-            echo json_encode($obj->runSetup());
+            try {
+                $response = $obj->runSetup();
+            } catch(AirtimeDatabaseException $e) {
+                $response = array(
+                    "message" => $e->getMessage(),
+                    "errors" => $e->getErrorFields(),
+                );
+            }
+
+            echo json_encode($response);
         }
     }
 }
