@@ -1,6 +1,7 @@
 <?php
 
 define("CONFIG_PATH", dirname(dirname( __DIR__)) . "/application/configs/");
+define("DEFAULT_STOR_DIR", "/srv/airtime/stor/");
 
 require_once(dirname(dirname( __DIR__)) . "/library/propel/runtime/lib/Propel.php");
 require_once(CONFIG_PATH . 'conf.php');
@@ -39,7 +40,10 @@ class MediaSetup extends Setup {
     function runSetup() {
         // If the path passed in is empty, set it to the default
         if (strlen(self::$path) == 0) {
-            self::$path = "/srv/airtime/stor/";
+            self::$path = DEFAULT_STOR_DIR;
+            if (!file_exists(DEFAULT_STOR_DIR)) {
+                mkdir(DEFAULT_STOR_DIR, 0755, true);
+            }
         }
 
         // Append a trailing / if they didn't
