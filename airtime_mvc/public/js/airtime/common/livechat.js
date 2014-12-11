@@ -5,7 +5,9 @@ function setupLiveChat() {
     // this is where we pass custom variables to livechat;
     // only pass the client id assigned by WHMCS for now
     __lc.params = [
-        { name: 'client_id', value: livechat_client_id }
+        { name: 'client_id', value: livechat_client_id },
+        { name: 'plan_type', value: livechat_plan_type},
+        { name: 'station_url', value: livechat_station_url}
     ];
     
     var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
