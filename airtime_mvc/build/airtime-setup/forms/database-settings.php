@@ -17,6 +17,7 @@
     <div class="form-group">
         <label class="control-label" for="dbName">Name</label>
         <input required class="form-control" type="text" name="dbName" id="dbName" placeholder="Name" value="airtime"/>
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
     <div class="form-group">
         <label class="control-label" for="dbHost">Host</label>

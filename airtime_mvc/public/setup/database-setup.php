@@ -18,27 +18,39 @@ class DatabaseSetup extends Setup {
         DB_HOST = "dbHost";
 
     // Form field values
-    static $user, $pass, $name, $host;
+    private $user, $pass, $name, $host;
 
     // Array of key->value pairs for airtime.conf
     static $properties;
 
-    // Message and error fields to return to the front-end
-    static $message = null;
-    static $errors = array();
+    static $dbh = null;
 
-    function __construct($settings) {
-        self::$user = $settings[self::DB_USER];
-        self::$pass = $settings[self::DB_PASS];
-        self::$name = $settings[self::DB_NAME];
-        self::$host = $settings[self::DB_HOST];
+    public function __construct($settings) {
+        $this->user = $settings[self::DB_USER];
+        $this->pass = $settings[self::DB_PASS];
+        $this->name = $settings[self::DB_NAME];
+        $this->host = $settings[self::DB_HOST];
 
         self::$properties = array(
-            "host" => self::$host,
-            "dbname" => self::$name,
-            "dbuser" => self::$user,
-            "dbpass" => self::$pass,
+            "host" => $this->host,
+            "dbname" => $this->name,
+            "dbuser" => $this->user,
+            "dbpass" => $this->pass,
         );
+    }
+
+    private function setNewDatabaseConnection($dbName) {
+        self::$dbh = new PDO("pgsql:host=" . $this->host . ";dbname=" . $dbName . ";port=5432"
+                       . ";user=" . $this->user . ";password=" . $this->pass);
+        $err = self::$dbh->errorInfo();
+        if ($err[1] != null) {
+            throw new AirtimeDatabaseException("Couldn't establish a connection to the database!",
+                                               array(
+                                                   self::DB_NAME,
+                                                   self::DB_USER,
+                                                   self::DB_PASS,
+                                               ));
+        }
     }
 
     /**
@@ -46,169 +58,133 @@ class DatabaseSetup extends Setup {
      * we attempt to install the Airtime schema. If not, we first check if the user can create databases, then try
      * to create the database. If we encounter errors, the offending fields are returned in an array to the browser.
      * @return array associative array containing a display message and fields with errors
+     * @throws AirtimeDatabaseException
      */
-    function runSetup() {
-        // Check the connection and user credentials
-        if ($this->checkDatabaseConnection()) {
-            // We know that the user credentials check out, so check if the database exists
-            if ($this->checkDatabaseExists()) {
-                // The database already exists, check if the schema exists as well
-                if ($this->checkSchemaExists()) {
-                    self::$message = "Airtime is already installed in this database!";
-                } else {
-                    if ($this->createDatabaseTables()) {
-                        self::$message = "Successfully installed Airtime database to '" . self::$name . "'";
-                    } else {
-                        self::$message = "Something went wrong setting up the Airtime schema!";
-                        self::$errors[] = self::DB_NAME;
-                    }
-                }
-            } else {
-                // The database doesn't exist, so check if the user can create databases
-                if ($this->checkUserCanCreateDb()) {
-                    // The user can create a database, do it
-                    if ($this->createDatabase()) {
-                        // Ensure that the database was installed in UTF8 (we only care about the Airtime database)
-                        if ($this->checkDatabaseSchema()) {
-                            if ($this->createDatabaseTables()) {
-                                self::$message = "Successfully installed Airtime database to '" . self::$name . "'";
-                            } else {
-                                self::$message = "Something went wrong setting up the Airtime schema!";
-                                self::$errors[] = self::DB_NAME;
-                            }
-                        } else {
-                            self::$message = "The database was installed with an incorrect encoding type!";
-                            self::$errors[] = self::DB_NAME;
-                        }
-                    } else {
-                        self::$message = "There was an error installing the database!";
-                        self::$errors[] = self::DB_NAME;
-                    }
-                } // The user can't create databases, so we're done
-                else {
-                    self::$message = "No database " . self::$name . " exists; user " . self::$user
-                        . " does not have permission to create databases on " . self::$host;
-                    self::$errors[] = self::DB_NAME;
-                }
-            }
+    public function runSetup() {
+        $this->setNewDatabaseConnection("postgres");
+        if ($this->checkDatabaseExists()) {
+            $this->installDatabaseTables();
+        } else {
+            $this->checkUserCanCreateDb();
+            $this->createDatabase();
+            $this->installDatabaseTables();
         }
 
-        if (count(self::$errors) <= 0) {
-            $this->writeToTemp();
-        }
+        $this->writeToTemp();
 
+        self::$dbh = null;
         return array(
-            "message" => self::$message,
-            "errors" => self::$errors,
+            "message" => "Airtime database was created successfully!",
+            "errors" => array(),
         );
     }
 
-    function writeToTemp() {
+    protected function writeToTemp() {
         parent::writeToTemp(self::SECTION, self::$properties);
     }
 
-
-    /**
-     * Check if the user's database connection is valid
-     * @return boolean true if the connection are valid
-     */
-    function checkDatabaseConnection() {
-        // This is pretty redundant, but we need to test both
-        // the existence and the validity of the given credentials
-        exec("export PGPASSWORD=" . self::$pass . " && psql -h "
-             . self::$host . " -U " . self::$user . " 2>&1", $out, $status);
-        foreach ($out as $o) {
-            if (strpos($o, "host name")) {
-                self::$message = "Invalid connection parameters!";
-                self::$errors[] = self::DB_HOST;
-                return false;
-            } else if (strpos($o, "authentication")) {
-                self::$message = "User credentials are invalid!";
-                self::$errors[] = self::DB_USER;
-                self::$errors[] = self::DB_PASS;
-                return false;
-            }
-        }
-        return $status == 0;
+    private function installDatabaseTables() {
+        $this->checkDatabaseEncoding();
+        $this->setNewDatabaseConnection($this->name);
+        $this->checkSchemaExists();
+        $this->createDatabaseTables();
     }
 
     /**
      * Check if the database settings and credentials given are valid
      * @return boolean true if the database given exists and the user is valid and can access it
      */
-    function checkDatabaseExists() {
-        exec("export PGPASSWORD=" . self::$pass . " && psql -lqt -h " . self::$host . " -U " . self::$user
-             . "| cut -d \\| -f 1 | grep -w " . self::$name, $out, $status);
-        return $status == 0;
+    private function checkDatabaseExists() {
+        $statement = self::$dbh->prepare("SELECT datname FROM pg_database WHERE datname = :dbname");
+        $statement->execute(array(":dbname" => $this->name));
+        $result = $statement->fetch();
+        return isset($result[0]);
     }
 
     /**
      * Check if the database schema has already been set up
-     * @return boolean true if the database schema exists
+     * @throws AirtimeDatabaseException
      */
-    function checkSchemaExists() {
-        // Check for cc_pref to see if the schema is already installed in this database
-        exec("export PGPASSWORD=" . self::$pass . " && psql -U " . self::$user . " -h "
-             . self::$host . " -d " . self::$name . " -tAc \"SELECT * FROM cc_pref\"", $out, $status);
-        return $status == 0;
+    private function checkSchemaExists() {
+        $statement = self::$dbh->prepare("SELECT EXISTS (SELECT relname FROM pg_class WHERE relname='cc_files')");
+        $statement->execute();
+        $result = $statement->fetch();
+        if (isset($result[0]) && $result[0] == "t") {
+            throw new AirtimeDatabaseException("Airtime is already installed in this database!", array());
+        }
     }
 
     /**
      * Check if the given user has access on the given host to create a new database
-     * @return boolean true if the given user has permission to create a database on the given host
+     * @throws AirtimeDatabaseException
      */
-    function checkUserCanCreateDb() {
-        exec("export PGPASSWORD=" . self::$pass . " && psql -h " . self::$host . " -U " . self::$user . " -tAc"
-             . "\"SELECT 1 FROM pg_roles WHERE rolname='" . self::$user . "' AND rolcreatedb='t'\"", $out, $status);
-        return $status == 0;
+    private function checkUserCanCreateDb() {
+        $statement = self::$dbh->prepare("SELECT 1 FROM pg_roles WHERE rolname=:dbuser AND rolcreatedb='t'");
+        $statement->execute(array(":dbuser" => $this->user));
+        $result = $statement->fetch();
+        if (!isset($result[0])) {
+            throw new AirtimeDatabaseException("No database " . $this->name . " exists; user '" . $this->user
+                                               . "' does not have permission to create databases on " . $this->host,
+                                               array(
+                                                   self::DB_NAME,
+                                                   self::DB_USER,
+                                                   self::DB_PASS,
+                                               ));
+        }
     }
 
     /**
      * Creates the Airtime database using the given credentials
-     * @return boolean true if the database was created
+     * @throws AirtimeDatabaseException
      */
-    function createDatabase() {
-        exec("export PGPASSWORD=" . self::$pass . " && psql -h " . self::$host . " -U " . self::$user . " -tAc"
-             . "\"CREATE DATABASE " . self::$name . " WITH ENCODING 'UTF8' TEMPLATE template0 OWNER "
-             . self::$user . "\"", $out, $status);
-        return $status == 0;
+    private function createDatabase() {
+        $statement = self::$dbh->prepare("CREATE DATABASE " . pg_escape_string($this->name)
+                                         . " WITH ENCODING 'UTF8' TEMPLATE template0"
+                                         . " OWNER " . pg_escape_string($this->user));
+        if (!$statement->execute()) {
+            throw new AirtimeDatabaseException("There was an error creating the database!",
+                                               array(self::DB_NAME,));
+        }
     }
 
     /**
      * Creates the Airtime database schema using the given credentials
-     * @return boolean true if the database tables were created without error
+     * @throws AirtimeDatabaseException
      */
-    function createDatabaseTables() {
+    private function createDatabaseTables() {
         $sqlDir = dirname(dirname(__DIR__)) . "/build/sql/";
         $files = array("schema.sql", "sequences.sql", "views.sql", "triggers.sql", "defaultdata.sql");
-
         foreach ($files as $f) {
             try {
-                exec("export PGPASSWORD=" . self::$pass . " && psql -U " . self::$user . " --dbname "
-                     . self::$name . " -h " . self::$host . " -f $sqlDir$f 2>/dev/null", $out, $status);
+                /*
+                 * Unfortunately, we need to use exec here due to PDO's lack of support for importing
+                 * multi-line .sql files. PDO->exec() almost works, but any SQL errors stop the import,
+                 * so the necessary DROPs on non-existent tables make it unusable. Prepared statements
+                 * have multiple issues; they similarly die on any SQL errors, fail to read in multi-line
+                 * commands, and fail on any unescaped ? or $ characters.
+                 */
+                exec("export PGPASSWORD=" . $this->pass . " && psql -U " . $this->user . " --dbname "
+                     . $this->name . " -h " . $this->host . " -f $sqlDir$f 2>/dev/null", $out, $status);
             } catch (Exception $e) {
-                return false;
+                throw new AirtimeDatabaseException("There was an error setting up the Airtime schema!",
+                                                   array(self::DB_NAME,));
             }
         }
-        return true;
     }
 
     /**
      * Checks whether the newly-created database's encoding was properly set to UTF8
-     * @return boolean true if the database encoding is UTF8
+     * @throws AirtimeDatabaseException
      */
-    function checkDatabaseEncoding() {
-        exec("export PGPASSWORD=" . self::$pass . " && psql -U " . self::$user . " -h "
-             . self::$host . " -d " . self::$name . " -tAc \"SHOW SERVER_ENCODING\"", $out, $status);
-        return $out && $out[0] == "UTF8";
-    }
-
-    // TODO Since we already check the encoding, is there a purpose to verifying the schema?
-    function checkDatabaseSchema() {
-        $outFile = "/tmp/tempSchema.xml";
-        exec("export PGPASSWORD=" . self::$pass . " && psql -U " . self::$user . " -h "
-             . self::$host . " -o ${outFile} -tAc \"SELECT database_to_xml(FALSE, FALSE, '"
-             . self::$name . "')\"", $out, $status);
+    private function checkDatabaseEncoding() {
+        $statement = self::$dbh->prepare("SELECT pg_encoding_to_char(encoding) "
+                                . "FROM pg_database WHERE datname = :dbname");
+        $statement->execute(array(":dbname" => $this->name));
+        $encoding = $statement->fetch();
+        if (!($encoding && $encoding[0] == "UTF8")) {
+            throw new AirtimeDatabaseException("The database was installed with an incorrect encoding type!",
+                                               array(self::DB_NAME,));
+        }
     }
 
 }
