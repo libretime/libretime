@@ -58,4 +58,47 @@ class Amazon_S3 extends StorageBackend
             throw new Exception("ERROR: Could not locate file to delete.");
         }
     }
+    
+    public function deleteObjects()
+    {
+        $cloudFilePager = CloudFileQuery::create()
+            ->filterByStorageBackend("amazon_S3")
+            ->paginate($page=1, $maxPerPage=1000);
+        
+        if ($cloudFilePager->haveToPaginate()) {
+            $numPages = $cloudFilePager->getLastPage();
+            $currentPage = 1;
+            while ($currentPage <= $numPages) {
+                $cloudFilePager = CloudFileQuery::create()
+                    ->filterByStorageBackend("amazon_S3")
+                    ->paginate($page = $currentPage, $maxPerPage = 1000);
+
+                $this->deleteObjectSet($cloudFilePager->getResults());
+
+                $currentPage += 1;
+            }
+        } else {
+            $this->deleteObjectSet($cloudFilePager->getResults());
+        }
+    }
+    
+    /**
+     * Deletes objects from Amazon S3 1000 at a time.
+     * 1000 is the max number of objects that can be deleted using the aws sdk
+     * api, per request.
+     */
+    private function deleteObjectSet($cloudFiles)
+    {
+        if (!$cloudFiles->isEmpty()) {
+            $cloudFilesToDelete = array();
+
+            foreach ($cloudFiles as $cloudFile) {
+                array_push($cloudFilesToDelete, array("Key" => $cloudFile->getResourceId()));
+            }
+        
+            $this->s3Client->deleteObjects(array(
+                "Bucket" => $this->getBucket(),
+                "Objects" => $cloudFilesToDelete));
+        }
+    }
 }

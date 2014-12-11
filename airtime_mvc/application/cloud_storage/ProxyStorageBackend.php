@@ -42,5 +42,10 @@ class ProxyStorageBackend extends StorageBackend
     {
         $this->storageBackend->deletePhysicalFile($resourceId);
     }
+    
+    public function deleteObjects()
+    {
+        $this->storageBackend->deleteObjects();
+    }
 
 }

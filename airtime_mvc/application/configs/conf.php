@@ -29,8 +29,8 @@ class Config {
         $cloudStorageConfig = isset($_SERVER['CLOUD_STORAGE_CONF']) ? $_SERVER['CLOUD_STORAGE_CONF'] : "/etc/airtime-saas/cloud_storage.conf";
         $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
         
-        $supportedStorageBackends = array('amazon_S3');
-        foreach ($supportedStorageBackends as $backend) {
+        $CC_CONFIG["supportedStorageBackends"] = array('amazon_S3');
+        foreach ($CC_CONFIG["supportedStorageBackends"] as $backend) {
             $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
         }
         
