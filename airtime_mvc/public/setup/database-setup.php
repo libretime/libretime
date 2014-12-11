@@ -41,15 +41,10 @@ class DatabaseSetup extends Setup {
 
     private function setNewDatabaseConnection($dbName) {
         self::$dbh = new PDO("pgsql:host=" . $this->host . ";dbname=" . $dbName . ";port=5432"
-                       . ";user=" . $this->user . ";password=" . $this->pass);
+                             . ";user=" . $this->user . ";password=" . $this->pass);
         $err = self::$dbh->errorInfo();
         if ($err[1] != null) {
-            throw new AirtimeDatabaseException("Couldn't establish a connection to the database!",
-                                               array(
-                                                   self::DB_NAME,
-                                                   self::DB_USER,
-                                                   self::DB_PASS,
-                                               ));
+            throw new PDOException();
         }
     }
 
@@ -61,13 +56,23 @@ class DatabaseSetup extends Setup {
      * @throws AirtimeDatabaseException
      */
     public function runSetup() {
-        $this->setNewDatabaseConnection("postgres");
-        if ($this->checkDatabaseExists()) {
-            $this->installDatabaseTables();
-        } else {
-            $this->checkUserCanCreateDb();
-            $this->createDatabase();
-            $this->installDatabaseTables();
+        try {
+            $this->setNewDatabaseConnection("postgres");
+            if ($this->checkDatabaseExists()) {
+                $this->installDatabaseTables();
+            } else {
+                $this->checkUserCanCreateDb();
+                $this->createDatabase();
+                $this->installDatabaseTables();
+            }
+        } catch (PDOException $e) {
+            throw new AirtimeDatabaseException("Couldn't establish a connection to the database! "
+                                               . "Please check your credentials and try again.",
+                                               array(
+                                                   self::DB_NAME,
+                                                   self::DB_USER,
+                                                   self::DB_PASS,
+                                               ));
         }
 
         $this->writeToTemp();
@@ -178,7 +183,7 @@ class DatabaseSetup extends Setup {
      */
     private function checkDatabaseEncoding() {
         $statement = self::$dbh->prepare("SELECT pg_encoding_to_char(encoding) "
-                                . "FROM pg_database WHERE datname = :dbname");
+                                         . "FROM pg_database WHERE datname = :dbname");
         $statement->execute(array(":dbname" => $this->name));
         $encoding = $statement->fetch();
         if (!($encoding && $encoding[0] == "UTF8")) {
