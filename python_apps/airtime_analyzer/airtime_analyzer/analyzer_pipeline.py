@@ -6,6 +6,9 @@ import multiprocessing
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
 from cloud_storage_uploader import CloudStorageUploader
+from cuepoint_analyzer import CuePointAnalyzer
+from replaygain_analyzer import ReplayGainAnalyzer
+from playability_analyzer import *
 
 class AnalyzerPipeline:
     """ Analyzes and imports an audio file into the Airtime library. 
@@ -54,10 +57,14 @@ class AnalyzerPipeline:
             metadata = dict()
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
             metadata["station_domain"] = station_domain
-            #metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+
+            metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
+            metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
+            metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
+
             csu = CloudStorageUploader()
             metadata = csu.upload_obj(audio_file_path, metadata)
-            metadata["import_status"] = 0 # imported
+            metadata["import_status"] = 0 # Successfully imported
 
             # Note that the queue we're putting the results into is our interprocess communication 
             # back to the main process.
@@ -65,6 +72,11 @@ class AnalyzerPipeline:
             # Pass all the file metadata back to the main analyzer process, which then passes
             # it back to the Airtime web application.
             queue.put(metadata)
+        except UnplayableFileError as e:
+            logging.exception(e)
+            metadata["import_status"] = 2
+            metadata["reason"] = "The file could not be played."
+            raise e
         except Exception as e:
             # Ensures the traceback for this child process gets written to our log files:
             logging.exception(e) 

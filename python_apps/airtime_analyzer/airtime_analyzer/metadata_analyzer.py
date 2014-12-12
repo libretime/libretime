@@ -149,7 +149,7 @@ class MetadataAnalyzer(Analyzer):
             metadata["mime"] = magic.from_file(filename, mime=True)
             metadata["channels"] = reader.getnchannels()
             metadata["sample_rate"] = reader.getframerate()
-            length_seconds = float(reader.getnframes()) / float(metadata["channels"] * metadata["sample_rate"])
+            length_seconds = float(reader.getnframes()) / float(metadata["sample_rate"])
             #Converting the length in seconds (float) to a formatted time string
             track_length = datetime.timedelta(seconds=length_seconds)
             metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
