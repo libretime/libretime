@@ -21,25 +21,29 @@ showhelp () {
                 No output except errors
     -f, --force
                 Turn off interactive prompts
+    -d, --install-dependencies
+                Install binary dependencies
     -w, --web-user=WEB_USER
                 Set the default apache web user
-    -i, --in-place
-                Set the current Airtime root as the working directory for
-                Airtime
-                Note that you will need to give your web user permissions on
-                these directories
-    -d, --install-directory=INSTALL_PATH
+    -r, --web-root=WEB_ROOT
                 Set the web root for Airtime files
                 This will copy the Airtime application files and make them
                 accessible to the web user
                 If no directory or an empty string is given, this defaults to
                 an in-place installation, and will give the web user
                 permissions on the current Airtime root
+    -i, --in-place
+                Set the current Airtime root as the working directory for
+                Airtime
+                Note that you will need to give your web user permissions on
+                these directories
     -p, --postgres-init
                 Create a default postgres user named 'airtime' with password
                 'airtime'
     -a, --apache
-                Install apache and deploys a basic configuration for Airtime"
+                Install apache and deploy a basic configuration for Airtime
+    -c, --icecast
+                Install Icecast 2 and deploy a basic configuration for Airtime"
     exit 0
 }
 
@@ -50,10 +54,12 @@ showversion () {
 }
 
 web_user="www-data"
-install_directory=""
-apache="f"
+web_root=""
 in_place="f"
-create_postgres_user="f"
+postgres="f"
+apache="f"
+icecast="f"
+install_dependencies="f"
 # Interactive
 _i=1
 # Verbose
@@ -82,35 +88,39 @@ function loudCmd() {
     fi
 }
 
-
 while :; do
     case "$1" in
-        -h|-\?|--help)
+        --help)
             showhelp
-            exit
             ;;
-        -V|--version)
+        --version)
             showversion
             ;;
-        -v|--verbose)
+        --verbose)
             _v=1
             ;;
-        -q|--quiet|--silent)
+        --quiet|--silent)
             _q=1
             ;;
-        -f|--force)
+        --force)
             _i=0
             ;;
-        -a|--apache)
+        --install-dependencies)
+            install_dependencies="t"
+            ;;
+        --apache)
             apache="t"
             ;;
-        -i|--in-place)
+        --icecast)
+            icecast="t"
+            ;;
+        --postgres-init)
+            postgres="t"
+            ;;
+        --in-place)
             in_place="t"
             ;;
-        -p|--postgres-init)
-            create_postgres_user="t"
-        ;;
-        -w|--web-user)
+        --web-user)
             if [ "$2" ]; then
                 web_user=$2
                 shift 2
@@ -127,21 +137,21 @@ while :; do
             echo 'ERROR: Must specify a non-empty "--web-user=WEB_USER" argument.' >&2
             exit 1
             ;;
-        -d|--install-directory)
+        --web-root)
             if [ "$2" ]; then
-                install_directory=$(readlink -f $2)
+                web_root=$(readlink -f $2)
                 shift 2
                 continue
             else
-                echo 'ERROR: Must specify a non-empty "--install-directory INSTALL_DIRECTORY" argument.' >&2
+                echo 'ERROR: Must specify a non-empty "--web-root WEB_ROOT" argument.' >&2
                 exit 1
             fi
             ;;
-        --install-directory=?*)
-            install_directory=${1#*=} # Delete everything up to "=" and assign the remainder.
+        --web-root=?*)
+            web_root=${1#*=} # Delete everything up to "=" and assign the remainder.
             ;;
-        --install-directory=)
-            echo 'ERROR: Must specify a non-empty "--install-directory=INSTALL_DIRECTORY" argument.' >&2
+        --web-root=)
+            echo 'ERROR: Must specify a non-empty "--web-root=WEB_ROOT" argument.' >&2
             exit 1
             ;;
         --)
@@ -149,9 +159,62 @@ while :; do
             break
             ;;
         -?*)
-            echo "$0: error - unrecognized option $1" 1>&2;
-            echo "Try 'install --help' for more information."
-            exit 1
+            for ((i = 1; i < ${#1}; i++)); do
+                case "${1:$i:1}" in
+                    h|\?)
+                        showhelp
+                        ;;
+                    V)
+                        showversion
+                        ;;
+                    v)
+                        _v=1
+                        ;;
+                    q)
+                        _q=1
+                        ;;
+                    f)
+                        _i=0
+                        ;;
+                    d)
+                        install_dependencies="t"
+                        ;;
+                    a)
+                        apache="t"
+                        ;;
+                    c)
+                        icecast="t"
+                        ;;
+                    p)
+                        postgres="t"
+                        ;;
+                    i)
+                        in_place="t"
+                        ;;
+                    w)
+                        if [ "$2" ]; then
+                            web_user=$2
+                            continue
+                        else
+                            echo 'ERROR: Must specify a non-empty "-w WEB_USER" argument.' >&2
+                            exit 1
+                        fi
+                        ;;
+                    r)
+                        if [ "$2" ]; then
+                            web_root=$(readlink -f $2)
+                            continue
+                        else
+                            echo 'ERROR: Must specify a non-empty "-d WEB_ROOT" argument.' >&2
+                            exit 1
+                        fi
+                        ;;
+                    *)
+                        echo "$0: error - unrecognized option $1" >&2;
+                        echo "Try 'install --help' for more information."
+                        exit 1
+                esac
+            done
             ;;
         *)
             break
@@ -159,12 +222,13 @@ while :; do
     shift
 done
 
-if [ -z install_directory -a ! -d install_directory ]; then
-    echo "$install_directory doesn't exist!"
+if [ -z web_root -a ! -d web_root ]; then
+    echo "$web_root doesn't exist!"
     exit 1
 fi
 
 dist=`lsb_release -is`
+code=`lsb_release -cs`
 
 echo -e "\n   _____  .________________________.___   _____  ___________   "
 echo    "  /  _  \ |   \______   \__    ___/|   | /     \ \_   _____/     "
@@ -173,22 +237,22 @@ echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
 echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
-echo    "  ____ ______   ____   ____     __________  __ _________   ____  ____    "
-echo    " /  _ \\\\____ \_/ __ \ /    \   /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \ "
-echo    "(  <_> )  |_> >  ___/|   |  \  \___ (  <_> )  |  /|  | \/\  \__\  ___/   "
-echo    " \____/|   __/ \___  >___|  / /____  >____/|____/ |__|    \___  >___  >  "
-echo    "       |__|        \/     \/       \/                         \/    \/   "
-echo    "                   .___.__                        __                         __  .__                      "
-echo    "____________     __| _/|__| ____   _____   __ ___/  |_  ____   _____ _____ _/  |_|__| ____   ____         "
-echo    "\_  __ \__  \   / __ | |  |/  _ \  \__  \ |  |  \   __\/  _ \ /     \\\\__  \\\\   __\  |/  _ \ /    \    "
-echo    " |  | \// __ \_/ /_/ | |  (  <_> )  / __ \|  |  /|  | (  <_> )  Y Y  \/ __ \|  | |  (  <_> )   |  \       "
-echo    " |__|  (____  /\____ | |__|\____/  (____  /____/ |__|  \____/|__|_|  (____  /__| |__|\____/|___|  /       "
-echo -e "            \/      \/                  \/                         \/     \/                    \/      \n"
+# echo    "  ____ ______   ____   ____     __________  __ _________   ____  ____    "
+# echo    " /  _ \\\\____ \_/ __ \ /    \   /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \ "
+# echo    "(  <_> )  |_> >  ___/|   |  \  \___ (  <_> )  |  /|  | \/\  \__\  ___/   "
+# echo    " \____/|   __/ \___  >___|  / /____  >____/|____/ |__|    \___  >___  >  "
+# echo    "       |__|        \/     \/       \/                         \/    \/   "
+# echo    "                   .___.__                        __                         __  .__                      "
+# echo    "____________     __| _/|__| ____   _____   __ ___/  |_  ____   _____ _____ _/  |_|__| ____   ____         "
+# echo    "\_  __ \__  \   / __ | |  |/  _ \  \__  \ |  |  \   __\/  _ \ /     \\\\__  \\\\   __\  |/  _ \ /    \    "
+# echo    " |  | \// __ \_/ /_/ | |  (  <_> )  / __ \|  |  /|  | (  <_> )  Y Y  \/ __ \|  | |  (  <_> )   |  \       "
+# echo    " |__|  (____  /\____ | |__|\____/  (____  /____/ |__|  \____/|__|_|  (____  /__| |__|\____/|___|  /       "
+# echo -e "            \/      \/                  \/                         \/     \/                    \/      \n"
 
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install default Airtime apache configuration? (Y/n): \c"
     read IN
-    if [ "${IN}" = "y" -o "${IN}" = "Y" ]; then
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
         apache="t"
     fi
 fi
@@ -200,21 +264,21 @@ if [ "$apache" = "t" ]; then
 
     if [ "$in_place" = "t" ]; then
         verbose "\n * Setting current Airtime directory as web root..."
-        install_directory=${AIRTIMEROOT}/airtime_mvc/public
+        web_root=${AIRTIMEROOT}/airtime_mvc/public
         chmod -R 755 ${AIRTIMEROOT}
-    elif [ -n "$install_directory" ]; then
+    elif [ -n "$web_root" ]; then
         verbose "\n * Creating Apache web root directory..."
-        mkdir -p ${install_directory}/airtime/public/
-        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${install_directory}/airtime/
-        chmod -R 755 ${install_directory}
+        mkdir -p ${web_root}/airtime/public/
+        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
+        chmod -R 755 ${web_root}
     else
         verbose "\n * Creating default Apache web root directory /usr/share/airtime/..."
-        install_directory="/usr/share"
-        mkdir -p ${install_directory}/airtime/public/
-        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${install_directory}/airtime/
+        web_root="/usr/share"
+        mkdir -p ${web_root}/airtime/public/
+        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
     fi
 
-    sed -e "s@WEB_ROOT@${install_directory}@g" apache/airtime-vhost > apache/airtime-vhost.tmp
+    sed -e "s@WEB_ROOT@${web_root}@g" apache/airtime-vhost > apache/airtime-vhost.tmp
 
     loudCmd "apt-get -y --force-yes install apache2 libapache2-mod-php5"
     set +e
@@ -240,6 +304,20 @@ if [ "$apache" = "t" ]; then
     fi
 fi
 
+if [ "$icecast" = "t" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "               * Installing Icecast *                "
+    loud "-----------------------------------------------------"
+    
+    loudCmd "apt-get -y --force-yes install icecast2"
+
+    verbose "\n * Enabling Icecast 2..."
+    sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
+    set +e
+    service icecast2 start
+    set -e
+fi
+
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
     loud "              * Installing Log Files *               "
@@ -254,7 +332,7 @@ if [ ! -d /var/log/airtime ]; then
 fi
 
 loud "\n-----------------------------------------------------"
-loud "                  * Installing PHP *                 "
+loud "                 * Installing PHP *                  "
 loud "-----------------------------------------------------"
 
 loudCmd "apt-get -y --force-yes install php5"
@@ -287,12 +365,14 @@ loud "-----------------------------------------------------"
 loudCmd "apt-get -y --force-yes install postgresql php5-pgsql"
 
 setupAirtimePostgresUser() {
+    # here-doc to execute this block as postgres user
     su postgres <<'EOF'
     psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+# don't indent this!
 EOF
 }
 
-if [ "$create_postgres_user" = "t" ]; then
+if [ "$postgres" = "t" ]; then
     setupAirtimePostgresUser
 elif [ ${_i} -eq 1 ]; then
     echo -e "Create default airtime postgres user? (Y/n): \c"
@@ -303,7 +383,7 @@ elif [ ${_i} -eq 1 ]; then
 fi
 
 loud "\n-----------------------------------------------------"
-loud "               * Setting up RabbitMQ *               "
+loud "               * Installing RabbitMQ *               "
 loud "-----------------------------------------------------"
 
 loudCmd "apt-get -y --force-yes install rabbitmq-server"
@@ -315,12 +395,12 @@ EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
 # Ignore errors in this check to avoid dying when vhost isn't found
 set +e
-rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST}
+rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST} > /dev/null
 RESULT="$?"
 set -e
 
 # Only run these if the vhost doesn't exist
-if [ "${RESULT}" != "0" ]; then
+if [ "$RESULT" != "0" ]; then
     verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
 
     rabbitmqctl add_vhost ${RABBITMQ_VHOST}
@@ -338,10 +418,23 @@ if [ ! -d "/etc/airtime" ]; then
     loud "-----------------------------------------------------"
 
     verbose "\n * Creating /etc/airtime/ directory..."
-    mkdir -p /srv/airtime
     mkdir /etc/airtime
     chown -R ${web_user}:${web_user} /srv/airtime
     chown -R ${web_user}:${web_user} /etc/airtime
+fi
+
+if [ ! -d "/srv/airtime" ]; then
+    mkdir -p /srv/airtime
+fi
+
+if [ "$install_dependencies" = "t" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "         * Installing External Dependencies *        "
+    loud "-----------------------------------------------------"
+
+    verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
+
+    loudCmd "apt-get -y --force-yes install $(grep -vE \"^\s*#\" \"bin/requirements-${dist,,}-${code,,}.apt\" | tr \"\n\" \" \")"
 fi
 
 verbose "\n * Restarting apache..."
