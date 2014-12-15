@@ -19,7 +19,7 @@ class ReplayGainAnalyzer(Analyzer):
         '''
         command = [ReplayGainAnalyzer.REPLAYGAIN_EXECUTABLE, '-d', filename]
         try:
-            results = subprocess.check_output(command, stderr=subprocess.STDOUT)
+            results = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
             filename_token = "%s: " % filename
             rg_pos = results.find(filename_token, results.find("Calculating Replay Gain information")) + len(filename_token)
             db_pos = results.find(" dB", rg_pos)
