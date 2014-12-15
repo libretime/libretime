@@ -38,10 +38,10 @@ $result = $r && $database;
                         Component
                     </td>
                     <td class="description">
-                        Description
+                        <strong>Description</strong>
                     </td>
                     <td class="solution">
-                        Solution
+                        <strong>Solution</strong>
                     </td>
                 </tr>
             </thead>
@@ -109,7 +109,7 @@ $result = $r && $database;
                             ?>">
                             Make sure you aren't missing any of the Postgres dependencies in the table above.
                             If your dependencies check out, make sure your database configuration settings in
-                            <code>airtime.conf</code> is correct and the Airtime database was installed correctly.
+                            <code>airtime.conf</code> are correct and the Airtime database was installed correctly.
                         <?php
                         }
                         ?>
@@ -132,6 +132,7 @@ $result = $r && $database;
         <p>
             Your Airtime station is up and running!
         </p>
+        <button onclick="location = location.pathname;">Log in to Airtime!</button>
     <?php
     }
 ?>
@@ -148,4 +149,3 @@ $result = $r && $database;
                 ?>
             </p>
         </div>
-<?php
