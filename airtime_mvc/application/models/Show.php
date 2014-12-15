@@ -1221,7 +1221,6 @@ SELECT si.starts AS start_timestamp,
        si.id AS instance_id,
        si.record,
        s.url,
-       s.image_path,
        starts,
        ends
 FROM cc_show_instances si
@@ -1273,7 +1272,6 @@ SQL;
                             "starts"                  => $rows[$i-1]['starts'],
                             "ends"                    => $rows[$i-1]['ends'],
                             "record"                  => $rows[$i-1]['record'],
-                            "image_path"             => $rows[$i-1]['image_path'],
                             "type"                   => "show");
                 }
     
@@ -1291,7 +1289,6 @@ SQL;
                             "starts"                  => $rows[$i+1]['starts'],
                             "ends"                    => $rows[$i+1]['ends'],
                             "record"                  => $rows[$i+1]['record'],
-                            "image_path"              => $rows[$i+1]['image_path'],
                             "type"                    => "show");
                 }
                 break;
@@ -1313,7 +1310,6 @@ SQL;
                         "starts"                  => $rows[$i]['starts'],
                         "ends"                    => $rows[$i]['ends'],
                         "record"                 => $rows[$i]['record'],
-                        "image_path"             => $rows[$i]['image_path'],
                                     "type"                   => "show");
                 break;
             }
@@ -1331,7 +1327,6 @@ SQL;
                     "starts"                  => $rows[$previousShowIndex]['starts'],
                     "ends"                    => $rows[$previousShowIndex]['ends'],
                     "record"                  => $rows[$previousShowIndex]['record'],
-                    "image_path"              => $rows[$previousShowIndex]['image_path'],
                     "type"                    => "show");
         }
     
