@@ -46,7 +46,7 @@ class GeneralSetup extends Setup {
      * @return array associative array containing a display message and fields with errors
      */
     function runSetup() {
-
+        // TODO Do we need to validate these settings?
 
         if (count(self::$errors) <= 0) {
             $this->writeToTemp();
