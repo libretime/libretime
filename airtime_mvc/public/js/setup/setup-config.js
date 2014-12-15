@@ -9,8 +9,12 @@ function cleanupStep(data, e) {
     // If there are no errors, we can continue with
     // the installation process
     if (data.errors.length == 0) {
-        // Call nextSlide from the submit button's context
-        nextSlide.call($(e.target));
+        if ($(e.target).attr("id") == "finishSettingsForm") {
+            window.location.replace("/?config");
+        } else {
+            // Call nextSlide from the submit button's context
+            nextSlide.call($(e.target));
+        }
     }
     removeOverlay();
 }
