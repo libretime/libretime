@@ -18,7 +18,7 @@ Major features:
  * Solid playout. Airtime uses the open source Liquidsoap streaming language 
    for reliable and precise playback to multiple outputs. 
  * Open, extensible architecture.  Stations are free to extend and alter 
-   all parts of the program code, under the GNU GPLv3 license.
+   all parts of the program code, under the GNU AGPLv3 license.
 
 
 INSTALLATION
@@ -30,16 +30,46 @@ http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/preparing-the-serve
 If you are a developer, please see this page:
 http://wiki.sourcefabric.org/display/CC/Airtime+Dev+Site
 
-For installation direct from a git checkout on Ubuntu 12.04 LTS, run:
+Basic installation has two steps:
 
-    cd install_full/ubuntu
-    sudo ./airtime-full-install
+1) Run the install script, located in the Airtime/installer directory.
 
-For installation from git on Debian wheezy, run:
+    cd installer
 
-    cd install_full/debian
-    sudo ./airtime-full-install
+For an interactive installation, run:
 
+    sudo ./install
+
+The installer will then prompt you about how you want to set up your Airtime installation.
+
+For a simple full installation (setting up apache and postgres configurations and users for you), run
+
+    sudo ./install -fap
+
+What this means:
+
+    -f - force; non-interactive (no prompts)
+    -a - install the default apache setup for Airtime
+    -p - create a default Airtime postgres user
+
+This will install all components necessary for Airtime, and set up /usr/share/airtime as your
+web root (where apache looks for your Airtime files).
+
+There are several options for installation - to see them all, run
+
+    sudo ./install --help
+
+2) Once you've run the installer, navigate to localhost/ (if you have a custom apache configuration, navigate to
+your Airtime web host) to run an interactive setup.
+
+If you just want to run Airtime with default settings, you won't need to change anything, but if you have any custom
+configuration settings you'll be able to specify them.
+
+Once you finish the setup process, you'll be presented with a configuration checklist so you can ensure that
+your Airtime installation is working correctly. If anything was mis-configured, the checklist will provide some
+helpful tips to resolve the issue.
+
+If your checklist is all green, you're ready to get started with Airtime!
 
 Quick links to our resources
 ----------------------------
