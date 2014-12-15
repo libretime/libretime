@@ -48,11 +48,11 @@ class PypoLiquidsoap():
 
     def handle_file_type(self, media_item):
         """
-        Wait maximum 5 seconds (50 iterations) for file to become ready, 
+        Wait 200 seconds (2000 iterations) for file to become ready, 
         otherwise give up on it.
         """
         iter_num = 0
-        while not media_item['file_ready'] and iter_num < 50:
+        while not media_item['file_ready'] and iter_num < 2000:
             time.sleep(0.1)
             iter_num += 1
 
