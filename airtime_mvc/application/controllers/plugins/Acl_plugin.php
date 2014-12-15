@@ -138,8 +138,6 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         } else {
 
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
-            // For now, close the session here to prevent it from blocking requests
-            session_write_close();
             $this->setRoleName($userInfo->type);
 
             Zend_View_Helper_Navigation_HelperAbstract::setDefaultAcl($this->_acl);
