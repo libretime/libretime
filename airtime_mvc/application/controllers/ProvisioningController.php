@@ -25,7 +25,7 @@ class ProvisioningController extends Zend_Controller_Action
         
         foreach ($CC_CONFIG["supportedStorageBackends"] as $storageBackend) {
             $proxyStorageBackend = new ProxyStorageBackend($storageBackend);
-            $proxyStorageBackend->deleteObjects();
+            $proxyStorageBackend->deleteAllCloudFileObjects();
         }
         
         //check at to make sure cloud_file table is empty

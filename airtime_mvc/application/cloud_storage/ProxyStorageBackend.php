@@ -43,9 +43,9 @@ class ProxyStorageBackend extends StorageBackend
         $this->storageBackend->deletePhysicalFile($resourceId);
     }
     
-    public function deleteObjects()
+    public function deleteAllCloudFileObjects()
     {
-        $this->storageBackend->deleteObjects();
+        $this->storageBackend->deleteAllCloudFileObjects();
     }
 
 }

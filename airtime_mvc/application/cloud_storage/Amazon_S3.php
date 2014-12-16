@@ -59,46 +59,19 @@ class Amazon_S3 extends StorageBackend
         }
     }
     
-    public function deleteObjects()
+    public function deleteAllCloudFileObjects()
     {
-        $cloudFilePager = CloudFileQuery::create()
-            ->filterByStorageBackend("amazon_S3")
-            ->paginate($page=1, $maxPerPage=1000);
-        
-        if ($cloudFilePager->haveToPaginate()) {
-            $numPages = $cloudFilePager->getLastPage();
-            $currentPage = 1;
-            while ($currentPage <= $numPages) {
-                $cloudFilePager = CloudFileQuery::create()
-                    ->filterByStorageBackend("amazon_S3")
-                    ->paginate($page = $currentPage, $maxPerPage = 1000);
+        $this->s3Client->deleteMatchingObjects(
+            $bucket = $this->getBucket(),
+            $prefix = Application_Model_Preference::GetStationName());
 
-                $this->deleteObjectSet($cloudFilePager->getResults());
-
-                $currentPage += 1;
-            }
-        } else {
-            $this->deleteObjectSet($cloudFilePager->getResults());
-        }
-    }
-    
-    /**
-     * Deletes objects from Amazon S3 1000 at a time.
-     * 1000 is the max number of objects that can be deleted using the aws sdk
-     * api, per request.
-     */
-    private function deleteObjectSet($cloudFiles)
-    {
-        if (!$cloudFiles->isEmpty()) {
-            $cloudFilesToDelete = array();
-
-            foreach ($cloudFiles as $cloudFile) {
-                array_push($cloudFilesToDelete, array("Key" => $cloudFile->getResourceId()));
-            }
-        
-            $this->s3Client->deleteObjects(array(
-                "Bucket" => $this->getBucket(),
-                "Objects" => $cloudFilesToDelete));
+        // delete record of the cloud files from the database
+        $criteria = new Criteria();
+        $criteria->clearSelectColumns();
+        $criteria->addSelectColumn(CloudFilePeer::CC_FILE_ID);
+        $results = CloudFilePeer::doSelectStmt($criteria)->fetchAll();
+        foreach ($results as $key => $value) {
+            CcFilesQuery::create()->findPk($value["cc_file_id"])->delete();
         }
     }
 }

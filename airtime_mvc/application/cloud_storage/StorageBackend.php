@@ -23,8 +23,9 @@ abstract class StorageBackend
     /** Deletes the file from the storage backend. */
     abstract public function deletePhysicalFile($resourceId);
 
-    /** Deletes multiple objects (files) stored on the cloud service. */
-    abstract public function deleteObjects();
+    /** Deletes all objects (files) stored on the cloud service. To be used
+     *  for station termination */
+    abstract public function deleteAllCloudFileObjects();
     
     protected function getBucket()
     {
