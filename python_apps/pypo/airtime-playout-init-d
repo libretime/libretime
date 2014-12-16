@@ -9,7 +9,7 @@
 # Short-Description: Manage airtime-playout daemon
 ### END INIT INFO
 
-USERID=root
+USERID=WEB_USER
 NAME="Airtime Scheduler"
 
 DAEMON=/usr/lib/airtime/pypo/bin/airtime-playout

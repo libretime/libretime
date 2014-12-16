@@ -319,18 +319,20 @@ loud "\n-----------------------------------------------------"
 loud "             * Installing Python Apps *              "
 loud "-----------------------------------------------------"
 
-verbose "\n * Installing virtualenv..."
-loudCmd "$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh"
-
-verbose "\n * Installing liquidsoap..."
 loudCmd "apt-get -y --force-yes install liquidsoap"
+
+verbose "\n * Creating /usr/lib/airtime..."
+mkdir -p /usr/lib/airtime
+verbose "...Done"
 
 verbose "\n * Installing API client..."
 cp -R ${AIRTIMEROOT}/python_apps/api_clients /usr/lib/airtime/api_clients
+verbose "...Done"
 
 verbose "\n * Copying media-monitor files..."
 cp -R ${AIRTIMEROOT}/python_apps/media-monitor /usr/lib/airtime/media-monitor
 cp -R ${AIRTIMEROOT}/python_apps/media-monitor2 /usr/lib/airtime/media-monitor/mm2
+verbose "...Done"
 
 sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
 touch /etc/sudoers.d/airtime-media-monitor_${web_user}
@@ -340,8 +342,11 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
                                          /sbin/status   airtime-media-monitor" > /etc/sudoers.d/airtime-media-monitor_${web_user}
 
 verbose "\n * Copying pypo files..."
+mkdir -p /usr/lib/airtime/pypo
 cp -R ${AIRTIMEROOT}/python_apps/pypo /usr/lib/airtime/pypo/bin/
+verbose "...Done"
 
+verbose "\n * Creating init files..."
 sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-playout-init-d > /etc/init.d/airtime-playout
 touch /etc/sudoers.d/airtime-playout_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-playout, \
@@ -349,12 +354,17 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-playout, \
                                          /sbin/restart  airtime-playout, \
                                          /sbin/status   airtime-playout" > /etc/sudoers.d/airtime-playout_${web_user}
 
+ln -sf /usr/bin/airtime-liquidsoap /usr/bin/liquidsoap
 sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-liquidsoap-init-d > /etc/init.d/airtime-liquidsoap
 touch /etc/sudoers.d/airtime-liquidsoap_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-liquidsoap, \
                                          /sbin/stop     airtime-liquidsoap, \
                                          /sbin/restart  airtime-liquidsoap, \
                                          /sbin/status   airtime-liquidsoap" > /etc/sudoers.d/airtime-liquidsoap_${web_user}
+verbose "...Done"
+
+chmod 700 /etc/init.d/airtime-*
+initctl reload-configuration
 
 # Do we need to run the init scripts for media-monitor and pypo here?
 
