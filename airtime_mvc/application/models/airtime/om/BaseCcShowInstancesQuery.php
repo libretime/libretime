@@ -7,6 +7,7 @@
  *
  *
  * @method CcShowInstancesQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method CcShowInstancesQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method CcShowInstancesQuery orderByDbStarts($order = Criteria::ASC) Order by the starts column
  * @method CcShowInstancesQuery orderByDbEnds($order = Criteria::ASC) Order by the ends column
  * @method CcShowInstancesQuery orderByDbShowId($order = Criteria::ASC) Order by the show_id column
@@ -20,6 +21,7 @@
  * @method CcShowInstancesQuery orderByDbModifiedInstance($order = Criteria::ASC) Order by the modified_instance column
  *
  * @method CcShowInstancesQuery groupByDbId() Group by the id column
+ * @method CcShowInstancesQuery groupByDbDescription() Group by the description column
  * @method CcShowInstancesQuery groupByDbStarts() Group by the starts column
  * @method CcShowInstancesQuery groupByDbEnds() Group by the ends column
  * @method CcShowInstancesQuery groupByDbShowId() Group by the show_id column
@@ -63,6 +65,7 @@
  * @method CcShowInstances findOne(PropelPDO $con = null) Return the first CcShowInstances matching the query
  * @method CcShowInstances findOneOrCreate(PropelPDO $con = null) Return the first CcShowInstances matching the query, or a new CcShowInstances object populated from the query conditions when no match is found
  *
+ * @method CcShowInstances findOneByDbDescription(string $description) Return the first CcShowInstances filtered by the description column
  * @method CcShowInstances findOneByDbStarts(string $starts) Return the first CcShowInstances filtered by the starts column
  * @method CcShowInstances findOneByDbEnds(string $ends) Return the first CcShowInstances filtered by the ends column
  * @method CcShowInstances findOneByDbShowId(int $show_id) Return the first CcShowInstances filtered by the show_id column
@@ -76,6 +79,7 @@
  * @method CcShowInstances findOneByDbModifiedInstance(boolean $modified_instance) Return the first CcShowInstances filtered by the modified_instance column
  *
  * @method array findByDbId(int $id) Return CcShowInstances objects filtered by the id column
+ * @method array findByDbDescription(string $description) Return CcShowInstances objects filtered by the description column
  * @method array findByDbStarts(string $starts) Return CcShowInstances objects filtered by the starts column
  * @method array findByDbEnds(string $ends) Return CcShowInstances objects filtered by the ends column
  * @method array findByDbShowId(int $show_id) Return CcShowInstances objects filtered by the show_id column
@@ -194,7 +198,7 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "starts", "ends", "show_id", "record", "rebroadcast", "instance_id", "file_id", "time_filled", "created", "last_scheduled", "modified_instance" FROM "cc_show_instances" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "description", "starts", "ends", "show_id", "record", "rebroadcast", "instance_id", "file_id", "time_filled", "created", "last_scheduled", "modified_instance" FROM "cc_show_instances" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -323,6 +327,35 @@ abstract class BaseCcShowInstancesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcShowInstancesPeer::ID, $dbId, $comparison);
+    }
+
+    /**
+     * Filter the query on the description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDbDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcShowInstancesQuery The current query, for fluid interface
+     */
+    public function filterByDbDescription($dbDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbDescription)) {
+                $dbDescription = str_replace('*', '%', $dbDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcShowInstancesPeer::DESCRIPTION, $dbDescription, $comparison);
     }
 
     /**

@@ -52,6 +52,7 @@ class CcShowTableMap extends TableMap
         $this->addColumn('live_stream_pass', 'DbLiveStreamPass', 'VARCHAR', false, 255, null);
         $this->addColumn('linked', 'DbLinked', 'BOOLEAN', true, null, false);
         $this->addColumn('is_linkable', 'DbIsLinkable', 'BOOLEAN', true, null, true);
+        $this->addColumn('image_path', 'DbImagePath', 'VARCHAR', false, 255, '');
         // validators
     } // initialize()
 

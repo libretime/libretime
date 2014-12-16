@@ -115,6 +115,13 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     protected $is_linkable;
 
     /**
+     * The value for the image_path field.
+     * Note: this column has a database default value of: ''
+     * @var        string
+     */
+    protected $image_path;
+
+    /**
      * @var        PropelObjectCollection|CcShowInstances[] Collection to store aggregation of CcShowInstances objects.
      */
     protected $collCcShowInstancess;
@@ -197,6 +204,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->live_stream_using_custom_auth = false;
         $this->linked = false;
         $this->is_linkable = true;
+        $this->image_path = '';
     }
 
     /**
@@ -350,6 +358,17 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     {
 
         return $this->is_linkable;
+    }
+
+    /**
+     * Get the [image_path] column value.
+     *
+     * @return string
+     */
+    public function getDbImagePath()
+    {
+
+        return $this->image_path;
     }
 
     /**
@@ -658,6 +677,27 @@ abstract class BaseCcShow extends BaseObject implements Persistent
     } // setDbIsLinkable()
 
     /**
+     * Set the value of [image_path] column.
+     *
+     * @param  string $v new value
+     * @return CcShow The current object (for fluent API support)
+     */
+    public function setDbImagePath($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->image_path !== $v) {
+            $this->image_path = $v;
+            $this->modifiedColumns[] = CcShowPeer::IMAGE_PATH;
+        }
+
+
+        return $this;
+    } // setDbImagePath()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -692,6 +732,10 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             }
 
             if ($this->is_linkable !== true) {
+                return false;
+            }
+
+            if ($this->image_path !== '') {
                 return false;
             }
 
@@ -730,6 +774,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $this->live_stream_pass = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
             $this->linked = ($row[$startcol + 11] !== null) ? (boolean) $row[$startcol + 11] : null;
             $this->is_linkable = ($row[$startcol + 12] !== null) ? (boolean) $row[$startcol + 12] : null;
+            $this->image_path = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -739,7 +784,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 13; // 13 = CcShowPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = CcShowPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcShow object", $e);
@@ -1076,6 +1121,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::IS_LINKABLE)) {
             $modifiedColumns[':p' . $index++]  = '"is_linkable"';
         }
+        if ($this->isColumnModified(CcShowPeer::IMAGE_PATH)) {
+            $modifiedColumns[':p' . $index++]  = '"image_path"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_show" (%s) VALUES (%s)',
@@ -1125,6 +1173,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
                         break;
                     case '"is_linkable"':
                         $stmt->bindValue($identifier, $this->is_linkable, PDO::PARAM_BOOL);
+                        break;
+                    case '"image_path"':
+                        $stmt->bindValue($identifier, $this->image_path, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1324,6 +1375,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 12:
                 return $this->getDbIsLinkable();
                 break;
+            case 13:
+                return $this->getDbImagePath();
+                break;
             default:
                 return null;
                 break;
@@ -1366,6 +1420,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             $keys[10] => $this->getDbLiveStreamPass(),
             $keys[11] => $this->getDbLinked(),
             $keys[12] => $this->getDbIsLinkable(),
+            $keys[13] => $this->getDbImagePath(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1458,6 +1513,9 @@ abstract class BaseCcShow extends BaseObject implements Persistent
             case 12:
                 $this->setDbIsLinkable($value);
                 break;
+            case 13:
+                $this->setDbImagePath($value);
+                break;
         } // switch()
     }
 
@@ -1495,6 +1553,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if (array_key_exists($keys[10], $arr)) $this->setDbLiveStreamPass($arr[$keys[10]]);
         if (array_key_exists($keys[11], $arr)) $this->setDbLinked($arr[$keys[11]]);
         if (array_key_exists($keys[12], $arr)) $this->setDbIsLinkable($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setDbImagePath($arr[$keys[13]]);
     }
 
     /**
@@ -1519,6 +1578,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         if ($this->isColumnModified(CcShowPeer::LIVE_STREAM_PASS)) $criteria->add(CcShowPeer::LIVE_STREAM_PASS, $this->live_stream_pass);
         if ($this->isColumnModified(CcShowPeer::LINKED)) $criteria->add(CcShowPeer::LINKED, $this->linked);
         if ($this->isColumnModified(CcShowPeer::IS_LINKABLE)) $criteria->add(CcShowPeer::IS_LINKABLE, $this->is_linkable);
+        if ($this->isColumnModified(CcShowPeer::IMAGE_PATH)) $criteria->add(CcShowPeer::IMAGE_PATH, $this->image_path);
 
         return $criteria;
     }
@@ -1594,6 +1654,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $copyObj->setDbLiveStreamPass($this->getDbLiveStreamPass());
         $copyObj->setDbLinked($this->getDbLinked());
         $copyObj->setDbIsLinkable($this->getDbIsLinkable());
+        $copyObj->setDbImagePath($this->getDbImagePath());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -2694,6 +2755,7 @@ abstract class BaseCcShow extends BaseObject implements Persistent
         $this->live_stream_pass = null;
         $this->linked = null;
         $this->is_linkable = null;
+        $this->image_path = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
