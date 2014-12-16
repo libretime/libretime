@@ -19,7 +19,10 @@ class ProxyStorageBackend extends StorageBackend
     public function ProxyStorageBackend($storageBackend)
     {
         $CC_CONFIG = Config::getConfig();
-        
+
+        //The storage backend in the airtime.conf directly corresponds to
+        //the name of the class that implements it (eg. Amazon_S3), so we 
+        //can easily create the right backend object dynamically:
         $this->storageBackend = new $storageBackend($CC_CONFIG[$storageBackend]);
     }
     
