@@ -314,6 +314,7 @@ if [ "$icecast" = "t" ]; then
     set -e
 fi
 
+
 loud "\n-----------------------------------------------------"
 loud "             * Installing Python Apps *              "
 loud "-----------------------------------------------------"
@@ -324,10 +325,6 @@ loudCmd "$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh"
 verbose "\n * Installing liquidsoap..."
 loudCmd "apt-get -y --force-yes install liquidsoap"
 
-# ------------ Activate virtualenv ------------
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
-
 verbose "\n * Installing API client..."
 cp -R ${AIRTIMEROOT}/python_apps/api_clients /usr/lib/airtime/api_clients
 
@@ -335,7 +332,7 @@ verbose "\n * Copying media-monitor files..."
 cp -R ${AIRTIMEROOT}/python_apps/media-monitor /usr/lib/airtime/media-monitor
 cp -R ${AIRTIMEROOT}/python_apps/media-monitor2 /usr/lib/airtime/media-monitor/mm2
 
-sed -e "s@WEB_USER@${web_user}@g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
+sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
 touch /etc/sudoers.d/airtime-media-monitor_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
                                          /sbin/stop     airtime-media-monitor, \
@@ -343,19 +340,23 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
                                          /sbin/status   airtime-media-monitor" > /etc/sudoers.d/airtime-media-monitor_${web_user}
 
 verbose "\n * Copying pypo files..."
-python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
+cp -R ${AIRTIMEROOT}/python_apps/pypo /usr/lib/airtime/pypo/bin/
 
-verbose "\n * Initializing media monitor..."
-python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
+sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-playout-init-d > /etc/init.d/airtime-playout
+touch /etc/sudoers.d/airtime-playout_${web_user}
+echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-playout, \
+                                         /sbin/stop     airtime-playout, \
+                                         /sbin/restart  airtime-playout, \
+                                         /sbin/status   airtime-playout" > /etc/sudoers.d/airtime-playout_${web_user}
 
-verbose "\n * Initializing pypo..."
-python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
+sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-liquidsoap-init-d > /etc/init.d/airtime-liquidsoap
+touch /etc/sudoers.d/airtime-liquidsoap_${web_user}
+echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-liquidsoap, \
+                                         /sbin/stop     airtime-liquidsoap, \
+                                         /sbin/restart  airtime-liquidsoap, \
+                                         /sbin/status   airtime-liquidsoap" > /etc/sudoers.d/airtime-liquidsoap_${web_user}
 
-loudCmd "service airtime-media-monitor restart 2>/dev/null"
-loudCmd "service airtime-playout restart 2>/dev/null"
-
-deactivate
-# ------------ Deactivate virtualenv ------------
+# Do we need to run the init scripts for media-monitor and pypo here?
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
@@ -365,9 +366,29 @@ if [ ! -d /var/log/airtime ]; then
     verbose "\n * Creating /var/log/airtime..."
     mkdir -p /var/log/airtime
     mkdir -p /var/log/airtime/media-monitor
+    mkdir -p /var/log/airtime/pypo
+    mkdir -p /var/log/airtime/pypo-liquidsoap
+    
+    verbose "\n * Creating /var/tmp/airtime..."
+    mkdir -p /var/tmp/airtime/media-monitor
+    mkdir -p /var/tmp/airtime/pypo/cache/
+    mkdir -p /var/tmp/airtime/pypo/files/
+    mkdir -p /var/tmp/airtime/pypo/tmp/
+    mkdir -p /var/tmp/airtime/show-recorder/
+
+    verbose "\n * Setting permissions on /var/log/airtime..."
     chmod -R a+x /var/log/airtime
     chown -R ${web_user}:${web_user} /var/log/airtime/
+    
+    verbose "\n * Setting permissions on /var/tmp/airtime..."
+    chmod -R a+x /var/tmp/airtime
+    chmod 755 /usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh
+    chown -R ${web_user}:${web_user} /var/tmp/airtime/
+    chown -R ${web_user}:${web_user} /usr/lib/airtime/
+
+    verbose "\n * Copying logrotate files..."
     cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
+    cp /usr/lib/airtime/pypo/bin/liquidsoap_scripts/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap
 fi
 
 loud "\n-----------------------------------------------------"
