@@ -354,7 +354,7 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-playout, \
                                          /sbin/restart  airtime-playout, \
                                          /sbin/status   airtime-playout" > /etc/sudoers.d/airtime-playout_${web_user}
 
-ln -sf /usr/bin/airtime-liquidsoap /usr/bin/liquidsoap
+ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-liquidsoap-init-d > /etc/init.d/airtime-liquidsoap
 touch /etc/sudoers.d/airtime-liquidsoap_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-liquidsoap, \
