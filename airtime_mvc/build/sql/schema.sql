@@ -605,17 +605,6 @@ CREATE TABLE "cc_listener_count"
 );
 
 -----------------------------------------------------------------------
-
-DROP TABLE IF EXISTS "cc_locale" CASCADE;
-
-CREATE TABLE "cc_locale"
-(
-    "id" serial NOT NULL,
-    "locale_code" VARCHAR(16) NOT NULL,
-    "locale_lang" VARCHAR(128) NOT NULL,
-    PRIMARY KEY ("id")
-);
-
 -- cc_playout_history
 -----------------------------------------------------------------------
 
