@@ -13,7 +13,7 @@ USERID=WEB_USER
 NAME="Airtime Scheduler"
 
 DAEMON=/usr/lib/airtime/pypo/bin/airtime-playout
-PIDFILE=/var/run/airtime-playout.pid
+PIDFILE=/var/run/airtime/airtime-playout.pid
 
 start () {
         mkdir -p /var/log/airtime/pypo

@@ -130,7 +130,7 @@ $result = $r && $database;
     } else {
         ?>
         <p>
-            Your Airtime station is up and running!
+            Your Airtime station is up and running! Get started by logging in with the default username and password: 'admin'/'admin'
         </p>
         <button onclick="location = location.pathname;">Log in to Airtime!</button>
     <?php

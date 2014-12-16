@@ -14,7 +14,7 @@ GROUPID=WEB_USER
 NAME=Airtime\ Media\ Monitor
 
 DAEMON=/usr/lib/airtime/media-monitor/airtime-media-monitor
-PIDFILE=/var/run/airtime-media-monitor.pid
+PIDFILE=/var/run/airtime/airtime-media-monitor.pid
 
 start () {
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \

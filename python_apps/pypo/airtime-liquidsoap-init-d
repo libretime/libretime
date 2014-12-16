@@ -14,7 +14,7 @@ GROUPID=WEB_USER
 NAME="Liquidsoap Playout Engine"
 
 DAEMON=/usr/lib/airtime/pypo/bin/airtime-liquidsoap
-PIDFILE=/var/run/airtime-liquidsoap.pid
+PIDFILE=/var/run/airtime/airtime-liquidsoap.pid
 EXEC='/usr/bin/airtime-liquidsoap'
 
 start () {
