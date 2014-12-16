@@ -21,7 +21,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, station_domain):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, station_domain, current_storage_backend):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -55,15 +55,19 @@ class AnalyzerPipeline:
             # Analyze the audio file we were told to analyze:
             # First, we extract the ID3 tags and other metadata:
             metadata = dict()
-            metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
             metadata["station_domain"] = station_domain
 
+            metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
             metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
-            csu = CloudStorageUploader()
-            metadata = csu.upload_obj(audio_file_path, metadata)
+            if current_storage_backend == "file":
+                metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+            else:
+                csu = CloudStorageUploader()
+                metadata = csu.upload_obj(audio_file_path, metadata)
+
             metadata["import_status"] = 0 # Successfully imported
 
             # Note that the queue we're putting the results into is our interprocess communication 

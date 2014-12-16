@@ -413,9 +413,12 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
             
         //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon...
-         
-        $storDir = Application_Model_MusicDir::getStorDir();
-        $importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;
+        
+        $importedStorageDirectory = "";
+        if ($CC_CONFIG["current_backend"] == "file") {
+            $storDir = Application_Model_MusicDir::getStorDir();
+            $importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;
+        }
         
         try {
             //Copy the temporary file over to the "organize" folder so that it's off our webserver
@@ -426,12 +429,14 @@ class Rest_MediaController extends Zend_Rest_Controller
             Logging::error($e->getMessage());
             return;
         }
+        
 
+        Logging::info($importedStorageDirectory);
         //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
         Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
                  $importedStorageDirectory, basename($originalFilename),
-                 $callbackUrl, $apiKey);
+                 $callbackUrl, $apiKey, $CC_CONFIG["current_backend"]);
     }
 
     private function getOwnerId()
