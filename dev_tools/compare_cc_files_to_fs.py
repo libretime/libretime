@@ -25,7 +25,7 @@ class AirtimeMediaMonitorBootstrap():
     api_clients -- reference of api_clients to communicate with airtime-server
     """
     def __init__(self):
-        config = ConfigObj('/etc/airtime/media-monitor.cfg')
+        config = ConfigObj('/etc/airtime/airtime.conf')
         self.api_client = apc.api_client_factory(config)
 
         """        

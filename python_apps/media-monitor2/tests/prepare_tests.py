@@ -8,7 +8,7 @@ real_path1 = u'/home/rudi/throwaway/watch/unknown/unknown/ACDC_-_Back_In_Black-s
 opath = u"/home/rudi/Airtime/python_apps/media-monitor2/tests/"
 ppath = u"/home/rudi/Airtime/python_apps/media-monitor2/media/"
 
-api_client_path = '/etc/airtime/api_client.cfg'
+api_client_path = '/etc/airtime/airtime.conf'
 # holdover from the time we had a special config for testing
 sample_config = api_client_path
 real_config = api_client_path

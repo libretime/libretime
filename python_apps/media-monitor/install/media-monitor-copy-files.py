@@ -44,17 +44,13 @@ try:
     # load config file
     try:
         config = ConfigObj(PATH_INI_FILE)
-        config['rabbitmq_user'] = os.environ['RABBITMQ_USER']
-        config['rabbitmq_password'] = os.environ['RABBITMQ_PASSWORD'] 
-        config['rabbitmq_vhost'] = os.environ['RABBITMQ_VHOST'] 
-        config.write()
     except Exception, e:
         print 'Error loading config file: ', e
         sys.exit(1)
 
     #copy monit files
     shutil.copy('%s/../../monit/monit-airtime-generic.cfg'%current_script_dir, '/etc/monit/conf.d/')
-    subprocess.call('sed -i "s/\$admin_pass/%s/g" /etc/monit/conf.d/monit-airtime-generic.cfg' % get_rand_string(), shell=True)
+    subprocess.call('sed -i "s/\$admin_pass/%s/g" /etc/monit/conf.d/monit-airtime-generic.cfg' % get_rand_string(), shell=True, close_fds=True)
     shutil.copy('%s/../monit-airtime-media-monitor.cfg'%current_script_dir, '/etc/monit/conf.d/')
 
     #create log dir

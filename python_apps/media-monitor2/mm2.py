@@ -4,12 +4,12 @@ import os
 from media.saas.launcher import setup_global, launch_instance, setup_logger
 from media.monitor.config import MMConfig
 
-def main(global_config, api_client_config, log_config):
+def main(global_config, log_config):
     """ function to run hosted install """
     mm_config = MMConfig(global_config)
     log = setup_logger( log_config, mm_config['logpath'] )
     setup_global(log)
-    launch_instance('hosted_install', '/', global_config, api_client_config)
+    launch_instance('hosted_install', '/', global_config)
 
 __doc__ = """
 Usage:

@@ -97,9 +97,9 @@ class MM2(InstanceThread, Loggable):
 
         manager.loop()
 
-def launch_instance(name, root, global_cfg, apc_cfg):
+def launch_instance(name, root, global_cfg):
     cfg = {
-        'api_client'    : apc_cfg,
+        'api_client'    : global_cfg,
         'media_monitor' : global_cfg,
     }
     ai = AirtimeInstance(name, root, cfg)

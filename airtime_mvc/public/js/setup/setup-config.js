@@ -78,11 +78,15 @@ function removeOverlay() {
 }
 
 function formSlide(dir) {
-    var delta = (dir == "next") ? "-=100%" : "+=100%";
-    $(".btn").attr("disabled", "disabled");
-    $(".form-slider").animate({left: delta}, 500, function() {
-        $(".btn").removeAttr("disabled");
-    });
+    var delta = (dir == "next") ? "-=100%" : "+=100%",
+        parent = $(this).parents("div.form-wrapper"),
+        toForm = (dir == "next") ? parent.next() : parent.prev();
+
+    parent.find(".btn").attr("disabled", "disabled");
+    toForm.find(".btn").removeAttr("disabled");
+    toForm.find(":input :first").focus();
+
+    $(".form-slider").animate({left: delta}, 500);
     var stepCount = $("#stepCount"),
         steps = parseInt(stepCount.html());
     stepCount.html((dir == "next") ? (steps + 1) : (steps - 1));
@@ -93,14 +97,14 @@ function formSlide(dir) {
  * Fade out the previous setup step and fade in the next one
  */
 function nextSlide() {
-    formSlide("next");
+    formSlide.call($(this), "next");
 }
 
 /**
  * Fade out the current setup step and fade in the previous one
  */
 function prevSlide() {
-    formSlide("prev");
+    formSlide.call($(this), "prev");
 }
 
 /**
@@ -118,7 +122,7 @@ function submitForm(e, obj) {
     var d = $(e.target).serializeArray();
     addOverlay();
     // Append .promise().done() rather than using a
-    // callback to avoid weird alert duplication
+    // callback to avoid call duplication
     $("#overlay, #loadingImage").fadeIn(500).promise().done(function() {
         // Proxy function for passing the event to the cleanup function
         var cleanupProxy = function(data) {
@@ -131,6 +135,8 @@ function submitForm(e, obj) {
 $(function() {
     // Stop the user from dragging the slider
     $(".form-slider").draggable('disable');
+    $(".btn").attr("disabled", "disabled");
+    $("form:first .btn").removeAttr("disabled");
 
     window.onresize = function() {
         var headerHeight = $(".header").outerHeight(),

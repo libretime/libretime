@@ -42,15 +42,18 @@ For an interactive installation, run:
 
 The installer will then prompt you about how you want to set up your Airtime installation.
 
-For a simple full installation (setting up apache and postgres configurations and users for you), run
+For a simple full installation (do this if you're installing Airtime from scratch and don't have any of your own 
+configuration set up), run
 
-    sudo ./install -fap
+    sudo ./install -fiapd
 
 What this means:
 
     -f - force; non-interactive (no prompts)
+    -i - install the default Icecast 2 setup for Airtime
     -a - install the default apache setup for Airtime
     -p - create a default Airtime postgres user
+    -d - install binary dependencies needed for Airtime
 
 This will install all components necessary for Airtime, and set up /usr/share/airtime as your
 web root (where apache looks for your Airtime files).

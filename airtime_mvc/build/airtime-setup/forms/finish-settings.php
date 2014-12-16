@@ -2,7 +2,7 @@
 ?>
 
 <form action="#" role="form" id="finishSettingsForm">
-    <h3 class="form-title">Media Settings</h3>
+    <h3 class="form-title">Setup Complete!</h3>
     <span id="helpBlock" class="help-block help-message"></span>
     <p>
         Looks like you're almost done! Click "Done!" to bring up the Airtime configuration checklist; if

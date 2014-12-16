@@ -83,6 +83,8 @@ api_config['push_stream_stats'] = 'push-stream-stats/api_key/%%api_key%%/format/
 api_config['update_stream_setting_table'] = 'update-stream-setting-table/api_key/%%api_key%%/format/json'
 api_config['get_files_without_silan_value'] = 'get-files-without-silan-value/api_key/%%api_key%%'
 api_config['update_cue_values_by_silan'] = 'update-cue-values-by-silan/api_key/%%api_key%%'
+api_config['api_base'] = 'api'
+api_config['bin_dir'] = '/usr/lib/airtime/api_clients'
 
 
 
@@ -203,7 +205,7 @@ class RequestProvider(object):
 
 
 class AirtimeApiClient(object):
-    def __init__(self, logger=None,config_path='/etc/airtime/api_client.cfg'):
+    def __init__(self, logger=None,config_path='/etc/airtime/airtime.conf'):
         if logger is None: self.logger = logging
         else: self.logger = logger
 

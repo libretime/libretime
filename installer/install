@@ -32,17 +32,17 @@ showhelp () {
                 If no directory or an empty string is given, this defaults to
                 an in-place installation, and will give the web user
                 permissions on the current Airtime root
-    -i, --in-place
+    -I, --in-place
                 Set the current Airtime root as the working directory for
                 Airtime
                 Note that you will need to give your web user permissions on
                 these directories
-    -p, --postgres-init
+    -p, --postgres
                 Create a default postgres user named 'airtime' with password
                 'airtime'
     -a, --apache
                 Install apache and deploy a basic configuration for Airtime
-    -c, --icecast
+    -i, --icecast
                 Install Icecast 2 and deploy a basic configuration for Airtime"
     exit 0
 }
@@ -114,7 +114,7 @@ while :; do
         --icecast)
             icecast="t"
             ;;
-        --postgres-init)
+        --postgres)
             postgres="t"
             ;;
         --in-place)
@@ -182,13 +182,13 @@ while :; do
                     a)
                         apache="t"
                         ;;
-                    c)
+                    i)
                         icecast="t"
                         ;;
                     p)
                         postgres="t"
                         ;;
-                    i)
+                    I)
                         in_place="t"
                         ;;
                     w)
@@ -210,7 +210,7 @@ while :; do
                         fi
                         ;;
                     *)
-                        echo "$0: error - unrecognized option $1" >&2;
+                        echo "$0: error - unrecognized option '${1:$i:1}'" >&2;
                         echo "Try 'install --help' for more information."
                         exit 1
                 esac
@@ -236,18 +236,6 @@ echo    " /  /_\  \|   ||       _/ |    |   |   |/  \ /  \ |    __)_      "
 echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
 echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
-
-# echo    "  ____ ______   ____   ____     __________  __ _________   ____  ____    "
-# echo    " /  _ \\\\____ \_/ __ \ /    \   /  ___/  _ \|  |  \_  __ \_/ ___\/ __ \ "
-# echo    "(  <_> )  |_> >  ___/|   |  \  \___ (  <_> )  |  /|  | \/\  \__\  ___/   "
-# echo    " \____/|   __/ \___  >___|  / /____  >____/|____/ |__|    \___  >___  >  "
-# echo    "       |__|        \/     \/       \/                         \/    \/   "
-# echo    "                   .___.__                        __                         __  .__                      "
-# echo    "____________     __| _/|__| ____   _____   __ ___/  |_  ____   _____ _____ _/  |_|__| ____   ____         "
-# echo    "\_  __ \__  \   / __ | |  |/  _ \  \__  \ |  |  \   __\/  _ \ /     \\\\__  \\\\   __\  |/  _ \ /    \    "
-# echo    " |  | \// __ \_/ /_/ | |  (  <_> )  / __ \|  |  /|  | (  <_> )  Y Y  \/ __ \|  | |  (  <_> )   |  \       "
-# echo    " |__|  (____  /\____ | |__|\____/  (____  /____/ |__|  \____/|__|_|  (____  /__| |__|\____/|___|  /       "
-# echo -e "            \/      \/                  \/                         \/     \/                    \/      \n"
 
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install default Airtime apache configuration? (Y/n): \c"
@@ -304,6 +292,14 @@ if [ "$apache" = "t" ]; then
     fi
 fi
 
+if [ "$icecast" = "f" -a ${_i} -eq 1 ]; then
+    echo -e "Install default Airtime Icecast configuration? (Y/n): \c"
+    read IN
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+        icecast="t"
+    fi
+fi
+
 if [ "$icecast" = "t" ]; then
     loud "\n-----------------------------------------------------"
     loud "               * Installing Icecast *                "
@@ -318,6 +314,49 @@ if [ "$icecast" = "t" ]; then
     set -e
 fi
 
+loud "\n-----------------------------------------------------"
+loud "             * Installing Python Apps *              "
+loud "-----------------------------------------------------"
+
+verbose "\n * Installing virtualenv..."
+loudCmd "$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh"
+
+verbose "\n * Installing liquidsoap..."
+loudCmd "apt-get -y --force-yes install liquidsoap"
+
+# ------------ Activate virtualenv ------------
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
+verbose "\n * Installing API client..."
+cp -R ${AIRTIMEROOT}/python_apps/api_clients /usr/lib/airtime/api_clients
+
+verbose "\n * Copying media-monitor files..."
+cp -R ${AIRTIMEROOT}/python_apps/media-monitor /usr/lib/airtime/media-monitor
+cp -R ${AIRTIMEROOT}/python_apps/media-monitor2 /usr/lib/airtime/media-monitor/mm2
+
+sed -e "s@WEB_USER@${web_user}@g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
+touch /etc/sudoers.d/airtime-media-monitor_${web_user}
+echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
+                                         /sbin/stop     airtime-media-monitor, \
+                                         /sbin/restart  airtime-media-monitor, \
+                                         /sbin/status   airtime-media-monitor" > /etc/sudoers.d/airtime-media-monitor_${web_user}
+
+verbose "\n * Copying pypo files..."
+python $AIRTIMEROOT/python_apps/pypo/install/pypo-copy-files.py
+
+verbose "\n * Initializing media monitor..."
+python $AIRTIMEROOT/python_apps/media-monitor/install/media-monitor-initialize.py
+
+verbose "\n * Initializing pypo..."
+python $AIRTIMEROOT/python_apps/pypo/install/pypo-initialize.py
+
+loudCmd "service airtime-media-monitor restart 2>/dev/null"
+loudCmd "service airtime-playout restart 2>/dev/null"
+
+deactivate
+# ------------ Deactivate virtualenv ------------
+
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
     loud "              * Installing Log Files *               "
@@ -325,9 +364,9 @@ if [ ! -d /var/log/airtime ]; then
 
     verbose "\n * Creating /var/log/airtime..."
     mkdir -p /var/log/airtime
-    chmod a+x /var/log/airtime
-    chown ${web_user}:${web_user} /var/log/airtime/
-
+    mkdir -p /var/log/airtime/media-monitor
+    chmod -R a+x /var/log/airtime
+    chown -R ${web_user}:${web_user} /var/log/airtime/
     cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
 fi
 
@@ -367,7 +406,9 @@ loudCmd "apt-get -y --force-yes install postgresql php5-pgsql"
 setupAirtimePostgresUser() {
     # here-doc to execute this block as postgres user
     su postgres <<'EOF'
+    set +e
     psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+    set -e
 # don't indent this!
 EOF
 }
@@ -419,12 +460,20 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
-    chown -R ${web_user}:${web_user} /srv/airtime
     chown -R ${web_user}:${web_user} /etc/airtime
 fi
 
 if [ ! -d "/srv/airtime" ]; then
     mkdir -p /srv/airtime
+    chown -R ${web_user}:${web_user} /srv/airtime
+fi
+
+if [ "$install_dependencies" = "f" -a ${_i} -eq 1 ]; then
+    echo -e "Install external binary dependencies? (Y/n): \c"
+    read IN
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+        install_dependencies="t"
+    fi
 fi
 
 if [ "$install_dependencies" = "t" ]; then
@@ -434,7 +483,7 @@ if [ "$install_dependencies" = "t" ]; then
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
 
-    loudCmd "apt-get -y --force-yes install $(grep -vE \"^\s*#\" \"bin/requirements-${dist,,}-${code,,}.apt\" | tr \"\n\" \" \")"
+    loudCmd "apt-get -y --force-yes install $(grep -vE '^\s*#' bin/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
 fi
 
 verbose "\n * Restarting apache..."

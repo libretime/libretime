@@ -9,8 +9,8 @@
 # Short-Description: Manage airtime-media-monitor daemon
 ### END INIT INFO
 
-USERID=root
-GROUPID=www-data
+USERID=WEB_USER
+GROUPID=WEB_USER
 NAME=Airtime\ Media\ Monitor
 
 DAEMON=/usr/lib/airtime/media-monitor/airtime-media-monitor

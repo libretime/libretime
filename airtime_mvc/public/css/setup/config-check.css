@@ -18,12 +18,13 @@ body {
 
 .table {
     padding: 0;
-    margin: 3em 0 0 0;
+    margin: 1em 0 0 0;
 }
 
 .checklist {
     overflow: auto;
     height: 50%;
+    min-height: 200px;
 }
 
 .caption {
@@ -40,7 +41,7 @@ body {
 }
 
 .check {
-    background: #dff0d8 url("css/images/accept.png") no-repeat center;
+    background: #dff0d8 url("../images/accept.png") no-repeat center;
 }
 
 .footer {
