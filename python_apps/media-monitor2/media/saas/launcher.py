@@ -23,10 +23,10 @@ class MM2(InstanceThread, Loggable):
     def index_create(self, index_create_attempt=False):
         config = user().mm_config
         if not index_create_attempt:
-            if not os.path.exists(config['index_path']):
+            if not os.path.exists(config['media-monitor']['index_path']):
                 self.logger.info("Attempting to create index file:...")
                 try:
-                    with open(config['index_path'], 'w') as f: f.write(" ")
+                    with open(config['media-monitor']['index_path'], 'w') as f: f.write(" ")
                 except Exception as e:
                     self.logger.info("Failed to create index file with exception: %s" \
                              % str(e))
@@ -36,8 +36,8 @@ class MM2(InstanceThread, Loggable):
         else:
             self.logger.info("Already tried to create index. Will not try again ")
 
-        if not os.path.exists(config['index_path']):
-            raise CouldNotCreateIndexFile(config['index_path'])
+        if not os.path.exists(config['media-monitor']['index_path']):
+            raise CouldNotCreateIndexFile(config['media-monitor']['index_path'])
 
     def run(self):
         self.index_create()
@@ -45,8 +45,8 @@ class MM2(InstanceThread, Loggable):
         apiclient = apc()
         config = user().mm_config
         WatchSyncer(signal=getsig('watch'),
-                chunking_number=config['chunking_number'],
-                timeout=config['request_max_wait'])
+                chunking_number=config['media-monitor']['chunking_number'],
+                timeout=config['media-monitor']['request_max_wait'])
         airtime_receiver = AirtimeMessageReceiver(config,manager)
         airtime_notifier = AirtimeNotifier(config, airtime_receiver)
 
@@ -76,14 +76,14 @@ class MM2(InstanceThread, Loggable):
             else: self.logger.info("Failed to add watch on %s" % str(watch_dir))
 
         EventDrainer(airtime_notifier,
-                interval=float(config['rmq_event_wait']))
+                interval=float(config['media-monitor']['rmq_event_wait']))
 
         # Launch the toucher that updates the last time when the script was
         # ran every n seconds.
         # TODO : verify that this does not interfere with bootstrapping because the
         # toucher thread might update the last_ran variable too fast
         ToucherThread(path=user().touch_file_path(),
-                interval=int(config['touch_interval']))
+                interval=int(config['media-monitor']['touch_interval']))
 
         success = False
         while not success:

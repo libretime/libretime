@@ -137,7 +137,7 @@ configure_locale()
 
 # loading config file
 try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
+    config = ConfigObj('/etc/airtime/airtime.conf')
 except Exception, e:
     logger.error('Error loading config file: %s', e)
     sys.exit(1)
@@ -241,8 +241,8 @@ if __name__ == '__main__':
 
     telnet_lock = Lock()
 
-    ls_host = config['ls_host']
-    ls_port = config['ls_port']
+    ls_host = config['pypo']['ls_host']
+    ls_port = config['pypo']['ls_port']
 
     liquidsoap_startup_test()
 
@@ -269,19 +269,20 @@ if __name__ == '__main__':
     """
     media_q = Queue()
 
-    pmh = PypoMessageHandler(pypoFetch_q, recorder_q, config)
+    # Pass only the configuration sections needed; PypoMessageHandler only needs rabbitmq settings
+    pmh = PypoMessageHandler(pypoFetch_q, recorder_q, config['rabbitmq'])
     pmh.daemon = True
     pmh.start()
 
-    pfile = PypoFile(media_q, config)
+    pfile = PypoFile(media_q, config['pypo'])
     pfile.daemon = True
     pfile.start()
 
-    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config)
+    pf = PypoFetch(pypoFetch_q, pypoPush_q, media_q, telnet_lock, pypo_liquidsoap, config['pypo'])
     pf.daemon = True
     pf.start()
 
-    pp = PypoPush(pypoPush_q, telnet_lock, pypo_liquidsoap, config)
+    pp = PypoPush(pypoPush_q, telnet_lock, pypo_liquidsoap, config['pypo'])
     pp.daemon = True
     pp.start()
 

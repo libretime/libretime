@@ -183,17 +183,17 @@ class RequestProvider(object):
     def __init__(self, cfg):
         self.config = cfg
         self.requests = {}
-        if self.config["base_dir"].startswith("/"):
-            self.config["base_dir"] = self.config["base_dir"][1:]
+        if self.config["general"]["base_dir"].startswith("/"):
+            self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
         self.url = ApcUrl("http://%s:%s/%s%s/%s" \
-            % (self.config["host"], str(self.config["base_port"]),
-               self.config["base_dir"], self.config["api_base"],
+            % (self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
+               self.config["general"]["base_dir"], self.config["api_base"],
                '%%action%%'))
         # Now we must discover the possible actions
         actions = dict( (k,v) for k,v in cfg.iteritems() if '%%api_key%%' in v)
         for action_name, action_value in actions.iteritems():
             new_url = self.url.params(action=action_value).params(
-                api_key=self.config['api_key'])
+                api_key=self.config["general"]['api_key'])
             self.requests[action_name] = ApiRequest(action_name, new_url)
 
     def available_requests(self)    : return self.requests.keys()
@@ -321,13 +321,13 @@ class AirtimeApiClient(object):
     def construct_url(self,config_action_key):
         """Constructs the base url for every request"""
         # TODO : Make other methods in this class use this this method.
-        if self.config["base_dir"].startswith("/"):
-            self.config["base_dir"] = self.config["base_dir"][1:]
+        if self.config["general"]["base_dir"].startswith("/"):
+            self.config["general"]["base_dir"] = self.config["general"]["base_dir"][1:]
         url = "http://%s:%s/%s%s/%s" %  \
-            (self.config["host"], str(self.config["base_port"]),
-             self.config["base_dir"], self.config["api_base"],
+            (self.config["general"]["base_url"], str(self.config["general"]["base_port"]),
+             self.config["general"]["base_dir"], self.config["api_base"],
              self.config[config_action_key])
-        url = url.replace("%%api_key%%", self.config["api_key"])
+        url = url.replace("%%api_key%%", self.config["general"]["api_key"])
         return url
 
     """
