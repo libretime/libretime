@@ -73,6 +73,7 @@ class PypoFile(Thread):
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
                     
                     if not response.ok:
+                        self.logger.error(response)
                         raise Exception("%s - Error occurred downloading file" % response.status_code)
                     
                     for chunk in response.iter_content(1024):
