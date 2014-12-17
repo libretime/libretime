@@ -1,8 +1,59 @@
-airtime (2.5.1-1) unstable; urgency=low
+airtime (2.5.2-1) unstable; urgency=low
 
   * Nightly development snapshot of Airtime 2.5.x series
 
- -- Daniel James <daniel@64studio.com>  Thu, 24 Oct 2013 11:04:56 +0100
+ -- Daniel James <daniel@64studio.com>  Wed, 17 Dec 2014 12:06:33 +0000
+
+airtime (2.5.1-6) unstable; urgency=low
+
+  * Newer Ubuntu distros use a real directory instead of a symlink for
+    /etc/php5/apache2/conf.d/ - thanks Mathieu
+
+ -- Daniel James <daniel@64studio.com>  Wed, 17 Dec 2014 12:06:32 +0000
+
+airtime (2.5.1-5) unstable; urgency=low
+
+  * Don't set SSL compression to off, it is now the default, for backwards
+    compatibility with versions of Apache before 2.2.24 or 2.4.3
+
+ -- Daniel James <daniel@64studio.com>  Tue, 16 Dec 2014 16:42:26 +0000
+
+airtime (2.5.1-4) unstable; urgency=low
+
+  * Fix installation of Apache 2.4 file
+  * Disable SSLv3 and compression by default
+
+ -- Daniel James <daniel@64studio.com>  Thu, 06 Nov 2014 15:15:21 +0000
+
+airtime (2.5.1-3) unstable; urgency=low
+
+  * Don't force https access in case of SSL issues
+
+ -- Daniel James <daniel@64studio.com>  Fri, 18 Jul 2014 10:04:30 +0100
+
+airtime (2.5.1-2) unstable; urgency=low
+
+  * Upstream 2.5.1a security release
+
+ -- Daniel James <daniel@64studio.com>  Tue, 15 Jul 2014 11:14:01 +0100
+
+airtime (2.5.1-1) unstable; urgency=low
+
+  * Upstream 2.5.1-ga release
+
+ -- Daniel James <daniel@64studio.com>  Tue, 17 Dec 2013 11:02:35 +0000
+
+airtime (2.5.0-3) unstable; urgency=low
+
+  * Added dependency on php5-json for newer distros
+
+ -- Daniel James <daniel@64studio.com>  Tue, 05 Nov 2013 13:33:10 +0000
+
+airtime (2.5.0-2) unstable; urgency=low
+
+  * Fixed error in upgrade handling
+
+ -- Daniel James <daniel@64studio.com>  Thu, 24 Oct 2013 11:17:42 +0100
 
 airtime (2.5.0-1) unstable; urgency=low
 

@@ -12,11 +12,12 @@ fi
 wwwdir="/usr/share/airtime"
 tmpdir="/var/lib/airtime/tmp"
 configdir="/etc/airtime"
-includefile="${configdir}/apache.conf"
 a2tplfile="${configdir}/apache.vhost.tpl"
+a24tplfile="${configdir}/apache24.vhost.tpl"
 phpinifile="${configdir}/airtime.ini"
 OLDVERSION="$2"
 NEWVERSION="2.5.1"
+POSTGRESRUNNING=$(invoke-rc.d postgresql status | grep main || true)
 
 case "$1" in
   configure|reconfigure)
@@ -55,11 +56,23 @@ case "$1" in
       db_get airtime/apache-serveradmin
       SA=$RET
 
+      # create the config directory if it doesn't exist
       if [ ! -d /etc/$webserver/sites-available/ ]; then
         install -d -m755 /etc/$webserver/sites-available/
       fi
-      sed -e "s/__SERVER_ADMIN__/${SA}/;s/__SERVER_NAME__/${SN}/" \
+
+      # check for apache version 2.4, virtualhost syntax is different
+      APACHEVERSION=$(dpkg-query -f '${Version}' -W 'apache2' | cut -c 1-3)
+
+      if [ "$APACHEVERSION" = "2.4" ] ; then
+       echo "Apache 2.4 detected, using newer access configuration..."
+       sed -e "s/__SERVER_ADMIN__/${SA}/g;s/__SERVER_NAME__/${SN}/g" \
+        ${a24tplfile} > /etc/$webserver/sites-available/airtime-vhost.conf
+
+      else
+       sed -e "s/__SERVER_ADMIN__/${SA}/g;s/__SERVER_NAME__/${SN}/g" \
         ${a2tplfile} > /etc/$webserver/sites-available/airtime-vhost.conf
+      fi
 
       command -v a2ensite > /dev/null
       RETVAL=$?
@@ -83,11 +96,11 @@ case "$1" in
         fi
       fi
 
-      # enable the rewrite module
+      # enable the alias, headers, rewrite and ssl modules
       command -v a2enmod > /dev/null
       RETVAL=$?
       if [ $RETVAL -eq 0 ]; then
-        a2enmod rewrite
+        a2enmod alias headers rewrite ssl
       fi
 
       # remove the default site, if requested to
@@ -105,8 +118,19 @@ case "$1" in
       if [ ! -d /etc/$php/conf.d/ ]; then
         install -d -m755 /etc/$php/conf.d/
       fi
+
+      # Newer Ubuntu distros use a real directory instead of a symlink for /etc/php5/apache2/conf.d/ - thanks Mathieu!
+      if [ ! -d /etc/$php/$webserver/conf.d/ ]; then
+        install -d -m755 /etc/$php/$webserver/conf.d/
+      fi
+
       if [ ! -e /etc/$php/conf.d/airtime.ini ]; then
         ln -s ${phpinifile} /etc/$php/conf.d/airtime.ini
+      fi
+
+      # Newer style configuration
+      if [ ! -e /etc/$php/$webserver/conf.d/airtime.ini ]; then
+        ln -s ${phpinifile} /etc/$php/$webserver/conf.d/airtime.ini
       fi
 
       # restart apache
@@ -228,15 +252,20 @@ case "$1" in
     # don't run airtime-install if the user is doing a dpkg-reconfigure
     if [ "$1" = "reconfigure" ] || [ -n "$DEBCONF_RECONFIGURE" ] ; then
       echo "Reconfiguration complete."
-    else
+    
+    # exit here if the current install is too old to be upgraded
+    elif [ -n "$OLDVERSION" ] && [[ "${OLDVERSION:0:3}" < "2.3" ]]; then
+        echo "Upgrades from Airtime versions before 2.3.0 are not supported. Please back up your files and perform a clean install."
 
-      if [ -n "$OLDVERSION" ] && [[ "${OLDVERSION:0:3}" < "2.1" ]]; then
-        echo "Upgrades from Airtime versions before 2.1.0 are not supported. Please back up your files and perform a clean install."
-
-      elif [ "${APACHESETUP}" == "no thanks" ]; then
+    # has the user chosen not to configure the web server? If so, don't run airtime-install
+    elif [ "${APACHESETUP}" == "no thanks" ]; then
         echo "Please run the ${tmpdir}/install_minimal/airtime-install script with the -d option after you have set up the web server."
 
-      else
+    # should postgres not be running yet, don't run airtime-install
+    elif [ -z "${POSTGRESRUNNING}" ]; then
+        echo "Please run the ${tmpdir}/install_minimal/airtime-install script with the -d option after you have started the database server."
+
+    else
 
         mkdir -p /var/log/airtime
         cd $tmpdir/install_minimal/
@@ -244,6 +273,11 @@ case "$1" in
         if [ "${OLDVERSION:0:5}" == "${NEWVERSION}" ] ; then
           echo "Reinstallation detected..."
           echo | ./airtime-install --disable-deb-check -rp 2> /var/log/airtime/reinstallation-errors.log
+
+           if [ -f /etc/init.d/icecast2 ] ; then
+           invoke-rc.d icecast2 restart || true
+           fi
+
         else
 
           ./airtime-install --disable-deb-check 2> /var/log/airtime/installation-errors.log
@@ -254,7 +288,6 @@ case "$1" in
           if test -x /usr/bin/update-menus; then
             update-menus;
           fi
-      fi
     fi
   ;;
 

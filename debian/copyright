@@ -5,11 +5,11 @@ Source: http://sourceforge.net/projects/airtime/files/
 
 Files: *
 Copyright:
- 2010-2012 Sourcefabric o.p.s
+ 2010-2014 Sourcefabric z.ú.
  2004-2009 Media Development Loan Fund
 License: GPL-3
 
-Files: airtime/python_apps/pypo/*
+Files: python_apps/pypo/*
 Copyright:
  Jonas Ohrstrom
  Paul Baranowski
@@ -51,6 +51,7 @@ License: Expat
 
 Files: debian/*
 Copyright:
+ 2013-2014 Daniel James <daniel@64studio.com>
  2012 Alessio Treglia <alessio@debian.org>
  2011 Robin Gareus <robin@gareus.org>
 License: GPL-2+

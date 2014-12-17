@@ -1,0 +1,252 @@
+# Debconf translation strings for Airtime.
+# Copyright (C) 2012 Airtime contributors
+# This file is distributed under the same license as the Airtime package.
+# 
+# Translators:
+# AlbertFR <albert.bruc.ab@gmail.com>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Airtime\n"
+"Report-Msgid-Bugs-To: contact@sourcefabric.org\n"
+"POT-Creation-Date: 2012-07-05 16:49+0100\n"
+"PO-Revision-Date: 2014-11-11 17:40+0000\n"
+"Last-Translator: AlbertFR <albert.bruc.ab@gmail.com>\n"
+"Language-Team: French (France) (http://www.transifex.com/projects/p/airtime/language/fr_FR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "dedicated v-host"
+msgstr "v-host dédié"
+
+#. Type: select
+#. Choices
+#: ../templates:1001
+msgid "no thanks"
+msgstr "non merci"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid "Create apache2 config:"
+msgstr "Création de la configuration d'Apache2 :"
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"This setup script can perform Apache web server configuration so that you "
+"can connect to Airtime directly after this installation."
+msgstr "Ce script d'installation peut effectuer la configuration du serveur Web Apache  de sorte que vous pouvez vous connecter à Airtime directement après cette installation."
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"Production systems should choose \"dedicated v-host\". This option will ask "
+"for a server hostname (FQDN) and will create a minimal Apache virtual host "
+"configuration that you can adapt."
+msgstr "Les systèmes en production doivent choisir \"dedicated v-host\". Cette option vous demandera un nom d'hôte pour le du serveur (FQDN) et créera une configuration d'hôte virtuel Apache minimal que vous pourrez adapter."
+
+#. Type: select
+#. Description
+#: ../templates:1002
+msgid ""
+"\"no, thanks\": no problem. You're welcome to set it up however you like. "
+"Note that the files in /etc/airtime/ may come in handy doing so."
+msgstr "\"Non, merci\": pas de problème. Vous êtes invités à configurer comme bon vous semble. Notez que les fichiers dans /etc/airtime/ peuvent être utiles à modifier..."
+
+#. Type: select
+#. Choices
+#: ../templates:2001
+msgid "remove default"
+msgstr "Retirer défaut"
+
+#. Type: select
+#. Choices
+#: ../templates:2001
+msgid "no change"
+msgstr "aucun changement"
+
+#. Type: select
+#. Description
+#: ../templates:2002
+msgid "Remove 000-default apache config:"
+msgstr "Supprimer 000-default de la configuration d'Apache :"
+
+#. Type: select
+#. Description
+#: ../templates:2002
+msgid ""
+"By default the Apache webserver is configured to send all virtual hosts to "
+"the /var/www/ directory."
+msgstr "Par défaut, le serveur Web Apache est configuré pour envoyer tous les hôtes virtuels vers le répertoire / var / www /."
+
+#. Type: select
+#. Description
+#: ../templates:2002
+msgid ""
+"This option will invoke `sudo a2dissite default` and is recommended when "
+"using a virtual host for Airtime."
+msgstr "Cette option invoque `sudo a2dissite default` et est recommandé lorsque vous utilisez un hôte virtuel pour Airtime."
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid "FQDN - Apache virtual host ServerName:"
+msgstr "Nom de domaine complet - Nom de l'hôte virtuel  du serveur Apache :"
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid ""
+"Enter the main hostname of the web server. The DNS of this name must resolve"
+" to the Apache server running on this machine."
+msgstr "Entrez le nom d'hôte principal du serveur web. Le DNS de ce nom doit être résolu par le serveur web Apache en cours d'exécution sur cette machine."
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid "e.g. \"example.com\" or \"www.example.com\" (without the quotes)"
+msgstr "ex. \"exemple.fr\" ou \"www.exemple.fr\" (sans les guillemets) "
+
+#. Type: string
+#. Description
+#: ../templates:3001
+msgid ""
+"You can customize /etc/apache2/sites-enabled/airtime.vhost afterward and add"
+" ServerAliases and further custom configuration."
+msgstr "Vous pouvez personnaliser /etc/apache2/sites-enabled/airtime.vhost et ajouter des ServerAliases et autres configurations personnalisées."
+
+#. Type: string
+#. Description
+#: ../templates:4001
+msgid "Email of the ServerAdmin:"
+msgstr "Courriel de l'administrateur du serveur :"
+
+#. Type: string
+#. Description
+#: ../templates:4001
+msgid "An email address is required for the virtual host configuration."
+msgstr "Une adresse de courriel est requise pour la configuration de l'hôte virtuel."
+
+#. Type: boolean
+#. Description
+#: ../templates:5001
+msgid "Enable Icecast2 and set passwords automatically?"
+msgstr "Activer Icecast2 et mettre les mots de passe automatiquement ?"
+
+#. Type: boolean
+#. Description
+#: ../templates:5001
+msgid ""
+"This option enables a local Icecast streaming media server to start on boot,"
+" and configures passwords for both the Icecast server and Airtime."
+msgstr "Cette option permet à un serveur Icecast local de s'activer au démarrage, et configure les mots de passe pour le serveur Icecast et Airtime."
+
+#. Type: boolean
+#. Description
+#: ../templates:5001
+msgid ""
+"Note: these settings are here for convenience only. Strictly speaking they "
+"should be done during Icecast installation - not Airtime installation."
+msgstr "Remarque : ces paramètres sont ici pour plus de commodité seulement. Strictement parlant, ils doivent être effectués lors de l'installation d'Icecast - pas pendant l'installation d'Airtime."
+
+#. Type: boolean
+#. Description
+#: ../templates:5001
+msgid ""
+"If you wish to set Icecast server passwords manually, you should answer No "
+"here."
+msgstr "Si vous souhaitez saisir manuellement les mots de passe du serveur Icecast, vous devez répondre Non ici."
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid "Icecast2 hostname:"
+msgstr "Nom de l'hote d'Icecast2 :"
+
+#. Type: string
+#. Description
+#: ../templates:6001
+msgid ""
+"Specify the hostname of the Icecast server. Depending on your setup, this "
+"might be the same as the Airtime ServerName. For testing purposes, you can "
+"use the default of 'localhost'."
+msgstr "Spécifier le nom d'hôte du serveur Icecast. Dépend de vos réglages, celui-ci peut être le même que le nom du serveur Airtime. A des fins de tests, vous pouvez utiliser par défaut 'localhost'."
+
+#. Type: string
+#. Description
+#: ../templates:7001
+msgid "Icecast2 Source Password:"
+msgstr "Mot de passe Source Icecast 2 : "
+
+#. Type: string
+#. Description
+#: ../templates:7001
+msgid "Specify a password to send A/V sources to Icecast"
+msgstr "Spécifier un mot de passe pour envoyer les sources A/V à Icecast"
+
+#. Type: string
+#. Description
+#: ../templates:8001
+msgid "Icecast2 Relay Password:"
+msgstr "Mot de passe Relai d'Icecast2 :"
+
+#. Type: string
+#. Description
+#: ../templates:8001
+msgid ""
+"Specify a password for stream relay access. This is not needed by Airtime, "
+"however you should change it from the default to lock down your system."
+msgstr "Indiquez un mot de passe pour l'accès flux relais. Ce n'est pas nécessaire par Airtime, mais vous pouvez changer la valeur par défaut pour verrouiller votre système."
+
+#. Type: string
+#. Description
+#: ../templates:9001
+msgid "Icecast2 Admin Password:"
+msgstr "Mot de passe administrateur Icecast2 :"
+
+#. Type: string
+#. Description
+#: ../templates:9001
+msgid ""
+"Specify the admin password for Icecast.  You can access icecast2's admin "
+"interface via http://localhost:8000/ - and both monitor connection as well "
+"as block users."
+msgstr "Spécifiez le mot de passe admin pour Icecast. Vous pouvez accéder à l'interface d'administration de icecast2 via http://localhost:8000/ -  et surveiller les utilisateurs et flux."
+
+#. Type: string
+#. Description
+#: ../templates:10001
+msgid "Airtime Admin Password:"
+msgstr "Mot de passe administrateur Airtime :"
+
+#. Type: string
+#. Description
+#: ../templates:10001
+msgid ""
+"Specify a secure admin password for Airtime. You can access the Airtime "
+"administration interface at http://localhost/ to set up other user accounts,"
+" upload media, create playlists and schedule shows."
+msgstr "Indiquez un mot de passe admin sécurisé pour Airtime. Vous pouvez accéder à l'interface d'administration d'Airtime à l'adresse http://localhost/ pour configurer d'autres comptes d'utilisateurs, télécharger des médias, créer des playlists et gérer vos horaires d'émissions."
+
+#. Type: string
+#. Description
+#: ../templates:11001
+msgid "Airtime Storage Directory:"
+msgstr "Dossier de stockage Airtime :"
+
+#. Type: string
+#. Description
+#: ../templates:11001
+msgid ""
+"Specify the main storage path which Airtime will use, ending with a slash. "
+"You can also specify watched folders in the Airtime administration "
+"interface."
+msgstr "Indiquez le chemin de stockage principal que va utiliser d'Airtime, se terminant par une barre oblique. Vous pouvez également spécifier des dossiers surveillés dans l'interface d'administration d'Airtime."
