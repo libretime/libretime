@@ -61,7 +61,7 @@ class CloudStorageUploader:
         # in the object name. URL encoding the object name doesn't solve the
         # problem. As a solution we will replace spaces with dashes.
         file_name = file_name.replace(" ", "-")
-        object_name = "%s/%s_%s%s" % (metadata["station_domain"], file_name, str(uuid.uuid4()), extension)
+        object_name = "%s/%s_%s%s" % (metadata["file_prefix"], file_name, str(uuid.uuid4()), extension)
 
         provider_driver_class = get_driver(getattr(Provider, self._provider))
         driver = provider_driver_class(self._api_key, self._api_key_secret)

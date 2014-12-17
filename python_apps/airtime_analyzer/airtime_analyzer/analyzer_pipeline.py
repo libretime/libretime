@@ -21,7 +21,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, station_domain, current_storage_backend):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, station_domain, current_storage_backend, file_prefix):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -56,6 +56,7 @@ class AnalyzerPipeline:
             # First, we extract the ID3 tags and other metadata:
             metadata = dict()
             metadata["station_domain"] = station_domain
+            metadata["file_prefix"] = file_prefix
 
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
             metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)

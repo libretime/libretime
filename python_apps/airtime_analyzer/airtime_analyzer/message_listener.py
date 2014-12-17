@@ -152,6 +152,7 @@ class MessageListener:
         api_key         = ""
         station_domain = ""
         current_storage_backend = ""
+        file_prefix = ""
 
         ''' Spin up a worker process. We use the multiprocessing module and multiprocessing.Queue 
             to pass objects between the processes so that if the analyzer process crashes, it does not
@@ -169,8 +170,9 @@ class MessageListener:
             import_directory = msg_dict["import_directory"]
             original_filename = msg_dict["original_filename"]
             current_storage_backend = msg_dict["current_storage_backend"]
-            
-            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, station_domain, current_storage_backend)
+            file_prefix = msg_dict["file_prefix"]
+
+            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, station_domain, current_storage_backend, file_prefix)
             StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
 
         except KeyError as e:
@@ -209,11 +211,11 @@ class MessageListener:
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
     
     @staticmethod
-    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, station_domain, current_storage_backend):
+    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, station_domain, current_storage_backend, file_prefix):
         ''' Spawn a child process to analyze and import a new audio file. '''
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis, 
-                        args=(q, audio_file_path, import_directory, original_filename, station_domain, current_storage_backend))
+                        args=(q, audio_file_path, import_directory, original_filename, station_domain, current_storage_backend, file_prefix))
         p.start()
         p.join()
         if p.exitcode == 0:
