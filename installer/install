@@ -374,6 +374,9 @@ verbose "...Done"
 chmod 755 /etc/init.d/airtime-*
 initctl reload-configuration
 
+verbose "\n * Copying pypo files..."
+python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
+
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
     loud "              * Installing Log Files *               "
