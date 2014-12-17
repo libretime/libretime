@@ -34,6 +34,10 @@ class Config {
             $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
         }
         
+        // Tells us where file uploads will be uploaded to.
+        // It will either be set to a cloud storage backend or local file storage.
+        $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
+        
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user
