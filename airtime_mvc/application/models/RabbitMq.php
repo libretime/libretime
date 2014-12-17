@@ -1,5 +1,6 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
+require_once 'BillingController.php';
 
 class Application_Model_RabbitMq
 {
@@ -111,6 +112,8 @@ class Application_Model_RabbitMq
         // isn't a requirement for cloud storage, but put there as a safeguard, since
         // all Airtime Pro stations will share the same bucket.
         $data['station_domain'] = $stationDomain = Application_Model_Preference::GetStationName();
+        Logging::info(BillingController::getClientCurrentAirtimeProduct());
+        $data['file_prefix'] = BillingController::getClientCurrentAirtimeProduct();
         
         $jsonData = json_encode($data);
         //self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');

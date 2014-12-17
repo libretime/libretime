@@ -48,6 +48,9 @@ set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_pat
 //Propel classes.
 set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
 
+//Controllers
+set_include_path(APPLICATION_PATH . '/controllers' . PATH_SEPARATOR . get_include_path());
+
 //Controller plugins.
 set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
 
