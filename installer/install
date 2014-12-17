@@ -7,7 +7,8 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-AIRTIMEROOT="$( cd "$( dirname "$0" )/.." && pwd )"
+SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+AIRTIMEROOT="$( cd "${SCRIPT_DIR}/.." && pwd )"
 
 showhelp () {
     echo "Usage: sudo bash install [options]
@@ -266,8 +267,6 @@ if [ "$apache" = "t" ]; then
         cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
     fi
 
-    sed -e "s@WEB_ROOT@${web_root}@g" apache/airtime-vhost > apache/airtime-vhost.tmp
-
     loudCmd "apt-get -y --force-yes install apache2 libapache2-mod-php5"
     set +e
     apache2 -v | grep "2\.4" > /dev/null
@@ -282,13 +281,11 @@ if [ "$apache" = "t" ]; then
 
     if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
         verbose "\n * Creating Apache config for Airtime..."
-
-        mv apache/airtime-vhost.tmp /etc/apache2/sites-available/${airtimeconfigfile}
+        sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
         loudCmd "a2dissite 000-default"
         loudCmd "a2ensite airtime"
     else
         verbose "\nApache config for Airtime already exists, skipping"
-        rm -f apache/airtime-vhost.tmp
     fi
 fi
 
@@ -431,7 +428,7 @@ fi
 # PHP Config File for Apache
 if [ ! -f "/etc/php5/apache2/conf.d/airtime.ini" ]; then
     verbose "\n * Creating Airtime PHP config for Apache..."
-    cp php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
+    cp ${SCRIPT_DIR}/php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
 else
     verbose "\nAirtime PHP config for Apache already exists, skipping"
 fi
@@ -524,8 +521,7 @@ if [ "$install_dependencies" = "t" ]; then
     loud "-----------------------------------------------------"
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
-
-    loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' bin/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+    loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/bin/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
 fi
 
 verbose "\n * Restarting apache..."
