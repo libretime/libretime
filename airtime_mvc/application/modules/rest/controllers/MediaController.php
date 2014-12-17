@@ -218,6 +218,42 @@ class Rest_MediaController extends Zend_Rest_Controller
             $this->getResponse()
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
+        } else if ($file) {
+            //local file storage
+            $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
+            $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
+            //Our RESTful API takes "full_path" as a field, which we then split and translate to match
+            //our internal schema. Internally, file path is stored relative to a directory, with the directory
+            //as a foreign key to cc_music_dirs.
+            if (isset($requestData["full_path"])) {
+                $fileSizeBytes = filesize($requestData["full_path"]);
+                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
+                {
+                    $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
+                    $this->fileNotFoundResponse();
+                    return;
+                }
+                Application_Model_Preference::updateDiskUsage($fileSizeBytes);
+                $fullPath = $requestData["full_path"];
+                $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
+                $pos = strpos($fullPath, $storDir);
+            
+                if ($pos !== FALSE)
+                {
+                    assert($pos == 0); //Path must start with the stor directory path
+            
+                    $filePathRelativeToStor = substr($fullPath, strlen($storDir));
+                    $file->setDbFilepath($filePathRelativeToStor);
+                }
+            }
+            
+            $now  = new DateTime("now", new DateTimeZone("UTC"));
+            $file->setDbMtime($now);
+            $file->save();
+            
+            $this->getResponse()
+                ->setHttpResponseCode(200)
+                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else {
             $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
             $this->fileNotFoundResponse();
@@ -430,8 +466,6 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
         
-
-        Logging::info($importedStorageDirectory);
         //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
         Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
