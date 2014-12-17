@@ -28,16 +28,6 @@ stop () {
         rm -f $PIDFILE
 }
 
-start_with_monit() {
-    start
-    monit monitor airtime-playout >/dev/null 2>&1
-}
-
-stop_with_monit() {
-    monit unmonitor airtime-playout >/dev/null 2>&1
-    stop
-}
-
 case "${1:-''}" in
   'start')
             # start commands here
@@ -56,18 +46,6 @@ case "${1:-''}" in
            echo -n "Restarting $NAME: "
            stop
            start
-           echo "Done."
-        ;;
-  'start-with-monit')
-           # restart commands here
-           echo -n "Starting $NAME: "
-           start_with_monit
-           echo "Done."
-        ;;
-  'stop-with-monit')
-           # restart commands here
-           echo -n "Stopping $NAME: "
-           stop_with_monit
            echo "Done."
         ;;
 

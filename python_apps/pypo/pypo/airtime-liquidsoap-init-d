@@ -56,37 +56,18 @@ stop () {
         sleep 2
 }
 
-start_with_monit () {
-        start
-        monit monitor airtime-liquidsoap >/dev/null 2>&1
-}
-
-stop_with_monit() {
-        monit unmonitor airtime-liquidsoap >/dev/null 2>&1
-        stop
-}
-
-
-
-
 case "${1:-''}" in
   'stop')
-           echo "* Stopping Liquidsoap without notifying Monit process watchdog. If Monit is 
-* running it will automatically bring the Liquidsoap back up. You probably want 
-* 'stop-with-monit' instead of 'stop'."
            echo -n "Stopping $NAME: "
            stop
            echo "Done."
         ;;
   'start')
-           echo "* Starting $NAME without Monit process watchdog. To make sure Monit is watching 
-* Liquidsoap, use 'start-with-monit' instead of 'start'."
            echo -n "Starting $NAME: "
            start
            echo "Done."
         ;;
   'restart')
-           # restart commands here
            echo -n "Restarting $NAME: "
            stop
            start
@@ -103,18 +84,6 @@ case "${1:-''}" in
         fi
         echo "$NAME is not running"
         exit 1
-        ;;
-  'start-with-monit')
-           # restart commands here
-           echo -n "Starting $NAME: "
-           start_with_monit
-           echo "Done."
-        ;;
-  'stop-with-monit')
-           # restart commands here
-           echo -n "Stopping $NAME: "
-           stop_with_monit
-           echo "Done."
         ;;
 
   *)      # no parameter specified

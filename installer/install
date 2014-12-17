@@ -8,7 +8,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
-AIRTIMEROOT="$( cd "${SCRIPT_DIR}/.." && pwd )"
+AIRTIMEROOT="$( cd "$( dirname ${SCRIPT_DIR} )" && pwd )"
 
 showhelp () {
     echo "Usage: sudo bash install [options]
@@ -329,11 +329,11 @@ chmod 755 /run/airtime
 chown -R ${web_user}:${web_user} /run/airtime
 verbose "...Done"
 
-verbose "\n * Cpoying logging files..."
+verbose "\n * Copying logging files..."
 cp -R ${AIRTIMEROOT}/python_apps/std_err_override /usr/lib/airtime/std_err_override
 verbose "...Done"
 
-verbose "\n * Cpoying API client files..."
+verbose "\n * Copying API client files..."
 cp -R ${AIRTIMEROOT}/python_apps/api_clients /usr/lib/airtime/api_clients
 verbose "...Done"
 
@@ -351,7 +351,7 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
 
 verbose "\n * Copying pypo files..."
 mkdir -p /usr/lib/airtime/pypo
-cp -R ${AIRTIMEROOT}/python_apps/pypo /usr/lib/airtime/pypo/bin/
+cp -R ${AIRTIMEROOT}/python_apps/pypo/pypo /usr/lib/airtime/pypo/bin/
 verbose "...Done"
 
 verbose "\n * Creating init files..."
@@ -365,7 +365,7 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start airtime-playout, \
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-liquidsoap-init-d > /etc/init.d/airtime-liquidsoap
 touch /etc/sudoers.d/airtime-liquidsoap_${web_user}
-echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-liquidsoap, \
+echo "${web_user} ALL = (root) NOPASSWD: /sbin/start airtime-liquidsoap, \
 /sbin/stop airtime-liquidsoap, \
 /sbin/restart airtime-liquidsoap, \
 /sbin/status airtime-liquidsoap" > /etc/sudoers.d/airtime-liquidsoap_${web_user}
@@ -373,8 +373,6 @@ verbose "...Done"
 
 chmod 755 /etc/init.d/airtime-*
 initctl reload-configuration
-
-# Do we need to run the init scripts for media-monitor and pypo here?
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
