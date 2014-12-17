@@ -115,6 +115,11 @@ $pages = array(
         'resource'    =>    'dashboard',
         'pages'      => array(
             array(
+                'label'      => _('Help Center'),
+                'uri'        => "http://help.sourcefabric.org/",
+                'target'     => "_blank"
+            ),
+            array(
                 'label'      => _('Getting Started'),
                 'module'     => 'default',
                 'controller' => 'dashboard',
