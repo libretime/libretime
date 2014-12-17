@@ -6,6 +6,6 @@
   notifempty
   sharedscripts
   postrotate
-    start-stop-daemon --stop --signal USR1 --quiet --pidfile /var/run/airtime-liquidsoap.pid
+    start-stop-daemon --stop --signal USR1 --quiet --pidfile /var/run/airtime/airtime-liquidsoap.pid
   endscript
 }
