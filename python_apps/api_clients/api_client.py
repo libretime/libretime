@@ -213,6 +213,7 @@ class AirtimeApiClient(object):
         try:
             self.config = ConfigObj(config_path)
             self.config.update(api_config)
+            self.logger.info(json.dumps(self.config))
             self.services = RequestProvider(self.config)
         except Exception, e:
             self.logger.error('Error loading config file: %s', config_path)

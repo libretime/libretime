@@ -319,7 +319,7 @@ loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
-loudCmd "apt-get -y --force-yes install liquidsoap python python-virtaulenv"
+loudCmd "apt-get -y --force-yes install liquidsoap python python-virtualenv"
 loudCmd "$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh"
 
 verbose "\n * Creating /usr/lib/airtime..."
@@ -332,7 +332,11 @@ chmod 755 /run/airtime
 chown -R ${web_user}:${web_user} /run/airtime
 verbose "...Done"
 
-verbose "\n * Installing API client..."
+verbose "\n * Cpoying logging files..."
+cp -R ${AIRTIMEROOT}/python_apps/std_err_override /usr/lib/airtime/std_err_override
+verbose "...Done"
+
+verbose "\n * Cpoying API client files..."
 cp -R ${AIRTIMEROOT}/python_apps/api_clients /usr/lib/airtime/api_clients
 verbose "...Done"
 

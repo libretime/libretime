@@ -31,7 +31,7 @@ start () {
         #start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
             #--pidfile $PIDFILE --nicelevel -15 --startas $DAEMON
         start-stop-daemon --start --quiet --chuid $USERID:$GROUPID \
-             --nicelevel -15 --startas $DAEMON --exec $EXEC
+             --startas $DAEMON --exec $EXEC
 }
 
 stop () {
