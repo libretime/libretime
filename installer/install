@@ -7,7 +7,7 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-AIRTIMEROOT=$(readlink -f ./..)
+AIRTIMEROOT="$( cd "$( dirname "$0" )/.." && pwd )"
 
 showhelp () {
     echo "Usage: sudo bash install [options]
@@ -305,7 +305,7 @@ if [ "$icecast" = "t" ]; then
     loud "               * Installing Icecast *                "
     loud "-----------------------------------------------------"
     
-    loudCmd "apt-get -y --force-yes install icecast2"
+    loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes install icecast2"
 
     verbose "\n * Enabling Icecast 2..."
     sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
