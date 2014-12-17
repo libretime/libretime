@@ -28,5 +28,5 @@ class MMConfig(object):
     def last_ran(self):
         """ Returns the last time media monitor was ran by looking at
         the time when the file at 'index_path' was modified """
-        return mmp.last_modified(self.cfg['index_path'])
+        return mmp.last_modified(self.cfg['media-monitor']['index_path'])
 

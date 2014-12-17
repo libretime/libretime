@@ -41,7 +41,7 @@ class AirtimeInstance(object):
 
     def touch_file_path(self):
         """ Get the path of the touch file for every instance """
-        touch_base_path = self.mm_config['index_path']
+        touch_base_path = self.mm_config['media-monitor']['index_path']
         touch_base_name = basename(touch_base_path)
         new_base_name   = self.name + touch_base_name
         return join(dirname(touch_base_path), new_base_name)

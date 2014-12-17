@@ -36,10 +36,10 @@ class PypoMessageHandler(Thread):
         try:
             schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-            connection = BrokerConnection(self.config["rabbitmq_host"], \
-                    self.config["rabbitmq_user"], \
-                    self.config["rabbitmq_password"], \
-                    self.config["rabbitmq_vhost"])
+            connection = BrokerConnection(self.config["host"], \
+                    self.config["user"], \
+                    self.config["password"], \
+                    self.config["vhost"])
 
             channel = connection.channel()
             self.simple_queue = SimpleQueue(channel, schedule_queue)

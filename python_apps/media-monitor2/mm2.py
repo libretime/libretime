@@ -7,7 +7,7 @@ from media.monitor.config import MMConfig
 def main(global_config, log_config):
     """ function to run hosted install """
     mm_config = MMConfig(global_config)
-    log = setup_logger( log_config, mm_config['logpath'] )
+    log = setup_logger( log_config, mm_config['media-monitor']['logpath'] )
     setup_global(log)
     launch_instance('hosted_install', '/', global_config)
 
