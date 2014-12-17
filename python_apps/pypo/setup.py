@@ -1,9 +1,13 @@
 from setuptools import setup
 from subprocess import call
 import sys
+import os
 
-# Allows us to avoid installing the upstart init script when deploying airtime_analyzer
-# on Airtime Pro:
+script_path = os.path.dirname(os.path.realpath(__file__))
+print script_path
+os.chdir(script_path)
+
+# Allows us to avoid installing the upstart init script when deploying on Airtime Pro:
 if '--no-init-script' in sys.argv:
     data_files = []
     sys.argv.remove('--no-init-script') # super hax
@@ -13,7 +17,7 @@ else:
 
 setup(name='airtime-playout',
       version='0.1',
-      description='Airtime Analyzer Worker and File Importer',
+      description='Airtime Playout Engine',
       url='http://github.com/sourcefabric/Airtime',
       author='sourcefabric',
       license='AGPLv3',
