@@ -347,11 +347,11 @@ verbose "...Done"
 
 verbose "\n * Installing media-monitor..."
 if [ -z web_root ]; then
-    python ${web_root}/python_apps/media-monitor/setup.py develop
+    python ${web_root}/python_apps/media-monitor/setup.py install
 elif [ "$in_place" = "t" ]; then
-    python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py develop
+    python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install
 else
-    python /usr/share/airtime/python_apps/media-monitor/setup.py develop
+    python /usr/share/airtime/python_apps/media-monitor/setup.py install
 fi
 verbose "...Done"
 
@@ -362,11 +362,11 @@ verbose "...Done"
 
 verbose "\n * Installing pypo..."
 if [ -z web_root ]; then
-    python ${web_root}/python_apps/pypo/setup.py develop
+    python ${web_root}/python_apps/pypo/setup.py install
 elif [ "$in_place" = "t" ]; then
-    python ${AIRTIMEROOT}/python_apps/pypo/setup.py develop
+    python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
 else
-    python /usr/share/airtime/python_apps/pypo/setup.py develop
+    python /usr/share/airtime/python_apps/pypo/setup.py install
 fi
 verbose "...Done"
 
