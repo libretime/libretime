@@ -10,3 +10,4 @@ def teardown():
 
 def test_analyze():
     cl = CloudStorageUploader()
+    cl._storage_backend = "file"
