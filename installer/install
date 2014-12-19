@@ -373,8 +373,8 @@ verbose "...Done"
 verbose "\n * Creating sudoers file..."
 # sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
 touch /etc/sudoers.d/airtime-media-monitor_${web_user}
-echo "${web_user} ALL = (root) NOPASSWD: /sbin/service airtime-media-monitor *, \
-/sbin/service airtime-playout *, /sbin/service airtime-liquidsoap *, \" > /etc/sudoers.d/service_${web_user}
+echo "${web_user} ALL = (ALL) NOPASSWD: /sbin/service airtime-media-monitor *, \
+/sbin/service airtime-playout *, /sbin/service airtime-liquidsoap *" > /etc/sudoers.d/service_${web_user}
 # sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-playout-init-d > /etc/init.d/airtime-playout
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 # sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-liquidsoap-init-d > /etc/init.d/airtime-liquidsoap
