@@ -99,6 +99,8 @@ function configureDatabase() {
 
 /**
  * Check that we can connect to RabbitMQ
+ * 
+ * @return true if the RabbitMQ connection can be established
  */
 function checkRMQConnection() {
     // Check for airtime.conf in /etc/airtime/ first, then check in the build directory,
@@ -116,16 +118,31 @@ function checkRMQConnection() {
     return isset($conn);
 }
 
+/**
+ * Check if airtime-media-monitor is currently running
+ * 
+ * @return boolean true if airtime-media-monitor is running
+ */
 function checkMediaMonitorService() {
     exec("initctl list | grep airtime-media-monitor", $out, $status);
     return $status == 0;
 }
 
+/**
+ * Check if airtime-playout is currently running
+ * 
+ * @return boolean true if airtime-playout is running
+ */
 function checkPlayoutService() {
     exec("initctl list | grep airtime-playout", $out, $status);
         return $status == 0;
 }
 
+/**
+ * Check if airtime-liquidsoap is currently running
+ * 
+ * @return boolean true if airtime-liquidsoap is running
+ */
 function checkLiquidsoapService() {
     exec("initctl list | grep airtime-liquidsoap", $out, $status);
         return $status == 0;

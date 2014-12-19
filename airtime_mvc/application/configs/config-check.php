@@ -209,9 +209,10 @@ $result = $r1 && $r2;
     if (!$result) {
         ?>
         <br/>
+        <strong>Looks like something went wrong!</strong>
         <p>
-            Looks like something went wrong! If you've tried everything we've recommended in the table above and are 
-            still experiencing issues, come <a href="https://forum.sourcefabric.org/">visit our forums</a>
+            If you've tried everything we've recommended above and are  still experiencing issues, come 
+            <a href="https://forum.sourcefabric.org/">visit our forums</a>
             or <a href="http://www.sourcefabric.org/en/airtime/manuals/">check out the manual</a>.
         </p>
     <?php
