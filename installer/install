@@ -246,26 +246,26 @@ if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     fi
 fi
 
+if [ "$in_place" = "t" ]; then
+    verbose "\n * Setting current Airtime directory as web root..."
+    web_root=${AIRTIMEROOT}/airtime_mvc/public
+    chmod -R 755 ${AIRTIMEROOT}
+elif [ -n "$web_root" ]; then
+    verbose "\n * Creating Apache web root directory..."
+    mkdir -p ${web_root}/airtime/public/
+    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
+    chmod -R 755 ${web_root}
+else
+    verbose "\n * Creating default Apache web root directory /usr/share/airtime/..."
+    web_root="/usr/share"
+    mkdir -p ${web_root}/airtime/public/
+    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
+fi
+
 if [ "$apache" = "t" ]; then
     loud "\n-----------------------------------------------------"
     loud "                * Installing Apache *                "
     loud "-----------------------------------------------------"
-
-    if [ "$in_place" = "t" ]; then
-        verbose "\n * Setting current Airtime directory as web root..."
-        web_root=${AIRTIMEROOT}/airtime_mvc/public
-        chmod -R 755 ${AIRTIMEROOT}
-    elif [ -n "$web_root" ]; then
-        verbose "\n * Creating Apache web root directory..."
-        mkdir -p ${web_root}/airtime/public/
-        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
-        chmod -R 755 ${web_root}
-    else
-        verbose "\n * Creating default Apache web root directory /usr/share/airtime/..."
-        web_root="/usr/share"
-        mkdir -p ${web_root}/airtime/public/
-        cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
-    fi
 
     loudCmd "apt-get -y --force-yes install apache2 libapache2-mod-php5"
     set +e
@@ -317,16 +317,8 @@ loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
-verbose "\n * Installing liquidsoap, python, and virtualenv..."
-loudCmd "apt-get -y --force-yes install liquidsoap python python-virtualenv"
-verbose "...Done"
-
-# DS, 19/12/14 -- I don't really like this script... should we rewrite it, 
-# or maybe see if we can get rid of virtualenv entirely?
-
-verbose "\n * Activating Airtime virtualenv..."
-loudCmd "$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh"
-. /usr/lib/airtime/airtime_virtualenv/bin/activate
+verbose "\n * Installing liquidsoap and python..."
+loudCmd "apt-get -y --force-yes install liquidsoap python"
 verbose "...Done"
 
 verbose "\n * Creating /usr/lib/airtime..."
@@ -353,7 +345,13 @@ cp -R ${AIRTIMEROOT}/python_apps/media-monitor/media-monitor2 /usr/lib/airtime/m
 verbose "...Done"
 
 verbose "\n * Installing media-monitor..."
-python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install
+if [ -z web_root ]; then
+    python ${web_root}/python_apps/media-monitor/setup.py develop
+elif [ "$in_place" = "t" ]; then
+    python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py develop
+else
+    python /usr/share/airtime/python_apps/media-monitor/setup.py develop
+fi
 verbose "...Done"
 
 verbose "\n * Copying pypo files..."
@@ -362,18 +360,24 @@ cp -R ${AIRTIMEROOT}/python_apps/pypo/pypo /usr/lib/airtime/pypo/bin/
 verbose "...Done"
 
 verbose "\n * Installing pypo..."
-python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
+if [ -z web_root ]; then
+    python ${web_root}/python_apps/pypo/setup.py develop
+elif [ "$in_place" = "t" ]; then
+    python ${AIRTIMEROOT}/python_apps/pypo/setup.py develop
+else
+    python /usr/share/airtime/python_apps/pypo/setup.py develop
+fi
 verbose "...Done"
 
-verbose "\n * Creating init files..."
-sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
+verbose "\n * Creating sudoers files..."
+# sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
 touch /etc/sudoers.d/airtime-media-monitor_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
 /sbin/stop airtime-media-monitor, \
 /sbin/restart airtime-media-monitor, \
 /sbin/status airtime-media-monitor" > /etc/sudoers.d/airtime-media-monitor_${web_user}
 
-sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-playout-init-d > /etc/init.d/airtime-playout
+# sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-playout-init-d > /etc/init.d/airtime-playout
 touch /etc/sudoers.d/airtime-playout_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start airtime-playout, \
 /sbin/stop airtime-playout, \
@@ -381,7 +385,7 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start airtime-playout, \
 /sbin/status airtime-playout" > /etc/sudoers.d/airtime-playout_${web_user}
 
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
-sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-liquidsoap-init-d > /etc/init.d/airtime-liquidsoap
+# sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-liquidsoap-init-d > /etc/init.d/airtime-liquidsoap
 touch /etc/sudoers.d/airtime-liquidsoap_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start airtime-liquidsoap, \
 /sbin/stop airtime-liquidsoap, \

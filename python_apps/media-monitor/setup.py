@@ -40,7 +40,7 @@ setup(name='airtime-media-monitor',
       zip_safe=False,
       data_files=data_files)
 
-# Reload the initctl config so that playout services works
+# Reload the initctl config so that the media-monitor service works
 if data_files:
     print "Reloading initctl configuration"
     call(['initctl', 'reload-configuration'])

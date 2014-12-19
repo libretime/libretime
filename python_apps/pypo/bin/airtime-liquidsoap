@@ -23,25 +23,15 @@ do
 done
 
 
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
-
 export HOME="/var/tmp/airtime/pypo/"
-api_client_path="/usr/lib/airtime/"
-if [ $debug = "t" ]; then
+if [ "$debug" = "t" ]; then
     ls_path="/usr/bin/airtime-liquidsoap --verbose -f"
 else
     ls_path="/usr/bin/airtime-liquidsoap --verbose -f -d"
 fi
 ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
-export PYTHONPATH=${api_client_path}
-
-SCRIPT=`readlink -f $0`
-# Absolute directory this script is in
-SCRIPTPATH=`dirname $SCRIPT`
-
-cd $SCRIPTPATH/liquidsoap_scripts
+cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts
 python generate_liquidsoap_cfg.py
 
 exec ${ls_path} ${ls_param} 2>&1
