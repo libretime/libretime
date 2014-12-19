@@ -396,9 +396,6 @@ verbose "...Done"
 
 initctl reload-configuration
 
-# Deactivate virtualenv
-deactivate
-
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
     loud "              * Installing Log Files *               "
