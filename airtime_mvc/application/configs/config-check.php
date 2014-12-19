@@ -8,17 +8,20 @@
  */
 
 $phpDependencies = checkPhpDependencies();
+$externalServices = checkExternalServices();
 $zend = $phpDependencies["zend"];
 $postgres = $phpDependencies["postgres"];
-$database = checkDatabaseConfiguration();
 
-function booleanReduce($a, $b) {
-    return $a && $b;
-}
+$database =      $externalServices["database"];
+$rabbitmq =      $externalServices["rabbitmq"];
 
-$r = array_reduce($phpDependencies, "booleanReduce", true);
-$result = $r && $database;
+$pypo =          $externalServices["pypo"];
+$liquidsoap =    $externalServices["liquidsoap"];
+$mediamonitor = $externalServices["media-monitor"];
 
+$r1 = array_reduce($phpDependencies, "booleanReduce", true);
+$r2 = array_reduce($externalServices, "booleanReduce", true);
+$result = $r1 && $r2;
 ?>
 <html>
     <head>
@@ -115,22 +118,107 @@ $result = $r && $database;
                         ?>
                     </td>
                 </tr>
+                <tr class="<?=$rabbitmq ? 'success' : 'danger';?>">
+                    <td class="component">
+                        RabbitMQ
+                    </td>
+                    <td class="description">
+                        RabbitMQ configuration for Airtime
+                    </td>
+                    <td class="solution <?php if ($rabbitmq) {echo 'check';?>">
+                        <?php
+                        } else {
+                            ?>">
+                            Make sure RabbitMQ is installed correctly, and that your settings in /etc/airtime/airtime.conf
+                            are correct. Try using <code>sudo rabbitmqctl list_users</code> and <code>sudo rabbitmqctl list_vhosts</code>
+                            to see if the airtime user (or your custom RabbitMQ user) exists, then checking that 
+                            <code>sudo rabbitmqctl list_exchanges</code> contains entries for airtime-media-monitor, airtime-pypo, 
+                            and airtime-uploads.
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr class="<?=$mediamonitor ? 'success' : 'danger';?>">
+                    <td class="component">
+                        Media Monitor
+                    </td>
+                    <td class="description">
+                        Airtime media-monitor service
+                    </td>
+                    <td class="solution <?php if ($mediamonitor) {echo 'check';?>">
+                        <?php
+                        } else {
+                            ?>">
+                            Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>
+                            and <code>/etc/init.d</code>, and ensure that it's running with
+                            <br/><code>sudo initctl list | grep airtime-media-monitor</code>. If not, try 
+                            <br/><code>sudo -u www-data service airtime-media-monitor restart</code>.
+                            (Replace www-data with your web user if necessary)
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr class="<?=$pypo ? 'success' : 'danger';?>">
+                    <td class="component">
+                        Pypo
+                    </td>
+                    <td class="description">
+                        Airtime playout service
+                    </td>
+                    <td class="solution <?php if ($pypo) {echo 'check';?>">
+                        <?php
+                        } else {
+                            ?>">
+                            Check that the airtime-playout service is installed correctly in <code>/etc/init</code>
+                            and <code>/etc/init.d</code>, and ensure that it's running with
+                            <br/><code>sudo initctl list | grep airtime-playout</code>. If not, try 
+                            <br/><code>sudo -u www-data service airtime-playout restart</code>.
+                            (Replace www-data with your web user if necessary)
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr class="<?=$liquidsoap ? 'success' : 'danger';?>">
+                    <td class="component">
+                        Liquidsoap
+                    </td>
+                    <td class="description">
+                        Airtime liquidsoap service
+                    </td>
+                    <td class="solution <?php if ($liquidsoap) {echo 'check';?>">
+                        <?php
+                        } else {
+                            ?>">
+                            Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>
+                            and <code>/etc/init.d</code>, and ensure that it's running with
+                            <br/><code>sudo initctl list | grep airtime-liquidsoap</code>. If not, try
+                            <br/><code>sudo -u www-data service airtime-liquidsoap restart</code>.
+                            (Replace www-data with your web user if necessary)
+                        <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
 <?php
     if (!$result) {
         ?>
+        <br/>
         <p>
-            Looks like something went wrong! If you've tried everything we've recommended in the table above, come
-            <a href="https://forum.sourcefabric.org/">visit our forums</a>
+            Looks like something went wrong! If you've tried everything we've recommended in the table above and are 
+            still experiencing issues, come <a href="https://forum.sourcefabric.org/">visit our forums</a>
             or <a href="http://www.sourcefabric.org/en/airtime/manuals/">check out the manual</a>.
         </p>
     <?php
     } else {
         ?>
         <p>
-            Your Airtime station is up and running! Get started by logging in with the default username and password: 'admin'/'admin'
+            Your Airtime station is up and running! Get started by logging in with the default username and password: admin/admin
         </p>
         <button onclick="location = location.pathname;">Log in to Airtime!</button>
     <?php

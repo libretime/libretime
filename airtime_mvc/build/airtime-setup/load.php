@@ -3,6 +3,10 @@
 define("RMQ_INI_SECTION", "rabbitmq");
 require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
 
+function booleanReduce($a, $b) {
+    return $a && $b;
+}
+
 /**
  * Check to see if Airtime is properly configured.
  *
@@ -10,9 +14,9 @@ require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
  *                 properly configured and running
  */
 function checkConfiguration() {
-    return checkPhpDependencies()
-        && checkDatabaseConfiguration()
-        && checkRMQConnection();
+    $r1 = array_reduce(checkPhpDependencies(), "booleanReduce", true);
+    $r2 = array_reduce(checkExternalServices(), "booleanReduce", true);
+    return $r1 && $r2;
 }
 
 /**
@@ -51,6 +55,22 @@ function checkDatabaseDependencies() {
 }
 
 /**
+ * Check that all external services are configured correctly and return an associative
+ * array with the results
+ * 
+ * @return array associative array of external service check results
+ */
+function checkExternalServices() {
+    return array(
+            "database" => checkDatabaseConfiguration(),
+            "media-monitor" => checkMediaMonitorService(),
+            "pypo" => checkPlayoutService(),
+            "liquidsoap" => checkLiquidsoapService(),
+            "rabbitmq" => checkRMQConnection()
+    );
+}
+
+/**
  * Check the database configuration by fetching a connection from Propel
  *
  * @return boolean true if a connection is made to the database
@@ -84,8 +104,6 @@ function checkRMQConnection() {
     // Check for airtime.conf in /etc/airtime/ first, then check in the build directory,
     if (file_exists(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG)) {
         $ini = parse_ini_file(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG, true);
-    } else if (file_exists(BUILD_PATH . AIRTIME_CONFIG)) {
-        $ini = parse_ini_file(BUILD_PATH . AIRTIME_CONFIG, true);
     } else {
         $ini = parse_ini_file(BUILD_PATH . "airtime.example.conf", true);
     }
@@ -96,4 +114,19 @@ function checkRMQConnection() {
                                $ini[RMQ_INI_SECTION]["password"],
                                $ini[RMQ_INI_SECTION]["vhost"]);
     return isset($conn);
+}
+
+function checkMediaMonitorService() {
+    exec("initctl list | grep airtime-media-monitor", $out, $status);
+    return $status == 0;
+}
+
+function checkPlayoutService() {
+    exec("initctl list | grep airtime-playout", $out, $status);
+        return $status == 0;
+}
+
+function checkLiquidsoapService() {
+    exec("initctl list | grep airtime-liquidsoap", $out, $status);
+        return $status == 0;
 }
