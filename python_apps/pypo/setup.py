@@ -16,7 +16,7 @@ else:
     print data_files
 
 setup(name='airtime-playout',
-      version='0.1',
+      version='1.0',
       description='Airtime Playout Engine',
       url='http://github.com/sourcefabric/Airtime',
       author='sourcefabric',
@@ -43,7 +43,7 @@ setup(name='airtime-playout',
       zip_safe=False,
       data_files=data_files)
 
-# Reload the initctl config so that "service start airtime_analyzer" works
+# Reload the initctl config so that playout services works
 if data_files:
     print "Reloading initctl configuration"
     call(['initctl', 'reload-configuration'])

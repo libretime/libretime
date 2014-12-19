@@ -311,19 +311,29 @@ if [ "$icecast" = "t" ]; then
     set -e
 fi
 
+# Do we want to prompt the user here?
 
 loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
+verbose "\n * Installing liquidsoap, python, and virtualenv..."
 loudCmd "apt-get -y --force-yes install liquidsoap python python-virtualenv"
+verbose "...Done"
+
+# DS, 19/12/14 -- I don't really like this script... should we rewrite it, 
+# or maybe see if we can get rid of virtualenv entirely?
+
+verbose "\n * Activating Airtime virtualenv..."
 loudCmd "$AIRTIMEROOT/python_apps/python-virtualenv/virtualenv-install.sh"
+. /usr/lib/airtime/airtime_virtualenv/bin/activate
+verbose "...Done"
 
 verbose "\n * Creating /usr/lib/airtime..."
 mkdir -p /usr/lib/airtime
 verbose "...Done"
 
-verbose "\n * Creating /usr/lib/airtime..."
+verbose "\n * Creating /run/airtime..."
 mkdir -p /run/airtime
 chmod 755 /run/airtime
 chown -R ${web_user}:${web_user} /run/airtime
@@ -342,6 +352,16 @@ cp -R ${AIRTIMEROOT}/python_apps/media-monitor /usr/lib/airtime/media-monitor
 cp -R ${AIRTIMEROOT}/python_apps/media-monitor2 /usr/lib/airtime/media-monitor/mm2
 verbose "...Done"
 
+verbose "\n * Copying pypo files..."
+mkdir -p /usr/lib/airtime/pypo
+cp -R ${AIRTIMEROOT}/python_apps/pypo/pypo /usr/lib/airtime/pypo/bin/
+verbose "...Done"
+
+verbose "\n * Installing pypo..."
+python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
+verbose "...Done"
+
+verbose "\n * Creating init files..."
 sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/media-monitor/airtime-media-monitor-init-d > /etc/init.d/airtime-media-monitor
 touch /etc/sudoers.d/airtime-media-monitor_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
@@ -349,12 +369,6 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start    airtime-media-monitor, \
 /sbin/restart airtime-media-monitor, \
 /sbin/status airtime-media-monitor" > /etc/sudoers.d/airtime-media-monitor_${web_user}
 
-verbose "\n * Copying pypo files..."
-mkdir -p /usr/lib/airtime/pypo
-cp -R ${AIRTIMEROOT}/python_apps/pypo/pypo /usr/lib/airtime/pypo/bin/
-verbose "...Done"
-
-verbose "\n * Creating init files..."
 sed -e "s/WEB_USER/${web_user}/g" /usr/lib/airtime/pypo/bin/airtime-playout-init-d > /etc/init.d/airtime-playout
 touch /etc/sudoers.d/airtime-playout_${web_user}
 echo "${web_user} ALL = (root) NOPASSWD: /sbin/start airtime-playout, \
@@ -374,8 +388,8 @@ verbose "...Done"
 chmod 755 /etc/init.d/airtime-*
 initctl reload-configuration
 
-verbose "\n * Copying pypo files..."
-python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
+# Deactivate virtualenv
+deactivate
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
