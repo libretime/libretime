@@ -394,7 +394,6 @@ echo "${web_user} ALL = (root) NOPASSWD: /sbin/start airtime-liquidsoap, \
 /sbin/status airtime-liquidsoap" > /etc/sudoers.d/airtime-liquidsoap_${web_user}
 verbose "...Done"
 
-chmod 755 /etc/init.d/airtime-*
 initctl reload-configuration
 
 # Deactivate virtualenv
