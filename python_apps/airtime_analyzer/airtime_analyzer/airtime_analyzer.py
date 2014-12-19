@@ -1,11 +1,11 @@
 """Contains the main application class for airtime_analyzer.
 """
-import ConfigParser
 import logging
 import logging.handlers
 import sys
 import signal
 import traceback
+import config_file
 from functools import partial
 from metadata_analyzer import MetadataAnalyzer
 from replaygain_analyzer import ReplayGainAnalyzer
@@ -32,7 +32,7 @@ class AirtimeAnalyzerServer:
         self.setup_logging(debug)
 
         # Read our config file
-        config = AirtimeAnalyzerServer.read_config_file(config_path)
+        config = config_file.read_config_file(config_path)
        
         # Start up the StatusReporter process
         StatusReporter.start_thread(http_retry_queue_path)
@@ -71,22 +71,6 @@ class AirtimeAnalyzerServer:
         consoleHandler = logging.StreamHandler()
         consoleHandler.setFormatter(logFormatter)
         rootLogger.addHandler(consoleHandler)
-
-
-    @staticmethod
-    def read_config_file(config_path):
-        """Parse the application's config file located at config_path."""
-        config = ConfigParser.SafeConfigParser()
-        try:
-            config.readfp(open(config_path))
-        except IOError as e:
-            print "Failed to open config file at " + config_path + ": " + e.strerror 
-            exit(-1)
-        except Exception:
-            print e.strerror 
-            exit(-1)
-
-        return config
    
     @classmethod
     def dump_stacktrace(stack):

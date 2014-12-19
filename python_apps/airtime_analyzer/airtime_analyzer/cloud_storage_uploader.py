@@ -1,12 +1,13 @@
 import os
 import logging
 import uuid
-import airtime_analyzer as aa
+import config_file
 from libcloud.storage.providers import get_driver
 from libcloud.storage.types import Provider, ContainerDoesNotExistError, ObjectDoesNotExistError
 
 
-CONFIG_PATH = '/etc/airtime-saas/cloud_storage.conf'
+CLOUD_CONFIG_PATH = '/etc/airtime-saas/cloud_storage.conf'
+STORAGE_BACKEND_FILE = "file"
 
 class CloudStorageUploader:
     """ A class that uses Apache Libcloud's Storage API to upload objects into
@@ -25,14 +26,28 @@ class CloudStorageUploader:
     """
 
     def __init__(self):
-        config = aa.AirtimeAnalyzerServer.read_config_file(CONFIG_PATH)
-        
+
+        config = config_file.read_config_file(CLOUD_CONFIG_PATH)
+
         CLOUD_STORAGE_CONFIG_SECTION = config.get("current_backend", "storage_backend")
         self._storage_backend = CLOUD_STORAGE_CONFIG_SECTION
-        self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
-        self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
-        self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
-        self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
+        if self._storage_backend == STORAGE_BACKEND_FILE:
+            self._provider = ""
+            self._bucket = ""
+            self._api_key = ""
+            self._api_key_secret = ""
+        else:
+            self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
+            self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
+            self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
+            self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
+
+    def enabled(self):
+        if self._storage_backend == "file":
+            return False
+        else:
+            return True
+
 
     def upload_obj(self, audio_file_path, metadata):
         """Uploads a file into Amazon S3 object storage.
@@ -61,6 +76,7 @@ class CloudStorageUploader:
         # in the object name. URL encoding the object name doesn't solve the
         # problem. As a solution we will replace spaces with dashes.
         file_name = file_name.replace(" ", "-")
+
         object_name = "%s/%s_%s%s" % (metadata["file_prefix"], file_name, str(uuid.uuid4()), extension)
 
         provider_driver_class = get_driver(getattr(Provider, self._provider))
@@ -71,8 +87,7 @@ class CloudStorageUploader:
         except ContainerDoesNotExistError:
             container = driver.create_container(self._bucket)
         
-        extra = {'meta_data': {'filename': file_base_name,
-                               'station_domain': metadata["station_domain"]}}
+        extra = {'meta_data': {'filename': file_base_name}}
         
         obj = driver.upload_object(file_path=audio_file_path,
                                    container=container,
