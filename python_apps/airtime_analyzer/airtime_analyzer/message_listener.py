@@ -134,7 +134,7 @@ class MessageListener:
         self._shutdown = True
         self.disconnect_from_messaging_server()
 
-    def msg_received_callback(channel, method_frame, header_frame, body):
+    def msg_received_callback(self, channel, method_frame, header_frame, body):
         ''' A callback method that runs when a RabbitMQ message is received. 
         
             Here we parse the message, spin up an analyzer process, and report the 
