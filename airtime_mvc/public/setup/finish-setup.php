@@ -50,9 +50,9 @@ class FinishSetup extends Setup {
     }
     
     function startServices() {
-        exec("service airtime-media-monitor start-with-monit");
-        exec("service airtime-playout start-with-monit");
-        exec("service airtime-liquidsoap start-with-monit");
+        exec("service airtime-media-monitor start");
+        exec("service airtime-playout start");
+        exec("service airtime-liquidsoap start");
     }
 
 }

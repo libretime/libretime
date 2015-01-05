@@ -371,10 +371,6 @@ fi
 verbose "...Done"
 
 verbose "\n * Creating sudoers file..."
-echo "${web_user} ALL = (root) NOPASSWD: \
-/sbin/start airtime-media-monitor, /sbin/stop airtime-media-monitor, \
-/sbin/start airtime-playout, /sbin/stop airtime-playout, \
-/sbin/start airtime-liquidsoap, /sbin/stop airtime-liquidsoap" > /etc/sudoers.d/service_${web_user}
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
