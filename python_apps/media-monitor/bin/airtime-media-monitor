@@ -12,6 +12,9 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 
 exec python /usr/lib/airtime/media-monitor/media_monitor.py > /var/log/airtime/media-monitor/py-interpreter.log 2>&1

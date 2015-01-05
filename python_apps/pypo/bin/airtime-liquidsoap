@@ -22,6 +22,8 @@ do
     shift
 done
 
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
 
 export HOME="/var/tmp/airtime/pypo/"
 if [ "$debug" = "t" ]; then

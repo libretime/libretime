@@ -8,6 +8,9 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
 export HOME="/var/tmp/airtime/pypo/"
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 export TERM=xterm

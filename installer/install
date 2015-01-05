@@ -322,6 +322,12 @@ loudCmd "apt-get -y --force-yes install liquidsoap python python-pip"
 loudCmd "pip install setuptools"
 verbose "...Done"
 
+verbose "\n * Activating virtualenv..."
+${AIRTIMEROOT}/python_apps/python-virtualenv/virtualenv-install.sh
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+verbose "...Done"
+
 verbose "\n * Creating /usr/lib/airtime..."
 mkdir -p /usr/lib/airtime
 verbose "...Done"
@@ -370,16 +376,15 @@ else
 fi
 verbose "...Done"
 
-export PYTHONPATH=$PYTHONPATH/usr/lib/airtime:/usr/lib/airtime/media-monitor:\
-/usr/lib/airtime/media-monitor/mm2:/usr/lib/airtime/pypo:\
-/usr/lib/airtime/media-monitor/mm2/media:/usr/lib/airtime/media-monitor/mm2/saas:\
-/usr/lib/airtime/api_clients:/usr/lib/airtime/std_err_override:
-
 verbose "\n * Creating liquidsoap symlink..."
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
 initctl reload-configuration
+
+verbose "\n * Deactivating virtualenv..."
+deactivate
+verbose "...Done"
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
