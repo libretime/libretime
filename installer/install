@@ -360,9 +360,6 @@ mkdir -p /usr/lib/airtime/pypo
 cp -R ${AIRTIMEROOT}/python_apps/pypo/pypo /usr/lib/airtime/pypo/bin/
 verbose "...Done"
 
-export PYTHONPATH=$PYTHONPATH:/usr/lib/airtime:/usr/lib/airtime/media-monitor:\
-/usr/lib/airtime/media-monitor/mm2:/usr/lib/airtime/pypo
-
 verbose "\n * Installing pypo..."
 if [ -z web_root ]; then
     python ${web_root}/python_apps/pypo/setup.py install
@@ -372,6 +369,11 @@ else
     python /usr/share/airtime/python_apps/pypo/setup.py install
 fi
 verbose "...Done"
+
+export PYTHONPATH=$PYTHONPATH/usr/lib/airtime:/usr/lib/airtime/media-monitor:\
+/usr/lib/airtime/media-monitor/mm2:/usr/lib/airtime/pypo:\
+/usr/lib/airtime/media-monitor/mm2/media:/usr/lib/airtime/media-monitor/mm2/saas:\
+/usr/lib/airtime/api_clients:/usr/lib/airtime/std_err_override:
 
 verbose "\n * Creating liquidsoap symlink..."
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
