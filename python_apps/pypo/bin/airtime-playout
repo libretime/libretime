@@ -1,5 +1,15 @@
 #!/bin/bash
 
+virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
+. ${virtualenv_bin}activate
+
+# Absolute path to this script
+SCRIPT=`readlink -f $0`
+# Absolute directory this script is in
+pypo_path=`dirname $SCRIPT`
+
+cd ${pypo_path}
+
 set +e
 cat /etc/default/locale | grep -i "LANG=.*UTF-\?8" > /dev/null
 set -e
@@ -8,13 +18,9 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
-
 export HOME="/var/tmp/airtime/pypo/"
+export PYTHONPATH=/usr/lib/airtime/:$PYTHONPATH
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 export TERM=xterm
 
-exec python /usr/lib/airtime/pypo/bin/pypocli.py > /var/log/airtime/pypo/py-interpreter.log 2>&1
-
-# EOF
+exec python ${pypo_path}/pypocli.py > /var/log/airtime/pypo/py-interpreter.log 2>&1

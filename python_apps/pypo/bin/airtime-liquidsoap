@@ -31,10 +31,11 @@ if [ "$debug" = "t" ]; then
 else
     ls_path="/usr/bin/airtime-liquidsoap --verbose -f -d"
 fi
+
+export PYTHONPATH=/usr/lib/airtime
 ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
 cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts
 python generate_liquidsoap_cfg.py
 
 exec ${ls_path} ${ls_param} 2>&1
-# EOF
