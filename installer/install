@@ -318,7 +318,7 @@ loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
 verbose "\n * Installing liquidsoap and python..."
-loudCmd "apt-get -y --force-yes install liquidsoap python python-pip"
+loudCmd "apt-get -y --force-yes install liquidsoap python python-pip python-virtualenv"
 loudCmd "pip install setuptools"
 verbose "...Done"
 
