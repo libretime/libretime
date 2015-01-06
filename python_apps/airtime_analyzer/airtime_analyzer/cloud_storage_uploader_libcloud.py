@@ -2,25 +2,27 @@ import os
 import logging
 import uuid
 import config_file
-from boto.s3.connection import S3Connection
-from boto.s3.key import Key
+from libcloud.storage.providers import get_driver
+from libcloud.storage.types import Provider, ContainerDoesNotExistError, ObjectDoesNotExistError
 
 
 CLOUD_CONFIG_PATH = '/etc/airtime-saas/cloud_storage.conf'
 STORAGE_BACKEND_FILE = "file"
 
 class CloudStorageUploader:
-    """ A class that uses Python-Boto SDK to upload objects into Amazon S3.
+    """ A class that uses Apache Libcloud's Storage API to upload objects into
+    a cloud storage backend. For this implementation all files will be uploaded
+    into a bucket on Amazon S3.
     
     It is important to note that every file, coming from different Airtime Pro
     stations, will get uploaded into the same bucket on the same Amazon S3
     account.
 
     Attributes:
-        _host: Host name for the specific region assigned to the bucket.
-        _bucket: Name of container on Amazon S3 where files will get uploaded into.
-        _api_key: Access key to objects on Amazon S3.
-        _api_key_secret: Secret access key to objects on Amazon S3.
+        _provider: Storage backend. For exmaple, Amazon S3, Google Storage.
+        _bucket: Name of container on provider where files will get uploaded into.
+        _api_key: Access key to objects on the provider's storage backend.
+        _api_key_secret: Secret access key to objects on the provider's storage backend.
     """
 
     def __init__(self):
@@ -30,12 +32,12 @@ class CloudStorageUploader:
         CLOUD_STORAGE_CONFIG_SECTION = config.get("current_backend", "storage_backend")
         self._storage_backend = CLOUD_STORAGE_CONFIG_SECTION
         if self._storage_backend == STORAGE_BACKEND_FILE:
-            self._host = ""
+            self._provider = ""
             self._bucket = ""
             self._api_key = ""
             self._api_key_secret = ""
         else:
-            self._host = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'host')
+            self._provider = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'provider')
             self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
             self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
             self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
@@ -74,15 +76,23 @@ class CloudStorageUploader:
         # in the object name. URL encoding the object name doesn't solve the
         # problem. As a solution we will replace spaces with dashes.
         file_name = file_name.replace(" ", "-")
-        resource_id = "%s_%s%s" % (file_name, str(uuid.uuid4()), extension)
+        object_name = "%s_%s%s" % (file_name, str(uuid.uuid4()), extension)
 
-        conn = S3Connection(self._api_key, self._api_key_secret, host=self._host)
-        bucket = conn.get_bucket(self._bucket)
+        provider_driver_class = get_driver(getattr(Provider, self._provider))
+        driver = provider_driver_class(self._api_key, self._api_key_secret)
         
-        key = Key(bucket)
-        key.key = resource_id
-        key.set_metadata('filename', file_base_name)
-        key.set_contents_from_filename(audio_file_path)
+        try:
+            container = driver.get_container(self._bucket)
+        except ContainerDoesNotExistError:
+            container = driver.create_container(self._bucket)
+        
+        extra = {'meta_data': {'filename': file_base_name}}
+        
+        obj = driver.upload_object(file_path=audio_file_path,
+                                   container=container,
+                                   object_name=object_name,
+                                   verify_hash=False,
+                                   extra=extra)
 
         metadata["filesize"] = os.path.getsize(audio_file_path)
         
@@ -95,7 +105,7 @@ class CloudStorageUploader:
         # Pass original filename to Airtime so we can store it in the db
         metadata["filename"] = file_base_name
         
-        metadata["resource_id"] = resource_id
+        metadata["resource_id"] = object_name
         metadata["storage_backend"] = self._storage_backend
         return metadata
 
