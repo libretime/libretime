@@ -18,6 +18,7 @@ class Amazon_S3 extends StorageBackend
         $this->s3Client = S3Client::factory(array(
             'key' => $securityCredentials['api_key'],
             'secret' => $securityCredentials['api_key_secret'],
+            'region' => $securityCredentials['region']
         ));
     }
     
