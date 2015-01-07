@@ -61,7 +61,7 @@ def configure_locale():
 
 # configure logging
 try:
-    logging.config.fileConfig("logging.cfg")
+    logging.config.fileConfig("%s/logging.cfg" % os.path.dirname(os.path.realpath(__file__)))
 
     #need to wait for Python 2.7 for this..
     #logging.captureWarnings(True)

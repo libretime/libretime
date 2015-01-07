@@ -2,6 +2,7 @@
 
 import logging
 import traceback
+import os
 import sys
 from threading import Thread
 import time
@@ -15,7 +16,7 @@ import json
 from std_err_override import LogWriter
 
 # configure logging
-logging.config.fileConfig("logging.cfg")
+logging.config.fileConfig("%s/logging.cfg" % os.path.dirname(os.path.realpath(__file__)))
 logger = logging.getLogger('message_h')
 LogWriter.override_std_err(logger)
 
