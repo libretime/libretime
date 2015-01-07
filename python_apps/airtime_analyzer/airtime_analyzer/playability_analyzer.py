@@ -21,7 +21,7 @@ class PlayabilityAnalyzer(Analyzer):
         '''
         command = [PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE, '-v', '-c', "output.dummy(audio_to_stereo(single('%s')))" % filename]
         try:
-            subprocess.check_output(command, stderr=subprocess.STDOUT)
+            subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
 
         except OSError as e: # liquidsoap was not found
             logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have liquidsoap installed?"))
