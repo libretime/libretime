@@ -9,7 +9,7 @@ if [ "$?" != "0" ]; then
 fi
 
 export HOME="/var/tmp/airtime/pypo/"
-export PYTHONPATH=/usr/lib/airtime/:/usr/lib/airtime/pypo/bin/:/usr/lib/airtime/pypo/bin/pypo:/usr/lib/airtime/std_err_override/:/usr/lib/airtime/api_clients:$PYTHONPATH
+export PYTHONPATH=/usr/lib/airtime/:/usr/lib/airtime/pypo/bin/:/usr/lib/airtime/std_err_override/:/usr/lib/airtime/api_clients:$PYTHONPATH
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 export TERM=xterm
 

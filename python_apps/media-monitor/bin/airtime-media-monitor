@@ -12,7 +12,7 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 
-export PYTHONPATH=/usr/lib/airtime/:/usr/lib/airtime/media-monitor/airtimefilemonitor/:/usr/lib/airtime/media-monitor/media-monitor/airtimefilemonitor:\
+export PYTHONPATH=/usr/lib/airtime/:/usr/lib/airtime/media-monitor/airtimefilemonitor/:\
 /usr/lib/airtime/media-monitor/mm2/:/usr/lib/airtime/std_err_override/:/usr/lib/airtime/api_clients:$PYTHONPATH
 export PYTHONPATH="/usr/lib/airtime/:/usr/lib/airtime/media-monitor/mm2/"
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
