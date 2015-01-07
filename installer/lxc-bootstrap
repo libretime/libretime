@@ -22,7 +22,7 @@ echo "...Done"
 set -e
 
 echo -e "\n * Creating ${name} with dist ${dist} and release ${release}..."
-lxc-create -t ${dist} -n ${name} -- --release ${release} --arch amd64
+lxc-create -t download -n ${name} -- --dist ${dist} --release ${release} --arch amd64
 echo "...Done"
 
 echo -e "\n * Starting ${name}..."

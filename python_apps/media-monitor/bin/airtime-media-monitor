@@ -14,7 +14,6 @@ fi
 
 export PYTHONPATH=/usr/lib/airtime/:/usr/lib/airtime/media-monitor/airtimefilemonitor/:\
 /usr/lib/airtime/media-monitor/mm2/:/usr/lib/airtime/std_err_override/:/usr/lib/airtime/api_clients:$PYTHONPATH
-export PYTHONPATH="/usr/lib/airtime/:/usr/lib/airtime/media-monitor/mm2/"
 export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
 
 exec python /usr/lib/airtime/media-monitor/media_monitor.py > /var/log/airtime/media-monitor/py-interpreter.log 2>&1
