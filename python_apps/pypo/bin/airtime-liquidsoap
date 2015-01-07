@@ -22,9 +22,6 @@ do
     shift
 done
 
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
-
 export HOME="/var/tmp/airtime/pypo/"
 if [ "$debug" = "t" ]; then
     ls_path="/usr/bin/airtime-liquidsoap --verbose -f"
@@ -32,7 +29,7 @@ else
     ls_path="/usr/bin/airtime-liquidsoap --verbose -f -d"
 fi
 
-export PYTHONPATH=/usr/lib/airtime
+export PYTHONPATH=/usr/lib/airtime/:/usr/lib/airtime/pypo/bin/:/usr/lib/airtime/std_err_override/:/usr/lib/airtime/api_clients:$PYTHONPATH
 ls_param="/usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq"
 
 cd /usr/lib/airtime/pypo/bin/liquidsoap_scripts

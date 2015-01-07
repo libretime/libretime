@@ -318,14 +318,8 @@ loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
 verbose "\n * Installing liquidsoap and python..."
-loudCmd "apt-get -y --force-yes install liquidsoap python python-pip python-virtualenv"
+loudCmd "apt-get -y --force-yes install liquidsoap python python-pip"
 loudCmd "pip install setuptools"
-verbose "...Done"
-
-verbose "\n * Activating virtualenv..."
-${AIRTIMEROOT}/python_apps/python-virtualenv/virtualenv-install.sh
-virtualenv_bin="/usr/lib/airtime/airtime_virtualenv/bin/"
-. ${virtualenv_bin}activate
 verbose "...Done"
 
 verbose "\n * Creating /usr/lib/airtime..."
@@ -359,8 +353,6 @@ elif [ "$in_place" = "t" ]; then
 else
     python /usr/share/airtime/python_apps/media-monitor/setup.py install
 fi
-chown ${web_user}:${web_user} /usr/lib/airtime/airtime_virtualenv/bin/airtime-media-monitor
-ln -sf /usr/lib/airtime/airtime_virtualenv/bin/airtime-media-monitor /usr/local/bin/airtime-media-monitor
 verbose "...Done"
 
 verbose "\n * Copying pypo files..."
@@ -376,21 +368,13 @@ elif [ "$in_place" = "t" ]; then
 else
     python /usr/share/airtime/python_apps/pypo/setup.py install
 fi
-chown ${web_user}:${web_user} /usr/lib/airtime/airtime_virtualenv/bin/airtime-playout
-ln -sf /usr/lib/airtime/airtime_virtualenv/bin/airtime-playout /usr/local/bin/airtime-playout
 verbose "...Done"
 
 verbose "\n * Creating liquidsoap symlink..."
-chown ${web_user}:${web_user} /usr/lib/airtime/airtime_virtualenv/bin/airtime-liquidsoap
-ln -sf /usr/lib/airtime/airtime_virtualenv/bin/airtime-liquidsoap /usr/local/bin/airtime-liquidsoap
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
 initctl reload-configuration
-
-verbose "\n * Deactivating virtualenv..."
-deactivate
-verbose "...Done"
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
