@@ -26,7 +26,7 @@ class CuePointAnalyzer(Analyzer):
         '''
         command = [CuePointAnalyzer.SILAN_EXECUTABLE, '-b', '-F', '0.99', '-f', 'JSON', filename]
         try:
-            results_json = subprocess.check_output(command, stderr=subprocess.STDOUT)
+            results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
             silan_results = json.loads(results_json)
             metadata['length_seconds'] = float(silan_results['file duration'])
             # Conver the length into a formatted time string
