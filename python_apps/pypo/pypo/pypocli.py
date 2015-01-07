@@ -82,7 +82,7 @@ LIQUIDSOAP_MIN_VERSION = "1.1.1"
 
 # configure logging
 try:
-    logging.config.fileConfig("logging.cfg")
+    logging.config.fileConfig("%s/logging.cfg" % os.path.dirname(os.path.realpath(__file__)))
     logger = logging.getLogger()
     LogWriter.override_std_err(logger)
 except Exception, e:

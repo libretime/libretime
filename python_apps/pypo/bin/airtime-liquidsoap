@@ -24,9 +24,9 @@ done
 
 export HOME="/var/tmp/airtime/pypo/"
 if [ "$debug" = "t" ]; then
-    ls_path="/usr/bin/airtime-liquidsoap --verbose -f"
+    ls_path="/usr/bin/airtime-liquidsoap --verbose -f --debug"
 else
-    ls_path="/usr/bin/airtime-liquidsoap --verbose -f -d"
+    ls_path="/usr/bin/airtime-liquidsoap --verbose -f"
 fi
 
 export PYTHONPATH=/usr/lib/airtime/:/usr/lib/airtime/pypo/bin/:/usr/lib/airtime/std_err_override/:/usr/lib/airtime/api_clients:$PYTHONPATH
