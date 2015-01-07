@@ -12,7 +12,7 @@ import stat
 from std_err_override import LogWriter
 
 # configure logging
-logging.config.fileConfig("%/logging.cfg" % os.path.dirname(os.path.realpath(__file__)))
+logging.config.fileConfig("%s/logging.cfg" % os.path.dirname(os.path.realpath(__file__)))
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
 
