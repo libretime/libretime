@@ -13,12 +13,12 @@
             elsif bitrate == 160 then
                 ignore(output_stereo(%fdkaac(bitrate = 160, aot="mpeg4_he_aac_v2", afterburner=true, sbr_mode=true), !source))
             elsif bitrate == 192 then
-                ignore(output_stereo(%fdkaac(bitrate = 192, aot="mpeg4_he_aac_v2"), afterburner=true, sbr_mode=true, !source))
+                ignore(output_stereo(%fdkaac(bitrate = 192, aot="mpeg4_he_aac_v2", afterburner=true, sbr_mode=true), !source))
             elsif bitrate == 224 then
-                ignore(output_stereo(%fdkaac(bitrate = 224, aot="mpeg4_he_aac_v2"), afterburner=true, sbr_mode=true, !source))
+                ignore(output_stereo(%fdkaac(bitrate = 224, aot="mpeg4_he_aac_v2", afterburner=true, sbr_mode=true), !source))
             elsif bitrate == 256 then
-                ignore(output_stereo(%fdkaac(bitrate = 256, aot="mpeg4_he_aac_v2"), afterburner=true, sbr_mode=true, !source))
+                ignore(output_stereo(%fdkaac(bitrate = 256, aot="mpeg4_he_aac_v2", afterburner=true, sbr_mode=true), !source))
             elsif bitrate == 320 then
-                ignore(output_stereo(%fdkaac(bitrate = 320, aot="mpeg4_he_aac_v2"), afterburner=true, sbr_mode=true, !source))
+                ignore(output_stereo(%fdkaac(bitrate = 320, aot="mpeg4_he_aac_v2", afterburner=true, sbr_mode=true), !source))
             end
 
