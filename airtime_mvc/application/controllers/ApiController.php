@@ -1424,8 +1424,21 @@ class ApiController extends Zend_Controller_Action
             $showId = $request->getParam("show_id", null);
  
             list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+
+            if ((!isset($showId)) || (!is_int($showId))) {
+                $this->_helper->json->sendJson(
+                    array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing invalid type for required show_id parameter. use type int"))
+                );
+            }
             
             $shows = Application_Model_Show::getShows($startsDT, $endsDT, FALSE, $showId);
+
+            // is this a valid show?
+            if (empty($shows)) {
+                $this->_helper->json->sendJson(
+                    array("jsonrpc" => "2.0", "error" => array("code" => 204, "message" => "no content for requested show_id"))
+                );
+            }
 
             $this->_helper->json->sendJson($shows);
         }
@@ -1448,13 +1461,22 @@ class ApiController extends Zend_Controller_Action
 
         $instanceId = $this->_getParam('instance_id');
 
-        if (!isset($instanceId)) {
+        if ((!isset($instanceId)) || (!is_int($instanceI))) {
             $this->_helper->json->sendJson(
-                array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing required instance_id parameter"))
+                array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing invalid type for required instance_id parameter. use type int"))
             );
         }
 
         $showInstance = new Application_Model_ShowInstance($instanceId);
+        $showInstanceContent = $showInstance->getShowListContent($prefTimezone);
+        
+        // is this a valid show instance with content?
+        if (empty($showInstanceContent)) {
+            $this->_helper->json->sendJson(
+                array("jsonrpc" => "2.0", "error" => array("code" => 204, "message" => "no content for requested instance_id"))
+            );
+        }
+
         $result = array();
         $position = 0;
         foreach ($showInstance->getShowListContent($prefTimezone) as $track) {
