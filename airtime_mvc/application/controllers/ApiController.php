@@ -1425,9 +1425,10 @@ class ApiController extends Zend_Controller_Action
  
             list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
-            if ((!isset($showId)) || (!is_int($showId))) {
+            if ((!isset($showId)) || (!is_numeric($showId))) {
+            //if (!isset($showId)) {
                 $this->_helper->json->sendJson(
-                    array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing invalid type for required show_id parameter. use type int"))
+                    array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing invalid type for required show_id parameter. use type int.".$showId))
                 );
             }
             
@@ -1461,7 +1462,7 @@ class ApiController extends Zend_Controller_Action
 
         $instanceId = $this->_getParam('instance_id');
 
-        if ((!isset($instanceId)) || (!is_int($instanceI))) {
+        if ((!isset($instanceId)) || (!is_numeric($instanceId))) {
             $this->_helper->json->sendJson(
                 array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing invalid type for required instance_id parameter. use type int"))
             );
