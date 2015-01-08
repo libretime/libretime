@@ -124,7 +124,7 @@ function checkRMQConnection() {
  * @return boolean true if airtime-media-monitor is running
  */
 function checkMediaMonitorService() {
-    exec("initctl list | grep airtime-media-monitor", $out, $status);
+    exec("service airtime-media-monitor status | grep start", $out, $status);
     return $status == 0;
 }
 
@@ -134,8 +134,8 @@ function checkMediaMonitorService() {
  * @return boolean true if airtime-playout is running
  */
 function checkPlayoutService() {
-    exec("initctl list | grep airtime-playout", $out, $status);
-        return $status == 0;
+    exec("service airtime-playout status | grep start", $out, $status);
+    return $status == 0;
 }
 
 /**
@@ -144,6 +144,6 @@ function checkPlayoutService() {
  * @return boolean true if airtime-liquidsoap is running
  */
 function checkLiquidsoapService() {
-    exec("initctl list | grep airtime-liquidsoap", $out, $status);
-        return $status == 0;
+    exec("service airtime-liquidsoap status | grep start", $out, $status);
+    return $status == 0;
 }
