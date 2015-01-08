@@ -12,7 +12,7 @@ if '--no-init-script' in sys.argv:
     data_files = []
     sys.argv.remove('--no-init-script') # super hax
 else:
-    data_files = [('/usr/share/upstart/sessions', ['install/airtime-media-monitor.conf'])]
+    data_files = [('/etc/init', ['install/airtime-media-monitor.conf'])]
     print data_files
 
 setup(name='airtime-media-monitor',
