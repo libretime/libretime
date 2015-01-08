@@ -374,11 +374,13 @@ verbose "\n * Creating liquidsoap symlink..."
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
-sed "s@WEB_USER@${web_user}@g" ${SCRIPT_DIR}/lib/Upstart.conf > /etc/dbus-1/system.d/Upstart.conf
-chmod 644 /etc/init/airtime*
+sed "s@WEB_USER@${web_user}@g;s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/lib/airtime-session-init.conf > /etc/init/airtime-session-init.conf
+chmod 644 /etc/init/airtime/*
 
 service dbus restart
 initctl reload-configuration
+
+service airtime-session-init start
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
