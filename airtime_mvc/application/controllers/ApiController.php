@@ -1479,7 +1479,7 @@ class ApiController extends Zend_Controller_Action
 
         $result = array();
         $position = 0;
-        foreach ($showInstance->getShowListContent($prefTimezone) as $track) {
+        foreach ($showInstanceContent as $track) {
 
             $elementMap = array(
                 'title' => isset($track['track_title']) ? $track['track_title'] : "",
