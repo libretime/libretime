@@ -317,8 +317,8 @@ loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
-verbose "\n * Installing liquidsoap and python..."
-loudCmd "apt-get -y --force-yes install liquidsoap python python-pip"
+verbose "\n * Installing necessary service binaries..."
+loudCmd "apt-get -y --force-yes install liquidsoap python python-pip dbus"
 loudCmd "pip install setuptools"
 verbose "...Done"
 
@@ -375,6 +375,7 @@ ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
 sed "s@WEB_USER@${web_user}@g" ${SCRIPT_DIR}/lib/Upstart.conf > /etc/dbus-1/system.d/Upstart.conf
+chmod 644 /etc/init/airtime*
 
 service dbus restart
 initctl reload-configuration
