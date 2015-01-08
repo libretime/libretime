@@ -150,10 +150,9 @@ $result = $r1 && $r2;
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>
-                            and <code>/etc/init.d</code>, and ensure that it's running with
-                            <br/><code>sudo initctl list | grep airtime-media-monitor</code>. If not, try 
-                            <br/><code>sudo -u www-data service airtime-media-monitor restart</code>.
+                            Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>, 
+                            and ensure that it's running in <br/><code>initctl list | grep airtime-media-monitor</code><br/>. 
+                            If not, try  <br/><code>sudo service airtime-media-monitor start</code><br/>.
                             (Replace www-data with your web user if necessary)
                         <?php
                         }

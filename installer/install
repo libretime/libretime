@@ -372,11 +372,12 @@ verbose "\n * Creating liquidsoap symlink..."
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
-sed "s@WEB_USER@${web_user}@g;s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/lib/airtime-session-init.conf > /etc/init/airtime-session-init.conf
+sed "s@WEB_USER@${web_user}@g" ${SCRIPT_DIR}/lib/airtime-session-init-setup.conf > /etc/init/airtime-session-init-setup.conf
+cp ${SCRIPT_DIR}/lib/airtime-session-init.conf /etc/init/airtime-session-init.conf
 chmod 644 /usr/share/upstart/sessions/airtime*
 
 initctl reload-configuration
-service airtime-session-init start
+service airtime-session-init-setup start
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
