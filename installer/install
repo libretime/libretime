@@ -373,7 +373,7 @@ ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
 sed "s@WEB_USER@${web_user}@g;s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/lib/airtime-session-init.conf > /etc/init/airtime-session-init.conf
-chmod 644 /etc/init/airtime/*
+chmod 644 /usr/share/upstart/sessions/airtime*
 
 initctl reload-configuration
 service airtime-session-init start

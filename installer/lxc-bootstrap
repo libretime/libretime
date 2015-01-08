@@ -21,6 +21,11 @@ lxc-destroy -n airtime-install
 echo "...Done"
 set -e
 
+###
+# ! NOTE: If you run into errors resolving the archives when running apt-get update, 
+#         clear your /var/cache/lxc directory and retry.
+###
+
 echo -e "\n * Creating ${name} with dist ${dist} and release ${release}..."
 lxc-create -t ${dist} -n ${name} -- --release ${release}
 echo "...Done"
