@@ -523,7 +523,7 @@ if [ "$install_dependencies" = "t" ]; then
     loud "-----------------------------------------------------"
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
-    loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/bin/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+    loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
 fi
 
 verbose "\n * Restarting apache..."
