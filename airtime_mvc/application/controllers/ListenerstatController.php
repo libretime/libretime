@@ -10,49 +10,6 @@ class ListenerstatController extends Zend_Controller_Action
         ->initContext();
     }
     
-    private function getStartEnd()
-    {
-    	$request = $this->getRequest();
-    
-    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-    	$utcTimezone = new DateTimeZone("UTC");
-    	$utcNow = new DateTime("now", $utcTimezone);
-    
-    	$start = $request->getParam("start");
-    	$end = $request->getParam("end");
-    
-    	if (empty($start) || empty($end)) {
-    		$startsDT = clone $utcNow;
-    		$startsDT->sub(new DateInterval("P1D"));
-    		$endsDT = clone $utcNow;
-    	}
-    	else {
-    		 
-    		try {
-    			$startsDT = new DateTime($start, $userTimezone);
-    			$startsDT->setTimezone($utcTimezone);
-    
-    			$endsDT = new DateTime($end, $userTimezone);
-    			$endsDT->setTimezone($utcTimezone);
-    
-    			if ($startsDT > $endsDT) {
-    				throw new Exception("start greater than end");
-    			}
-    		}
-    		catch (Exception $e) {
-    			Logging::info($e);
-    			Logging::info($e->getMessage());
-    
-    			$startsDT = clone $utcNow;
-    			$startsDT->sub(new DateInterval("P1D"));
-    			$endsDT = clone $utcNow;
-    		}
-    		 
-    	}
-    
-    	return array($startsDT, $endsDT);
-    }
-
     public function indexAction()
     {
         $CC_CONFIG = Config::getConfig();
@@ -69,7 +26,7 @@ class ListenerstatController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
 
-        list($startsDT, $endsDT) = $this->getStartEnd();
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $startsDT->setTimezone($userTimezone);
         $endsDT->setTimezone($userTimezone);
@@ -98,7 +55,7 @@ class ListenerstatController extends Zend_Controller_Action
     }
 
     public function getDataAction(){
-        list($startsDT, $endsDT) = $this->getStartEnd();
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         
         $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format("Y-m-d H:i:s"), $endsDT->format("Y-m-d H:i:s"));
         $this->_helper->json->sendJson($data);
