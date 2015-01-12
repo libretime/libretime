@@ -12,7 +12,7 @@ if '--no-init-script' in sys.argv:
     data_files = []
     sys.argv.remove('--no-init-script') # super hax
 else:
-    data_files = [('/usr/share/upstart/sessions', ['install/airtime-playout.conf', 'install/airtime-liquidsoap.conf'])]
+    data_files = [('/var/www/.init', ['install/airtime-playout.conf', 'install/airtime-liquidsoap.conf'])]
     print data_files
 
 setup(name='airtime-playout',
