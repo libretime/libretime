@@ -380,16 +380,18 @@ SQL;
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
         }
-
+Logging::info("1111");
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
         if (!$isAdminOrPM && $this->getFileOwnerId() != $user->getId()) {
             throw new FileNoPermissionException();
         }
+        Logging::info("222");
         $file_id = $this->_file->getDbId();
+        Logging::info($file_id);
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$file_id);
-
+Logging::info("3333");
         $filesize = $this->_file->getFileSize();
         if ($filesize <= 0) {
             throw new Exception("Cannot delete file with filesize ".$filesize);
