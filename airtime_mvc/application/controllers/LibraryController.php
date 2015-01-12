@@ -352,8 +352,9 @@ class LibraryController extends Zend_Controller_Action
         }
 
         foreach ($files as $id) {
-
+Logging::info("aaa");
             $file = Application_Model_StoredFile::RecallById($id);
+            Logging::info("bbb");
             if (isset($file)) {
                 try {
                     $res = $file->delete();
