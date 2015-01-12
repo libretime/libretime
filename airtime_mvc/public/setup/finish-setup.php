@@ -29,11 +29,6 @@ class FinishSetup extends Setup {
             $errors[] = "ERR";
         }
         
-        if (empty($errors)) {
-            // Write service configurations for pypo and media-monitor
-            $this->startServices();
-        }
-        
         return array(
             "message" => $message,
             "errors" => $errors,
@@ -49,10 +44,4 @@ class FinishSetup extends Setup {
             && unlink(AIRTIME_CONF_TEMP_PATH);
     }
     
-    function startServices() {
-        exec("service airtime-media-monitor start");
-        exec("service airtime-playout start");
-        exec("service airtime-liquidsoap start");
-    }
-
 }

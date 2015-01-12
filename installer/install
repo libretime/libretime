@@ -322,7 +322,6 @@ verbose "...Done"
 
 verbose "\n * Creating /usr/lib/airtime..."
 mkdir -p /usr/lib/airtime
-mkdir -p /var/www/.init
 verbose "...Done"
 
 verbose "\n * Creating /run/airtime..."
@@ -373,8 +372,9 @@ verbose "\n * Creating liquidsoap symlink..."
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
-for i in /var/www/.init/airtime*; do
-    sed -i 's/WEB_USER/${web_user}/g' $i
+for i in /etc/init/airtime*; do
+    chmod 644 $i
+    sed -i "s/WEB_USER/${web_user}/g" $i
 done
 
 initctl reload-configuration
