@@ -24,7 +24,6 @@
 
 <script>
     $("#finishSettingsForm").submit(function(e) {
-        window.location.replace("/?config");
-        // submitForm(e, "FinishSetup");
+        window.location.assign("/?config");
     });
 </script>
