@@ -18,6 +18,7 @@ WHERE file_id = :file_id
 SQL;
         $count = Application_Common_Database::prepareAndExecute( $sql, array(
             ':file_id'=>$p_fileId), 'column');
+        Logging::info($count);
         return (is_numeric($count) && ($count != '0'));
     }
 
