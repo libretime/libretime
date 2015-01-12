@@ -9,6 +9,7 @@ class Application_Model_Schedule
      */
     public static function IsFileScheduledInTheFuture($p_fileId)
     {
+        Logging::info($p_fileId);
         $sql = <<<SQL
 SELECT COUNT(*)
 FROM cc_schedule
