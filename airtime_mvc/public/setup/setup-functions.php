@@ -83,7 +83,6 @@ require_once('database-setup.php');
 require_once('rabbitmq-setup.php');
 require_once('general-setup.php');
 require_once('media-setup.php');
-require_once('finish-setup.php');
 
 // If airtime.conf exists, we shouldn't be here
 if (!file_exists("/etc/airtime/airtime.conf")) {
