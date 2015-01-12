@@ -113,10 +113,14 @@ class Application_Model_RabbitMq
         // Pro stations will share the same bucket.
         $data['station_domain'] = $stationDomain = Application_Model_Preference::GetStationName();
         
-        // Each file uploaded to cloud storage is prefixed with the station's
-        // hosting id.
+        // We add a prefix to the resource name so files are not all placed
+        // under the root folder. We do this in case we need to restore a 
+        // customer's file/s; File restoration is done via the S3 Browser
+        // client. The client will hang if there are too many files under the
+        // same folder.
         $clientCurrentAirtimeProduct = BillingController::getClientCurrentAirtimeProduct();
-        $data['file_prefix'] = $clientCurrentAirtimeProduct["id"];
+        $hostingId = $clientCurrentAirtimeProduct["id"];
+        $data['file_prefix'] = substr($hostingId, -2)."/".$hostingId;
         
         $jsonData = json_encode($data);
         //self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');

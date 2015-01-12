@@ -74,7 +74,17 @@ class CloudStorageUploader:
         # in the object name. URL encoding the object name doesn't solve the
         # problem. As a solution we will replace spaces with dashes.
         file_name = file_name.replace(" ", "-")
-        resource_id = "%s/%s_%s%s" % (metadata["file_prefix"], file_name, str(uuid.uuid4()), extension)
+        
+        unique_id = str(uuid.uuid4())
+        
+        # We add another prefix to the resource name with the last two characters
+        # of the unique id so files are not all placed under the root folder. We
+        # do this in case we need to restore a customer's file/s; File restoration
+        # is done via the S3 Browser client. The client will hang if there are too
+        # many files under the same folder.
+        unique_id_prefix = unique_id[-2:]
+        
+        resource_id = "%s/%s/%s_%s%s" % (metadata['file_prefix'], unique_id_prefix, file_name, unique_id, extension)
 
         conn = S3Connection(self._api_key, self._api_key_secret, host=self._host)
         bucket = conn.get_bucket(self._bucket)
