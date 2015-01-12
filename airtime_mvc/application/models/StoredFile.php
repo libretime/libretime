@@ -376,6 +376,7 @@ SQL;
      */
     public function delete()
     {
+        Logging::info("111aaa");
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
             throw new DeleteScheduledFileException();
