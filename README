@@ -32,9 +32,7 @@ http://wiki.sourcefabric.org/display/CC/Airtime+Dev+Site
 
 Basic installation has two steps:
 
-1) Run the install script, located in the Airtime/installer directory.
-
-    cd installer
+1) Run the install script, located in the Airtime root directory.
 
 For an interactive installation, run:
 

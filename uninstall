@@ -1,0 +1,51 @@
+#!/bin/bash -e
+#-e Causes bash script to exit if any of the installers
+#return with a non-zero return value.
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Please run as root user."
+    exit 1
+fi
+
+SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+AIRTIMEROOT=${SCRIPT_DIR}
+
+FILES=(
+     "/etc/airtime"
+     "/var/log/airtime"
+     "/usr/lib/airtime"
+     "/usr/share/airtime"
+     "/etc/init/airtime*"
+     "/usr/bin/airtime*"
+     "/etc/apache2/sites-available/airtime*"
+     "pip airtime-playout"
+     "pip airtime-media-monitor"
+    )
+
+echo -e "The following files, directories, and services will be removed:\n"
+for i in ${FILES[*]}; do
+    echo $i
+done
+
+echo -e "\nThis will permanently remove Airtime and all related files from your computer. \
+Any files in Airtime directories will be deleted. Are you sure you want to proceed? (Y/n): \c"
+read IN
+if [[ ! ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
+    exit 0
+fi
+
+echo "Uninstalling Airtime..."
+rm -rf /etc/airtime
+rm -rf /var/log/airtime/
+rm -rf /usr/lib/airtime/
+
+rm -rf /usr/share/airtime
+
+rm -f /etc/init/airtime*
+rm -f /usr/bin/airtime*
+
+rm -f /etc/apache2/sites-enabled/airtime*
+rm -f /etc/apache2/sites-available/airtime*
+
+pip uninstall -y airtime-playout airtime-media-monitor
+echo "...Done"

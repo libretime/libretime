@@ -8,7 +8,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
-AIRTIMEROOT="$( cd "$( dirname ${SCRIPT_DIR} )" && pwd )"
+AIRTIMEROOT=${SCRIPT_DIR}
 
 showhelp () {
     echo "Usage: sudo bash install [options]
@@ -281,7 +281,7 @@ if [ "$apache" = "t" ]; then
 
     if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
         verbose "\n * Creating Apache config for Airtime..."
-        sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
+        sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
         loudCmd "a2dissite 000-default"
         loudCmd "a2ensite airtime"
     else
@@ -344,13 +344,7 @@ cp -R ${AIRTIMEROOT}/python_apps/media-monitor/media-monitor2 /usr/lib/airtime/m
 verbose "...Done"
 
 verbose "\n * Installing media-monitor..."
-if [ -z web_root ]; then
-    python ${web_root}/python_apps/media-monitor/setup.py install
-elif [ "$in_place" = "t" ]; then
-    python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install
-else
-    python /usr/share/airtime/python_apps/media-monitor/setup.py install
-fi
+python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install
 verbose "...Done"
 
 verbose "\n * Copying pypo files..."
@@ -359,13 +353,7 @@ cp -R ${AIRTIMEROOT}/python_apps/pypo/pypo /usr/lib/airtime/pypo/bin/
 verbose "...Done"
 
 verbose "\n * Installing pypo..."
-if [ -z web_root ]; then
-    python ${web_root}/python_apps/pypo/setup.py install
-elif [ "$in_place" = "t" ]; then
-    python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
-else
-    python /usr/share/airtime/python_apps/pypo/setup.py install
-fi
+python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
 verbose "...Done"
 
 verbose "\n * Creating liquidsoap symlink..."
@@ -431,7 +419,7 @@ fi
 # PHP Config File for Apache
 if [ ! -f "/etc/php5/apache2/conf.d/airtime.ini" ]; then
     verbose "\n * Creating Airtime PHP config for Apache..."
-    cp ${SCRIPT_DIR}/php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
+    cp ${SCRIPT_DIR}/installer/php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
 else
     verbose "\nAirtime PHP config for Apache already exists, skipping"
 fi
@@ -524,7 +512,7 @@ if [ "$install_dependencies" = "t" ]; then
     loud "-----------------------------------------------------"
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
-    loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+    loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
 fi
 
 verbose "\n * Restarting apache..."

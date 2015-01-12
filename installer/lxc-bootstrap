@@ -51,7 +51,7 @@ lxc-attach -n ${name} -- git -C /usr/share/Airtime checkout 2.5.x-installer-moni
 echo "...Done"
 
 echo -e "\n * Running installer..."
-lxc-attach -n ${name} -e -- /usr/share/Airtime/installer/install -ifapdIv
+lxc-attach -n ${name} -e -- /usr/share/Airtime/install -ifapdIv
 echo "...Done"
 
 IP=$(lxc-info -i -n ${name} -H)
