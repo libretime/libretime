@@ -140,4 +140,9 @@ class CcFiles extends BaseCcFiles {
         return null;
     }
     
+    public function getCcFileId()
+    {
+        return $this->id;
+    }
+    
 } // CcFiles
