@@ -377,7 +377,7 @@ SQL;
     public function delete()
     {
         // Check if the file is scheduled to be played in the future
-        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->getId())) {
+        if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->_file->getCcFileId())) {
             throw new DeleteScheduledFileException();
         }
 
