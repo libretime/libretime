@@ -229,9 +229,6 @@ if [ -z web_root -a ! -d web_root ]; then
     exit 1
 fi
 
-dist=`lsb_release -is`
-code=`lsb_release -cs`
-
 echo -e "\n   _____  .________________________.___   _____  ___________   "
 echo    "  /  _  \ |   \______   \__    ___/|   | /     \ \_   _____/     "
 echo    " /  /_\  \|   ||       _/ |    |   |   |/  \ /  \ |    __)_      "
@@ -245,6 +242,19 @@ if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     if [ "$IN" = "y" -o "$IN" = "Y" ]; then
         apache="t"
     fi
+fi
+
+loudCmd "apt-get install -y --force-yes lsb-release"
+
+dist=`lsb_release -is`
+code=`lsb_release -cs`
+set +e
+grep -E "deb +http://apt.sourcefabric.org/? +$code +main" /etc/apt/sources.list
+returncode=$?
+set -e
+if [ "$returncode" != "0" ]; then
+    echo "deb http://apt.sourcefabric.org/ $code main" >> /etc/apt/sources.list
+    apt-get update
 fi
 
 if [ "$in_place" = "t" ]; then

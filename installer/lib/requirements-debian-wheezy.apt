@@ -37,8 +37,6 @@ php-apc
 libmp3lame-dev
 lame
 
-libzend-framework-php
-
 coreutils
 
 sourcefabric-keyring
