@@ -94,7 +94,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         //
          // Add the description element
         $this->addElement('textarea', 'widgetCode', array(
-            'label'      => 'Javascript Code:',
+            'label'      => _('HTML Code:'),
             'required'   => false,
             'readonly'   => true,
             'style'      => 'font-family: Consolas, "Liberation Mono", Courier, 
@@ -134,10 +134,14 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         
         $host = $_SERVER['SERVER_NAME'];
         $code = <<<CODE
-<script src="http://$host/widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
-<script src="http://$host/widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
-<script src="http://$host/widgets/js/jquery.showinfo.js" type="text/javascript"></script>
+<!-- READ THESE INSTRUCTIONS CAREFULLY:
+    Step 1 of 2: Paste these next 4 lines in the <head> section of your HTML page -->
+<script src="https://$host/widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="https://$host/widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+<script src="https://$host/widgets/js/jquery.showinfo.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://$host/widgets/css/airtime-widgets.css"></link>
 
+<!-- Step 2 of 2: Paste these remaining lines in the <body> section of your HTML page -->
 <div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
 <div id="onAirToday"></div>
 <div id="scheduleTabs"></div>
@@ -159,6 +163,8 @@ $(document).ready(function() {
         sourceDomain:"http://$host",
         updatePeriod: 600 //seconds
     });
+    var d = new Date().getDay();
+    $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});               
 });
 </script>
 CODE;
