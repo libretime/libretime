@@ -34,11 +34,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         		'required'   => true,
         		'filters'    => array('StringTrim'),
         		'validators' => array(
-        				array(
-        						$rangeValidator,
-        						$notEmptyValidator,
-        						'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
-        				)
+                    $rangeValidator,
+                    $notEmptyValidator,
+                    array('regex', false, array('/^[0-9]+(\.\d+)?$/', 'messages' => _('Please enter a time in seconds (eg. 0.5)')))
         		),
         		'value' => Application_Model_Preference::GetDefaultCrossfadeDuration(),
         		'decorators' => array(
@@ -53,11 +51,9 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'required'   => true,
             'filters'    => array('StringTrim'),
             'validators' => array(
-                array(
-                    $rangeValidator,
-                    $notEmptyValidator,
-                    'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
-                )
+                $rangeValidator,
+                $notEmptyValidator,
+                array('regex', false, array('/^[0-9]+(\.\d+)?$/', 'messages' => _('Please enter a time in seconds (eg. 0.5)')))
             ),
             'value' => $defaultFadeIn,
             'decorators' => array(
@@ -72,12 +68,10 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         		'required'   => true,
         		'filters'    => array('StringTrim'),
         		'validators' => array(
-        				array(
-        						$rangeValidator,
-        						$notEmptyValidator,
-        						'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
-        				)
-        		),
+                    $rangeValidator,
+                    $notEmptyValidator,
+                    array('regex', false, array('/^[0-9]+(\.\d+)?$/', 'messages' => _('Please enter a time in seconds (eg. 0.5)')))
+                ),
         		'value' => $defaultFadeOut,
         		'decorators' => array(
         				'ViewHelper'
