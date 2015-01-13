@@ -501,8 +501,8 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
-    chown -R ${web_user}:${web_user} /etc/airtime
 fi
+chown -R ${web_user}:${web_user} /etc/airtime
 
 if [ ! -d "/srv/airtime" ]; then
     mkdir -p /srv/airtime
