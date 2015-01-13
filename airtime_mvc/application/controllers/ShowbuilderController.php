@@ -439,6 +439,7 @@ class ShowbuilderController extends Zend_Controller_Action
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 ); // WHMCS IP whitelist doesn't support IPv6
             curl_setopt($ch, CURLOPT_TIMEOUT, 5); //Aggressive 5 second timeout
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $query_string);
