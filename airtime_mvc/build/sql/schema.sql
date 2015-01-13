@@ -158,6 +158,7 @@ CREATE TABLE "cc_show"
 	"live_stream_pass" VARCHAR(255),
 	"linked" BOOLEAN default 'f' NOT NULL,
 	"is_linkable" BOOLEAN default 't' NOT NULL,
+	"image_path" VARCHAR(255),
 	PRIMARY KEY ("id")
 );
 
@@ -175,6 +176,7 @@ DROP TABLE "cc_show_instances" CASCADE;
 CREATE TABLE "cc_show_instances"
 (
 	"id" serial  NOT NULL,
+	"description" VARCHAR(512),
 	"starts" TIMESTAMP  NOT NULL,
 	"ends" TIMESTAMP  NOT NULL,
 	"show_id" INTEGER  NOT NULL,
