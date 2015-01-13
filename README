@@ -38,10 +38,11 @@ For an interactive installation, run:
 
     sudo ./install
 
-The installer will then prompt you about how you want to set up your Airtime installation.
+The installer will then prompt you about how you want to set up your Airtime 
+installation.
 
-For a simple full installation (do this if you're installing Airtime from scratch and don't have any of your own 
-configuration set up), run
+For a simple full installation (do this if you're installing Airtime from 
+scratch and don't have any of your own configuration set up), run
 
     sudo ./install -fiapd
 
@@ -53,21 +54,24 @@ What this means:
     -p - create a default Airtime postgres user
     -d - install binary dependencies needed for Airtime
 
-This will install all components necessary for Airtime, and set up /usr/share/airtime as your
-web root (where apache looks for your Airtime files).
+This will install all components necessary for Airtime, and set up 
+/usr/share/airtime as your web root (where apache looks for your Airtime files)
 
 There are several options for installation - to see them all, run
 
     sudo ./install --help
 
-2) Once you've run the installer, navigate to localhost/ (if you have a custom apache configuration, navigate to
-your Airtime web host) to run an interactive setup.
+2) Once you've run the installer, navigate to localhost/ (if you have a custom 
+apache configuration, navigate to your Airtime web host) to run an interactive 
+setup.
 
-If you just want to run Airtime with default settings, you won't need to change anything, but if you have any custom
-configuration settings you'll be able to specify them.
+If you just want to run Airtime with default settings, you won't need to change 
+anything, but if you have any custom configuration settings you'll be able to 
+specify them.
 
-Once you finish the setup process, you'll be presented with a configuration checklist so you can ensure that
-your Airtime installation is working correctly. If anything was mis-configured, the checklist will provide some
+Once you finish the setup process, you'll be presented with a configuration 
+checklist so you can ensure that your Airtime installation is working 
+correctly. If anything was mis-configured, the checklist will provide some .
 helpful tips to resolve the issue.
 
 If your checklist is all green, you're ready to get started with Airtime!
