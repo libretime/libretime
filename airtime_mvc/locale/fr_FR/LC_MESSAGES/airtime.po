@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2014-11-14 09:58+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2014-12-23 10:09+0000\n"
+"Last-Translator: AlbertFR <albert.bruc.ab@gmail.com>\n"
 "Language-Team: French (France) (http://www.transifex.com/projects/p/airtime/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +79,7 @@ msgstr "Fondu en Sorti"
 msgid ""
 "%1$s copyright &copy; %2$s All rights reserved.%3$sMaintained and "
 "distributed under the %4$s by %5$s"
-msgstr ""
+msgstr "%1$s copyright &copy; %2$s Tous droits réservés.%3$sMaintenue et distribuée sous %4$s by %5$s"
 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
@@ -1096,13 +1096,13 @@ msgstr "Envoyez vos remarques au support"
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 #, php-format
 msgid "Promote my station on %s"
-msgstr ""
+msgstr "Promouvoir station sur %s"
 
 #: airtime_mvc/application/forms/SupportSettings.php:150
 #: airtime_mvc/application/forms/RegisterAirtime.php:151
 #, php-format
 msgid "By checking this box, I agree to %s's %sprivacy policy%s."
-msgstr ""
+msgstr "En cochant cette case , je accepte la %s's %s de politique de confidentialité %s ."
 
 #: airtime_mvc/application/forms/SupportSettings.php:174
 #: airtime_mvc/application/forms/RegisterAirtime.php:169
@@ -1141,7 +1141,7 @@ msgstr "Rediffusion?"
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr ""
+msgstr "Utilisez l'authentification %s :"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
@@ -2613,7 +2613,7 @@ msgstr "Vous n'êtes pas autorisé à acceder à cette ressource."
 #: airtime_mvc/application/controllers/ApiController.php:803
 #, php-format
 msgid "File does not exist in %s"
-msgstr ""
+msgstr "Le fichier n'existe pas dans %s"
 
 #: airtime_mvc/application/controllers/ApiController.php:854
 msgid "Bad request. no 'mode' parameter passed."
@@ -2824,7 +2824,7 @@ msgstr "Mémoire"
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:14
 #, php-format
 msgid "%s Version"
-msgstr ""
+msgstr "%s Version"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:30
 msgid "Disk Space"
@@ -2909,13 +2909,13 @@ msgid ""
 " collected regularly in order to enhance your user experience.%2$sClick "
 "'Yes, help %1$s' and we'll make sure the features you use are constantly "
 "improving."
-msgstr ""
+msgstr "Aidez %1$s nous à l'améliorer en nous faisant savoir comment vous l'utilisez. Cette information sera recueillie régulièrement afin d'améliorer votre expérience utilisateur.\n%2$s Cliquez Oui, aider %1$s et nous vous assurerons que les fonctions que vous utilisez seront en constante amélioration."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:29
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:29
 #, php-format
 msgid "Click the box below to promote your station on %s."
-msgstr ""
+msgstr "Cliquez sur la case ci-dessous pour promouvoir votre station sur %s ."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:67
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:81
@@ -2961,7 +2961,7 @@ msgstr "Répertoire d'Import en Cours:"
 msgid ""
 "Rescan watched directory (This is useful if it is network mount and may be "
 "out of sync with %s)"
-msgstr ""
+msgstr "Rescanner le répertoire surveillé (Ce qui peut être utile si il est sur le réseau et est peut être désynchronisé de %s)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
@@ -3016,7 +3016,7 @@ msgid ""
 "will be collected regularly in order to enhance your user experience.%sClick"
 " the 'Send support feedback' box and we'll make sure the features you use "
 "are constantly improving."
-msgstr ""
+msgstr "Aidez %s à améliorer le logiciel en nous faisant savoir comment vous l'utilisez %s. Cette information sera recueillie régulièrement afin d'améliorer votre expérience utilisateur.\n%s Cliquez la case \"Envoyer des rapports d'utilisation» et nous nous assurerons que les fonctions que vous utilisez seront en constante amélioration."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
 msgid ""
@@ -3279,12 +3279,12 @@ msgstr "Nombre d'auditeur au fil du temps"
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:3
 #, php-format
 msgid "Welcome to %s!"
-msgstr ""
+msgstr "Bienvenue à %s !"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:4
 #, php-format
 msgid "Here's how you can get started using %s to automate your broadcasts: "
-msgstr ""
+msgstr "Voici comment vous pouvez commencer à utiliser %s pour automatiser vos émissions:"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
 msgid ""
@@ -3333,12 +3333,12 @@ msgstr "Selection du Flux:"
 msgid ""
 "%1$s %2$s, the open radio software for scheduling and remote station "
 "management."
-msgstr ""
+msgstr "%1$s %2$s, le logiciel ouvert de gestion et de programmation pour vos stations distantes."
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:22
 #, php-format
 msgid "%1$s %2$s is distributed under the %3$s"
-msgstr ""
+msgstr "%1$s %2$s est distribué sous %3$s"
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
@@ -3371,7 +3371,7 @@ msgstr "Retour à l'écran de connexion"
 msgid ""
 "Welcome to the %s demo! You can log in using the username 'admin' and the "
 "password 'admin'."
-msgstr ""
+msgstr "Bienvenue à la démo %s ! Vous pouvez vous connecter en utilisant le nom d'utilisateur «admin» et le mot de passe «admin» ."
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
@@ -3416,7 +3416,7 @@ msgstr "Votre période d'éssai expire dans"
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 #, php-format
 msgid "Purchase your copy of %s"
-msgstr ""
+msgstr "Achetez votre copie d' %s"
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 msgid "My Account"
@@ -3732,7 +3732,7 @@ msgstr "Le contenu des émissions liés doit être programmé avant ou après sa
 
 #: airtime_mvc/application/models/Scheduler.php:195
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Vous ne pouvez pas programmer une liste de lecture qui contient des fichiers manquants "
 
 #: airtime_mvc/application/models/Scheduler.php:216
 #: airtime_mvc/application/models/Scheduler.php:305
@@ -3807,7 +3807,7 @@ msgstr "Bonjour %s,  \n\nCliquez sur ce lien pour réinitialiser votre mot de pa
 #: airtime_mvc/application/models/Auth.php:36
 #, php-format
 msgid "%s Password Reset"
-msgstr ""
+msgstr "%s Réinitialisation du mot de passe"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"

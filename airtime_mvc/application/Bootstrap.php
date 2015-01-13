@@ -11,6 +11,7 @@ require_once __DIR__."/configs/constants.php";
 require_once 'Preference.php';
 require_once 'Locale.php';
 require_once "DateHelper.php";
+require_once "HTTPHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
 require_once "Timezone.php";
