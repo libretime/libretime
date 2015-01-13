@@ -25,7 +25,8 @@ showhelp () {
     -d, --install-dependencies
                 Install binary dependencies
     -w, --web-user=WEB_USER
-                Set the default apache web user
+                Set the apache web user. Defaults to www-data. Only change
+                this setting if you've changed the default apache web user
     -r, --web-root=WEB_ROOT
                 Set the web root for Airtime files
                 This will copy the Airtime application files and make them

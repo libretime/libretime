@@ -43,11 +43,7 @@ lxc-attach -n ${name} -e -- apt-get -y --force-yes install git
 echo "...Done"
 
 echo -e "\n * Cloning Airtime..."
-lxc-attach -n ${name} -- git clone https://github.com/sourcefabric/Airtime.git /usr/share/Airtime
-echo "...Done"
-
-echo -e "\n * Checking out installer branch..."
-lxc-attach -n ${name} -- git -C /usr/share/Airtime checkout 2.5.x-installer-monitless
+lxc-attach -n ${name} -- git clone https://github.com/sourcefabric/Airtime.git /usr/share/Airtime --branch 2.5.x-installer-monitless --depth 1
 echo "...Done"
 
 echo -e "\n * Running installer..."
