@@ -9,12 +9,12 @@ fi
 
 getStorDirFromDatabase() {
     # here-doc to execute this block as postgres user
-    su postgres <<'EOF'
+    result=`su postgres <<'EOF'
     set +e
-    result=$(psql -d airtime -tAc "SELECT directory FROM cc_music_dirs WHERE type='stor'")
+    echo $(psql -d airtime -tAc "SELECT directory FROM cc_music_dirs WHERE type='stor'")
     set -e
 # don't indent this!
-EOF
+EOF`
     echo $result
 }
 
@@ -22,7 +22,9 @@ dropAirtimeDatabase() {
     # here-doc to execute this block as postgres user
     su postgres <<'EOF'
     set +e
-    psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime; DROP USER IF EXISTS airtime;"
+    # DROP DATABASE cannot be executed from a function or multi-command string
+    psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime"
+    psql -d postgres -tAc "DROP USER IF EXISTS airtime"
     set -e
 # don't indent this!
 EOF

@@ -35,11 +35,11 @@ lxc-start -n ${name} -d
 echo "...Done"
 
 echo -e "\n * Running apt update..."
-lxc-attach -n ${name} -e -- apt-get update
+lxc-attach -n ${name} -- apt-get update
 echo "...Done"
 
 echo -e "\n * Installing git..."
-lxc-attach -n ${name} -e -- apt-get -y --force-yes install git
+lxc-attach -n ${name} -- apt-get -y --force-yes install git
 echo "...Done"
 
 echo -e "\n * Cloning Airtime..."
