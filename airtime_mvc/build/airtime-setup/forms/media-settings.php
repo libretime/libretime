@@ -20,7 +20,6 @@
     <div>
         <input type="submit" formtarget="mediaSettingsForm" class="btn btn-primary btn-next" value="Next &#10097;"/>
         <input type="button" class="btn btn-primary btn-back" value="&#10096; Back"/>
-        <input type="button" class="btn btn-default btn-skip" value="Skip this step &#10097;"/>
     </div>
 </form>
 

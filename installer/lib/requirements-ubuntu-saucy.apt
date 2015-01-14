@@ -50,7 +50,6 @@ liquidsoap-plugin-icecast
 liquidsoap-plugin-lame
 liquidsoap-plugin-mad
 liquidsoap-plugin-ogg
-liquidsoap-plugin-opus
 liquidsoap-plugin-portaudio
 liquidsoap-plugin-pulseaudio
 liquidsoap-plugin-taglib
