@@ -236,6 +236,14 @@ echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
 echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
+if [ -f /etc/airtime/airtime.conf ]; then
+    # If we don't remove the existing python files in /usr/lib, services won't work properly
+    rm -rf /usr/lib/airtime/
+    echo -e "Existing Airtime installation detected. Your current /etc/airtime/airtime.conf\
+will be moved to /etc/airtime/airtime.conf.bak"
+    mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.bak
+fi
+
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install default Airtime apache configuration? (Y/n): \c"
     read IN
@@ -342,15 +350,15 @@ chown -R ${web_user}:${web_user} /run/airtime
 verbose "...Done"
 
 verbose "\n * Copying logging files..."
-cp -R ${AIRTIMEROOT}/python_apps/std_err_override /usr/lib/airtime/std_err_override
+cp -R ${AIRTIMEROOT}/python_apps/std_err_override /usr/lib/airtime/
 verbose "...Done"
 
 verbose "\n * Copying API client files..."
-cp -R ${AIRTIMEROOT}/python_apps/api_clients /usr/lib/airtime/api_clients
+cp -R ${AIRTIMEROOT}/python_apps/api_clients /usr/lib/airtime/
 verbose "...Done"
 
 verbose "\n * Copying media-monitor files..."
-cp -R ${AIRTIMEROOT}/python_apps/media-monitor/media-monitor /usr/lib/airtime/media-monitor
+cp -R ${AIRTIMEROOT}/python_apps/media-monitor/media-monitor /usr/lib/airtime/
 cp -R ${AIRTIMEROOT}/python_apps/media-monitor/media-monitor2 /usr/lib/airtime/media-monitor/mm2
 verbose "...Done"
 
@@ -396,20 +404,20 @@ if [ ! -d /var/log/airtime ]; then
     mkdir -p /var/tmp/airtime/pypo/tmp/
     mkdir -p /var/tmp/airtime/show-recorder/
 
-    verbose "\n * Setting permissions on /var/log/airtime..."
-    chmod -R a+x /var/log/airtime
-    chown -R ${web_user}:${web_user} /var/log/airtime/
-    
-    verbose "\n * Setting permissions on /var/tmp/airtime..."
-    chmod -R a+x /var/tmp/airtime
-    chmod 755 /usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh
-    chown -R ${web_user}:${web_user} /var/tmp/airtime/
-    chown -R ${web_user}:${web_user} /usr/lib/airtime/
-
     verbose "\n * Copying logrotate files..."
     cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
     cp /usr/lib/airtime/pypo/bin/liquidsoap_scripts/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap
 fi
+
+verbose "\n * Setting permissions on /var/log/airtime..."
+chmod -R a+x /var/log/airtime
+chown -R ${web_user}:${web_user} /var/log/airtime/
+
+verbose "\n * Setting permissions on /var/tmp/airtime..."
+chmod -R a+x /var/tmp/airtime
+chmod 755 /usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh
+chown -R ${web_user}:${web_user} /var/tmp/airtime/
+chown -R ${web_user}:${web_user} /usr/lib/airtime/
 
 loud "\n-----------------------------------------------------"
 loud "                 * Installing PHP *                  "

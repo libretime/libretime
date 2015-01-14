@@ -151,9 +151,9 @@ $result = $r1 && $r2;
                         } else {
                             ?>">
                             Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>, 
-                            and ensure that it's running in <br/><code>initctl list | grep airtime-media-monitor</code><br/>. 
-                            If not, try  <br/><code>sudo service airtime-media-monitor start</code><br/>.
-                            (Replace www-data with your web user if necessary)
+                            and ensure that it's running with
+                            <br/><code>initctl list | grep airtime-media-monitor</code><br/>
+                            If not, try  <br/><code>sudo service airtime-media-monitor start</code>
                         <?php
                         }
                         ?>
@@ -170,11 +170,10 @@ $result = $r1 && $r2;
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-playout service is installed correctly in <code>/etc/init</code>
-                            and <code>/etc/init.d</code>, and ensure that it's running with
-                            <br/><code>sudo initctl list | grep airtime-playout</code>. If not, try 
-                            <br/><code>sudo -u www-data service airtime-playout restart</code>.
-                            (Replace www-data with your web user if necessary)
+                            Check that the airtime-playout service is installed correctly in <code>/etc/init</code>, 
+                            and ensure that it's running with
+                            <br/><code>sudo initctl list | grep airtime-playout</code><br/>
+                            If not, try <br/><code>sudo service airtime-playout restart</code>
                         <?php
                         }
                         ?>
@@ -191,11 +190,10 @@ $result = $r1 && $r2;
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>
-                            and <code>/etc/init.d</code>, and ensure that it's running with
-                            <br/><code>sudo initctl list | grep airtime-liquidsoap</code>. If not, try
-                            <br/><code>sudo -u www-data service airtime-liquidsoap restart</code>.
-                            (Replace www-data with your web user if necessary)
+                            Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>, 
+                            and ensure that it's running with
+                            <br/><code>sudo initctl list | grep airtime-liquidsoap</code><br/>
+                            If not, try <br/><code>sudo service airtime-liquidsoap restart</code>
                         <?php
                         }
                         ?>
