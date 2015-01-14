@@ -250,6 +250,13 @@ will be moved to /etc/airtime/airtime.conf.bak"
     # /etc/init.d startup scripts, services won't work properly
     rm -rf /usr/lib/airtime/
     rm /etc/init.d/airtime-*
+    # If the user selects an "in-place" install or passes in a web root, 
+    # we need to replace the old apache airtime.conf
+    rm /etc/apache2/sites-available/airtime.conf
+    
+    if [ -d /usr/share/airtime -a web_root = /usr/share/airtime ]; then
+        rm -rf /usr/share/airtime
+    fi
     
     mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.bak
     set -e
@@ -526,8 +533,8 @@ chown -R ${web_user}:${web_user} /etc/airtime
 
 if [ ! -d "/srv/airtime" ]; then
     mkdir -p /srv/airtime
-    chown -R ${web_user}:${web_user} /srv/airtime
 fi
+chown -R ${web_user}:${web_user} /srv/airtime
 
 if [ "$install_dependencies" = "f" -a ${_i} -eq 1 ]; then
     echo -e "Install external binary dependencies? (Y/n): \c"

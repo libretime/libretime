@@ -52,6 +52,7 @@ echo -e "The following files, directories, and services will be removed:\n"
 for i in ${FILES[*]}; do
     echo $i
 done
+echo -e "\nIf your web root is not listed, you will need to manually remove it."
 
 echo -e "\nThis will *permanently* remove Airtime and all related files from your computer. \
 Any files in Airtime directories and subdirectories will be deleted. Are you sure you want to proceed? (Y/n): \c"
