@@ -17,6 +17,7 @@ require_once "Database.php";
 require_once "Timezone.php";
 require_once "Auth.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
+require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 
 require_once (APPLICATION_PATH."/logging/Logging.php");

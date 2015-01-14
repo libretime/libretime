@@ -1316,16 +1316,16 @@ SQL;
                 $results['nextShow'][0] = array(
                         "id"                      => $rows[$i]['id'],
                         "instance_id"             => $rows[$i]['instance_id'],
-                                    "name"                    => $rows[$i]['name'],
+                        "name"                    => $rows[$i]['name'],
                         "description"             => $rows[$i]['description'],
-                                    "url"                     => $rows[$i]['url'],
+                        "url"                     => $rows[$i]['url'],
                         "start_timestamp"         => $rows[$i]['start_timestamp'],
                         "end_timestamp"           => $rows[$i]['end_timestamp'],
                         "starts"                  => $rows[$i]['starts'],
                         "ends"                    => $rows[$i]['ends'],
                         "record"                 => $rows[$i]['record'],
                         "image_path"             => $rows[$i]['image_path'],
-                                    "type"                   => "show");
+                        "type"                   => "show");
                 break;
             }
         }
