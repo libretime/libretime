@@ -104,7 +104,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
                 monospace;',
             'value' => self::getWidgetCode(),
         ));
-        $this->getElement('widgetCode')->addDecorator(new Airtime_Decorator_SuperAdmin_Only());
+
         $locale = new Zend_Form_Element_Select("locale");
         $locale->setLabel(_("Default Language"));
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
