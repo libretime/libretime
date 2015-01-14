@@ -10,9 +10,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $isStreamConfigable = Application_Model_Preference::GetEnableStreamConf() == "true";
 
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
-        if ($defaultFade == "") {
-            $defaultFade = '00.000000';
-        }
 
         // automatic trasition on source disconnection
         $auto_transition = new Zend_Form_Element_Checkbox("auto_transition");
@@ -32,8 +29,8 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $transition_fade = new Zend_Form_Element_Text("transition_fade");
         $transition_fade->setLabel(_("Switch Transition Fade (s)"))
                         ->setFilters(array('StringTrim'))
-                        ->addValidator('regex', false, array('/^[0-9]{1,2}(\.\d{1,6})?$/',
-                        'messages' => _('enter a time in seconds 00{.000000}')))
+                        ->addValidator('regex', false, array('/^[0-9]{1,2}(\.\d{1,3})?$/',
+                        'messages' => _('enter a time in seconds 0{.000}')))
                         ->setValue($defaultFade)
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($transition_fade);
