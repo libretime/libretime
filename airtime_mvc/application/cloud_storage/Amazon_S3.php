@@ -60,19 +60,14 @@ class Amazon_S3 extends StorageBackend
         }
     }
     
+    // This should only be called for station termination.
+    // We are only deleting the file objects from Amazon S3.
+    // Records in the database will remain in case we have to restore the files.
     public function deleteAllCloudFileObjects()
     {
         $this->s3Client->deleteMatchingObjects(
             $bucket = $this->getBucket(),
             $prefix = Application_Model_Preference::GetStationName());
 
-        // delete record of the cloud files from the database
-        $criteria = new Criteria();
-        $criteria->clearSelectColumns();
-        $criteria->addSelectColumn(CloudFilePeer::CC_FILE_ID);
-        $results = CloudFilePeer::doSelectStmt($criteria)->fetchAll();
-        foreach ($results as $key => $value) {
-            CcFilesQuery::create()->findPk($value["cc_file_id"])->delete();
-        }
     }
 }
