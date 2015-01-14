@@ -237,11 +237,22 @@ echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
 if [ -f /etc/airtime/airtime.conf ]; then
-    # If we don't remove the existing python files in /usr/lib, services won't work properly
-    rm -rf /usr/lib/airtime/
-    echo -e "Existing Airtime installation detected. Your current /etc/airtime/airtime.conf\
+    set +e
+    verbose "Stopping airtime services..."
+    service airtime-playout stop-with-monit
+    service airtime-media-monitor stop-with-monit
+    service airtime-liquidsoap stop-with-monit
+    verbose "...Done"
+    
+    echo "Existing Airtime installation detected. Your current /etc/airtime/airtime.conf\
 will be moved to /etc/airtime/airtime.conf.bak"
+    # If we don't remove the existing python files in /usr/lib and the 
+    # /etc/init.d startup scripts, services won't work properly
+    rm -rf /usr/lib/airtime/
+    rm /etc/init.d/airtime-*
+    
     mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.bak
+    set -e
 fi
 
 if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
@@ -328,6 +339,7 @@ if [ "$icecast" = "t" ]; then
     set +e
     service icecast2 start
     set -e
+    verbose "...Done"
 fi
 
 loud "\n-----------------------------------------------------"
