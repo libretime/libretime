@@ -10,8 +10,8 @@ def check_default_metadata(metadata):
     tolerance_seconds = 0.1
     length_seconds = 3.9
     assert abs(metadata['length_seconds'] - length_seconds) < tolerance_seconds
-    assert abs(metadata['cuein']) < tolerance_seconds
-    assert abs(metadata['cueout'] - length_seconds) < tolerance_seconds
+    assert abs(float(metadata['cuein'])) < tolerance_seconds
+    assert abs(float(metadata['cueout']) - length_seconds) < tolerance_seconds
 
 def test_missing_silan():
     old_silan = CuePointAnalyzer.SILAN_EXECUTABLE
