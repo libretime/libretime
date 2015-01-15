@@ -32,8 +32,8 @@ class CuePointAnalyzer(Analyzer):
             # Conver the length into a formatted time string
             track_length = datetime.timedelta(seconds=metadata['length_seconds'])
             metadata["length"] = str(track_length)
-            metadata['cuein'] = silan_results['sound'][0][0]
-            metadata['cueout'] = silan_results['sound'][0][1]
+            metadata['cuein'] = format(silan_results['sound'][0][0], 'f')
+            metadata['cueout'] = format(silan_results['sound'][0][1], 'f')
 
         except OSError as e: # silan was not found
             logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))
