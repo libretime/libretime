@@ -29,16 +29,13 @@ showhelp () {
                 this setting if you've changed the default apache web user
     -r, --web-root=WEB_ROOT
                 Set the web root for Airtime files
-                This will copy the Airtime application files and make them
-                accessible to the web user
-                If no directory or an empty string is given, this defaults to
-                an in-place installation, and will give the web user
-                permissions on the current Airtime root
+                This will copy the Airtime application files, but you will need
+                to give your web user access to the given directory if it is 
+                not accessible
     -I, --in-place
-                Set the current Airtime root as the working directory for
-                Airtime
-                Note that you will need to give your web user permissions on
-                these directories
+                Set the current Airtime directory as the web root
+                Note that you will need to give your web user permission to 
+                access this directory if it is not accessible
     -p, --postgres
                 Create a default postgres user named 'airtime' with password
                 'airtime'
@@ -274,6 +271,8 @@ loudCmd "apt-get install -y --force-yes lsb-release"
 
 dist=`lsb_release -is`
 code=`lsb_release -cs`
+
+verbose "\n * Adding apt.sourcefabric to sources.list..."
 set +e
 grep -E "deb +http://apt.sourcefabric.org/? +$code +main" /etc/apt/sources.list
 returncode=$?
@@ -282,22 +281,23 @@ if [ "$returncode" != "0" ]; then
     echo "deb http://apt.sourcefabric.org/ $code main" >> /etc/apt/sources.list
     apt-get update
 fi
+verbose "...Done"
 
 if [ "$in_place" = "t" ]; then
     verbose "\n * Setting current Airtime directory as web root..."
     web_root=${AIRTIMEROOT}/airtime_mvc/public
-    chmod -R 755 ${AIRTIMEROOT}
 elif [ -n "$web_root" ]; then
     verbose "\n * Creating Apache web root directory..."
-    mkdir -p ${web_root}/airtime/public/
-    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
-    chmod -R 755 ${web_root}
+    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}
+    web_root=${web_root}/public/
 else
     verbose "\n * Creating default Apache web root directory /usr/share/airtime/..."
-    web_root="/usr/share"
-    mkdir -p ${web_root}/airtime/public/
-    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}/airtime/
+    web_root="/usr/share/airtime"
+    mkdir -p ${web_root}
+    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}
+    web_root=${web_root}/public/
 fi
+verbose "...Done"
 
 if [ "$apache" = "t" ]; then
     loud "\n-----------------------------------------------------"
@@ -549,7 +549,7 @@ loud "                * Installing Locales *               "
 loud "-----------------------------------------------------"
 
 set +e
-verbose "Generating locales"
+verbose "\n * Generating locales"
 for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
     if [ "$dist" = "Debian" ]; then
         grep -qi "^$i" /etc/locale.gen
