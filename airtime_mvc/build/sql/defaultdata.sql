@@ -1,3 +1,6 @@
+-- Schema version
+INSERT INTO cc_pref("keystr", "valstr") VALUES('system_version', '2.5.2');
+
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 -- added in 2.3
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('off_air_meta', 'Airtime - offline', 'string');

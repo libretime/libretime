@@ -19,6 +19,7 @@ define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.h
 define('AIRTIME_COPYRIGHT_DATE' , '2010-2012');
 define('AIRTIME_REST_VERSION'   , '1.1');
 define('AIRTIME_API_VERSION'    , '1.1');
+define('AIRTIME_CODE_VERSION'   , '2.5.2');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');
