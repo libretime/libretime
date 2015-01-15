@@ -244,7 +244,7 @@ if [ -f /etc/airtime/airtime.conf ]; then
     service airtime-liquidsoap stop-with-monit
     verbose "...Done"
     
-    echo "Existing Airtime installation detected. Your current /etc/airtime/airtime.conf\
+    echo "Existing Airtime installation detected. Your current /etc/airtime/airtime.conf \
 will be moved to /etc/airtime/airtime.conf.bak"
     # If we don't remove the existing python files in /usr/lib and the 
     # /etc/init.d startup scripts, services won't work properly
@@ -542,6 +542,28 @@ if [ "$install_dependencies" = "f" -a ${_i} -eq 1 ]; then
     if [ "$IN" = "y" -o "$IN" = "Y" ]; then
         install_dependencies="t"
     fi
+fi
+
+loud "\n-----------------------------------------------------"
+loud "                * Installing Locales *               "
+loud "-----------------------------------------------------"
+
+set +e
+verbose "Generating locales"
+for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
+    if [ "$dist" = "Debian" ]; then
+        grep -qi "^$i" /etc/locale.gen
+        if [ $? -ne 0 ]; then
+            verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
+        fi
+    else
+        locale-gen "$i.utf8"
+    fi
+done
+set -e
+
+if [ "$dist" = "Debian" ]; then
+    /usr/sbin/locale-gen
 fi
 
 if [ "$install_dependencies" = "t" ]; then
