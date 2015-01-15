@@ -27,7 +27,7 @@ function checkConfiguration() {
  */
 function checkPhpDependencies() {
     return array(
-        "zend" => checkMvcDependencies(),
+        "zend" => checkZendDependencies(),
         "postgres" => checkDatabaseDependencies()
     );
 }
@@ -37,7 +37,7 @@ function checkPhpDependencies() {
  *
  * @return boolean true if Zend exists in /usr/share/php
  */
-function checkMvcDependencies() {
+function checkZendDependencies() {
     return file_exists('/usr/share/php/libzend-framework-php')
         || file_exists('/usr/share/php/zendframework'); // Debian version
 }
