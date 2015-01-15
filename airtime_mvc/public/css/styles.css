@@ -13,7 +13,7 @@ html, body {
 }
 
 #login-page {
-    background: #1f1f1f url(images/login_page_bg.png) no-repeat center 0;`
+    background: #1f1f1f url(images/login_page_bg.png) no-repeat center 0;
     margin: 0;
     padding: 0;
     height:100%;
@@ -1002,7 +1002,28 @@ input[type="checkbox"] {
     display:block;
 }
 
-dt.block-display, dd.block-display {
+#pref_form dt, #pref_form dd,
+#pref_form textarea {
+    display:block;
+    float:none;
+    margin-left:0;
+    padding-left:0;
+    width: 100%;
+}
+#pref_form textarea {
+    width: 98.5%;
+}
+#pref_form select {
+    width: 100%;
+}
+
+#pref_form p.description {
+    color: #3b3b3b;
+    font-size: 12px;
+    float: left;
+}
+
+  dt.block-display, dd.block-display {
     display:block;
     float:none;
     margin-left:0;

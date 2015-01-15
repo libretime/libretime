@@ -19,56 +19,13 @@ class PlayouthistoryController extends Zend_Controller_Action
             ->initContext();
     }
     
-    private function getStartEnd()
-    {
-    	$request = $this->getRequest();
-    	 
-    	$userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
-    	$utcTimezone = new DateTimeZone("UTC");
-    	$utcNow = new DateTime("now", $utcTimezone);
-    	 
-    	$start = $request->getParam("start");
-    	$end = $request->getParam("end");
-    
-    	if (empty($start) || empty($end)) {
-    		$startsDT = clone $utcNow;
-    		$startsDT->sub(new DateInterval("P1D"));
-    		$endsDT = clone $utcNow;
-    	}
-    	else {
-    		 
-    		try {
-    			$startsDT = new DateTime($start, $userTimezone);
-    			$startsDT->setTimezone($utcTimezone);
-    
-    			$endsDT = new DateTime($end, $userTimezone);
-    			$endsDT->setTimezone($utcTimezone);
-    
-    			if ($startsDT > $endsDT) {
-    				throw new Exception("start greater than end");
-    			}
-    		}
-    		catch (Exception $e) {
-    			Logging::info($e);
-    			Logging::info($e->getMessage());
-    
-    			$startsDT = clone $utcNow;
-    			$startsDT->sub(new DateInterval("P1D"));
-    			$endsDT = clone $utcNow;
-    		}
-    		 
-    	}
-    	 
-    	return array($startsDT, $endsDT);
-    }
-
     public function indexAction()
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        list($startsDT, $endsDT) = $this->getStartEnd();
-        
+        list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
+       
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $startsDT->setTimezone($userTimezone);
         $endsDT->setTimezone($userTimezone);
@@ -123,7 +80,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     		$params = $request->getParams();
     		$instance = $request->getParam("instance_id", null);
 	        
-    		list($startsDT, $endsDT) = $this->getStartEnd();
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
 	        $historyService = new Application_Service_HistoryService();
 	        $r = $historyService->getFileSummaryData($startsDT, $endsDT, $params);
@@ -146,7 +103,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     		$params = $request->getParams();
     		$instance = $request->getParam("instance_id", null);
 	        
-    		list($startsDT, $endsDT) = $this->getStartEnd();
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
     		
 	        $historyService = new Application_Service_HistoryService();
 	        $r = $historyService->getPlayedItemData($startsDT, $endsDT, $params, $instance);
@@ -169,7 +126,7 @@ class PlayouthistoryController extends Zend_Controller_Action
     		$params = $request->getParams();
     		$instance = $request->getParam("instance_id", null);
 	        
-    		list($startsDT, $endsDT) = $this->getStartEnd();
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
 
     		$historyService = new Application_Service_HistoryService();
     		$shows = $historyService->getShowList($startsDT, $endsDT);
