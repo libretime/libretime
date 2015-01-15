@@ -2,8 +2,6 @@
 /* THIS FILE IS NOT MEANT FOR CUSTOMIZING.
  * PLEASE EDIT THE FOLLOWING TO CHANGE YOUR CONFIG:
  * /etc/airtime/airtime.conf
- * /etc/airtime/pypo.cfg
- * /etc/airtime/recorder.cfg
  */
 
 class Config {
