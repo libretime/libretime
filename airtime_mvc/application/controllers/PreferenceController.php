@@ -34,15 +34,11 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_Preferences();
         $values = array();
 
-        if ($request->isPost()) {
-            $params = $request->getPost();
-            $postData = explode('&', $params['data']);
-            foreach($postData as $k=>$v) {
-                $v = explode('=', $v);
-                $values[$v[0]] = urldecode($v[1]);
-            }
-            if ($form->isValid($values)) {
 
+        if ($request->isPost()) {
+            $values = $request->getPost();
+            if ($form->isValid($values))
+            {
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
                 Application_Model_Preference::SetDefaultCrossfadeDuration($values["stationDefaultCrossfadeDuration"]);
                 Application_Model_Preference::SetDefaultFadeIn($values["stationDefaultFadeIn"]);
@@ -51,6 +47,11 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetDefaultLocale($values["locale"]);
                 Application_Model_Preference::SetDefaultTimezone($values["timezone"]);
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
+
+                $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
+                $logoUploadElement->receive();
+                $imagePath = $logoUploadElement->getFileName();
+                Application_Model_Preference::SetStationLogo($imagePath);
 
                 Application_Model_Preference::SetEnableSystemEmail($values["enableSystemEmail"]);
                 Application_Model_Preference::SetSystemEmail($values["systemEmail"]);
@@ -73,12 +74,14 @@ class PreferenceController extends Zend_Controller_Action
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
-                $this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
+                //$this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
             } else {
                 $this->view->form = $form;
-                $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml')));
+                //$this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/index.phtml')));
             }
         }
+        $this->view->logoImg = Application_Model_Preference::GetStationLogo();
+
         $this->view->form = $form;
     }
 
@@ -111,13 +114,9 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
                 Application_Model_Preference::SetPublicise($values["Publicise"]);
 
-                $form->Logo->receive();
-                $imagePath = $form->Logo->getFileName();
-
                 Application_Model_Preference::SetStationCountry($values["Country"]);
                 Application_Model_Preference::SetStationCity($values["City"]);
                 Application_Model_Preference::SetStationDescription($values["Description"]);
-                Application_Model_Preference::SetStationLogo($imagePath);
                 if (isset($values["Privacy"])) {
                     Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
@@ -125,10 +124,6 @@ class PreferenceController extends Zend_Controller_Action
             $this->view->statusMsg = "<div class='success'>"._("Support setting updated.")."</div>";
         }
 
-        $logo = Application_Model_Preference::GetStationLogo();
-        if ($logo) {
-            $this->view->logoImg = $logo;
-        }
         $privacyChecked = false;
         if (Application_Model_Preference::GetPrivacyPolicyCheck() == 1) {
             $privacyChecked = true;

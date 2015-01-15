@@ -1,11 +1,14 @@
 <?php
 
+require_once 'customfilters/ImageSize.php';
+
 class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 {
 
     public function init()
     {
         $maxLens = Application_Model_Show::getMaxLengths();
+        $this->setEnctype(Zend_Form::ENCTYPE_MULTIPART);
 
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $rangeValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(0, 59.9);
@@ -33,6 +36,18 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $stationDescription->setValidators(array(array('StringLength', false, array(0, $maxLens['description']))));
         $stationDescription->setAttrib('rows', 4);
         $this->addElement($stationDescription);
+
+        // Station Logo
+        $stationLogoUpload = new Zend_Form_Element_File('stationLogo');
+        $stationLogoUpload->setLabel(_('Station Logo:'))
+            ->setDescription(_("Note: Anything larger than 600x600 will be resized."))
+            ->setRequired(false)
+            ->addValidator('Count', false, 1)
+            ->addValidator('Extension', false, 'jpg,jpeg,png,gif')
+            ->setMaxFileSize(1000000)
+            ->addFilter('ImageSize');
+        $stationLogoUpload->setAttrib('accept', 'image/*');
+        $this->addElement($stationLogoUpload);
 
         //Default station crossfade duration
         $this->addElement('text', 'stationDefaultCrossfadeDuration', array(
