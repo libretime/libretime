@@ -69,7 +69,7 @@ if [[ ! ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
     exit 0
 fi
 
-if [ -n ${STOR_DIR} ]; then
+if [ -n "${STOR_DIR}" ]; then
     echo -e "\nAre you sure you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? (Y/n): \c"
     read IN
     if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
@@ -80,7 +80,9 @@ else
 fi
 
 echo -e "\nUninstalling Airtime..."
-removeRabbitmqAirtimeSettings
+if [ -f /etc/airtime/airtime.conf ]; then
+    removeRabbitmqAirtimeSettings
+fi
 
 rm -rf /etc/airtime
 rm -rf /var/log/airtime/
