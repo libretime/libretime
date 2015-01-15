@@ -2121,6 +2121,7 @@ span.errors.sp-errors{
 }
 .preferences {
     width: 500px;
+    margin-bottom: 40px;
 }
 .manage-folders {
     width: 610px;

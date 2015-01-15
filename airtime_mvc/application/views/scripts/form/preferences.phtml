@@ -1,5 +1,9 @@
 <form method="<?php echo $this->element->getMethod() ?>" enctype="multipart/form-data">
     <?php echo $this->element->getElement('csrf') ?>
+
     <?php echo $this->element->getSubform('preferences_general') ?>
     <?php //No soundcloud stuff on Airtime Pro -- Albert ?>
+
+    <?php echo $this->element->submit->render() ?>
+
 </form>
