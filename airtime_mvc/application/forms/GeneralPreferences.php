@@ -5,6 +5,8 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
     public function init()
     {
+        $maxLens = Application_Model_Show::getMaxLengths();
+
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();
         $rangeValidator = Application_Form_Helper_ValidationTypes::overrideBetweenValidator(0, 59.9);
         $this->setDecorators(array(
@@ -13,104 +15,100 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
 
         $defaultFadeIn = Application_Model_Preference::GetDefaultFadeIn();
         $defaultFadeOut = Application_Model_Preference::GetDefaultFadeOut();
-       
+
         //Station name
         $this->addElement('text', 'stationName', array(
-            'class'      => 'input_text',
-            'label'      => _('Station Name'),
-            'required'   => false,
-            'filters'    => array('StringTrim'),
+            'class' => 'input_text',
+            'label' => _('Station Name'),
+            'required' => false,
+            'filters' => array('StringTrim'),
             'value' => Application_Model_Preference::GetStationName(),
-            'decorators' => array(
-                'ViewHelper'
-            )
         ));
-        
-        //Default station fade in
+
+        // Station description
+        $stationDescription = new Zend_Form_Element_Textarea("stationDescription");
+        $stationDescription->setLabel(_('Station Description'));
+        $stationDescription->setValue(Application_Model_Preference::GetStationDescription());
+        $stationDescription->setRequired(false);
+        $stationDescription->setValidators(array(array('StringLength', false, array(0, $maxLens['description']))));
+        $stationDescription->setAttrib('rows', 4);
+        $this->addElement($stationDescription);
+
+        //Default station crossfade duration
         $this->addElement('text', 'stationDefaultCrossfadeDuration', array(
-        		'class'      => 'input_text',
-        		'label'      => _('Default Crossfade Duration (s):'),
-        		'required'   => true,
-        		'filters'    => array('StringTrim'),
-        		'validators' => array(
-        				array(
-        						$rangeValidator,
-        						$notEmptyValidator,
-        						'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
-        				)
-        		),
-        		'value' => Application_Model_Preference::GetDefaultCrossfadeDuration(),
-        		'decorators' => array(
-        				'ViewHelper'
-        		)
+            'class' => 'input_text',
+            'label' => _('Default Crossfade Duration (s):'),
+            'required' => true,
+            'filters' => array('StringTrim'),
+            'validators' => array(
+                    $rangeValidator,
+                    $notEmptyValidator,
+                    array('regex', false, array('/^[0-9]+(\.\d+)?$/', 'messages' => _('Please enter a time in seconds (eg. 0.5)')))
+            ),
+            'value' => Application_Model_Preference::GetDefaultCrossfadeDuration(),
         ));
 
         //Default station fade in
         $this->addElement('text', 'stationDefaultFadeIn', array(
-            'class'      => 'input_text',
-            'label'      => _('Default Fade In (s):'),
-            'required'   => true,
-            'filters'    => array('StringTrim'),
+            'class' => 'input_text',
+            'label' => _('Default Fade In (s):'),
+            'required' => true,
+            'filters' => array('StringTrim'),
             'validators' => array(
-                array(
-                    $rangeValidator,
-                    $notEmptyValidator,
-                    'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
-                )
+                $rangeValidator,
+                $notEmptyValidator,
+                array('regex', false, array('/^[0-9]+(\.\d+)?$/', 'messages' => _('Please enter a time in seconds (eg. 0.5)')))
             ),
             'value' => $defaultFadeIn,
-            'decorators' => array(
-                'ViewHelper'
-            )
         ));
-        
+
         //Default station fade out
         $this->addElement('text', 'stationDefaultFadeOut', array(
-        		'class'      => 'input_text',
-        		'label'      => _('Default Fade Out (s):'),
-        		'required'   => true,
-        		'filters'    => array('StringTrim'),
-        		'validators' => array(
-        				array(
-        						$rangeValidator,
-        						$notEmptyValidator,
-        						'regex', false, array('/^[0-9]{1,2}(\.\d{1})?$/', 'messages' => _('enter a time in seconds 0{.0}'))
-        				)
-        		),
-        		'value' => $defaultFadeOut,
-        		'decorators' => array(
-        				'ViewHelper'
-        		)
+            'class' => 'input_text',
+            'label' => _('Default Fade Out (s):'),
+            'required' => true,
+            'filters' => array('StringTrim'),
+            'validators' => array(
+                $rangeValidator,
+                $notEmptyValidator,
+                array('regex', false, array('/^[0-9]+(\.\d+)?$/', 'messages' => _('Please enter a time in seconds (eg. 0.5)')))
+            ),
+            'value' => $defaultFadeOut,
         ));
 
         $third_party_api = new Zend_Form_Element_Radio('thirdPartyApi');
-        $third_party_api->setLabel(
-            sprintf(_('Allow Remote Websites To Access "Schedule" Info?%s (Enable this to make front-end widgets work.)'), '<br>'));
-        $third_party_api->setMultiOptions(array(_("Disabled"),
-                                            _("Enabled")));
+        $third_party_api->setLabel(_('Public Airtime API'));
+        $third_party_api->setDescription(_('Required for embeddable schedule widget.'));
+        $third_party_api->setMultiOptions(array(
+                                            _("Disabled"),
+                                            _("Enabled"),
+                                        ));
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
-        $third_party_api->setDecorators(array('ViewHelper'));
+        $third_party_api->setDescription(_('Enabling this feature will allow Airtime to provide schedule data
+                                            to external widgets that can be embedded in your website. Enable this
+                                            feature to reveal the embeddable code.'));
+        $third_party_api->setSeparator(' '); //No <br> between radio buttons
+        //$third_party_api->addDecorator(new Zend_Form_Decorator_Label(array('tag' => 'dd', 'class' => 'radio-inline-list')));
+        $third_party_api->addDecorator('HtmlTag', array('tag' => 'dd',
+                                                        'id'=>"thirdPartyApi-element",
+                                                        'class' => 'radio-inline-list',
+                                        ));
         $this->addElement($third_party_api);
-        //
-         // Add the description element
+
+        // Add the description element
         $this->addElement('textarea', 'widgetCode', array(
-            'label'      => 'Javascript Code:',
-            'required'   => false,
-            'readonly'   => true,
-            'style'      => 'font-family: Consolas, "Liberation Mono", Courier, 
+            'label' => 'Javascript Code:',
+            'required' => false,
+            'readonly' => true,
+            'style' => 'font-family: Consolas, "Liberation Mono", Courier,
                 monospace;',
-            'class'      => 'input_text_area',
-            'value' => self::getWidgetCode(), //$_SERVER["SERVER_NAME"],
-            'decorators' => array(
-                'ViewHelper'
-            )
+            'value' => self::getWidgetCode(),
         ));
 
         $locale = new Zend_Form_Element_Select("locale");
-        $locale->setLabel(_("Default Interface Language"));
+        $locale->setLabel(_("Default Language"));
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
         $locale->setValue(Application_Model_Preference::GetDefaultLocale());
-        $locale->setDecorators(array('ViewHelper'));
         $this->addElement($locale);
 
         /* Form Element for setting the Timezone */
@@ -118,7 +116,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $timezone->setLabel(_("Station Timezone"));
         $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
         $timezone->setValue(Application_Model_Preference::GetDefaultTimezone());
-        $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
 
         /* Form Element for setting which day is the start of the week */
@@ -126,7 +123,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setLabel(_("Week Starts On"));
         $week_start_day->setMultiOptions($this->getWeekStartDays());
         $week_start_day->setValue(Application_Model_Preference::GetWeekStartDay());
-        $week_start_day->setDecorators(array('ViewHelper'));
         $this->addElement($week_start_day);
     }
 
@@ -134,10 +130,14 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         
         $host = $_SERVER['SERVER_NAME'];
         $code = <<<CODE
-<script src="http://$host/widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
-<script src="http://$host/widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
-<script src="http://$host/widgets/js/jquery.showinfo.js" type="text/javascript"></script>
+<!-- READ THESE INSTRUCTIONS CAREFULLY:
+    Step 1 of 2: Paste these next 4 lines in the <head> section of your HTML page -->
+<script src="https://$host/widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
+<script src="https://$host/widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
+<script src="https://$host/widgets/js/jquery.showinfo.js" type="text/javascript"></script>
+<link rel="stylesheet" href="https://$host/widgets/css/airtime-widgets.css"></link>
 
+<!-- Step 2 of 2: Paste these remaining lines in the <body> section of your HTML page -->
 <div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
 <div id="onAirToday"></div>
 <div id="scheduleTabs"></div>
@@ -159,6 +159,8 @@ $(document).ready(function() {
         sourceDomain:"http://$host",
         updatePeriod: 600 //seconds
     });
+    var d = new Date().getDay();
+    $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});               
 });
 </script>
 CODE;

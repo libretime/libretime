@@ -21,9 +21,9 @@
             $companySiteAnchor = "<a href='" . COMPANY_SITE_URL . "'>"
                                   . $company
                                 . "</a>";
-            echo sprintf(_('%1$s copyright &copy; %2$s All rights reserved.%3$s'
-                . 'Maintained and distributed under the %4$s by %5$s'), 
-            PRODUCT_NAME, $company, "<br>",
+            echo sprintf(_('%1$s copyright &copy; %2$s All rights reserved.<br />'
+                . 'Maintained and distributed under the %3$s by %4$s'), 
+            PRODUCT_NAME, $company,
             $licenseSiteAnchor,
             $companySiteAnchor);
         ?> 

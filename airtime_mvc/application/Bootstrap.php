@@ -12,11 +12,13 @@ require_once 'Preference.php';
 require_once 'Locale.php';
 require_once "DateHelper.php";
 require_once "LocaleHelper.php";
+require_once "HTTPHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
 require_once "Timezone.php";
 require_once "Auth.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
+require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 require_once __DIR__.'/controllers/plugins/Maintenance.php';
 require_once __DIR__.'/modules/rest/controllers/ShowController.php';
@@ -158,8 +160,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/playlist-preview') === false
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/block-preview') === false) {
                 if (Application_Model_Preference::GetLiveChatEnabled()) {
-                    $client_id = Application_Model_Preference::GetClientId();
-                    $view->headScript()->appendScript("var livechat_client_id = '$client_id';");
+                    $client_id = strval(Application_Model_Preference::GetClientId());
+                    $plan_level = strval(Application_Model_Preference::GetPlanLevel());
+                    $station_url = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+                    $view->headScript()->appendScript("var livechat_client_id = '$client_id';\n".
+                                                      "var livechat_plan_type = '$plan_level';\n".
+                                                      "var livechat_station_url = 'http://$station_url';");
                     $view->headScript()->appendFile($baseUrl . 'js/airtime/common/livechat.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');  
                 }
             }          

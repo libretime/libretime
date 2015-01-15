@@ -1,6 +1,0 @@
-?package(airtime):\
-  needs="X11"\
-  section="Applications/Sound"\
-  title="Airtime"\
-  command="/usr/bin/airtime-launch-browser"\
-  icon="/usr/share/pixmaps/airtime.xpm"

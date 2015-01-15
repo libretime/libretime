@@ -11,17 +11,19 @@ class CORSHelper
         $response = $response->setHeader('Access-Control-Allow-Origin', '*');
         $origin = $request->getHeader('Origin');
         if ((!(preg_match("/https?:\/\/localhost/", $origin) === 1)) && ($origin != "") &&
-        (!in_array($origin,
-                array("http://www.airtime.pro",
-                        "https://www.airtime.pro",
-                        "https://account.sourcefabric.com",
-                        "http://" . $_SERVER['SERVER_NAME'],
-                        "https://" . $_SERVER['SERVER_NAME']
-                ))
-        ))
+            (!in_array($origin, self::getAllowedOrigins())))
         {
             //Don't allow CORS from other domains to prevent XSS.
             throw new Zend_Controller_Action_Exception('Forbidden', 403);
         }
+    }
+
+    public static function getAllowedOrigins()
+    {
+        return array("http://www.airtime.pro",
+                        "https://www.airtime.pro",
+                        "https://account.sourcefabric.com",
+                        "http://" . $_SERVER['SERVER_NAME'],
+                        "https://" . $_SERVER['SERVER_NAME']);
     }
 }
