@@ -1,4 +1,8 @@
 <?php
+    $tempConfigPath = "/etc/airtime/airtime.conf.tmp";
+    if (file_exists($tempConfigPath)) {
+        rename($tempConfigPath, "/etc/airtime/airtime.conf.bak");
+    }
 ?>
 
 <form action="#" role="form" id="finishSettingsForm">

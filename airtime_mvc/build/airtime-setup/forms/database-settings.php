@@ -1,4 +1,9 @@
 <?php
+    $tempConfigPath = "/etc/airtime/airtime.conf.tmp";
+    if (file_exists($tempConfigPath)) {
+        $airtimeConfig = parse_ini_file($tempConfigPath, true);
+        $db = $airtimeConfig["database"];
+    }
 ?>
 
 <form action="#" role="form" id="dbSettingsForm">
@@ -10,22 +15,26 @@
     </p>
     <div class="form-group">
         <label class="control-label" for="dbUser">Username</label>
-        <input required class="form-control" type="text" name="dbUser" id="dbUser" placeholder="Username" value="airtime"/>
+        <input required class="form-control" type="text" name="dbUser" id="dbUser" placeholder="Username" 
+            value=<?php echo (isset($db) ? $db["dbuser"] : "airtime"); ?>/>
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
     <div class="form-group">
         <label class="control-label" for="dbPass">Password</label>
-        <input required class="form-control" type="password" name="dbPass" id="dbPass" placeholder="Password" value="airtime"/>
+        <input required class="form-control" type="password" name="dbPass" id="dbPass" placeholder="Password" 
+            value=<?php echo (isset($db) ? $db["dbpass"] : "airtime"); ?>/>
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
     <div class="form-group">
         <label class="control-label" for="dbName">Name</label>
-        <input required class="form-control" type="text" name="dbName" id="dbName" placeholder="Name" value="airtime"/>
+        <input required class="form-control" type="text" name="dbName" id="dbName" placeholder="Name" 
+            value=<?php echo (isset($db) ? $db["dbname"] : "airtime"); ?>/>
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
     <div class="form-group">
         <label class="control-label" for="dbHost">Host</label>
-        <input required class="form-control" type="text" name="dbHost" id="dbHost" placeholder="Host" value="localhost"/>
+        <input required class="form-control" type="text" name="dbHost" id="dbHost" placeholder="Host" 
+            value=<?php echo (isset($db) ? $db["host"] : "localhost"); ?>/>
         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
     </div>
     <input class="form-control" type="hidden" name="dbErr" id="dbErr" aria-describedby="helpBlock"/>
