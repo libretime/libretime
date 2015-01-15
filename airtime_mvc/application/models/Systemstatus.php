@@ -6,15 +6,15 @@ class Application_Model_Systemstatus
     public static function GetMonitStatus($p_ip)
     {
         $CC_CONFIG = Config::getConfig();
-        $monit_user = $CC_CONFIG['monit_user'];
-        $monit_password = $CC_CONFIG['monit_password'];
+//         $monit_user = $CC_CONFIG['monit_user'];
+//         $monit_password = $CC_CONFIG['monit_password'];
 
         $url = "http://$p_ip:2812/_status?format=xml";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_USERPWD, "$monit_user:$monit_password");
+//         curl_setopt($ch, CURLOPT_USERPWD, "$monit_user:$monit_password");
         //wait a max of 3 seconds before aborting connection attempt
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 3);
         $result = curl_exec($ch);

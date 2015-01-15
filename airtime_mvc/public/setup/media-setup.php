@@ -15,7 +15,7 @@ require_once(dirname(dirname( __DIR__)) . "/application/models/airtime/om/BaseCc
 require_once(dirname(dirname( __DIR__)) . "/application/models/airtime/CcMusicDirsPeer.php");
 
 /**
- * User: sourcefabric
+ * Author: sourcefabric
  * Date: 08/12/14
  *
  * Class MediaSetup
@@ -64,6 +64,15 @@ class MediaSetup extends Setup {
             if (!$this->moveAirtimeConfig()) {
                 $message = "Error moving airtime.conf or deleting /tmp/airtime.conf.temp!";
                 $errors[] = "ERR";
+            }
+            
+            /* 
+             * If we're upgrading from an old Airtime instance (pre-2.5.2) we rename their old 
+             * airtime.conf to airtime.conf.tmp during the setup process. Now that we're done,
+             * we can rename it to airtime.conf.bak to avoid confusion.
+             */
+            if (file_exists(self::AIRTIME_CONF_PATH . ".tmp")) {
+                rename(self::AIRTIME_CONF_PATH . ".tmp", self::AIRTIME_CONF_PATH . ".bak");
             }
         } else {
             $message = "Failed to move airtime.conf; /etc/airtime doesn't exist!";

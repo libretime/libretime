@@ -406,6 +406,7 @@ verbose "...Done"
 for i in /etc/init/airtime*; do
     chmod 644 $i
     sed -i "s/WEB_USER/${web_user}/g" $i
+    mv $i ${i%.template}
 done
 
 initctl reload-configuration
@@ -414,18 +415,8 @@ if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
     loud "              * Installing Log Files *               "
     loud "-----------------------------------------------------"
-
-    verbose "\n * Creating /var/log/airtime..."
-    mkdir -p /var/log/airtime
-    mkdir -p /var/log/airtime/media-monitor
-    mkdir -p /var/log/airtime/pypo
-    mkdir -p /var/log/airtime/pypo-liquidsoap
     
     verbose "\n * Creating /var/tmp/airtime..."
-    mkdir -p /var/tmp/airtime/media-monitor
-    mkdir -p /var/tmp/airtime/pypo/cache/
-    mkdir -p /var/tmp/airtime/pypo/files/
-    mkdir -p /var/tmp/airtime/pypo/tmp/
     mkdir -p /var/tmp/airtime/show-recorder/
 
     verbose "\n * Copying logrotate files..."

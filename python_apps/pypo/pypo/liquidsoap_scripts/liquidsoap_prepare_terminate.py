@@ -3,9 +3,9 @@ import telnetlib
 import sys
 
 try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
-    LS_HOST = config['ls_host']
-    LS_PORT = config['ls_port']
+    config = ConfigObj('/etc/airtime/airtime.conf')
+    LS_HOST = config['pypo']['ls_host']
+    LS_PORT = config['pypo']['ls_port']
 
     tn = telnetlib.Telnet(LS_HOST, LS_PORT)
     tn.write("master_harbor.stop\n")
@@ -14,6 +14,6 @@ try:
     tn.read_all()
 
 except Exception, e:
-    print 'Error loading config file: %s' % e
+    print('Error loading config file: %s', e)
     sys.exit()
 

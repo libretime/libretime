@@ -38,9 +38,6 @@ class Config {
         
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
         
-        $CC_CONFIG['monit_user'] = $values['monit']['monit_user'];
-        $CC_CONFIG['monit_password'] = $values['monit']['monit_password'];
-        
 	    // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];
         $CC_CONFIG['dsn']['password'] = $values['database']['dbpass'];

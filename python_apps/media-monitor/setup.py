@@ -12,7 +12,20 @@ if '--no-init-script' in sys.argv:
     data_files = []
     sys.argv.remove('--no-init-script') # super hax
 else:
-    data_files = [('/etc/init', ['install/airtime-media-monitor.conf'])]
+    media_monitor_files = []
+    mm2_files = []
+    for root, dirnames, filenames in os.walk('media-monitor'):
+        for filename in filenames:
+            media_monitor_files.append(os.path.join(root, filename))
+    for root, dirnames, filenames in os.walk('media-monitor2'):
+        for filename in filenames:
+            mm2_files.append(os.path.join(root, filename))
+        
+    data_files = [
+                  ('/etc/init', ['install/airtime-media-monitor.conf.template']),
+                  ('/var/log/airtime/media-monitor', []),
+                  ('/var/tmp/airtime/media-monitor', []),
+                 ]
     print data_files
 
 setup(name='airtime-media-monitor',

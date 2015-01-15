@@ -18,7 +18,7 @@ if [ "$1" = "--enable" ]; then
 
     echo "Changing ownership to user $1"
     chmod -R a+rw /var/log/airtime/pypo
-    chmod a+r /etc/airtime/pypo.cfg
+    chmod a+r /etc/airtime/airtime.conf
     chown -Rv $user:$user /var/tmp/airtime/pypo/
     chmod -v a+r /etc/airtime/api_client.cfg
 elif [ "$1" = "--disable" ]; then
@@ -26,7 +26,7 @@ elif [ "$1" = "--disable" ]; then
     user="pypo"
 
     echo "Changing ownership to user $1"
-    chmod 644 /etc/airtime/pypo.cfg
+    chmod 644 /etc/airtime/airtime.conf
     chown -Rv $user:$user /var/tmp/airtime/pypo/
     chmod -v a+r /etc/airtime/api_client.cfg    
 

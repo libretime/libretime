@@ -52,14 +52,16 @@ FILES=(
      "/etc/init/airtime*"
      "/usr/bin/airtime*"
      "/etc/apache2/sites-available/airtime*"
-     "pip airtime-playout"
-     "pip airtime-media-monitor"
+     "/etc/apache2/sites-enabled/airtime*"
     )
 
 echo -e "The following files, directories, and services will be removed:\n"
 for i in ${FILES[*]}; do
     echo $i
 done
+echo "pip airtime-playout"
+echo "pip airtime-media-monitor"
+
 echo -e "\nIf your web root is not listed, you will need to manually remove it."
 
 echo -e "\nThis will *permanently* remove Airtime and all related files from your computer. \
@@ -84,19 +86,17 @@ if [ -f /etc/airtime/airtime.conf ]; then
     removeRabbitmqAirtimeSettings
 fi
 
-rm -rf /etc/airtime
-rm -rf /var/log/airtime/
-rm -rf /usr/lib/airtime/
+for i in ${FILES[*]}; do
+    rm -rf $i
+done
 
-rm -rf /usr/share/airtime
-
-rm -f /etc/init/airtime*
-rm -f /usr/bin/airtime*
-
-rm -f /etc/apache2/sites-enabled/airtime*
-rm -f /etc/apache2/sites-available/airtime*
-
-dropAirtimeDatabase
+echo -e "\Do you want to drop your current Airtime database? (Y/n): \c"
+read IN
+if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
+    echo -e "\nDropping Airtime database..."
+    dropAirtimeDatabase
+fi
 
 pip uninstall -y airtime-playout airtime-media-monitor
+service apache2 restart
 echo "...Done"

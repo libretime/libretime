@@ -34,7 +34,7 @@ def api_client(logger):
 
 # loading config file
 try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
+    config = ConfigObj('/etc/airtime/airtime.conf')
 except Exception, e:
     print ('Error loading config file: %s', e)
     sys.exit()
@@ -73,18 +73,18 @@ class ShowRecorder(Thread):
         filename = self.start_time
         filename = filename.replace(" ", "-")
 
-        if config["record_file_type"] in ["mp3", "ogg"]:
-            filetype = config["record_file_type"]
+        if config["pypo"]["record_file_type"] in ["mp3", "ogg"]:
+            filetype = config["pypo"]["record_file_type"]
         else:
             filetype = "ogg";
 
         joined_path = os.path.join(config["base_recorded_files"], filename)
         filepath = "%s.%s" % (joined_path, filetype)
 
-        br = config["record_bitrate"]
-        sr = config["record_samplerate"]
-        c  = config["record_channels"]
-        ss = config["record_sample_size"]
+        br = config["pypo"]["record_bitrate"]
+        sr = config["pypo"]["record_samplerate"]
+        c  = config["pypo"]["record_channels"]
+        ss = config["pypo"]["record_sample_size"]
 
         #-f:16,2,44100
         #-b:256

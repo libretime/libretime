@@ -12,7 +12,21 @@ if '--no-init-script' in sys.argv:
     data_files = []
     sys.argv.remove('--no-init-script') # super hax
 else:
-    data_files = [('/etc/init', ['install/airtime-playout.conf', 'install/airtime-liquidsoap.conf'])]
+    pypo_files = []
+    for root, dirnames, filenames in os.walk('pypo'):
+        for filename in filenames:
+            pypo_files.append(os.path.join(root, filename))
+        
+    data_files = [
+                  ('/etc/init', ['install/airtime-playout.conf.template']),
+                  ('/etc/init', ['install/airtime-liquidsoap.conf.template']),
+                  ('/var/log/airtime/pypo', []),
+                  ('/var/log/airtime/pypo/liquidsoap', []),
+                  ('/var/tmp/airtime/pypo', []),
+                  ('/var/tmp/airtime/pypo/cache', []),
+                  ('/var/tmp/airtime/pypo/files', []),
+                  ('/var/tmp/airtime/pypo/tmp', []),
+                 ]
     print data_files
 
 setup(name='airtime-playout',

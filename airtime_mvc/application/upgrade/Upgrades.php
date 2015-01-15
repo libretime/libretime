@@ -1,5 +1,32 @@
 <?php
 
+class UpgradeManager {
+
+    /**
+     * Run a given set of upgrades
+     * 
+     * @param array $upgraders the upgrades to perform
+     * @param string $dir the directory containing the upgrade sql
+     * @return boolean whether or not an upgrade was performed
+     */
+    public function runUpgrades($upgraders, $dir) {
+        $upgradePerformed;
+        
+        for($i = 0; $i < count($upgraders); $i++) {
+            $upgrader = $upgraders[$i];
+            if ($upgrader->checkIfUpgradeSupported()) {
+                // pass the given directory to the upgrades, since __DIR__ returns parent dir of file, not executor
+                $upgrader->upgrade($dir); // This will throw an exception if the upgrade fails.
+                $upgradePerformed = true;
+                $i = 0; // Start over, in case the upgrade handlers are not in ascending order.
+            }
+        }
+        
+        return $upgradePerformed;
+    }
+
+}
+
 abstract class AirtimeUpgrader
 {
     /** Versions that this upgrader class can upgrade from (an array of version strings). */

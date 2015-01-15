@@ -21,7 +21,7 @@ class AirtimeInstance(object):
     def root_make(cls, name, root):
         cfg = {
                 'api_client' : join(root, 'etc/airtime/api_client.cfg'),
-                'media_monitor' : join(root, 'etc/airtime/media-monitor.cfg'),
+                'media_monitor' : join(root, 'etc/airtime/airtime.conf'),
         }
         return cls(name, root, cfg)
 

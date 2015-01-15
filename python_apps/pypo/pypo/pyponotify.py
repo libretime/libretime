@@ -59,7 +59,7 @@ LogWriter.override_std_err(logger)
 
 # loading config file
 try:
-    config = ConfigObj('/etc/airtime/pypo.cfg')
+    config = ConfigObj('/etc/airtime/airtime.conf')
 
 except Exception, e:
     logger.error('Error loading config file: %s', e)

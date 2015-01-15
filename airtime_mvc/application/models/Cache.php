@@ -28,4 +28,10 @@ class Cache
 		//$cacheKey = self::createCacheKey($key, $isUserValue, $userId);
 		return false; //apc_fetch($cacheKey);
 	}
+	
+    public static function clear() {
+        // Disabled on SaaS
+        // apc_clear_cache('user');
+        // apc_clear_cache();
+    }
 }
