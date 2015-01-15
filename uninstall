@@ -31,8 +31,13 @@ EOF
 }
 
 removeRabbitmqAirtimeSettings() {
-    RMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' /etc/airtime/airtime.conf)
-    RMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' /etc/airtime/airtime.conf)
+    if [ -f /etc/airtime/airtime.conf ]; then
+        RMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' /etc/airtime/airtime.conf)
+        RMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' /etc/airtime/airtime.conf)
+    else
+        RMQ_VHOST=/airtime
+        RMQ_USER=airtime
+    fi
 
     rabbitmqctl delete_vhost ${RMQ_VHOST}
     rabbitmqctl delete_user ${RMQ_USER}
@@ -82,15 +87,13 @@ else
 fi
 
 echo -e "\nUninstalling Airtime..."
-if [ -f /etc/airtime/airtime.conf ]; then
-    removeRabbitmqAirtimeSettings
-fi
+removeRabbitmqAirtimeSettings
 
 for i in ${FILES[*]}; do
     rm -rf $i
 done
 
-echo -e "\Do you want to drop your current Airtime database? (Y/n): \c"
+echo -e "\nDo you want to drop your current Airtime database? (Y/n): \c"
 read IN
 if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
     echo -e "\nDropping Airtime database..."

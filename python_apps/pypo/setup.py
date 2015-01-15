@@ -21,7 +21,7 @@ else:
                   ('/etc/init', ['install/airtime-playout.conf.template']),
                   ('/etc/init', ['install/airtime-liquidsoap.conf.template']),
                   ('/var/log/airtime/pypo', []),
-                  ('/var/log/airtime/pypo/liquidsoap', []),
+                  ('/var/log/airtime/pypo-liquidsoap', []),
                   ('/var/tmp/airtime/pypo', []),
                   ('/var/tmp/airtime/pypo/cache', []),
                   ('/var/tmp/airtime/pypo/files', []),

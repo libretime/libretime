@@ -10,7 +10,7 @@
     <h3 class="form-title">Database Settings</h3>
     <span id="helpBlock" class="help-block help-message"></span>
     <p>
-        Enter your Airtime database settings here. Empty or non-existent database names will be created and populated 
+        Enter your Airtime database settings here. Empty or non-existent databases will be created and populated 
         if the given user has administrative permissions in postgres.
     </p>
     <div class="form-group">
