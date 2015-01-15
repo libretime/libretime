@@ -3,7 +3,7 @@
 =========================================================================
 
 Airtime is an open source application that provides remote and 
-collaborative automation of a broadcast station.
+collaborative automation of a broadcast radio station.
 
 Home page: http://www.sourcefabric.org/en/airtime/
 
@@ -61,9 +61,9 @@ There are several options for installation - to see them all, run
 
     sudo ./install --help
 
-2) Once you've run the installer, navigate to localhost/ (if you have a custom 
-apache configuration, navigate to your Airtime web host) to run an interactive 
-setup.
+2) Once you've run the installer, open a web browser to http://localhost to run 
+the interactive setup. (If you have a custom apache configuration, navigate to 
+your Airtime web host instead.) 
 
 If you just want to run Airtime with default settings, you won't need to change 
 anything, but if you have any custom configuration settings you'll be able to 
