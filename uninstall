@@ -30,6 +30,14 @@ dropAirtimeDatabase() {
 EOF
 }
 
+removeRabbitmqAirtimeSettings() {
+    RMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' /etc/airtime/airtime.conf)
+    RMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' /etc/airtime/airtime.conf)
+
+    rabbitmqctl delete_vhost ${RMQ_VHOST}
+    rabbitmqctl delete_user ${RMQ_USER}
+}
+
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 AIRTIMEROOT=${SCRIPT_DIR}
 
@@ -61,13 +69,19 @@ if [[ ! ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
     exit 0
 fi
 
-echo -e "\nAre you sure you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? (Y/n): \c"
-read IN
-if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
-    rm -rf ${STOR_DIR}
+if [ -n ${STOR_DIR} ]; then
+    echo -e "\nAre you sure you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? (Y/n): \c"
+    read IN
+    if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
+        rm -rf ${STOR_DIR}
+    fi
+else
+    echo -e "\nNo stor directory found, skipping..."
 fi
 
-echo "Uninstalling Airtime..."
+echo -e "\nUninstalling Airtime..."
+removeRabbitmqAirtimeSettings
+
 rm -rf /etc/airtime
 rm -rf /var/log/airtime/
 rm -rf /usr/lib/airtime/

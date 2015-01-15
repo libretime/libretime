@@ -497,9 +497,9 @@ loud "-----------------------------------------------------"
 
 loudCmd "apt-get -y --force-yes install rabbitmq-server"
 
-RABBITMQ_VHOST=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^vhost/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
-RABBITMQ_USER=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^user/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
-RABBITMQ_PASSWORD=$(awk -F ' = ' '{if (! ($0 ~ /^;/) && $0 ~ /^password/ ) print $2}' ${AIRTIMEROOT}/airtime_mvc/build/airtime.example.conf)
+RABBITMQ_VHOST=/airtime
+RABBITMQ_USER=airtime
+RABBITMQ_PASSWORD=airtime
 EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
 # Ignore errors in this check to avoid dying when vhost isn't found
