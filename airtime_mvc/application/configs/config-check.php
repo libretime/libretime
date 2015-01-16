@@ -28,6 +28,25 @@ $result = $r1 && $r2;
         <link rel="stylesheet" type="text/css" href="css/bootstrap-3.3.1.min.css">
         <link rel="stylesheet" type="text/css" href="css/setup/config-check.css">
     </head>
+    <style>
+        /* 
+            This is here because we're using the config-check css for 
+            both this page and the system status page
+         */
+        html {
+            background-color: #f5f5f5;
+        }
+        
+        body {
+            padding: 2em 0;
+            min-width: 600px;
+            width: 50%;
+            text-align: center;
+            margin: 3em auto;
+            border: 1px solid lightgray;
+            border-radius: 5em;
+        }
+    </style>
 
     <body>
         <h2>

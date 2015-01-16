@@ -16,6 +16,11 @@ function showConfigCheckPage() {
     die();
 }
 
+function isApiCall() {
+    $path = $_SERVER['PHP_SELF'];
+    return strpos($path, "api") !== false;
+}
+
 // Define application path constants
 define('ROOT_PATH', dirname( __DIR__) . '/');
 define('LIB_PATH', ROOT_PATH . 'library/');
@@ -40,20 +45,6 @@ if (array_key_exists('config', $_GET)) {
 
 // If a configuration file exists, forward to our boot script
 if (file_exists(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG)) {
-    /*
-     * Even if the user has been through the setup process and
-     * created an airtime.conf file (or they may have simply
-     * copied the example file) their settings aren't necessarily
-     * correctly configured.
-     *
-     * If something is improperly configured, show the user a
-     * configuration checklist page so they know what went wrong
-     */
-    if (!checkConfiguration()) {
-        $configRun = true;
-        showConfigCheckPage();
-    }
-
     require_once(APPLICATION_PATH . 'airtime-boot.php');
 }
 // Otherwise, we'll need to run our configuration setup
