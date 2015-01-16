@@ -80,10 +80,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     
     protected function _initUpgrade() {
         if (AIRTIME_CODE_VERSION > Application_Model_Preference::GetAirtimeVersion()) {
-            // This line is actually fairly important (incidentally) because it 
-            // instantiates the logger singleton, which in turn decides the Airtime PHP error policy, 
-            // otherwise we would trip up on the '#' characters in airtime.conf
-            Logging::info("Checking if upgrade is needed...");
             $upgradeManager = new UpgradeManager();
             $upgradeManager->runUpgrades(array(new AirtimeUpgrader252()), (__DIR__ . "/controllers"));
         }
