@@ -6,10 +6,10 @@
     <span id="helpBlock" class="help-block help-message"></span>
     <p>
         Looks like you're almost done! As a final step, run the following commands from the terminal:
-        <br/><code>sudo service airtime-playout start</code>
-        <br/><code>sudo service airtime-liquidsoap start</code>
-        <br/><code>sudo service airtime-media-monitor start</code>
     </p>
+    <pre style="text-align: left">sudo service airtime-playout start
+sudo service airtime-liquidsoap start
+sudo service airtime-media-monitor start</pre>
     <p>
         Click "Done!" to bring up the Airtime configuration checklist; if your configuration is all green, 
         you're ready to get started with your personal Airtime station!

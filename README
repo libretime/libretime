@@ -24,12 +24,6 @@ Major features:
 INSTALLATION
 ------------
 
-Please see this chapter to begin a typical installation:
-http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/preparing-the-server/
-
-If you are a developer, please see this page:
-http://wiki.sourcefabric.org/display/CC/Airtime+Dev+Site
-
 Basic installation has two steps:
 
 1) Run the install script, located in the Airtime root directory.
@@ -41,7 +35,7 @@ For an interactive installation, run:
 The installer will then prompt you about how you want to set up your Airtime 
 installation.
 
-For a simple full installation (do this if you're installing Airtime from 
+For a non-interactive full installation (do this if you're installing Airtime from 
 scratch and don't have any of your own configuration set up), run
 
     sudo ./install -fiapd
@@ -83,4 +77,3 @@ Forums and mailing lists: http://forum.sourcefabric.org
 Bug tracker: http://dev.sourcefabric.org
 Source code: http://github.com/sourcefabric/Airtime
 IRC chat: #airtime on Freenode
-
