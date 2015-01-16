@@ -251,9 +251,12 @@ will be moved to /etc/airtime/airtime.conf.tmp"
         # /etc/init.d startup scripts, services won't work properly
         rm -rf /usr/lib/airtime/
         rm /etc/init.d/airtime-*
-        # If the user selects an "in-place" install or passes in a web root, 
-        # we need to replace the old apache airtime.conf
-        rm /etc/apache2/sites-available/airtime.conf
+    
+        if [ "$apache" = "t" ]; then
+            # If the user selects an "in-place" install or passes in a web root, 
+            # we need to replace the old apache airtime.conf
+            rm /etc/apache2/sites-available/airtime.conf
+        fi
         
         if [ -d /usr/share/airtime -a web_root = /usr/share/airtime ]; then
             rm -rf /usr/share/airtime
