@@ -39,6 +39,9 @@
     </div>
     <input class="form-control" type="hidden" name="dbErr" id="dbErr" aria-describedby="helpBlock"/>
     <div>
+        <p style="text-align:right">
+            This may take up to 30 seconds to complete!
+        </p>
         <input type="submit" formtarget="dbSettingsForm" class="btn btn-primary btn-next" value="Next &#10097;"/>
     </div>
 </form>
