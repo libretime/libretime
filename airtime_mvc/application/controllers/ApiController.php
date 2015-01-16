@@ -5,8 +5,17 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
-        $ignoreAuth = array("live-info", "live-info-v2", "week-info", 
-                    "station-metadata", "station-logo");
+        $ignoreAuth = array("live-info", 
+            "live-info-v2", 
+            "week-info", 
+            "station-metadata", 
+            "station-logo",
+            "show-history-feed", 
+            "item-history-feed",
+            "shows",
+            "show-tracks",
+            "show-schedules"
+        );
 
         $params = $this->getRequest()->getParams();
         if (!in_array($params['action'], $ignoreAuth)) {
@@ -274,10 +283,10 @@ class ApiController extends Zend_Controller_Action
                 $utcTimeEnd = $end->format("Y-m-d H:i:s");
                 
                 $result = array(
-                        "env" => APPLICATION_ENV,
-                        "schedulerTime" => $utcTimeNow,
-                        "currentShow" => Application_Model_Show::getCurrentShow($utcTimeNow),
-                        "nextShow" => Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
+                    "env" => APPLICATION_ENV,
+                    "schedulerTime" => $utcTimeNow,
+                    "currentShow" => Application_Model_Show::getCurrentShow($utcTimeNow),
+                    "nextShow" => Application_Model_Show::getNextShows($utcTimeNow, $limit, $utcTimeEnd)
                 );
             } else {
                 $result = Application_Model_Schedule::GetPlayOrderRangeOld($limit);
@@ -484,9 +493,9 @@ class ApiController extends Zend_Controller_Action
                     $shows,
                     array("starts", "ends", "start_timestamp","end_timestamp"),
                     $timezone
-                  );
+                );
 
-                  $result[$dow[$i]] = $shows;
+                $result[$dow[$i]] = $shows;
             }
 
             // XSS exploit prevention
@@ -1320,4 +1329,175 @@ class ApiController extends Zend_Controller_Action
             Application_Model_StreamSetting::SetListenerStatError($k, $v);
         }
     }
+
+    /**
+     * display played items for a given time range and show instance_id
+     *
+     * @return json array
+     */
+    public function itemHistoryFeedAction()
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $instance = $request->getParam("instance_id", null);
+
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+
+            $historyService = new Application_Service_HistoryService();
+            $results = $historyService->getPlayedItemData($startsDT, $endsDT, $params, $instance);
+
+            $this->_helper->json->sendJson($results['history']);
+    }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+    }
+
+    /**
+     * display show schedules for a given time range and show instance_id
+     *
+     * @return json array
+     */
+    public function showHistoryFeedAction()
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $userId = $request->getParam("user_id", null);
+ 
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+            
+            $historyService = new Application_Service_HistoryService();
+            $shows = $historyService->getShowList($startsDT, $endsDT, $userId);
+
+            $this->_helper->json->sendJson($shows);
+        }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+    }
+
+    /**
+     * display show info (without schedule) for given show_id
+     *
+     * @return json array
+     */
+    public function showsAction()
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $showId = $request->getParam("show_id", null);
+            $results = array();
+ 
+            if (empty($showId)) {            
+                $shows = CcShowQuery::create()->find();
+                foreach($shows as $show) {
+                    $results[] = $show->getShowInfo();
+                }
+            } else {
+                $show = CcShowQuery::create()->findPK($showId);
+                $results[] = $show->getShowInfo();
+            }
+
+            $this->_helper->json->sendJson($results);
+        }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+    }
+   
+    /**
+     * display show schedule for given show_id
+     *
+     * @return json array
+     */
+    public function showSchedulesAction() 
+    {
+        try {
+            $request = $this->getRequest();
+            $params = $request->getParams();
+            $showId = $request->getParam("show_id", null);
+ 
+            list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($request);
+
+            if ((!isset($showId)) || (!is_numeric($showId))) {
+            //if (!isset($showId)) {
+                $this->_helper->json->sendJson(
+                    array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing invalid type for required show_id parameter. use type int.".$showId))
+                );
+            }
+            
+            $shows = Application_Model_Show::getShows($startsDT, $endsDT, FALSE, $showId);
+
+            // is this a valid show?
+            if (empty($shows)) {
+                $this->_helper->json->sendJson(
+                    array("jsonrpc" => "2.0", "error" => array("code" => 204, "message" => "no content for requested show_id"))
+                );
+            }
+
+            $this->_helper->json->sendJson($shows);
+        }
+        catch (Exception $e) {
+            Logging::info($e);
+            Logging::info($e->getMessage());
+        }
+
+    }
+    
+    /**
+     * displays track listing for given instance_id
+     *
+     * @return json array
+     */
+    public function showTracksAction()
+    {
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $prefTimezone = Application_Model_Preference::GetTimezone();
+
+        $instanceId = $this->_getParam('instance_id');
+
+        if ((!isset($instanceId)) || (!is_numeric($instanceId))) {
+            $this->_helper->json->sendJson(
+                array("jsonrpc" => "2.0", "error" => array("code" => 400, "message" => "missing invalid type for required instance_id parameter. use type int"))
+            );
+        }
+
+        $showInstance = new Application_Model_ShowInstance($instanceId);
+        $showInstanceContent = $showInstance->getShowListContent($prefTimezone);
+        
+        // is this a valid show instance with content?
+        if (empty($showInstanceContent)) {
+            $this->_helper->json->sendJson(
+                array("jsonrpc" => "2.0", "error" => array("code" => 204, "message" => "no content for requested instance_id"))
+            );
+        }
+
+        $result = array();
+        $position = 0;
+        foreach ($showInstanceContent as $track) {
+
+            $elementMap = array(
+                'title' => isset($track['track_title']) ? $track['track_title'] : "",
+                'artist' => isset($track['creator']) ? $track['creator'] : "",
+                'position' => $position,
+                'id' => ++$position,
+                'mime' => isset($track['mime'])?$track['mime']:"",
+                'starts' => isset($track['starts']) ? $track['starts'] : "",
+                'length' => isset($track['length']) ? $track['length'] : "",
+                'file_id' => ($track['type'] == 0) ? $track['item_id'] :  $track['filepath']
+            );
+
+            $result[] = $elementMap;
+        }
+
+        $this->_helper->json($result);
+
+    }
+    
 }

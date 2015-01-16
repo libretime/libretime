@@ -1,138 +1,23 @@
 <fieldset class="padded">
     <dl class="zend_form">
-        <dt id="stationName-label" class="block-display">
-            <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>:
-            </label>
-        </dt>
-        <dd id="stationName-element" class="block-display">
-            <?php echo $this->element->getElement('stationName') ?>
-            <?php if($this->element->getElement('stationName')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('stationName')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="stationDefaultFadeIn-label" class="block-display">
-            <label class="optional" for="stationDefaultFadeIn"><?php echo $this->element->getElement('stationDefaultFadeIn')->getLabel() ?></label>
-        </dt>
-        <dd id="stationDefaultFadeIn-element" class="block-display">
-            <?php echo $this->element->getElement('stationDefaultFadeIn') ?>
-            <?php if($this->element->getElement('stationDefaultFadeIn')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('stationDefaultFadeIn')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="stationDefaultFadeOut-label" class="block-display">
-            <label class="optional" for="stationDefaultFadeOut"><?php echo $this->element->getElement('stationDefaultFadeOut')->getLabel() ?></label>
-        </dt>
-        <dd id="stationDefaultFadeOut-element" class="block-display">
-            <?php echo $this->element->getElement('stationDefaultFadeOut') ?>
-            <?php if($this->element->getElement('stationDefaultFadeOut')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('stationDefaultFadeOut')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="stationDefaultCrossfadeDuration-label" class="block-display">
-            <label class="optional" for="stationDefaultCrossfadeDuration"><?php echo $this->element->getElement('stationDefaultCrossfadeDuration')->getLabel() ?></label>
-        </dt>
-        <dd id="stationDefaultCrossfadeDuration-element" class="block-display">
-            <?php echo $this->element->getElement('stationDefaultCrossfadeDuration') ?>
-            <?php if($this->element->getElement('stationDefaultCrossfadeDuration')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('stationDefaultCrossfadeDuration')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="thirdPartyApi-label" class="block-display">
-            <label class="optional"><?php echo $this->element->getElement('thirdPartyApi')->getLabel() ?></label>
-        </dt>
-        <dd id="thirdPartyApi-element" class="block-display  radio-inline-list">
-            <?php $i=0;
-                  $value = $this->element->getElement('thirdPartyApi')->getValue();
-            ?>
-            <?php foreach ($this->element->getElement('thirdPartyApi')->getMultiOptions() as $radio) : ?>
-                <label for="thirdPartyApi-<?php echo $i ?>">
-                    <input type="radio" value="<?php echo $i ?>" id="thirdPartyApi-<?php echo $i ?>" name="thirdPartyApi" <?php if($i == $value){echo 'checked="checked"';}?>>
-                        <?php echo $radio ?>
-                    </input>
-                </label>
-            <?php $i = $i + 1; ?>
-            <?php endforeach; ?>
-            <?php if($this->element->getElement('thirdPartyApi')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('thirdPartyApi')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
 
-        <dt id="locale-label" class="block-display">
-            <label class="required" for="locale"><?php echo $this->element->getElement('locale')->getLabel() ?>:
-            </label>
-        </dt>
-        <dd id="locale-element" class="block-display">
-            <?php echo $this->element->getElement('locale') ?>
-            <?php if($this->element->getElement('locale')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('locale')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
+        <?php echo $this->element->getElement('stationName')->render() ?>
 
-        <dt id="timezone-label" class="block-display">
-            <label class="required" for="timezone"><?php echo $this->element->getElement('timezone')->getLabel() ?>:
-                <span class="info-text-small"><?php _("(Required)") ?></span>
-            </label>
-        </dt>
-        <dd id="timezone-element" class="block-display">
-            <?php echo $this->element->getElement('timezone') ?>
-            <?php if($this->element->getElement('timezone')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('timezone')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
+        <?php echo $this->element->getElement('stationDescription')->render() ?>
 
-        <!-- Week Start Day option -->
-        <dt id="weekStartDay-label" class="block-display">
-            <label class="required" for="timezone"><?php echo $this->element->getElement('weekStartDay')->getLabel() ?>:
-            </label>
-        </dt>
-        <dd id="weekStartDay-element" class="block-display">
-            <?php $i=0;
-                  $value = $this->element->getElement('weekStartDay')->getValue();
-            ?>
-            <select id="weekStartDay" name="weekStartDay">
-            <?php foreach ($this->element->getElement('weekStartDay')->getMultiOptions() as $option) : ?>
-                <option value="<?php echo $i ?>" <?php if($i == $value){echo 'selected="selected"';}?> >
-                        <?php echo $option ?>
-                </option>
-                <?php $i = $i + 1; ?>
-            <?php endforeach; ?>
-            </select>
+        <?php echo $this->element->getElement('locale')->render() ?>
 
-            <?php if($this->element->getElement('weekStartDay')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('weekStartDay')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
+        <?php echo $this->element->getElement('timezone')->render() ?>
+
+        <?php echo $this->element->getElement('weekStartDay')->render() ?>
+
+        <?php echo $this->element->getElement('stationDefaultFadeIn')->render() ?>
+
+        <?php echo $this->element->getElement('stationDefaultFadeOut')->render() ?>
+
+        <?php echo $this->element->getElement('stationDefaultCrossfadeDuration')->render() ?>
+
+        <?php echo $this->element->getElement('thirdPartyApi')->render() ?>
+
     </dl>
 </fieldset>

@@ -862,9 +862,11 @@ SQL;
      *      In UTC time.
      * @param  unknown_type $excludeInstance
      * @param  boolean      $onlyRecord
+     * @param  int          $showId
+     *      limits the results to instances of a given showId only
      * @return array
      */
-    public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE)
+    public static function getShows($start_timestamp, $end_timestamp, $onlyRecord=FALSE, $showId=null)
     {
         self::createAndFillShowInstancesPastPopulatedUntilDate($end_timestamp);
 
@@ -895,13 +897,21 @@ SQL;
         //only want shows that are starting at the time or later.
         $start_string = $start_timestamp->format("Y-m-d H:i:s");
         $end_string = $end_timestamp->format("Y-m-d H:i:s");
+
+        $params = array();
+
+        if ($showId) {
+            $sql .= " AND (si1.show_id = :show_id)";
+            $params[':show_id'] = $showId; 
+        }
+
         if ($onlyRecord) {
             $sql .= " AND (si1.starts >= :start::TIMESTAMP AND si1.starts < :end::TIMESTAMP)";
             $sql .= " AND (si1.record = 1)";
 
-            return Application_Common_Database::prepareAndExecute( $sql,
-                array( ':start' => $start_string,
-                       ':end'   => $end_string ), 'all');
+            $params[':start'] = $start_string;
+            $params[':end'] = $end_string;
+            return Application_Common_Database::prepareAndExecute( $sql, $params, 'all');
 
         } else {
             $sql .= " ". <<<SQL
@@ -910,15 +920,16 @@ AND ((si1.starts >= :start1::TIMESTAMP AND si1.starts < :end1::TIMESTAMP)
      OR (si1.starts <= :start3::TIMESTAMP AND si1.ends >= :end3::TIMESTAMP))
 ORDER BY si1.starts
 SQL;
-            return Application_Common_Database::prepareAndExecute( $sql,
-                array(
+            $params = array_merge($params, array(
                     'start1' => $start_string,
                     'start2' => $start_string,
                     'start3' => $start_string,
                     'end1'   => $end_string,
                     'end2'   => $end_string,
                     'end3'   => $end_string
-                ), 'all');
+                )
+            );
+            return Application_Common_Database::prepareAndExecute( $sql, $params, 'all');
         }
     }
 
@@ -1013,10 +1024,10 @@ SQL;
             
             //for putting the now playing icon on the show.
             if ($now > $startsDT && $now < $endsDT) {
-            	$event["nowPlaying"] = true;
+                $event["nowPlaying"] = true;
             }
             else {
-            	$event["nowPlaying"] = false;
+                $event["nowPlaying"] = false;
             }
 
             //event colouring
@@ -1045,9 +1056,9 @@ SQL;
      **/
     private static function getPercentScheduled($p_starts, $p_ends, $p_time_filled)
     {
-    	$utcTimezone = new DatetimeZone("UTC");
-    	$startDt = new DateTime($p_starts, $utcTimezone);
-    	$endDt = new DateTime($p_ends, $utcTimezone);
+        $utcTimezone = new DatetimeZone("UTC");
+        $startDt = new DateTime($p_starts, $utcTimezone);
+        $endDt = new DateTime($p_ends, $utcTimezone);
         $durationSeconds = intval($endDt->format("U")) - intval($startDt->format("U"));
         $time_filled = Application_Common_DateHelper::playlistTimeToSeconds($p_time_filled);
         if ($durationSeconds != 0) { //Prevent division by zero if the show duration somehow becomes zero.
@@ -1272,6 +1283,7 @@ SQL;
                             "starts"                  => $rows[$i-1]['starts'],
                             "ends"                    => $rows[$i-1]['ends'],
                             "record"                  => $rows[$i-1]['record'],
+                            "image_path"              => $rows[$i-1]['image_path'],
                             "type"                   => "show");
                 }
     
@@ -1289,6 +1301,7 @@ SQL;
                             "starts"                  => $rows[$i+1]['starts'],
                             "ends"                    => $rows[$i+1]['ends'],
                             "record"                  => $rows[$i+1]['record'],
+                            "image_path"              => $rows[$i+1]['image_path'],
                             "type"                    => "show");
                 }
                 break;
@@ -1302,15 +1315,16 @@ SQL;
                 $results['nextShow'][0] = array(
                         "id"                      => $rows[$i]['id'],
                         "instance_id"             => $rows[$i]['instance_id'],
-                                    "name"                    => $rows[$i]['name'],
+                        "name"                    => $rows[$i]['name'],
                         "description"             => $rows[$i]['description'],
-                                    "url"                     => $rows[$i]['url'],
+                        "url"                     => $rows[$i]['url'],
                         "start_timestamp"         => $rows[$i]['start_timestamp'],
                         "end_timestamp"           => $rows[$i]['end_timestamp'],
                         "starts"                  => $rows[$i]['starts'],
                         "ends"                    => $rows[$i]['ends'],
                         "record"                 => $rows[$i]['record'],
-                                    "type"                   => "show");
+                        "image_path"             => $rows[$i]['image_path'],
+                        "type"                   => "show");
                 break;
             }
         }
@@ -1443,4 +1457,5 @@ SQL;
 
         return array($start, $end);
     }
+
 }

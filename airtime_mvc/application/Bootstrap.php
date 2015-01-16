@@ -15,13 +15,15 @@ require_once CONFIG_PATH . "constants.php";
 require_once 'Preference.php';
 require_once 'Locale.php';
 require_once "DateHelper.php";
+require_once "HTTPHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
 require_once "Timezone.php";
 require_once "Auth.php";
-require_once __DIR__ . '/forms/helpers/ValidationTypes.php';
-require_once __DIR__ . '/controllers/plugins/RabbitMqPlugin.php';
-require_once __DIR__ . '/upgrade/Upgrades.php';
+require_once __DIR__.'/forms/helpers/ValidationTypes.php';
+require_once __DIR__.'/forms/helpers/CustomDecorators.php';
+require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
+require_once __DIR__.'/upgrade/Upgrades.php';
 
 require_once (APPLICATION_PATH . "logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
