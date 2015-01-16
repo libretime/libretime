@@ -1,6 +1,7 @@
 <?php
 
 require_once 'StorageBackend.php';
+require_once 'BillingController.php';
 
 use Aws\S3\S3Client;
 
@@ -67,7 +68,14 @@ class Amazon_S3 extends StorageBackend
     {
         $this->s3Client->deleteMatchingObjects(
             $bucket = $this->getBucket(),
-            $prefix = Application_Model_Preference::GetStationName());
+            $prefix = self::getAmazonS3FilePrefix());
 
+    }
+    
+    public static function getAmazonS3FilePrefix()
+    {
+        $clientCurrentAirtimeProduct = BillingController::getClientCurrentAirtimeProduct();
+        $hostingId = $clientCurrentAirtimeProduct["id"];
+        return substr($hostingId, -2)."/".$hostingId;
     }
 }

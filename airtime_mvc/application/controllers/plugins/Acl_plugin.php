@@ -118,7 +118,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             return;
         }
 
-        if (in_array($controller, array("api", "auth", "locale", "upgrade", 'whmcs-login'))) {
+        if (in_array($controller, array("api", "auth", "locale", "upgrade", 'whmcs-login', "provisioning"))) {
             $this->setRoleName("G");
         } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
 

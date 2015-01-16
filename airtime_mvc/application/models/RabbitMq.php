@@ -1,6 +1,6 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
-require_once 'BillingController.php';
+require_once 'Amazon_S3.php';
 
 class Application_Model_RabbitMq
 {
@@ -118,9 +118,7 @@ class Application_Model_RabbitMq
         // customer's file/s; File restoration is done via the S3 Browser
         // client. The client will hang if there are too many files under the
         // same folder.
-        $clientCurrentAirtimeProduct = BillingController::getClientCurrentAirtimeProduct();
-        $hostingId = $clientCurrentAirtimeProduct["id"];
-        $data['file_prefix'] = substr($hostingId, -2)."/".$hostingId;
+        $data['file_prefix'] = Amazon_S3::getAmazonS3FilePrefix();
         
         $jsonData = json_encode($data);
         //self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');

@@ -28,14 +28,6 @@ class ProvisioningController extends Zend_Controller_Action
             $proxyStorageBackend->deleteAllCloudFileObjects();
         }
         
-        //check at to make sure cloud_file table is empty
-        if (CloudFileQuery::create()->count() > 0) {
-            $this->getResponse()
-                ->setHttpResponseCode(400)
-                ->appendBody("ERROR: Not all cloud files were deleted.");
-            return;
-        }
-        
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->appendBody("OK");
