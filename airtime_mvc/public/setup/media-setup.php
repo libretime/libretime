@@ -91,7 +91,7 @@ class MediaSetup extends Setup {
      */
     function moveAirtimeConfig() {
         return copy(AIRTIME_CONF_TEMP_PATH, self::AIRTIME_CONF_PATH)
-        && unlink(AIRTIME_CONF_TEMP_PATH);
+            && unlink(AIRTIME_CONF_TEMP_PATH);
     }
 
     /**

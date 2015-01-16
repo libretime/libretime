@@ -240,9 +240,9 @@ if [ -f /etc/airtime/airtime.conf ]; then
     if [ -n "${OLD_CONF}" ]; then
         set +e
         verbose "Stopping airtime services..."
-        service airtime-playout stop-with-monit
-        service airtime-media-monitor stop-with-monit
-        service airtime-liquidsoap stop-with-monit
+        loudCmd "service airtime-playout stop-with-monit"
+        loudCmd "service airtime-media-monitor stop-with-monit"
+        loudCmd "service airtime-liquidsoap stop-with-monit"
         verbose "...Done"
         
         echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
@@ -284,7 +284,7 @@ returncode=$?
 set -e
 if [ "$returncode" != "0" ]; then
     echo "deb http://apt.sourcefabric.org/ $code main" >> /etc/apt/sources.list
-    apt-get update
+    loudCmd "apt-get update"
 fi
 verbose "...Done"
 
@@ -387,7 +387,7 @@ cp -R ${AIRTIMEROOT}/python_apps/media-monitor/media-monitor2 /usr/lib/airtime/m
 verbose "...Done"
 
 verbose "\n * Installing media-monitor..."
-python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install
+loudCmd "python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install"
 verbose "...Done"
 
 verbose "\n * Copying pypo files..."
@@ -396,20 +396,20 @@ cp -R ${AIRTIMEROOT}/python_apps/pypo/pypo /usr/lib/airtime/pypo/bin/
 verbose "...Done"
 
 verbose "\n * Installing pypo..."
-python ${AIRTIMEROOT}/python_apps/pypo/setup.py install
+loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install"
 verbose "...Done"
 
 verbose "\n * Creating liquidsoap symlink..."
 ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
 verbose "...Done"
 
-for i in /etc/init/airtime*; do
+for i in /etc/init/airtime*.template; do
     chmod 644 $i
     sed -i "s/WEB_USER/${web_user}/g" $i
     mv $i ${i%.template}
 done
 
-initctl reload-configuration
+loudCmd "initctl reload-configuration"
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
@@ -553,13 +553,13 @@ for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
             verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
         fi
     else
-        locale-gen "$i.utf8"
+        loudCmd "locale-gen \"$i.utf8\""
     fi
 done
 set -e
 
 if [ "$dist" = "Debian" ]; then
-    /usr/sbin/locale-gen
+    loudCmd "/usr/sbin/locale-gen"
 fi
 
 if [ "$install_dependencies" = "t" ]; then

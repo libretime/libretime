@@ -40,7 +40,13 @@ abstract class Setup {
                 $inSection = false;
             }
             
-            if ($inSection) {
+            if (substr(trim($line), 0, 1) == "#") {
+                /* Workaround to strip comments from airtime.conf.
+                 * We need to do this because python's ConfigObj and PHP
+                 * have different (and equally strict) rules about comment 
+                 * characters in configuration files.
+                 */
+            } else if ($inSection) {
                 $key = trim(@substr($line, 0, strpos($line, "=")));
                 $fileOutput .= $key && isset($properties[$key]) ? $key . " = " . $properties[$key] . "\n" : $line;
             } else {
