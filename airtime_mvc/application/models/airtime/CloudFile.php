@@ -65,27 +65,11 @@ class CloudFile extends BaseCloudFile
      */
     public function isValidPhysicalFile()
     {
-        $ch = curl_init($this->getURLForTrackPreviewOrDownload());
-        
-        // There is not enough memory to download large files so instead
-        // write the file contents to /dev/null
-        $fp = fopen('/dev/null', 'w+');
-        
-        curl_setopt_array($ch, array(
-            CURLOPT_FILE, $fp,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_VERBOSE => false
-        ));
-        curl_exec($ch);
-        $http_status = curl_getinfo($ch);
-
-        if ($http_status["http_code"] === 200)
-        {
-            return true;
-        } else {
-            return false;
-        }
+        // We don't need to check if the cloud file is a valid file because
+        // before it is imported the Analyzer runs it through Liquidsoap
+        // to check its playability. If Liquidsoap can't play the file it
+        // does not get imported into the Airtime library.
+        return true;
     }
     
     /**
