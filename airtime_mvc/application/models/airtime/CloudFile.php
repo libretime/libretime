@@ -65,16 +65,21 @@ class CloudFile extends BaseCloudFile
      */
     public function isValidPhysicalFile()
     {
-        $ch = curl_init();
+        $ch = curl_init($this->getURLForTrackPreviewOrDownload());
+        
+        // There is not enough memory to download large files so instead
+        // write the file contents to /dev/null
+        $fp = fopen('/dev/null', 'w+');
+        
         curl_setopt_array($ch, array(
-            CURLOPT_URL => $this->getURLForTrackPreviewOrDownload(),
+            CURLOPT_FILE, $fp,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_VERBOSE => false
         ));
         curl_exec($ch);
         $http_status = curl_getinfo($ch);
-        
+
         if ($http_status["http_code"] === 200)
         {
             return true;
