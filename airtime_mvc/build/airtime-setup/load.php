@@ -124,7 +124,7 @@ function checkRMQConnection() {
  * @return boolean true if airtime-media-monitor is running
  */
 function checkMediaMonitorService() {
-    exec("pgrep -f media-monitor", $out, $status);
+    exec("pgrep -fx 'python /usr/lib/airtime/media-monitor/media_monitor.py'", $out, $status);
     return $status == 0;
 }
 
@@ -134,7 +134,7 @@ function checkMediaMonitorService() {
  * @return boolean true if airtime-playout is running
  */
 function checkPlayoutService() {
-    exec("pgrep -f pypocli", $out, $status);
+    exec("pgrep -fx 'python /usr/lib/airtime/pypo/bin/pypocli.py'", $out, $status);
     return $status == 0;
 }
 
@@ -144,6 +144,6 @@ function checkPlayoutService() {
  * @return boolean true if airtime-liquidsoap is running
  */
 function checkLiquidsoapService() {
-    exec("pgrep -f liquidsoap", $out, $status);
+    exec("pgrep -fx '/usr/bin/airtime-liquidsoap --verbose -f /usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq'", $out, $status);
     return $status == 0;
 }
