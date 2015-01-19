@@ -6,13 +6,14 @@
 # Zsolt Magyar <picizse@gmail.com>, 2014
 # Zsolt Magyar <picizse@gmail.com>, 2014
 # Sourcefabric <contact@sourcefabric.org>, 2012
+# Zsolt Magyar <picizse@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2014-11-14 09:58+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2015-01-19 13:01+0000\n"
+"Last-Translator: Zsolt Magyar <picizse@gmail.com>\n"
 "Language-Team: Hungarian (Hungary) (http://www.transifex.com/projects/p/airtime/language/hu_HU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +81,7 @@ msgstr "Leúsztatás"
 msgid ""
 "%1$s copyright &copy; %2$s All rights reserved.%3$sMaintained and "
 "distributed under the %4$s by %5$s"
-msgstr ""
+msgstr "%1$s szerzői & másolási jog; %2$s Minden jog fenntartva.%3$sFejleszti és forgalmazza %4$s alatt a %5$s"
 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
@@ -1097,13 +1098,13 @@ msgstr "Támogatási Visszajelzés Küldése"
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 #, php-format
 msgid "Promote my station on %s"
-msgstr ""
+msgstr "Az állomásom közzététele a %s-on"
 
 #: airtime_mvc/application/forms/SupportSettings.php:150
 #: airtime_mvc/application/forms/RegisterAirtime.php:151
 #, php-format
 msgid "By checking this box, I agree to %s's %sprivacy policy%s."
-msgstr ""
+msgstr "A mező bejelölésével, elfogadom a %s %sadatvédelmi irányelveit%s."
 
 #: airtime_mvc/application/forms/SupportSettings.php:174
 #: airtime_mvc/application/forms/RegisterAirtime.php:169
@@ -1142,7 +1143,7 @@ msgstr "Újraközvetítés?"
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr ""
+msgstr "%s Hitelesítés Használata:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
@@ -2614,7 +2615,7 @@ msgstr "Az Ön számára nem érhető el az alábbi erőforrás."
 #: airtime_mvc/application/controllers/ApiController.php:803
 #, php-format
 msgid "File does not exist in %s"
-msgstr ""
+msgstr "A fájl nem elérhető itt: %s"
 
 #: airtime_mvc/application/controllers/ApiController.php:854
 msgid "Bad request. no 'mode' parameter passed."
@@ -2825,7 +2826,7 @@ msgstr "Memória"
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:14
 #, php-format
 msgid "%s Version"
-msgstr ""
+msgstr "%s Verzió"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:30
 msgid "Disk Space"
@@ -2910,13 +2911,13 @@ msgid ""
 " collected regularly in order to enhance your user experience.%2$sClick "
 "'Yes, help %1$s' and we'll make sure the features you use are constantly "
 "improving."
-msgstr ""
+msgstr "Segítsen az %1$s fejlesztésében, tudassa velünk az ötleteit. Az információk gyűjtése fokozza a felhasználás élményét.%2$sKlikk 'Igen, segítek az %1$s-nak' fejlesztésében, és igyekszek folyamatosan a funkciók használatának javításain fáradozni. "
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:29
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:29
 #, php-format
 msgid "Click the box below to promote your station on %s."
-msgstr ""
+msgstr "Jelöld be a mezőt az állomásod közzétételéhez a %s-on."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:67
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:81
@@ -2962,7 +2963,7 @@ msgstr "Jelenlegi Tároló Mappa:"
 msgid ""
 "Rescan watched directory (This is useful if it is network mount and may be "
 "out of sync with %s)"
-msgstr ""
+msgstr "A figyelt mappa újraellenőrzése (Ez akkor hasznos, ha a hálózati csatolás nincs szinkronban az %s-al)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
@@ -3017,7 +3018,7 @@ msgid ""
 "will be collected regularly in order to enhance your user experience.%sClick"
 " the 'Send support feedback' box and we'll make sure the features you use "
 "are constantly improving."
-msgstr ""
+msgstr "Segítse az %s fejlesztését azáltal, hogy a %s tudja, hogy Ön, hogyan használja azt. Információk összegyűjtése céljából, rendszerezve azokat, hogy fokozza a felhasználás élményét.%sKlikkeljen a 'Támogatási Visszajelzés Küldése' mezőbe és győződjön meg arról, hogy a funkciók használatának minősége folyamatosan javul."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
 msgid ""
@@ -3280,12 +3281,12 @@ msgstr "Hallgatói Statisztika"
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:3
 #, php-format
 msgid "Welcome to %s!"
-msgstr ""
+msgstr "Üdvözöljük az %s-nál!"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:4
 #, php-format
 msgid "Here's how you can get started using %s to automate your broadcasts: "
-msgstr ""
+msgstr "Itt van, hogyan tudod elindítani adásaid automatizálását használva az %s-t:"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
 msgid ""
@@ -3334,12 +3335,12 @@ msgstr "Adásfolyam:"
 msgid ""
 "%1$s %2$s, the open radio software for scheduling and remote station "
 "management."
-msgstr ""
+msgstr "%1$s %2$s, a nyitott rádiós szoftver, az ütemezett és távoli állomás menedzsment."
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:22
 #, php-format
 msgid "%1$s %2$s is distributed under the %3$s"
-msgstr ""
+msgstr "%1$s %2$s-ot %3$s mellett terjesztik"
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
@@ -3372,7 +3373,7 @@ msgstr "Vissza a belépéshez"
 msgid ""
 "Welcome to the %s demo! You can log in using the username 'admin' and the "
 "password 'admin'."
-msgstr ""
+msgstr "Üdvözöljük az %s demó változatában! Jelentkezzen be 'admin' felhasználónévvel és 'admin' jelszóval."
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
@@ -3417,7 +3418,7 @@ msgstr "Az Ön próba ideje lejár"
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 #, php-format
 msgid "Purchase your copy of %s"
-msgstr ""
+msgstr "Vásárolja meg az Ön %s másolatát"
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 msgid "My Account"
@@ -3733,7 +3734,7 @@ msgstr "A kapcsolódó műsorok tartalmait bármelyik adás előtt vagy után ke
 
 #: airtime_mvc/application/models/Scheduler.php:195
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Nem lehet ütemezni olyan lejátszási listát, amely tartalmaz hiányzó fájlokat."
 
 #: airtime_mvc/application/models/Scheduler.php:216
 #: airtime_mvc/application/models/Scheduler.php:305
@@ -3808,7 +3809,7 @@ msgstr "Üdv. %s, \n\nErre a hivatkozásra kattintva visszaállíthatja a jelsza
 #: airtime_mvc/application/models/Auth.php:36
 #, php-format
 msgid "%s Password Reset"
-msgstr ""
+msgstr "%s Jelszó Visszaállítás"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
