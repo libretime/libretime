@@ -862,10 +862,22 @@ class Application_Model_Preference
 
         return self::getValue("enable_stream_conf");
     }
-    
-    public static function SetAirtimeVersion($version)
+
+    public static function GetSchemaVersion()
     {
-        self::setValue("system_version", $version);
+        $schemaVersion = self::getValue("schema_version");
+
+        //Pre-2.5.2 releases all used this ambiguous "system_version" key to represent both the code and schema versions...
+        if (empty($schemaVersion)) {
+            $schemaVersion = self::getValue("system_version");
+        }
+
+        return $schemaVersion;
+    }
+
+    public static function SetSchemaVersion($version)
+    {
+        self::setValue("schema_version", $version);
     }
 
     public static function GetAirtimeVersion()

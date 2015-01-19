@@ -24,9 +24,12 @@ class ErrorController extends Zend_Controller_Action
         }
 
         // Log exception, if logger available
+        /* No idea why this doesn't work or why it was implemented like this. Disabling it -- Albert
         if (($log = $this->getLog())) {
             $log->crit($this->view->message, $errors->exception);
-        }
+        }*/
+        //Logging that actually works: -- Albert
+        Logging::error($this->view->message . ": " . $errors->exception);
 
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {

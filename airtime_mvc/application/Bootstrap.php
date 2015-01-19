@@ -81,10 +81,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
     
     protected function _initUpgrade() {
-        if (AIRTIME_CODE_VERSION > Application_Model_Preference::GetAirtimeVersion()) {
-            $upgradeManager = new UpgradeManager();
-            $upgradeManager->runUpgrades(array(new AirtimeUpgrader252()), (__DIR__ . "/controllers"));
-        }
+        UpgradeManager::checkIfUpgradeIsNeeded(); //This will do the upgrade too if it's needed...
     }
 
     protected function _initHeadLink()

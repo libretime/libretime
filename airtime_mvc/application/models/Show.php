@@ -1232,6 +1232,7 @@ SELECT si.starts AS start_timestamp,
        si.id AS instance_id,
        si.record,
        s.url,
+       s.image_path,
        starts,
        ends
 FROM cc_show_instances si

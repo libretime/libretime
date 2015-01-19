@@ -13,25 +13,19 @@ class UpgradeController extends Zend_Controller_Action
             return;
         }
 
-        $upgraders = array();
-        array_push($upgraders, new AirtimeUpgrader252());
-        /* These upgrades do not apply to open source Airtime yet.
-        array_push($upgraders, new AirtimeUpgrader253());
-        array_push($upgraders, new AirtimeUpgrader254());
-        */
         $didWePerformAnUpgrade = false;
         try {
             $upgradeManager = new UpgradeManager();
-            $didWePerformAnUpgrade = $upgradeManager->runUpgrades($upgraders, __DIR__);
+            $didWePerformAnUpgrade = $upgradeManager->doUpgrade();
             
             if (!$didWePerformAnUpgrade) {
                 $this->getResponse()
                      ->setHttpResponseCode(200)
-                     ->appendBody("No upgrade was performed. The current Airtime version is " . AirtimeUpgrader::getCurrentVersion() . ".<br>");
+                     ->appendBody("No upgrade was performed. The current schema version is " . Application_Model_Preference::GetSchemaVersion() . ".<br>");
             } else {
                 $this->getResponse()
                      ->setHttpResponseCode(200)
-                     ->appendBody("Upgrade to Airtime " . $upgrader->getNewVersion() . " OK<br>");
+                     ->appendBody("Upgrade to Airtime schema version " . Application_Model_Preference::GetSchemaVersion() . " OK<br>");
             }
         } 
         catch (Exception $e) 
