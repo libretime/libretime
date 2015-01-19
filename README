@@ -38,7 +38,7 @@ installation.
 For a non-interactive full installation (do this if you're installing Airtime from 
 scratch and don't have any of your own configuration set up), run
 
-    sudo ./install -fiapd
+    sudo ./install -fiap
 
 What this means:
 
@@ -46,7 +46,6 @@ What this means:
     -i - install the default Icecast 2 setup for Airtime
     -a - install the default apache setup for Airtime
     -p - create a default Airtime postgres user
-    -d - install binary dependencies needed for Airtime
 
 This will install all components necessary for Airtime, and set up 
 /usr/share/airtime as your web root (where apache looks for your Airtime files)
