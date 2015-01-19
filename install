@@ -22,8 +22,8 @@ showhelp () {
                 No output except errors
     -f, --force
                 Turn off interactive prompts
-    -d, --install-dependencies
-                Install binary dependencies
+    -d, --ignore-dependencies
+                Don't install binary dependencies
     -w, --web-user=WEB_USER
                 Set the apache web user. Defaults to www-data. Only change
                 this setting if you've changed the default apache web user
@@ -47,8 +47,8 @@ showhelp () {
 }
 
 showversion () {
-    . ${AIRTIMEROOT}/VERSION > /dev/null
-    echo "Airtime Version ${PRODUCT_RELEASE}"
+    version=$(php -r 'require_once(__DIR__ . "/airtime_mvc/application/configs/constants.php"); echo AIRTIME_CODE_VERSION;')
+    echo "Airtime Version ${version}"
     exit 0
 }
 
@@ -58,7 +58,7 @@ in_place="f"
 postgres="f"
 apache="f"
 icecast="f"
-install_dependencies="f"
+ignore_dependencies="f"
 # Interactive
 _i=1
 # Verbose
@@ -104,8 +104,8 @@ while :; do
         --force)
             _i=0
             ;;
-        --install-dependencies)
-            install_dependencies="t"
+        --ignore-dependencies)
+            ignore_dependencies="t"
             ;;
         --apache)
             apache="t"
@@ -176,7 +176,7 @@ while :; do
                         _i=0
                         ;;
                     d)
-                        install_dependencies="t"
+                        ignore_dependencies="t"
                         ;;
                     a)
                         apache="t"
@@ -535,14 +535,6 @@ if [ ! -d "/srv/airtime" ]; then
 fi
 chown -R ${web_user}:${web_user} /srv/airtime
 
-if [ "$install_dependencies" = "f" -a ${_i} -eq 1 ]; then
-    echo -e "Install external binary dependencies? (Y/n): \c"
-    read IN
-    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
-        install_dependencies="t"
-    fi
-fi
-
 loud "\n-----------------------------------------------------"
 loud "                * Installing Locales *               "
 loud "-----------------------------------------------------"
@@ -565,13 +557,19 @@ if [ "$dist" = "Debian" ]; then
     loudCmd "/usr/sbin/locale-gen"
 fi
 
-if [ "$install_dependencies" = "t" ]; then
+if [ "$ignore_dependencies" = "f" ]; then
     loud "\n-----------------------------------------------------"
     loud "         * Installing External Dependencies *        "
     loud "-----------------------------------------------------"
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
-    loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+    set +e
+    if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
+        loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+    else
+        loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
+    fi
+    set -e
 fi
 
 verbose "\n * Restarting apache..."

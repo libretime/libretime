@@ -191,7 +191,7 @@ $result = $r1 && $r2;
                             ?>">
                             Check that the airtime-playout service is installed correctly in <code>/etc/init</code>, 
                             and ensure that it's running with
-                            <br/><code>sudo initctl list | grep airtime-playout</code><br/>
+                            <br/><code>initctl list | grep airtime-playout</code><br/>
                             If not, try <br/><code>sudo service airtime-playout restart</code>
                         <?php
                         }
@@ -211,7 +211,7 @@ $result = $r1 && $r2;
                             ?>">
                             Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>, 
                             and ensure that it's running with
-                            <br/><code>sudo initctl list | grep airtime-liquidsoap</code><br/>
+                            <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
                             If not, try <br/><code>sudo service airtime-liquidsoap restart</code>
                         <?php
                         }
