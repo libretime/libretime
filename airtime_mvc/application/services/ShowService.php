@@ -1133,7 +1133,7 @@ SQL;
         $start = $this->getNextRepeatingPopulateStartDateTime($showDay);
 
         if (is_null($repeatInterval)&& $repeatType == REPEAT_MONTHLY_WEEKLY) {
-            $repeatInterval = $this->getMonthlyWeeklyRepeatInterval($start, $timezone);
+            $repeatInterval = self::getMonthlyWeeklyRepeatInterval($start, $timezone);
         }
 
         //DatePeriod in user's local time
@@ -1236,7 +1236,7 @@ SQL;
 
         // We will only need this if the repeat type is MONTHLY_WEEKLY
         list($weekNumberOfMonth, $dayOfWeek) =
-            $this->getMonthlyWeeklyRepeatInterval(
+            self::getMonthlyWeeklyRepeatInterval(
                 new DateTime($first_show, new DateTimeZone($timezone)));
 
         $this->repeatType = $showDay->getDbRepeatType();
@@ -1296,7 +1296,7 @@ SQL;
                 $monthlyWeeklyStart = new DateTime($utcStartDateTime->format("Y-m"),
                     new DateTimeZone("UTC"));
                 $monthlyWeeklyStart->add(new DateInterval("P1M"));
-                $start = $this->getNextMonthlyWeeklyRepeatDate(
+                $start = self::getNextMonthlyWeeklyRepeatDate(
                     $monthlyWeeklyStart,
                     $timezone,
                     $showDay->getDbStartTime(),
@@ -1318,7 +1318,7 @@ SQL;
      * @param string $showStart
      * @param string $timezone user's local timezone
      */
-    private function getMonthlyWeeklyRepeatInterval($showStart)
+    public static function getMonthlyWeeklyRepeatInterval($showStart)
     {
         $start = clone $showStart;
         $dayOfMonth = $start->format("j");
@@ -1393,7 +1393,7 @@ SQL;
      * @param string (i.e. 'first', 'second') $weekNumberOfMonth
      * @param string (i.e. 'Monday') $dayOfWeek
      */
-    private function getNextMonthlyWeeklyRepeatDate(
+    public static function getNextMonthlyWeeklyRepeatDate(
         $start,
         $timezone,
         $startTime,
