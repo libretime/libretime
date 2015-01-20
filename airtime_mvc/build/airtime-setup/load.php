@@ -125,6 +125,9 @@ function checkRMQConnection() {
  */
 function checkMediaMonitorService() {
     exec("pgrep -fx 'python /usr/lib/airtime/media-monitor/media_monitor.py'", $out, $status);
+    if (array_key_exists(0, $out) && $status == 0) {
+        return posix_kill(rtrim($out[0]), 0);
+    }
     return $status == 0;
 }
 
@@ -135,6 +138,9 @@ function checkMediaMonitorService() {
  */
 function checkPlayoutService() {
     exec("pgrep -fx 'python /usr/lib/airtime/pypo/bin/pypocli.py'", $out, $status);
+    if (array_key_exists(0, $out) && $status == 0) {
+        return posix_kill(rtrim($out[0]), 0);
+    }
     return $status == 0;
 }
 
@@ -145,5 +151,8 @@ function checkPlayoutService() {
  */
 function checkLiquidsoapService() {
     exec("pgrep -fx '/usr/bin/airtime-liquidsoap --verbose -f /usr/lib/airtime/pypo/bin/liquidsoap_scripts/ls_script.liq'", $out, $status);
+    if (array_key_exists(0, $out) && $status == 0) {
+        return posix_kill(rtrim($out[0]), 0);
+    }
     return $status == 0;
 }
