@@ -326,7 +326,12 @@ if [ "$apache" = "t" ]; then
 
     if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
         verbose "\n * Creating Apache config for Airtime..."
-        sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
+        
+        if [ "$apacheversion" != "1" ]; then
+            sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4 > /etc/apache2/sites-available/${airtimeconfigfile}
+        else
+            sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
+        fi
         loudCmd "a2dissite 000-default"
         loudCmd "a2ensite airtime"
     else
