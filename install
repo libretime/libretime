@@ -65,6 +65,7 @@ _i=1
 _v=0
 # Quiet
 _q=0
+upgrade="f"
 
 function verbose() {
     if [[ ${_v} -eq 1 ]]; then
@@ -238,6 +239,8 @@ if [ -f /etc/airtime/airtime.conf ]; then
     OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
     
     if [ -n "${OLD_CONF}" ]; then
+        upgrade="t"
+    
         set +e
         verbose "Stopping airtime services..."
         loudCmd "service airtime-playout stop-with-monit"
@@ -324,7 +327,11 @@ if [ "$apache" = "t" ]; then
         airtimeconfigfile="airtime"
     fi
 
-    if [ ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
+    # If we're upgrading (installing over an existing Airtime install) and we've been told to
+    # install apache, we should overwrite any existing configuration. If we don't do this, doing
+    # an in-place installation over an old Airtime install (which installs to /usr/share by default)
+    # will fail
+    if [ "$upgrade" = "t" -o ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
         verbose "\n * Creating Apache config for Airtime..."
         
         if [ "$apacheversion" != "1" ]; then
