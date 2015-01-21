@@ -10,6 +10,7 @@ body {
 }
 html, body {
     height: 100%;
+    background: #7f7f7f;
 }
 
 #login-page {
