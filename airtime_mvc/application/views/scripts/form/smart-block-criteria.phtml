@@ -95,7 +95,18 @@
             <?php endif; ?>
         <br />
         </dd>
-        
+        <dd id='sp_sort-element'>
+            <span class='sp_text_font'>Sort tracks by</span>
+            <?php echo $this->element->getElement('sp_sort_options') ?>
+           <?php if($this->element->getElement("sp_sort_options")->hasErrors()) : ?>
+                <?php foreach($this->element->getElement("sp_sort_options")->getMessages() as $error): ?>
+                <span class='errors sp-errors'>
+                   <?php echo $error; ?>
+                </span>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        <br />
+        </dd> 
         <dd id='sp_limit-element'>
             <span class='sp_text_font'><?php echo $this->element->getElement('sp_limit_value')->getLabel() ?></span>
             <?php echo $this->element->getElement('sp_limit_value')?>

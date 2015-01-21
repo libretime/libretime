@@ -26,8 +26,8 @@ class Rest_MediaController extends Zend_Rest_Controller
     public function init()
     {
         $this->view->layout()->disableLayout();
-		// Remove reliance on .phtml files to render requests
-   		$this->_helper->viewRenderer->setNoRender(true);
+        // Remove reliance on .phtml files to render requests
+        $this->_helper->viewRenderer->setNoRender(true);
     }
     
     public function indexAction()
@@ -83,7 +83,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     public function getAction()
     {
         if (!$this->verifyAuth(true, true))
-                {
+        {
             return;
         }
         
@@ -286,11 +286,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         $observed_csrf_token = $token;
         $expected_csrf_token = $current_namespace->authtoken;
 
-        if($observed_csrf_token == $expected_csrf_token){
-            return true;
-        }else{
-            return false;
-        }
+        return ($observed_csrf_token === $expected_csrf_token);
     }
 
     private function verifyAuth($checkApiKey, $checkSession)
@@ -301,7 +297,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             if(!$this->verifyCSRFToken($this->_getParam('csrf_token'))){
                 $resp = $this->getResponse();
                 $resp->setHttpResponseCode(401);
-                $resp->appendBody("ERROR: Token Missmatch."); 
+                $resp->appendBody("ERROR: Token Mismatch."); 
                 return false;
             }
             return true;
@@ -331,24 +327,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
         $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
         
-        if ($encodedRequestApiKey === $encodedStoredApiKey) 
-        {
-            return true;
-        } else {
-            return false;
-        }
-        
-        return false;
+        return ($encodedRequestApiKey === $encodedStoredApiKey);
     }
     
     private function verifySession()
     {
         $auth = Zend_Auth::getInstance();
-        if ($auth->hasIdentity())
-        {
-            return true;
-        }
-        return false;
+        return ($auth->hasIdentity());
         
         //Token checking stub code. We'd need to change LoginController.php to generate a token too, but
         //but luckily all the token code already exists and works.
@@ -458,7 +443,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 return $service_user->getCurrentUser()->getDbId();
             } else {
                 $defaultOwner = CcSubjsQuery::create()
-                    ->filterByDbType('A')
+                    ->filterByDbType(array('A', 'S'), Criteria::IN)
                     ->orderByDbId()
                     ->findOne();
                 if (!$defaultOwner) {
@@ -474,23 +459,21 @@ class Rest_MediaController extends Zend_Rest_Controller
     }
 
     /**
-     * 
+     *
      * Strips out fields from incoming request data that should never be modified
      * from outside of Airtime
-     * @param array $data
+     * 
+     * @param array $data            
      */
-    private static function removeBlacklistedFieldsFromRequestData($data)
-    {
+    private static function removeBlacklistedFieldsFromRequestData($data) {
         foreach (self::$blackList as $key) {
             unset($data[$key]);
         }
-    
-            return $data;
-        }
+        
+        return $data;
+    }
 
-
-    private function removeEmptySubFolders($path)
-    {
+    private function removeEmptySubFolders($path) {
         exec("find $path -empty -type d -delete");
     }
 
