@@ -27,7 +27,7 @@ setup(name='airtime_analyzer',
           'nose',
           'coverage',
           'mock',
-          'python-daemon',
+          'python-daemon==1.6',
           'requests',
           'rgain',
           # These next 3 are required for requests to support SSL with SNI. Learned this the hard way...
