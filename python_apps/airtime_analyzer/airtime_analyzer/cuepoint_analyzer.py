@@ -24,7 +24,7 @@ class CuePointAnalyzer(Analyzer):
             the unit test on the short m4a file fails. With the new setting, it gets the correct cue-in time and
             all the unit tests pass.
         '''
-        command = [CuePointAnalyzer.SILAN_EXECUTABLE, '-b', '-F', '0.99', '-f', 'JSON', filename]
+        command = [CuePointAnalyzer.SILAN_EXECUTABLE, '-b', '-F', '0.99', '-f', 'JSON', '-t', '1.0', filename]
         try:
             results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
             silan_results = json.loads(results_json)
