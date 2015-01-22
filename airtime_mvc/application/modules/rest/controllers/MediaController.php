@@ -372,7 +372,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     private function getOwnerId()
     {
         try {
-            if ($this->verifySession()) {
+            if (Zend_Auth::getInstance()->hasIdentity()) {
                 $service_user = new Application_Service_UserService();
                 return $service_user->getCurrentUser()->getDbId();
             } else {

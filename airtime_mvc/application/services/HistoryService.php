@@ -204,30 +204,34 @@ class Application_Service_HistoryService
 		//------------------------------------------------------------------------
 		//Using Datatables parameters to sort the data.
 
-		$numOrderColumns = $opts["iSortingCols"];
-		$orderBys = array();
+        if (empty($opts["iSortingCols"])) {
+		    $orderBys = array();
+        } else {
+            $numOrderColumns = $opts["iSortingCols"];
+            $orderBys = array();
 
-		for ($i = 0; $i < $numOrderColumns; $i++) {
+            for ($i = 0; $i < $numOrderColumns; $i++) {
 
-			$colNum = $opts["iSortCol_".$i];
-			$key = $opts["mDataProp_".$colNum];
-			$sortDir = $opts["sSortDir_".$i];
+                $colNum = $opts["iSortCol_".$i];
+                $key = $opts["mDataProp_".$colNum];
+                $sortDir = $opts["sSortDir_".$i];
 
-			if (in_array($key, $required)) {
+                if (in_array($key, $required)) {
 
-				$orderBys[] = "history_range.{$key} {$sortDir}";
-			}
-			else if (in_array($key, $filemd_keys)) {
+                    $orderBys[] = "history_range.{$key} {$sortDir}";
+                }
+                else if (in_array($key, $filemd_keys)) {
 
-				$orderBys[] = "file_info.{$key} {$sortDir}";
-			}
-			else if (in_array($key, $general_keys)) {
+                    $orderBys[] = "file_info.{$key} {$sortDir}";
+                }
+                else if (in_array($key, $general_keys)) {
 
-				$orderBys[] = "{$key}_filter.{$key} {$sortDir}";
-			}
-			else {
-				//throw new Exception("Error: $key is not part of the template.");
-			}
+                    $orderBys[] = "{$key}_filter.{$key} {$sortDir}";
+                }
+                else {
+                    //throw new Exception("Error: $key is not part of the template.");
+                }
+            }
 		}
 
 		if (count($orderBys) > 0) {
@@ -241,7 +245,7 @@ class Application_Service_HistoryService
 		//---------------------------------------------------------------
 		//using Datatables parameters to add limits/offsets
 
-		$displayLength = intval($opts["iDisplayLength"]);
+		 $displayLength = empty($opts["iDisplayLength"]) ? -1 : intval($opts["iDisplayLength"]);
 		//limit the results returned.
 		if ($displayLength !== -1) {
 			$mainSqlQuery.=
@@ -275,14 +279,14 @@ class Application_Service_HistoryService
 		foreach ($fields as $index=>$field) {
 
 			if ($field["type"] == TEMPLATE_BOOLEAN) {
-				$boolCast[] = $field["name"];
+				$boolCast[] = $field;
 			}
 		}
 
 		foreach ($rows as $index => &$result) {
 
-			foreach ($boolCast as $name) {
-				$result[$name] = (bool) $result[$name];
+			foreach ($boolCast as $field) {
+				$result[$field['label']] = (bool) $result[$field['name']];
 			}
 
 			//need to display the results in the station's timezone.
@@ -311,7 +315,7 @@ class Application_Service_HistoryService
 		}
 
 		return array(
-			"sEcho" => intval($opts["sEcho"]),
+			"sEcho" => empty($opts["sEcho"]) ? null : intval($opts["sEcho"]),
 			//"iTotalDisplayRecords" => intval($totalDisplayRows),
 			"iTotalDisplayRecords" => intval($totalRows),
 			"iTotalRecords" => intval($totalRows),
@@ -445,9 +449,13 @@ class Application_Service_HistoryService
 		);
 	}
 
-	public function getShowList($startDT, $endDT)
+	public function getShowList($startDT, $endDT, $userId = null)
 	{
-		$user = Application_Model_User::getCurrentUser();
+        if (empty($userId)) {
+		    $user = Application_Model_User::getCurrentUser();
+        } else {
+            $user = new Application_Model_User($userId);
+        }
 		$shows = Application_Model_Show::getShows($startDT, $endDT);
 
 		Logging::info($startDT->format("Y-m-d H:i:s"));
@@ -456,7 +464,7 @@ class Application_Service_HistoryService
 		Logging::info($shows);
 
 		//need to filter the list to only their shows
-		if ($user->isHost()) {
+		if ((!empty($user)) && ($user->isHost())) {
 
 			$showIds = array();
 

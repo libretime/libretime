@@ -304,4 +304,23 @@ class CcShow extends BaseCcShow {
             ->filterByDbId($instanceId, Criteria::NOT_EQUAL)
             ->find();
     }
+
+    public function getShowInfo()
+    {
+        $info = array();
+        if ($this->getDbId() == null) {
+            return $info;
+        } else {
+            $info['name'] = $this->getDbName();
+            $info['id'] = $this->getDbId();
+            $info['url'] = $this->getDbUrl();
+            $info['genre'] = $this->getDbGenre();
+            $info['description'] = $this->getDbDescription();
+            $info['color'] = $this->getDbColor();
+            $info['background_color'] = $this->getDbBackgroundColor();
+            $info['linked'] = $this->getDbLinked();
+            return $info;
+        }
+
+    }
 } // CcShow
