@@ -136,9 +136,13 @@
 	<column name="is_linkable" phpName="DbIsLinkable" type="BOOLEAN" required="true" defaultValue="true" />
 	<!-- A show is_linkable if it has never been linked before. Once a show becomes unlinked
          it can not be linked again -->
+    <column name="image_path" phpName="DbImagePath" type="VARCHAR" size="255" required="false" defaultValue=""/>
+    <!-- Fully qualified path for the image associated with this show. 
+         Default is /path/to/stor/dir/:ownerId/show-images/:showId/imageName -->
   </table>
   <table name="cc_show_instances" phpName="CcShowInstances">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false" defaultValue=""/>
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
 	<column name="show_id" phpName="DbShowId" type="INTEGER" required="true"/>

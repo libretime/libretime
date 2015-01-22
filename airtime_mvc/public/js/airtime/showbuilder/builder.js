@@ -1059,7 +1059,10 @@ var AIRTIME = (function(AIRTIME){
                     "<i class='icon-white icon-ban-circle'></i></button></div>");
         }
 
-        $toolbar.append($menu);
+        if (localStorage.getItem('user-type') != 'G') {
+            $toolbar.append($menu);
+        }
+        
         $menu = undefined;
         
         $('#timeline-sa').click(function(){mod.selectAll();});

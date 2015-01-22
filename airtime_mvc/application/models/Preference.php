@@ -263,7 +263,7 @@ class Application_Model_Preference
     
         if ($fade === "") {
             // the default value of the fade is 00.5
-            return "00.5";
+            return "0.5";
         }
     
         return $fade;
@@ -279,8 +279,8 @@ class Application_Model_Preference
         $fade = self::getValue("default_fade_out");
     
         if ($fade === "") {
-            // the default value of the fade is 00.5
-            return "00.5";
+            // the default value of the fade is 0.5
+            return "0.5";
         }
     
         return $fade;
@@ -289,33 +289,6 @@ class Application_Model_Preference
     public static function SetDefaultFade($fade)
     {
         self::setValue("default_fade", $fade);
-    }
-
-    public static function GetDefaultFade()
-    {
-        $fade = self::getValue("default_fade");
-
-        if ($fade === "") {
-            // the default value of the fade is 00.5
-            return "00.5";
-        }
-
-        // we need this function to work with 2.0 version on default_fade value in cc_pref
-        // it has 00:00:00.000000 format where in 2.1 we have 00.000000 format
-        if (preg_match("/([0-9]{2}):([0-9]{2}):([0-9]{2}).([0-9]{6})/", $fade, $matches) == 1 && count($matches) == 5) {
-            $out = 0;
-            $out += intval($matches[1] * 3600);
-            $out += intval($matches[2] * 60);
-            $out += intval($matches[3]);
-            $out .= ".$matches[4]";
-            $fade = $out;
-        }
-
-        $fade = number_format($fade, 1, '.', '');
-        //fades need 2 leading zeros for DateTime conversion
-        $fade = str_pad($fade, 4, "0", STR_PAD_LEFT);
-
-        return $fade;
     }
 
     public static function SetDefaultTransitionFade($fade)
@@ -330,7 +303,7 @@ class Application_Model_Preference
     public static function GetDefaultTransitionFade()
     {
         $transition_fade = self::getValue("default_transition_fade");
-        return ($transition_fade == "") ? "00.000000" : $transition_fade;
+        return ($transition_fade == "") ? "0.000" : $transition_fade;
     }
 
     public static function SetStreamLabelFormat($type)
