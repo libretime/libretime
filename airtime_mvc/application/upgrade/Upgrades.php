@@ -105,7 +105,7 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
             $host = $values['database']['host'];
             $database = $values['database']['dbname'];
         
-            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_".$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
+            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_".$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
         
             Application_Model_Preference::SetAirtimeVersion($this->getNewVersion());
             //clear out the cache
@@ -238,7 +238,7 @@ class AirtimeUpgrader255 extends AirtimeUpgrader {
             $database = $values['database']['dbname'];
 
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
-                    .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
+                    .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
             
             Application_Model_Preference::SetAirtimeVersion($newVersion);
             Cache::clear();
@@ -284,7 +284,7 @@ class AirtimeUpgrader259 extends AirtimeUpgrader {
             $database = $values['database']['dbname'];
                 
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
-                     .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v \"will create implicit index\"");
+                     .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
             
             Application_Model_Preference::SetAirtimeVersion($newVersion);
             Cache::clear();
