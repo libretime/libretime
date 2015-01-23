@@ -897,10 +897,20 @@ input[type="checkbox"] {
 }
 /*---//////////////////// LOGIN & PASSWORD RESET  ////////////////////---*/
 
-#csrf-label, #csrf-element {
-    /* Remove any visible csrf form token footprint */
+/* Remove any visible csrf form token footprint */
+#csrf-label {
     height: 0;
     padding: 0;
+    margin: 0;
+}
+
+#csrf-element {
+    height: 8px;
+    padding: 0;
+    margin: 0;
+}
+
+#csrf-label .errors li, #csrf-element .errors li {
     margin: 0;
 }
 
@@ -2122,6 +2132,7 @@ span.errors.sp-errors{
 }
 .preferences {
     width: 500px;
+    margin-bottom: 40px;
 }
 .manage-folders {
     width: 610px;

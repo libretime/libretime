@@ -14,7 +14,9 @@ class ApiController extends Zend_Controller_Action
             "item-history-feed",
             "shows",
             "show-tracks",
-            "show-schedules"
+            "show-schedules",
+            "station-logo",
+            "show-logo"
         );
 
         $params = $this->getRequest()->getParams();

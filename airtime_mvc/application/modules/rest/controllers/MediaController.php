@@ -27,8 +27,8 @@ class Rest_MediaController extends Zend_Rest_Controller
     {
         $this->view->layout()->disableLayout();
 
-		// Remove reliance on .phtml files to render requests
-   		$this->_helper->viewRenderer->setNoRender(true);
+        // Remove reliance on .phtml files to render requests
+        $this->_helper->viewRenderer->setNoRender(true);
     }
     
     public function indexAction()
@@ -381,7 +381,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 return $service_user->getCurrentUser()->getDbId();
             } else {
                 $defaultOwner = CcSubjsQuery::create()
-                    ->filterByDbType('A')
+                    ->filterByDbType(array('A', 'S'), Criteria::IN)
                     ->orderByDbId()
                     ->findOne();
                 if (!$defaultOwner) {
@@ -397,23 +397,21 @@ class Rest_MediaController extends Zend_Rest_Controller
     }
 
     /**
-     * 
+     *
      * Strips out fields from incoming request data that should never be modified
      * from outside of Airtime
-     * @param array $data
+     * 
+     * @param array $data            
      */
-    private static function removeBlacklistedFieldsFromRequestData($data)
-    {
+    private static function removeBlacklistedFieldsFromRequestData($data) {
         foreach (self::$blackList as $key) {
             unset($data[$key]);
         }
-    
-            return $data;
-        }
+        
+        return $data;
+    }
 
-
-    private function removeEmptySubFolders($path)
-    {
+    private function removeEmptySubFolders($path) {
         exec("find $path -empty -type d -delete");
     }
 
