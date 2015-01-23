@@ -111,16 +111,16 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $controller = strtolower($request->getControllerName());
         Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
-        //Ignore authentication for all access to the rest API. We do auth via API keys for this
-        //and/or by OAuth.
-        if (strtolower($request->getModuleName()) == "rest")
-        {
-            return;
-        }
-
         if (in_array($controller, array("api", "auth", "locale", "upgrade", 'whmcs-login', "provisioning"))) {
             $this->setRoleName("G");
         } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
+            
+            // If we don't have an identity and we're making a RESTful request,
+            // we need to do API key verification
+            if ($request->getModuleName() == "rest") {
+                $this->verifyAuth();
+                return;
+            }
 
              if ($controller !== 'login') {
 
@@ -143,7 +143,19 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                }
             }
         } else {
+            // If we have an identity and we're making a RESTful request,
+            // we need to check the CSRF token
+            if ($request->_action != "get" && $request->getModuleName() == "rest") {
+                $tokenValid = $this->verifyCSRFToken($request->getParam("csrf_token"));
 
+                if (!$tokenValid) {
+                    $this->getResponse()
+                         ->setHttpResponseCode(401)
+                         ->appendBody("ERROR: CSRF token mismatch.");
+                    return;
+                }
+            }
+            
             $userInfo = Zend_Auth::getInstance()->getStorage()->read();
             $this->setRoleName($userInfo->type);
 
@@ -167,6 +179,40 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 $this->denyAccess();
             }
         }
+    }
+
+    private function verifyAuth() {
+        if ($this->verifyAPIKey()) {
+            return true;
+        }
+    
+        $this->getResponse()
+             ->setHttpResponseCode(401)
+             ->appendBody("ERROR: Incorrect API key.");
+        return false;
+    }
+    
+    private function verifyCSRFToken($token) {
+        $current_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $observed_csrf_token = $token;
+        $expected_csrf_token = $current_namespace->authtoken;
+        Logging::error("Observed: " . $observed_csrf_token);
+        Logging::error("Expected: " . $expected_csrf_token);
+        
+        return ($observed_csrf_token == $expected_csrf_token);
+    }
+    
+    private function verifyAPIKey() {
+        // The API key is passed in via HTTP "basic authentication":
+        // http://en.wikipedia.org/wiki/Basic_access_authentication
+        $CC_CONFIG = Config::getConfig();
+    
+        // Decode the API key that was passed to us in the HTTP request.
+        $authHeader = $this->getRequest()->getHeader("Authorization");
+        $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
+        $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
+    
+        return ($encodedRequestApiKey === $encodedStoredApiKey);
     }
 
     /**

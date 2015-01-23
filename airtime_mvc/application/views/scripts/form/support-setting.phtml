@@ -1,5 +1,51 @@
 <fieldset class="padded">
-    <dl id="public-info" style="display:<?php echo "block"?>;">
+    <dl class="zend_form">
+        <dd id="SupportFeedback-element" style="width:90%;">
+            <div class="info-text">
+               <?php echo sprintf(_("Help improve %s by letting us know how you're using it. This information"
+                ." will be collected regularly in order to enhance your user experience.<br />"
+                ."Click the box below and we'll make sure the features you use are constantly improving."), 
+                       PRODUCT_NAME)?>
+            </div>
+            <label class="optional" for="SupportFeedback">
+                <?php echo $this->element->getElement('SupportFeedback') ?>
+                <strong><?php echo $this->element->getElement('SupportFeedback')->getLabel() ?></strong>
+            </label>
+            <?php if($this->element->getElement('SupportFeedback')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('SupportFeedback')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+        <dd id="publicize-element" style="width:90%;">
+            <div class="info-text">
+                <?php 
+                
+                $whosUsingAnchor = "<a id='link_to_whos_using' href='" . WHOS_USING_URL . "' onclick='window.open(this.href); return false'>"
+                                    . COMPANY_SITE
+                                . "</a>";
+                echo sprintf(_("Click the box below to promote your station on %s."), $whosUsingAnchor)
+                ?>
+            </div>
+            <label class="optional" for="Publicise">
+                <?php echo $this->element->getElement('Publicise') ?>
+                <strong><?php echo $this->element->getElement('Publicise')->getLabel() ?></strong>
+            </label>
+            <?php if($this->element->getElement('Publicise')->hasErrors()) : ?>
+                <ul class='errors'>
+                    <?php foreach($this->element->getElement('Publicise')->getMessages() as $error): ?>
+                        <li><?php echo $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?> 
+        </dd>
+    </dl>
+    <div class="info-text" style="clear: both;padding: 4px 0 4px 15px;">
+        <?php echo _("(In order to promote your station, 'Send support feedback' must be enabled).")?><br /><br />
+    </div>
+    <dl id="public-info" style="display:<?php echo "none"?>;">
         <dt id="stationName-label" class="block-display">
             <label class="required" for="stationName"><?php echo $this->element->getElement('stationName')->getLabel() ?>
                 <span class="info-text-small"><?php echo _("(Required)")?></span>:

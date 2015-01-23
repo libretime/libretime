@@ -1156,7 +1156,7 @@ SQL;
      */
     public function saveSmartBlockCriteria($p_criteria)
     {
-        $data = $this->organizeSmartPlyalistCriteria($p_criteria);
+        $data = $this->organizeSmartPlaylistCriteria($p_criteria);
         // saving dynamic/static flag
         $blockType = $data['etc']['sp_type'] == 0 ? 'static':'dynamic';
         $this->saveType($blockType);
@@ -1224,6 +1224,16 @@ SQL;
             }
         }
 
+        // insert sort info
+        $qry = new CcBlockcriteria();
+        $qry->setDbCriteria("sort")
+        ->setDbModifier("N/A")
+        ->setDbValue($p_criteriaData['etc']['sp_sort_options'])
+        ->setDbBlockId($this->id)
+        ->save();
+
+
+
         // insert limit info
         $qry = new CcBlockcriteria();
         $qry->setDbCriteria("limit")
@@ -1231,7 +1241,8 @@ SQL;
         ->setDbValue($p_criteriaData['etc']['sp_limit_value'])
         ->setDbBlockId($this->id)
         ->save();
-        
+       
+ 
         // insert repeate track option
         $qry = new CcBlockcriteria();
         $qry->setDbCriteria("repeat_tracks")
@@ -1352,6 +1363,7 @@ SQL;
             "isrc_number"  => _("ISRC"),
             "label"        => _("Label"),
             "language"     => _("Language"),
+            "utime"        => _("Upload Time"),
             "mtime"        => _("Last Modified"),
             "lptime"       => _("Last Played"),
             "length"       => _("Length"),
@@ -1399,6 +1411,8 @@ SQL;
                     "display_modifier"=>_($modifier));
             } else if($criteria == "repeat_tracks") {
                 $storedCrit["repeat_tracks"] = array("value"=>$value);
+            } else if($criteria == "sort") {
+                $storedCrit["sort"] = array("value"=>$value);
             } else {
                 $storedCrit["crit"][$criteria][] = array(
                     "criteria"=>$criteria,
@@ -1507,8 +1521,20 @@ SQL;
             // check if file exists
             $qry->add("file_exists", "true", Criteria::EQUAL);
             $qry->add("hidden", "false", Criteria::EQUAL);
+        if (isset($storedCrit['sort'])) {
+            $sortTracks = $storedCrit['sort']['value'];
+        }
+        if ($sortTracks == 'newest') {
+            $qry->addDescendingOrderByColumn('utime');
+        }
+        else if ($sortTracks == 'oldest') {
+            $qry->addAscendingOrderByColumn('utime');
+        }
+        else {
             $qry->addAscendingOrderByColumn('random()');
         }
+
+    }
         // construct limit restriction
         $limits = array();
         
@@ -1537,9 +1563,8 @@ SQL;
             Logging::info($e);
         }
     }
-
-    public static function organizeSmartPlyalistCriteria($p_criteria)
-    {
+    public static function organizeSmartPlaylistCriteria($p_criteria)
+    { 
         $fieldNames = array('sp_criteria_field', 'sp_criteria_modifier', 'sp_criteria_value', 'sp_criteria_extra');
         $output = array();
         foreach ($p_criteria as $ele) {

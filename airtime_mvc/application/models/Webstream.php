@@ -88,11 +88,19 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
 
     public static function deleteStreams($p_ids, $p_userId)
     {
-        $leftOver = self::streamsNotOwnedByUser($p_ids, $p_userId);
-        if (count($leftOver) == 0) {
-            CcWebstreamQuery::create()->findPKs($p_ids)->delete();
+        $userInfo = Zend_Auth::getInstance()->getStorage()->read();
+        $user = new Application_Model_User($userInfo->id);
+        $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        
+        if (!$isAdminOrPM) {
+            $leftOver = self::streamsNotOwnedByUser($p_ids, $p_userId);
+            if (count($leftOver) == 0) {
+                CcWebstreamQuery::create()->findPKs($p_ids)->delete();
+            } else {
+                throw new WebstreamNoPermissionException;
+            }
         } else {
-            throw new WebstreamNoPermissionException;
+            CcWebstreamQuery::create()->findPKs($p_ids)->delete();
         }
     }
 
