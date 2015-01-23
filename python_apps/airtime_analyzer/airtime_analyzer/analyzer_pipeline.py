@@ -58,7 +58,7 @@ class AnalyzerPipeline:
             metadata["file_prefix"] = file_prefix
 
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
-            metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
+            #metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
