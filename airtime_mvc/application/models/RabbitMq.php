@@ -1,6 +1,5 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
-require_once 'Amazon_S3StorageBackend.php';
 
 class Application_Model_RabbitMq
 {
