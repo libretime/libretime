@@ -29,8 +29,8 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $transition_fade = new Zend_Form_Element_Text("transition_fade");
         $transition_fade->setLabel(_("Switch Transition Fade (s)"))
                         ->setFilters(array('StringTrim'))
-                        ->addValidator('regex', false, array('/^[0-9]{1,2}(\.\d{1,3})?$/',
-                        'messages' => _('enter a time in seconds 0{.000}')))
+                        ->addValidator('regex', false, array('/^\d+(\.\d+)?$/',
+                                'messages' => _('Please enter a time in seconds (eg. 0.5)')))
                         ->setValue($defaultFade)
                         ->setDecorators(array('ViewHelper'));
         $this->addElement($transition_fade);
