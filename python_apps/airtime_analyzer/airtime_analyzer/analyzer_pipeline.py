@@ -56,7 +56,7 @@ class AnalyzerPipeline:
             # First, we extract the ID3 tags and other metadata:
             metadata = dict()
             metadata = MetadataAnalyzer.analyze(audio_file_path, metadata)
-            metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
+            #metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
