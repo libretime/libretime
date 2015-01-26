@@ -26,7 +26,10 @@ abstract class StorageBackend
     /** Deletes all objects (files) stored on the cloud service. To be used
      *  for station termination */
     abstract public function deleteAllCloudFileObjects();
-    
+
+    /** Get a prefix for the file (which is usually treated like a directory in the cloud) */
+    abstract public function getFilePrefix();
+
     protected function getBucket()
     {
         return $this->bucket;

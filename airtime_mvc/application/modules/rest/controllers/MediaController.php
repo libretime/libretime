@@ -1,5 +1,7 @@
 <?php
 
+require_once 'ProxyStorageBackend.php';
+
 class Rest_MediaController extends Zend_Rest_Controller
 {
     const MUSIC_DIRS_STOR_PK = 1;
@@ -368,9 +370,11 @@ class Rest_MediaController extends Zend_Rest_Controller
         
         //Dispatch a message to airtime_analyzer through RabbitMQ,
         //notifying it that there's a new upload to process!
+        $storageBackend = new ProxyStorageBackend($CC_CONFIG["current_backend"]);
         Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
                  $importedStorageDirectory, basename($originalFilename),
-                 $callbackUrl, $apiKey, $CC_CONFIG["current_backend"]);
+                 $callbackUrl, $apiKey, $CC_CONFIG["current_backend"],
+                 $storageBackend->getFilePrefix());
     }
     
     private function getOwnerId()

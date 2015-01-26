@@ -4,7 +4,7 @@
 
 ?>
 <script type="text/javascript">
-<?php echo("var products = " . json_encode(BillingController::getProducts()) . ";\n");
+<?php echo("var products = " . json_encode(Billing::getProducts()) . ";\n");
       echo("var vatRate = " . json_encode(VAT_RATE) . ";");
 ?>
 
@@ -255,7 +255,7 @@ $(document).ready(function() {
  -->
 <p id="current_plan"><b>Current Plan:</b> 
 <?php 
-$currentProduct = BillingController::getClientCurrentAirtimeProduct();
+$currentProduct = Billing::getClientCurrentAirtimeProduct();
 echo($currentProduct["name"]);
 //echo Application_Model_Preference::GetPlanLevel();
 ?>

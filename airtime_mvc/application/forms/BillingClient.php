@@ -7,7 +7,7 @@ class Application_Form_BillingClient extends Zend_Form
     {        
         /*$this->setDecorators(array(
                 array('ViewScript', array('viewScript' => 'form/billing-purchase.phtml'))));*/
-        $client = BillingController::getClientDetails();
+        $client = Billing::getClientDetails();
         $this->setAttrib("id", "clientdetails_form");
         
         $notEmptyValidator = Application_Form_Helper_ValidationTypes::overrideNotEmptyValidator();

@@ -1,11 +1,11 @@
 <?php
 
 require_once 'StorageBackend.php';
-require_once 'BillingController.php';
+require_once 'Billing.php';
 
 use Aws\S3\S3Client;
 
-class Amazon_S3 extends StorageBackend
+class Amazon_S3StorageBackend extends StorageBackend
 {
     
     private $s3Client;
@@ -68,13 +68,12 @@ class Amazon_S3 extends StorageBackend
     {
         $this->s3Client->deleteMatchingObjects(
             $bucket = $this->getBucket(),
-            $prefix = self::getAmazonS3FilePrefix());
-
+            $prefix = $this->getFilePrefix());
     }
     
-    public static function getAmazonS3FilePrefix()
+    public function getFilePrefix()
     {
-        $clientCurrentAirtimeProduct = BillingController::getClientCurrentAirtimeProduct();
+        $clientCurrentAirtimeProduct = Billing::getClientCurrentAirtimeProduct();
         $hostingId = $clientCurrentAirtimeProduct["id"];
         return substr($hostingId, -2)."/".$hostingId;
     }
