@@ -60,6 +60,6 @@ class ProxyStorageBackend extends StorageBackend
 
     public function getFilePrefix()
     {
-        $this->storageBackend->getFilePrefix();
+        return $this->storageBackend->getFilePrefix();
     }
 }
