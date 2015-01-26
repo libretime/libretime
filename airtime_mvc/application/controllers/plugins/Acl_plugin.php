@@ -196,8 +196,6 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $current_namespace = new Zend_Session_Namespace('csrf_namespace');
         $observed_csrf_token = $token;
         $expected_csrf_token = $current_namespace->authtoken;
-        Logging::error("Observed: " . $observed_csrf_token);
-        Logging::error("Expected: " . $expected_csrf_token);
         
         return ($observed_csrf_token == $expected_csrf_token);
     }
