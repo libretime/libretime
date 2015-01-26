@@ -283,17 +283,6 @@ loudCmd "apt-get install -y --force-yes lsb-release"
 dist=`lsb_release -is`
 code=`lsb_release -cs`
 
-verbose "\n * Adding apt.sourcefabric to sources.list..."
-set +e
-grep -E "deb +http://apt.sourcefabric.org/? +$code +main" /etc/apt/sources.list
-returncode=$?
-set -e
-if [ "$returncode" != "0" ]; then
-    echo "deb http://apt.sourcefabric.org/ $code main" >> /etc/apt/sources.list
-    loudCmd "apt-get update"
-fi
-verbose "...Done"
-
 if [ "$in_place" = "t" ]; then
     verbose "\n * Setting current Airtime directory as web root..."
     web_root=${AIRTIMEROOT}/airtime_mvc/public
