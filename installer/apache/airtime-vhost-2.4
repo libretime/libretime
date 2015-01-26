@@ -9,11 +9,6 @@
       Order allow,deny
       Allow from all
 
-      # PHP's server values can be spoofed or incorrect if an 
-      # Apache instance is behind a proxy, so set these here
-      UseCanonicalName On
-      UseCanonicalPhysicalPort On
-      
       Require all granted
   </Directory>
 </VirtualHost>
