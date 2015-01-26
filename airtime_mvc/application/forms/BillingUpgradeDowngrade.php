@@ -5,9 +5,9 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
     {
         $productPrices = array();
         $productTypes = array();       
-        list($productPrices, $productTypes) = BillingController::getProductPricesAndTypes();
+        list($productPrices, $productTypes) = Billing::getProductPricesAndTypes();
                        
-        $currentPlanProduct = BillingController::getClientCurrentAirtimeProduct();
+        $currentPlanProduct = Billing::getClientCurrentAirtimeProduct();
         $currentPlanProductId = $currentPlanProduct["pid"];
         
         $currentPlanProductBillingCycle = $currentPlanProduct["billingcycle"];

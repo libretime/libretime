@@ -1,7 +1,8 @@
 <?php
 
 require_once 'StorageBackend.php';
-require_once 'Amazon_S3.php';
+require_once 'FileStorageBackend.php';
+require_once 'Amazon_S3StorageBackend.php';
 
 /**
  * 
@@ -23,7 +24,13 @@ class ProxyStorageBackend extends StorageBackend
         //The storage backend in the airtime.conf directly corresponds to
         //the name of the class that implements it (eg. Amazon_S3), so we 
         //can easily create the right backend object dynamically:
-        $this->storageBackend = new $storageBackend($CC_CONFIG[$storageBackend]);
+        if ($storageBackend == "Amazon_S3") {
+            $this->storageBackend = new Amazon_S3StorageBackend($CC_CONFIG["Amazon_S3"]);
+        } else if ($storageBackend == "file") {
+            $this->storageBackend = new FileStorageBackend();
+        } else {
+            $this->storageBackend = new $storageBackend($CC_CONFIG[$storageBackend]);
+        }
     }
     
     public function getAbsoluteFilePath($resourceId)
@@ -51,4 +58,8 @@ class ProxyStorageBackend extends StorageBackend
         $this->storageBackend->deleteAllCloudFileObjects();
     }
 
+    public function getFilePrefix()
+    {
+        $this->storageBackend->getFilePrefix();
+    }
 }

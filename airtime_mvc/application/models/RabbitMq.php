@@ -1,6 +1,6 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
-require_once 'Amazon_S3.php';
+require_once 'Amazon_S3StorageBackend.php';
 
 class Application_Model_RabbitMq
 {
@@ -81,7 +81,7 @@ class Application_Model_RabbitMq
     }
 
     public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
-                                                $callbackUrl, $apiKey, $currentStorageBackend)
+                                                $callbackUrl, $apiKey, $currentStorageBackend, $filePrefix)
     {
         //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
         //and shared between all instances on Airtime Pro.
@@ -118,7 +118,7 @@ class Application_Model_RabbitMq
         // customer's file/s; File restoration is done via the S3 Browser
         // client. The client will hang if there are too many files under the
         // same folder.
-        $data['file_prefix'] = Amazon_S3::getAmazonS3FilePrefix();
+        $data['file_prefix'] = $filePrefix;
         
         $jsonData = json_encode($data);
         //self::sendMessage($exchange, 'topic', false, $jsonData, 'airtime-uploads');
