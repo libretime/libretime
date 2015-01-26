@@ -25,7 +25,7 @@ class ProxyStorageBackend extends StorageBackend
         //the name of the class that implements it (eg. Amazon_S3), so we 
         //can easily create the right backend object dynamically:
         if ($storageBackend == "amazon_S3") {
-            $this->storageBackend = new Amazon_S3StorageBackend($CC_CONFIG["Amazon_S3"]);
+            $this->storageBackend = new Amazon_S3StorageBackend($CC_CONFIG["amazon_S3"]);
         } else if ($storageBackend == "file") {
             $this->storageBackend = new FileStorageBackend();
         } else {
