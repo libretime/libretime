@@ -87,6 +87,6 @@ try {
     } else {
         Logging::error($e->getTrace());
     }
-    die();
+    throw $e;
 }
 
