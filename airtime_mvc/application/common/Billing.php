@@ -14,7 +14,7 @@ class Billing
     /** Get the Airtime instance ID of the instance the customer is currently viewing. */
     public static function getClientInstanceId()
     {
-        $currentProduct = BillingController::getClientCurrentAirtimeProduct();
+        $currentProduct = Billing::getClientCurrentAirtimeProduct();
         return $currentProduct["id"];
     }
 
