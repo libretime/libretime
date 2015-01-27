@@ -34,7 +34,11 @@ setup(name='airtime-media-monitor',
       url='http://github.com/sourcefabric/Airtime',
       author='sourcefabric',
       license='AGPLv3',
-      packages=['media-monitor', 'media-monitor2'],
+      packages=['media_monitor', 'mm2', 'mm2.configs', 
+                'mm2.media', 'mm2.media.monitor', 
+                'mm2.media.metadata', 'mm2.media.saas'
+                ],
+      package_data={'': ['*.cfg']},
       scripts=['bin/airtime-media-monitor'],
       install_requires=[
           'amqplib',

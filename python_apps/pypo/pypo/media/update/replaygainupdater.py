@@ -5,7 +5,7 @@ import os
 import time
 import logging
 
-from media.update import replaygain
+import replaygain
 
 class ReplayGainUpdater(Thread):
     """

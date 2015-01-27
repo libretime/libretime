@@ -35,10 +35,13 @@ setup(name='airtime-playout',
       url='http://github.com/sourcefabric/Airtime',
       author='sourcefabric',
       license='AGPLv3',
-      packages=['pypo'],
+      packages=['pypo', 'pypo.media', 'pypo.media.update',
+                'liquidsoap', 'liquidsoap.library'],
+      package_data={'': ['*.liq', '*.cfg']},
       scripts=[
           'bin/airtime-playout',
-          'bin/airtime-liquidsoap'
+          'bin/airtime-liquidsoap',
+          'bin/pyponotify'
       ],
       install_requires=[
           'amqplib',
