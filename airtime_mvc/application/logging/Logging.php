@@ -38,52 +38,50 @@ class Logging {
             return $p_msg;
         }
     }
+
+    /** @param debugMode Prints the function name, file, and line number. This is slow as it uses debug_backtrace()
+     *                   so don't use it unless you need it.
+     */
+    private static function getLinePrefix($debugMode=false)
+    {
+        $linePrefix = "";
+
+        if (array_key_exists('SERVER_NAME', $_SERVER)) {
+            $linePrefix .= $_SERVER['SERVER_NAME'] . " ";
+        }
+
+        if ($debugMode) {
+            //debug_backtrace is SLOW so we don't want this invoke unless there was a real error! (hence $debugMode)
+            $bt = debug_backtrace();
+            $caller = $bt[1];
+            $file = basename($caller['file']);
+            $line = $caller['line'];
+            $function = "Unknown function";
+            if (array_key_exists(2, $bt)) {
+                $function = $bt[2]['function'];
+            }
+            $linePrefix .= "[$file:$line - $function()] - ";
+        }
+
+        return $linePrefix;
+    }
     
     public static function info($p_msg)
     {
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-       
         $logger = self::getLogger();
-        $logger->info($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - ".self::toString($p_msg));
+        $logger->info(self::getLinePrefix() . self::toString($p_msg));
     }
 
     public static function warn($p_msg)
     {
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-       
         $logger = self::getLogger();
-        $logger->warn($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - "
-            . self::toString($p_msg));
+        $logger->warn(self::getLinePrefix() . self::toString($p_msg));
     }
 
     public static function error($p_msg)
     {
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-       
         $logger = self::getLogger();
-        $logger->err($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - "
-            . self::toString($p_msg));
+        $logger->err(self::getLinePrefix(true) .  self::toString($p_msg));
     }
     
     public static function debug($p_msg)
@@ -92,17 +90,8 @@ class Logging {
             return;
         }
 
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-
         $logger = self::getLogger();
-        $logger->debug($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - ".self::toString($p_msg));
+        $logger->debug(self::getLinePrefix(true) . self::toString($p_msg));
     }
     // kind of like debug but for printing arrays more compactly (skipping
     // empty elements
