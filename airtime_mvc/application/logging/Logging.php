@@ -51,7 +51,7 @@ class Logging {
         $function = $caller['function'];
        
         $logger = self::getLogger();
-        $logger->info("[$file : $function() : line $line] - ".self::toString($p_msg));
+        $logger->info($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - ".self::toString($p_msg));
     }
 
     public static function warn($p_msg)
@@ -66,7 +66,7 @@ class Logging {
         $function = $caller['function'];
        
         $logger = self::getLogger();
-        $logger->warn("[$file : $function() : line $line] - "
+        $logger->warn($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - "
             . self::toString($p_msg));
     }
 
@@ -82,7 +82,7 @@ class Logging {
         $function = $caller['function'];
        
         $logger = self::getLogger();
-        $logger->err("[$file : $function() : line $line] - "
+        $logger->err($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - "
             . self::toString($p_msg));
     }
     
@@ -102,7 +102,7 @@ class Logging {
         $function = $caller['function'];
 
         $logger = self::getLogger();
-        $logger->debug("[$file : $function() : line $line] - ".self::toString($p_msg));            
+        $logger->debug($_SERVER['SERVER_NAME'] . " [$file : $function() : line $line] - ".self::toString($p_msg));
     }
     // kind of like debug but for printing arrays more compactly (skipping
     // empty elements
