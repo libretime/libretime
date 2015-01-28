@@ -76,9 +76,16 @@ parser.add_option("-c",
 
 LIQUIDSOAP_MIN_VERSION = "1.1.1"
 
+PYPO_HOME='/var/tmp/airtime/pypo/'
 
-#need to wait for Python 2.7 for this..
-#logging.captureWarnings(True)
+def configure_environment():
+    os.environ["HOME"] = PYPO_HOME
+    os.environ["TERM"] = 'xterm'
+
+configure_environment()
+
+# need to wait for Python 2.7 for this..
+logging.captureWarnings(True)
 
 # configure logging
 try:

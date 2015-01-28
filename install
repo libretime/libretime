@@ -392,10 +392,6 @@ verbose "\n * Installing pypo..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install"
 verbose "...Done"
 
-verbose "\n * Creating liquidsoap symlink..."
-ln -sf /usr/bin/liquidsoap /usr/bin/airtime-liquidsoap
-verbose "...Done"
-
 for i in /etc/init/airtime*.template; do
     chmod 644 $i
     sed -i "s/WEB_USER/${web_user}/g" $i

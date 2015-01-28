@@ -25,7 +25,7 @@ require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 require_once __DIR__.'/upgrade/Upgrades.php';
 
-require_once (APPLICATION_PATH . "logging/Logging.php");
+require_once (APPLICATION_PATH . "/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 Config::setAirtimeVersion();
@@ -81,7 +81,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
     
     protected function _initUpgrade() {
-        UpgradeManager::checkIfUpgradeIsNeeded(); //This will do the upgrade too if it's needed...
+        /* We need to wrap this here so that we aren't checking when we're running the unit test suite
+         */
+        if (getenv("AIRTIME_UNIT_TEST") != 1) {
+            UpgradeManager::checkIfUpgradeIsNeeded(); //This will do the upgrade too if it's needed...
+        }
     }
 
     protected function _initHeadLink()

@@ -1,15 +1,3 @@
 #!/bin/bash
 
-set +e
-cat /etc/default/locale | grep -i "LANG=.*UTF-\?8" > /dev/null
-set -e
-if [ "$?" != "0" ]; then
-    echo "non UTF-8 default locale found in /etc/default/locale." > /var/log/airtime/pypo/error.log
-    exit 1
-fi
-
-export HOME="/var/tmp/airtime/pypo/"
-export LC_ALL=`cat /etc/default/locale | grep "LANG=" | cut -d= -f2 | tr -d "\n\""`
-export TERM=xterm
-
 exec python -m pypo > /var/log/airtime/pypo/py-interpreter.log 2>&1
