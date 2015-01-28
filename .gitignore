@@ -1,3 +1,12 @@
 .*
 *.pyc
 *.*~
+vendor/*
+composer.phar
+*log.*
+**/*.egg-info/*
+**/build/*
+**/dist/*
+/airtime_mvc/tests/test_results.xml
+/tests/results.html
+/tests/*.jar
