@@ -1,4 +1,5 @@
 <?php
+require_once('SentryLogging.php');
 
 class Logging {
 
@@ -82,6 +83,7 @@ class Logging {
     {
         $logger = self::getLogger();
         $logger->err(self::getLinePrefix(true) .  self::toString($p_msg));
+        SentryLogger::getInstance()->captureError(self::toString($p_msg));
     }
     
     public static function debug($p_msg)
