@@ -24,7 +24,7 @@ class SentryLogger
     private function __construct()
     {
         // Instantiate a new client with a compatible DSN
-        $dsn = 'http://6a495f2d42b345f3a995b0c2219c3b9f:383164e96bb741998d8c2af468edf503@sentry.sourcefabric.org/12';
+        $dsn = 'TODO: FILL ME IN';
         $this->sentryClient = new Raven_Client($dsn,
             array(
                 //FIXME: This doesn't seem to be working...
