@@ -188,7 +188,7 @@ def make_scheduled_play_unavailable()
 end
 
 def update_source_status(sourcename, status) =
-    command = "timeout --signal=KILL 45 python pyponotify --source-name=#{sourcename} --source-status=#{status} &"
+    command = "timeout --signal=KILL 45 pyponotify --source-name=#{sourcename} --source-status=#{status} &"
     system(command)
     log(command)
 end
@@ -399,6 +399,6 @@ if s3_enable == true then
                 s3_connected, s3_description, s3_channels)
 end
 
-command = "timeout --signal=KILL 45 python pyponotify --liquidsoap-started &"
+command = "timeout --signal=KILL 45 pyponotify --liquidsoap-started &"
 log(command)
 system(command)

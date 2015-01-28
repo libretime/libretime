@@ -1,5 +1,5 @@
 def notify(m)
-  command = "timeout --signal=KILL 45 python pyponotify --media-id=#{m['schedule_table_id']} &"
+  command = "timeout --signal=KILL 45 pyponotify --media-id=#{m['schedule_table_id']} &"
   log(command)
   system(command)
 end
@@ -15,7 +15,7 @@ def notify_stream(m)
   #if a string has a single apostrophe in it, let's comment it out by ending the string before right before it
   #escaping the apostrophe, and then starting a new string right after it. This is why we use 3 apostrophes.
   json_str = string.replace(pattern="'",(fun (s) -> "'\''"), json_str)
-  command = "timeout --signal=KILL 45 python pyponotify --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
+  command = "timeout --signal=KILL 45 pyponotify --webstream='#{json_str}' --media-id=#{!current_dyn_id} &"
   
   if !current_dyn_id != "-1" then
     log(command)
@@ -93,14 +93,14 @@ def output_to(output_type, type, bitrate, host, port, pass, mount_point, url, de
     source = ref s
     def on_error(msg)
         connected := "false"
-        command = "timeout --signal=KILL 45 python pyponotify --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
+        command = "timeout --signal=KILL 45 pyponotify --error='#{msg}' --stream-id=#{stream} --time=#{!time} &"
         system(command)
         log(command)
         5.
     end
     def on_connect()
         connected := "true"
-        command = "timeout --signal=KILL 45 python pyponotify --connect --stream-id=#{stream} --time=#{!time} &"
+        command = "timeout --signal=KILL 45 pyponotify --connect --stream-id=#{stream} --time=#{!time} &"
         system(command)
         log(command)
     end

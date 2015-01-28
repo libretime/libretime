@@ -20,6 +20,7 @@ else:
     data_files = [
                   ('/etc/init', ['install/airtime-playout.conf.template']),
                   ('/etc/init', ['install/airtime-liquidsoap.conf.template']),
+                  ('/etc/airtime', ['pypo/notify_logging.cfg']),
                   ('/var/log/airtime/pypo', []),
                   ('/var/log/airtime/pypo-liquidsoap', []),
                   ('/var/tmp/airtime/pypo', []),
@@ -35,7 +36,7 @@ setup(name='airtime-playout',
       url='http://github.com/sourcefabric/Airtime',
       author='sourcefabric',
       license='AGPLv3',
-      packages=['pypo', 'pypo.media', 'pypo.media.update',
+      packages=['pypo', 'pypo.media.update',
                 'liquidsoap', 'liquidsoap.library'],
       package_data={'': ['*.liq', '*.cfg']},
       scripts=[
