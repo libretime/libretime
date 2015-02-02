@@ -19,7 +19,7 @@ class PlayabilityAnalyzer(Analyzer):
         :param metadata: A metadata dictionary where the results will be put
         :return: The metadata dictionary
         '''
-        command = [PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE, '-v', '-c', "output.dummy(audio_to_stereo(single('%s')))" % filename]
+        command = [PlayabilityAnalyzer.LIQUIDSOAP_EXECUTABLE, '-v', '-c', "output.dummy(audio_to_stereo(single(argv(1))))", '--', filename]
         try:
             subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
 
