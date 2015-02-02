@@ -101,7 +101,8 @@ class SentryLogger
     private static function getTags()
     {
         $tags = array();
-        $tags['Development Environment'] = Config::getConfig()["dev_env"];
+        $config = Config::getConfig();
+        $tags['Development Environment'] = $config["dev_env"];
         return $tags;
     }
 
