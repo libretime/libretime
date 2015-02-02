@@ -1,9 +1,4 @@
 <?php
-/*
-require('/path/to/Raven/Autoloader.php');
-
-Raven_Autoloader::register();
-*/
 
 class SentryLogger
 {
@@ -23,15 +18,20 @@ class SentryLogger
 
     private function __construct()
     {
+        if (!file_exists(SENTRY_CONFIG_PATH)) {
+            $this->sentryClient = null;
+            return;
+        }
         // Instantiate a new client with a compatible DSN
-        $dsn = 'TODO: FILL ME IN';
+        $sentry_config = parse_ini_file(SENTRY_CONFIG_PATH, false);
+        $dsn = $sentry_config['dsn'];
         $this->sentryClient = new Raven_Client($dsn,
             array(
                 //FIXME: This doesn't seem to be working...
                 'processorOptions' => array(
                     'Raven_SanitizeDataProcessor' => array(
-                        'fields_re' => '/(user_password|user_token|user_secret)/i',
-                        'values_re' => '/^(?:\d[ -]*?){15,16}$/'
+                        'fields_re' => '/(authorization|password|passwd|user_token|secret|WHMCS_|SESSION)/i',
+                        'values_re' => '/^(?:\d[ -]*?){13,16}$/'
                     )
                 )
             ));
@@ -50,7 +50,12 @@ class SentryLogger
 
     public function captureMessage($msg)
     {
+        if (!$this->sentryClient) {
+            return;
+        }
         $client = $this->sentryClient;
+        self::addUserData($client);
+        self::addTags($client);
 
         // Capture a message
         $event_id = $client->getIdent($client->captureMessage($msg));
@@ -61,8 +66,13 @@ class SentryLogger
 
     public function captureException($exception)
     {
+        if (!$this->sentryClient) {
+            return;
+        }
+
         $client = $this->sentryClient;
         self::addUserData($client);
+        self::addTags($client);
 
         $event_id = $client->getIdent($client->captureException($exception, array(
             'extra' => $this->getExtraData(),
@@ -73,13 +83,17 @@ class SentryLogger
 
     public function captureError($errorMessage)
     {
+        if (!$this->sentryClient) {
+            return;
+        }
+
         $client = $this->sentryClient;
 
         // Provide some additional data with an exception
         self::addUserData($client);
+        self::addTags($client);
         $event_id = $client->getIdent($client->captureMessage($errorMessage, array(
-            'extra' => $this->getExtraData(),
-            'tags' => $this->getTags(),
+            'extra' => $this->getExtraData()
         )));
         $client->context->clear();
     }
@@ -87,8 +101,13 @@ class SentryLogger
     private static function getTags()
     {
         $tags = array();
-        $tags['dev_env'] = Config::getConfig()["dev_env"];
+        $tags['Development Environment'] = Config::getConfig()["dev_env"];
         return $tags;
+    }
+
+    private static function addTags($client)
+    {
+        $client->tags_context(self::getTags());
     }
 
     private static function addUserData($client)
