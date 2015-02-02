@@ -20,8 +20,9 @@ def teardown():
 def test_basic():
     filename = os.path.basename(DEFAULT_AUDIO_FILE)
     q = multiprocessing.Queue()
+    cloud_storage_enabled = False
     #This actually imports the file into the "./Test Artist" directory.
-    AnalyzerPipeline.run_analysis(q, DEFAULT_AUDIO_FILE, u'.', filename)
+    AnalyzerPipeline.run_analysis(q, DEFAULT_AUDIO_FILE, u'.', filename, cloud_storage_enabled)
     metadata = q.get()
     assert metadata['track_title'] == u'Test Title'
     assert metadata['artist_name'] == u'Test Artist'
