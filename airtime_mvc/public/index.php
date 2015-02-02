@@ -79,6 +79,7 @@ $application = new Zend_Application(
 
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
+Logging::setupParseErrorLogging();
 
 // Create application, bootstrap, and run
 try {
