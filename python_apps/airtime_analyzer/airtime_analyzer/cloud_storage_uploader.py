@@ -1,7 +1,7 @@
 import os
 import logging
 import uuid
-import config_file
+import ConfigParser
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
@@ -25,20 +25,31 @@ class CloudStorageUploader:
 
     def __init__(self):
 
-        config = config_file.read_config_file(CLOUD_CONFIG_PATH)
+        try:
+            config = ConfigParser.SafeConfigParser()
+            config.readfp(open(CLOUD_CONFIG_PATH))
+            cloud_storage_config_section = config.get("current_backend", "storage_backend")
+            self._storage_backend = cloud_storage_config_section
+        except IOError as e:
+            print "Failed to open config file at " + CLOUD_CONFIG_PATH + ": " + e.strerror
+            print "Defaulting to file storage"
+            self._storage_backend = STORAGE_BACKEND_FILE
+        except Exception as e:
+            print e
+            print "Defaulting to file storage"
+            self._storage_backend = STORAGE_BACKEND_FILE
 
-        CLOUD_STORAGE_CONFIG_SECTION = config.get("current_backend", "storage_backend")
-        self._storage_backend = CLOUD_STORAGE_CONFIG_SECTION
         if self._storage_backend == STORAGE_BACKEND_FILE:
             self._host = ""
             self._bucket = ""
             self._api_key = ""
             self._api_key_secret = ""
         else:
-            self._host = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'host')
-            self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
-            self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
-            self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
+            self._host = config.get(cloud_storage_config_section, 'host')
+            self._bucket = config.get(cloud_storage_config_section, 'bucket')
+            self._api_key = config.get(cloud_storage_config_section, 'api_key')
+            self._api_key_secret = config.get(cloud_storage_config_section, 'api_key_secret')
+
 
     def enabled(self):
         if self._storage_backend == "file":
