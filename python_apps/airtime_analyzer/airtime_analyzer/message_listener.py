@@ -209,9 +209,13 @@ class MessageListener:
     @staticmethod
     def spawn_analyzer_process(audio_file_path, import_directory, original_filename, file_prefix):
         ''' Spawn a child process to analyze and import a new audio file. '''
+
+        csu = CloudStorageUploader()
+        cloud_storage_enabled = csu.enabled()
+
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis, 
-                        args=(q, audio_file_path, import_directory, original_filename, file_prefix))
+                        args=(q, audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_enabled))
         p.start()
         p.join()
         if p.exitcode == 0:

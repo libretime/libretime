@@ -21,7 +21,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, file_prefix):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_enabled):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -33,8 +33,9 @@ class AnalyzerPipeline:
             original_filename: The original filename of the file, which we'll try to 
                                preserve. The file at audio_file_path typically has a 
                                temporary randomly generated name, which is why we want
-                               to know what the original name was.  
-            station_domain: The Airtime Pro account's domain name. i.e. bananas
+                               to know what the original name was.
+            file_prefix: A prefix for any files storage in the cloud (treated as a directory name on S3)
+            cloud_storage_enabled: Whether to store the file in the cloud or on the local disk.
         """
         # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
@@ -50,6 +51,10 @@ class AnalyzerPipeline:
                 raise TypeError("import_directory must be unicode. Was of type " + type(import_directory).__name__ + " instead.")
             if not isinstance(original_filename, unicode):
                 raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
+            if not isinstance(file_prefix, unicode):
+                raise TypeError("file_prefix must be unicode. Was of type " + type(file_prefix).__name__ + " instead.")
+            if not isinstance(cloud_storage_enabled, bool):
+                raise TypeError("cloud_storage_enabled must be a boolean. Was of type " + type(cloud_storage_enabled).__name__ + " instead.")
 
 
             # Analyze the audio file we were told to analyze:
@@ -62,9 +67,8 @@ class AnalyzerPipeline:
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
-
-            csu = CloudStorageUploader()
-            if csu.enabled():
+            if cloud_storage_enabled:
+                csu = CloudStorageUploader()
                 metadata = csu.upload_obj(audio_file_path, metadata)
             else:
                 metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
