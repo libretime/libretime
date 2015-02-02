@@ -86,3 +86,5 @@ define('SOUNDCLOUD_ERROR'            , -3);
 define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
 define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
 
+//Sentry error logging
+define('SENTRY_CONFIG_PATH', '/etc/airtime-saas/sentry.airtime_web.ini');
