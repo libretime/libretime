@@ -25,19 +25,6 @@ class Config {
             $filename = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
         }
         
-        // Parse separate conf file for cloud storage values
-        $cloudStorageConfig = isset($_SERVER['CLOUD_STORAGE_CONF']) ? $_SERVER['CLOUD_STORAGE_CONF'] : "/etc/airtime-saas/cloud_storage.conf";
-        $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
-        
-        $CC_CONFIG["supportedStorageBackends"] = array('amazon_S3');
-        foreach ($CC_CONFIG["supportedStorageBackends"] as $backend) {
-            $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
-        }
-        
-        // Tells us where file uploads will be uploaded to.
-        // It will either be set to a cloud storage backend or local file storage.
-        $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
-        
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user
@@ -53,6 +40,19 @@ class Config {
         } else {
             $CC_CONFIG['dev_env'] = 'production';
         }
+        
+        // Parse separate conf file for cloud storage values
+        $cloudStorageConfig = "/etc/airtime-saas/".$CC_CONFIG['dev_env']."/cloud_storage_".$CC_CONFIG['dev_env'].".conf";
+        $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
+        
+        $CC_CONFIG["supportedStorageBackends"] = array('amazon_S3');
+        foreach ($CC_CONFIG["supportedStorageBackends"] as $backend) {
+            $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
+        }
+        
+        // Tells us where file uploads will be uploaded to.
+        // It will either be set to a cloud storage backend or local file storage.
+        $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
         
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
         

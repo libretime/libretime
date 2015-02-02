@@ -5,8 +5,7 @@ import config_file
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
-
-CLOUD_CONFIG_PATH = '/etc/airtime-saas/cloud_storage.conf'
+AIRTIME_CONFIG_PATH = '/etc/airtime/airtime.conf'
 STORAGE_BACKEND_FILE = "file"
 
 class CloudStorageUploader:
@@ -25,6 +24,13 @@ class CloudStorageUploader:
 
     def __init__(self):
 
+        airtime_config = config_file.read_config_file(AIRTIME_CONFIG_PATH)
+        dev_env = "production" # Default
+        if airtime_config.has_option("general", "dev_env"):
+            dev_env = airtime_config.get("general", "dev_env")
+        
+        
+        CLOUD_CONFIG_PATH = "/etc/airtime-saas/%s/cloud_storage_%s.conf" % (dev_env, dev_env)
         config = config_file.read_config_file(CLOUD_CONFIG_PATH)
 
         CLOUD_STORAGE_CONFIG_SECTION = config.get("current_backend", "storage_backend")
