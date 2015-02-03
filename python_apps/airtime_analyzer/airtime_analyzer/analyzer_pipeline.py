@@ -67,12 +67,13 @@ class AnalyzerPipeline:
 
             csu = CloudStorageUploader()
             if csu.enabled():
+                logging.info("333")
                 metadata = csu.upload_obj(audio_file_path, metadata)
             else:
                 metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
 
             metadata["import_status"] = 0 # Successfully imported
-            logging.info("333")
+            logging.info("444")
 
             # Note that the queue we're putting the results into is our interprocess communication 
             # back to the main process.
@@ -80,7 +81,7 @@ class AnalyzerPipeline:
             # Pass all the file metadata back to the main analyzer process, which then passes
             # it back to the Airtime web application.
             queue.put(metadata)
-            logging.info("444")
+            logging.info("555")
         except UnplayableFileError as e:
             logging.exception(e)
             metadata["import_status"] = 2
