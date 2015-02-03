@@ -157,17 +157,9 @@ class ApiController extends Zend_Controller_Action
         if (!$location || $location == "") {
             throw new FileDoesNotExistException("Requested file does not exist!");
         }
-        
-        // If we're passing in a Stored File object, it's faster 
-        // to use getFileSize() and pass in the result
-        if (!$size || $size <= 0) {
-            $size= filesize($location);
-        }
-        
-        if ($size <= 0) {
-            throw new Exception("Invalid file size returned for file at $location");
-        }
-        
+
+        $size= filesize($location);
+
         $fm = @fopen($location, 'rb');
         if (!$fm) {
             header ("HTTP/1.1 505 Internal server error");
