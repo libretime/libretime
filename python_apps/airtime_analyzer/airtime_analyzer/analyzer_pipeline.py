@@ -21,7 +21,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, file_prefix):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_config):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -34,7 +34,8 @@ class AnalyzerPipeline:
                                preserve. The file at audio_file_path typically has a 
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
-            station_domain: The Airtime Pro account's domain name. i.e. bananas
+            file_prefix:
+            cloud_storage_config: ConfigParser object containing the cloud storage configuration settings
         """
         # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
@@ -42,7 +43,6 @@ class AnalyzerPipeline:
         AnalyzerPipeline.python_logger_deadlock_workaround()
 
         try:
-            logging.info("111")
             if not isinstance(queue, multiprocessing.queues.Queue):
                 raise TypeError("queue must be a multiprocessing.Queue()")
             if not isinstance(audio_file_path, unicode):
@@ -62,18 +62,15 @@ class AnalyzerPipeline:
             metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
-            logging.info("222")
 
 
-            csu = CloudStorageUploader()
+            csu = CloudStorageUploader(cloud_storage_config)
             if csu.enabled():
-                logging.info("333")
                 metadata = csu.upload_obj(audio_file_path, metadata)
             else:
                 metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
 
             metadata["import_status"] = 0 # Successfully imported
-            logging.info("444")
 
             # Note that the queue we're putting the results into is our interprocess communication 
             # back to the main process.
@@ -81,7 +78,6 @@ class AnalyzerPipeline:
             # Pass all the file metadata back to the main analyzer process, which then passes
             # it back to the Airtime web application.
             queue.put(metadata)
-            logging.info("555")
         except UnplayableFileError as e:
             logging.exception(e)
             metadata["import_status"] = 2

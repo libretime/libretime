@@ -1,11 +1,9 @@
 import os
 import logging
 import uuid
-import config_file
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
-AIRTIME_CONFIG_PATH = '/etc/airtime/airtime.conf'
 STORAGE_BACKEND_FILE = "file"
 
 class CloudStorageUploader:
@@ -22,17 +20,7 @@ class CloudStorageUploader:
         _api_key_secret: Secret access key to objects on Amazon S3.
     """
 
-    def __init__(self):
-
-        airtime_config = config_file.read_config_file(AIRTIME_CONFIG_PATH)
-        dev_env = "production" # Default
-        if airtime_config.has_option("general", "dev_env"):
-            dev_env = airtime_config.get("general", "dev_env")
-        
-        
-        CLOUD_CONFIG_PATH = "/etc/airtime-saas/%s/cloud_storage_%s.conf" % (dev_env, dev_env)
-        logging.info(CLOUD_CONFIG_PATH)
-        config = config_file.read_config_file(CLOUD_CONFIG_PATH)
+    def __init__(self, config):
 
         CLOUD_STORAGE_CONFIG_SECTION = config.get("current_backend", "storage_backend")
         self._storage_backend = CLOUD_STORAGE_CONFIG_SECTION
@@ -73,7 +61,7 @@ class CloudStorageUploader:
                 resource_id: The unique object name used to identify the objects
                              on Amazon S3 
         """
-        logging.info("aaa")
+
         file_base_name = os.path.basename(audio_file_path)
         file_name, extension = os.path.splitext(file_base_name)
         
@@ -83,7 +71,6 @@ class CloudStorageUploader:
         file_name = file_name.replace(" ", "-")
         
         unique_id = str(uuid.uuid4())
-        logging.info("bbb")
         
         # We add another prefix to the resource name with the last two characters
         # of the unique id so files are not all placed under the root folder. We
@@ -91,10 +78,8 @@ class CloudStorageUploader:
         # is done via the S3 Browser client. The client will hang if there are too
         # many files under the same folder.
         unique_id_prefix = unique_id[-2:]
-        logging.info("ccc")
         
         resource_id = "%s/%s/%s_%s%s" % (metadata['file_prefix'], unique_id_prefix, file_name, unique_id, extension)
-        logging.info("ddd")
 
         conn = S3Connection(self._api_key, self._api_key_secret, host=self._host)
         bucket = conn.get_bucket(self._bucket)
@@ -105,7 +90,6 @@ class CloudStorageUploader:
         key.set_contents_from_filename(audio_file_path)
 
         metadata["filesize"] = os.path.getsize(audio_file_path)
-        logging.info("eee")
         
         # Remove file from organize directory
         try:

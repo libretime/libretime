@@ -89,7 +89,7 @@ class Application_Model_RabbitMq
         if (array_key_exists("dev_env", $CC_CONFIG)) {
             $devEnv = $CC_CONFIG["dev_env"];
         }
-        $config = parse_ini_file("/etc/airtime-saas/".$devEnv."/rabbitmq-analyzer-" . $devEnv . ".ini", true);
+        $config = parse_ini_file("/etc/airtime-saas/".$devEnv."/rabbitmq-analyzer.ini", true);
         $conn = new AMQPConnection($config["rabbitmq"]["host"],
                 $config["rabbitmq"]["port"],
                 $config["rabbitmq"]["user"],

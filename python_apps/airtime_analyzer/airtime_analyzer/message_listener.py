@@ -55,12 +55,13 @@ QUEUE = "airtime-uploads"
 """
 class MessageListener:
 
-    def __init__(self, config):
+    def __init__(self, config, cloud_storage_config):
         ''' Start listening for file upload notification messages
             from RabbitMQ
             
             Keyword arguments:
                 config: A ConfigParser object containing the [rabbitmq] configuration.
+                cloud_storage_config: A ConfigParser object containing the cloud storage configuration.
         '''
     
         self._shutdown = False
@@ -73,6 +74,8 @@ class MessageListener:
         self._username = config.get(RMQ_CONFIG_SECTION, 'user')
         self._password = config.get(RMQ_CONFIG_SECTION, 'password')
         self._vhost = config.get(RMQ_CONFIG_SECTION, 'vhost')
+
+        self.cloud_storage_config = cloud_storage_config
         
         # Set up a signal handler so we can shutdown gracefully
         # For some reason, this signal handler must be set up here. I'd rather 
@@ -167,7 +170,7 @@ class MessageListener:
             original_filename = msg_dict["original_filename"]
             file_prefix = msg_dict["file_prefix"]
 
-            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, file_prefix)
+            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, file_prefix, self.cloud_storage_config)
 
             StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
 
@@ -207,11 +210,11 @@ class MessageListener:
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
     
     @staticmethod
-    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, file_prefix):
+    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_config):
         ''' Spawn a child process to analyze and import a new audio file. '''
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis, 
-                        args=(q, audio_file_path, import_directory, original_filename, file_prefix))
+                        args=(q, audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_config))
         p.start()
         p.join()
         if p.exitcode == 0:
