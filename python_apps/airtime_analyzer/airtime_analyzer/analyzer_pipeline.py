@@ -42,6 +42,7 @@ class AnalyzerPipeline:
         AnalyzerPipeline.python_logger_deadlock_workaround()
 
         try:
+            logging.info("111")
             if not isinstance(queue, multiprocessing.queues.Queue):
                 raise TypeError("queue must be a multiprocessing.Queue()")
             if not isinstance(audio_file_path, unicode):
@@ -61,6 +62,7 @@ class AnalyzerPipeline:
             metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
+            logging.info("222")
 
 
             csu = CloudStorageUploader()
@@ -70,6 +72,7 @@ class AnalyzerPipeline:
                 metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
 
             metadata["import_status"] = 0 # Successfully imported
+            logging.info("333")
 
             # Note that the queue we're putting the results into is our interprocess communication 
             # back to the main process.
@@ -77,6 +80,7 @@ class AnalyzerPipeline:
             # Pass all the file metadata back to the main analyzer process, which then passes
             # it back to the Airtime web application.
             queue.put(metadata)
+            logging.info("444")
         except UnplayableFileError as e:
             logging.exception(e)
             metadata["import_status"] = 2
