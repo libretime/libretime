@@ -168,8 +168,6 @@ class ApiController extends Zend_Controller_Action
             throw new Exception("Invalid file size returned for file at $location");
         }
         
-        $time= date('r', filemtime($location));
-        
         $fm = @fopen($location, 'rb');
         if (!$fm) {
             header ("HTTP/1.1 505 Internal server error");
