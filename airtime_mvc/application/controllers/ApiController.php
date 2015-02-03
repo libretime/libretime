@@ -135,7 +135,7 @@ class ApiController extends Zend_Controller_Action
         $size = $storedFile->getFileSize();
         $mimeType = $storedFile->getPropelOrm()->getDbMime();
         
-        $this->smartReadFile($filepath, $size, $mimeType);
+        $this->smartReadFile($filepath, $mimeType, $size);
     }
     
 
