@@ -22,18 +22,25 @@ class CloudStorageUploader:
 
     def __init__(self, config):
 
-        CLOUD_STORAGE_CONFIG_SECTION = config.get("current_backend", "storage_backend")
-        self._storage_backend = CLOUD_STORAGE_CONFIG_SECTION
+        try:
+            cloud_storage_config_section = config.get("current_backend", "storage_backend")
+            self._storage_backend = cloud_storage_config_section
+        except Exception as e:
+            print e
+            print "Defaulting to file storage"
+            self._storage_backend = STORAGE_BACKEND_FILE
+
         if self._storage_backend == STORAGE_BACKEND_FILE:
             self._host = ""
             self._bucket = ""
             self._api_key = ""
             self._api_key_secret = ""
         else:
-            self._host = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'host')
-            self._bucket = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'bucket')
-            self._api_key = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key')
-            self._api_key_secret = config.get(CLOUD_STORAGE_CONFIG_SECTION, 'api_key_secret')
+            self._host = config.get(cloud_storage_config_section, 'host')
+            self._bucket = config.get(cloud_storage_config_section, 'bucket')
+            self._api_key = config.get(cloud_storage_config_section, 'api_key')
+            self._api_key_secret = config.get(cloud_storage_config_section, 'api_key_secret')
+
 
     def enabled(self):
         if self._storage_backend == "file":

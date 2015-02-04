@@ -1,6 +1,7 @@
 {
     "require": {
         "propel/propel1": "1.7.0-stable",
-        "aws/aws-sdk-php": "2.7.9"
+        "aws/aws-sdk-php": "2.7.9",
+        "raven/raven": "0.8.x-dev"
     }
 }

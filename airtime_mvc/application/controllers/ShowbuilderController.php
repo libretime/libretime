@@ -299,7 +299,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $log_vars["params"]["media_items"] = $mediaItems;
         $log_vars["params"]["scheduled_items"] = $scheduledItems;
         Logging::info($log_vars);
-
+        
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->scheduleAfter($scheduledItems, $mediaItems);

@@ -115,7 +115,7 @@ class ApiController extends Zend_Controller_Action
                     header('Content-Disposition: inline; filename="'.$filename.'"');
                 }
 
-                $this->smartReadFile($media);
+                $this->readStoredFileObject($media);
                 exit;
             } else {
                 header ("HTTP/1.1 404 Not Found");
@@ -124,29 +124,53 @@ class ApiController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson(array());
     }
+    
+    /**
+     * Read data from StoredFile object and send with XHR response
+     * 
+     * @param Application_Model_StoredFile $storedFile - StoredFile object holding file information
+     */
+    private function readStoredFileObject($storedFile) {
+        $filepath = $storedFile->getFilePath();
+        $size = $storedFile->getFileSize();
+        $mimeType = $storedFile->getPropelOrm()->getDbMime();
+        
+        $this->smartReadFile($filepath, $mimeType, $size);
+    }
+    
 
     /**
     * Reads the requested portion of a file and sends its contents to the client with the appropriate headers.
     *
     * This HTTP_RANGE compatible read file function is necessary for allowing streaming media to be skipped around in.
     *
-    * @param string $location
-    * @param string $mimeType
+    * @param string $location - the full filepath pointing to the location of the file
+    * @param string $mimeType - the file's mime type. Defaults to 'audio/mp3'
+    * @param integer $size - the file size, in bytes
     * @return void
     *
     * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
     * @link http://php.net/manual/en/function.readfile.php#86244
     */
-    public function smartReadFile($media)
+    private function smartReadFile($location, $mimeType = 'audio/mp3', $size = null)
     {
-        $filepath = $media->getFilePath();
-        $size= $media->getFileSize();
-        $mimeType = $media->getPropelOrm()->getDbMime();
-
-        $fm = @fopen($filepath, 'rb');
+        if (!$location || $location == "") {
+            throw new FileDoesNotExistException("Requested file does not exist!");
+        }
+        
+        // If we're passing in a Stored File object, it's faster 
+        // to use getFileSize() and pass in the result
+        if (!$size || $size <= 0) {
+            $size= filesize($location);
+        }
+        
+        if ($size <= 0) {
+            throw new Exception("Invalid file size returned for file at $location");
+        }
+        
+        $fm = @fopen($location, 'rb');
         if (!$fm) {
             header ("HTTP/1.1 505 Internal server error");
-
             return;
         }
 
