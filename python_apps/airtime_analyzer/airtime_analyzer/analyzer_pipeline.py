@@ -2,7 +2,8 @@
 """
 import logging
 import threading
-import multiprocessing 
+import multiprocessing
+import ConfigParser
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
 from cloud_storage_uploader import CloudStorageUploader
@@ -53,8 +54,8 @@ class AnalyzerPipeline:
                 raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
             if not isinstance(file_prefix, unicode):
                 raise TypeError("file_prefix must be unicode. Was of type " + type(file_prefix).__name__ + " instead.")
-            if not isinstance(cloud_storage_enabled, bool):
-                raise TypeError("cloud_storage_enabled must be a boolean. Was of type " + type(cloud_storage_enabled).__name__ + " instead.")
+            if not isinstance(cloud_storage_config, ConfigParser.SafeConfigParser):
+                raise TypeError("cloud_storage_config must be a SafeConfigParser. Was of type " + type(cloud_storage_config).__name__ + " instead.")
 
 
             # Analyze the audio file we were told to analyze:
