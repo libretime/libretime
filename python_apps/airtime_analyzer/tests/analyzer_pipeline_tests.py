@@ -5,6 +5,7 @@ import multiprocessing
 import Queue
 import datetime
 from airtime_analyzer.analyzer_pipeline import AnalyzerPipeline
+from airtime_analyzer import config_file
 
 DEFAULT_AUDIO_FILE = u'tests/test_data/44100Hz-16bit-mono.mp3'
 DEFAULT_IMPORT_DEST = u'Test Artist/Test Album/44100Hz-16bit-mono.mp3'
@@ -20,10 +21,11 @@ def teardown():
 def test_basic():
     filename = os.path.basename(DEFAULT_AUDIO_FILE)
     q = multiprocessing.Queue()
-    cloud_storage_enabled = False
+    cloud_storage_config_path = '/etc/airtime-saas/production/cloud_storage.conf'
+    cloud_storage_config = config_file.read_config_file(cloud_storage_config_path)
     file_prefix = u''
     #This actually imports the file into the "./Test Artist" directory.
-    AnalyzerPipeline.run_analysis(q, DEFAULT_AUDIO_FILE, u'.', filename, file_prefix, cloud_storage_enabled)
+    AnalyzerPipeline.run_analysis(q, DEFAULT_AUDIO_FILE, u'.', filename, file_prefix, cloud_storage_config)
     metadata = q.get()
     assert metadata['track_title'] == u'Test Title'
     assert metadata['artist_name'] == u'Test Artist'
