@@ -55,25 +55,25 @@ QUEUE = "airtime-uploads"
 """
 class MessageListener:
 
-    def __init__(self, config, cloud_storage_config):
+    def __init__(self, rmq_config, cloud_storage_config):
         ''' Start listening for file upload notification messages
             from RabbitMQ
             
             Keyword arguments:
-                config: A ConfigParser object containing the [rabbitmq] configuration.
+                rmq_config: A ConfigParser object containing the [rabbitmq] configuration.
                 cloud_storage_config: A ConfigParser object containing the cloud storage configuration.
         '''
     
         self._shutdown = False
 
-        # Read the RabbitMQ connection settings from the config file
+        # Read the RabbitMQ connection settings from the rmq_config file
         # The exceptions throw here by default give good error messages. 
         RMQ_CONFIG_SECTION = "rabbitmq"
-        self._host = config.get(RMQ_CONFIG_SECTION, 'host')
-        self._port = config.getint(RMQ_CONFIG_SECTION, 'port')
-        self._username = config.get(RMQ_CONFIG_SECTION, 'user')
-        self._password = config.get(RMQ_CONFIG_SECTION, 'password')
-        self._vhost = config.get(RMQ_CONFIG_SECTION, 'vhost')
+        self._host = rmq_config.get(RMQ_CONFIG_SECTION, 'host')
+        self._port = rmq_config.getint(RMQ_CONFIG_SECTION, 'port')
+        self._username = rmq_config.get(RMQ_CONFIG_SECTION, 'user')
+        self._password = rmq_config.get(RMQ_CONFIG_SECTION, 'password')
+        self._vhost = rmq_config.get(RMQ_CONFIG_SECTION, 'vhost')
 
         self.cloud_storage_config = cloud_storage_config
         

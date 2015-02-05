@@ -23,7 +23,7 @@ class AirtimeAnalyzerServer:
     # Variables
     _log_level = logging.INFO
 
-    def __init__(self, config_path, cloud_storage_config_path, http_retry_queue_path, debug=False):
+    def __init__(self, rmq_config_path, cloud_storage_config_path, http_retry_queue_path, debug=False):
 
         # Dump a stacktrace with 'kill -SIGUSR2 <PID>'
         signal.signal(signal.SIGUSR2, lambda sig, frame: AirtimeAnalyzerServer.dump_stacktrace())
@@ -32,7 +32,7 @@ class AirtimeAnalyzerServer:
         self.setup_logging(debug)
 
         # Read our rmq config file
-        config = config_file.read_config_file(config_path)
+        rmq_config = config_file.read_config_file(rmq_config_path)
 
         # Read the cloud storage config file
         cloud_storage_config = config_file.read_config_file(cloud_storage_config_path)
@@ -42,7 +42,7 @@ class AirtimeAnalyzerServer:
 
         # Start listening for RabbitMQ messages telling us about newly
         # uploaded files. This blocks until we recieve a shutdown signal.
-        self._msg_listener = MessageListener(config, cloud_storage_config)
+        self._msg_listener = MessageListener(rmq_config, cloud_storage_config)
 
         StatusReporter.stop_thread()
     
