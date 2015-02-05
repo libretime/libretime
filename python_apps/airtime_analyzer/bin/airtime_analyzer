@@ -8,7 +8,8 @@ import os
 import airtime_analyzer.airtime_analyzer as aa
 
 VERSION = "1.0"
-DEFAULT_CONFIG_PATH = '/etc/airtime/airtime.conf'
+DEFAULT_RMQ_CONFIG_PATH = '/etc/airtime/airtime.conf'
+DEFAULT_CLOUD_STORAGE_CONFIG_PATH = '/etc/airtime-saas/production/cloud_storage.conf'
 DEFAULT_HTTP_RETRY_PATH = '/tmp/airtime_analyzer_http_retries'
 
 def run():
@@ -17,28 +18,34 @@ def run():
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--daemon", help="run as a daemon", action="store_true")
     parser.add_argument("--debug", help="log full debugging output", action="store_true")
-    parser.add_argument("--rmq-config-file", help="specify a configuration file with RabbitMQ settings (default is %s)" % DEFAULT_CONFIG_PATH)
+    parser.add_argument("--rmq-config-file", help="specify a configuration file with RabbitMQ settings (default is %s)" % DEFAULT_RMQ_CONFIG_PATH)
+    parser.add_argument("--cloud-storage-config-file", help="specify a configuration file with cloud storage settings (default is %s)" % DEFAULT_CLOUD_STORAGE_CONFIG_PATH)
     parser.add_argument("--http-retry-queue-file", help="specify where incompleted HTTP requests will be serialized (default is %s)" % DEFAULT_HTTP_RETRY_PATH)
     args = parser.parse_args()
 
     check_if_media_monitor_is_running()
 
     #Default config file path
-    config_path = DEFAULT_CONFIG_PATH
+    rmq_config_path = DEFAULT_RMQ_CONFIG_PATH
+    cloud_storage_config_path = DEFAULT_CLOUD_STORAGE_CONFIG_PATH
     http_retry_queue_path = DEFAULT_HTTP_RETRY_PATH
     if args.rmq_config_file:
-        config_path = args.rmq_config_file
+        rmq_config_path = args.rmq_config_file
+    if args.cloud_storage_config_file:
+        cloud_storage_config_path = args.cloud_storage_config_file
     if args.http_retry_queue_file:
         http_retry_queue_path = args.http_retry_queue_file
 
     if args.daemon:
         with daemon.DaemonContext():
-            aa.AirtimeAnalyzerServer(config_path=config_path, 
+            aa.AirtimeAnalyzerServer(rmq_config_path=rmq_config_path,
+                                     cloud_storage_config_path = cloud_storage_config_path,
                                      http_retry_queue_path=http_retry_queue_path, 
                                      debug=args.debug)
     else: 
         # Run without daemonizing
-        aa.AirtimeAnalyzerServer(config_path=config_path,
+        aa.AirtimeAnalyzerServer(rmq_config_path=rmq_config_path,
+                                 cloud_storage_config_path = cloud_storage_config_path,
                                  http_retry_queue_path=http_retry_queue_path, 
                                  debug=args.debug)
 

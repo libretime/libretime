@@ -1,12 +1,9 @@
 import os
 import logging
 import uuid
-import ConfigParser
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
-
-CLOUD_CONFIG_PATH = '/etc/airtime-saas/cloud_storage.conf'
 STORAGE_BACKEND_FILE = "file"
 
 class CloudStorageUploader:
@@ -23,17 +20,11 @@ class CloudStorageUploader:
         _api_key_secret: Secret access key to objects on Amazon S3.
     """
 
-    def __init__(self):
+    def __init__(self, config):
 
         try:
-            config = ConfigParser.SafeConfigParser()
-            config.readfp(open(CLOUD_CONFIG_PATH))
             cloud_storage_config_section = config.get("current_backend", "storage_backend")
             self._storage_backend = cloud_storage_config_section
-        except IOError as e:
-            print "Failed to open config file at " + CLOUD_CONFIG_PATH + ": " + e.strerror
-            print "Defaulting to file storage"
-            self._storage_backend = STORAGE_BACKEND_FILE
         except Exception as e:
             print e
             print "Defaulting to file storage"
@@ -77,7 +68,7 @@ class CloudStorageUploader:
                 resource_id: The unique object name used to identify the objects
                              on Amazon S3 
         """
-        
+
         file_base_name = os.path.basename(audio_file_path)
         file_name, extension = os.path.splitext(file_base_name)
         
