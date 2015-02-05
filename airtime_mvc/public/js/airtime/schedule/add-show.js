@@ -652,7 +652,7 @@ function setAddShowEvents(form) {
         return true;
     }
     
-    // Duplicate of the function in ShowController - provide it as a GET endpoint?
+    // Duplicate of the function in ShowImageController
     function validateMimeType(mime) {
         var extensions = [
             'image/jpeg',
@@ -668,12 +668,12 @@ function setAddShowEvents(form) {
             var showId = $("#add_show_id").attr("value");
             
             if (showId && $("#add_show_logo_current").attr("src") !== "") {
-                var action = '/rest/show/' + showId + '/delete-image';
+                var action = '/rest/show-image?id=' + showId;
                 
                 $.ajax({
                     url: action,
                     data: '',
-                    type: 'POST',
+                    type: 'DELETE',
                     success: function() {
                         $("#add_show_logo_current").prop("src", "")
                         $("[id^=add_show_logo_current]").hide();
@@ -748,7 +748,7 @@ function setAddShowEvents(form) {
             data: {format: "json", data: data, hosts: hosts, days: days},
             success: function(json) {
                 if (json.showId && image) { // Successfully added the show, and it contains an image to upload
-                    var imageAction = '/rest/show/' + json.showId + '/upload-image';
+                    var imageAction = '/rest/show-image?id=' + json.showId;
                     
                     // perform a second xhttprequest in order to send the show image
                     $.ajax({

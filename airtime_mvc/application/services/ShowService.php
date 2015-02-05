@@ -209,7 +209,7 @@ class Application_Service_ShowService
                 
                 // Only delete the previous logo if a new one is being uploaded
                 if (array_key_exists("add_show_logo_name", $showData) && $showData["add_show_logo_name"] !== "") {
-                    if (!Rest_ShowController::deleteShowImagesFromStor($showId)) {
+                    if (!Rest_ShowImageController::deleteShowImagesFromStor($showId)) {
                         throw new Exception("Error deleting show images");
                     }
                 }
@@ -267,7 +267,7 @@ class Application_Service_ShowService
             Logging::info($e->getMessage());
         }
         
-        // Added to pass along to the RESTful ShowController
+        // Added to pass along to the RESTful ShowImageController
         return $this->ccShow->getDbId();
     }
 
@@ -763,7 +763,7 @@ SQL;
 
             // Delete show images
             $showId = $ccShowInstance->getDbShowId();
-            if (!Rest_ShowController::deleteShowImagesFromStor($showId)) {
+            if (!Rest_ShowImageController::deleteShowImagesFromStor($showId)) {
                 throw new Exception("Error deleting show images");
             }
             
