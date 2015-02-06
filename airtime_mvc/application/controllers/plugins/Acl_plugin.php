@@ -118,8 +118,10 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             // If we don't have an identity and we're making a RESTful request,
             // we need to do API key verification
             if ($request->getModuleName() == "rest") {
-                $this->verifyAuth();
-                return;
+                if (!$this->verifyAuth()) {
+                    $this->getResponse()->sendResponse();
+                    die();
+                }
             }
 
              if ($controller !== 'login') {
@@ -185,10 +187,11 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         if ($this->verifyAPIKey()) {
             return true;
         }
-    
+
         $this->getResponse()
-             ->setHttpResponseCode(401)
-             ->appendBody("ERROR: Incorrect API key.");
+            ->setHttpResponseCode(401)
+            ->appendBody("ERROR: Incorrect API key.");
+
         return false;
     }
     
