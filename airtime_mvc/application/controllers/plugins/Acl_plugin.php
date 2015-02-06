@@ -114,15 +114,17 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         if (in_array($controller, array("api", "auth", "locale", "upgrade"))) {
             $this->setRoleName("G");
         } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
-            
+
             // If we don't have an identity and we're making a RESTful request,
             // we need to do API key verification
             if ($request->getModuleName() == "rest") {
-                $this->verifyAuth();
-                return;
+                if (!$this->verifyAuth()) {
+                    $this->getResponse()->sendResponse();
+                    die();
+                }
             }
 
-             if ($controller !== 'login') {
+            if ($controller !== 'login') {
 
                 if ($request->isXmlHttpRequest()) {
 
