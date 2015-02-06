@@ -92,11 +92,17 @@ try {
     }
 } catch (Exception $e) {
 
-    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+    if ($e->getCode() == 401)
+    {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized', true, 401);
+        return;
+    }
 
+    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
     Logging::error($e->getMessage());
+
     if (VERBOSE_STACK_TRACE) {
-        echo $e->getMessage();
+        echo $e->getMessage() . '<br>';
         echo "<pre>";
         echo $e->getTraceAsString();
         echo "</pre>";

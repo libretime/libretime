@@ -119,12 +119,12 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             // we need to do API key verification
             if ($request->getModuleName() == "rest") {
                 if (!$this->verifyAuth()) {
-                    $this->denyAccess();
+                    //$this->denyAccess();
                     //$this->getResponse()->sendResponse();
                     //$r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
 
                     //die();
-                    return;
+                    throw new Zend_Controller_Exception("hi", 401);
                 }
             }
 
