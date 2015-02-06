@@ -123,28 +123,32 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                     die();
                 }
             }
+            else  //Non-REST, regular Airtime web app requests
+            {
+                //Redirect you to the login screen since you have no session.
+                if ($controller !== 'login') {
 
-            if ($controller !== 'login') {
+                    if ($request->isXmlHttpRequest()) {
 
-                if ($request->isXmlHttpRequest()) {
+                        $url = 'http://'.$request->getHttpHost().'/login';
+                        $json = Zend_Json::encode(array('auth' => false, 'url' => $url));
 
-                    $url = 'http://'.$request->getHttpHost().'/login';
-                    $json = Zend_Json::encode(array('auth' => false, 'url' => $url));
+                        // Prepare response
+                        $this->getResponse()
+                             ->setHttpResponseCode(401)
+                             ->setBody($json)
+                             ->sendResponse();
 
-                    // Prepare response
-                    $this->getResponse()
-                         ->setHttpResponseCode(401)
-                         ->setBody($json)
-                         ->sendResponse();
-
-                    //redirectAndExit() cleans up, sends the headers and stops the script
-                    Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
-                } else {
-                    $r = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
-                    $r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
-               }
+                        //redirectAndExit() cleans up, sends the headers and stops the script
+                        Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
+                    } else {
+                        $r = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
+                        $r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
+                   }
+                }
             }
-        } else {
+        } else { //We have a session/identity.
+
             // If we have an identity and we're making a RESTful request,
             // we need to check the CSRF token
             if ($request->_action != "get" && $request->getModuleName() == "rest") {
