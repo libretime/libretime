@@ -3,13 +3,11 @@
 }
 
 .table {
-    padding: 0;
+    padding: 5px;
     margin: 1em 0 0 0;
 }
 
 .checklist {
-    overflow: auto;
-    height: 50%;
     min-height: 200px;
 }
 
@@ -22,8 +20,12 @@
     width: 20%;
 }
 
-.description, .solution {
-    width: 40%;
+.error {
+    color: red;
+}
+
+.description {
+    width: 300px;
 }
 
 .check {

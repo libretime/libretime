@@ -1,10 +1,22 @@
+apache2
+libapache2-mod-php5
+php5
+libzend-framework-php
 php-pear
 php5-gd
+php5-json
 
-odbc-postgresql
+lsb-release
+
+rabbitmq-server
+
+postgresql
+postgresql-client
+php5-pgsql
 
 python
 python-virtualenv
+python-pip
 
 libsoundtouch-ocaml
 libtaglib-ocaml
@@ -18,6 +30,8 @@ patch
 
 php5-curl
 mpg123
+
+icecast2
 
 libcamomile-ocaml-data
 libpulse0
@@ -34,12 +48,9 @@ php-apc
 
 lame
 
-libzend-framework-php
-
 coreutils
 
-php5-json
-
+liquidsoap
 liquidsoap-plugin-alsa
 liquidsoap-plugin-ao
 liquidsoap-plugin-faad

@@ -88,6 +88,18 @@ function loudCmd() {
     fi
 }
 
+function checkCommandExists() {
+    set +e
+    command=$@
+    eval hash ${command} 2>/dev/null
+    commandFound=$?
+    if [[ ! ${commandFound} -eq 0 ]]; then
+        echo -e "Error: ${command} not found. Please ensure you have the corresponding dependency installed."
+        exit
+    fi
+    set -e
+}
+
 while :; do
     case "$1" in
         --help)
@@ -234,6 +246,25 @@ echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
 echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
+if [ "$ignore_dependencies" = "f" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "         * Installing External Dependencies *        "
+    loud "-----------------------------------------------------"
+
+    verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
+    set +e
+    if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
+        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+    else
+        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
+    fi
+    set -e
+
+else
+    checkCommandExists "apache2"
+    checkCommandExists "rabbitmqctl"
+    checkCommandExists "psql"
+fi
 
 if [ -f /etc/airtime/airtime.conf ]; then
     OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
@@ -281,11 +312,6 @@ if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
     fi
 fi
 
-loudCmd "apt-get install -y --force-yes lsb-release"
-
-dist=`lsb_release -is`
-code=`lsb_release -cs`
-
 if [ "$in_place" = "t" ]; then
     verbose "\n * Setting current Airtime directory as web root..."
     web_root=${AIRTIMEROOT}/airtime_mvc/public
@@ -304,10 +330,9 @@ verbose "...Done"
 
 if [ "$apache" = "t" ]; then
     loud "\n-----------------------------------------------------"
-    loud "                * Installing Apache *                "
+    loud "                * Configuring Apache *                "
     loud "-----------------------------------------------------"
 
-    loudCmd "apt-get -y --force-yes install apache2 libapache2-mod-php5"
     set +e
     apache2 -v | grep "2\.4" > /dev/null
     apacheversion=$?
@@ -348,11 +373,9 @@ fi
 
 if [ "$icecast" = "t" ]; then
     loud "\n-----------------------------------------------------"
-    loud "               * Installing Icecast *                "
+    loud "               * Configuring Icecast *                "
     loud "-----------------------------------------------------"
     
-    loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes install icecast2"
-
     verbose "\n * Enabling Icecast 2..."
     sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
     set +e
@@ -365,8 +388,7 @@ loud "\n-----------------------------------------------------"
 loud "          * Installing Airtime Services *            "
 loud "-----------------------------------------------------"
 
-verbose "\n * Installing necessary binaries..."
-loudCmd "apt-get -y --force-yes install liquidsoap python python-pip"
+verbose "\n * Installing necessary python services..."
 loudCmd "pip install setuptools"
 verbose "...Done"
 
@@ -421,22 +443,6 @@ verbose "\n * Setting permissions on /var/tmp/airtime..."
 chmod -R a+x /var/tmp/airtime
 chown -R ${web_user}:${web_user} /var/tmp/airtime/
 
-loud "\n-----------------------------------------------------"
-loud "                 * Installing PHP *                  "
-loud "-----------------------------------------------------"
-
-loudCmd "apt-get -y --force-yes install php5"
-
-verbose "\n * Installing Zend framework..."
-#Debian Squeeze only has zendframework package. Newer versions of Ubuntu have zend-framework package.
-#Ubuntu Lucid has both zendframework and zend-framework. Difference appears to be that zendframework is for
-#1.10 and zend-framework is 1.11
-if [ "$dist" = "Debian" ]; then
-    loudCmd "apt-get -y --force-yes install zendframework"
-else
-    loudCmd "apt-get -y --force-yes install libzend-framework-php"
-fi
-
 # PHP Config File for Apache
 if [ ! -f "/etc/php5/apache2/conf.d/airtime.ini" ]; then
     verbose "\n * Creating Airtime PHP config for Apache..."
@@ -445,14 +451,12 @@ else
     verbose "\nAirtime PHP config for Apache already exists, skipping"
 fi
 
-# Enable modules
+# Enable Apache modules
 loudCmd "a2enmod rewrite php5"
 
 loud "\n-----------------------------------------------------"
-loud "              * Installing PostgreSQL *              "
+loud "              * Configuring PostgreSQL *              "
 loud "-----------------------------------------------------"
-
-loudCmd "apt-get -y --force-yes install postgresql php5-pgsql"
 
 setupAirtimePostgresUser() {
     # here-doc to execute this block as postgres user
@@ -475,10 +479,8 @@ elif [ ${_i} -eq 1 ]; then
 fi
 
 loud "\n-----------------------------------------------------"
-loud "               * Installing RabbitMQ *               "
+loud "               * Configuring RabbitMQ *               "
 loud "-----------------------------------------------------"
-
-loudCmd "apt-get -y --force-yes install rabbitmq-server"
 
 RABBITMQ_VHOST=/airtime
 RABBITMQ_USER=airtime
@@ -519,45 +521,39 @@ if [ ! -d "/srv/airtime" ]; then
 fi
 chown -R ${web_user}:${web_user} /srv/airtime
 
-loud "\n-----------------------------------------------------"
-loud "                * Installing Locales *               "
-loud "-----------------------------------------------------"
 
-set +e
-verbose "\n * Generating locales"
-for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
-    if [ "$dist" = "Debian" ]; then
-        grep -qi "^$i" /etc/locale.gen
-        if [ $? -ne 0 ]; then
-            verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
-        fi
-    else
-        loudCmd "locale-gen \"$i.utf8\""
-    fi
-done
-set -e
-
-if [ "$dist" = "Debian" ]; then
-    loudCmd "/usr/sbin/locale-gen"
-fi
-
+# We only generate the locales for Airtime if you're allowing us
+# to install our dependencies, so that we won't automatically do this
+# when this install script runs from our DEB package.
 if [ "$ignore_dependencies" = "f" ]; then
     loud "\n-----------------------------------------------------"
-    loud "         * Installing External Dependencies *        "
+    loud "                * Installing Locales *               "
     loud "-----------------------------------------------------"
 
-    verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
+    dist=`lsb_release -is`
+    code=`lsb_release -cs`
+
     set +e
-    if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
-        loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
-    else
-        loudCmd "apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
-    fi
+    verbose "\n * Generating locales"
+    for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
+        if [ "$dist" = "Debian" ]; then
+            grep -qi "^$i" /etc/locale.gen
+            if [ $? -ne 0 ]; then
+                verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
+            fi
+        else
+            loudCmd "locale-gen \"$i.utf8\""
+        fi
+    done
     set -e
+
+    if [ "$dist" = "Debian" ]; then
+        loudCmd "/usr/sbin/locale-gen"
+    fi
 fi
 
-verbose "\n * Restarting apache..."
-loudCmd "service apache2 restart 2>/dev/null"
+verbose "\n * Reloading apache..."
+loudCmd "service apache2 reload 2>/dev/null"
 
 IP=$(ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://')
 

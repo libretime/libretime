@@ -27,8 +27,8 @@ from pypomessagehandler import PypoMessageHandler
 from pypoliquidsoap import PypoLiquidsoap
 from timeout import ls_timeout
 
-from media.update.replaygainupdater import ReplayGainUpdater
-from media.update.silananalyzer import SilanAnalyzer
+from pypo.media.update.replaygainupdater import ReplayGainUpdater
+from pypo.media.update.silananalyzer import SilanAnalyzer
 
 from configobj import ConfigObj
 

@@ -1,8 +1,8 @@
 html {
-    background: -webkit-linear-gradient(midnightblue, black); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(midnightblue, black); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(midnightblue, black); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(midnightblue, black); /* Standard syntax */
+    background: -webkit-linear-gradient(#444, black); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#444, black); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#444, black); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#444, black); /* Standard syntax */
 }
 
 body {
@@ -13,6 +13,14 @@ body {
     height: 100%;
     text-align: center;
     margin: auto;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+    text-shadow: 0px 1px 1px #000;
+}
+
+code {
+    text-shadow: none;
 }
 
 .header {
@@ -36,8 +44,33 @@ body {
 }
 
 #airtimeLogo {
-    padding-top: .7em;
     float: left;
+    padding-top: 0.6em;
+}
+
+.btn-primary {
+    text-shadow: 0px 1px 1px #000000;
+    background-color: #ff5d1a;
+    border-color: #8d3715;
+}
+
+.btn-primary:focus, .btn-primary:active, .form-control:focus
+{
+    border-color: #ff5d1a;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 93, 26, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 93, 26, 0.6);
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open>.dropdown-toggle.btn-primary,
+.btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover,
+fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus,
+.btn-primary.disabled.focus, .btn-primary[disabled].focus, fieldset[disabled] .btn-primary.focus, .btn-primary.disabled:active,
+.btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary[disabled].active,
+fieldset[disabled] .btn-primary.active
+{
+    background-color: #dc5118;
+    border-color: #632910;
 }
 
 /* ############################################################################

@@ -67,7 +67,8 @@ class DatabaseSetup extends Setup {
             }
         } catch (PDOException $e) {
             throw new AirtimeDatabaseException("Couldn't establish a connection to the database! "
-                                               . "Please check your credentials and try again.",
+                                               . "Please check your credentials and try again. "
+                                               . "PDO Exception: " .  $e->getMessage(),
                                                array(
                                                    self::DB_NAME,
                                                    self::DB_USER,

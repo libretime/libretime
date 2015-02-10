@@ -38,13 +38,12 @@ $result = $r1 && $r2;
         }
         
         body {
-            padding: 2em 0;
+            padding: 2em;
             min-width: 600px;
-            width: 50%;
             text-align: center;
-            margin: 3em auto;
+            margin: 3em ;
             border: 1px solid lightgray;
-            border-radius: 5em;
+            border-radius: 5px;
         }
     </style>
 
@@ -53,18 +52,42 @@ $result = $r1 && $r2;
             <img class="logo" src="css/images/airtime_logo_jp.png" /><br/>
             <strong>Configuration Checklist</strong>
         </h2>
+
+        <?php
+        if (!$result) {
+            ?>
+            <br/>
+            <h3 class="error">Looks like something went wrong!</h3>
+            <p>
+                Take a look at the checklist below for possible solutions. If you're tried the suggestions and are
+                still experiencing issues, come
+                <a href="https://forum.sourcefabric.org/">visit our forums</a>
+                or <a href="http://www.sourcefabric.org/en/airtime/manuals/">check out the manual</a>.
+            </p>
+        <?php
+        } else {
+            ?>
+            <p>
+                Your Airtime station is up and running! Get started by logging in with the default username and password: admin/admin
+            </p>
+            <button onclick="location = location.pathname;">Log in to Airtime!</button>
+        <?php
+        }
+        ?>
+
+
         <table class="table">
             <thead>
                 <tr>
-                    <td class="component">
+                    <th class="component">
                         Component
-                    </td>
-                    <td class="description">
+                    </th>
+                    <th class="description">
                         <strong>Description</strong>
-                    </td>
-                    <td class="solution">
-                        <strong>Solution</strong>
-                    </td>
+                    </th>
+                    <th class="solution">
+                        <strong>Status or Solution</strong>
+                    </th>
                 </tr>
             </thead>
         </table>
@@ -172,7 +195,7 @@ $result = $r1 && $r2;
                             Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>, 
                             and ensure that it's running with
                             <br/><code>initctl list | grep airtime-media-monitor</code><br/>
-                            If not, try  <br/><code>sudo service airtime-media-monitor start</code>
+                            If not, try running <code>sudo service airtime-media-monitor start</code>
                         <?php
                         }
                         ?>
@@ -192,7 +215,7 @@ $result = $r1 && $r2;
                             Check that the airtime-playout service is installed correctly in <code>/etc/init</code>, 
                             and ensure that it's running with
                             <br/><code>initctl list | grep airtime-playout</code><br/>
-                            If not, try <br/><code>sudo service airtime-playout restart</code>
+                            If not, try running <code>sudo service airtime-playout restart</code>
                         <?php
                         }
                         ?>
@@ -212,7 +235,7 @@ $result = $r1 && $r2;
                             Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>, 
                             and ensure that it's running with
                             <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
-                            If not, try <br/><code>sudo service airtime-liquidsoap restart</code>
+                            If not, try running <code>sudo service airtime-liquidsoap restart</code>
                         <?php
                         }
                         ?>
@@ -221,26 +244,6 @@ $result = $r1 && $r2;
                 </tbody>
             </table>
         </div>
-<?php
-    if (!$result) {
-        ?>
-        <br/>
-        <strong>Looks like something went wrong!</strong>
-        <p>
-            If you've tried everything we've recommended above and are  still experiencing issues, come 
-            <a href="https://forum.sourcefabric.org/">visit our forums</a>
-            or <a href="http://www.sourcefabric.org/en/airtime/manuals/">check out the manual</a>.
-        </p>
-    <?php
-    } else {
-        ?>
-        <p>
-            Your Airtime station is up and running! Get started by logging in with the default username and password: admin/admin
-        </p>
-        <button onclick="location = location.pathname;">Log in to Airtime!</button>
-    <?php
-    }
-?>
         <div class="footer">
             <h3>
                 PHP Extension List
