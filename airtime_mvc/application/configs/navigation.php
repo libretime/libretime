@@ -85,6 +85,13 @@ $pages = array(
                 'controller' => 'listenerstat',
                 'action'     => 'index',
                 'resource'   => 'listenerstat'
+            ),
+            array(
+                'label'      => _('Embeddable Player'),
+                'module'     => 'default',
+                'controller' => 'embeddableplayer',
+                'action'     => 'index',
+                'resource'   => 'embeddableplayer'
             )
         )
     ),
