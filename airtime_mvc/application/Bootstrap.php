@@ -21,6 +21,7 @@ require_once "LocaleHelper.php";
 require_once "HTTPHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
+require_once "ProvisioningHelper.php";
 require_once "Timezone.php";
 require_once "Auth.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
@@ -32,6 +33,11 @@ require_once __DIR__.'/modules/rest/controllers/MediaController.php';
 
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
+
+if (strpos("/provisioning/create-database", $_SERVER["REDIRECT_URL"]) !== false) {
+    (new ProvisioningHelper($CC_CONFIG["apiKey"][0]))->createDatabaseAction();
+    die;
+}
 
 Config::setAirtimeVersion();
 require_once __DIR__."/configs/navigation.php";
