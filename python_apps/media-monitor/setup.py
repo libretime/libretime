@@ -60,5 +60,5 @@ setup(name='airtime-media-monitor',
 # Reload the initctl config so that the media-monitor service works
 if data_files:
     print "Reloading initctl configuration"
-    call(['initctl', 'reload-configuration'])
+    #call(['initctl', 'reload-configuration'])
     print "Run \"sudo service airtime-media-monitor start\""

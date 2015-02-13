@@ -64,5 +64,5 @@ setup(name='airtime-playout',
 # Reload the initctl config so that playout services works
 if data_files:
     print "Reloading initctl configuration"
-    call(['initctl', 'reload-configuration'])
+    #call(['initctl', 'reload-configuration'])
     print "Run \"sudo service airtime-playout start\" and \"sudo service airtime-liquidsoap start\""

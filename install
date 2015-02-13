@@ -100,6 +100,11 @@ function checkCommandExists() {
     set -e
 }
 
+function checkDistro() {
+    distro=$@
+    unameStr=`uname -a`
+    eval echo "${unameStr}" | grep --quiet "${distro}"
+}
 while :; do
     case "$1" in
         --help)
@@ -246,6 +251,27 @@ echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
 echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
+# Check for the distribution without using lsb_release, which not all distros have installed by default
+if checkDistro "wheezy"; then
+    dist="debian"
+    code="wheezy"
+elif checkDistro "trusty"; then
+    dist="ubuntu"
+    code="trusty"
+elif checkDistro "saucy"; then
+    dist="ubuntu"
+    code="saucy"
+elif checkDistro "precise"; then
+    dist="ubuntu"
+    code="precise"
+elif checkDistro "trusty"; then
+    dist="ubuntu"
+    code="trusty"
+else
+    dist="unknown"
+    code="unknown"
+fi
+
 if [ "$ignore_dependencies" = "f" ]; then
     loud "\n-----------------------------------------------------"
     loud "         * Installing External Dependencies *        "
@@ -253,13 +279,13 @@ if [ "$ignore_dependencies" = "f" ]; then
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
     set +e
+    loudCmd "sudo apt-get update"
     if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
     else
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
     fi
     set -e
-
 else
     checkCommandExists "apache2"
     checkCommandExists "rabbitmqctl"
@@ -399,19 +425,19 @@ chown -R ${web_user}:${web_user} /run/airtime
 verbose "...Done"
 
 verbose "\n * Installing log writer..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/std_err_override/setup.py install"
+loudCmd "python ${AIRTIMEROOT}/python_apps/std_err_override/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
 verbose "\n * Installing API client..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/api_clients/setup.py install"
+loudCmd "python ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
 verbose "\n * Installing media-monitor..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install"
+loudCmd "python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
 verbose "\n * Installing pypo..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install"
+loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
 for i in /etc/init/airtime*.template; do
@@ -420,7 +446,7 @@ for i in /etc/init/airtime*.template; do
     mv $i ${i%.template}
 done
 
-loudCmd "initctl reload-configuration"
+#loudCmd "initctl reload-configuration"
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
@@ -529,9 +555,6 @@ if [ "$ignore_dependencies" = "f" ]; then
     loud "\n-----------------------------------------------------"
     loud "                * Installing Locales *               "
     loud "-----------------------------------------------------"
-
-    dist=`lsb_release -is`
-    code=`lsb_release -cs`
 
     set +e
     verbose "\n * Generating locales"

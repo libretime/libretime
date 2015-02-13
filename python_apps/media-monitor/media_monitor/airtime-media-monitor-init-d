@@ -9,12 +9,26 @@
 # Short-Description: Manage airtime-media-monitor daemon
 ### END INIT INFO
 
-USERID=WEB_USER
-GROUPID=WEB_USER
-NAME=Airtime\ Media\ Monitor
+USERID=www-data
+GROUPID=www-data
+NAME=airtime-media-monitor
 
-DAEMON=/usr/lib/airtime/media-monitor/airtime-media-monitor
-PIDFILE=/var/run/airtime/airtime-media-monitor.pid
+DAEMON=/usr/bin/$NAME
+PIDFILE=/var/run/$NAME.pid
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.2-14) to ensure that this file is present
+# and status_of_proc is working.
+. /lib/lsb/init-functions
 
 start () {
         start-stop-daemon --start --background --quiet --chuid $USERID:$GROUPID \
@@ -48,8 +62,7 @@ case "${1:-''}" in
            echo "Done."
         ;;
   'status')
-           # status commands here
-           /usr/bin/airtime-check-system
+	   status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
         ;;
   *)      # no parameter specified
         echo "Usage: $SELF start|stop|restart|status"

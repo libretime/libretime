@@ -52,6 +52,7 @@ coreutils
 
 liquidsoap
 
-silan
 libopus0
 
+sysvinit
+sysvinit-utils
