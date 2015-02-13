@@ -1,3 +1,5 @@
-#!/bin/bash
+#!/usr/bin/python
+import runpy
 
-exec python -m pypo > /var/log/airtime/pypo/py-interpreter.log 2>&1
+runpy.run_module("pypo", run_name="__main__")
+

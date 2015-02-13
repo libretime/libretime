@@ -39,10 +39,11 @@ def run():
             generate_liquidsoap_config(ss)
             successful = True
         except Exception, e:
+            print "Unable to connect to the Airtime server."
+            logging.error(str(e))
+            logging.error("traceback: %s", traceback.format_exc())
             if attempts == max_attempts:
-                print "Unable to connect to the Airtime server."
-                logging.error(str(e))
-                logging.error("traceback: %s", traceback.format_exc())
+                logging.error("giving up and exiting...")
                 sys.exit(1)
             else:
                 time.sleep(3)

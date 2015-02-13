@@ -39,7 +39,7 @@ function checkPhpDependencies() {
  */
 function checkZendDependencies() {
     return file_exists('/usr/share/php/libzend-framework-php')
-        || file_exists('/usr/share/php/zendframework'); // Debian version
+        || file_exists('/usr/share/php/Zend'); // Debian version
 }
 
 /**
@@ -124,7 +124,7 @@ function checkRMQConnection() {
  * @return boolean true if airtime-media-monitor is running
  */
 function checkMediaMonitorService() {
-    exec("pgrep -f -u www-data media_monitor", $out, $status);
+    exec("pgrep -f -u www-data airtime-media-monitor", $out, $status);
     if (array_key_exists(0, $out) && $status == 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
@@ -137,7 +137,7 @@ function checkMediaMonitorService() {
  * @return boolean true if airtime-playout is running
  */
 function checkPlayoutService() {
-    exec("pgrep -f -u www-data pypo", $out, $status);
+    exec("pgrep -f -u www-data airtime-playout", $out, $status);
     if (array_key_exists(0, $out) && $status == 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
