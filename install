@@ -255,6 +255,9 @@ echo -e "        \/            \/                       \/        \/    \n"
 if checkDistro "wheezy"; then
     dist="debian"
     code="wheezy"
+elif checkDistro "jessie"; then
+    dist="debian"
+    code="jessie"
 elif checkDistro "trusty"; then
     dist="ubuntu"
     code="trusty"
