@@ -34,9 +34,11 @@ require_once __DIR__.'/modules/rest/controllers/MediaController.php';
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
-if (strpos("/provisioning/create-database", $_SERVER["REDIRECT_URL"]) !== false) {
-    (new ProvisioningHelper($CC_CONFIG["apiKey"][0]))->createDatabaseAction();
-    die;
+// We need to manually route because we can't load Zend without the database being initialized first.
+if (strpos("/provisioning/create", $_SERVER["REDIRECT_URL"]) !== false) {
+    $provisioningHelper = new ProvisioningHelper($CC_CONFIG["apiKey"][0]);
+    $provisioningHelper->createAction();
+    die();
 }
 
 Config::setAirtimeVersion();

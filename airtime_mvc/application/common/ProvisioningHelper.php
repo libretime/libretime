@@ -19,18 +19,12 @@ class ProvisioningHelper {
     }
 
     /**
-     * Endpoint for setting up and installing the Airtime database
+     * Endpoint for setting up and installing the Airtime database. This all has to be done without Zend
+     * which is why the code looks so old school (eg. http_response_code).
      */
-    public function createDatabaseAction() {
-        Logging::info("Create Database action received");
+    public function createAction() {
 
         $this->getParams();
-        Logging::info("Parameters: "
-                      . "\nUser:  " . $this->dbuser
-                      . "\nPass:  " . $this->dbpass
-                      . "\nName:  " . $this->dbname
-                      . "\nHost:  " . $this->dbhost
-                      . "\nOwner: " . $this->dbowner);
 
         $apikey = $_SERVER['PHP_AUTH_USER'];
         if (!isset($apikey) || $apikey != $this->apikey) {

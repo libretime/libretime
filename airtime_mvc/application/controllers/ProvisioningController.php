@@ -12,6 +12,13 @@ class ProvisioningController extends Zend_Controller_Action
     }
 
     /**
+     *
+     *  The "create action" is in ProvisioningHelper because it needs to have no dependency on Zend,
+     *  since when we bootstrap Zend, we already need the database set up and working (Bootstrap.php is a mess).
+     *
+     */
+
+    /**
      * Delete the Airtime Pro station's files from Amazon S3
      */
     public function terminateAction()
