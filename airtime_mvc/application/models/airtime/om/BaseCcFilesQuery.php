@@ -76,6 +76,8 @@
  * @method CcFilesQuery orderByDbHidden($order = Criteria::ASC) Order by the hidden column
  * @method CcFilesQuery orderByDbIsScheduled($order = Criteria::ASC) Order by the is_scheduled column
  * @method CcFilesQuery orderByDbIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
+ * @method CcFilesQuery orderByDbFilesize($order = Criteria::ASC) Order by the filesize column
+ * @method CcFilesQuery orderByDbMd5Hash($order = Criteria::ASC) Order by the md5_hash column
  *
  * @method CcFilesQuery groupByDbId() Group by the id column
  * @method CcFilesQuery groupByDbName() Group by the name column
@@ -147,6 +149,8 @@
  * @method CcFilesQuery groupByDbHidden() Group by the hidden column
  * @method CcFilesQuery groupByDbIsScheduled() Group by the is_scheduled column
  * @method CcFilesQuery groupByDbIsPlaylist() Group by the is_playlist column
+ * @method CcFilesQuery groupByDbFilesize() Group by the filesize column
+ * @method CcFilesQuery groupByDbMd5Hash() Group by the md5_hash column
  *
  * @method CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -260,6 +264,8 @@
  * @method CcFiles findOneByDbHidden(boolean $hidden) Return the first CcFiles filtered by the hidden column
  * @method CcFiles findOneByDbIsScheduled(boolean $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
  * @method CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
+ * @method CcFiles findOneByDbFilesize(int $filesize) Return the first CcFiles filtered by the filesize column
+ * @method CcFiles findOneByDbMd5Hash(string $md5_hash) Return the first CcFiles filtered by the md5_hash column
  *
  * @method array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -331,6 +337,8 @@
  * @method array findByDbHidden(boolean $hidden) Return CcFiles objects filtered by the hidden column
  * @method array findByDbIsScheduled(boolean $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
  * @method array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
+ * @method array findByDbFilesize(int $filesize) Return CcFiles objects filtered by the filesize column
+ * @method array findByDbMd5Hash(string $md5_hash) Return CcFiles objects filtered by the md5_hash column
  *
  * @package    propel.generator.airtime.om
  */
@@ -438,7 +446,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "md5_hash" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -2789,6 +2797,77 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(CcFilesPeer::IS_PLAYLIST, $dbIsPlaylist, $comparison);
+    }
+
+    /**
+     * Filter the query on the filesize column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbFilesize(1234); // WHERE filesize = 1234
+     * $query->filterByDbFilesize(array(12, 34)); // WHERE filesize IN (12, 34)
+     * $query->filterByDbFilesize(array('min' => 12)); // WHERE filesize >= 12
+     * $query->filterByDbFilesize(array('max' => 12)); // WHERE filesize <= 12
+     * </code>
+     *
+     * @param     mixed $dbFilesize The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbFilesize($dbFilesize = null, $comparison = null)
+    {
+        if (is_array($dbFilesize)) {
+            $useMinMax = false;
+            if (isset($dbFilesize['min'])) {
+                $this->addUsingAlias(CcFilesPeer::FILESIZE, $dbFilesize['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbFilesize['max'])) {
+                $this->addUsingAlias(CcFilesPeer::FILESIZE, $dbFilesize['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::FILESIZE, $dbFilesize, $comparison);
+    }
+
+    /**
+     * Filter the query on the md5_hash column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbMd5Hash('fooValue');   // WHERE md5_hash = 'fooValue'
+     * $query->filterByDbMd5Hash('%fooValue%'); // WHERE md5_hash LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbMd5Hash The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbMd5Hash($dbMd5Hash = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbMd5Hash)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbMd5Hash)) {
+                $dbMd5Hash = str_replace('*', '%', $dbMd5Hash);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::MD5_HASH, $dbMd5Hash, $comparison);
     }
 
     /**

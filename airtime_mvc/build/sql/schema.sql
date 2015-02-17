@@ -94,6 +94,8 @@ CREATE TABLE "cc_files"
     "hidden" BOOLEAN DEFAULT 'f',
     "is_scheduled" BOOLEAN DEFAULT 'f',
     "is_playlist" BOOLEAN DEFAULT 'f',
+    "filesize" INTEGER DEFAULT 0 NOT NULL,
+    "md5_hash" VARCHAR(512) DEFAULT '' NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -185,11 +187,7 @@ CREATE TABLE "cc_show_instances"
     PRIMARY KEY ("id")
 );
 
-COMMENT ON TABLE "cc_show_instances" IS '';
-
-
-SET search_path TO public;
------------------------------------------------------------------------------
+-----------------------------------------------------------------------
 -- cc_show_days
 -----------------------------------------------------------------------
 

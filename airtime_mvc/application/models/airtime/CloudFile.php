@@ -49,10 +49,7 @@ class CloudFile extends BaseCloudFile
      */
     public function getFileSize()
     {
-        if ($this->proxyStorageBackend == null) {
-            $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
-        }
-        return $this->proxyStorageBackend->getFileSize($this->getResourceId());
+        return $this->getDbFilesize();
     }
     
     public function getFilename()

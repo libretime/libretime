@@ -76,7 +76,7 @@ class CcFiles extends BaseCcFiles {
      */
     public function getFileSize()
     {
-        return filesize($this->getAbsoluteFilePath());
+        return $this->getDbFilesize();
     }
     
     public function getFilename()
