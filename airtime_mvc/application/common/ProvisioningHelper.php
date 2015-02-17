@@ -35,11 +35,11 @@ class ProvisioningHelper {
         }
 
         try {
-            $this->setNewDatabaseConnection();
-            if ($this->checkDatabaseExists()) {
-                throw new Exception("ERROR: Airtime database already exists");
-            }
-            $this->createDatabase();
+           // $this->setNewDatabaseConnection();
+            //if ($this->checkDatabaseExists()) {
+            //    throw new Exception("ERROR: Airtime database already exists");
+            //}
+            //$this->createDatabase();
             $this->createDatabaseTables();
         } catch(Exception $e) {
             http_response_code(400);
