@@ -1,10 +1,12 @@
 import os
 import logging
 import uuid
+import socket
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
 STORAGE_BACKEND_FILE = "file"
+SOCKET_TIMEOUT = 240
 
 class CloudStorageUploader:
     """ A class that uses Python-Boto SDK to upload objects into Amazon S3.
@@ -87,6 +89,10 @@ class CloudStorageUploader:
         unique_id_prefix = unique_id[-2:]
         
         resource_id = "%s/%s/%s_%s%s" % (metadata['file_prefix'], unique_id_prefix, file_name, unique_id, extension)
+
+        # Boto uses the "global default timeout" by default, which is infinite! To prevent network problems from
+        # turning into deadlocks, we explicitly set the global default timeout period here:
+        socket.setdefaulttimeout(SOCKET_TIMEOUT)
 
         conn = S3Connection(self._api_key, self._api_key_secret, host=self._host)
         bucket = conn.get_bucket(self._bucket)
