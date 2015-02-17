@@ -446,7 +446,7 @@ class LibraryController extends Zend_Controller_Action
 
             if ($form->isValid($serialized)) {
                 // Sanitize any incorrect metadata that slipped past validation
-                FileDataHelper::sanitizeData($serialized["track_number"]);
+                FileDataHelper::sanitizeData($serialized);
 
                 $formValues = $this->_getParam('data', null);
                 $formdata = array();

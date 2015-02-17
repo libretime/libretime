@@ -120,7 +120,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         } else {
             // Sanitize any incorrect metadata that slipped past validation
-            FileDataHelper::sanitizeData($whiteList["track_number"]);
+            FileDataHelper::sanitizeData($whiteList);
 
             /* If full_path is set, the post request came from ftp.
              * Users are allowed to upload folders via ftp. If this is the case
@@ -176,7 +176,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         } else if ($file && isset($requestData["resource_id"])) {
             // Sanitize any incorrect metadata that slipped past validation
-            FileDataHelper::sanitizeData($whiteList["track_number"]);
+            FileDataHelper::sanitizeData($whiteList);
 
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
             
@@ -207,7 +207,7 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else if ($file) {
             // Sanitize any incorrect metadata that slipped past validation
-            $this->sanitizeData($file, $whiteList);
+            FileDataHelper::sanitizeData($whiteList);
 
             //local file storage
             $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
