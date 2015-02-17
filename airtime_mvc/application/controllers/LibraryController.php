@@ -77,8 +77,6 @@ class LibraryController extends Zend_Controller_Action
 
             $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
             if (isset($obj_sess->id)) {
-                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
-
                 $objInfo     = Application_Model_Library::getObjInfo($obj_sess->type);
                 $obj         = new $objInfo['className']($obj_sess->id);
                 $userInfo    = Zend_Auth::getInstance()->getStorage()->read();
@@ -446,6 +444,8 @@ class LibraryController extends Zend_Controller_Action
             }
 
             if ($form->isValid($serialized)) {
+                // Sanitize any incorrect metadata that slipped past validation
+                FileDataHelper::sanitizeData($serialized["track_number"]);
 
                 $formValues = $this->_getParam('data', null);
                 $formdata = array();
