@@ -44,14 +44,6 @@ class CloudFile extends BaseCloudFile
         return $this->proxyStorageBackend->getAbsoluteFilePath($this->getResourceId());
     }
     
-    /**
-     * Returns the file size in bytes.
-     */
-    public function getFileSize()
-    {
-        return $this->getDbFilesize();
-    }
-    
     public function getFilename()
     {
         return $this->getDbFilepath();

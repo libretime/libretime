@@ -62,8 +62,7 @@ class CloudStorageUploader:
             metadata: ID3 tags and other metadata extracted from the audio file.
             
         Returns:
-            The metadata dictionary it received with three new keys:
-                filesize: The file's filesize in bytes.
+            The metadata dictionary it received with two new keys:
                 filename: The file's filename.
                 resource_id: The unique object name used to identify the objects
                              on Amazon S3 
@@ -95,8 +94,6 @@ class CloudStorageUploader:
         key.key = resource_id
         key.set_metadata('filename', file_base_name)
         key.set_contents_from_filename(audio_file_path)
-
-        metadata["filesize"] = os.path.getsize(audio_file_path)
         
         # Remove file from organize directory
         try:
