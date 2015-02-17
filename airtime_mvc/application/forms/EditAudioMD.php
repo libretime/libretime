@@ -59,7 +59,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $track_number->class = 'input_text';
         $track_number->setLabel('Track Number:')
             ->setFilters(array('StringTrim'))
-            ->setValidators(array(new Zend_Validate_Digits()));
+            ->setValidators(array(new Zend_Validate_Int()));
         $this->addElement($track_number);
 
         // Add genre field

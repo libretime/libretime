@@ -113,6 +113,8 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
             return;
         } else {
+            // Sanitize any incorrect metadata that slipped past validation
+            $this->sanitizeData($file, $whiteList);
             /* If full_path is set, the post request came from ftp.
              * Users are allowed to upload folders via ftp. If this is the case
              * we need to include the folder name with the file name, otherwise
@@ -165,6 +167,9 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
             return;
         } else if ($file) {
+            // Sanitize any incorrect metadata that slipped past validation
+            $this->sanitizeData($file, $whiteList);
+
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
 
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
@@ -295,6 +300,18 @@ class Rest_MediaController extends Zend_Rest_Controller
             return false;
         }
         return true;
+    }
+
+    /**
+     * We want to throw out invalid data and process the upload successfully
+     * at all costs, so check the whitelisted data and sanitize it if necessary
+     * @param CcFiles   $file       CcFiles object being uploaded
+     * @param array     $whitelist  array of whitelisted (modifiable) file fields
+     */
+    private function sanitizeData($file, &$whitelist) {
+        if (!ctype_digit(strval($whitelist["track_number"]))) {
+            $file->setDbTrackNumber(null);
+        }
     }
 
     private function processUploadedFile($callbackUrl, $originalFilename, $ownerId)
