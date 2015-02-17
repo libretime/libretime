@@ -421,9 +421,6 @@ class LibraryController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-
-
-
         $file_id = $this->_getParam('id', null);
         $file = Application_Model_StoredFile::RecallById($file_id);
 
@@ -447,20 +444,7 @@ class LibraryController extends Zend_Controller_Action
             if ($form->isValid($serialized)) {
                 // Sanitize any incorrect metadata that slipped past validation
                 FileDataHelper::sanitizeData($serialized);
-
-                $formValues = $this->_getParam('data', null);
-                $formdata = array();
-                foreach ($formValues as $val) {
-                    $formdata[$val["name"]] = $val["value"];
-                }
-                $file->setDbColMetadata($formdata);
-
-                $data = $file->getMetadata();
-
-                // set MDATA_KEY_FILEPATH
-                $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
-                Logging::info($data['MDATA_KEY_FILEPATH']);
-                Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
+                $file->setDbColMetadata($serialized);
 
                 $this->_redirect('Library');
             }
