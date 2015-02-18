@@ -21,6 +21,7 @@ require_once "LocaleHelper.php";
 require_once "HTTPHelper.php";
 require_once "OsPath.php";
 require_once "Database.php";
+require_once "ProvisioningHelper.php";
 require_once "Timezone.php";
 require_once "Auth.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
@@ -32,6 +33,13 @@ require_once __DIR__.'/modules/rest/controllers/MediaController.php';
 
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
+
+// We need to manually route because we can't load Zend without the database being initialized first.
+if (strpos($_SERVER["REQUEST_URI"], "/provisioning/create") !== false) {
+    $provisioningHelper = new ProvisioningHelper($CC_CONFIG["apiKey"][0]);
+    $provisioningHelper->createAction();
+    die();
+}
 
 Config::setAirtimeVersion();
 require_once __DIR__."/configs/navigation.php";
