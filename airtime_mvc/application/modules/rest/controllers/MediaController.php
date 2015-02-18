@@ -113,9 +113,6 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
             return;
         } else {
-            // Sanitize any incorrect metadata that slipped past validation
-            FileDataHelper::sanitizeData($whiteList["track_number"]);
-
             /* If full_path is set, the post request came from ftp.
              * Users are allowed to upload folders via ftp. If this is the case
              * we need to include the folder name with the file name, otherwise
@@ -168,8 +165,6 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
             return;
         } else if ($file && isset($requestData["resource_id"])) {
-            // Sanitize any incorrect metadata that slipped past validation
-            FileDataHelper::sanitizeData($whiteList["track_number"]);
 
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
             
@@ -199,8 +194,6 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else if ($file) {
-            // Sanitize any incorrect metadata that slipped past validation
-            $this->sanitizeData($file, $whiteList);
 
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
 
@@ -294,6 +287,9 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     private function validateRequestData($file, &$whiteList)
     {
+        // Sanitize any wildly incorrect metadata before it goes to be validated
+        FileDataHelper::sanitizeData($whiteList);
+
         try {        
             // EditAudioMD form is used here for validation
             $fileForm = new Application_Form_EditAudioMD();
