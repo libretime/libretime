@@ -204,6 +204,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
             //local file storage
             $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
+
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
             //our internal schema. Internally, file path is stored relative to a directory, with the directory

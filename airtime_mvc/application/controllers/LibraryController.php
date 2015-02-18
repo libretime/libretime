@@ -421,9 +421,6 @@ class LibraryController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-
-
-
         $file_id = $this->_getParam('id', null);
         $file = Application_Model_StoredFile::RecallById($file_id);
 
@@ -449,7 +446,6 @@ class LibraryController extends Zend_Controller_Action
 
             if ($form->isValid($serialized)) {
                 $file->setDbColMetadata($serialized);
-                $this->_redirect('Library');
             }
         }
 
