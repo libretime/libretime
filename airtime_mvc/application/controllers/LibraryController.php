@@ -441,12 +441,11 @@ class LibraryController extends Zend_Controller_Action
                 $serialized[$j["name"]] = $j["value"];
             }
 
-            if ($form->isValid($serialized)) {
-                // Sanitize any incorrect metadata that slipped past validation
-                FileDataHelper::sanitizeData($serialized);
-                $file->setDbColMetadata($serialized);
+            // Sanitize any wildly incorrect metadata before it goes to be validated.
+            FileDataHelper::sanitizeData($serialized);
 
-                $this->_redirect('Library');
+            if ($form->isValid($serialized)) {
+                $file->setDbColMetadata($serialized);
             }
         }
 
