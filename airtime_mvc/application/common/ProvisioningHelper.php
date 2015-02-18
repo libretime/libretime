@@ -9,6 +9,7 @@ class ProvisioningHelper
 
     // Parameter values
     private $dbuser, $dbpass, $dbname, $dbhost, $dbowner, $apikey;
+    private $instanceId;
 
     public function __construct($apikey)
     {
@@ -34,6 +35,8 @@ class ProvisioningHelper
 
             $this->parsePostParams();
 
+            if (empty($this->instanceId))
+
             //For security, the Airtime Pro provisioning system creates the database for the user.
             // $this->setNewDatabaseConnection();
             //if ($this->checkDatabaseExists()) {
@@ -43,6 +46,7 @@ class ProvisioningHelper
 
             //All we need to do is create the database tables.
             $this->createDatabaseTables();
+            $this->initializeMusicDirsTable($this->instanceId);
         } catch (Exception $e) {
             http_response_code(400);
             Logging::error($e->getMessage());
@@ -72,6 +76,7 @@ class ProvisioningHelper
         $this->dbname = $_POST['dbname'];
         $this->dbhost = $_POST['dbhost'];
         $this->dbowner = $_POST['dbowner'];
+        $this->instanceId = $_POST['instanceid'];
     }
 
     /**
@@ -128,5 +133,27 @@ class ProvisioningHelper
             }
         }
     }
+
+    private function initializeMusicDirsTable($instanceId)
+    {
+        if (!is_string($instanceId) || empty($instanceId) || !is_numeric($instanceId))
+        {
+            throw new Exception("Invalid instance id: " . $instanceId);
+        }
+
+        $instanceIdPrefix = $instanceId[0];
+
+        //Reinitialize Propel, just in case...
+        Propel::init(__DIR__."/../configs/airtime-conf-production.php");
+
+        //Create the cc_music_dir entry
+        $musicDir = new CcMusicDirs();
+        $musicDir->setType("stor");
+        $musicDir->setExists(true);
+        $musicDir->setWatched(true);
+        $musicDir->setDirectory("/mnt/airtimepro/instances/$instanceIdPrefix/$instanceId/srv/airtime/stor/");
+        $musicDir->save();
+    }
+
 
 }
