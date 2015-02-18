@@ -34,9 +34,7 @@ class ProvisioningHelper
         try {
 
             $this->parsePostParams();
-
-            if (empty($this->instanceId))
-
+            
             //For security, the Airtime Pro provisioning system creates the database for the user.
             // $this->setNewDatabaseConnection();
             //if ($this->checkDatabaseExists()) {
