@@ -113,6 +113,9 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
             return;
         } else {
+            // Sanitize any incorrect metadata that slipped past validation
+            FileDataHelper::sanitizeData($whiteList["track_number"]);
+
             /* If full_path is set, the post request came from ftp.
              * Users are allowed to upload folders via ftp. If this is the case
              * we need to include the folder name with the file name, otherwise
@@ -164,7 +167,41 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$this->validateRequestData($file, $whiteList)) {
             $file->save();
             return;
+        } else if ($file && isset($requestData["resource_id"])) {
+            // Sanitize any incorrect metadata that slipped past validation
+            FileDataHelper::sanitizeData($whiteList["track_number"]);
+
+            $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
+            
+            //store the original filename
+            $file->setDbFilepath($requestData["filename"]);
+            
+            $fileSizeBytes = $requestData["filesize"];
+            if (!isset($fileSizeBytes) || $fileSizeBytes === false)
+            {
+                $file->setDbImportStatus(2)->save();
+                $this->fileNotFoundResponse();
+                return;
+            }
+            $cloudFile = new CloudFile();
+            $cloudFile->setStorageBackend($requestData["storage_backend"]);
+            $cloudFile->setResourceId($requestData["resource_id"]);
+            $cloudFile->setCcFiles($file);
+            $cloudFile->save();
+            
+            Application_Model_Preference::updateDiskUsage($fileSizeBytes);
+            
+            $now  = new DateTime("now", new DateTimeZone("UTC"));
+            $file->setDbMtime($now);
+            $file->save();
+            
+            $this->getResponse()
+                ->setHttpResponseCode(200)
+                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else if ($file) {
+            // Sanitize any incorrect metadata that slipped past validation
+            $this->sanitizeData($file, $whiteList);
+
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
 
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
@@ -262,7 +299,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $fileForm = new Application_Form_EditAudioMD();
             $fileForm->startForm($file->getDbId());
             $fileForm->populate($whiteList);
-            
+
             /*
              * Here we are truncating metadata of any characters greater than the
              * max string length set in the database. In the rare case a track's
