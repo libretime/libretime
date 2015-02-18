@@ -35,7 +35,7 @@ require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 // We need to manually route because we can't load Zend without the database being initialized first.
-if (strpos("/provisioning/create", $_SERVER["REDIRECT_URL"]) !== false) {
+if (strpos($_SERVER["REQUEST_URI"], "/provisioning/create") !== false) {
     $provisioningHelper = new ProvisioningHelper($CC_CONFIG["apiKey"][0]);
     $provisioningHelper->createAction();
     die();
