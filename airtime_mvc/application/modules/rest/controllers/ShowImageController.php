@@ -40,12 +40,6 @@ class Rest_ShowImageController extends Zend_Rest_Controller {
      * RESTful POST endpoint; used when uploading show images
      */
     public function postAction() {
-        if (!RestAuth::verifyAuth(true, true)) {
-            $this->getResponse()
-                ->setHttpResponseCode(401)
-                ->appendBody("Authentication failed");
-            return;
-        }
 
         $showId = $this->getShowId();
 
@@ -89,12 +83,6 @@ class Rest_ShowImageController extends Zend_Rest_Controller {
      * RESTful DELETE endpoint; used when deleting show images
      */
     public function deleteAction() {
-        if (!RestAuth::verifyAuth(true, true)) {
-            $this->getResponse()
-                ->setHttpResponseCode(401)
-                ->appendBody("Authentication failed");
-            return;
-        }
 
         $showId = $this->getShowId();
 
