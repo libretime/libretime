@@ -296,3 +296,48 @@ class AirtimeUpgrader259 extends AirtimeUpgrader {
         }
     }
 }
+
+class AirtimeUpgrader2510 extends AirtimeUpgrader
+{
+    protected function getSupportedVersions() {
+        return array (
+            '2.5.9'
+        );
+    }
+
+    public function getNewVersion() {
+        return '2.5.10';
+    }
+
+    public function upgrade($dir = __DIR__) {
+        Cache::clear();
+        assert($this->checkIfUpgradeSupported());
+
+        $newVersion = $this->getNewVersion();
+
+        try {
+            $this->toggleMaintenanceScreen(true);
+            Cache::clear();
+
+            // Begin upgrade
+            $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+            $values = parse_ini_file($airtimeConf, true);
+
+            $username = $values['database']['dbuser'];
+            $password = $values['database']['dbpass'];
+            $host = $values['database']['host'];
+            $database = $values['database']['dbname'];
+
+            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
+                .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
+
+            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Cache::clear();
+
+            $this->toggleMaintenanceScreen(false);
+        } catch(Exception $e) {
+            $this->toggleMaintenanceScreen(false);
+            throw $e;
+        }
+    }
+}

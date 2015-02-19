@@ -18,6 +18,7 @@ class UpgradeController extends Zend_Controller_Action
         array_push($upgraders, new AirtimeUpgrader254());
         array_push($upgraders, new AirtimeUpgrader255());
         array_push($upgraders, new AirtimeUpgrader259());
+        array_push($upgraders, new AirtimeUpgrader2510());
         
         $didWePerformAnUpgrade = false;
         try 
