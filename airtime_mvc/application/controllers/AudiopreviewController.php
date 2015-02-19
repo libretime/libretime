@@ -204,6 +204,8 @@ class AudiopreviewController extends Zend_Controller_Action
                 $elementMap['element_mp3'] = $track['item_id'];
             } elseif (strtolower($mime) === 'audio/ogg') {
                 $elementMap['element_oga'] = $track['item_id'];
+            } elseif (strtolower($mime) === 'audio/vorbis') {
+                $elementMap['element_oga'] = $track['item_id'];
             } elseif (strtolower($mime) === 'audio/mp4') {
                 $elementMap['element_m4a'] = $track['item_id'];
             } elseif (strtolower($mime) === 'audio/wav') {
@@ -290,6 +292,8 @@ class AudiopreviewController extends Zend_Controller_Action
                 if (strtolower($mime) === 'audio/mp3') {
                     $elementMap['element_mp3'] = $track['item_id'];
                 } elseif (strtolower($mime) === 'audio/ogg') {
+                    $elementMap['element_oga'] = $track['item_id'];
+                } elseif (strtolower($mime) === 'audio/vorbis') {
                     $elementMap['element_oga'] = $track['item_id'];
                 } elseif (strtolower($mime) === 'audio/mp4') {
                     $elementMap['element_m4a'] = $track['item_id'];
