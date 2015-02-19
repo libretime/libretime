@@ -108,7 +108,7 @@ class MetadataAnalyzer(Analyzer):
                 if not data:
                     break
                 m.update(data)
-            metadata["md5_hash"] = m.hexdigest()
+            metadata["md5"] = m.hexdigest()
 
 
 
