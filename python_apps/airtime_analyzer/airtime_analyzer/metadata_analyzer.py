@@ -99,19 +99,16 @@ class MetadataAnalyzer(Analyzer):
             pass
 
         # Get file size and md5 hash of the file
-        try:
-            metadata["filesize"] = os.path.getsize(filename)
+        metadata["filesize"] = os.path.getsize(filename)
 
-            with open(filename, 'rb') as fh:
-                m = hashlib.md5()
-                while True:
-                    data = fh.read(8192)
-                    if not data:
-                        break
-                    m.update(data)
-                metadata["md5_hash"] = m.hexdigest()
-        except (OSError, IOError) as e:
-            raise e
+        with open(filename, 'rb') as fh:
+            m = hashlib.md5()
+            while True:
+                data = fh.read(8192)
+                if not data:
+                    break
+                m.update(data)
+            metadata["md5_hash"] = m.hexdigest()
 
 
 
