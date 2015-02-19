@@ -110,7 +110,6 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('is_scheduled', 'DbIsScheduled', 'BOOLEAN', false, null, false);
         $this->addColumn('is_playlist', 'DbIsPlaylist', 'BOOLEAN', false, null, false);
         $this->addColumn('filesize', 'DbFilesize', 'INTEGER', true, null, 0);
-        $this->addColumn('md5_hash', 'DbMd5Hash', 'VARCHAR', true, 512, '');
         // validators
     } // initialize()
 

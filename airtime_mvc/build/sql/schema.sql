@@ -95,7 +95,6 @@ CREATE TABLE "cc_files"
     "is_scheduled" BOOLEAN DEFAULT 'f',
     "is_playlist" BOOLEAN DEFAULT 'f',
     "filesize" INTEGER DEFAULT 0 NOT NULL,
-    "md5_hash" VARCHAR(512) DEFAULT '' NOT NULL,
     PRIMARY KEY ("id")
 );
 

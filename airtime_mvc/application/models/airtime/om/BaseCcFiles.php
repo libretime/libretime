@@ -471,13 +471,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $filesize;
 
     /**
-     * The value for the md5_hash field.
-     * Note: this column has a database default value of: ''
-     * @var        string
-     */
-    protected $md5_hash;
-
-    /**
      * @var        CcSubjs
      */
     protected $aFkOwner;
@@ -607,7 +600,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->is_scheduled = false;
         $this->is_playlist = false;
         $this->filesize = 0;
-        $this->md5_hash = '';
     }
 
     /**
@@ -1495,17 +1487,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     {
 
         return $this->filesize;
-    }
-
-    /**
-     * Get the [md5_hash] column value.
-     *
-     * @return string
-     */
-    public function getDbMd5Hash()
-    {
-
-        return $this->md5_hash;
     }
 
     /**
@@ -3060,27 +3041,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbFilesize()
 
     /**
-     * Set the value of [md5_hash] column.
-     *
-     * @param  string $v new value
-     * @return CcFiles The current object (for fluent API support)
-     */
-    public function setDbMd5Hash($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->md5_hash !== $v) {
-            $this->md5_hash = $v;
-            $this->modifiedColumns[] = CcFilesPeer::MD5_HASH;
-        }
-
-
-        return $this;
-    } // setDbMd5Hash()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -3147,10 +3107,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
 
             if ($this->filesize !== 0) {
-                return false;
-            }
-
-            if ($this->md5_hash !== '') {
                 return false;
             }
 
@@ -3247,7 +3203,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->is_scheduled = ($row[$startcol + 68] !== null) ? (boolean) $row[$startcol + 68] : null;
             $this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
             $this->filesize = ($row[$startcol + 70] !== null) ? (int) $row[$startcol + 70] : null;
-            $this->md5_hash = ($row[$startcol + 71] !== null) ? (string) $row[$startcol + 71] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3257,7 +3212,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 72; // 72 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 71; // 71 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcFiles object", $e);
@@ -3844,9 +3799,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) {
             $modifiedColumns[':p' . $index++]  = '"filesize"';
         }
-        if ($this->isColumnModified(CcFilesPeer::MD5_HASH)) {
-            $modifiedColumns[':p' . $index++]  = '"md5_hash"';
-        }
 
         $sql = sprintf(
             'INSERT INTO "cc_files" (%s) VALUES (%s)',
@@ -4070,9 +4022,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                         break;
                     case '"filesize"':
                         $stmt->bindValue($identifier, $this->filesize, PDO::PARAM_INT);
-                        break;
-                    case '"md5_hash"':
-                        $stmt->bindValue($identifier, $this->md5_hash, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -4486,9 +4435,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 70:
                 return $this->getDbFilesize();
                 break;
-            case 71:
-                return $this->getDbMd5Hash();
-                break;
             default:
                 return null;
                 break;
@@ -4589,7 +4535,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[68] => $this->getDbIsScheduled(),
             $keys[69] => $this->getDbIsPlaylist(),
             $keys[70] => $this->getDbFilesize(),
-            $keys[71] => $this->getDbMd5Hash(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -4871,9 +4816,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 70:
                 $this->setDbFilesize($value);
                 break;
-            case 71:
-                $this->setDbMd5Hash($value);
-                break;
         } // switch()
     }
 
@@ -4969,7 +4911,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[68], $arr)) $this->setDbIsScheduled($arr[$keys[68]]);
         if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
         if (array_key_exists($keys[70], $arr)) $this->setDbFilesize($arr[$keys[70]]);
-        if (array_key_exists($keys[71], $arr)) $this->setDbMd5Hash($arr[$keys[71]]);
     }
 
     /**
@@ -5052,7 +4993,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::IS_SCHEDULED)) $criteria->add(CcFilesPeer::IS_SCHEDULED, $this->is_scheduled);
         if ($this->isColumnModified(CcFilesPeer::IS_PLAYLIST)) $criteria->add(CcFilesPeer::IS_PLAYLIST, $this->is_playlist);
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) $criteria->add(CcFilesPeer::FILESIZE, $this->filesize);
-        if ($this->isColumnModified(CcFilesPeer::MD5_HASH)) $criteria->add(CcFilesPeer::MD5_HASH, $this->md5_hash);
 
         return $criteria;
     }
@@ -5186,7 +5126,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbIsScheduled($this->getDbIsScheduled());
         $copyObj->setDbIsPlaylist($this->getDbIsPlaylist());
         $copyObj->setDbFilesize($this->getDbFilesize());
-        $copyObj->setDbMd5Hash($this->getDbMd5Hash());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -7094,7 +7033,6 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->is_scheduled = null;
         $this->is_playlist = null;
         $this->filesize = null;
-        $this->md5_hash = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
