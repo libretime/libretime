@@ -17,6 +17,12 @@ class FileDataHelper {
             // If the track number isn't numeric, this will return 0
             $data["year"] = intval($data["year"]);
         }
+        if (array_key_exists("bpm", $data)) {
+            //Some BPM tags are silly and include the word "BPM". Let's strip that...
+            $data["year"] = str_ireplace("BPM", "", $data["year"]);
+            // This will convert floats to ints too.
+            $data["year"] = intval($data["year"]);
+        }
     }
 
 }
