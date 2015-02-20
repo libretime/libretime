@@ -77,8 +77,6 @@ class LibraryController extends Zend_Controller_Action
 
             $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
             if (isset($obj_sess->id)) {
-                $objInfo = Application_Model_Library::getObjInfo($obj_sess->type);
-
                 $objInfo     = Application_Model_Library::getObjInfo($obj_sess->type);
                 $obj         = new $objInfo['className']($obj_sess->id);
                 $userInfo    = Zend_Auth::getInstance()->getStorage()->read();
@@ -423,9 +421,6 @@ class LibraryController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-
-
-
         $file_id = $this->_getParam('id', null);
         $file = Application_Model_StoredFile::RecallById($file_id);
 
@@ -446,23 +441,11 @@ class LibraryController extends Zend_Controller_Action
                 $serialized[$j["name"]] = $j["value"];
             }
 
+            // Sanitize any wildly incorrect metadata before it goes to be validated.
+            FileDataHelper::sanitizeData($serialized);
+
             if ($form->isValid($serialized)) {
-
-                $formValues = $this->_getParam('data', null);
-                $formdata = array();
-                foreach ($formValues as $val) {
-                    $formdata[$val["name"]] = $val["value"];
-                }
-                $file->setDbColMetadata($formdata);
-
-                $data = $file->getMetadata();
-
-                // set MDATA_KEY_FILEPATH
-                $data['MDATA_KEY_FILEPATH'] = $file->getFilePath();
-                Logging::info($data['MDATA_KEY_FILEPATH']);
-                Application_Model_RabbitMq::SendMessageToMediaMonitor("md_update", $data);
-
-                $this->_redirect('Library');
+                $file->setDbColMetadata($serialized);
             }
         }
 

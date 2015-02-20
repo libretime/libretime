@@ -172,6 +172,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $file->save();
             return;
         } else if ($file && isset($requestData["resource_id"])) {
+
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
             
             //store the original filename
@@ -200,8 +201,10 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->setHttpResponseCode(200)
                 ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
         } else if ($file) {
+
             //local file storage
             $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
+
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
             //Our RESTful API takes "full_path" as a field, which we then split and translate to match
             //our internal schema. Internally, file path is stored relative to a directory, with the directory
@@ -294,12 +297,15 @@ class Rest_MediaController extends Zend_Rest_Controller
 
     private function validateRequestData($file, &$whiteList)
     {
+        // Sanitize any wildly incorrect metadata before it goes to be validated
+        FileDataHelper::sanitizeData($whiteList);
+
         try {        
             // EditAudioMD form is used here for validation
             $fileForm = new Application_Form_EditAudioMD();
             $fileForm->startForm($file->getDbId());
             $fileForm->populate($whiteList);
-            
+
             /*
              * Here we are truncating metadata of any characters greater than the
              * max string length set in the database. In the rare case a track's

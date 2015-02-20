@@ -1,4 +1,5 @@
 from nose.tools import *
+from ConfigParser import SafeConfigParser
 import os
 import shutil
 import multiprocessing
@@ -21,8 +22,11 @@ def teardown():
 def test_basic():
     filename = os.path.basename(DEFAULT_AUDIO_FILE)
     q = multiprocessing.Queue()
-    cloud_storage_config_path = '/etc/airtime-saas/production/cloud_storage.conf'
-    cloud_storage_config = config_file.read_config_file(cloud_storage_config_path)
+    #cloud_storage_config_path = '/etc/airtime-saas/production/cloud_storage.conf'
+    #cloud_storage_config = config_file.read_config_file(cloud_storage_config_path)
+    cloud_storage_config = SafeConfigParser()
+    cloud_storage_config.add_section("current_backend")
+    cloud_storage_config.set("current_backend", "storage_backend", "file")
     file_prefix = u''
     #This actually imports the file into the "./Test Artist" directory.
     AnalyzerPipeline.run_analysis(q, DEFAULT_AUDIO_FILE, u'.', filename, file_prefix, cloud_storage_config)
