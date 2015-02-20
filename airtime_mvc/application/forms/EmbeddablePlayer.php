@@ -14,10 +14,13 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $this->addElement($displayTrackMetadata);
 
         $streamURL = new Zend_Form_Element_Radio('stream_url');
-        $streamURL->setMultiOptions(array(
-            'AAC' => 'http://127.0.0.1:8000/airtime_a',
-            'MP3' => 'http://127.0.0.1:8000/airtime_b'
-        ));
+        $urlOptions = Array();
+        foreach(Application_Model_StreamSetting::getStreamUrls() as $type => $url) {
+            $urlOptions[$url] = $type;
+        }
+        $streamURL->setMultiOptions(
+            $urlOptions
+        );
         $streamURL->setLabel(_('Select stream:'));
         $this->addElement($streamURL);
 
