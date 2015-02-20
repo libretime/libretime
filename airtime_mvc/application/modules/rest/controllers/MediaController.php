@@ -4,11 +4,6 @@ require_once 'ProxyStorageBackend.php';
 
 class Rest_MediaController extends Zend_Rest_Controller
 {
-    const IMPORT_STATUS_SUCCESS = 0;
-    const IMPORT_STATUS_PENDING = 1;
-    const IMPORT_STATUS_FAILED = 2;
-    
-
     public function init()
     {
         $this->view->layout()->disableLayout();
@@ -191,7 +186,6 @@ class Rest_MediaController extends Zend_Rest_Controller
     private function unknownErrorResponse()
     {
         $resp = $this->getResponse();
-
         $resp->setHttpResponseCode(400);
         $resp->appendBody("An unknown error occurred.");
     }

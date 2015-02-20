@@ -100,20 +100,6 @@ class ApiController extends Zend_Controller_Action
 
         $this->_helper->json->sendJson(array());
     }
-    
-    /**
-     * Read data from StoredFile object and send with XHR response
-     * 
-     * @param Application_Model_StoredFile $storedFile - StoredFile object holding file information
-     */
-    private function readStoredFileObject($storedFile) {
-        $filepath = $storedFile->getFilePath();
-        $size = $storedFile->getFileSize();
-        $mimeType = $storedFile->getPropelOrm()->getDbMime();
-        
-        $this->smartReadFile($filepath, $mimeType, $size);
-    }
-
 
     //Used by the SaaS monitoring
     public function onAirLightAction()
