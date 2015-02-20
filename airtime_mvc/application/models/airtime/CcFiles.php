@@ -282,7 +282,6 @@ class CcFiles extends BaseCcFiles {
             if ($storedFile->existsOnDisk()) {
                 $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
             }
-            $file->delete();
         } else {
             throw new FileNotFoundException();
         }
