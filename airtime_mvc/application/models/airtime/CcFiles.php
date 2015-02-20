@@ -119,9 +119,8 @@ class CcFiles extends BaseCcFiles {
      * @param bool $copyFile True if you want to just copy the false, false if you want to move it (default false)
      * @throws Exception
      */
-    public static function createFromLocalFile($filePath, $copyFile=false)
+    public static function createFromLocalFile($fileArray, $filePath, $copyFile=false)
     {
-        $fileArray = array();
         $info = pathinfo($filePath);
         $fileName =  basename($filePath).'.'.$info['extension'];
         self::createAndImport($fileArray, $filePath, $fileName, $copyFile);
