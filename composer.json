@@ -1,0 +1,6 @@
+{
+    "require": {
+        "propel/propel1": "1.7.0-stable",
+        "aws/aws-sdk-php": "2.7.9"
+    }
+}

@@ -3,9 +3,15 @@ require_once __DIR__."/configs/conf.php";
 $CC_CONFIG = Config::getConfig();
 
 require_once __DIR__."/configs/ACL.php";
-require_once 'propel/runtime/lib/Propel.php';
+if (!@include_once('propel/propel1/runtime/lib/Propel.php'))
+{
+    die('Error: Propel not found. Did you install Airtime\'s third-party dependencies with composer? (Check the README.)');
+}
 
 Propel::init(__DIR__."/configs/airtime-conf-production.php");
+
+//Composer's autoloader
+require_once 'autoload.php';
 
 require_once __DIR__."/configs/constants.php";
 require_once 'Preference.php';

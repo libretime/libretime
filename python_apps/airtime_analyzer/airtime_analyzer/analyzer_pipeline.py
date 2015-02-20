@@ -5,6 +5,7 @@ import threading
 import multiprocessing 
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
+from cloud_storage_uploader import CloudStorageUploader
 from cuepoint_analyzer import CuePointAnalyzer
 from replaygain_analyzer import ReplayGainAnalyzer
 from playability_analyzer import *
@@ -20,7 +21,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, cloud_storage_enabled):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -33,6 +34,7 @@ class AnalyzerPipeline:
                                preserve. The file at audio_file_path typically has a 
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
+            cloud_storage_enabled: Whether to store the file in the cloud or on the local disk.
         """
         # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
@@ -48,6 +50,8 @@ class AnalyzerPipeline:
                 raise TypeError("import_directory must be unicode. Was of type " + type(import_directory).__name__ + " instead.")
             if not isinstance(original_filename, unicode):
                 raise TypeError("original_filename must be unicode. Was of type " + type(original_filename).__name__ + " instead.")
+            if not isinstance(cloud_storage_enabled, bool):
+                raise TypeError("cloud_storage_enabled must be a boolean. Was of type " + type(cloud_storage_enabled).__name__ + " instead.")
 
 
             # Analyze the audio file we were told to analyze:
@@ -57,7 +61,13 @@ class AnalyzerPipeline:
             metadata = CuePointAnalyzer.analyze(audio_file_path, metadata)
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
-            metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+
+            if cloud_storage_enabled:
+                csu = CloudStorageUploader()
+                metadata = csu.upload_obj(audio_file_path, metadata)
+            else:
+                metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)
+
             metadata["import_status"] = 0 # Successfully imported
 
             # Note that the queue we're putting the results into is our interprocess communication 

@@ -98,6 +98,19 @@
       <index-column name="name"/>
     </index>
   </table>
+  <!-- Class Table Inheritance -->
+  <table name="cloud_file" phpName="CloudFile">
+    <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
+    <column name="storage_backend" phpName="StorageBackend" type="VARCHAR" size="512" required="true" />
+    <column name="resource_id" phpName="ResourceId" type="LONGVARCHAR" required="true"/>
+    <column name="cc_file_id" type="INTEGER"/>
+    <foreign-key foreignTable="cc_files" onDelete="CASCADE">
+      <reference local="cc_file_id" foreign="id"/>
+    </foreign-key>
+    <behavior name="delegate">
+      <parameter name="to" value="cc_files"/>
+    </behavior>
+  </table>
   <table name="cc_perms" phpName="CcPerms">
     <column name="permid" phpName="Permid" type="INTEGER" primaryKey="true" required="true"/>
     <column name="subj" phpName="Subj" type="INTEGER" required="false"/>

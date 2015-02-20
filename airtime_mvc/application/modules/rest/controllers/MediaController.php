@@ -142,7 +142,6 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id) {
             return;
         }
-
         try {
             CcFiles::deleteById($id);
             $this->getResponse()
@@ -174,6 +173,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(404);
         $resp->appendBody("ERROR: Media not found."); 
+    }
+    
+    private function importFailedResponse()
+    {
+        $resp = $this->getResponse();
+        $resp->setHttpResponseCode(200);
+        $resp->appendBody("ERROR: Import Failed.");
     }
 
     private function unknownErrorResponse()

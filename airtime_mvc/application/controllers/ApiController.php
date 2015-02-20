@@ -87,26 +87,19 @@ class ApiController extends Zend_Controller_Action
      */
     public function getMediaAction()
     {
+        // Close the session so other HTTP requests can be completed while
+        // tracks are read for previewing or downloading.
+        session_write_close();
+
         $fileId = $this->_getParam("file");
 
         $media = Application_Model_StoredFile::RecallById($fileId);
         if ($media != null) {
-
-            $filepath = $media->getFilePath();
             // Make sure we don't have some wrong result beecause of caching
             clearstatcache();
-            if (is_file($filepath)) {
-                $full_path = $media->getPropelOrm()->getDbFilepath();
-
-                $file_base_name = strrchr($full_path, '/');
-                /* If $full_path does not contain a '/', strrchr will return false,
-                 * in which case we can use $full_path as the base name.
-                 */
-                if (!$file_base_name) {
-                    $file_base_name = $full_path;
-                } else {
-                    $file_base_name = substr($file_base_name, 1);
-                }
+            
+            if ($media->getPropelOrm()->isValidPhysicalFile()) {
+                $filename = $media->getPropelOrm()->getFilename();
 
                 //Download user left clicks a track and selects Download.
                 if ("true" == $this->_getParam('download')) {
@@ -114,13 +107,13 @@ class ApiController extends Zend_Controller_Action
                     //We just want the basename which is the file name with the path
                     //information stripped away. We are using Content-Disposition to specify
                     //to the browser what name the file should be saved as.
-                    header('Content-Disposition: attachment; filename="'.$file_base_name.'"');
+                    header('Content-Disposition: attachment; filename="'.$filename.'"');
                 } else {
-                    //user clicks play button for track and downloads it.
-                    header('Content-Disposition: inline; filename="'.$file_base_name.'"');
+                    //user clicks play button for track preview
+                    header('Content-Disposition: inline; filename="'.$filename.'"');
                 }
 
-                $this->smartReadFile($filepath, $media->getPropelOrm()->getDbMime());
+                $this->smartReadFile($media);
                 exit;
             } else {
                 header ("HTTP/1.1 404 Not Found");
@@ -142,12 +135,13 @@ class ApiController extends Zend_Controller_Action
     * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
     * @link http://php.net/manual/en/function.readfile.php#86244
     */
-    public function smartReadFile($location, $mimeType = 'audio/mp3')
+    public function smartReadFile($media)
     {
-        $size= filesize($location);
-        $time= date('r', filemtime($location));
+        $filepath = $media->getFilePath();
+        $size= $media->getFileSize();
+        $mimeType = $media->getPropelOrm()->getDbMime();
 
-        $fm = @fopen($location, 'rb');
+        $fm = @fopen($filepath, 'rb');
         if (!$fm) {
             header ("HTTP/1.1 505 Internal server error");
 
@@ -180,20 +174,18 @@ class ApiController extends Zend_Controller_Action
             header("Content-Range: bytes $begin-$end/$size");
         }
         header("Content-Transfer-Encoding: binary");
-        header("Last-Modified: $time");
 
         //We can have multiple levels of output buffering. Need to
         //keep looping until all have been disabled!!!
         //http://www.php.net/manual/en/function.ob-end-flush.php
         while (@ob_end_flush());
 
-        $cur = $begin;
-        fseek($fm, $begin, 0);
-
-        while (!feof($fm) && $cur <= $end && (connection_status() == 0)) {
-            echo  fread($fm, min(1024 * 16, ($end - $cur) + 1));
-            $cur += 1024 * 16;
+        // NOTE: We can't use fseek here because it does not work with streams
+        // (a.k.a. Files stored in the cloud)
+        while(!feof($fm) && (connection_status() == 0)) {
+            echo fread($fm, 1024 * 8);
         }
+        fclose($fm);
     }
 
     //Used by the SaaS monitoring

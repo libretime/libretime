@@ -420,4 +420,79 @@ class CcFiles extends BaseCcFiles {
     {
         exec("find $path -empty -type d -delete");
     }
-}
+
+    /**
+     * Returns the file size in bytes.
+     */
+    public function getFileSize()
+    {
+        return filesize($this->getAbsoluteFilePath());
+    }
+    
+    public function getFilename()
+    {
+        $info = pathinfo($this->getAbsoluteFilePath());
+        return $info['filename'];
+    }
+    
+    /**
+     * Returns the file's absolute file path stored on disk.
+     */
+    public function getURLForTrackPreviewOrDownload()
+    {
+        return $this->getAbsoluteFilePath();
+    }
+    
+    /**
+     * Returns the file's absolute file path stored on disk.
+     */
+    public function getAbsoluteFilePath()
+    {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
+        if (!$music_dir) {
+            throw new Exception("Invalid music_dir for file in database.");
+        }
+        $directory = $music_dir->getDirectory();
+        $filepath  = $this->getDbFilepath();
+
+        return Application_Common_OsPath::join($directory, $filepath);
+    }
+    
+    /**
+     * Checks if the file is a regular file that can be previewed and downloaded.
+     */
+    public function isValidPhysicalFile()
+    {
+        return is_file($this->getAbsoluteFilePath());
+    }
+    
+    /**
+     * 
+     * Deletes the file from the stor directory on disk.
+     */
+    public function deletePhysicalFile()
+    {
+        $filepath = $this->getAbsoluteFilePath();
+        if (file_exists($filepath)) {
+            unlink($filepath);
+        } else {
+            throw new Exception("Could not locate file ".$filepath);
+        }
+    }
+    
+    /**
+     * 
+     * This function refers to the file's Amazon S3 resource id.
+     * Returns null because cc_files are stored on local disk.
+     */
+    public function getResourceId()
+    {
+        return null;
+    }
+    
+    public function getCcFileId()
+    {
+        return $this->id;
+    }
+    
+} // CcFiles

@@ -16,7 +16,7 @@ require_once(AirtimeInstall::GetAirtimeSrcDir().'/application/configs/conf.php')
 set_include_path(AirtimeInstall::GetAirtimeSrcDir().'/application/models' . PATH_SEPARATOR . get_include_path());
 
 $CC_CONFIG = Config::getConfig();
-require_once 'propel/runtime/lib/Propel.php';
+require_once 'vendor/propel/propel1/runtime/lib/Propel.php';
 Propel::init(AirtimeInstall::GetAirtimeSrcDir()."/application/configs/airtime-conf-production.php");
 
 //use this class to set new values in the cache as well.

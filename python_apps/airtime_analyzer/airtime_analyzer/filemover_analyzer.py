@@ -62,6 +62,7 @@ class FileMoverAnalyzer(Analyzer):
         #the wrong information for the file we just overwrote (eg. the song length would be wrong!)
         #If the final file path is the same as the file we've been told to import (which
         #you often do when you're debugging), then don't move the file at all.
+        
         if os.path.exists(final_file_path):
             if os.path.samefile(audio_file_path, final_file_path):
                 metadata["full_path"] = final_file_path

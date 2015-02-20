@@ -1,3 +1,5 @@
+requests==2.5.0
+apache-libcloud==0.15.1
 argparse==1.2.1
 amqplib==1.0.2
 PyDispatcher==2.0.3

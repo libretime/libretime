@@ -761,7 +761,20 @@ SQL;
         }
     }
 
-    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri)
+    /**
+     * 
+     * Appends schedule "events" to an array of schedule events that gets
+     * sent to PYPO. Each schedule event contains information PYPO and
+     * Liquidsoap need for playout.
+     * 
+     * @param Array $data array to be filled with schedule info - $item(s)
+     * @param Array $item schedule info about one track
+     * @param Integer $media_id scheduled item's cc_files id
+     * @param String $uri path to the scheduled item's physical location
+     * @param Integer $filsize The file's file size in bytes
+     * 
+     */
+    private static function createFileScheduleEvent(&$data, $item, $media_id, $uri, $filesize)
     {
         $start = self::AirtimeTimeToPypoTime($item["start"]);
         $end   = self::AirtimeTimeToPypoTime($item["end"]);
@@ -796,6 +809,7 @@ SQL;
             'show_name'         => $item["show_name"],
             'replay_gain'       => $replay_gain,
             'independent_event' => $independent_event,
+            'filesize'          => $filesize,
         );
 
         if ($schedule_item['cue_in'] > $schedule_item['cue_out']) {
@@ -928,8 +942,13 @@ SQL;
                 //row is from "file"
                 $media_id = $item['file_id'];
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
-                $uri = $storedFile->getFilePath();
-                self::createFileScheduleEvent($data, $item, $media_id, $uri);
+                $file = $storedFile->getPropelOrm();
+                $uri = $file->getAbsoluteFilePath();
+                
+                $baseUrl = Application_Common_OsPath::getBaseDir();
+                $filesize = $file->getFileSize();
+                
+                self::createFileScheduleEvent($data, $item, $media_id, $uri, $filesize);
             } 
             elseif (!is_null($item['stream_id'])) {
                 //row is type "webstream"

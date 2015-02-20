@@ -8,4 +8,4 @@ cd $SCRIPTPATH/../airtime_mvc/
 path=`pwd`
 cd build
 sed -i s#"project\.home =.*$"#"project.home = $path"#g build.properties
-../library/propel/generator/bin/propel-gen
+../../vendor/propel/propel1/generator/bin/propel-gen

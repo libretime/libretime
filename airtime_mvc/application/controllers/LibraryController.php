@@ -189,7 +189,6 @@ class LibraryController extends Zend_Controller_Action
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
 
         if ($type === "audioclip") {
-
             $file = Application_Model_StoredFile::RecallById($id);
 
             $menu["play"]["mime"] = $file->getPropelOrm()->getDbMime();
@@ -214,7 +213,11 @@ class LibraryController extends Zend_Controller_Action
                 $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
             }
 
-            $url = $file->getRelativeFileUrl($baseUrl).'/download/true';
+            // It's important that we always return the parent id (cc_files id)
+            // and not the cloud_file id (if applicable) for track download.
+            // Our application logic (StoredFile.php) will determine if the track
+            // is a cloud_file and handle it appropriately.
+            $url = $baseUrl."api/get-media/file/".$id.".".$file->getFileExtension().'/download/true';
             $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {
@@ -349,7 +352,6 @@ class LibraryController extends Zend_Controller_Action
         foreach ($files as $id) {
 
             $file = Application_Model_StoredFile::RecallById($id);
-
             if (isset($file)) {
                 try {
                     $res = $file->delete();
@@ -357,8 +359,8 @@ class LibraryController extends Zend_Controller_Action
                     $message = $noPermissionMsg;
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
-                    $message = _("Could not delete some scheduled files.");
-                    Logging::debug($e->getMessage());
+                    $message = _("Could not delete file(s).");
+                    Logging::info($message.": ".$e->getMessage());
                 }
             }
         }
@@ -468,7 +470,7 @@ class LibraryController extends Zend_Controller_Action
                 $md = $file->getMetadata();
 
                 foreach ($md as $key => $value) {
-                    if ($key == 'MDATA_KEY_DIRECTORY') {
+                    if ($key == 'MDATA_KEY_DIRECTORY' && !is_null($value)) {
                         $musicDir = Application_Model_MusicDir::getDirByPK($value);
                         $md['MDATA_KEY_FILEPATH'] = Application_Common_OsPath::join($musicDir->getDirectory(), $md['MDATA_KEY_FILEPATH']);
                     }

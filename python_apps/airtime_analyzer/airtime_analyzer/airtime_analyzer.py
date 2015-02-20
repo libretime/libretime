@@ -1,11 +1,11 @@
 """Contains the main application class for airtime_analyzer.
 """
-import ConfigParser
 import logging
 import logging.handlers
 import sys
 import signal
 import traceback
+import config_file
 from functools import partial
 from metadata_analyzer import MetadataAnalyzer
 from replaygain_analyzer import ReplayGainAnalyzer
@@ -23,7 +23,7 @@ class AirtimeAnalyzerServer:
     # Variables
     _log_level = logging.INFO
 
-    def __init__(self, rmq_config_path, http_retry_queue_path, debug=False):
+    def __init__(self, config_path, http_retry_queue_path, debug=False):
 
         # Dump a stacktrace with 'kill -SIGUSR2 <PID>'
         signal.signal(signal.SIGUSR2, lambda sig, frame: AirtimeAnalyzerServer.dump_stacktrace())
@@ -32,14 +32,14 @@ class AirtimeAnalyzerServer:
         self.setup_logging(debug)
 
         # Read our config file
-        rabbitmq_config = self.read_config_file(rmq_config_path)
+        config = config_file.read_config_file(config_path)
        
         # Start up the StatusReporter process
         StatusReporter.start_thread(http_retry_queue_path)
 
         # Start listening for RabbitMQ messages telling us about newly
         # uploaded files. This blocks until we recieve a shutdown signal.
-        self._msg_listener = MessageListener(rabbitmq_config)
+        self._msg_listener = MessageListener(config)
 
         StatusReporter.stop_thread()
     
@@ -71,21 +71,6 @@ class AirtimeAnalyzerServer:
         consoleHandler = logging.StreamHandler()
         consoleHandler.setFormatter(logFormatter)
         rootLogger.addHandler(consoleHandler)
-
-
-    def read_config_file(self, config_path):
-        """Parse the application's config file located at config_path."""
-        config = ConfigParser.SafeConfigParser()
-        try:
-            config.readfp(open(config_path))
-        except IOError as e:
-            print "Failed to open config file at " + config_path + ": " + e.strerror 
-            exit(-1)
-        except Exception:
-            print e.strerror 
-            exit(-1)
-
-        return config
    
     @classmethod
     def dump_stacktrace(stack):

@@ -35,6 +35,9 @@ defined('APPLICATION_ENV')
 defined('VERBOSE_STACK_TRACE')
     || define('VERBOSE_STACK_TRACE', (getenv('VERBOSE_STACK_TRACE') ? getenv('VERBOSE_STACK_TRACE') : true));
 
+//Vendors
+set_include_path(realpath(dirname(__FILE__) . '/../../vendor'));
+
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
@@ -56,6 +59,9 @@ set_include_path(APPLICATION_PATH . '/services/' . PATH_SEPARATOR . get_include_
 if (file_exists('/usr/share/php/libzend-framework-php')) {
     set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
 }
+
+//cloud storage directory
+set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
 
 /** Zend_Application */
 require_once 'Zend/Application.php';

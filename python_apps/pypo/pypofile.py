@@ -8,8 +8,12 @@ import shutil
 import os
 import sys
 import stat
+import requests
+import ConfigParser
 
 from std_err_override import LogWriter
+
+CONFIG_PATH = '/etc/airtime/airtime.conf'
 
 # configure logging
 logging.config.fileConfig("logging.cfg")
@@ -36,11 +40,7 @@ class PypoFile(Thread):
         src = media_item['uri']
         dst = media_item['dst']
 
-        try:
-            src_size = os.path.getsize(src)
-        except Exception, e:
-            self.logger.error("Could not get size of source file: %s", src)
-            return
+        src_size = media_item['filesize']
 
         dst_exists = True
         try:
@@ -62,11 +62,24 @@ class PypoFile(Thread):
         if do_copy:
             self.logger.debug("copying from %s to local cache %s" % (src, dst))
             try:
+                config = self.read_config_file(CONFIG_PATH)
+                CONFIG_SECTION = "general"
+                username = config.get(CONFIG_SECTION, 'api_key')
 
-                """
-                copy will overwrite dst if it already exists
-                """
-                shutil.copy(src, dst)
+                host = config.get(CONFIG_SECTION, 'base_url')
+                url = "http://%s/rest/media/%s/download" % (host, media_item["id"])
+                
+                with open(dst, "wb") as handle:
+                    response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True)
+                    
+                    if not response.ok:
+                        raise Exception("%s - Error occurred downloading file" % response.status_code)
+                    
+                    for chunk in response.iter_content(1024):
+                        if not chunk:
+                            break
+                        
+                        handle.write(chunk)
 
                 #make file world readable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
@@ -106,6 +119,19 @@ class PypoFile(Thread):
 
         return media_item
 
+    def read_config_file(self, config_path):
+        """Parse the application's config file located at config_path."""
+        config = ConfigParser.SafeConfigParser()
+        try:
+            config.readfp(open(config_path))
+        except IOError as e:
+            logging.debug("Failed to open config file at %s: %s" % (config_path, e.strerror))
+            sys.exit()
+        except Exception:
+            logging.debug(e.strerror) 
+            sys.exit()
+
+        return config
 
     def main(self):
         while True:
