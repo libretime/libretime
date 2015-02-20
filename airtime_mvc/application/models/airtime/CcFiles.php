@@ -119,9 +119,8 @@ class CcFiles extends BaseCcFiles {
      * @param bool $copyFile True if you want to just copy the false, false if you want to move it (default false)
      * @throws Exception
      */
-    public static function createFromLocalFile($filePath, $copyFile=false)
+    public static function createFromLocalFile($fileArray, $filePath, $copyFile=false)
     {
-        $fileArray = array();
         $info = pathinfo($filePath);
         $fileName =  basename($filePath).'.'.$info['extension'];
         self::createAndImport($fileArray, $filePath, $fileName, $copyFile);
@@ -281,7 +280,6 @@ class CcFiles extends BaseCcFiles {
             if ($storedFile->existsOnDisk()) {
                 $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
             }
-            $file->delete();
         } else {
             throw new FileNotFoundException();
         }
