@@ -4,26 +4,10 @@ require_once 'ProxyStorageBackend.php';
 
 class Rest_MediaController extends Zend_Rest_Controller
 {
-    const MUSIC_DIRS_STOR_PK = 1;
-    
     const IMPORT_STATUS_SUCCESS = 0;
     const IMPORT_STATUS_PENDING = 1;
     const IMPORT_STATUS_FAILED = 2;
     
-    //fields that are not modifiable via our RESTful API
-    private static $blackList = array(
-        'id',
-        'directory',
-        'filepath',
-        'file_exists',
-        'mtime',
-        'utime',
-        'lptime',
-        'silan_check',
-        'soundcloud_id',
-        'is_scheduled',
-        'is_playlist'
-    );
 
     public function init()
     {
@@ -59,18 +43,20 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        $file = CcFilesQuery::create()->findPk($id);
-        if ($file) {
-            $con = Propel::getConnection();
-            $storedFile = new Application_Model_StoredFile($file, $con);
-            $baseUrl = Application_Common_OsPath::getBaseDir();
-
-            $CC_CONFIG = Config::getConfig();
+        try
+        {
             $this->getResponse()
-                ->setHttpResponseCode(200)
-                ->appendBody($this->_redirect($storedFile->getRelativeFileUrl($baseUrl).'/download/true/api_key/'.$CC_CONFIG["apiKey"][0]));
-        } else {
+                ->setHttpResponseCode(200);
+            $inline = false;
+            Application_Service_MediaService::streamFileDownload($id, $inline);
+        }
+        catch (FileNotFoundException $e) {
             $this->fileNotFoundResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
         }
     }
     
@@ -81,14 +67,18 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        $file = CcFilesQuery::create()->findPk($id);
-        if ($file) {
-            
+        try {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
-        } else {
+                ->appendBody(json_encode(CcFiles::getSanitizedFileById($id)));
+        }
+        catch (FileNotFoundException $e) {
             $this->fileNotFoundResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
         }
     }
     
@@ -103,52 +93,24 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        if (Application_Model_Systemstatus::isDiskOverQuota()) {
+        try {
+            $sanitizedFile = CcFiles::createFromUpload($this->getRequest()->getPost());
+            $this->getResponse()
+                ->setHttpResponseCode(201)
+                ->appendBody(json_encode($sanitizedFile));
+        }
+        catch (InvalidMetadataException $e) {
+            $this->invalidDataResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (OverDiskQuotaException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
                 ->appendBody("ERROR: Disk Quota reached.");
-            return;
         }
-
-        $file = new CcFiles();
-        $whiteList = $this->removeBlacklistedFieldsFromRequestData($this->getRequest()->getPost());
-
-        if (!$this->validateRequestData($file, $whiteList)) {
-            $file->setDbTrackTitle($_FILES["file"]["name"]);
-            $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
-            $file->save();
-            return;
-        } else {
-            /* If full_path is set, the post request came from ftp.
-             * Users are allowed to upload folders via ftp. If this is the case
-             * we need to include the folder name with the file name, otherwise
-             * files won't get removed from the organize folder.
-             */
-            if (isset($whiteList["full_path"])) {
-                $fullPath = $whiteList["full_path"];
-                $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
-                //$relativePath is the folder name(if one) + track name, that was uploaded via ftp
-                $relativePath = substr($fullPath, strlen($basePath)-1);
-            } else {
-                $relativePath = $_FILES["file"]["name"];
-            }
-
-            
-            $file->fromArray($whiteList);
-            $file->setDbOwnerId($this->getOwnerId());
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
-            $file->setDbTrackTitle($_FILES["file"]["name"]);
-            $file->setDbUtime($now);
-            $file->setDbHidden(true);
-            $file->save();
-
-            $callbackUrl = $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getRequest()->getRequestUri() . "/" . $file->getPrimaryKey();
-
-            $this->processUploadedFile($callbackUrl, $relativePath, $this->getOwnerId());
-
-            $this->getResponse()
-                ->setHttpResponseCode(201)
-                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
+        catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
         }
     }
 
@@ -158,89 +120,25 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id) {
             return;
         }
-        
-        $file = CcFilesQuery::create()->findPk($id);
 
-        // Since we check for this value when deleting files, set it first
-        //$file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
-
-        $requestData = json_decode($this->getRequest()->getRawBody(), true);
-        $whiteList = $this->removeBlacklistedFieldsFromRequestData($requestData);
-        $whiteList = $this->stripTimeStampFromYearTag($whiteList);
-
-        if (!$this->validateRequestData($file, $whiteList)) {
-            $file->save();
-            return;
-        } else if ($file && isset($requestData["resource_id"])) {
-
-            $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
-            
-            //store the original filename
-            $file->setDbFilepath($requestData["filename"]);
-            
-            $fileSizeBytes = $requestData["filesize"];
-            if (!isset($fileSizeBytes) || $fileSizeBytes === false)
-            {
-                $file->setDbImportStatus(2)->save();
-                $this->fileNotFoundResponse();
-                return;
-            }
-            $cloudFile = new CloudFile();
-            $cloudFile->setStorageBackend($requestData["storage_backend"]);
-            $cloudFile->setResourceId($requestData["resource_id"]);
-            $cloudFile->setCcFiles($file);
-            $cloudFile->save();
-            
-            Application_Model_Preference::updateDiskUsage($fileSizeBytes);
-            
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
-            $file->setDbMtime($now);
-            $file->save();
-            
+        try {
+            $requestData = json_decode($this->getRequest()->getRawBody(), true);
+            $sanitizedFile = CcFiles::updateFromArray($id, $requestData);
             $this->getResponse()
-                ->setHttpResponseCode(200)
-                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
-        } else if ($file) {
-
-            //local file storage
-            $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
-
-            $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
-            //Our RESTful API takes "full_path" as a field, which we then split and translate to match
-            //our internal schema. Internally, file path is stored relative to a directory, with the directory
-            //as a foreign key to cc_music_dirs.
-            if (isset($requestData["full_path"])) {
-                $fileSizeBytes = filesize($requestData["full_path"]);
-                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
-                {
-                    $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
-                    $this->fileNotFoundResponse();
-                    return;
-                }
-                Application_Model_Preference::updateDiskUsage($fileSizeBytes);
-                $fullPath = $requestData["full_path"];
-                $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
-                $pos = strpos($fullPath, $storDir);
-            
-                if ($pos !== FALSE)
-                {
-                    assert($pos == 0); //Path must start with the stor directory path
-            
-                    $filePathRelativeToStor = substr($fullPath, strlen($storDir));
-                    $file->setDbFilepath($filePathRelativeToStor);
-                }
-            }
-            
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
-            $file->setDbMtime($now);
-            $file->save();
-            
-            $this->getResponse()
-                ->setHttpResponseCode(200)
-                ->appendBody(json_encode(CcFiles::sanitizeResponse($file)));
-        } else {
-            $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
+                ->setHttpResponseCode(201)
+                ->appendBody(json_encode($sanitizedFile));
+        }
+        catch (InvalidMetadataException $e) {
+            $this->invalidDataResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (FileNotFoundException $e) {
             $this->fileNotFoundResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
         }
     }
 
@@ -250,16 +148,18 @@ class Rest_MediaController extends Zend_Rest_Controller
         if (!$id) {
             return;
         }
-        $file = CcFilesQuery::create()->findPk($id);
-        if ($file) {
-            $con = Propel::getConnection();
-            $storedFile = Application_Model_StoredFile::RecallById($id, $con);
-            $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
-            
+        try {
+            CcFiles::deleteById($id);
             $this->getResponse()
                 ->setHttpResponseCode(204);
-        } else {
+        }
+        catch (FileNotFoundException $e) {
             $this->fileNotFoundResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
         }
     }
 
@@ -288,177 +188,12 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp->appendBody("ERROR: Import Failed.");
     }
 
-    private function invalidDataResponse()
+    private function unknownErrorResponse()
     {
         $resp = $this->getResponse();
-        $resp->setHttpResponseCode(422);
-        $resp->appendBody("ERROR: Invalid data");
-    }
 
-    private function validateRequestData($file, &$whiteList)
-    {
-        // Sanitize any wildly incorrect metadata before it goes to be validated
-        FileDataHelper::sanitizeData($whiteList);
-
-        try {        
-            // EditAudioMD form is used here for validation
-            $fileForm = new Application_Form_EditAudioMD();
-            $fileForm->startForm($file->getDbId());
-            $fileForm->populate($whiteList);
-
-            /*
-             * Here we are truncating metadata of any characters greater than the
-             * max string length set in the database. In the rare case a track's
-             * genre is more than 64 chars, for example, we don't want to reject
-             * tracks for that reason
-             */
-            foreach($whiteList as $tag => &$value) {
-                if ($fileForm->getElement($tag)) {
-                    $stringLengthValidator = $fileForm->getElement($tag)->getValidator('StringLength');
-                    //$stringLengthValidator will be false if the StringLength validator doesn't exist on the current element
-                    //in which case we don't have to truncate the extra characters
-                    if ($stringLengthValidator) {
-                        $value = substr($value, 0, $stringLengthValidator->getMax());
-                    }
-                    
-                    $value = $this->stripInvalidUtf8Characters($value);
-                }
-            }
-    
-            if (!$fileForm->isValidPartial($whiteList)) {
-                throw new Exception("Data validation failed");
-            }
-        } catch (Exception $e) {
-            $errors = $fileForm->getErrors();
-            $messages = $fileForm->getMessages();
-            Logging::error($messages);
-            $file->setDbImportStatus(2);
-            $file->setDbHidden(true);
-            $this->invalidDataResponse();
-            return false;
-        }
-        return true;
-    }
-
-    private function processUploadedFile($callbackUrl, $originalFilename, $ownerId)
-    {
-        $CC_CONFIG = Config::getConfig();
-        $apiKey = $CC_CONFIG["apiKey"][0];
-                
-        $tempFilePath = $_FILES['file']['tmp_name'];
-        $tempFileName = basename($tempFilePath);
-
-        //Only accept files with a file extension that we support.
-        $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-        if (!in_array(strtolower($fileExtension), explode(",", "ogg,mp3,oga,flac,wav,m4a,mp4,opus")))
-        {
-            @unlink($tempFilePath);
-            throw new Exception("Bad file extension.");
-        }
-
-        //TODO: Remove uploadFileAction from ApiController.php **IMPORTANT** - It's used by the recorder daemon...
-        
-        $importedStorageDirectory = "";
-        if ($CC_CONFIG["current_backend"] == "file") {
-            $storDir = Application_Model_MusicDir::getStorDir();
-            $importedStorageDirectory = $storDir->getDirectory() . "/imported/" . $ownerId;
-        }
-        
-        try {
-            //Copy the temporary file over to the "organize" folder so that it's off our webserver
-            //and accessible by airtime_analyzer which could be running on a different machine.
-            $newTempFilePath = Application_Model_StoredFile::copyFileToStor($tempFilePath, $originalFilename);
-        } catch (Exception $e) {
-            @unlink($tempFilePath);
-            Logging::error($e->getMessage());
-            return;
-        }
-        
-        //Dispatch a message to airtime_analyzer through RabbitMQ,
-        //notifying it that there's a new upload to process!
-        $storageBackend = new ProxyStorageBackend($CC_CONFIG["current_backend"]);
-        Application_Model_RabbitMq::SendMessageToAnalyzer($newTempFilePath,
-                 $importedStorageDirectory, basename($originalFilename),
-                 $callbackUrl, $apiKey, $CC_CONFIG["current_backend"],
-                 $storageBackend->getFilePrefix());
-    }
-    
-    private function getOwnerId()
-    {
-        try {
-            if (Zend_Auth::getInstance()->hasIdentity()) {
-                $service_user = new Application_Service_UserService();
-                return $service_user->getCurrentUser()->getDbId();
-            } else {
-                $defaultOwner = CcSubjsQuery::create()
-                    ->filterByDbType(array('A', 'S'), Criteria::IN)
-                    ->orderByDbId()
-                    ->findOne();
-                if (!$defaultOwner) {
-                    // what to do if there is no admin user?
-                    // should we handle this case?
-                    return null;
-                }
-                return $defaultOwner->getDbId();
-            }
-        } catch(Exception $e) {
-            Logging::info($e->getMessage());
-        }
-    }
-
-    /**
-     *
-     * Strips out fields from incoming request data that should never be modified
-     * from outside of Airtime
-     * 
-     * @param array $data            
-     */
-    private static function removeBlacklistedFieldsFromRequestData($data) {
-        foreach (self::$blackList as $key) {
-            unset($data[$key]);
-        }
-        
-        return $data;
-    }
-
-    private function removeEmptySubFolders($path) {
-        exec("find $path -empty -type d -delete");
-    }
-
-    /*
-     * It's possible that the year tag will be a timestamp but Airtime doesn't support this.
-     * The year field in cc_files can only be 16 chars max.
-     * 
-     * This functions strips the year field of it's timestamp, if one, and leaves just the year
-     */
-    private function stripTimeStampFromYearTag($metadata)
-    {
-        if (isset($metadata["year"])) {
-            if (preg_match("/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2}):(\d{2}))?$/", $metadata["year"])) {
-                $metadata["year"] = substr($metadata["year"], 0, 4);
-            }
-        }
-        return $metadata;
-    }
-    
-    private function stripInvalidUtf8Characters($string)
-    {
-        //Remove invalid UTF-8 characters
-        //reject overly long 2 byte sequences, as well as characters above U+10000 and replace with ?
-        $string = preg_replace('/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'.
-                '|[\x00-\x7F][\x80-\xBF]+'.
-                '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'.
-                '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'.
-                '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/S',
-                '?', $string );
-         
-        //reject overly long 3 byte sequences and UTF-16 surrogates and replace with ?
-        $string = preg_replace('/\xE0[\x80-\x9F][\x80-\xBF]'.
-                '|\xED[\xA0-\xBF][\x80-\xBF]/S','?', $string );
-        
-        //Do a final encoding conversion to
-        $string = mb_convert_encoding($string, 'UTF-8', 'UTF-8');
-        return $string;   
+        $resp->setHttpResponseCode(400);
+        $resp->appendBody("An unknown error occurred.");
     }
 }
 

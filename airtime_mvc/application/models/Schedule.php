@@ -954,7 +954,6 @@ SQL;
                 
                 $baseUrl = Application_Common_OsPath::getBaseDir();
                 $filesize = $file->getFileSize();
-                
                 self::createFileScheduleEvent($data, $item, $media_id, $uri, $filesize);
             } 
 
