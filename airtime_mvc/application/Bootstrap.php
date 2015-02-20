@@ -65,13 +65,28 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
         $view->headScript()->appendScript("var userType = '$userType';");
     }
+
+    /**
+     * Create a global namespace to hold a session token for CSRF prevention
+     */
+    protected function _initCsrfNamespace() {
+        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+        // Check if the token exists
+        if (!$csrf_namespace->authtoken) {
+            // If we don't have a token, regenerate it and set a 2 hour timeout
+            // Should we log the user out here if the token is expired?
+            $csrf_namespace->authtoken = sha1(uniqid(rand(),1));
+            $csrf_namespace->setExpirationSeconds(2*60*60);
+        }
+    }
     
     /**
      * Ideally, globals should be written to a single js file once 
      * from a php init function. This will save us from having to 
      * reinitialize them every request
      */
-    private function _initTranslationGlobals($view) {
+    protected function _initTranslationGlobals() {
+        $view = $this->getResource('view');
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");

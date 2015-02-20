@@ -32,8 +32,9 @@ class PluploadController extends Zend_Controller_Action
         }
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
-        $csrf_namespace->setExpirationSeconds(5*60*60);
-        $csrf_namespace->authtoken = sha1(uniqid(rand(),1));
+        /* Moved to be globally set in Bootstrap */
+        // $csrf_namespace->setExpirationSeconds(5*60*60);
+        // $csrf_namespace->authtoken = sha1(uniqid(rand(),1));
 
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
         $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
