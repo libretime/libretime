@@ -21,7 +21,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, cloud_storage_enabled):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, storage_backend):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -34,7 +34,7 @@ class AnalyzerPipeline:
                                preserve. The file at audio_file_path typically has a 
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
-            cloud_storage_enabled: Whether to store the file in the cloud or on the local disk.
+            storage_backend: String indicating the storage backend (amazon_s3 or file)
         """
         # It is super critical to initialize a separate log file here so that we 
         # don't inherit logging/locks from the parent process. Supposedly
@@ -62,7 +62,7 @@ class AnalyzerPipeline:
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
-            if cloud_storage_enabled:
+            if storage_backend.lower() == "amazon_S3":
                 csu = CloudStorageUploader()
                 metadata = csu.upload_obj(audio_file_path, metadata)
             else:
