@@ -52,4 +52,14 @@ abstract class StorageBackend
     {
         $this->secretKey = $secretKey;
     }
+
+    public function deleteAllCloudFileObjects()
+    {
+        return false;
+    }
+
+    public function getFilePrefix()
+    {
+        return "";
+    }
 }

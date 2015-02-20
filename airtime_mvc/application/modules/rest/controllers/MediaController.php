@@ -41,8 +41,9 @@ class Rest_MediaController extends Zend_Rest_Controller
         try
         {
             $this->getResponse()
-                ->setHttpResponseCode(200)
-                ->appendBody($this->_redirect(CcFiles::getDownloadUrl($id)));
+                ->setHttpResponseCode(200);
+            $inline = false;
+            Application_Service_MediaService::streamFileDownload($id, $inline);
         }
         catch (FileNotFoundException $e) {
             $this->fileNotFoundResponse();
@@ -64,7 +65,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode(CcFiles::getSantiziedFileById($id)));
+                ->appendBody(json_encode(CcFiles::getSanitizedFileById($id)));
         }
         catch (FileNotFoundException $e) {
             $this->fileNotFoundResponse();

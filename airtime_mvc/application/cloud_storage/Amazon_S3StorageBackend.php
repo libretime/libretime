@@ -4,12 +4,12 @@ require_once 'StorageBackend.php';
 
 use Aws\S3\S3Client;
 
-class Amazon_S3 extends StorageBackend
+class Amazon_S3StorageBackend extends StorageBackend
 {
     
     private $s3Client;
     
-    public function Amazon_S3($securityCredentials)
+    public function Amazon_S3StorageBackend($securityCredentials)
     {
         $this->setBucket($securityCredentials['bucket']);
         $this->setAccessKey($securityCredentials['api_key']);

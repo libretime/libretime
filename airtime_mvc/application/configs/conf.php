@@ -27,17 +27,22 @@ class Config {
         
         // Parse separate conf file for cloud storage values
         $cloudStorageConfig = isset($_SERVER['CLOUD_STORAGE_CONF']) ? $_SERVER['CLOUD_STORAGE_CONF'] : "/etc/airtime-saas/cloud_storage.conf";
-        $cloudStorageValues = parse_ini_file($cloudStorageConfig, true);
-        
-        $supportedStorageBackends = array('amazon_S3');
-        foreach ($supportedStorageBackends as $backend) {
-            $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
+        $cloudStorageValues = @parse_ini_file($cloudStorageConfig, true);
+        if ($cloudStorageValues !== false) {
+            $supportedStorageBackends = array('amazon_S3');
+            foreach ($supportedStorageBackends as $backend) {
+                $CC_CONFIG[$backend] = $cloudStorageValues[$backend];
+            }
+            // Tells us where file uploads will be uploaded to.
+            // It will either be set to a cloud storage backend or local file storage.
+            $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
+
+        } else {
+            //Default to file storage if we didn't find a cloud_storage.conf
+            $CC_CONFIG["current_backend"] = "file";
         }
-        
-        // Tells us where file uploads will be uploaded to.
-        // It will either be set to a cloud storage backend or local file storage.
-        $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
-        
+
+
         $values = parse_ini_file($filename, true);
 
         // Name of the web server user

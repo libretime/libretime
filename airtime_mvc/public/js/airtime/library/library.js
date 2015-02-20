@@ -643,11 +643,11 @@ var AIRTIME = (function(AIRTIME) {
                         open_playlist_preview(aData.audioFile, 0);
                     } else if (aData.ftype === 'audioclip') {
                         if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                            open_audio_preview(aData.ftype, aData.id);
                         }
                     } else if (aData.ftype == 'stream') {
                         if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.audioFile, aData.track_title, aData.artist_name);
+                            open_audio_preview(aData.ftype, aData.id);
                         }
                     } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
                         open_block_preview(aData.audioFile, 0);
@@ -955,7 +955,7 @@ var AIRTIME = (function(AIRTIME) {
                                                                                             // pl_
                                 open_playlist_preview(playlistIndex, 0);
                             } else if (data.ftype === 'audioclip' || data.ftype === 'stream') {
-                                open_audio_preview(data.ftype, data.audioFile, data.track_title, data.artist_name);
+                                open_audio_preview(data.ftype, data.id);
                             } else if (data.ftype === 'block') {
                                 blockIndex = $(this).parent().attr('id').substring(3); // remove
                                                                                         // the

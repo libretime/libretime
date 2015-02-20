@@ -57,7 +57,7 @@ class CcFiles extends BaseCcFiles {
      * Retrieve a sanitized version of the file metadata, suitable for public access.
      * @param $fileId
      */
-    public static function getSantiziedFileById($fileId)
+    public static function getSanitizedFileById($fileId)
     {
         $file = CcFilesQuery::create()->findPk($fileId);
         if ($file) {
@@ -114,7 +114,7 @@ class CcFiles extends BaseCcFiles {
             $file->setDbHidden(true);
             $file->save();
 
-            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "/rest/media/" . $file->getPrimaryKey();
+            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "rest/media/" . $file->getPrimaryKey();
 
             Application_Service_MediaService::processUploadedFile($callbackUrl, $relativePath, self::getOwnerId());
             return CcFiles::sanitizeResponse($file);
@@ -138,14 +138,11 @@ class CcFiles extends BaseCcFiles {
     {
         $file = CcFilesQuery::create()->findPk($fileId);
 
-        // Since we check for this value when deleting files, set it first
-        $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
-
         $fileArray = self::removeBlacklistedFields($fileArray);
         $fileArray = self::stripTimeStampFromYearTag($fileArray);
 
         self::validateFileArray($fileArray);
-        if ($file && isset($requestData["resource_id"])) {
+        if ($file && isset($fileArray["resource_id"])) {
 
             $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
@@ -155,9 +152,10 @@ class CcFiles extends BaseCcFiles {
             $fileSizeBytes = $fileArray["filesize"];
             if (!isset($fileSizeBytes) || $fileSizeBytes === false)
             {
-                $file->setDbImportStatus(2)->save();
+                $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
                 throw new FileNotFoundException();
             }
+
             $cloudFile = new CloudFile();
             $cloudFile->setStorageBackend($fileArray["storage_backend"]);
             $cloudFile->setResourceId($fileArray["resource_id"]);
@@ -171,6 +169,9 @@ class CcFiles extends BaseCcFiles {
             $file->save();
 
         } else if ($file) {
+
+            // Since we check for this value when deleting files, set it first
+            $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
 
             $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
@@ -251,6 +252,7 @@ class CcFiles extends BaseCcFiles {
             throw new FileNotFoundException();
         }
     }
+
 
     private static function validateFileArray(&$fileArray)
     {
@@ -343,6 +345,42 @@ class CcFiles extends BaseCcFiles {
     }
 
     /**
+     * Returns the file size in bytes.
+     */
+    public function getFileSize()
+    {
+        return filesize($this->getAbsoluteFilePath());
+    }
+
+    public function getFilename()
+    {
+        $info = pathinfo($this->getAbsoluteFilePath());
+        return $info['filename'];
+    }
+
+    /**
+     * Returns the file's absolute file path stored on disk.
+     */
+    public function getURLForTrackPreviewOrDownload()
+    {
+        return $this->getAbsoluteFilePath();
+    }
+
+    /**
+     * Returns the file's absolute file path stored on disk.
+     */
+    public function getAbsoluteFilePath()
+    {
+        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
+        if (!$music_dir) {
+            throw new Exception("Invalid music_dir for file in database.");
+        }
+        $directory = $music_dir->getDirectory();
+        $filepath  = $this->getDbFilepath();
+        return Application_Common_OsPath::join($directory, $filepath);
+    }
+
+    /**
      *
      * Strips out fields from incoming request data that should never be modified
      * from outside of Airtime
@@ -421,43 +459,7 @@ class CcFiles extends BaseCcFiles {
         exec("find $path -empty -type d -delete");
     }
 
-    /**
-     * Returns the file size in bytes.
-     */
-    public function getFileSize()
-    {
-        return filesize($this->getAbsoluteFilePath());
-    }
-    
-    public function getFilename()
-    {
-        $info = pathinfo($this->getAbsoluteFilePath());
-        return $info['filename'];
-    }
-    
-    /**
-     * Returns the file's absolute file path stored on disk.
-     */
-    public function getURLForTrackPreviewOrDownload()
-    {
-        return $this->getAbsoluteFilePath();
-    }
-    
-    /**
-     * Returns the file's absolute file path stored on disk.
-     */
-    public function getAbsoluteFilePath()
-    {
-        $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
-        if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file in database.");
-        }
-        $directory = $music_dir->getDirectory();
-        $filepath  = $this->getDbFilepath();
 
-        return Application_Common_OsPath::join($directory, $filepath);
-    }
-    
     /**
      * Checks if the file is a regular file that can be previewed and downloaded.
      */
