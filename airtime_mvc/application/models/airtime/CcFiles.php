@@ -29,6 +29,10 @@ class CcFiles extends BaseCcFiles {
 
     const MUSIC_DIRS_STOR_PK = 1;
 
+    const IMPORT_STATUS_SUCCESS = 0;
+    const IMPORT_STATUS_PENDING = 1;
+    const IMPORT_STATUS_FAILED = 2;
+
 
     //fields that are not modifiable via our RESTful API
     private static $blackList = array(
@@ -78,57 +82,104 @@ class CcFiles extends BaseCcFiles {
             throw new OverDiskQuotaException();
         }
 
-        $file = new CcFiles();
+        /* If full_path is set, the post request came from ftp.
+         * Users are allowed to upload folders via ftp. If this is the case
+         * we need to include the folder name with the file name, otherwise
+         * files won't get removed from the organize folder.
+         */
 
-        try{
-            $fileArray = self::removeBlacklistedFields($fileArray);
+        //Extract the relative path to the temporary uploaded file on disk.
+        if (isset($fileArray["full_path"])) {
+            $fullPath = $fileArray["full_path"];
+            $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
+            //$relativePath is the folder name(if one) + track name, that was uploaded via ftp
+            $filePathRelativeToOrganize = substr($fullPath, strlen($basePath)-1);
+            $originalFilename = $filePathRelativeToOrganize;
+        } else {
+            //Extract the original filename, which we set as the temporary title for the track
+            //until it's finished being processed by the analyzer.
+            $originalFilename = $_FILES["file"]["name"];
+        }
 
-            /*if (!self::validateFileArray($fileArray))
-            {
-                $file->setDbTrackTitle($_FILES["file"]["name"]);
-                $file->setDbUtime(new DateTime("now", new DateTimeZone("UTC")));
-                $file->save();
-                return CcFiles::sanitizeResponse($file);*/
-            self::validateFileArray($fileArray);
+        $tempFilePath = $_FILES['file']['tmp_name'];
 
-            /* If full_path is set, the post request came from ftp.
-             * Users are allowed to upload folders via ftp. If this is the case
-             * we need to include the folder name with the file name, otherwise
-             * files won't get removed from the organize folder.
-             */
-            if (isset($fileArray["full_path"])) {
-                $fullPath = $fileArray["full_path"];
-                $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
-                //$relativePath is the folder name(if one) + track name, that was uploaded via ftp
-                $relativePath = substr($fullPath, strlen($basePath)-1);
-            } else {
-                $relativePath = $_FILES["file"]["name"];
-            }
-
-
-            $file->fromArray($fileArray);
-            $file->setDbOwnerId(self::getOwnerId());
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
-            $file->setDbTrackTitle($_FILES["file"]["name"]);
-            $file->setDbUtime($now);
-            $file->setDbHidden(true);
-            $file->save();
-
-            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "rest/media/" . $file->getPrimaryKey();
-
-            Application_Service_MediaService::processUploadedFile($callbackUrl, $relativePath, self::getOwnerId());
-            return CcFiles::sanitizeResponse($file);
-
-        } catch (Exception $e) {
-            $file->setDbImportStatus(2);
-            $file->setDbHidden(true);
+        try {
+            self::createAndImport($fileArray, $tempFilePath, $originalFilename);
+        } catch (Exception $e)
+        {
+            @unlink($tempFilePath);
             throw $e;
         }
     }
 
+    /** Import a music file to the library from a local file on disk (something pre-existing).
+     *  This function allows you to copy a file rather than move it, which is useful for importing
+     *  static music files (like sample tracks).
+     * @param string $filePath The full path to the audio file to import.
+     * @param bool $copyFile True if you want to just copy the false, false if you want to move it (default false)
+     * @throws Exception
+     */
+    public static function createFromLocalFile($filePath, $copyFile=false)
+    {
+        $fileArray = array();
+        $info = pathinfo($filePath);
+        $fileName =  basename($filePath).'.'.$info['extension'];
+        self::createAndImport($fileArray, $filePath, $fileName, $copyFile);
+    }
+
+    /** Create a new CcFiles object/row and import a file for it.
+     *  You shouldn't call this directly. Either use createFromUpload() or createFromLocalFile().
+     * @param array $fileArray Any metadata to pre-fill for the audio file
+     * @param string $filePath The full path to the audio file to import
+     * @param string $originalFilename
+     * @param bool $copyFile
+     * @return mixed
+     * @throws Exception
+     * @throws PropelException
+     */
+    private static function createAndImport($fileArray, $filePath, $originalFilename, $copyFile=false)
+    {
+        $file = new CcFiles();
+
+        try
+        {
+            $fileArray = self::removeBlacklistedFields($fileArray);
+
+            self::validateFileArray($fileArray);
+
+            $file->fromArray($fileArray);
+            $file->setDbOwnerId(self::getOwnerId());
+            $now  = new DateTime("now", new DateTimeZone("UTC"));
+            $file->setDbTrackTitle($originalFilename);
+            $file->setDbUtime($now);
+            $file->setDbHidden(true);
+            $file->save();
+
+            //Only accept files with a file extension that we support.
+            $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+            if (!in_array(strtolower($fileExtension), explode(",", "ogg,mp3,oga,flac,wav,m4a,mp4,opus"))) {
+                throw new Exception("Bad file extension.");
+            }
+
+            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "rest/media/" . $file->getPrimaryKey();
+
+            Application_Service_MediaService::importFileToLibrary($callbackUrl, $filePath,
+                $originalFilename, self::getOwnerId(), $copyFile);
+
+            return CcFiles::sanitizeResponse($file);
+
+        } catch (Exception $e) {
+            $file->setDbImportStatus(self::IMPORT_STATUS_FAILED);
+            $file->setDbHidden(true);
+            $file->save();
+            throw $e;
+        }
+    }
+
+
     /** Update a file with metadata specified in an array.
-     * @param $fileId The ID of the file to update in the DB.
-     * @param $fileArray An associative array containing metadata. Replaces those fields if they exist.
+     * @param $fileId string The ID of the file to update in the DB.
+     * @param $fileArray array An associative array containing metadata. Replaces those fields if they exist.
      * @return array A sanitized version of the file metadata array.
      * @throws Exception
      * @throws FileNotFoundException
@@ -238,22 +289,6 @@ class CcFiles extends BaseCcFiles {
 
     }
 
-    public static function getDownloadUrl($id)
-    {
-        $file = CcFilesQuery::create()->findPk($id);
-        if ($file) {
-            $con = Propel::getConnection();
-            $storedFile = new Application_Model_StoredFile($file, $con);
-            $baseDir = Application_Common_OsPath::getBaseDir();
-
-            return $storedFile->getRelativeFileUrl($baseDir) . '/download/true';
-        }
-        else {
-            throw new FileNotFoundException();
-        }
-    }
-
-
     private static function validateFileArray(&$fileArray)
     {
         // Sanitize any wildly incorrect metadata before it goes to be validated
@@ -330,7 +365,7 @@ class CcFiles extends BaseCcFiles {
     /**
      *
      * Strips out the private fields we do not want to send back in API responses
-     * @param $file a CcFiles object
+     * @param $file string a CcFiles object
      */
     //TODO: rename this function?
     public static function sanitizeResponse($file)
