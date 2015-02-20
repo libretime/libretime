@@ -15,7 +15,7 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
 
         $streamURL = new Zend_Form_Element_Radio('stream_url');
         $urlOptions = Array();
-        foreach(Application_Model_StreamSetting::getStreamUrls() as $type => $url) {
+        foreach(Application_Model_StreamSetting::getEnabledStreamUrls() as $type => $url) {
             $urlOptions[$url] = $type;
         }
         $streamURL->setMultiOptions(
