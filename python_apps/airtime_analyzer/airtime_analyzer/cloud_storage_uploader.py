@@ -93,6 +93,12 @@ class CloudStorageUploader:
         # turning into deadlocks, we explicitly set the global default timeout period here:
         socket.setdefaulttimeout(SOCKET_TIMEOUT)
 
+        # Crazy workaround for a deadlock inside Python 2.7 where unicode hostname resolution can
+        # cause a deadlock because the import spins up a separate thread:
+        #  http://emptysqua.re/blog/weird-green-bug/
+        #  https://jira.mongodb.org/browse/PYTHON-607
+        unicode('foo').encode('idna')
+
         conn = S3Connection(self._api_key, self._api_key_secret, host=self._host)
         bucket = conn.get_bucket(self._bucket)
         
