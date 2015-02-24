@@ -72,6 +72,7 @@ $application = new Zend_Application(
 
 require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
+Logging::setupParseErrorLogging();
 
 // Create application, bootstrap, and run
 try {
@@ -83,15 +84,18 @@ try {
         $application->bootstrap()->run();
     }
 } catch (Exception $e) {
-    echo $e->getMessage();
-    echo "<pre>";
-    echo $e->getTraceAsString();
-    echo "</pre>";
-    Logging::info($e->getMessage());
+
+    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
+
+    Logging::error($e->getMessage());
     if (VERBOSE_STACK_TRACE) {
-        Logging::info($e->getTraceAsString());
+        echo $e->getMessage();
+        echo "<pre>";
+        echo $e->getTraceAsString();
+        echo "</pre>";
+        Logging::error($e->getTraceAsString());
     } else {
-        Logging::info($e->getTrace());
+        Logging::error($e->getTrace());
     }
     throw $e;
 }

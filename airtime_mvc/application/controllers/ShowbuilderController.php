@@ -283,6 +283,14 @@ class ShowbuilderController extends Zend_Controller_Action
         $mediaItems = $request->getParam("mediaIds", array());
         $scheduledItems = $request->getParam("schedIds", array());
 
+        $log_vars = array();
+        $log_vars["url"] = $_SERVER['HTTP_HOST'];
+        $log_vars["action"] = "showbuilder/schedule-add";
+        $log_vars["params"] = array();
+        $log_vars["params"]["media_items"] = $mediaItems;
+        $log_vars["params"]["scheduled_items"] = $scheduledItems;
+        Logging::info($log_vars);
+
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->scheduleAfter($scheduledItems, $mediaItems);
