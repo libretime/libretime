@@ -5,6 +5,12 @@ import socket
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
+# Fix for getaddrinfo deadlock. See these issues for details:
+# https://github.com/gevent/gevent/issues/349
+# https://github.com/docker/docker-registry/issues/400
+u'fix getaddrinfo deadlock'.encode('idna')
+
+CLOUD_CONFIG_PATH = '/etc/airtime-saas/cloud_storage.conf'
 STORAGE_BACKEND_FILE = "file"
 SOCKET_TIMEOUT = 240
 
