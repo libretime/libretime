@@ -114,14 +114,18 @@ class PypoFile(Thread):
             self.logger.error(e)
 
         # Make PUT request to Airtime to update the file size and hash
-        put_url = "http://%s/rest/media/%s" % (host_name, file_id)
-        payload = json.dumps({'filesize': file_size, 'md5': md5_hash})
+        error_msg = "Could not update media file %s with file size and md5 hash" % file_id
         try:
+            put_url = "http://%s/rest/media/%s" % (host_name, file_id)
+            payload = json.dumps({'filesize': file_size, 'md5': md5_hash})
             response = requests.put(put_url, data=payload, auth=requests.auth.HTTPBasicAuth(api_key, ''))
             if not response.ok:
-                self.logger.error("Could not update media file %s with file size and md5 hash" % file_id)
+                self.logger.error(error_msg)
         except (ConnectionError, Timeout):
-            self.logger.error("Could not update media file %s with file size and md5 hash" % file_id)
+            self.logger.error(error_msg)
+        except Exception as e:
+            self.logger.error(error_msg)
+            self.logger.error(e)
 
         return file_size
 
