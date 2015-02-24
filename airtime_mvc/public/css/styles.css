@@ -2187,6 +2187,14 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
     height: 120px;
 }
 
+.preferences #logo-remove-btn {
+    float: right;
+}
+
+.preferences #Logo-img-container {
+    float: left;
+}
+
 #show_time_info {
     font-size:12px;
     height:30px;

@@ -146,6 +146,15 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->form = $watched_dirs_pref;
     }
 
+    public function removeLogoAction()
+    {
+        $this->view->layout()->disableLayout();
+        // Remove reliance on .phtml files to render requests
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        Application_Model_Preference::SetStationLogo("");
+    }
+
     public function streamSettingAction()
     {
         $CC_CONFIG = Config::getConfig();
