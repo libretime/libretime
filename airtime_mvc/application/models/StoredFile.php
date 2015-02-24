@@ -564,7 +564,10 @@ SQL;
     public function getFileSize()
     {
         $filesize = $this->_file->getFileSize();
-        if ($filesize <= 0) {
+
+        // It's OK for the file size to be zero. Pypo will make a request to Airtime and update
+        // the file size and md5 hash if they are not set.
+        if ($filesize < 0) {
             throw new Exception ("Could not determine filesize for file id: ".$this->_file->getDbId().". Filesize: ".$filesize);
         }
         return $filesize;
