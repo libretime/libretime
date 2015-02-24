@@ -61,6 +61,13 @@ case "${1:-''}" in
            start
            echo "Done."
         ;;
+  'force-reload')
+           # reload commands here
+           echo -n "Reloading $NAME: "
+           stop
+           start
+           echo "Done."
+        ;;
   'status')
 	   status_of_proc "$DAEMON" "$NAME" && exit 0 || exit $?
         ;;
