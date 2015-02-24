@@ -156,7 +156,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
                 if (!$tokenValid) {
                     $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
-                    $csrf_namespace->authtoken = sha1(uniqid(rand(),1));
+                    $csrf_namespace->authtoken = sha1(openssl_random_pseudo_bytes(128));
 
                     Logging::warn("Invalid CSRF token: $token");
                     $this->getResponse()
