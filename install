@@ -561,7 +561,7 @@ if [ "$ignore_dependencies" = "f" ]; then
 
     set +e
     verbose "\n * Generating locales"
-    for i in `ls /usr/share/airtime/locale | grep ".._.."`; do
+    for i in `ls ${web_root}/../locale | grep ".._.."`; do
         if [ "$dist" = "Debian" ]; then
             grep -qi "^$i" /etc/locale.gen
             if [ $? -ne 0 ]; then
