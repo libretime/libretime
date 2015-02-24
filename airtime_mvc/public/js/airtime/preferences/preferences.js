@@ -88,9 +88,11 @@ function setCollapsibleWidgetJsCode() {
             $('#widgetCode-label').show("fast");
             $('#widgetCode-element').show("fast");
         } else {
-            //hide js textarea
-            $('#widgetCode-label').hide("fast");
-            $('#widgetCode-element').hide("fast");
+            if ($('#widgetCode-label').is(":visible")) {
+                //hide js textarea
+                $('#widgetCode-label').hide();
+                $('#widgetCode-element').hide();
+            }
         }
     }
     x();
