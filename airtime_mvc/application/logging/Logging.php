@@ -38,52 +38,50 @@ class Logging {
             return $p_msg;
         }
     }
+
+    /** @param debugMode Prints the function name, file, and line number. This is slow as it uses debug_backtrace()
+     *                   so don't use it unless you need it.
+     */
+    private static function getLinePrefix($debugMode=false)
+    {
+        $linePrefix = "";
+
+        if (array_key_exists('SERVER_NAME', $_SERVER)) {
+            $linePrefix .= $_SERVER['SERVER_NAME'] . " ";
+        }
+
+        if ($debugMode) {
+            //debug_backtrace is SLOW so we don't want this invoke unless there was a real error! (hence $debugMode)
+            $bt = debug_backtrace();
+            $caller = $bt[1];
+            $file = basename($caller['file']);
+            $line = $caller['line'];
+            $function = "Unknown function";
+            if (array_key_exists(2, $bt)) {
+                $function = $bt[2]['function'];
+            }
+            $linePrefix .= "[$file:$line - $function()] - ";
+        }
+
+        return $linePrefix;
+    }
     
     public static function info($p_msg)
     {
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-       
         $logger = self::getLogger();
-        $logger->info("[$file : $function() : line $line] - ".self::toString($p_msg));
+        $logger->info(self::getLinePrefix() . self::toString($p_msg));
     }
 
     public static function warn($p_msg)
     {
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-       
         $logger = self::getLogger();
-        $logger->warn("[$file : $function() : line $line] - "
-            . self::toString($p_msg));
+        $logger->warn(self::getLinePrefix() . self::toString($p_msg));
     }
 
     public static function error($p_msg)
     {
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-       
         $logger = self::getLogger();
-        $logger->err("[$file : $function() : line $line] - "
-            . self::toString($p_msg));
+        $logger->err(self::getLinePrefix(true) .  self::toString($p_msg));
     }
     
     public static function debug($p_msg)
@@ -92,17 +90,8 @@ class Logging {
             return;
         }
 
-        $bt = debug_backtrace();
-
-        $caller = array_shift($bt);
-        $file = basename($caller['file']);
-        $line = $caller['line'];
-        
-        $caller = array_shift($bt);
-        $function = $caller['function'];
-
         $logger = self::getLogger();
-        $logger->debug("[$file : $function() : line $line] - ".self::toString($p_msg));            
+        $logger->debug(self::getLinePrefix(true) . self::toString($p_msg));
     }
     // kind of like debug but for printing arrays more compactly (skipping
     // empty elements
@@ -134,4 +123,49 @@ class Logging {
         Propel::setLogger(null);
     }
 
+    public static function loggingShutdownCallback()
+    {
+        //Catch the types of errors that PHP doesn't normally let us catch and
+        //would otherwise log to the apache log. We route these to our Airtime log to improve the modularity
+        //and reliability of our error logging. (All errors are in one spot!)
+        $err = error_get_last();
+        if (!is_array($err) || !array_key_exists('type', $err)) {
+            return;
+        }
+
+        switch($err['type'])
+        {
+            case E_ERROR:
+            case E_PARSE:
+            case E_CORE_ERROR:
+            case E_CORE_WARNING:
+            case E_COMPILE_ERROR:
+            case E_COMPILE_WARNING:
+                //error_log("Oh noes, a fatal: " . var_export($err, true), 1, 'fatals@example.com');
+                $errorStr = '';
+                if (array_key_exists('message', $err)) {
+                    $errorStr .= $err['message'];
+                }
+                if (array_key_exists('file', $err))
+                {
+                    $errorStr .= ' at ' .$err['file'];
+                }
+                if (array_key_exists('line', $err))
+                {
+                    $errorStr .= ':' . $err['line'];
+                }
+
+                $errorStr .= "\n" . var_export($err, true);
+                Logging::error($errorStr);
+                break;
+        }
+    }
+
+    public static function setupParseErrorLogging()
+    {
+        //Static callback:
+        register_shutdown_function('Logging::loggingShutdownCallback');
+    }
+
 }
+

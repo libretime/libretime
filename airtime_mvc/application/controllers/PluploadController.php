@@ -31,9 +31,10 @@ class PluploadController extends Zend_Controller_Action
             $this->view->quotaLimitReached = true;
         }
 
+        //Because uploads are done via AJAX (and we're not using Zend form for those), we manually add the CSRF
+        //token in here.
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
-        $csrf_namespace->setExpirationSeconds(5*60*60);
-        $csrf_namespace->authtoken = sha1(uniqid(rand(),1));
+        //The CSRF token is generated in Bootstrap.php
 
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
         $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');

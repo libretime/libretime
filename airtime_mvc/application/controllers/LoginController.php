@@ -98,6 +98,9 @@ class LoginController extends Zend_Controller_Action
     {
         $auth = Zend_Auth::getInstance();
         $auth->clearIdentity();
+        // Unset all session variables relating to CSRF prevention on logout
+        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrf_namespace->unsetAll();
         $this->_redirect('showbuilder/index');
     }
 
