@@ -55,6 +55,7 @@ FILES=(
      "/usr/lib/airtime"
      "/usr/share/airtime"
      "/etc/init/airtime*"
+     "/usr/local/bin/airtime-*"
      "/usr/bin/airtime*"
      "/etc/apache2/sites-available/airtime*"
      "/etc/apache2/sites-enabled/airtime*"
