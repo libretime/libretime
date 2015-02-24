@@ -44,12 +44,10 @@ class PypoFile(Thread):
         dst = media_item['dst']
 
         src_size = media_item['filesize']
-        self.logger.info("--- src size: %s ---" % src_size)
 
         dst_exists = True
         try:
             dst_size = os.path.getsize(dst)
-            self.logger.info("--- dst size: %s ---" % dst_size)
         except Exception, e:
             dst_exists = False
 
@@ -65,7 +63,6 @@ class PypoFile(Thread):
         media_item['file_ready'] = not do_copy
 
         if do_copy:
-            self.logger.info("----doing copy-----")
             self.logger.debug("copying from %s to local cache %s" % (src, dst))
             try:
                 config = self.read_config_file(CONFIG_PATH)
