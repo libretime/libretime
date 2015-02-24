@@ -2122,6 +2122,7 @@ span.errors.sp-errors{
 }
 .preferences {
     width: 500px;
+    margin-bottom: 40px;
 }
 .manage-folders {
     width: 610px;
@@ -2184,6 +2185,14 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 
 .preferences dd#SoundCloudTags-element.block-display .input_text_area {
     height: 120px;
+}
+
+.preferences #logo-remove-btn {
+    float: right;
+}
+
+.preferences #Logo-img-container {
+    float: left;
 }
 
 #show_time_info {

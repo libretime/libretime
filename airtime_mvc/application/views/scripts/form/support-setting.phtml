@@ -143,26 +143,6 @@
                 </ul>
             <?php endif; ?>
         </dd>
-        <dt id="Logo-label" class="block-display">
-            <label class="optional" for="Description"><?php echo $this->element->getElement('Logo')->getLabel() ?></label>
-        </dt>
-        <dd id="Logo-element" class="block-display clearfix">
-            <?php if($this->element->getView()->logoImg){?>
-            <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
-            <?php }?>
-            
-            <?php echo $this->element->getElement('Logo') ?>
-            <div class="info-text">
-                <p><?php echo _("Note: Anything larger than 600x600 will be resized.")?></p>
-            </div>
-            <?php if($this->element->getElement('Logo')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('Logo')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
     </dl>
     <div id="show_what_sending" style="display: block;">
         <fieldset class="display_field toggle closed">
