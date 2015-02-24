@@ -316,15 +316,24 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.fnDeleteItems = function(aMedia) {
-       
+
+        //Prevent the user from spamming the delete button while the AJAX request is in progress
+        AIRTIME.button.disableButton("btn-group #sb-trash", false);
+        //Hack to immediately show the "Processing" div in DataTables to give the user some sort of feedback.
+        $(".dataTables_processing").css('visibility','visible');
+
         $.post(baseUrl+"library/delete", 
             {"format": "json", "media": aMedia}, 
             function(json){
                 if (json.message !== undefined) {
                     alert(json.message);
                 }
+
                 chosenItems = {};
                 oTable.fnStandingRedraw();
+
+                //Re-enable the delete button
+                AIRTIME.button.enableButton("btn-group #sb-trash", false);
             });
     };
     
