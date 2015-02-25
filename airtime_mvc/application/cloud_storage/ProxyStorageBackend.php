@@ -43,11 +43,6 @@ class ProxyStorageBackend extends StorageBackend
         return $this->storageBackend->getSignedURL($resourceId);
     }
 
-    public function getFileSize($resourceId)
-    {
-        return $this->storageBackend->getFileSize($resourceId);
-    }
-
     public function deletePhysicalFile($resourceId)
     {
         $this->storageBackend->deletePhysicalFile($resourceId);

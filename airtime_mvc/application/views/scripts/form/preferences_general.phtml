@@ -7,7 +7,11 @@
 
         <?php echo $this->element->getElement('stationLogo')->render() ?>
 
-        <div id="Logo-img-container"><img id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" /></div>
+        <button id="logo-remove-btn" value="Remove" class="btn">Remove</button>
+
+        <div id="Logo-img-container">
+            <img onError="this.onerror = '';this.style.visibility='hidden';$('#logo-remove-btn').hide();" id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" />
+        </div>
 
         <?php echo $this->element->getElement('locale')->render() ?>
 

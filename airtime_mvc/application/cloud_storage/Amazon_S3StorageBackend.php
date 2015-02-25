@@ -33,19 +33,6 @@ class Amazon_S3StorageBackend extends StorageBackend
         return $this->s3Client->getObjectUrl($this->getBucket(), $resourceId, '+60 minutes');
     }
     
-    public function getFileSize($resourceId)
-    {
-        $obj = $this->s3Client->getObject(array(
-            'Bucket' => $this->getBucket(),
-            'Key' => $resourceId,
-        ));
-        if (isset($obj["ContentLength"])) {
-            return (int)$obj["ContentLength"];
-        } else {
-            return 0;
-        }
-    }
-    
     public function deletePhysicalFile($resourceId)
     {
         $bucket = $this->getBucket();

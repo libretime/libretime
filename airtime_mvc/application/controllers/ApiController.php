@@ -495,9 +495,8 @@ class ApiController extends Zend_Controller_Action
             
             $path = $show->getDbImagePath();
             $mime_type = mime_content_type($path);
-            
-            header("Content-type: " . $mime_type);
-            $this->smartReadFile($path, $mime_type);
+
+            Application_Common_FileIO::smartReadFile($path, filesize($path), $mime_type);
            } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');

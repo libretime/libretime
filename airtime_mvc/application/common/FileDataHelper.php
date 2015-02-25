@@ -24,5 +24,4 @@ class FileDataHelper {
             $data["bpm"] = intval($data["bpm"]);
         }
     }
-
 }

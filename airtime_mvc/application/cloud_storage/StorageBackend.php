@@ -17,9 +17,6 @@ abstract class StorageBackend
      *  privately stored on the storage backend. */
     abstract public function getSignedURL($resourceId);
     
-    /** Returns the file's size in bytes. */
-    abstract public function getFileSize($resourceId);
-    
     /** Deletes the file from the storage backend. */
     abstract public function deletePhysicalFile($resourceId);
 
