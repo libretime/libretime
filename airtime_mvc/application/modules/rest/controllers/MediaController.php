@@ -103,12 +103,13 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        if (Application_Model_Systemstatus::isDiskOverQuota()) {
+        //temporarily disabling disk quota until all file sizes have ben set in the database.
+        /*if (Application_Model_Systemstatus::isDiskOverQuota()) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
                 ->appendBody("ERROR: Disk Quota reached.");
             return;
-        }
+        }*/
 
         $file = new CcFiles();
         $whiteList = $this->removeBlacklistedFieldsFromRequestData($this->getRequest()->getPost());
