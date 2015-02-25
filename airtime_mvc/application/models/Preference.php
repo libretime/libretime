@@ -589,13 +589,12 @@ class Application_Model_Preference
 
     public static function SetStationLogo($imagePath)
     {
-        if (!empty($imagePath)) {
-            $image = @file_get_contents($imagePath);
-            $image = base64_encode($image);
-            self::setValue("logoImage", $image);
-        } else {
-            Logging::warn("Attempting to set imagePath to empty string");
+        if (empty($imagePath)) {
+            Logging::info("Removed station logo");
         }
+        $image = @file_get_contents($imagePath);
+        $image = base64_encode($image);
+        self::setValue("logoImage", $image);
     }
 
     public static function GetStationLogo()

@@ -88,9 +88,11 @@ function setCollapsibleWidgetJsCode() {
             $('#widgetCode-label').show("fast");
             $('#widgetCode-element').show("fast");
         } else {
-            //hide js textarea
-            $('#widgetCode-label').hide("fast");
-            $('#widgetCode-element').hide("fast");
+            if ($('#widgetCode-label').is(":visible")) {
+                //hide js textarea
+                $('#widgetCode-label').hide();
+                $('#widgetCode-element').hide();
+            }
         }
     }
     x();
@@ -120,6 +122,10 @@ $(document).ready(function() {
         $(this).toggleClass("closed");
         return false;
     }).next().hide();
+
+    $('#logo-remove-btn').click(function() {
+        $.post(baseUrl+'Preference/remove-logo', function(json){});
+    });
 
     /* No longer using AJAX for this form. Zend + our code makes it needlessly hard to deal with. -- Albert
     $('#pref_save').live('click', function() {

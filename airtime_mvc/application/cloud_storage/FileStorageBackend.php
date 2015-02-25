@@ -18,12 +18,6 @@ class FileStorageBackend extends StorageBackend
         return "";
     }
 
-    public function getFileSize($resourceId)
-    {
-        //TODO
-        return filesize($resourceId);
-    }
-
     public function deletePhysicalFile($resourceId)
     {
         //TODO

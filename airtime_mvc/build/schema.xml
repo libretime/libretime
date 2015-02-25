@@ -82,6 +82,7 @@
     <column name="hidden" phpName="DbHidden" type="BOOLEAN" defaultValue="false"/>
     <column name="is_scheduled" phpName="DbIsScheduled" type="BOOLEAN" defaultValue="false"/>
     <column name="is_playlist" phpName="DbIsPlaylist" type="BOOLEAN" defaultValue="false"/>
+    <column name="filesize" phpName="DbFilesize" type="Integer" required="true" defaultValue="0"/>
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>

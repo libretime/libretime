@@ -160,11 +160,11 @@ class ApiController extends Zend_Controller_Action
         
         // If we're passing in a Stored File object, it's faster 
         // to use getFileSize() and pass in the result
-        if (!$size || $size <= 0) {
+        if (!isset($size) || $size < 0) {
             $size= filesize($location);
         }
         
-        if ($size <= 0) {
+        if ($size < 0) {
             throw new Exception("Invalid file size returned for file at $location");
         }
         
@@ -195,9 +195,11 @@ class ApiController extends Zend_Controller_Action
         header('Cache-Control: public, must-revalidate, max-age=0');
         header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
-        header('Content-Length:' . (($end - $begin) + 1));
-        if (isset($_SERVER['HTTP_RANGE'])) {
-            header("Content-Range: bytes $begin-$end/$size");
+        if ($size > 0) {
+            header('Content-Length:' . (($end - $begin) + 1));
+            if (isset($_SERVER['HTTP_RANGE'])) {
+                header("Content-Range: bytes $begin-$end/$size");
+            }
         }
         header("Content-Transfer-Encoding: binary");
 

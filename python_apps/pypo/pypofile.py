@@ -10,6 +10,9 @@ import sys
 import stat
 import requests
 import ConfigParser
+import json
+import hashlib
+from requests.exceptions import ConnectionError, HTTPError, Timeout
 
 from std_err_override import LogWriter
 
@@ -68,7 +71,6 @@ class PypoFile(Thread):
 
                 host = config.get(CONFIG_SECTION, 'base_url')
                 url = "http://%s/rest/media/%s/download" % (host, media_item["id"])
-                
                 with open(dst, "wb") as handle:
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
                     
@@ -85,10 +87,47 @@ class PypoFile(Thread):
                 #make file world readable
                 os.chmod(dst, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
 
+                if media_item['filesize'] == 0:
+                    file_size = self.report_file_size_and_md5_to_airtime(dst, media_item["id"], host, username)
+                    media_item["filesize"] = file_size
+
                 media_item['file_ready'] = True
             except Exception, e:
                 self.logger.error("Could not copy from %s to %s" % (src, dst))
                 self.logger.error(e)
+
+    def report_file_size_and_md5_to_airtime(self, file_path, file_id, host_name, api_key):
+        try:
+            file_size = os.path.getsize(file_path)
+
+            with open(file_path, 'rb') as fh:
+                m = hashlib.md5()
+                while True:
+                    data = fh.read(8192)
+                    if not data:
+                        break
+                    m.update(data)
+                md5_hash = m.hexdigest()
+        except (OSError, IOError) as e:
+            file_size = 0
+            self.logger.error("Error getting file size and md5 hash for file id %s" % file_id)
+            self.logger.error(e)
+
+        # Make PUT request to Airtime to update the file size and hash
+        error_msg = "Could not update media file %s with file size and md5 hash" % file_id
+        try:
+            put_url = "http://%s/rest/media/%s" % (host_name, file_id)
+            payload = json.dumps({'filesize': file_size, 'md5': md5_hash})
+            response = requests.put(put_url, data=payload, auth=requests.auth.HTTPBasicAuth(api_key, ''))
+            if not response.ok:
+                self.logger.error(error_msg)
+        except (ConnectionError, Timeout):
+            self.logger.error(error_msg)
+        except Exception as e:
+            self.logger.error(error_msg)
+            self.logger.error(e)
+
+        return file_size
 
     def get_highest_priority_media_item(self, schedule):
         """

@@ -4,6 +4,8 @@ import mutagen
 import magic
 import wave
 import logging
+import os
+import hashlib
 from analyzer import Analyzer
 
 class MetadataAnalyzer(Analyzer):
@@ -95,6 +97,20 @@ class MetadataAnalyzer(Analyzer):
         except (AttributeError, KeyError, IndexError):
             #If we couldn't figure out the track_number or track_total, just ignore it...
             pass
+
+        # Get file size and md5 hash of the file
+        metadata["filesize"] = os.path.getsize(filename)
+
+        with open(filename, 'rb') as fh:
+            m = hashlib.md5()
+            while True:
+                data = fh.read(8192)
+                if not data:
+                    break
+                m.update(data)
+            metadata["md5"] = m.hexdigest()
+
+
 
         #We normalize the mutagen tags slightly here, so in case mutagen changes,
         #we find the 
