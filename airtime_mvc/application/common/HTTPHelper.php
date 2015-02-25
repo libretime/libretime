@@ -31,6 +31,9 @@ class Application_Common_HTTPHelper
         if (empty($baseDir)) {
             $baseDir = "/";
         }
+        if ($baseDir[0] != "") {
+            $baseDir = "/" . $baseDir;
+        }
         $stationUrl = "$scheme://${baseUrl}:${basePort}${baseDir}";
 
         return $stationUrl;

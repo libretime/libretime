@@ -160,7 +160,7 @@ class CcFiles extends BaseCcFiles {
                 throw new Exception("Bad file extension.");
             }
 
-            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "rest/media/" . $file->getPrimaryKey();
+            $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "/rest/media/" . $file->getPrimaryKey();
 
             Application_Service_MediaService::importFileToLibrary($callbackUrl, $filePath,
                 $originalFilename, self::getOwnerId(), $copyFile);
