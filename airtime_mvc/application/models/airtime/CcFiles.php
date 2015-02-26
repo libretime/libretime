@@ -100,7 +100,7 @@ class CcFiles extends BaseCcFiles {
     {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
         if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file in database.");
+            throw new Exception("Invalid music_dir for file " . $this->getDbId() . " in database.");
         }
         $directory = $music_dir->getDirectory();
         $filepath  = $this->getDbFilepath();

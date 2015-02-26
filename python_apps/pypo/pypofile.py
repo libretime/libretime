@@ -167,7 +167,7 @@ class PypoFile(Thread):
         except IOError as e:
             logging.debug("Failed to open config file at %s: %s" % (config_path, e.strerror))
             sys.exit()
-        except Exception:
+        except Exception as e:
             logging.debug(e.strerror) 
             sys.exit()
 
