@@ -69,7 +69,7 @@ class AnalyzerPipeline:
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
-            if storage_backend.lower() == "amazon_S3":
+            if storage_backend.lower() == u"amazon_s3":
                 csu = CloudStorageUploader(cloud_storage_config)
                 metadata = csu.upload_obj(audio_file_path, metadata)
             else:
