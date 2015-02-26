@@ -38,20 +38,31 @@ class ProvisioningHelper
             //For security, the Airtime Pro provisioning system creates the database for the user.
             $this->setNewDatabaseConnection();
 
+            //if ($this->checkDatabaseExists()) {
+            //    throw new Exception("ERROR: Airtime database already exists");
+            //}
+
+            if (!$this->checkDatabaseExists()) {
+                throw new Exception("ERROR: $this->dbname database does not exist.");
+            }
+
             //We really want to do this check because all the Propel-generated SQL starts with "DROP TABLE IF EXISTS".
             //If we don't check, then a second call to this API endpoint would wipe all the tables!
-            if ($this->checkDatabaseExists()) {
-                throw new Exception("ERROR: Airtime database already exists");
+            if ($this->checkTablesExist()) {
+                throw new Exception("ERROR: airtime tables already exists");
             }
+
             //$this->createDatabase();
 
             //All we need to do is create the database tables.
+
             $this->createDatabaseTables();
             $this->initializeMusicDirsTable($this->instanceId);
         } catch (Exception $e) {
             http_response_code(400);
-            Logging::error($e->getMessage());
-            echo $e->getMessage();
+            Logging::error($e->getMessage()
+            );
+            echo $e->getMessage() . PHP_EOL;
             return;
         }
 
@@ -70,6 +81,19 @@ class ProvisioningHelper
         return isset($result[0]);
     }
 
+    private function checkTablesExist()
+    {
+        try {
+            $result = self::$dbh->query("SELECT 1 FROM cc_files LIMIT 1");
+        } catch (Exception $e) {
+            // We got an exception == table not found
+            echo($e . PHP_EOL);
+            return FALSE;
+        }
+
+        // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
+        return $result !== FALSE;
+    }
     private function parsePostParams()
     {
         $this->dbuser = $_POST['dbuser'];
@@ -87,9 +111,11 @@ class ProvisioningHelper
     private function setNewDatabaseConnection()
     {
         self::$dbh = new PDO("pgsql:host=" . $this->dbhost
-            . ";dbname=postgres"
+            . ";dbname=" . $this->dbname
             . ";port=5432" . ";user=" . $this->dbuser
             . ";password=" . $this->dbpass);
+        //Turn on PDO exceptions because they're off by default.
+        //self::$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $err = self::$dbh->errorInfo();
         if ($err[1] != null) {
             throw new PDOException("ERROR: Could not connect to database");
