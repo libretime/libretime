@@ -119,6 +119,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         try {
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
             $sanitizedFile = CcFiles::updateFromArray($id, $requestData);
+
             $this->getResponse()
                 ->setHttpResponseCode(201)
                 ->appendBody(json_encode($sanitizedFile));

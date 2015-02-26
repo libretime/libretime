@@ -1,4 +1,4 @@
-<?php if($this->trial_remain != '' && $this->trial_remain != "Trial expired."){?>
+<?php if($this->is_trial && $this->trial_remain != '' && $this->trial_remain != "Trial expired."){?>
   <div class="trial-box">
       <p><?php echo _("Your trial expires in") ?></p>
       <div class="trial-box-calendar">

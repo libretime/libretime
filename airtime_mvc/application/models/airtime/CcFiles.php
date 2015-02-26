@@ -192,74 +192,76 @@ class CcFiles extends BaseCcFiles {
         $fileArray = self::removeBlacklistedFields($fileArray);
         $fileArray = self::stripTimeStampFromYearTag($fileArray);
 
-        self::validateFileArray($fileArray);
-        if ($file && isset($fileArray["resource_id"])) {
+        try {
 
-            $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
+            self::validateFileArray($fileArray);
+            if ($file && isset($fileArray["resource_id"])) {
 
-            //store the original filename
-            $file->setDbFilepath($fileArray["filename"]);
+                $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
 
-            $fileSizeBytes = $fileArray["filesize"];
-            if (!isset($fileSizeBytes) || $fileSizeBytes === false)
-            {
-                $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
-                throw new FileNotFoundException();
-            }
+                //store the original filename
+                $file->setDbFilepath($fileArray["filename"]);
 
-            $cloudFile = new CloudFile();
-            $cloudFile->setStorageBackend($fileArray["storage_backend"]);
-            $cloudFile->setResourceId($fileArray["resource_id"]);
-            $cloudFile->setCcFiles($file);
-            $cloudFile->save();
-
-            Application_Model_Preference::updateDiskUsage($fileSizeBytes);
-
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
-            $file->setDbMtime($now);
-            $file->save();
-
-        } else if ($file) {
-
-            // Since we check for this value when deleting files, set it first
-            $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
-
-            $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
-
-            //Our RESTful API takes "full_path" as a field, which we then split and translate to match
-            //our internal schema. Internally, file path is stored relative to a directory, with the directory
-            //as a foreign key to cc_music_dirs.
-            if (isset($fileArray["full_path"])) {
-                $fileSizeBytes = filesize($fileArray["full_path"]);
-                if (!isset($fileSizeBytes) || $fileSizeBytes === false)
-                {
-                    $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
-                    throw new FileNotFoundException();
+                $fileSizeBytes = $fileArray["filesize"];
+                if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
+                    throw new FileNotFoundException("Invalid filesize for $fileId");
                 }
+
+                $cloudFile = new CloudFile();
+                $cloudFile->setStorageBackend($fileArray["storage_backend"]);
+                $cloudFile->setResourceId($fileArray["resource_id"]);
+                $cloudFile->setCcFiles($file);
+                $cloudFile->save();
+
                 Application_Model_Preference::updateDiskUsage($fileSizeBytes);
 
-                $fullPath = $fileArray["full_path"];
-                $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
-                $pos = strpos($fullPath, $storDir);
+                $now = new DateTime("now", new DateTimeZone("UTC"));
+                $file->setDbMtime($now);
+                $file->save();
 
-                if ($pos !== FALSE)
-                {
-                    assert($pos == 0); //Path must start with the stor directory path
+            } else if ($file) {
 
-                    $filePathRelativeToStor = substr($fullPath, strlen($storDir));
-                    $file->setDbFilepath($filePathRelativeToStor);
+                // Since we check for this value when deleting files, set it first
+                $file->setDbDirectory(self::MUSIC_DIRS_STOR_PK);
+
+                $file->fromArray($fileArray, BasePeer::TYPE_FIELDNAME);
+
+                //Our RESTful API takes "full_path" as a field, which we then split and translate to match
+                //our internal schema. Internally, file path is stored relative to a directory, with the directory
+                //as a foreign key to cc_music_dirs.
+                if (isset($fileArray["full_path"])) {
+                    $fileSizeBytes = filesize($fileArray["full_path"]);
+                    if (!isset($fileSizeBytes) || $fileSizeBytes === false) {
+                        throw new FileNotFoundException("Invalid filesize for $fileId");
+                    }
+                    Application_Model_Preference::updateDiskUsage($fileSizeBytes);
+
+                    $fullPath = $fileArray["full_path"];
+                    $storDir = Application_Model_MusicDir::getStorDir()->getDirectory();
+                    $pos = strpos($fullPath, $storDir);
+
+                    if ($pos !== FALSE) {
+                        assert($pos == 0); //Path must start with the stor directory path
+
+                        $filePathRelativeToStor = substr($fullPath, strlen($storDir));
+                        $file->setDbFilepath($filePathRelativeToStor);
+                    }
                 }
+
+                $now = new DateTime("now", new DateTimeZone("UTC"));
+                $file->setDbMtime($now);
+                $file->save();
+
+            } else {
+                throw new FileNotFoundException();
             }
-
-            $now  = new DateTime("now", new DateTimeZone("UTC"));
-            $file->setDbMtime($now);
+        }
+        catch (FileNotFoundException $e)
+        {
+            $file->setDbImportStatus(self::IMPORT_STATUS_FAILED);
+            $file->setDbHidden(true);
             $file->save();
-
-            /* $this->removeEmptySubFolders(
-                isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/"); */
-        } else {
-            $file->setDbImportStatus(self::IMPORT_STATUS_FAILED)->save();
-            throw new FileNotFoundException();
+            throw $e;
         }
 
         return CcFiles::sanitizeResponse($file);
@@ -409,7 +411,7 @@ class CcFiles extends BaseCcFiles {
     {
         $music_dir = Application_Model_MusicDir::getDirByPK($this->getDbDirectory());
         if (!$music_dir) {
-            throw new Exception("Invalid music_dir for file in database.");
+            throw new Exception("Invalid music_dir for file " . $this->getDbId() . " in database.");
         }
         $directory = $music_dir->getDirectory();
         $filepath  = $this->getDbFilepath();
