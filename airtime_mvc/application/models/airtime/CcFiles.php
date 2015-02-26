@@ -78,9 +78,11 @@ class CcFiles extends BaseCcFiles {
      */
     public static function createFromUpload($fileArray)
     {
+        /*temporarily disabling disk quota until all file sizes have ben set in the database.
         if (Application_Model_Systemstatus::isDiskOverQuota()) {
             throw new OverDiskQuotaException();
         }
+        */
 
         /* If full_path is set, the post request came from ftp.
          * Users are allowed to upload folders via ftp. If this is the case

@@ -27,9 +27,10 @@ class PluploadController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/addmedia.css?'.$CC_CONFIG['airtime_version']);
 
         $this->view->quotaLimitReached = false;
-        if (Application_Model_Systemstatus::isDiskOverQuota()) {
+        // temporarily disabling disk quota until all file size values have been set
+        /*if (Application_Model_Systemstatus::isDiskOverQuota()) {
             $this->view->quotaLimitReached = true;
-        }
+        }*/
 
         //Because uploads are done via AJAX (and we're not using Zend form for those), we manually add the CSRF
         //token in here.

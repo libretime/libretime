@@ -28,6 +28,18 @@ class MetadataAnalyzer(Analyzer):
         #Other fields we'll want to set for Airtime:
         metadata["hidden"] = False
 
+        # Get file size and md5 hash of the file
+        metadata["filesize"] = os.path.getsize(filename)
+
+        with open(filename, 'rb') as fh:
+            m = hashlib.md5()
+            while True:
+                data = fh.read(8192)
+                if not data:
+                    break
+                m.update(data)
+            metadata["md5"] = m.hexdigest()
+
         # Mutagen doesn't handle WAVE files so we use a different package 
         mime_check = magic.from_file(filename, mime=True)
         metadata["mime"] = mime_check
@@ -97,20 +109,6 @@ class MetadataAnalyzer(Analyzer):
         except (AttributeError, KeyError, IndexError):
             #If we couldn't figure out the track_number or track_total, just ignore it...
             pass
-
-        # Get file size and md5 hash of the file
-        metadata["filesize"] = os.path.getsize(filename)
-
-        with open(filename, 'rb') as fh:
-            m = hashlib.md5()
-            while True:
-                data = fh.read(8192)
-                if not data:
-                    break
-                m.update(data)
-            metadata["md5"] = m.hexdigest()
-
-
 
         #We normalize the mutagen tags slightly here, so in case mutagen changes,
         #we find the 

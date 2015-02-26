@@ -392,7 +392,7 @@ SQL;
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$file_id);
 
         $filesize = $this->_file->getFileSize();
-        if ($filesize <= 0) {
+        if ($filesize < 0) {
             throw new Exception("Cannot delete file with filesize ".$filesize);
         }
 
