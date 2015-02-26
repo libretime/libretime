@@ -88,7 +88,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      * from a php init function. This will save us from having to 
      * reinitialize them every request
      */
-    private function _initTranslationGlobals($view) {
+    private function _initTranslationGlobals() {
+        $view = $this->getResource('view');
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
@@ -174,9 +175,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/audio-preview') === false
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/playlist-preview') === false
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl.'audiopreview/block-preview') === false) {
-                if (Application_Model_Preference::GetLiveChatEnabled()) {
+                $plan_level = strval(Application_Model_Preference::GetPlanLevel());
+                // Since the Hobbyist plan doesn't come with Live Chat support, don't enable it
+                if (Application_Model_Preference::GetLiveChatEnabled() && $plan_level !== 'hobbyist') {
                     $client_id = strval(Application_Model_Preference::GetClientId());
-                    $plan_level = strval(Application_Model_Preference::GetPlanLevel());
                     $station_url = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
                     $view->headScript()->appendScript("var livechat_client_id = '$client_id';\n".
                                                       "var livechat_plan_type = '$plan_level';\n".
