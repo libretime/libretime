@@ -175,14 +175,16 @@ class Rest_MediaController extends Zend_Rest_Controller
         } else if ($file && isset($requestData["resource_id"])) {
 
             $file->fromArray($whiteList, BasePeer::TYPE_FIELDNAME);
-            
+
             //store the original filename
             $file->setDbFilepath($requestData["filename"]);
-            
+
             $fileSizeBytes = $requestData["filesize"];
             if (!isset($fileSizeBytes) || $fileSizeBytes === false)
             {
-                $file->setDbImportStatus(2)->save();
+                $file->setDbImportStatus(2);
+                $file->setHidden(true);
+                $file->save();
                 $this->fileNotFoundResponse();
                 return;
             }
