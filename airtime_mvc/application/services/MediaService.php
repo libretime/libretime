@@ -58,17 +58,9 @@ class Application_Service_MediaService
         $filepath = $media->getFilePath();
         // Make sure we don't have some wrong result beecause of caching
         clearstatcache();
-        $media = Application_Model_StoredFile::RecallById($fileId);
-        if ($media == null) {
-            throw new FileNotFoundException();
-        }
-
-        // Make sure we don't have some wrong result beecause of caching
-        clearstatcache();
 
         if ($media->getPropelOrm()->isValidPhysicalFile()) {
             $filename = $media->getPropelOrm()->getFilename();
-
             //Download user left clicks a track and selects Download.
             if (!$inline) {
                 //We are using Content-Disposition to specify

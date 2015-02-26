@@ -388,7 +388,8 @@ class CcFiles extends BaseCcFiles {
     public function getFilename()
     {
         $info = pathinfo($this->getAbsoluteFilePath());
-        return $info['filename'];
+        //filename doesn't contain the extension because PHP is awful
+        return $info['filename'].".".$info['extension'];
     }
 
     /**
