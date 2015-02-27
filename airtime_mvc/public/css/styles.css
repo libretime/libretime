@@ -2187,12 +2187,17 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
     height: 120px;
 }
 
+.preferences #stationLogoRemove-label {
+    display: none;
+}
+
 .preferences #logo-remove-btn {
     float: right;
+    margin-bottom: 4px;
 }
 
 .preferences #Logo-img-container {
-    float: left;
+    margin-top: 30px;
 }
 
 #show_time_info {

@@ -49,6 +49,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $stationLogoUpload->setAttrib('accept', 'image/*');
         $this->addElement($stationLogoUpload);
 
+        $stationLogoRemove = new Zend_Form_Element_Button('stationLogoRemove');
+        $stationLogoRemove->setLabel(_('Remove'));
+        $stationLogoRemove->setAttrib('class', 'btn');
+        $stationLogoRemove->setAttrib('id', 'logo-remove-btn');
+        $stationLogoRemove->setAttrib('onclick', 'removeLogo();');
+        $this->addElement($stationLogoRemove);
+
         //Default station crossfade duration
         $this->addElement('text', 'stationDefaultCrossfadeDuration', array(
             'class' => 'input_text',
