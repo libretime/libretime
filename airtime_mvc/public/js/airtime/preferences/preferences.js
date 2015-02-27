@@ -115,6 +115,11 @@ function setSoundCloudCheckBoxListener() {
     });
 }
 
+function removeLogo() {
+    $.post(baseUrl+'Preference/remove-logo', function(json){});
+    location.reload();
+}
+
 $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
@@ -122,10 +127,6 @@ $(document).ready(function() {
         $(this).toggleClass("closed");
         return false;
     }).next().hide();
-
-    $('#logo-remove-btn').click(function() {
-        $.post(baseUrl+'Preference/remove-logo', function(json){});
-    });
 
     /* No longer using AJAX for this form. Zend + our code makes it needlessly hard to deal with. -- Albert
     $('#pref_save').live('click', function() {
