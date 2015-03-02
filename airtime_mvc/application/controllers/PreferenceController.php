@@ -38,6 +38,7 @@ class PreferenceController extends Zend_Controller_Action
             if ($form->isValid($values))
             {
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
+                Application_Model_Preference::SetStationDescription($values["stationDescription"]);
                 Application_Model_Preference::SetDefaultCrossfadeDuration($values["stationDefaultCrossfadeDuration"]);
                 Application_Model_Preference::SetDefaultFadeIn($values["stationDefaultFadeIn"]);
                 Application_Model_Preference::SetDefaultFadeOut($values["stationDefaultFadeOut"]);
@@ -49,7 +50,11 @@ class PreferenceController extends Zend_Controller_Action
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();
                 $imagePath = $logoUploadElement->getFileName();
-                Application_Model_Preference::SetStationLogo($imagePath);
+
+                // Only update the image logo if the new logo is non-empty
+                if (!empty($imagePath) && $imagePath != "") {
+                    Application_Model_Preference::SetStationLogo($imagePath);
+                }
 
                 Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
                 Application_Model_Preference::SetSoundCloudDownloadbleOption($values["SoundCloudDownloadbleOption"]);
