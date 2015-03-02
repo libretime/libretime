@@ -668,7 +668,7 @@ function setAddShowEvents(form) {
             var showId = $("#add_show_id").attr("value");
             
             if (showId && $("#add_show_logo_current").attr("src") !== "") {
-                var action = '/rest/show-image?id=' + showId;
+                var action = '/rest/show-image?csrf_token=' + $('#csrf').val() + '&id=' + showId;
                 
                 $.ajax({
                     url: action,
@@ -748,7 +748,7 @@ function setAddShowEvents(form) {
             data: {format: "json", data: data, hosts: hosts, days: days},
             success: function(json) {
                 if (json.showId && image) { // Successfully added the show, and it contains an image to upload
-                    var imageAction = '/rest/show-image?id=' + json.showId;
+                    var imageAction = '/rest/show-image?csrf_token=' + $('#csrf').val() + '&id=' + json.showId;
                     
                     // perform a second xhttprequest in order to send the show image
                     $.ajax({
