@@ -40,6 +40,7 @@ class PreferenceController extends Zend_Controller_Action
             if ($form->isValid($values))
             {
                 Application_Model_Preference::SetHeadTitle($values["stationName"], $this->view);
+                Application_Model_Preference::SetStationDescription($values["stationDescription"]);
                 Application_Model_Preference::SetDefaultCrossfadeDuration($values["stationDefaultCrossfadeDuration"]);
                 Application_Model_Preference::SetDefaultFadeIn($values["stationDefaultFadeIn"]);
                 Application_Model_Preference::SetDefaultFadeOut($values["stationDefaultFadeOut"]);
