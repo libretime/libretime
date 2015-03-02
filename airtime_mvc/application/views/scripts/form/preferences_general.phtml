@@ -7,10 +7,12 @@
 
         <?php echo $this->element->getElement('stationLogo')->render() ?>
 
-        <button id="logo-remove-btn" value="Remove" class="btn">Remove</button>
+        <?php echo $this->element->getElement('stationLogoRemove')->render() ?>
+
+<!--        <button id="logo-remove-btn" value="Remove" class="btn">Remove</button>-->
 
         <div id="Logo-img-container">
-            <img onError="this.onerror = '';this.style.visibility='hidden';$('#logo-remove-btn').hide();" id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" />
+            <img onError="this.onerror = '';this.style.visibility='hidden';$('#logo-remove-btn').hide();$('[id^=stationLogoRemove]').each(function(i,v){v.style.width=v.style.height=v.style.margin=v.style.padding='0px';});" id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" />
         </div>
 
         <?php echo $this->element->getElement('locale')->render() ?>
