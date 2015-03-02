@@ -54,7 +54,7 @@ class PreferenceController extends Zend_Controller_Action
                 $imagePath = $logoUploadElement->getFileName();
 
                 // Only update the image logo if the new logo is non-empty
-                if (!is_null($imagePath) && $imagePath != "") {
+                if (!empty($imagePath) && $imagePath != "") {
                     Application_Model_Preference::SetStationLogo($imagePath);
                 }
 
