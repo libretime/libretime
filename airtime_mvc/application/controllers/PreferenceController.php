@@ -51,7 +51,11 @@ class PreferenceController extends Zend_Controller_Action
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();
                 $imagePath = $logoUploadElement->getFileName();
-                Application_Model_Preference::SetStationLogo($imagePath);
+
+                // Only update the image logo if the new logo is non-empty
+                if (!is_null($imagePath) && $imagePath != "") {
+                    Application_Model_Preference::SetStationLogo($imagePath);
+                }
 
                 Application_Model_Preference::SetEnableSystemEmail($values["enableSystemEmail"]);
                 Application_Model_Preference::SetSystemEmail($values["systemEmail"]);
