@@ -223,6 +223,9 @@ class PreferenceController extends Zend_Controller_Action
                 } elseif (strpos($v[0], "s3_data") !== false) {
                    preg_match('/\[(.*)\]/', $v[0], $matches);
                     $s3_data[$matches[1]] = $v[1];
+                } elseif (strpos($v[0], "s4_data") !== false) {
+                   preg_match('/\[(.*)\]/', $v[0], $matches);
+                    $s4_data[$matches[1]] = $v[1];
                 } else {
                     $values[$v[0]] = $v[1];
                 }
@@ -230,6 +233,7 @@ class PreferenceController extends Zend_Controller_Action
             $values["s1_data"] = $s1_data;
             $values["s2_data"] = $s2_data;
             $values["s3_data"] = $s3_data;
+            $values["s4_data"] = $s4_data;
 
             $error = false;
             if ($form->isValid($values)) {
@@ -245,6 +249,7 @@ class PreferenceController extends Zend_Controller_Action
                 $s1_set_admin_pass = !empty($values["s1_data"]["admin_pass"]);
                 $s2_set_admin_pass = !empty($values["s2_data"]["admin_pass"]);
                 $s3_set_admin_pass = !empty($values["s3_data"]["admin_pass"]);
+                $s4_set_admin_pass = !empty($values["s4_data"]["admin_pass"]);
 
                 // this goes into cc_pref table
                 Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
@@ -290,6 +295,7 @@ class PreferenceController extends Zend_Controller_Action
                     "s1_set_admin_pass"=>$s1_set_admin_pass,
                     "s2_set_admin_pass"=>$s2_set_admin_pass,
                     "s3_set_admin_pass"=>$s3_set_admin_pass,
+                    "s4_set_admin_pass"=>$s4_set_admin_pass,
                 ));
             } else {
                 $live_stream_subform->updateVariables();
@@ -441,7 +447,7 @@ class PreferenceController extends Zend_Controller_Action
     public function getAdminPasswordStatusAction()
     {
         $out = array();
-        for ($i=1; $i<=3; $i++) {
+        for ($i=1; $i<=4; $i++) {
             if (Application_Model_StreamSetting::getAdminPass('s'.$i)=='') {
                 $out["s".$i] = false;
             } else {
