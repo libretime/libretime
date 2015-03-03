@@ -398,7 +398,9 @@ SQL;
 
         //Delete the physical file from either the local stor directory
         //or from the cloud
-        $this->_file->deletePhysicalFile();
+        if ($this->_file->getDbImportStatus() == CcFiles::IMPORT_STATUS_SUCCESS) {
+            $this->_file->deletePhysicalFile();
+        }
 
         //Update the user's disk usage
         Application_Model_Preference::updateDiskUsage(-1 * $filesize);
