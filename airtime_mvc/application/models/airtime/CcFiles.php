@@ -280,10 +280,8 @@ class CcFiles extends BaseCcFiles {
         $file = CcFilesQuery::create()->findPk($id);
         if ($file) {
             $con = Propel::getConnection();
-            $storedFile = new Application_Model_StoredFile($file, $con);
-            if ($storedFile->existsOnDisk()) {
-                $storedFile->delete(); //TODO: This checks your session permissions... Make it work without a session?
-            }
+            $storedFile = Application_Model_StoredFile::RecallById($id, $con);
+            $storedFile->delete();
         } else {
             throw new FileNotFoundException();
         }
