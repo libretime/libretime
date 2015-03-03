@@ -65,8 +65,33 @@ class ProvisioningHelper
             $this->initializePrefs();
         } catch (Exception $e) {
             http_response_code(400);
-            Logging::error($e->getMessage()
-            );
+            Logging::error($e->getMessage());
+            echo $e->getMessage() . PHP_EOL;
+            return;
+        }
+
+        http_response_code(201);
+    }
+
+    /**
+     * Endpoint to change Airtime preferences remotely.
+     * Mainly for use with the dashboard right now.
+     */
+    public function changeAction() {
+        $apikey = $_SERVER['PHP_AUTH_USER'];
+        if (!isset($apikey) || $apikey != $this->apikey) {
+            Logging::info("Invalid API Key: $apikey");
+            http_response_code(403);
+            echo "ERROR: Incorrect API key";
+            return;
+        }
+
+        try {
+            $this->parsePostParams();
+            $this->initializePrefs();
+        } catch (Exception $e) {
+            http_response_code(400);
+            Logging::error($e->getMessage());
             echo $e->getMessage() . PHP_EOL;
             return;
         }
