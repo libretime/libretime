@@ -10,6 +10,7 @@ class ProvisioningHelper
     // Parameter values
     private $dbuser, $dbpass, $dbname, $dbhost, $dbowner, $apikey;
     private $instanceId;
+    private $station_name, $description;
 
     public function __construct($apikey)
     {
@@ -34,7 +35,7 @@ class ProvisioningHelper
         try {
 
             $this->parsePostParams();
-            
+
             //For security, the Airtime Pro provisioning system creates the database for the user.
             $this->setNewDatabaseConnection();
 
@@ -58,6 +59,7 @@ class ProvisioningHelper
 
             $this->createDatabaseTables();
             $this->initializeMusicDirsTable($this->instanceId);
+            $this->initializePrefs();
         } catch (Exception $e) {
             http_response_code(400);
             Logging::error($e->getMessage()
@@ -102,6 +104,9 @@ class ProvisioningHelper
         $this->dbhost = $_POST['dbhost'];
         $this->dbowner = $_POST['dbowner'];
         $this->instanceId = $_POST['instanceid'];
+
+        $this->station_name = $_POST['station_name'];
+        $this->description = $_POST['description'];
     }
 
     /**
@@ -111,9 +116,9 @@ class ProvisioningHelper
     private function setNewDatabaseConnection()
     {
         self::$dbh = new PDO("pgsql:host=" . $this->dbhost
-            . ";dbname=" . $this->dbname
-            . ";port=5432" . ";user=" . $this->dbuser
-            . ";password=" . $this->dbpass);
+                             . ";dbname=" . $this->dbname
+                             . ";port=5432" . ";user=" . $this->dbuser
+                             . ";password=" . $this->dbpass);
         //Turn on PDO exceptions because they're off by default.
         //self::$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $err = self::$dbh->errorInfo();
@@ -130,8 +135,8 @@ class ProvisioningHelper
     {
         Logging::info("Creating database...");
         $statement = self::$dbh->prepare("CREATE DATABASE " . pg_escape_string($this->dbname)
-            . " WITH ENCODING 'UTF8' TEMPLATE template0"
-            . " OWNER " . pg_escape_string($this->dbowner));
+                                         . " WITH ENCODING 'UTF8' TEMPLATE template0"
+                                         . " OWNER " . pg_escape_string($this->dbowner));
         if (!$statement->execute()) {
             throw new Exception("ERROR: Failed to create Airtime database");
         }
@@ -182,5 +187,12 @@ class ProvisioningHelper
         $musicDir->save();
     }
 
+    /**
+     * Initialize preference values passed from the dashboard (if any exist)
+     */
+    private function initializePrefs() {
+        Application_Model_Preference::SetStationName($this->station_name);
+        Application_Model_Preference::SetStationDescription($this->description);
+    }
 
 }
