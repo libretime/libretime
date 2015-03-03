@@ -37,28 +37,31 @@ class ProvisioningHelper
             $this->parsePostParams();
 
             //For security, the Airtime Pro provisioning system creates the database for the user.
-            $this->setNewDatabaseConnection();
+            if ($this->dbhost && !empty($this->dbhost)) {
+                $this->setNewDatabaseConnection();
 
-            //if ($this->checkDatabaseExists()) {
-            //    throw new Exception("ERROR: Airtime database already exists");
-            //}
+                //if ($this->checkDatabaseExists()) {
+                //    throw new Exception("ERROR: Airtime database already exists");
+                //}
 
-            if (!$this->checkDatabaseExists()) {
-                throw new Exception("ERROR: $this->dbname database does not exist.");
-            }
+                if (!$this->checkDatabaseExists()) {
+                    throw new Exception("ERROR: $this->dbname database does not exist.");
+                }
 
-            //We really want to do this check because all the Propel-generated SQL starts with "DROP TABLE IF EXISTS".
-            //If we don't check, then a second call to this API endpoint would wipe all the tables!
-            if ($this->checkTablesExist()) {
-                throw new Exception("ERROR: airtime tables already exists");
+                //We really want to do this check because all the Propel-generated SQL starts with "DROP TABLE IF EXISTS".
+                //If we don't check, then a second call to this API endpoint would wipe all the tables!
+                if ($this->checkTablesExist()) {
+                    throw new Exception("ERROR: airtime tables already exists");
+                }
+
+                $this->createDatabaseTables();
+                $this->initializeMusicDirsTable($this->instanceId);
             }
 
             //$this->createDatabase();
 
             //All we need to do is create the database tables.
 
-            $this->createDatabaseTables();
-            $this->initializeMusicDirsTable($this->instanceId);
             $this->initializePrefs();
         } catch (Exception $e) {
             http_response_code(400);
