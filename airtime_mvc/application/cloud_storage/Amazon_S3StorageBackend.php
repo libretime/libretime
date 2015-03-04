@@ -60,8 +60,7 @@ class Amazon_S3StorageBackend extends StorageBackend
     
     public function getFilePrefix()
     {
-        $clientCurrentAirtimeProduct = Billing::getClientCurrentAirtimeProduct();
-        $hostingId = $clientCurrentAirtimeProduct["id"];
+        $hostingId = Billing::getClientInstanceId();
         return substr($hostingId, -2)."/".$hostingId;
     }
 }
