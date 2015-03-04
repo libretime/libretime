@@ -14,15 +14,27 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function indexAction()
     {
-        $files_array = array();
-        foreach (CcFilesQuery::create()->find() as $file)
-        {
-            array_push($files_array, CcFiles::sanitizeResponse($file));
+        $pager = CcFilesQuery::create()->paginate($page=1, $maxPerPage=50);
+        $numPages = $pager->getLastPage();
+
+        $nextPage = 1;
+
+        while ($nextPage <= $numPages) {
+            $pager = CcFilesQuery::create()->paginate($page=$nextPage, $maxPerPage=50);
+
+            $files = array();
+            foreach($pager->getResults() as $file) {
+                array_push($files, CcFiles::sanitizeResponse($file));
+            }
+            $this->getResponse()->appendBody(json_encode($files));
+            unset($files);
+
+            $nextPage +=1;
+
         }
         
         $this->getResponse()
-        ->setHttpResponseCode(200)
-        ->appendBody(json_encode($files_array));
+        ->setHttpResponseCode(200);
         
         /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
         $this->getResponse()
