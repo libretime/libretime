@@ -14,27 +14,31 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function indexAction()
     {
-        $pager = CcFilesQuery::create()->paginate($page=1, $maxPerPage=50);
-        $numPages = $pager->getLastPage();
+        $totalFileCount = BaseCcFilesQuery::create()->count();
 
-        $nextPage = 1;
+        // Check if offset and limit were sent with request.
+        // Default limit to zero and offset to $totalFileCount
+        $offset = $this->_getParam('offset', 0);
+        $limit = $this->_getParam('limit', $totalFileCount);
 
-        while ($nextPage <= $numPages) {
-            $pager = CcFilesQuery::create()->paginate($page=$nextPage, $maxPerPage=50);
+        $query = CcFilesQuery::create()
+            ->filterByDbHidden(false)
+            ->filterByDbImportStatus(0)
+            ->setLimit($limit)
+            ->setOffset($offset);
+        $queryCount = $query->count();
+        $queryResult = $query->find();
 
-            $files = array();
-            foreach($pager->getResults() as $file) {
-                array_push($files, CcFiles::sanitizeResponse($file));
-            }
-            $this->getResponse()->appendBody(json_encode($files));
-            unset($files);
-
-            $nextPage +=1;
-
+        $files_array = array();
+        foreach ($queryResult as $file)
+        {
+            array_push($files_array, CcFiles::sanitizeResponse($file));
         }
-        
+
         $this->getResponse()
-        ->setHttpResponseCode(200);
+            ->setHttpResponseCode(200)
+            ->setHeader('X-TOTAL-COUNT', $queryCount)
+            ->appendBody(json_encode($files_array));
         
         /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
         $this->getResponse()
