@@ -90,19 +90,9 @@ class CcFiles extends BaseCcFiles {
          * files won't get removed from the organize folder.
          */
 
-        //Extract the relative path to the temporary uploaded file on disk.
-        if (isset($fileArray["full_path"])) {
-            $fullPath = $fileArray["full_path"];
-            $basePath = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."/srv/airtime/stor/organize/" : "/srv/airtime/stor/organize/";
-            //$relativePath is the folder name(if one) + track name, that was uploaded via ftp
-            $filePathRelativeToOrganize = substr($fullPath, strlen($basePath)-1);
-            $originalFilename = $filePathRelativeToOrganize;
-        } else {
-            //Extract the original filename, which we set as the temporary title for the track
-            //until it's finished being processed by the analyzer.
-            $originalFilename = $_FILES["file"]["name"];
-        }
-
+        //Extract the original filename, which we set as the temporary title for the track
+        //until it's finished being processed by the analyzer.
+        $originalFilename = $_FILES["file"]["name"];
         $tempFilePath = $_FILES['file']['tmp_name'];
 
         try {
