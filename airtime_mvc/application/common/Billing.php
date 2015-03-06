@@ -14,8 +14,8 @@ class Billing
     /** Get the Airtime instance ID of the instance the customer is currently viewing. */
     public static function getClientInstanceId()
     {
-        $currentProduct = Billing::getClientCurrentAirtimeProduct();
-        return $currentProduct["id"];
+        //$currentProduct = Billing::getClientCurrentAirtimeProduct();
+        //return $currentProduct["id"];
         //XXX: Major hack attack. Since this function gets called often, rather than querying WHMCS
         //     we're just going to extract it from airtime.conf since it's the same as the rabbitmq username.
         $CC_CONFIG = Config::getConfig();
