@@ -14,7 +14,7 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function indexAction()
     {
-        $totalFileCount = BaseCcFilesQuery::create()->count();
+        $totalFileCount = CcFilesQuery::create()->count();
 
         // Check if offset and limit were sent with request.
         // Default limit to zero and offset to $totalFileCount
