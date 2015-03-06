@@ -23,6 +23,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $query = CcFilesQuery::create()
             ->filterByDbHidden(false)
+            ->filterByDbFileExists(true)
             ->filterByDbImportStatus(0)
             ->setLimit($limit)
             ->setOffset($offset);
