@@ -141,11 +141,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         // get current settings
-        $temp = Application_Model_StreamSetting::getStreamSetting();
-        $setting = array();
-        foreach ($temp as $t) {
-            $setting[$t['keyname']] = $t['value'];
-        }
+        $setting = Application_Model_StreamSetting::getStreamSetting();
 
         $name_map = array(
 				'ogg' => 'Ogg Vorbis',
@@ -208,6 +204,7 @@ class PreferenceController extends Zend_Controller_Action
             $s1_data = array();
             $s2_data = array();
             $s3_data = array();
+            $s4_data = array();
             $values = array();
             foreach($postData as $k=>$v) {
                 $v = explode('=', urldecode($v));
@@ -447,7 +444,8 @@ class PreferenceController extends Zend_Controller_Action
     public function getAdminPasswordStatusAction()
     {
         $out = array();
-        for ($i=1; $i<=4; $i++) {
+        $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
+        for ($i=1; $i<=$num_of_stream; $i++) {
             if (Application_Model_StreamSetting::getAdminPass('s'.$i)=='') {
                 $out["s".$i] = false;
             } else {

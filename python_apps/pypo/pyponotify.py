@@ -83,12 +83,12 @@ class Notify:
 
     # @pram time: time that LS started
     def notify_liquidsoap_status(self, msg, stream_id, time):
-        logger.debug('#################################################')
-        logger.debug('# Calling server to update liquidsoap status    #')
-        logger.debug('#################################################')
-        logger.debug('msg = ' + str(msg))
+        logger.info('#################################################')
+        logger.info('# Calling server to update liquidsoap status    #')
+        logger.info('#################################################')
+        logger.info('msg = ' + str(msg))
         response = self.api_client.notify_liquidsoap_status(msg, stream_id, time)
-        logger.debug("Response: " + json.dumps(response))
+        logger.info("Response: " + json.dumps(response))
 
     def notify_source_status(self, source_name, status):
         logger.debug('#################################################')
