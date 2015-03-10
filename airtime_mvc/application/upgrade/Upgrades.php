@@ -341,3 +341,44 @@ class AirtimeUpgrader2510 extends AirtimeUpgrader
         }
     }
 }
+
+class AirtimeUpgrader2511 extends AirtimeUpgrader
+{
+    protected function getSupportedVersions() {
+        return array (
+            '2.5.10'
+        );
+    }
+
+    public function getNewVersion() {
+        return '2.5.11';
+    }
+
+    public function upgrade($dir = __DIR__) {
+        Cache::clear();
+        assert($this->checkIfUpgradeSupported());
+
+        $newVersion = $this->getNewVersion();
+
+        try {
+            $this->toggleMaintenanceScreen(true);
+            Cache::clear();
+
+            // Begin upgrade
+            $queryResult = CcFilesQuery::create()
+                ->select(array('disk_usage'))
+                ->withColumn('SUM(CcFiles.filesize)', 'disk_usage')
+                ->find();
+            $disk_usage = $queryResult[0];
+            Application_Model_Preference::setDiskUsage($disk_usage);
+
+            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Cache::clear();
+
+            $this->toggleMaintenanceScreen(false);
+        } catch(Exception $e) {
+            $this->toggleMaintenanceScreen(false);
+            throw $e;
+        }
+    }
+}
