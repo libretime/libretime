@@ -10,7 +10,6 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
 
         $embedSrc = new Zend_Form_Element_Text('player_embed_src');
         $embedSrc->setAttrib("readonly", "readonly");
-        $embedSrc->setAttrib("class", "player_embed_src");
         $embedSrc->setValue('<iframe frameborder="0" src="http://localhost/embeddableplayer/embed-code"></iframe>');
         $embedSrc->removeDecorator('label');
         $this->addElement($embedSrc);

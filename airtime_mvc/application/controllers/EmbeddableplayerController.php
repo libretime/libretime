@@ -17,5 +17,5 @@ class EmbeddablePlayerController extends Zend_Controller_Action
     public function embedCodeAction()
     {
         $this->view->layout()->disableLayout();
-     }
+    }
 }
