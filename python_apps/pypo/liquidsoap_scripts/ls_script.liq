@@ -401,6 +401,7 @@ if s3_enable == true then
                 s3_connected, s3_description, s3_channels)
 end
 
+%ifdef s4_enable
 if s4_enable == true then
     if s4_output == 'shoutcast' then
         s4_namespace := "shoutcast_stream_4"
@@ -412,6 +413,8 @@ if s4_enable == true then
                 s4_mount, s4_url, s4_name, s4_genre, s4_user, s, "4",
                 s4_connected, s4_description, s4_channels)
 end
+%endif
+
 
 command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --liquidsoap-started &"
 log(command)
