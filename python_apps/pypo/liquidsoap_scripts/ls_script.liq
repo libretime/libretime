@@ -33,7 +33,6 @@ s4_connected = ref ''
 s1_namespace = ref ''
 s2_namespace = ref ''
 s3_namespace = ref ''
-s4_namespace = ref ''
 just_switched = ref false
 
 %include "ls_lib.liq"
@@ -402,6 +401,7 @@ if s3_enable == true then
 end
 
 %ifdef s4_enable
+s4_namespace = ref ''
 if s4_enable == true then
     if s4_output == 'shoutcast' then
         s4_namespace := "shoutcast_stream_4"
