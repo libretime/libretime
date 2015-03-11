@@ -6,6 +6,7 @@ import select
 import signal
 import logging 
 import multiprocessing 
+import Queue
 from analyzer_pipeline import AnalyzerPipeline
 from status_reporter import StatusReporter
 from cloud_storage_uploader import CloudStorageUploader
@@ -212,6 +213,7 @@ class MessageListener:
     @staticmethod
     def spawn_analyzer_process(audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config):
         ''' Spawn a child process to analyze and import a new audio file. '''
+        '''
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis,
                         args=(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config))
@@ -223,7 +225,16 @@ class MessageListener:
             logging.info(results)
         else:
             raise Exception("Analyzer process terminated unexpectedly.")
-       
+        '''
+
+        q = Queue.Queue()
+        try:
+            AnalyzerPipeline.run_analysis(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config)
+            results = q.get()
+        except Exception as e:
+            logging.error("Analyzer pipeline exception", e)
+            pass
+
         # Ensure our queue doesn't fill up and block due to unexpected behaviour. Defensive code.
         while not q.empty():
             q.get()
