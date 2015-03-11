@@ -21,9 +21,9 @@ def create_liquidsoap_annotation(media):
     # which doesn't get saved back to the file.)
     if 'metadata' in media:
         if 'artist_name' in media['metadata']:
-            annotation += ',artist="%s"' % (media['metadata']['artist_name'])
+            annotation += ',artist="%s"' % (media['metadata']['artist_name'].replace('"', '\\"'))
         if 'track_title' in media['metadata']:
-            annotation += ',title="%s"' % (media['metadata']['track_title'])
+            annotation += ',title="%s"' % (media['metadata']['track_title'].replace('"', '\\"'))
 
     annotation += ":" + filename
 
