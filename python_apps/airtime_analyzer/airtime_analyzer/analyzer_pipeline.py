@@ -22,7 +22,7 @@ class AnalyzerPipeline:
     """
     
     @staticmethod
-    def run_analysis(queue, audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_config):
+    def run_analysis(queue, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config):
         """Analyze and import an audio file, and put all extracted metadata into queue.
         
         Keyword arguments:
@@ -35,6 +35,7 @@ class AnalyzerPipeline:
                                preserve. The file at audio_file_path typically has a 
                                temporary randomly generated name, which is why we want
                                to know what the original name was.  
+            storage_backend: String indicating the storage backend (amazon_s3 or file)
             file_prefix:
             cloud_storage_config: ConfigParser object containing the cloud storage configuration settings
         """
@@ -68,8 +69,8 @@ class AnalyzerPipeline:
             metadata = ReplayGainAnalyzer.analyze(audio_file_path, metadata)
             metadata = PlayabilityAnalyzer.analyze(audio_file_path, metadata)
 
-            csu = CloudStorageUploader(cloud_storage_config)
-            if csu.enabled():
+            if storage_backend.lower() == u"amazon_s3":
+                csu = CloudStorageUploader(cloud_storage_config)
                 metadata = csu.upload_obj(audio_file_path, metadata)
             else:
                 metadata = FileMoverAnalyzer.move(audio_file_path, import_directory, original_filename, metadata)

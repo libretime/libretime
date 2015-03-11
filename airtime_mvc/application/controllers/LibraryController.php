@@ -217,7 +217,7 @@ class LibraryController extends Zend_Controller_Action
             // and not the cloud_file id (if applicable) for track download.
             // Our application logic (StoredFile.php) will determine if the track
             // is a cloud_file and handle it appropriately.
-            $url = $baseUrl."api/get-media/file/".$id.".".$file->getFileExtension().'/download/true';
+            $url = $baseUrl."api/get-media/file/$id/download/true";
             $menu["download"] = array("name" => _("Download"), "icon" => "download", "url" => $url);
         } elseif ($type === "playlist" || $type === "block") {
             if ($type === 'playlist') {

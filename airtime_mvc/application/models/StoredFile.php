@@ -392,13 +392,15 @@ SQL;
         Logging::info("User ".$user->getLogin()." is deleting file: ".$this->_file->getDbTrackTitle()." - file id: ".$file_id);
 
         $filesize = $this->_file->getFileSize();
-        if ($filesize <= 0) {
+        if ($filesize < 0) {
             throw new Exception("Cannot delete file with filesize ".$filesize);
         }
 
         //Delete the physical file from either the local stor directory
         //or from the cloud
-        $this->_file->deletePhysicalFile();
+        if ($this->_file->getDbImportStatus() == CcFiles::IMPORT_STATUS_SUCCESS) {
+            $this->_file->deletePhysicalFile();
+        }
 
         //Update the user's disk usage
         Application_Model_Preference::updateDiskUsage(-1 * $filesize);
@@ -944,19 +946,17 @@ SQL;
      * The file is actually copied to "stor/organize", which is a staging directory where files go
      * before they're processed by airtime_analyzer, which then moves them to "stor/imported" in the final
      * step.
-     * 
-     * TODO: Implement better error handling here...
      *
      * @param string $tempFilePath
      * @param string $originalFilename
+     * @param bool $copyFile Copy the file instead of moving it.
      * @throws Exception
      * @return Ambigous <unknown, string>
      */
-    public static function copyFileToStor($tempFilePath, $originalFilename)
+    public static function moveFileToStor($tempFilePath, $originalFilename, $copyFile=false)
     {
         $audio_file = $tempFilePath;
-        Logging::info('copyFileToStor: moving file '.$audio_file);
-    
+
         $storDir = Application_Model_MusicDir::getStorDir();
         $stor    = $storDir->getDirectory();
         // check if "organize" dir exists and if not create one
@@ -970,57 +970,34 @@ SQL;
             Logging::info("Warning: couldn't change permissions of $audio_file to 0644");
         }
     
-        // Check if liquidsoap can play this file
-        // TODO: Move this to airtime_analyzer
-        /*
-        if (!self::liquidsoapFilePlayabilityTest($audio_file)) {
-            return array(
-                    "code"    => 110,
-                    "message" => _("This file appears to be corrupted and will not "
-                            ."be added to media library."));
-        }*/
-
-    
         // Did all the checks for real, now trying to copy
         $audio_stor = Application_Common_OsPath::join($stor, "organize",
                 $originalFilename);
-                Logging::info($originalFilename);
-                Logging::info($audio_stor);
-        $user = Application_Model_User::getCurrentUser();
-        if (is_null($user)) {
-            $uid = Application_Model_User::getFirstAdminId();
-        } else {
-            $uid = $user->getId();
-        }
-        /*
-        $id_file = "$audio_stor.identifier";
-        if (file_put_contents($id_file, $uid) === false) {
-            Logging::info("Could not write file to identify user: '$uid'");
-            Logging::info("Id file path: '$id_file'");
-            Logging::info("Defaulting to admin (no identification file was
-                written)");
-        } else {
-            Logging::info("Successfully written identification file for
-            uploaded '$audio_stor'");
-        }*/
-        
         //if the uploaded file is not UTF-8 encoded, let's encode it. Assuming source
         //encoding is ISO-8859-1
         $audio_stor = mb_detect_encoding($audio_stor, "UTF-8") == "UTF-8" ? $audio_stor : utf8_encode($audio_stor);
-        Logging::info("copyFileToStor: moving file $audio_file to $audio_stor");
-        // Martin K.: changed to rename: Much less load + quicker since this is
-        // an atomic operation
-        if (@rename($audio_file, $audio_stor) === false) {
-            //something went wrong likely there wasn't enough space in .
-            //the audio_stor to move the file too warn the user that   .
-            //the file wasn't uploaded and they should check if there  .
-            //is enough disk space                                     .
-            unlink($audio_file); //remove the file after failed rename
-            //unlink($id_file); // Also remove the identifier file
-    
-            throw new Exception("The file was not uploaded, this error can occur if the computer "
-                            ."hard drive does not have enough disk space or the stor "
-                            ."directory does not have correct write permissions.");
+        if ($copyFile) {
+            Logging::info("Copying file $audio_file to $audio_stor");
+            if (@copy($audio_file, $audio_stor) === false) {
+                throw new Exception("Failed to copy $audio_file to $audio_stor");
+            }
+        } else {
+            Logging::info("Moving file $audio_file to $audio_stor");
+
+            // Martin K.: changed to rename: Much less load + quicker since this is
+            // an atomic operation
+            if (@rename($audio_file, $audio_stor) === false) {
+                //something went wrong likely there wasn't enough space in .
+                //the audio_stor to move the file too warn the user that   .
+                //the file wasn't uploaded and they should check if there  .
+                //is enough disk space                                     .
+                unlink($audio_file); //remove the file after failed rename
+                //unlink($id_file); // Also remove the identifier file
+
+                throw new Exception("The file was not uploaded, this error can occur if the computer "
+                    . "hard drive does not have enough disk space or the stor "
+                    . "directory does not have correct write permissions.");
+            }
         }
         return $audio_stor;
     }

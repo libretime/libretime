@@ -80,7 +80,7 @@ class Application_Model_RabbitMq
     }
 
     public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
-                                                $callbackUrl, $apiKey, $currentStorageBackend, $filePrefix)
+                                                $callbackUrl, $apiKey, $storageBackend, $filePrefix)
     {
         //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
         //and shared between all instances on Airtime Pro.
@@ -107,7 +107,7 @@ class Application_Model_RabbitMq
         $queue = 'airtime-uploads';
         $autoDeleteExchange = false;
         $data['tmp_file_path'] = $tmpFilePath;
-        $data['current_storage_backend'] = $currentStorageBackend;
+        $data['storage_backend'] = $storageBackend;
         $data['import_directory'] = $importedStorageDirectory;
         $data['original_filename'] = $originalFilename;
         $data['callback_url'] = $callbackUrl;

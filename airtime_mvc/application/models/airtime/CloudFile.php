@@ -5,6 +5,9 @@ require_once 'ProxyStorageBackend.php';
 /**
  * Skeleton subclass for representing a row from the 'cloud_file' table.
  *
+ * This class uses Propel's delegation feature to virtually inherit from CcFile!
+ * You can call any CcFile method on this function and it will work! -- Albert
+ *
  * Each cloud_file has a corresponding cc_file referenced as a foreign key.
  * The file's metadata is stored in the cc_file table. This, cloud_file,
  * table represents files that are stored in the cloud.

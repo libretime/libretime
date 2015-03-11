@@ -152,17 +152,22 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 }
             }
         } else { //We have a session/identity.
-
             // If we have an identity and we're making a RESTful request,
             // we need to check the CSRF token
-            if ($request->_action != "get" && $request->getModuleName() == "rest") {
-                $tokenValid = $this->verifyCSRFToken($request->getParam("csrf_token"));
+            if ($_SERVER['REQUEST_METHOD'] != "GET" && $request->getModuleName() == "rest") {
+                $token = $request->getParam("csrf_token");
+                $tokenValid = $this->verifyCSRFToken($token);
 
                 if (!$tokenValid) {
+                    $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+                    $csrf_namespace->authtoken = sha1(openssl_random_pseudo_bytes(128));
+
+                    Logging::warn("Invalid CSRF token: $token");
                     $this->getResponse()
                          ->setHttpResponseCode(401)
-                         ->appendBody("ERROR: CSRF token mismatch.");
-                    return;
+                         ->appendBody("ERROR: CSRF token mismatch.")
+                         ->sendResponse();
+                    die();
                 }
             }
             
@@ -207,7 +212,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $current_namespace = new Zend_Session_Namespace('csrf_namespace');
         $observed_csrf_token = $token;
         $expected_csrf_token = $current_namespace->authtoken;
-        
+
         return ($observed_csrf_token == $expected_csrf_token);
     }
     

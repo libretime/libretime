@@ -169,9 +169,9 @@ class MessageListener:
             import_directory = msg_dict["import_directory"]
             original_filename = msg_dict["original_filename"]
             file_prefix = msg_dict["file_prefix"]
+            storage_backend = msg_dict["storage_backend"]
 
-            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, file_prefix, self.cloud_storage_config)
-
+            audio_metadata = MessageListener.spawn_analyzer_process(audio_file_path, import_directory, original_filename, storage_backend, file_prefix, self.cloud_storage_config)
             StatusReporter.report_success_to_callback_url(callback_url, api_key, audio_metadata)
 
         except KeyError as e:
@@ -210,11 +210,11 @@ class MessageListener:
             channel.basic_ack(delivery_tag=method_frame.delivery_tag)
     
     @staticmethod
-    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_config):
+    def spawn_analyzer_process(audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config):
         ''' Spawn a child process to analyze and import a new audio file. '''
         q = multiprocessing.Queue()
         p = multiprocessing.Process(target=AnalyzerPipeline.run_analysis,
-                        args=(q, audio_file_path, import_directory, original_filename, file_prefix, cloud_storage_config))
+                        args=(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config))
         p.start()
         p.join()
         if p.exitcode == 0:

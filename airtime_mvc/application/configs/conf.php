@@ -43,7 +43,7 @@ class Config {
         } else {
             $CC_CONFIG['dev_env'] = 'production';
         }
-        
+
         // Parse separate conf file for cloud storage values
         $cloudStorageConfig = "/etc/airtime-saas/".$CC_CONFIG['dev_env']."/cloud_storage.conf";
         if (!file_exists($cloudStorageConfig)) {

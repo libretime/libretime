@@ -95,125 +95,10 @@ class ApiController extends Zend_Controller_Action
 
         $fileId = $this->_getParam("file");
 
-        $media = Application_Model_StoredFile::RecallById($fileId);
-        if ($media != null) {
-            // Make sure we don't have some wrong result beecause of caching
-            clearstatcache();
-            
-            if ($media->getPropelOrm()->isValidPhysicalFile()) {
-                $filename = $media->getPropelOrm()->getFilename();
-
-                //Download user left clicks a track and selects Download.
-                if ("true" == $this->_getParam('download')) {
-                    //path_info breaks up a file path into seperate pieces of informaiton.
-                    //We just want the basename which is the file name with the path
-                    //information stripped away. We are using Content-Disposition to specify
-                    //to the browser what name the file should be saved as.
-                    header('Content-Disposition: attachment; filename="'.$filename.'"');
-                } else {
-                    //user clicks play button for track preview
-                    header('Content-Disposition: inline; filename="'.$filename.'"');
-                }
-
-                $this->readStoredFileObject($media);
-                exit;
-            } else {
-                header ("HTTP/1.1 404 Not Found");
-            }
-        }
+        $inline = !($this->_getParam('download',false) == true);
+        Application_Service_MediaService::streamFileDownload($fileId, $inline);
 
         $this->_helper->json->sendJson(array());
-    }
-    
-    /**
-     * Read data from StoredFile object and send with XHR response
-     * 
-     * @param Application_Model_StoredFile $storedFile - StoredFile object holding file information
-     */
-    private function readStoredFileObject($storedFile) {
-        $filepath = $storedFile->getFilePath();
-        $size = $storedFile->getFileSize();
-        $mimeType = $storedFile->getPropelOrm()->getDbMime();
-        
-        $this->smartReadFile($filepath, $mimeType, $size);
-    }
-    
-
-    /**
-    * Reads the requested portion of a file and sends its contents to the client with the appropriate headers.
-    *
-    * This HTTP_RANGE compatible read file function is necessary for allowing streaming media to be skipped around in.
-    *
-    * @param string $location - the full filepath pointing to the location of the file
-    * @param string $mimeType - the file's mime type. Defaults to 'audio/mp3'
-    * @param integer $size - the file size, in bytes
-    * @return void
-    *
-    * @link https://groups.google.com/d/msg/jplayer/nSM2UmnSKKA/Hu76jDZS4xcJ
-    * @link http://php.net/manual/en/function.readfile.php#86244
-    */
-    private function smartReadFile($location, $mimeType = 'audio/mp3', $size = null)
-    {
-        if (!$location || $location == "") {
-            throw new FileDoesNotExistException("Requested file does not exist!");
-        }
-        
-        // If we're passing in a Stored File object, it's faster 
-        // to use getFileSize() and pass in the result
-        if (!isset($size) || $size < 0) {
-            $size= filesize($location);
-        }
-        
-        if ($size < 0) {
-            throw new Exception("Invalid file size returned for file at $location");
-        }
-        
-        $fm = @fopen($location, 'rb');
-        if (!$fm) {
-            header ("HTTP/1.1 505 Internal server error");
-            return;
-        }
-
-        $begin = 0;
-        $end   = $size - 1;
-
-        if (isset($_SERVER['HTTP_RANGE'])) {
-            if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
-                $begin = intval($matches[1]);
-                if (!empty($matches[2])) {
-                    $end = intval($matches[2]);
-                }
-            }
-        }
-
-        if (isset($_SERVER['HTTP_RANGE'])) {
-            header('HTTP/1.1 206 Partial Content');
-        } else {
-            header('HTTP/1.1 200 OK');
-        }
-        header("Content-Type: $mimeType");
-        header('Cache-Control: public, must-revalidate, max-age=0');
-        header('Pragma: no-cache');
-        header('Accept-Ranges: bytes');
-        if ($size > 0) {
-            header('Content-Length:' . (($end - $begin) + 1));
-            if (isset($_SERVER['HTTP_RANGE'])) {
-                header("Content-Range: bytes $begin-$end/$size");
-            }
-        }
-        header("Content-Transfer-Encoding: binary");
-
-        //We can have multiple levels of output buffering. Need to
-        //keep looping until all have been disabled!!!
-        //http://www.php.net/manual/en/function.ob-end-flush.php
-        while (@ob_end_flush());
-
-        // NOTE: We can't use fseek here because it does not work with streams
-        // (a.k.a. Files stored in the cloud)
-        while(!feof($fm) && (connection_status() == 0)) {
-            echo fread($fm, 1024 * 8);
-        }
-        fclose($fm);
     }
 
     //Used by the SaaS monitoring
@@ -610,9 +495,8 @@ class ApiController extends Zend_Controller_Action
             
             $path = $show->getDbImagePath();
             $mime_type = mime_content_type($path);
-            
-            header("Content-type: " . $mime_type);
-            $this->smartReadFile($path, $mime_type);
+
+            Application_Common_FileIO::smartReadFile($path, filesize($path), $mime_type);
            } else {
             header('HTTP/1.0 401 Unauthorized');
             print _('You are not allowed to access this resource. ');

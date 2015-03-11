@@ -91,16 +91,11 @@ function openAudioPreview(p_event) {
     }
 }
 
-function open_audio_preview(type, id, audioFileTitle, audioFileArtist) {
-    // we need to remove soundcloud icon from audioFileTitle
-    var index = audioFileTitle.indexOf("<span class=");
-    if(index != -1){
-        audioFileTitle = audioFileTitle.substring(0,index);
-    }
+function open_audio_preview(type, id) {
     // The reason that we need to encode artist and title string is that
     // sometime they contain '/' or '\' and apache reject %2f or %5f
     // so the work around is to encode it twice.
-    openPreviewWindow(baseUrl+'audiopreview/audio-preview/audioFileID/'+id+'/audioFileArtist/'+encodeURIComponent(encodeURIComponent(audioFileArtist))+'/audioFileTitle/'+encodeURIComponent(encodeURIComponent(audioFileTitle))+'/type/'+type);
+    openPreviewWindow(baseUrl+'audiopreview/audio-preview/audioFileID/'+id+'/type/'+type);
     _preview_window.focus();
 }
 

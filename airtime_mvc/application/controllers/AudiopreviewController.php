@@ -22,8 +22,6 @@ class AudiopreviewController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
 
         $audioFileID     = $this->_getParam('audioFileID');
-        $audioFileArtist = $this->_getParam('audioFileArtist');
-        $audioFileTitle  = $this->_getParam('audioFileTitle');
         $type = $this->_getParam('type');
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
@@ -49,10 +47,15 @@ class AudiopreviewController extends Zend_Controller_Action
             $media = Application_Model_StoredFile::RecallById($audioFileID);
             $uri   = $baseUrl."api/get-media/file/".$audioFileID;
             $mime  = $media->getPropelOrm()->getDbMime();
+            $this->view->audioFileArtist = htmlspecialchars($media->getPropelOrm()->getDbArtistName());
+            $this->view->audioFileTitle  = htmlspecialchars($media->getPropelOrm()->getDbTrackTitle());
+
         } elseif ($type == "stream") {
             $webstream = CcWebstreamQuery::create()->findPk($audioFileID);
             $uri       = $webstream->getDbUrl();
             $mime      = $webstream->getDbMime();
+            $this->view->audioFileTitle  = htmlspecialchars($webstream->getDbName());
+
         } else {
             throw new Exception("Unknown type for audio preview!.Type=$type");
         }
@@ -60,10 +63,7 @@ class AudiopreviewController extends Zend_Controller_Action
         $this->view->uri             = $uri;
         $this->view->mime            = $mime;
         $this->view->audioFileID     = $audioFileID;
-        // We need to decode artist and title because it gets
-        // encoded twice in js
-        $this->view->audioFileArtist = htmlspecialchars(urldecode($audioFileArtist));
-        $this->view->audioFileTitle  = htmlspecialchars(urldecode($audioFileTitle));
+
         $this->view->type            = $type;
 
         $this->_helper->viewRenderer->setRender('audio-preview');
