@@ -22,6 +22,10 @@ showhelp () {
                 No output except errors
     -f, --force
                 Turn off interactive prompts
+    --distribution
+                Linux distribution the installation is being run on
+    --release
+                Distribution release
     -d, --ignore-dependencies
                 Don't install binary dependencies
     -w, --web-user=WEB_USER
@@ -66,6 +70,8 @@ _v=0
 # Quiet
 _q=0
 upgrade="f"
+dist=""
+code=""
 
 function verbose() {
     if [[ ${_v} -eq 1 ]]; then
@@ -100,11 +106,6 @@ function checkCommandExists() {
     set -e
 }
 
-function checkDistro() {
-    distro=$@
-    unameStr=`uname -a`
-    eval echo "${unameStr}" | grep --quiet "${distro}"
-}
 while :; do
     case "$1" in
         --help)
@@ -121,6 +122,40 @@ while :; do
             ;;
         --force)
             _i=0
+            ;;
+        --distribution)
+            if [ "$2" ]; then
+                dist=$2
+                shift 2
+                continue
+            else
+                echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
+                exit 1
+            fi
+            ;;
+        --distribution=?*)
+            dist=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --distribution=)
+            echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
+            exit 1
+            ;;
+        --release)
+            if [ "$2" ]; then
+                code=$2
+                shift 2
+                continue
+            else
+                echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
+                exit 1
+            fi
+            ;;
+        --release=?*)
+            code=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --release=)
+            echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
+            exit 1
             ;;
         --ignore-dependencies)
             ignore_dependencies="t"
@@ -251,28 +286,12 @@ echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
 echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
-# Check for the distribution without using lsb_release, which not all distros have installed by default
-if checkDistro "wheezy"; then
-    dist="debian"
-    code="wheezy"
-elif checkDistro "jessie"; then
-    dist="debian"
-    code="jessie"
-elif checkDistro "trusty"; then
-    dist="ubuntu"
-    code="trusty"
-elif checkDistro "saucy"; then
-    dist="ubuntu"
-    code="saucy"
-elif checkDistro "precise"; then
-    dist="ubuntu"
-    code="precise"
-elif checkDistro "trusty"; then
-    dist="ubuntu"
-    code="trusty"
-else
-    dist="unknown"
-    code="unknown"
+# If we don't pass the distribution/release into the installer,
+# install lsb-release and fetch them
+if [ -z "${distro}" ]; then
+    loudCmd "apt-get install lsb-release"
+    dist=`lsb_release -ds | awk '{print tolower($1);}'`
+    code=`lsb_release -cs`
 fi
 
 if [ "$ignore_dependencies" = "f" ]; then
@@ -282,7 +301,7 @@ if [ "$ignore_dependencies" = "f" ]; then
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
     set +e
-    loudCmd "sudo apt-get update"
+    loudCmd "apt-get update"
     if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
     else
