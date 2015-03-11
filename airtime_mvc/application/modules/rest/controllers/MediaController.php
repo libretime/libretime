@@ -14,15 +14,33 @@ class Rest_MediaController extends Zend_Rest_Controller
     
     public function indexAction()
     {
+        $totalFileCount = CcFilesQuery::create()->count();
+
+        // Check if offset and limit were sent with request.
+        // Default limit to zero and offset to $totalFileCount
+        $offset = $this->_getParam('offset', 0);
+        $limit = $this->_getParam('limit', $totalFileCount);
+
+        $query = CcFilesQuery::create()
+            ->filterByDbHidden(false)
+            ->filterByDbFileExists(true)
+            ->filterByDbImportStatus(0)
+            ->setLimit($limit)
+            ->setOffset($offset)
+            ->orderByDbId();
+        $queryCount = $query->count();
+        $queryResult = $query->find();
+
         $files_array = array();
-        foreach (CcFilesQuery::create()->find() as $file)
+        foreach ($queryResult as $file)
         {
             array_push($files_array, CcFiles::sanitizeResponse($file));
         }
-        
+
         $this->getResponse()
-        ->setHttpResponseCode(200)
-        ->appendBody(json_encode($files_array));
+            ->setHttpResponseCode(200)
+            ->setHeader('X-TOTAL-COUNT', $queryCount)
+            ->appendBody(json_encode($files_array));
         
         /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
         $this->getResponse()
