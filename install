@@ -286,15 +286,13 @@ echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
 echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
-# If we don't pass the distribution/release into the installer,
-# install lsb-release and fetch them
-if [ -z "${distro}" ]; then
-    loudCmd "apt-get install lsb-release"
-    dist=`lsb_release -ds | awk '{print tolower($1);}'`
-    code=`lsb_release -cs`
-fi
-
 if [ "$ignore_dependencies" = "f" ]; then
+    if [ -z "${dist}" ]; then
+        loudCmd "apt-get install lsb-release"
+        dist=`lsb_release -ds | awk '{print tolower($1);}'`
+        code=`lsb_release -cs`
+    fi
+
     loud "\n-----------------------------------------------------"
     loud "         * Installing External Dependencies *        "
     loud "-----------------------------------------------------"
