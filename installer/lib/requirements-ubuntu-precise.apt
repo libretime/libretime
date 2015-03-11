@@ -64,9 +64,3 @@ liquidsoap-plugin-pulseaudio
 liquidsoap-plugin-taglib
 liquidsoap-plugin-voaacenc
 liquidsoap-plugin-vorbis
-
-silan
-libopus0
-
-sysv-init
-sysvinit-utils
