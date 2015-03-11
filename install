@@ -287,8 +287,9 @@ echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
 echo -e "        \/            \/                       \/        \/    \n"
 
 if [ "$ignore_dependencies" = "f" ]; then
+    set +e
     if [ -z "${dist}" ]; then
-        loudCmd "apt-get install lsb-release"
+        loudCmd "apt-get -y --force-yes install lsb-release"
         dist=`lsb_release -ds | awk '{print tolower($1);}'`
         code=`lsb_release -cs`
     fi
@@ -298,7 +299,6 @@ if [ "$ignore_dependencies" = "f" ]; then
     loud "-----------------------------------------------------"
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
-    set +e
     loudCmd "apt-get update"
     if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"

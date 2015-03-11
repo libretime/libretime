@@ -67,6 +67,3 @@ liquidsoap-plugin-vorbis
 
 silan
 libopus0
-
-sysv-init
-sysvinit-utils
