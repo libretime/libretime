@@ -26,7 +26,8 @@ class Rest_MediaController extends Zend_Rest_Controller
             ->filterByDbFileExists(true)
             ->filterByDbImportStatus(0)
             ->setLimit($limit)
-            ->setOffset($offset);
+            ->setOffset($offset)
+            ->orderByDbId();
         $queryCount = $query->count();
         $queryResult = $query->find();
 
