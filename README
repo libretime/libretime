@@ -32,6 +32,12 @@ For an interactive installation, run:
 
     sudo ./install
 
+If you're using a terminal that is not running Bash, you'll need to run
+
+    sudo /bin/bash ./install
+
+instead. You may need to install Bash first.
+
 The installer will then prompt you about how you want to set up your Airtime 
 installation.
 
