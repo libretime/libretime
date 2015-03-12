@@ -89,11 +89,11 @@ logging.captureWarnings(True)
 
 # configure logging
 try:
-    logging.config.fileConfig("%s/logging.cfg" % os.path.dirname(os.path.realpath(__file__)))
+    logging.config.fileConfig("/etc/airtime/pypo_logging.cfg")
     logger = logging.getLogger()
     LogWriter.override_std_err(logger)
 except Exception, e:
-    print "Couldn't configure logging"
+    print "Couldn't configure logging", e
     sys.exit(1)
 
 def configure_locale():

@@ -26,7 +26,7 @@ from timeout import ls_timeout
 
 
 # configure logging
-logging_cfg = os.path.join(os.path.dirname(__file__), "logging.cfg")
+logging_cfg = "/etc/airtime/pypo_logging.cfg"
 logging.config.fileConfig(logging_cfg)
 logger = logging.getLogger()
 LogWriter.override_std_err(logger)
