@@ -2,17 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-    <script src="http://localhost/widgets/muses/self_hosted/mrp.js" type="text/javascript"></script>
+    <script src="<?php echo $this->mrp_js?>" type="text/javascript"></script>
 </head>
 
-<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="180" height="60" bgcolor="#FFFFFF">
+<object classid="" width="180" height="60" bgcolor="#FFFFFF">
     <param name="movie" value="muses.swf" />
-    <param name="flashvars" value="url=http://albertprov1.out.airtime.pro:8000/albertprov1_a&lang=auto&codec=mp3&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&skin=http://localhost/js/airtime/embeddableplayer/ffmp3-mcclean.xml&title=Albert's%20Test Stream" />
+    <param name="flashvars" value="url=<?php echo $this->streamURL?>&lang=auto&codec=<?php echo $this->codec?>&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&skin=<?php echo $this->skin?>&title=''" />
     <param name="wmode" value="window" />
     <param name="allowscriptaccess" value="always" />
     <param name="bgcolor" value="#FFFFFF" />
     <param name="scale" value="noscale" />
-    <embed src="http://localhost/js/airtime/embeddableplayer/muses.swf" flashvars="url=http://albertprov1.out.airtime.pro:8000/albertprov1_a&lang=auto&codec=mp3&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&skin=http://localhost/js/airtime/embeddableplayer/ffmp3-mcclean.xml&title=Albert's%20Test Stream" width="180" scale="noscale" height="60" wmode="window" bgcolor="#FFFFFF" allowscriptaccess="always" type="application/x-shockwave-flash" />
+    <embed src="<?php echo $this->muses_swf?>" flashvars="url=<?php echo $this->streamURL?>&lang=auto&codec=<?php echo $this->codec?>&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&skin=<?php echo $this->skin?>&title=''" width="180" scale="noscale" height="60" wmode="window" bgcolor="#FFFFFF" allowscriptaccess="always" type="application/x-shockwave-flash" />
 </object>
 
 </html>

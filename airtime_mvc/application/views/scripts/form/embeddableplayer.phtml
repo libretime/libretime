@@ -8,6 +8,6 @@
         <?php echo $this->element->getElement('player_stream_url'); ?>
 
         <div style="clear:both"></div>
-        <iframe frameborder="0" src="http://localhost/embeddableplayer/embed-code"></iframe>
+        <?php echo $this->element->getElement('player_embed_src')->getValue(); ?>
     </dl>
 </fieldset>

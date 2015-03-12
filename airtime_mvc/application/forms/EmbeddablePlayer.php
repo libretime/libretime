@@ -8,12 +8,6 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/embeddableplayer.phtml'))
         ));
 
-        $embedSrc = new Zend_Form_Element_Text('player_embed_src');
-        $embedSrc->setAttrib("readonly", "readonly");
-        $embedSrc->setValue('<iframe frameborder="0" src="http://localhost/embeddableplayer/embed-code"></iframe>');
-        $embedSrc->removeDecorator('label');
-        $this->addElement($embedSrc);
-
         $displayTrackMetadata = new Zend_Form_Element_Checkbox('player_display_track_metadata');
         $displayTrackMetadata->setValue(true);
         $displayTrackMetadata->setLabel(_('Display track metadata?'));
@@ -27,9 +21,19 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $streamURL->setMultiOptions(
             $urlOptions
         );
-        $streamURL->setValue(0);
+        $streamURL->setValue(array_keys($urlOptions)[0]);
         $streamURL->setLabel(_('Select stream:'));
+        $streamURL->setAttrib('codec', array_values($urlOptions)[0]);
         $this->addElement($streamURL);
+
+        $url = $streamURL->getValue();
+        $codec = $streamURL->getAttrib('codec');
+
+        $embedSrc = new Zend_Form_Element_Text('player_embed_src');
+        $embedSrc->setAttrib("readonly", "readonly");
+        $embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'/embeddableplayer/embed-code?url='.$url.'&codec='.$codec.'"></iframe>');
+        $embedSrc->removeDecorator('label');
+        $this->addElement($embedSrc);
 
     }
 }
