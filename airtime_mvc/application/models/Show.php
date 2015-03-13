@@ -1446,9 +1446,9 @@ SQL;
     }
 
     public static function getStartEndCurrentWeekView() {
-        $first_day_of_calendar_week_view = mktime(0, 0, 0, date("n"), date("j"));
+        $first_day_of_calendar_week_view = mktime(0, 0, 0, gmdate("n"), gmdate("j"));
         $weekStart = Application_Model_Preference::GetWeekStartDay();
-        while (date('w', $first_day_of_calendar_week_view) != $weekStart) {
+        while (gmdate('w', $first_day_of_calendar_week_view) != $weekStart) {
             $first_day_of_calendar_week_view -= 60*60*24;
         }
         $last_day_of_calendar_view = $first_day_of_calendar_week_view + 3600*24*7;
@@ -1460,7 +1460,7 @@ SQL;
     }
 
     public static function getStartEndCurrentDayView() {
-        $today = mktime(0, 0, 0, date("n"), date("j"));
+        $today = mktime(0, 0, 0, gmdate("n"), gmdate("j"));
         $tomorrow = $today + 3600*24;
 
         $start = new DateTime("@".$today);

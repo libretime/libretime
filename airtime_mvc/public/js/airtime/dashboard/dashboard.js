@@ -395,7 +395,6 @@ function getScheduleFromServer(){
                 parseSourceStatus(data.source_status);
                 parseSwitchStatus(data.switch_status);
                 showName = data.show_name;
-                setTimeout(getScheduleFromServer, serverUpdateInterval);
           }, error:function(jqXHR, textStatus, errorThrown){}});
 }
 
@@ -456,8 +455,9 @@ var stream_window = null;
 
 function init() {
     //begin producer "thread"
-    getScheduleFromServer();
-    
+    //getScheduleFromServer();
+    setInterval(getScheduleFromServer, serverUpdateInterval);
+
     //begin consumer "thread"
     secondsTimer();
 

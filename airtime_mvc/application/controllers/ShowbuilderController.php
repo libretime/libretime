@@ -246,6 +246,7 @@ class ShowbuilderController extends Zend_Controller_Action
     
     public function checkBuilderFeedAction()
     {
+        session_write_close();
         $request = $this->getRequest();
         $show_filter = intval($request->getParam("showFilter", 0));
         $my_shows = intval($request->getParam("myShows", 0));
@@ -265,6 +266,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function builderFeedAction()
     {
+        session_write_close();
     	$current_time = time();
     	
         $request = $this->getRequest();

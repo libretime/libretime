@@ -403,6 +403,7 @@ class LibraryController extends Zend_Controller_Action
 
     public function contentsFeedAction()
     {
+        session_write_close();
         $params = $this->getRequest()->getParams();
 
         # terrible name for the method below. it does not only search files.

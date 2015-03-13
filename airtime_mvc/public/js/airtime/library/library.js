@@ -890,7 +890,7 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
        
-        checkImportStatus();
+        //checkImportStatus();
         checkLibrarySCUploadStatus();
         
         addQtipToSCIcons();

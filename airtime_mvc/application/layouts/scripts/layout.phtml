@@ -19,6 +19,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-55N6NH');</script>
 <!-- End Google Tag Manager -->
 
+<script type="text/javascript">
+    //Awful hack to speed up loading - Embed the schedule in the response so that the dashboard
+    //doesn't have to make a separate AJAX request to get this data.
+    var schedulePreLoaded = <?php
+    require_once("ScheduleController.php");
+    $front = Zend_Controller_Front::getInstance();
+        $foo = new ScheduleController($front->getRequest(), $front->getResponse());
+        $foo->getCurrentPlaylistAction();
+        echo(json_encode($foo->view));
+ ?>;
+    parseItems(schedulePreLoaded.entries);
+    parseSourceStatus(schedulePreLoaded.source_status);
+    parseSwitchStatus(schedulePreLoaded.switch_status);
+
+
+</script>
+
 <?php echo $this->partial('partialviews/trialBox.phtml', array("is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
 <div id="Panel">
     <div class="logo"></div>

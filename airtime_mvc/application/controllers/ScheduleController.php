@@ -50,6 +50,13 @@ class ScheduleController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
+        $foo = new ScheduleController($this->getRequest(), $this->getResponse());
+        $foo->eventFeedPreloadAction();
+        //$foo->eventFeedAction();
+        $events = json_encode($foo->view->events);
+        //$timescale =
+            //$this->getRequest()->getParam("view", "week");
+
         $this->view->headScript()->appendScript(
             "var calendarPref = {};\n".
             "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
@@ -58,7 +65,7 @@ class ScheduleController extends Zend_Controller_Action
             "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
             "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
             "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
-            "var calendarEvents = null;"
+            "var calendarEvents = $events;"
         );
 
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -116,6 +123,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function eventFeedAction()
     {
+        session_write_close();
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
 
@@ -137,6 +145,7 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $editable = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+        session_write_close();
 
         $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
         if ($calendar_interval == "agendaDay") {
@@ -155,6 +164,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentShowAction()
     {
+        session_write_close();
         $currentShow = Application_Model_Show::getCurrentShow();
         if (!empty($currentShow)) {
             $this->view->si_id = $currentShow[0]["instance_id"];
@@ -296,6 +306,7 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentPlaylistAction()
     {
+        session_write_close();
         $range = Application_Model_Schedule::GetPlayOrderRangeOld();
         $show = Application_Model_Show::getCurrentShow();
 
@@ -704,6 +715,7 @@ class ScheduleController extends Zend_Controller_Action
      */
     public function setTimeScaleAction()
     {
+        session_write_close();
         Application_Model_Preference::SetCalendarTimeScale($this->_getParam('timeScale'));
     }
 

@@ -362,11 +362,14 @@ function windowResize() {
 function preloadEventFeed () {
     var url = baseUrl+'Schedule/event-feed-preload';
     var d = new Date();
+    createFullCalendar({calendarInit: calendarPref});
 
+/*
     $.post(url, {format: "json", cachep: d.getTime()}, function(json){
         calendarEvents = json.events;
         createFullCalendar({calendarInit: calendarPref});
     });
+   */
 }
 
 var initialLoad = true;
