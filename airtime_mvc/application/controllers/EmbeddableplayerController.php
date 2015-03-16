@@ -11,7 +11,12 @@ class EmbeddablePlayerController extends Zend_Controller_Action
     {
         $form = new Application_Form_EmbeddablePlayer();
 
-        $this->view->form = $form;
+        if ($form->getElement('player_stream_url')->getAttrib('numberOfEnabledStreams') > 0) {
+            $this->view->form = $form;
+        } else {
+            $this->view->errorMsg = "You need to enable at least one MP3, AAC, or OGG stream to use this feature.";
+        }
+
     }
 
     public function embedCodeAction()
