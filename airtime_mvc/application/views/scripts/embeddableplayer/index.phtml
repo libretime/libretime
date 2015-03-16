@@ -1,14 +1,12 @@
-<div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong preferences">
+<div class="ui-widget ui-widget-content block-shadow simple-formblock embed-player-form clearfix padded-strong preferences">
     <h2 style="float:left"><?php echo _("Embeddable Player") ?></h2>
     <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
 
     <form method="post" id="player_form" enctype="multipart/form-data">
-
-
+        
         <div style="clear:both"></div>
         <?php echo $this->errorMsg; ?>
         <?php echo $this->form; ?>
 
-        <br />
     </form>
 </div>

@@ -7,7 +7,10 @@
 
         <?php echo $this->element->getElement('player_stream_url'); ?>
 
+        <?php echo $this->element->getElement('player_preview_label')->renderLabel(); ?>
         <div style="clear:both"></div>
-        <?php echo $this->element->getElement('player_embed_src')->getValue(); ?>
+        <div id="embed_player_preview">
+            <?php echo $this->element->getElement('player_embed_src')->getValue(); ?>
+        </div>
     </dl>
 </fieldset>

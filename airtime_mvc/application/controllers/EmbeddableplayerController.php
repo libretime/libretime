@@ -9,6 +9,9 @@ class EmbeddablePlayerController extends Zend_Controller_Action
     
     public function indexAction()
     {
+        $CC_CONFIG = Config::getConfig();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/embeddableplayer.css?'.$CC_CONFIG['airtime_version']);
         $form = new Application_Form_EmbeddablePlayer();
 
         if ($form->getElement('player_stream_url')->getAttrib('numberOfEnabledStreams') > 0) {

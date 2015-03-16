@@ -34,8 +34,13 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $embedSrc = new Zend_Form_Element_Text('player_embed_src');
         $embedSrc->setAttrib("readonly", "readonly");
         $embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'/embeddableplayer/embed-code?url='.$url.'&codec='.$codec.'"></iframe>');
+        $embedSrc->setAttrib("class", "embed-player-text-box");
         $embedSrc->removeDecorator('label');
         $this->addElement($embedSrc);
+
+        $previewLabel = new Zend_Form_Element_Text('player_preview_label');
+        $previewLabel->setLabel("Preview:");
+        $this->addElement($previewLabel);
 
     }
 }
