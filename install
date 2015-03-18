@@ -466,7 +466,10 @@ for i in /etc/init/airtime*.template; do
     mv $i ${i%.template}
 done
 
-#loudCmd "initctl reload-configuration"
+set +e
+loudCmd "initctl reload-configuration"
+loudCmd "systemctl daemon-reload" #systemd hipsters
+set -e
 
 if [ ! -d /var/log/airtime ]; then
     loud "\n-----------------------------------------------------"
@@ -503,6 +506,9 @@ loudCmd "a2enmod rewrite php5"
 loud "\n-----------------------------------------------------"
 loud "              * Configuring PostgreSQL *              "
 loud "-----------------------------------------------------"
+
+# Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
+loudCmd "service postgresql start"
 
 setupAirtimePostgresUser() {
     # here-doc to execute this block as postgres user
