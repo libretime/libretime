@@ -579,7 +579,7 @@ if [ "$ignore_dependencies" = "f" ]; then
     set +e
     verbose "\n * Generating locales"
     for i in `ls ${web_root}/../locale | grep ".._.."`; do
-        if [ "$dist" = "Debian" ]; then
+        if [ "$dist" = "debian" ]; then
             grep -qi "^$i" /etc/locale.gen
             if [ $? -ne 0 ]; then
                 verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
@@ -590,7 +590,7 @@ if [ "$ignore_dependencies" = "f" ]; then
     done
     set -e
 
-    if [ "$dist" = "Debian" ]; then
+    if [ "$dist" = "debian" ]; then
         loudCmd "/usr/sbin/locale-gen"
     fi
 fi
