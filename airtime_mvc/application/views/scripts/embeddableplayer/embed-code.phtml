@@ -3,16 +3,33 @@
 
 <head>
     <script src="<?php echo $this->mrp_js?>" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        function musesCallback(event,value){
+            if (event == "source") {
+                //MRP.setUrl("http://sourcefabric.out.airtime.pro:8000/sourcefabric_b");
+            }
+        }
+        </script>
 </head>
+<body>
 
-<object classid="" width="180" height="60" bgcolor="#FFFFFF">
-    <param name="movie" value="muses.swf" />
-    <param name="flashvars" value="url=<?php echo $this->streamURL?>&lang=auto&codec=<?php echo $this->codec?>&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&skin=<?php echo $this->skin?>&title=''" />
-    <param name="wmode" value="window" />
-    <param name="allowscriptaccess" value="always" />
-    <param name="bgcolor" value="#FFFFFF" />
-    <param name="scale" value="noscale" />
-    <embed src="<?php echo $this->muses_swf?>" flashvars="url=<?php echo $this->streamURL?>&lang=auto&codec=<?php echo $this->codec?>&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&skin=<?php echo $this->skin?>&title=''" width="180" scale="noscale" height="60" wmode="window" bgcolor="#FFFFFF" allowscriptaccess="always" type="application/x-shockwave-flash" />
-</object>
+<script type="text/javascript">
+    MRP.insert({
+        'url':"<?php echo $this->streamURL ?>",
+        'codec':"<?php echo $this->codec ?>",
+        'volume':100,
+        'jsevents':true,
+        'autoplay':false,
+        'buffering':5,
+        'title':'test',
+        'bgcolor':'#FFFFFF',
+        'skin':"<?php echo $this->skin ?>",
+        'width':180,
+        'height':60
+    });
 
+</script>
+
+</body>
 </html>

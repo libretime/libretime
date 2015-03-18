@@ -22,6 +22,7 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $streamURL->setMultiOptions(
             $urlOptions
         );
+        Logging::info($urlOptions);
         $streamURL->setValue(array_keys($urlOptions)[0]);
         $streamURL->setLabel(_('Select stream:'));
         $streamURL->setAttrib('codec', array_values($urlOptions)[0]);
@@ -33,8 +34,9 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
 
         $embedSrc = new Zend_Form_Element_Text('player_embed_src');
         $embedSrc->setAttrib("readonly", "readonly");
-        $embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'/embeddableplayer/embed-code?url='.$url.'&codec='.$codec.'"></iframe>');
         $embedSrc->setAttrib("class", "embed-player-text-box");
+        //$embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?url='.$url.'&codec='.$codec.'"></iframe>');
+        $embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?stream=stream1&codec='.$codec.'"></iframe>');
         $embedSrc->removeDecorator('label');
         $this->addElement($embedSrc);
 

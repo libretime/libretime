@@ -203,7 +203,8 @@
                 c + ("&skin=" + g.getSkin(a.skin, !0)),
             c = c + ("&title=" + a.title),
             c = c + ("&welcome=" + a.welcome),
-            b = g.getScriptBaseHREF() + "/muses-hosted.swf",
+            //b = g.getScriptBaseHREF() + "/muses-hosted.swf",
+            b = "http://localhost/js/airtime/embeddableplayer/muses.swf",
             e = 'width="' + a.width + '" height="' + a.height + '" ';
         null != a.bgcolor && (e += 'bgcolor="' + a.bgcolor + '" ');
         var f = '<object id="' + a.id + '" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" ' + e + ">",

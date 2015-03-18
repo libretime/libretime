@@ -8,9 +8,31 @@
         <?php echo $this->element->getElement('player_stream_url'); ?>
 
         <?php echo $this->element->getElement('player_preview_label')->renderLabel(); ?>
+
+        <div style="clear:both"></div>
+        <div id="custom_muses_player">
+            <a href="#"><div id="muses_play">play</div></a>
+            <a href="#"><div id="muses_stop">stop</div></a>
+        </div>
+
+        <!--
+        <div style="clear:both"></div>
+        <object classid="" width="180" height="60" bgcolor="#FFFFFF">
+            <param name="movie" value="muses.swf" />
+            <param name="flashvars" value="url=<?php echo $this->streamURL?>&lang=auto&codec=<?php echo $this->codec?>&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&title=''%skin=''" />
+            <param name="wmode" value="window" />
+            <param name="allowscriptaccess" value="always" />
+            <param name="bgcolor" value="#FFFFFF" />
+            <param name="scale" value="noscale" />
+            <embed src="<?php echo $this->muses_swf?>" flashvars="url=<?php echo $this->streamURL?>&lang=auto&codec=<?php echo $this->codec?>&volume=100&introurl=&tracking=true&jsevents=true&buffering=5&title=''&skin=''" width="180" scale="noscale" height="60" wmode="window" bgcolor="#FFFFFF" allowscriptaccess="always" type="application/x-shockwave-flash" />
+        </object>
+        -->
+
         <div style="clear:both"></div>
         <div id="embed_player_preview">
             <?php echo $this->element->getElement('player_embed_src')->getValue(); ?>
         </div>
+
+
     </dl>
 </fieldset>
