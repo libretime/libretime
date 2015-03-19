@@ -10,26 +10,41 @@
                 //MRP.setUrl("http://sourcefabric.out.airtime.pro:8000/sourcefabric_b");
             }
         }
-        </script>
+
+    </script>
+    <style type="text/css">
+        #muses_skin{width:1px; height:1px; overflow-x: hidden; overflow-y: hidden;}
+    </style>
 </head>
+
 <body>
 
-<script type="text/javascript">
-    MRP.insert({
-        'url':"<?php echo $this->streamURL ?>",
-        'codec':"<?php echo $this->codec ?>",
-        'volume':100,
-        'jsevents':true,
-        'autoplay':false,
-        'buffering':5,
-        'title':'test',
-        'bgcolor':'#FFFFFF',
-        'skin':"<?php echo $this->skin ?>",
-        'width':180,
-        'height':60
-    });
+<div id="muses_skin">
+    <script type="text/javascript">
 
-</script>
+
+        MRP.insert({
+            'url':"<?php echo $this->streamURL ?>",
+            'codec':"<?php echo $this->codec ?>",
+            'volume':100,
+            'jsevents':true,
+            'autoplay':false,
+            'buffering':5,
+            'title':'test',
+            'bgcolor':'#FFFFFF',
+            'skin':'mcclean',
+            'width':180,
+            'height':60
+        });
+    </script>
+</div>
+
+<div id="custom_muses_play" onclick="MRP.play()">
+    <a href="#">play</a>
+</div>
+<div id="custom_muses_stop" onclick="MRP.stop()">
+    <a href="#">stop</a>
+</div>
 
 </body>
 </html>
