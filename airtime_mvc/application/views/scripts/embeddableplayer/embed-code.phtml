@@ -5,10 +5,31 @@
     <script src="<?php echo $this->mrp_js?>" type="text/javascript"></script>
     <script type="text/javascript">
 
-        function musesCallback(event,value){
-            if (event == "source") {
-                //MRP.setUrl("http://sourcefabric.out.airtime.pro:8000/sourcefabric_b");
-            }
+        var MusesPlayer = function() {
+            this.flashDetect = FlashDetect.versionAtLeast(10, 1) ? true : false;
+        };
+        MusesPlayer.prototype.play = function() {
+            this.flashDetect ? MRP.play() : musesHTMLPlayClick();
+        };
+        MusesPlayer.prototype.stop = function() {
+            this.flashDetect ? MRP.stop() : musesHTMLStopClick();
+        };
+        //TODO: setVolume, setURL
+
+        var musesPlayer = new MusesPlayer();
+
+        function musesHTMLPlayClick() {
+            //child nodes
+            var cn = document.getElementById("MusesRadioPlayer-HTML5-player-1").childNodes;
+            var playDiv = cn[4];
+            playDiv.onclick();
+        }
+
+        function musesHTMLStopClick() {
+            //child nodes
+            var cn = document.getElementById("MusesRadioPlayer-HTML5-player-1").childNodes;
+            var stopDiv = cn[5];
+            stopDiv.onclick();
         }
 
     </script>
@@ -21,8 +42,6 @@
 
 <div id="muses_skin">
     <script type="text/javascript">
-
-
         MRP.insert({
             'url':"<?php echo $this->streamURL ?>",
             'codec':"<?php echo $this->codec ?>",
@@ -39,10 +58,10 @@
     </script>
 </div>
 
-<div id="custom_muses_play" onclick="MRP.play()">
+<div id="custom_muses_play" onclick="musesPlayer.play()">
     <a href="#">play</a>
 </div>
-<div id="custom_muses_stop" onclick="MRP.stop()">
+<div id="custom_muses_stop" onclick="musesPlayer.stop()">
     <a href="#">stop</a>
 </div>
 

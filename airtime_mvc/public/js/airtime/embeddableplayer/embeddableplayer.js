@@ -4,6 +4,6 @@ window.onload = function() {
 
 function generateEmbedSrc()
 {
-    document.getElementById('embed_player_preview').textContent="";
+
 }
 
