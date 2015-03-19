@@ -219,10 +219,10 @@ class ProvisioningHelper
      * Initialize preference values passed from the dashboard (if any exist)
      */
     private function initializePrefs() {
-        if ($this->statio_name) {
+        if ($this->station_name) {
             Application_Model_Preference::SetStationName($this->station_name);
         }
-        if ($this->descption) {
+        if ($this->description) {
             Application_Model_Preference::SetStationDescription($this->description);
         }
     }
