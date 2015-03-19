@@ -35,8 +35,8 @@ class ProvisioningController extends Zend_Controller_Action
             if ($_POST['station_name']) {
                 Application_Model_Preference::SetStationName($_POST['station_name']);
             }
-            if ($_POST['station_name']) {
-                Application_Model_Preference::SetStationDescription($_POST['station_name']);
+            if ($_POST['description']) {
+                Application_Model_Preference::SetStationDescription($_POST['description']);
             }
         } catch (Exception $e) {
             $this->getResponse()
