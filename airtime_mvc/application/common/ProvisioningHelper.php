@@ -74,32 +74,6 @@ class ProvisioningHelper
     }
 
     /**
-     * Endpoint to change Airtime preferences remotely.
-     * Mainly for use with the dashboard right now.
-     */
-    public function changeAction() {
-        $apikey = $_SERVER['PHP_AUTH_USER'];
-        if (!isset($apikey) || $apikey != $this->apikey) {
-            Logging::info("Invalid API Key: $apikey");
-            http_response_code(403);
-            echo "ERROR: Incorrect API key";
-            return;
-        }
-
-        try {
-            $this->parsePostParams();
-            $this->initializePrefs();
-        } catch (Exception $e) {
-            http_response_code(400);
-            Logging::error($e->getMessage());
-            echo $e->getMessage() . PHP_EOL;
-            return;
-        }
-
-        http_response_code(201);
-    }
-
-    /**
      * Check if the database settings and credentials given are valid
      * @return boolean true if the database given exists and the user is valid and can access it
      */
@@ -124,6 +98,7 @@ class ProvisioningHelper
         // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
         return $result !== FALSE;
     }
+
     private function parsePostParams()
     {
         $this->dbuser = $_POST['dbuser'];
