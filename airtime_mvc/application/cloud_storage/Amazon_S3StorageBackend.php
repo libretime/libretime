@@ -65,7 +65,7 @@ class Amazon_S3StorageBackend extends StorageBackend
         $slashPos = strpos($prefix, "/");
         if (($slashPos === FALSE) || //Slash must exist
             ($slashPos != 2) ||      //Slash must be the third character
-            (strlen($prefix) > $slashPos) ||    //String must have something after the first slash
+            (strlen($prefix) <= $slashPos) ||    //String must have something after the first slash
             (substr_count($prefix, "/") != 2))  //String must have two slashes
         {
             throw new Exception("Invalid file prefix in " . __FUNCTION__);
