@@ -6,6 +6,20 @@
     <script type="text/javascript">
 
         var MusesPlayer = function() {
+            MRP.insert({
+                'url':"<?php echo $this->streamURL ?>",
+                'codec':"<?php echo $this->codec ?>",
+                'volume':100,
+                'jsevents':true,
+                'autoplay':false,
+                'buffering':5,
+                'title':'test',
+                'bgcolor':'#FFFFFF',
+                'skin':'mcclean',
+                'width':180,
+                'height':60
+            });
+
             this.flashDetect = FlashDetect.versionAtLeast(10, 1) ? true : false;
         };
 
@@ -25,8 +39,6 @@
         MusesPlayer.prototype.setURL = function() {
             //TODO
         };
-
-        var musesPlayer = new MusesPlayer();
 
         function musesHTMLPlayClick() {
             //child nodes
@@ -52,21 +64,7 @@
 
 <div id="muses_skin">
     <script type="text/javascript">
-        MRP.insert({
-            'url':"<?php echo $this->streamURL ?>",
-            'codec':"<?php echo $this->codec ?>",
-            'volume':100,
-            'jsevents':true,
-            'autoplay':false,
-            'buffering':5,
-            'title':'test',
-            'bgcolor':'#FFFFFF',
-            'skin':'mcclean',
-            'width':180,
-            'height':60
-        });
-
-        musesPlayer.setVolume(50);
+        var musesPlayer = new MusesPlayer();
     </script>
 </div>
 
