@@ -8,13 +8,23 @@
         var MusesPlayer = function() {
             this.flashDetect = FlashDetect.versionAtLeast(10, 1) ? true : false;
         };
+
         MusesPlayer.prototype.play = function() {
             this.flashDetect ? MRP.play() : musesHTMLPlayClick();
         };
+
         MusesPlayer.prototype.stop = function() {
             this.flashDetect ? MRP.stop() : musesHTMLStopClick();
         };
-        //TODO: setVolume, setURL
+
+        MusesPlayer.prototype.setVolume = function(value) {
+            //this.flashDetect ? MRP.setVolume(value) : null;
+            //TODO - maybe
+        };
+
+        MusesPlayer.prototype.setURL = function() {
+            //TODO
+        };
 
         var musesPlayer = new MusesPlayer();
 
@@ -55,6 +65,8 @@
             'width':180,
             'height':60
         });
+
+        musesPlayer.setVolume(50);
     </script>
 </div>
 
