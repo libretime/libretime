@@ -26,7 +26,7 @@ class ProvisioningController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        if (!RestAuth::verifyAuth(true, true, $this)) {
+        if (!RestAuth::verifyAuth(true, false, $this)) {
             return;
         }
 
@@ -65,12 +65,12 @@ class ProvisioningController extends Zend_Controller_Action
         }
         
         $CC_CONFIG = Config::getConfig();
-        
+
         foreach ($CC_CONFIG["supportedStorageBackends"] as $storageBackend) {
             $proxyStorageBackend = new ProxyStorageBackend($storageBackend);
             $proxyStorageBackend->deleteAllCloudFileObjects();
         }
-        
+
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->appendBody("OK");

@@ -52,6 +52,7 @@ Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
+$front->throwExceptions(false);
 
 //localization configuration
 Application_Model_Locale::configureLocalization();
