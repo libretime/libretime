@@ -326,6 +326,11 @@ class Application_Model_Preference
         return self::getValue("station_name");
     }
 
+    public static function SetStationName($station_name)
+    {
+        self::setValue("station_name", $station_name);
+    }
+
     public static function SetAutoUploadRecordedShowToSoundcloud($upload)
     {
         self::setValue("soundcloud_auto_upload_recorded_show", $upload);
