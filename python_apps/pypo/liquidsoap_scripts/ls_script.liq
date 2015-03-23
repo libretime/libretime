@@ -29,6 +29,7 @@ dynamic_metadata_callback = ref fun (s) -> begin () end
 s1_connected = ref ''
 s2_connected = ref ''
 s3_connected = ref ''
+s4_connected = ref ''
 s1_namespace = ref ''
 s2_namespace = ref ''
 s3_namespace = ref ''
@@ -103,7 +104,7 @@ server.register(namespace="vars",
                 fun (s) -> begin log("vars.bootup_time") time := s s end)
 server.register(namespace="streams",
                 "connection_status",
-                fun (s) -> begin log("streams.connection_status") "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected}" end)
+                fun (s) -> begin log("streams.connection_status") "1:#{!s1_connected},2:#{!s2_connected},3:#{!s3_connected},4:#{!s4_connected}" end)
 server.register(namespace="vars",
                 "default_dj_fade",
                 fun (s) -> begin log("vars.default_dj_fade") default_dj_fade := float_of_string(s) s end)
@@ -398,6 +399,21 @@ if s3_enable == true then
                 s3_mount, s3_url, s3_name, s3_genre, s3_user, s, "3",
                 s3_connected, s3_description, s3_channels)
 end
+
+s4_namespace = ref ''
+if s4_enable == true then
+    log("Stream 4 Enabled")
+    if s4_output == 'shoutcast' then
+        s4_namespace := "shoutcast_stream_4"
+    else
+        s4_namespace := s4_mount
+    end
+    server.register(namespace=!s4_namespace, "connected", fun (s) -> begin log("#{!s4_namespace}.connected") !s4_connected end)
+    output_to(s4_output, s4_type, s4_bitrate, s4_host, s4_port, s4_pass,
+                s4_mount, s4_url, s4_name, s4_genre, s4_user, s, "4",
+                s4_connected, s4_description, s4_channels)
+end
+
 
 command = "/usr/lib/airtime/pypo/bin/liquidsoap_scripts/notify.sh --liquidsoap-started &"
 log(command)

@@ -1309,7 +1309,7 @@ class ApiController extends Zend_Controller_Action
     }
 
     public function getStreamParametersAction() {
-        $streams = array("s1", "s2", "s3");
+        $streams = array("s1", "s2", "s3", "s4");
         $stream_params = array();
         foreach ($streams as $s) {
             $stream_params[$s] =

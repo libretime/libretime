@@ -10,18 +10,23 @@ def generate_liquidsoap_config(ss):
     fh.write("################################################\n")
     fh.write("# THIS FILE IS AUTO GENERATED. DO NOT CHANGE!! #\n")
     fh.write("################################################\n")
+    fh.write("# The ignore() lines are to squash unused variable warnings\n")
 
-    for d in data:
-        key = d['keyname']
+    for key, value in data.iteritems():
+        try:
+            str_buffer = "%s = %s\n" % (key, int(value))
+        except ValueError:
+            try: # Is it a boolean?
+                if "true" in value or "false" in value:
+                    str_buffer = "%s = %s\n" % (key, value.lower())
+                else:
+                    raise ValueError() # Just drop into the except below
+            except: #Everything else is a string
+                str_buffer = "%s = \"%s\"\n" % (key, value)
 
-        str_buffer = d[u'keyname'] + " = "
-        if d[u'type'] == 'string':
-            val = '"%s"' % d['value']
-        else:
-            val = d[u'value']
-            val = val if len(val) > 0 else "0"
-        str_buffer = "%s = %s\n" % (key, val)
         fh.write(str_buffer.encode('utf-8'))
+        # ignore squashes unused variable errors from Liquidsoap
+        fh.write(("ignore(%s)\n" % key).encode('utf-8'))
 
     fh.write('log_file = "/var/log/airtime/pypo-liquidsoap/<script>.log"\n')
     fh.close()
