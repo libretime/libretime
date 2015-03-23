@@ -1,4 +1,4 @@
-function generateEmbedSrc()
+function updateEmbedSrcParams()
 {
     var $embedCodeParams = "?";
     var $streamMode = getStreamMode();
@@ -20,19 +20,26 @@ function getStreamMode() {
 }
 
 $(document).ready(function() {
+
     $("#player_stream_mode-element").change(function() {
         var $streamMode = getStreamMode();
         if ($streamMode == "a") {
             $("#player_stream_url-element input[type='radio']").attr("disabled", "disabled");
         } else if ($streamMode == "b") {
             $("#player_stream_url-element input[type='radio']").removeAttr("disabled");
+
+            $("input[name=player_stream_url]").each(function(i, obj) {
+                if ($(this).parent().text().indexOf("opus") >= 0) {
+                    $(this).attr("disabled", "disabled");
+                }
+            });
         }
 
-        generateEmbedSrc();
+        updateEmbedSrcParams();
     });
 
     $("#player_stream_url-element").change(function() {
-        generateEmbedSrc();
+        updateEmbedSrcParams();
     });
 });
 

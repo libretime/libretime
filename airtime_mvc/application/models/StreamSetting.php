@@ -78,6 +78,25 @@ class Application_Model_StreamSetting
         return $urls;
     }
 
+    public static function getEnabledStreamData()
+    {
+        $streams = Array();
+        $streamIds = self::getEnabledStreamIds();
+        foreach ($streamIds as $id) {
+            $streamData = self::getStreamData($id);
+            $prefix = $id."_";
+            $host = $streamData[$prefix."host"];
+            $port = $streamData[$prefix."port"];
+            $mount = $streamData[$prefix."mount"];
+            $streams[$id] = Array(
+                "url" => "http://$host:$port/$mount",
+                "codec" => $streamData[$prefix."type"],
+                "bitrate" => $streamData[$prefix."bitrate"]
+            );
+        }
+        return $streams;
+    }
+
     /* Returns the id's of all streams that are enabled in an array. An
      * example of the array returned in JSON notation is ["s1", "s2", "s3"] */
     public static function getEnabledStreamIds()

@@ -13,30 +13,48 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $displayTrackMetadata->setLabel(_('Display track metadata?'));
         $this->addElement($displayTrackMetadata);
 
+        $streamMode = new Zend_Form_Element_Radio('player_stream_mode');
+        $streamMode->setLabel(_('Select Stream:'));
+        $streamMode->setMultiOptions(
+            array(
+                "a" => "Use a mobile stream if possible, when appropriate. Otherwise use the highest quality stream.",
+                "b" => "Select a stream"
+            )
+        );
+        $streamMode->setValue("a");
+        $this->addElement($streamMode);
+
         $streamURL = new Zend_Form_Element_Radio('player_stream_url');
+        $opusStreamCount = 0;
         $urlOptions = Array();
-        foreach(Application_Model_StreamSetting::getEnabledStreamUrls() as $type => $url) {
-            if ($type == "opus") continue;
-            $urlOptions[$url] = $type;
+        foreach(Application_Model_StreamSetting::getEnabledStreamData() as $stream => $data) {
+            $urlOptions[$stream] = $data["codec"]." - ".$data["bitrate"]."kbps";
+            if ($data["codec"] == "opus") {
+                $opusStreamCount += 1;
+                $urlOptions[$stream] .=" - The player does not support Opus streams.";
+            }
         }
         $streamURL->setMultiOptions(
             $urlOptions
         );
-        Logging::info($urlOptions);
-        $streamURL->setValue(array_keys($urlOptions)[0]);
-        $streamURL->setLabel(_('Select stream:'));
-        $streamURL->setAttrib('codec', array_values($urlOptions)[0]);
-        $streamURL->setAttrib('numberOfEnabledStreams', sizeof($urlOptions));
-        $this->addElement($streamURL);
 
-        $url = $streamURL->getValue();
-        $codec = $streamURL->getAttrib('codec');
+        foreach ($urlOptions as $o => $v) {
+            if (strpos($v, "opus") !== false) {
+                continue;
+            } else {
+                $streamURL->setValue($o);
+                break;
+            }
+        }
+
+        $streamURL->setAttrib('numberOfEnabledStreams', sizeof($urlOptions)-$opusStreamCount);
+        $streamURL->setAttrib("disabled", "disabled");
+        $this->addElement($streamURL);
 
         $embedSrc = new Zend_Form_Element_Text('player_embed_src');
         $embedSrc->setAttrib("readonly", "readonly");
         $embedSrc->setAttrib("class", "embed-player-text-box");
-        //$embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?url='.$url.'&codec='.$codec.'"></iframe>');
-        $embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?stream=stream1&codec='.$codec.'"></iframe>');
+        $embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?stream-mode=a"></iframe>');
         $embedSrc->removeDecorator('label');
         $this->addElement($embedSrc);
 
