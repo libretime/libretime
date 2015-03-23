@@ -19,6 +19,40 @@ class ProvisioningController extends Zend_Controller_Action
      */
 
     /**
+     * Endpoint to change Airtime preferences remotely.
+     * Mainly for use with the dashboard right now.
+     */
+    public function changeAction() {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        if (!RestAuth::verifyAuth(true, false, $this)) {
+            return;
+        }
+
+        try {
+            // This is hacky and should be genericized
+            if ($_POST['station_name']) {
+                Application_Model_Preference::SetStationName($_POST['station_name']);
+            }
+            if ($_POST['description']) {
+                Application_Model_Preference::SetStationDescription($_POST['description']);
+            }
+        } catch (Exception $e) {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody("ERROR: " . $e->getMessage());
+            Logging::error($e->getMessage());
+            echo $e->getMessage() . PHP_EOL;
+            return;
+        }
+
+        $this->getResponse()
+            ->setHttpResponseCode(200)
+            ->appendBody("OK");
+    }
+
+    /**
      * Delete the Airtime Pro station's files from Amazon S3
      */
     public function terminateAction()
@@ -31,12 +65,12 @@ class ProvisioningController extends Zend_Controller_Action
         }
         
         $CC_CONFIG = Config::getConfig();
-        
+
         foreach ($CC_CONFIG["supportedStorageBackends"] as $storageBackend) {
             $proxyStorageBackend = new ProxyStorageBackend($storageBackend);
             $proxyStorageBackend->deleteAllCloudFileObjects();
         }
-        
+
         $this->getResponse()
             ->setHttpResponseCode(200)
             ->appendBody("OK");

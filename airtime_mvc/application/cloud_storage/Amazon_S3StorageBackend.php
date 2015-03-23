@@ -53,14 +53,30 @@ class Amazon_S3StorageBackend extends StorageBackend
     // Records in the database will remain in case we have to restore the files.
     public function deleteAllCloudFileObjects()
     {
-        $this->s3Client->deleteMatchingObjects(
-            $bucket = $this->getBucket(),
-            $prefix = $this->getFilePrefix());
+        $bucket = $this->getBucket();
+        $prefix = $this->getFilePrefix();
+
+        //Add a trailing slash in for safety
+        //(so that deleting /13/413 doesn't delete /13/41313 !)
+        $prefix = $prefix . "/";
+
+        //Do a bunch of safety checks to ensure we don't delete more than we intended.
+        //An valid prefix is like "12/4312" for instance 4312.
+        $slashPos = strpos($prefix, "/");
+        if (($slashPos === FALSE) || //Slash must exist
+            ($slashPos != 2) ||      //Slash must be the third character
+            (strlen($prefix) <= $slashPos) ||    //String must have something after the first slash
+            (substr_count($prefix, "/") != 2))  //String must have two slashes
+        {
+            throw new Exception("Invalid file prefix in " . __FUNCTION__);
     }
-    
+        $this->s3Client->deleteMatchingObjects($bucket, $prefix);
+    }
+
     public function getFilePrefix()
     {
         $hostingId = Billing::getClientInstanceId();
-        return substr($hostingId, -2)."/".$hostingId;
+        $filePrefix = substr($hostingId, -2)."/".$hostingId;
+        return $filePrefix;
     }
 }

@@ -3,6 +3,7 @@
 import logging
 import threading
 import multiprocessing
+import Queue
 import ConfigParser
 from metadata_analyzer import MetadataAnalyzer
 from filemover_analyzer import FileMoverAnalyzer
@@ -45,8 +46,8 @@ class AnalyzerPipeline:
         AnalyzerPipeline.python_logger_deadlock_workaround()
 
         try:
-            if not isinstance(queue, multiprocessing.queues.Queue):
-                raise TypeError("queue must be a multiprocessing.Queue()")
+            if not isinstance(queue, Queue.Queue):
+                raise TypeError("queue must be a Queue.Queue()")
             if not isinstance(audio_file_path, unicode):
                 raise TypeError("audio_file_path must be unicode. Was of type " + type(audio_file_path).__name__ + " instead.")
             if not isinstance(import_directory, unicode):

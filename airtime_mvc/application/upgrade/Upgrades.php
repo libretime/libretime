@@ -381,4 +381,7 @@ class AirtimeUpgrader2511 extends AirtimeUpgrader
             throw $e;
         }
     }
+    public function downgrade() {
+
+    }
 }

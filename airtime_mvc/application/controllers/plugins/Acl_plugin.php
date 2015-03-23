@@ -28,7 +28,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     {
         $this->_errorPage = array('module' => 'default',
                                   'controller' => 'error',
-                                  'action' => 'denied');
+                                  'action' => 'error');
 
         $this->_roleName = $roleName;
 
@@ -111,7 +111,16 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $controller = strtolower($request->getControllerName());
         Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
-        if (in_array($controller, array("api", "auth", "locale", "upgrade", 'whmcs-login', "provisioning"))) {
+        if (in_array($controller, array(
+                "api",
+                "auth",
+                "error",
+                "locale",
+                "upgrade",
+                'whmcs-login',
+                "provisioning"
+            )))
+        {
             $this->setRoleName("G");
         } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
 

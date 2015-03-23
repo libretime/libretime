@@ -37,7 +37,7 @@ require_once (APPLICATION_PATH."/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 // We need to manually route because we can't load Zend without the database being initialized first.
-if (array_key_exists("REQUEST_URI", $_SERVER) && (strpos($_SERVER["REQUEST_URI"], "/provisioning/create") !== false)) {
+if (array_key_exists("REQUEST_URI", $_SERVER) && (stripos($_SERVER["REQUEST_URI"], "/provisioning/create") !== false)) {
     $provisioningHelper = new ProvisioningHelper($CC_CONFIG["apiKey"][0]);
     $provisioningHelper->createAction();
     die();
@@ -52,6 +52,7 @@ Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
+$front->throwExceptions(false);
 
 //localization configuration
 Application_Model_Locale::configureLocalization();

@@ -899,20 +899,19 @@ input[type="checkbox"] {
 
 /* Remove any visible csrf form token footprint */
 #csrf-label {
-    height: 0;
-    padding: 0;
-    margin: 0;
+    display: none;
 }
 
 #csrf-element {
-    height: 8px;
     padding: 0;
     margin: 0;
+    display: inline-block;
 }
 
+/*
 #csrf-label .errors li, #csrf-element .errors li {
     margin: 0;
-}
+}*/
 
 .login_box {
     margin: 0 auto 0 auto;
@@ -1031,7 +1030,6 @@ input[type="checkbox"] {
 #pref_form p.description {
     color: #3b3b3b;
     font-size: 12px;
-    float: left;
 }
 
   dt.block-display, dd.block-display {
@@ -2193,7 +2191,7 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
     width: 98.5%;
 }
 
-.preferences dd#SoundCloudTags-element.block-display .input_text_area {
+.preferences dd.block-display .input_text_area {
     height: 120px;
 }
 
@@ -2202,12 +2200,8 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 }
 
 .preferences #logo-remove-btn {
-    float: right;
+    /*float: left;*/
     margin-bottom: 4px;
-}
-
-.preferences #Logo-img-container {
-    margin-top: 30px;
 }
 
 #show_time_info {
@@ -2570,19 +2564,21 @@ dt.block-display.info-block {
 
 /*---////////////////////    ERROR PAGE    ////////////////////---*/
 
-.error-content    {
-    background:url(images/404.png) no-repeat 0 0;
-    width:300px;
-    margin: 24px 15px;
-    padding: 0px 10px 0 420px;
+.error-content {
+    background:url(images/maintenance.png) no-repeat 0 0;
+    width:360px;
+    height:350px;
+    margin:auto;
+    margin-top:25px;
+    padding:auto;
 }
 .error-content h2 {
     margin:0;
-    padding:0 0 10px 0;
+    padding:350px 0 10px 0;
     font-size:36px;
     font-weight:bold;
     color:#3e3e3e;
-    text-align:left;
+    text-align:center;
     letter-spacing:-.3px;
     text-shadow: rgba(248,248,248,.3) 0 1px 0, rgba(0,0,0,.8) 0 -1px 0;
     rgba(51,51,51,.9)
@@ -2590,12 +2586,14 @@ dt.block-display.info-block {
 .error-content p {
     color: #272727;
     font-size: 16px;
+    text-align:center;
     margin: 0;
     padding:8px 2px;
 }
-.error-content .button-bar    {
+.error-content .button-bar	{
     margin-top:47px;
     padding-left:2px;
+    text-align:center;
 }
 .error-content .toggle-button    {
     border: 1px solid #434343;
@@ -3142,3 +3140,4 @@ dd .stream-status {
 }
 .quota-reached {
     font-size: 14px !important;
+}
