@@ -28,7 +28,10 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $opusStreamCount = 0;
         $urlOptions = Array();
         foreach(Application_Model_StreamSetting::getEnabledStreamData() as $stream => $data) {
-            $urlOptions[$stream] = $data["codec"]." - ".$data["bitrate"]."kbps";
+            $urlOptions[$stream] = strtoupper($data["codec"])." - ".$data["bitrate"]."kbps";
+            if ($data["mobile"]) {
+                $urlOptions[$stream] .= " - Mobile friendly";
+            }
             if ($data["codec"] == "opus") {
                 $opusStreamCount += 1;
                 $urlOptions[$stream] .=" - The player does not support Opus streams.";

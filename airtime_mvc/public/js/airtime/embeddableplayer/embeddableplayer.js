@@ -29,7 +29,7 @@ $(document).ready(function() {
             $("#player_stream_url-element input[type='radio']").removeAttr("disabled");
 
             $("input[name=player_stream_url]").each(function(i, obj) {
-                if ($(this).parent().text().indexOf("opus") >= 0) {
+                if ($(this).parent().text().toLowerCase().indexOf("opus") >= 0) {
                     $(this).attr("disabled", "disabled");
                 }
             });

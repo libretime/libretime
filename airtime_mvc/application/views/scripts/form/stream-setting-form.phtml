@@ -14,6 +14,13 @@
             <dd id="<?php echo $s_name?>Enabled-element">
                 <?php echo $this->element->getElement('enable')?>
             </dd>
+
+            <dt id="<?php echo $s_name?>Mobile-label">
+                <label for="<?php echo $s_name?>Mobile"><?php echo $this->element->getElement('mobile')->getLabel() ?></label>
+            </dt>
+            <dd id="<?php echo $s_name?>Mobile-element">
+                <?php echo $this->element->getElement('mobile')?>
+            </dd>
             
             <dt id="<?php echo $s_name?>Type-label">
                 <label for="<?php echo $s_name?>Type"><?php echo $this->element->getElement('type')->getLabel()?></label>

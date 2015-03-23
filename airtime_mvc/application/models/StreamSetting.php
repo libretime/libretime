@@ -94,7 +94,8 @@ class Application_Model_StreamSetting
             $streams[$id] = Array(
                 "url" => "http://$host:$port/$mount",
                 "codec" => $streamData[$prefix."type"],
-                "bitrate" => $streamData[$prefix."bitrate"]
+                "bitrate" => $streamData[$prefix."bitrate"],
+                "mobile" => $streamData[$prefix."mobile"]
             );
         }
         return $streams;
