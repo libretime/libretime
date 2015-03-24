@@ -65,7 +65,9 @@ class Application_Common_FileIO
         //We can have multiple levels of output buffering. Need to
         //keep looping until all have been disabled!!!
         //http://www.php.net/manual/en/function.ob-end-flush.php
-        while (@ob_end_flush());
+        while (ob_get_level() > 0) {
+            ob_end_flush();
+        }
 
         // NOTE: We can't use fseek here because it does not work with streams
         // (a.k.a. Files stored in the cloud)
