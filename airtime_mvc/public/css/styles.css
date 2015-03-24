@@ -3141,3 +3141,15 @@ dd .stream-status {
 .quota-reached {
     font-size: 14px !important;
 }
+
+.thankyou-panel
+{
+    width: 400px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.thankyou-panel h3
+{
+    color: #222;
+}

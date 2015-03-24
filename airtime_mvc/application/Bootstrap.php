@@ -24,12 +24,14 @@ require_once "FileIO.php";
 require_once "OsPath.php";
 require_once "Database.php";
 require_once "ProvisioningHelper.php";
+require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
 require_once "Auth.php";
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
 require_once __DIR__.'/controllers/plugins/Maintenance.php';
+require_once __DIR__.'/controllers/plugins/ConversionTracking.php';
 require_once __DIR__.'/modules/rest/controllers/ShowImageController.php';
 require_once __DIR__.'/modules/rest/controllers/MediaController.php';
 
@@ -52,6 +54,7 @@ Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
 $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
+$front->registerPlugin(new Zend_Controller_Plugin_ConversionTracking());
 $front->throwExceptions(false);
 
 //localization configuration

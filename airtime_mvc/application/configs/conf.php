@@ -44,6 +44,13 @@ class Config {
             $CC_CONFIG['dev_env'] = 'production';
         }
 
+        //Backported static_base_dir default value into saas for now.
+        if (array_key_exists('static_base_dir', $values['general'])) {
+            $CC_CONFIG['staticBaseDir'] = $values['general']['static_base_dir'];
+        } else {
+            $CC_CONFIG['staticBaseDir'] = '/';
+        }
+
         // Parse separate conf file for cloud storage values
         $cloudStorageConfig = "/etc/airtime-saas/".$CC_CONFIG['dev_env']."/cloud_storage.conf";
         if (!file_exists($cloudStorageConfig)) {

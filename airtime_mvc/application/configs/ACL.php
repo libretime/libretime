@@ -36,6 +36,7 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('rest:media'))
       ->add(new Zend_Acl_Resource('rest:show-image'))
       ->add(new Zend_Acl_Resource('billing'))
+      ->add(new Zend_Acl_Resource('thank-you'))
       ->add(new Zend_Acl_Resource('provisioning'));
 
 /** Creating permissions */
@@ -69,6 +70,7 @@ $ccAcl->allow('G', 'index')
       ->allow('A', 'user')
       ->allow('A', 'systemstatus')
       ->allow('A', 'preference')
+      ->allow('S', 'thank-you')
       ->allow('S', 'billing');
       
 

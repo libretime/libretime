@@ -1,0 +1,20 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        <?php if ($this->gaEventTrackingJsCode != "") {
+            echo($this->gaEventTrackingJsCode);
+        ?>
+        jQuery.post("<?=$this->conversionUrl?>", { "csrf_token" : $("#csrf").attr('value')},
+            function( data ) {});
+        <?php }; //endif ?>
+    });
+</script>
+<?php echo $this->form->getElement('csrf') ?>
+
+<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong thankyou-panel">
+    <center>
+        <div class="logobox" style="margin-left: 32px;"></div>
+        <h2><?php echo _pro("Thank you!")?></h2>
+        <h3><?php echo _pro("Your station has been upgraded successfully.")?></h3>
+        <p><a href="<?=$this->stationUrl?>"><?php echo _pro("Return to Airtime")?></a></p>
+    </center>
+</div>

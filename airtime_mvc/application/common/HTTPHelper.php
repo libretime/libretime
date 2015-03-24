@@ -27,7 +27,7 @@ class Application_Common_HTTPHelper
         if (empty($baseDir)) {
             $baseDir = "/";
         }
-        if ($baseDir[0] != "") {
+        if ($baseDir[0] != "/") {
             $baseDir = "/" . $baseDir;
         }
 
