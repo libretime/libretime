@@ -38,14 +38,17 @@ abstract class AirtimeUpgrader
             //create a temporary maintenance notification file
             //when this file is on the server, zend framework redirects all
             //requests to the maintenance page and sets a 503 response code
+            /* DISABLED because this does not work correctly
             $this->maintenanceFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."maintenance.txt" : "/tmp/maintenance.txt";
             $file = fopen($this->maintenanceFile, 'w');
             fclose($file);
+             */
         } else {
             //delete maintenance.txt to give users access back to Airtime
+            /* DISABLED because this does not work correctly
             if ($this->maintenanceFile) {
                 unlink($this->maintenanceFile);
-            }
+            }*/
         }
     }
             
