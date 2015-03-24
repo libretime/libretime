@@ -124,6 +124,7 @@ class Rest_MediaController extends Zend_Rest_Controller
         catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
+            throw $e;
         }
     }
 
