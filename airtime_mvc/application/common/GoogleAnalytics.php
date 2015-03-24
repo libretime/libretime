@@ -77,7 +77,9 @@ class Application_Common_GoogleAnalytics
 
         $oldPlan = Application_Model_Preference::GetOldPlanLevel();
 
-        if ($user->isSuperAdmin() && $request->getControllerKey() !== "thank-you")
+        if ($user->isSuperAdmin() &&
+            !$user->isSourcefabricAdmin() &&
+            $request->getControllerKey() !== "thank-you")
         {
             //Only tracking trial->paid conversions for now.
             if ($oldPlan == "trial")
