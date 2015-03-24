@@ -824,7 +824,7 @@ class Application_Model_Preference
 
     public static function SetPlanLevel($plan)
     {
-        $oldPlanLevel = GetPlanLevel();
+        $oldPlanLevel = self::GetPlanLevel();
         self::setValue("plan_level", $plan);
         //We save the old plan level temporarily to facilitate conversion tracking
         self::setValue("old_plan_level", $oldPlanLevel);
