@@ -83,7 +83,6 @@
                 data: {type:"interval",limit:"5"},
                 dataType: "jsonp",
                 success: function(data) {
-                    console.log("fetching metadata");
                     var current_track_end_time = new Date(data.current.ends);
                     var current_time = new Date();
                     current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset()*60*1000);
