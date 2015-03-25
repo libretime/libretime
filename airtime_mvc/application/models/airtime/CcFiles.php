@@ -95,9 +95,10 @@ class CcFiles extends BaseCcFiles {
 
         try {
             self::createAndImport($fileArray, $tempFilePath, $originalFilename);
-        } catch (Exception $e)
-        {
-            @unlink($tempFilePath);
+        } catch (Exception $e) {
+            if (file_exists($tempFilePath)) {
+                unlink($tempFilePath);
+            }
             throw $e;
         }
     }
