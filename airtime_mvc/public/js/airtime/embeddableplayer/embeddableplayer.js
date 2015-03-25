@@ -2,17 +2,25 @@ function updateEmbedSrcParams()
 {
     var $embedCodeParams = "?";
     var $streamMode = getStreamMode();
-    if ($streamMode == "b") {
+    if ($streamMode == "manual") {
         var $stream = $("input[name=player_stream_url]:radio:checked").val();
-        $embedCodeParams += "stream-mode=b&stream="+$stream;
-    } else if ($streamMode == "a") {
-        $embedCodeParams += "stream-mode=a";
+        $embedCodeParams += "stream="+$stream;
+    } else if ($streamMode == "auto") {
+        $embedCodeParams += "stream=auto";
     }
     $embedCodeParams += "\"";
 
     $("input[name=player_embed_src]").val(function(index, value) {
         return value.replace(/\?.*?"/, $embedCodeParams);
     });
+
+    updatePlayerIframeSrc($("input[name=player_embed_src]").val());
+}
+
+function updatePlayerIframeSrc(iframe_text) {
+    var $player_iframe = $("#player_form iframe");
+    var player_iframe_src = iframe_text.match(/http.*?"/)[0].slice(0, -1);
+    $player_iframe.attr('src', player_iframe_src);
 }
 
 function getStreamMode() {
@@ -23,9 +31,9 @@ $(document).ready(function() {
 
     $("#player_stream_mode-element").change(function() {
         var $streamMode = getStreamMode();
-        if ($streamMode == "a") {
+        if ($streamMode == "auto") {
             $("#player_stream_url-element input[type='radio']").attr("disabled", "disabled");
-        } else if ($streamMode == "b") {
+        } else if ($streamMode == "manual") {
             $("#player_stream_url-element input[type='radio']").removeAttr("disabled");
 
             $("input[name=player_stream_url]").each(function(i, obj) {

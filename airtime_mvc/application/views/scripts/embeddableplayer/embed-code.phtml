@@ -2,7 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+    <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
     <script src="<?php echo $this->mrp_js?>" type="text/javascript"></script>
+    <script src="<?php echo $this->jquery?>" type="text/javascript"></script>
     <script type="text/javascript">
 
         var MusesPlayer = function() {
@@ -19,27 +21,38 @@
                 'width':180,
                 'height':60
             });
+            $("p.station_name").html("<?php echo $this->station_name?>");
 
             this.flashDetect = FlashDetect.versionAtLeast(10, 1) ? true : false;
+
+            getMetadata();
         };
 
         MusesPlayer.prototype.play = function() {
             this.flashDetect ? MRP.play() : musesHTMLPlayClick();
+            togglePlayStopButton();
         };
 
         MusesPlayer.prototype.stop = function() {
             this.flashDetect ? MRP.stop() : musesHTMLStopClick();
+            togglePlayStopButton();
         };
 
         MusesPlayer.prototype.setVolume = function(value) {
             //this.flashDetect ? MRP.setVolume(value) : null;
-            //TODO - maybe
         };
 
         MusesPlayer.prototype.setURL = function() {
             //TODO
         };
 
+        /*function musesCallback(event,value){
+         console.log('event: "'+event+'", value: "'+value+'"');
+         }*/
+
+        /**
+         * This is a hack to trigger the play button in HTML5 mode
+         */
         function musesHTMLPlayClick() {
             //child nodes
             var cn = document.getElementById("MusesRadioPlayer-HTML5-player-1").childNodes;
@@ -47,6 +60,9 @@
             playDiv.onclick();
         }
 
+        /**
+         * This is a hack to trigger the stop button in HTML5 mode
+         */
         function musesHTMLStopClick() {
             //child nodes
             var cn = document.getElementById("MusesRadioPlayer-HTML5-player-1").childNodes;
@@ -54,7 +70,39 @@
             stopDiv.onclick();
         }
 
+        function togglePlayStopButton() {
+            document.getElementById("play_button").classList.toggle("hide_button");
+            document.getElementById("stop_button").classList.toggle("hide_button");
+        }
+
+        // default how often to fetch metadata to 20 seconds
+        var time_to_next_track_starts = 20000;
+
+        function getMetadata(){
+            $.ajax({url: "<?php echo $this->metadata_api_url?>",
+                data: {type:"interval",limit:"5"},
+                dataType: "jsonp",
+                success: function(data) {
+                    console.log("fetching metadata");
+                    var current_track_end_time = new Date(data.current.ends);
+                    var current_time = new Date();
+                    current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset()*60*1000);
+                    time_to_next_track_starts = current_track_end_time - current_time;
+                    // maybe we should set time_to_next_track_starts to
+                    // (10 || 20 || etc.) minutes if its greater than that
+                    // in case of on-the-fly schedule changes
+
+                    var artist = data.current.name.split(" - ")[0];
+                    var track = data.current.name.split(" - ")[1];
+                    $("p.now_playing").html(artist+"<span>"+track+"</span>");
+                    $("ul.schedule_list").find("li").html(data.next.name);
+                }
+            });
+            setTimeout(getMetadata, time_to_next_track_starts);
+        }
+
     </script>
+
     <style type="text/css">
         #muses_skin{width:1px; height:1px; overflow-x: hidden; overflow-y: hidden;}
     </style>
@@ -62,18 +110,58 @@
 
 <body>
 
+<div class="airtime_player">
+
+    <div class="airtime_header">
+        <p class="station_name">fff</p>
+        <a class="airtime_pro" href="#"><span>airtime.pro</span><img src="http://localhost/css/embed-player-images/airtime_logo.png"></a>
+    </div>
+
+    <div class="airtime_box">
+
+        <div class="airtime_button">
+            <span id="play_button" class="play_button" onclick="musesPlayer.play()"></span>
+            <span id="stop_button" class="stop_button hide_button" onclick="musesPlayer.stop()"></span>
+        </div>
+        <p class="now_playing"></p>
+
+    </div>
+
+    <div class="airtime_volume">
+
+        <div class="volume_control">
+            <span class="mute"></span>
+        </div>
+
+        <div class="airtime_volume_bar">
+            <div class="airtime_volume_bar_value" style="width: 80%;"></div>
+        </div>
+
+    </div>
+
+    <div class="airtime_schedule">
+        <p class="airtime_next">Next</p>
+        <ul class="schedule_list">
+            <li>John Legend - Ordinary People</li>
+        </ul>
+    </div>
+
+</div>
+
 <div id="muses_skin">
     <script type="text/javascript">
         var musesPlayer = new MusesPlayer();
     </script>
 </div>
 
+<!--
 <div id="custom_muses_play" onclick="musesPlayer.play()">
     <a href="#">play</a>
 </div>
 <div id="custom_muses_stop" onclick="musesPlayer.stop()">
     <a href="#">stop</a>
 </div>
+-->
 
 </body>
 </html>

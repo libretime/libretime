@@ -17,11 +17,11 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $streamMode->setLabel(_('Select Stream:'));
         $streamMode->setMultiOptions(
             array(
-                "a" => "Use a mobile stream if possible, when appropriate. Otherwise use the highest quality stream.",
-                "b" => "Select a stream"
+                "auto" => "Auto detect the most appropriate stream to use.",
+                "manual" => "Select a stream:"
             )
         );
-        $streamMode->setValue("a");
+        $streamMode->setValue("auto");
         $this->addElement($streamMode);
 
         $streamURL = new Zend_Form_Element_Radio('player_stream_url');
@@ -42,7 +42,7 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         );
 
         foreach ($urlOptions as $o => $v) {
-            if (strpos($v, "opus") !== false) {
+            if (strpos(strtolower($v), "opus") !== false) {
                 continue;
             } else {
                 $streamURL->setValue($o);
@@ -57,7 +57,7 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         $embedSrc = new Zend_Form_Element_Text('player_embed_src');
         $embedSrc->setAttrib("readonly", "readonly");
         $embedSrc->setAttrib("class", "embed-player-text-box");
-        $embedSrc->setValue('<iframe frameborder="0" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?stream-mode=a"></iframe>');
+        $embedSrc->setValue('<iframe frameborder="0" width="280" height="230" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?stream=auto"></iframe>');
         $embedSrc->removeDecorator('label');
         $this->addElement($embedSrc);
 
