@@ -386,8 +386,10 @@ if [ "$apache" = "t" ]; then
 
     if [ "$apacheversion" != "1" ]; then
         airtimeconfigfile="airtime.conf"
+        oldconfigfile="airtime-vhost.conf"
     else
         airtimeconfigfile="airtime"
+        oldconfigfile="airtime-vhost"
     fi
 
     # If we're upgrading (installing over an existing Airtime install) and we've been told to
@@ -403,6 +405,11 @@ if [ "$apache" = "t" ]; then
             sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
         fi
         loudCmd "a2dissite 000-default"
+        # If Airtime was previously installed with apt, the vhost file name is different,
+        # so we need to specifically disable it.
+        if [ -f "/etc/apache2/sites-available/${oldconfigfile}" ]; then
+            loudCmd "a2dissite airtime-vhost"
+        fi
         loudCmd "a2ensite airtime"
     else
         verbose "\nApache config for Airtime already exists, skipping"

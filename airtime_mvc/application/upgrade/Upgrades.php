@@ -30,7 +30,7 @@ class UpgradeManager
         array_push($upgraders, new AirtimeUpgrader253());
         array_push($upgraders, new AirtimeUpgrader254());
         */
-        return $upgradeManager->runUpgrades(array(new AirtimeUpgrader252()), (__DIR__ . "/controllers"));
+        return $upgradeManager->runUpgrades(array(new AirtimeUpgrader252()), (dirname(__DIR__) . "/controllers"));
     }
 
     /**

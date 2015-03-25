@@ -71,16 +71,16 @@ echo "pip airtime-media-monitor"
 echo -e "\nIf your web root is not listed, you will need to manually remove it."
 
 echo -e "\nThis will *permanently* remove Airtime and all related files from your computer. \
-Any files in Airtime directories and subdirectories will be deleted. Are you sure you want to proceed? (Y/n): \c"
+Any files in Airtime directories and subdirectories will be deleted. Are you sure you want to proceed? [y/N]: \c"
 read IN
 if [[ ! ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
     exit 0
 fi
 
 if [ -n "${STOR_DIR}" ]; then
-    echo -e "\nAre you sure you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? (Y/n): \c"
+    echo -e "\nDo you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? [y/N]: \c"
     read IN
-    if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
+    if [[ ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
         rm -rf ${STOR_DIR}
     fi
 else
@@ -94,7 +94,7 @@ for i in ${FILES[*]}; do
     rm -rf $i
 done
 
-echo -e "\nDo you want to drop your current Airtime database? (Y/n): \c"
+echo -e "\nDo you want to drop your current Airtime database? [y/N]: \c"
 read IN
 if [[ "$IN" = "y" || "$IN" = "Y" ]]; then
     echo -e "\nDropping Airtime database..."
