@@ -300,13 +300,12 @@
 
 
 .personal-block.solo {
-	position: absolute;
-	right: 145px;
-	top: 104px;
-	width: auto;
-	z-index: 1000;
-	height:auto;
-	margin:0;
+    width: auto;
+    height:auto;
+    margin: 0 10px 0 0;
+}
+.personal-block.solo ol {
+    margin-top: 6px;
 }
 .time-info-block.pull-right {
 	margin-right:0;
