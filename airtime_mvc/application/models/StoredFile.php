@@ -984,6 +984,11 @@ SQL;
         } else {
             Logging::info("Moving file $audio_file to $audio_stor");
 
+            //Ensure we have permissions to overwrite the file in stor, in case it already exists.
+            if (file_exists($audio_stor)) {
+                chmod($audio_stor, 0644);
+            }
+
             // Martin K.: changed to rename: Much less load + quicker since this is
             // an atomic operation
             if (rename($audio_file, $audio_stor) === false) {
