@@ -293,7 +293,7 @@ select {
     margin: 0;
 }
 #nav li.top {
-    float: none;
+    /*float: none;*/
 }
 @media screen and (max-width: 1200px) {
     .now-playing-block {
@@ -345,7 +345,14 @@ select {
         margin-left: 12px;
     }
 }
-
+@media screen and (max-width: 380px) {
+    .time-info-block {
+	display: none;
+    }
+    .on-air-block {
+	margin: 0;
+    }
+}
 .time-info-block ul {
     margin:0;
     padding:6px 0 0;
