@@ -226,6 +226,7 @@ class MessageListener:
         else:
             raise Exception("Analyzer process terminated unexpectedly.")
         '''
+        results = {}
 
         q = Queue.Queue()
         try:
