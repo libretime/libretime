@@ -129,6 +129,7 @@ def send_http_request(picklable_request, retry_queue):
         retry_queue.append(picklable_request) # Retry it later
     except Exception as e:
         logging.error("HTTP request failed with unhandled exception. %s" % str(e))
+        logging.error(traceback.format_exc())
         # Don't put the request into the retry queue, just give up on this one.
         # I'm doing this to protect against us getting some pathological request
         # that breaks our code. I don't want us pickling data that potentially
