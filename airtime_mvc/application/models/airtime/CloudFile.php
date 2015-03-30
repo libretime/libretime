@@ -27,12 +27,12 @@ class CloudFile extends BaseCloudFile
      * requesting the file's object via this URL, it needs to be signed because
      * all objects stored on Amazon S3 are private.
      */
-    public function getURLForTrackPreviewOrDownload()
+    public function getURLsForTrackPreviewOrDownload()
     {
         if ($this->proxyStorageBackend == null) {
             $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
         }
-        return $this->proxyStorageBackend->getSignedURL($this->getResourceId());
+        return $this->proxyStorageBackend->getDownloadURLs($this->getResourceId());
     }
     
     /**

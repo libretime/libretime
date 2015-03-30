@@ -15,7 +15,7 @@ abstract class StorageBackend
     
     /** Returns the file object's signed URL. The URL must be signed since they
      *  privately stored on the storage backend. */
-    abstract public function getSignedURL($resourceId);
+    abstract public function getDownloadURLs($resourceId);
     
     /** Deletes the file from the storage backend. */
     abstract public function deletePhysicalFile($resourceId);

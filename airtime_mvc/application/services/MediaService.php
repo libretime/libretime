@@ -55,9 +55,10 @@ class Application_Service_MediaService
         if ($media == null) {
             throw new FileNotFoundException();
         }
-        $filepath = $media->getFilePath();
-        // Make sure we don't have some wrong result beecause of caching
+        // Make sure we don't have some wrong result because of caching
         clearstatcache();
+
+        $filePath = "";
 
         if ($media->getPropelOrm()->isValidPhysicalFile()) {
             $filename = $media->getPropelOrm()->getFilename();
@@ -71,13 +72,40 @@ class Application_Service_MediaService
                 header('Content-Disposition: inline; filename="' . $filename . '"');
             }
 
-            $filepath = $media->getFilePath();
-            $size= $media->getFileSize();
-            $mimeType = $media->getPropelOrm()->getDbMime();
-            Application_Common_FileIO::smartReadFile($filepath, $size, $mimeType);
+            /*
+            In this block of code below, we're getting the list of download URLs for a track
+            and then streaming the file as the response. A file can be stored in more than one location,
+            with the alternate locations used as a fallback, so that's why we're looping until we
+            are able to actually send the file.
+
+            This mechanism is used to try fetching our file from our internal S3 caching proxy server first.
+            If the file isn't found there (or the cache is down), then we attempt to download the file
+            directly from Amazon S3. We do this to save bandwidth costs!
+            */
+
+            $filePaths = $media->getFilePaths();
+            assert(is_array($filePaths));
+
+            do {
+                //Read from $filePath and stream it to the browser.
+                $filePath = array_shift($filePaths);
+                try {
+                    $size= $media->getFileSize();
+                    $mimeType = $media->getPropelOrm()->getDbMime();
+                    Application_Common_FileIO::smartReadFile($filePath, $size, $mimeType);
+                } catch (FileNotFoundException $e) {
+                    //If we have no alternate filepaths left, then let the exception bubble up.
+                    if (sizeof($filePaths) == 0) {
+                        throw $e;
+                    }
+                }
+                //Retry with the next alternate filepath in the list
+            } while (sizeof($filePaths) > 0);
+
             exit;
+
         } else {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException($filePath);
         }
     }
 

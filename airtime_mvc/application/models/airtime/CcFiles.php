@@ -386,9 +386,9 @@ class CcFiles extends BaseCcFiles {
     /**
      * Returns the file's absolute file path stored on disk.
      */
-    public function getURLForTrackPreviewOrDownload()
+    public function getURLsForTrackPreviewOrDownload()
     {
-        return $this->getAbsoluteFilePath();
+        return array($this->getAbsoluteFilePath());
     }
 
     /**
