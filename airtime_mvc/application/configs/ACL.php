@@ -71,11 +71,8 @@ $ccAcl->allow('G', 'index')
       ->allow('A', 'user')
       ->allow('A', 'systemstatus')
       ->allow('A', 'preference')
-<<<<<<< HEAD
       ->allow('A', 'embeddableplayer')
-=======
       ->allow('S', 'thank-you')
->>>>>>> saas
       ->allow('S', 'billing');
       
 
