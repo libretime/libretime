@@ -149,7 +149,7 @@ CREATE TABLE "cc_show"
     "name" VARCHAR(255) DEFAULT '' NOT NULL,
     "url" VARCHAR(255) DEFAULT '',
     "genre" VARCHAR(255) DEFAULT '',
-    "description" VARCHAR(512),
+    "description" VARCHAR(8192),
     "color" VARCHAR(6),
     "background_color" VARCHAR(6),
     "live_stream_using_airtime_auth" BOOLEAN DEFAULT 'f',
@@ -171,7 +171,7 @@ DROP TABLE IF EXISTS "cc_show_instances" CASCADE;
 CREATE TABLE "cc_show_instances"
 (
     "id" serial NOT NULL,
-    "description" VARCHAR(512) DEFAULT '',
+    "description" VARCHAR(8192) DEFAULT '',
     "starts" TIMESTAMP NOT NULL,
     "ends" TIMESTAMP NOT NULL,
     "show_id" INTEGER NOT NULL,

@@ -139,7 +139,7 @@
     <column name="name" phpName="DbName" type="VARCHAR" size="255" required="true" defaultValue=""/>
     <column name="url" phpName="DbUrl" type="VARCHAR" size="255" required="false" defaultValue=""/>
     <column name="genre" phpName="DbGenre" type="VARCHAR" size="255" required="false" defaultValue=""/>
-    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false"/>
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="8192" required="false"/>
 	<column name="color" phpName="DbColor" type="VARCHAR" size="6" required="false"/>
 	<column name="background_color" phpName="DbBackgroundColor" type="VARCHAR" size="6" required="false"/>
 	<column name="live_stream_using_airtime_auth" phpName="DbLiveStreamUsingAirtimeAuth" type="BOOLEAN" required="false" defaultValue="false"/>
@@ -156,7 +156,7 @@
   </table>
   <table name="cc_show_instances" phpName="CcShowInstances">
     <column name="id" phpName="DbId" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" required="false" defaultValue=""/>
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="8192" required="false" defaultValue=""/>
     <column name="starts" phpName="DbStarts" type="TIMESTAMP" required="true"/>
     <column name="ends" phpName="DbEnds" type="TIMESTAMP" required="true"/>
 	<column name="show_id" phpName="DbShowId" type="INTEGER" required="true"/>
