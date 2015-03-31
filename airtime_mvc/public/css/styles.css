@@ -48,14 +48,12 @@ select {
 }
 
 .logo {
-    position:absolute;
-    right:20px;
-    top:104px;
-    background:transparent url(images/airtime_logo.png) no-repeat 0 0;
-    height:35px;
-    width:66px;
-    z-index:1000;
-    display:block;
+    background: transparent url(images/airtime_logo.png) no-repeat 0 0;
+    height: 35px;
+    width: 66px;
+    float: right;
+    padding: 0 5px 0 10px;
+    margin-top: -5px;
 }
 
 /* Version Notification Starts*/
@@ -286,8 +284,74 @@ select {
     background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
 .time-info-block  {
-    padding:0 14px 0 2px;
-    min-width:105px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#navlist {
+    padding: 0;
+    margin: 0;
+}
+#nav li.top {
+    /*float: none;*/
+}
+@media screen and (max-width: 1200px) {
+    .now-playing-block {
+        width: 30%;
+    }
+    .show-block {
+        width: 25%;
+    }
+}
+@media screen and (max-width: 920px) {
+    .now-playing-block {
+        width: 50%;
+    }
+    .show-block {
+        display: none;
+    }
+    .personal-block.solo {
+        right: 10px !important;
+    }
+}
+@media screen and (max-width: 810px) {
+    .now-playing-block {
+        width: 40%;
+    }
+}
+@media screen and (max-width: 863px) {
+    #nav {
+        height: inherit;
+        overflow-y: visible;
+    }
+}
+@media screen and (max-width: 680px) {
+    .now-playing-block {
+        display: none;
+    }
+    #nav li.top {
+        display: -webkit-flex;
+        width: 110px;
+    }
+    .personal-block.solo {
+        float: none;
+        text-align: left;
+    }
+    .personal-block.solo ol {
+        padding-left: 12px;
+    }
+    .logo {
+        float: none;
+        margin-left: 12px;
+    }
+}
+@media screen and (max-width: 380px) {
+    .time-info-block {
+	display: none;
+    }
+    .on-air-block {
+	margin: 0;
+    }
 }
 .time-info-block ul {
     margin:0;
@@ -3140,4 +3204,16 @@ dd .stream-status {
 }
 .quota-reached {
     font-size: 14px !important;
+}
+
+.thankyou-panel
+{
+    width: 400px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.thankyou-panel h3
+{
+    color: #222;
 }

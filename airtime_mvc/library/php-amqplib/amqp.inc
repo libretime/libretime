@@ -463,8 +463,10 @@ class AMQPConnection extends AbstractChannel
             {
               debug_msg("closing socket");
             }
-            
-            @fclose($this->sock);
+
+            if (is_resource($this->sock)) { 
+                @fclose($this->sock);
+            }
             $this->sock = NULL;
         }
     }

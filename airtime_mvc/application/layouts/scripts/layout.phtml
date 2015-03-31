@@ -21,7 +21,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <?php echo $this->partial('partialviews/trialBox.phtml', array("is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
 <div id="Panel">
-    <div class="logo"></div>
     <?php echo $this->versionNotify();
             $sss = $this->SourceSwitchStatus();
             $scs = $this->SourceConnectionStatus();
@@ -30,17 +29,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
 <?php 	$partial = array('menu.phtml', 'default');
     $this->navigation()->menu()->setPartial($partial); ?>
-    <div class="personal-block solo">
-        <ul>
-          <li>
-            <!-- <span class="trial-box-button"><a title="Billing" href=<?php echo $baseUrl . 'billing/upgrade'?>>Upgrade</a></span>&nbsp;-->
-            <a id="current-user" href=<?php echo $baseUrl . "User/edit-user"?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
-             | <a href=<?php echo $baseUrl . "Login/logout"?>><?php echo _("Logout")?></a>
-          </li>
-        </ul>
-    </div>
+    <div id="nav">
+        <div class="logo"></div>
+        <div class="personal-block solo">
+            <ol>
+              <li>
+                <!-- <span class="trial-box-button"><a title="Billing" href=<?php echo $baseUrl . 'billing/upgrade'?>>Upgrade</a></span>&nbsp;-->
+                <a id="current-user" href=<?php echo $baseUrl . "User/edit-user"?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
+                 | <a href=<?php echo $baseUrl . "Login/logout"?>><?php echo _("Logout")?></a>
+              </li>
+            </ol>
+        </div>
 
-<?php echo $this->navigation()->menu() ?>
+        <?php echo $this->navigation()->menu() ?>
+        <div style="clear:both;"></div>
+    </div>
 </div>
 
 <div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>

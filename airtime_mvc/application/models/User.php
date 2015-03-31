@@ -69,6 +69,15 @@ class Application_Model_User
         return $result;
     }
 
+    public function isSourcefabricAdmin()
+    {
+        $username = $this->getLogin();
+        if ($username == "sourcefabric_admin") {
+            return true;
+        }
+        return false;
+    }
+
     // TODO : refactor code to only accept arrays for isUserType and
     // simplify code even further
     public function isUserType($type)

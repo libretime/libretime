@@ -38,14 +38,17 @@ abstract class AirtimeUpgrader
             //create a temporary maintenance notification file
             //when this file is on the server, zend framework redirects all
             //requests to the maintenance page and sets a 503 response code
+            /* DISABLED because this does not work correctly
             $this->maintenanceFile = isset($_SERVER['AIRTIME_BASE']) ? $_SERVER['AIRTIME_BASE']."maintenance.txt" : "/tmp/maintenance.txt";
             $file = fopen($this->maintenanceFile, 'w');
             fclose($file);
+             */
         } else {
             //delete maintenance.txt to give users access back to Airtime
+            /* DISABLED because this does not work correctly
             if ($this->maintenanceFile) {
                 unlink($this->maintenanceFile);
-            }
+            }*/
         }
     }
             
@@ -371,6 +374,55 @@ class AirtimeUpgrader2511 extends AirtimeUpgrader
                 ->find();
             $disk_usage = $queryResult[0];
             Application_Model_Preference::setDiskUsage($disk_usage);
+
+            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Cache::clear();
+
+            $this->toggleMaintenanceScreen(false);
+        } catch(Exception $e) {
+            $this->toggleMaintenanceScreen(false);
+            throw $e;
+        }
+    }
+    public function downgrade() {
+
+    }
+}
+
+class AirtimeUpgrader2512 extends AirtimeUpgrader
+{
+    protected function getSupportedVersions() {
+        return array (
+            '2.5.10',
+            '2.5.11'
+        );
+    }
+
+    public function getNewVersion() {
+        return '2.5.12';
+    }
+
+    public function upgrade($dir = __DIR__) {
+        Cache::clear();
+        assert($this->checkIfUpgradeSupported());
+
+        $newVersion = $this->getNewVersion();
+
+        try {
+            $this->toggleMaintenanceScreen(true);
+            Cache::clear();
+
+            // Begin upgrade
+            $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+            $values = parse_ini_file($airtimeConf, true);
+
+            $username = $values['database']['dbuser'];
+            $password = $values['database']['dbpass'];
+            $host = $values['database']['host'];
+            $database = $values['database']['dbname'];
+
+            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
+                .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
 
             Application_Model_Preference::SetAirtimeVersion($newVersion);
             Cache::clear();

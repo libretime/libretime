@@ -1,4 +1,4 @@
-<ul id="nav">
+<ol id="navlist">
 <?php foreach ($this->container as $page) : ?>
     <?php if($this->navigation()->accept($page)) : ?>
 	    <li class="top <?php if($page->isActive(true)){echo 'active';} ?>">
@@ -29,4 +29,4 @@
 	    </li>
     <?php endif; ?>
 <?php endforeach; ?>
-</ul>
+</ol>
