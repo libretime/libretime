@@ -9,44 +9,34 @@
 
         var MusesPlayer = function() {
             this.mobileDetect = this.mobileDetect();
-            this.availableMobileStreamQueue = <?php echo $this->availableMobileStreams?>;
-            this.availableDesktopStreamQueue = <?php echo $this->availableDesktopStreams?>;
             this.playerMode = "<?php echo $this->playerMode ?>";
+            this.flashDetect = FlashDetect.versionAtLeast(10, 1) ? true : false;
+            this.settings = {
+                'volume': 100,
+                'jsevents': true,
+                'autoplay': false,
+                'buffering': 5,
+                'title': 'test',
+                'bgcolor': '#FFFFFF',
+                'skin': 'mcclean',
+                'width': 180,
+                'height': 60
+            };
 
             if (this.playerMode == "manual") {
-                MRP.insert({
-                    'url': "<?php echo $this->streamURL ?>",
-                    'codec': "<?php echo $this->codec ?>",
-                    'volume': 100,
-                    'jsevents': true,
-                    'autoplay': false,
-                    'buffering': 5,
-                    'title': 'test',
-                    'bgcolor': '#FFFFFF',
-                    'skin': 'mcclean',
-                    'width': 180,
-                    'height': 60
-                });
+                this.settings.url = "<?php echo $this->streamURL ?>";
+                this.settings.codec = "<?php echo $this->codec ?>";
+                MRP.insert(this.settings);
             } else if (this.playerMode == "auto") {
+                this.availableMobileStreamQueue = <?php echo $this->availableMobileStreams?>;
+                this.availableDesktopStreamQueue = <?php echo $this->availableDesktopStreams?>;
                 var stream = this.getNextAvailableStream();
-                MRP.insert({
-                    'url': stream["url"],
-                    'codec': stream["codec"],
-                    'volume': 100,
-                    'jsevents': true,
-                    'autoplay': false,
-                    'buffering': 5,
-                    'title': 'test',
-                    'bgcolor': '#FFFFFF',
-                    'skin': 'mcclean',
-                    'width': 180,
-                    'height': 60
-                });
+                this.settings.url = stream["url"];
+                this.settings.codec = stream["codec"];
+                MRP.insert(this.settings);
             }
 
             $("p.station_name").html("<?php echo $this->station_name?>");
-
-            this.flashDetect = FlashDetect.versionAtLeast(10, 1) ? true : false;
 
             getMetadata();
         };
@@ -95,7 +85,7 @@
         }
 
         MusesPlayer.prototype.play = function() {
-            this.flashDetect ? MRP.play() : musesHTMLPlayClick();
+            this.flashDetect ? MRP.play() : musesHTMLPlayClick();;
             togglePlayStopButton();
         };
 
@@ -108,43 +98,39 @@
             //this.flashDetect ? MRP.setVolume(value) : null;
         };
 
-        MusesPlayer.prototype.setURL = function() {
-            //TODO
+        MusesPlayer.prototype.setURL = function(url) {
+            MRP.setUrl(url);
         };
 
-        function musesCallback(event,value){
+        // detects errors in FLASH mode
+        function musesCallback(event,value) {
             switch (event) {
-                case "loadComplete":
-                    // no source URL is set
-                    if (value === "0") {
-                        console.log("loadComplete failed");
-                    }
                 case "ioError":
                     // connection limit reached or problem connecting to stream
                     if (value === "0") {
                         console.log("ioError");
+                        var stream = musesPlayer.getNextAvailableStream();
+                        musesPlayer.setURL(stream["url"]);
+                        musesPlayer.play();
                     }
             }
         }
 
-        /**
-         * This is a hack to trigger the play button in HTML5 mode
-         */
         function musesHTMLPlayClick() {
-            //child nodes
-            var cn = document.getElementById("MusesRadioPlayer-HTML5-player-1").childNodes;
-            var playDiv = cn[4];
-            playDiv.onclick();
+            MRP.html.audio.src = MRP.html.src;
+
+            MRP.html.audio.play();
+
+            // detects errors in HTML5 mode
+            MRP.html.audio.addEventListener('error', function failed(e) {
+                var stream = musesPlayer.getNextAvailableStream();
+                MRP.html.audio.src = stream["url"];
+                MRP.html.audio.play();
+            }, true);
         }
 
-        /**
-         * This is a hack to trigger the stop button in HTML5 mode
-         */
         function musesHTMLStopClick() {
-            //child nodes
-            var cn = document.getElementById("MusesRadioPlayer-HTML5-player-1").childNodes;
-            var stopDiv = cn[5];
-            stopDiv.onclick();
+            MRP.html.audio.pause();
         }
 
         function togglePlayStopButton() {
@@ -246,15 +232,6 @@
         var musesPlayer = new MusesPlayer();
     </script>
 </div>
-
-<!--
-<div id="custom_muses_play" onclick="musesPlayer.play()">
-    <a href="#">play</a>
-</div>
-<div id="custom_muses_stop" onclick="musesPlayer.stop()">
-    <a href="#">stop</a>
-</div>
--->
 
 </body>
 </html>

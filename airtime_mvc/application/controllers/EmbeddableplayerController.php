@@ -39,11 +39,11 @@ class EmbeddablePlayerController extends Zend_Controller_Action
         $this->view->station_name = Application_Model_Preference::GetStationName();
         $stream = $request->getParam('stream');
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
+        $availableMobileStreams = array();
+        $availableDesktopStreams = array();
 
         if ($stream == "auto") {
             $this->view->playerMode = "auto";
-            $availableMobileStreams = array();
-            $availableDesktopStreams = array();
             foreach ($streamData as $s) {
                 if ($s["mobile"]) {
                     array_push($availableMobileStreams, $s);
@@ -51,14 +51,14 @@ class EmbeddablePlayerController extends Zend_Controller_Action
                     array_push($availableDesktopStreams, $s);
                 }
             }
-            $this->view->availableMobileStreams = json_encode($availableMobileStreams);
-            $this->view->availableDesktopStreams = json_encode($availableDesktopStreams);
         } else {
             $this->view->playerMode = "manual";
             $selectedStreamData = $streamData[$stream];
             $this->view->streamURL = $selectedStreamData["url"];
             $this->view->codec = $selectedStreamData["codec"];
         }
+        $this->view->availableMobileStreams = json_encode($availableMobileStreams);
+        $this->view->availableDesktopStreams = json_encode($availableDesktopStreams);
         //$this->view->displayMetadata = $request->getParam('display_metadata');
     }
 }

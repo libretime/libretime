@@ -2298,6 +2298,7 @@
         this.ui = new d.UI(this, a);
         a.autoplay && (a = window.navigator.userAgent.toLowerCase(), -1 == a.indexOf("iphone") && -1 == a.indexOf("ipad") && -1 == a.indexOf("ipod") &&
         this.playAudio())
+        n.MRP.html = this;
     };
     d.Muses.__name__ = !0;
     d.Muses.initTimer = function(a) {
