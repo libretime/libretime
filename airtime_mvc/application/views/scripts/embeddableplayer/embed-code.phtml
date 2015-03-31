@@ -39,6 +39,16 @@
             $("p.station_name").html("<?php echo $this->station_name?>");
 
             getMetadata();
+
+            // detects errors in HTML5 mode
+            if (!this.flashDetect) {
+                MRP.html.audio.addEventListener('error', function failed(e) {
+                    var stream = musesPlayer.getNextAvailableStream();
+                    console.log(stream);
+                    MRP.html.audio.src = stream["url"];
+                    MRP.html.audio.play();
+                }, true);
+            }
         };
 
         MusesPlayer.prototype.mobileDetect = function() {
@@ -120,13 +130,6 @@
             MRP.html.audio.src = MRP.html.src;
 
             MRP.html.audio.play();
-
-            // detects errors in HTML5 mode
-            MRP.html.audio.addEventListener('error', function failed(e) {
-                var stream = musesPlayer.getNextAvailableStream();
-                MRP.html.audio.src = stream["url"];
-                MRP.html.audio.play();
-            }, true);
         }
 
         function musesHTMLStopClick() {
