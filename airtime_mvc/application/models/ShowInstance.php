@@ -138,8 +138,11 @@ SQL;
         if (isset($file_id)) {
             $file =  Application_Model_StoredFile::RecallById($file_id);
 
-            if (isset($file) && file_exists($file->getFilePath())) {
-                return $file;
+            if (isset($file)) {
+                $filePaths = $file->getFilePaths();
+                if (file_exists($filePaths[0])) {
+                    return $file;
+                }
             }
         }
 
