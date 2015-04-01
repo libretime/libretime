@@ -93,6 +93,7 @@ class Application_Service_MediaService
                     $size= $media->getFileSize();
                     $mimeType = $media->getPropelOrm()->getDbMime();
                     Application_Common_FileIO::smartReadFile($filePath, $size, $mimeType);
+                    break; //Break out of the loop if we successfully read the file!
                 } catch (FileNotFoundException $e) {
                     //If we have no alternate filepaths left, then let the exception bubble up.
                     if (sizeof($filePaths) == 0) {
