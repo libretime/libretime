@@ -45,8 +45,9 @@
     background: url("embed-player-images/airtime_logo.png") center no-repeat;
     width: 16px;
     height: 16px;
+    display:inline-block;
 }
-.airtime_pro span {
+/*.airtime_pro span {
     display: inline-block;
     vertical-align: 2px;
     margin-right: 5px;
@@ -55,7 +56,7 @@
     display: inline-block;
     vertical-align: 2px;
     margin-right: 5px;
-}
+}*/
 .airtime_box .airtime_button {
     text-indent: -9999px;
     -webkit-border-radius: 2px;
