@@ -177,6 +177,7 @@ class Application_Model_StreamSetting
         self::ensureKeyExists($keyPrefix . 'type', $data);
         self::ensureKeyExists($keyPrefix . 'url', $data);
         self::ensureKeyExists($keyPrefix . 'user', $data);
+        self::ensureKeyExists($keyPrefix . 'mobile', $data);
 
         return $data;
     }
