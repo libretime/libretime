@@ -35,6 +35,8 @@ class Application_Common_FileIO
         $begin = 0;
         $end   = $size - 1;
 
+        ob_start(); //Must start a buffer here for these header() functions
+
         if (isset($_SERVER['HTTP_RANGE'])) {
             if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
                 $begin = intval($matches[1]);
@@ -50,6 +52,7 @@ class Application_Common_FileIO
             header('HTTP/1.1 200 OK');
         }
         header("Content-Type: $mimeType");
+        header("Content-Transfer-Encoding: binary");
         header('Cache-Control: public, must-revalidate, max-age=0');
         header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
@@ -59,7 +62,6 @@ class Application_Common_FileIO
                 header("Content-Range: bytes $begin-$end/$size");
             }
         }
-        header("Content-Transfer-Encoding: binary");
 
         //Squashes headers() warning on PHP 5.3/ubuntu 12.04:
         flush();
