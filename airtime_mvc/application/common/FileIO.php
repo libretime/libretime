@@ -61,6 +61,9 @@ class Application_Common_FileIO
         }
         header("Content-Transfer-Encoding: binary");
 
+        //Squashes headers() warning on PHP 5.3/ubuntu 12.04:
+        flush();
+
         //We can have multiple levels of output buffering. Need to
         //keep looping until all have been disabled!!!
         //http://www.php.net/manual/en/function.ob-end-flush.php
