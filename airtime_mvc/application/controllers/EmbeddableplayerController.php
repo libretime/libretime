@@ -17,10 +17,15 @@ class EmbeddablePlayerController extends Zend_Controller_Action
 
         $form = new Application_Form_EmbeddablePlayer();
 
-        if ($form->getElement('player_stream_url')->getAttrib('numberOfEnabledStreams') > 0) {
+        $apiEnabled = Application_Model_Preference::GetAllow3rdPartyApi();
+        $numEnabledStreams = $form->getElement('player_stream_url')->getAttrib('numberOfEnabledStreams');
+
+        if ($numEnabledStreams > 0 && $apiEnabled) {
             $this->view->form = $form;
         } else {
-            $this->view->errorMsg = "You need to enable at least one MP3, AAC, or OGG stream to use this feature.";
+            $this->view->errorMsg = "To configure and use the embeddable player you must:<br><br>
+            1. Enable at least one MP3, AAC, or OGG stream under System -> Streams<br>
+            2. Enable the Public Airtime API under System -> Preferences";
         }
 
     }
