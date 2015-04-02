@@ -54,7 +54,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->addElement($enable);
 
         $mobile = new Zend_Form_Element_Checkbox('mobile');
-        $mobile->setLabel(_('Good for mobile?'));
+        $mobile->setLabel(_('Mobile:'));
         $mobile->setValue($setting[$prefix.'_mobile']);
         $mobile->setDecorators(array('ViewHelper'));
         $this->addElement($mobile);
