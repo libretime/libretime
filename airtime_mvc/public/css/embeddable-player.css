@@ -1,5 +1,6 @@
 .airtime_player {
-    max-width: 270px;
+    width: 270px;
+    height: 172px;
     position: relative;
     font-family: Arial, Helvetica, sans-serif;
     color: #fff;
@@ -40,6 +41,8 @@
     color: #fff;
     font-size: 10px;
     text-decoration: none;
+    display:inline-block;
+    float:right;
 }
 .airtime_pro_logo {
     background: url("embed-player-images/airtime_logo.png") center no-repeat;
@@ -47,6 +50,7 @@
     height: 16px;
     display:inline-block;
 }
+
 /*.airtime_pro span {
     display: inline-block;
     vertical-align: 2px;
