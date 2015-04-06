@@ -21,7 +21,9 @@ class AnalyzerPipeline:
         so that if it crashes, it does not kill the entire airtime_analyzer daemon and
         the failure to import can be reported back to the web application.
     """
-    
+
+    IMPORT_STATUS_FAILED = 2
+
     @staticmethod
     def run_analysis(queue, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config):
         """Analyze and import an audio file, and put all extracted metadata into queue.
@@ -86,12 +88,12 @@ class AnalyzerPipeline:
             queue.put(metadata)
         except UnplayableFileError as e:
             logging.exception(e)
-            metadata["import_status"] = 2
+            metadata["import_status"] = IMPORT_STATUS_FAILED
             metadata["reason"] = "The file could not be played."
             raise e
         except Exception as e:
             # Ensures the traceback for this child process gets written to our log files:
-            logging.exception(e) 
+            logging.exception(e)
             raise e
 
     @staticmethod

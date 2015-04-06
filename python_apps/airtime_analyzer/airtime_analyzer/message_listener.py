@@ -226,19 +226,19 @@ class MessageListener:
         else:
             raise Exception("Analyzer process terminated unexpectedly.")
         '''
-        results = {}
+        metadata = {}
 
         q = Queue.Queue()
         try:
             AnalyzerPipeline.run_analysis(q, audio_file_path, import_directory, original_filename, storage_backend, file_prefix, cloud_storage_config)
-            results = q.get()
+            metadata = q.get()
         except Exception as e:
             logging.error("Analyzer pipeline exception: %s" % str(e))
-            pass
+            metadata["import_status"] = AnalyzerPipeline.IMPORT_STATUS_FAILED
 
         # Ensure our queue doesn't fill up and block due to unexpected behaviour. Defensive code.
         while not q.empty():
             q.get()
 
-        return results
+        return metadata
 
