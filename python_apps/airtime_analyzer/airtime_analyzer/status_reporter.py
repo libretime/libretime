@@ -25,7 +25,7 @@ class PicklableHttpRequest:
                                 auth=requests.auth.HTTPBasicAuth(self.api_key, ''))
 
 def process_http_requests(ipc_queue, http_retry_queue_path):
-    ''' Runs in a separate process and performs all the HTTP requests where we're
+    ''' Runs in a separate thread and performs all the HTTP requests where we're
         reporting extracted audio file metadata or errors back to the Airtime web application.
 
         This process also checks every 5 seconds if there's failed HTTP requests that we 

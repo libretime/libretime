@@ -27,6 +27,6 @@ class PlayabilityAnalyzer(Analyzer):
             logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have liquidsoap installed?"))
         except (subprocess.CalledProcessError, Exception) as e: # liquidsoap returned an error code
             logging.warn(e)
-            raise UnplayableFileError
+            raise UnplayableFileError()
 
         return metadata
