@@ -15,7 +15,7 @@
                 'volume': 100,
                 'jsevents': true,
                 'autoplay': false,
-                'buffering': 5,
+                'buffering': 0,
                 'title': 'test',
                 'bgcolor': '#FFFFFF',
                 'skin': 'mcclean',
@@ -26,27 +26,37 @@
             if (this.playerMode == "manual") {
                 this.settings.url = "<?php echo $this->streamURL ?>";
                 this.settings.codec = "<?php echo $this->codec ?>";
-                MRP.insert(this.settings);
             } else if (this.playerMode == "auto") {
                 this.availableMobileStreamQueue = <?php echo $this->availableMobileStreams?>;
                 this.availableDesktopStreamQueue = <?php echo $this->availableDesktopStreams?>;
                 var stream = this.getNextAvailableStream();
                 this.settings.url = stream["url"];
                 this.settings.codec = stream["codec"];
-                MRP.insert(this.settings);
             }
+
+            MRP.insert(this.settings);
 
             $("p.station_name").html("<?php echo $this->station_name?>");
 
             getMetadata();
 
-            // detects errors in HTML5 mode
+            // detects events in HTML5 mode
             if (!this.flashDetect) {
+
                 MRP.html.audio.addEventListener('error', function failed(e) {
+                    console.log("HTML error");
                     var stream = musesPlayer.getNextAvailableStream();
-                    console.log(stream);
-                    MRP.html.audio.src = stream["url"];
-                    MRP.html.audio.play();
+                    var audio = $(MRP.html.audio);
+                    audio.src = stream["url"];
+                    audio[0].load();
+                    audio[0].play();
+                }, true);
+
+                MRP.html.audio.addEventListener('pause', function paused(e) {
+                    //this is when pause happens
+                    console.log("HTML paused");
+                    //src = MRP.html.audio.src;
+                    //MRP.html.audio.src = "";
                 }, true);
             }
         };
@@ -109,6 +119,7 @@
         };
 
         MusesPlayer.prototype.setURL = function(url) {
+            console.log("setURL");
             MRP.setUrl(url);
         };
 
