@@ -30,18 +30,29 @@ class EmbeddablePlayerController extends Zend_Controller_Action
 
     }
 
+    /**
+     * This is the action that is called to insert the player onto a web page.
+     * It passes all the js and css files to the view, as well as all the
+     * stream customization information.
+     *
+     * The view for this action contains all the inline javascript needed to
+     * create the player.
+     */
     public function embedCodeAction()
     {
         $this->view->layout()->disableLayout();
 
+        $CC_CONFIG = Config::getConfig();
+
         $request = $this->getRequest();
 
-        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "css/embeddable-player.css";
-        $this->view->mrp_js = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/embeddableplayer/mrp.js";
+        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "css/embeddable-player.css?".$CC_CONFIG['airtime_version'];
+        $this->view->mrp_js = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/embeddableplayer/mrp.js?".$CC_CONFIG['airtime_version'];
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "js/libs/jquery-1.10.2.js";
         $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/embeddableplayer/muses.swf";
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
-        $this->view->station_name = Application_Model_Preference::GetStationName();
+        $this->view->station_name = addslashes(Application_Model_Preference::GetStationName());
+
         $stream = $request->getParam('stream');
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
         $availableMobileStreams = array();

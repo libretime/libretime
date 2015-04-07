@@ -65,22 +65,6 @@ class Application_Model_StreamSetting
         return $result ? $result : $default;
     }
 
-    public static function getEnabledStreamUrls()
-    {
-        $urls = Array();
-        $streamIds = Application_Model_StreamSetting::getEnabledStreamIds();
-        foreach ($streamIds as $id) {
-            $prefix = $id."_";
-            $streamData = Application_Model_StreamSetting::getStreamData($id);
-            $host = $streamData[$prefix."host"];
-            $port = $streamData[$prefix."port"];
-            $mount = $streamData[$prefix."mount"];
-            $type = $streamData[$prefix."type"];
-            $urls[$type] = "http://$host:$port/$mount";
-        }
-        return $urls;
-    }
-
     public static function getEnabledStreamData()
     {
         $streams = Array();

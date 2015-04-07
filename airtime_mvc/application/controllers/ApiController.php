@@ -523,7 +523,7 @@ class ApiController extends Zend_Controller_Action
             $result["description"] = Application_Model_Preference::GetStationDescription();
             $result["timezone"] = Application_Model_Preference::GetDefaultTimezone();
             $result["locale"] = Application_Model_Preference::GetDefaultLocale();
-            $result["enabled_stream_urls"] = Application_Model_StreamSetting::getEnabledStreamUrls();
+            $result["stream_data"] = Application_Model_StreamSetting::getEnabledStreamData();
             
             // used by caller to determine if the airtime they are running or widgets in use is out of date.
             $result['AIRTIME_API_VERSION'] = AIRTIME_API_VERSION;

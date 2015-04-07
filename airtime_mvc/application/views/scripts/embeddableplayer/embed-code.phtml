@@ -7,6 +7,17 @@
     <script src="<?php echo $this->jquery?>" type="text/javascript"></script>
     <script type="text/javascript">
 
+        var MAX_MOBILE_SCREEN_WIDTH = 760;
+
+        // We are creating a custom player object that acts as a wrapper
+        // around the player object we get from Muses. We are doing this
+        // for a couple reasons:
+        //
+        // 1. It will be easier to swap out Muses for a different player engine
+        //    in the future - if we ever decide to do that.
+        // 2. We had to add in some custom behaviour depending on the player
+        //    customizations and whether or not the player is in Flash or HTML5
+        //    mode.
         var MusesPlayer = function() {
             this.mobileDetect = this.mobileDetect();
             this.playerMode = "<?php echo $this->playerMode ?>";
@@ -34,11 +45,12 @@
                 this.settings.codec = stream["codec"];
             }
 
+            // Create the Muses player object
             MRP.insert(this.settings);
 
-            $("p.station_name").html("<?php echo $this->station_name?>");
+            $("p.station_name").html(htmlEscape("<?php echo $this->station_name?>"));
 
-            getMetadata();
+            attachStreamMetadataToPlayer();
 
             // detects events in HTML5 mode
             if (!this.flashDetect) {
@@ -62,13 +74,14 @@
         };
 
         MusesPlayer.prototype.mobileDetect = function() {
-            if ( screen.width <= 760) {
-                return true;
-            } else {
-                return false;
-            }
+            return (screen.width <= MAX_MOBILE_SCREEN_WIDTH);
         }
 
+        // This function is called if an error occurs while a client is
+        // attempting to connect to a stream (An error would occur if
+        // the streams listener count has been maxed out or if the stream is down).
+        // It checks if the client is a mobile device or not and returns the next
+        // best available stream.
         MusesPlayer.prototype.getNextAvailableStream = function() {
             if (this.mobileDetect && this.availableMobileStreamQueue.length > 0) {
                 return this.getNextAvailableMobileStream();
@@ -78,9 +91,9 @@
                 return this.getNextAvailableDesktopStream();
             }
 
-            //if we get to this point there are no available streams for the
-            //type of device the client has connected with so just return
-            //the next available stream - first we'll try the desktop streams
+            // If we get to this point there are no available streams for the
+            // type of device the client has connected with so just return
+            // the next available stream - first we'll try the desktop streams
             var desktopStream = this.getNextAvailableDesktopStream();
             if (desktopStream) {
                 return desktopStream;
@@ -90,6 +103,8 @@
 
         }
 
+        // Gets and returns the next available mobile stream from the queue,
+        // but adds it back to the end of the queue to be recycled.
         MusesPlayer.prototype.getNextAvailableMobileStream = function() {
             var stream = this.availableMobileStreamQueue.shift();
             //add to end of queue
@@ -97,6 +112,8 @@
             return stream;
         }
 
+        // Gets and returns the next available desktop stream from the queue,
+        // but adds it back to the end of the queue to be recycled.
         MusesPlayer.prototype.getNextAvailableDesktopStream = function() {
             var stream = this.availableDesktopStreamQueue.shift();
             //add to end of queue
@@ -114,10 +131,6 @@
             togglePlayStopButton();
         };
 
-        MusesPlayer.prototype.setVolume = function(value) {
-            //this.flashDetect ? MRP.setVolume(value) : null;
-        };
-
         MusesPlayer.prototype.setURL = function(url) {
             console.log("setURL");
             MRP.setUrl(url);
@@ -129,7 +142,6 @@
                 case "ioError":
                     // connection limit reached or problem connecting to stream
                     if (value === "0") {
-                        console.log("ioError");
                         var stream = musesPlayer.getNextAvailableStream();
                         musesPlayer.setURL(stream["url"]);
                         musesPlayer.play();
@@ -137,14 +149,23 @@
             }
         }
 
+        // Triggers the play function on the Muses player object in HTML5 mode
         function musesHTMLPlayClick() {
+            /*if (MRP.html === undefined) {
+                console.log("inserting player");
+                MRP.insert(musesPlayer.settings);
+            }*/
             MRP.html.audio.src = MRP.html.src;
 
             MRP.html.audio.play();
         }
 
+        // Triggers the stop function on the Muses player object in HTML5 mode
+        // NOTE: The HTML5 audio element doesn't have stop functionality. It
+        // can only be paused.
         function musesHTMLStopClick() {
             MRP.html.audio.pause();
+            //delete MRP.html;
         }
 
         function togglePlayStopButton() {
@@ -155,12 +176,15 @@
         // default how often to fetch metadata to 20 seconds
         var time_to_next_track_starts = 20000;
 
-        function getMetadata(){
+        // Fetches the streams metadata from the Airtime live-info API
+        // and attaches it to the player UI.
+        //
+        // The metadata is fetched when the current track is about to end.
+        function attachStreamMetadataToPlayer(){
             $.ajax({url: "<?php echo $this->metadata_api_url?>",
                 data: {type:"interval",limit:"5"},
                 dataType: "jsonp",
                 success: function(data) {
-                    //console.log("hello");
 
                     if (data.current === null) {
                         $("p.now_playing").html("Offline");
@@ -191,14 +215,30 @@
 
                 }
             });
-            setTimeout(getMetadata, time_to_next_track_starts);
+            setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts);
+        }
+
+        function htmlEscape(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
 
     </script>
 
     <style type="text/css">
+        /*
+        We have to have the default Muses skin displayed on the page or else
+        the player will not work. Setting the display to none and hidden does
+        not work. It has to be "visible" on the page. As a hacky work around we
+        set the height and width to 1px so users will not see it.
+        */
         #muses_skin{width:1px; height:1px; overflow-x: hidden; overflow-y: hidden;}
     </style>
+
 </head>
 
 <body>
@@ -219,7 +259,8 @@
 
     </div>
 
-    <!--<div class="airtime_volume">
+    <!--
+    <div class="airtime_volume">
 
         <div class="volume_control">
             <span class="mute"></span>
@@ -229,7 +270,8 @@
             <div class="airtime_volume_bar_value" style="width: 80%;"></div>
         </div>
 
-    </div>-->
+    </div>
+    -->
     <div style="clear:both"></div>
 
     <div class="airtime_schedule">
@@ -239,7 +281,6 @@
         </ul>
     </div>
     <a class="airtime_pro" target="_blank" href="https://www.airtime.pro/">Powered by Airtime Pro<span class="airtime_pro_logo"></span></a>
-
 
 </div>
 
