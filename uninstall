@@ -49,7 +49,6 @@ AIRTIMEROOT=${SCRIPT_DIR}
 STOR_DIR=$(getStorDirFromDatabase)
 
 FILES=(
-     "${STOR_DIR}"
      "/etc/airtime"
      "/var/log/airtime"
      "/usr/lib/airtime"
@@ -81,7 +80,7 @@ if [ -n "${STOR_DIR}" ]; then
     echo -e "\nDo you want to remove your music storage directory ${STOR_DIR} and all of its subdirectories? [y/N]: \c"
     read IN
     if [[ ( "$IN" = "y" || "$IN" = "Y" ) ]]; then
-        rm -rf ${STOR_DIR}
+        rm -rf "${STOR_DIR}"
     fi
 else
     echo -e "\nNo stor directory found, skipping..."
