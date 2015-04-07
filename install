@@ -476,6 +476,9 @@ done
 set +e
 loudCmd "initctl reload-configuration"
 loudCmd "systemctl daemon-reload" #systemd hipsters
+loudCmd "update-rc.d airtime-playout defaults" # Start at bootup, on Debian
+loudCmd "update-rc.d airtime-media-monitor defaults" # Start at bootup, on Debian
+loudCmd "update-rc.d airtime-liquidsoap defaults" # Start at bootup, on Debian
 set -e
 
 if [ ! -d /var/log/airtime ]; then
