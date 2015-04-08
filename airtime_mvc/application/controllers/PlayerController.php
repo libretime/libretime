@@ -51,7 +51,7 @@ class PlayerController extends Zend_Controller_Action
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "js/libs/jquery-1.10.2.js";
         $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/muses.swf";
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
-        $this->view->station_name = addslashes(Application_Model_Preference::GetStationName());
+        $this->view->station_name = json_encode(Application_Model_Preference::GetStationName());
 
         $stream = $request->getParam('stream');
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
@@ -70,7 +70,7 @@ class PlayerController extends Zend_Controller_Action
         } else {
             $this->view->playerMode = "manual";
             $selectedStreamData = $streamData[$stream];
-            $this->view->streamURL = $selectedStreamData["url"];
+            $this->view->streamURL = json_encode($selectedStreamData["url"]);
             $this->view->codec = $selectedStreamData["codec"];
         }
         $this->view->availableMobileStreams = json_encode($availableMobileStreams);

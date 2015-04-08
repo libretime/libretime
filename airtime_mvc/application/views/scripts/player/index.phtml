@@ -35,21 +35,20 @@
             };
 
             if (this.playerMode == "manual") {
-                this.settings.url = htmlEscape("<?php echo $this->streamURL ?>");
+                this.settings.url = "<?php echo $this->streamURL ?>";
                 this.settings.codec = "<?php echo $this->codec ?>";
             } else if (this.playerMode == "auto") {
                 this.availableMobileStreamQueue = <?php echo $this->availableMobileStreams?>;
                 this.availableDesktopStreamQueue = <?php echo $this->availableDesktopStreams?>;
                 var stream = this.getNextAvailableStream();
-                this.settings.url = htmlEscape(stream["url"]);
+                this.settings.url = stream["url"];
                 this.settings.codec = stream["codec"];
             }
 
             // Create the Muses player object
             MRP.insert(this.settings);
 
-            var station_name = htmlEscape("<?php echo $this->station_name?>");
-            $("p.station_name").html(station_name);
+            $("p.station_name").html("<?php echo $this->station_name?>");
 
             attachStreamMetadataToPlayer();
 
@@ -143,7 +142,7 @@
                     // connection limit reached or problem connecting to stream
                     if (value === "0") {
                         var stream = musesPlayer.getNextAvailableStream();
-                        musesPlayer.setURL(htmlEscape(stream["url"]));
+                        musesPlayer.setURL(stream["url"]);
                         musesPlayer.play();
                     }
             }
@@ -216,15 +215,6 @@
                 }
             });
             setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts);
-        }
-
-        function htmlEscape(str) {
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
         }
 
     </script>
