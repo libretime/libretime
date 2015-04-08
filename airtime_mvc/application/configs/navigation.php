@@ -87,11 +87,10 @@ $pages = array(
                 'resource'   => 'listenerstat'
             ),
             array(
-                'label'      => _('Embeddable Player'),
+                'label'      => _('Player'),
                 'module'     => 'default',
-                'controller' => 'embeddableplayer',
-                'action'     => 'index',
-                'resource'   => 'embeddableplayer'
+                'controller' => 'player',
+                'action'     => 'customize'
             )
         )
     ),

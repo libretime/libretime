@@ -29,12 +29,16 @@ function getStreamMode() {
 
 $(document).ready(function() {
 
+    $("#player_stream_url-element").hide();
+
     $("#player_stream_mode-element").change(function() {
         var $streamMode = getStreamMode();
+
         if ($streamMode == "auto") {
-            $("#player_stream_url-element input[type='radio']").attr("disabled", "disabled");
+            $("#player_stream_url-element").hide();
+
         } else if ($streamMode == "manual") {
-            $("#player_stream_url-element input[type='radio']").removeAttr("disabled");
+            $("#player_stream_url-element").show();
 
             $("input[name=player_stream_url]").each(function(i, obj) {
                 if ($(this).parent().text().toLowerCase().indexOf("opus") >= 0) {

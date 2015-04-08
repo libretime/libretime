@@ -1,0 +1,27 @@
+<fieldset class="padded">
+    <dl class="zend_form">
+
+        <?php echo $this->element->getElement('player_preview_label')->renderLabel(); ?>
+
+        <div style="clear:both"></div>
+        <div class="player-preview">
+            <?php echo $this->element->getElement('player_embed_src')->getValue(); ?>
+        </div>
+
+        <div id="player_instructions">
+            Customize the player by configuring the options below. Once you are happy with the player
+            copy the embeddable code below into your websites HTML.
+        </div>
+
+        <?php echo $this->element->getElement('player_stream_mode')->render(); ?>
+
+        <?php echo $this->element->getElement('player_stream_url'); ?>
+
+        <?php echo $this->element->getElement('player_embed_src')->render(); ?>
+
+        <?php //echo $this->element->getElement('player_display_track_metadata'); ?>
+
+
+
+    </dl>
+</fieldset>

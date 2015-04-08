@@ -2,12 +2,12 @@
 
 define("OPUS", "opus");
 
-class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
+class Application_Form_Player extends Zend_Form_SubForm
 {
     public function init()
     {
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/embeddableplayer.phtml'))
+            array('ViewScript', array('viewScript' => 'form/player.phtml'))
         ));
 
         /* We will use this option in the future
@@ -56,14 +56,14 @@ class Application_Form_EmbeddablePlayer extends Zend_Form_SubForm
         }
 
         $streamURL->setAttrib('numberOfEnabledStreams', sizeof($urlOptions)-$opusStreamCount);
-        $streamURL->setAttrib("disabled", "disabled");
+        $streamURL->removeDecorator('label');
         $this->addElement($streamURL);
 
         $embedSrc = new Zend_Form_Element_Text('player_embed_src');
         $embedSrc->setAttrib("readonly", "readonly");
         $embedSrc->setAttrib("class", "embed-player-text-box");
-        $embedSrc->setValue('<iframe frameborder="0" width="280" height="230" src="'.Application_Common_HTTPHelper::getStationUrl().'embeddableplayer/embed-code?stream=auto"></iframe>');
-        $embedSrc->removeDecorator('label');
+        $embedSrc->setLabel(_("Embeddable code:"));
+        $embedSrc->setValue('<iframe frameborder="0" width="280" height="210" src="'.Application_Common_HTTPHelper::getStationUrl().'player?stream=auto"></iframe>');
         $this->addElement($embedSrc);
 
         $previewLabel = new Zend_Form_Element_Text('player_preview_label');

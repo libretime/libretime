@@ -1,0 +1,35 @@
+.embed-player-text-box {
+    padding-right: 0px !important;
+    width: 100% !important;
+}
+.embed-player-form {
+    width: 98%;
+}
+.embed-player-form dd {
+    width: 100% !important;
+    float: left;
+    margin: 0;
+    padding: 4px 0px 4px 0px;
+}
+.player-preview {
+    width: 100%;
+}
+.player-preview iframe {
+    margin: 0 auto;
+    display: block;
+}
+#player_form {
+    width: 50%;
+    margin: 0 auto;
+}
+#player_instructions {
+    border-bottom: 1px solid;
+    padding-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #5b5b5b;
+    margin-bottom: 10px;
+}
+
+
+
