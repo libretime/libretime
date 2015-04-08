@@ -35,20 +35,21 @@
             };
 
             if (this.playerMode == "manual") {
-                this.settings.url = "<?php echo $this->streamURL ?>";
+                this.settings.url = htmlEscape("<?php echo $this->streamURL ?>");
                 this.settings.codec = "<?php echo $this->codec ?>";
             } else if (this.playerMode == "auto") {
                 this.availableMobileStreamQueue = <?php echo $this->availableMobileStreams?>;
                 this.availableDesktopStreamQueue = <?php echo $this->availableDesktopStreams?>;
                 var stream = this.getNextAvailableStream();
-                this.settings.url = stream["url"];
+                this.settings.url = htmlEscape(stream["url"]);
                 this.settings.codec = stream["codec"];
             }
 
             // Create the Muses player object
             MRP.insert(this.settings);
 
-            $("p.station_name").html(htmlEscape("<?php echo $this->station_name?>"));
+            var station_name = htmlEscape("<?php echo $this->station_name?>");
+            $("p.station_name").html(station_name);
 
             attachStreamMetadataToPlayer();
 
@@ -132,7 +133,6 @@
         };
 
         MusesPlayer.prototype.setURL = function(url) {
-            console.log("setURL");
             MRP.setUrl(url);
         };
 
@@ -143,7 +143,7 @@
                     // connection limit reached or problem connecting to stream
                     if (value === "0") {
                         var stream = musesPlayer.getNextAvailableStream();
-                        musesPlayer.setURL(stream["url"]);
+                        musesPlayer.setURL(htmlEscape(stream["url"]));
                         musesPlayer.play();
                     }
             }
