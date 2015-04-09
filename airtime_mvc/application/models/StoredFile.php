@@ -362,8 +362,9 @@ SQL;
     {
         $exists = false;
         try {
-            $filePath = $this->getFilePath();
-            $exists = (file_exists($this->getFilePath()) && !is_dir($filePath));
+            $filePaths = $this->getFilePaths();
+            $filePath = $filePaths[0];
+            $exists = (file_exists($filePath) && !is_dir($filePath));
         } catch (Exception $e) {
             return false;
         }
@@ -399,7 +400,14 @@ SQL;
         //Delete the physical file from either the local stor directory
         //or from the cloud
         if ($this->_file->getDbImportStatus() == CcFiles::IMPORT_STATUS_SUCCESS) {
-            $this->_file->deletePhysicalFile();
+            try {
+                $this->_file->deletePhysicalFile();
+            }
+            catch (Exception $e)
+            {
+                //Just log the exception and continue.
+                Logging::error($e);
+            }
         }
 
         //Update the user's disk usage
@@ -444,8 +452,6 @@ SQL;
      */
     public function deleteByMediaMonitor($deleteFromPlaylist=false)
     {
-        $filepath = $this->getFilePath();
-
         if ($deleteFromPlaylist) {
             Application_Model_Playlist::DeleteFileFromAllPlaylists($this->getId());
         }
@@ -499,13 +505,13 @@ SQL;
     /**
      * Get the absolute filepath
      *
-     * @return string
+     * @return array of strings
      */
-    public function getFilePath()
+    public function getFilePaths()
     {
         assert($this->_file);
         
-        return $this->_file->getURLForTrackPreviewOrDownload();
+        return $this->_file->getURLsForTrackPreviewOrDownload();
     }
 
     /**
@@ -1243,9 +1249,11 @@ SQL;
                 $genre       = $file->getDbGenre();
                 $release     = $file->getDbUtime();
                 try {
+                    $filePaths = $this->getFilePaths();
+                    $filePath = $filePaths[0];
                     $soundcloud     = new Application_Model_Soundcloud();
                     $soundcloud_res = $soundcloud->uploadTrack(
-                        $this->getFilePath(), $this->getName(), $description,
+                        $filePath, $this->getName(), $description,
                         $tag, $release, $genre);
                     $this->setSoundCloudFileId($soundcloud_res['id']);
                     $this->setSoundCloudLinkToFile($soundcloud_res['permalink_url']);

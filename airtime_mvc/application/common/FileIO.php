@@ -10,7 +10,7 @@ class Application_Common_FileIO
      *
      * This HTTP_RANGE compatible read file function is necessary for allowing streaming media to be skipped around in.
      *
-     * @param string $filePath - the full filepath pointing to the location of the file
+     * @param string $filePath - the full filepath or URL pointing to the location of the file
      * @param string $mimeType - the file's mime type. Defaults to 'audio/mp3'
      * @param integer $size - the file size, in bytes
      * @return void
@@ -22,8 +22,7 @@ class Application_Common_FileIO
     {
         $fm = @fopen($filePath, 'rb');
         if (!$fm) {
-            header ("HTTP/1.1 505 Internal server error");
-            return;
+            throw new FileNotFoundException($filePath);
         }
 
         //Note that $size is allowed to be zero. If that's the case, it means we don't
@@ -35,6 +34,8 @@ class Application_Common_FileIO
 
         $begin = 0;
         $end   = $size - 1;
+
+        ob_start(); //Must start a buffer here for these header() functions
 
         if (isset($_SERVER['HTTP_RANGE'])) {
             if (preg_match('/bytes=\h*(\d+)-(\d*)[\D.*]?/i', $_SERVER['HTTP_RANGE'], $matches)) {
@@ -51,6 +52,7 @@ class Application_Common_FileIO
             header('HTTP/1.1 200 OK');
         }
         header("Content-Type: $mimeType");
+        header("Content-Transfer-Encoding: binary");
         header('Cache-Control: public, must-revalidate, max-age=0');
         header('Pragma: no-cache');
         header('Accept-Ranges: bytes');
@@ -60,7 +62,6 @@ class Application_Common_FileIO
                 header("Content-Range: bytes $begin-$end/$size");
             }
         }
-        header("Content-Transfer-Encoding: binary");
 
         //We can have multiple levels of output buffering. Need to
         //keep looping until all have been disabled!!!

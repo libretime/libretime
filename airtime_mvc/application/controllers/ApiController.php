@@ -1074,7 +1074,9 @@ class ApiController extends Zend_Controller_Action
                         $dir->getId(),$all=false);
                     foreach ($files as $f) {
                         // if the file is from this mount
-                        if (substr($f->getFilePath(), 0, strlen($rd)) === $rd) {
+                        $filePaths = $f->getFilePaths();
+                        $filePath = $filePaths[0];
+                        if (substr($filePath, 0, strlen($rd)) === $rd) {
                             $f->delete();
                         }
                     }
