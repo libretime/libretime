@@ -123,7 +123,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function eventFeedAction()
     {
-        session_write_close();
         $service_user = new Application_Service_UserService();
         $currentUser = $service_user->getCurrentUser();
 
@@ -145,7 +144,6 @@ class ScheduleController extends Zend_Controller_Action
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         $user = new Application_Model_User($userInfo->id);
         $editable = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
-        session_write_close();
 
         $calendar_interval = Application_Model_Preference::GetCalendarTimeScale();
         if ($calendar_interval == "agendaDay") {
@@ -164,7 +162,6 @@ class ScheduleController extends Zend_Controller_Action
 
     public function getCurrentShowAction()
     {
-        session_write_close();
         $currentShow = Application_Model_Show::getCurrentShow();
         if (!empty($currentShow)) {
             $this->view->si_id = $currentShow[0]["instance_id"];
@@ -304,9 +301,19 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
+    /** This is a nasty hack to let us embed the the data the dashboard needs into the HTML response for each page.
+     *  This was originally loaded AFTER page load by AJAX, which is needlessly slow. This should have been templated in.
+     */
+    public static function printCurrentPlaylistForEmbedding()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $foo = new ScheduleController($front->getRequest(), $front->getResponse());
+        $foo->getCurrentPlaylistAction();
+        echo(json_encode($foo->view));
+    }
+
     public function getCurrentPlaylistAction()
     {
-        session_write_close();
         $range = Application_Model_Schedule::GetPlayOrderRangeOld();
         $show = Application_Model_Show::getCurrentShow();
 
@@ -715,7 +722,6 @@ class ScheduleController extends Zend_Controller_Action
      */
     public function setTimeScaleAction()
     {
-        session_write_close();
         Application_Model_Preference::SetCalendarTimeScale($this->_getParam('timeScale'));
     }
 

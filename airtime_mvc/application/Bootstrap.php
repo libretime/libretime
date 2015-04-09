@@ -100,6 +100,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $csrf_namespace->authtoken = sha1(uniqid(rand(),1));
             $csrf_namespace->setExpirationSeconds(2*60*60);
         }
+
+        //Here we are closing the session for writing because otherwise no requests
+        //in this session will be handled in parallel. This gives a major boost to the perceived performance
+        //of the application (page load times are more consistent, no lock contention).
+        session_write_close();
     }
     
     /**

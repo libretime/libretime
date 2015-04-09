@@ -37,7 +37,6 @@ class UsersettingsController extends Zend_Controller_Action
 
     public function setLibraryDatatableAction()
     {
-        session_write_close();
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
@@ -46,7 +45,6 @@ class UsersettingsController extends Zend_Controller_Action
 
     public function getLibraryDatatableAction()
     {
-        session_write_close();
         $data = Application_Model_Preference::getCurrentLibraryTableSetting();
         if (!is_null($data)) {
             $this->view->settings = $data;
@@ -55,7 +53,6 @@ class UsersettingsController extends Zend_Controller_Action
 
     public function setTimelineDatatableAction()
     {
-        session_write_close();
         $request = $this->getRequest();
         $settings = $request->getParam("settings");
 
@@ -64,7 +61,6 @@ class UsersettingsController extends Zend_Controller_Action
 
     public function getTimelineDatatableAction()
     {
-        session_write_close();
         $data = Application_Model_Preference::getTimelineDatatableSetting();
         if (!is_null($data)) {
             $this->view->settings = $data;
