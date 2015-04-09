@@ -9,10 +9,7 @@ function updateEmbedSrcParams()
         $embedCodeParams += "stream=auto";
     }
 
-    var playerTitle = getPlayerTitle();
-    if (playerTitle !== null) {
-        $embedCodeParams += "&title="+playerTitle;
-    }
+    $embedCodeParams += "&title="+getPlayerTitle();
 
     $embedCodeParams += "\"";
 
@@ -34,11 +31,7 @@ function getStreamMode() {
 }
 
 function getPlayerTitle() {
-    if ($("#player_display_title").prop("checked")) {
-        return $("input[name=player_title]").val();
-    } else {
-        return null;
-    }
+    return $("input[name=player_title]").val();
 }
 
 $(document).ready(function() {

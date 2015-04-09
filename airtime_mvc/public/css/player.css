@@ -38,9 +38,9 @@
     padding-right: 30px;
 }
 .airtime_pro {
-    margin: 0px 20px;
+    margin: 6px 20px;
     color: #fff;
-    font-size: 10px;
+    font-size: 11px;
     text-decoration: none;
     display:inline-block;
     float:right;
@@ -189,6 +189,7 @@
 .airtime_next {
     float: left;
     margin: 0px;
+    margin-top: 1px;
 }
 
 .schedule_list {
@@ -199,10 +200,15 @@
     margin-left: 60px;
     margin-bottom: 0px;
     line-height: 130%;
+    height: 20px;
 }
 
 .schedule_list li {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.airtime-pro-orange {
+    color: #ff5d1a;
 }
