@@ -76,7 +76,7 @@ class Application_Form_Player extends Zend_Form_SubForm
         $embedSrc->setAttrib('cols', '40')
             ->setAttrib('rows', '4');
         $embedSrc->setLabel(_("Embeddable code:"));
-        $embedSrc->setValue('<iframe frameborder="0" width="280" height="210" src="'.Application_Common_HTTPHelper::getStationUrl().'player?stream=auto&title=Now Playing"></iframe>');
+        $embedSrc->setValue('<iframe frameborder="0" width="280" height="210" src="'.Application_Common_HTTPHelper::getStationUrl().'embed/player?stream=auto&title=Now Playing"></iframe>');
         $this->addElement($embedSrc);
 
         $previewLabel = new Zend_Form_Element_Text('player_preview_label');
