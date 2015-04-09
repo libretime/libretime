@@ -10,12 +10,23 @@ class Application_Form_Player extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/player.phtml'))
         ));
 
-        /* We will use this option in the future
-        $displayTrackMetadata = new Zend_Form_Element_Checkbox('player_display_track_metadata');
-        $displayTrackMetadata->setValue(true);
-        $displayTrackMetadata->setLabel(_('Display track metadata?'));
-        $this->addElement($displayTrackMetadata);
-        */
+        $displayTitle = new Zend_Form_Element_Checkbox('player_display_title');
+        $displayTitle->setValue(true);
+        $displayTitle->setLabel(_('Display title?'));
+        //$displayTitle->addDecorator('Label', array('placement' => 'APPEND'));
+        $displayTitle->setDecorators(array(
+            'ViewHelper',
+            'Errors',
+            'Label'
+        ));
+        $displayTitle->addDecorator('Label', array('class' => 'player-checkbox', 'placement' => 'APPEND'));
+        $this->addElement($displayTitle);
+
+        $title = new Zend_Form_Element_Text('player_title');
+        $title->setValue(_('Now Playing'));
+        $title->setLabel(_('Title:'));
+        $title->removeDecorator('DtDdWrapper');
+        $this->addElement($title);
 
         $streamMode = new Zend_Form_Element_Radio('player_stream_mode');
         $streamMode->setLabel(_('Select Stream:'));
@@ -59,11 +70,13 @@ class Application_Form_Player extends Zend_Form_SubForm
         $streamURL->removeDecorator('label');
         $this->addElement($streamURL);
 
-        $embedSrc = new Zend_Form_Element_Text('player_embed_src');
+        $embedSrc = new Zend_Form_Element_Textarea('player_embed_src');
         $embedSrc->setAttrib("readonly", "readonly");
         $embedSrc->setAttrib("class", "embed-player-text-box");
+        $embedSrc->setAttrib('cols', '40')
+            ->setAttrib('rows', '4');
         $embedSrc->setLabel(_("Embeddable code:"));
-        $embedSrc->setValue('<iframe frameborder="0" width="280" height="210" src="'.Application_Common_HTTPHelper::getStationUrl().'player?stream=auto"></iframe>');
+        $embedSrc->setValue('<iframe frameborder="0" width="280" height="210" src="'.Application_Common_HTTPHelper::getStationUrl().'player?stream=auto&title=Now Playing"></iframe>');
         $this->addElement($embedSrc);
 
         $previewLabel = new Zend_Form_Element_Text('player_preview_label');

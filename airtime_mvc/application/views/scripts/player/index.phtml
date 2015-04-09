@@ -35,7 +35,7 @@
             };
 
             if (this.playerMode == "manual") {
-                this.settings.url = "<?php echo $this->streamURL ?>";
+                this.settings.url = '<?php echo $this->streamURL ?>';
                 this.settings.codec = "<?php echo $this->codec ?>";
             } else if (this.playerMode == "auto") {
                 this.availableMobileStreamQueue = <?php echo $this->availableMobileStreams?>;
@@ -48,7 +48,14 @@
             // Create the Muses player object
             MRP.insert(this.settings);
 
-            $("p.station_name").html("<?php echo $this->station_name?>");
+            // Configure player title
+            var player_title = <?php echo $this->player_title?>;
+            if (player_title === null) {
+                $(".airtime_header").hide();
+                $(".airtime_player").css('height', '150px');
+            } else {
+                $("p.station_name").html(player_title);
+            }
 
             attachStreamMetadataToPlayer();
 

@@ -51,7 +51,7 @@ class PlayerController extends Zend_Controller_Action
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "js/libs/jquery-1.10.2.js";
         $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/muses.swf";
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
-        $this->view->station_name = json_encode(Application_Model_Preference::GetStationName());
+        $this->view->player_title = json_encode($request->getParam('title'));
 
         $stream = $request->getParam('stream');
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();

@@ -8,13 +8,19 @@ function updateEmbedSrcParams()
     } else if ($streamMode == "auto") {
         $embedCodeParams += "stream=auto";
     }
+
+    var playerTitle = getPlayerTitle();
+    if (playerTitle !== null) {
+        $embedCodeParams += "&title="+playerTitle;
+    }
+
     $embedCodeParams += "\"";
 
-    $("input[name=player_embed_src]").val(function(index, value) {
+    $("textarea[name=player_embed_src]").val(function(index, value) {
         return value.replace(/\?.*?"/, $embedCodeParams);
     });
 
-    updatePlayerIframeSrc($("input[name=player_embed_src]").val());
+    updatePlayerIframeSrc($("textarea[name=player_embed_src]").val());
 }
 
 function updatePlayerIframeSrc(iframe_text) {
@@ -27,10 +33,19 @@ function getStreamMode() {
     return $("input[name=player_stream_mode]:radio:checked").val();
 }
 
+function getPlayerTitle() {
+    if ($("#player_display_title").prop("checked")) {
+        return $("input[name=player_title]").val();
+    } else {
+        return null;
+    }
+}
+
 $(document).ready(function() {
 
     $("#player_stream_url-element").hide();
 
+    // stream mode change event
     $("#player_stream_mode-element").change(function() {
         var $streamMode = getStreamMode();
 
@@ -50,8 +65,37 @@ $(document).ready(function() {
         updateEmbedSrcParams();
     });
 
+    // stream url change event
     $("#player_stream_url-element").change(function() {
         updateEmbedSrcParams();
+    });
+
+    // display title checkbox change event
+    $("#player_display_title").change(function() {
+        if ($(this).prop("checked")) {
+            $("#player_title-label").show();
+            $("#player_title-element").show();
+        } else {
+            $("#player_title-label").hide();
+            $("#player_title-element").hide();
+        }
+        updateEmbedSrcParams();
+    });
+
+    // title textbox change event
+    // setup before functions
+    var typingTimer;
+    var doneTypingInterval = 3000;
+
+    // on keyup, start the countdown
+    $("input[name=player_title]").keyup(function(){
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(updateEmbedSrcParams, doneTypingInterval);
+    });
+
+    // on keydown, clear the countdown
+    $("input[name=player_title]").keydown(function(){
+        clearTimeout(typingTimer);
     });
 });
 

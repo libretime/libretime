@@ -19,8 +19,11 @@
     display: block;
 }
 #player_form {
-    width: 50%;
+    width: 40%;
     margin: 0 auto;
+}
+#player_form dd {
+    margin-bottom: 10px;
 }
 #player_instructions {
     border-bottom: 1px solid;
@@ -29,6 +32,17 @@
     font-weight: bold;
     color: #5b5b5b;
     margin-bottom: 10px;
+}
+.player-checkbox {
+    clear: left;
+    color: #5b5b5b;
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0;
+    min-width: 90px;
+    padding: 4px 0;
+    text-align: left;
 }
 
 
