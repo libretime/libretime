@@ -48,14 +48,12 @@ select {
 }
 
 .logo {
-    position:absolute;
-    right:20px;
-    top:104px;
-    background:transparent url(images/airtime_logo.png) no-repeat 0 0;
-    height:35px;
-    width:66px;
-    z-index:1000;
-    display:block;
+    background: transparent url(images/airtime_logo.png) no-repeat 0 0;
+    height: 35px;
+    width: 66px;
+    float: right;
+    padding: 0 5px 0 10px;
+    margin-top: -5px;
 }
 
 /* Version Notification Starts*/
@@ -286,8 +284,74 @@ select {
     background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
 .time-info-block  {
-    padding:0 14px 0 2px;
-    min-width:105px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#navlist {
+    padding: 0;
+    margin: 0;
+}
+#nav li.top {
+    /*float: none;*/
+}
+@media screen and (max-width: 1200px) {
+    .now-playing-block {
+        width: 30%;
+    }
+    .show-block {
+        width: 25%;
+    }
+}
+@media screen and (max-width: 920px) {
+    .now-playing-block {
+        width: 50%;
+    }
+    .show-block {
+        display: none;
+    }
+    .personal-block.solo {
+        right: 10px !important;
+    }
+}
+@media screen and (max-width: 810px) {
+    .now-playing-block {
+        width: 40%;
+    }
+}
+@media screen and (max-width: 863px) {
+    #nav {
+        height: inherit;
+        overflow-y: visible;
+    }
+}
+@media screen and (max-width: 680px) {
+    .now-playing-block {
+        display: none;
+    }
+    #nav li.top {
+        display: -webkit-flex;
+        width: 110px;
+    }
+    .personal-block.solo {
+        float: none;
+        text-align: left;
+    }
+    .personal-block.solo ol {
+        padding-left: 12px;
+    }
+    .logo {
+        float: none;
+        margin-left: 12px;
+    }
+}
+@media screen and (max-width: 380px) {
+    .time-info-block {
+	display: none;
+    }
+    .on-air-block {
+	margin: 0;
+    }
 }
 .time-info-block ul {
     margin:0;
@@ -899,20 +963,19 @@ input[type="checkbox"] {
 
 /* Remove any visible csrf form token footprint */
 #csrf-label {
-    height: 0;
-    padding: 0;
-    margin: 0;
+    display: none;
 }
 
 #csrf-element {
-    height: 8px;
     padding: 0;
     margin: 0;
+    display: inline-block;
 }
 
+/*
 #csrf-label .errors li, #csrf-element .errors li {
     margin: 0;
-}
+}*/
 
 .login_box {
     margin: 0 auto 0 auto;
@@ -1031,7 +1094,6 @@ input[type="checkbox"] {
 #pref_form p.description {
     color: #3b3b3b;
     font-size: 12px;
-    float: left;
 }
 
   dt.block-display, dd.block-display {
@@ -2193,7 +2255,7 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
     width: 98.5%;
 }
 
-.preferences dd#SoundCloudTags-element.block-display .input_text_area {
+.preferences dd.block-display .input_text_area {
     height: 120px;
 }
 
@@ -2202,12 +2264,8 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 }
 
 .preferences #logo-remove-btn {
-    float: right;
+    /*float: left;*/
     margin-bottom: 4px;
-}
-
-.preferences #Logo-img-container {
-    margin-top: 30px;
 }
 
 #show_time_info {
@@ -2570,19 +2628,21 @@ dt.block-display.info-block {
 
 /*---////////////////////    ERROR PAGE    ////////////////////---*/
 
-.error-content    {
-    background:url(images/404.png) no-repeat 0 0;
-    width:300px;
-    margin: 24px 15px;
-    padding: 0px 10px 0 420px;
+.error-content {
+    background:url(images/maintenance.png) no-repeat 0 0;
+    width:360px;
+    height:350px;
+    margin:auto;
+    margin-top:25px;
+    padding:auto;
 }
 .error-content h2 {
     margin:0;
-    padding:0 0 10px 0;
+    padding:350px 0 10px 0;
     font-size:36px;
     font-weight:bold;
     color:#3e3e3e;
-    text-align:left;
+    text-align:center;
     letter-spacing:-.3px;
     text-shadow: rgba(248,248,248,.3) 0 1px 0, rgba(0,0,0,.8) 0 -1px 0;
     rgba(51,51,51,.9)
@@ -2590,12 +2650,14 @@ dt.block-display.info-block {
 .error-content p {
     color: #272727;
     font-size: 16px;
+    text-align:center;
     margin: 0;
     padding:8px 2px;
 }
-.error-content .button-bar    {
+.error-content .button-bar	{
     margin-top:47px;
     padding-left:2px;
+    text-align:center;
 }
 .error-content .toggle-button    {
     border: 1px solid #434343;
@@ -3142,3 +3204,16 @@ dd .stream-status {
 }
 .quota-reached {
     font-size: 14px !important;
+}
+
+.thankyou-panel
+{
+    width: 400px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+
+.thankyou-panel h3
+{
+    color: #222;
+}

@@ -356,6 +356,8 @@ class LibraryController extends Zend_Controller_Action
                     $res = $file->delete();
                 } catch (FileNoPermissionException $e) {
                     $message = $noPermissionMsg;
+                } catch (DeleteScheduledFileException $e) {
+                    $message = _("Could not delete file because it is scheduled in the future.");
                 } catch (Exception $e) {
                     //could throw a scheduled in future exception.
                     $message = _("Could not delete file(s).");

@@ -25,7 +25,7 @@ class PicklableHttpRequest:
                                 auth=requests.auth.HTTPBasicAuth(self.api_key, ''))
 
 def process_http_requests(ipc_queue, http_retry_queue_path):
-    ''' Runs in a separate process and performs all the HTTP requests where we're
+    ''' Runs in a separate thread and performs all the HTTP requests where we're
         reporting extracted audio file metadata or errors back to the Airtime web application.
 
         This process also checks every 5 seconds if there's failed HTTP requests that we 
@@ -129,6 +129,7 @@ def send_http_request(picklable_request, retry_queue):
         retry_queue.append(picklable_request) # Retry it later
     except Exception as e:
         logging.error("HTTP request failed with unhandled exception. %s" % str(e))
+        logging.error(traceback.format_exc())
         # Don't put the request into the retry queue, just give up on this one.
         # I'm doing this to protect against us getting some pathological request
         # that breaks our code. I don't want us pickling data that potentially

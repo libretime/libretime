@@ -326,6 +326,11 @@ class Application_Model_Preference
         return self::getValue("station_name");
     }
 
+    public static function SetStationName($station_name)
+    {
+        self::setValue("station_name", $station_name);
+    }
+
     public static function SetAutoUploadRecordedShowToSoundcloud($upload)
     {
         self::setValue("soundcloud_auto_upload_recorded_show", $upload);
@@ -819,7 +824,10 @@ class Application_Model_Preference
 
     public static function SetPlanLevel($plan)
     {
+        $oldPlanLevel = self::GetPlanLevel();
         self::setValue("plan_level", $plan);
+        //We save the old plan level temporarily to facilitate conversion tracking
+        self::setValue("old_plan_level", $oldPlanLevel);
     }
 
     public static function GetPlanLevel()
@@ -831,6 +839,19 @@ class Application_Model_Preference
 
         return $plan;
     }
+
+    public static function GetOldPlanLevel()
+    {
+        $oldPlan = self::getValue("old_plan_level");
+        return $oldPlan;
+    }
+
+    /** Clearing the old plan level indicates a change in your plan has been tracked (Google Analytics) */
+    public static function ClearOldPlanLevel()
+    {
+        self::setValue("old_plan_level", '');
+    }
+
 
     public static function SetTrialEndingDate($date)
     {

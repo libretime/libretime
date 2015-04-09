@@ -82,7 +82,7 @@ function closeAddShowForm(event) {
         
         redrawAddShowForm($el, json.form);
     });
-    
+
     makeAddShowButton();
 }
 
@@ -742,7 +742,7 @@ function setAddShowEvents(form) {
             image = new FormData();
             image.append('file', $('#add_show_logo')[0].files[0]);
         }
-        
+
         $.ajax({
             url: action, 
             data: {format: "json", data: data, hosts: hosts, days: days},
@@ -784,6 +784,7 @@ function setAddShowEvents(form) {
                 } else {
                     redrawAddShowForm($addShowForm, json.newForm);
                     scheduleRefetchEvents(json);
+                    $addShowForm.hide();
                 }
             }
         });

@@ -2,10 +2,14 @@
 
 post_file() {
     #kill process after 30 minutes (360*5=30 minutes)
-    max_retry=360
+    max_retry=5
     retry_count=0
 
     file_path="${1}"
+    # Give us write permissions on the file to prevent problems if the user
+    # uploads a read-only file.
+    chmod +w "${file_path}"
+
     #We must remove commas because CURL can't upload files with commas in the name
     # http://curl.haxx.se/mail/archive-2009-07/0029.html
     stripped_file_path=${file_path//','/''}
