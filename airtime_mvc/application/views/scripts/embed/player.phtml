@@ -63,11 +63,55 @@
             if (!this.flashDetect) {
 
                 MRP.html.audio.addEventListener('error', function failed(e) {
-                    var stream = musesPlayer.getNextAvailableStream();
-                    var audio = $(MRP.html.audio);
-                    audio.src = stream["url"];
-                    audio[0].load();
-                    audio[0].play();
+                    switch (e.target.error.code) {
+                        case e.target.error.MEDIA_ERR_NETWORK:
+                            // If there is a network error keep retrying to connect
+                            // to a stream.
+                            var stream;
+                            if (musesPlayer.playerMode == "auto") {
+                                var nextAvailableStream = musesPlayer.getNextAvailableStream();
+                                stream = nextAvailableStream["url"];
+                            } else {
+                                stream = musesPlayer.settings.url;
+                            }
+                            var audio = $(MRP.html.audio);
+                            audio.src = stream;
+                            audio[0].load();
+                            audio[0].play();
+                            break;
+                        case e.target.error.MEDIA_ERR_DECODE:
+                            // If there was a corruption error or a problem with the browser
+                            // display an error and stop playback.
+                            togglePlayStopButton();
+                            clearTimeout(metadataTimer);
+                            $("p.now_playing").html("Error - Try again later");
+                            break;
+                        case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                            // If in auto mode and the current stream format is not supported
+                            // or the max number of listeners has been reached
+                            // retry connection with the next available stream.
+                            if (musesPlayer.playerMode == "auto") {
+                                var nextAvailableStream = musesPlayer.getNextAvailableStream();
+                                var audio = $(MRP.html.audio);
+                                audio.src = nextAvailableStream["url"];;
+                                audio[0].load();
+                                audio[0].play();
+                            } else {
+                                // If in manual mode and the current stream format is not supported
+                                // or the max number of listeners has been reached
+                                // display an error and stop play back.
+                                togglePlayStopButton();
+                                clearTimeout(metadataTimer);
+                                $("p.now_playing").html("Error - Try again later");
+                            }
+                            break;
+                        default:
+                            togglePlayStopButton();
+                            clearTimeout(metadataTimer);
+                            $("p.now_playing").html("Error - Try again later");
+                            break;
+                    }
+
                 }, true);
 
                 MRP.html.audio.addEventListener('pause', function paused(e) {
@@ -218,8 +262,8 @@
 
                 }
             });
-            setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts);
         }
+        var metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts);
 
     </script>
 
