@@ -240,8 +240,6 @@
                     } else {
                         var artist = data.current.name.split(" - ")[0];
                         var track = data.current.name.split(" - ")[1];
-                        console.log(artist);
-                        console.log(track);
                         $("p.now_playing").html(artist + "<span>" + track + "</span>");
 
                         var current_track_end_time = new Date(data.current.ends);
@@ -259,7 +257,6 @@
 
                 }
             });
-            console.log(time_to_next_track_starts);
             // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
         }
