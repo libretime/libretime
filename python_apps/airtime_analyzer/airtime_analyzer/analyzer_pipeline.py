@@ -88,7 +88,7 @@ class AnalyzerPipeline:
             queue.put(metadata)
         except UnplayableFileError as e:
             logging.exception(e)
-            metadata["import_status"] = IMPORT_STATUS_FAILED
+            metadata["import_status"] = AnalyzerPipeline.IMPORT_STATUS_FAILED
             metadata["reason"] = "The file could not be played."
             raise e
         except Exception as e:
