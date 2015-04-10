@@ -70,12 +70,14 @@ class UsersettingsController extends Zend_Controller_Action
     public function remindmeAction()
     {
         // unset session
+        session_start();  //open session for writing again
         Zend_Session::namespaceUnset('referrer');
         Application_Model_Preference::SetRemindMeDate();
     }
     
     public function remindmeNeverAction()
     {
+        session_start();  //open session for writing again
         Zend_Session::namespaceUnset('referrer');
         //pass in true to indicate 'Remind me never' was clicked
         Application_Model_Preference::SetRemindMeDate(true);
@@ -84,6 +86,7 @@ class UsersettingsController extends Zend_Controller_Action
     public function donotshowregistrationpopupAction()
     {
         // unset session
+        session_start();  //open session for writing again
         Zend_Session::namespaceUnset('referrer');
     }
 
