@@ -75,7 +75,7 @@
                                 stream = musesPlayer.settings.url;
                             }
                             var audio = $(MRP.html.audio);
-                            audio.src = stream;
+                            audio[0].src = stream;
                             audio[0].load();
                             audio[0].play();
                             break;
