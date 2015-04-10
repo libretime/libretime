@@ -530,12 +530,14 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateSave": function (oSettings, oData) {
                 localStorage.setItem('datatables-library', JSON.stringify(oData));
+                /*
                 $.ajax({
                     url: baseUrl+"usersettings/set-library-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
                     dataType: "json"
                   });
+                  */
                 
                 colReorderMap = oData.ColReorder;
             },

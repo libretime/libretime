@@ -439,13 +439,14 @@ var AIRTIME = (function(AIRTIME){
             "fnStateSave": function fnStateSave(oSettings, oData) {
                
                 localStorage.setItem('datatables-timeline', JSON.stringify(oData));
-                
+
+                /*
                 $.ajax({
                   url: baseUrl+"usersettings/set-timeline-datatable",
                   type: "POST",
                   data: {settings : oData, format: "json"},
                   dataType: "json"
-                });
+                });*/
             },
             "fnStateLoad": function fnBuilderStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-timeline');
@@ -466,13 +467,14 @@ var AIRTIME = (function(AIRTIME){
                         a[i] = (a[i] === "true") ? true : false;
                     }
                 }
-                
+
+                /*
                 a = oData.ColReorder;
                 for (i = 0, length = a.length; i < length; i++) {   
                     if (typeof(a[i]) === "string") {
                         a[i] = parseInt(a[i], 10);
                     }
-                }
+                }*/
                
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },

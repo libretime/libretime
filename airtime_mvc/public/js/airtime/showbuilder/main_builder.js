@@ -328,10 +328,10 @@ AIRTIME = (function(AIRTIME) {
                     setTimeout(checkScheduleUpdates, 5000);
                 }
             });
-        }
 
-        //check if the timeline view needs updating.
-        checkScheduleUpdates();
+            //check if the timeline view needs updating.
+            setTimeout(checkScheduleUpdates, 5000);
+        }
     };
 
     mod.onResize = function() {
