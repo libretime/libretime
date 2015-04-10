@@ -35,7 +35,7 @@
             };
 
             if (this.playerMode == "manual") {
-                this.settings.url = '<?php echo $this->streamURL ?>';
+                this.settings.url = <?php echo $this->streamURL ?>;
                 this.settings.codec = "<?php echo $this->codec ?>";
             } else if (this.playerMode == "auto") {
                 this.availableMobileStreamQueue = <?php echo $this->availableMobileStreams?>;
@@ -63,7 +63,6 @@
             if (!this.flashDetect) {
 
                 MRP.html.audio.addEventListener('error', function failed(e) {
-                    console.log("HTML error");
                     var stream = musesPlayer.getNextAvailableStream();
                     var audio = $(MRP.html.audio);
                     audio.src = stream["url"];
@@ -72,8 +71,6 @@
                 }, true);
 
                 MRP.html.audio.addEventListener('pause', function paused(e) {
-                    //this is when pause happens
-                    console.log("HTML paused");
                     //src = MRP.html.audio.src;
                     //MRP.html.audio.src = "";
                 }, true);
@@ -256,19 +253,6 @@
 
     </div>
 
-    <!--
-    <div class="airtime_volume">
-
-        <div class="volume_control">
-            <span class="mute"></span>
-        </div>
-
-        <div class="airtime_volume_bar">
-            <div class="airtime_volume_bar_value" style="width: 80%;"></div>
-        </div>
-
-    </div>
-    -->
     <div style="clear:both"></div>
 
     <div class="airtime_schedule">

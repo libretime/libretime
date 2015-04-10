@@ -37,6 +37,7 @@ class EmbedController extends Zend_Controller_Action
 
         if ($stream == "auto") {
             $this->view->playerMode = "auto";
+            $this->view->streamURL = json_encode("");
             foreach ($streamData as $s) {
                 if ($s["mobile"]) {
                     array_push($availableMobileStreams, $s);
@@ -44,7 +45,7 @@ class EmbedController extends Zend_Controller_Action
                     array_push($availableDesktopStreams, $s);
                 }
             }
-        } else {
+        } elseif (!empty($stream)) {
             $this->view->playerMode = "manual";
             $selectedStreamData = $streamData[$stream];
             $this->view->streamURL = json_encode($selectedStreamData["url"]);
