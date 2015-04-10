@@ -220,8 +220,9 @@
             document.getElementById("stop_button").classList.toggle("hide_button");
         }
 
-        // default how often to fetch metadata to 20 seconds
-        var time_to_next_track_starts = 20000;
+        // variables for updating the player's metadata
+        var time_to_next_track_starts;
+        var metadataTimer;
 
         // Fetches the streams metadata from the Airtime live-info API
         // and attaches it to the player UI.
@@ -235,23 +236,19 @@
 
                     if (data.current === null) {
                         $("p.now_playing").html("Offline");
+                        time_to_next_track_starts = 20000;
                     } else {
                         var artist = data.current.name.split(" - ")[0];
                         var track = data.current.name.split(" - ")[1];
+                        console.log(artist);
+                        console.log(track);
                         $("p.now_playing").html(artist + "<span>" + track + "</span>");
 
                         var current_track_end_time = new Date(data.current.ends);
                         var current_time = new Date();
                         //convert current_time to UTC to match the timezone of time_to_next_track_starts
                         current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
-                        //TODO stop the first settimeout from executing!!
                         time_to_next_track_starts = current_track_end_time - current_time;
-                        //console.log((time_to_next_track_starts/1000)/60);
-                        // maybe we should set time_to_next_track_starts to
-                        // (10 || 20 || etc.) minutes if its greater than that
-                        // in case of on-the-fly schedule changes
-
-
                     }
 
                     if (data.next === null) {
@@ -262,8 +259,10 @@
 
                 }
             });
+            console.log(time_to_next_track_starts);
+            // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
+            metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
         }
-        var metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts);
 
     </script>
 
