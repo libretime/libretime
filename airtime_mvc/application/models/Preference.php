@@ -1443,4 +1443,15 @@ class Application_Model_Preference
 
         self::setDiskUsage($currentDiskUsage + $filesize);
     }
+
+
+    public static function setProvisioningStatus($status)
+    {
+        self::setValue("provisioning_status", $status);
+    }
+
+    public static function getProvisioningStatus()
+    {
+        return self::getValue("provisioning_status");
+    }
 }
