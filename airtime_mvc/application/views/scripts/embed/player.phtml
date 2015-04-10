@@ -93,7 +93,7 @@
                             if (musesPlayer.playerMode == "auto") {
                                 var nextAvailableStream = musesPlayer.getNextAvailableStream();
                                 var audio = $(MRP.html.audio);
-                                audio.src = nextAvailableStream["url"];;
+                                audio[0].src = nextAvailableStream["url"];;
                                 audio[0].load();
                                 audio[0].play();
                             } else {
