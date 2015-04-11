@@ -278,7 +278,8 @@ var AIRTIME = (function(AIRTIME){
         oSchedTable.fnDraw();
 
         mod.enableUI();
-        $("#library_content").find("#library_display").dataTable().fnStandingRedraw();
+        //Unneccessary reload of the library pane after moving tracks in the showbuilder pane.
+        //$("#library_content").find("#library_display").dataTable().fnStandingRedraw();
     };
     
     mod.getSelectedCursors = function() {
@@ -319,7 +320,7 @@ var AIRTIME = (function(AIRTIME){
     
     mod.fnMove = function(aSelect, aAfter) {
         
-        mod.disableUI();
+        //mod.disableUI();
         
         $.post(baseUrl+"showbuilder/schedule-move", 
             {"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
@@ -398,12 +399,19 @@ var AIRTIME = (function(AIRTIME){
 
         $scroll.scrollTop(currentTop - scrollingTop + scrolled);
     }
-    
+
     mod.builderDataTable = function() {
         $sbContent = $('#show_builder');
         $lib = $("#library_content"),
         $sbTable = $sbContent.find('table');
         var isInitialized = false;
+
+        var emptyNode = document.createElement('div');
+        var lockedPreviewIcon = document.createElement('span');
+        lockedPreviewIcon.setAttribute('class', 'ui-icon ui-icon-locked');
+        var previewIcon = document.createElement('img');
+        previewIcon.setAttribute('src', baseUrl+'css/images/icon_audioclip.png');
+        previewIcon.setAttribute('title', $.i18n._("Track preview"));
 
         oSchedTable = $sbTable.dataTable( {
             "aoColumns": [
@@ -429,6 +437,7 @@ var AIRTIME = (function(AIRTIME){
             "bServerSide": true,
             "bInfo": false,
             "bAutoWidth": false,
+            "bDeferRender": true,
             
             "bStateSave": true,
             "fnStateSaveParams": function (oSettings, oData) {
@@ -494,8 +503,13 @@ var AIRTIME = (function(AIRTIME){
                     headerIcon;
 
                 fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
+                    //Albert:
+                    //$(nRow.children[iNodeIndex]).replaceWith(emptyNode);
+
+
                     $node = $(nRow.children[iNodeIndex]);
                     $node.html(sRowContent);
+
                     $node.attr('colspan',100);
                     for (i = iNodeIndex + 1, length = nRow.children.length; i < length; i = i+1) {
                         $node = $(nRow.children[i]);
@@ -504,6 +518,7 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     $nRow.addClass(sClass);
+
                 };
                         
                 if (aData.header === true) {
@@ -575,8 +590,9 @@ var AIRTIME = (function(AIRTIME){
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
                     
-                    $node = $(nRow.children[0]);
-                    $node.html('');
+                    //$node = $(nRow.children[0]).replaceWith(emptyNode);;
+                    //$node.html('');
+                    $node.empty();
                     
                     sSeparatorHTML = '<span>'+$.i18n._("Show Empty")+'</span>';
                     cl = cl + " sb-empty odd";
@@ -592,24 +608,32 @@ var AIRTIME = (function(AIRTIME){
                     
                     sSeparatorHTML = '<span>'+$.i18n._("Recording From Line In")+'</span>';
                     cl = cl + " sb-record odd";
-                    
                     fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
                 }
                 else {
                     
                      //add the play function if the file exists on disk.
                     $image = $nRow.find('td.sb-image');
+                    $image.empty();
                     //check if the file exists.
                     if (aData.image === true) {
                         $nRow.addClass("lib-audio");
                         if (!isAudioSupported(aData.mime)) {
-                            $image.html('<span class="ui-icon ui-icon-locked"></span>');
+                            //$image.html('<span class="ui-icon ui-icon-locked"></span>');
+                            $image.append(lockedPreviewIcon);
                         } else {
+                            /*
                             $image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>')
                             .click(function() {
                                 open_show_preview(aData.instance, aData.pos);
                                 return false;
+                            });*/
+                            $image.append(previewIcon.cloneNode(false));
+                            $image.click(function() {
+                                open_show_preview(aData.instance, aData.pos);
+                                return false;
                             });
+
                         }
                     }
                     else {
@@ -625,13 +649,13 @@ var AIRTIME = (function(AIRTIME){
                             hide: 'mouseout'
                         });
                     }
-                    
+
                     $node = $(nRow.children[0]);
                     if (aData.allowed === true && aData.scheduled >= 1 && aData.linked_allowed) {
                         $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
                     }
                     else {
-                        $node.html('');
+                        $node.empty();
                     }
                 }
                 
@@ -705,7 +729,6 @@ var AIRTIME = (function(AIRTIME){
                 $("#draggingContainer").remove();
             },
             "fnDrawCallback": function fnBuilderDrawCallback(oSettings, json) {
-                var isInitialized = false;
 
                 if (!isInitialized) {
                     //when coming to 'Now Playing' page we want the page
@@ -730,7 +753,8 @@ var AIRTIME = (function(AIRTIME){
                     heights = [];
                 
                 clearTimeout(mod.timeout);
-                
+
+                /*
                 //only create the cursor arrows if the library is on the page.
                 if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
 
@@ -775,18 +799,18 @@ var AIRTIME = (function(AIRTIME){
                             $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
                         }
 						
-                        /* If the currently playing track's cursor is selected, 
-                         * and that track is deleted, the cursor position becomes
-                         * unavailble. We have to check the position is available
-                         * before re-highlighting it.
-                         */
+                        //If the currently playing track's cursor is selected,
+                        //and that track is deleted, the cursor position becomes
+                        //unavailble. We have to check the position is available
+                         // before re-highlighting it.
+                        //
                         if ($tr.find(".sb-checkbox").children().hasClass("innerWrapper")) {
                             mod.selectCursor($tr);
                             
-                        /* If the selected cursor is the footer row we need to
-                         * explicitly select it because that row does not have
-                         * innerWrapper class
-                         */     
+                        // If the selected cursor is the footer row we need to
+                         //explicitly select it because that row does not have
+                         // innerWrapper class
+                         //
                         } else if ($tr.hasClass("sb-footer")) {
                             mod.selectCursor($tr);	
                         }
@@ -801,6 +825,7 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     $parent.append($table);
+
                 }
                 
                 //order of importance of elements for setting the next timeout.
@@ -825,7 +850,7 @@ var AIRTIME = (function(AIRTIME){
 						mod.timeout = setTimeout(function() {mod.refresh(aData.id)}, refreshInterval); //need refresh in milliseconds
                         break;
                     }
-                }
+                }*/
                 
                 mod.checkToolBarIcons();
             },
@@ -957,9 +982,9 @@ var AIRTIME = (function(AIRTIME){
                 //item was reordered.
                 else {
                     
-                    ui.item
-                        .empty()
-                        .after(draggingContainer.html());
+                    //ui.item
+                    //    .empty()
+                    //    .after(draggingContainer.html());
                     
                     aItemData.push(ui.item.data("aData"));
                     fnMove();
@@ -968,9 +993,10 @@ var AIRTIME = (function(AIRTIME){
             
             return {
                 placeholder: "sb-placeholder ui-state-highlight",
-                forcePlaceholderSize: true,
+                //forcePlaceholderSize: true,
                 distance: 10,
-                helper: function(event, item) {
+                helper:
+                    function(event, item) {
                     var selected = mod.getSelectedData(NOW_PLAYING_CLASS),          
                         thead = $("#show_builder_table thead"),
                         colspan = thead.find("th").length,
@@ -985,23 +1011,24 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     if (selected.length === 1) {
-                        message = $.i18n._("Moving 1 Item");
+                        //message = $.i18n._("Moving 1 Item");
+                        draggingContainer = item;
                     }
                     else {
                         message = sprintf($.i18n._("Moving %s Items"), selected.length);
-                    }
-                    
-                    draggingContainer = $('<tr/>')
-                        .addClass('sb-helper')
-                        .append('<td/>')
-                        .find("td")
+                        draggingContainer = $('<tr/>')
+                            .addClass('sb-helper')
+                            .append('<td/>')
+                            .find("td")
                             .attr("colspan", colspan)
                             .width(width)
                             .height(height)
                             .addClass("ui-state-highlight")
                             .append(message)
                             .end();
-  
+
+                    }
+
                     helperData = selected;
                     
                     return draggingContainer; 
