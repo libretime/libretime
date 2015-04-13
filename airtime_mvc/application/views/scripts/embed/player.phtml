@@ -180,14 +180,19 @@
 
         // detects errors in FLASH mode
         function musesCallback(event,value) {
+            console.log(event+" - "+value);
             switch (event) {
                 case "ioError":
-                    // connection limit reached or problem connecting to stream
+                    // problem connecting to stream
                     if (value === "0") {
                         var stream = musesPlayer.getNextAvailableStream();
                         musesPlayer.setURL(stream["url"]);
                         musesPlayer.play();
                     }
+                    break;
+                case "securityError":
+                    // max listeners reached
+                    break;
             }
         }
 
