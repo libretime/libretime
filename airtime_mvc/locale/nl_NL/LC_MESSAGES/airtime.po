@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2015-04-13 19:25+0000\n"
+"PO-Revision-Date: 2015-04-13 19:39+0000\n"
 "Last-Translator: dave van den berg <d.berg501@gmail.com>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/projects/p/airtime/language/nl_NL/)\n"
 "MIME-Version: 1.0\n"
@@ -23,102 +23,102 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/audio-player.phtml:5
 #: airtime_mvc/application/controllers/LocaleController.php:28
 msgid "Audio Player"
-msgstr ""
+msgstr "Audio Player"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:27
 msgid "Logout"
-msgstr ""
+msgstr "loguit"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
-msgstr ""
+msgstr "Play"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
-msgstr ""
+msgstr "Stop"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:47
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
 #: airtime_mvc/application/controllers/LocaleController.php:270
 #: airtime_mvc/application/models/Block.php:1347
 msgid "Cue In"
-msgstr ""
+msgstr "Cue In"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:49
 msgid "Set Cue In"
-msgstr ""
+msgstr "Set Cue In"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:54
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
 #: airtime_mvc/application/controllers/LocaleController.php:271
 #: airtime_mvc/application/models/Block.php:1348
 msgid "Cue Out"
-msgstr ""
+msgstr "Cue Out"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
-msgstr ""
+msgstr "Set Cue Out"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
-msgstr ""
+msgstr "Cursor"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:272
 msgid "Fade In"
-msgstr ""
+msgstr "Infaden"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:75
 #: airtime_mvc/application/controllers/LocaleController.php:273
 msgid "Fade Out"
-msgstr ""
+msgstr "uitfaden"
 
 #: airtime_mvc/application/layouts/scripts/login.phtml:24
 #, php-format
 msgid ""
 "%1$s copyright &copy; %2$s All rights reserved.%3$sMaintained and "
 "distributed under the %4$s by %5$s"
-msgstr ""
+msgstr "%1$s copyright © %2$s Alle rechten voorbehouden. %3$s Maintained en gedistribueerd onder de %4$s door %5$s"
 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
 msgid "Live stream"
-msgstr ""
+msgstr "Live stream"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:48
 msgid "Enabled:"
-msgstr ""
+msgstr "Ingeschakeld"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:57
 msgid "Stream Type:"
-msgstr ""
+msgstr "Stream Type:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:67
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:15
 msgid "Bit Rate:"
-msgstr ""
+msgstr "Bit Rate:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:77
 msgid "Service Type:"
-msgstr ""
+msgstr "Service Type:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:87
 msgid "Channels:"
-msgstr ""
+msgstr "kanalen:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:88
 msgid "1 - Mono"
-msgstr ""
+msgstr "1- Mono"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:88
 msgid "2 - Stereo"
-msgstr ""
+msgstr "2 - Stereo"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:97
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:100
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:123
@@ -136,24 +136,24 @@ msgstr ""
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:118
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:26
 msgid "Invalid character entered"
-msgstr ""
+msgstr "Ongeldig teken ingevoerd"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:109
 #: airtime_mvc/application/forms/EmailServerPreferences.php:100
 msgid "Port"
-msgstr ""
+msgstr "poort"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:112
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:90
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:109
 msgid "Only numbers are allowed."
-msgstr ""
+msgstr "Alleen cijfers zijn toegestaan."
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:120
 #: airtime_mvc/application/forms/PasswordChange.php:17
 #: airtime_mvc/application/forms/EmailServerPreferences.php:82
 msgid "Password"
-msgstr ""
+msgstr "wachtwoord"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:132
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:59
@@ -162,137 +162,137 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1351
 #: airtime_mvc/application/services/HistoryService.php:1112
 msgid "Genre"
-msgstr ""
+msgstr "Genre"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:141
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:153
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:9
 msgid "Name"
-msgstr ""
+msgstr "naam"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:162
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:41
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:55
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:57
 msgid "Description"
-msgstr ""
+msgstr "Beschrijving"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:171
 msgid "Mount Point"
-msgstr ""
+msgstr "Aankoppelpunt"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:183
 #: airtime_mvc/application/forms/PasswordRestore.php:25
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:18
 msgid "Username"
-msgstr ""
+msgstr "gebuikersnaam"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:195
 msgid "Admin User"
-msgstr ""
+msgstr "admin gebuiker "
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:207
 msgid "Admin Password"
-msgstr ""
+msgstr "admin wachtwoord "
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:218
 #: airtime_mvc/application/controllers/LocaleController.php:161
 msgid "Getting information from the server..."
-msgstr ""
+msgstr "Het verkrijgen van informatie van de server ..."
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:232
 msgid "Server cannot be empty."
-msgstr ""
+msgstr "Server kan niet leeg zijn"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:237
 msgid "Port cannot be empty."
-msgstr ""
+msgstr "poort kan niet leeg zijn"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:243
 msgid "Mount cannot be empty with Icecast server."
-msgstr ""
+msgstr "Mount kan niet leeg zijn met Icecast server"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:19
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:9
 msgid "Title:"
-msgstr ""
+msgstr "Titel"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:26
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:10
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:34
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:148
 msgid "Creator:"
-msgstr ""
+msgstr "Aangemaakt door"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:33
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:11
 msgid "Album:"
-msgstr ""
+msgstr "Album"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:40
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:12
 msgid "Track:"
-msgstr ""
+msgstr "track"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:47
 #: airtime_mvc/application/forms/AddShowWhat.php:45
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:17
 msgid "Genre:"
-msgstr ""
+msgstr "genre:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:55
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:18
 msgid "Year:"
-msgstr ""
+msgstr "Jaar"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:67
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:19
 msgid "Label:"
-msgstr ""
+msgstr "label"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:74
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:21
 msgid "Composer:"
-msgstr ""
+msgstr "schrijver van een muziekwerk"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:81
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:22
 msgid "Conductor:"
-msgstr ""
+msgstr "Conductor:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:88
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:16
 msgid "Mood:"
-msgstr ""
+msgstr "Mood:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:96
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:20
 msgid "BPM:"
-msgstr ""
+msgstr "BPM:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:105
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:23
 msgid "Copyright:"
-msgstr ""
+msgstr "Copyright:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:112
 msgid "ISRC Number:"
-msgstr ""
+msgstr "ISRC nummer:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:119
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:25
 msgid "Website:"
-msgstr ""
+msgstr "Website:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:126
 #: airtime_mvc/application/forms/Login.php:52
 #: airtime_mvc/application/forms/EditUser.php:118
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:26
 msgid "Language:"
-msgstr ""
+msgstr "Taal:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:135
 #: airtime_mvc/application/forms/AddUser.php:110
@@ -309,7 +309,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:27
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:24
 msgid "Save"
-msgstr ""
+msgstr "opslaan"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:145
 #: airtime_mvc/application/forms/EditHistory.php:141
@@ -317,185 +317,185 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:284
 #: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "Cancel"
-msgstr ""
+msgstr "anuleren"
 
 #: airtime_mvc/application/forms/AddUser.php:29
 #: airtime_mvc/application/forms/Login.php:23
 #: airtime_mvc/application/forms/EditUser.php:36
 msgid "Username:"
-msgstr ""
+msgstr "gebuikersnaam"
 
 #: airtime_mvc/application/forms/AddUser.php:38
 #: airtime_mvc/application/forms/Login.php:38
 #: airtime_mvc/application/forms/EditUser.php:47
 msgid "Password:"
-msgstr ""
+msgstr "wachtwoord"
 
 #: airtime_mvc/application/forms/AddUser.php:46
 #: airtime_mvc/application/forms/EditUser.php:56
 msgid "Verify Password:"
-msgstr ""
+msgstr "Wachtwoord verifiëren:"
 
 #: airtime_mvc/application/forms/AddUser.php:55
 #: airtime_mvc/application/forms/EditUser.php:66
 msgid "Firstname:"
-msgstr ""
+msgstr "voornaam"
 
 #: airtime_mvc/application/forms/AddUser.php:61
 #: airtime_mvc/application/forms/EditUser.php:74
 msgid "Lastname:"
-msgstr ""
+msgstr "achternaam"
 
 #: airtime_mvc/application/forms/AddUser.php:67
 #: airtime_mvc/application/forms/SupportSettings.php:46
 #: airtime_mvc/application/forms/RegisterAirtime.php:51
 #: airtime_mvc/application/forms/EditUser.php:82
 msgid "Email:"
-msgstr ""
+msgstr "e-mail"
 
 #: airtime_mvc/application/forms/AddUser.php:76
 #: airtime_mvc/application/forms/EditUser.php:93
 msgid "Mobile Phone:"
-msgstr ""
+msgstr "mobiel nummer"
 
 #: airtime_mvc/application/forms/AddUser.php:82
 #: airtime_mvc/application/forms/EditUser.php:101
 msgid "Skype:"
-msgstr ""
+msgstr "skype"
 
 #: airtime_mvc/application/forms/AddUser.php:88
 #: airtime_mvc/application/forms/EditUser.php:109
 msgid "Jabber:"
-msgstr ""
+msgstr "Jabber:"
 
 #: airtime_mvc/application/forms/AddUser.php:95
 msgid "User Type:"
-msgstr ""
+msgstr "Gebruiker Type :"
 
 #: airtime_mvc/application/forms/AddUser.php:99
 #: airtime_mvc/application/controllers/LocaleController.php:313
 msgid "Guest"
-msgstr ""
+msgstr "gast"
 
 #: airtime_mvc/application/forms/AddUser.php:100
 #: airtime_mvc/application/controllers/LocaleController.php:311
 msgid "DJ"
-msgstr ""
+msgstr "DJ"
 
 #: airtime_mvc/application/forms/AddUser.php:101
 #: airtime_mvc/application/controllers/LocaleController.php:312
 msgid "Program Manager"
-msgstr ""
+msgstr "Programmabeheer"
 
 #: airtime_mvc/application/forms/AddUser.php:102
 #: airtime_mvc/application/controllers/LocaleController.php:310
 msgid "Admin"
-msgstr ""
+msgstr "Admin"
 
 #: airtime_mvc/application/forms/AddUser.php:120
 #: airtime_mvc/application/forms/EditUser.php:139
 msgid "Login name is not unique."
-msgstr ""
+msgstr "Login naam is niet uniek."
 
 #: airtime_mvc/application/forms/AddShowStyle.php:10
 msgid "Background Colour:"
-msgstr ""
+msgstr "achtergrond kleur"
 
 #: airtime_mvc/application/forms/AddShowStyle.php:29
 msgid "Text Colour:"
-msgstr ""
+msgstr "tekst kleur"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:18
 #: airtime_mvc/application/forms/DateRange.php:16
 msgid "Date Start:"
-msgstr ""
+msgstr "datum start"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:46
 #: airtime_mvc/application/forms/DateRange.php:44
 #: airtime_mvc/application/forms/AddShowRepeats.php:56
 msgid "Date End:"
-msgstr ""
+msgstr "datum einde"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:72
 msgid "Show:"
-msgstr ""
+msgstr "Show"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:80
 msgid "All My Shows:"
-msgstr ""
+msgstr "al mij shows"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:15
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:6
 msgid "days"
-msgstr ""
+msgstr "dagen"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:71
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:66
 msgid "Day must be specified"
-msgstr ""
+msgstr "Dag moet worden opgegeven"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:76
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:71
 msgid "Time must be specified"
-msgstr ""
+msgstr "Tijd moet worden opgegeven"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:103
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:94
 msgid "Must wait at least 1 hour to rebroadcast"
-msgstr ""
+msgstr "Ten minste 1 uur opnieuw uitzenden moet wachten"
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:14
 msgid "Import Folder:"
-msgstr ""
+msgstr "mappen importeren"
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:25
 msgid "Watched Folders:"
-msgstr ""
+msgstr "Gecontroleerde mappen:"
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:40
 msgid "Not a valid Directory"
-msgstr ""
+msgstr "Niet een geldige map"
 
 #: airtime_mvc/application/forms/AddShowWho.php:10
 msgid "Search Users:"
-msgstr ""
+msgstr "zoek gebruikers"
 
 #: airtime_mvc/application/forms/AddShowWho.php:24
 msgid "DJs:"
-msgstr ""
+msgstr "DJs:"
 
 #: airtime_mvc/application/forms/Login.php:67
 #: airtime_mvc/application/views/scripts/login/index.phtml:3
 msgid "Login"
-msgstr ""
+msgstr "Inloggen"
 
 #: airtime_mvc/application/forms/Login.php:86
 msgid "Type the characters you see in the picture below."
-msgstr ""
+msgstr "Typ de tekens die u ziet in de afbeelding hieronder."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:21
 #: airtime_mvc/application/forms/SupportSettings.php:21
 #: airtime_mvc/application/forms/RegisterAirtime.php:30
 msgid "Station Name"
-msgstr ""
+msgstr "station naam"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
 msgid "Default Crossfade Duration (s):"
-msgstr ""
+msgstr "Standaardduur Crossfade (s):"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:40
 #: airtime_mvc/application/forms/GeneralPreferences.php:59
 #: airtime_mvc/application/forms/GeneralPreferences.php:78
 msgid "enter a time in seconds 0{.0}"
-msgstr ""
+msgstr "Voer een tijd in seconden 0 {.0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr ""
+msgstr "standaard fade in (s):"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr ""
+msgstr "standaard fade uit (s):"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
@@ -2167,7 +2167,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:262
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: airtime_mvc/application/controllers/LocaleController.php:263
 msgid "End"
@@ -2255,7 +2255,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:304
 msgid "Disk"
-msgstr ""
+msgstr "hardeschijf"
 
 #: airtime_mvc/application/controllers/LocaleController.php:306
 msgid "Look in"
@@ -2263,11 +2263,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:308
 msgid "Open"
-msgstr ""
+msgstr "open"
 
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Guests can do the following:"
-msgstr ""
+msgstr "Gasten kunnen het volgende doen:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:315
 msgid "View schedule"
@@ -2287,7 +2287,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:319
 msgid "Import media files"
-msgstr ""
+msgstr "Mediabestanden importeren"
 
 #: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "Create playlists, smart blocks, and webstreams"
@@ -2331,7 +2331,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "View system status"
-msgstr ""
+msgstr "Bekijk systeem status"
 
 #: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "Access playout history"
@@ -2343,15 +2343,15 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "Show / hide columns"
-msgstr ""
+msgstr "Geef weer / verberg kolommen"
 
 #: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "From {from} to {to}"
-msgstr ""
+msgstr "Van {from} tot {to}"
 
 #: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "kbps"
-msgstr ""
+msgstr "kbps"
 
 #: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "yyyy-mm-dd"
@@ -2363,62 +2363,62 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:341
 msgid "kHz"
-msgstr ""
+msgstr "kHz"
 
 #: airtime_mvc/application/controllers/LocaleController.php:344
 msgid "Su"
-msgstr ""
+msgstr "Zo"
 
 #: airtime_mvc/application/controllers/LocaleController.php:345
 msgid "Mo"
-msgstr ""
+msgstr "Ma"
 
 #: airtime_mvc/application/controllers/LocaleController.php:346
 msgid "Tu"
-msgstr ""
+msgstr "Di"
 
 #: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "We"
-msgstr ""
+msgstr "Wo"
 
 #: airtime_mvc/application/controllers/LocaleController.php:348
 msgid "Th"
-msgstr ""
+msgstr "Do"
 
 #: airtime_mvc/application/controllers/LocaleController.php:349
 msgid "Fr"
-msgstr ""
+msgstr "Vr"
 
 #: airtime_mvc/application/controllers/LocaleController.php:350
 msgid "Sa"
-msgstr ""
+msgstr "Za"
 
 #: airtime_mvc/application/controllers/LocaleController.php:351
 #: airtime_mvc/application/controllers/LocaleController.php:379
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #: airtime_mvc/application/controllers/LocaleController.php:353
 msgid "Hour"
-msgstr ""
+msgstr "Uur"
 
 #: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Minute"
-msgstr ""
+msgstr "Minuut"
 
 #: airtime_mvc/application/controllers/LocaleController.php:355
 msgid "Done"
-msgstr ""
+msgstr "Klaar"
 
 #: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "Select files"
-msgstr ""
+msgstr "Selecteer bestanden"
 
 #: airtime_mvc/application/controllers/LocaleController.php:359
 #: airtime_mvc/application/controllers/LocaleController.php:360
 msgid "Add files to the upload queue and click the start button."
-msgstr ""
+msgstr "Voeg bestanden aan de upload wachtrij toe en klik op de begin knop"
 
 #: airtime_mvc/application/controllers/LocaleController.php:361
 #: airtime_mvc/application/controllers/LocaleController.php:362
@@ -2426,23 +2426,23 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:5
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:8
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Add Files"
-msgstr ""
+msgstr "Bestanden toevoegen"
 
 #: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Stop Upload"
-msgstr ""
+msgstr "Stop upload"
 
 #: airtime_mvc/application/controllers/LocaleController.php:365
 msgid "Start upload"
-msgstr ""
+msgstr "Begin upload"
 
 #: airtime_mvc/application/controllers/LocaleController.php:366
 msgid "Add files"
-msgstr ""
+msgstr "Bestanden toevoegen"
 
 #: airtime_mvc/application/controllers/LocaleController.php:367
 #, php-format
@@ -2455,15 +2455,15 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "Drag files here."
-msgstr ""
+msgstr "Sleep bestanden hierheen."
 
 #: airtime_mvc/application/controllers/LocaleController.php:370
 msgid "File extension error."
-msgstr ""
+msgstr "Bestandsextensie fout"
 
 #: airtime_mvc/application/controllers/LocaleController.php:371
 msgid "File size error."
-msgstr ""
+msgstr "Bestandsgrote fout."
 
 #: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "File count error."
@@ -2475,15 +2475,15 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "HTTP Error."
-msgstr ""
+msgstr "HTTP fout."
 
 #: airtime_mvc/application/controllers/LocaleController.php:375
 msgid "Security error."
-msgstr ""
+msgstr "Beveiligingsfout."
 
 #: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "Generic error."
-msgstr ""
+msgstr "Generieke fout."
 
 #: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "IO error."
@@ -2492,7 +2492,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:378
 #, php-format
 msgid "File: %s"
-msgstr ""
+msgstr "Bestand: %s"
 
 #: airtime_mvc/application/controllers/LocaleController.php:380
 #, php-format
@@ -2509,11 +2509,11 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "Error: File too large: "
-msgstr ""
+msgstr "Fout: Bestand is te groot"
 
 #: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "Error: Invalid file extension: "
-msgstr ""
+msgstr "Fout: Niet toegestane bestandsextensie "
 
 #: airtime_mvc/application/controllers/LocaleController.php:386
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:25
@@ -2808,7 +2808,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:4
 msgid "Service"
-msgstr ""
+msgstr "Dienst"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:6
 msgid "Uptime"
@@ -2820,7 +2820,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:8
 msgid "Memory"
-msgstr ""
+msgstr "Geheugen"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:14
 #, php-format
@@ -2829,7 +2829,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:30
 msgid "Disk Space"
-msgstr ""
+msgstr "Hardeschijf ruimte"
 
 #: airtime_mvc/application/views/scripts/form/preferences.phtml:5
 msgid "Email / Mail Server Settings"
@@ -3046,15 +3046,15 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:39
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:40
 msgid "and"
-msgstr ""
+msgstr "en"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:63
 msgid " to "
-msgstr ""
+msgstr "tot"
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:120
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:133
@@ -3113,31 +3113,31 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:11
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:11
 msgid "New"
-msgstr ""
+msgstr "Nieuw"
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:8
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:14
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:14
 msgid "New Playlist"
-msgstr ""
+msgstr "Nieuwe Playlist"
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:9
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:15
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:15
 msgid "New Smart Block"
-msgstr ""
+msgstr "Nieuw Slim Blok"
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:10
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:16
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:16
 msgid "New Webstream"
-msgstr ""
+msgstr "Nieuwe Webstream"
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:39
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:53
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:55
 msgid "View / edit description"
-msgstr ""
+msgstr "Bekijk / bewerk beschrijving"
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:52
 msgid "Stream URL:"
@@ -3145,11 +3145,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:57
 msgid "Default Length:"
-msgstr ""
+msgstr "Standaard lengte:"
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:64
 msgid "No webstream"
-msgstr ""
+msgstr "Geen webstream"
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:2
 msgid "Stream Settings"
@@ -3175,7 +3175,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:5
 #: airtime_mvc/application/views/scripts/library/library.phtml:10
 msgid "Advanced Search Options"
-msgstr ""
+msgstr "Geadvanceerde zoek opties"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:23
 msgid "previous"
@@ -3195,12 +3195,12 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:42
 msgid "stop"
-msgstr ""
+msgstr "Stop"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:60
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:90
 msgid "mute"
-msgstr ""
+msgstr "dempen"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:63
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:91
@@ -3323,11 +3323,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
 msgid "Share"
-msgstr ""
+msgstr "Deel"
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:64
 msgid "Select stream:"
-msgstr ""
+msgstr "Selecteer stream:"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:9
 #, php-format
@@ -3343,7 +3343,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
-msgstr ""
+msgstr "Nieuw wachtwoord"
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:6
 msgid "Please enter and confirm your new password in the fields below."
@@ -3365,7 +3365,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-restore-after.phtml:7
 msgid "Back to login screen"
-msgstr ""
+msgstr "Terug naar het inlog scherm"
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:7
 #, php-format
@@ -3376,15 +3376,15 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
-msgstr ""
+msgstr "Vorige:"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:10
 msgid "Next:"
-msgstr ""
+msgstr "Volgende:"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:24
 msgid "Source Streams"
-msgstr ""
+msgstr "Bron Streams"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:29
 msgid "Master Source"
@@ -3392,7 +3392,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:38
 msgid "Show Source"
-msgstr ""
+msgstr "Bron weergeven"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:45
 msgid "Scheduled Play"
@@ -3404,7 +3404,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:55
 msgid "Listen"
-msgstr ""
+msgstr "Luister"
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:59
 msgid "Station time"
@@ -3421,7 +3421,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 msgid "My Account"
-msgstr ""
+msgstr "Mijn account"
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:3
 msgid "Manage Users"
@@ -3513,7 +3513,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:72
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:19
 msgid "Fade in: "
-msgstr ""
+msgstr "Fade in:"
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:70
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:75
@@ -3574,11 +3574,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:10
 msgid "What"
-msgstr ""
+msgstr "Wat"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
 msgid "When"
-msgstr ""
+msgstr "Wanneer"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:19
 msgid "Live Stream Input"
@@ -3590,11 +3590,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:29
 msgid "Who"
-msgstr ""
+msgstr "Wie"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:33
 msgid "Style"
-msgstr ""
+msgstr "Stijl"
 
 #: airtime_mvc/application/models/ShowBuilder.php:212
 #, php-format
@@ -3880,31 +3880,31 @@ msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1119
 msgid "Track"
-msgstr ""
+msgstr "track"
 
 #: airtime_mvc/application/services/HistoryService.php:1167
 msgid "Played"
-msgstr ""
+msgstr "Gespeeld"
 
 #: airtime_mvc/application/common/DateHelper.php:213
 #, php-format
 msgid "The year %s must be within the range of 1753 - 9999"
-msgstr ""
+msgstr "Het jaar %s moet binnen het bereik van 1753-9999"
 
 #: airtime_mvc/application/common/DateHelper.php:216
 #, php-format
 msgid "%s-%s-%s is not a valid date"
-msgstr ""
+msgstr "%s-%s-%s dit is geen geldige datum"
 
 #: airtime_mvc/application/common/DateHelper.php:240
 #, php-format
 msgid "%s:%s:%s is not a valid time"
-msgstr ""
+msgstr "%s:%s:%s Dit is geen geldige tijd."
 
 #: airtime_mvc/library/propel/contrib/pear/HTML_QuickForm_Propel/Propel.php:512
 msgid "Please selection an option"
-msgstr ""
+msgstr "Gelieve selectie een optie"
 
 #: airtime_mvc/library/propel/contrib/pear/HTML_QuickForm_Propel/Propel.php:531
 msgid "No Records"
-msgstr ""
+msgstr "Geen records"
