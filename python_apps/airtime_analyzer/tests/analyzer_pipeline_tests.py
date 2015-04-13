@@ -21,15 +21,16 @@ def teardown():
 
 def test_basic():
     filename = os.path.basename(DEFAULT_AUDIO_FILE)
-    q = multiprocessing.Queue()
+    q = Queue.Queue()
     #cloud_storage_config_path = '/etc/airtime-saas/production/cloud_storage.conf'
     #cloud_storage_config = config_file.read_config_file(cloud_storage_config_path)
     cloud_storage_config = SafeConfigParser()
     cloud_storage_config.add_section("current_backend")
     cloud_storage_config.set("current_backend", "storage_backend", "file")
     file_prefix = u''
+    storage_backend = "file"
     #This actually imports the file into the "./Test Artist" directory.
-    AnalyzerPipeline.run_analysis(q, DEFAULT_AUDIO_FILE, u'.', filename, file_prefix, cloud_storage_config)
+    AnalyzerPipeline.run_analysis(q, DEFAULT_AUDIO_FILE, u'.', filename, storage_backend, file_prefix, cloud_storage_config)
     metadata = q.get()
     assert metadata['track_title'] == u'Test Title'
     assert metadata['artist_name'] == u'Test Artist'
@@ -47,13 +48,13 @@ def test_wrong_type_queue_param():
 
 @raises(TypeError)
 def test_wrong_type_string_param2():
-    AnalyzerPipeline.run_analysis(multiprocessing.queues.Queue(), '', u'', u'')
+    AnalyzerPipeline.run_analysis(Queue.Queue(), '', u'', u'')
 
 @raises(TypeError)
 def test_wrong_type_string_param3():
-    AnalyzerPipeline.run_analysis(multiprocessing.queues.Queue(), u'', '', u'')
+    AnalyzerPipeline.run_analysis(Queue.Queue(), u'', '', u'')
 
 @raises(TypeError)
 def test_wrong_type_string_param4():
-    AnalyzerPipeline.run_analysis(multiprocessing.queues.Queue(), u'', u'', '')
+    AnalyzerPipeline.run_analysis(Queue.Queue(), u'', u'', '')
 

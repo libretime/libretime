@@ -99,13 +99,10 @@ def send_http_request(picklable_request, retry_queue):
     if not isinstance(picklable_request, PicklableHttpRequest):
         raise TypeError("picklable_request must be a PicklableHttpRequest. Was of type " + type(picklable_request).__name__)
     try: 
-        #t = threading.Timer(60, alert_hung_request)
-        #t.start()
         bare_request = picklable_request.create_request()
         s = requests.Session()
         prepared_request = s.prepare_request(bare_request)
         r = s.send(prepared_request, timeout=StatusReporter._HTTP_REQUEST_TIMEOUT, verify=False) # SNI is a pain in the ass
-        #t.cancel() # Watchdog no longer needed.
         r.raise_for_status() # Raise an exception if there was an http error code returned
         logging.info("HTTP request sent successfully.")
     except requests.exceptions.HTTPError as e:
@@ -150,63 +147,6 @@ def is_web_server_broken(url):
         # The request worked fine, so the web server and Airtime are still up.
         return False 
     return False
-
-
-def alert_hung_request():
-    ''' Temporary function to alert our Airtime developers when we have a request that's
-        blocked indefinitely. We're working with the python requests developers to figure this
-        one out. (We need to strace airtime_analyzer to figure out where exactly it's blocked.)
-        There's some weird circumstance where this can happen, even though we specify a timeout.
-    '''
-    pid = os.getpid()
- 
-    # Capture a list of the open file/socket handles so we can interpret the strace log
-    lsof_log = subprocess.check_output(["lsof -p %s" % str(pid)], shell=True)
-
-    strace_log = ""
-    # Run strace on us for 10 seconds
-    try:
-        subprocess.check_output(["timeout 10 strace -p %s -s 1000 -f -v -o /var/log/airtime/airtime_analyzer_strace.log -ff " % str(pid)],
-                                shell=True)
-    except subprocess.CalledProcessError as e: # When the timeout fires, it returns a crazy code
-        strace_log = e.output
-        pass
-    
-
-    # Dump a traceback
-    code = []
-    for threadId, stack in sys._current_frames().items():
-        code.append("\n# ThreadID: %s" % threadId)
-        for filename, lineno, name, line in traceback.extract_stack(stack):
-            code.append('File: "%s", line %d, in %s' % (filename, lineno, name))
-            if line:
-                code.append("  %s" % (line.strip()))
-    stack_trace = ('\n'.join(code))
-
-    logging.critical(stack_trace)
-    logging.critical(strace_log)
-    logging.critical(lsof_log)
-    # Exit the program so that upstart respawns us
-    #sys.exit(-1) #deadlocks :(
-    subprocess.check_output(["kill -9 %s" % str(pid)], shell=True) # Ugh, avert your eyes
-
-'''
-request_running = False
-request_running_lock = threading.Lock()
-def is_request_running():
-    request_running_lock.acquire()
-    rr = request_running
-    request_running_lock.release()
-    return rr
-def set_request_running(is_running):
-    request_running_lock.acquire()
-    request_running = is_running
-    request_running_lock.release()
-def is_request_hung():
-'''
-
-
-
 
 
 class StatusReporter():
