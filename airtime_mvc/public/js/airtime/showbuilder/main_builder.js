@@ -168,7 +168,7 @@ AIRTIME = (function(AIRTIME) {
         $builder.find(dateStartId)
         	.datepicker(oBaseDatePickerSettings)
         	.blur(validateTimeRange);
-        
+
         $builder.find(timeStartId)
         	.timepicker(oBaseTimePickerSettings)
         	.blur(validateTimeRange);

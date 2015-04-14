@@ -590,8 +590,7 @@ var AIRTIME = (function(AIRTIME){
                     //remove the column classes from all tds.
                     $nRow.find('td').removeClass();
                     
-                    //$node = $(nRow.children[0]).replaceWith(emptyNode);;
-                    //$node.html('');
+                    $node = $(nRow.children[0]);
                     if ($node) {
                         $node.empty();
                     }
@@ -1014,8 +1013,18 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     if (selected.length === 1) {
-                        //message = $.i18n._("Moving 1 Item");
-                        draggingContainer = item;
+                        message = sprintf($.i18n._("Moving %s"), selected[0].title);
+                        //draggingContainer = item; //Default DataTables drag and drop
+                        draggingContainer = $('<tr/>')
+                            .addClass('sb-helper')
+                            .append('<td/>')
+                            .find("td")
+                            .attr("colspan", colspan)
+                            .width(width)
+                            .height(height)
+                            .addClass("ui-state-highlight")
+                            .append(message)
+                            .end();
                     }
                     else {
                         message = sprintf($.i18n._("Moving %s Items"), selected.length);
