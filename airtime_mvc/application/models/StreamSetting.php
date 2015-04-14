@@ -1,4 +1,7 @@
 <?php
+
+define("MAX_NUM_STREAMS", 4);
+
 class Application_Model_StreamSetting
 {
     public static function setValue($key, $value, $type)
@@ -41,7 +44,7 @@ class Application_Model_StreamSetting
         }
     }
 
-    public static function getValue($key)
+    public static function getValue($key, $default="")
     {
         $con = Propel::getConnection();
         
@@ -59,7 +62,27 @@ class Application_Model_StreamSetting
             throw new Exception("Error: $msg");
         }
 
-        return $result ? $result : "";
+        return $result ? $result : $default;
+    }
+
+    public static function getEnabledStreamData()
+    {
+        $streams = Array();
+        $streamIds = self::getEnabledStreamIds();
+        foreach ($streamIds as $id) {
+            $streamData = self::getStreamData($id);
+            $prefix = $id."_";
+            $host = $streamData[$prefix."host"];
+            $port = $streamData[$prefix."port"];
+            $mount = $streamData[$prefix."mount"];
+            $streams[$id] = Array(
+                "url" => "http://$host:$port/$mount",
+                "codec" => $streamData[$prefix."type"],
+                "bitrate" => $streamData[$prefix."bitrate"],
+                "mobile" => $streamData[$prefix."mobile"]
+            );
+        }
+        return $streams;
     }
 
     /* Returns the id's of all streams that are enabled in an array. An
@@ -83,49 +106,62 @@ class Application_Model_StreamSetting
         return $ids;
     }
 
-    /* Returns only global data as array*/
-    public static function getGlobalData()
-    {
-        $con = Propel::getConnection();
-        $sql = "SELECT * "
-            ."FROM cc_stream_setting "
-            ."WHERE keyname IN ('output_sound_device', 'icecast_vorbis_metadata')";
-
-        $rows = Application_Common_Database::prepareAndExecute($sql, array(), 'all');
-        
-        $data = array();
-
-        foreach ($rows as $row) {
-            $data[$row["keyname"]] = $row["value"];
-        }
-
-        return $data;
-    }
-
     /* Returns all information related to a specific stream. An example
      * of a stream id is 's1' or 's2'. */
     public static function getStreamData($p_streamId)
     {
-        $con = Propel::getConnection();
-        $streamId = pg_escape_string($p_streamId);
-        $sql = "SELECT * "
-                ."FROM cc_stream_setting "
-                ."WHERE keyname LIKE '{$streamId}_%'";
+        $rows = CcStreamSettingQuery::create()
+            ->filterByDbKeyName("${p_streamId}_%")
+            ->find();
 
-        $stmt = $con->prepare($sql);
-        
-        if ($stmt->execute()) {
-            $rows = $stmt->fetchAll();
-        } else {
-            $msg = implode(',', $stmt->errorInfo());
-            throw new Exception("Error: $msg");
-        }
-
+        //This is way too much code because someone made only stupid decisions about how
+        //the layout of this table worked. The git history doesn't lie.
         $data = array();
-
         foreach ($rows as $row) {
-            $data[$row["keyname"]] = $row["value"];
+            $key = $row->getDbKeyName();
+            $value = $row->getDbValue();
+            $type = $row->getDbType();
+            //Fix stupid defaults so we end up with proper typing in our JSON
+            if ($row->getDbType() == "boolean") {
+                if (empty($value)) {
+                    //In Python, there is no way to tell the difference between ints and booleans,
+                    //which we need to differentiate between for when we're generating the Liquidsoap
+                    //config file. Returning booleans as a string is a workaround that lets us do that.
+                    $value = "false";
+                }
+                $data[$key] = $value;
+            }
+            elseif ($row->getDbType() == "integer") {
+                if (empty($value)) {
+                    $value = 0;
+                }
+                $data[$key] = intval($value);
+            }
+            else {
+                $data[$key] = $value;
+            }
         }
+
+        //Add in defaults in case they don't exist in the database.
+        $keyPrefix = $p_streamId . '_';
+        self::ensureKeyExists($keyPrefix . 'admin_pass', $data);
+        self::ensureKeyExists($keyPrefix . 'admin_user', $data);
+        self::ensureKeyExists($keyPrefix . 'bitrate', $data, 128);
+        self::ensureKeyExists($keyPrefix . 'channels', $data, "stereo");
+        self::ensureKeyExists($keyPrefix . 'description', $data);
+        self::ensureKeyExists($keyPrefix . 'enable', $data, "false");
+        self::ensureKeyExists($keyPrefix . 'genre', $data);
+        self::ensureKeyExists($keyPrefix . 'host', $data);
+        self::ensureKeyExists($keyPrefix . 'liquidsoap_error', $data, "waiting");
+        self::ensureKeyExists($keyPrefix . 'mount', $data);
+        self::ensureKeyExists($keyPrefix . 'name', $data);
+        self::ensureKeyExists($keyPrefix . 'output', $data);
+        self::ensureKeyExists($keyPrefix . 'pass', $data);
+        self::ensureKeyExists($keyPrefix . 'port', $data, 8000);
+        self::ensureKeyExists($keyPrefix . 'type', $data);
+        self::ensureKeyExists($keyPrefix . 'url', $data);
+        self::ensureKeyExists($keyPrefix . 'user', $data);
+        self::ensureKeyExists($keyPrefix . 'mobile', $data);
 
         return $data;
     }
@@ -134,76 +170,41 @@ class Application_Model_StreamSetting
      * make data easier to iterate over */
     public static function getStreamDataNormalized($p_streamId)
     {
-        $con = Propel::getConnection();
-        $streamId = pg_escape_string($p_streamId);
-        $sql = "SELECT * "
-                ."FROM cc_stream_setting "
-                ."WHERE keyname LIKE '{$streamId}_%'";
-
-        $stmt = $con->prepare($sql);
-        
-        if ($stmt->execute()) {
-            $rows = $stmt->fetchAll();
-        } else {
-            $msg = implode(',', $stmt->errorInfo());
-            throw new Exception("Error: $msg");
+        $settings = self::getStreamData($p_streamId);
+        foreach ($settings as $key => $value)
+        {
+            unset($settings[$key]);
+            $newKey = substr($key, strlen($p_streamId)+1); //$p_streamId is assumed to be the key prefix.
+            $settings[$newKey] = $value;
         }
+        return $settings;
+    }
 
-        $data = array();
-
-        foreach ($rows as $row) {
-            list($id, $key) = explode("_", $row["keyname"], 2);
-            $data[$key] = $row["value"];
+    private static function ensureKeyExists($key, &$array, $default='')
+    {
+        if (!array_key_exists($key, $array)) {
+            $array[$key] = $default;
         }
-
-        return $data;
+        return $array;
     }
 
     public static function getStreamSetting()
     {
-        $con = Propel::getConnection();
-        $sql = "SELECT *"
-                ." FROM cc_stream_setting"
-                ." WHERE keyname not like '%_error' AND keyname not like '%_admin_%'";
-
-        $rows = Application_Common_Database::prepareAndExecute($sql, array(), 'all');
-
-        $exists = array();
-
-        foreach ($rows as $r) {
-            if ($r['keyname'] == 'master_live_stream_port') {
-                $exists['master_live_stream_port'] = true;
-            } elseif ($r['keyname'] == 'master_live_stream_mp') {
-                $exists['master_live_stream_mp'] = true;
-            } elseif ($r['keyname'] == 'dj_live_stream_port') {
-                $exists['dj_live_stream_port'] = true;
-            } elseif ($r['keyname'] == 'dj_live_stream_mp') {
-                $exists['dj_live_stream_mp'] = true;
-            }
+        $settings = array();
+        $numStreams = MAX_NUM_STREAMS;
+        for ($streamIdx = 1; $streamIdx <= $numStreams; $streamIdx++)
+        {
+            $settings = array_merge($settings, self::getStreamData("s" . $streamIdx));
         }
-
-        if (!isset($exists["master_live_stream_port"])) {
-            $rows[] = array("keyname" =>"master_live_stream_port",
-                            "value"=>self::getMasterLiveStreamPort(),
-                            "type"=>"integer");
-        }
-        if (!isset($exists["master_live_stream_mp"])) {
-            $rows[] = array("keyname" =>"master_live_stream_mp",
-                            "value"=>self::getMasterLiveStreamMountPoint(),
-                            "type"=>"string");
-        }
-        if (!isset($exists["dj_live_stream_port"])) {
-            $rows[] = array("keyname" =>"dj_live_stream_port",
-                            "value"=>self::getDjLiveStreamPort(),
-                            "type"=>"integer");
-        }
-        if (!isset($exists["dj_live_stream_mp"])) {
-            $rows[] = array("keyname" =>"dj_live_stream_mp",
-                            "value"=>self::getDjLiveStreamMountPoint(),
-                            "type"=>"string");
-        }
-
-        return $rows;
+        $settings["master_live_stream_port"] = self::getMasterLiveStreamPort();
+        $settings["master_live_stream_mp"] = self::getMasterLiveStreamMountPoint();
+        $settings["dj_live_stream_port"] = self::getDjLiveStreamPort();
+        $settings["dj_live_stream_mp"] = self::getDjLiveStreamMountPoint();
+        $settings["off_air_meta"] = self::getOffAirMeta();
+        $settings["icecast_vorbis_metadata"] = self::getIcecastVorbisMetadata();
+        $settings["output_sound_device"] = self::getOutputSoundDevice();
+        $settings["output_sound_device_type"] = self::getOutputSoundDeviceType();
+        return $settings;
     }
 
 
@@ -211,7 +212,10 @@ class Application_Model_StreamSetting
     {
         $stream_setting = CcStreamSettingQuery::create()->filterByDbKeyName($key)->findOne();
         if (is_null($stream_setting)) {
-            throw new Exception("Keyname $key does not exist!");
+            //throw new Exception("Keyname $key does not exist!");
+            $stream_setting = new CcStreamSetting();
+            $stream_setting->setDbKeyName($key);
+            $stream_setting->setDbType("");
         }
 
         $stream_setting->setDbValue($value);
@@ -411,7 +415,7 @@ class Application_Model_StreamSetting
 
     public static function getMasterLiveStreamPort()
     {
-        return self::getValue("master_live_stream_port");
+        return self::getValue("master_live_stream_port", 8001);
     }
 
     public static function setMasterLiveStreamMountPoint($value)
@@ -421,7 +425,7 @@ class Application_Model_StreamSetting
 
     public static function getMasterLiveStreamMountPoint()
     {
-        return self::getValue("master_live_stream_mp");
+        return self::getValue("master_live_stream_mp", "/master");
     }
 
     public static function setDjLiveStreamPort($value)
@@ -431,7 +435,7 @@ class Application_Model_StreamSetting
 
     public static function getDjLiveStreamPort()
     {
-        return self::getValue("dj_live_stream_port");
+        return self::getValue("dj_live_stream_port", 8001);
     }
 
     public static function setDjLiveStreamMountPoint($value)
@@ -441,7 +445,7 @@ class Application_Model_StreamSetting
 
     public static function getDjLiveStreamMountPoint()
     {
-        return self::getValue("dj_live_stream_mp");
+        return self::getValue("dj_live_stream_mp", "/show");
     }
     
     public static function getAdminUser($stream){
@@ -487,5 +491,17 @@ class Application_Model_StreamSetting
     
     public static function SetListenerStatError($key, $v) {
         self::setValue($key, $v, 'string');
+    }
+
+    public static function getIcecastVorbisMetadata() {
+        return self::getValue("icecast_vorbis_metadata", "");
+    }
+
+    public static function getOutputSoundDevice() {
+        return self::getValue("output_sound_device", "false");
+    }
+
+    public static function getOutputSoundDeviceType() {
+        return self::getValue("output_sound_device_type", "");
     }
 }

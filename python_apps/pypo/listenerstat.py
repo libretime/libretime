@@ -118,10 +118,10 @@ class ListenerStat(Thread):
                     else:
                         stats.append(self.get_shoutcast_stats(v))
                     self.update_listener_stat_error(v["mount"], 'OK')
-                except Exception, e:
+                except Exception as e:
                     try:
                         self.update_listener_stat_error(v["mount"], str(e))
-                    except Exception, e:
+                    except Exception as e:
                         self.logger.error('Exception: %s', e)
 
         return stats
