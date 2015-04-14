@@ -184,14 +184,29 @@
             switch (event) {
                 case "ioError":
                     // problem connecting to stream
-                    if (value === "0") {
-                        var stream = musesPlayer.getNextAvailableStream();
+                    var stream;
+                    if (musesPlayer.playerMode == "auto") {
+                        stream = musesPlayer.getNextAvailableStream();
                         musesPlayer.setURL(stream["url"]);
-                        musesPlayer.play();
+                    } else {
+                        stream = musesPlayer.settings.url;
+                        musesPlayer.setURL(stream);
                     }
+                    musesPlayer.play();
                     break;
                 case "securityError":
                     // max listeners reached
+                    if (musesPlayer.playerMode == "auto") {
+                        var stream = musesPlayer.getNextAvailableStream();
+                        musesPlayer.setURL(stream["url"]);
+                        musesPlayer.play();
+                    } else {
+                        // If in manual mode and there is a problem connecting to
+                        // the stream display an error and stop play back.
+                        togglePlayStopButton();
+                        clearTimeout(metadataTimer);
+                        $("p.now_playing").html("Error - Try again later");
+                    }
                     break;
             }
         }
