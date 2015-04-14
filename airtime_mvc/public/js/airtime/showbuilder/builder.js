@@ -320,7 +320,7 @@ var AIRTIME = (function(AIRTIME){
     
     mod.fnMove = function(aSelect, aAfter) {
         
-        //mod.disableUI();
+        mod.disableUI();
         
         $.post(baseUrl+"showbuilder/schedule-move", 
             {"format": "json", "selectedItem": aSelect, "afterItem": aAfter},  
@@ -592,7 +592,9 @@ var AIRTIME = (function(AIRTIME){
                     
                     //$node = $(nRow.children[0]).replaceWith(emptyNode);;
                     //$node.html('');
-                    $node.empty();
+                    if ($node) {
+                        $node.empty();
+                    }
                     
                     sSeparatorHTML = '<span>'+$.i18n._("Show Empty")+'</span>';
                     cl = cl + " sb-empty odd";
@@ -827,7 +829,7 @@ var AIRTIME = (function(AIRTIME){
                     $parent.append($table);
 
                 }
-                
+                 */
                 //order of importance of elements for setting the next timeout.
                 elements = [
                     $sbTable.find("tr."+NOW_PLAYING_CLASS),
@@ -850,7 +852,8 @@ var AIRTIME = (function(AIRTIME){
 						mod.timeout = setTimeout(function() {mod.refresh(aData.id)}, refreshInterval); //need refresh in milliseconds
                         break;
                     }
-                }*/
+                }
+
                 
                 mod.checkToolBarIcons();
             },

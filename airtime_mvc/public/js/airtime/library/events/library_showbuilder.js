@@ -8,7 +8,7 @@ var AIRTIME = (function(AIRTIME) {
     mod = AIRTIME.library;
 
     mod.checkAddButton = function() {
-        var selected = mod.getChosenItemsLength(), $cursor = $('tr.cursor-selected-row'), check = false;
+        var selected = mod.getChosenItemsLength(), $cursor = $('tr.sb-selected'), check = false;
 
         // make sure library items are selected and a cursor is selected.
         if (selected !== 0 && $cursor.length !== 0) {
@@ -146,7 +146,7 @@ var AIRTIME = (function(AIRTIME) {
                             });
                         }
     
-                        $("#show_builder_table tr.cursor-selected-row")
+                        $("#show_builder_table tr.sb-selected")
                                 .each(function(i, el) {
                                     aData.push($(el).prev().data("aData"));
                                 });
