@@ -468,9 +468,11 @@ var AIRTIME = (function(AIRTIME){
                 }
                 
                 a = oData.ColReorder;
-                for (i = 0, length = a.length; i < length; i++) {   
-                    if (typeof(a[i]) === "string") {
-                        a[i] = parseInt(a[i], 10);
+                if (a) {
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = parseInt(a[i], 10);
+                        }
                     }
                 }
                
