@@ -186,7 +186,6 @@
                     var stream;
                     if (musesPlayer.playerMode == "auto") {
                         stream = musesPlayer.getNextAvailableStream();
-                        console.log(stream);
                         musesPlayer.setURL(stream["url"]);
                     } else {
                         stream = musesPlayer.settings.url;
