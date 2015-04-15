@@ -358,3 +358,21 @@ INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', 'UTC');
 INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0');
 
 --end added in 2.5.2
+
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_enable', 'false', 'boolean');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_output', 'icecast', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_name', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_type', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_bitrate', '', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_host', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_port', '', 'integer');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_pass', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_admin_user', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_admin_pass', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_mount', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_url', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_description', '', 'string');
+INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('s4_genre', '', 'string');
+INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s4_channels', 'stereo', 'string');
+

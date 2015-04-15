@@ -118,7 +118,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 "locale",
                 "upgrade",
                 'whmcs-login',
-                "provisioning"
+                "provisioning",
+                "embed"
             )))
         {
             $this->setRoleName("G");
