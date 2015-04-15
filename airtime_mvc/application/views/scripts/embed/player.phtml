@@ -180,7 +180,6 @@
 
         // detects errors in FLASH mode
         function musesCallback(event,value) {
-            console.log(event+" - "+value);
             switch (event) {
                 case "ioError":
                     // problem connecting to stream
@@ -203,7 +202,10 @@
                     } else {
                         // If in manual mode and there is a problem connecting to
                         // the stream display an error and stop play back.
-                        togglePlayStopButton();
+                        MRP.stop();
+                        if ($("#play_button").hasClass("hide_button")) {
+                            togglePlayStopButton();
+                        }
                         clearTimeout(metadataTimer);
                         $("p.now_playing").html("Error - Try again later");
                     }
