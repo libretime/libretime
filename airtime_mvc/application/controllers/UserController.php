@@ -118,7 +118,8 @@ class UserController extends Zend_Controller_Action
     }
     
     public function editUserAction()
-    {        
+    {
+        session_start(); //Reopen session for writing.
         $request = $this->getRequest();
         $form = new Application_Form_EditUser();
         if ($request->isPost()) {

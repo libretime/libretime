@@ -974,10 +974,7 @@ SQL;
         foreach ($shows as &$show) {
             $options = array();
 
-            //only bother calculating percent for week or day view.
-            if (intval($days) <= 7) {
-                $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
-            }
+            $options["percent"] = Application_Model_Show::getPercentScheduled($show["starts"], $show["ends"], $show["time_filled"]);
 
             if (isset($show["parent_starts"])) {
                 $parentStartsDT = new DateTime($show["parent_starts"], $utcTimezone);
@@ -1432,39 +1429,52 @@ SQL;
     }
 
     public static function getStartEndCurrentMonthView() {
-        $first_day_of_calendar_month_view = mktime(0, 0, 0, date("n"), 1);
-        $weekStart = Application_Model_Preference::GetWeekStartDay();
-        while (date('w', $first_day_of_calendar_month_view) != $weekStart) {
-            $first_day_of_calendar_month_view -= 60*60*24;
-        }
-        $last_day_of_calendar_view = $first_day_of_calendar_month_view + 3600*24*42;
 
-        $start = new DateTime("@".$first_day_of_calendar_month_view);
-        $end = new DateTime("@".$last_day_of_calendar_view);
+        $utcTimeZone = new DateTimeZone("UTC");
+
+        //We have to get the start of the day in the user's timezone, and then convert that to UTC.
+        $start = new DateTime("first day of this month", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
+
+        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+        $monthInterval = new DateInterval("P1M");
+        $end = clone($start);
+        $end->add($monthInterval);
 
         return array($start, $end);
     }
 
     public static function getStartEndCurrentWeekView() {
-        $first_day_of_calendar_week_view = mktime(0, 0, 0, gmdate("n"), gmdate("j"));
-        $weekStart = Application_Model_Preference::GetWeekStartDay();
-        while (gmdate('w', $first_day_of_calendar_week_view) != $weekStart) {
-            $first_day_of_calendar_week_view -= 60*60*24;
+
+        $weekStartDayNum = Application_Model_Preference::GetWeekStartDay();
+        $utcTimeZone = new DateTimeZone("UTC");
+
+        //We have to get the start of the week in the user's timezone, and then convert that to UTC.
+        if ($weekStartDayNum == "0") {
+            $start = new DateTime("Sunday last week", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
+        } else if ($weekStartDayNum == "1") {
+            $start = new DateTime("Monday this week", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
+        } else {
+            $weekStartDayNum = "0";
+            Logging::warn("Unhandled week start day: " . $weekStartDayNum);
         }
-        $last_day_of_calendar_view = $first_day_of_calendar_week_view + 3600*24*7;
 
-        $start = new DateTime("@".$first_day_of_calendar_week_view);
-        $end = new DateTime("@".$last_day_of_calendar_view);
-
+        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+        $weekInterval = new DateInterval("P1W");
+        $end = clone($start);
+        $end->add($weekInterval);
         return array($start, $end);
     }
 
     public static function getStartEndCurrentDayView() {
-        $today = mktime(0, 0, 0, gmdate("n"), gmdate("j"));
-        $tomorrow = $today + 3600*24;
+        $utcTimeZone = new DateTimeZone("UTC");
 
-        $start = new DateTime("@".$today);
-        $end = new DateTime("@".$tomorrow);
+        //We have to get the start of the day in the user's timezone, and then convert that to UTC.
+        $start = new DateTime("today", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
+
+        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+        $dayInterval = new DateInterval("P1D");
+        $end = clone($start);
+        $end->add($dayInterval);
 
         return array($start, $end);
     }
