@@ -32,6 +32,7 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_Preferences();
         $values = array();
 
+        session_start(); //Open session for writing.
 
         if ($request->isPost()) {
             $values = $request->getPost();
@@ -89,6 +90,8 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
+        session_start(); //Open session for writing.
+
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
             $values = $request->getPost();
@@ -123,6 +126,8 @@ class PreferenceController extends Zend_Controller_Action
 
     public function removeLogoAction()
     {
+        session_start(); //Open session for writing.
+
         $this->view->layout()->disableLayout();
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
@@ -139,6 +144,8 @@ class PreferenceController extends Zend_Controller_Action
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+        session_start(); //Open session for writing.
 
         // get current settings
         $setting = Application_Model_StreamSetting::getStreamSetting();
@@ -425,6 +432,8 @@ class PreferenceController extends Zend_Controller_Action
 
     public function setSourceConnectionUrlAction()
     {
+        session_start(); //Open session for writing.
+
         $request = $this->getRequest();
         $type = $request->getParam("type", null);
         $url = urldecode($request->getParam("url", null));
@@ -443,6 +452,8 @@ class PreferenceController extends Zend_Controller_Action
 
     public function getAdminPasswordStatusAction()
     {
+        session_start(); //Open session for writing.
+
         $out = array();
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         for ($i=1; $i<=$num_of_stream; $i++) {
