@@ -1454,10 +1454,10 @@ SQL;
 
         //We have to get the start of the day in the user's timezone, and then convert that to UTC.
         $start = new DateTime("first day of this month", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
-        $start->setTimezone($utcTimeZone); //Covert it to UTC.
 
-        $dayOfWeekNumeric = $start->format('w') + 1;
+        $dayOfWeekNumeric = $start->format('w');
         $start->sub(new DateInterval("P{$dayOfWeekNumeric}D")); //Subtract the index of the day of the week the month starts on. (adds this many days from the previous month)
+        $start->setTimezone($utcTimeZone); //Covert it to UTC.
 
         $fullCalendarMonthInterval = new DateInterval("P42D"); //42 days
         $end = clone($start);
