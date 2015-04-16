@@ -1443,20 +1443,38 @@ SQL;
         return array($start, $end);
     }
 
+    /** Returns the start and end date that FullCalendar will display for today's month.
+     *
+     *  FullCalendar displays 6 weeks, starting on a Sunday, for a total of 42 days. This function returns 42 days worth
+     *  of data (a few days before, and a few days after.)
+     */
+    public static function getStartEndCurrentMonthPlusView() {
+
+        $utcTimeZone = new DateTimeZone("UTC");
+
+        //We have to get the start of the day in the user's timezone, and then convert that to UTC.
+        $start = new DateTime("first day of this month", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
+        $start->setTimezone($utcTimeZone); //Covert it to UTC.
+
+        $dayOfWeekNumeric = $start->format('w') + 1;
+        $start->sub(new DateInterval("P{$dayOfWeekNumeric}D")); //Subtract the index of the day of the week the month starts on. (adds this many days from the previous month)
+
+        $fullCalendarMonthInterval = new DateInterval("P42D"); //42 days
+        $end = clone($start);
+        $end->add($fullCalendarMonthInterval);
+
+        return array($start, $end);
+    }
+
+
     public static function getStartEndCurrentWeekView() {
 
         $weekStartDayNum = Application_Model_Preference::GetWeekStartDay();
         $utcTimeZone = new DateTimeZone("UTC");
 
         //We have to get the start of the week in the user's timezone, and then convert that to UTC.
-        if ($weekStartDayNum == "0") {
-            $start = new DateTime("Sunday last week", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
-        } else if ($weekStartDayNum == "1") {
-            $start = new DateTime("Monday this week", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
-        } else {
-            $weekStartDayNum = "0";
-            Logging::warn("Unhandled week start day: " . $weekStartDayNum);
-        }
+        $start = new DateTime("Sunday last week", new DateTimeZone(Application_Model_Preference::GetUserTimezone()));
+        $start->add(new DateInterval("P{$weekStartDayNum}D")); //Shift the start date to the station's "Week Starts on Day"
 
         $start->setTimezone($utcTimeZone); //Covert it to UTC.
         $weekInterval = new DateInterval("P1W");

@@ -151,7 +151,7 @@ class ScheduleController extends Zend_Controller_Action
         } else if ($calendar_interval == "agendaWeek") {
             list($start, $end) = Application_Model_Show::getStartEndCurrentWeekView();
         } else if ($calendar_interval == "month") {
-            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthView();
+            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthPlusView();
         } else {
             Logging::error("Invalid Calendar Interval '$calendar_interval'");
         }
