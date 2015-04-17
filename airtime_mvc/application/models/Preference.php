@@ -37,8 +37,6 @@ class Application_Model_Preference
             if ($isUserValue && is_null($userId))
                 throw new Exception("User id can't be null for a user preference {$key}.");
             
-            Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
-
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
                 ." WHERE keystr = :key";

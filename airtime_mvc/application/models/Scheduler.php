@@ -828,7 +828,8 @@ class Application_Model_Scheduler
                                 "fade_in = '{$file["fadein"]}', ".
                                 "fade_out = '{$file["fadeout"]}', ".
                                 "clip_length = '{$file["cliplength"]}', ".
-                                "position = {$pos} ".
+                                "position = {$pos}, ".
+                                "instance_id = {$instanceId} ".
                                 "WHERE id = {$sched["id"]}";
 
                             Application_Common_Database::prepareAndExecute(
