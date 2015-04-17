@@ -443,7 +443,7 @@ function setSliderForReplayGain(){
     $( "#replayGainModifier" ).val( $( "#slider-range-max" ).slider( "value" ) );
 }
 
-function setPseudoAdminPassword(s1, s2, s3) {
+function setPseudoAdminPassword(s1, s2, s3, s4) {
     if (s1) {
         $('#s1_data-admin_pass').val('xxxxxx');
     }
@@ -453,11 +453,14 @@ function setPseudoAdminPassword(s1, s2, s3) {
     if (s3) {
         $('#s3_data-admin_pass').val('xxxxxx');
     }
+    if (s4) {
+        $('#s4_data-admin_pass').val('xxxxxx');
+    }
 }
 
 function getAdminPasswordStatus() {
     $.ajax({ url: baseUrl+'Preference/get-admin-password-status/format/json', dataType:"json", success:function(data){
-        setPseudoAdminPassword(data.s1, data.s2, data.s3);
+        setPseudoAdminPassword(data.s1, data.s2, data.s3, data.s4);
       }});   
 }
 
@@ -476,7 +479,7 @@ $(document).ready(function() {
                 $('#content').empty().append(json.html);
                 setupEventListeners();
                 setSliderForReplayGain();
-                setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass);
+                setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass, json.s4_set_admin_pass);
             });
         }
     });
