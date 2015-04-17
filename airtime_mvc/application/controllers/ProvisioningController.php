@@ -38,6 +38,9 @@ class ProvisioningController extends Zend_Controller_Action
             if ($_POST['description']) {
                 Application_Model_Preference::SetStationDescription($_POST['description']);
             }
+            if ($_POST['provisioning_status']) {
+                Application_Model_Preference::setProvisioningStatus($_POST['provisioning_status']);
+            }
         } catch (Exception $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
