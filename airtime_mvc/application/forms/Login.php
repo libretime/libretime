@@ -87,7 +87,8 @@ class Application_Form_Login extends Zend_Form
                 'captcha' =>  'ReCaptcha',
                 'captchaOptions'        => array(
                     'captcha'   => 'ReCaptcha',
-                    'service' => $recaptcha
+                    'service' => $recaptcha,
+                    'ssl' => 'true'
                 )
             )
         );
