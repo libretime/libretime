@@ -32,13 +32,13 @@ class ProvisioningController extends Zend_Controller_Action
 
         try {
             // This is hacky and should be genericized
-            if ($_POST['station_name']) {
+            if (isset($_POST['station_name'])) {
                 Application_Model_Preference::SetStationName($_POST['station_name']);
             }
-            if ($_POST['description']) {
+            if (isset($_POST['description'])) {
                 Application_Model_Preference::SetStationDescription($_POST['description']);
             }
-            if ($_POST['provisioning_status']) {
+            if (isset($_POST['provisioning_status'])) {
                 Application_Model_Preference::setProvisioningStatus($_POST['provisioning_status']);
             }
         } catch (Exception $e) {

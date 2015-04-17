@@ -1445,6 +1445,7 @@ class Application_Model_Preference
 
     public static function setProvisioningStatus($status)
     {
+        //See constants.php for the list of valid values. eg. PROVISIONING_STATUS_ACTIVE
         self::setValue("provisioning_status", $status);
     }
 
