@@ -67,8 +67,8 @@ class ShowbuilderController extends Zend_Controller_Action
                 if (isset($values["Privacy"])) {
                     Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
-                // unset referrer
                 session_start();  //open session for writing again
+                // unset referrer
                 Zend_Session::namespaceUnset('referrer');
             } elseif ($values["Publicise"] == '1' && $form->isValid($values)) {
                 Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
@@ -89,8 +89,8 @@ class ShowbuilderController extends Zend_Controller_Action
                 if (isset($values["Privacy"])) {
                     Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
-                // unset session
                 session_start();  //open session for writing again
+                // unset referrer
                 Zend_Session::namespaceUnset('referrer');
             } else {
                 $logo = Application_Model_Preference::GetStationLogo();

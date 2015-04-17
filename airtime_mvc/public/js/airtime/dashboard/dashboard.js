@@ -455,7 +455,6 @@ var stream_window = null;
 
 function init() {
     //begin producer "thread"
-    //getScheduleFromServer();
     setInterval(getScheduleFromServer, serverUpdateInterval);
 
     //begin consumer "thread"

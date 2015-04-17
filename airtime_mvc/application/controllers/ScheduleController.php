@@ -50,12 +50,10 @@ class ScheduleController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $foo = new ScheduleController($this->getRequest(), $this->getResponse());
-        $foo->eventFeedPreloadAction();
-        //$foo->eventFeedAction();
-        $events = json_encode($foo->view->events);
-        //$timescale =
-            //$this->getRequest()->getParam("view", "week");
+        //Embed the schedule in our page response so we don't have to make an AJAX request to get this data after the page load.
+        $scheduleController = new ScheduleController($this->getRequest(), $this->getResponse());
+        $scheduleController->eventFeedPreloadAction();
+        $events = json_encode($scheduleController->view->events);
 
         $this->view->headScript()->appendScript(
             "var calendarPref = {};\n".
@@ -307,9 +305,9 @@ class ScheduleController extends Zend_Controller_Action
     public static function printCurrentPlaylistForEmbedding()
     {
         $front = Zend_Controller_Front::getInstance();
-        $foo = new ScheduleController($front->getRequest(), $front->getResponse());
-        $foo->getCurrentPlaylistAction();
-        echo(json_encode($foo->view));
+        $scheduleController = new ScheduleController($front->getRequest(), $front->getResponse());
+        $scheduleController->getCurrentPlaylistAction();
+        echo(json_encode($scheduleController->view));
     }
 
     public function getCurrentPlaylistAction()
