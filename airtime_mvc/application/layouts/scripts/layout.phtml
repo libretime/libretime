@@ -22,7 +22,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <?php echo $this->partial('partialviews/trialBox.phtml', array("is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
 
 <div id="Panel">
-    <?php if(!$this->suspended) : ?>
+    <?php if($this->suspended) : ?>
         <?php echo $this->partial('partialviews/suspended.phtml'); ?>
     <?php else : ?>
 
