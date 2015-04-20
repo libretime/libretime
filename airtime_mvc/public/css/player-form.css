@@ -59,4 +59,26 @@
 }
 
 
+table#player_compatibility_chart{
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 5px;
+    color: #3b3b3b;
+}
+
+#player_compatibility_chart th, tr, td {
+    border-bottom: 1px solid #999;
+    border-right: 1px solid #999 !important;
+    background-color: #ccc;
+    padding: 10px;
+}
+
+#player_compatibility_chart th
+{
+    color: #5b5b5b;
+    border: 0px;
+}
+
+
+
 
