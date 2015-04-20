@@ -15,6 +15,14 @@
 
         <?php echo $this->element->getElement('player_title')->render(); ?>
 
+        <?php echo $this->element->getElement('player_stream_mode')->render(); ?>
+
+        <?php echo $this->element->getElement('player_stream_url'); ?>
+
+        <?php echo $this->element->getElement('player_embed_src')->render(); ?>
+
+        <?php //echo $this->element->getElement('player_display_track_metadata'); ?>
+
         <table id="player_compatibility_chart">
             <th colspan="5">Stream Compatibility</th>
             <tr>
@@ -39,15 +47,6 @@
                 <td colspan="5">* Chrome on Android is known to take about 4 seconds to buffer a 128 kbps MP3 stream. Lower bitrates take longer to buffer.</td>
             </tr>
         </table>
-        
-        <?php echo $this->element->getElement('player_stream_mode')->render(); ?>
-
-        <?php echo $this->element->getElement('player_stream_url'); ?>
-
-        <?php echo $this->element->getElement('player_embed_src')->render(); ?>
-
-        <?php //echo $this->element->getElement('player_display_track_metadata'); ?>
-
 
 
     </dl>
