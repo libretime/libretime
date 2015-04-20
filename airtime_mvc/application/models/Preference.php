@@ -37,8 +37,6 @@ class Application_Model_Preference
             if ($isUserValue && is_null($userId))
                 throw new Exception("User id can't be null for a user preference {$key}.");
             
-            Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
-
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
                 ." WHERE keystr = :key";
@@ -1442,5 +1440,17 @@ class Application_Model_Preference
         }
 
         self::setDiskUsage($currentDiskUsage + $filesize);
+    }
+
+
+    public static function setProvisioningStatus($status)
+    {
+        //See constants.php for the list of valid values. eg. PROVISIONING_STATUS_ACTIVE
+        self::setValue("provisioning_status", $status);
+    }
+
+    public static function getProvisioningStatus()
+    {
+        return self::getValue("provisioning_status");
     }
 }
