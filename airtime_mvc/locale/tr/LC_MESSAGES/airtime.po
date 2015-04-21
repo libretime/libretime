@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2015-04-17 20:17+0000\n"
+"PO-Revision-Date: 2015-04-20 14:55+0000\n"
 "Last-Translator: M.  Ömer Gölgeli <az+transifex.com@cokh.net>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/airtime/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -21,102 +21,102 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/audio-player.phtml:5
 #: airtime_mvc/application/controllers/LocaleController.php:28
 msgid "Audio Player"
-msgstr ""
+msgstr "Audio Player"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:27
 msgid "Logout"
-msgstr ""
+msgstr "Oturumu kapat"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:42
 #: airtime_mvc/application/layouts/scripts/layout.phtml:68
 msgid "Play"
-msgstr ""
+msgstr "Oynat"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:43
 #: airtime_mvc/application/layouts/scripts/layout.phtml:69
 msgid "Stop"
-msgstr ""
+msgstr "Durdur"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:47
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
 #: airtime_mvc/application/controllers/LocaleController.php:270
 #: airtime_mvc/application/models/Block.php:1347
 msgid "Cue In"
-msgstr ""
+msgstr "Cue In"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:49
 msgid "Set Cue In"
-msgstr ""
+msgstr "Cue In değerini ayarla"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:54
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
 #: airtime_mvc/application/controllers/LocaleController.php:271
 #: airtime_mvc/application/models/Block.php:1348
 msgid "Cue Out"
-msgstr ""
+msgstr "Cue Out"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:56
 msgid "Set Cue Out"
-msgstr ""
+msgstr "Cue Out değerini ayarla"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:73
 msgid "Cursor"
-msgstr ""
+msgstr "Cursor"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:74
 #: airtime_mvc/application/controllers/LocaleController.php:272
 msgid "Fade In"
-msgstr ""
+msgstr "Fade In"
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:75
 #: airtime_mvc/application/controllers/LocaleController.php:273
 msgid "Fade Out"
-msgstr ""
+msgstr "Fade Out"
 
 #: airtime_mvc/application/layouts/scripts/login.phtml:24
 #, php-format
 msgid ""
 "%1$s copyright &copy; %2$s All rights reserved.%3$sMaintained and "
 "distributed under the %4$s by %5$s"
-msgstr ""
+msgstr "%1$s copyright &copy; %2$s Tüm hakları saklıdır.%3$s%4$s lisansı altında %5$s tarafından geliştirmekte ve dağıtılmaktadır."
 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
 msgid "Live stream"
-msgstr ""
+msgstr "Canlı yayın"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:48
 msgid "Enabled:"
-msgstr ""
+msgstr "Etkin:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:57
 msgid "Stream Type:"
-msgstr ""
+msgstr "Yayın Türü:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:67
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:15
 msgid "Bit Rate:"
-msgstr ""
+msgstr "Bit Değeri:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:77
 msgid "Service Type:"
-msgstr ""
+msgstr "Servis Türü:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:87
 msgid "Channels:"
-msgstr ""
+msgstr "Kanallar:"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:88
 msgid "1 - Mono"
-msgstr ""
+msgstr "1 - Mono"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:88
 msgid "2 - Stereo"
-msgstr ""
+msgstr "2 - Stereo"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:97
 msgid "Server"
-msgstr ""
+msgstr "Sunucu"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:100
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:123
@@ -134,24 +134,24 @@ msgstr ""
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:118
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:26
 msgid "Invalid character entered"
-msgstr ""
+msgstr "Yanlış karakter girdiniz"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:109
 #: airtime_mvc/application/forms/EmailServerPreferences.php:100
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:112
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:90
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:109
 msgid "Only numbers are allowed."
-msgstr ""
+msgstr "Sadece rakam girebilirsiniz."
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:120
 #: airtime_mvc/application/forms/PasswordChange.php:17
 #: airtime_mvc/application/forms/EmailServerPreferences.php:82
 msgid "Password"
-msgstr ""
+msgstr "Şifre"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:132
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:59
@@ -160,137 +160,137 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1351
 #: airtime_mvc/application/services/HistoryService.php:1112
 msgid "Genre"
-msgstr ""
+msgstr "Tür"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:141
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:153
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:9
 msgid "Name"
-msgstr ""
+msgstr "İsim"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:162
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:41
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:55
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:57
 msgid "Description"
-msgstr ""
+msgstr "Tanım"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:171
 msgid "Mount Point"
-msgstr ""
+msgstr "Bağlama Noktası"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:183
 #: airtime_mvc/application/forms/PasswordRestore.php:25
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:18
 msgid "Username"
-msgstr ""
+msgstr "Kullanıcı adı"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:195
 msgid "Admin User"
-msgstr ""
+msgstr "Yönetici Hesabı"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:207
 msgid "Admin Password"
-msgstr ""
+msgstr "Yönetici Şifresi"
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:218
 #: airtime_mvc/application/controllers/LocaleController.php:161
 msgid "Getting information from the server..."
-msgstr ""
+msgstr "Sunucudan bilgiler getiriliyor..."
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:232
 msgid "Server cannot be empty."
-msgstr ""
+msgstr "Sunucu değeri boş bırakılamaz."
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:237
 msgid "Port cannot be empty."
-msgstr ""
+msgstr "Port değeri boş bırakılamaz."
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:243
 msgid "Mount cannot be empty with Icecast server."
-msgstr ""
+msgstr "Icecast sunucusunu Bağlama noktası değeri boş olarak kullanamazsınız."
 
 #: airtime_mvc/application/forms/EditAudioMD.php:19
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:9
 msgid "Title:"
-msgstr ""
+msgstr "Parça Adı:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:26
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:10
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:34
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:148
 msgid "Creator:"
-msgstr ""
+msgstr "Oluşturan:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:33
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:11
 msgid "Album:"
-msgstr ""
+msgstr "Albüm:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:40
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:12
 msgid "Track:"
-msgstr ""
+msgstr "Parça Numarası:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:47
 #: airtime_mvc/application/forms/AddShowWhat.php:45
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:17
 msgid "Genre:"
-msgstr ""
+msgstr "Tür:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:55
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:18
 msgid "Year:"
-msgstr ""
+msgstr "Yıl:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:67
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:19
 msgid "Label:"
-msgstr ""
+msgstr "Plak Şirketi:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:74
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:21
 msgid "Composer:"
-msgstr ""
+msgstr "Besteleyen:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:81
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:22
 msgid "Conductor:"
-msgstr ""
+msgstr "Orkestra Şefi:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:88
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:16
 msgid "Mood:"
-msgstr ""
+msgstr "Ruh Hali:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:96
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:20
 msgid "BPM:"
-msgstr ""
+msgstr "BPM:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:105
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:23
 msgid "Copyright:"
-msgstr ""
+msgstr "Telif Hakkı:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:112
 msgid "ISRC Number:"
-msgstr ""
+msgstr "ISRC No:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:119
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:25
 msgid "Website:"
-msgstr ""
+msgstr "Websitesi:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:126
 #: airtime_mvc/application/forms/Login.php:52
 #: airtime_mvc/application/forms/EditUser.php:118
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:26
 msgid "Language:"
-msgstr ""
+msgstr "Dil:"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:135
 #: airtime_mvc/application/forms/AddUser.php:110
@@ -307,7 +307,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:27
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:24
 msgid "Save"
-msgstr ""
+msgstr "Kaydet"
 
 #: airtime_mvc/application/forms/EditAudioMD.php:145
 #: airtime_mvc/application/forms/EditHistory.php:141
@@ -315,355 +315,355 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:284
 #: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #: airtime_mvc/application/forms/AddUser.php:29
 #: airtime_mvc/application/forms/Login.php:23
 #: airtime_mvc/application/forms/EditUser.php:36
 msgid "Username:"
-msgstr ""
+msgstr "Kullanıcı Adı:"
 
 #: airtime_mvc/application/forms/AddUser.php:38
 #: airtime_mvc/application/forms/Login.php:38
 #: airtime_mvc/application/forms/EditUser.php:47
 msgid "Password:"
-msgstr ""
+msgstr "Şifre:"
 
 #: airtime_mvc/application/forms/AddUser.php:46
 #: airtime_mvc/application/forms/EditUser.php:56
 msgid "Verify Password:"
-msgstr ""
+msgstr "Şifre Onayı:"
 
 #: airtime_mvc/application/forms/AddUser.php:55
 #: airtime_mvc/application/forms/EditUser.php:66
 msgid "Firstname:"
-msgstr ""
+msgstr "İsim:"
 
 #: airtime_mvc/application/forms/AddUser.php:61
 #: airtime_mvc/application/forms/EditUser.php:74
 msgid "Lastname:"
-msgstr ""
+msgstr "Soyisim:"
 
 #: airtime_mvc/application/forms/AddUser.php:67
 #: airtime_mvc/application/forms/SupportSettings.php:46
 #: airtime_mvc/application/forms/RegisterAirtime.php:51
 #: airtime_mvc/application/forms/EditUser.php:82
 msgid "Email:"
-msgstr ""
+msgstr "Eposta:"
 
 #: airtime_mvc/application/forms/AddUser.php:76
 #: airtime_mvc/application/forms/EditUser.php:93
 msgid "Mobile Phone:"
-msgstr ""
+msgstr "Cep Telefonu:"
 
 #: airtime_mvc/application/forms/AddUser.php:82
 #: airtime_mvc/application/forms/EditUser.php:101
 msgid "Skype:"
-msgstr ""
+msgstr "Skype:"
 
 #: airtime_mvc/application/forms/AddUser.php:88
 #: airtime_mvc/application/forms/EditUser.php:109
 msgid "Jabber:"
-msgstr ""
+msgstr "Jabber:"
 
 #: airtime_mvc/application/forms/AddUser.php:95
 msgid "User Type:"
-msgstr ""
+msgstr "Kullanıcı Tipi:"
 
 #: airtime_mvc/application/forms/AddUser.php:99
 #: airtime_mvc/application/controllers/LocaleController.php:313
 msgid "Guest"
-msgstr ""
+msgstr "Ziyaretçi"
 
 #: airtime_mvc/application/forms/AddUser.php:100
 #: airtime_mvc/application/controllers/LocaleController.php:311
 msgid "DJ"
-msgstr ""
+msgstr "DJ"
 
 #: airtime_mvc/application/forms/AddUser.php:101
 #: airtime_mvc/application/controllers/LocaleController.php:312
 msgid "Program Manager"
-msgstr ""
+msgstr "Program Yöneticisi"
 
 #: airtime_mvc/application/forms/AddUser.php:102
 #: airtime_mvc/application/controllers/LocaleController.php:310
 msgid "Admin"
-msgstr ""
+msgstr "Yönetici (Admin)"
 
 #: airtime_mvc/application/forms/AddUser.php:120
 #: airtime_mvc/application/forms/EditUser.php:139
 msgid "Login name is not unique."
-msgstr ""
+msgstr "Kullanıcı adı eşsiz değil."
 
 #: airtime_mvc/application/forms/AddShowStyle.php:10
 msgid "Background Colour:"
-msgstr ""
+msgstr "Arkaplan Rengi"
 
 #: airtime_mvc/application/forms/AddShowStyle.php:29
 msgid "Text Colour:"
-msgstr ""
+msgstr "Metin Rengi:"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:18
 #: airtime_mvc/application/forms/DateRange.php:16
 msgid "Date Start:"
-msgstr ""
+msgstr "Tarih Başlangıcı:"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:46
 #: airtime_mvc/application/forms/DateRange.php:44
 #: airtime_mvc/application/forms/AddShowRepeats.php:56
 msgid "Date End:"
-msgstr ""
+msgstr "Tarih Bitişi:"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:72
 msgid "Show:"
-msgstr ""
+msgstr "Show:"
 
 #: airtime_mvc/application/forms/ShowBuilder.php:80
 msgid "All My Shows:"
-msgstr ""
+msgstr "Tüm Show'larım:"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:15
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:6
 msgid "days"
-msgstr ""
+msgstr "gün"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:71
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:66
 msgid "Day must be specified"
-msgstr ""
+msgstr "Günü belirtmelisiniz"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:76
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:71
 msgid "Time must be specified"
-msgstr ""
+msgstr "Zamanı belirtmelisiniz"
 
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:103
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:94
 msgid "Must wait at least 1 hour to rebroadcast"
-msgstr ""
+msgstr "Tekrar yayın yapmak için en az bir saat bekleyiniz"
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:14
 msgid "Import Folder:"
-msgstr ""
+msgstr "İçe Aktarım Klasörü"
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:25
 msgid "Watched Folders:"
-msgstr ""
+msgstr "İzlenen Klasörler:"
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:40
 msgid "Not a valid Directory"
-msgstr ""
+msgstr "Geçerli bir Klasör değil."
 
 #: airtime_mvc/application/forms/AddShowWho.php:10
 msgid "Search Users:"
-msgstr ""
+msgstr "Kullanıcıları Ara:"
 
 #: airtime_mvc/application/forms/AddShowWho.php:24
 msgid "DJs:"
-msgstr ""
+msgstr "DJ'ler:"
 
 #: airtime_mvc/application/forms/Login.php:67
 #: airtime_mvc/application/views/scripts/login/index.phtml:3
 msgid "Login"
-msgstr ""
+msgstr "Giriş yap"
 
 #: airtime_mvc/application/forms/Login.php:86
 msgid "Type the characters you see in the picture below."
-msgstr ""
+msgstr "Aşağıdaki resimde gördüğünüz karakterleri girin."
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:21
 #: airtime_mvc/application/forms/SupportSettings.php:21
 #: airtime_mvc/application/forms/RegisterAirtime.php:30
 msgid "Station Name"
-msgstr ""
+msgstr "Radyo Adı"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
 msgid "Default Crossfade Duration (s):"
-msgstr ""
+msgstr "Varsayılan Çarpraz Geçiş Süresi:"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:40
 #: airtime_mvc/application/forms/GeneralPreferences.php:59
 #: airtime_mvc/application/forms/GeneralPreferences.php:78
 msgid "enter a time in seconds 0{.0}"
-msgstr ""
+msgstr "saniye olarak bir zaman giriniz 0{.0}"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:52
 msgid "Default Fade In (s):"
-msgstr ""
+msgstr "Varsayılan Fade In geçişi (s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:71
 msgid "Default Fade Out (s):"
-msgstr ""
+msgstr "Varsayılan Fade Out geçişi (s)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:89
 #, php-format
 msgid ""
 "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make "
 "front-end widgets work.)"
-msgstr ""
+msgstr "Harici Websitelerinin \"Yayın Akışı\" Bilgilerine Erişmesine İzin Ver?%s (Anasayfa Widget'ları Kullanabilmek İçin Bunu Aktifleştirin)"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:90
 msgid "Disabled"
-msgstr ""
+msgstr "Devre dışı"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:91
 msgid "Enabled"
-msgstr ""
+msgstr "Aktif"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:97
 msgid "Default Interface Language"
-msgstr ""
+msgstr "Varsayılan Arabirim Dili"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
 msgid "Station Timezone"
-msgstr ""
+msgstr "Radyo Saat Dilimi"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:113
 msgid "Week Starts On"
-msgstr ""
+msgstr "Hafta Başlangıcı"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:123
 #: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "Sunday"
-msgstr ""
+msgstr "Pazar"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:124
 #: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "Monday"
-msgstr ""
+msgstr "Pazartesi"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:125
 #: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Tuesday"
-msgstr ""
+msgstr "Salı"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:126
 #: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "Wednesday"
-msgstr ""
+msgstr "Çarşamba"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:127
 #: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Thursday"
-msgstr ""
+msgstr "Perşembe"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:128
 #: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "Friday"
-msgstr ""
+msgstr "Cuma"
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:129
 #: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "Saturday"
-msgstr ""
+msgstr "Cumartesi"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr ""
+msgstr "Birbirine Bağla:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
-msgstr ""
+msgstr "Tekrar Türü:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:19
 msgid "weekly"
-msgstr ""
+msgstr "haftalık"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:20
 msgid "every 2 weeks"
-msgstr ""
+msgstr "2 haftada bir"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:21
 msgid "every 3 weeks"
-msgstr ""
+msgstr "3 haftada bir"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:22
 msgid "every 4 weeks"
-msgstr ""
+msgstr "4 haftada bir"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:23
 msgid "monthly"
-msgstr ""
+msgstr "aylık"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:32
 msgid "Select Days:"
-msgstr ""
+msgstr "Günleri Seçin:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:35
 #: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "Sun"
-msgstr ""
+msgstr "Paz"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:36
 #: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "Mon"
-msgstr ""
+msgstr "Pzt"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:37
 #: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "Tue"
-msgstr ""
+msgstr "Sal"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:38
 #: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Wed"
-msgstr ""
+msgstr "Çar"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:39
 #: airtime_mvc/application/controllers/LocaleController.php:249
 msgid "Thu"
-msgstr ""
+msgstr "Per"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:40
 #: airtime_mvc/application/controllers/LocaleController.php:250
 msgid "Fri"
-msgstr ""
+msgstr "Cum"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:41
 #: airtime_mvc/application/controllers/LocaleController.php:251
 msgid "Sat"
-msgstr ""
+msgstr "Cmt"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:47
 msgid "Repeat By:"
-msgstr ""
+msgstr "Şuna göre tekrar et:"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the month"
-msgstr ""
+msgstr "Ayın günü"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the week"
-msgstr ""
+msgstr "Haftanın günü"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:69
 msgid "No End?"
-msgstr ""
+msgstr "Sonu yok?"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:106
 msgid "End date must be after start date"
-msgstr ""
+msgstr "Bitiş tarihi başlangıç tarihinden sonra olmalı"
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:113
 msgid "Please select a repeat day"
-msgstr ""
+msgstr "Lütfen tekrar edilmesini istediğiniz günleri seçiniz"
 
 #: airtime_mvc/application/forms/PasswordChange.php:28
 msgid "Confirm new password"
-msgstr ""
+msgstr "Yeni şifreyi onayla"
 
 #: airtime_mvc/application/forms/PasswordChange.php:36
 msgid "Password confirmation does not match your password."
-msgstr ""
+msgstr "Onay şifresiyle şifreniz aynı değil."
 
 #: airtime_mvc/application/forms/PasswordChange.php:43
 msgid "Get new password"
-msgstr ""
+msgstr "Yeni şifre al"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:48
 #: airtime_mvc/application/models/Block.php:1340
 msgid "Select criteria"
-msgstr ""
+msgstr "Kriter seçiniz"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:49
 #: airtime_mvc/application/controllers/LocaleController.php:66
@@ -671,18 +671,18 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1341
 #: airtime_mvc/application/services/HistoryService.php:1110
 msgid "Album"
-msgstr ""
+msgstr "Albüm"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:50
 #: airtime_mvc/application/models/Block.php:1342
 msgid "Bit Rate (Kbps)"
-msgstr ""
+msgstr "Bit Oranı (Kbps)"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:51
 #: airtime_mvc/application/controllers/LocaleController.php:68
 #: airtime_mvc/application/models/Block.php:1343
 msgid "BPM"
-msgstr ""
+msgstr "BPM"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:52
 #: airtime_mvc/application/controllers/LocaleController.php:69
@@ -690,14 +690,14 @@ msgstr ""
 #: airtime_mvc/application/services/HistoryService.php:1115
 #: airtime_mvc/application/services/HistoryService.php:1169
 msgid "Composer"
-msgstr ""
+msgstr "Besteleyen"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:53
 #: airtime_mvc/application/controllers/LocaleController.php:70
 #: airtime_mvc/application/models/Block.php:1345
 #: airtime_mvc/application/services/HistoryService.php:1120
 msgid "Conductor"
-msgstr ""
+msgstr "Orkestra Şefi"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:54
 #: airtime_mvc/application/controllers/LocaleController.php:71
@@ -705,7 +705,7 @@ msgstr ""
 #: airtime_mvc/application/services/HistoryService.php:1117
 #: airtime_mvc/application/services/HistoryService.php:1170
 msgid "Copyright"
-msgstr ""
+msgstr "Telif Hakkı"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
 #: airtime_mvc/application/controllers/LocaleController.php:65
@@ -715,46 +715,46 @@ msgstr ""
 #: airtime_mvc/application/services/HistoryService.php:1149
 #: airtime_mvc/application/services/HistoryService.php:1166
 msgid "Creator"
-msgstr ""
+msgstr "Oluşturan"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:58
 #: airtime_mvc/application/controllers/LocaleController.php:72
 #: airtime_mvc/application/models/Block.php:1350
 msgid "Encoded By"
-msgstr ""
+msgstr "Encode eden"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:60
 #: airtime_mvc/application/controllers/LocaleController.php:74
 #: airtime_mvc/application/models/Block.php:1352
 #: airtime_mvc/application/services/HistoryService.php:1116
 msgid "ISRC"
-msgstr ""
+msgstr "ISRC"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
 #: airtime_mvc/application/controllers/LocaleController.php:75
 #: airtime_mvc/application/models/Block.php:1353
 #: airtime_mvc/application/services/HistoryService.php:1114
 msgid "Label"
-msgstr ""
+msgstr "Plak Şirketi"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:62
 #: airtime_mvc/application/controllers/LocaleController.php:76
 #: airtime_mvc/application/models/Block.php:1354
 #: airtime_mvc/application/services/HistoryService.php:1121
 msgid "Language"
-msgstr ""
+msgstr "Dil"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:63
 #: airtime_mvc/application/controllers/LocaleController.php:77
 #: airtime_mvc/application/models/Block.php:1355
 msgid "Last Modified"
-msgstr ""
+msgstr "Son Değiştirilme Zamanı"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:64
 #: airtime_mvc/application/controllers/LocaleController.php:78
 #: airtime_mvc/application/models/Block.php:1356
 msgid "Last Played"
-msgstr ""
+msgstr "Son Oynatma Zamanı"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
 #: airtime_mvc/application/controllers/LocaleController.php:79
@@ -763,37 +763,37 @@ msgstr ""
 #: airtime_mvc/application/services/HistoryService.php:1111
 #: airtime_mvc/application/services/HistoryService.php:1168
 msgid "Length"
-msgstr ""
+msgstr "Uzunluk"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:66
 #: airtime_mvc/application/controllers/LocaleController.php:80
 #: airtime_mvc/application/models/Block.php:1358
 msgid "Mime"
-msgstr ""
+msgstr "Mime"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:67
 #: airtime_mvc/application/controllers/LocaleController.php:81
 #: airtime_mvc/application/models/Block.php:1359
 #: airtime_mvc/application/services/HistoryService.php:1113
 msgid "Mood"
-msgstr ""
+msgstr "Ruh Hali"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:68
 #: airtime_mvc/application/controllers/LocaleController.php:82
 #: airtime_mvc/application/models/Block.php:1360
 msgid "Owner"
-msgstr ""
+msgstr "Sahibi"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:69
 #: airtime_mvc/application/controllers/LocaleController.php:83
 #: airtime_mvc/application/models/Block.php:1361
 msgid "Replay Gain"
-msgstr ""
+msgstr "Replay Gain"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:70
 #: airtime_mvc/application/models/Block.php:1362
 msgid "Sample Rate (kHz)"
-msgstr ""
+msgstr "Örnekleme Oranı (kHz)"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
 #: airtime_mvc/application/controllers/LocaleController.php:64
@@ -803,32 +803,32 @@ msgstr ""
 #: airtime_mvc/application/services/HistoryService.php:1148
 #: airtime_mvc/application/services/HistoryService.php:1165
 msgid "Title"
-msgstr ""
+msgstr "Parça Adı"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:72
 #: airtime_mvc/application/controllers/LocaleController.php:85
 #: airtime_mvc/application/models/Block.php:1364
 msgid "Track Number"
-msgstr ""
+msgstr "Parça Numarası"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:73
 #: airtime_mvc/application/controllers/LocaleController.php:86
 #: airtime_mvc/application/models/Block.php:1365
 msgid "Uploaded"
-msgstr ""
+msgstr "Yüklenme Tarihi"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:74
 #: airtime_mvc/application/controllers/LocaleController.php:87
 #: airtime_mvc/application/models/Block.php:1366
 msgid "Website"
-msgstr ""
+msgstr "Website'si"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:75
 #: airtime_mvc/application/controllers/LocaleController.php:88
 #: airtime_mvc/application/models/Block.php:1367
 #: airtime_mvc/application/services/HistoryService.php:1118
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:87
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:103
@@ -838,19 +838,19 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:139
 #: airtime_mvc/application/models/Block.php:1371
 msgid "Select modifier"
-msgstr ""
+msgstr "Değişken seçin"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:88
 #: airtime_mvc/application/controllers/LocaleController.php:140
 #: airtime_mvc/application/models/Block.php:1372
 msgid "contains"
-msgstr ""
+msgstr "içersin"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:89
 #: airtime_mvc/application/controllers/LocaleController.php:141
 #: airtime_mvc/application/models/Block.php:1373
 msgid "does not contain"
-msgstr ""
+msgstr "içermesin"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:104
@@ -858,7 +858,7 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1374
 #: airtime_mvc/application/models/Block.php:1378
 msgid "is"
-msgstr ""
+msgstr "eşittir"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:91
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:105
@@ -866,144 +866,144 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:1375
 #: airtime_mvc/application/models/Block.php:1379
 msgid "is not"
-msgstr ""
+msgstr "eşit değildir"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:92
 #: airtime_mvc/application/controllers/LocaleController.php:144
 #: airtime_mvc/application/models/Block.php:1376
 msgid "starts with"
-msgstr ""
+msgstr "ile başlayan"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:93
 #: airtime_mvc/application/controllers/LocaleController.php:145
 #: airtime_mvc/application/models/Block.php:1377
 msgid "ends with"
-msgstr ""
+msgstr "ile biten"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:106
 #: airtime_mvc/application/controllers/LocaleController.php:146
 #: airtime_mvc/application/models/Block.php:1380
 msgid "is greater than"
-msgstr ""
+msgstr "büyüktür"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:107
 #: airtime_mvc/application/controllers/LocaleController.php:147
 #: airtime_mvc/application/models/Block.php:1381
 msgid "is less than"
-msgstr ""
+msgstr "küçüktür"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:108
 #: airtime_mvc/application/controllers/LocaleController.php:148
 #: airtime_mvc/application/models/Block.php:1382
 msgid "is in the range"
-msgstr ""
+msgstr "aralıkta"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:118
 msgid "hours"
-msgstr ""
+msgstr "saat"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:119
 msgid "minutes"
-msgstr ""
+msgstr "dakika"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:120
 #: airtime_mvc/application/models/Block.php:333
 msgid "items"
-msgstr ""
+msgstr "parça"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:167
 msgid "Set smart block type:"
-msgstr ""
+msgstr "Akıllı blok türünü seçin"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:170
 msgid "Static"
-msgstr ""
+msgstr "Sabit"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:171
 msgid "Dynamic"
-msgstr ""
+msgstr "Dinamik"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:285
 msgid "Allow Repeat Tracks:"
-msgstr ""
+msgstr "Parçalar tekrar etsin mi?"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:302
 msgid "Limit to"
-msgstr ""
+msgstr "Sınırla"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:324
 msgid "Generate playlist content and save criteria"
-msgstr ""
+msgstr "Çalma listesi içeriği oluştur ve kriterleri kaydet"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:326
 msgid "Generate"
-msgstr ""
+msgstr "Oluştur"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:332
 msgid "Shuffle playlist content"
-msgstr ""
+msgstr "Çalma listesi içeriğini karıştır"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:334
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:24
 msgid "Shuffle"
-msgstr ""
+msgstr "Karıştır"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:500
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:512
 msgid "Limit cannot be empty or smaller than 0"
-msgstr ""
+msgstr "Sınırlama boş veya 0'dan küçük olamaz"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:505
 msgid "Limit cannot be more than 24 hrs"
-msgstr ""
+msgstr "Sınırlama 24 saati geçemez"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:515
 msgid "The value should be an integer"
-msgstr ""
+msgstr "Değer tamsayı olmalıdır"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:518
 msgid "500 is the max item limit value you can set"
-msgstr ""
+msgstr "Ayarlayabileceğiniz azami parça sınırı 500'dür"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:529
 msgid "You must select Criteria and Modifier"
-msgstr ""
+msgstr "Kriter ve Değişken seçin"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:536
 msgid "'Length' should be in '00:00:00' format"
-msgstr ""
+msgstr "Uzunluk  '00:00:00' türünde olmalıdır"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:541
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:554
 msgid ""
 "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 "
 "00:00:00)"
-msgstr ""
+msgstr "Değer saat biçiminde girilmelidir  (eör. 0000-00-00 veya 0000-00-00 00:00:00)"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:568
 msgid "The value has to be numeric"
-msgstr ""
+msgstr "Değer rakam cinsinden girilmelidir"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:573
 msgid "The value should be less then 2147483648"
-msgstr ""
+msgstr "Değer 2147483648'den küçük olmalıdır"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:578
 #, php-format
 msgid "The value should be less than %s characters"
-msgstr ""
+msgstr "Değer %s karakter'den az olmalıdır"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:585
 msgid "Value cannot be empty"
-msgstr ""
+msgstr "Değer boş bırakılamaz"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:19
 msgid "Auto Switch Off"
-msgstr ""
+msgstr "Otomatik Devre Dışı Bırak"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:26
 msgid "Auto Switch On"
-msgstr ""
+msgstr "Otomatik Devreye Sok"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:33
 msgid "Switch Transition Fade (s)"
@@ -2851,7 +2851,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:40
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:75
 msgid "Add"
-msgstr ""
+msgstr "Ekle"
 
 #: airtime_mvc/application/views/scripts/form/add-show-live-stream.phtml:53
 msgid "Connection URL: "
