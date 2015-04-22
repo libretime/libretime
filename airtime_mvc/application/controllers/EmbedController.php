@@ -54,4 +54,28 @@ class EmbedController extends Zend_Controller_Action
         $this->view->availableMobileStreams = json_encode($availableMobileStreams);
         $this->view->availableDesktopStreams = json_encode($availableDesktopStreams);
     }
+
+    public function currentDayProgramAction()
+    {
+        $this->view->layout()->disableLayout();
+
+        $CC_CONFIG = Config::getConfig();
+
+        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "widgets/css/airtime-widgets.css?".$CC_CONFIG['airtime_version'];
+        $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
+        $this->view->jquery_custom = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-ui-1.8.10.custom.min.js?".$CC_CONFIG['airtime_version'];
+        $this->view->widget_js = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery.showinfo.js?".$CC_CONFIG['airtime_version'];
+    }
+
+    public function weeklyProgramAction()
+    {
+        $this->view->layout()->disableLayout();
+
+        $CC_CONFIG = Config::getConfig();
+
+        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "widgets/css/airtime-widgets.css?".$CC_CONFIG['airtime_version'];
+        $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
+        $this->view->jquery_custom = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-ui-1.8.10.custom.min.js?".$CC_CONFIG['airtime_version'];
+        $this->view->widget_js = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery.showinfo.js?".$CC_CONFIG['airtime_version'];
+    }
 }

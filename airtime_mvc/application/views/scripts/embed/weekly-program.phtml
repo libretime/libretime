@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
+    <script src="<?php echo $this->jquery ?>" type="text/javascript"></script>
+    <script src="<?php echo $this->jquery_custom ?>" type="text/javascript"></script>
+    <script src="<?php echo $this->widget_js ?>" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#scheduleTabs").airtimeWeekSchedule({
+                sourceDomain:"http://localhost",
+                dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday", nextmonday:"Next Monday", nexttuesday:"Next Tuesday",nextwednesday:"Next Wednesday", nextthursday:"Next Thursday",nextfriday:"Next Friday", nextsaturday:"Next Saturday", nextsunday:"NextSunday"},
+                miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
+                updatePeriod: 600 //seconds
+            });
+            var d = new Date().getDay();
+            $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
+        });
+    </script>
+</head>
+
+<body>
+<div id="scheduleTabs"></div>
+</body>
+
+</html>
+
+
