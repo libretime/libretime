@@ -1,11 +1,11 @@
 $(document).ready(function() {
 
-    $("#Panel").stickyPanel({
-	    topPadding: 1,
-	    afterDetachCSSClass: "floated-panel",
-	    savePanelSpace: true
-    });
-
+    /* Removed as this is now (hopefully) unnecessary */
+    //$("#Panel").stickyPanel({
+    //    topPadding: 1,
+    //    afterDetachCSSClass: "floated-panel",
+    //    savePanelSpace: true
+    //});
 
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
@@ -52,8 +52,8 @@ var i18n_days_short = [
     $.i18n._("We"),
     $.i18n._("Th"),
     $.i18n._("Fr"),
-    $.i18n._("Sa"),
-]
+    $.i18n._("Sa")
+];
 
 function adjustDateToServerDate(date, serverTimezoneOffset){
     //date object stores time in the browser's localtime. We need to artificially shift 
