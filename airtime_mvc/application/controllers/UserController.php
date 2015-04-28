@@ -16,6 +16,9 @@ class UserController extends Zend_Controller_Action
 
     public function addUserAction()
     {
+        // Start the session to re-open write permission to the session so we can
+        // create the namespace for our csrf token verification
+        session_start();
         $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
