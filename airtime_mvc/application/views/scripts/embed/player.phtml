@@ -238,7 +238,7 @@
         }
 
         // variables for updating the player's metadata
-        var time_to_next_track_starts;
+        var time_to_next_track_starts = 0;
         var metadataTimer;
 
         // Fetches the streams metadata from the Airtime live-info API
@@ -271,7 +271,6 @@
                     } else {
                         $("ul.schedule_list").find("li").html(data.next.name);
                     }
-
                 }
             });
             // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
