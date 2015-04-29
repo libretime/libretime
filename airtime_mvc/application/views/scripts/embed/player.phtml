@@ -260,6 +260,12 @@
                         $("p.now_playing").html(artist + "<span>" + track + "</span>");
 
                         var current_track_end_time = new Date(data.current.ends);
+                        if (current_track_end_time == "Invalid Date" || isNaN(current_track_end_time)) {
+                            // If the conversion didn't work (since the String is not in ISO format)
+                            // then change it to be ISO-compliant. This is somewhat hacky and may break
+                            // if the date string format in live-info changes!
+                            current_track_end_time = new Date((data.current.ends).replace(" ", "T"));
+                        }
                         var current_time = new Date();
                         //convert current_time to UTC to match the timezone of time_to_next_track_starts
                         current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
