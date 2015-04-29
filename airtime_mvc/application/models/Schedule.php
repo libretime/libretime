@@ -64,13 +64,6 @@ SQL;
     {
         //Everything in this function must be done in UTC. You will get a swift kick in the pants if you mess that up.
 
-        if (!is_int($p_prev) || !is_int($p_next)) {
-            //must enter integers to specify ranges
-            Logging::info("Invalid range parameters: $p_prev or $p_next");
-
-            return array();
-        }
-
         // when timeEnd is unspecified, return to the default behaviour - set a range of 48 hours from current time
         if (!$utcTimeEnd) {
             $end = new DateTime();
