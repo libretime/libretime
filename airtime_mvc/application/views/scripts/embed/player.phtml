@@ -252,7 +252,6 @@
                 success: function(data) {
 
                     if (data.current === null) {
-                        console.log(data.currentShow);
                         if (data.currentShow != null) {
                             //Master/show source have no current track but they do have a current show.
                             $("p.now_playing").html(data.currentShow[0].name);
