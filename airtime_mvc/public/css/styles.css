@@ -441,8 +441,9 @@ select {
 
 .wrapper {
     position: absolute;
-    top: 139px;
-    margin: 0 5px 0 5px;
+    top: 141px;
+    left: 10px;
+    right: 10px;
     padding:10px 0 0 0;
 }
 
