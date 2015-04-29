@@ -53,8 +53,8 @@ AIRTIME = (function(AIRTIME) {
     function setWidgetSize() {
         viewport = AIRTIME.utilities.findViewportDimensions();
         widgetHeight = viewport.height - 180;
-        screenWidth = Math.floor(viewport.width - 40);
-        
+        screenWidth = Math.floor(viewport.width - 50);
+
         var libTableHeight = widgetHeight - 175,
             builderTableHeight = widgetHeight - 95,
             oTable;
@@ -77,9 +77,9 @@ AIRTIME = (function(AIRTIME) {
         
         if ($lib.filter(':visible').length > 0) {
             
-            $lib.width(Math.floor(screenWidth * 0.48));
+            $lib.width(Math.floor(screenWidth * 0.47));
                 
-            $builder.width(Math.floor(screenWidth * 0.48))
+            $builder.width(Math.floor(screenWidth * 0.47))
                 .find("#sb_edit")
                     .remove()
                     .end()
