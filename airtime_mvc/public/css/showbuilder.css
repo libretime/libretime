@@ -258,10 +258,17 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 * keep the dialog css at the bottom so it can override previous rules if needed.
 */
 
+.ui-dialog.ui-widget {
+    top: 141px !important;
+}
+
 .ui-dialog .wrapper {
     margin: 0;
     padding: 10px 0 0 0;
     overflow: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .ui-dialog .lib_content {
