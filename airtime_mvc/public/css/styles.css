@@ -3238,7 +3238,13 @@ dd .stream-status {
 {
     text-align: center;
     background-color: #D27A7A;
-    padding: 20px;
+    height: 143px;
     font-size: 16px;
     font-family: Helvetica, Arial, sans-serif;
+}
+
+.suspension_notice h2
+{
+    padding-bottom: 0px;
+    padding-top: 13px;
 }
