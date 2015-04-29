@@ -273,6 +273,12 @@
                     }
                 }
             });
+
+            //Preventative code if the local and remote clocks are out of sync.
+            if (time_to_next_track_starts < 0) {
+                time_to_next_track_starts = 0;
+            }
+
             // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
         }
