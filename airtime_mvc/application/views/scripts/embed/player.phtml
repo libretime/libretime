@@ -275,7 +275,7 @@
             });
 
             //Preventative code if the local and remote clocks are out of sync.
-            if (time_to_next_track_starts < 0) {
+            if (isNaN(time_to_next_track_starts) || time_to_next_track_starts < 0) {
                 time_to_next_track_starts = 0;
             }
 
