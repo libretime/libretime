@@ -109,7 +109,7 @@ var AIRTIME = (function(AIRTIME) {
     
     mod.changeAddButtonText = function($button, btnText) {
         $button.text(btnText);
-    }
+    };
     
     mod.createToolbarButtons = function() {
         $menu = $("<div class='btn-toolbar' />");
@@ -135,7 +135,7 @@ var AIRTIME = (function(AIRTIME) {
                             "<i class='icon-white icon-trash'></i>" +
                         "</button>" +
                     "</div>");
-    }
+    };
     
     mod.createToolbarDropDown = function() {
         $('#sb-select-page').click(function(){mod.selectCurrentPage();});
