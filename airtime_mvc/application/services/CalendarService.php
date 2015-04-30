@@ -150,23 +150,27 @@ class Application_Service_CalendarService
                         $menu["edit"] = array(
                             "name" => _("Edit This Instance"),
                             "icon" => "edit",
-                            "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
+                            "url" => $baseUrl . "Schedule/populate-repeating-show-instance-form"
+                        );
                     } else {
                         $menu["edit"] = array(
                             "name" => _("Edit"),
                             "icon" => "edit",
-                            "items" => array());
+                            "items" => array()
+                        );
 
                         $menu["edit"]["items"]["all"] = array(
                             "name" => _("Edit Show"),
                             "icon" => "edit",
-                            "url" => $baseUrl."Schedule/populate-show-form");
+                            "url" => $baseUrl . "Schedule/populate-show-form"
+                        );
 
                         $menu["edit"]["items"]["instance"] = array(
                             "name" => _("Edit This Instance"),
                             "icon" => "edit",
-                            "url" => $baseUrl."Schedule/populate-repeating-show-instance-form");
-                        }
+                            "url" => $baseUrl . "Schedule/populate-repeating-show-instance-form"
+                        );
+                    }
                 } else {
                     $menu["edit"] = array(
                         "name"=> _("Edit Show"),
