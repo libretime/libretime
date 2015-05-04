@@ -238,8 +238,8 @@
         }
 
         // variables for updating the player's metadata
-        var time_to_next_track_starts;
-        var metadataTimer;
+        var time_to_next_track_starts = 0;
+        var metadataTimer = null;
 
         // Fetches the streams metadata from the Airtime live-info API
         // and attaches it to the player UI.
@@ -252,7 +252,12 @@
                 success: function(data) {
 
                     if (data.current === null) {
-                        $("p.now_playing").html("Offline");
+                        if (data.currentShow != null && data.currentShow.length != 0) {
+                            // Master/show source have no current track but they do have a current show.
+                            $("p.now_playing").html(data.currentShow[0].name);
+                        } else {
+                            $("p.now_playing").html("Offline");
+                        }
                         time_to_next_track_starts = 20000;
                     } else {
                         var artist = data.current.name.split(" - ")[0];
@@ -260,6 +265,12 @@
                         $("p.now_playing").html(artist + "<span>" + track + "</span>");
 
                         var current_track_end_time = new Date(data.current.ends);
+                        if (current_track_end_time == "Invalid Date" || isNaN(current_track_end_time)) {
+                            // If the conversion didn't work (since the String is not in ISO format)
+                            // then change it to be ISO-compliant. This is somewhat hacky and may break
+                            // if the date string format in live-info changes!
+                            current_track_end_time = new Date((data.current.ends).replace(" ", "T"));
+                        }
                         var current_time = new Date();
                         //convert current_time to UTC to match the timezone of time_to_next_track_starts
                         current_time = new Date(current_time.getTime() + current_time.getTimezoneOffset() * 60 * 1000);
@@ -271,9 +282,14 @@
                     } else {
                         $("ul.schedule_list").find("li").html(data.next.name);
                     }
-
                 }
             });
+
+            //Preventative code if the local and remote clocks are out of sync.
+            if (isNaN(time_to_next_track_starts) || time_to_next_track_starts < 0) {
+                time_to_next_track_starts = 0;
+            }
+
             // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
         }

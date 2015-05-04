@@ -1445,7 +1445,7 @@ var AIRTIME = (function(AIRTIME){
         initialEvents();
         setUpPlaylist();
     };
-    
+
     function setWidgetSize() {
         viewport = AIRTIME.utilities.findViewportDimensions();
         widgetHeight = viewport.height - 185;
@@ -1458,7 +1458,7 @@ var AIRTIME = (function(AIRTIME){
                 .find(".dataTables_scrolling")
                     .css("max-height", libTableHeight)
                     .end()
-                .width(Math.floor(width * 0.55));
+                .width(Math.floor(width * 0.54));
 
             $pl.height(widgetHeight)
                 .width(Math.floor(width * 0.45));

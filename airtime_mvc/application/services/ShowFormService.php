@@ -153,14 +153,19 @@ class Application_Service_ShowFormService
         if ($ccShowDay->isShowStartInPast()) {
             //for a non-repeating show, we should never allow user to change the start time.
             //for a repeating show, we should allow because the form works as repeating template form
-            if (!$ccShowDay->isRepeating()) {
+            $form->disableStartDateAndTime();
+
+            // Removing this - if there is no future instance, this will throw an error.
+            // If there is a future instance, then we get a WHEN block representing the next instance
+            // which may be confusing.
+            /*if (!$ccShowDay->isRepeating()) {
                 $form->disableStartDateAndTime();
             } else {
                 list($showStart, $showEnd) = $this->getNextFutureRepeatShowTime();
                 if ($this->hasShowStarted($showStart)) {
                     $form->disableStartDateAndTime();
                 }
-            }
+            }*/
         }
 
         $form->populate(
@@ -410,9 +415,8 @@ class Application_Service_ShowFormService
 
         //if the show is repeating, set the start date to the next
         //repeating instance in the future
-        if ($this->ccShow->isRepeating()) {
-             list($originalShowStartDateTime,) = $this->getNextFutureRepeatShowTime();
-        } else {
+        $originalShowStartDateTime = $this->getCurrentOrNextInstanceStartTime();
+        if (!$originalShowStartDateTime) {
             $originalShowStartDateTime = $dt;
         }
 
@@ -421,26 +425,30 @@ class Application_Service_ShowFormService
 
     /**
      * 
-     * Returns 2 DateTime objects, in the user's local time,
-     * of the next future repeat show instance start and end time
+     * Returns a DateTime object, in the user's local time,
+     * of the current or next show instance start time
+     *
+     * Returns null if there is no next future repeating show instance
      */
-    public function getNextFutureRepeatShowTime()
+    public function getCurrentOrNextInstanceStartTime()
     {
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())
             ->filterByDbModifiedInstance(false)
-            ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->filterByDbStarts(gmdate("Y-m-d"), Criteria::GREATER_EQUAL)
             ->orderByDbStarts()
             ->findOne();
+
+        if (!$ccShowInstance) {
+            return null;
+        }
         
         $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
-        $ends = new DateTime($ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
         $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
 
         $starts->setTimezone(new DateTimeZone($showTimezone));
-        $ends->setTimezone(new DateTimeZone($showTimezone));
 
-        return array($starts, $ends);
+        return $starts;
     }
 
 

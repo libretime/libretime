@@ -20,7 +20,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 <?php echo $this->partial('partialviews/trialBox.phtml', array("is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
-<div id="Panel">
+
+    <div id="Panel" class="sticky">
+    <?php if($this->suspended) : ?>
+        <?php echo $this->partial('partialviews/suspended.phtml'); ?>
+    <?php else : ?>
+
     <?php echo $this->versionNotify();
             $sss = $this->SourceSwitchStatus();
             $scs = $this->SourceConnectionStatus();
@@ -61,7 +66,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <?php echo $this->navigation()->menu() ?>
         <div style="clear:both;"></div>
     </div>
+    <?php endif; //suspended ?>
 </div>
+
 
 <div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>
 
