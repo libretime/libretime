@@ -60,6 +60,9 @@ class AirtimeAnalyzerServer:
             #Disable most pika/rabbitmq logging:
             pika_logger = logging.getLogger('pika')
             pika_logger.setLevel(logging.CRITICAL)
+            
+            boto_logger = logging.getLogger('auth')
+            boto_logger.setLevel(logging.CRITICAL)
         
         # Set up logging
         logFormatter = logging.Formatter("%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s")

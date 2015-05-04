@@ -5,7 +5,10 @@
 </style>
 <?php if ($this->quotaLimitReached) { ?>
     <div class="errors quota-reached">
-    Disk quota exceeded. You cannot upload files until you <a href="http://www.sourcefabric.org/en/airtime" target="_blank">upgrade your storage</a>.
+    Disk quota exceeded. You cannot upload files until you
+        <a target="_parent" href=<?php $baseUrl = Application_Common_OsPath::getBaseDir(); echo $baseUrl . "billing/upgrade"?>>
+            upgrade your storage
+        </a>.
     </div>
 <?php 
 }

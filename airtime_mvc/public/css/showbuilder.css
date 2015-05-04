@@ -262,6 +262,9 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
     margin: 0;
     padding: 10px 0 0 0;
     overflow: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .ui-dialog .lib_content {
