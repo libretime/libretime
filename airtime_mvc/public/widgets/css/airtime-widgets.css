@@ -233,4 +233,7 @@
 #scheduleTabs.ui-tabs .ui-tabs-hide {
     display: none;
 }
-	  
+
+.embedScheduleWidget {
+	width: 500px;
+}

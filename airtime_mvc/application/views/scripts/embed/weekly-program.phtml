@@ -8,20 +8,116 @@
     <script src="<?php echo $this->widget_js ?>" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("#scheduleTabs").airtimeWeekSchedule({
+            /*var data = <?php //echo $this->scheduleData ?>;
+                console.log(data);*/
+            /*$("#scheduleTabs").airtimeWeekSchedule({
                 sourceDomain:"http://localhost",
                 dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday", nextmonday:"Next Monday", nexttuesday:"Next Tuesday",nextwednesday:"Next Wednesday", nextthursday:"Next Thursday",nextfriday:"Next Friday", nextsaturday:"Next Saturday", nextsunday:"NextSunday"},
                 miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
                 updatePeriod: 600 //seconds
-            });
+            });*/
             var d = new Date().getDay();
-            $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
+            $('#scheduleTabs.scheduleTabsWeek1').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
+            $('#scheduleTabs.scheduleTabsWeek2').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
+
+            $('.scheduleWidgetToggle').click(function() {
+                $('#scheduleTabs.scheduleTabsWeek1').toggle();
+                $('#scheduleTabs.scheduleTabsWeek2').toggle();
+            });
         });
     </script>
 </head>
 
 <body>
-<div id="scheduleTabs"></div>
+<div id="scheduleTabs" class="ui-tabs embedScheduleWidget scheduleTabsWeek1">
+    <ul>
+        <?php foreach($this->scheduleDataWeek1 as $day => $data) {
+            echo "<li><a href='#" . $day . "'>" . $data["dayOfWeek"] . "</a></li>";
+        } ?>
+        <li><a class="scheduleWidgetToggle" href="#">Next Week</a></li>
+    </ul>
+
+    <?php
+    foreach($this->scheduleDataWeek1 as $day => $data) {
+        echo "<div id='".$day."' class='ui-tabs-hide'>";
+        echo '<table class="widget widget now-playing-list">
+                <colgroup>
+                      <col width="150" />
+                      <col width="350" />
+                      <col width="240" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <td>Time</td>
+                    <td>Program Name</td>
+                    <td>Details</td>
+                  </tr>
+                </thead>
+                <tfoot>
+                  <tr>
+                    <td></td>
+                  </tr>
+                </tfoot>
+                <tbody>';
+                    foreach ($data["shows"] as $show => $data) {
+                        echo '<tr>
+                            <td>'.$data["show_start_hour"].' - '.$data["show_end_hour"].'</td>
+                            <td><h4>'.$data["name"].'</h4></td>
+                            <td><ul><li><a href="'.$data["url"].'" target="_blank">Read more</a></li></ul></td>
+                            </tr>';
+
+                    }
+                echo '</tbody>
+            </table>';
+
+        echo "</div>";
+    } ?>
+</div>
+
+<div id="scheduleTabs" class="ui-tabs embedScheduleWidget scheduleTabsWeek2" style="display:none">
+    <ul>
+        <?php foreach($this->scheduleDataWeek2 as $day => $data) {
+            echo "<li><a href='#" . $day . "'>" . $data["dayOfWeek"] . "</a></li>";
+        } ?>
+        <li><a class="scheduleWidgetToggle" href="#">Previous Week</a></li>
+    </ul>
+
+    <?php foreach($this->scheduleDataWeek2 as $day => $data) {
+        echo "<div id='".$day."' class='ui-tabs-hide'>";
+        echo '<table class="widget widget now-playing-list">
+                <colgroup>
+                      <col width="150" />
+                      <col width="350" />
+                      <col width="240" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <td>Time</td>
+                        <td>Program Name</td>
+                        <td>Details</td>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                    <tbody>';
+                        foreach ($data["shows"] as $show => $data) {
+                            echo '<tr>
+                                    <td>'.$data["show_start_hour"].' - '.$data["show_end_hour"].'</td>
+                                    <td><h4>'.$data["name"].'</h4></td>
+                                    <td><ul><li><a href="'.$data["url"].'" target="_blank">Read more</a></li></ul></td>
+                                    </tr>';
+
+                        }
+                        echo '</tbody>
+                    </table>';
+
+        echo "</div>";
+    } ?>
+</div>
+
 </body>
 
 </html>
