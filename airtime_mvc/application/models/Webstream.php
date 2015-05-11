@@ -93,6 +93,7 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
         $isAdminOrPM = $user->isUserType(array(UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
         
         if (!$isAdminOrPM) {
+            //Make sure the user has ownership of ALL the selected webstreams before
             $leftOver = self::streamsNotOwnedByUser($p_ids, $p_userId);
             if (count($leftOver) == 0) {
                 CcWebstreamQuery::create()->findPKs($p_ids)->delete();
@@ -280,13 +281,22 @@ class Application_Model_Webstream implements Application_Model_LibraryEditable
     private static function getPlsUrl($url)
     {
         $content = self::getUrlData($url);
-        $ini = parse_ini_string($content, true);
 
-        if ($ini !== false && isset($ini["playlist"]) && isset($ini["playlist"]["File1"])) {
-            return $ini["playlist"]["File1"];
+        $matches = array();
+        $numStreams = 0; //Number of streams explicitly listed in the PLS.
+        
+        if (preg_match("/NumberOfEntries=([0-9]*)/", $content, $matches) !== FALSE) {
+            $numStreams = $matches[1];
         }
 
-        throw new Exception(_("Could not parse PLS playlist"));
+        //Find all the stream URLs in the playlist
+        if (preg_match_all("/File[0-9]*=(.*)/", $content, $matches) !== FALSE) {
+            //This array contains all the streams! If we need fallback stream URLs in the future,
+            //they're already in this array...
+            return $matches[1][0];
+        } else {
+            throw new Exception(_("Could not parse PLS playlist"));
+        }
     }
 
     private static function getM3uUrl($url)
