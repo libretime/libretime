@@ -31,10 +31,12 @@
 <body>
 <div id="scheduleTabs" class="ui-tabs embedScheduleWidget scheduleTabsWeek1">
     <ul>
-        <?php foreach($this->scheduleDataWeek1 as $day => $data) {
-            echo "<li><a href='#" . $day . "'>" . $data["dayOfWeek"] . "</a></li>";
+        <?php
+        Logging::info($this->scheduleDataWeek1);
+        foreach($this->scheduleDataWeek1 as $day => $data) {
+            echo "<li><a href='#" . $day . "'><span class='day-of-week'>".$data["dayOfWeek"]."</span><span class='day-of-month'>" .$data["dayOfMonth"]."</span></a></li>";
         } ?>
-        <li><a class="scheduleWidgetToggle" href="#">Next Week</a></li>
+        <!--<li><a class="scheduleWidgetToggle" href="#">Next Week</a></li>-->
     </ul>
 
     <?php
@@ -44,15 +46,7 @@
                 <colgroup>
                       <col width="150" />
                       <col width="350" />
-                      <col width="240" />
                 </colgroup>
-                <thead>
-                  <tr>
-                    <td>Time</td>
-                    <td>Program Name</td>
-                    <td>Details</td>
-                  </tr>
-                </thead>
                 <tfoot>
                   <tr>
                     <td></td>
@@ -63,7 +57,6 @@
                         echo '<tr>
                             <td>'.$data["show_start_hour"].' - '.$data["show_end_hour"].'</td>
                             <td><h4>'.$data["name"].'</h4></td>
-                            <td><ul><li><a href="'.$data["url"].'" target="_blank">Read more</a></li></ul></td>
                             </tr>';
 
                     }
@@ -88,15 +81,7 @@
                 <colgroup>
                       <col width="150" />
                       <col width="350" />
-                      <col width="240" />
                     </colgroup>
-                    <thead>
-                      <tr>
-                        <td>Time</td>
-                        <td>Program Name</td>
-                        <td>Details</td>
-                      </tr>
-                    </thead>
                     <tfoot>
                       <tr>
                         <td></td>
@@ -107,7 +92,6 @@
                             echo '<tr>
                                     <td>'.$data["show_start_hour"].' - '.$data["show_end_hour"].'</td>
                                     <td><h4>'.$data["name"].'</h4></td>
-                                    <td><ul><li><a href="'.$data["url"].'" target="_blank">Read more</a></li></ul></td>
                                     </tr>';
 
                         }

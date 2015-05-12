@@ -3,43 +3,60 @@
 }
 #scheduleTabs ul {
     overflow:hidden;
-    height:28px;
-    background: url('../widgets/css/widget-img/schedule-tabs-list-bgr.png') repeat-x left bottom;
+    height:50px;
+    /*background: url('../widgets/css/widget-img/schedule-tabs-list-bgr.png') repeat-x left bottom;*/
+    background: #2E9AFE;
     list-style-type:none;
     margin:0;
     padding:0;
 }
 #scheduleTabs ul li {
     float:left;
-    height:28px;
+    height:50px;
     margin:0;
     padding:0;
 }
 #scheduleTabs ul li a {
+    width: 50px;
     display:block;
     float:left;
-    height:25px;
+    /*height:40px;*/
     padding:0 10px;
-    margin-top:3px;
     font-size:12px;
     font-weight:bold;
-    color:#666;
-    line-height:25px;
-    border-right:1px solid #dbdbdb;
-    border-left:1px solid #f4f4f4;
+    color:#ffffff;
+    /*line-height:40px;*/
+    /*border-right:1px solid #dbdbdb;
+    border-left:1px solid #f4f4f4;*/
     text-decoration:none;
 }
 #scheduleTabs ul li a:hover {
     color:#000;
     text-decoration:none;
 }
+
+#scheduleTabs ul li a span {
+    position:relative;
+    display:block;
+    text-align: center;
+}
+.day-of-month{
+    font-size: 20px;
+    padding-bottom:10px;
+
+}
+.day-of-week{
+    font-size: 10px;
+    padding-top:10px;
+}
 #scheduleTabs ul li.ui-tabs-selected a {
-    height:27px;
+    /*height:40px;*/
     margin-top:0px;
-    line-height:27px;
-    color:#333333;
-    background:#ffffff;
-    border:1px solid #cac9c9; border-bottom:none;
+    width: 50px;
+    /*line-height:40px;*/
+    color:#ffffff;
+    background: #2ECCFA;
+    /*border:1px solid #cac9c9; border-bottom:none;*/
 }
 #scheduleTabs table {
     clear:both;
@@ -65,7 +82,10 @@
 #scheduleTabs table tfoot {
 }
 #scheduleTabs table tbody {
-    font-size:13px; color:#666666;  font-weight:bold;
+    font-size:13px;
+    color:#ffffff;
+    font-weight:bold;
+    background: rgba(0, 0, 0, 1);
 }
 #scheduleTabs table tbody tr {
     height:30px;
@@ -76,7 +96,7 @@
     border-bottom:1px dotted #b3b3b3;
 }
 #scheduleTabs table tbody tr td h4 {
-    color:#333333;  font-size:12px;
+    color:#ffffff;  font-size:12px;
     margin:0;
     padding:0;
 }
@@ -106,5 +126,5 @@
 }
 
 .embedScheduleWidget {
-    width: 500px;
+    width: 490px;
 }
