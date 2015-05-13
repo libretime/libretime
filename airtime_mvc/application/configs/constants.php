@@ -92,3 +92,7 @@ define('SENTRY_CONFIG_PATH', '/etc/airtime-saas/sentry.airtime_web.ini');
 //Provisioning status
 define('PROVISIONING_STATUS_SUSPENDED' , 'Suspended');
 define('PROVISIONING_STATUS_ACTIVE' , 'Active');
+
+//TuneIn integration
+define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
+
