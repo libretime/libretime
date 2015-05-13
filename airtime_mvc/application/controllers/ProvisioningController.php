@@ -57,13 +57,16 @@ class ProvisioningController extends Zend_Controller_Action
 
     /**
      * Delete the Airtime Pro station's files from Amazon S3
+     *
+     * FIXME: When we deploy this next time, we should ensure that
+     *        this function can only be accessed with POST requests!
      */
     public function terminateAction()
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        if (!RestAuth::verifyAuth(true, true, $this)) {
+        if (!RestAuth::verifyAuth(true, false, $this)) {
             return;
         }
         
