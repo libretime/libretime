@@ -375,7 +375,7 @@ SQL;
      * Deletes the physical file from the local file system or from the cloud
      *
      */
-    public function delete()
+    public function delete($quiet=false)
     {
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->_file->getCcFileId())) {
@@ -401,13 +401,16 @@ SQL;
         //or from the cloud
         if ($this->_file->getDbImportStatus() == CcFiles::IMPORT_STATUS_SUCCESS) {
             try {
-                Logging::info("DELETING PHYSICAL FILE " . $this->_file->getDbTrackTitle());
                 $this->_file->deletePhysicalFile();
             }
             catch (Exception $e)
             {
-                //Just log the exception and continue.
-                Logging::error($e);
+                if ($quiet) {
+                    Logging::info($e);
+                } else {
+                    //Just log the exception and continue.
+                    Logging::error($e);
+                }
             }
         }
 

@@ -509,10 +509,10 @@ class PreferenceController extends Zend_Controller_Action
         $files = CcFilesQuery::create()->find();
         foreach ($files as $file) {
             $storedFile = new Application_Model_StoredFile($file, null);
-            $storedFile->delete();
+            // Delete the files quietly to avoid getting Sentry errors for
+            // every S3 file we delete.
+            $storedFile->delete(true);
         }
-
-        /* TODO: delete hard copies of files? */
 
         $this->getResponse()
              ->setHttpResponseCode(200)
