@@ -1788,7 +1788,7 @@ ul.errors {
     width:278px;
 }
 
-ul.errors li {
+ul.errors li, .warning {
     color:#902d2d;
     font-size:11px;
     padding:2px 4px;
@@ -1796,6 +1796,11 @@ ul.errors li {
     margin-bottom:2px;
     border:1px solid #c83f3f;
     list-style: none;
+}
+
+.warning-label {
+    font-size: medium;
+    text-align: center;
 }
 
 div.success{
@@ -2255,14 +2260,9 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .radio-inline-list label {
     margin-right:12px;
 }
-.preferences.simple-formblock dd.block-display {
-    width: 100%;
-}
-
-.preferences.simple-formblock dd.block-display select, .stream-config.simple-formblock dd.block-display select {
-    width: 100%;
-}
-.preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
+.preferences.simple-formblock dd.block-display,
+ .preferences.simple-formblock dd.block-display select, .stream-config.simple-formblock dd.block-display select,
+ .preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
     width: 100%;
 }
 .preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text 
@@ -2282,6 +2282,15 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .preferences #logo-remove-btn {
     /*float: left;*/
     margin-bottom: 4px;
+}
+
+.preferences #Logo-img-container {
+    margin-top: 30px;
+}
+
+.centered {
+    margin: 0 auto;
+    display: block;
 }
 
 #show_time_info {

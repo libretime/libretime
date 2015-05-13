@@ -401,6 +401,7 @@ SQL;
         //or from the cloud
         if ($this->_file->getDbImportStatus() == CcFiles::IMPORT_STATUS_SUCCESS) {
             try {
+                Logging::info("DELETING PHYSICAL FILE " . $this->_file->getDbTrackTitle());
                 $this->_file->deletePhysicalFile();
             }
             catch (Exception $e)

@@ -1,18 +1,13 @@
 function showErrorSections() {
-    if($("#soundcloud-settings .errors").length > 0) {
-        $("#soundcloud-settings").show();
-        $(window).scrollTop($("#soundcloud-settings .errors").position().top);
-    }
-    
-    if($("#email-server-settings .errors").length > 0) {
-        $("#email-server-settings").show();
-        $(window).scrollTop($("#email-server-settings .errors").position().top);
-    }
-    
-    if($("#livestream-settings .errors").length > 0) {
-        $("#livestream-settings").show();
-        $(window).scrollTop($("#livestream-settings .errors").position().top);
-    }
+    var selector = $("[id$=-settings]");
+    selector.each(function(i) {
+        var el = $(this);
+        var errors = el.find(".errors");
+        if (errors.length > 0) {
+            el.show();
+            $(window).scrollTop(errors.position().top);
+        }
+    });
 }
 
 function setConfigureMailServerListener() {
@@ -118,6 +113,14 @@ function setSoundCloudCheckBoxListener() {
 function removeLogo() {
     $.post(baseUrl+'Preference/remove-logo', function(json){});
     location.reload();
+}
+
+function deleteAllFiles() {
+    var resp = confirm($.i18n._("Are you sure you want to delete all the tracks in your library?"))
+    if (resp) {
+        $.post(baseUrl+'Preference/delete-all-files', function(json){});
+        location.reload();
+    }
 }
 
 $(document).ready(function() {
