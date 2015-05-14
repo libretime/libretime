@@ -152,6 +152,10 @@ $(document).ready(function() {
         return false;
     }).next().hide();
 
+    if ($("#tunein-settings").find(".errors").length > 0) {
+        $(".collapsible-content#tunein-settings").show();
+    }
+
     /* No longer using AJAX for this form. Zend + our code makes it needlessly hard to deal with. -- Albert
     $('#pref_save').live('click', function() {
         var data = $('#pref_form').serialize();

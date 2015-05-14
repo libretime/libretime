@@ -3248,3 +3248,7 @@ dd .stream-status {
     padding-bottom: 0px;
     padding-top: 13px;
 }
+
+.enable-tunein {
+    font-weight:bold;
+}

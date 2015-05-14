@@ -1,6 +1,12 @@
 <fieldset class="padded">
     <dl class="zend_form">
-        <?php echo $this->element->getElement('enable_tunein')->render() ?>
+
+        <?php if($this->element->getElement("enable_tunein")->hasErrors()) {
+            echo $this->element->getElement('enable_tunein')->renderErrors();
+        }
+        ?>
+        <?php echo $this->element->getElement('enable_tunein')->renderViewHelper() ?>
+        <?php echo $this->element->getElement('enable_tunein')->renderLabel() ?>
 
         <?php echo $this->element->getElement('tunein_station_id')->render() ?>
 
