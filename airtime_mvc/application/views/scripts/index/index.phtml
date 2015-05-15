@@ -1,0 +1,114 @@
+
+<div class="wrapper">
+
+    <div class="bck_cover"></div>
+
+    <?php if (!empty($this->stationLogo)) {
+        echo "<a href = '#' class='logo' ><img src = 'data:image/png;base64," . $this->stationLogo. "'></a>";
+    } ?>
+
+    <div id="tab-1" class="schedule tab_content current">
+        <ul class="tabs">
+            <li class="active" data-tab="day-1">THU <span>30</span></li><li class="" data-tab="day-2">FRI <span>1</span></li><li class="" data-tab="day-3">SAT <span>2</span></li><li class="" data-tab="day-4">SUN <span>3</span></li><li class="" data-tab="day-5">MON <span>4</span></li><li class="" data-tab="day-6">TUE <span>5</span></li><li class="" data-tab="day-7">WED <span>6</span></li>
+        </ul>
+
+        <div class="schedule_content">
+            <div id="day-1" class="schedule_item active">
+                <table class="widget widget now-playing-list"><colgroup><col width="110"><col width="350"><col width="240"></colgroup><thead></thead><tfoot><tr><td></td></tr></tfoot><tbody><tr><td class="time_grid col_two">09:00 - 10:00</td><td class="name_grid"><h4>Ryerson's Ryecast</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">10:00 - 11:00</td><td class="name_grid"><h4>Endeavours</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">11:00 - 13:00</td><td class="name_grid"><h4>!earshot 20</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">13:00 - 14:00</td><td class="name_grid"><h4>Resonating Reconciliation</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">14:00 - 15:00</td><td class="name_grid"><h4>Documentary and Spoken Word</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">15:00 - 16:00</td><td class="name_grid"><h4>A Peek in the Music Library</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">16:00 - 17:00</td><td class="name_grid"><h4>A Peek in the Music Library</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">17:00 - 18:00</td><td class="name_grid"><h4>A Peek in the Music Library</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">18:00 - 19:00</td><td class="name_grid"><h4>The Star Spot</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">19:00 - 20:00</td><td class="name_grid"><h4>Song Talk</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">20:00 - 21:00</td><td class="name_grid"><h4>Metal On Metal</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">21:00 - 22:00</td><td class="name_grid"><h4>The B &amp; D Approach</h4></td><td class="more_grid"></td></tr><tr><td class="time_grid col_two">22:00 - 00:00</td><td class="name_grid"><h4>Something Completely Different</h4></td><td class="more_grid"></td></tr></tbody></table>
+            </div>
+
+            <div id="day-2" class="schedule_item">
+                <p>Day 2</p>
+            </div>
+
+            <div id="day-3" class="schedule_item">
+                <p>Day 3</p>
+            </div>
+
+            <div id="day-4" class="schedule_item">
+                <p>Day 4</p>
+            </div>
+
+            <div id="day-5" class="schedule_item">
+                <p>Day 5</p>
+            </div>
+
+            <div id="day-6" class="schedule_item">
+                <p>Day 6</p>
+            </div>
+
+            <div id="day-7" class="schedule_item">
+                <p>Day 7</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-2" class="about_us tab_content">
+        <h1><?php echo $this->stationName ?></h1>
+        <p><?php echo $this->stationDescription ?></p>
+    </div>
+
+    <div id="tab-3" class="login tab_content">
+        <h2>Login</h2>
+        <form action="demo_form.asp">
+            <input type="text" name="FirstName" value="username"><br>
+            <input type="text" name="Password" value="password"><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+
+    <div class="bottom_bar">
+        <div class="play cont_btn">
+
+        </div>
+
+        <div class="on_air">
+            <p>Bob Marley
+                <span>Chant Down Babylon</span></p>
+        </div>
+
+        <div class="schedule_btn button current" data-tab="tab-1">
+
+        </div>
+
+        <div class="about_us_btn button" data-tab="tab-2">
+
+        </div>
+
+        <div class="login_btn button" data-tab="tab-3">
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $('.bottom_bar .button').click(function(){
+            var tab_id = $(this).attr('data-tab');
+
+            $('.bottom_bar .button').removeClass('current');
+            $('.tab_content').removeClass('current');
+
+            $(this).addClass('current');
+            $("#"+tab_id).addClass('current');
+        })
+
+        $('.tabs li').click(function(){
+            var tab_id = $(this).attr('data-tab');
+
+            $('.tabs li').removeClass('active');
+            $('.schedule_item').removeClass('active');
+
+            $(this).addClass('active');
+            $("#"+tab_id).addClass('active');
+        })
+
+        $(".play").click(function(){
+            $(this).toggleClass("pause");
+        });
+
+    })
+</script>

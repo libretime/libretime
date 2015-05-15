@@ -1,0 +1,376 @@
+html {
+    background: url("img/background.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow-y: scroll;
+}
+
+.bck_cover {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+}
+
+.logo img {
+    margin: 70px 0px 0px 60px;
+}
+
+.tab_content {
+    color: #fff;
+    text-align: center;
+    /*display: none;*/
+    visibility: hidden;
+    width: 100%;
+    max-width: 740px;
+    margin: 0 auto;
+    margin-top: 20px;
+    margin-bottom: 140px;
+    padding: 10px;
+    position: absolute;
+    left: 50%;
+    margin-left: -380px;
+    /*	-webkit-transition-delay: 1s;
+        transition-delay: 1s;*/
+}
+
+.tab_content.current {
+    /*display: block;*/
+    visibility: visible;
+}
+
+.schedule .tabs {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0px;
+    background: rgba(69, 155, 143, 0.8);
+}
+
+.schedule .tabs li {
+    width: 105px;
+    height: 80px;
+    display: inline-block;
+    font-size: 14px;
+    padding: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.schedule .tabs li span {
+    font-size: 30px;
+    display: block;
+}
+
+.schedule .tabs li.active {
+    background: #459B8F;
+}
+
+.schedule .tabs li.active:hover {
+    background: #459B8F;
+}
+
+.schedule .tabs li:hover {
+    background: rgba(69, 155, 143, 0.6)
+}
+
+.schedule_content {
+    background: rgba(0, 0, 0, 0.3);
+    max-height: 0px;
+    transition: max-height 2s ease;
+    /*transition-delay: 1s;*/
+}
+
+.schedule.current .schedule_content {
+    max-height: 2000px;
+}
+
+.schedule_content table {
+    opacity: 0;
+    /*transition: all 1s ease;*/
+}
+
+.schedule.current .schedule_content table {
+    opacity: 1;
+    -webkit-transition-delay: 0.6s;
+    transition-delay: 0.6s;
+}
+
+.schedule_item {
+    display: none;
+    font-size: 17px;
+    text-align: left;
+    text-transform: uppercase;
+    padding: 30px 40px;
+}
+
+.schedule_item.active {
+    display: block;
+}
+
+.schedule_item .time_grid  {
+    font-weight: 300;
+    color: #AAAAAA;
+}
+
+.schedule_item .name_grid {
+    padding-left: 30px;
+}
+
+.schedule_item h4 {
+    margin: 10px 0px;
+    font-weight: 400;
+}
+
+.about_us {
+    -webkit-transition-delay: 2s;
+    transition-delay: 2s;
+}
+
+.schedule, .about_us, .login {
+    /*	-webkit-transition-delay: 1s;
+        transition-delay: 1s;*/
+    transition: all 0.4s ease;
+    opacity: 0;
+}
+
+.about_us.current, .login.current {
+    opacity: 1;
+    -webkit-transition-delay: 0.4s;
+    transition-delay: 0.4s;
+}
+
+.schedule.current {
+    opacity: 1;
+}
+
+.about_us h1 {
+    font-size: 80px;
+    font-weight: 300;
+    margin: 10px;
+}
+
+.about_us p {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 10px;
+}
+
+.login h2 {
+    font-size: 28px;
+    font-weight: 300;
+}
+
+input[type="text"] {
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    margin-bottom: 1px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+input[type="text"]:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+input[type="submit"] {
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 300;
+    background: #459B8F;
+    width: 100%;
+    max-width: 380px;
+    padding: 18px 20px;
+    margin-top: 20px;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+input[type="submit"]:hover {
+    background-color: #409187;
+}
+
+.bottom_bar {
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    height: 120px;
+    background: #fff;
+}
+
+.bottom_bar .cont_btn {
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.bottom_bar .cont_btn:hover {
+    background-color: #409187;
+}
+
+.bottom_bar .play {
+    background: #459B8F url('img/play.png') no-repeat center center;
+}
+
+.bottom_bar .pause {
+    background: #459B8F url('img/pause.png') no-repeat center center;
+}
+
+.on_air {
+    display: inline-block;
+    margin-left: 40px;
+}
+
+.bottom_bar p {
+    color: #222222;
+    font-size: 26px;
+    font-weight: 300;
+    float: left;
+    margin: 28px 0px;
+}
+
+.bottom_bar p span {
+    display: block;
+    font-weight: 100;
+}
+
+.bottom_bar .button {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    margin: 35px 40px;
+    cursor: pointer;
+}
+
+.bottom_bar .schedule_btn {
+    background: url('img/schedule.png') no-repeat center 0px;
+}
+
+.bottom_bar .schedule_btn.current {
+    background: url('img/schedule.png') no-repeat center -50px;
+}
+
+.bottom_bar .about_us_btn {
+    background: url('img/about_us.png') no-repeat center 0px;
+}
+
+.bottom_bar .about_us_btn.current {
+    background: url('img/about_us.png') no-repeat center -50px;
+}
+
+.bottom_bar .login_btn {
+    background: url('img/login.png') no-repeat center 0px;
+    float: right;
+}
+
+.bottom_bar .login_btn.current {
+    background: url('img/login.png') no-repeat center -50px;
+    float: right;
+}
+
+@media (max-width: 780px) {
+    .logo {
+        display: block;
+        text-align: center;
+    }
+
+    .logo img {
+        margin: 20px 0px;
+    }
+
+    .tab_content {
+        margin-top: 0px;
+        width: auto;
+        max-width: 100%;
+        margin-left: auto;
+        left: 10px;
+        right: 10px;
+    }
+
+    .schedule .tabs li {
+        width: 64px;
+        height: 64px;
+        padding: 6px;
+    }
+
+    .about_us h1 {
+        font-size: 40px;
+    }
+
+    .about_us p {
+        font-size: 18px;
+    }
+
+    .bottom_bar {
+        height: 80px;
+    }
+
+    .bottom_bar .play {
+        width: 80px;
+        height: 80px;
+        float: left;
+        background-size: 60%;
+    }
+
+    .bottom_bar p {
+        font-size: 18px;
+        margin: 10px 10px;
+        color: #fff;
+        white-space: nowrap;
+    }
+
+    .bottom_bar p span {
+        display: inline-block;
+    }
+
+    .on_air {
+        margin-left: 0px;
+        position: absolute;
+        top: -82px;
+        left: 0px;
+        right: 0px;
+        padding-top: 40px;
+        background: rgba(0,0,0,0);
+        background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 69%, rgba(0,0,0,1) 100%);
+        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(0,0,0,0)), color-stop(69%, rgba(0,0,0,1)), color-stop(100%, rgba(0,0,0,1)));
+        background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 69%, rgba(0,0,0,1) 100%);
+        background: -o-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 69%, rgba(0,0,0,1) 100%);
+        background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 69%, rgba(0,0,0,1) 100%);
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 69%, rgba(0,0,0,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#000000', GradientType=0 );
+    }
+
+    .bottom_bar .button {
+        margin: 15px 20px;
+    }
+
+    .bottom_bar .schedule_btn.current {
+        top: 0px;
+        left: 0px;
+    }
+
+    .bottom_bar .about_us_btn {
+        top: 0px;
+        right: 0px;
+    }
+}

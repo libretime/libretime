@@ -128,7 +128,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headLink()->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl . 'css/pro_dropdown_3.css?' . $CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl . 'css/qtip/jquery.qtip.min.css?' . $CC_CONFIG['airtime_version']);
-        $view->headLink()->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
+
+        // Don't include style.css on the Radio Page because there are conflicting styles.
+        if ($_SERVER['REQUEST_URI'] != "/") {
+            $view->headLink()->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
+        }
         $view->headLink()->appendStylesheet($baseUrl . 'css/masterpanel.css?' . $CC_CONFIG['airtime_version']);
         $view->headLink()->appendStylesheet($baseUrl . 'css/tipsy/jquery.tipsy.css?' . $CC_CONFIG['airtime_version']);
     }
