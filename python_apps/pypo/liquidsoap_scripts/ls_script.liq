@@ -249,6 +249,7 @@ s = if dj_live_stream_port != 0 and dj_live_stream_mp != "" then
                 on_connect=live_dj_connect,
                 on_disconnect=live_dj_disconnect))
 
+    dj_live = on_metadata(notify_queue, dj_live)
     ignore(output.dummy(dj_live, fallible=true))
 
     switch(id="show_schedule_noise_switch",
@@ -271,6 +272,7 @@ s = if master_live_stream_port != 0 and master_live_stream_mp != "" then
                 on_connect=master_dj_connect,
                 on_disconnect=master_dj_disconnect))
 
+    master_dj = on_metadata(notify_queue, master_dj)
     ignore(output.dummy(master_dj, fallible=true))
 
     switch(id="master_show_schedule_noise_switch",
