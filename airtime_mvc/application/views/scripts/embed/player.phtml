@@ -294,6 +294,7 @@
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
         }
 
+
     </script>
 
     <style type="text/css">
@@ -310,31 +311,47 @@
 
 <body>
 
-<div class="airtime_player">
+<div id="player" style="display:none;">
+    <div class="airtime_player">
 
-    <div class="airtime_header">
-        <p class="station_name">fff</p>
-    </div>
-
-    <div class="airtime_box">
-
-        <div class="airtime_button">
-            <span id="play_button" class="play_button" onclick="musesPlayer.play()"></span>
-            <span id="stop_button" class="stop_button hide_button" onclick="musesPlayer.stop()"></span>
+        <div class="airtime_header">
+            <p class="station_name">fff</p>
         </div>
-        <p class="now_playing"></p>
+
+        <div class="airtime_box">
+
+            <div class="airtime_button">
+                <span id="play_button" class="play_button" onclick="musesPlayer.play()"></span>
+                <span id="stop_button" class="stop_button hide_button" onclick="musesPlayer.stop()"></span>
+            </div>
+            <p class="now_playing"></p>
+
+        </div>
+
+        <div style="clear:both"></div>
+
+        <div class="airtime_schedule">
+            <p class="airtime_next">Next</p>
+            <ul class="schedule_list">
+                <li></li>
+            </ul>
+        </div>
+        <a class="airtime_pro" target="_blank" href="https://www.airtime.pro/">Powered by <span class="airtime-pro-orange">Airtime Pro</span></a>
 
     </div>
+</div>
 
-    <div style="clear:both"></div>
+<div id="premium_player" style="display:block;">
+    <div class="bottom_bar">
+        <div class="play cont_btn">
 
-    <div class="airtime_schedule">
-        <p class="airtime_next">Next</p>
-        <ul class="schedule_list">
-            <li></li>
-        </ul>
+        </div>
+
+        <div class="on_air">
+            <p>Bob Marley
+                <span>Chant Down Babylon</span></p>
+        </div>
     </div>
-    <a class="airtime_pro" target="_blank" href="https://www.airtime.pro/">Powered by <span class="airtime-pro-orange">Airtime Pro</span></a>
 
 </div>
 

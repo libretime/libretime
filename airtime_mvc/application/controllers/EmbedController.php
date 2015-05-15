@@ -24,12 +24,21 @@ class EmbedController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "css/player.css?".$CC_CONFIG['airtime_version'];
+
         $this->view->mrp_js = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/mrp.js?".$CC_CONFIG['airtime_version'];
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "js/libs/jquery-1.10.2.js";
         $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/muses.swf";
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
         $this->view->player_title = json_encode($request->getParam('title'));
+
+        //TODO: un-hardcode this
+        $player_style = "premium";
+        if ($player_style == "premium") {
+            $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "css/radio-page/premium_player.css?".$CC_CONFIG['airtime_version'];
+        } else {
+            $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "css/player.css?".$CC_CONFIG['airtime_version'];
+        }
+        $this->view->player_style = $player_style;
 
         $stream = $request->getParam('stream');
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
@@ -54,6 +63,11 @@ class EmbedController extends Zend_Controller_Action
         }
         $this->view->availableMobileStreams = json_encode($availableMobileStreams);
         $this->view->availableDesktopStreams = json_encode($availableDesktopStreams);
+    }
+
+    public function premiumPlayerAction()
+    {
+        $this->view->layout()->disableLayout();
     }
 
     public function currentDayProgramAction()
