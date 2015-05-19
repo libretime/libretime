@@ -50,11 +50,23 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
         // from the station on TuneIn. After that, and if the test request
         // succeeds, we will make another request with the real metadata.
         if ($data["enable_tunein"]) {
-            $qry_str = "?partnerId=".$data["tunein_partner_id"]."&partnerKey=".$data["tunein_partner_key"]."&id=".$data["tunein_station_id"];
+            $credentialsQryStr = "?partnerId=".$data["tunein_partner_id"]."&partnerKey=".$data["tunein_partner_key"]."&id=".$data["tunein_station_id"];
             $commercialFlagQryStr = "&commercial=true";
 
+            $metadata = Application_Model_Schedule::getCurrentPlayingTrack();
+
+            if (is_null($metadata)) {
+                $qryStr = $credentialsQryStr . $commercialFlagQryStr;
+            } else {
+                $metadata["artist"] = empty($metadata["artist"]) ? "n/a" : $metadata["artist"];
+                $metadata["title"] = empty($metadata["title"]) ? "n/a" : $metadata["title"];
+                $metadataQryStr = "&artist=" . $metadata["artist"] . "&title=" . $metadata["title"];
+
+                $qryStr = $credentialsQryStr . $metadataQryStr;
+            }
+
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, TUNEIN_API_URL . $qry_str . $commercialFlagQryStr);
+            curl_setopt($ch, CURLOPT_URL, TUNEIN_API_URL . $qryStr);
             curl_setopt($ch, CURLOPT_FAILONERROR, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -80,7 +92,7 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
                     // Make another request to TuneIn to update the metadata right away
                     // and to turn off the commercial flag.
 
-                    $metadata = Application_Model_Schedule::getCurrentPlayingTrack();
+                    /*$metadata = Application_Model_Schedule::getCurrentPlayingTrack();
 
                     if (!is_null($metadata)) {
 
@@ -110,7 +122,7 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
                         if (!$xmlObj || $xmlObj->head->status != "200") {
                             Logging::error("Failed updating metadata on TuneIn");
                         }
-                    }
+                    }*/
 
                 }
             }

@@ -25,4 +25,6 @@ class Application_Common_TuneIn
 
     }
 
+    public static function updateOfflineMetadata()
+
 }
