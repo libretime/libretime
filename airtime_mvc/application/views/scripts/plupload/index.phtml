@@ -3,12 +3,11 @@
     font-size: 200px !important;
 }
 </style>
+<?php $upgradeLink = Application_Common_OsPath::getBaseDir() . "billing/upgrade"; ?>
 <?php if ($this->quotaLimitReached) { ?>
     <div class="errors quota-reached">
-    Disk quota exceeded. You cannot upload files until you
-        <a target="_parent" href=<?php $baseUrl = Application_Common_OsPath::getBaseDir(); echo $baseUrl . "billing/upgrade"?>>
-            upgrade your storage
-        </a>.
+    <?php printf(_pro("Disk quota exceeded. You cannot upload files until you %s upgrade your storage"),
+        "<a target=\"_parent\" href=$upgradeLink>");?></a>.
     </div>
 <?php 
 }

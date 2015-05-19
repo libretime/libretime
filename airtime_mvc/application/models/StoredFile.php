@@ -375,7 +375,7 @@ SQL;
      * Deletes the physical file from the local file system or from the cloud
      *
      */
-    public function delete()
+    public function delete($quiet=false)
     {
         // Check if the file is scheduled to be played in the future
         if (Application_Model_Schedule::IsFileScheduledInTheFuture($this->_file->getCcFileId())) {
@@ -405,8 +405,12 @@ SQL;
             }
             catch (Exception $e)
             {
-                //Just log the exception and continue.
-                Logging::error($e);
+                if ($quiet) {
+                    Logging::info($e);
+                } else {
+                    //Just log the exception and continue.
+                    Logging::error($e);
+                }
             }
         }
 

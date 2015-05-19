@@ -459,4 +459,69 @@ class PreferenceController extends Zend_Controller_Action
         }
         $this->_helper->json->sendJson($out);
     }
+
+    public function deleteAllFilesAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Only admin users should get here through ACL permissioning
+        // Only allow POST requests
+        $method = $_SERVER['REQUEST_METHOD'];
+        if (!($method == 'POST')) {
+            $this->getResponse()
+                 ->setHttpResponseCode(405)
+                 ->appendBody(_("Request method not accepted") . ": $method");
+            return;
+        }
+
+        $user = Application_Model_User::getCurrentUser();
+        $playlists = $blocks = $streams = [];
+
+        $allPlaylists = CcPlaylistQuery::create()->find();
+        foreach ($allPlaylists as $p) {
+            $playlists[] = $p->getDbId();
+        }
+
+        $allBlocks = CcBlockQuery::create()->find();
+        foreach ($allBlocks as $b) {
+            $blocks[] = $b->getDbId();
+        }
+
+        $allStreams = CcWebstreamQuery::create()->find();
+        foreach ($allStreams as $s) {
+            $streams[] = $s->getDbId();
+        }
+
+        // Delete all playlists, blocks, and streams
+        Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
+        Application_Model_Block::deleteBlocks($blocks, $user->getId());
+        Application_Model_Webstream::deleteStreams($streams, $user->getId());
+
+        try {
+            // Delete all the cloud files
+            $CC_CONFIG = Config::getConfig();
+
+            foreach ($CC_CONFIG["supportedStorageBackends"] as $storageBackend) {
+                $proxyStorageBackend = new ProxyStorageBackend($storageBackend);
+                $proxyStorageBackend->deleteAllCloudFileObjects();
+            }
+        } catch(Exception $e) {
+            Logging::info($e->getMessage());
+        }
+
+        // Delete all files from the database
+        $files = CcFilesQuery::create()->find();
+        foreach ($files as $file) {
+            $storedFile = new Application_Model_StoredFile($file, null);
+            // Delete the files quietly to avoid getting Sentry errors for
+            // every S3 file we delete.
+            $storedFile->delete(true);
+        }
+
+        $this->getResponse()
+             ->setHttpResponseCode(200)
+             ->appendBody("OK");
+    }
+
 }
