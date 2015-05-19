@@ -13,7 +13,16 @@
     </div>
     <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("When") ?></h3>
     <div id="schedule-show-when" class="collapsible-content">
+        <?php
+        if (!$this->addNewShow) {
+            $this->when->getElement('add_show_timezone')->setOptions(array('disabled' => true));
+            ?>
+            <input type="hidden" name="add_show_timezone" id="add_show_timezone" value=<?php echo $this->when->getElement('add_show_timezone')->getValue()?>>
+        <?php
+        }
+        ?>
         <?php echo $this->when; ?>
+
         <?php echo $this->repeats; ?>
     </div>
     <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("Live Stream Input") ?></h3>

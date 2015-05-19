@@ -255,21 +255,7 @@ class Application_Service_ShowService
                         $showData["add_show_start_date"] = $this->origCcShowDay->getLocalStartDateAndTime()->format("Y-m-d");
                 }
 
-                // We don't want to adjust the cc_schedule times if ONLY the timezone has changed
-
-                // adjust schedule if the show time changed AND the timezone did not change
-                if ($this->oldShowTimezone == $showData["add_show_timezone"] &&
-                    (substr($this->origCcShowDay->getDbStartTime(), 0, 5) != $showData["add_show_start_time"])) {
-
-                    $this->adjustSchedule($showData);
-                }
-
-                // adjust the schedule if both the timezone changed AND the show time changed
-                if ($this->oldShowTimezone != $showData["add_show_timezone"] &&
-                    (substr($this->origCcShowDay->getDbStartTime(), 0, 5) != $showData["add_show_start_time"])) {
-
-                    $this->adjustSchedule($showData);
-                }
+                $this->adjustSchedule($showData);
 
             }
 
