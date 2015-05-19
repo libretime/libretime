@@ -56,14 +56,19 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationLogo($imagePath);
                 }
 
-                Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
+                Application_Model_Preference::setTuneinEnabled($values["enable_tunein"]);
+                Application_Model_Preference::setTuneinStationId($values["tunein_station_id"]);
+                Application_Model_Preference::setTuneinPartnerKey($values["tunein_partner_key"]);
+                Application_Model_Preference::setTuneinPartnerId($values["tunein_partner_id"]);
+
+                /*Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
                 Application_Model_Preference::SetSoundCloudDownloadbleOption($values["SoundCloudDownloadbleOption"]);
                 Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
                 Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]);
                 Application_Model_Preference::SetSoundCloudTags($values["SoundCloudTags"]);
                 Application_Model_Preference::SetSoundCloudGenre($values["SoundCloudGenre"]);
                 Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
-                Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);
+                Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);*/
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
