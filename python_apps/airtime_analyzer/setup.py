@@ -23,6 +23,7 @@ setup(name='airtime_analyzer',
       install_requires=[
           'mutagen',
           'pika',
+          'daemon',
           'python-magic',
           'nose',
           'coverage',
