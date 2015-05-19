@@ -58,6 +58,30 @@ function setMailServerInputReadonly() {
     setMsAuthenticationFieldsReadonly(requiresAuthCB);
 }
 
+function setTuneInSettingsListener() {
+    var enableTunein = $("#enable_tunein");
+    enableTunein.click(function(event){
+        setTuneInSettingsReadonly();
+    });
+}
+
+function setTuneInSettingsReadonly() {
+    var enableTunein = $("#enable_tunein");
+    var stationId = $("#tunein_station_id");
+    var partnerKey = $("#tunein_partner_key");
+    var partnerId = $("#tunein_partner_id");
+
+    if (enableTunein.is(':checked')) {
+        stationId.removeAttr("readonly");
+        partnerKey.removeAttr("readonly");
+        partnerId.removeAttr("readonly");
+    } else {
+        stationId.attr("readonly", "readonly");
+        partnerKey.attr("readonly", "readonly");
+        partnerId.attr("readonly", "readonly");
+    }
+}
+
 /*
  * Enable/disable mail server authentication fields
  */
@@ -131,6 +155,10 @@ $(document).ready(function() {
         return false;
     }).next().hide();
 
+    if ($("#tunein-settings").find(".errors").length > 0) {
+        $(".collapsible-content#tunein-settings").show();
+    }
+
     /* No longer using AJAX for this form. Zend + our code makes it needlessly hard to deal with. -- Albert
     $('#pref_save').live('click', function() {
         var data = $('#pref_form').serialize();
@@ -154,4 +182,6 @@ $(document).ready(function() {
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();
     setCollapsibleWidgetJsCode();
+    setTuneInSettingsReadonly();
+    setTuneInSettingsListener();
 });
