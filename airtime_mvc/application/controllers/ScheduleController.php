@@ -301,9 +301,10 @@ class ScheduleController extends Zend_Controller_Action
 
         // If there is no current track playing update TuneIn so it doesn't
         // display outdated metadata
-        if (is_null($range["current"]) && Application_Model_Preference::getTuneinEnabled()) {
+        //TODO: find a better solution for this so we don't spam the station on TuneIn
+        /*if (is_null($range["current"]) && Application_Model_Preference::getTuneinEnabled()) {
             Application_Common_TuneIn::updateOfflineMetadata();
-        }
+        }*/
 
         $show = Application_Model_Show::getCurrentShow();
 
