@@ -116,7 +116,8 @@ SQL;
         $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
         $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
-        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
+        //$results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
+        $results = Application_Model_Schedule::getPVC($utcNow);
     
         $range = array(
                 "env" => APPLICATION_ENV,
@@ -131,6 +132,103 @@ SQL;
         );
     
         return $range;
+    }
+
+    public static function getPVC($utcNow)
+    {
+        $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
+        assert(get_class($utcNow) === "DateTime");
+        assert($utcNow->getTimeZone() == $timeZone);
+
+        $results['previous'] = null;
+        $results['current']  = null;
+        $results['next']     = null;
+
+        $currentMedia = CcScheduleQuery::create()
+            ->filterByDbStarts($utcNow, Criteria::LESS_EQUAL)
+            ->filterByDbEnds($utcNow, Criteria::GREATER_EQUAL)
+            ->findOne();
+
+        if (!isset($currentMedia)) {
+            return $results;
+        }
+
+        $currentMediaScheduleId = $currentMedia->getDbId();
+        $currentMediaFileId = $currentMedia->getDbFileId();
+        $currentMediaStreamId = $currentMedia->getDbStreamId();
+        if (isset($currentMediaFileId)) {
+            $currentMediaType = "track";
+            $currentFile = CcFilesQuery::create()
+                ->filterByDbId($currentMediaFileId)
+                ->findOne();
+            $currentMediaName = $currentFile->getDbArtistName() . " - " . $currentFile->getDbTrackTitle();
+        } else if (isset($currentMediaStreamId)) {
+            $currentMediaType = "webstream";
+            //TODO get name
+        } else {
+            $currentMediaType = null;
+        }
+        $results["current"] = array(
+            "starts" => $currentMedia->getDbStarts(),
+            "ends" => $currentMedia->getDbEnds(),
+            "type" => $currentMediaType,
+            "name" => $currentMediaName,
+            "media_item_played" => $currentMedia->getDbMediaItemPlayed(),
+            "record" => "0"
+        );
+
+        $previousMedia = CcScheduleQuery::create()
+            ->filterByDbId($currentMediaScheduleId-1)
+            ->orderByDbStarts()
+            ->findOne();
+        $previousMediaFileId = $previousMedia->getDbFileId();
+        $previousMediaStreamId = $previousMedia->getDbStreamId();
+        if (isset($previousMediaFileId)) {
+            $previousMediaType = "track";
+            $previousFile = CcFilesQuery::create()
+                ->filterByDbId($previousMediaFileId)
+                ->findOne();
+            $previousMediaName = $previousFile->getDbArtistName() . " - " . $previousFile->getDbTrackTitle();
+        } else if (isset($previousMediaStreamId)) {
+            $previousMediaType = "webstream";
+            //TODO get name
+        } else {
+            $previousMediaType = null;
+        }
+        $results["previous"] = array(
+            "starts" => $previousMedia->getDbStarts(),
+            "ends" => $previousMedia->getDbEnds(),
+            "type" => $previousMediaType,
+            "name" => $previousMediaName
+        );
+
+        $nextMedia = CcScheduleQuery::create()
+            ->filterByDbId($currentMediaScheduleId+1)
+            ->orderByDbStarts()
+            ->findOne();
+        $nextMediaFileId = $nextMedia->getDbFileId();
+        $nextMediaStreamId = $previousMedia->getDbStreamId();
+        if (isset($nextMediaFileId)) {
+            $nextMediaType = "track";
+            $nextFile = CcFilesQuery::create()
+                ->filterByDbId($nextMediaFileId)
+                ->findOne();
+            $nextMediaName = $nextFile->getDbArtistName() . " - " . $nextFile->getDbTrackTitle();
+        } else if (isset($nextMediaStreamId)) {
+            $nextMediaType = "webstream";
+            //TODO get name
+        } else {
+            $nextMediaType = null;
+        }
+        $results["next"] = array(
+            "starts" => $nextMedia->getDbStarts(),
+            "ends" => $nextMedia->getDbEnds(),
+            "type" => $nextMediaType,
+            "name" => $nextMediaName
+        );
+
+        return $results;
+
     }
 
     /**
