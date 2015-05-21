@@ -12,12 +12,17 @@ class Application_Form_Preferences extends Zend_Form
 
         $general_pref = new Application_Form_GeneralPreferences();
 
-        $this->addElement('hash', 'csrf', array(
-           'salt' => 'unique',
-           'decorators' => array(
-                'ViewHelper'
-            )
-        ));
+        // $this->addElement('hash', 'csrf', array(
+        //     'salt' => 'unique',
+        //     'decorators' => array(
+        //         'ViewHelper'
+        //     )
+        // ));
+
+        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrf_element = new Zend_Form_Element_Hidden('csrf');
+        $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
+        $this->addElement($csrf_element);
 
         $this->addSubForm($general_pref, 'preferences_general');
 

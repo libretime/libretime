@@ -181,9 +181,14 @@ class PreferenceController extends Zend_Controller_Action
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
 
-        $form->addElement('hash', 'csrf', array(
-           'salt' => 'unique'
-        ));
+        // $form->addElement('hash', 'csrf', array(
+        //     'salt' => 'unique'
+        // ));
+
+        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrf_element = new Zend_Form_Element_Hidden('csrf');
+        $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
+        $form->addElement($csrf_element);
 
         $form->setSetting($setting);
         $form->startFrom();
