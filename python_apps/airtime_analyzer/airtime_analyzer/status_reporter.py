@@ -9,6 +9,8 @@ import pickle
 import threading 
 from urlparse import urlparse
 
+requests.packages.urllib3.disable_warnings()
+
 class PicklableHttpRequest:
     def __init__(self, method, url, data, api_key):
         self.method = method
