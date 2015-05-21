@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the Airtime package.
 # 
 # Translators:
+# Iva Heilova <iva.heilova@sourcefabric.org>, 2015
 # Sourcefabric <contact@sourcefabric.org>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2015-05-07 08:14+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2015-05-21 10:59+0000\n"
+"Last-Translator: Iva Heilova <iva.heilova@sourcefabric.org>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/projects/p/airtime/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +79,7 @@ msgstr "Pozvolné zeslabování"
 msgid ""
 "%1$s copyright &copy; %2$s All rights reserved.%3$sMaintained and "
 "distributed under the %4$s by %5$s"
-msgstr ""
+msgstr "%1$s copyright &copy; %2$sVeškerá práva vyhrazena.%3$sUdržován a distribuován pod %4$s by %5$s"
 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
@@ -1095,13 +1096,13 @@ msgstr "Odeslat zpětnou vazbu"
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 #, php-format
 msgid "Promote my station on %s"
-msgstr ""
+msgstr "Podpořit mou stanici na %s"
 
 #: airtime_mvc/application/forms/SupportSettings.php:150
 #: airtime_mvc/application/forms/RegisterAirtime.php:151
 #, php-format
 msgid "By checking this box, I agree to %s's %sprivacy policy%s."
-msgstr ""
+msgstr "Zaškrtnutí tohoto okénka souhlasím s  %s's %spravidly ochrany osobních údajů%s."
 
 #: airtime_mvc/application/forms/SupportSettings.php:174
 #: airtime_mvc/application/forms/RegisterAirtime.php:169
@@ -1140,7 +1141,7 @@ msgstr "Vysílat znovu?"
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr ""
+msgstr "Použij  %s ověření pravosti:"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
@@ -1942,7 +1943,7 @@ msgstr "Toto je administrátorské jméno a heslo pro Icecast / SHOUTcast k zís
 #: airtime_mvc/application/controllers/LocaleController.php:178
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
-msgstr ""
+msgstr "Upozornění: Nelze změnit toto pole v průběhu vysílání programu"
 
 #: airtime_mvc/application/controllers/LocaleController.php:179
 msgid "No result found"
@@ -2612,7 +2613,7 @@ msgstr "Nemáte udělen přístup k tomuto zdroji. "
 #: airtime_mvc/application/controllers/ApiController.php:803
 #, php-format
 msgid "File does not exist in %s"
-msgstr ""
+msgstr "Soubor neexistuje v %s"
 
 #: airtime_mvc/application/controllers/ApiController.php:854
 msgid "Bad request. no 'mode' parameter passed."
@@ -2823,7 +2824,7 @@ msgstr "Paměť"
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:14
 #, php-format
 msgid "%s Version"
-msgstr ""
+msgstr "%s Verze"
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:30
 msgid "Disk Space"
@@ -2908,13 +2909,13 @@ msgid ""
 " collected regularly in order to enhance your user experience.%2$sClick "
 "'Yes, help %1$s' and we'll make sure the features you use are constantly "
 "improving."
-msgstr ""
+msgstr "Pomozte %1$s zlepšit tím, že nám dáte vědět jak to používáte. Tyto informace budou pravidelně shromažďovány, aby se zvýšila vaše uživatelská zkušenosti. %2$s Zmáčkněte 'Odeslat feedback' 'Ano, pomoc %1$s' my budeme pracovat na tom, aby funkce, které používáte byly neustále zlepšovány."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:29
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:29
 #, php-format
 msgid "Click the box below to promote your station on %s."
-msgstr ""
+msgstr "Klikněte na box níže pro podporu vaší stanice na %s."
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:67
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:81
@@ -2960,7 +2961,7 @@ msgstr "Aktuálně importovaný soubor:"
 msgid ""
 "Rescan watched directory (This is useful if it is network mount and may be "
 "out of sync with %s)"
-msgstr ""
+msgstr "Znovu projít sledovaný adresář (Tato funkce je užitečná, pokud je síť přeplněna a nedojde k synchronizaci s %s)"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
@@ -3015,7 +3016,7 @@ msgid ""
 "will be collected regularly in order to enhance your user experience.%sClick"
 " the 'Send support feedback' box and we'll make sure the features you use "
 "are constantly improving."
-msgstr ""
+msgstr "Pomozte %s zlepšit %s tím, že dáte vědět jak to používáte. Tyto informace budou pravidelně shromažďovány, aby se zvýšily vaše uživatelské zkušenosti.%sZmáčkněte 'Odeslat feedback' box a my budeme pracovat na tom, aby funkce, které používáte byly neustále zlepšovány."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
 msgid ""
@@ -3278,12 +3279,12 @@ msgstr "Počítaní posluchačů v čase"
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:3
 #, php-format
 msgid "Welcome to %s!"
-msgstr ""
+msgstr "Vítejte v %s!"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:4
 #, php-format
 msgid "Here's how you can get started using %s to automate your broadcasts: "
-msgstr ""
+msgstr "Zde můžete vidět jak začít s používáním %s pro automatizované vysílání:"
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
 msgid ""
@@ -3332,12 +3333,12 @@ msgstr "Vyberte stream:"
 msgid ""
 "%1$s %2$s, the open radio software for scheduling and remote station "
 "management."
-msgstr ""
+msgstr "%1$s %2$s, open radio software pro plánování a řízení vzdálené stanice. "
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:22
 #, php-format
 msgid "%1$s %2$s is distributed under the %3$s"
-msgstr ""
+msgstr "%1$s %2$s je distribuován pod %3$s"
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
@@ -3370,7 +3371,7 @@ msgstr "Zpět na přihlašovací stránku"
 msgid ""
 "Welcome to the %s demo! You can log in using the username 'admin' and the "
 "password 'admin'."
-msgstr ""
+msgstr "Vítejte v %s demo! Můžete se přihlásit přes uživatelské jméno 'admin' a heslo 'admin'."
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:3
 msgid "Previous:"
@@ -3415,7 +3416,7 @@ msgstr "Váše zkušební období vyprší "
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 #, php-format
 msgid "Purchase your copy of %s"
-msgstr ""
+msgstr "Kup si svou kopii %s"
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:9
 msgid "My Account"
@@ -3731,7 +3732,7 @@ msgstr "Obsah v propojených show musí být zařazen před nebo po kterémkoliv
 
 #: airtime_mvc/application/models/Scheduler.php:195
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr ""
+msgstr "Nelze naplánovat playlist, který obsahuje chybějící soubory."
 
 #: airtime_mvc/application/models/Scheduler.php:216
 #: airtime_mvc/application/models/Scheduler.php:305
@@ -3806,7 +3807,7 @@ msgstr "Ahoj %s , \n\nKlikněte na tento odkaz pro obnovení vašeho hesla: "
 #: airtime_mvc/application/models/Auth.php:36
 #, php-format
 msgid "%s Password Reset"
-msgstr ""
+msgstr "%s Heslo onboveno"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
