@@ -1,18 +1,13 @@
 function showErrorSections() {
-    if($("#soundcloud-settings .errors").length > 0) {
-        $("#soundcloud-settings").show();
-        $(window).scrollTop($("#soundcloud-settings .errors").position().top);
-    }
-    
-    if($("#email-server-settings .errors").length > 0) {
-        $("#email-server-settings").show();
-        $(window).scrollTop($("#email-server-settings .errors").position().top);
-    }
-    
-    if($("#livestream-settings .errors").length > 0) {
-        $("#livestream-settings").show();
-        $(window).scrollTop($("#livestream-settings .errors").position().top);
-    }
+    var selector = $("[id$=-settings]");
+    selector.each(function(i) {
+        var el = $(this);
+        var errors = el.find(".errors");
+        if (errors.length > 0) {
+            el.show();
+            $(window).scrollTop(errors.position().top);
+        }
+    });
 }
 
 function setConfigureMailServerListener() {
@@ -61,6 +56,30 @@ function setMailServerInputReadonly() {
     }
     
     setMsAuthenticationFieldsReadonly(requiresAuthCB);
+}
+
+function setTuneInSettingsListener() {
+    var enableTunein = $("#enable_tunein");
+    enableTunein.click(function(event){
+        setTuneInSettingsReadonly();
+    });
+}
+
+function setTuneInSettingsReadonly() {
+    var enableTunein = $("#enable_tunein");
+    var stationId = $("#tunein_station_id");
+    var partnerKey = $("#tunein_partner_key");
+    var partnerId = $("#tunein_partner_id");
+
+    if (enableTunein.is(':checked')) {
+        stationId.removeAttr("readonly");
+        partnerKey.removeAttr("readonly");
+        partnerId.removeAttr("readonly");
+    } else {
+        stationId.attr("readonly", "readonly");
+        partnerKey.attr("readonly", "readonly");
+        partnerId.attr("readonly", "readonly");
+    }
 }
 
 /*
@@ -120,6 +139,14 @@ function removeLogo() {
     location.reload();
 }
 
+function deleteAllFiles() {
+    var resp = confirm($.i18n._("Are you sure you want to delete all the tracks in your library?"))
+    if (resp) {
+        $.post(baseUrl+'Preference/delete-all-files', function(json){});
+        location.reload();
+    }
+}
+
 $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
@@ -127,6 +154,10 @@ $(document).ready(function() {
         $(this).toggleClass("closed");
         return false;
     }).next().hide();
+
+    if ($("#tunein-settings").find(".errors").length > 0) {
+        $(".collapsible-content#tunein-settings").show();
+    }
 
     /* No longer using AJAX for this form. Zend + our code makes it needlessly hard to deal with. -- Albert
     $('#pref_save').live('click', function() {
@@ -151,4 +182,6 @@ $(document).ready(function() {
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();
     setCollapsibleWidgetJsCode();
+    setTuneInSettingsReadonly();
+    setTuneInSettingsListener();
 });

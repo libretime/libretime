@@ -1,4 +1,5 @@
 <?php
+require_once('TuneIn.php');
 
 class ApiController extends Zend_Controller_Action
 {
@@ -615,6 +616,14 @@ class ApiController extends Zend_Controller_Action
                     $file = Application_Model_StoredFile::RecallById($file_id);
                     $now = new DateTime("now", new DateTimeZone("UTC"));
                     $file->setLastPlayedTime($now);
+
+                    // Push metadata to TuneIn
+                    if (Application_Model_Preference::getTuneinEnabled()) {
+                        $filePropelOrm = $file->getPropelOrm();
+                        $title = urlencode($filePropelOrm->getDbTrackTitle());
+                        $artist = urlencode($filePropelOrm->getDbArtistName());
+                        Application_Common_TuneIn::sendMetadataToTunein($title, $artist);
+                    }
                 }
             } else {
                 // webstream
