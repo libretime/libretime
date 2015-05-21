@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2015-04-24 09:08+0000\n"
+"PO-Revision-Date: 2015-04-25 00:16+0000\n"
 "Last-Translator: M.  Ömer Gölgeli <az+transifex.com@cokh.net>\n"
 "Language-Team: Turkish (http://www.transifex.com/projects/p/airtime/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -1007,282 +1007,282 @@ msgstr "Otomatik Devreye Sok"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:33
 msgid "Switch Transition Fade (s)"
-msgstr ""
+msgstr "Geçiş Transition Fade'i [Switch Transition Fade]"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:36
 msgid "enter a time in seconds 00{.000000}"
-msgstr ""
+msgstr "saniye olarak bir değer giriniz 00{.000000}"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:45
 msgid "Master Username"
-msgstr ""
+msgstr "Master Kullanıcı adı"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:62
 msgid "Master Password"
-msgstr ""
+msgstr "Master Şifre"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:70
 msgid "Master Source Connection URL"
-msgstr ""
+msgstr "Master Source Bağlantı URL"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:78
 msgid "Show Source Connection URL"
-msgstr ""
+msgstr "Source Bağlantı URL'sini göster"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:87
 msgid "Master Source Port"
-msgstr ""
+msgstr "Master Source Port'u"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:96
 msgid "Master Source Mount Point"
-msgstr ""
+msgstr "Master Source Mount Adresi"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:106
 msgid "Show Source Port"
-msgstr ""
+msgstr "Source Port'unu Göster"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:115
 msgid "Show Source Mount Point"
-msgstr ""
+msgstr "Source Mount Adresini Göster"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:153
 msgid "You cannot use same port as Master DJ port."
-msgstr ""
+msgstr "Master DJ Port'u ile aynı portu kullanamazsınız"
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:164
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:182
 #, php-format
 msgid "Port %s is not available"
-msgstr ""
+msgstr "Port %s kullanılamaz"
 
 #: airtime_mvc/application/forms/SupportSettings.php:34
 #: airtime_mvc/application/forms/RegisterAirtime.php:39
 msgid "Phone:"
-msgstr ""
+msgstr "Telefon:"
 
 #: airtime_mvc/application/forms/SupportSettings.php:57
 #: airtime_mvc/application/forms/RegisterAirtime.php:62
 msgid "Station Web Site:"
-msgstr ""
+msgstr "Radyo Web Sitesi:"
 
 #: airtime_mvc/application/forms/SupportSettings.php:68
 #: airtime_mvc/application/forms/RegisterAirtime.php:73
 msgid "Country:"
-msgstr ""
+msgstr "Ülke:"
 
 #: airtime_mvc/application/forms/SupportSettings.php:79
 #: airtime_mvc/application/forms/RegisterAirtime.php:84
 msgid "City:"
-msgstr ""
+msgstr "Şehir:"
 
 #: airtime_mvc/application/forms/SupportSettings.php:91
 #: airtime_mvc/application/forms/RegisterAirtime.php:96
 msgid "Station Description:"
-msgstr ""
+msgstr "Radyo Tanımı:"
 
 #: airtime_mvc/application/forms/SupportSettings.php:101
 #: airtime_mvc/application/forms/RegisterAirtime.php:106
 msgid "Station Logo:"
-msgstr ""
+msgstr "Radyo Logosu:"
 
 #: airtime_mvc/application/forms/SupportSettings.php:112
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "Send support feedback"
-msgstr ""
+msgstr "Destek Geribildirimi gönder"
 
 #: airtime_mvc/application/forms/SupportSettings.php:122
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 #, php-format
 msgid "Promote my station on %s"
-msgstr ""
+msgstr "Radyomu %s'da tanıt"
 
 #: airtime_mvc/application/forms/SupportSettings.php:150
 #: airtime_mvc/application/forms/RegisterAirtime.php:151
 #, php-format
 msgid "By checking this box, I agree to %s's %sprivacy policy%s."
-msgstr ""
+msgstr "Bu kutuyu işaretleyerek %s'un %sgizlilik politikası%s'nı onaylıyorum"
 
 #: airtime_mvc/application/forms/SupportSettings.php:174
 #: airtime_mvc/application/forms/RegisterAirtime.php:169
 msgid "You have to agree to privacy policy."
-msgstr ""
+msgstr "Gizlilik politikasını kabul etmeniz gerekmektedir."
 
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:26
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 msgid "Value is required and can't be empty"
-msgstr ""
+msgstr "Değer gerekli ve boş bırakılamaz"
 
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
 #: airtime_mvc/application/services/HistoryService.php:1146
 msgid "Start Time"
-msgstr ""
+msgstr "Başlangıç Saati"
 
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
 #: airtime_mvc/application/services/HistoryService.php:1147
 msgid "End Time"
-msgstr ""
+msgstr "Bitiş Saati"
 
 #: airtime_mvc/application/forms/EditHistoryItem.php:57
 #: airtime_mvc/application/controllers/LocaleController.php:389
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 msgid "No Show"
-msgstr ""
+msgstr "Show Yok"
 
 #: airtime_mvc/application/forms/AddShowRR.php:10
 msgid "Record from Line In?"
-msgstr ""
+msgstr "Line In'den Kaydet?"
 
 #: airtime_mvc/application/forms/AddShowRR.php:16
 msgid "Rebroadcast?"
-msgstr ""
+msgstr "Tekrar yayınla?"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr ""
+msgstr "%s Kimlik Doğrulamasını Kullan"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
-msgstr ""
+msgstr "Özel Kimlik Doğrulama Kullan"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:26
 msgid "Custom Username"
-msgstr ""
+msgstr "Özel Kullanıcı Adı"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:39
 msgid "Custom Password"
-msgstr ""
+msgstr "Özel Şifre"
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:63
 msgid "Username field cannot be empty."
-msgstr ""
+msgstr "Kullanıcı adı kısmı boş bırakılamaz."
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:68
 msgid "Password field cannot be empty."
-msgstr ""
+msgstr "Şifre kısmı boş bırakılamaz."
 
 #: airtime_mvc/application/forms/PasswordRestore.php:14
 msgid "E-mail"
-msgstr ""
+msgstr "E-posta"
 
 #: airtime_mvc/application/forms/PasswordRestore.php:36
 msgid "Restore password"
-msgstr ""
+msgstr "Şifreyi geri al"
 
 #: airtime_mvc/application/forms/StreamSetting.php:22
 msgid "Hardware Audio Output"
-msgstr ""
+msgstr "Donanımsal Ses Çıkışı"
 
 #: airtime_mvc/application/forms/StreamSetting.php:33
 msgid "Output Type"
-msgstr ""
+msgstr "Ses Çıkış Türü"
 
 #: airtime_mvc/application/forms/StreamSetting.php:44
 msgid "Icecast Vorbis Metadata"
-msgstr ""
+msgstr "Icecast Vorbis Metadata"
 
 #: airtime_mvc/application/forms/StreamSetting.php:54
 msgid "Stream Label:"
-msgstr ""
+msgstr "Yayın Etiketi:"
 
 #: airtime_mvc/application/forms/StreamSetting.php:55
 msgid "Artist - Title"
-msgstr ""
+msgstr "Şarkıcı - Parça Adı"
 
 #: airtime_mvc/application/forms/StreamSetting.php:56
 msgid "Show - Artist - Title"
-msgstr ""
+msgstr "Show - Şarkıcı - Parça Adı"
 
 #: airtime_mvc/application/forms/StreamSetting.php:57
 msgid "Station name - Show name"
-msgstr ""
+msgstr "Radyo adı - Show adı"
 
 #: airtime_mvc/application/forms/StreamSetting.php:63
 msgid "Off Air Metadata"
-msgstr ""
+msgstr "Yayın Dışında Gösterilecek Etiket"
 
 #: airtime_mvc/application/forms/StreamSetting.php:69
 msgid "Enable Replay Gain"
-msgstr ""
+msgstr "ReplayGain'i aktif et"
 
 #: airtime_mvc/application/forms/StreamSetting.php:75
 msgid "Replay Gain Modifier"
-msgstr ""
+msgstr "ReplayGain Değeri"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:19
 msgid ""
 "'%value%' is no valid email address in the basic format local-part@hostname"
-msgstr ""
+msgstr "'%value%' kullanici@site.com yapısına uymayan geçersiz bir adres"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:33
 msgid "'%value%' does not fit the date format '%format%'"
-msgstr ""
+msgstr "'%value%' değeri '%format%' zaman formatına uymuyor"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:59
 msgid "'%value%' is less than %min% characters long"
-msgstr ""
+msgstr "'%value%' değeri olması gereken '%min%' karakterden daha az"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:64
 msgid "'%value%' is more than %max% characters long"
-msgstr ""
+msgstr "'%value%' değeri olması gereken '%max%' karakterden daha fazla"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:76
 msgid "'%value%' is not between '%min%' and '%max%', inclusively"
-msgstr ""
+msgstr "'%value%' değeri '%min%' ve '%max%' değerleri arasında değil"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:89
 msgid "Passwords do not match"
-msgstr ""
+msgstr "Girdiğiniz şifreler örtüşmüyor."
 
 #: airtime_mvc/application/forms/AddShowWhen.php:16
 msgid "'%value%' does not fit the time format 'HH:mm'"
-msgstr ""
+msgstr "'%value%' değeri 'HH:mm' saat formatına uymuyor"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:22
 msgid "Date/Time Start:"
-msgstr ""
+msgstr "Başlangıç Tarih/Saat'i:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:49
 msgid "Date/Time End:"
-msgstr ""
+msgstr "Bitiş Tarih/Saat'i:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:74
 msgid "Duration:"
-msgstr ""
+msgstr "Uzunluğu:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:83
 msgid "Timezone:"
-msgstr ""
+msgstr "Zaman Dilimi:"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:92
 msgid "Repeats?"
-msgstr ""
+msgstr "Tekrar Ediyor mu?"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:124
 msgid "Cannot create show in the past"
-msgstr ""
+msgstr "Geçmiş tarihli bir show oluşturamazsınız"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:132
 msgid "Cannot modify start date/time of the show that is already started"
-msgstr ""
+msgstr "Başlamış olan bir yayının tarih/saat bilgilerini değiştiremezsiniz"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:141
 #: airtime_mvc/application/models/Show.php:278
 msgid "End date/time cannot be in the past"
-msgstr ""
+msgstr "Bitiş tarihi geçmişte olamaz"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:149
 msgid "Cannot have duration < 0m"
-msgstr ""
+msgstr "Uzunluk < 0dk'dan kısa olamaz"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:153
 msgid "Cannot have duration 00h 00m"
-msgstr ""
+msgstr "00s 00dk Uzunluk olamaz"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:160
 msgid "Cannot have duration greater than 24h"
-msgstr ""
+msgstr "Yayın süresi 24 saati geçemez"
 
 #: airtime_mvc/application/forms/AddShowWhen.php:287
 #: airtime_mvc/application/forms/AddShowWhen.php:301
@@ -1291,104 +1291,104 @@ msgstr ""
 #: airtime_mvc/application/forms/AddShowWhen.php:336
 #: airtime_mvc/application/services/CalendarService.php:304
 msgid "Cannot schedule overlapping shows"
-msgstr ""
+msgstr "Üst üste binen show'lar olamaz"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:26
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:33
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:146
 msgid "Name:"
-msgstr ""
+msgstr "İsim:"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:30
 msgid "Untitled Show"
-msgstr ""
+msgstr "İsimsiz Show"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:36
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:150
 msgid "URL:"
-msgstr ""
+msgstr "URL"
 
 #: airtime_mvc/application/forms/AddShowWhat.php:54
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:40
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:149
 msgid "Description:"
-msgstr ""
+msgstr "Açıklama:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:16
 msgid "Automatically Upload Recorded Shows"
-msgstr ""
+msgstr "Kaydedilen Show'ları Otomatik olarak Karşıya Yükle"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:26
 msgid "Enable SoundCloud Upload"
-msgstr ""
+msgstr "SoundCloud'a Yüklemeyi Aktifleştir"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:36
 msgid "Automatically Mark Files \"Downloadable\" on SoundCloud"
-msgstr ""
+msgstr "SoundCloud'da dosyaları otomatik olarak \"İndirilebilir\" olarak işaretle"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:47
 msgid "SoundCloud Email"
-msgstr ""
+msgstr "SoundCloud Email Adresi"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:67
 msgid "SoundCloud Password"
-msgstr ""
+msgstr "SoundCloud Şifreniz"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:87
 msgid "SoundCloud Tags: (separate tags with spaces)"
-msgstr ""
+msgstr "SoundCloud Etiketleri: (boşluklarla ayırınız)"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:99
 msgid "Default Genre:"
-msgstr ""
+msgstr "Varsayılan Tür:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:109
 msgid "Default Track Type:"
-msgstr ""
+msgstr "Varsayılan Parça Türü:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:113
 msgid "Original"
-msgstr ""
+msgstr "Orjinal"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:114
 msgid "Remix"
-msgstr ""
+msgstr "Remix"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:115
 msgid "Live"
-msgstr ""
+msgstr "Canlı"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:116
 msgid "Recording"
-msgstr ""
+msgstr "Kayıt"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:117
 msgid "Spoken"
-msgstr ""
+msgstr "Sözlü"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:118
 msgid "Podcast"
-msgstr ""
+msgstr "Podcast"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:119
 msgid "Demo"
-msgstr ""
+msgstr "Demo"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:120
 msgid "Work in progress"
-msgstr ""
+msgstr "Halen Devam Eden"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:121
 msgid "Stem"
-msgstr ""
+msgstr "Stem"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:122
 msgid "Loop"
-msgstr ""
+msgstr "Tekrar Et"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:123
 msgid "Sound Effect"
-msgstr ""
+msgstr "Ses Efekti"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:124
 msgid "One Shot Sample"
@@ -1396,19 +1396,19 @@ msgstr ""
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:125
 msgid "Other"
-msgstr ""
+msgstr "Diğer"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:133
 msgid "Default License:"
-msgstr ""
+msgstr "Varsayılan Lisans Türü:"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:137
 msgid "The work is in the public domain"
-msgstr ""
+msgstr "Eser halka açık olarak kayıtlı"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:138
 msgid "All rights are reserved"
-msgstr ""
+msgstr "Tüm Hakları Saklıdır"
 
 #: airtime_mvc/application/forms/SoundcloudPreferences.php:139
 msgid "Creative Commons Attribution"
@@ -1436,19 +1436,19 @@ msgstr ""
 
 #: airtime_mvc/application/forms/EditUser.php:125
 msgid "Interface Timezone:"
-msgstr ""
+msgstr "Arayüz Zaman Dilimi"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:17
 msgid "Enable System Emails (Password Reset)"
-msgstr ""
+msgstr "Sistem Epostalarını Aktif Et (Şifre Sıfırlama)"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:27
 msgid "Reset Password 'From' Email"
-msgstr ""
+msgstr "Şifre Sıfırlama epostası 'Kimden' kısmı"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:34
 msgid "Configure Mail Server"
-msgstr ""
+msgstr "Posta Sunucusu Ayarları"
 
 #: airtime_mvc/application/forms/EmailServerPreferences.php:43
 msgid "Requires Authentication"
@@ -1538,7 +1538,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:32
 msgid "Live Stream"
-msgstr ""
+msgstr "Canlı yayın"
 
 #: airtime_mvc/application/controllers/LocaleController.php:33
 msgid "Nothing Scheduled"
@@ -1649,12 +1649,12 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:89
 msgid "Loading..."
-msgstr ""
+msgstr "Yükleniyor..."
 
 #: airtime_mvc/application/controllers/LocaleController.php:90
 #: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "All"
-msgstr ""
+msgstr "Tümü"
 
 #: airtime_mvc/application/controllers/LocaleController.php:91
 msgid "Files"
@@ -2148,7 +2148,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:255
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #: airtime_mvc/application/controllers/LocaleController.php:256
 msgid "Contents of Show"
@@ -2395,11 +2395,11 @@ msgstr ""
 #: airtime_mvc/application/controllers/LocaleController.php:379
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #: airtime_mvc/application/controllers/LocaleController.php:353
 msgid "Hour"
-msgstr ""
+msgstr "Cmt"
 
 #: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "Minute"
@@ -2407,7 +2407,7 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:355
 msgid "Done"
-msgstr ""
+msgstr "OK"
 
 #: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "Select files"
@@ -2625,7 +2625,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LibraryController.php:189
 #: airtime_mvc/application/controllers/ShowbuilderController.php:194
 msgid "Preview"
-msgstr ""
+msgstr "Ön izleme"
 
 #: airtime_mvc/application/controllers/LibraryController.php:210
 #: airtime_mvc/application/controllers/LibraryController.php:234
@@ -2648,7 +2648,7 @@ msgstr ""
 #: airtime_mvc/application/services/CalendarService.php:200
 #: airtime_mvc/application/services/CalendarService.php:205
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 #: airtime_mvc/application/controllers/LibraryController.php:226
 msgid "Duplicate Playlist"
@@ -2658,7 +2658,7 @@ msgstr ""
 #: airtime_mvc/application/controllers/LibraryController.php:263
 #: airtime_mvc/application/services/CalendarService.php:156
 msgid "Edit"
-msgstr ""
+msgstr "Düzenle"
 
 #: airtime_mvc/application/controllers/LibraryController.php:276
 msgid "Soundcloud"
@@ -2776,7 +2776,7 @@ msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:92
 msgid "History"
-msgstr ""
+msgstr "Geçmiş"
 
 #: airtime_mvc/application/configs/navigation.php:97
 msgid "Playout History"
@@ -2844,7 +2844,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:18
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:18
 msgid "Remove"
-msgstr ""
+msgstr "Kaldır"
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:41
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:28
@@ -2873,7 +2873,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:120
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:164
@@ -2940,7 +2940,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/login.phtml:36
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:3
 msgid "Reset password"
-msgstr ""
+msgstr "Parolayı değiştir"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:9
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:27
@@ -3177,7 +3177,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:23
 msgid "previous"
-msgstr ""
+msgstr "önceki"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:28
 msgid "play"
@@ -3189,11 +3189,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:37
 msgid "next"
-msgstr ""
+msgstr "sonraki"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:42
 msgid "stop"
-msgstr ""
+msgstr "Durdur"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:60
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:90
@@ -3233,7 +3233,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:24
 msgid "Isrc Number:"
-msgstr ""
+msgstr "ISRC No:"
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:27
 msgid "File Path:"
@@ -3321,7 +3321,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
 msgid "Share"
-msgstr ""
+msgstr "Paylaş"
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:64
 msgid "Select stream:"
@@ -3435,11 +3435,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:19
 msgid "First Name"
-msgstr ""
+msgstr "İsim"
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:20
 msgid "Last Name"
-msgstr ""
+msgstr "Soyisim"
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
@@ -3588,11 +3588,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:29
 msgid "Who"
-msgstr ""
+msgstr "DJ"
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:33
 msgid "Style"
-msgstr ""
+msgstr "Stil"
 
 #: airtime_mvc/application/models/ShowBuilder.php:212
 #, php-format
