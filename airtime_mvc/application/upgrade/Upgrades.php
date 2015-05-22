@@ -1,21 +1,75 @@
 <?php
 
+class UpgradeManager
+{
+    /** Used to determine if the database schema needs an upgrade in order for this version of the Airtime codebase to work correctly.
+     * @return array A list of schema versions that this version of the codebase supports.
+     */
+    public static function getSupportedSchemaVersions()
+    {
+        //What versions of the schema does the code support today:
+        return array('2.5.12');
+    }
+
+    public static function checkIfUpgradeIsNeeded()
+    {
+        $schemaVersion = Application_Model_Preference::GetSchemaVersion();
+        $supportedSchemaVersions = self::getSupportedSchemaVersions();
+        $upgradeNeeded = !in_array($schemaVersion, $supportedSchemaVersions);
+        if ($upgradeNeeded) {
+            self::doUpgrade();
+        }
+    }
+
+    public static function doUpgrade()
+    {
+        $upgradeManager = new UpgradeManager();
+        $upgraders = array();
+        array_push($upgraders, new AirtimeUpgrader253());
+        array_push($upgraders, new AirtimeUpgrader254());
+        array_push($upgraders, new AirtimeUpgrader255());
+        array_push($upgraders, new AirtimeUpgrader259());
+        array_push($upgraders, new AirtimeUpgrader2510());
+        array_push($upgraders, new AirtimeUpgrader2511());
+        array_push($upgraders, new AirtimeUpgrader2512());
+        return $upgradeManager->runUpgrades($upgraders, (dirname(__DIR__) . "/controllers"));
+    }
+
+    /**
+     * Run a given set of upgrades
+     * 
+     * @param array $upgraders the upgrades to perform
+     * @param string $dir the directory containing the upgrade sql
+     * @return boolean whether or not an upgrade was performed
+     */
+    public function runUpgrades($upgraders, $dir) {
+        $upgradePerformed = false;
+        
+        for($i = 0; $i < count($upgraders); $i++) {
+            $upgrader = $upgraders[$i];
+            if ($upgrader->checkIfUpgradeSupported()) {
+                // pass the given directory to the upgrades, since __DIR__ returns parent dir of file, not executor
+                $upgrader->upgrade($dir); // This will throw an exception if the upgrade fails.
+                $upgradePerformed = true;
+                $i = 0; // Start over, in case the upgrade handlers are not in ascending order.
+            }
+        }
+        
+        return $upgradePerformed;
+    }
+
+}
+
 abstract class AirtimeUpgrader
 {
-    /** Versions that this upgrader class can upgrade from (an array of version strings). */
-    abstract protected function getSupportedVersions();
-    /** The version that this upgrader class will upgrade to. (returns a version string) */
+    /** Schema versions that this upgrader class can upgrade from (an array of version strings). */
+    abstract protected function getSupportedSchemaVersions();
+    /** The schema version that this upgrader class will upgrade to. (returns a version string) */
     abstract public function getNewVersion();
 
-    public static function getCurrentVersion()
+    public static function getCurrentSchemaVersion()
     {
-        CcPrefPeer::clearInstancePool(); //Ensure we don't get a cached Propel object (cached DB results) 
-                                         //because we're updating this version number within this HTTP request as well.
-        $pref = CcPrefQuery::create()
-        ->filterByKeystr('system_version')
-        ->findOne();
-        $airtime_version = $pref->getValStr();
-        return $airtime_version;
+        return Application_Model_Preference::GetSchemaVersion();
     }
     
     /** 
@@ -24,7 +78,7 @@ abstract class AirtimeUpgrader
      */
     public function checkIfUpgradeSupported()
     {        
-        if (!in_array(AirtimeUpgrader::getCurrentVersion(), $this->getSupportedVersions())) {
+        if (!in_array(AirtimeUpgrader::getCurrentSchemaVersion(), $this->getSupportedSchemaVersions())) {
             return false;
         }
         return true;
@@ -58,9 +112,10 @@ abstract class AirtimeUpgrader
 
 class AirtimeUpgrader253 extends AirtimeUpgrader
 {
-    protected function getSupportedVersions()
+    protected function getSupportedSchemaVersions()
     {
         return array('2.5.1', '2.5.2');
+
     }
     public function getNewVersion()
     {
@@ -109,8 +164,8 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
             $database = $values['database']['dbname'];
         
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_".$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
-        
-            Application_Model_Preference::SetAirtimeVersion($this->getNewVersion());
+            Application_Model_Preference::SetSchemaVersion($this->getNewVersion());
+
             //clear out the cache
             Cache::clear();
             
@@ -125,7 +180,7 @@ class AirtimeUpgrader253 extends AirtimeUpgrader
 
 class AirtimeUpgrader254 extends AirtimeUpgrader
 {
-    protected function getSupportedVersions()
+    protected function getSupportedSchemaVersions()
     {
         return array('2.5.3');
     }
@@ -195,7 +250,7 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
             }
             
             //$con->commit();
-            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Application_Model_Preference::SetSchemaVersion($newVersion);
             Cache::clear();
             
             $this->toggleMaintenanceScreen(false);
@@ -211,7 +266,7 @@ class AirtimeUpgrader254 extends AirtimeUpgrader
 }
 
 class AirtimeUpgrader255 extends AirtimeUpgrader {
-    protected function getSupportedVersions() {
+    protected function getSupportedSchemaVersions() {
         return array (
             '2.5.4'
         );
@@ -243,7 +298,7 @@ class AirtimeUpgrader255 extends AirtimeUpgrader {
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
                     .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
             
-            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Application_Model_Preference::SetSchemaVersion($newVersion);
             Cache::clear();
             
             $this->toggleMaintenanceScreen(false);
@@ -257,7 +312,7 @@ class AirtimeUpgrader255 extends AirtimeUpgrader {
 }
 
 class AirtimeUpgrader259 extends AirtimeUpgrader {
-    protected function getSupportedVersions() {
+    protected function getSupportedSchemaVersions() {
         return array (
             '2.5.5'
         );
@@ -289,7 +344,7 @@ class AirtimeUpgrader259 extends AirtimeUpgrader {
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
                      .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
             
-            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Application_Model_Preference::SetSchemaVersion($newVersion);
             Cache::clear();
             
             $this->toggleMaintenanceScreen(false);
@@ -302,7 +357,7 @@ class AirtimeUpgrader259 extends AirtimeUpgrader {
 
 class AirtimeUpgrader2510 extends AirtimeUpgrader
 {
-    protected function getSupportedVersions() {
+    protected function getSupportedSchemaVersions() {
         return array (
             '2.5.9'
         );
@@ -334,7 +389,7 @@ class AirtimeUpgrader2510 extends AirtimeUpgrader
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
                 .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
 
-            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Application_Model_Preference::SetSchemaVersion($newVersion);
             Cache::clear();
 
             $this->toggleMaintenanceScreen(false);
@@ -347,7 +402,7 @@ class AirtimeUpgrader2510 extends AirtimeUpgrader
 
 class AirtimeUpgrader2511 extends AirtimeUpgrader
 {
-    protected function getSupportedVersions() {
+    protected function getSupportedSchemaVersions() {
         return array (
             '2.5.10'
         );
@@ -375,7 +430,7 @@ class AirtimeUpgrader2511 extends AirtimeUpgrader
             $disk_usage = $queryResult[0];
             Application_Model_Preference::setDiskUsage($disk_usage);
 
-            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Application_Model_Preference::SetSchemaVersion($newVersion);
             Cache::clear();
 
             $this->toggleMaintenanceScreen(false);
@@ -391,7 +446,7 @@ class AirtimeUpgrader2511 extends AirtimeUpgrader
 
 class AirtimeUpgrader2512 extends AirtimeUpgrader
 {
-    protected function getSupportedVersions() {
+    protected function getSupportedSchemaVersions() {
         return array (
             '2.5.10',
             '2.5.11'
@@ -424,7 +479,7 @@ class AirtimeUpgrader2512 extends AirtimeUpgrader
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
                 .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
 
-            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Application_Model_Preference::SetSchemaVersion($newVersion);
             Cache::clear();
 
             $this->toggleMaintenanceScreen(false);

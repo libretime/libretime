@@ -1,117 +1,65 @@
 <?php
 
-//  Only enable cookie secure if we are supporting https.
-//  Ideally, this would always be on and we would force https,
-//  but the default installation configs are likely to be installed by
-//  amature users on the setup that does not have https.  Forcing
-//  cookie_secure on non https would result in confusing login problems.
-if(!empty($_SERVER['HTTPS'])){
-        ini_set('session.cookie_secure', '1');
-}
-ini_set('session.cookie_httponly', '1');
+$configRun = false;
+$extensions = get_loaded_extensions();
+$airtimeSetup = false;
 
-error_reporting(E_ALL|E_STRICT);
-
-function exception_error_handler($errno, $errstr, $errfile, $errline)
-{
-    //Check if the statement that threw this error wanted its errors to be 
-    //suppressed. If so then return without with throwing exception.
-    if (0 === error_reporting()) {
-        return;
+function showConfigCheckPage() {
+    global $configRun;
+    if (!$configRun) {
+        // This will run any necessary setup we need if
+        // configuration hasn't been initialized
+        checkConfiguration();
     }
-    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
-    return false;
+
+    require_once(CONFIG_PATH . 'config-check.php');
+    die();
 }
 
-// Define path to application directory
-defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));
+function isApiCall() {
+    $path = $_SERVER['PHP_SELF'];
+    return strpos($path, "api") !== false;
+}
 
-// Define application environment
-defined('APPLICATION_ENV')
-    || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+// Define application path constants
+define('ROOT_PATH', dirname( __DIR__) . '/');
+define('LIB_PATH', ROOT_PATH . 'library/');
+define('BUILD_PATH', ROOT_PATH . 'build/');
+define('SETUP_PATH', BUILD_PATH . 'airtime-setup/');
+define('APPLICATION_PATH', ROOT_PATH . 'application/');
+define('CONFIG_PATH', APPLICATION_PATH . 'configs/');
+define('VENDOR_PATH', ROOT_PATH . '../vendor/');
 
-defined('VERBOSE_STACK_TRACE')
-    || define('VERBOSE_STACK_TRACE', (getenv('VERBOSE_STACK_TRACE') ? getenv('VERBOSE_STACK_TRACE') : true));
+define("AIRTIME_CONFIG_STOR", "/etc/airtime/");
 
-//Vendors
-set_include_path(realpath(dirname(__FILE__) . '/../../vendor'));
+define('AIRTIME_CONFIG', 'airtime.conf');
+
+//Vendors (Composer)
+set_include_path(VENDOR_PATH . PATH_SEPARATOR . get_include_path());
 
 // Ensure library/ is on include_path
-set_include_path(implode(PATH_SEPARATOR, array(
-    get_include_path(),
-    realpath(APPLICATION_PATH . '/../library')
-)));
+set_include_path(LIB_PATH . PATH_SEPARATOR . get_include_path());
 
-set_include_path(APPLICATION_PATH . '/common' . PATH_SEPARATOR . get_include_path());
-
-//Propel classes.
-set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());
-
-//Controllers
-set_include_path(APPLICATION_PATH . '/controllers' . PATH_SEPARATOR . get_include_path());
-
-//Controller plugins.
-set_include_path(APPLICATION_PATH . '/controllers/plugins' . PATH_SEPARATOR . get_include_path());
-
-//Services.
-set_include_path(APPLICATION_PATH . '/services/' . PATH_SEPARATOR . get_include_path());
-
-//Zend framework
-if (file_exists('/usr/share/php/libzend-framework-php')) {
-    set_include_path('/usr/share/php/libzend-framework-php' . PATH_SEPARATOR . get_include_path());
+if (!@include_once(VENDOR_PATH . 'propel/propel1/runtime/lib/Propel.php'))
+{
+    die('Error: Propel not found. Did you install Airtime\'s third-party dependencies with composer? (Check the README.)');
 }
 
-//cloud storage directory
-set_include_path(APPLICATION_PATH . '/cloud_storage' . PATH_SEPARATOR . get_include_path());
+require_once(CONFIG_PATH . 'conf.php');
+require_once(SETUP_PATH . 'load.php');
 
-//Upgrade directory
-set_include_path(APPLICATION_PATH . '/upgrade/' . PATH_SEPARATOR . get_include_path());
+// This allows us to pass ?config as a parameter to any page
+// and get to the config checklist.
+if (array_key_exists('config', $_GET)) {
+    showConfigCheckPage();
+}
 
-//Common directory
-set_include_path(APPLICATION_PATH . '/common/' . PATH_SEPARATOR . get_include_path());
-
-
-/** Zend_Application */
-require_once 'Zend/Application.php';
-$application = new Zend_Application(
-    APPLICATION_ENV,
-    //$_SERVER["AIRTIME_APPINI"] // Old SaaS customization that's no longer needed -- Albert May 2, 2014
-    APPLICATION_PATH . '/configs/application.ini'
-);
-
-require_once (APPLICATION_PATH."/logging/Logging.php");
-Logging::setLogPath('/var/log/airtime/zendphp.log');
-Logging::setupParseErrorLogging();
-
-// Create application, bootstrap, and run
-try {
-    $sapi_type = php_sapi_name();
-    if (substr($sapi_type, 0, 3) == 'cli') {
-        set_include_path(APPLICATION_PATH . PATH_SEPARATOR . get_include_path());
-        require_once("Bootstrap.php");
-    } else {
-        $application->bootstrap()->run();
-    }
-} catch (Exception $e) {
-
-    if ($e->getCode() == 401)
-    {
-        header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized', true, 401);
-        return;
-    }
-
-    header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
-    Logging::error($e->getMessage());
-
-    if (VERBOSE_STACK_TRACE) {
-        echo $e->getMessage() . '<br>';
-        echo "<pre>";
-        echo $e->getTraceAsString();
-        echo "</pre>";
-        Logging::error($e->getTraceAsString());
-    } else {
-        Logging::error($e->getTrace());
-    }
-    throw $e;
+// If a configuration file exists, forward to our boot script
+if (file_exists(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG)) {
+    require_once(APPLICATION_PATH . 'airtime-boot.php');
+}
+// Otherwise, we'll need to run our configuration setup
+else {
+    $airtimeSetup = true;
+    require_once(SETUP_PATH . 'setup-config.php');
 }

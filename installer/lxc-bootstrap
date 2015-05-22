@@ -1,0 +1,60 @@
+#!/bin/bash -e
+#-e Causes bash script to exit if any of the installers
+#return with a non-zero return value.
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Please run as root user."
+    exit 1
+fi
+
+dist=$1
+release=$2
+name=airtime-install
+
+set +e
+echo -e "\n * Stopping ${name}..."
+lxc-stop -n airtime-install
+echo "...Done"
+
+echo -e "\n * Destroying ${name}..."
+lxc-destroy -n airtime-install
+echo "...Done"
+set -e
+
+###
+# ! NOTE: If you run into errors resolving the archives when running apt-get update, 
+#         clear your /var/cache/lxc directory and retry.
+###
+
+echo -e "\n * Creating ${name} with dist ${dist} and release ${release}..."
+lxc-create -t ${dist} -n ${name} -- --release ${release}
+echo "...Done"
+
+echo -e "\n * Starting ${name}..."
+lxc-start -n ${name} -d
+echo "...Done"
+
+echo -e "\n * Running apt update..."
+lxc-attach -n ${name} -- apt-get update
+echo "...Done"
+
+echo -e "\n * Installing git..."
+lxc-attach -n ${name} -- apt-get -y --force-yes install git
+echo "...Done"
+
+echo -e "\n * Cloning Airtime..."
+lxc-attach -n ${name} -- git clone https://github.com/sourcefabric/Airtime.git /usr/share/Airtime --branch 2.5.x-installer-monitless --depth 1
+echo "...Done"
+
+echo -e "\n * Running installer..."
+lxc-attach -n ${name} -e -- /usr/share/Airtime/install -ifapdIv
+echo "...Done"
+
+IP=$(lxc-info -i -n ${name} -H)
+echo -e "\n * Opening ${name} in your browser..."
+if hash xdg-open 2>/dev/null; then
+  xdg-open "http://${IP}/"
+elif hash gnome-open 2>/dev/null; then
+  gnome-open "http://${IP}/"
+fi
+echo "...Done"

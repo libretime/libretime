@@ -62,7 +62,7 @@ class TestHelper
             //   cc_subjs - Most of Airtime requires an admin account to work, which has id=1,
             //              so don't clear it.
             //   cc_music_dirs - Has foreign key constraints against cc_files, so we clear cc_files 
-            //                   first and ckear cc_music_dirs after
+            //                   first and clear cc_music_dirs after
             $tablesToNotClear = array("cc_subjs", "cc_music_dirs");
 
             $con->beginTransaction();
@@ -128,7 +128,7 @@ class TestHelper
 
     public static function setupZendBootstrap()
     {
-        $application = new Zend_Application(APPLICATION_ENV, APPLICATION_PATH .'/configs/application.ini');
+        $application = new Zend_Application(APPLICATION_ENV, CONFIG_PATH . 'application.ini');
         $application->bootstrap();
         return $application;
     }

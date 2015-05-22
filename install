@@ -1,0 +1,625 @@
+#!/bin/bash -e
+#-e Causes bash script to exit if any of the installers
+#return with a non-zero return value.
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Please run as root user."
+    exit 1
+fi
+
+SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
+AIRTIMEROOT=${SCRIPT_DIR}
+
+showhelp () {
+    echo "Usage: sudo bash install [options]
+    -h, --help, -?
+                Display usage information
+    -V, --version
+                Display version information
+    -v, --verbose
+                More output
+    -q, --quiet, --silent
+                No output except errors
+    -f, --force
+                Turn off interactive prompts
+    --distribution
+                Linux distribution the installation is being run on
+    --release
+                Distribution release
+    -d, --ignore-dependencies
+                Don't install binary dependencies
+    -w, --web-user=WEB_USER
+                Set the apache web user. Defaults to www-data. Only change
+                this setting if you've changed the default apache web user
+    -r, --web-root=WEB_ROOT
+                Set the web root for Airtime files
+                This will copy the Airtime application files, but you will need
+                to give your web user access to the given directory if it is 
+                not accessible
+    -I, --in-place
+                Set the current Airtime directory as the web root
+                Note that you will need to give your web user permission to 
+                access this directory if it is not accessible
+    -p, --postgres
+                Create a default postgres user named 'airtime' with password
+                'airtime'
+    -a, --apache
+                Install apache and deploy a basic configuration for Airtime
+    -i, --icecast
+                Install Icecast 2 and deploy a basic configuration for Airtime"
+    exit 0
+}
+
+showversion () {
+    version=$(php -r 'require_once(__DIR__ . "/airtime_mvc/application/configs/constants.php"); echo AIRTIME_CODE_VERSION;')
+    echo "Airtime Version ${version}"
+    exit 0
+}
+
+web_user="www-data"
+web_root=""
+in_place="f"
+postgres="f"
+apache="f"
+icecast="f"
+ignore_dependencies="f"
+# Interactive
+_i=1
+# Verbose
+_v=0
+# Quiet
+_q=0
+upgrade="f"
+dist=""
+code=""
+
+function verbose() {
+    if [[ ${_v} -eq 1 ]]; then
+        echo -e "$@"
+    fi
+}
+
+function loud() {
+    if [[ ${_q} -eq 0 ]]; then
+        echo -e "$@"
+    fi
+}
+
+# Evaluate commands silently if quiet
+function loudCmd() {
+    if [[ ${_q} -eq 0 ]]; then
+        eval $@
+    else
+        eval $@ > /dev/null
+    fi
+}
+
+function checkCommandExists() {
+    set +e
+    command=$@
+    eval hash ${command} 2>/dev/null
+    commandFound=$?
+    if [[ ! ${commandFound} -eq 0 ]]; then
+        echo -e "Error: ${command} not found. Please ensure you have the corresponding dependency installed."
+        exit
+    fi
+    set -e
+}
+
+while :; do
+    case "$1" in
+        --help)
+            showhelp
+            ;;
+        --version)
+            showversion
+            ;;
+        --verbose)
+            _v=1
+            ;;
+        --quiet|--silent)
+            _q=1
+            ;;
+        --force)
+            _i=0
+            ;;
+        --distribution)
+            if [ "$2" ]; then
+                dist=$2
+                shift 2
+                continue
+            else
+                echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
+                exit 1
+            fi
+            ;;
+        --distribution=?*)
+            dist=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --distribution=)
+            echo 'ERROR: Must specify a non-empty "--distribution DISTRIBUTION" argument.' >&2
+            exit 1
+            ;;
+        --release)
+            if [ "$2" ]; then
+                code=$2
+                shift 2
+                continue
+            else
+                echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
+                exit 1
+            fi
+            ;;
+        --release=?*)
+            code=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --release=)
+            echo 'ERROR: Must specify a non-empty "--release RELEASE" argument.' >&2
+            exit 1
+            ;;
+        --ignore-dependencies)
+            ignore_dependencies="t"
+            ;;
+        --apache)
+            apache="t"
+            ;;
+        --icecast)
+            icecast="t"
+            ;;
+        --postgres)
+            postgres="t"
+            ;;
+        --in-place)
+            in_place="t"
+            ;;
+        --web-user)
+            if [ "$2" ]; then
+                web_user=$2
+                shift 2
+                continue
+            else
+                echo 'ERROR: Must specify a non-empty "--web-user WEB_USER" argument.' >&2
+                exit 1
+            fi
+            ;;
+        --web-user=?*)
+            web_user=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --web-user=)
+            echo 'ERROR: Must specify a non-empty "--web-user=WEB_USER" argument.' >&2
+            exit 1
+            ;;
+        --web-root)
+            if [ "$2" ]; then
+                web_root=$(readlink -f $2)
+                shift 2
+                continue
+            else
+                echo 'ERROR: Must specify a non-empty "--web-root WEB_ROOT" argument.' >&2
+                exit 1
+            fi
+            ;;
+        --web-root=?*)
+            web_root=${1#*=} # Delete everything up to "=" and assign the remainder.
+            ;;
+        --web-root=)
+            echo 'ERROR: Must specify a non-empty "--web-root=WEB_ROOT" argument.' >&2
+            exit 1
+            ;;
+        --)
+            shift
+            break
+            ;;
+        -?*)
+            for ((i = 1; i < ${#1}; i++)); do
+                case "${1:$i:1}" in
+                    h|\?)
+                        showhelp
+                        ;;
+                    V)
+                        showversion
+                        ;;
+                    v)
+                        _v=1
+                        ;;
+                    q)
+                        _q=1
+                        ;;
+                    f)
+                        _i=0
+                        ;;
+                    d)
+                        ignore_dependencies="t"
+                        ;;
+                    a)
+                        apache="t"
+                        ;;
+                    i)
+                        icecast="t"
+                        ;;
+                    p)
+                        postgres="t"
+                        ;;
+                    I)
+                        in_place="t"
+                        ;;
+                    w)
+                        if [ "$2" ]; then
+                            web_user=$2
+                            continue
+                        else
+                            echo 'ERROR: Must specify a non-empty "-w WEB_USER" argument.' >&2
+                            exit 1
+                        fi
+                        ;;
+                    r)
+                        if [ "$2" ]; then
+                            web_root=$(readlink -f $2)
+                            continue
+                        else
+                            echo 'ERROR: Must specify a non-empty "-d WEB_ROOT" argument.' >&2
+                            exit 1
+                        fi
+                        ;;
+                    *)
+                        echo "$0: error - unrecognized option '${1:$i:1}'" >&2;
+                        echo "Try 'install --help' for more information."
+                        exit 1
+                esac
+            done
+            ;;
+        *)
+            break
+    esac
+    shift
+done
+
+if [ -z web_root -a ! -d web_root ]; then
+    echo "$web_root doesn't exist!"
+    exit 1
+fi
+
+echo -e "\n   _____  .________________________.___   _____  ___________   "
+echo    "  /  _  \ |   \______   \__    ___/|   | /     \ \_   _____/     "
+echo    " /  /_\  \|   ||       _/ |    |   |   |/  \ /  \ |    __)_      "
+echo    "/    |    \   ||    |   \ |    |   |   /    Y    \|        \     "
+echo    "\____|__  /___||____|_  / |____|   |___\____|__  /_______  /     "
+echo -e "        \/            \/                       \/        \/    \n"
+
+if [ "$ignore_dependencies" = "f" ]; then
+    set +e
+    if [ -z "${dist}" ]; then
+        loudCmd "apt-get -y --force-yes install lsb-release"
+        dist=`lsb_release -ds | awk '{print tolower($1);}'`
+        code=`lsb_release -cs`
+    fi
+
+    loud "\n-----------------------------------------------------"
+    loud "         * Installing External Dependencies *        "
+    loud "-----------------------------------------------------"
+
+    verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
+    loudCmd "apt-get update"
+    if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
+        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
+    else
+        loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-ubuntu-trusty.apt | tr '\n' ' ')"
+    fi
+    set -e
+else
+    checkCommandExists "apache2"
+    checkCommandExists "rabbitmqctl"
+    checkCommandExists "psql"
+fi
+
+if [ -f /etc/airtime/airtime.conf ]; then
+    OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
+    
+    if [ -n "${OLD_CONF}" ]; then
+        upgrade="t"
+    
+        set +e
+        verbose "Stopping airtime services..."
+        loudCmd "service airtime-playout stop-with-monit"
+        loudCmd "service airtime-media-monitor stop-with-monit"
+        loudCmd "service airtime-liquidsoap stop-with-monit"
+        verbose "...Done"
+        
+        echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
+will be moved to /etc/airtime/airtime.conf.tmp"
+        # If we don't remove the existing python files in /usr/lib and the 
+        # /etc/init.d startup scripts, services won't work properly
+        if [ -d /usr/lib/airtime/ ]; then
+            rm -rf /usr/lib/airtime/
+        fi
+        
+        rm /etc/init.d/airtime-*
+    
+        if [ "$apache" = "t" ]; then
+            # If the user selects an "in-place" install or passes in a web root, 
+            # we need to replace the old apache airtime.conf
+            rm /etc/apache2/sites-available/airtime.conf
+        fi
+        
+        if [ -d /usr/share/airtime -a web_root = /usr/share/airtime ]; then
+            rm -rf /usr/share/airtime
+        fi
+        
+        mv /etc/airtime/airtime.conf /etc/airtime/airtime.conf.tmp
+        set -e
+    fi
+fi
+
+if [ "$apache" = "f" -a ${_i} -eq 1 ]; then
+    echo -e "Install default Airtime apache configuration? (Y/n): \c"
+    read IN
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+        apache="t"
+    fi
+fi
+
+if [ "$in_place" = "t" ]; then
+    verbose "\n * Setting current Airtime directory as web root..."
+    web_root=${AIRTIMEROOT}/airtime_mvc/public
+elif [ -n "$web_root" ]; then
+    verbose "\n * Creating Apache web root directory..."
+    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}
+    web_root=${web_root}/public/
+else
+    verbose "\n * Creating default Apache web root directory /usr/share/airtime/..."
+    web_root="/usr/share/airtime"
+    mkdir -p ${web_root}
+    cp -R ${AIRTIMEROOT}/airtime_mvc/* ${web_root}
+    web_root=${web_root}/public/
+fi
+verbose "...Done"
+
+if [ "$apache" = "t" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "                * Configuring Apache *                "
+    loud "-----------------------------------------------------"
+
+    set +e
+    apache2 -v | grep "2\.4" > /dev/null
+    apacheversion=$?
+    set -e
+
+    if [ "$apacheversion" != "1" ]; then
+        airtimeconfigfile="airtime.conf"
+        oldconfigfile="airtime-vhost.conf"
+    else
+        airtimeconfigfile="airtime"
+        oldconfigfile="airtime-vhost"
+    fi
+
+    # If we're upgrading (installing over an existing Airtime install) and we've been told to
+    # install apache, we should overwrite any existing configuration. If we don't do this, doing
+    # an in-place installation over an old Airtime install (which installs to /usr/share by default)
+    # will fail
+    if [ "$upgrade" = "t" -o ! -f /etc/apache2/sites-available/${airtimeconfigfile} ]; then
+        verbose "\n * Creating Apache config for Airtime..."
+        
+        if [ "$apacheversion" != "1" ]; then
+            sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost-2.4 > /etc/apache2/sites-available/${airtimeconfigfile}
+        else
+            sed -e "s@WEB_ROOT@${web_root}@g" ${SCRIPT_DIR}/installer/apache/airtime-vhost > /etc/apache2/sites-available/${airtimeconfigfile}
+        fi
+        loudCmd "a2dissite 000-default"
+        # If Airtime was previously installed with apt, the vhost file name is different,
+        # so we need to specifically disable it.
+        if [ -f "/etc/apache2/sites-available/${oldconfigfile}" ]; then
+            loudCmd "a2dissite airtime-vhost"
+        fi
+        loudCmd "a2ensite airtime"
+    else
+        verbose "\nApache config for Airtime already exists, skipping"
+    fi
+fi
+
+if [ "$icecast" = "f" -a ${_i} -eq 1 ]; then
+    echo -e "Install default Airtime Icecast configuration? (Y/n): \c"
+    read IN
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+        icecast="t"
+    fi
+fi
+
+if [ "$icecast" = "t" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "               * Configuring Icecast *                "
+    loud "-----------------------------------------------------"
+    
+    verbose "\n * Enabling Icecast 2..."
+    sed -i 's/ENABLE=false/ENABLE=true/g' /etc/default/icecast2
+    set +e
+    loudCmd "service icecast2 start"
+    set -e
+    verbose "...Done"
+fi
+
+loud "\n-----------------------------------------------------"
+loud "          * Installing Airtime Services *            "
+loud "-----------------------------------------------------"
+
+verbose "\n * Installing necessary python services..."
+loudCmd "pip install setuptools"
+verbose "...Done"
+
+verbose "\n * Creating /run/airtime..."
+mkdir -p /run/airtime
+chmod 755 /run/airtime
+chown -R ${web_user}:${web_user} /run/airtime
+verbose "...Done"
+
+verbose "\n * Installing log writer..."
+loudCmd "python ${AIRTIMEROOT}/python_apps/std_err_override/setup.py install --install-scripts=/usr/bin"
+verbose "...Done"
+
+verbose "\n * Installing API client..."
+loudCmd "python ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
+verbose "...Done"
+
+verbose "\n * Installing media-monitor..."
+loudCmd "python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install --install-scripts=/usr/bin"
+verbose "...Done"
+
+verbose "\n * Installing pypo..."
+loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin"
+verbose "...Done"
+
+for i in /etc/init/airtime*.template; do
+    chmod 644 $i
+    sed -i "s/WEB_USER/${web_user}/g" $i
+    mv $i ${i%.template}
+done
+
+set +e
+loudCmd "initctl reload-configuration"
+loudCmd "systemctl daemon-reload" #systemd hipsters
+loudCmd "update-rc.d airtime-playout defaults" # Start at bootup, on Debian
+loudCmd "update-rc.d airtime-media-monitor defaults" # Start at bootup, on Debian
+loudCmd "update-rc.d airtime-liquidsoap defaults" # Start at bootup, on Debian
+set -e
+
+if [ ! -d /var/log/airtime ]; then
+    loud "\n-----------------------------------------------------"
+    loud "              * Installing Log Files *               "
+    loud "-----------------------------------------------------"
+    
+    verbose "\n * Creating /var/tmp/airtime..."
+    mkdir -p /var/tmp/airtime/show-recorder/
+
+    verbose "\n * Copying logrotate files..."
+    cp ${AIRTIMEROOT}/airtime_mvc/build/airtime-php.logrotate /etc/logrotate.d/airtime-php
+    cp ${AIRTIMEROOT}/python_apps/pypo/pypo/liquidsoap_scripts/airtime-liquidsoap.logrotate /etc/logrotate.d/airtime-liquidsoap
+fi
+
+verbose "\n * Setting permissions on /var/log/airtime..."
+chmod -R a+x /var/log/airtime
+chown -R ${web_user}:${web_user} /var/log/airtime/
+
+verbose "\n * Setting permissions on /var/tmp/airtime..."
+chmod -R a+x /var/tmp/airtime
+chown -R ${web_user}:${web_user} /var/tmp/airtime/
+
+# PHP Config File for Apache
+if [ ! -f "/etc/php5/apache2/conf.d/airtime.ini" ]; then
+    verbose "\n * Creating Airtime PHP config for Apache..."
+    cp ${SCRIPT_DIR}/installer/php/airtime.ini /etc/php5/apache2/conf.d/airtime.ini
+else
+    verbose "\nAirtime PHP config for Apache already exists, skipping"
+fi
+
+# Enable Apache modules
+loudCmd "a2enmod rewrite php5"
+
+loud "\n-----------------------------------------------------"
+loud "              * Configuring PostgreSQL *              "
+loud "-----------------------------------------------------"
+
+# Ensure postgres is running - It isn't after you install the postgres package on Ubuntu 15.04
+loudCmd "service postgresql start"
+
+setupAirtimePostgresUser() {
+    # here-doc to execute this block as postgres user
+    su postgres <<'EOF'
+    set +e
+    psql -d postgres -tAc "CREATE USER airtime WITH ENCRYPTED PASSWORD 'airtime'; ALTER USER airtime CREATEDB;"
+    set -e
+# don't indent this!
+EOF
+}
+
+if [ "$postgres" = "t" ]; then
+    setupAirtimePostgresUser
+elif [ ${_i} -eq 1 ]; then
+    echo -e "Create default airtime postgres user? (Y/n): \c"
+    read IN
+    if [ "$IN" = "y" -o "$IN" = "Y" ]; then
+        setupAirtimePostgresUser
+    fi
+fi
+
+loud "\n-----------------------------------------------------"
+loud "               * Configuring RabbitMQ *               "
+loud "-----------------------------------------------------"
+
+RABBITMQ_VHOST=/airtime
+RABBITMQ_USER=airtime
+RABBITMQ_PASSWORD=airtime
+EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
+
+# Ignore errors in this check to avoid dying when vhost isn't found
+set +e
+rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST} > /dev/null
+RESULT="$?"
+set -e
+
+# Only run these if the vhost doesn't exist
+if [ "$RESULT" != "0" ]; then
+    verbose "\n * Creating RabbitMQ user ${RABBITMQ_USER}..."
+
+    rabbitmqctl add_vhost ${RABBITMQ_VHOST}
+    rabbitmqctl add_user ${RABBITMQ_USER} ${RABBITMQ_PASSWORD}
+else
+    verbose "\nRabbitMQ user already exists, skipping creation"
+fi
+
+verbose "\n * Setting RabbitMQ user permissions..."
+loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
+
+if [ ! -d "/etc/airtime" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "                * Installing Airtime *               "
+    loud "-----------------------------------------------------"
+
+    verbose "\n * Creating /etc/airtime/ directory..."
+    mkdir /etc/airtime
+fi
+chown -R ${web_user}:${web_user} /etc/airtime
+
+if [ ! -d "/srv/airtime" ]; then
+    mkdir -p /srv/airtime
+fi
+chown -R ${web_user}:${web_user} /srv/airtime
+
+
+# We only generate the locales for Airtime if you're allowing us
+# to install our dependencies, so that we won't automatically do this
+# when this install script runs from our DEB package.
+if [ "$ignore_dependencies" = "f" ]; then
+    loud "\n-----------------------------------------------------"
+    loud "                * Installing Locales *               "
+    loud "-----------------------------------------------------"
+
+    set +e
+    verbose "\n * Generating locales"
+    for i in `ls ${web_root}/../locale | grep ".._.."`; do
+        if [ "$dist" = "debian" ]; then
+            grep -qi "^$i" /etc/locale.gen
+            if [ $? -ne 0 ]; then
+                verbose "$i.UTF-8 UTF-8" >> /etc/locale.gen
+            fi
+        else
+            loudCmd "locale-gen \"$i.utf8\""
+        fi
+    done
+    set -e
+
+    if [ "$dist" = "debian" ]; then
+        loudCmd "/usr/sbin/locale-gen"
+    fi
+fi
+
+verbose "\n * Reloading apache..."
+loudCmd "service apache2 reload 2>/dev/null"
+
+IP=$(ifconfig eth0 2>/dev/null|awk '/inet addr:/ {print $2}'|sed 's/addr://')
+
+echo -e "\n-----------------------------------------------------"
+echo    "                * Basic Setup DONE! *                "
+echo    "                                                     "
+echo    " To get started with Airtime, visit ${IP}            "
+echo    " or, if you've set up your own web configuration,    "
+echo    " the Airtime webroot on your webserver               "
+echo    "-----------------------------------------------------"
