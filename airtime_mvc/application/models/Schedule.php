@@ -144,12 +144,6 @@ SQL;
         $results['current']  = null;
         $results['next']     = null;
 
-        /*$currentMedia = CcScheduleQuery::create()
-            ->filterByDbStarts($utcNow, Criteria::LESS_EQUAL)
-            ->filterByDbEnds($utcNow, Criteria::GREATER_EQUAL)
-            ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
-            ->findOne();*/
-
         $sql = "select s.id, s.starts, s.ends, s.file_id, s.stream_id, s.media_item_played,
                 s.instance_id, si.ends as show_ends from cc_schedule s left join cc_show_instances si
                 on s.instance_id = si.id where s.playout_status > 0 and s.starts <= :p1
