@@ -88,42 +88,6 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
                     $valid = false;
                 } else if ($xmlObj->head->status == "200") {
                     $valid = true;
-
-                    // Make another request to TuneIn to update the metadata right away
-                    // and to turn off the commercial flag.
-
-                    /*$metadata = Application_Model_Schedule::getCurrentPlayingTrack();
-
-                    if (!is_null($metadata)) {
-
-                        Logging::info($metadata);
-                        // Replace empty strings with "n/a" since the TuneIn API will complain
-                        // and return an error that title and/or artist is not set.
-                        $metadata["artist"] = empty($metadata["artist"]) ? "n/a" : $metadata["artist"];
-                        $metadata["title"] = empty($metadata["title"]) ? "n/a" : $metadata["title"];
-                        Logging::info($metadata);
-
-                        $metadataQryStr = "&artist=" . $metadata["artist"] . "&title=" . $metadata["title"];
-
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_URL, TUNEIN_API_URL . $qry_str . "&commercial=false" . $metadataQryStr);
-                        curl_setopt($ch, CURLOPT_FAILONERROR, 1);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-
-                        $xmlData = curl_exec($ch);
-                        Logging::info($xmlData);
-                        if (curl_error($ch)) {
-                            Logging::error("Failed to reach TuneIn: " . curl_errno($ch) . " - " . curl_error($ch) . " - " . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
-                        }
-
-                        curl_close($ch);
-                        $xmlObj = new SimpleXMLElement($xmlData);
-                        if (!$xmlObj || $xmlObj->head->status != "200") {
-                            Logging::error("Failed updating metadata on TuneIn");
-                        }
-                    }*/
-
                 }
             }
         } else {
