@@ -57,6 +57,7 @@ setup(name='airtime-playout',
           'PyDispatcher',
           'pyinotify',
           'pytz',
+          'requests',
           'wsgiref'
       ],
       zip_safe=False,
