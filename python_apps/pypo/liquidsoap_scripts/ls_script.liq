@@ -284,8 +284,6 @@ else
     s
 end
 
-# Send metadata notifications when using master source
-s = on_metadata(notify_queue, s)
 
 # Attach a skip command to the source s:
 #add_skip_command(s)
