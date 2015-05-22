@@ -98,10 +98,8 @@ SQL;
         $utcNow = new DateTime("now", new DateTimeZone("UTC"));
 
         $shows = Application_Model_Show::getPrevCurrentNext($utcNow, $utcTimeEnd, $showsToRetrieve);
-        $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow']['instance_id']:null;
-        $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
-        $results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
+        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID);
 
         $range = array(
             "station" => array (
@@ -136,11 +134,8 @@ SQL;
         $utcNow = new DateTime("now", new DateTimeZone("UTC"));
     
         $shows = Application_Model_Show::getPrevCurrentNextOld($utcNow);
-        $previousShowID = count($shows['previousShow'])>0?$shows['previousShow'][0]['instance_id']:null;
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
-        $nextShowID = count($shows['nextShow'])>0?$shows['nextShow'][0]['instance_id']:null;
-        //$results = self::GetPrevCurrentNext($previousShowID, $currentShowID, $nextShowID, $utcNow);
-        $results = Application_Model_Schedule::getPVC($utcNow);
+        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID);
     
         $range = array(
                 "env" => APPLICATION_ENV,
@@ -157,7 +152,17 @@ SQL;
         return $range;
     }
 
-    public static function getPVC($utcNow)
+    /**
+     * Attempts to find a media item (track or webstream) that is currently playing.
+     * If a current media item is currently playing, this function then attempts to
+     * find an item that played previously and is scheduled to play next.
+     *
+     * @param $utcNow DateTime current time in UTC
+     * @param $currentShowInstanceId cc_show_instance id of the show instance currently playing
+     * @return array with data about the previous, current, and next media items playing.
+     *      Returns an empty arrays if there is no media item currently playing
+     */
+    public static function getPreviousCurrentNextMedia($utcNow, $currentShowInstanceId)
     {
         $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
         assert(get_class($utcNow) === "DateTime");
@@ -170,11 +175,12 @@ SQL;
         $sql = "select s.id, s.starts, s.ends, s.file_id, s.stream_id, s.media_item_played,
                 s.instance_id, si.ends as show_ends from cc_schedule s left join cc_show_instances si
                 on s.instance_id = si.id where s.playout_status > 0 and s.starts <= :p1
-                and s.ends >= :p2 order by starts desc limit 1";
+                and s.ends >= :p2 and s.instance_id = :p3 order by starts desc limit 1";
 
         $params = array(
             ":p1" => $utcNow->format("Y-m-d H:i:s"),
-            ":p2" => $utcNow->format("Y-m-d H:i:s")
+            ":p2" => $utcNow->format("Y-m-d H:i:s"),
+            ":p3" => $currentShowInstanceId
         );
 
         $rows = Application_Common_Database::prepareAndExecute($sql, $params);
@@ -298,132 +304,6 @@ SQL;
 
         return $results;
 
-    }
-
-    /**
-     * Queries the database for the set of schedules one hour before
-     * and after the given time. If a show starts and ends within that
-     * time that is considered the current show. Then the scheduled item
-     * before it is the previous show, and the scheduled item after it
-     * is the next show. This way the dashboard getCurrentPlaylist is
-     * very fast. But if any one of the three show types are not found
-     * through this mechanism a call is made to the old way of querying
-     * the database to find the track info.
-    **/
-    public static function GetPrevCurrentNext($p_previousShowID, $p_currentShowID, $p_nextShowID, $utcNow)
-    {
-        $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
-        assert(get_class($utcNow) === "DateTime");
-        assert($utcNow->getTimeZone() == $timeZone);
-
-        if ($p_previousShowID == null && $p_currentShowID == null && $p_nextShowID == null) {
-            return;
-        }
-
-        $sql = "SELECT %%columns%% st.starts as starts, st.ends as ends,
-            st.media_item_played as media_item_played, si.ends as show_ends
-            %%tables%% WHERE ";
-
-        $fileColumns = "ft.artist_name, ft.track_title, ";
-        $fileJoin = "FROM cc_schedule st JOIN cc_files ft ON st.file_id = ft.id
-            LEFT JOIN cc_show_instances si ON st.instance_id = si.id";
-
-        $streamColumns = "ws.name AS artist_name, wm.liquidsoap_data AS track_title, ";
-        $streamJoin = <<<SQL
-FROM cc_schedule AS st
-JOIN cc_webstream ws ON st.stream_id = ws.id
-LEFT JOIN cc_show_instances AS si ON st.instance_id = si.id
-LEFT JOIN cc_subjs AS sub ON sub.id = ws.creator_id
-LEFT JOIN
-  (SELECT *
-   FROM cc_webstream_metadata
-   ORDER BY start_time DESC LIMIT 1) AS wm ON st.id = wm.instance_id
-SQL;
-
-        $predicateArr = array();
-        $paramMap = array();
-        if (isset($p_previousShowID)) {
-            $predicateArr[] = 'st.instance_id = :previousShowId';
-            $paramMap[':previousShowId'] = $p_previousShowID;
-        }
-        if (isset($p_currentShowID)) {
-            $predicateArr[] = 'st.instance_id = :currentShowId';
-            $paramMap[':currentShowId'] = $p_currentShowID;
-        }
-        if (isset($p_nextShowID)) {
-            $predicateArr[] = 'st.instance_id = :nextShowId';
-            $paramMap[':nextShowId'] = $p_nextShowID;
-        }
-
-        $sql .= " (".implode(" OR ", $predicateArr).") ";
-        $sql .= ' AND st.playout_status > 0 ORDER BY st.starts';
-
-        $filesSql = str_replace("%%columns%%", $fileColumns, $sql);
-        $filesSql = str_replace("%%tables%%", $fileJoin, $filesSql);
-
-        $streamSql = str_replace("%%columns%%", $streamColumns, $sql);
-        $streamSql = str_replace("%%tables%%", $streamJoin, $streamSql);
-
-        $sql = "SELECT * FROM (($filesSql) UNION ($streamSql)) AS unioned ORDER BY starts";
-
-        $rows = Application_Common_Database::prepareAndExecute($sql, $paramMap);
-        $numberOfRows = count($rows);
-
-        $results['previous'] = null;
-        $results['current']  = null;
-        $results['next']     = null;
-
-        for ($i = 0; $i < $numberOfRows; ++$i) {
-
-            // if the show is overbooked, then update the track end time to the end of the show time.
-            if ($rows[$i]['ends'] > $rows[$i]["show_ends"]) {
-                $rows[$i]['ends'] = $rows[$i]["show_ends"];
-            }
-
-            $curShowStartTime = new DateTime($rows[$i]['starts'], $timeZone);
-            $curShowEndTime   = new DateTime($rows[$i]['ends'], $timeZone);
-
-            if (($curShowStartTime <= $utcNow) && ($curShowEndTime >= $utcNow)) {
-                if ($i - 1 >= 0) {
-                    $results['previous'] = array("name"=>$rows[$i-1]["artist_name"]." - ".$rows[$i-1]["track_title"],
-                            "starts"=>$rows[$i-1]["starts"],
-                            "ends"=>$rows[$i-1]["ends"],
-                            "type"=>'track');
-                }
-                 $results['current'] =  array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
-                            "starts"=>$rows[$i]["starts"],
-                            "ends"=> (($rows[$i]["ends"] > $rows[$i]["show_ends"]) ? $rows[$i]["show_ends"]: $rows[$i]["ends"]),
-                            "media_item_played"=>$rows[$i]["media_item_played"],
-                            "record"=>0,
-                            "type"=>'track');
-                if (isset($rows[$i+1])) {
-                    $results['next'] =  array("name"=>$rows[$i+1]["artist_name"]." - ".$rows[$i+1]["track_title"],
-                            "starts"=>$rows[$i+1]["starts"],
-                            "ends"=>$rows[$i+1]["ends"],
-                            "type"=>'track');
-                }
-                break;
-            }
-            if ($curShowEndTime < $utcNow ) {
-                $previousIndex = $i;
-            }
-            if ($curShowStartTime > $utcNow) {
-                $results['next'] = array("name"=>$rows[$i]["artist_name"]." - ".$rows[$i]["track_title"],
-                            "starts"=>$rows[$i]["starts"],
-                            "ends"=>$rows[$i]["ends"],
-                            "type"=>'track');
-                break;
-            }
-        }
-        //If we didn't find a a current show because the time didn't fit we may still have
-        //found a previous show so use it.
-        if ($results['previous'] === null && isset($previousIndex)) {
-                $results['previous'] = array("name"=>$rows[$previousIndex]["artist_name"]." - ".$rows[$previousIndex]["track_title"],
-                            "starts"=>$rows[$previousIndex]["starts"],
-                            "ends"=>$rows[$previousIndex]["ends"]);;
-        }
-
-        return $results;
     }
 
     public static function GetLastScheduleItem($p_timeNow)
