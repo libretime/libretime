@@ -22,8 +22,6 @@ else:
                   ('/etc/init', ['install/upstart/airtime-liquidsoap.conf.template']),
                   ('/etc/init.d', ['install/sysvinit/airtime-playout']),
                   ('/etc/init.d', ['install/sysvinit/airtime-liquidsoap']),
-                  ('/etc/airtime', ['install/notify_logging.cfg']),
-                  ('/etc/airtime', ['install/pypo_logging.cfg']),
                   ('/var/log/airtime/pypo', []),
                   ('/var/log/airtime/pypo-liquidsoap', []),
                   ('/var/tmp/airtime/pypo', []),

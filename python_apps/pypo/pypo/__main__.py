@@ -34,8 +34,11 @@ from configobj import ConfigObj
 
 # custom imports
 from api_clients import api_client
-from std_err_override import LogWriter
+#from std_err_override import LogWriter
 import pure
+
+LOG_PATH = '/var/log/airtime/pypo/pypo.log'
+LOG_LEVEL = logging.INFO
 
 # Set up command-line options
 parser = OptionParser()
@@ -89,9 +92,15 @@ logging.captureWarnings(True)
 
 # configure logging
 try:
-    logging.config.fileConfig("/etc/airtime/pypo_logging.cfg")
-    logger = logging.getLogger()
-    LogWriter.override_std_err(logger)
+    # Set up logging
+    logFormatter = logging.Formatter("%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s")
+    rootLogger = logging.getLogger()
+    rootLogger.setLevel(LOG_LEVEL)
+    logger = rootLogger
+
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setFormatter(logFormatter)
+    rootLogger.addHandler(consoleHandler)
 except Exception, e:
     print "Couldn't configure logging", e
     sys.exit(1)
@@ -301,6 +310,9 @@ if __name__ == '__main__':
     stat.daemon = True
     stat.start()
 
-    pf.join()
+    # Just sleep the main thread, instead of blocking on pf.join().
+    # This allows CTRL-C to work!
+    while True:
+        time.sleep(1)
 
     logger.info("System exit")
