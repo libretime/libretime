@@ -153,7 +153,7 @@ SQL;
         $sql = "select s.id, s.starts, s.ends, s.file_id, s.stream_id, s.media_item_played,
                 s.instance_id, si.ends as show_ends from cc_schedule s left join cc_show_instances si
                 on s.instance_id = si.id where s.playout_status > 0 and s.starts <= :p1
-                and s.ends >= :p2 order by starts limit 1";
+                and s.ends >= :p2 order by starts desc limit 1";
 
         $params = array(
             ":p1" => $utcNow->format("Y-m-d H:i:s"),
