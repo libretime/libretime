@@ -25,12 +25,6 @@ from std_err_override import LogWriter
 from timeout import ls_timeout
 
 
-# configure logging
-logging_cfg = "/etc/airtime/pypo_logging.cfg"
-logging.config.fileConfig(logging_cfg)
-logger = logging.getLogger()
-LogWriter.override_std_err(logger)
-
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 

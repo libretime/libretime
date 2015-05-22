@@ -22,9 +22,9 @@ showhelp () {
                 No output except errors
     -f, --force
                 Turn off interactive prompts
-    --distribution
+    --distribution=DISTRIBUTION
                 Linux distribution the installation is being run on
-    --release
+    --release=RELEASE
                 Distribution release
     -d, --ignore-dependencies
                 Don't install binary dependencies

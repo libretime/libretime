@@ -30,6 +30,9 @@ from configobj import ConfigObj
 from api_clients import *
 from std_err_override import LogWriter
 
+LOG_LEVEL = logging.INFO
+LOG_PATH = '/var/log/airtime/pypo/notify.log'
+
 # help screeen / info
 usage = "%prog [options]" + " - notification gateway"
 parser = OptionParser(usage=usage)
@@ -50,10 +53,20 @@ parser.add_option("-n", "--liquidsoap-started", help="notify liquidsoap started"
 # parse options
 (options, args) = parser.parse_args()
 
-# configure logging
-logging.config.fileConfig('/etc/airtime/notify_logging.cfg')
-logger = logging.getLogger('notify')
-LogWriter.override_std_err(logger)
+# Set up logging
+logFormatter = logging.Formatter("%(asctime)s [%(module)s] [%(levelname)-5.5s]  %(message)s")
+rootLogger = logging.getLogger()
+rootLogger.setLevel(LOG_LEVEL)
+
+fileHandler = logging.handlers.RotatingFileHandler(filename=LOG_PATH, maxBytes=1024*1024*30,
+                                          backupCount=8)
+fileHandler.setFormatter(logFormatter)
+rootLogger.addHandler(fileHandler)
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+rootLogger.addHandler(consoleHandler)
+logger = rootLogger
 
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)

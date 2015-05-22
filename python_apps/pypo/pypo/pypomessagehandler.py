@@ -15,12 +15,6 @@ import json
 
 from std_err_override import LogWriter
 
-# configure logging
-logging_cfg = "/etc/airtime/pypo_logging.cfg"
-logging.config.fileConfig(logging_cfg)
-logger = logging.getLogger('message_h')
-LogWriter.override_std_err(logger)
-
 #need to wait for Python 2.7 for this..
 #logging.captureWarnings(True)
 
