@@ -235,6 +235,7 @@ SQL;
 
         $previousMedia = CcScheduleQuery::create()
             ->filterByDbId($currentMediaScheduleId-1)
+            ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
             ->orderByDbStarts()
             ->findOne();
         if (isset($previousMedia)) {
