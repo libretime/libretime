@@ -312,7 +312,7 @@ function createFullCalendar(data){
         ],
         contentHeight: mainHeight,
         theme: true,
-        lazyFetching: false,
+        lazyFetching: true,
         serverTimestamp: parseInt(data.calendarInit.timestamp, 10),
         serverTimezoneOffset: parseInt(data.calendarInit.timezoneOffset, 10),
        

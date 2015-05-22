@@ -1,31 +1,6 @@
 <table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
-        <thead>
-            <tr class="ui-state-default strong">
-                <td><?php echo _("Service") ?></td>
-                <td><?php echo _("Status") ?></td>
-                <td><?php echo _("Uptime") ?></td>
-                <td><?php echo _("CPU") ?></td>
-                <td><?php echo _("Memory") ?></td>
-            </tr>
-        </thead>
+
         <tbody>
-            <!--
-            <tr class="odd">
-                <td><?php echo sprintf(_("%s Version"), PRODUCT_NAME) ?></td>
-                <td>1.9.3</td>
-                <td>&nbsp;</td>
-            </tr>
-            -->
-            <?php $i=0; ?>
-            <?php foreach($this->status->services as $key=>$value): ?>
-                <tr class="<?php echo ($i&1) == 0 ? "even":"odd"; $i++; ?>" id="<?php echo $value["name"]; ?>">
-                    <td><?php echo $value["name"]; ?></td>
-                    <td><span></span></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            <?php endforeach; ?>
             <tr id="partitions" class="even">
                 <th colspan="5"><?php echo _("Disk Space") ?></th>
             </tr>

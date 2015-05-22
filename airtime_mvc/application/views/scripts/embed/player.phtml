@@ -252,8 +252,8 @@
                 success: function(data) {
 
                     if (data.current === null) {
-                        if (data.currentShow != null) {
-                            //Master/show source have no current track but they do have a current show.
+                        if (data.currentShow != null && data.currentShow.length != 0) {
+                            // Master/show source have no current track but they do have a current show.
                             $("p.now_playing").html(data.currentShow[0].name);
                         } else {
                             $("p.now_playing").html("Offline");

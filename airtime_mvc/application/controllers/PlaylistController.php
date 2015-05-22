@@ -31,6 +31,8 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('empty-content', 'json')
                     ->initContext();
 
+        //This controller writes to the session all over the place, so we're going to reopen it for writing here.
+        session_start(); //Reopen the session for writing
     }
 
     private function getPlaylist($p_type)

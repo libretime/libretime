@@ -112,12 +112,7 @@ class Application_Model_RabbitMq
         $data['original_filename'] = $originalFilename;
         $data['callback_url'] = $callbackUrl;
         $data['api_key'] = $apiKey;
-        // Pass station name to the analyzer so we can set it with the file's
-        // metadata before uploading it to the cloud. This isn't a requirement
-        // for cloud storage, but put there as a safeguard, since all Airtime
-        // Pro stations will share the same bucket.
-        $data['station_domain'] = $stationDomain = Application_Model_Preference::GetStationName();
-        
+
         // We add a prefix to the resource name so files are not all placed
         // under the root folder. We do this in case we need to restore a 
         // customer's file/s; File restoration is done via the S3 Browser

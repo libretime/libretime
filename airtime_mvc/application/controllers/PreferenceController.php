@@ -32,6 +32,7 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_Preferences();
         $values = array();
 
+        session_start(); //Open session for writing.
 
         if ($request->isPost()) {
             $values = $request->getPost();
@@ -56,14 +57,19 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_Preference::SetStationLogo($imagePath);
                 }
 
-                Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
+                Application_Model_Preference::setTuneinEnabled($values["enable_tunein"]);
+                Application_Model_Preference::setTuneinStationId($values["tunein_station_id"]);
+                Application_Model_Preference::setTuneinPartnerKey($values["tunein_partner_key"]);
+                Application_Model_Preference::setTuneinPartnerId($values["tunein_partner_id"]);
+
+                /*Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
                 Application_Model_Preference::SetSoundCloudDownloadbleOption($values["SoundCloudDownloadbleOption"]);
                 Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
                 Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]);
                 Application_Model_Preference::SetSoundCloudTags($values["SoundCloudTags"]);
                 Application_Model_Preference::SetSoundCloudGenre($values["SoundCloudGenre"]);
                 Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
-                Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);
+                Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);*/
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $this->view->form = $form;
@@ -88,6 +94,8 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
+
+        session_start(); //Open session for writing.
 
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
@@ -123,6 +131,8 @@ class PreferenceController extends Zend_Controller_Action
 
     public function removeLogoAction()
     {
+        session_start(); //Open session for writing.
+
         $this->view->layout()->disableLayout();
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
@@ -139,6 +149,8 @@ class PreferenceController extends Zend_Controller_Action
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+        session_start(); //Open session for writing.
 
         // get current settings
         $setting = Application_Model_StreamSetting::getStreamSetting();
@@ -176,9 +188,14 @@ class PreferenceController extends Zend_Controller_Action
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
 
-        $form->addElement('hash', 'csrf', array(
-           'salt' => 'unique'
-        ));
+        // $form->addElement('hash', 'csrf', array(
+        //     'salt' => 'unique'
+        // ));
+
+        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrf_element = new Zend_Form_Element_Hidden('csrf');
+        $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
+        $form->addElement($csrf_element);
 
         $form->setSetting($setting);
         $form->startFrom();
@@ -425,6 +442,8 @@ class PreferenceController extends Zend_Controller_Action
 
     public function setSourceConnectionUrlAction()
     {
+        session_start(); //Open session for writing.
+
         $request = $this->getRequest();
         $type = $request->getParam("type", null);
         $url = urldecode($request->getParam("url", null));
@@ -443,6 +462,8 @@ class PreferenceController extends Zend_Controller_Action
 
     public function getAdminPasswordStatusAction()
     {
+        session_start(); //Open session for writing.
+
         $out = array();
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         for ($i=1; $i<=$num_of_stream; $i++) {
@@ -454,4 +475,69 @@ class PreferenceController extends Zend_Controller_Action
         }
         $this->_helper->json->sendJson($out);
     }
+
+    public function deleteAllFilesAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        // Only admin users should get here through ACL permissioning
+        // Only allow POST requests
+        $method = $_SERVER['REQUEST_METHOD'];
+        if (!($method == 'POST')) {
+            $this->getResponse()
+                 ->setHttpResponseCode(405)
+                 ->appendBody(_("Request method not accepted") . ": $method");
+            return;
+        }
+
+        $user = Application_Model_User::getCurrentUser();
+        $playlists = $blocks = $streams = [];
+
+        $allPlaylists = CcPlaylistQuery::create()->find();
+        foreach ($allPlaylists as $p) {
+            $playlists[] = $p->getDbId();
+        }
+
+        $allBlocks = CcBlockQuery::create()->find();
+        foreach ($allBlocks as $b) {
+            $blocks[] = $b->getDbId();
+        }
+
+        $allStreams = CcWebstreamQuery::create()->find();
+        foreach ($allStreams as $s) {
+            $streams[] = $s->getDbId();
+        }
+
+        // Delete all playlists, blocks, and streams
+        Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
+        Application_Model_Block::deleteBlocks($blocks, $user->getId());
+        Application_Model_Webstream::deleteStreams($streams, $user->getId());
+
+        try {
+            // Delete all the cloud files
+            $CC_CONFIG = Config::getConfig();
+
+            foreach ($CC_CONFIG["supportedStorageBackends"] as $storageBackend) {
+                $proxyStorageBackend = new ProxyStorageBackend($storageBackend);
+                $proxyStorageBackend->deleteAllCloudFileObjects();
+            }
+        } catch(Exception $e) {
+            Logging::info($e->getMessage());
+        }
+
+        // Delete all files from the database
+        $files = CcFilesQuery::create()->find();
+        foreach ($files as $file) {
+            $storedFile = new Application_Model_StoredFile($file, null);
+            // Delete the files quietly to avoid getting Sentry errors for
+            // every S3 file we delete.
+            $storedFile->delete(true);
+        }
+
+        $this->getResponse()
+             ->setHttpResponseCode(200)
+             ->appendBody("OK");
+    }
+
 }

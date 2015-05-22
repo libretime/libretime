@@ -8,6 +8,8 @@ class LoginController extends Zend_Controller_Action
 
     public function init()
     {
+        //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
+        session_start();
     }
 
     public function indexAction()

@@ -10,7 +10,7 @@ class ProvisioningHelper
     // Parameter values
     private $dbuser, $dbpass, $dbname, $dbhost, $dbowner, $apikey;
     private $instanceId;
-    private $station_name, $description;
+    private $stationName, $description;
 
     public function __construct($apikey)
     {
@@ -40,18 +40,14 @@ class ProvisioningHelper
             if ($this->dbhost && !empty($this->dbhost)) {
                 $this->setNewDatabaseConnection();
 
-                //if ($this->checkDatabaseExists()) {
-                //    throw new Exception("ERROR: Airtime database already exists");
-                //}
-
                 if (!$this->checkDatabaseExists()) {
-                    throw new Exception("ERROR: $this->dbname database does not exist.");
+                    throw new DatabaseDoesNotExistException("ERROR: $this->dbname database does not exist.");
                 }
 
                 //We really want to do this check because all the Propel-generated SQL starts with "DROP TABLE IF EXISTS".
                 //If we don't check, then a second call to this API endpoint would wipe all the tables!
                 if ($this->checkTablesExist()) {
-                    throw new Exception("ERROR: airtime tables already exists");
+                    throw new DatabaseAlreadyExistsException();
                 }
 
                 $this->createDatabaseTables();
@@ -63,9 +59,17 @@ class ProvisioningHelper
             //All we need to do is create the database tables.
 
             $this->initializePrefs();
-        } catch (Exception $e) {
+        } catch (DatabaseDoesNotExistException $e) {
             http_response_code(400);
             Logging::error($e->getMessage());
+            echo $e->getMessage() . PHP_EOL;
+            return;
+        } catch (DatabaseAlreadyExistsException $e) {
+            // When we recreate a terminated instance, the process will fail
+            // if we return a 40x response here. In order to circumvent this,
+            // just return a 200; we still avoid dropping the existing tables
+            http_response_code(200);
+            Logging::info($e->getMessage());
             echo $e->getMessage() . PHP_EOL;
             return;
         }
@@ -108,7 +112,7 @@ class ProvisioningHelper
         $this->dbowner = $_POST['dbowner'];
         $this->instanceId = $_POST['instanceid'];
 
-        $this->station_name = $_POST['station_name'];
+        $this->stationName = $_POST['station_name'];
         $this->description = $_POST['description'];
     }
 
@@ -194,8 +198,8 @@ class ProvisioningHelper
      * Initialize preference values passed from the dashboard (if any exist)
      */
     private function initializePrefs() {
-        if ($this->station_name) {
-            Application_Model_Preference::SetStationName($this->station_name);
+        if ($this->stationName) {
+            Application_Model_Preference::SetStationName($this->stationName);
         }
         if ($this->description) {
             Application_Model_Preference::SetStationDescription($this->description);
@@ -203,3 +207,14 @@ class ProvisioningHelper
     }
 
 }
+
+class DatabaseAlreadyExistsException extends Exception {
+    private static $_defaultMessage = "ERROR: airtime tables already exists";
+    public function __construct($message = null, $code = 0, Exception $previous = null) {
+        $message = _((is_null($message) ? self::$_defaultMessage : $message));
+        parent::__construct($message, $code, $previous);
+    }
+}
+
+class DatabaseDoesNotExistException extends Exception {}
+

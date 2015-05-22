@@ -56,6 +56,29 @@ SQL;
 
         return $real_streams;
     }
+
+    /**
+     * Returns an array with 2 elements: artist and title name of the track that is currently playing.
+     * Elements will be set to null if metadata is not set for those fields.
+     *
+     * Returns null if no track is currently playing.
+     *
+     * Data is based on GetPlayOrderRange() in this class.
+     */
+    public static function getCurrentPlayingTrack()
+    {
+        $currentScheduleInfo = self::GetPlayOrderRange();
+        if (empty($currentScheduleInfo["tracks"]["current"])) {
+            return null;
+        }
+
+        $currentTrackArray = explode(" - ", $currentScheduleInfo["tracks"]["current"]["name"]);
+        $currentTrackMetadata = array(
+            "artist" => empty($currentTrackArray[0]) ? null : urlencode($currentTrackArray[0]),
+            "title" => empty($currentTrackArray[1]) ? null : urlencode($currentTrackArray[1])
+        );
+        return $currentTrackMetadata;
+    }
     
     /**
      * Returns data related to the scheduled items.
