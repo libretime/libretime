@@ -87,6 +87,7 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
                 if (!$xmlObj || $xmlObj->head->status != "200") {
                     $valid = false;
                 } else if ($xmlObj->head->status == "200") {
+                    Application_Model_Preference::setLastTuneinMetadataUpdate(time());
                     $valid = true;
                 }
             }

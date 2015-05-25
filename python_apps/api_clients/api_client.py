@@ -83,6 +83,7 @@ api_config['push_stream_stats'] = 'push-stream-stats/api_key/%%api_key%%/format/
 api_config['update_stream_setting_table'] = 'update-stream-setting-table/api_key/%%api_key%%/format/json'
 api_config['get_files_without_silan_value'] = 'get-files-without-silan-value/api_key/%%api_key%%'
 api_config['update_cue_values_by_silan'] = 'update-cue-values-by-silan/api_key/%%api_key%%'
+api_config['update_metadata_on_tunein'] = 'update-metadata-on-tunein/api_key/%%api_key%%'
 
 
 
@@ -529,6 +530,9 @@ class AirtimeApiClient(object):
         except Exception, e:
             #TODO
             self.logger.error(str(e))
+
+    def update_metadata_on_tunein(self):
+        self.services.update_metadata_on_tunein()
 
 
 class InvalidContentType(Exception):

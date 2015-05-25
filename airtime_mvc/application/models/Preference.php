@@ -1493,4 +1493,14 @@ class Application_Model_Preference
     {
         return self::getValue("tunein_station_id");
     }
+
+    public static function geLastTuneinMetadataUpdate()
+    {
+        return self::getValue("last_tunein_metadata_update");
+    }
+
+    public static function setLastTuneinMetadataUpdate($value)
+    {
+        self::setValue("last_tunein_metadata_update", $value);
+    }
 }

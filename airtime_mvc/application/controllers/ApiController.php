@@ -1515,5 +1515,30 @@ class ApiController extends Zend_Controller_Action
         $this->_helper->json($result);
 
     }
+
+    /**
+     * This function is called from PYPO (pypofetch) every 2 minutes and updates
+     * metadata on TuneIn if we haven't done so in the last 4 minutes. We have
+     * to do this because TuneIn turns off metadata if it has not received a
+     * request within 5 minutes. This is necessary for long tracks > 5 minutes.
+     */
+    public function updateMetadataOnTuneinAction()
+    {
+        if (!Application_Model_Preference::getTuneinEnabled()) {
+            $this->_helper->json->sendJson(array(0));
+        }
+
+        $lastTuneInMetadataUpdate = Application_Model_Preference::geLastTuneinMetadataUpdate();
+        if (time() - $lastTuneInMetadataUpdate >= 240) {
+            $metadata = $metadata = Application_Model_Schedule::getCurrentPlayingTrack();
+            if (!is_null($metadata)) {
+                Application_Common_TuneIn::sendMetadataToTunein(
+                    $metadata["title"],
+                    $metadata["artist"]
+                );
+            }
+        }
+        $this->_helper->json->sendJson(array(1));
+    }
     
 }
