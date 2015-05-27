@@ -480,31 +480,42 @@ class PreferenceController extends Zend_Controller_Action
             return;
         }
 
-        $user = Application_Model_User::getCurrentUser();
-        $playlists = $blocks = $streams = [];
+        $this->deleteFutureScheduleItems();
+        $this->deleteCloudFiles();
+        $this->deleteStoredFiles();
 
-        $allPlaylists = CcPlaylistQuery::create()->find();
-        foreach ($allPlaylists as $p) {
-            $playlists[] = $p->getDbId();
+        $this->getResponse()
+             ->setHttpResponseCode(200)
+             ->appendBody("OK");
+    }
+
+    private function deleteFutureScheduleItems() {
+        $utcTimezone = new DateTimeZone("UTC");
+        $nowDateTime = new DateTime("now", $utcTimezone);
+        $scheduleItems = CcScheduleQuery::create()
+            ->filterByDbEnds($nowDateTime->format("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->find();
+
+        // Delete all the schedule items
+        foreach ($scheduleItems as $i) {
+            // If this is the currently playing track, cancel the current show
+            if ($i->isCurrentItem()) {
+                $instanceId = $i->getDbInstanceId();
+                $instance = CcShowInstancesQuery::create()->findPk($instanceId);
+                $showId = $instance->getDbShowId();
+
+                // From ScheduleController
+                $scheduler = new Application_Model_Scheduler();
+                $scheduler->cancelShow($showId);
+                Application_Model_StoredFile::updatePastFilesIsScheduled();
+            }
+
+            $i->delete();
         }
+    }
 
-        $allBlocks = CcBlockQuery::create()->find();
-        foreach ($allBlocks as $b) {
-            $blocks[] = $b->getDbId();
-        }
-
-        $allStreams = CcWebstreamQuery::create()->find();
-        foreach ($allStreams as $s) {
-            $streams[] = $s->getDbId();
-        }
-
-        // Delete all playlists, blocks, and streams
-        Application_Model_Playlist::deletePlaylists($playlists, $user->getId());
-        Application_Model_Block::deleteBlocks($blocks, $user->getId());
-        Application_Model_Webstream::deleteStreams($streams, $user->getId());
-
+    private function deleteCloudFiles() {
         try {
-            // Delete all the cloud files
             $CC_CONFIG = Config::getConfig();
 
             foreach ($CC_CONFIG["supportedStorageBackends"] as $storageBackend) {
@@ -514,7 +525,9 @@ class PreferenceController extends Zend_Controller_Action
         } catch(Exception $e) {
             Logging::info($e->getMessage());
         }
+    }
 
+    private function deleteStoredFiles() {
         // Delete all files from the database
         $files = CcFilesQuery::create()->find();
         foreach ($files as $file) {
@@ -523,10 +536,6 @@ class PreferenceController extends Zend_Controller_Action
             // every S3 file we delete.
             $storedFile->delete(true);
         }
-
-        $this->getResponse()
-             ->setHttpResponseCode(200)
-             ->appendBody("OK");
     }
 
 }
