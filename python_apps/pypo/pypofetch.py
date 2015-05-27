@@ -14,7 +14,7 @@ import traceback
 import pure
 
 from Queue import Empty
-from threading import Thread
+from threading import Thread, Timer
 from subprocess import Popen, PIPE
 
 from api_clients import api_client
@@ -447,6 +447,12 @@ class PypoFetch(Thread):
 
         return success
 
+    # This function makes a request to Airtime to see if we need to
+    # push metadata to TuneIn. We have to do this because TuneIn turns
+    # off metadata if it does not receive a request every 5 minutes.
+    def update_metadata_on_tunein(self):
+        self.api_client.update_metadata_on_tunein()
+        Timer(120, self.update_metadata_on_tunein).start()
 
     def main(self):
         #Make sure all Liquidsoap queues are empty. This is important in the
@@ -458,8 +464,10 @@ class PypoFetch(Thread):
 
         self.set_bootstrap_variables()
 
+        self.update_metadata_on_tunein()
+
         # Bootstrap: since we are just starting up, we need to grab the
-        # most recent schedule.  After that we fetch the schedule every 30
+        # most recent schedule.  After that we fetch the schedule every 8
         # minutes or wait for schedule updates to get pushed.
         success = self.persistent_manual_schedule_fetch(max_attempts=5)
 
