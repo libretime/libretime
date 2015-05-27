@@ -8,98 +8,48 @@
     <script src="<?php echo $this->widget_js ?>" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            /*var data = <?php //echo $this->scheduleData ?>;
-                console.log(data);*/
-            /*$("#scheduleTabs").airtimeWeekSchedule({
-                sourceDomain:"http://localhost",
-                dowText:{monday:"Monday", tuesday:"Tuesday", wednesday:"Wednesday", thursday:"Thursday", friday:"Friday", saturday:"Saturday", sunday:"Sunday", nextmonday:"Next Monday", nexttuesday:"Next Tuesday",nextwednesday:"Next Wednesday", nextthursday:"Next Thursday",nextfriday:"Next Friday", nextsaturday:"Next Saturday", nextsunday:"NextSunday"},
-                miscText:{time:"Time", programName:"Program Name", details:"Details", readMore:"Read More"},
-                updatePeriod: 600 //seconds
-            });*/
-            var d = new Date().getDay();
-            $('#scheduleTabs.scheduleTabsWeek1').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
-            $('#scheduleTabs.scheduleTabsWeek2').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});
+            $('.tabs li').click(function(){
+                var tab_id = $(this).attr('data-tab');
 
-            $('.scheduleWidgetToggle').click(function() {
-                $('#scheduleTabs.scheduleTabsWeek1').toggle();
-                $('#scheduleTabs.scheduleTabsWeek2').toggle();
+                $('.tabs li').removeClass('active');
+                $('.schedule_item').removeClass('active');
+
+                $(this).addClass('active');
+                $("#"+tab_id).addClass('active');
             });
         });
+
     </script>
 </head>
 
 <body>
-<div id="scheduleTabs" class="ui-tabs embedScheduleWidget scheduleTabsWeek1">
-    <ul>
+
+<div class="schedule tab_content current">
+    <ul class="tabs">
         <?php
-        Logging::info($this->scheduleDataWeek1);
         foreach($this->scheduleDataWeek1 as $day => $data) {
-            echo "<li><a href='#" . $day . "'><span class='day-of-week'>".$data["dayOfWeek"]."</span><span class='day-of-month'>" .$data["dayOfMonth"]."</span></a></li>";
-        } ?>
-        <!--<li><a class="scheduleWidgetToggle" href="#">Next Week</a></li>-->
+            $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
+            echo "<li class='".$activeClass."' data-tab='day-".$data["dayOfMonth"]."'>" . $data["dayOfWeek"] . "<span>" . $data["dayOfMonth"] . "</span></li>";
+        }?>
     </ul>
 
-    <?php
-    foreach($this->scheduleDataWeek1 as $day => $data) {
-        echo "<div id='".$day."' class='ui-tabs-hide'>";
-        echo '<table class="widget widget now-playing-list">
-                <colgroup>
-                      <col width="150" />
-                      <col width="350" />
-                </colgroup>
-                <tfoot>
-                  <tr>
-                    <td></td>
-                  </tr>
-                </tfoot>
-                <tbody>';
-                    foreach ($data["shows"] as $show => $data) {
-                        echo '<tr>
-                            <td>'.$data["show_start_hour"].' - '.$data["show_end_hour"].'</td>
-                            <td><h4>'.$data["name"].'</h4></td>
-                            </tr>';
-
-                    }
-                echo '</tbody>
-            </table>';
-
-        echo "</div>";
-    } ?>
-</div>
-
-<div id="scheduleTabs" class="ui-tabs embedScheduleWidget scheduleTabsWeek2" style="display:none">
-    <ul>
-        <?php foreach($this->scheduleDataWeek2 as $day => $data) {
-            echo "<li><a href='#" . $day . "'>" . $data["dayOfWeek"] . "</a></li>";
-        } ?>
-        <li><a class="scheduleWidgetToggle" href="#">Previous Week</a></li>
-    </ul>
-
-    <?php foreach($this->scheduleDataWeek2 as $day => $data) {
-        echo "<div id='".$day."' class='ui-tabs-hide'>";
-        echo '<table class="widget widget now-playing-list">
-                <colgroup>
-                      <col width="150" />
-                      <col width="350" />
-                    </colgroup>
-                    <tfoot>
-                      <tr>
-                        <td></td>
-                      </tr>
-                    </tfoot>
-                    <tbody>';
-                        foreach ($data["shows"] as $show => $data) {
-                            echo '<tr>
-                                    <td>'.$data["show_start_hour"].' - '.$data["show_end_hour"].'</td>
-                                    <td><h4>'.$data["name"].'</h4></td>
-                                    </tr>';
-
-                        }
-                        echo '</tbody>
-                    </table>';
-
-        echo "</div>";
-    } ?>
+    <div class="schedule_content">
+        <?php
+        foreach($this->scheduleDataWeek1 as $day => $data) {
+            $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
+        echo"<div id='day-".$data["dayOfMonth"]."' class='schedule_item ".$activeClass."'>
+            <table class='widget widget now-playing-list'>
+            <colgroup><col width='110'><col width='350'><col width='240'></colgroup>
+            <thead></thead>
+            <tfoot><tr><td></td></tr></tfoot>
+            <tbody>";
+            foreach ($data["shows"] as $show => $showData) {
+                echo "<tr><td class='time_grid col_two'>".$showData["show_start_hour"].' - '.$showData["show_end_hour"]."</td>
+                    <td class='name_grid'><h4>".$showData["name"]."</h4></td><td class='more_grid'></td></tr>";
+            }
+            echo "</tbody></table></div>";
+        }?>
+    </div>
 </div>
 
 </body>

@@ -26,13 +26,13 @@ body {
     margin: 70px 0px 0px 60px;
 }
 
-.tab_content {
+#schedule_iframe, .tab_content {
     color: #fff;
     text-align: center;
     /*display: none;*/
-    visibility: hidden;
+    height: 100%;
     width: 100%;
-    max-width: 740px;
+    max-width: 750px;
     margin: 0 auto;
     margin-top: 20px;
     margin-bottom: 140px;
@@ -47,88 +47,6 @@ body {
 .tab_content.current {
     /*display: block;*/
     visibility: visible;
-}
-
-.schedule .tabs {
-    list-style: none;
-    padding-left: 0px;
-    margin: 0px;
-    background: rgba(69, 155, 143, 0.8);
-}
-
-.schedule .tabs li {
-    width: 105px;
-    height: 80px;
-    display: inline-block;
-    font-size: 14px;
-    padding: 15px;
-    box-sizing: border-box;
-    cursor: pointer;
-}
-
-.schedule .tabs li span {
-    font-size: 30px;
-    display: block;
-}
-
-.schedule .tabs li.active {
-    background: #459B8F;
-}
-
-.schedule .tabs li.active:hover {
-    background: #459B8F;
-}
-
-.schedule .tabs li:hover {
-    background: rgba(69, 155, 143, 0.6)
-}
-
-.schedule_content {
-    background: rgba(0, 0, 0, 0.3);
-    max-height: 0px;
-    transition: max-height 2s ease;
-    /*transition-delay: 1s;*/
-}
-
-.schedule.current .schedule_content {
-    max-height: 2000px;
-}
-
-.schedule_content table {
-    opacity: 0;
-    /*transition: all 1s ease;*/
-}
-
-.schedule.current .schedule_content table {
-    opacity: 1;
-    -webkit-transition-delay: 0.6s;
-    transition-delay: 0.6s;
-}
-
-.schedule_item {
-    display: none;
-    font-size: 17px;
-    text-align: left;
-    text-transform: uppercase;
-    padding: 30px 40px;
-}
-
-.schedule_item.active {
-    display: block;
-}
-
-.schedule_item .time_grid  {
-    font-weight: 300;
-    color: #AAAAAA;
-}
-
-.schedule_item .name_grid {
-    padding-left: 30px;
-}
-
-.schedule_item h4 {
-    margin: 10px 0px;
-    font-weight: 400;
 }
 
 .about_us {

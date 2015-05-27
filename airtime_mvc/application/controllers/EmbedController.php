@@ -88,14 +88,16 @@ class EmbedController extends Zend_Controller_Action
 
         $CC_CONFIG = Config::getConfig();
 
-        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/schedule-widget.css?".$CC_CONFIG['airtime_version'];
+        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/radio-page/weekly-schedule-widget.css?".$CC_CONFIG['airtime_version'];
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
         $this->view->jquery_custom = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-ui-1.8.10.custom.min.js?".$CC_CONFIG['airtime_version'];
-        //$this->view->widget_js = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery.showinfo.js?".$CC_CONFIG['airtime_version'];
 
         $result = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));
-        //Logging::info($result);
         $this->view->scheduleDataWeek1 = $result[0];
         $this->view->scheduleDataWeek2 = $result[1];
+
+        $currentDay = new DateTime("now", new DateTimeZone(Application_Model_Preference::GetTimezone()));
+        //day of the month without leading zeros (1 to 31)
+        $this->view->currentDayOfMonth = $currentDay->format("j");
     }
 }
