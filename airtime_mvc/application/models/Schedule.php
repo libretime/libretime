@@ -199,7 +199,6 @@ SQL;
             $currentMedia["ends"] = $currentMedia["show_ends"];
         }
 
-        $currentMediaScheduleId = $currentMedia["id"];
         $currentMediaFileId = $currentMedia["file_id"];
         $currentMediaStreamId = $currentMedia["stream_id"];
         if (isset($currentMediaFileId)) {
@@ -234,9 +233,10 @@ SQL;
         );
 
         $previousMedia = CcScheduleQuery::create()
-            ->filterByDbId($currentMediaScheduleId-1)
+            ->filterByDbStarts($currentMedia["starts"], Criteria::LESS_THAN)
+            ->filterByDbId($currentMedia["id"], Criteria::NOT_EQUAL)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
-            ->orderByDbStarts()
+            ->orderByDbStarts(Criteria::DESC)
             ->findOne();
         if (isset($previousMedia)) {
             $previousMediaFileId = $previousMedia->getDbFileId();
@@ -253,10 +253,6 @@ SQL;
                 $previousWebstream = CcWebstreamQuery::create()
                     ->filterByDbId($previousMediaStreamId)
                     ->findOne();
-                /*$previousWebstreamMetadata = CcWebstreamMetadataQuery::create()
-                    ->filterByDbInstanceId($previousMedia->getDbInstanceId())
-                    ->orderByDbStartTime(Criteria::DESC)
-                    ->findOne();*/
                 $previousMediaName = $previousWebstream->getDbName();
             } else {
                 $previousMediaType = null;
@@ -270,8 +266,9 @@ SQL;
         }
 
         $nextMedia = CcScheduleQuery::create()
-            ->filterByDbId($currentMediaScheduleId+1)
-            ->orderByDbStarts()
+            ->filterByDbStarts($currentMedia["starts"], Criteria::GREATER_THAN)
+            ->filterByDbId($currentMedia["id"], Criteria::NOT_EQUAL)
+            ->orderByDbStarts(Criteria::ASC)
             ->findOne();
         if (isset($nextMedia)) {
             $nextMediaFileId = $nextMedia->getDbFileId();
@@ -287,10 +284,6 @@ SQL;
                 $nextWebstream = CcWebstreamQuery::create()
                     ->filterByDbId($nextMediaStreamId)
                     ->findOne();
-                /*$nextWebstreamMetadata = CcWebstreamMetadataQuery::create()
-                    ->filterByDbInstanceId($nextMedia->getDbInstanceId())
-                    ->orderByDbStartTime(Criteria::DESC)
-                    ->findOne();*/
                 $nextMediaName = $nextWebstream->getDbName();
             } else {
                 $nextMediaType = null;
