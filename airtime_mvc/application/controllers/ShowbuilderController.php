@@ -42,7 +42,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        //$this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
@@ -67,7 +67,8 @@ class ShowbuilderController extends Zend_Controller_Action
                 if (isset($values["Privacy"])) {
                     Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
-                // unset session
+                session_start();  //open session for writing again
+                // unset referrer
                 Zend_Session::namespaceUnset('referrer');
             } elseif ($values["Publicise"] == '1' && $form->isValid($values)) {
                 Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
@@ -88,7 +89,8 @@ class ShowbuilderController extends Zend_Controller_Action
                 if (isset($values["Privacy"])) {
                     Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
                 }
-                // unset session
+                session_start();  //open session for writing again
+                // unset referrer
                 Zend_Session::namespaceUnset('referrer');
             } else {
                 $logo = Application_Model_Preference::GetStationLogo();
@@ -156,7 +158,7 @@ class ShowbuilderController extends Zend_Controller_Action
         //populate date range form for show builder.
         $now  = time();
         $from = $request->getParam("from", $now);
-        $to   = $request->getParam("to", $now + (24*60*60));
+        $to   = $request->getParam("to", $now + (3*60*60));
 
         $utcTimezone = new DateTimeZone("UTC");
         $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
@@ -341,7 +343,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $request = $this->getRequest();
         $selectedItems = $request->getParam("selectedItem");
         $afterItem = $request->getParam("afterItem");
-        
+
+        /*
         $log_vars = array();
         $log_vars["url"] = $_SERVER['HTTP_HOST'];
         $log_vars["action"] = "showbuilder/schedule-move";
@@ -349,6 +352,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $log_vars["params"]["selected_items"] = $selectedItems;
         $log_vars["params"]["destination_after_item"] = $afterItem;
         Logging::info($log_vars);
+        */
 
         try {
             $scheduler = new Application_Model_Scheduler();

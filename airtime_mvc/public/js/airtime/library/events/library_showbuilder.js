@@ -8,11 +8,17 @@ var AIRTIME = (function(AIRTIME) {
     mod = AIRTIME.library;
 
     mod.checkAddButton = function() {
-        var selected = mod.getChosenItemsLength(), $cursor = $('tr.cursor-selected-row'), check = false;
+        var selected = mod.getChosenItemsLength(), $cursor = $('tr.sb-selected'), check = false,
+            shows = $('tr.sb-header'), current = $('tr.sb-current-show'),
+            cursorText = $.i18n._('Add to next show');
 
         // make sure library items are selected and a cursor is selected.
-        if (selected !== 0 && $cursor.length !== 0) {
+        if (selected !== 0) {
             check = true;
+        }
+
+        if (shows.length === 0) {
+            check = false;
         }
 
         if (check === true) {
@@ -20,8 +26,13 @@ var AIRTIME = (function(AIRTIME) {
         } else {
             AIRTIME.button.disableButton("btn-group #library-plus", false);
         }
-        
-        AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), ' '+$.i18n._('Add to selected show'));
+
+        if ($cursor.length !== 0) {
+            cursorText = $.i18n._('Add before selected items');
+        } else if (current.length !== 0) {
+            cursorText = $.i18n._('Add to current show');
+        }
+        AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), ' '+ cursorText);
     };
 
     mod.fnRowCallback = function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
@@ -98,7 +109,7 @@ var AIRTIME = (function(AIRTIME) {
             "type" : type
         });
 
-        $("#show_builder_table tr.cursor-selected-row").each(function(i, el) {
+        $("#show_builder_table tr.sb-selected").each(function(i, el) {
             aData.push($(el).prev().data("aData"));
         });
 
@@ -113,11 +124,34 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (aSchedIds.length == 0) {
-            alert($.i18n._("Please select a cursor position on timeline."));
-            return false;
+            addToCurrentOrNext(aSchedIds);
         }
+
         AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
     };
+
+    function addToCurrentOrNext(arr) {
+        var el;
+        // Get the show instance id of the first non-data row (id = 0)
+        // The second last row in the table with that instance id is the
+        // last schedule item for the first show. (This is important for
+        // the Now Playing screen if multiple shows are in view).
+        el = $("[si_id="+$("#0").attr("si_id")+"]");
+        var temp = el.eq(-2).data("aData");
+        arr.push({
+            "id" : temp.id,
+            "instance" : temp.instance,
+            "timestamp" : temp.timestamp
+        });
+
+        if (!isInView(el)) {
+            $('.dataTables_scrolling.sb-padded').animate({
+                scrollTop: el.offset().top
+            }, 0);
+        }
+
+        return arr;
+    }
 
     mod.setupLibraryToolbar = function() {
         var $toolbar = $(".lib-content .fg-toolbar:first");
@@ -146,7 +180,7 @@ var AIRTIME = (function(AIRTIME) {
                             });
                         }
     
-                        $("#show_builder_table tr.cursor-selected-row")
+                        $("#show_builder_table tr.sb-selected")
                                 .each(function(i, el) {
                                     aData.push($(el).prev().data("aData"));
                                 });
@@ -160,6 +194,10 @@ var AIRTIME = (function(AIRTIME) {
                                 "instance" : temp.instance,
                                 "timestamp" : temp.timestamp
                             });
+                        }
+
+                        if (aSchedIds.length == 0) {
+                            addToCurrentOrNext(aSchedIds);
                         }
     
                         AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);

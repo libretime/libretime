@@ -3,15 +3,13 @@ import json
 import logging
 import collections
 import Queue
-import subprocess
-import multiprocessing
 import time
-import sys
 import traceback
-import os
 import pickle
 import threading 
 from urlparse import urlparse
+
+requests.packages.urllib3.disable_warnings()
 
 class PicklableHttpRequest:
     def __init__(self, method, url, data, api_key):
@@ -158,23 +156,23 @@ class StatusReporter():
     ''' We use multiprocessing.Process again here because we need a thread for this stuff
         anyways, and Python gives us process isolation for free (crash safety).
     '''
-    _ipc_queue = multiprocessing.Queue()
-    #_request_process = multiprocessing.Process(target=process_http_requests,
+    _ipc_queue = Queue.Queue()
+    #_http_thread = multiprocessing.Process(target=process_http_requests,
     #                        args=(_ipc_queue,))
-    _request_process = None
+    _http_thread = None
 
     @classmethod
     def start_thread(self, http_retry_queue_path):
-        StatusReporter._request_process = threading.Thread(target=process_http_requests,
+        StatusReporter._http_thread = threading.Thread(target=process_http_requests,
                                 args=(StatusReporter._ipc_queue,http_retry_queue_path))
-        StatusReporter._request_process.start()
+        StatusReporter._http_thread.start()
 
     @classmethod
     def stop_thread(self):
         logging.info("Terminating status_reporter process")
-        #StatusReporter._request_process.terminate() # Triggers SIGTERM on the child process
+        #StatusReporter._http_thread.terminate() # Triggers SIGTERM on the child process
         StatusReporter._ipc_queue.put("shutdown") # Special trigger
-        StatusReporter._request_process.join()
+        StatusReporter._http_thread.join()
 
     @classmethod
     def _send_http_request(self, request):

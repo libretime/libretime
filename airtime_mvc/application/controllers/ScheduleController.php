@@ -1,4 +1,5 @@
 <?php
+require_once('TuneIn.php');
 
 $filepath = realpath (dirname(__FILE__));
 require_once($filepath."/../modules/rest/controllers/MediaController.php");
@@ -50,6 +51,11 @@ class ScheduleController extends Zend_Controller_Action
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
+        //Embed the schedule in our page response so we don't have to make an AJAX request to get this data after the page load.
+        $scheduleController = new ScheduleController($this->getRequest(), $this->getResponse());
+        $scheduleController->eventFeedPreloadAction();
+        $events = json_encode($scheduleController->view->events);
+
         $this->view->headScript()->appendScript(
             "var calendarPref = {};\n".
             "calendarPref.weekStart = ".Application_Model_Preference::GetWeekStartDay().";\n".
@@ -58,7 +64,7 @@ class ScheduleController extends Zend_Controller_Action
             "calendarPref.timeScale = '".Application_Model_Preference::GetCalendarTimeScale()."';\n".
             "calendarPref.timeInterval = ".Application_Model_Preference::GetCalendarTimeInterval().";\n".
             "calendarPref.weekStartDay = ".Application_Model_Preference::GetWeekStartDay().";\n".
-            "var calendarEvents = null;"
+            "var calendarEvents = $events;"
         );
 
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -144,7 +150,7 @@ class ScheduleController extends Zend_Controller_Action
         } else if ($calendar_interval == "agendaWeek") {
             list($start, $end) = Application_Model_Show::getStartEndCurrentWeekView();
         } else if ($calendar_interval == "month") {
-            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthView();
+            list($start, $end) = Application_Model_Show::getStartEndCurrentMonthPlusView();
         } else {
             Logging::error("Invalid Calendar Interval '$calendar_interval'");
         }
@@ -294,9 +300,21 @@ class ScheduleController extends Zend_Controller_Action
         }
     }
 
+    /** This is a nasty hack to let us embed the the data the dashboard needs into the HTML response for each page.
+     *  This was originally loaded AFTER page load by AJAX, which is needlessly slow. This should have been templated in.
+     */
+    public static function printCurrentPlaylistForEmbedding()
+    {
+        $front = Zend_Controller_Front::getInstance();
+        $scheduleController = new ScheduleController($front->getRequest(), $front->getResponse());
+        $scheduleController->getCurrentPlaylistAction();
+        echo(json_encode($scheduleController->view));
+    }
+
     public function getCurrentPlaylistAction()
     {
         $range = Application_Model_Schedule::GetPlayOrderRangeOld();
+
         $show = Application_Model_Show::getCurrentShow();
 
         /* Convert all UTC times to localtime before sending back to user. */

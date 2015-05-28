@@ -109,7 +109,7 @@ var AIRTIME = (function(AIRTIME) {
     
     mod.changeAddButtonText = function($button, btnText) {
         $button.text(btnText);
-    }
+    };
     
     mod.createToolbarButtons = function() {
         $menu = $("<div class='btn-toolbar' />");
@@ -135,7 +135,7 @@ var AIRTIME = (function(AIRTIME) {
                             "<i class='icon-white icon-trash'></i>" +
                         "</button>" +
                     "</div>");
-    }
+    };
     
     mod.createToolbarDropDown = function() {
         $('#sb-select-page').click(function(){mod.selectCurrentPage();});
@@ -530,12 +530,14 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateSave": function (oSettings, oData) {
                 localStorage.setItem('datatables-library', JSON.stringify(oData));
+                /*
                 $.ajax({
                     url: baseUrl+"usersettings/set-library-datatable",
                     type: "POST",
                     data: {settings : oData, format: "json"},
                     dataType: "json"
                   });
+                  */
                 
                 colReorderMap = oData.ColReorder;
             },
@@ -890,7 +892,6 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
        
-        checkImportStatus();
         checkLibrarySCUploadStatus();
         
         addQtipToSCIcons();

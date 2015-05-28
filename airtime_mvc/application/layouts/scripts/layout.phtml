@@ -34,6 +34,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
 <?php 	$partial = array('menu.phtml', 'default');
     $this->navigation()->menu()->setPartial($partial); ?>
+
+
+    <script type="text/javascript">
+        var schedulePreLoaded = <?php
+        //Awful hack to speed up loading - Embed the schedule in the response so that the dashboard
+        //doesn't have to make a separate AJAX request to get this data.
+    require_once("ScheduleController.php");
+    ScheduleController::printCurrentPlaylistForEmbedding();
+ ?>;
+        //The DOM elements that these calls depend on exist by this point:
+        parseItems(schedulePreLoaded.entries);
+        parseSourceStatus(schedulePreLoaded.source_status);
+        parseSwitchStatus(schedulePreLoaded.switch_status);
+
+    </script>
+
+
     <div id="nav">
         <div class="logo"></div>
         <div class="personal-block solo">

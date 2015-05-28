@@ -1453,4 +1453,54 @@ class Application_Model_Preference
     {
         return self::getValue("provisioning_status");
     }
+
+    public static function setTuneinEnabled($value)
+    {
+        self::setValue("tunein_enabled", $value);
+    }
+
+    public static function getTuneinEnabled()
+    {
+        return self::getValue("tunein_enabled");
+    }
+
+    public static function setTuneinPartnerKey($value)
+    {
+        self::setValue("tunein_partner_key", $value);
+    }
+
+    public static function getTuneinPartnerKey()
+    {
+        return self::getValue("tunein_partner_key");
+    }
+
+    public static function setTuneinPartnerId($value)
+    {
+        self::setValue("tunein_partner_id", $value);
+    }
+
+    public static function getTuneinPartnerId()
+    {
+        return self::getValue("tunein_partner_id");
+    }
+
+    public static function setTuneinStationId($value)
+    {
+        self::setValue("tunein_station_id", $value);
+    }
+
+    public static function getTuneinStationId()
+    {
+        return self::getValue("tunein_station_id");
+    }
+
+    public static function geLastTuneinMetadataUpdate()
+    {
+        return self::getValue("last_tunein_metadata_update");
+    }
+
+    public static function setLastTuneinMetadataUpdate($value)
+    {
+        self::setValue("last_tunein_metadata_update", $value);
+    }
 }

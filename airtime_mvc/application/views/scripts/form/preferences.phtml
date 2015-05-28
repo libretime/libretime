@@ -2,7 +2,21 @@
     <?php echo $this->element->getElement('csrf') ?>
 
     <?php echo $this->element->getSubform('preferences_general') ?>
+
+    <h3 class="collapsible-header" id="tunein-pref-heading"><span class="arrow-icon"></span><?php echo _("TuneIn Settings"); ?></h3>
+    <div class="collapsible-content" id="tunein-settings">
+        <?php echo $this->element->getSubform('preferences_tunein') ?>
+    </div>
+
+
     <?php //No soundcloud stuff on Airtime Pro -- Albert ?>
+
+    <h3 class="collapsible-header" id="dangerous-heading"><span class="arrow-icon"></span><?php echo _("Dangerous Options") ?></h3>
+    <div class="collapsible-content" id="dangerous-settings">
+        <?php echo $this->element->getSubform('preferences_danger') ?>
+    </div>
+
+    <br>
 
     <?php echo $this->element->submit->render() ?>
 
