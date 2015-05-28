@@ -72,6 +72,7 @@ class ApiController extends Zend_Controller_Action
             print _('You are not allowed to access this resource.');
             exit;
         }
+        return true;
     }
 
     public function versionAction()
@@ -156,7 +157,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function liveInfoAction()
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
@@ -251,7 +252,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function liveInfoV2Action()
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
@@ -359,7 +360,7 @@ class ApiController extends Zend_Controller_Action
     
     public function weekInfoAction()
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
@@ -478,7 +479,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function showLogoAction() 
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             $request = $this->getRequest();
             $showId = $request->getParam('id');
 
@@ -509,7 +510,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function stationMetadataAction()
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
@@ -548,7 +549,7 @@ class ApiController extends Zend_Controller_Action
      */
     public function stationLogoAction() 
     {
-        if (Application_Model_Preference::GetAllow3rdPartyApi()) {
+        if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             // disable the view and the layout
             $this->view->layout()->disableLayout();
             $this->_helper->viewRenderer->setNoRender(true);
