@@ -72,6 +72,7 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);*/
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
+                $form = new Application_Form_Preferences();
                 $this->view->form = $form;
                 //$this->_helper->json->sendJson(array("valid"=>"true", "html"=>$this->view->render('preference/index.phtml')));
             } else {
