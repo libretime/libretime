@@ -239,7 +239,7 @@ class WHMCS_Auth_Adapter implements Zend_Auth_Adapter_Interface {
             }
             else
             {
-                if ($product["status"] === "Active") {
+                if (($product["status"] === "Active") || ($product["status"] === "Suspended")) {
                     $airtimeProduct = $product;
                     $subdomain = '';
 
