@@ -237,6 +237,18 @@
             document.getElementById("stop_button").classList.toggle("hide_button");
         }
 
+        $(document).ready(function() {
+            $(".play").click(function () {
+                if ($(this).hasClass("pause")) {
+                    musesPlayer.stop();
+                } else {
+                    musesPlayer.play();
+                }
+
+                $(this).toggleClass("pause");
+            });
+        });
+
         // variables for updating the player's metadata
         var time_to_next_track_starts = 0;
         var metadataTimer = null;
@@ -343,9 +355,7 @@
 
 <div id="premium_player" style="display:block;">
     <div class="bottom_bar">
-        <div class="play cont_btn">
-
-        </div>
+        <div class="play cont_btn"></div>
 
         <div class="on_air">
             <p>Bob Marley
