@@ -32,7 +32,7 @@ body {
     /*display: none;*/
     height: 100%;
     width: 100%;
-    max-width: 750px;
+    max-width: 740px;
     margin: 0 auto;
     margin-top: 20px;
     margin-bottom: 140px;
@@ -44,7 +44,7 @@ body {
         transition-delay: 1s;*/
 }
 
-.tab_content.current {
+#schedule_iframe.tab_content.current, .tab_content.current {
     /*display: block;*/
     visibility: visible;
 }
@@ -54,7 +54,7 @@ body {
     transition-delay: 2s;
 }
 
-.schedule, .about_us, .login {
+#schedule_iframe.schedule, .about_us, .login {
     /*	-webkit-transition-delay: 1s;
         transition-delay: 1s;*/
     transition: all 0.4s ease;
@@ -67,7 +67,7 @@ body {
     transition-delay: 0.4s;
 }
 
-.schedule.current {
+#schedule_iframe.schedule.current {
     opacity: 1;
 }
 
@@ -145,10 +145,12 @@ input[type="submit"]:hover {
         right: 10px;
     }
 
-    .schedule .tabs li {
-        width: 64px;
-        height: 64px;
-        padding: 6px;
+    #schedule_iframe {
+        margin-top: 0px;
+        max-width: 100%;
+        margin-left: auto;
+        left: -10px;
+        right: 10px;
     }
 
     .about_us h1 {

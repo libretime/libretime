@@ -6,7 +6,6 @@ body {
 .tab_content {
     color: #fff;
     text-align: center;
-    /*display: none;*/
     visibility: hidden;
     width: 100%;
     max-width: 740px;
@@ -17,8 +16,6 @@ body {
     position: absolute;
     left: 50%;
     margin-left: -380px;
-    /*	-webkit-transition-delay: 1s;
-        transition-delay: 1s;*/
 }
 
 .tab_content.current {
@@ -107,3 +104,21 @@ body {
     margin: 10px 0px;
     font-weight: 400;
 }
+
+@media (max-width: 730px) {
+    .tab_content {
+        margin-top: 0px;
+        width: auto;
+        max-width: 100%;
+        margin-left: auto;
+        left: 10px;
+        right: 10px;
+    }
+
+    .schedule .tabs li {
+        width: 64px;
+        height: 64px;
+        padding: 6px;
+    }
+}
+
