@@ -4,7 +4,7 @@ html {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    overflow-y: scroll;
+    overflow-y: hidden;
 }
 
 .bck_cover {
@@ -32,11 +32,12 @@ body {
     /*display: none;*/
     height: 100%;
     width: 100%;
-    max-width: 740px;
+    max-width: 760px;
     margin: 0 auto;
     margin-top: 20px;
     margin-bottom: 140px;
     padding: 10px;
+    padding-left: 0px;
     position: absolute;
     left: 50%;
     margin-left: -380px;
@@ -149,7 +150,7 @@ input[type="submit"]:hover {
         margin-top: 0px;
         max-width: 100%;
         margin-left: auto;
-        left: -10px;
+        left: 0px;
         right: 10px;
     }
 
