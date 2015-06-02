@@ -33,9 +33,10 @@
     $(document).ready(function(){
 
         $("#player_iframe").load(function () {
-            $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");
-            $("#player_iframe").contents().find('.bottom_bar').append("<div class='about_us_btn button' data-tab='tab-2'></div>");
             $("#player_iframe").contents().find('.bottom_bar').append("<a class='login_btn button' target='_parent' href='/login'></a>");
+            $("#player_iframe").contents().find('.bottom_bar').append("<div class='about_us_btn button' data-tab='tab-2'></div>");
+            $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");
+
 
             $("#player_iframe").contents().find('.bottom_bar .button').click(function(){
                 var tab_id = $(this).attr('data-tab');

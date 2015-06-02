@@ -60,6 +60,7 @@ body {
     display: inline-block;
     margin: 35px 40px;
     cursor: pointer;
+    float: right;
 }
 
 .bottom_bar .schedule_btn {
@@ -80,7 +81,6 @@ body {
 
 .bottom_bar .login_btn {
     background: url('img/login.png') no-repeat center 0px;
-    float: right;
 }
 
 .bottom_bar .login_btn.current {
