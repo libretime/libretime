@@ -23,7 +23,7 @@ body {
 }
 
 .logo img {
-    margin: 70px 0px 0px 60px;
+    margin: 40px 0px 0px 60px;
 }
 
 #schedule_iframe, .tab_content {
@@ -34,7 +34,6 @@ body {
     width: 100%;
     max-width: 760px;
     margin: 0 auto;
-    margin-top: 20px;
     margin-bottom: 140px;
     padding: 10px;
     padding-left: 0px;
