@@ -85,6 +85,7 @@ api_config['get_files_without_silan_value'] = 'get-files-without-silan-value/api
 api_config['update_cue_values_by_silan'] = 'update-cue-values-by-silan/api_key/%%api_key%%'
 api_config['api_base'] = 'api'
 api_config['bin_dir'] = '/usr/lib/airtime/api_clients/'
+api_config['update_metadata_on_tunein'] = 'update-metadata-on-tunein/api_key/%%api_key%%'
 
 
 
@@ -531,6 +532,9 @@ class AirtimeApiClient(object):
         except Exception, e:
             #TODO
             self.logger.error(str(e))
+
+    def update_metadata_on_tunein(self):
+        self.services.update_metadata_on_tunein()
 
 
 class InvalidContentType(Exception):
