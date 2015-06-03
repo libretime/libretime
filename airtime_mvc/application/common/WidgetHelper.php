@@ -103,10 +103,10 @@ class WidgetHelper
 
                 foreach($shows as &$show) {
                     $startParseDate = date_parse($show['starts']);
-                    $show["show_start_hour"] = str_pad($startParseDate["hour"], 2, "0").":".str_pad($startParseDate["minute"], 2, 0);
+                    $show["show_start_hour"] = str_pad($startParseDate["hour"], 2, "0", STR_PAD_LEFT).":".str_pad($startParseDate["minute"], 2, 0, STR_PAD_LEFT);
 
                     $endParseDate = date_parse($show['ends']);
-                    $show["show_end_hour"] = str_pad($endParseDate["hour"], 2, 0).":".str_pad($endParseDate["minute"],2, 0);
+                    $show["show_end_hour"] = str_pad($endParseDate["hour"], 2, 0, STR_PAD_LEFT).":".str_pad($endParseDate["minute"],2, 0, STR_PAD_LEFT);
                 }
                 $result[$weekCounter][$dow[$i]]["dayOfMonth"] = $dateParse["day"];
                 $result[$weekCounter][$dow[$i]]["dayOfWeek"] = strtoupper(substr($dow[$i], 0, 3));
