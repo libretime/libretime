@@ -31,8 +31,8 @@ class EmbedController extends Zend_Controller_Action
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
         $this->view->player_title = json_encode($request->getParam('title'));
 
-        //TODO: un-hardcode this
-        $player_style = "premium";
+        $styleParam = $request->getParam('style');
+        $player_style = isset($styleParam) ? $styleParam : "basic";
         if ($player_style == "premium") {
             $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "css/radio-page/premium_player.css?".$CC_CONFIG['airtime_version'];
         } else {
@@ -90,8 +90,7 @@ class EmbedController extends Zend_Controller_Action
 
         $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/radio-page/weekly-schedule-widget.css?".$CC_CONFIG['airtime_version'];
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
-        $this->view->jquery_custom = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-ui-1.8.10.custom.min.js?".$CC_CONFIG['airtime_version'];
-
+        
         $result = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));
         $this->view->scheduleDataWeek1 = $result[0];
         $this->view->scheduleDataWeek2 = $result[1];

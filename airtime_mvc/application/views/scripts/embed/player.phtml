@@ -323,7 +323,7 @@
 
 <body>
 
-<div id="player" style="display:none;">
+<div id="player" <?php if ($this->player_style == "basic") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
     <div class="airtime_player">
 
         <div class="airtime_header">
@@ -353,7 +353,7 @@
     </div>
 </div>
 
-<div id="premium_player" style="display:block;">
+<div id="premium_player" <?php if ($this->player_style == "premium") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
     <div class="bottom_bar">
         <div class="play cont_btn"></div>
 
