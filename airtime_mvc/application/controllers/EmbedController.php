@@ -65,11 +65,6 @@ class EmbedController extends Zend_Controller_Action
         $this->view->availableDesktopStreams = json_encode($availableDesktopStreams);
     }
 
-    public function premiumPlayerAction()
-    {
-        $this->view->layout()->disableLayout();
-    }
-
     public function currentDayProgramAction()
     {
         $this->view->layout()->disableLayout();
@@ -90,7 +85,7 @@ class EmbedController extends Zend_Controller_Action
 
         $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/radio-page/weekly-schedule-widget.css?".$CC_CONFIG['airtime_version'];
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
-        
+
         $result = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));
         $this->view->scheduleDataWeek1 = $result[0];
         $this->view->scheduleDataWeek2 = $result[1];
