@@ -20,11 +20,9 @@ class IndexController extends Zend_Controller_Action
         $this->view->stationLogo = Application_Model_Preference::GetStationLogo();
 
         $stationName = Application_Model_Preference::GetStationName();
-        $stationName = empty($stationName) ? "Station Name" : $stationName;
         $this->view->stationName = $stationName;
 
         $stationDescription = Application_Model_Preference::GetStationDescription();
-        $stationDescription = empty($stationDescription) ? "Station Description" : $stationDescription;
         $this->view->stationDescription = $stationDescription;
 
         $this->view->stationUrl = Application_Common_HTTPHelper::getStationUrl();

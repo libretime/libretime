@@ -61,7 +61,7 @@ body {
     max-height: 0px;
     transition: max-height 2s ease;
 
-    overflow-y: scroll;
+    overflow-y: auto;
     /*transition-delay: 1s;*/
 }
 
