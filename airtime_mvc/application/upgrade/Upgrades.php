@@ -1,5 +1,25 @@
 <?php
 
+/**
+ * Check if a given classname belongs to a subclass of AirtimeUpgrader
+ *
+ * @param $c string class name
+ *
+ * @return bool true if the $c is a subclass of AirtimeUpgrader
+ */
+function isUpgrade($c) {
+    return is_subclass_of($c, "AirtimeUpgrader");
+}
+
+/**
+ * Filter all declared classes to get all upgrade classes dynamically
+ *
+ * @return array all upgrade classes
+ */
+function getUpgrades() {
+    return array_filter(get_declared_classes(), "isUpgrade");
+}
+
 abstract class AirtimeUpgrader
 {
     /** Versions that this upgrader class can upgrade from (an array of version strings). */
@@ -9,27 +29,27 @@ abstract class AirtimeUpgrader
 
     public static function getCurrentVersion()
     {
-        CcPrefPeer::clearInstancePool(); //Ensure we don't get a cached Propel object (cached DB results) 
-                                         //because we're updating this version number within this HTTP request as well.
+        CcPrefPeer::clearInstancePool(); //Ensure we don't get a cached Propel object (cached DB results)
+        //because we're updating this version number within this HTTP request as well.
         $pref = CcPrefQuery::create()
-        ->filterByKeystr('system_version')
-        ->findOne();
+            ->filterByKeystr('system_version')
+            ->findOne();
         $airtime_version = $pref->getValStr();
         return $airtime_version;
     }
-    
-    /** 
+
+    /**
      * This function checks to see if this class can perform an upgrade of your version of Airtime
      * @return boolean True if we can upgrade your version of Airtime.
      */
     public function checkIfUpgradeSupported()
-    {        
+    {
         if (!in_array(AirtimeUpgrader::getCurrentVersion(), $this->getSupportedVersions())) {
             return false;
         }
         return true;
     }
-    
+
     protected function toggleMaintenanceScreen($toggle)
     {
         if ($toggle)
@@ -51,7 +71,7 @@ abstract class AirtimeUpgrader
             }*/
         }
     }
-            
+
     /** Implement this for each new version of Airtime */
     abstract public function upgrade();
 }
@@ -437,3 +457,49 @@ class AirtimeUpgrader2512 extends AirtimeUpgrader
 
     }
 }
+
+class AirtimeUpgrader2513 extends AirtimeUpgrader
+{
+    protected function getSupportedVersions() {
+        return array (
+            '2.5.12'
+        );
+    }
+
+    public function getNewVersion() {
+        return '2.5.13';
+    }
+
+    public function upgrade($dir = __DIR__) {
+        Cache::clear();
+        assert($this->checkIfUpgradeSupported());
+
+        $newVersion = $this->getNewVersion();
+
+        try {
+            $this->toggleMaintenanceScreen(true);
+            Cache::clear();
+
+            // Begin upgrade
+            $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
+            $values = parse_ini_file($airtimeConf, true);
+
+            $username = $values['database']['dbuser'];
+            $password = $values['database']['dbpass'];
+            $host = $values['database']['host'];
+            $database = $values['database']['dbname'];
+
+            passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
+                     .$newVersion."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
+
+            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Cache::clear();
+
+            $this->toggleMaintenanceScreen(false);
+        } catch(Exception $e) {
+            $this->toggleMaintenanceScreen(false);
+            throw $e;
+        }
+    }
+}
+

@@ -118,19 +118,6 @@ SQL;
         return $showStartExplode[1];
     }
 
-    public function setSoundCloudFileId($p_soundcloud_id)
-    {
-        $file = Application_Model_StoredFile::RecallById($this->_showInstance->getDbRecordedFile());
-        $file->setSoundCloudFileId($p_soundcloud_id);
-    }
-
-    public function getSoundCloudFileId()
-    {
-        $file = Application_Model_StoredFile::RecallById($this->_showInstance->getDbRecordedFile());
-
-        return $file->getSoundCloudId();
-    }
-
     public function getRecordedFile()
     {
         $file_id =  $this->_showInstance->getDbRecordedFile();

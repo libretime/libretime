@@ -43,7 +43,7 @@ class CcShowTableMap extends TableMap
         $this->addColumn('name', 'DbName', 'VARCHAR', true, 255, '');
         $this->addColumn('url', 'DbUrl', 'VARCHAR', false, 255, '');
         $this->addColumn('genre', 'DbGenre', 'VARCHAR', false, 255, '');
-        $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, null);
+        $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 8192, null);
         $this->addColumn('color', 'DbColor', 'VARCHAR', false, 6, null);
         $this->addColumn('background_color', 'DbBackgroundColor', 'VARCHAR', false, 6, null);
         $this->addColumn('live_stream_using_airtime_auth', 'DbLiveStreamUsingAirtimeAuth', 'BOOLEAN', false, null, false);

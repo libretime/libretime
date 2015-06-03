@@ -612,17 +612,6 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                //add soundcloud icon
-                if (aData.soundcloud_id !== undefined) {
-                    if (aData.soundcloud_id === "-2") {
-                        $(nRow).find("td.library_title").append('<span class="small-icon progress"/>');
-                    } else if (aData.soundcloud_id === "-3") {
-                        $(nRow).find("td.library_title").append('<span class="small-icon sc-error"/>');
-                    } else if (aData.soundcloud_id !== null) {
-                        $(nRow).find("td.library_title").append('<span class="small-icon soundcloud"/>');
-                    }
-                }
-
                 // add checkbox
                 $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
 
@@ -892,10 +881,6 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
        
-        checkLibrarySCUploadStatus();
-        
-        addQtipToSCIcons();
-       
         // begin context menu initialization.
         $.contextMenu({
             selector: '#library_display td:not(.library_checkbox)',
@@ -1026,21 +1011,19 @@ var AIRTIME = (function(AIRTIME) {
                     // add callbacks for Soundcloud menu items.
                     if (oItems.soundcloud !== undefined) {
                         var soundcloud = oItems.soundcloud.items;
-                        
+
                         // define an upload to soundcloud callback.
                         if (soundcloud.upload !== undefined) {
-                            
+
                             callback = function() {
-                                $.post(soundcloud.upload.url, function(){
-                                    addProgressIcon(data.id);
-                                });
+                                $.post(soundcloud.upload.url, function(){});
                             };
                             soundcloud.upload.callback = callback;
                         }
-                        
+
                         // define a view on soundcloud callback
                         if (soundcloud.view !== undefined) {
-                            
+
                             callback = function() {
                                 window.open(soundcloud.view.url);
                             };
@@ -1140,122 +1123,6 @@ function addProgressIcon(id) {
     }
 }
     
-function checkLibrarySCUploadStatus(){
-    var url = baseUrl+'Library/get-upload-to-soundcloud-status',
-        span,
-        id;
-    
-    function checkSCUploadStatusCallback(json) {
-        
-        if (json.sc_id > 0) {
-            span.removeClass("progress").addClass("soundcloud");
-            
-        }
-        else if (json.sc_id == "-3") {
-            span.removeClass("progress").addClass("sc-error");
-        }
-    }
-    
-    function checkSCUploadStatusRequest() {
-        
-        span = $(this);
-        id = span.parents("tr").data("aData").id;
-       
-        $.post(url, {format: "json", id: id, type:"file"}, checkSCUploadStatusCallback);
-    }
-    
-    $("#library_display span.progress").each(checkSCUploadStatusRequest);
-    setTimeout(checkLibrarySCUploadStatus, 5000);
-}
-    
-function addQtipToSCIcons() {
-    $("#content")
-    	.on('mouseover', ".progress, .soundcloud, .sc-error", function() {
-        
-    	var aData = $(this).parents("tr").data("aData"),
-        	id = aData.id,
-        	sc_id = aData.soundcloud_id;
-        
-        if ($(this).hasClass("progress")){
-            $(this).qtip({
-                content: {
-                    text: $.i18n._("Uploading in progress...")
-                },
-                position:{
-                    adjust: {
-                    resize: true,
-                    method: "flip flip"
-                    },
-                    at: "right center",
-                    my: "left top",
-                    viewport: $(window)
-                },
-                style: {
-                    classes: "ui-tooltip-dark file-md-long"
-                },
-                show: {
-                    ready: true // Needed to make it show on first mouseover event
-                }
-            });
-        }
-        else if ($(this).hasClass("soundcloud")){
-        	
-            $(this).qtip({
-                content: {
-                    text: $.i18n._("The soundcloud id for this file is: ") + sc_id
-                },
-                position:{
-                    adjust: {
-                    resize: true,
-                    method: "flip flip"
-                    },
-                    at: "right center",
-                    my: "left top",
-                    viewport: $(window)
-                },
-                style: {
-                    classes: "ui-tooltip-dark file-md-long"
-                },
-                show: {
-                    ready: true // Needed to make it show on first mouseover event
-                }
-            });
-        }
-        else if ($(this).hasClass("sc-error")) {
-            $(this).qtip({
-                content: {
-                    text: $.i18n._("Retreiving data from the server..."),
-                    ajax: {
-                        url: baseUrl+"Library/get-upload-to-soundcloud-status",
-                        type: "post",
-                        data: ({format: "json", id : id, type: "file"}),
-                        success: function(json, status){
-                            this.set('content.text', $.i18n._("There was an error while uploading to soundcloud.")+"<br>"+
-                                    $.i18n._("Error code: ")+json.error_code+
-                                    "<br>"+$.i18n._("Error msg: ")+json.error_msg+"<br>");
-                        }
-                    }
-                },
-                position:{
-                    adjust: {
-                    resize: true,
-                    method: "flip flip"
-                    },
-                    at: "right center",
-                    my: "left top",
-                    viewport: $(window)
-                },
-                style: {
-                    classes: "ui-tooltip-dark file-md-long"
-                },
-                show: {
-                    ready: true // Needed to make it show on first mouseover event
-                }
-            });
-        }
-    });
-}
-
 /*
  * This function is called from dataTables.columnFilter.js
  */

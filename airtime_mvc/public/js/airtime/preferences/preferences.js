@@ -82,6 +82,20 @@ function setTuneInSettingsReadonly() {
     }
 }
 
+function setSoundCloudSettingsListener() {
+    var connect = $("#SoundCloudConnect"),
+        disconnect = $("#SoundCloudDisconnect");
+    connect.click(function(e){
+        e.preventDefault();
+        window.location.replace(baseUrl + "soundcloud/authorize");
+    });
+
+    disconnect.click(function(e){
+        e.preventDefault();
+        window.location.replace(baseUrl + "soundcloud/deauthorize");
+    });
+}
+
 /*
  * Enable/disable mail server authentication fields
  */
@@ -118,21 +132,21 @@ function setCollapsibleWidgetJsCode() {
     $('#thirdPartyApi-element input').click(x);
 }
 
-function setSoundCloudCheckBoxListener() {
-    var subCheckBox= $("#UseSoundCloud,#SoundCloudDownloadbleOption");
-    var mainCheckBox= $("#UploadToSoundcloudOption");
-    subCheckBox.change(function(e){
-        if (subCheckBox.is(':checked')) {
-            mainCheckBox.attr("checked", true);
-        }
-    });
-
-    mainCheckBox.change(function(e){
-         if (!mainCheckBox.is(':checked')) {
-            $("#UseSoundCloud,#SoundCloudDownloadbleOption").attr("checked", false);
-        }   
-    });
-}
+//function setSoundCloudCheckBoxListener() {
+//    var subCheckBox= $("#UseSoundCloud,#SoundCloudDownloadbleOption");
+//    var mainCheckBox= $("#UploadToSoundcloudOption");
+//    subCheckBox.change(function(e){
+//        if (subCheckBox.is(':checked')) {
+//            mainCheckBox.attr("checked", true);
+//        }
+//    });
+//
+//    mainCheckBox.change(function(e){
+//         if (!mainCheckBox.is(':checked')) {
+//            $("#UseSoundCloud,#SoundCloudDownloadbleOption").attr("checked", false);
+//        }
+//    });
+//}
 
 function removeLogo() {
     $.post(baseUrl+'Preference/remove-logo', function(json){});
@@ -176,7 +190,7 @@ $(document).ready(function() {
 
     showErrorSections();
     
-    setSoundCloudCheckBoxListener();
+    //setSoundCloudCheckBoxListener();
     setMailServerInputReadonly();
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
@@ -184,4 +198,5 @@ $(document).ready(function() {
     setCollapsibleWidgetJsCode();
     setTuneInSettingsReadonly();
     setTuneInSettingsListener();
+    setSoundCloudSettingsListener();
 });

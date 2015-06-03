@@ -89,7 +89,17 @@ class Config {
 
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
-        
+
+        $globalAirtimeConfig = "/etc/airtime-saas/".$CC_CONFIG['dev_env']."/airtime.conf";
+        if (!file_exists($globalAirtimeConfig)) {
+            // If the dev env specific airtime.conf doesn't exist default
+            // to the production airtime.conf
+            $globalAirtimeConfig = "/etc/airtime-saas/production/airtime.conf";
+        }
+        $globalAirtimeConfigValues = parse_ini_file($globalAirtimeConfig, true);
+        $CC_CONFIG['soundcloud-client-id'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_id'];
+        $CC_CONFIG['soundcloud-client-secret'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_secret'];
+
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }

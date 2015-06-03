@@ -329,77 +329,6 @@ class Application_Model_Preference
         self::setValue("station_name", $station_name);
     }
 
-    public static function SetAutoUploadRecordedShowToSoundcloud($upload)
-    {
-        self::setValue("soundcloud_auto_upload_recorded_show", $upload);
-    }
-
-    public static function GetAutoUploadRecordedShowToSoundcloud()
-    {
-        return self::getValue("soundcloud_auto_upload_recorded_show");
-    }
-
-    public static function SetSoundCloudUser($user)
-    {
-        self::setValue("soundcloud_user", $user);
-    }
-
-    public static function GetSoundCloudUser()
-    {
-        return self::getValue("soundcloud_user");
-    }
-
-    public static function SetSoundCloudPassword($password)
-    {
-        if (strlen($password) > 0)
-            self::setValue("soundcloud_password", $password);
-    }
-
-    public static function GetSoundCloudPassword()
-    {
-        return self::getValue("soundcloud_password");
-    }
-
-    public static function SetSoundCloudTags($tags)
-    {
-        self::setValue("soundcloud_tags", $tags);
-    }
-
-    public static function GetSoundCloudTags()
-    {
-        return self::getValue("soundcloud_tags");
-    }
-
-    public static function SetSoundCloudGenre($genre)
-    {
-        self::setValue("soundcloud_genre", $genre);
-    }
-
-    public static function GetSoundCloudGenre()
-    {
-        return self::getValue("soundcloud_genre");
-    }
-
-    public static function SetSoundCloudTrackType($track_type)
-    {
-        self::setValue("soundcloud_tracktype", $track_type);
-    }
-
-    public static function GetSoundCloudTrackType()
-    {
-        return self::getValue("soundcloud_tracktype");
-    }
-
-    public static function SetSoundCloudLicense($license)
-    {
-        self::setValue("soundcloud_license", $license);
-    }
-
-    public static function GetSoundCloudLicense()
-    {
-        return self::getValue("soundcloud_license");
-    }
-
     public static function SetAllow3rdPartyApi($bool)
     {
         self::setValue("third_party_api", $bool);
@@ -660,12 +589,6 @@ class Application_Model_Preference
 
         $outputArray['LIVE_DURATION'] = Application_Model_LiveLog::GetLiveShowDuration($p_testing);
         $outputArray['SCHEDULED_DURATION'] = Application_Model_LiveLog::GetScheduledDuration($p_testing);
-        $outputArray['SOUNDCLOUD_ENABLED'] = self::GetUploadToSoundcloudOption();
-        if ($outputArray['SOUNDCLOUD_ENABLED']) {
-            $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = Application_Model_StoredFile::getSoundCloudUploads();
-        } else {
-            $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = NULL;
-        }
 
         $outputArray['STATION_NAME'] = self::GetStationName();
         $outputArray['PHONE'] = self::GetPhone();
@@ -710,12 +633,6 @@ class Application_Model_Preference
                     foreach ($s_info as $k => $v) {
                         $outputString .= "\t".strtoupper($k)." : ".$v."\n";
                     }
-                }
-            } elseif ($key == "SOUNDCLOUD_ENABLED") {
-                if ($out) {
-                    $outputString .= $key." : TRUE\n";
-                } elseif (!$out) {
-                    $outputString .= $key." : FALSE\n";
                 }
             } elseif ($key == "SAAS") {
                 $outputString .= $key.' : '.$out."\n";
@@ -928,26 +845,6 @@ class Application_Model_Preference
         if (preg_match($pattern, $link)) {
             self::setValue("latest_link", $link);
         }
-    }
-
-    public static function SetUploadToSoundcloudOption($upload)
-    {
-        self::setValue("soundcloud_upload_option", $upload);
-    }
-
-    public static function GetUploadToSoundcloudOption()
-    {
-        return self::getValue("soundcloud_upload_option");
-    }
-
-    public static function SetSoundCloudDownloadbleOption($upload)
-    {
-        self::setValue("soundcloud_downloadable", $upload);
-    }
-
-    public static function GetSoundCloudDownloadbleOption()
-    {
-        return self::getValue("soundcloud_downloadable");
     }
 
     public static function SetWeekStartDay($day)
@@ -1503,4 +1400,33 @@ class Application_Model_Preference
     {
         self::setValue("last_tunein_metadata_update", $value);
     }
+
+    /* Third Party */
+
+    // SoundCloud
+
+    public static function getDefaultSoundCloudLicenseType() {
+        return self::getValue("soundcloud_license_type");
+    }
+
+    public static function setDefaultSoundCloudLicenseType($value) {
+        self::setValue("soundcloud_license_type", $value);
+    }
+
+    public static function getDefaultSoundCloudSharingType() {
+        return self::getValue("soundcloud_sharing_type");
+    }
+
+    public static function setDefaultSoundCloudSharingType($value) {
+        self::setValue("soundcloud_sharing_type", $value);
+    }
+
+    public static function getSoundCloudRequestToken() {
+        return self::getValue("soundcloud_request_token");
+    }
+
+    public static function setSoundCloudRequestToken($value) {
+        self::setValue("soundcloud_request_token", $value);
+    }
+
 }

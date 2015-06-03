@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'cc_playout_history_template' table.
+ * This class defines the structure of the 'third_party_track_references' table.
  *
  *
  *
@@ -14,13 +14,13 @@
  *
  * @package    propel.generator.airtime.map
  */
-class CcPlayoutHistoryTemplateTableMap extends TableMap
+class ThirdPartyTrackReferencesTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'airtime.map.CcPlayoutHistoryTemplateTableMap';
+    const CLASS_NAME = 'airtime.map.ThirdPartyTrackReferencesTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -32,16 +32,18 @@ class CcPlayoutHistoryTemplateTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('cc_playout_history_template');
-        $this->setPhpName('CcPlayoutHistoryTemplate');
-        $this->setClassname('CcPlayoutHistoryTemplate');
+        $this->setName('third_party_track_references');
+        $this->setPhpName('ThirdPartyTrackReferences');
+        $this->setClassname('ThirdPartyTrackReferences');
         $this->setPackage('airtime');
         $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('cc_playout_history_template_id_seq');
+        $this->setPrimaryKeyMethodInfo('third_party_track_references_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
-        $this->addColumn('name', 'DbName', 'VARCHAR', true, 128, null);
-        $this->addColumn('type', 'DbType', 'VARCHAR', true, 35, null);
+        $this->addColumn('service', 'DbService', 'VARCHAR', true, 512, null);
+        $this->addColumn('foreign_id', 'DbForeignId', 'INTEGER', true, null, null);
+        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_playout_history_template', 'id', true, null, null);
+        $this->addColumn('status', 'DbStatus', 'VARCHAR', true, 256, null);
         // validators
     } // initialize()
 
@@ -50,8 +52,7 @@ class CcPlayoutHistoryTemplateTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcPlayoutHistoryTemplateField', 'CcPlayoutHistoryTemplateField', RelationMap::ONE_TO_MANY, array('id' => 'template_id', ), 'CASCADE', null, 'CcPlayoutHistoryTemplateFields');
-        $this->addRelation('ThirdPartyTrackReferences', 'ThirdPartyTrackReferences', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'ThirdPartyTrackReferencess');
+        $this->addRelation('CcPlayoutHistoryTemplate', 'CcPlayoutHistoryTemplate', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
-} // CcPlayoutHistoryTemplateTableMap
+} // ThirdPartyTrackReferencesTableMap

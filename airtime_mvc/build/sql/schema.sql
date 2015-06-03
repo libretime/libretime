@@ -670,6 +670,22 @@ CREATE TABLE "cc_playout_history_template_field"
     PRIMARY KEY ("id")
 );
 
+-----------------------------------------------------------------------
+-- third_party_track_references
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "third_party_track_references" CASCADE;
+
+CREATE TABLE "third_party_track_references"
+(
+    "id" serial NOT NULL,
+    "service" VARCHAR(512) NOT NULL,
+    "foreign_id" INTEGER NOT NULL,
+    "file_id" INTEGER NOT NULL,
+    "status" VARCHAR(256) NOT NULL,
+    PRIMARY KEY ("id")
+);
+
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
@@ -829,5 +845,10 @@ ALTER TABLE "cc_playout_history_metadata" ADD CONSTRAINT "cc_playout_history_met
 
 ALTER TABLE "cc_playout_history_template_field" ADD CONSTRAINT "cc_playout_history_template_template_fkey"
     FOREIGN KEY ("template_id")
+    REFERENCES "cc_playout_history_template" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "third_party_track_references" ADD CONSTRAINT "track_reference_fkey"
+    FOREIGN KEY ("file_id")
     REFERENCES "cc_playout_history_template" ("id")
     ON DELETE CASCADE;

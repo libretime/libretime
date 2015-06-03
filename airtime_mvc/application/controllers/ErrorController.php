@@ -71,6 +71,7 @@ class ErrorController extends Zend_Controller_Action {
      * 404 error - route or controller
      */
     public function error404Action() {
+        Logging::info("404!");
         $this->_helper->viewRenderer('error-404');
         $this->getResponse()->setHttpResponseCode(404);
         $this->view->message = _('Page not found.');

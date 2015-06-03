@@ -533,7 +533,7 @@ var AIRTIME = (function(AIRTIME){
                     
                     if (aData.record === true) {
                         
-                        headerIcon =  (aData.soundcloud_id > 0) ? "soundcloud" : "recording";
+                        //headerIcon =  (aData.soundcloud_id > 0) ? "soundcloud" : "recording";
                         
                         $div = $("<div/>", {
                             "class": "small-icon " + headerIcon

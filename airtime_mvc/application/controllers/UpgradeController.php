@@ -9,25 +9,21 @@ class UpgradeController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
-        if (!$this->verifyAuth()) {
+        if (!RestAuth::verifyAuth(true, false, $this)) {
             return;
         }
 
-        $upgraders = array();
-        array_push($upgraders, new AirtimeUpgrader253());        
-        array_push($upgraders, new AirtimeUpgrader254());
-        array_push($upgraders, new AirtimeUpgrader255());
-        array_push($upgraders, new AirtimeUpgrader259());
-        array_push($upgraders, new AirtimeUpgrader2510());
-        array_push($upgraders, new AirtimeUpgrader2511());
-        array_push($upgraders, new AirtimeUpgrader2512());
+        // Get all upgrades dynamically so we don't have to add them explicitly each time
+        $upgraders = getUpgrades();
+        Logging::info($upgraders);
 
         $didWePerformAnUpgrade = false;
         try 
         {
-            for ($i = 0; $i < count($upgraders); $i++)
+            foreach ($upgraders as $upgrader)
             {
-                $upgrader = $upgraders[$i];
+                /** @var $upgrader AirtimeUpgrader */
+                $upgrader = new $upgrader();
                 if ($upgrader->checkIfUpgradeSupported())
                 {
                 	// pass __DIR__ to the upgrades, since __DIR__ returns parent dir of file, not executor
@@ -36,7 +32,6 @@ class UpgradeController extends Zend_Controller_Action
                     $this->getResponse()
                          ->setHttpResponseCode(200)
                          ->appendBody("Upgrade to Airtime " . $upgrader->getNewVersion() . " OK<br>"); 
-                    $i = 0; //Start over, in case the upgrade handlers are not in ascending order.
                 }
             }
             
@@ -54,28 +49,4 @@ class UpgradeController extends Zend_Controller_Action
            		 ->appendBody($e->getMessage());
         }
     }
-
-    private function verifyAuth()
-    {
-        //The API key is passed in via HTTP "basic authentication":
-        //http://en.wikipedia.org/wiki/Basic_access_authentication
-        
-        $CC_CONFIG = Config::getConfig();
-        
-        //Decode the API key that was passed to us in the HTTP request.
-        $authHeader = $this->getRequest()->getHeader("Authorization");
-
-        $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
-        $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
-
-        if ($encodedRequestApiKey !== $encodedStoredApiKey)
-        {
-            $this->getResponse()
-                 ->setHttpResponseCode(401)
-                 ->appendBody("Error: Incorrect API key.<br>");
-            return false;
-        }
-        return true;
-    }
-
 }

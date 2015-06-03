@@ -40,7 +40,7 @@ class CcShowInstancesTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('cc_show_instances_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
-        $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, '');
+        $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 8192, '');
         $this->addColumn('starts', 'DbStarts', 'TIMESTAMP', true, null, null);
         $this->addColumn('ends', 'DbEnds', 'TIMESTAMP', true, null, null);
         $this->addForeignKey('show_id', 'DbShowId', 'INTEGER', 'cc_show', 'id', true, null, null);

@@ -103,6 +103,9 @@ return array (
   'BaseCloudFile' => 'airtime/om/BaseCloudFile.php',
   'BaseCloudFilePeer' => 'airtime/om/BaseCloudFilePeer.php',
   'BaseCloudFileQuery' => 'airtime/om/BaseCloudFileQuery.php',
+  'BaseThirdPartyTrackReferences' => 'airtime/om/BaseThirdPartyTrackReferences.php',
+  'BaseThirdPartyTrackReferencesPeer' => 'airtime/om/BaseThirdPartyTrackReferencesPeer.php',
+  'BaseThirdPartyTrackReferencesQuery' => 'airtime/om/BaseThirdPartyTrackReferencesQuery.php',
   'CcBlock' => 'airtime/CcBlock.php',
   'CcBlockPeer' => 'airtime/CcBlockPeer.php',
   'CcBlockQuery' => 'airtime/CcBlockQuery.php',
@@ -239,4 +242,8 @@ return array (
   'CloudFilePeer' => 'airtime/CloudFilePeer.php',
   'CloudFileQuery' => 'airtime/CloudFileQuery.php',
   'CloudFileTableMap' => 'airtime/map/CloudFileTableMap.php',
+  'ThirdPartyTrackReferences' => 'airtime/ThirdPartyTrackReferences.php',
+  'ThirdPartyTrackReferencesPeer' => 'airtime/ThirdPartyTrackReferencesPeer.php',
+  'ThirdPartyTrackReferencesQuery' => 'airtime/ThirdPartyTrackReferencesQuery.php',
+  'ThirdPartyTrackReferencesTableMap' => 'airtime/map/ThirdPartyTrackReferencesTableMap.php',
 );
