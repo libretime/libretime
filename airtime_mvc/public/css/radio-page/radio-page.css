@@ -29,15 +29,15 @@ body {
 #schedule_iframe, .tab_content {
     color: #fff;
     text-align: center;
-    /*width: 760px;*/
+    width: 770px;
     max-width: 770px;
     margin: 0 auto;
     margin-bottom: 140px;
     padding: 10px;
     padding-left: 0px;
     position: absolute;
-    /*left: 50%;*/
-    /*margin-left: -380px;*/
+    left: 50%;
+    margin-left: -380px;
     /*	-webkit-transition-delay: 1s;
         transition-delay: 1s;*/
 }
