@@ -602,7 +602,14 @@ class Application_Model_Preference
 
     public static function GetStationLogo()
     {
-        return self::getValue("logoImage");
+        $logoImage = self::getValue("logoImage");
+        if (!empty($logoImage)) {
+            return $logoImage;
+        } else {
+            // We return the Airtime logo if no logo is set in the database.
+            // airtime_logo.png is stored under the public directory
+            return "airtime_logo.png";
+        }
     }
     
     public static function SetUniqueId($id)

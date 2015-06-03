@@ -3,8 +3,10 @@
 
     <div class="bck_cover"></div>
 
-    <?php if (!empty($this->stationLogo)) {
-        echo "<a href = '#' class='logo' ><img src = 'data:image/png;base64," . $this->stationLogo. "'></a>";
+    <?php if ($this->stationLogo === "airtime_logo.png") {
+        echo "<a href='#' class='logo'><img src='airtime_logo.png'></a>";
+    } else {
+        echo "<a href='#' class='logo' ><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
     } ?>
 
     <div id="tab-1" class="schedule tab_content current">
