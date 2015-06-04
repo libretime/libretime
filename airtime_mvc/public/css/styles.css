@@ -3261,3 +3261,33 @@ dd .stream-status {
 .enable-tunein {
     font-weight:bold;
 }
+
+#weekly-schedule-widget {
+    margin: 0 auto;
+    width: 50%;
+}
+
+#widget-menu {
+    margin: 0 auto;
+    width: 40%;
+}
+
+#widget-menu a {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+#weekly-schedule-widget label {
+    font-weight: bold;
+}
+
+.blah {
+    width: 100%;
+    float: left;
+    text-align: center;
+}
+
+#schedule_iframe {
+    margin: 0 auto;
+}

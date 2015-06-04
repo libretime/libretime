@@ -268,7 +268,7 @@
                             //Master/show source have no current track but they do have a current show.
                             $("p.now_playing").html("On Air:" + "<span>" + data.currentShow[0].name + "</span>");
                         } else {
-                            $("p.now_playing").html("Offline");
+                            $("p.now_playing").html("Off Air" + "<span>Offline</span>");
                         }
                         time_to_next_track_starts = 20000;
                     } else {

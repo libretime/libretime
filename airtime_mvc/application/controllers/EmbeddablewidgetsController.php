@@ -1,13 +1,14 @@
 <?php
 
-class PlayerController extends Zend_Controller_Action
+class EmbeddableWidgetsController extends Zend_Controller_Action
 {
+
     public function init()
     {
 
     }
-    
-    public function customizeAction()
+
+    public function indexAction()
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
@@ -20,12 +21,17 @@ class PlayerController extends Zend_Controller_Action
         $numEnabledStreams = $form->getElement('player_stream_url')->getAttrib('numberOfEnabledStreams');
 
         if ($numEnabledStreams > 0 && $apiEnabled) {
-            $this->view->form = $form;
+            $this->view->player_form = $form;
         } else {
-            $this->view->errorMsg = "To configure and use the embeddable player you must:<br><br>
+            $this->view->player_error_msg = "To configure and use the embeddable player you must:<br><br>
             1. Enable at least one MP3, AAC, or OGG stream under System -> Streams<br>
             2. Enable the Public Airtime API under System -> Preferences";
         }
 
+        if (!$apiEnabled) {
+            $this->view->weekly_schedule_error_msg = "To use the embeddable weekly schedule you must:<br><br>
+            1. Enable the Public Airtime API under System -> Preferences";
+        }
     }
 }
+

@@ -6,11 +6,11 @@
     <?php if ($this->stationLogo === "airtime_logo.png") {
         echo "<a href='#' class='logo'><img src='airtime_logo.png'></a>";
     } else {
-        echo "<a href='#' class='logo' ><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
+        echo "<a href='#' class='logo'><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
     } ?>
 
     <div id="tab-1" class="schedule tab_content current">
-        <iframe id="schedule_iframe" height="400px" scrolling="no" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program"?>></iframe>
+        <iframe id="schedule_iframe" height="400px" scrolling="no" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program?style=premium"?>></iframe>
     </div>
 
     <div id="tab-2" class="about_us tab_content">
@@ -27,7 +27,7 @@
         </form>
     </div>
 
-    <iframe id="player_iframe" frameborder="0" width="100%" style="bottom:0px; left:0px; position:fixed; right:0px;" src=<?php echo $this->stationUrl."embed/player?stream=auto&title=Staging1&style=premium";?>></iframe>
+    <iframe id="player_iframe" frameborder="0" width="100%" style="bottom:0px; left:0px; position:fixed; right:0px;" src=<?php echo $this->stationUrl."embed/player?stream=auto&style=premium";?>></iframe>
 
 </div>
 

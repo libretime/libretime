@@ -24,7 +24,6 @@ class EmbedController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-
         $this->view->mrp_js = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/mrp.js?".$CC_CONFIG['airtime_version'];
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "js/libs/jquery-1.10.2.js";
         $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/muses.swf";
@@ -83,7 +82,14 @@ class EmbedController extends Zend_Controller_Action
 
         $CC_CONFIG = Config::getConfig();
 
-        $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/radio-page/weekly-schedule-widget.css?".$CC_CONFIG['airtime_version'];
+        $request = $this->getRequest();
+
+        $widgetStyle = $request->getParam('style');
+        if ($widgetStyle == "premium") {
+            $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/embed/weekly-schedule-widget.css?" . $CC_CONFIG['airtime_version'];
+        } else {
+            $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/embed/weekly-schedule-widget-basic.css?" . $CC_CONFIG['airtime_version'];
+        }
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
 
         $result = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));

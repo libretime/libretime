@@ -8,12 +8,12 @@ body {
     text-align: center;
     visibility: hidden;
     max-width: 750px;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
     margin-bottom: 140px;
     padding: 10px;
     position: absolute;
-    left: 50%;
-    margin-left: -380px;
+    /*left: 50%;
+    margin-left: -380px;*/
 }
 
 .tab_content.current {
