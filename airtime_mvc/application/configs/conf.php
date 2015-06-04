@@ -99,6 +99,7 @@ class Config {
         $globalAirtimeConfigValues = parse_ini_file($globalAirtimeConfig, true);
         $CC_CONFIG['soundcloud-client-id'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_id'];
         $CC_CONFIG['soundcloud-client-secret'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_secret'];
+        $CC_CONFIG['soundcloud-redirect-uri'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_redirect_uri'];
 
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];

@@ -33,12 +33,9 @@ class SoundcloudService extends ThirdPartyService {
      */
     public function __construct() {
         $CC_CONFIG      = Config::getConfig();
-        // FIXME: These values are hardcoded into conf.php right now...
-        // we should move these to a global config file
         $clientId       = $CC_CONFIG['soundcloud-client-id'];
         $clientSecret   = $CC_CONFIG['soundcloud-client-secret'];
-        $baseUrl        = $CC_CONFIG['baseUrl'] . ":" . $CC_CONFIG['basePort'];
-        $redirectUri    = 'http://' . $baseUrl . '/soundcloud/redirect';
+        $redirectUri    = $CC_CONFIG['soundcloud-redirect-uri'];
 
         $this->_client = new Soundcloud\Service($clientId, $clientSecret, $redirectUri);
         $accessToken = Application_Model_Preference::getSoundCloudRequestToken();
@@ -127,7 +124,7 @@ class SoundcloudService extends ThirdPartyService {
         // Pass the current URL in the state parameter in order to preserve it
         // in the redirect. This allows us to create a singular script to redirect
         // back to any station the request comes from.
-        $url = urlencode('http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+        $url = urlencode('http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].'/soundcloud/redirect');
         return $this->_client->getAuthorizeUrl(array("state" => $url));
     }
 
