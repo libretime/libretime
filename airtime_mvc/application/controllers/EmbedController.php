@@ -86,8 +86,10 @@ class EmbedController extends Zend_Controller_Action
 
         $widgetStyle = $request->getParam('style');
         if ($widgetStyle == "premium") {
+            $this->view->widgetStyle = "premium";
             $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/embed/weekly-schedule-widget.css?" . $CC_CONFIG['airtime_version'];
         } else {
+            $this->view->widgetStyle = "basic";
             $this->view->css = Application_Common_HTTPHelper::getStationUrl() . "/css/embed/weekly-schedule-widget-basic.css?" . $CC_CONFIG['airtime_version'];
         }
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];

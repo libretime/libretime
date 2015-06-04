@@ -25,7 +25,7 @@ body {
     list-style: none;
     padding-left: 0px;
     margin: 0px;
-    background: rgba(69, 155, 143, 0.8);
+    background: rgba(170, 170, 170, 0.9);
 }
 
 .schedule .tabs li {
@@ -44,19 +44,20 @@ body {
 }
 
 .schedule .tabs li.active {
-    background: #459B8F;
+    background: rgba(150, 150, 150, 0.9);
 }
 
 .schedule .tabs li.active:hover {
-    background: #459B8F;
+    background: rgba(170, 170, 170, 0.9);
+    background: #aaa
 }
 
 .schedule .tabs li:hover {
-    background: rgba(69, 155, 143, 0.6)
+    background: rgba(160, 160, 160, 0.7);
 }
 
 .schedule_content {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(53, 53, 53, 0.9);
     max-height: 0px;
     transition: max-height 2s ease;
 
@@ -84,7 +85,7 @@ body {
     font-size: 17px;
     text-align: left;
     text-transform: uppercase;
-    padding: 30px 40px;
+    padding: 10px 30px;
 }
 
 .schedule_item.active {
@@ -97,12 +98,28 @@ body {
 }
 
 .schedule_item .name_grid {
-    padding-left: 30px;
+    padding-left: 10px;
 }
 
 .schedule_item h4 {
     margin: 10px 0px;
     font-weight: 400;
+}
+
+.weekly-schedule-widget-footer {
+    border-top: 1px solid #aaaaaa;
+    text-align: right;
+    padding: 4px 16px;
+    background: rgba(53, 53, 53, 0.9);
+}
+
+.weekly-schedule-widget-footer a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.weekly-schedule-widget-footer span {
+    color: #ff5d1a;
 }
 
 @media (max-width: 730px) {
@@ -119,6 +136,16 @@ body {
         width: 64px;
         height: 64px;
         padding: 6px;
+    }
+}
+
+@media (max-width: 520px) {
+
+    .schedule_item {
+        padding: 0px 10px;
+    }
+    .schedule_item .time_grid, .schedule_item .name_grid {
+        font-size: 14px;
     }
 }
 
