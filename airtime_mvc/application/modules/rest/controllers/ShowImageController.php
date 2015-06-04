@@ -56,12 +56,13 @@ class Rest_ShowImageController extends Zend_Rest_Controller {
             $this->getResponse()
                 ->setHttpResponseCode(500)
                 ->appendBody("Error processing image: " . $e->getMessage());
+            return;
         }
 
         $show = CcShowQuery::create()->findPk($showId);
 
+        $con = Propel::getConnection();
         try {
-            $con = Propel::getConnection();
             $con->beginTransaction();
 
             $show->setDbImagePath($path);
@@ -103,8 +104,8 @@ class Rest_ShowImageController extends Zend_Rest_Controller {
 
         $show = CcShowQuery::create()->findPk($showId);
 
+        $con = Propel::getConnection();
         try {
-            $con = Propel::getConnection();
             $con->beginTransaction();
 
             $show->setDbImagePath(null);
@@ -268,7 +269,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller {
     private static function delTree($dir) {
         $files = array_diff(scandir($dir), array('.', '..'));
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+            (is_dir("$dir/$file")) ? self::delTree("$dir/$file") : unlink("$dir/$file");
         }
         return rmdir($dir);
     }
@@ -279,7 +280,7 @@ class Rest_ShowImageController extends Zend_Rest_Controller {
      * provided, otherwise returns the id
      */
     private function getShowId() {
-        if (!$id = $this->_getParam('id', false)) {
+        if (!($id = $this->_getParam('id', false))) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
             $resp->appendBody("ERROR: No show ID specified.");
