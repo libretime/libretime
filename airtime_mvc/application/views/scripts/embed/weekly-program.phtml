@@ -39,13 +39,13 @@
             $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
         echo"<div id='day-".$data["dayOfMonth"]."' class='schedule_item ".$activeClass."'>
             <table class='widget widget now-playing-list'>
-            <colgroup><col width='150'><col width='350'><col width='20'></colgroup>
+
             <thead></thead>
             <tfoot><tr><td></td></tr></tfoot>
             <tbody>";
             foreach ($data["shows"] as $show => $showData) {
-                echo "<tr><td class='time_grid col_two'>".$showData["show_start_hour"].' - '.$showData["show_end_hour"]."</td>
-                    <td class='name_grid'><h4>".$showData["name"]."</h4></td><td class='more_grid'></td></tr>";
+                echo "<tr><td class='time_grid col_two'><div>".$showData["show_start_hour"].' - '.$showData["show_end_hour"]."</div></td>
+                    <td class='name_grid'><div><h4>".$showData["name"]."</h4></div></td></tr>";
             }
             echo "</tbody></table></div>";
         }?>

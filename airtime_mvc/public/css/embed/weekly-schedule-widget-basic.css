@@ -62,6 +62,8 @@ body {
     transition: max-height 2s ease;
 
     overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
     /*transition-delay: 1s;*/
 }
 
@@ -97,6 +99,18 @@ body {
     color: #AAAAAA;
 }
 
+.schedule_item .time_grid div {
+    /*padding-right: 10px;*/
+    width:120px;
+}
+
+.schedule_item .name_grid div {
+    /*padding-right: 10px;*/
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
 .schedule_item .name_grid {
     padding-left: 10px;
 }
@@ -104,6 +118,9 @@ body {
 .schedule_item h4 {
     margin: 10px 0px;
     font-weight: 400;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    overflow-x: hidden;
 }
 
 .weekly-schedule-widget-footer {
