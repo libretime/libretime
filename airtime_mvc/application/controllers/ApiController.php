@@ -487,32 +487,19 @@ class ApiController extends Zend_Controller_Action
         if (Application_Model_Preference::GetAllow3rdPartyApi() || $this->checkAuth()) {
             $request = $this->getRequest();
             $showId = $request->getParam('id');
-
-            // If no id is passed, redirect to a 404
             if (empty($showId)) {
-                $this->getResponse()
-                    ->setHttpResponseCode(400)
-                    ->appendBody("ERROR: No ID was given.");
-                return;
+                throw new ZendActionHttpException($this, 400, "ERROR: No ID was given.");
             }
 
             $show = CcShowQuery::create()->findPk($showId);
-            // Check that a show with this ID exists
             if (empty($show)) {
-                $this->getResponse()
-                    ->setHttpResponseCode(400)
-                    ->appendBody("ERROR: No show with ID $showId exists.");
-                return;
+                throw new ZendActionHttpException($this, 400, "ERROR: No show with ID $showId exists.");
             }
             
             $path = $show->getDbImagePath();
             $mime_type = mime_content_type($path);
-
             if (empty($path)) {
-                $this->getResponse()
-                    ->setHttpResponseCode(400)
-                    ->appendBody("ERROR: Show does not have an associated image.");
-                return;
+                throw new ZendActionHttpException($this, 400, "ERROR: Show does not have an associated image.");
             }
 
             try {
@@ -520,13 +507,9 @@ class ApiController extends Zend_Controller_Action
                 // but has been cached in a client's browser this will throw an exception
                 Application_Common_FileIO::smartReadFile($path, filesize($path), $mime_type);
             } catch(FileNotFoundException $e) {
-                $this->getResponse()
-                    ->setHttpResponseCode(404)
-                    ->appendBody("ERROR: No image found at $path");
+                throw new ZendActionHttpException($this, 404, "ERROR: No image found at $path");
             } catch(Exception $e) {
-                $this->getResponse()
-                    ->setHttpResponseCode(500)
-                    ->appendBody("ERROR: " . $e->getMessage());
+                throw new ZendActionHttpException($this, 500, "ERROR: " . $e->getMessage());
             }
         } else {
             header('HTTP/1.0 401 Unauthorized');
