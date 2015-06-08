@@ -144,14 +144,27 @@ class UserController extends Zend_Controller_Action
                 // We don't allow 6 x's as a password.
                 // The reason is because we use that as a password placeholder
                 // on the client side.
-                if (($formData['cu_password'] != "xxxxxx") &&
+                if (array_key_exists('cu_password', $formData) && ($formData['cu_password'] != "xxxxxx") &&
                     (!empty($formData['cu_password']))) {
                     $user->setPassword($formData['cu_password']);
                 }
-                $user->setEmail($formData['cu_email']);
-                $user->setCellPhone($formData['cu_cell_phone']);
-                $user->setSkype($formData['cu_skype']);
-                $user->setJabber($formData['cu_jabber']);
+
+                if (array_key_exists('cu_email', $formData)) {
+                    $user->setEmail($formData['cu_email']);
+                }
+
+                if (array_key_exists('cu_cell_phone', $formData)) {
+                    $user->setCellPhone($formData['cu_cell_phone']);
+                }
+
+                if (array_key_exists('cu_skype', $formData)) {
+                    $user->setSkype($formData['cu_skype']);
+                }
+
+                if (array_key_exists('cu_jabber', $formData)) {
+                    $user->setJabber($formData['cu_jabber']);
+                }
+
                 $user->save();
 
                 Application_Model_Preference::SetUserLocale($formData['cu_locale']);
