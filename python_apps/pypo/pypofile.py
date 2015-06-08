@@ -35,6 +35,7 @@ class PypoFile(Thread):
         self.media_queue = schedule_queue
         self.media = None
         self.cache_dir = os.path.join(config["cache_dir"], "scheduler")
+        self._config = self.read_config_file(CONFIG_PATH)
 
     def copy_file(self, media_item):
         """
@@ -65,11 +66,9 @@ class PypoFile(Thread):
         if do_copy:
             self.logger.debug("copying from %s to local cache %s" % (src, dst))
             try:
-                config = self.read_config_file(CONFIG_PATH)
                 CONFIG_SECTION = "general"
-                username = config.get(CONFIG_SECTION, 'api_key')
-
-                host = config.get(CONFIG_SECTION, 'base_url')
+                username = self._config.get(CONFIG_SECTION, 'api_key')
+                host = self._config.get(CONFIG_SECTION, 'base_url')
                 url = "http://%s/rest/media/%s/download" % (host, media_item["id"])
                 with open(dst, "wb") as handle:
                     response = requests.get(url, auth=requests.auth.HTTPBasicAuth(username, ''), stream=True, verify=False)
@@ -210,3 +209,4 @@ class PypoFile(Thread):
         Entry point of the thread
         """
         self.main()
+
