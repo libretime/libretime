@@ -14,6 +14,8 @@ def generate_liquidsoap_config(ss):
 
     for key, value in data.iteritems():
         try:
+            if not "port" in key and not "bitrate" in key: # Stupid hack
+                raise ValueError()
             str_buffer = "%s = %s\n" % (key, int(value))
         except ValueError:
             try: # Is it a boolean?

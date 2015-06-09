@@ -18,7 +18,6 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
         $enableTunein->addDecorator('Label', array('class' => 'enable-tunein'));
         $enableTunein->setLabel(_("Push metadata to your station on TuneIn?"));
         $enableTunein->setValue(Application_Model_Preference::getTuneinEnabled());
-        $enableTunein->setAttrib("class", "block-display");
         $this->addElement($enableTunein);
 
         $tuneinStationId = new Zend_Form_Element_Text("tunein_station_id");
@@ -76,7 +75,6 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
                 Logging::error("Failed to reach TuneIn: ". curl_errno($ch)." - ". curl_error($ch) . " - " . curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
                 if (curl_error($ch) == "The requested URL returned error: 403 Forbidden") {
                     $this->getElement("enable_tunein")->setErrors(array(_("Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again.")));
-
                     $valid = false;
                 }
             }
@@ -85,6 +83,7 @@ class Application_Form_TuneInPreferences extends Zend_Form_SubForm
             if ($valid) {
                 $xmlObj = new SimpleXMLElement($xmlData);
                 if (!$xmlObj || $xmlObj->head->status != "200") {
+                    $this->getElement("enable_tunein")->setErrors(array(_("Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again.")));
                     $valid = false;
                 } else if ($xmlObj->head->status == "200") {
                     Application_Model_Preference::setLastTuneinMetadataUpdate(time());

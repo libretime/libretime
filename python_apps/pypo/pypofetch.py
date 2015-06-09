@@ -477,6 +477,7 @@ class PypoFetch(Thread):
         loops = 1
         while True:
             self.logger.info("Loop #%s", loops)
+            manual_fetch_needed = False
             try:
                 """
                 our simple_queue.get() requires a timeout, in which case we
@@ -492,14 +493,23 @@ class PypoFetch(Thread):
                 Currently we are checking every POLL_INTERVAL seconds
                 """
 
-
                 message = self.fetch_queue.get(block=True, timeout=self.listener_timeout)
+                manual_fetch_needed = False
                 self.handle_message(message)
-            except Empty, e:
+            except Empty as e:
                 self.logger.info("Queue timeout. Fetching schedule manually")
-                self.persistent_manual_schedule_fetch(max_attempts=5)
-            except Exception, e:
+                manual_fetch_needed = True
+            except Exception as e:
                 top = traceback.format_exc()
+                self.logger.error('Exception: %s', e)
+                self.logger.error("traceback: %s", top)
+
+            try:
+                if manual_fetch_needed:
+                    self.persistent_manual_schedule_fetch(max_attempts=5)
+            except Exception as e:
+                top = traceback.format_exc()
+                self.logger.error('Failed to manually fetch the schedule.')
                 self.logger.error('Exception: %s', e)
                 self.logger.error("traceback: %s", top)
 
@@ -510,3 +520,4 @@ class PypoFetch(Thread):
         Entry point of the thread
         """
         self.main()
+        self.logger.info('PypoFetch thread exiting')
