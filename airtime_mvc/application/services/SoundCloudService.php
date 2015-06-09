@@ -44,7 +44,6 @@ class SoundcloudService extends ThirdPartyService {
         }
     }
 
-    // TODO: upload functionality will be moved to python, this is just for testing
     /**
      * Upload the file with the given identifier to SoundCloud
      *
@@ -55,8 +54,13 @@ class SoundcloudService extends ThirdPartyService {
      */
     public function upload($fileId) {
         $file = Application_Model_StoredFile::RecallById($fileId);
+        $data = array(
+            'track_data' => $this->_buildTrackArray($file),
+            'token' => $this->_client->getAccessToken(),
+            'file_path' => $file->getFilePaths()[0]
+        );
         try {
-            $track = json_decode($this->_client->post('tracks', $this->_buildTrackArray($file)));
+            $track = json_decode(Application_Model_RabbitMq::uploadToSoundCloud($data));
             parent::_createTrackReference($fileId, $track);
         } catch(Soundcloud\Exception\InvalidHttpResponseCodeException $e) {
             Logging::info("Invalid request: " . $e->getMessage());
@@ -74,15 +78,12 @@ class SoundcloudService extends ThirdPartyService {
      */
     private function _buildTrackArray($file) {
         $trackArray = array(
-            'track[title]' => $file->getName(),
-            // TODO: verify that S3 uploads work
-            'track[asset_data]' => '@'.$file->getFilePaths()[0]
+            'title' => $file->getName(),
         );
-
         foreach($this->_SOUNDCLOUD_PREF_FUNCTIONS as $func => $param) {
             $val = Application_Model_Preference::$func();
             if (!empty($val)) {
-                $trackArray["track[$param]"] = $val;
+                $trackArray[$param] = $val;
             }
         }
 

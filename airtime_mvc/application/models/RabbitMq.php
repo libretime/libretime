@@ -1,9 +1,12 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
+require_once 'massivescale/celery-php/celery.php';
 
 class Application_Model_RabbitMq
 {
     public static $doPush = false;
+
+    const CELERY_TIMEOUT = 10;
 
     /**
      * Sets a flag to push the schedule at the end of the request.
@@ -40,6 +43,32 @@ class Application_Model_RabbitMq
         $channel->basic_publish($msg, $exchange);
         $channel->close();
         $conn->close();
+    }
+
+    public static function sendCeleryMessage($task, $exchange, $data) {
+        $CC_CONFIG = Config::getConfig();
+
+        $c = new Celery($CC_CONFIG["rabbitmq"]["host"],
+                        $CC_CONFIG["rabbitmq"]["user"],
+                        $CC_CONFIG["rabbitmq"]["password"],
+                        $CC_CONFIG["rabbitmq"]["vhost"],
+                        $exchange=$exchange);
+        $result = $c->PostTask($task, $data);
+
+        $timeout = 0;
+        while(!$result->isReady()) {
+            sleep(1);
+            if($timeout++ >= self::CELERY_TIMEOUT) {
+                break;
+            }
+        }
+
+        if($result->isSuccess()) {
+            Logging::info($result);
+            return $result->getResult();
+        } else {
+            throw new CeleryTimeoutException("Celery task $task timed out!");
+        }
     }
 
     public static function SendMessageToPypo($event_type, $md)
@@ -146,5 +175,9 @@ class Application_Model_RabbitMq
     
     public static function SendMessageToHaproxyConfigDaemon($md){
         //XXX: This function has been deprecated and is no longer needed
-    }        
+    }
+
+    public static function uploadToSoundCloud($data) {
+        return self::sendCeleryMessage("upload", "soundcloud-uploads", $data);
+    }
 }
