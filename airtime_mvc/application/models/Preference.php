@@ -498,7 +498,12 @@ class Application_Model_Preference
 
     public static function GetStationDescription()
     {
-        return self::getValue("description");
+        $description = self::getValue("description");
+        if (!empty($description)) {
+            return $description;
+        } else {
+            return "Powered by Airtime Pro";
+        }
     }
 
     // Sets station default timezone (from preferences)
