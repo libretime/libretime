@@ -75,8 +75,13 @@ class Application_Model_StreamSetting
             $host = $streamData[$prefix."host"];
             $port = $streamData[$prefix."port"];
             $mount = $streamData[$prefix."mount"];
+            if ($streamData[$prefix."output"] == "shoutcast") {
+                $url = "http://$host:$port/";
+            } else { //Icecast
+                $url = "http://$host:$port/$mount";
+            }
             $streams[$id] = Array(
-                "url" => "http://$host:$port/$mount",
+                "url" => $url,
                 "codec" => $streamData[$prefix."type"],
                 "bitrate" => $streamData[$prefix."bitrate"],
                 "mobile" => $streamData[$prefix."mobile"]
