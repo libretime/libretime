@@ -71,16 +71,16 @@ body {
     max-height: 300px;
 }
 
-.schedule_content table {
+/*.schedule_content table {
     opacity: 0;
-    /*transition: all 1s ease;*/
+    *//*transition: all 1s ease;*//*
 }
 
 .schedule.current .schedule_content table {
     opacity: 1;
     -webkit-transition-delay: 0.6s;
     transition-delay: 0.6s;
-}
+}*/
 
 .schedule_item {
     display: none;
@@ -94,33 +94,26 @@ body {
     display: block;
 }
 
-.schedule_item .time_grid  {
+.schedule_item .row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.schedule_item div.time_grid {
+    /*padding-right: 10px;*/
+    width: 20%;
     font-weight: 300;
     color: #AAAAAA;
+    display: inline-block;
 }
 
-.schedule_item .time_grid div {
-    /*padding-right: 10px;*/
-    width:120px;
-}
-
-.schedule_item .name_grid div {
-    /*padding-right: 10px;*/
+.schedule_item div.name_grid {
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-
-.schedule_item .name_grid {
     padding-left: 10px;
-}
-
-.schedule_item h4 {
-    margin: 10px 0px;
-    font-weight: 400;
-    overflow: hidden;
-    text-overflow:ellipsis;
-    overflow-x: hidden;
+    width: 77%;
+    display:inline-block;
+    vertical-align: middle;
 }
 
 .weekly-schedule-widget-footer {
@@ -156,13 +149,48 @@ body {
     }
 }
 
-@media (max-width: 520px) {
-
-    .schedule_item {
-        padding: 0px 10px;
+@media (max-width: 630px) {
+    .schedule_item div.time_grid {
+        width: 25%;
     }
-    .schedule_item .time_grid, .schedule_item .name_grid {
+
+    .schedule_item div.name_grid {
+        width: 72%;
+    }
+}
+
+@media (max-width: 530px) {
+    .schedule_item {
+        padding: 10px 20px;
         font-size: 14px;
+    }
+
+    .schedule_item div.time_grid {
+        width: 30%;
+    }
+
+    .schedule_item div.name_grid {
+        width: 67%;
+    }
+}
+
+@media (max-width: 500px) {
+    .schedule_item div.time_grid {
+        width: 35%;
+    }
+
+    .schedule_item div.name_grid {
+        width: 62%;
+    }
+}
+
+@media (max-width: 400px) {
+    .schedule_item div.time_grid {
+        width: 40%;
+    }
+
+    .schedule_item div.name_grid {
+        width: 50%;
     }
 }
 

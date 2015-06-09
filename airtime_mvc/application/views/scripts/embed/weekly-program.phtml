@@ -37,17 +37,15 @@
         <?php
         foreach($this->scheduleDataWeek1 as $day => $data) {
             $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
-        echo"<div id='day-".$data["dayOfMonth"]."' class='schedule_item ".$activeClass."'>
-            <table class='widget widget now-playing-list'>
 
-            <thead></thead>
-            <tfoot><tr><td></td></tr></tfoot>
-            <tbody>";
-            foreach ($data["shows"] as $show => $showData) {
-                echo "<tr><td class='time_grid col_two'><div>".$showData["show_start_hour"].' - '.$showData["show_end_hour"]."</div></td>
-                    <td class='name_grid'><div><h4>".$showData["name"]."</h4></div></td></tr>";
-            }
-            echo "</tbody></table></div>";
+            echo "<div id='day-".$data["dayOfMonth"]."' class='schedule_item ".$activeClass."'>";
+                foreach ($data["shows"] as $show => $showData) {
+                    echo "<div class='row'>";
+                    echo "<div class='time_grid'>".$showData["show_start_hour"].' - '.$showData["show_end_hour"]."</div>";
+                    echo "<div class='name_grid'>".$showData["name"]."</div>";
+                    echo "</div>";
+                }
+            echo "</div>";
         }?>
     </div>
 
