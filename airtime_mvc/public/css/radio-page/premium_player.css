@@ -109,6 +109,7 @@ body {
 
     .bottom_bar p.now_playing span {
         display: inline-block;
+        padding-left: 10px;
     }
 
     /*.on_air {
