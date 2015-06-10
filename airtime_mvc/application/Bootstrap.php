@@ -1,19 +1,19 @@
 <?php
-require_once __DIR__."/configs/conf.php";
+require_once CONFIG_PATH . "conf.php";
 $CC_CONFIG = Config::getConfig();
 
-require_once __DIR__."/configs/ACL.php";
-if (!@include_once('propel/propel1/runtime/lib/Propel.php'))
-{
-    die('Error: Propel not found. Did you install Airtime\'s third-party dependencies with composer? (Check the README.)');
-}
+require_once CONFIG_PATH . "ACL.php";
 
-Propel::init(__DIR__."/configs/airtime-conf-production.php");
+// Since we initialize the database during the configuration check,
+// check the $configRun global to avoid reinitializing unnecessarily
+if (!isset($configRun) || !$configRun) {
+    Propel::init(CONFIG_PATH . 'airtime-conf-production.php');
+}
 
 //Composer's autoloader
 require_once 'autoload.php';
 
-require_once __DIR__."/configs/constants.php";
+require_once CONFIG_PATH . "constants.php";
 require_once 'Preference.php';
 require_once 'Locale.php';
 require_once "DateHelper.php";
@@ -35,8 +35,9 @@ require_once __DIR__.'/controllers/plugins/Maintenance.php';
 require_once __DIR__.'/controllers/plugins/ConversionTracking.php';
 require_once __DIR__.'/modules/rest/controllers/ShowImageController.php';
 require_once __DIR__.'/modules/rest/controllers/MediaController.php';
+require_once __DIR__.'/upgrade/Upgrades.php';
 
-require_once (APPLICATION_PATH."/logging/Logging.php");
+require_once (APPLICATION_PATH . "/logging/Logging.php");
 Logging::setLogPath('/var/log/airtime/zendphp.log');
 
 // We need to manually route because we can't load Zend without the database being initialized first.
@@ -47,7 +48,7 @@ if (array_key_exists("REQUEST_URI", $_SERVER) && (stripos($_SERVER["REQUEST_URI"
 }
 
 Config::setAirtimeVersion();
-require_once __DIR__."/configs/navigation.php";
+require_once (CONFIG_PATH . 'navigation.php');
 
 Zend_Validate::setDefaultNamespaces("Zend");
 
@@ -120,6 +121,18 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendScript("var PRODUCT_NAME = '" . PRODUCT_NAME . "';");
         $view->headScript()->appendScript("var USER_MANUAL_URL = '" . USER_MANUAL_URL . "';");
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
+    }
+    
+    protected function _initUpgrade() {
+        /* We need to wrap this here so that we aren't checking when we're running the unit test suite
+         */
+        if (getenv("AIRTIME_UNIT_TEST") != 1) {
+            //This will do the upgrade too if it's needed...
+            if (UpgradeManager::checkIfUpgradeIsNeeded()) {
+                $upgradeManager = new UpgradeManager();
+                $upgradeManager->doUpgrade();
+            }
+        }
     }
 
     protected function _initHeadLink()
@@ -196,12 +209,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
         $view->headScript()->appendScript("var userType = '$userType';");
-
         if (array_key_exists('REQUEST_URI', $_SERVER)) { //Doesn't exist for unit tests
             if (strpos($_SERVER['REQUEST_URI'], $baseUrl . 'Dashboard/stream-player') === false
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl . 'audiopreview/audio-preview') === false
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl . 'audiopreview/playlist-preview') === false
                 && strpos($_SERVER['REQUEST_URI'], $baseUrl . 'audiopreview/block-preview') === false
+                && $_SERVER['REQUEST_URI'] != "/"
             ) {
                 $plan_level = strval(Application_Model_Preference::GetPlanLevel());
                 // Since the Hobbyist plan doesn't come with Live Chat support, don't enable it
@@ -225,8 +238,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initViewHelpers()
     {
         $view = $this->getResource('view');
-        $view->addHelperPath('../application/views/helpers', 'Airtime_View_Helper');
-
+        $view->addHelperPath(APPLICATION_PATH . 'views/helpers', 'Airtime_View_Helper');
         $view->assign('suspended', (Application_Model_Preference::getProvisioningStatus() == PROVISIONING_STATUS_SUSPENDED));
     }
 
@@ -239,7 +251,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initZFDebug()
     {
 
-        Zend_Controller_Front::getInstance()->throwExceptions(true);
+        Zend_Controller_Front::getInstance()->throwExceptions(false);
 
         /*
         if (APPLICATION_ENV == "development") {

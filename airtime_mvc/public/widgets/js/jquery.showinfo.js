@@ -250,7 +250,7 @@
 
         obj.attr("class", "ui-tabs");
 
-				var dow = ["monday", "tuesday", "wednesday", "thursday", "friday","saturday", "sunday", "nextmonday", "nexttuesday", "nextwednesday","nextthursday", "nextfriday", "nextsaturday", "nextsunday"];
+        var dow = ["monday", "tuesday", "wednesday", "thursday", "friday","saturday", "sunday", "nextmonday", "nexttuesday", "nextwednesday","nextthursday", "nextfriday", "nextsaturday", "nextsunday"];
 
         var date = new Date();
         //subtract 1 because javascript date function returns

@@ -12,7 +12,15 @@
 <!--        <button id="logo-remove-btn" value="Remove" class="btn">Remove</button>-->
 
         <div id="Logo-img-container">
-            <img onError="this.onerror = '';this.style.visibility='hidden';$('#logo-remove-btn').hide();$('[id^=stationLogoRemove]').each(function(i,v){v.style.width=v.style.height=v.style.margin=v.style.padding='0px';});" id="logo-img" onload='resizeImg(this, 450, 450);' src="data:image/png;base64,<?php echo $this->element->getView()->logoImg ?>" />
+            <?php
+            $logoImg = $this->element->getView()->logoImg;
+            if ($logoImg === DEFAULT_LOGO_PLACEHOLDER) {
+                $src = DEFAULT_LOGO_FILE;
+            } else {
+                $src = "data:image/png;base64,".$logoImg;
+            }
+            ?>
+            <img onError="this.onerror = '';this.style.visibility='hidden';$('#logo-remove-btn').hide();$('[id^=stationLogoRemove]').each(function(i,v){v.style.width=v.style.height=v.style.margin=v.style.padding='0px';});" id="logo-img" onload='resizeImg(this, 450, 450);' src="<?php echo $src ?>" />
         </div>
 
         <?php echo $this->element->getElement('locale')->render() ?>

@@ -237,6 +237,18 @@
             document.getElementById("stop_button").classList.toggle("hide_button");
         }
 
+        $(document).ready(function() {
+            $(".play").click(function () {
+                if ($(this).hasClass("pause")) {
+                    musesPlayer.stop();
+                } else {
+                    musesPlayer.play();
+                }
+
+                $(this).toggleClass("pause");
+            });
+        });
+
         // variables for updating the player's metadata
         var time_to_next_track_starts = 0;
         var metadataTimer = null;
@@ -252,11 +264,11 @@
                 success: function(data) {
 
                     if (data.current === null) {
-                        if (data.currentShow != null && data.currentShow.length != 0) {
-                            // Master/show source have no current track but they do have a current show.
-                            $("p.now_playing").html(data.currentShow[0].name);
+                        if (data.currentShow != null && data.currentShow.length > 0) {
+                            //Master/show source have no current track but they do have a current show.
+                            $("p.now_playing").html("On Air:" + "<span>" + data.currentShow[0].name + "</span>");
                         } else {
-                            $("p.now_playing").html("Offline");
+                            $("p.now_playing").html("Off Air" + "<span>Offline</span>");
                         }
                         time_to_next_track_starts = 20000;
                     } else {
@@ -294,6 +306,7 @@
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
         }
 
+
     </script>
 
     <style type="text/css">
@@ -310,31 +323,44 @@
 
 <body>
 
-<div class="airtime_player">
+<div id="player" <?php if ($this->player_style == "basic") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
+    <div class="airtime_player">
 
-    <div class="airtime_header">
-        <p class="station_name">fff</p>
-    </div>
-
-    <div class="airtime_box">
-
-        <div class="airtime_button">
-            <span id="play_button" class="play_button" onclick="musesPlayer.play()"></span>
-            <span id="stop_button" class="stop_button hide_button" onclick="musesPlayer.stop()"></span>
+        <div class="airtime_header">
+            <p class="station_name">fff</p>
         </div>
-        <p class="now_playing"></p>
+
+        <div class="airtime_box">
+
+            <div class="airtime_button">
+                <span id="play_button" class="play_button" onclick="musesPlayer.play()"></span>
+                <span id="stop_button" class="stop_button hide_button" onclick="musesPlayer.stop()"></span>
+            </div>
+            <p class="now_playing"></p>
+
+        </div>
+
+        <div style="clear:both"></div>
+
+        <div class="airtime_schedule">
+            <p class="airtime_next">Next</p>
+            <ul class="schedule_list">
+                <li></li>
+            </ul>
+        </div>
+        <a class="airtime_pro" target="_blank" href="https://www.airtime.pro/">Powered by <span class="airtime-pro-orange">Airtime Pro</span></a>
 
     </div>
+</div>
 
-    <div style="clear:both"></div>
+<div id="premium_player" <?php if ($this->player_style == "premium") echo "style='display:block;'"; else echo "style='display:none'"; ?>>
+    <div class="bottom_bar">
+        <div class="play cont_btn"></div>
 
-    <div class="airtime_schedule">
-        <p class="airtime_next">Next</p>
-        <ul class="schedule_list">
-            <li></li>
-        </ul>
+        <div class="on_air">
+            <p class="now_playing"></p>
+        </div>
     </div>
-    <a class="airtime_pro" target="_blank" href="https://www.airtime.pro/">Powered by <span class="airtime-pro-orange">Airtime Pro</span></a>
 
 </div>
 

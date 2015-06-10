@@ -63,25 +63,6 @@ function confirmCancelRecordedShow(show_instance_id){
     }
 }
 
-//function uploadToSoundCloud(show_instance_id, el){
-//
-//    var url = baseUrl+"Schedule/upload-to-sound-cloud",
-//    	$el = $(el),
-//    	$span = $el.find(".soundcloud");
-//
-//    $.post(url, {id: show_instance_id, format: "json"});
-//
-//    //first upload to soundcloud.
-//    if ($span.length === 0){
-//        $span = $("<span/>", {"class": "progress"});
-//
-//        $el.find(".fc-event-title").after($span);
-//    }
-//    else {
-//        $span.removeClass("soundcloud").addClass("progress");
-//    }
-//}
-
 function checkCalendarSCUploadStatus(){
     var url = baseUrl+'Library/get-upload-to-soundcloud-status',
         span,
@@ -420,24 +401,6 @@ $(document).ready(function() {
                     };
                     oItems.content.callback = callback;
                 }
-                
-                //define a soundcloud upload callback.
-                //if (oItems.soundcloud_upload !== undefined) {
-                //
-                //    callback = function() {
-                //        uploadToSoundCloud(data.id, this.context);
-                //    };
-                //    oItems.soundcloud_upload.callback = callback;
-                //}
-                
-                //define a view on soundcloud callback.
-                //if (oItems.soundcloud_view !== undefined) {
-                //
-                //    callback = function() {
-                //        window.open(oItems.soundcloud_view.url);
-                //    };
-                //    oItems.soundcloud_view.callback = callback;
-                //}
                 
                 //define a cancel recorded show callback.
                 if (oItems.cancel_recorded !== undefined) {

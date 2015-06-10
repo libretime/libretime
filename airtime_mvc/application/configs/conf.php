@@ -2,8 +2,6 @@
 /* THIS FILE IS NOT MEANT FOR CUSTOMIZING.
  * PLEASE EDIT THE FOLLOWING TO CHANGE YOUR CONFIG:
  * /etc/airtime/airtime.conf
- * /etc/airtime/pypo.cfg
- * /etc/airtime/recorder.cfg
  */
 
 class Config {
@@ -69,11 +67,8 @@ class Config {
         // Tells us where file uploads will be uploaded to.
         // It will either be set to a cloud storage backend or local file storage.
         $CC_CONFIG["current_backend"] = $cloudStorageValues["current_backend"]["storage_backend"];
-        
+
         $CC_CONFIG['cache_ahead_hours'] = $values['general']['cache_ahead_hours'];
-        
-        $CC_CONFIG['monit_user'] = $values['monit']['monit_user'];
-        $CC_CONFIG['monit_password'] = $values['monit']['monit_password'];
         
 	    // Database config
         $CC_CONFIG['dsn']['username'] = $values['database']['dbuser'];

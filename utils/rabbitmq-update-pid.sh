@@ -12,4 +12,4 @@ else
 fi
 
 echo "RabbitMQ PID: $rabbitmqpid"
-echo "$rabbitmqpid" > /var/run/rabbitmq.pid
+echo "$rabbitmqpid" > /var/run/airtime/rabbitmq.pid

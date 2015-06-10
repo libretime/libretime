@@ -1,10 +1,11 @@
 .*
+*.*~
 *.pyc
 vendor/*
 composer.phar
 *~$
 *log.*
-**/airtime_analyzer.egg-info/*
+**/*.egg-info/*
 **/build/*
 **/dist/*
 *~

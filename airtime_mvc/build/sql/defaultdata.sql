@@ -1,5 +1,5 @@
 -- Schema version
-INSERT INTO cc_pref("keystr", "valstr") VALUES('system_version', '2.5.9');
+INSERT INTO cc_pref("keystr", "valstr") VALUES('schema_version', '2.5.12');
 
 INSERT INTO cc_subjs ("login", "type", "pass") VALUES ('admin', 'A', md5('admin'));
 -- added in 2.3

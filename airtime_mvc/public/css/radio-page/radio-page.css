@@ -1,0 +1,161 @@
+html {
+    background: url("img/background.png") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow-y: hidden;
+}
+
+.bck_cover {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+}
+
+.logo img {
+    margin: 40px 0px 0px 60px;
+}
+
+#schedule_iframe, .tab_content {
+    color: #fff;
+    text-align: center;
+    width: 770px;
+    max-width: 770px;
+    margin: 0 auto;
+    margin-bottom: 140px;
+    padding: 10px;
+    padding-left: 0px;
+    position: absolute;
+    left: 50%;
+    margin-left: -380px;
+    /*	-webkit-transition-delay: 1s;
+        transition-delay: 1s;*/
+}
+
+#schedule_iframe.tab_content.current, .tab_content.current {
+    /*display: block;*/
+    visibility: visible;
+}
+
+.about_us {
+    -webkit-transition-delay: 2s;
+    transition-delay: 2s;
+}
+
+#schedule_iframe.schedule, .about_us, .login {
+    /*	-webkit-transition-delay: 1s;
+        transition-delay: 1s;*/
+    transition: all 0.4s ease;
+    opacity: 0;
+}
+
+.about_us.current, .login.current {
+    opacity: 1;
+    -webkit-transition-delay: 0.4s;
+    transition-delay: 0.4s;
+}
+
+#schedule_iframe.schedule.current {
+    opacity: 1;
+}
+
+.about_us h1 {
+    font-size: 80px;
+    font-weight: 300;
+    margin: 10px;
+}
+
+.about_us p {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 10px;
+}
+
+.login h2 {
+    font-size: 28px;
+    font-weight: 300;
+}
+
+input[type="text"] {
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    margin-bottom: 1px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+input[type="text"]:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+input[type="submit"] {
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 300;
+    background: #459B8F;
+    width: 100%;
+    max-width: 380px;
+    padding: 18px 20px;
+    margin-top: 20px;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+input[type="submit"]:hover {
+    background-color: #409187;
+}
+
+@media (max-width: 780px) {
+    .logo {
+        display: block;
+        text-align: center;
+    }
+
+    .logo img {
+        margin: 20px 0px;
+    }
+
+    .tab_content {
+        margin-top: 0px;
+        width: auto;
+        max-width: 100%;
+        margin-left: auto;
+        left: 10px;
+        right: 10px;
+    }
+
+    #schedule_iframe {
+        margin-top: 0px;
+        max-width: 100%;
+        margin-left: auto;
+        left: 0px;
+        right: 10px;
+    }
+
+    .about_us h1 {
+        font-size: 40px;
+    }
+
+    .about_us p {
+        font-size: 18px;
+    }
+}

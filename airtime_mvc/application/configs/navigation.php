@@ -67,12 +67,6 @@ $pages = array(
                 'action'     => 'stream-setting'
             ),
             array(
-                'label'      => _('Support Feedback'),
-                'module'     => 'default',
-                'controller' => 'Preference',
-                'action'     => 'support-setting'
-            ),
-            array(
                 'label'      => _('Status'),
                 'module'     => 'default',
                 'controller' => 'systemstatus',
@@ -87,10 +81,10 @@ $pages = array(
                 'resource'   => 'listenerstat'
             ),
             array(
-                'label'      => _('Player'),
+                'label'      => _('Widgets'),
                 'module'     => 'default',
-                'controller' => 'player',
-                'action'     => 'customize'
+                'controller' => 'embeddablewidgets',
+                'action'     => 'index'
             )
         )
     ),

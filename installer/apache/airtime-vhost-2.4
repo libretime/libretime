@@ -1,0 +1,14 @@
+<VirtualHost *:80>
+   ServerAdmin foo@bar.org
+   DocumentRoot WEB_ROOT
+   php_admin_value upload_tmp_dir /tmp
+
+  <Directory WEB_ROOT>
+      DirectoryIndex index.php
+      AllowOverride all
+      Order allow,deny
+      Allow from all
+
+      Require all granted
+  </Directory>
+</VirtualHost>

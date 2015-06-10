@@ -13,40 +13,25 @@ class UpgradeController extends Zend_Controller_Action
             return;
         }
 
-        // Get all upgrades dynamically (in declaration order!) so we don't have to add them explicitly each time
-        // TODO: explicitly sort classnames by ascending version suffix for safety
-        $upgraders = getUpgrades();
+        try {
+            $upgradeManager = new UpgradeManager();
+            $didWePerformAnUpgrade = $upgradeManager->doUpgrade();
 
-        $didWePerformAnUpgrade = false;
-        try 
-        {
-            foreach ($upgraders as $upgrader)
-            {
-                /** @var $upgrader AirtimeUpgrader */
-                $upgrader = new $upgrader();
-                if ($upgrader->checkIfUpgradeSupported())
-                {
-                	// pass __DIR__ to the upgrades, since __DIR__ returns parent dir of file, not executor
-                    $upgrader->upgrade(__DIR__); //This will throw an exception if the upgrade fails.
-                    $didWePerformAnUpgrade = true;
-                    $this->getResponse()
-                         ->setHttpResponseCode(200)
-                         ->appendBody("Upgrade to Airtime " . $upgrader->getNewVersion() . " OK<br>"); 
-                }
-            }
-            
-            if (!$didWePerformAnUpgrade)
-            {
+            if (!$didWePerformAnUpgrade) {
                 $this->getResponse()
-                	 ->setHttpResponseCode(200)
-                	 ->appendBody("No upgrade was performed. The current Airtime version is " . AirtimeUpgrader::getCurrentVersion() . ".<br>");
+                     ->setHttpResponseCode(200)
+                     ->appendBody("No upgrade was performed. The current schema version is " . Application_Model_Preference::GetSchemaVersion() . ".<br>");
+            } else {
+                $this->getResponse()
+                     ->setHttpResponseCode(200)
+                     ->appendBody("Upgrade to Airtime schema version " . Application_Model_Preference::GetSchemaVersion() . " OK<br>");
             }
         } 
         catch (Exception $e) 
         {
             $this->getResponse()
-            	 ->setHttpResponseCode(400)
-           		 ->appendBody($e->getMessage());
+                 ->setHttpResponseCode(400)
+                 ->appendBody($e->getMessage());
         }
     }
 }

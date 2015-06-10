@@ -17,7 +17,7 @@ class PreferenceUnitTest extends PHPUnit_Framework_TestCase
     public function testSetHeadTitle()
     {
         $title = "unit test";
-        //This function is confusing and doesn't really work so we're just gonna let it slide...
+        //This function is confusing and doesn't really work so we're just gonna let it formSlide...
         Application_Model_Preference::SetHeadTitle($title);
         $this->assertEquals(Application_Model_Preference::GetHeadTitle(), $title);
     }

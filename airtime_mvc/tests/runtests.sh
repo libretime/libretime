@@ -33,5 +33,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
 #Run the unit tests
-phpunit --log-junit test_results.xml
+phpunit --verbose --log-junit test_results.xml
 

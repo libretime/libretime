@@ -132,22 +132,6 @@ function setCollapsibleWidgetJsCode() {
     $('#thirdPartyApi-element input').click(x);
 }
 
-//function setSoundCloudCheckBoxListener() {
-//    var subCheckBox= $("#UseSoundCloud,#SoundCloudDownloadbleOption");
-//    var mainCheckBox= $("#UploadToSoundcloudOption");
-//    subCheckBox.change(function(e){
-//        if (subCheckBox.is(':checked')) {
-//            mainCheckBox.attr("checked", true);
-//        }
-//    });
-//
-//    mainCheckBox.change(function(e){
-//         if (!mainCheckBox.is(':checked')) {
-//            $("#UseSoundCloud,#SoundCloudDownloadbleOption").attr("checked", false);
-//        }
-//    });
-//}
-
 function removeLogo() {
     $.post(baseUrl+'Preference/remove-logo', function(json){});
     location.reload();
@@ -190,7 +174,6 @@ $(document).ready(function() {
 
     showErrorSections();
     
-    //setSoundCloudCheckBoxListener();
     setMailServerInputReadonly();
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();

@@ -139,12 +139,15 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             }
             else  //Non-REST, regular Airtime web app requests
             {
-                //Redirect you to the login screen since you have no session.
-                if ($controller !== 'login') {
+                // Redirect user to the landing page if they are trying to
+                // access a resource that requires a valid session.
+                // Skip the redirection if they are already on the landing page
+                // or the login page.
+                if ($controller !== 'index' && $controller !== 'login') {
 
                     if ($request->isXmlHttpRequest()) {
 
-                        $url = 'http://'.$request->getHttpHost().'/login';
+                        $url = 'http://'.$request->getHttpHost().'/';
                         $json = Zend_Json::encode(array('auth' => false, 'url' => $url));
 
                         // Prepare response
@@ -157,7 +160,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                         Zend_Controller_Action_HelperBroker::getStaticHelper('redirector')->redirectAndExit();
                     } else {
                         $r = Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
-                        $r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
+                        $r->gotoSimpleAndExit('index', 'index', $request->getModuleName());
                    }
                 }
             }

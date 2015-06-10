@@ -1,0 +1,66 @@
+
+<div class="wrapper">
+
+    <div class="bck_cover"></div>
+
+    <?php if ($this->stationLogo === DEFAULT_LOGO_PLACEHOLDER) {
+        echo "<a href='#' class='logo'><img src='".$this->baseUrl.DEFAULT_LOGO_FILE."'></a>";
+    } else {
+        echo "<a href='#' class='logo'><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
+    } ?>
+
+    <div id="tab-1" class="schedule tab_content current">
+        <iframe id="schedule_iframe" height="400px" scrolling="no" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program?style=premium"?>></iframe>
+    </div>
+
+    <div id="tab-2" class="about_us tab_content">
+        <h1><?php echo $this->stationName ?></h1>
+        <p><?php echo $this->stationDescription ?></p>
+    </div>
+
+    <div id="tab-3" class="login tab_content">
+        <h2>Login</h2>
+        <form action="demo_form.asp">
+            <input type="text" name="FirstName" value="username"><br>
+            <input type="text" name="Password" value="password"><br>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <iframe id="player_iframe" frameborder="0" width="100%" style="bottom:0px; left:0px; position:fixed; right:0px;" src=<?php echo $this->stationUrl."embed/player?stream=auto&style=premium";?>></iframe>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        $("#player_iframe").load(function () {
+            $("#player_iframe").contents().find('.bottom_bar').append("<a class='login_btn button' target='_parent' href='/login'></a>");
+            $("#player_iframe").contents().find('.bottom_bar').append("<div class='about_us_btn button' data-tab='tab-2'></div>");
+            $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");
+
+
+            $("#player_iframe").contents().find('.bottom_bar .button').not('.login_btn').click(function(){
+                var tab_id = $(this).attr('data-tab');
+
+                $("#player_iframe").contents().find('.bottom_bar .button').removeClass('current');
+                $('.tab_content').removeClass('current');
+
+                $(this).addClass('current');
+                $("#"+tab_id).addClass('current');
+            });
+        });
+
+        // schedule widget tabs
+        $('.tabs li').click(function(){
+            var tab_id = $(this).attr('data-tab');
+
+            $('.tabs li').removeClass('active');
+            $('.schedule_item').removeClass('active');
+
+            $(this).addClass('active');
+            $("#"+tab_id).addClass('active');
+        });
+
+    })
+</script>
