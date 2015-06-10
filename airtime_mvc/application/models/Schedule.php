@@ -268,6 +268,7 @@ SQL;
         $nextMedia = CcScheduleQuery::create()
             ->filterByDbStarts($currentMedia["starts"], Criteria::GREATER_THAN)
             ->filterByDbId($currentMedia["id"], Criteria::NOT_EQUAL)
+            ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
             ->orderByDbStarts(Criteria::ASC)
             ->findOne();
         if (isset($nextMedia)) {
