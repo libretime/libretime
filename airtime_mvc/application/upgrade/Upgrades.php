@@ -35,7 +35,7 @@ class UpgradeManager
     {
         $schemaVersion = Application_Model_Preference::GetSchemaVersion();
         $supportedSchemaVersions = self::getSupportedSchemaVersions();
-        $upgradeNeeded = !in_array($schemaVersion, $supportedSchemaVersions);
+        return !in_array($schemaVersion, $supportedSchemaVersions);
         // We shouldn't run the upgrade as a side-effect of this function!
         /*
         if ($upgradeNeeded) {
@@ -46,7 +46,6 @@ class UpgradeManager
 
     public function doUpgrade()
     {
-        $didWePerformAnUpgrade = false;
         // Get all upgrades dynamically (in declaration order!) so we don't have to add them explicitly each time
         // TODO: explicitly sort classnames by ascending version suffix for safety
         $upgraders = getUpgrades();
@@ -69,7 +68,7 @@ class UpgradeManager
             {
                 // pass the given directory to the upgrades, since __DIR__ returns parent dir of file, not executor
                 $upgrader->upgrade($dir); //This will throw an exception if the upgrade fails.
-                $didWePerformAnUpgrade = true;
+                $upgradePerformed = true;
             }
         }
         return $upgradePerformed;
@@ -512,7 +511,7 @@ class AirtimeUpgrader2512 extends AirtimeUpgrader
 
 class AirtimeUpgrader2513 extends AirtimeUpgrader
 {
-    protected function getSupportedVersions() {
+    protected function getSupportedSchemaVersions() {
         return array (
             '2.5.12'
         );
@@ -544,7 +543,7 @@ class AirtimeUpgrader2513 extends AirtimeUpgrader
             passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f $dir/upgrade_sql/airtime_"
                      .$newVersion."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
 
-            Application_Model_Preference::SetAirtimeVersion($newVersion);
+            Application_Model_Preference::SetSchemaVersion($newVersion);
             Cache::clear();
 
             $this->toggleMaintenanceScreen(false);
@@ -553,5 +552,6 @@ class AirtimeUpgrader2513 extends AirtimeUpgrader
             throw $e;
         }
     }
+
 }
 

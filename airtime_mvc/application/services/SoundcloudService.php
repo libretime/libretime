@@ -83,15 +83,16 @@ class SoundcloudService extends ThirdPartyService {
 
     /**
      * Update a ThirdPartyTrackReferences object for a completed upload
+     * TODO: should we have a database layer class to handle Propel operations?
      *
      * @param $fileId int    local CcFiles identifier
      * @param $track  object third-party service track object
+     * @param $status string Celery task status
      *
      * @throws Exception
      * @throws PropelException
      */
-    protected function _addOrUpdateTrackReference($fileId, $track) {
-        // First, check if the track already has an entry in the database
+    protected function _addOrUpdateTrackReference($fileId, $track, $status) {
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->filterByDbService($this->_SERVICE_NAME)
             ->findOneByDbFileId($fileId);
@@ -99,10 +100,17 @@ class SoundcloudService extends ThirdPartyService {
             $ref = new ThirdPartyTrackReferences();
         }
         $ref->setDbService($this->_SERVICE_NAME);
-        $ref->setDbForeignId($track->id);
+        // Only set the SoundCloud fields if the task was successful
+        if ($status == $this->_SUCCESS_STATUS) {
+            // TODO: fetch any additional SoundCloud parameters we want to store
+            $ref->setDbForeignId($track->id);  // SoundCloud identifier
+        }
         $ref->setDbFileId($fileId);
-        $ref->setDbStatus($track->state);
+        $ref->setDbStatus($status);
         // Null the broker task fields because we no longer need them
+        // We use NULL over an empty string/object here because we have
+        // a unique constraint on the task ID and it's easier to filter
+        // and query against NULLs
         $ref->setDbBrokerTaskId(NULL);
         $ref->setDbBrokerTaskName(NULL);
         $ref->setDbBrokerTaskDispatchTime(NULL);

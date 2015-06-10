@@ -36,6 +36,11 @@ abstract class ThirdPartyService {
     protected $_PENDING_STATUS = 'PENDING';
 
     /**
+     * @var string status string for successful tasks
+     */
+    protected $_SUCCESS_STATUS = 'SUCCESS';
+
+    /**
      * @var string status string for failed tasks
      */
     protected $_FAILED_STATUS = 'FAILED';
@@ -68,6 +73,7 @@ abstract class ThirdPartyService {
 
     /**
      * Create a ThirdPartyTrackReferences object for a pending task
+     * TODO: should we have a database layer class to handle Propel operations?
      *
      * @param $fileId       int    local CcFiles identifier
      * @param $brokerTaskId int    broker task identifier to so we can asynchronously
@@ -151,9 +157,8 @@ abstract class ThirdPartyService {
         $pendingTasks = $this->_getPendingTasks($taskName);
         foreach ($pendingTasks as $task) {
             try {
-                $result = $this->_getTaskResult($task);
-                Logging::info(json_decode($result));
-                $this->_addOrUpdateTrackReference($task->getDbFileId(), json_decode($result));
+                $message = $this->_getTaskMessage($task);
+                $this->_addOrUpdateTrackReference($task->getDbFileId(), json_decode($message->result), $message->status);
             } catch(CeleryException $e) {
                 Logging::info("Couldn't retrieve task message for task " . $task->getDbBrokerTaskName()
                               . " with ID " . $task->getDbBrokerTaskId() . ": " . $e->getMessage());
@@ -185,19 +190,18 @@ abstract class ThirdPartyService {
     }
 
     /**
-     * Get the result from a celery task message in the results queue
-     * If the task message no longer exists, remove it from the track references table
+     * Get a Celery task message from the results queue
      *
      * @param $task ThirdPartyTrackReferences the track reference object
      *
-     * @return array the results from the task message
+     * @return object the task message object
      *
      * @throws CeleryException when the result message for this task no longer exists
      */
-    protected function _getTaskResult($task) {
-        $message = Application_Model_RabbitMq::getAsyncResultMessage($task->getDbBrokerTaskName(),
-                                                                     $task->getDbBrokerTaskId());
-        return json_decode($message['body'])->result;  // The actual result message from the service
+    protected function _getTaskMessage($task) {
+        $message =  Application_Model_RabbitMq::getAsyncResultMessage($task->getDbBrokerTaskName(),
+                                                                      $task->getDbBrokerTaskId());
+        return json_decode($message['body']);
     }
 
     /**
@@ -231,11 +235,12 @@ abstract class ThirdPartyService {
      *
      * @param $fileId int    local CcFiles identifier
      * @param $track  object third-party service track object
+     * @param $status string Celery task status
      *
      * @throws Exception
      * @throws PropelException
      */
-    abstract protected function _addOrUpdateTrackReference($fileId, $track);
+    abstract protected function _addOrUpdateTrackReference($fileId, $track, $status);
 
     /**
      * Check whether an OAuth access token exists for the third-party client
