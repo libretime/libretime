@@ -27,7 +27,6 @@ class IndexController extends Zend_Controller_Action
 
         $this->view->stationUrl = Application_Common_HTTPHelper::getStationUrl();
 
-        $this->view->baseUrl = Application_Common_OsPath::getBaseDir();
     }
 
     public function mainAction()

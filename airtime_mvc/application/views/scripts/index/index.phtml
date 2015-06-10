@@ -4,7 +4,7 @@
     <div class="bck_cover"></div>
 
     <?php if ($this->stationLogo === DEFAULT_LOGO_PLACEHOLDER) {
-        echo "<a href='#' class='logo'><img src='".$this->baseUrl."/images/".DEFAULT_LOGO_FILE."'></a>";
+        echo "<a href='#' class='logo'><img src='images/".DEFAULT_LOGO_FILE."'></a>";
     } else {
         echo "<a href='#' class='logo'><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
     } ?>
