@@ -81,7 +81,7 @@ $pages = array(
                 'resource'   => 'listenerstat'
             ),
             array(
-                'label'      => _('Widgets'),
+                'label'      => _('Embeddable Widgets'),
                 'module'     => 'default',
                 'controller' => 'embeddablewidgets',
                 'action'     => 'index'
