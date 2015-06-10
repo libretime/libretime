@@ -13,45 +13,25 @@ class UpgradeController extends Zend_Controller_Action
             return;
         }
 
-        $upgraders = array();
-        array_push($upgraders, new AirtimeUpgrader253());        
-        array_push($upgraders, new AirtimeUpgrader254());
-        array_push($upgraders, new AirtimeUpgrader255());
-        array_push($upgraders, new AirtimeUpgrader259());
-        array_push($upgraders, new AirtimeUpgrader2510());
-        array_push($upgraders, new AirtimeUpgrader2511());
-        array_push($upgraders, new AirtimeUpgrader2512());
-
-        $didWePerformAnUpgrade = false;
-        try 
-        {
-            for ($i = 0; $i < count($upgraders); $i++)
-            {
-                $upgrader = $upgraders[$i];
-                if ($upgrader->checkIfUpgradeSupported())
-                {
-                	// pass __DIR__ to the upgrades, since __DIR__ returns parent dir of file, not executor
-                    $upgrader->upgrade(__DIR__); //This will throw an exception if the upgrade fails.
-                    $didWePerformAnUpgrade = true;
-                    $this->getResponse()
-                         ->setHttpResponseCode(200)
-                         ->appendBody("Upgrade to Airtime " . $upgrader->getNewVersion() . " OK<br>"); 
-                    $i = 0; //Start over, in case the upgrade handlers are not in ascending order.
-                }
-            }
+        try {
+            $upgradeManager = new UpgradeManager();
+            $didWePerformAnUpgrade = $upgradeManager->doUpgrade();
             
-            if (!$didWePerformAnUpgrade)
-            {
+            if (!$didWePerformAnUpgrade) {
                 $this->getResponse()
-                	 ->setHttpResponseCode(200)
-                	 ->appendBody("No upgrade was performed. The current Airtime version is " . AirtimeUpgrader::getCurrentVersion() . ".<br>");
+                     ->setHttpResponseCode(200)
+                     ->appendBody("No upgrade was performed. The current schema version is " . Application_Model_Preference::GetSchemaVersion() . ".<br>");
+            } else {
+                $this->getResponse()
+                     ->setHttpResponseCode(200)
+                     ->appendBody("Upgrade to Airtime schema version " . Application_Model_Preference::GetSchemaVersion() . " OK<br>");
             }
         } 
         catch (Exception $e) 
         {
             $this->getResponse()
-            	 ->setHttpResponseCode(400)
-           		 ->appendBody($e->getMessage());
+                 ->setHttpResponseCode(400)
+                 ->appendBody($e->getMessage());
         }
     }
 

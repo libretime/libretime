@@ -886,10 +886,30 @@ class Application_Model_Preference
 
         return self::getValue("enable_stream_conf");
     }
-    
-    public static function SetAirtimeVersion($version)
+
+    public static function GetSchemaVersion()
     {
-        self::setValue("system_version", $version);
+        CcPrefPeer::clearInstancePool(); //Ensure we don't get a cached Propel object (cached DB results)
+        //because we're updating this version number within this HTTP request as well.
+
+        //New versions use schema_version
+        $pref = CcPrefQuery::create()
+            ->filterByKeystr('schema_version')
+            ->findOne();
+
+        if (empty($pref)) {
+            //Pre-2.5.2 releases all used this ambiguous "system_version" key to represent both the code and schema versions...
+            $pref = CcPrefQuery::create()
+                ->filterByKeystr('system_version')
+                ->findOne();
+        }
+        $schemaVersion = $pref->getValStr();
+        return $schemaVersion;
+    }
+
+    public static function SetSchemaVersion($version)
+    {
+        self::setValue("schema_version", $version);
     }
 
     public static function GetAirtimeVersion()

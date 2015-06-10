@@ -3,7 +3,10 @@ error_reporting(E_ALL | E_STRICT);
 
 // Define path to application directory
 defined('APPLICATION_PATH')
-    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application'));
+    || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../../application/'));
+
+// Define path to configs directory
+define('CONFIG_PATH', APPLICATION_PATH . '/configs/');
 
 // Define application environment
 defined('APPLICATION_ENV')

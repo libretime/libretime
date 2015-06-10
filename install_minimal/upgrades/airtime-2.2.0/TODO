@@ -1,9 +1,0 @@
-need to install the following packages:
-
-mp3gain
-vorbisgain
-flac
-vorbis-tools
-
-
-calculate Replay Gain dB on upgrade: the default value should be NULL.

@@ -3,7 +3,7 @@
 =========================================================================
 
 Airtime is an open source application that provides remote and 
-collaborative automation of a broadcast station.
+collaborative automation of a broadcast radio station.
 
 Home page: http://www.sourcefabric.org/en/airtime/
 
@@ -18,28 +18,62 @@ Major features:
  * Solid playout. Airtime uses the open source Liquidsoap streaming language 
    for reliable and precise playback to multiple outputs. 
  * Open, extensible architecture.  Stations are free to extend and alter 
-   all parts of the program code, under the GNU GPLv3 license.
+   all parts of the program code, under the GNU AGPLv3 license.
 
 
 INSTALLATION
 ------------
 
-Please see this chapter to begin a typical installation:
-http://sourcefabric.booktype.pro/airtime-25-for-broadcasters/preparing-the-server/
+Basic installation has two steps:
 
-If you are a developer, please see this page:
-http://wiki.sourcefabric.org/display/CC/Airtime+Dev+Site
+1) Run the install script, located in the Airtime root directory.
 
-For installation direct from a git checkout on Ubuntu 12.04 LTS, run:
+For an interactive installation, run:
 
-    cd install_full/ubuntu
-    sudo ./airtime-full-install
+    sudo ./install
 
-For installation from git on Debian wheezy, run:
+If you're using a terminal that is not running Bash, you'll need to run
 
-    cd install_full/debian
-    sudo ./airtime-full-install
+    sudo /bin/bash ./install
 
+instead. You may need to install Bash first.
+
+The installer will then prompt you about how you want to set up your Airtime 
+installation.
+
+For a non-interactive full installation (do this if you're installing Airtime from 
+scratch and don't have any of your own configuration set up), run
+
+    sudo ./install -fiap
+
+What this means:
+
+    -f - force; non-interactive (no prompts)
+    -i - install the default Icecast 2 setup for Airtime
+    -a - install the default apache setup for Airtime
+    -p - create a default Airtime postgres user
+
+This will install all components necessary for Airtime, and set up 
+/usr/share/airtime as your web root (where apache looks for your Airtime files)
+
+There are several options for installation - to see them all, run
+
+    sudo ./install --help
+
+2) Once you've run the installer, open a web browser to http://localhost to run 
+the interactive setup. (If you have a custom apache configuration, navigate to 
+your Airtime web host instead.) 
+
+If you just want to run Airtime with default settings, you won't need to change 
+anything, but if you have any custom configuration settings you'll be able to 
+specify them.
+
+Once you finish the setup process, you'll be presented with a configuration 
+checklist so you can ensure that your Airtime installation is working 
+correctly. If anything was mis-configured, the checklist will provide some .
+helpful tips to resolve the issue.
+
+If your checklist is all green, you're ready to get started with Airtime!
 
 Quick links to our resources
 ----------------------------
@@ -48,4 +82,3 @@ Forums and mailing lists: http://forum.sourcefabric.org
 Bug tracker: http://dev.sourcefabric.org
 Source code: http://github.com/sourcefabric/Airtime
 IRC chat: #airtime on Freenode
-

@@ -436,10 +436,13 @@ class AMQPConnection extends AbstractChannel
         $len = strlen($data);
         while(true)
         {
-            if(false === ($written = fwrite($this->sock, $data)))
+            $written = fwrite($this->sock, $data);
+
+            if($written == false || $written <= 0)
             {
                 throw new Exception ("Error sending data");
             }
+
             $len = $len - $written;
             if($len>0)
                 $data=substr($data,0-$len);
@@ -601,12 +604,17 @@ class AMQPConnection extends AbstractChannel
      */
     public function close($reply_code=0, $reply_text="", $method_sig=array(0, 0))
     {
-        $args = new AMQPWriter();
-        $args->write_short($reply_code);
-        $args->write_shortstr($reply_text);
-        $args->write_short($method_sig[0]); // class_id
-        $args->write_short($method_sig[1]); // method_id
-        $this->send_method_frame(array(10, 60), $args);
+        try {
+            $args = new AMQPWriter();
+            $args->write_short($reply_code);
+            $args->write_shortstr($reply_text);
+            $args->write_short($method_sig[0]); // class_id
+            $args->write_short($method_sig[1]); // method_id
+            $this->send_method_frame(array(10, 60), $args);
+        } catch(Exception $e) {
+            return;
+        }
+
         return $this->wait(array(
                                "10,61",    // Connection.close_ok
                            ));
