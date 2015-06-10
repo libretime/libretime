@@ -24,7 +24,7 @@ define('AIRTIME_API_VERSION'    , '1.1');
 define('AIRTIME_CODE_VERSION'   , '2.5.13');
 
 define('DEFAULT_LOGO_PLACEHOLDER', 1);
-define('DEFAULT_LOGO_FILE', 'airtime_logo.png');
+define('DEFAULT_LOGO_FILE', 'images/airtime_logo.png');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');

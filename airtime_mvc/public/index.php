@@ -54,8 +54,11 @@ if (array_key_exists('config', $_GET)) {
     showConfigCheckPage();
 }
 
+$filename = isset($_SERVER['AIRTIME_CONF']) ? 
+    $_SERVER['AIRTIME_CONF'] : AIRTIME_CONFIG_STOR . AIRTIME_CONFIG;
+
 // If a configuration file exists, forward to our boot script
-if (file_exists(AIRTIME_CONFIG_STOR . AIRTIME_CONFIG)) {
+if (file_exists($filename)) {
     require_once(APPLICATION_PATH . 'airtime-boot.php');
 }
 // Otherwise, we'll need to run our configuration setup
