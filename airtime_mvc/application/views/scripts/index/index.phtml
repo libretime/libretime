@@ -40,7 +40,7 @@
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");
 
 
-            $("#player_iframe").contents().find('.bottom_bar .button').click(function(){
+            $("#player_iframe").contents().find('.bottom_bar .button').not('.login_btn').click(function(){
                 var tab_id = $(this).attr('data-tab');
 
                 $("#player_iframe").contents().find('.bottom_bar .button').removeClass('current');
