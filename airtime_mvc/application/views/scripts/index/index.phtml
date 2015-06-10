@@ -3,8 +3,8 @@
 
     <div class="bck_cover"></div>
 
-    <?php if ($this->stationLogo === "airtime_logo.png") {
-        echo "<a href='#' class='logo'><img src='airtime_logo.png'></a>";
+    <?php if ($this->stationLogo === DEFAULT_LOGO_PLACEHOLDER) {
+        echo "<a href='#' class='logo'><img src='".DEFAULT_LOGO_FILE."'></a>";
     } else {
         echo "<a href='#' class='logo'><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
     } ?>

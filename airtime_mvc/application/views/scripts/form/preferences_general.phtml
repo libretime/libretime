@@ -14,8 +14,8 @@
         <div id="Logo-img-container">
             <?php
             $logoImg = $this->element->getView()->logoImg;
-            if ($logoImg === "airtime_logo.png") {
-                $src = "airtime_logo.png";
+            if ($logoImg === DEFAULT_LOGO_PLACEHOLDER) {
+                $src = DEFAULT_LOGO_FILE;
             } else {
                 $src = "data:image/png;base64,".$logoImg;
             }

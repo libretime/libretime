@@ -502,7 +502,7 @@ class Application_Model_Preference
         if (!empty($description)) {
             return $description;
         } else {
-            return "Powered by Airtime Pro";
+            return sprintf(_("Powered by %s"), SAAS_PRODUCT_BRANDING_NAME);
         }
     }
 
@@ -613,7 +613,7 @@ class Application_Model_Preference
         } else {
             // We return the Airtime logo if no logo is set in the database.
             // airtime_logo.png is stored under the public directory
-            return "airtime_logo.png";
+            return DEFAULT_LOGO_PLACEHOLDER;
         }
     }
     
