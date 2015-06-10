@@ -1,5 +1,7 @@
 <?php
 
+define("DAYS_PER_WEEK", 7);
+
 class WidgetHelper
 {
     public static function getWeekInfo($timezone)
@@ -59,10 +61,9 @@ class WidgetHelper
     public static function getWeekInfoV2($timezone)
     {
         //weekStart is in station time.
-        $weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
+        //$weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
+        $weekStartDateTime = new DateTime("now", new DateTimeZone(Application_Model_Preference::GetTimezone()));
 
-        $dow = array("monday", "tuesday", "wednesday", "thursday", "friday",
-            "saturday", "sunday");
         $maxNumOFWeeks = 2;
 
         $result = array();
@@ -80,8 +81,12 @@ class WidgetHelper
         $utcDayStart = $weekStartDateTime->format("Y-m-d H:i:s");
         $weekCounter = 0;
         while ($weekCounter < $maxNumOFWeeks) {
-            for ($i = 0; $i < 7; $i++) {
+            for ($dayOfWeekCounter = 0; $dayOfWeekCounter < DAYS_PER_WEEK; $dayOfWeekCounter++) {
                 $dateParse = date_parse($weekStartDateTime->format("Y-m-d H:i:s"));
+
+                $result[$weekCounter][$dayOfWeekCounter]["dayOfMonth"] = $dateParse["day"];
+                $result[$weekCounter][$dayOfWeekCounter]["dayOfWeek"] = strtoupper(date("D", $weekStartDateTime->getTimestamp()));
+
                 //have to be in station timezone when adding 1 day for daylight savings.
                 $weekStartDateTime->setTimezone(new DateTimeZone($timezone));
                 $weekStartDateTime->add(new DateInterval('P1D'));
@@ -108,14 +113,13 @@ class WidgetHelper
                     $endParseDate = date_parse($show['ends']);
                     $show["show_end_hour"] = str_pad($endParseDate["hour"], 2, 0, STR_PAD_LEFT).":".str_pad($endParseDate["minute"],2, 0, STR_PAD_LEFT);
                 }
-                $result[$weekCounter][$dow[$i]]["dayOfMonth"] = $dateParse["day"];
-                $result[$weekCounter][$dow[$i]]["dayOfWeek"] = strtoupper(substr($dow[$i], 0, 3));
-                $result[$weekCounter][$dow[$i]]["shows"] = $shows;
+                $result[$weekCounter][$dayOfWeekCounter]["shows"] = $shows;
 
                 // XSS exploit prevention
                 self::convertSpecialChars($result, array("name", "url"));
                 // convert image paths to point to api endpoints
                 self::findAndConvertPaths($result);
+
             }
             $weekCounter += 1;
         }

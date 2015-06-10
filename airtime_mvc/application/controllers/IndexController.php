@@ -12,7 +12,7 @@ class IndexController extends Zend_Controller_Action
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/radio-page/radio-page.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->setStylesheet($baseUrl.'css/radio-page/radio-page.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/embed/weekly-schedule-widget.css?'.$CC_CONFIG['airtime_version']);
 
         $this->_helper->layout->setLayout('radio-page');

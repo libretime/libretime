@@ -94,9 +94,10 @@ class EmbedController extends Zend_Controller_Action
         }
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "widgets/js/jquery-1.6.1.min.js?".$CC_CONFIG['airtime_version'];
 
-        $result = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));
-        $this->view->scheduleDataWeek1 = $result[0];
-        $this->view->scheduleDataWeek2 = $result[1];
+        $weeklyScheduleData = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));
+
+        // Return only the current week's schedule data. In the future we may use the next week's data.
+        $this->view->weeklyScheduleData = $weeklyScheduleData[0];
 
         $currentDay = new DateTime("now", new DateTimeZone(Application_Model_Preference::GetTimezone()));
         //day of the month without leading zeros (1 to 31)

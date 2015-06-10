@@ -27,7 +27,7 @@
 <div class="schedule tab_content current">
     <ul class="tabs">
         <?php
-        foreach($this->scheduleDataWeek1 as $day => $data) {
+        foreach($this->weeklyScheduleData as $day => $data) {
             $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
             echo "<li class='".$activeClass."' data-tab='day-".$data["dayOfMonth"]."'>" . $data["dayOfWeek"] . "<span>" . $data["dayOfMonth"] . "</span></li>";
         }?>
@@ -35,7 +35,7 @@
 
     <div class="schedule_content">
         <?php
-        foreach($this->scheduleDataWeek1 as $day => $data) {
+        foreach($this->weeklyScheduleData as $day => $data) {
             $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
 
             echo "<div id='day-".$data["dayOfMonth"]."' class='schedule_item ".$activeClass."'>";
