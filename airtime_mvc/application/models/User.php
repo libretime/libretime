@@ -282,7 +282,6 @@ class Application_Model_User
         $con     = Propel::getConnection();
 
         $sql_gen = "SELECT login AS value, login AS label, id as index FROM cc_subjs ";
-        $sql     = $sql_gen;
 
         $types = array();
         $params = array();
@@ -296,13 +295,8 @@ class Application_Model_User
 
         $sql      = $sql_gen ." WHERE (". $sql_type.") ";
 
-        if (!is_null($search)) {
-            //need to use addslashes for 'LIKE' values
-            $search = addslashes($search);
-            $like = "login ILIKE '%{$search}%'";
-
-            $sql  = $sql . " AND ".$like;
-        }
+        $sql .= " AND login ILIKE :search";
+        $params[":search"] = "%$search%";
 
         $sql = $sql ." ORDER BY login";
 

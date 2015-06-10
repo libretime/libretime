@@ -1157,13 +1157,13 @@ WHERE si.show_id = s.id
   AND si.starts >= :timeNow::timestamp - INTERVAL '2 days'
   AND si.starts < :timeEnd::timestamp
   AND modified_instance != TRUE
-ORDER BY 
-  CASE 
+ORDER BY
+  CASE
     WHEN si.ends > :timeNow::timestamp
       AND  si.starts < :timeNow::timestamp THEN 1
     WHEN si.starts > :timeNow::timestamp THEN 2
     ELSE 3
-  END
+  END, si.starts
 LIMIT :lim
 SQL;
 
