@@ -6,7 +6,15 @@ class Application_Model_RabbitMq
 {
     public static $doPush = false;
 
-    const CELERY_TIMEOUT = 10;
+    /**
+     * @var int milliseconds (for compatibility with celery) until we consider a message to have timed out
+     */
+    public static $_CELERY_MESSAGE_TIMEOUT = 300000;  // 5 minutes
+
+    /**
+     * @var string exchange for celery task results
+     */
+    public static $_CELERY_RESULTS_EXCHANGE = 'airtime-results';
 
     /**
      * Sets a flag to push the schedule at the end of the request.
@@ -45,30 +53,72 @@ class Application_Model_RabbitMq
         $conn->close();
     }
 
+    /**
+     * Connect to the Celery daemon via amqp
+     *
+     * @param $config   array  the airtime configuration array
+     * @param $exchange string the amqp exchange name
+     * @param $queue    string the amqp queue name
+     *
+     * @return Celery the Celery connection object
+     *
+     * @throws Exception when a connection error occurs
+     */
+    private static function _setupCeleryExchange($config, $exchange, $queue) {
+        return new Celery($config["rabbitmq"]["host"],
+                          $config["rabbitmq"]["user"],
+                          $config["rabbitmq"]["password"],
+                          $config["rabbitmq"]["vhost"],
+                          $exchange,                        // Exchange name
+                          $queue,                           // Binding/queue
+                          $config["rabbitmq"]["port"],
+                          false,                            // Connector
+                          true,                             // Persistent messages
+                          self::$_CELERY_MESSAGE_TIMEOUT,   // Result expiration
+                          array());                         // SSL opts
+    }
+
+    /**
+     * Send an amqp message to Celery the airtime-celery daemon to perform a task
+     *
+     * @param $task     string the Celery task name
+     * @param $exchange string the amqp exchange name
+     * @param $data     array  an associative array containing arguments for the Celery task
+     *
+     * @return string the task identifier for the started Celery task so we can fetch the
+     *                results asynchronously later
+     *
+     * @throws CeleryException when no message is found
+     */
     public static function sendCeleryMessage($task, $exchange, $data) {
-        $CC_CONFIG = Config::getConfig();
+        $config  = Config::getConfig();
+        $queue = $routingKey = $exchange;
+        $c = self::_setupCeleryExchange($config, $exchange, $queue);  // Use the exchange name for the queue
+        $result = $c->PostTask($task, $data, true, $routingKey);      // and routing key
+        return $result->getId();
+    }
 
-        $c = new Celery($CC_CONFIG["rabbitmq"]["host"],
-                        $CC_CONFIG["rabbitmq"]["user"],
-                        $CC_CONFIG["rabbitmq"]["password"],
-                        $CC_CONFIG["rabbitmq"]["vhost"],
-                        $exchange=$exchange);
-        $result = $c->PostTask($task, $data);
+    /**
+     * Given a task name and identifier, check the Celery results queue for any
+     * corresponding messages
+     *
+     * @param $task string the Celery task name
+     * @param $id   string the Celery task identifier
+     *
+     * @return object the message object
+     *
+     * @throws CeleryException when no message is found
+     */
+    public static function getAsyncResultMessage($task, $id) {
+        $config  = Config::getConfig();
+        $queue = self::$_CELERY_RESULTS_EXCHANGE . "." . $config["stationId"];
+        $c = self::_setupCeleryExchange($config, self::$_CELERY_RESULTS_EXCHANGE, $queue);
+        $message = $c->getAsyncResultMessage($task, $id);
 
-        $timeout = 0;
-        while(!$result->isReady()) {
-            sleep(1);
-            if($timeout++ >= self::CELERY_TIMEOUT) {
-                break;
-            }
+        if ($message == FALSE) {
+            throw new CeleryException("Failed to get message for task $task with ID $id");
         }
-
-        if($result->isSuccess()) {
-            Logging::info($result);
-            return $result->getResult();
-        } else {
-            throw new CeleryTimeoutException("Celery task $task timed out!");
-        }
+        return $message;
     }
 
     public static function SendMessageToPypo($event_type, $md)
@@ -177,7 +227,4 @@ class Application_Model_RabbitMq
         //XXX: This function has been deprecated and is no longer needed
     }
 
-    public static function uploadToSoundCloud($data) {
-        return self::sendCeleryMessage("upload", "soundcloud-uploads", $data);
-    }
 }

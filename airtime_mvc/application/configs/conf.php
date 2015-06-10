@@ -37,6 +37,7 @@ class Config {
         $CC_CONFIG['baseDir'] = $values['general']['base_dir'];
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
+        $CC_CONFIG['stationId'] = $values['general']['station_id'];
         $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
         if (isset($values['general']['dev_env'])) {
             $CC_CONFIG['dev_env'] = $values['general']['dev_env'];

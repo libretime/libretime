@@ -533,10 +533,20 @@
   </table>
   <table name="third_party_track_references" phpName="ThirdPartyTrackReferences">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="service" phpName="DbService" type="VARCHAR" size="512" required="true" />
-    <column name="foreign_id" phpName="DbForeignId" type="INTEGER" required="true" />
+    <column name="service" phpName="DbService" type="VARCHAR" size="256" required="true" />
+    <!-- Make foreign ID a VARCHAR field in case a service uses hashes or other non-integer identifiers -->
+    <column name="foreign_id" phpName="DbForeignId" type="VARCHAR" size="256" />
+    <column name="broker_task_id" phpName="DbBrokerTaskId" type="VARCHAR" size="256" />
+    <column name="broker_task_name" phpName="DbBrokerTaskName" type="VARCHAR" size="256" />
+    <column name="broker_task_dispatch_time" phpName="DbBrokerTaskDispatchTime" type="TIMESTAMP" />
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="true" />
     <column name="status" phpName="DbStatus" type="VARCHAR" size="256" required="true" />
+    <unique name="broker_task_id_unique">
+      <unique-column name="broker_task_id"/>
+    </unique>
+    <unique name="foreign_id_unique">
+      <unique-column name="foreign_id"/>
+    </unique>
     <foreign-key foreignTable="cc_playout_history_template" name="track_reference_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id"/>
     </foreign-key>

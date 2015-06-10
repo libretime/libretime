@@ -27,7 +27,7 @@ require_once "ProvisioningHelper.php";
 require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
 require_once "Auth.php";
-require_once __DIR__.'/services/SoundCloudService.php';
+require_once __DIR__.'/services/SoundcloudService.php';
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';

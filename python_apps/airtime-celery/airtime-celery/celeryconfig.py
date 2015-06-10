@@ -24,15 +24,22 @@ def get_rmq_broker():
 # Celery amqp settings
 BROKER_URL = get_rmq_broker()
 CELERY_RESULT_BACKEND = 'amqp'     # Use RabbitMQ as the celery backend
-# CELERY_RESULT_EXCHANGE = 'upload-results'
 CELERY_RESULT_PERSISTENT = True    # Persist through a broker restart
-CELERY_TASK_RESULT_EXPIRES = None  # Don't expire tasks
+CELERY_TASK_RESULT_EXPIRES = 300   # Expire task results after 5 minutes
 CELERY_TRACK_STARTED = False
+CELERY_RESULT_EXCHANGE = 'airtime-results'
 CELERY_QUEUES = (
-    Queue('soundcloud-uploads', Exchange('soundcloud-uploads'), routing_key='celery'),
+    Queue('soundcloud-uploads', exchange=Exchange('soundcloud-uploads'), routing_key='soundcloud-uploads'),
+    Queue('airtime-results.soundcloud-uploads', exchange=Exchange('airtime-results')),
 )
-CELERY_DEFAULT_QUEUE = 'soundcloud-uploads'
-CELERY_DEFAULT_EXCHANGE_TYPE = 'topic'
+CELERY_ROUTES = (
+    {
+        'soundcloud_uploads.uploader.upload_to_soundcloud': {
+            'exchange': 'airtime-results',
+            'queue': 'airtime-results.soundcloud-uploads',
+        }
+    },
+)
 
 # Celery task settings
 CELERY_TASK_SERIALIZER = 'json'

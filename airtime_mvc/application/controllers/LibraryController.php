@@ -283,7 +283,6 @@ class LibraryController extends Zend_Controller_Action
                 $text = _("Upload to SoundCloud");
             }
 
-            // TODO: reimplement how this works
             $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $baseUrl."soundcloud/upload/id/{$id}");
         }
 

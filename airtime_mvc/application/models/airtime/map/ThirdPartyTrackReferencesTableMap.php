@@ -40,8 +40,11 @@ class ThirdPartyTrackReferencesTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('third_party_track_references_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
-        $this->addColumn('service', 'DbService', 'VARCHAR', true, 512, null);
-        $this->addColumn('foreign_id', 'DbForeignId', 'INTEGER', true, null, null);
+        $this->addColumn('service', 'DbService', 'VARCHAR', true, 256, null);
+        $this->addColumn('foreign_id', 'DbForeignId', 'VARCHAR', false, 256, null);
+        $this->addColumn('broker_task_id', 'DbBrokerTaskId', 'VARCHAR', false, 256, null);
+        $this->addColumn('broker_task_name', 'DbBrokerTaskName', 'VARCHAR', false, 256, null);
+        $this->addColumn('broker_task_dispatch_time', 'DbBrokerTaskDispatchTime', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_playout_history_template', 'id', true, null, null);
         $this->addColumn('status', 'DbStatus', 'VARCHAR', true, 256, null);
         // validators

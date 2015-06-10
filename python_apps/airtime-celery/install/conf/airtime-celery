@@ -1,11 +1,11 @@
 # Names of nodes to start
-CELERYD_NODES="soundcloud_uploader"
+CELERYD_NODES="airtime-celery"
 
 # Absolute or relative path to the 'celery' command:
 CELERY_BIN="/usr/local/bin/celery"
 
 # App instance to use
-CELERY_APP="soundcloud_uploader.uploader:celery"
+CELERY_APP="airtime-celery.uploader:celery"
 
 # Extra command-line arguments to the worker
 CELERYD_OPTS="--time-limit=300 --concurrency=8 --config=celeryconfig"

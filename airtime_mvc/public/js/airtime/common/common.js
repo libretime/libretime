@@ -9,6 +9,7 @@ $(document).ready(function() {
 
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
+    pollTaskQueues();
 });
 
 /*
@@ -155,4 +156,9 @@ function removeSuccessMsg() {
     var $status = $('.success');
     
     $status.fadeOut("slow", function(){$status.empty()});
+}
+
+function pollTaskQueues() {
+    console.log("Polling broker queues...");
+    $.get(baseUrl + 'soundcloud/poll-broker-task-queue');
 }

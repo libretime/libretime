@@ -1,8 +1,0 @@
-#!/usr/bin/env sh
-
-if [ "$(id -u)" != "0" ]; then
-    echo "Please run as root user."
-    exit 1
-fi
-
-service soundcloud_uploader restart

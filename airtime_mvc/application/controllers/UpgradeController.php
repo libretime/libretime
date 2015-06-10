@@ -13,9 +13,9 @@ class UpgradeController extends Zend_Controller_Action
             return;
         }
 
-        // Get all upgrades dynamically so we don't have to add them explicitly each time
+        // Get all upgrades dynamically (in declaration order!) so we don't have to add them explicitly each time
+        // TODO: explicitly sort classnames by ascending version suffix for safety
         $upgraders = getUpgrades();
-        Logging::info($upgraders);
 
         $didWePerformAnUpgrade = false;
         try 

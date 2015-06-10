@@ -43,9 +43,27 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
 
     /**
      * The value for the foreign_id field.
-     * @var        int
+     * @var        string
      */
     protected $foreign_id;
+
+    /**
+     * The value for the broker_task_id field.
+     * @var        string
+     */
+    protected $broker_task_id;
+
+    /**
+     * The value for the broker_task_name field.
+     * @var        string
+     */
+    protected $broker_task_name;
+
+    /**
+     * The value for the broker_task_dispatch_time field.
+     * @var        string
+     */
+    protected $broker_task_dispatch_time;
 
     /**
      * The value for the file_id field.
@@ -109,12 +127,69 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     /**
      * Get the [foreign_id] column value.
      *
-     * @return int
+     * @return string
      */
     public function getDbForeignId()
     {
 
         return $this->foreign_id;
+    }
+
+    /**
+     * Get the [broker_task_id] column value.
+     *
+     * @return string
+     */
+    public function getDbBrokerTaskId()
+    {
+
+        return $this->broker_task_id;
+    }
+
+    /**
+     * Get the [broker_task_name] column value.
+     *
+     * @return string
+     */
+    public function getDbBrokerTaskName()
+    {
+
+        return $this->broker_task_name;
+    }
+
+    /**
+     * Get the [optionally formatted] temporal [broker_task_dispatch_time] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbBrokerTaskDispatchTime($format = 'Y-m-d H:i:s')
+    {
+        if ($this->broker_task_dispatch_time === null) {
+            return null;
+        }
+
+
+        try {
+            $dt = new DateTime($this->broker_task_dispatch_time);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->broker_task_dispatch_time, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
     }
 
     /**
@@ -184,13 +259,13 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     /**
      * Set the value of [foreign_id] column.
      *
-     * @param  int $v new value
+     * @param  string $v new value
      * @return ThirdPartyTrackReferences The current object (for fluent API support)
      */
     public function setDbForeignId($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->foreign_id !== $v) {
@@ -201,6 +276,71 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
 
         return $this;
     } // setDbForeignId()
+
+    /**
+     * Set the value of [broker_task_id] column.
+     *
+     * @param  string $v new value
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     */
+    public function setDbBrokerTaskId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->broker_task_id !== $v) {
+            $this->broker_task_id = $v;
+            $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::BROKER_TASK_ID;
+        }
+
+
+        return $this;
+    } // setDbBrokerTaskId()
+
+    /**
+     * Set the value of [broker_task_name] column.
+     *
+     * @param  string $v new value
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     */
+    public function setDbBrokerTaskName($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->broker_task_name !== $v) {
+            $this->broker_task_name = $v;
+            $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME;
+        }
+
+
+        return $this;
+    } // setDbBrokerTaskName()
+
+    /**
+     * Sets the value of [broker_task_dispatch_time] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     */
+    public function setDbBrokerTaskDispatchTime($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->broker_task_dispatch_time !== null || $dt !== null) {
+            $currentDateAsString = ($this->broker_task_dispatch_time !== null && $tmpDt = new DateTime($this->broker_task_dispatch_time)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->broker_task_dispatch_time = $newDateAsString;
+                $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setDbBrokerTaskDispatchTime()
 
     /**
      * Set the value of [file_id] column.
@@ -282,9 +422,12 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->service = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->foreign_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
-            $this->file_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
-            $this->status = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->foreign_id = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->broker_task_id = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->broker_task_name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->broker_task_dispatch_time = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->file_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->status = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -294,7 +437,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 5; // 5 = ThirdPartyTrackReferencesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = ThirdPartyTrackReferencesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ThirdPartyTrackReferences object", $e);
@@ -541,6 +684,15 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FOREIGN_ID)) {
             $modifiedColumns[':p' . $index++]  = '"foreign_id"';
         }
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"broker_task_id"';
+        }
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME)) {
+            $modifiedColumns[':p' . $index++]  = '"broker_task_name"';
+        }
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME)) {
+            $modifiedColumns[':p' . $index++]  = '"broker_task_dispatch_time"';
+        }
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FILE_ID)) {
             $modifiedColumns[':p' . $index++]  = '"file_id"';
         }
@@ -565,7 +717,16 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                         $stmt->bindValue($identifier, $this->service, PDO::PARAM_STR);
                         break;
                     case '"foreign_id"':
-                        $stmt->bindValue($identifier, $this->foreign_id, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->foreign_id, PDO::PARAM_STR);
+                        break;
+                    case '"broker_task_id"':
+                        $stmt->bindValue($identifier, $this->broker_task_id, PDO::PARAM_STR);
+                        break;
+                    case '"broker_task_name"':
+                        $stmt->bindValue($identifier, $this->broker_task_name, PDO::PARAM_STR);
+                        break;
+                    case '"broker_task_dispatch_time"':
+                        $stmt->bindValue($identifier, $this->broker_task_dispatch_time, PDO::PARAM_STR);
                         break;
                     case '"file_id"':
                         $stmt->bindValue($identifier, $this->file_id, PDO::PARAM_INT);
@@ -722,9 +883,18 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                 return $this->getDbForeignId();
                 break;
             case 3:
-                return $this->getDbFileId();
+                return $this->getDbBrokerTaskId();
                 break;
             case 4:
+                return $this->getDbBrokerTaskName();
+                break;
+            case 5:
+                return $this->getDbBrokerTaskDispatchTime();
+                break;
+            case 6:
+                return $this->getDbFileId();
+                break;
+            case 7:
                 return $this->getDbStatus();
                 break;
             default:
@@ -759,8 +929,11 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             $keys[0] => $this->getDbId(),
             $keys[1] => $this->getDbService(),
             $keys[2] => $this->getDbForeignId(),
-            $keys[3] => $this->getDbFileId(),
-            $keys[4] => $this->getDbStatus(),
+            $keys[3] => $this->getDbBrokerTaskId(),
+            $keys[4] => $this->getDbBrokerTaskName(),
+            $keys[5] => $this->getDbBrokerTaskDispatchTime(),
+            $keys[6] => $this->getDbFileId(),
+            $keys[7] => $this->getDbStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -815,9 +988,18 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                 $this->setDbForeignId($value);
                 break;
             case 3:
-                $this->setDbFileId($value);
+                $this->setDbBrokerTaskId($value);
                 break;
             case 4:
+                $this->setDbBrokerTaskName($value);
+                break;
+            case 5:
+                $this->setDbBrokerTaskDispatchTime($value);
+                break;
+            case 6:
+                $this->setDbFileId($value);
+                break;
+            case 7:
                 $this->setDbStatus($value);
                 break;
         } // switch()
@@ -847,8 +1029,11 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setDbService($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDbForeignId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDbFileId($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setDbStatus($arr[$keys[4]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbBrokerTaskId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbBrokerTaskName($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbBrokerTaskDispatchTime($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDbFileId($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setDbStatus($arr[$keys[7]]);
     }
 
     /**
@@ -863,6 +1048,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::ID)) $criteria->add(ThirdPartyTrackReferencesPeer::ID, $this->id);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::SERVICE)) $criteria->add(ThirdPartyTrackReferencesPeer::SERVICE, $this->service);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FOREIGN_ID)) $criteria->add(ThirdPartyTrackReferencesPeer::FOREIGN_ID, $this->foreign_id);
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID)) $criteria->add(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID, $this->broker_task_id);
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME)) $criteria->add(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME, $this->broker_task_name);
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME)) $criteria->add(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $this->broker_task_dispatch_time);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FILE_ID)) $criteria->add(ThirdPartyTrackReferencesPeer::FILE_ID, $this->file_id);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::STATUS)) $criteria->add(ThirdPartyTrackReferencesPeer::STATUS, $this->status);
 
@@ -930,6 +1118,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     {
         $copyObj->setDbService($this->getDbService());
         $copyObj->setDbForeignId($this->getDbForeignId());
+        $copyObj->setDbBrokerTaskId($this->getDbBrokerTaskId());
+        $copyObj->setDbBrokerTaskName($this->getDbBrokerTaskName());
+        $copyObj->setDbBrokerTaskDispatchTime($this->getDbBrokerTaskDispatchTime());
         $copyObj->setDbFileId($this->getDbFileId());
         $copyObj->setDbStatus($this->getDbStatus());
 
@@ -1050,6 +1241,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         $this->id = null;
         $this->service = null;
         $this->foreign_id = null;
+        $this->broker_task_id = null;
+        $this->broker_task_name = null;
+        $this->broker_task_dispatch_time = null;
         $this->file_id = null;
         $this->status = null;
         $this->alreadyInSave = false;

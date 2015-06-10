@@ -24,13 +24,13 @@ abstract class BaseThirdPartyTrackReferencesPeer
     const TM_CLASS = 'ThirdPartyTrackReferencesTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 8;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /** the column name for the id field */
     const ID = 'third_party_track_references.id';
@@ -40,6 +40,15 @@ abstract class BaseThirdPartyTrackReferencesPeer
 
     /** the column name for the foreign_id field */
     const FOREIGN_ID = 'third_party_track_references.foreign_id';
+
+    /** the column name for the broker_task_id field */
+    const BROKER_TASK_ID = 'third_party_track_references.broker_task_id';
+
+    /** the column name for the broker_task_name field */
+    const BROKER_TASK_NAME = 'third_party_track_references.broker_task_name';
+
+    /** the column name for the broker_task_dispatch_time field */
+    const BROKER_TASK_DISPATCH_TIME = 'third_party_track_references.broker_task_dispatch_time';
 
     /** the column name for the file_id field */
     const FILE_ID = 'third_party_track_references.file_id';
@@ -66,12 +75,12 @@ abstract class BaseThirdPartyTrackReferencesPeer
      * e.g. ThirdPartyTrackReferencesPeer::$fieldNames[ThirdPartyTrackReferencesPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbService', 'DbForeignId', 'DbFileId', 'DbStatus', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbService', 'dbForeignId', 'dbFileId', 'dbStatus', ),
-        BasePeer::TYPE_COLNAME => array (ThirdPartyTrackReferencesPeer::ID, ThirdPartyTrackReferencesPeer::SERVICE, ThirdPartyTrackReferencesPeer::FOREIGN_ID, ThirdPartyTrackReferencesPeer::FILE_ID, ThirdPartyTrackReferencesPeer::STATUS, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SERVICE', 'FOREIGN_ID', 'FILE_ID', 'STATUS', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'service', 'foreign_id', 'file_id', 'status', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbService', 'DbForeignId', 'DbBrokerTaskId', 'DbBrokerTaskName', 'DbBrokerTaskDispatchTime', 'DbFileId', 'DbStatus', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbService', 'dbForeignId', 'dbBrokerTaskId', 'dbBrokerTaskName', 'dbBrokerTaskDispatchTime', 'dbFileId', 'dbStatus', ),
+        BasePeer::TYPE_COLNAME => array (ThirdPartyTrackReferencesPeer::ID, ThirdPartyTrackReferencesPeer::SERVICE, ThirdPartyTrackReferencesPeer::FOREIGN_ID, ThirdPartyTrackReferencesPeer::BROKER_TASK_ID, ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME, ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, ThirdPartyTrackReferencesPeer::FILE_ID, ThirdPartyTrackReferencesPeer::STATUS, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'SERVICE', 'FOREIGN_ID', 'BROKER_TASK_ID', 'BROKER_TASK_NAME', 'BROKER_TASK_DISPATCH_TIME', 'FILE_ID', 'STATUS', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'service', 'foreign_id', 'broker_task_id', 'broker_task_name', 'broker_task_dispatch_time', 'file_id', 'status', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -81,12 +90,12 @@ abstract class BaseThirdPartyTrackReferencesPeer
      * e.g. ThirdPartyTrackReferencesPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbService' => 1, 'DbForeignId' => 2, 'DbFileId' => 3, 'DbStatus' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbService' => 1, 'dbForeignId' => 2, 'dbFileId' => 3, 'dbStatus' => 4, ),
-        BasePeer::TYPE_COLNAME => array (ThirdPartyTrackReferencesPeer::ID => 0, ThirdPartyTrackReferencesPeer::SERVICE => 1, ThirdPartyTrackReferencesPeer::FOREIGN_ID => 2, ThirdPartyTrackReferencesPeer::FILE_ID => 3, ThirdPartyTrackReferencesPeer::STATUS => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SERVICE' => 1, 'FOREIGN_ID' => 2, 'FILE_ID' => 3, 'STATUS' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'service' => 1, 'foreign_id' => 2, 'file_id' => 3, 'status' => 4, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbService' => 1, 'DbForeignId' => 2, 'DbBrokerTaskId' => 3, 'DbBrokerTaskName' => 4, 'DbBrokerTaskDispatchTime' => 5, 'DbFileId' => 6, 'DbStatus' => 7, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbService' => 1, 'dbForeignId' => 2, 'dbBrokerTaskId' => 3, 'dbBrokerTaskName' => 4, 'dbBrokerTaskDispatchTime' => 5, 'dbFileId' => 6, 'dbStatus' => 7, ),
+        BasePeer::TYPE_COLNAME => array (ThirdPartyTrackReferencesPeer::ID => 0, ThirdPartyTrackReferencesPeer::SERVICE => 1, ThirdPartyTrackReferencesPeer::FOREIGN_ID => 2, ThirdPartyTrackReferencesPeer::BROKER_TASK_ID => 3, ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME => 4, ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME => 5, ThirdPartyTrackReferencesPeer::FILE_ID => 6, ThirdPartyTrackReferencesPeer::STATUS => 7, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'SERVICE' => 1, 'FOREIGN_ID' => 2, 'BROKER_TASK_ID' => 3, 'BROKER_TASK_NAME' => 4, 'BROKER_TASK_DISPATCH_TIME' => 5, 'FILE_ID' => 6, 'STATUS' => 7, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'service' => 1, 'foreign_id' => 2, 'broker_task_id' => 3, 'broker_task_name' => 4, 'broker_task_dispatch_time' => 5, 'file_id' => 6, 'status' => 7, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -163,12 +172,18 @@ abstract class BaseThirdPartyTrackReferencesPeer
             $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::ID);
             $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::SERVICE);
             $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::FOREIGN_ID);
+            $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID);
+            $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME);
+            $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME);
             $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::FILE_ID);
             $criteria->addSelectColumn(ThirdPartyTrackReferencesPeer::STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.service');
             $criteria->addSelectColumn($alias . '.foreign_id');
+            $criteria->addSelectColumn($alias . '.broker_task_id');
+            $criteria->addSelectColumn($alias . '.broker_task_name');
+            $criteria->addSelectColumn($alias . '.broker_task_dispatch_time');
             $criteria->addSelectColumn($alias . '.file_id');
             $criteria->addSelectColumn($alias . '.status');
         }

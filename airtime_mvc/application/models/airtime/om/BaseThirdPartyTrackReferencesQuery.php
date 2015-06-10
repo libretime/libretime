@@ -9,12 +9,18 @@
  * @method ThirdPartyTrackReferencesQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method ThirdPartyTrackReferencesQuery orderByDbService($order = Criteria::ASC) Order by the service column
  * @method ThirdPartyTrackReferencesQuery orderByDbForeignId($order = Criteria::ASC) Order by the foreign_id column
+ * @method ThirdPartyTrackReferencesQuery orderByDbBrokerTaskId($order = Criteria::ASC) Order by the broker_task_id column
+ * @method ThirdPartyTrackReferencesQuery orderByDbBrokerTaskName($order = Criteria::ASC) Order by the broker_task_name column
+ * @method ThirdPartyTrackReferencesQuery orderByDbBrokerTaskDispatchTime($order = Criteria::ASC) Order by the broker_task_dispatch_time column
  * @method ThirdPartyTrackReferencesQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
  * @method ThirdPartyTrackReferencesQuery orderByDbStatus($order = Criteria::ASC) Order by the status column
  *
  * @method ThirdPartyTrackReferencesQuery groupByDbId() Group by the id column
  * @method ThirdPartyTrackReferencesQuery groupByDbService() Group by the service column
  * @method ThirdPartyTrackReferencesQuery groupByDbForeignId() Group by the foreign_id column
+ * @method ThirdPartyTrackReferencesQuery groupByDbBrokerTaskId() Group by the broker_task_id column
+ * @method ThirdPartyTrackReferencesQuery groupByDbBrokerTaskName() Group by the broker_task_name column
+ * @method ThirdPartyTrackReferencesQuery groupByDbBrokerTaskDispatchTime() Group by the broker_task_dispatch_time column
  * @method ThirdPartyTrackReferencesQuery groupByDbFileId() Group by the file_id column
  * @method ThirdPartyTrackReferencesQuery groupByDbStatus() Group by the status column
  *
@@ -30,13 +36,19 @@
  * @method ThirdPartyTrackReferences findOneOrCreate(PropelPDO $con = null) Return the first ThirdPartyTrackReferences matching the query, or a new ThirdPartyTrackReferences object populated from the query conditions when no match is found
  *
  * @method ThirdPartyTrackReferences findOneByDbService(string $service) Return the first ThirdPartyTrackReferences filtered by the service column
- * @method ThirdPartyTrackReferences findOneByDbForeignId(int $foreign_id) Return the first ThirdPartyTrackReferences filtered by the foreign_id column
+ * @method ThirdPartyTrackReferences findOneByDbForeignId(string $foreign_id) Return the first ThirdPartyTrackReferences filtered by the foreign_id column
+ * @method ThirdPartyTrackReferences findOneByDbBrokerTaskId(string $broker_task_id) Return the first ThirdPartyTrackReferences filtered by the broker_task_id column
+ * @method ThirdPartyTrackReferences findOneByDbBrokerTaskName(string $broker_task_name) Return the first ThirdPartyTrackReferences filtered by the broker_task_name column
+ * @method ThirdPartyTrackReferences findOneByDbBrokerTaskDispatchTime(string $broker_task_dispatch_time) Return the first ThirdPartyTrackReferences filtered by the broker_task_dispatch_time column
  * @method ThirdPartyTrackReferences findOneByDbFileId(int $file_id) Return the first ThirdPartyTrackReferences filtered by the file_id column
  * @method ThirdPartyTrackReferences findOneByDbStatus(string $status) Return the first ThirdPartyTrackReferences filtered by the status column
  *
  * @method array findByDbId(int $id) Return ThirdPartyTrackReferences objects filtered by the id column
  * @method array findByDbService(string $service) Return ThirdPartyTrackReferences objects filtered by the service column
- * @method array findByDbForeignId(int $foreign_id) Return ThirdPartyTrackReferences objects filtered by the foreign_id column
+ * @method array findByDbForeignId(string $foreign_id) Return ThirdPartyTrackReferences objects filtered by the foreign_id column
+ * @method array findByDbBrokerTaskId(string $broker_task_id) Return ThirdPartyTrackReferences objects filtered by the broker_task_id column
+ * @method array findByDbBrokerTaskName(string $broker_task_name) Return ThirdPartyTrackReferences objects filtered by the broker_task_name column
+ * @method array findByDbBrokerTaskDispatchTime(string $broker_task_dispatch_time) Return ThirdPartyTrackReferences objects filtered by the broker_task_dispatch_time column
  * @method array findByDbFileId(int $file_id) Return ThirdPartyTrackReferences objects filtered by the file_id column
  * @method array findByDbStatus(string $status) Return ThirdPartyTrackReferences objects filtered by the status column
  *
@@ -146,7 +158,7 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "service", "foreign_id", "file_id", "status" FROM "third_party_track_references" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "service", "foreign_id", "broker_task_id", "broker_task_name", "broker_task_dispatch_time", "file_id", "status" FROM "third_party_track_references" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -311,13 +323,101 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByDbForeignId(1234); // WHERE foreign_id = 1234
-     * $query->filterByDbForeignId(array(12, 34)); // WHERE foreign_id IN (12, 34)
-     * $query->filterByDbForeignId(array('min' => 12)); // WHERE foreign_id >= 12
-     * $query->filterByDbForeignId(array('max' => 12)); // WHERE foreign_id <= 12
+     * $query->filterByDbForeignId('fooValue');   // WHERE foreign_id = 'fooValue'
+     * $query->filterByDbForeignId('%fooValue%'); // WHERE foreign_id LIKE '%fooValue%'
      * </code>
      *
-     * @param     mixed $dbForeignId The value to use as filter.
+     * @param     string $dbForeignId The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
+     */
+    public function filterByDbForeignId($dbForeignId = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbForeignId)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbForeignId)) {
+                $dbForeignId = str_replace('*', '%', $dbForeignId);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::FOREIGN_ID, $dbForeignId, $comparison);
+    }
+
+    /**
+     * Filter the query on the broker_task_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbBrokerTaskId('fooValue');   // WHERE broker_task_id = 'fooValue'
+     * $query->filterByDbBrokerTaskId('%fooValue%'); // WHERE broker_task_id LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbBrokerTaskId The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
+     */
+    public function filterByDbBrokerTaskId($dbBrokerTaskId = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbBrokerTaskId)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbBrokerTaskId)) {
+                $dbBrokerTaskId = str_replace('*', '%', $dbBrokerTaskId);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID, $dbBrokerTaskId, $comparison);
+    }
+
+    /**
+     * Filter the query on the broker_task_name column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbBrokerTaskName('fooValue');   // WHERE broker_task_name = 'fooValue'
+     * $query->filterByDbBrokerTaskName('%fooValue%'); // WHERE broker_task_name LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbBrokerTaskName The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
+     */
+    public function filterByDbBrokerTaskName($dbBrokerTaskName = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbBrokerTaskName)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbBrokerTaskName)) {
+                $dbBrokerTaskName = str_replace('*', '%', $dbBrokerTaskName);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME, $dbBrokerTaskName, $comparison);
+    }
+
+    /**
+     * Filter the query on the broker_task_dispatch_time column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbBrokerTaskDispatchTime('2011-03-14'); // WHERE broker_task_dispatch_time = '2011-03-14'
+     * $query->filterByDbBrokerTaskDispatchTime('now'); // WHERE broker_task_dispatch_time = '2011-03-14'
+     * $query->filterByDbBrokerTaskDispatchTime(array('max' => 'yesterday')); // WHERE broker_task_dispatch_time < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $dbBrokerTaskDispatchTime The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
      *              Use scalar values for equality.
      *              Use array values for in_array() equivalent.
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
@@ -325,16 +425,16 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      *
      * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
      */
-    public function filterByDbForeignId($dbForeignId = null, $comparison = null)
+    public function filterByDbBrokerTaskDispatchTime($dbBrokerTaskDispatchTime = null, $comparison = null)
     {
-        if (is_array($dbForeignId)) {
+        if (is_array($dbBrokerTaskDispatchTime)) {
             $useMinMax = false;
-            if (isset($dbForeignId['min'])) {
-                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::FOREIGN_ID, $dbForeignId['min'], Criteria::GREATER_EQUAL);
+            if (isset($dbBrokerTaskDispatchTime['min'])) {
+                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $dbBrokerTaskDispatchTime['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
-            if (isset($dbForeignId['max'])) {
-                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::FOREIGN_ID, $dbForeignId['max'], Criteria::LESS_EQUAL);
+            if (isset($dbBrokerTaskDispatchTime['max'])) {
+                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $dbBrokerTaskDispatchTime['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -345,7 +445,7 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::FOREIGN_ID, $dbForeignId, $comparison);
+        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $dbBrokerTaskDispatchTime, $comparison);
     }
 
     /**
