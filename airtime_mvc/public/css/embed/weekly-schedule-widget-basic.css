@@ -70,6 +70,7 @@ body {
     background: rgba(53, 53, 53, 0.9);
     max-height: 0px;
     transition: max-height 2s ease;
+    height: 290px;
 
     overflow-y: auto;
     overflow-x: hidden;
@@ -78,6 +79,7 @@ body {
 }
 
 .schedule.current .schedule_content {
+    max-height: 290px;
 }
 
 .tab_content.current ul {
