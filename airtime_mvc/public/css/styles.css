@@ -3282,10 +3282,11 @@ dd .stream-status {
     font-weight: bold;
 }
 
-.blah {
+.schedule_iframe_wrapper {
     width: 100%;
     float: left;
     text-align: center;
+    padding: 10px;
 }
 
 #schedule_iframe {

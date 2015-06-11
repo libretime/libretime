@@ -78,7 +78,7 @@ body {
 }
 
 .schedule.current .schedule_content {
-    max-height: 300px;
+    max-height: 290px;
 }
 
 .tab_content.current ul {
