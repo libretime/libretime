@@ -78,7 +78,6 @@ body {
 }
 
 .schedule.current .schedule_content {
-    max-height: 290px;
 }
 
 .tab_content.current ul {
@@ -117,6 +116,7 @@ background: rgba(53, 53, 53, 1.0);
     text-transform: none;
     text-align: center;
     color: #aaaaaa;
+    line-height: 240px;
 }
 
 .schedule_item div.time_grid {

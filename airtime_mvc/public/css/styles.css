@@ -3264,11 +3264,13 @@ dd .stream-status {
 
 #weekly-schedule-widget {
     margin: 0 auto;
+    margin-bottom: 20px;
     width: 50%;
 }
 
 #widget-menu {
     margin: 0 auto;
+    margin-bottom: 20px;
     width: 40%;
 }
 
@@ -3276,6 +3278,10 @@ dd .stream-status {
     display: block;
     margin-bottom: 5px;
     font-size: 14px;
+}
+
+#player-widget {
+    margin-bottom: 20px;
 }
 
 #weekly-schedule-widget label {
