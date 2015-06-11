@@ -39,11 +39,15 @@
             $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
 
             echo "<div id='day-".$data["dayOfMonth"]."' class='schedule_item ".$activeClass."'>";
-                foreach ($data["shows"] as $show => $showData) {
-                    echo "<div class='row'>";
-                    echo "<div class='time_grid'>".$showData["show_start_hour"].' - '.$showData["show_end_hour"]."</div>";
-                    echo "<div class='name_grid'>".$showData["name"]."</div>";
-                    echo "</div>";
+                if (count($data["shows"]) == 0) {
+                    echo "<div class='row empty-schedule'>Looks like there are no shows scheduled on this day.</div>";
+                } else {
+                    foreach ($data["shows"] as $show => $showData) {
+                        echo "<div class='row'>";
+                        echo "<div class='time_grid'>" . $showData["show_start_hour"] . ' - ' . $showData["show_end_hour"] . "</div>";
+                        echo "<div class='name_grid'>" . $showData["name"] . "</div>";
+                        echo "</div>";
+                    }
                 }
             echo "</div>";
         }?>

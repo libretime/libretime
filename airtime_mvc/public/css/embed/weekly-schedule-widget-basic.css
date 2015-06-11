@@ -99,6 +99,11 @@ body {
     padding-bottom: 10px;
 }
 
+.empty-schedule {
+    text-transform: none;
+    text-align: center;
+}
+
 .schedule_item div.time_grid {
     /*padding-right: 10px;*/
     width: 20%;
