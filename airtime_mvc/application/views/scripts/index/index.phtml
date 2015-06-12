@@ -15,8 +15,8 @@
 
     
     <div id="tab-2" class="about_us tab_content">
-        <h1><?php echo $this->stationName ?></h1>
-        <p><?php echo $this->stationDescription ?></p>
+        <h1><?php echo $this->escape($this->stationName) ?></h1>
+        <p><?php echo $this->escape($this->stationDescription) ?></p>
     </div>
 
     <div id="tab-3" class="login tab_content">
