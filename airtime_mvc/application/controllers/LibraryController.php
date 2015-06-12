@@ -413,7 +413,7 @@ class LibraryController extends Zend_Controller_Action
         $this->view->sEcho = $r["sEcho"];
         $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
         $this->view->iTotalRecords = $r["iTotalRecords"];
-        $this->view->files = $r["aaData"];
+        $this->view->files = SecurityHelper::htmlescape_recursive($r["aaData"]);
     }
 
     public function editFileMdAction()

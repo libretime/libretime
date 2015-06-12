@@ -24,6 +24,7 @@ require_once "FileIO.php";
 require_once "OsPath.php";
 require_once "Database.php";
 require_once "ProvisioningHelper.php";
+require_once "SecurityHelper.php";
 require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
 require_once "Auth.php";

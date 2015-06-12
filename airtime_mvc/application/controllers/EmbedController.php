@@ -28,7 +28,7 @@ class EmbedController extends Zend_Controller_Action
         $this->view->jquery = Application_Common_HTTPHelper::getStationUrl() . "js/libs/jquery-1.10.2.js";
         $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/muses.swf";
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
-        $this->view->player_title = json_encode($request->getParam('title'));
+        $this->view->player_title = json_encode($this->view->escape($request->getParam('title')));
 
         $styleParam = $request->getParam('style');
         $player_style = isset($styleParam) ? $styleParam : "basic";
@@ -97,7 +97,7 @@ class EmbedController extends Zend_Controller_Action
         $weeklyScheduleData = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));
 
         // Return only the current week's schedule data. In the future we may use the next week's data.
-        $this->view->weeklyScheduleData = $weeklyScheduleData[0];
+        $this->view->weeklyScheduleData = ($weeklyScheduleData[0]);
 
         $currentDay = new DateTime("now", new DateTimeZone(Application_Model_Preference::GetTimezone()));
         //day of the month without leading zeros (1 to 31)
