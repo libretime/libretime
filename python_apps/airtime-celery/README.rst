@@ -9,14 +9,6 @@ Installation
 
     $ sudo python setup.py install
 
-To install the configuration and upstart files for all environments (development and production)
-
-    $ sudo python setup.py install --all-envs
-
-You can also specify a single environment to deploy config and upstart files for:
-
-    $ sudo python setup.py install --dev-env=bananas
-
 Each instance of airtime-celery has its own worker, and multiple instances can be run in parallel.
 `Celery is thread-safe`_, so this parallelization won't cause conflicts.
 
