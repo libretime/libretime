@@ -1,25 +1,25 @@
+import os
 from configobj import ConfigObj
 from kombu import Exchange, Queue
 
 # Get the broker string from airtime.conf
-DEFAULT_RMQ_CONFIG_PATH = '/etc/airtime/airtime.conf'
 RMQ_CONFIG_SECTION = "rabbitmq"
+
+
+def get_rmq_broker():
+    rmq_config = ConfigObj(os.environ['RMQ_CONFIG_FILE'])
+    rmq_settings = parse_rmq_config(rmq_config)
+    return 'amqp://{username}:{password}@{host}:{port}/{vhost}'.format(**rmq_settings)
 
 
 def parse_rmq_config(rmq_config):
     return {
-        'host'     : rmq_config[RMQ_CONFIG_SECTION]['host'],
-        'port'     : rmq_config[RMQ_CONFIG_SECTION]['port'],
-        'username' : rmq_config[RMQ_CONFIG_SECTION]['user'],
-        'password' : rmq_config[RMQ_CONFIG_SECTION]['password'],
-        'vhost'    : rmq_config[RMQ_CONFIG_SECTION]['vhost']
+        'host'    : rmq_config[RMQ_CONFIG_SECTION]['host'],
+        'port'    : rmq_config[RMQ_CONFIG_SECTION]['port'],
+        'username': rmq_config[RMQ_CONFIG_SECTION]['user'],
+        'password': rmq_config[RMQ_CONFIG_SECTION]['password'],
+        'vhost'   : rmq_config[RMQ_CONFIG_SECTION]['vhost']
     }
-
-
-def get_rmq_broker():
-    rmq_config = ConfigObj(DEFAULT_RMQ_CONFIG_PATH)
-    rmq_settings = parse_rmq_config(rmq_config)
-    return 'amqp://{username}:{password}@{host}:{port}/{vhost}'.format(**rmq_settings)
 
 # Celery amqp settings
 BROKER_URL = get_rmq_broker()
@@ -34,7 +34,7 @@ CELERY_QUEUES = (
 )
 CELERY_ROUTES = (
     {
-        'soundcloud_uploads.uploader.upload_to_soundcloud': {
+        'soundcloud_uploads.tasks.upload_to_soundcloud': {
             'exchange': 'airtime-results',
             'queue': 'airtime-results.soundcloud-uploads',
         }

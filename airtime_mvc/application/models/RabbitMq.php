@@ -74,8 +74,7 @@ class Application_Model_RabbitMq
                           $config["rabbitmq"]["port"],
                           false,                            // Connector
                           true,                             // Persistent messages
-                          self::$_CELERY_MESSAGE_TIMEOUT,   // Result expiration
-                          array());                         // SSL opts
+                          self::$_CELERY_MESSAGE_TIMEOUT);  // Result expiration
     }
 
     /**
@@ -91,7 +90,7 @@ class Application_Model_RabbitMq
      * @throws CeleryException when no message is found
      */
     public static function sendCeleryMessage($task, $exchange, $data) {
-        $config  = Config::getConfig();
+        $config = parse_ini_file($this->_getRmqConfigPath(), true);
         $queue = $routingKey = $exchange;
         $c = self::_setupCeleryExchange($config, $exchange, $queue);  // Use the exchange name for the queue
         $result = $c->PostTask($task, $data, true, $routingKey);      // and routing key
@@ -110,7 +109,7 @@ class Application_Model_RabbitMq
      * @throws CeleryException when no message is found
      */
     public static function getAsyncResultMessage($task, $id) {
-        $config  = Config::getConfig();
+        $config = parse_ini_file($this->_getRmqConfigPath(), true);
         $queue = self::$_CELERY_RESULTS_EXCHANGE . "." . $config["stationId"];
         $c = self::_setupCeleryExchange($config, self::$_CELERY_RESULTS_EXCHANGE, $queue);
         $message = $c->getAsyncResultMessage($task, $id);
@@ -158,12 +157,10 @@ class Application_Model_RabbitMq
         self::sendMessage($exchange, 'direct', true, $data);
     }
 
-    public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
-                                                $callbackUrl, $apiKey, $storageBackend, $filePrefix)
-    {
+    private function _getRmqConfigPath() {
         //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
         //and shared between all instances on Airtime Pro.
-        $CC_CONFIG = Config::getConfig();        
+        $CC_CONFIG = Config::getConfig();
         $devEnv = "production"; //Default
         if (array_key_exists("dev_env", $CC_CONFIG)) {
             $devEnv = $CC_CONFIG["dev_env"];
@@ -174,7 +171,13 @@ class Application_Model_RabbitMq
             // to the production rabbitmq-analyzer.ini
             $rmq_config_path = "/etc/airtime-saas/production/rabbitmq-analyzer.ini";
         }
-        $config = parse_ini_file($rmq_config_path, true);
+        return $rmq_config_path;
+    }
+
+    public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
+                                                $callbackUrl, $apiKey, $storageBackend, $filePrefix)
+    {
+        $config = parse_ini_file($this->_getRmqConfigPath(), true);
         $conn = new AMQPConnection($config["rabbitmq"]["host"],
                 $config["rabbitmq"]["port"],
                 $config["rabbitmq"]["user"],

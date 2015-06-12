@@ -11,6 +11,16 @@ logger = get_task_logger(__name__)
 
 @celery.task(name='upload-to-soundcloud')
 def upload_to_soundcloud(data, token, file_path):
+    """
+    Upload a file to SoundCloud
+
+    :param data:      associative array containing SoundCloud metadata
+    :param token:     OAuth2 client access token
+    :param file_path: path to the file being uploaded
+
+    :return: the SoundCloud response object
+    :rtype: dict
+    """
     client = soundcloud.Client(access_token=token)
     # Open the file with urllib2 if it's a cloud file
     data['asset_data'] = open(file_path, 'rb') if os.path.isfile(file_path) else urllib2.urlopen(file_path)

@@ -1,5 +1,5 @@
 # Names of nodes to start
-CELERYD_NODES="airtime-celery"
+CELERYD_NODES="airtime-celery-cliff"
 
 # Absolute or relative path to the 'celery' command:
 CELERY_BIN="/usr/local/bin/celery"
