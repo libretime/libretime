@@ -9,6 +9,13 @@
         echo "<a href='#' class='logo'><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
     } ?>
 
+    <div class="login-btn">
+        <a href="/login" target="_parent">
+        <span>Login</span>
+        <span class="login-img"></span>
+        </a>
+    </div>
+
     <div id="tab-1" class="schedule tab_content current">
         <iframe id="schedule_iframe" height="400px" scrolling="no" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program?style=premium"?>></iframe>
     </div>
@@ -36,12 +43,11 @@
     $(document).ready(function(){
 
         $("#player_iframe").load(function () {
-            $("#player_iframe").contents().find('.bottom_bar').append("<a class='login_btn button' target='_parent' href='/login'></a>");
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='about_us_btn button' data-tab='tab-2'></div>");
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");
 
 
-            $("#player_iframe").contents().find('.bottom_bar .button').not('.login_btn').click(function(){
+            $("#player_iframe").contents().find('.bottom_bar .button').click(function(){
                 var tab_id = $(this).attr('data-tab');
 
                 $("#player_iframe").contents().find('.bottom_bar .button').removeClass('current');
