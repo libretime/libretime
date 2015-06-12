@@ -19,8 +19,9 @@
     $r2 = array_reduce($externalServices, "booleanReduce", true);
     $result = $r1 && $r2;
 ?>
-    
+
 <table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
+<?php /* Disabling most of the status page for Airtime Pro
     <thead>
         <tr class="ui-state-default strong">
             <td><?php echo _("Service") ?></td>
@@ -64,7 +65,7 @@
             <td class="solution <?php if ($postgres) {echo 'check';?>">
                 <?php
                     } else {
-                        ?>">
+                        ?>"
                         Try running <code>sudo apt-get install php5-pgsql</code>
                     <?php
                     }
@@ -81,7 +82,7 @@
             <td class="solution <?php if ($database) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>">
+                    ?>"
                     Make sure you aren't missing any of the Postgres dependencies in the table above.
                     If your dependencies check out, make sure your database configuration settings in
                     <code>/etc/airtime.conf</code> are correct and the Airtime database was installed correctly.
@@ -100,7 +101,7 @@
             <td class="solution <?php if ($rabbitmq) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>">
+                    ?>"
                     Make sure RabbitMQ is installed correctly, and that your settings in /etc/airtime/airtime.conf
                     are correct. Try using <code>sudo rabbitmqctl list_users</code> and <code>sudo rabbitmqctl list_vhosts</code>
                     to see if the airtime user (or your custom RabbitMQ user) exists, then checking that 
@@ -121,7 +122,7 @@
             <td class="solution <?php if ($mediamonitor) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>">
+                    ?>"
                     Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>, 
                     and ensure that it's running with
                     <br/><code>initctl list | grep airtime-media-monitor</code><br/>
@@ -141,7 +142,7 @@
             <td class="solution <?php if ($pypo) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>">
+                    ?>"
                     Check that the airtime-playout service is installed correctly in <code>/etc/init</code>, 
                     and ensure that it's running with
                     <br/><code>initctl list | grep airtime-playout</code><br/>
@@ -161,7 +162,7 @@
             <td class="solution <?php if ($liquidsoap) {echo 'check';?>">
                 <?php
                 } else {
-                    ?>">
+                    ?>"
                     Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>, 
                     and ensure that it's running with
                     <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
@@ -171,6 +172,7 @@
                 ?>
             </td>
         </tr>
+ */?>
         <tr id="partitions" class="even">
             <th colspan="5"><?php echo _("Disk Space") ?></th>
         </tr>
