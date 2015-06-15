@@ -5,7 +5,19 @@ html {
     -o-background-size: cover;
     background-size: cover;
     overflow-y: auto;
+    background-color:#000000;
 }
+
+html, body {
+    height: 100%;
+}
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+}
+
 
 .bck_cover {
     position: fixed;
@@ -15,11 +27,6 @@ html {
     left: 0px;
     background: rgba(0, 0, 0, 0.7);
     z-index: -1;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0px;
 }
 
 .logo img {
