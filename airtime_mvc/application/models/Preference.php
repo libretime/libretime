@@ -1,5 +1,6 @@
 <?php
 
+require_once 'StreamSetting.php';
 require_once 'Cache.php';
 
 class Application_Model_Preference
@@ -815,6 +816,19 @@ class Application_Model_Preference
     public static function SetNumOfStreams($num)
     {
         self::setValue("num_of_streams", intval($num));
+
+        //Enable or disable each stream according to whatever was just changed.
+        for ($streamIdx = 1; $streamIdx <= MAX_NUM_STREAMS; $streamIdx++)
+        {
+            $prefix = 's' . $streamIdx . '_';
+            $enable = 'false';
+            if ($streamIdx <= intval($num)) {
+                $enable = 'true';
+            }
+
+            //Enable or disable the stream in the Stream Settings DB table.
+            Application_Model_StreamSetting::setIndividualStreamSetting(array($prefix.'enable' => $enable));
+        }
     }
 
     public static function GetNumOfStreams()
