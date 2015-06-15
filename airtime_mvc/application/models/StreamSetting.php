@@ -279,7 +279,7 @@ class Application_Model_StreamSetting
             $sql = "UPDATE cc_stream_setting SET value=:v WHERE keyname=:keyname";
             $map = array(":v" => $v, ":keyname"=>$keyname);
 
-            $res = Application_Common_Database::prepareAndExecute($sql, $map, 
+            $res = Application_Common_Database::prepareAndExecute($sql, $map,
                 Application_Common_Database::EXECUTE);
         }
     }
