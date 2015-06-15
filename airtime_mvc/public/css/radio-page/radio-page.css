@@ -5,11 +5,6 @@ html {
     -o-background-size: cover;
     background-size: cover;
     overflow-y: auto;
-    background-color:#000000;
-}
-
-html, body {
-    height: 100%;
 }
 
 
