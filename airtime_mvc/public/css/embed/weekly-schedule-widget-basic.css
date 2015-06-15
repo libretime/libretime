@@ -10,7 +10,6 @@ body {
     max-width: 750px;
     /*margin: 0 auto;*/
     margin-bottom: 140px;
-    padding: 10px;
     position: absolute;
     /*left: 50%;
     margin-left: -380px;*/
@@ -25,7 +24,18 @@ body {
     list-style: none;
     padding-left: 0px;
     margin: 0px;
-    background: rgba(170, 170, 170, 0.9);
+    background: rgba(53, 53, 53, 0.9);
+
+    -moz-border-top-left-radius: 4px;
+    -moz-border-top-right-radius: 4px;
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+    -webkit-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    -moz-box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.1) inset,0 1px 0 rgba(255,255,255,0.1),0 0 1px #000 inset;
 }
 
 .schedule .tabs li {
@@ -60,6 +70,7 @@ body {
     background: rgba(53, 53, 53, 0.9);
     max-height: 0px;
     transition: max-height 2s ease;
+    height: 290px;
 
     overflow-y: auto;
     overflow-x: hidden;
@@ -68,7 +79,11 @@ body {
 }
 
 .schedule.current .schedule_content {
-    max-height: 300px;
+    max-height: 290px;
+}
+
+.tab_content.current ul {
+background: rgba(53, 53, 53, 1.0);
 }
 
 /*.schedule_content table {
@@ -86,8 +101,8 @@ body {
     display: none;
     font-size: 17px;
     text-align: left;
-    text-transform: uppercase;
     padding: 10px 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .schedule_item.active {
@@ -97,6 +112,13 @@ body {
 .schedule_item .row {
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.empty-schedule {
+    text-transform: none;
+    text-align: center;
+    color: #aaaaaa;
+    line-height: 240px;
 }
 
 .schedule_item div.time_grid {
@@ -117,10 +139,19 @@ body {
 }
 
 .weekly-schedule-widget-footer {
-    border-top: 1px solid #aaaaaa;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     text-align: right;
-    padding: 4px 16px;
+    font-size: 11px;
+    padding: 16px 16px;
     background: rgba(53, 53, 53, 0.9);
+
+    -moz-border-bottom-left-radius: 4px;
+    -moz-border-bottom-right-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+
 }
 
 .weekly-schedule-widget-footer a {

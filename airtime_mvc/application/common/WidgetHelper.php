@@ -78,7 +78,12 @@ class WidgetHelper
         $utcTimezone = new DateTimeZone("UTC");
 
         $weekStartDateTime->setTimezone($utcTimezone);
-        $utcDayStart = $weekStartDateTime->format("Y-m-d H:i:s");
+
+        // When querying for shows we need the start and end date range to have
+        // a time of "00:00". $utcDayStart is used below when querying for shows.
+        $utcDayStartDT = clone $weekStartDateTime;
+        $utcDayStartDT->setTime(0, 0, 0);
+        $utcDayStart = $utcDayStartDT->format("Y-m-d H:i:s");
         $weekCounter = 0;
         while ($weekCounter < $maxNumOFWeeks) {
             for ($dayOfWeekCounter = 0; $dayOfWeekCounter < DAYS_PER_WEEK; $dayOfWeekCounter++) {
@@ -94,7 +99,11 @@ class WidgetHelper
                 //convert back to UTC to get the actual timestamp used for search.
                 $weekStartDateTime->setTimezone($utcTimezone);
 
-                $utcDayEnd = $weekStartDateTime->format("Y-m-d H:i:s");
+                // When querying for shows we need the start and end date range to have
+                // a time of "00:00".
+                $utcDayEndDT = clone $weekStartDateTime;
+                $utcDayEndDT->setTime(0, 0, 0);
+                $utcDayEnd = $utcDayEndDT->format("Y-m-d H:i:s");
                 $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 

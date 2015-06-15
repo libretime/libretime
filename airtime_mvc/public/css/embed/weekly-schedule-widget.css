@@ -57,7 +57,7 @@ body {
 
 .schedule_content {
     background: rgba(0, 0, 0, 0.3);
-    max-height: 0px;
+    max-height: 290px;
     transition: max-height 2s ease;
 
     overflow-y: auto;
@@ -86,6 +86,11 @@ body {
 .schedule_item .row {
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.empty-schedule {
+    text-transform: none;
+    text-align: center;
 }
 
 .schedule_item div.time_grid {

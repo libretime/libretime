@@ -29,8 +29,8 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
         }
 
         if (!$apiEnabled) {
-            $this->view->weekly_schedule_error_msg = _("To use the embeddable weekly schedule you must:<br><br>
-            1. Enable the Public Airtime API under System -> Preferences");
+            $this->view->weekly_schedule_error_msg = _("To use the embeddable weekly schedule widget you must:<br><br>
+            Enable the Public Airtime API under System -> Preferences");
         }
     }
 }

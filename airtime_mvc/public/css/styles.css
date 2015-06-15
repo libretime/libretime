@@ -332,7 +332,7 @@ select {
         width: 40%;
     }
 }
-@media screen and (max-width: 863px) {
+@media screen and (max-width: 1100px) {
     #nav {
         height: inherit;
         overflow-y: visible;
@@ -3264,11 +3264,13 @@ dd .stream-status {
 
 #weekly-schedule-widget {
     margin: 0 auto;
+    margin-bottom: 20px;
     width: 50%;
 }
 
 #widget-menu {
     margin: 0 auto;
+    margin-bottom: 20px;
     width: 40%;
 }
 
@@ -3278,14 +3280,19 @@ dd .stream-status {
     font-size: 14px;
 }
 
+#player-widget {
+    margin-bottom: 20px;
+}
+
 #weekly-schedule-widget label {
     font-weight: bold;
 }
 
-.blah {
+.schedule_iframe_wrapper {
     width: 100%;
     float: left;
     text-align: center;
+    padding: 10px;
 }
 
 #schedule_iframe {

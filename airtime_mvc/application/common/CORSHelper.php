@@ -23,6 +23,7 @@ class CORSHelper
         return array("http://www.airtime.pro",
                         "https://www.airtime.pro",
                         "https://account.sourcefabric.com",
+                        "https://account.sourcefabric.com:5001",
                         "http://" . $_SERVER['SERVER_NAME'],
                         "https://" . $_SERVER['SERVER_NAME']);
     }
