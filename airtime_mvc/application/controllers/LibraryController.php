@@ -277,13 +277,11 @@ class LibraryController extends Zend_Controller_Action
 
             $serviceId = $soundcloudService->getServiceId($id);
             if (!is_null($file) && $serviceId != 0) {
-                $menu["soundcloud"]["items"]["view"] = array("name" => _("View on Soundcloud"), "icon" => "soundcloud", "url" => $baseUrl."soundcloud/view-on-sound-cloud/id/{$id}");
-                $text = _("Re-upload to SoundCloud");
+                $menu["soundcloud"]["items"]["view"] = array("name" => _("View track"), "icon" => "soundcloud", "url" => $baseUrl."soundcloud/view-on-sound-cloud/id/{$id}");
+                $menu["soundcloud"]["items"]["upload"] = array("name" => _("Remove track"), "icon" => "soundcloud", "url" => $baseUrl."soundcloud/delete/id/{$id}");
             } else {
-                $text = _("Upload to SoundCloud");
+                $menu["soundcloud"]["items"]["upload"] = array("name" => _("Upload track"), "icon" => "soundcloud", "url" => $baseUrl."soundcloud/upload/id/{$id}");
             }
-
-            $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $baseUrl."soundcloud/upload/id/{$id}");
         }
 
         if (empty($menu)) {

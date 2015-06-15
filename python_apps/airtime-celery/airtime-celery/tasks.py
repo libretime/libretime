@@ -9,8 +9,8 @@ celery = Celery()
 logger = get_task_logger(__name__)
 
 
-@celery.task(name='upload-to-soundcloud')
-def upload_to_soundcloud(data, token, file_path):
+@celery.task(name='soundcloud-upload')
+def soundcloud_upload(data, token, file_path):
     """
     Upload a file to SoundCloud
 
@@ -31,4 +31,23 @@ def upload_to_soundcloud(data, token, file_path):
         logger.info('Error uploading track {title}: {0}'.format(e.message, **data))
         raise e
     data['asset_data'].close()
+    return json.dumps(track.fields())
+
+@celery.task(name='soundcloud-delete')
+def soundcloud_delete(token, track_id):
+    """
+    Delete a file from SoundCloud
+
+    :param token: OAuth2 client access token
+
+    :return: the SoundCloud response object
+    :rtype: dict
+    """
+    client = soundcloud.Client(access_token=token)
+    try:
+        logger.info('Deleting track with ID {0}'.format(track_id))
+        track = client.delete('/tracks/%s' % track_id)
+    except Exception as e:
+        logger.info('Error deleting track!')
+        raise e
     return json.dumps(track.fields())

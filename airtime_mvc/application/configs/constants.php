@@ -83,9 +83,20 @@ define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
 
 // Soundcloud contants
-define('SOUNDCLOUD_NOT_UPLOADED_YET' , -1);
-define('SOUNDCLOUD_PROGRESS'         , -2);
-define('SOUNDCLOUD_ERROR'            , -3);
+/**
+ * @var string status string for pending Celery tasks
+ */
+define('CELERY_PENDING_STATUS', 'PENDING');
+
+/**
+ * @var string status string for successful Celery tasks
+ */
+define('CELERY_SUCCESS_STATUS', 'SUCCESS');
+
+/**
+ * @var string status string for failed Celery tasks
+ */
+define('CELERY_FAILED_STATUS', 'FAILED');
 
 
 //WHMCS integration

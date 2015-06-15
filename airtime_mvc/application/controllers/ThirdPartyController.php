@@ -42,6 +42,17 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     }
 
     /**
+     * Clear the previously saved request token from the preferences
+     *
+     * @return void
+     */
+    public function deauthorizeAction() {
+        $function = $this->_SERVICE_TOKEN_ACCESSOR;
+        Application_Model_Preference::$function("");
+        header('Location: ' . $this->_baseUrl . 'Preference');  // Redirect back to the Preference page
+    }
+
+    /**
      * Called when user successfully completes third-party authorization
      * Store the returned request token for future requests
      *
@@ -67,25 +78,16 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     }
 
     /**
-     * Clear the previously saved request token from the preferences
+     * Delete the file with the given id from a third-party service
      *
      * @return void
-     */
-    public function deauthorizeAction() {
-        Application_Model_Preference::$this->_SERVICE_TOKEN_ACCESSOR("");
-        header('Location: ' . $this->_baseUrl . 'Preference');  // Redirect back to the Preference page
-    }
-
-    /**
-     * Poll the task queue for completed tasks associated with this service
-     * Optionally accepts a specific task name as a parameter
      *
-     * @return void
+     * @throws Zend_Controller_Response_Exception thrown if deletion fails for any reason
      */
-    public function pollBrokerTaskQueueAction() {
+    public function deleteAction() {
         $request = $this->getRequest();
-        $taskName = $request->getParam('task');
-        $this->_service->pollBrokerTaskQueue($taskName);
+        $id = $request->getParam('id');
+        $this->_service->delete($id);
     }
 
 }

@@ -27,6 +27,7 @@ require_once "ProvisioningHelper.php";
 require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
 require_once "Auth.php";
+require_once "TaskManager.php";
 require_once __DIR__.'/services/SoundcloudService.php';
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';
@@ -123,15 +124,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
     }
     
-    protected function _initUpgrade() {
+    protected function _initTasks() {
         /* We need to wrap this here so that we aren't checking when we're running the unit test suite
          */
         if (getenv("AIRTIME_UNIT_TEST") != 1) {
             //This will do the upgrade too if it's needed...
-            if (UpgradeManager::checkIfUpgradeIsNeeded()) {
-                $upgradeManager = new UpgradeManager();
-                $upgradeManager->doUpgrade();
-            }
+            TaskManager::getInstance()->runTasks();
         }
     }
 

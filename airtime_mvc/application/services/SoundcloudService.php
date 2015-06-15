@@ -17,28 +17,28 @@ class SoundcloudService extends ThirdPartyService {
     /**
      * @var string service name to store in ThirdPartyTrackReferences database
      */
-    protected $_SERVICE_NAME = 'SoundCloud';
-
-    /**
-     * @var string base URI for SoundCloud tracks
-     */
-    protected $_THIRD_PARTY_TRACK_URI = 'http://api.soundcloud.com/tracks/';
+    protected static $_SERVICE_NAME = 'SoundCloud';
 
     /**
      * @var string exchange name for SoundCloud tasks
      */
-    protected $_CELERY_EXCHANGE_NAME = 'soundcloud-uploads';
+    protected static $_CELERY_EXCHANGE_NAME = 'soundcloud';
 
     /**
      * @var string celery task name for third party uploads
      */
-    protected $_CELERY_UPLOAD_TASK_NAME = 'upload-to-soundcloud';
+    protected static $_CELERY_UPLOAD_TASK_NAME = 'soundcloud-upload';
+
+    /**
+     * @var string celery task name for third party deletions
+     */
+    protected static $_CELERY_DELETE_TASK_NAME = 'soundcloud-delete';
 
     /**
      * @var array Application_Model_Preference functions for SoundCloud and their
      *            associated API parameter keys so that we can call them dynamically
      */
-    private $_SOUNDCLOUD_PREF_FUNCTIONS = array(
+    private static $_SOUNDCLOUD_PREF_FUNCTIONS = array(
         "getDefaultSoundCloudLicenseType" => "license",
         "getDefaultSoundCloudSharingType" => "sharing"
     );
@@ -71,7 +71,7 @@ class SoundcloudService extends ThirdPartyService {
         $trackArray = array(
             'title' => $file->getName(),
         );
-        foreach ($this->_SOUNDCLOUD_PREF_FUNCTIONS as $func => $param) {
+        foreach (self::$_SOUNDCLOUD_PREF_FUNCTIONS as $func => $param) {
             $val = Application_Model_Preference::$func();
             if (!empty($val)) {
                 $trackArray[$param] = $val;
@@ -84,6 +84,7 @@ class SoundcloudService extends ThirdPartyService {
     /**
      * Update a ThirdPartyTrackReferences object for a completed upload
      * TODO: should we have a database layer class to handle Propel operations?
+     * TODO: break this function up, it's a bit of a beast
      *
      * @param $fileId int    local CcFiles identifier
      * @param $track  object third-party service track object
@@ -94,14 +95,18 @@ class SoundcloudService extends ThirdPartyService {
      */
     protected function _addOrUpdateTrackReference($fileId, $track, $status) {
         $ref = ThirdPartyTrackReferencesQuery::create()
-            ->filterByDbService($this->_SERVICE_NAME)
+            ->filterByDbService(static::$_SERVICE_NAME)
             ->findOneByDbFileId($fileId);
         if (is_null($ref)) {
             $ref = new ThirdPartyTrackReferences();
+        }  // If this was a delete task, just remove the record and return
+        else if ($ref->getDbBrokerTaskName() == static::$_CELERY_DELETE_TASK_NAME) {
+            $ref->delete();
+            return;
         }
-        $ref->setDbService($this->_SERVICE_NAME);
+        $ref->setDbService(static::$_SERVICE_NAME);
         // Only set the SoundCloud fields if the task was successful
-        if ($status == $this->_SUCCESS_STATUS) {
+        if ($status == CELERY_SUCCESS_STATUS) {
             // TODO: fetch any additional SoundCloud parameters we want to store
             $ref->setDbForeignId($track->id);  // SoundCloud identifier
         }
@@ -124,12 +129,23 @@ class SoundcloudService extends ThirdPartyService {
      * @param int $fileId the local CcFiles identifier
      *
      * @return string the link to the remote file
+     *
+     * @throws Soundcloud\Exception\InvalidHttpResponseCodeException when SoundCloud returns a 4xx/5xx response
      */
     public function getLinkToFile($fileId) {
         $serviceId = $this->getServiceId($fileId);
         // If we don't find a record for the file we'll get 0 back for the id
         if ($serviceId == 0) { return ''; }
-        $track = json_decode($this->_client->get('tracks/' . $serviceId));
+        try {
+            $track = json_decode($this->_client->get('tracks/' . $serviceId));
+        } catch (Soundcloud\Exception\InvalidHttpResponseCodeException $e) {
+            // If we end up here it means the track was removed from SoundCloud
+            // or the foreign id in our database is incorrect, so we should just
+            // get rid of the database record
+            Logging::warn("Error retrieving track data from SoundCloud: " . $e->getMessage());
+            $this->removeTrackReference($fileId);
+            throw $e;  // Throw the exception up to the controller so we can redirect to a 404
+        }
         return $track->permalink_url;
     }
 
@@ -152,7 +168,7 @@ class SoundcloudService extends ThirdPartyService {
         // in the redirect. This allows us to create a singular script to redirect
         // back to any station the request comes from.
         $url = urlencode('http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].'/soundcloud/redirect');
-        return $this->_client->getAuthorizeUrl(array("state" => $url));
+        return $this->_client->getAuthorizeUrl(array("state" => $url, "scope" => "non-expiring"));
     }
 
     /**
@@ -162,7 +178,7 @@ class SoundcloudService extends ThirdPartyService {
      */
     public function requestNewAccessToken($code) {
         // Get a non-expiring access token
-        $response = $this->_client->accessToken($code, $postData = array('scope' => 'non-expiring'));
+        $response = $this->_client->accessToken($code);
         $accessToken = $response['access_token'];
         Application_Model_Preference::setSoundCloudRequestToken($accessToken);
         $this->_accessToken = $accessToken;

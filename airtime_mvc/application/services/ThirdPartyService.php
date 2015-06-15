@@ -1,7 +1,13 @@
 <?php
 
 /**
+ * Class ServiceNotFoundException
+ */
+class ServiceNotFoundException extends Exception {}
+
+/**
  * Class ThirdPartyService generic superclass for third-party services
+ * TODO: decouple the media/track-specific functions into ThirdPartyMediaService class?
  */
 abstract class ThirdPartyService {
 
@@ -13,44 +19,32 @@ abstract class ThirdPartyService {
     /**
      * @var string service name to store in ThirdPartyTrackReferences database
      */
-    protected $_SERVICE_NAME;
+    protected static $_SERVICE_NAME;
 
     /**
      * @var string base URI for third-party tracks
      */
-    protected $_THIRD_PARTY_TRACK_URI;
+    protected static $_THIRD_PARTY_TRACK_URI;
 
     /**
      * @var string broker exchange name for third party tasks
      */
-    protected $_CELERY_EXCHANGE_NAME = 'default';
+    protected static $_CELERY_EXCHANGE_NAME;
 
     /**
      * @var string celery task name for third party uploads
      */
-    protected $_CELERY_UPLOAD_TASK_NAME = 'upload';
+    protected static $_CELERY_UPLOAD_TASK_NAME;
 
     /**
-     * @var string status string for pending tasks
+     * @var string celery task name for third party deletion
      */
-    protected $_PENDING_STATUS = 'PENDING';
-
-    /**
-     * @var string status string for successful tasks
-     */
-    protected $_SUCCESS_STATUS = 'SUCCESS';
-
-    /**
-     * @var string status string for failed tasks
-     */
-    protected $_FAILED_STATUS = 'FAILED';
+    protected static $_CELERY_DELETE_TASK_NAME;
 
     /**
      * Upload the file with the given identifier to a third-party service
      *
      * @param int $fileId the local CcFiles identifier
-     *
-     * @throws Exception thrown when the upload fails for any reason
      */
     public function upload($fileId) {
         $file = Application_Model_StoredFile::RecallById($fileId);
@@ -60,11 +54,40 @@ abstract class ThirdPartyService {
             'file_path' => $file->getFilePaths()[0]
         );
         try {
-            $brokerTaskId = Application_Model_RabbitMq::sendCeleryMessage($this->_CELERY_UPLOAD_TASK_NAME,
-                                                                          $this->_CELERY_EXCHANGE_NAME,
+            $brokerTaskId = Application_Model_RabbitMq::sendCeleryMessage(static::$_CELERY_UPLOAD_TASK_NAME,
+                                                                          static::$_CELERY_EXCHANGE_NAME,
                                                                           $data);
-            $this->_createTaskReference($fileId, $brokerTaskId, $this->_CELERY_UPLOAD_TASK_NAME);
-        } catch(Exception $e) {
+            $this->_createTaskReference($fileId, $brokerTaskId, static::$_CELERY_UPLOAD_TASK_NAME);
+        } catch (Exception $e) {
+            Logging::info("Invalid request: " . $e->getMessage());
+            // We should only get here if we have an access token, so attempt to refresh
+            $this->accessTokenRefresh();
+        }
+    }
+
+    /**
+     * Delete the file with the given identifier from a third-party service
+     *
+     * @param int $fileId the local CcFiles identifier
+     *
+     * @throws ServiceNotFoundException when a $fileId with no corresponding
+     *                                  service identifier is given
+     */
+    public function delete($fileId) {
+        $serviceId = $this->getServiceId($fileId);
+        if ($serviceId == 0) {
+            throw new ServiceNotFoundException("No service found for file with ID $fileId");
+        }
+        $data = array(
+            'token' => $this->_accessToken,
+            'track_id' => $serviceId
+        );
+        try {
+            $brokerTaskId = Application_Model_RabbitMq::sendCeleryMessage(static::$_CELERY_DELETE_TASK_NAME,
+                                                                          static::$_CELERY_EXCHANGE_NAME,
+                                                                          $data);
+            $this->_createTaskReference($fileId, $brokerTaskId, static::$_CELERY_DELETE_TASK_NAME);
+        } catch (Exception $e) {
             Logging::info("Invalid request: " . $e->getMessage());
             // We should only get here if we have an access token, so attempt to refresh
             $this->accessTokenRefresh();
@@ -86,18 +109,18 @@ abstract class ThirdPartyService {
     protected function _createTaskReference($fileId, $brokerTaskId, $taskName) {
         // First, check if the track already has an entry in the database
         $ref = ThirdPartyTrackReferencesQuery::create()
-            ->filterByDbService($this->_SERVICE_NAME)
+            ->filterByDbService(static::$_SERVICE_NAME)
             ->findOneByDbFileId($fileId);
         if (is_null($ref)) {
             $ref = new ThirdPartyTrackReferences();
         }
-        $ref->setDbService($this->_SERVICE_NAME);
+        $ref->setDbService(static::$_SERVICE_NAME);
         $ref->setDbBrokerTaskId($brokerTaskId);
         $ref->setDbBrokerTaskName($taskName);
         $utc = new DateTimeZone("UTC");
         $ref->setDbBrokerTaskDispatchTime(new DateTime("now", $utc));
         $ref->setDbFileId($fileId);
-        $ref->setDbStatus($this->_PENDING_STATUS);
+        $ref->setDbStatus(CELERY_PENDING_STATUS);
         $ref->save();
     }
 
@@ -113,7 +136,7 @@ abstract class ThirdPartyService {
      */
     public function removeTrackReference($fileId) {
         $ref = ThirdPartyTrackReferencesQuery::create()
-            ->filterByDbService($this->_SERVICE_NAME)
+            ->filterByDbService(static::$_SERVICE_NAME)
             ->findOneByDbFileId($fileId);
         $ref->delete();
     }
@@ -128,9 +151,9 @@ abstract class ThirdPartyService {
      */
     public function getServiceId($fileId) {
         $ref = ThirdPartyTrackReferencesQuery::create()
-            ->filterByDbService($this->_SERVICE_NAME)
-            ->findOneByDbFileId($fileId); // There shouldn't be duplicates!
-        return is_null($ref) ? 0 : $ref->getDbForeignId();
+            ->filterByDbService(static::$_SERVICE_NAME)
+            ->findOneByDbFileId($fileId);  // There shouldn't be duplicates!
+        return empty($ref) ? 0 : $ref->getDbForeignId();
     }
 
     /**
@@ -143,7 +166,24 @@ abstract class ThirdPartyService {
      */
     public function getLinkToFile($fileId) {
         $serviceId = $this->getServiceId($fileId);
-        return $serviceId > 0 ? $this->_THIRD_PARTY_TRACK_URI . $serviceId : '';
+        return $serviceId > 0 ? static::$_THIRD_PARTY_TRACK_URI . $serviceId : '';
+    }
+
+    /**
+     * Check to see if there are any pending tasks for this service
+     *
+     * @param string $taskName
+     *
+     * @return bool true if there are any pending tasks, otherwise false
+     */
+    public function isBrokerTaskQueueEmpty($taskName="") {
+        $query = ThirdPartyTrackReferencesQuery::create()
+            ->filterByDbService(static::$_SERVICE_NAME);
+        if (!empty($taskName)) {
+            $query->filterByDbBrokerTaskName($taskName);
+        }
+        $result = $query->findOneByDbStatus(CELERY_PENDING_STATUS);
+        return empty($result);
     }
 
     /**
@@ -154,18 +194,22 @@ abstract class ThirdPartyService {
      * @param string $taskName the name of the task to poll for
      */
     public function pollBrokerTaskQueue($taskName="") {
-        $pendingTasks = $this->_getPendingTasks($taskName);
+        $pendingTasks = static::_getPendingTasks($taskName);
         foreach ($pendingTasks as $task) {
             try {
-                $message = $this->_getTaskMessage($task);
-                $this->_addOrUpdateTrackReference($task->getDbFileId(), json_decode($message->result), $message->status);
-            } catch(CeleryException $e) {
-                Logging::info("Couldn't retrieve task message for task " . $task->getDbBrokerTaskName()
-                              . " with ID " . $task->getDbBrokerTaskId() . ": " . $e->getMessage());
-                if ($this->_checkMessageTimeout($task)) {
-                    $task->setDbStatus($this->_FAILED_STATUS);
+                $message = static::_getTaskMessage($task);
+                static::_addOrUpdateTrackReference($task->getDbFileId(), json_decode($message->result), $message->status);
+            } catch (CeleryException $e) {
+                // Fail silently unless the message has timed out; often we end up here when
+                // the Celery task takes a while to execute
+                if (static::_checkMessageTimeout($task)) {
+                    Logging::info($e->getMessage());
+                    $task->setDbStatus(CELERY_FAILED_STATUS);
                     $task->save();
                 }
+            } catch (Exception $e) {
+                // Sometimes we might catch a json_decode error and end up here
+                Logging::info($e->getMessage());
             }
         }
     }
@@ -180,8 +224,8 @@ abstract class ThirdPartyService {
      */
     protected function _getPendingTasks($taskName) {
         $query = ThirdPartyTrackReferencesQuery::create()
-            ->filterByDbService($this->_SERVICE_NAME)
-            ->filterByDbStatus($this->_PENDING_STATUS)
+            ->filterByDbService(static::$_SERVICE_NAME)
+            ->filterByDbStatus(CELERY_PENDING_STATUS)
             ->filterByDbBrokerTaskId('', Criteria::NOT_EQUAL);
         if (!empty($taskName)) {
             $query->filterByDbBrokerTaskName($taskName);
@@ -198,7 +242,7 @@ abstract class ThirdPartyService {
      *
      * @throws CeleryException when the result message for this task no longer exists
      */
-    protected function _getTaskMessage($task) {
+    protected static function _getTaskMessage($task) {
         $message =  Application_Model_RabbitMq::getAsyncResultMessage($task->getDbBrokerTaskName(),
                                                                       $task->getDbBrokerTaskId());
         return json_decode($message['body']);
@@ -212,7 +256,7 @@ abstract class ThirdPartyService {
      * @return bool true if the dispatch time is empty or it's been more than our timeout time
      *              since the message was dispatched, otherwise false
      */
-    protected function _checkMessageTimeout($task) {
+    protected static function _checkMessageTimeout($task) {
         $utc = new DateTimeZone("UTC");
         $dispatchTime = new DateTime($task->getDbBrokerTaskDispatchTime(), $utc);
         $now = new DateTime("now", $utc);

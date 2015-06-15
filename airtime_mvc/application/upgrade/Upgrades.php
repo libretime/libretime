@@ -49,7 +49,7 @@ class UpgradeManager
      *
      * @return boolean whether or not an upgrade was performed
      */
-    public function doUpgrade()
+    public static function doUpgrade()
     {
         // Get all upgrades dynamically (in declaration order!) so we don't have to add them explicitly each time
         // TODO: explicitly sort classnames by ascending version suffix for safety
@@ -58,7 +58,7 @@ class UpgradeManager
         $upgradePerformed = false;
 
         foreach ($upgraders as $upgrader) {
-            $upgradePerformed = $this->_runUpgrade(new $upgrader($dir)) ? true : $upgradePerformed;
+            $upgradePerformed = self::_runUpgrade(new $upgrader($dir)) ? true : $upgradePerformed;
         }
 
         return $upgradePerformed;
@@ -71,7 +71,7 @@ class UpgradeManager
      *
      * @return bool true if the upgrade was successful, otherwise false
      */
-    private function _runUpgrade(AirtimeUpgrader $upgrader) {
+    private static function _runUpgrade(AirtimeUpgrader $upgrader) {
         return $upgrader->checkIfUpgradeSupported() && $upgrader->upgrade();
     }
 
@@ -327,6 +327,22 @@ class AirtimeUpgrader2512 extends AirtimeUpgrader
     }
 }
 
+/**
+ * Class AirtimeUpgrader2513 - Celery and SoundCloud upgrade
+ *
+ * Adds third_party_track_references table for third party service
+ * authentication and task architecture.
+ *
+ * Schema:
+ *      id                          -> int          PK
+ *      service                     -> string       internal service name
+ *      foreign_id                  -> int          external unique service id
+ *      broker_task_id              -> int          external unique amqp results identifier
+ *      broker_task_name            -> string       external Celery task name
+ *      broker_task_dispatch_time   -> timestamp    internal message dispatch time
+ *      file_id                     -> int          internal FK->cc_files track id
+ *      status                      -> string       external Celery task status - PENDING, SUCCESS, or FAILED
+ */
 class AirtimeUpgrader2513 extends AirtimeUpgrader
 {
     protected function getSupportedSchemaVersions() {

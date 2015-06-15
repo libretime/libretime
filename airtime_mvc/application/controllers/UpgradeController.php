@@ -14,8 +14,7 @@ class UpgradeController extends Zend_Controller_Action
         }
 
         try {
-            $upgradeManager = new UpgradeManager();
-            $didWePerformAnUpgrade = $upgradeManager->doUpgrade();
+            $didWePerformAnUpgrade = UpgradeManager::doUpgrade();
 
             if (!$didWePerformAnUpgrade) {
                 $this->getResponse()

@@ -9,12 +9,15 @@ class Application_Model_RabbitMq
     /**
      * @var int milliseconds (for compatibility with celery) until we consider a message to have timed out
      */
-    public static $_CELERY_MESSAGE_TIMEOUT = 300000;  // 5 minutes
+    public static $_CELERY_MESSAGE_TIMEOUT = 600000;  // 10 minutes
 
     /**
+     * We have to use celeryresults (the default results exchange) because php-celery doesn't support
+     * named results exchanges.
+     *
      * @var string exchange for celery task results
      */
-    public static $_CELERY_RESULTS_EXCHANGE = 'airtime-results';
+    public static $_CELERY_RESULTS_EXCHANGE = 'celeryresults';
 
     /**
      * Sets a flag to push the schedule at the end of the request.
@@ -90,7 +93,7 @@ class Application_Model_RabbitMq
      * @throws CeleryException when no message is found
      */
     public static function sendCeleryMessage($task, $exchange, $data) {
-        $config = parse_ini_file($this->_getRmqConfigPath(), true);
+        $config = parse_ini_file(self::_getRmqConfigPath(), true);
         $queue = $routingKey = $exchange;
         $c = self::_setupCeleryExchange($config, $exchange, $queue);  // Use the exchange name for the queue
         $result = $c->PostTask($task, $data, true, $routingKey);      // and routing key
@@ -109,8 +112,8 @@ class Application_Model_RabbitMq
      * @throws CeleryException when no message is found
      */
     public static function getAsyncResultMessage($task, $id) {
-        $config = parse_ini_file($this->_getRmqConfigPath(), true);
-        $queue = self::$_CELERY_RESULTS_EXCHANGE . "." . $config["stationId"];
+        $config = parse_ini_file(self::_getRmqConfigPath(), true);
+        $queue = self::$_CELERY_RESULTS_EXCHANGE . "." . $task;
         $c = self::_setupCeleryExchange($config, self::$_CELERY_RESULTS_EXCHANGE, $queue);
         $message = $c->getAsyncResultMessage($task, $id);
 
@@ -157,7 +160,7 @@ class Application_Model_RabbitMq
         self::sendMessage($exchange, 'direct', true, $data);
     }
 
-    private function _getRmqConfigPath() {
+    private static function _getRmqConfigPath() {
         //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
         //and shared between all instances on Airtime Pro.
         $CC_CONFIG = Config::getConfig();
@@ -177,7 +180,7 @@ class Application_Model_RabbitMq
     public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
                                                 $callbackUrl, $apiKey, $storageBackend, $filePrefix)
     {
-        $config = parse_ini_file($this->_getRmqConfigPath(), true);
+        $config = parse_ini_file(self::_getRmqConfigPath(), true);
         $conn = new AMQPConnection($config["rabbitmq"]["host"],
                 $config["rabbitmq"]["port"],
                 $config["rabbitmq"]["user"],

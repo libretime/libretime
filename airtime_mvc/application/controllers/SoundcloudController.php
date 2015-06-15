@@ -33,13 +33,8 @@ class SoundcloudController extends ThirdPartyController {
             $soundcloudLink = $this->_service->getLinkToFile($id);
             header('Location: ' . $soundcloudLink);
         } catch (Soundcloud\Exception\InvalidHttpResponseCodeException $e) {
-            // If we end up here it means the track was removed from SoundCloud
-            // or the foreign id in our database is incorrect, so we should just
-            // get rid of the database record
-            Logging::warn("Error retrieving track data from SoundCloud: " . $e->getMessage());
-            $this->_service->removeTrackReference($id);
             // Redirect to a 404 so the user knows something went wrong
-            header('Location: ' . $this->_baseUrl . 'error/error-404'); // Redirect back to the Preference page
+            header('Location: ' . $this->_baseUrl . 'error/error-404');
         }
     }
 
