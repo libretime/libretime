@@ -6,12 +6,10 @@ php_value session.auto_start 0
 
 RewriteEngine On
 RewriteOptions inherit
-RewriteCond %{SERVER_NAME} localhost$
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^.*$ - [NC,L]
-RewriteCond %{SERVER_NAME} localhost$
 RewriteRule ^.*$ index.php [NC,L]
 
 AddOutputFilterByType DEFLATE text/plain
