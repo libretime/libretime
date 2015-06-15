@@ -44,14 +44,14 @@ body {
 .bottom_bar p.now_playing {
     color: #222222;
     font-size: 26px;
-    font-weight: normal;
+    font-weight: 300;
     float: left;
     margin: 28px 0px;
 }
 
 .bottom_bar p.now_playing span {
     display: block;
-    font-weight: lighter;
+    font-weight: 100;
 }
 
 .bottom_bar .button {

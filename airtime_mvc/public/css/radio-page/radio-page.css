@@ -31,8 +31,6 @@ body {
     margin-right: 60px;
     margin-top: 40px;
     display:inline-block;
-    background-color: #000000;
-    opacity: 0.5;
     padding: 10px;
 }
 
@@ -47,7 +45,7 @@ body {
 }
 
 span.login-img {
-    background: url('img/login-small.png') no-repeat center -25px;
+    background: url('img/login-small-white.png') no-repeat center -25px;
     display: inline-block;
     vertical-align: middle;
     width: 25px;
