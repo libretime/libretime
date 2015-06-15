@@ -68,7 +68,9 @@ body {
 }
 
 .schedule.current .schedule_content {
-    height: 70%;
+    /*height: 50%;
+    overflow-y: auto;*/
+    max-height: 700px;
     overflow-y: auto;
 }
 
