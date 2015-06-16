@@ -2262,7 +2262,7 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 }
 .preferences.simple-formblock dd.block-display,
  .preferences.simple-formblock dd.block-display select, .stream-config.simple-formblock dd.block-display select,
- .preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
+.preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
     width: 100%;
 }
 .preferences dd.block-display .input_text_area, .preferences dd.block-display .input_text 

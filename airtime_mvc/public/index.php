@@ -54,7 +54,7 @@ if (array_key_exists('config', $_GET)) {
     showConfigCheckPage();
 }
 
-$filename = isset($_SERVER['AIRTIME_CONF']) ? 
+$filename = isset($_SERVER['AIRTIME_CONF']) ?
     $_SERVER['AIRTIME_CONF'] : AIRTIME_CONFIG_STOR . AIRTIME_CONFIG;
 
 // If a configuration file exists, forward to our boot script

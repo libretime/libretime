@@ -9,7 +9,6 @@ body {
     visibility: hidden;
     max-width: 750px;
     /*margin: 0 auto;*/
-    margin-bottom: 140px;
     padding: 10px;
     position: absolute;
     /*left: 50%;
@@ -68,7 +67,10 @@ body {
 }
 
 .schedule.current .schedule_content {
-    max-height: 300px;
+    /*height: 50%;
+    overflow-y: auto;*/
+    max-height: 700px;
+    overflow-y: auto;
 }
 
 .schedule_item {

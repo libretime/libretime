@@ -4,22 +4,24 @@ html {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    overflow-y: hidden;
+    overflow-y: auto;
 }
 
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0px;
+}
+
+
 .bck_cover {
-    position: fixed;
+    position: absolute;
     top: 0px;
     right: 0px;
     bottom: 0px;
     left: 0px;
     background: rgba(0, 0, 0, 0.7);
     z-index: -1;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0px;
 }
 
 .logo img {
@@ -31,8 +33,6 @@ body {
     margin-right: 60px;
     margin-top: 40px;
     display:inline-block;
-    background-color: #000000;
-    opacity: 0.5;
     padding: 10px;
 }
 
@@ -47,7 +47,7 @@ body {
 }
 
 span.login-img {
-    background: url('img/login-small.png') no-repeat center -25px;
+    background: url('img/login-small-white.png') no-repeat center -25px;
     display: inline-block;
     vertical-align: middle;
     width: 25px;

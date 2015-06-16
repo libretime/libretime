@@ -78,11 +78,17 @@ class EmbedController extends Zend_Controller_Action
 
     public function weeklyProgramAction()
     {
-        $this->view->layout()->disableLayout();
 
         $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
+
+        $useIframe = $request->getParam('useiframe');
+        if (!isset($useIframe)) {
+            $this->view->layout()->disableLayout();
+        } elseif ($useIframe == "1") {
+            $this->_helper->layout->setLayout('bare');
+        }
 
         $widgetStyle = $request->getParam('style');
         if ($widgetStyle == "premium") {
