@@ -37,8 +37,6 @@ class Application_Model_Preference
             if ($isUserValue && is_null($userId))
                 throw new Exception("User id can't be null for a user preference {$key}.");
             
-            Application_Common_Database::prepareAndExecute("LOCK TABLE cc_pref");
-
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
                 ." WHERE keystr = :key";
@@ -589,13 +587,12 @@ class Application_Model_Preference
 
     public static function SetStationLogo($imagePath)
     {
-        if (!empty($imagePath)) {
-            $image = @file_get_contents($imagePath);
-            $image = base64_encode($image);
-            self::setValue("logoImage", $image);
-        } else {
-            Logging::warn("Attempting to set imagePath to empty string");
+        if (empty($imagePath)) {
+            Logging::info("Removed station logo");
         }
+        $image = @file_get_contents($imagePath);
+        $image = base64_encode($image);
+        self::setValue("logoImage", $image);
     }
 
     public static function GetStationLogo()

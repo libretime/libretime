@@ -96,6 +96,11 @@ function setSoundCloudCheckBoxListener() {
     });
 }
 
+function removeLogo() {
+    $.post(baseUrl+'Preference/remove-logo', function(json){});
+    location.reload();
+}
+
 $(document).ready(function() {
 
     $('.collapsible-header').live('click',function() {
@@ -103,7 +108,8 @@ $(document).ready(function() {
         $(this).toggleClass("closed");
         return false;
     }).next().hide();
-    
+
+    /* No longer using AJAX for this form. Zend + our code makes it needlessly hard to deal with. -- Albert
     $('#pref_save').live('click', function() {
         var data = $('#pref_form').serialize();
         var url = baseUrl+'Preference/index';
@@ -116,7 +122,7 @@ $(document).ready(function() {
             setConfigureMailServerListener();
             setEnableSystemEmailsListener();
         });
-    });
+    });*/
 
     showErrorSections();
     

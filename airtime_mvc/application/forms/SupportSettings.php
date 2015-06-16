@@ -1,7 +1,5 @@
 <?php
 
-require_once 'customfilters/ImageSize.php';
-
 class Application_Form_SupportSettings extends Zend_Form
 {
 
@@ -95,17 +93,6 @@ class Application_Form_SupportSettings extends Zend_Form
                     ->setAttrib('ROWS','2')
                     ->setAttrib('COLS','58');
         $this->addElement($description);
-
-        // Station Logo
-        $upload = new Zend_Form_Element_File('Logo');
-        $upload->setLabel(_('Station Logo:'))
-                ->setRequired(false)
-                ->setDecorators(array('File'))
-                ->addValidator('Count', false, 1)
-                ->addValidator('Extension', false, 'jpg,jpeg,png,gif')
-                ->addFilter('ImageSize');
-        $upload->setAttrib('accept', 'image/*');
-        $this->addElement($upload);
 
             //enable support feedback
             $this->addElement('checkbox', 'SupportFeedback', array(

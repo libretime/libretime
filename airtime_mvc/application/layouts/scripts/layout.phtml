@@ -11,7 +11,7 @@
 <body>
 
 <?php echo $this->partial('partialviews/trialBox.phtml', array("is_trial"=>$this->isTrial(), "trial_remain"=> $this->trialRemaining())) ?>
-<div id="Panel">
+<div id="Panel" class="sticky">
     <div class="logo"></div>
     <?php echo $this->versionNotify();
             $sss = $this->SourceSwitchStatus();

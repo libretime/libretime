@@ -402,6 +402,7 @@ class Application_Service_ShowFormService
             ->filterByDbShowId($this->ccShow->getDbId())
             ->filterByDbModifiedInstance(false)
             ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->orderByDbStarts()
             ->findOne();
         
         $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
