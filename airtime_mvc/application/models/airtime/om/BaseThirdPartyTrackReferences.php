@@ -48,28 +48,16 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     protected $foreign_id;
 
     /**
-     * The value for the broker_task_id field.
-     * @var        string
-     */
-    protected $broker_task_id;
-
-    /**
-     * The value for the broker_task_name field.
-     * @var        string
-     */
-    protected $broker_task_name;
-
-    /**
-     * The value for the broker_task_dispatch_time field.
-     * @var        string
-     */
-    protected $broker_task_dispatch_time;
-
-    /**
      * The value for the file_id field.
      * @var        int
      */
     protected $file_id;
+
+    /**
+     * The value for the upload_time field.
+     * @var        string
+     */
+    protected $upload_time;
 
     /**
      * The value for the status field.
@@ -78,9 +66,15 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     protected $status;
 
     /**
-     * @var        CcPlayoutHistoryTemplate
+     * @var        CcFiles
      */
-    protected $aCcPlayoutHistoryTemplate;
+    protected $aCcFiles;
+
+    /**
+     * @var        PropelObjectCollection|CeleryTasks[] Collection to store aggregation of CeleryTasks objects.
+     */
+    protected $collCeleryTaskss;
+    protected $collCeleryTaskssPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -101,6 +95,12 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $celeryTaskssScheduledForDeletion = null;
 
     /**
      * Get the [id] column value.
@@ -136,29 +136,18 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     }
 
     /**
-     * Get the [broker_task_id] column value.
+     * Get the [file_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getDbBrokerTaskId()
+    public function getDbFileId()
     {
 
-        return $this->broker_task_id;
+        return $this->file_id;
     }
 
     /**
-     * Get the [broker_task_name] column value.
-     *
-     * @return string
-     */
-    public function getDbBrokerTaskName()
-    {
-
-        return $this->broker_task_name;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [broker_task_dispatch_time] column value.
+     * Get the [optionally formatted] temporal [upload_time] column value.
      *
      *
      * @param string $format The date/time format string (either date()-style or strftime()-style).
@@ -166,17 +155,17 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
      * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
      * @throws PropelException - if unable to parse/validate the date/time value.
      */
-    public function getDbBrokerTaskDispatchTime($format = 'Y-m-d H:i:s')
+    public function getDbUploadTime($format = 'Y-m-d H:i:s')
     {
-        if ($this->broker_task_dispatch_time === null) {
+        if ($this->upload_time === null) {
             return null;
         }
 
 
         try {
-            $dt = new DateTime($this->broker_task_dispatch_time);
+            $dt = new DateTime($this->upload_time);
         } catch (Exception $x) {
-            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->broker_task_dispatch_time, true), $x);
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->upload_time, true), $x);
         }
 
         if ($format === null) {
@@ -190,17 +179,6 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
 
         return $dt->format($format);
 
-    }
-
-    /**
-     * Get the [file_id] column value.
-     *
-     * @return int
-     */
-    public function getDbFileId()
-    {
-
-        return $this->file_id;
     }
 
     /**
@@ -278,71 +256,6 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     } // setDbForeignId()
 
     /**
-     * Set the value of [broker_task_id] column.
-     *
-     * @param  string $v new value
-     * @return ThirdPartyTrackReferences The current object (for fluent API support)
-     */
-    public function setDbBrokerTaskId($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->broker_task_id !== $v) {
-            $this->broker_task_id = $v;
-            $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::BROKER_TASK_ID;
-        }
-
-
-        return $this;
-    } // setDbBrokerTaskId()
-
-    /**
-     * Set the value of [broker_task_name] column.
-     *
-     * @param  string $v new value
-     * @return ThirdPartyTrackReferences The current object (for fluent API support)
-     */
-    public function setDbBrokerTaskName($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->broker_task_name !== $v) {
-            $this->broker_task_name = $v;
-            $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME;
-        }
-
-
-        return $this;
-    } // setDbBrokerTaskName()
-
-    /**
-     * Sets the value of [broker_task_dispatch_time] column to a normalized version of the date/time value specified.
-     *
-     * @param mixed $v string, integer (timestamp), or DateTime value.
-     *               Empty strings are treated as null.
-     * @return ThirdPartyTrackReferences The current object (for fluent API support)
-     */
-    public function setDbBrokerTaskDispatchTime($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->broker_task_dispatch_time !== null || $dt !== null) {
-            $currentDateAsString = ($this->broker_task_dispatch_time !== null && $tmpDt = new DateTime($this->broker_task_dispatch_time)) ? $tmpDt->format('Y-m-d H:i:s') : null;
-            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
-            if ($currentDateAsString !== $newDateAsString) {
-                $this->broker_task_dispatch_time = $newDateAsString;
-                $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME;
-            }
-        } // if either are not null
-
-
-        return $this;
-    } // setDbBrokerTaskDispatchTime()
-
-    /**
      * Set the value of [file_id] column.
      *
      * @param  int $v new value
@@ -359,13 +272,36 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::FILE_ID;
         }
 
-        if ($this->aCcPlayoutHistoryTemplate !== null && $this->aCcPlayoutHistoryTemplate->getDbId() !== $v) {
-            $this->aCcPlayoutHistoryTemplate = null;
+        if ($this->aCcFiles !== null && $this->aCcFiles->getDbId() !== $v) {
+            $this->aCcFiles = null;
         }
 
 
         return $this;
     } // setDbFileId()
+
+    /**
+     * Sets the value of [upload_time] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     */
+    public function setDbUploadTime($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->upload_time !== null || $dt !== null) {
+            $currentDateAsString = ($this->upload_time !== null && $tmpDt = new DateTime($this->upload_time)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->upload_time = $newDateAsString;
+                $this->modifiedColumns[] = ThirdPartyTrackReferencesPeer::UPLOAD_TIME;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setDbUploadTime()
 
     /**
      * Set the value of [status] column.
@@ -423,11 +359,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->service = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
             $this->foreign_id = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->broker_task_id = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->broker_task_name = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->broker_task_dispatch_time = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->file_id = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-            $this->status = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->file_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->upload_time = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->status = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -437,7 +371,7 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 8; // 8 = ThirdPartyTrackReferencesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = ThirdPartyTrackReferencesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ThirdPartyTrackReferences object", $e);
@@ -460,8 +394,8 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     public function ensureConsistency()
     {
 
-        if ($this->aCcPlayoutHistoryTemplate !== null && $this->file_id !== $this->aCcPlayoutHistoryTemplate->getDbId()) {
-            $this->aCcPlayoutHistoryTemplate = null;
+        if ($this->aCcFiles !== null && $this->file_id !== $this->aCcFiles->getDbId()) {
+            $this->aCcFiles = null;
         }
     } // ensureConsistency
 
@@ -502,7 +436,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->aCcPlayoutHistoryTemplate = null;
+            $this->aCcFiles = null;
+            $this->collCeleryTaskss = null;
+
         } // if (deep)
     }
 
@@ -621,11 +557,11 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCcPlayoutHistoryTemplate !== null) {
-                if ($this->aCcPlayoutHistoryTemplate->isModified() || $this->aCcPlayoutHistoryTemplate->isNew()) {
-                    $affectedRows += $this->aCcPlayoutHistoryTemplate->save($con);
+            if ($this->aCcFiles !== null) {
+                if ($this->aCcFiles->isModified() || $this->aCcFiles->isNew()) {
+                    $affectedRows += $this->aCcFiles->save($con);
                 }
-                $this->setCcPlayoutHistoryTemplate($this->aCcPlayoutHistoryTemplate);
+                $this->setCcFiles($this->aCcFiles);
             }
 
             if ($this->isNew() || $this->isModified()) {
@@ -637,6 +573,23 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                 }
                 $affectedRows += 1;
                 $this->resetModified();
+            }
+
+            if ($this->celeryTaskssScheduledForDeletion !== null) {
+                if (!$this->celeryTaskssScheduledForDeletion->isEmpty()) {
+                    CeleryTasksQuery::create()
+                        ->filterByPrimaryKeys($this->celeryTaskssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->celeryTaskssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collCeleryTaskss !== null) {
+                foreach ($this->collCeleryTaskss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
             }
 
             $this->alreadyInSave = false;
@@ -684,17 +637,11 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FOREIGN_ID)) {
             $modifiedColumns[':p' . $index++]  = '"foreign_id"';
         }
-        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID)) {
-            $modifiedColumns[':p' . $index++]  = '"broker_task_id"';
-        }
-        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME)) {
-            $modifiedColumns[':p' . $index++]  = '"broker_task_name"';
-        }
-        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME)) {
-            $modifiedColumns[':p' . $index++]  = '"broker_task_dispatch_time"';
-        }
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FILE_ID)) {
             $modifiedColumns[':p' . $index++]  = '"file_id"';
+        }
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::UPLOAD_TIME)) {
+            $modifiedColumns[':p' . $index++]  = '"upload_time"';
         }
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::STATUS)) {
             $modifiedColumns[':p' . $index++]  = '"status"';
@@ -719,17 +666,11 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                     case '"foreign_id"':
                         $stmt->bindValue($identifier, $this->foreign_id, PDO::PARAM_STR);
                         break;
-                    case '"broker_task_id"':
-                        $stmt->bindValue($identifier, $this->broker_task_id, PDO::PARAM_STR);
-                        break;
-                    case '"broker_task_name"':
-                        $stmt->bindValue($identifier, $this->broker_task_name, PDO::PARAM_STR);
-                        break;
-                    case '"broker_task_dispatch_time"':
-                        $stmt->bindValue($identifier, $this->broker_task_dispatch_time, PDO::PARAM_STR);
-                        break;
                     case '"file_id"':
                         $stmt->bindValue($identifier, $this->file_id, PDO::PARAM_INT);
+                        break;
+                    case '"upload_time"':
+                        $stmt->bindValue($identifier, $this->upload_time, PDO::PARAM_STR);
                         break;
                     case '"status"':
                         $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
@@ -826,9 +767,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
-            if ($this->aCcPlayoutHistoryTemplate !== null) {
-                if (!$this->aCcPlayoutHistoryTemplate->validate($columns)) {
-                    $failureMap = array_merge($failureMap, $this->aCcPlayoutHistoryTemplate->getValidationFailures());
+            if ($this->aCcFiles !== null) {
+                if (!$this->aCcFiles->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aCcFiles->getValidationFailures());
                 }
             }
 
@@ -837,6 +778,14 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                 $failureMap = array_merge($failureMap, $retval);
             }
 
+
+                if ($this->collCeleryTaskss !== null) {
+                    foreach ($this->collCeleryTaskss as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
 
 
             $this->alreadyInValidation = false;
@@ -883,18 +832,12 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                 return $this->getDbForeignId();
                 break;
             case 3:
-                return $this->getDbBrokerTaskId();
-                break;
-            case 4:
-                return $this->getDbBrokerTaskName();
-                break;
-            case 5:
-                return $this->getDbBrokerTaskDispatchTime();
-                break;
-            case 6:
                 return $this->getDbFileId();
                 break;
-            case 7:
+            case 4:
+                return $this->getDbUploadTime();
+                break;
+            case 5:
                 return $this->getDbStatus();
                 break;
             default:
@@ -929,11 +872,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             $keys[0] => $this->getDbId(),
             $keys[1] => $this->getDbService(),
             $keys[2] => $this->getDbForeignId(),
-            $keys[3] => $this->getDbBrokerTaskId(),
-            $keys[4] => $this->getDbBrokerTaskName(),
-            $keys[5] => $this->getDbBrokerTaskDispatchTime(),
-            $keys[6] => $this->getDbFileId(),
-            $keys[7] => $this->getDbStatus(),
+            $keys[3] => $this->getDbFileId(),
+            $keys[4] => $this->getDbUploadTime(),
+            $keys[5] => $this->getDbStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -941,8 +882,11 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->aCcPlayoutHistoryTemplate) {
-                $result['CcPlayoutHistoryTemplate'] = $this->aCcPlayoutHistoryTemplate->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            if (null !== $this->aCcFiles) {
+                $result['CcFiles'] = $this->aCcFiles->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->collCeleryTaskss) {
+                $result['CeleryTaskss'] = $this->collCeleryTaskss->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -988,18 +932,12 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
                 $this->setDbForeignId($value);
                 break;
             case 3:
-                $this->setDbBrokerTaskId($value);
-                break;
-            case 4:
-                $this->setDbBrokerTaskName($value);
-                break;
-            case 5:
-                $this->setDbBrokerTaskDispatchTime($value);
-                break;
-            case 6:
                 $this->setDbFileId($value);
                 break;
-            case 7:
+            case 4:
+                $this->setDbUploadTime($value);
+                break;
+            case 5:
                 $this->setDbStatus($value);
                 break;
         } // switch()
@@ -1029,11 +967,9 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setDbService($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setDbForeignId($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDbBrokerTaskId($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setDbBrokerTaskName($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDbBrokerTaskDispatchTime($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setDbFileId($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setDbStatus($arr[$keys[7]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbFileId($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbUploadTime($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbStatus($arr[$keys[5]]);
     }
 
     /**
@@ -1048,10 +984,8 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::ID)) $criteria->add(ThirdPartyTrackReferencesPeer::ID, $this->id);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::SERVICE)) $criteria->add(ThirdPartyTrackReferencesPeer::SERVICE, $this->service);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FOREIGN_ID)) $criteria->add(ThirdPartyTrackReferencesPeer::FOREIGN_ID, $this->foreign_id);
-        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID)) $criteria->add(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID, $this->broker_task_id);
-        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME)) $criteria->add(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME, $this->broker_task_name);
-        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME)) $criteria->add(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $this->broker_task_dispatch_time);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::FILE_ID)) $criteria->add(ThirdPartyTrackReferencesPeer::FILE_ID, $this->file_id);
+        if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::UPLOAD_TIME)) $criteria->add(ThirdPartyTrackReferencesPeer::UPLOAD_TIME, $this->upload_time);
         if ($this->isColumnModified(ThirdPartyTrackReferencesPeer::STATUS)) $criteria->add(ThirdPartyTrackReferencesPeer::STATUS, $this->status);
 
         return $criteria;
@@ -1118,10 +1052,8 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     {
         $copyObj->setDbService($this->getDbService());
         $copyObj->setDbForeignId($this->getDbForeignId());
-        $copyObj->setDbBrokerTaskId($this->getDbBrokerTaskId());
-        $copyObj->setDbBrokerTaskName($this->getDbBrokerTaskName());
-        $copyObj->setDbBrokerTaskDispatchTime($this->getDbBrokerTaskDispatchTime());
         $copyObj->setDbFileId($this->getDbFileId());
+        $copyObj->setDbUploadTime($this->getDbUploadTime());
         $copyObj->setDbStatus($this->getDbStatus());
 
         if ($deepCopy && !$this->startCopy) {
@@ -1130,6 +1062,12 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
+
+            foreach ($this->getCeleryTaskss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addCeleryTasks($relObj->copy($deepCopy));
+                }
+            }
 
             //unflag object copy
             $this->startCopy = false;
@@ -1182,13 +1120,13 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     }
 
     /**
-     * Declares an association between this object and a CcPlayoutHistoryTemplate object.
+     * Declares an association between this object and a CcFiles object.
      *
-     * @param                  CcPlayoutHistoryTemplate $v
+     * @param                  CcFiles $v
      * @return ThirdPartyTrackReferences The current object (for fluent API support)
      * @throws PropelException
      */
-    public function setCcPlayoutHistoryTemplate(CcPlayoutHistoryTemplate $v = null)
+    public function setCcFiles(CcFiles $v = null)
     {
         if ($v === null) {
             $this->setDbFileId(NULL);
@@ -1196,10 +1134,10 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
             $this->setDbFileId($v->getDbId());
         }
 
-        $this->aCcPlayoutHistoryTemplate = $v;
+        $this->aCcFiles = $v;
 
         // Add binding for other direction of this n:n relationship.
-        // If this object has already been added to the CcPlayoutHistoryTemplate object, it will not be re-added.
+        // If this object has already been added to the CcFiles object, it will not be re-added.
         if ($v !== null) {
             $v->addThirdPartyTrackReferences($this);
         }
@@ -1210,27 +1148,268 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
 
 
     /**
-     * Get the associated CcPlayoutHistoryTemplate object
+     * Get the associated CcFiles object
      *
      * @param PropelPDO $con Optional Connection object.
      * @param $doQuery Executes a query to get the object if required
-     * @return CcPlayoutHistoryTemplate The associated CcPlayoutHistoryTemplate object.
+     * @return CcFiles The associated CcFiles object.
      * @throws PropelException
      */
-    public function getCcPlayoutHistoryTemplate(PropelPDO $con = null, $doQuery = true)
+    public function getCcFiles(PropelPDO $con = null, $doQuery = true)
     {
-        if ($this->aCcPlayoutHistoryTemplate === null && ($this->file_id !== null) && $doQuery) {
-            $this->aCcPlayoutHistoryTemplate = CcPlayoutHistoryTemplateQuery::create()->findPk($this->file_id, $con);
+        if ($this->aCcFiles === null && ($this->file_id !== null) && $doQuery) {
+            $this->aCcFiles = CcFilesQuery::create()->findPk($this->file_id, $con);
             /* The following can be used additionally to
                 guarantee the related object contains a reference
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCcPlayoutHistoryTemplate->addThirdPartyTrackReferencess($this);
+                $this->aCcFiles->addThirdPartyTrackReferencess($this);
              */
         }
 
-        return $this->aCcPlayoutHistoryTemplate;
+        return $this->aCcFiles;
+    }
+
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName)
+    {
+        if ('CeleryTasks' == $relationName) {
+            $this->initCeleryTaskss();
+        }
+    }
+
+    /**
+     * Clears out the collCeleryTaskss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     * @see        addCeleryTaskss()
+     */
+    public function clearCeleryTaskss()
+    {
+        $this->collCeleryTaskss = null; // important to set this to null since that means it is uninitialized
+        $this->collCeleryTaskssPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collCeleryTaskss collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialCeleryTaskss($v = true)
+    {
+        $this->collCeleryTaskssPartial = $v;
+    }
+
+    /**
+     * Initializes the collCeleryTaskss collection.
+     *
+     * By default this just sets the collCeleryTaskss collection to an empty array (like clearcollCeleryTaskss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initCeleryTaskss($overrideExisting = true)
+    {
+        if (null !== $this->collCeleryTaskss && !$overrideExisting) {
+            return;
+        }
+        $this->collCeleryTaskss = new PropelObjectCollection();
+        $this->collCeleryTaskss->setModel('CeleryTasks');
+    }
+
+    /**
+     * Gets an array of CeleryTasks objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ThirdPartyTrackReferences is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|CeleryTasks[] List of CeleryTasks objects
+     * @throws PropelException
+     */
+    public function getCeleryTaskss($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collCeleryTaskssPartial && !$this->isNew();
+        if (null === $this->collCeleryTaskss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collCeleryTaskss) {
+                // return empty collection
+                $this->initCeleryTaskss();
+            } else {
+                $collCeleryTaskss = CeleryTasksQuery::create(null, $criteria)
+                    ->filterByThirdPartyTrackReferences($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collCeleryTaskssPartial && count($collCeleryTaskss)) {
+                      $this->initCeleryTaskss(false);
+
+                      foreach ($collCeleryTaskss as $obj) {
+                        if (false == $this->collCeleryTaskss->contains($obj)) {
+                          $this->collCeleryTaskss->append($obj);
+                        }
+                      }
+
+                      $this->collCeleryTaskssPartial = true;
+                    }
+
+                    $collCeleryTaskss->getInternalIterator()->rewind();
+
+                    return $collCeleryTaskss;
+                }
+
+                if ($partial && $this->collCeleryTaskss) {
+                    foreach ($this->collCeleryTaskss as $obj) {
+                        if ($obj->isNew()) {
+                            $collCeleryTaskss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collCeleryTaskss = $collCeleryTaskss;
+                $this->collCeleryTaskssPartial = false;
+            }
+        }
+
+        return $this->collCeleryTaskss;
+    }
+
+    /**
+     * Sets a collection of CeleryTasks objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $celeryTaskss A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     */
+    public function setCeleryTaskss(PropelCollection $celeryTaskss, PropelPDO $con = null)
+    {
+        $celeryTaskssToDelete = $this->getCeleryTaskss(new Criteria(), $con)->diff($celeryTaskss);
+
+
+        $this->celeryTaskssScheduledForDeletion = $celeryTaskssToDelete;
+
+        foreach ($celeryTaskssToDelete as $celeryTasksRemoved) {
+            $celeryTasksRemoved->setThirdPartyTrackReferences(null);
+        }
+
+        $this->collCeleryTaskss = null;
+        foreach ($celeryTaskss as $celeryTasks) {
+            $this->addCeleryTasks($celeryTasks);
+        }
+
+        $this->collCeleryTaskss = $celeryTaskss;
+        $this->collCeleryTaskssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related CeleryTasks objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related CeleryTasks objects.
+     * @throws PropelException
+     */
+    public function countCeleryTaskss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collCeleryTaskssPartial && !$this->isNew();
+        if (null === $this->collCeleryTaskss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collCeleryTaskss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getCeleryTaskss());
+            }
+            $query = CeleryTasksQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByThirdPartyTrackReferences($this)
+                ->count($con);
+        }
+
+        return count($this->collCeleryTaskss);
+    }
+
+    /**
+     * Method called to associate a CeleryTasks object to this object
+     * through the CeleryTasks foreign key attribute.
+     *
+     * @param    CeleryTasks $l CeleryTasks
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     */
+    public function addCeleryTasks(CeleryTasks $l)
+    {
+        if ($this->collCeleryTaskss === null) {
+            $this->initCeleryTaskss();
+            $this->collCeleryTaskssPartial = true;
+        }
+
+        if (!in_array($l, $this->collCeleryTaskss->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddCeleryTasks($l);
+
+            if ($this->celeryTaskssScheduledForDeletion and $this->celeryTaskssScheduledForDeletion->contains($l)) {
+                $this->celeryTaskssScheduledForDeletion->remove($this->celeryTaskssScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	CeleryTasks $celeryTasks The celeryTasks object to add.
+     */
+    protected function doAddCeleryTasks($celeryTasks)
+    {
+        $this->collCeleryTaskss[]= $celeryTasks;
+        $celeryTasks->setThirdPartyTrackReferences($this);
+    }
+
+    /**
+     * @param	CeleryTasks $celeryTasks The celeryTasks object to remove.
+     * @return ThirdPartyTrackReferences The current object (for fluent API support)
+     */
+    public function removeCeleryTasks($celeryTasks)
+    {
+        if ($this->getCeleryTaskss()->contains($celeryTasks)) {
+            $this->collCeleryTaskss->remove($this->collCeleryTaskss->search($celeryTasks));
+            if (null === $this->celeryTaskssScheduledForDeletion) {
+                $this->celeryTaskssScheduledForDeletion = clone $this->collCeleryTaskss;
+                $this->celeryTaskssScheduledForDeletion->clear();
+            }
+            $this->celeryTaskssScheduledForDeletion[]= clone $celeryTasks;
+            $celeryTasks->setThirdPartyTrackReferences(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1241,10 +1420,8 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
         $this->id = null;
         $this->service = null;
         $this->foreign_id = null;
-        $this->broker_task_id = null;
-        $this->broker_task_name = null;
-        $this->broker_task_dispatch_time = null;
         $this->file_id = null;
+        $this->upload_time = null;
         $this->status = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
@@ -1268,14 +1445,23 @@ abstract class BaseThirdPartyTrackReferences extends BaseObject implements Persi
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->aCcPlayoutHistoryTemplate instanceof Persistent) {
-              $this->aCcPlayoutHistoryTemplate->clearAllReferences($deep);
+            if ($this->collCeleryTaskss) {
+                foreach ($this->collCeleryTaskss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->aCcFiles instanceof Persistent) {
+              $this->aCcFiles->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        $this->aCcPlayoutHistoryTemplate = null;
+        if ($this->collCeleryTaskss instanceof PropelCollection) {
+            $this->collCeleryTaskss->clearIterator();
+        }
+        $this->collCeleryTaskss = null;
+        $this->aCcFiles = null;
     }
 
     /**

@@ -81,24 +81,6 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 /*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
-
-// Soundcloud contants
-/**
- * @var string status string for pending Celery tasks
- */
-define('CELERY_PENDING_STATUS', 'PENDING');
-
-/**
- * @var string status string for successful Celery tasks
- */
-define('CELERY_SUCCESS_STATUS', 'SUCCESS');
-
-/**
- * @var string status string for failed Celery tasks
- */
-define('CELERY_FAILED_STATUS', 'FAILED');
-
-
 //WHMCS integration
 define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
 define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
@@ -112,4 +94,12 @@ define('PROVISIONING_STATUS_ACTIVE' , 'Active');
 
 //TuneIn integration
 define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
+
+// Celery
+define('CELERY_PENDING_STATUS', 'PENDING');
+define('CELERY_SUCCESS_STATUS', 'SUCCESS');
+define('CELERY_FAILED_STATUS', 'FAILED');
+
+// Celery Services
+define('SOUNDCLOUD_SERVICE_NAME', 'soundcloud');
 

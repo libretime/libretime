@@ -51,7 +51,6 @@ class CcPlayoutHistoryTemplateTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('CcPlayoutHistoryTemplateField', 'CcPlayoutHistoryTemplateField', RelationMap::ONE_TO_MANY, array('id' => 'template_id', ), 'CASCADE', null, 'CcPlayoutHistoryTemplateFields');
-        $this->addRelation('ThirdPartyTrackReferences', 'ThirdPartyTrackReferences', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'ThirdPartyTrackReferencess');
     } // buildRelations()
 
 } // CcPlayoutHistoryTemplateTableMap

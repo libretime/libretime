@@ -9,47 +9,43 @@
  * @method ThirdPartyTrackReferencesQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method ThirdPartyTrackReferencesQuery orderByDbService($order = Criteria::ASC) Order by the service column
  * @method ThirdPartyTrackReferencesQuery orderByDbForeignId($order = Criteria::ASC) Order by the foreign_id column
- * @method ThirdPartyTrackReferencesQuery orderByDbBrokerTaskId($order = Criteria::ASC) Order by the broker_task_id column
- * @method ThirdPartyTrackReferencesQuery orderByDbBrokerTaskName($order = Criteria::ASC) Order by the broker_task_name column
- * @method ThirdPartyTrackReferencesQuery orderByDbBrokerTaskDispatchTime($order = Criteria::ASC) Order by the broker_task_dispatch_time column
  * @method ThirdPartyTrackReferencesQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
+ * @method ThirdPartyTrackReferencesQuery orderByDbUploadTime($order = Criteria::ASC) Order by the upload_time column
  * @method ThirdPartyTrackReferencesQuery orderByDbStatus($order = Criteria::ASC) Order by the status column
  *
  * @method ThirdPartyTrackReferencesQuery groupByDbId() Group by the id column
  * @method ThirdPartyTrackReferencesQuery groupByDbService() Group by the service column
  * @method ThirdPartyTrackReferencesQuery groupByDbForeignId() Group by the foreign_id column
- * @method ThirdPartyTrackReferencesQuery groupByDbBrokerTaskId() Group by the broker_task_id column
- * @method ThirdPartyTrackReferencesQuery groupByDbBrokerTaskName() Group by the broker_task_name column
- * @method ThirdPartyTrackReferencesQuery groupByDbBrokerTaskDispatchTime() Group by the broker_task_dispatch_time column
  * @method ThirdPartyTrackReferencesQuery groupByDbFileId() Group by the file_id column
+ * @method ThirdPartyTrackReferencesQuery groupByDbUploadTime() Group by the upload_time column
  * @method ThirdPartyTrackReferencesQuery groupByDbStatus() Group by the status column
  *
  * @method ThirdPartyTrackReferencesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method ThirdPartyTrackReferencesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
  * @method ThirdPartyTrackReferencesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method ThirdPartyTrackReferencesQuery leftJoinCcPlayoutHistoryTemplate($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcPlayoutHistoryTemplate relation
- * @method ThirdPartyTrackReferencesQuery rightJoinCcPlayoutHistoryTemplate($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcPlayoutHistoryTemplate relation
- * @method ThirdPartyTrackReferencesQuery innerJoinCcPlayoutHistoryTemplate($relationAlias = null) Adds a INNER JOIN clause to the query using the CcPlayoutHistoryTemplate relation
+ * @method ThirdPartyTrackReferencesQuery leftJoinCcFiles($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFiles relation
+ * @method ThirdPartyTrackReferencesQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
+ * @method ThirdPartyTrackReferencesQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
+ *
+ * @method ThirdPartyTrackReferencesQuery leftJoinCeleryTasks($relationAlias = null) Adds a LEFT JOIN clause to the query using the CeleryTasks relation
+ * @method ThirdPartyTrackReferencesQuery rightJoinCeleryTasks($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CeleryTasks relation
+ * @method ThirdPartyTrackReferencesQuery innerJoinCeleryTasks($relationAlias = null) Adds a INNER JOIN clause to the query using the CeleryTasks relation
  *
  * @method ThirdPartyTrackReferences findOne(PropelPDO $con = null) Return the first ThirdPartyTrackReferences matching the query
  * @method ThirdPartyTrackReferences findOneOrCreate(PropelPDO $con = null) Return the first ThirdPartyTrackReferences matching the query, or a new ThirdPartyTrackReferences object populated from the query conditions when no match is found
  *
  * @method ThirdPartyTrackReferences findOneByDbService(string $service) Return the first ThirdPartyTrackReferences filtered by the service column
  * @method ThirdPartyTrackReferences findOneByDbForeignId(string $foreign_id) Return the first ThirdPartyTrackReferences filtered by the foreign_id column
- * @method ThirdPartyTrackReferences findOneByDbBrokerTaskId(string $broker_task_id) Return the first ThirdPartyTrackReferences filtered by the broker_task_id column
- * @method ThirdPartyTrackReferences findOneByDbBrokerTaskName(string $broker_task_name) Return the first ThirdPartyTrackReferences filtered by the broker_task_name column
- * @method ThirdPartyTrackReferences findOneByDbBrokerTaskDispatchTime(string $broker_task_dispatch_time) Return the first ThirdPartyTrackReferences filtered by the broker_task_dispatch_time column
  * @method ThirdPartyTrackReferences findOneByDbFileId(int $file_id) Return the first ThirdPartyTrackReferences filtered by the file_id column
+ * @method ThirdPartyTrackReferences findOneByDbUploadTime(string $upload_time) Return the first ThirdPartyTrackReferences filtered by the upload_time column
  * @method ThirdPartyTrackReferences findOneByDbStatus(string $status) Return the first ThirdPartyTrackReferences filtered by the status column
  *
  * @method array findByDbId(int $id) Return ThirdPartyTrackReferences objects filtered by the id column
  * @method array findByDbService(string $service) Return ThirdPartyTrackReferences objects filtered by the service column
  * @method array findByDbForeignId(string $foreign_id) Return ThirdPartyTrackReferences objects filtered by the foreign_id column
- * @method array findByDbBrokerTaskId(string $broker_task_id) Return ThirdPartyTrackReferences objects filtered by the broker_task_id column
- * @method array findByDbBrokerTaskName(string $broker_task_name) Return ThirdPartyTrackReferences objects filtered by the broker_task_name column
- * @method array findByDbBrokerTaskDispatchTime(string $broker_task_dispatch_time) Return ThirdPartyTrackReferences objects filtered by the broker_task_dispatch_time column
  * @method array findByDbFileId(int $file_id) Return ThirdPartyTrackReferences objects filtered by the file_id column
+ * @method array findByDbUploadTime(string $upload_time) Return ThirdPartyTrackReferences objects filtered by the upload_time column
  * @method array findByDbStatus(string $status) Return ThirdPartyTrackReferences objects filtered by the status column
  *
  * @package    propel.generator.airtime.om
@@ -158,7 +154,7 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "service", "foreign_id", "broker_task_id", "broker_task_name", "broker_task_dispatch_time", "file_id", "status" FROM "third_party_track_references" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "service", "foreign_id", "file_id", "upload_time", "status" FROM "third_party_track_references" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -348,107 +344,6 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the broker_task_id column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbBrokerTaskId('fooValue');   // WHERE broker_task_id = 'fooValue'
-     * $query->filterByDbBrokerTaskId('%fooValue%'); // WHERE broker_task_id LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbBrokerTaskId The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
-     */
-    public function filterByDbBrokerTaskId($dbBrokerTaskId = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbBrokerTaskId)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbBrokerTaskId)) {
-                $dbBrokerTaskId = str_replace('*', '%', $dbBrokerTaskId);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_ID, $dbBrokerTaskId, $comparison);
-    }
-
-    /**
-     * Filter the query on the broker_task_name column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbBrokerTaskName('fooValue');   // WHERE broker_task_name = 'fooValue'
-     * $query->filterByDbBrokerTaskName('%fooValue%'); // WHERE broker_task_name LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbBrokerTaskName The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
-     */
-    public function filterByDbBrokerTaskName($dbBrokerTaskName = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbBrokerTaskName)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbBrokerTaskName)) {
-                $dbBrokerTaskName = str_replace('*', '%', $dbBrokerTaskName);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_NAME, $dbBrokerTaskName, $comparison);
-    }
-
-    /**
-     * Filter the query on the broker_task_dispatch_time column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbBrokerTaskDispatchTime('2011-03-14'); // WHERE broker_task_dispatch_time = '2011-03-14'
-     * $query->filterByDbBrokerTaskDispatchTime('now'); // WHERE broker_task_dispatch_time = '2011-03-14'
-     * $query->filterByDbBrokerTaskDispatchTime(array('max' => 'yesterday')); // WHERE broker_task_dispatch_time < '2011-03-13'
-     * </code>
-     *
-     * @param     mixed $dbBrokerTaskDispatchTime The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
-     */
-    public function filterByDbBrokerTaskDispatchTime($dbBrokerTaskDispatchTime = null, $comparison = null)
-    {
-        if (is_array($dbBrokerTaskDispatchTime)) {
-            $useMinMax = false;
-            if (isset($dbBrokerTaskDispatchTime['min'])) {
-                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $dbBrokerTaskDispatchTime['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($dbBrokerTaskDispatchTime['max'])) {
-                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $dbBrokerTaskDispatchTime['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::BROKER_TASK_DISPATCH_TIME, $dbBrokerTaskDispatchTime, $comparison);
-    }
-
-    /**
      * Filter the query on the file_id column
      *
      * Example usage:
@@ -459,7 +354,7 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      * $query->filterByDbFileId(array('max' => 12)); // WHERE file_id <= 12
      * </code>
      *
-     * @see       filterByCcPlayoutHistoryTemplate()
+     * @see       filterByCcFiles()
      *
      * @param     mixed $dbFileId The value to use as filter.
      *              Use scalar values for equality.
@@ -493,6 +388,49 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the upload_time column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbUploadTime('2011-03-14'); // WHERE upload_time = '2011-03-14'
+     * $query->filterByDbUploadTime('now'); // WHERE upload_time = '2011-03-14'
+     * $query->filterByDbUploadTime(array('max' => 'yesterday')); // WHERE upload_time < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $dbUploadTime The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
+     */
+    public function filterByDbUploadTime($dbUploadTime = null, $comparison = null)
+    {
+        if (is_array($dbUploadTime)) {
+            $useMinMax = false;
+            if (isset($dbUploadTime['min'])) {
+                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::UPLOAD_TIME, $dbUploadTime['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbUploadTime['max'])) {
+                $this->addUsingAlias(ThirdPartyTrackReferencesPeer::UPLOAD_TIME, $dbUploadTime['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ThirdPartyTrackReferencesPeer::UPLOAD_TIME, $dbUploadTime, $comparison);
+    }
+
+    /**
      * Filter the query on the status column
      *
      * Example usage:
@@ -522,43 +460,43 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related CcPlayoutHistoryTemplate object
+     * Filter the query by a related CcFiles object
      *
-     * @param   CcPlayoutHistoryTemplate|PropelObjectCollection $ccPlayoutHistoryTemplate The related object(s) to use as filter
+     * @param   CcFiles|PropelObjectCollection $ccFiles The related object(s) to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 ThirdPartyTrackReferencesQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByCcPlayoutHistoryTemplate($ccPlayoutHistoryTemplate, $comparison = null)
+    public function filterByCcFiles($ccFiles, $comparison = null)
     {
-        if ($ccPlayoutHistoryTemplate instanceof CcPlayoutHistoryTemplate) {
+        if ($ccFiles instanceof CcFiles) {
             return $this
-                ->addUsingAlias(ThirdPartyTrackReferencesPeer::FILE_ID, $ccPlayoutHistoryTemplate->getDbId(), $comparison);
-        } elseif ($ccPlayoutHistoryTemplate instanceof PropelObjectCollection) {
+                ->addUsingAlias(ThirdPartyTrackReferencesPeer::FILE_ID, $ccFiles->getDbId(), $comparison);
+        } elseif ($ccFiles instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(ThirdPartyTrackReferencesPeer::FILE_ID, $ccPlayoutHistoryTemplate->toKeyValue('PrimaryKey', 'DbId'), $comparison);
+                ->addUsingAlias(ThirdPartyTrackReferencesPeer::FILE_ID, $ccFiles->toKeyValue('PrimaryKey', 'DbId'), $comparison);
         } else {
-            throw new PropelException('filterByCcPlayoutHistoryTemplate() only accepts arguments of type CcPlayoutHistoryTemplate or PropelCollection');
+            throw new PropelException('filterByCcFiles() only accepts arguments of type CcFiles or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the CcPlayoutHistoryTemplate relation
+     * Adds a JOIN clause to the query using the CcFiles relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
      */
-    public function joinCcPlayoutHistoryTemplate($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinCcFiles($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('CcPlayoutHistoryTemplate');
+        $relationMap = $tableMap->getRelation('CcFiles');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -573,14 +511,14 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'CcPlayoutHistoryTemplate');
+            $this->addJoinObject($join, 'CcFiles');
         }
 
         return $this;
     }
 
     /**
-     * Use the CcPlayoutHistoryTemplate relation CcPlayoutHistoryTemplate object
+     * Use the CcFiles relation CcFiles object
      *
      * @see       useQuery()
      *
@@ -588,13 +526,87 @@ abstract class BaseThirdPartyTrackReferencesQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   CcPlayoutHistoryTemplateQuery A secondary query class using the current class as primary query
+     * @return   CcFilesQuery A secondary query class using the current class as primary query
      */
-    public function useCcPlayoutHistoryTemplateQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function useCcFilesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinCcPlayoutHistoryTemplate($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'CcPlayoutHistoryTemplate', 'CcPlayoutHistoryTemplateQuery');
+            ->joinCcFiles($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CcFiles', 'CcFilesQuery');
+    }
+
+    /**
+     * Filter the query by a related CeleryTasks object
+     *
+     * @param   CeleryTasks|PropelObjectCollection $celeryTasks  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 ThirdPartyTrackReferencesQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByCeleryTasks($celeryTasks, $comparison = null)
+    {
+        if ($celeryTasks instanceof CeleryTasks) {
+            return $this
+                ->addUsingAlias(ThirdPartyTrackReferencesPeer::ID, $celeryTasks->getDbTrackReference(), $comparison);
+        } elseif ($celeryTasks instanceof PropelObjectCollection) {
+            return $this
+                ->useCeleryTasksQuery()
+                ->filterByPrimaryKeys($celeryTasks->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByCeleryTasks() only accepts arguments of type CeleryTasks or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the CeleryTasks relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return ThirdPartyTrackReferencesQuery The current query, for fluid interface
+     */
+    public function joinCeleryTasks($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('CeleryTasks');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'CeleryTasks');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the CeleryTasks relation CeleryTasks object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   CeleryTasksQuery A secondary query class using the current class as primary query
+     */
+    public function useCeleryTasksQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinCeleryTasks($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'CeleryTasks', 'CeleryTasksQuery');
     }
 
     /**

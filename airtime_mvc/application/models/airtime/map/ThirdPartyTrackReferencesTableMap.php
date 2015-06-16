@@ -42,11 +42,9 @@ class ThirdPartyTrackReferencesTableMap extends TableMap
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
         $this->addColumn('service', 'DbService', 'VARCHAR', true, 256, null);
         $this->addColumn('foreign_id', 'DbForeignId', 'VARCHAR', false, 256, null);
-        $this->addColumn('broker_task_id', 'DbBrokerTaskId', 'VARCHAR', false, 256, null);
-        $this->addColumn('broker_task_name', 'DbBrokerTaskName', 'VARCHAR', false, 256, null);
-        $this->addColumn('broker_task_dispatch_time', 'DbBrokerTaskDispatchTime', 'TIMESTAMP', false, null, null);
-        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_playout_history_template', 'id', true, null, null);
-        $this->addColumn('status', 'DbStatus', 'VARCHAR', true, 256, null);
+        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', true, null, null);
+        $this->addColumn('upload_time', 'DbUploadTime', 'TIMESTAMP', false, null, null);
+        $this->addColumn('status', 'DbStatus', 'VARCHAR', false, 256, null);
         // validators
     } // initialize()
 
@@ -55,7 +53,8 @@ class ThirdPartyTrackReferencesTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('CcPlayoutHistoryTemplate', 'CcPlayoutHistoryTemplate', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('CcFiles', 'CcFiles', RelationMap::MANY_TO_ONE, array('file_id' => 'id', ), 'CASCADE', null);
+        $this->addRelation('CeleryTasks', 'CeleryTasks', RelationMap::ONE_TO_MANY, array('id' => 'track_reference', ), 'CASCADE', null, 'CeleryTaskss');
     } // buildRelations()
 
 } // ThirdPartyTrackReferencesTableMap

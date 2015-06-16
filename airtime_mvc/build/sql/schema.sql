@@ -681,14 +681,28 @@ CREATE TABLE "third_party_track_references"
     "id" serial NOT NULL,
     "service" VARCHAR(256) NOT NULL,
     "foreign_id" VARCHAR(256),
-    "broker_task_id" VARCHAR(256),
-    "broker_task_name" VARCHAR(256),
-    "broker_task_dispatch_time" TIMESTAMP,
     "file_id" INTEGER NOT NULL,
+    "upload_time" TIMESTAMP,
+    "status" VARCHAR(256),
+    PRIMARY KEY ("id"),
+    CONSTRAINT "foreign_id_unique" UNIQUE ("foreign_id")
+);
+
+-----------------------------------------------------------------------
+-- celery_tasks
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "celery_tasks" CASCADE;
+
+CREATE TABLE "celery_tasks"
+(
+    "id" VARCHAR(256) NOT NULL,
+    "track_reference" INTEGER NOT NULL,
+    "name" VARCHAR(256),
+    "dispatch_time" TIMESTAMP,
     "status" VARCHAR(256) NOT NULL,
     PRIMARY KEY ("id"),
-    CONSTRAINT "broker_task_id_unique" UNIQUE ("broker_task_id"),
-    CONSTRAINT "foreign_id_unique" UNIQUE ("foreign_id")
+    CONSTRAINT "id_unique" UNIQUE ("id")
 );
 
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
@@ -855,5 +869,10 @@ ALTER TABLE "cc_playout_history_template_field" ADD CONSTRAINT "cc_playout_histo
 
 ALTER TABLE "third_party_track_references" ADD CONSTRAINT "track_reference_fkey"
     FOREIGN KEY ("file_id")
-    REFERENCES "cc_playout_history_template" ("id")
+    REFERENCES "cc_files" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "celery_tasks" ADD CONSTRAINT "celery_service_fkey"
+    FOREIGN KEY ("track_reference")
+    REFERENCES "third_party_track_references" ("id")
     ON DELETE CASCADE;

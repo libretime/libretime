@@ -1,8 +1,8 @@
 <?php
 
-require_once "ThirdPartyService.php";
+require_once "ThirdPartyCeleryService.php";
 
-class SoundcloudService extends ThirdPartyService {
+class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
 
     /**
      * @var string service access token for accessing remote API
@@ -17,7 +17,7 @@ class SoundcloudService extends ThirdPartyService {
     /**
      * @var string service name to store in ThirdPartyTrackReferences database
      */
-    protected static $_SERVICE_NAME = 'SoundCloud';
+    protected static $_SERVICE_NAME = SOUNDCLOUD_SERVICE_NAME;  // SoundCloud service name constant from constants.php
 
     /**
      * @var string exchange name for SoundCloud tasks
@@ -84,25 +84,20 @@ class SoundcloudService extends ThirdPartyService {
     /**
      * Update a ThirdPartyTrackReferences object for a completed upload
      * TODO: should we have a database layer class to handle Propel operations?
-     * TODO: break this function up, it's a bit of a beast
      *
-     * @param $fileId int    local CcFiles identifier
-     * @param $track  object third-party service track object
-     * @param $status string Celery task status
+     * @param $trackId int    ThirdPartyTrackReferences identifier
+     * @param $track  object  third-party service track object
+     * @param $status string  Celery task status
      *
      * @throws Exception
      * @throws PropelException
      */
-    protected function _addOrUpdateTrackReference($fileId, $track, $status) {
+    public function updateTrackReference($trackId, $track, $status) {
+        parent::updateTrackReference($trackId, $track, $status);
         $ref = ThirdPartyTrackReferencesQuery::create()
-            ->filterByDbService(static::$_SERVICE_NAME)
-            ->findOneByDbFileId($fileId);
+            ->findOneByDbId($trackId);
         if (is_null($ref)) {
             $ref = new ThirdPartyTrackReferences();
-        }  // If this was a delete task, just remove the record and return
-        else if ($ref->getDbBrokerTaskName() == static::$_CELERY_DELETE_TASK_NAME) {
-            $ref->delete();
-            return;
         }
         $ref->setDbService(static::$_SERVICE_NAME);
         // Only set the SoundCloud fields if the task was successful
@@ -110,15 +105,8 @@ class SoundcloudService extends ThirdPartyService {
             // TODO: fetch any additional SoundCloud parameters we want to store
             $ref->setDbForeignId($track->id);  // SoundCloud identifier
         }
-        $ref->setDbFileId($fileId);
-        $ref->setDbStatus($status);
-        // Null the broker task fields because we no longer need them
-        // We use NULL over an empty string/object here because we have
-        // a unique constraint on the task ID and it's easier to filter
-        // and query against NULLs
-        $ref->setDbBrokerTaskId(NULL);
-        $ref->setDbBrokerTaskName(NULL);
-        $ref->setDbBrokerTaskDispatchTime(NULL);
+        // TODO: set SoundCloud upload status?
+        // $ref->setDbStatus($status);
         $ref->save();
     }
 

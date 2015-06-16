@@ -2,24 +2,24 @@
 
 
 /**
- * Base class that represents a row from the 'cc_playout_history_template' table.
+ * Base class that represents a row from the 'celery_tasks' table.
  *
  *
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persistent
+abstract class BaseCeleryTasks extends BaseObject implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'CcPlayoutHistoryTemplatePeer';
+    const PEER = 'CeleryTasksPeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        CcPlayoutHistoryTemplatePeer
+     * @var        CeleryTasksPeer
      */
     protected static $peer;
 
@@ -31,9 +31,15 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
 
     /**
      * The value for the id field.
-     * @var        int
+     * @var        string
      */
     protected $id;
+
+    /**
+     * The value for the track_reference field.
+     * @var        int
+     */
+    protected $track_reference;
 
     /**
      * The value for the name field.
@@ -42,16 +48,21 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     protected $name;
 
     /**
-     * The value for the type field.
+     * The value for the dispatch_time field.
      * @var        string
      */
-    protected $type;
+    protected $dispatch_time;
 
     /**
-     * @var        PropelObjectCollection|CcPlayoutHistoryTemplateField[] Collection to store aggregation of CcPlayoutHistoryTemplateField objects.
+     * The value for the status field.
+     * @var        string
      */
-    protected $collCcPlayoutHistoryTemplateFields;
-    protected $collCcPlayoutHistoryTemplateFieldsPartial;
+    protected $status;
+
+    /**
+     * @var        ThirdPartyTrackReferences
+     */
+    protected $aThirdPartyTrackReferences;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -74,20 +85,25 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     protected $alreadyInClearAllReferencesDeep = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
-     */
-    protected $ccPlayoutHistoryTemplateFieldsScheduledForDeletion = null;
-
-    /**
      * Get the [id] column value.
      *
-     * @return int
+     * @return string
      */
     public function getDbId()
     {
 
         return $this->id;
+    }
+
+    /**
+     * Get the [track_reference] column value.
+     *
+     * @return int
+     */
+    public function getDbTrackReference()
+    {
+
+        return $this->track_reference;
     }
 
     /**
@@ -102,31 +118,66 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     }
 
     /**
-     * Get the [type] column value.
+     * Get the [optionally formatted] temporal [dispatch_time] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbDispatchTime($format = 'Y-m-d H:i:s')
+    {
+        if ($this->dispatch_time === null) {
+            return null;
+        }
+
+
+        try {
+            $dt = new DateTime($this->dispatch_time);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->dispatch_time, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
+    }
+
+    /**
+     * Get the [status] column value.
      *
      * @return string
      */
-    public function getDbType()
+    public function getDbStatus()
     {
 
-        return $this->type;
+        return $this->status;
     }
 
     /**
      * Set the value of [id] column.
      *
-     * @param  int $v new value
-     * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
+     * @param  string $v new value
+     * @return CeleryTasks The current object (for fluent API support)
      */
     public function setDbId($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (int) $v;
+            $v = (string) $v;
         }
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[] = CcPlayoutHistoryTemplatePeer::ID;
+            $this->modifiedColumns[] = CeleryTasksPeer::ID;
         }
 
 
@@ -134,10 +185,35 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     } // setDbId()
 
     /**
+     * Set the value of [track_reference] column.
+     *
+     * @param  int $v new value
+     * @return CeleryTasks The current object (for fluent API support)
+     */
+    public function setDbTrackReference($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->track_reference !== $v) {
+            $this->track_reference = $v;
+            $this->modifiedColumns[] = CeleryTasksPeer::TRACK_REFERENCE;
+        }
+
+        if ($this->aThirdPartyTrackReferences !== null && $this->aThirdPartyTrackReferences->getDbId() !== $v) {
+            $this->aThirdPartyTrackReferences = null;
+        }
+
+
+        return $this;
+    } // setDbTrackReference()
+
+    /**
      * Set the value of [name] column.
      *
      * @param  string $v new value
-     * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
+     * @return CeleryTasks The current object (for fluent API support)
      */
     public function setDbName($v)
     {
@@ -147,7 +223,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
 
         if ($this->name !== $v) {
             $this->name = $v;
-            $this->modifiedColumns[] = CcPlayoutHistoryTemplatePeer::NAME;
+            $this->modifiedColumns[] = CeleryTasksPeer::NAME;
         }
 
 
@@ -155,25 +231,48 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     } // setDbName()
 
     /**
-     * Set the value of [type] column.
+     * Sets the value of [dispatch_time] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return CeleryTasks The current object (for fluent API support)
+     */
+    public function setDbDispatchTime($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->dispatch_time !== null || $dt !== null) {
+            $currentDateAsString = ($this->dispatch_time !== null && $tmpDt = new DateTime($this->dispatch_time)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->dispatch_time = $newDateAsString;
+                $this->modifiedColumns[] = CeleryTasksPeer::DISPATCH_TIME;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setDbDispatchTime()
+
+    /**
+     * Set the value of [status] column.
      *
      * @param  string $v new value
-     * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
+     * @return CeleryTasks The current object (for fluent API support)
      */
-    public function setDbType($v)
+    public function setDbStatus($v)
     {
         if ($v !== null && is_numeric($v)) {
             $v = (string) $v;
         }
 
-        if ($this->type !== $v) {
-            $this->type = $v;
-            $this->modifiedColumns[] = CcPlayoutHistoryTemplatePeer::TYPE;
+        if ($this->status !== $v) {
+            $this->status = $v;
+            $this->modifiedColumns[] = CeleryTasksPeer::STATUS;
         }
 
 
         return $this;
-    } // setDbType()
+    } // setDbStatus()
 
     /**
      * Indicates whether the columns in this object are only set to default values.
@@ -207,9 +306,11 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     {
         try {
 
-            $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->name = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->type = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->id = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
+            $this->track_reference = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
+            $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->dispatch_time = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->status = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -219,10 +320,10 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 3; // 3 = CcPlayoutHistoryTemplatePeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 5; // 5 = CeleryTasksPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating CcPlayoutHistoryTemplate object", $e);
+            throw new PropelException("Error populating CeleryTasks object", $e);
         }
     }
 
@@ -242,6 +343,9 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     public function ensureConsistency()
     {
 
+        if ($this->aThirdPartyTrackReferences !== null && $this->track_reference !== $this->aThirdPartyTrackReferences->getDbId()) {
+            $this->aThirdPartyTrackReferences = null;
+        }
     } // ensureConsistency
 
     /**
@@ -265,13 +369,13 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(CcPlayoutHistoryTemplatePeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(CeleryTasksPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = CcPlayoutHistoryTemplatePeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = CeleryTasksPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -281,8 +385,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
 
         if ($deep) {  // also de-associate any related objects?
 
-            $this->collCcPlayoutHistoryTemplateFields = null;
-
+            $this->aThirdPartyTrackReferences = null;
         } // if (deep)
     }
 
@@ -303,12 +406,12 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(CcPlayoutHistoryTemplatePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(CeleryTasksPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = CcPlayoutHistoryTemplateQuery::create()
+            $deleteQuery = CeleryTasksQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -346,7 +449,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(CcPlayoutHistoryTemplatePeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(CeleryTasksPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
@@ -366,7 +469,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                CcPlayoutHistoryTemplatePeer::addInstanceToPool($this);
+                CeleryTasksPeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -396,6 +499,18 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
 
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aThirdPartyTrackReferences !== null) {
+                if ($this->aThirdPartyTrackReferences->isModified() || $this->aThirdPartyTrackReferences->isNew()) {
+                    $affectedRows += $this->aThirdPartyTrackReferences->save($con);
+                }
+                $this->setThirdPartyTrackReferences($this->aThirdPartyTrackReferences);
+            }
+
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
                 if ($this->isNew()) {
@@ -405,23 +520,6 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion !== null) {
-                if (!$this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion->isEmpty()) {
-                    CcPlayoutHistoryTemplateFieldQuery::create()
-                        ->filterByPrimaryKeys($this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collCcPlayoutHistoryTemplateFields !== null) {
-                foreach ($this->collCcPlayoutHistoryTemplateFields as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
             }
 
             $this->alreadyInSave = false;
@@ -444,34 +542,26 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = CcPlayoutHistoryTemplatePeer::ID;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CcPlayoutHistoryTemplatePeer::ID . ')');
-        }
-        if (null === $this->id) {
-            try {
-                $stmt = $con->query("SELECT nextval('cc_playout_history_template_id_seq')");
-                $row = $stmt->fetch(PDO::FETCH_NUM);
-                $this->id = $row[0];
-            } catch (Exception $e) {
-                throw new PropelException('Unable to get sequence id.', $e);
-            }
-        }
-
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::ID)) {
+        if ($this->isColumnModified(CeleryTasksPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '"id"';
         }
-        if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::NAME)) {
+        if ($this->isColumnModified(CeleryTasksPeer::TRACK_REFERENCE)) {
+            $modifiedColumns[':p' . $index++]  = '"track_reference"';
+        }
+        if ($this->isColumnModified(CeleryTasksPeer::NAME)) {
             $modifiedColumns[':p' . $index++]  = '"name"';
         }
-        if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::TYPE)) {
-            $modifiedColumns[':p' . $index++]  = '"type"';
+        if ($this->isColumnModified(CeleryTasksPeer::DISPATCH_TIME)) {
+            $modifiedColumns[':p' . $index++]  = '"dispatch_time"';
+        }
+        if ($this->isColumnModified(CeleryTasksPeer::STATUS)) {
+            $modifiedColumns[':p' . $index++]  = '"status"';
         }
 
         $sql = sprintf(
-            'INSERT INTO "cc_playout_history_template" (%s) VALUES (%s)',
+            'INSERT INTO "celery_tasks" (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -481,13 +571,19 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
                     case '"id"':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_STR);
+                        break;
+                    case '"track_reference"':
+                        $stmt->bindValue($identifier, $this->track_reference, PDO::PARAM_INT);
                         break;
                     case '"name"':
                         $stmt->bindValue($identifier, $this->name, PDO::PARAM_STR);
                         break;
-                    case '"type"':
-                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_STR);
+                    case '"dispatch_time"':
+                        $stmt->bindValue($identifier, $this->dispatch_time, PDO::PARAM_STR);
+                        break;
+                    case '"status"':
+                        $stmt->bindValue($identifier, $this->status, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -576,18 +672,22 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
             $failureMap = array();
 
 
-            if (($retval = CcPlayoutHistoryTemplatePeer::doValidate($this, $columns)) !== true) {
-                $failureMap = array_merge($failureMap, $retval);
+            // We call the validate method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aThirdPartyTrackReferences !== null) {
+                if (!$this->aThirdPartyTrackReferences->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aThirdPartyTrackReferences->getValidationFailures());
+                }
             }
 
 
-                if ($this->collCcPlayoutHistoryTemplateFields !== null) {
-                    foreach ($this->collCcPlayoutHistoryTemplateFields as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
+            if (($retval = CeleryTasksPeer::doValidate($this, $columns)) !== true) {
+                $failureMap = array_merge($failureMap, $retval);
+            }
+
 
 
             $this->alreadyInValidation = false;
@@ -608,7 +708,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = CcPlayoutHistoryTemplatePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = CeleryTasksPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -628,10 +728,16 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
                 return $this->getDbId();
                 break;
             case 1:
-                return $this->getDbName();
+                return $this->getDbTrackReference();
                 break;
             case 2:
-                return $this->getDbType();
+                return $this->getDbName();
+                break;
+            case 3:
+                return $this->getDbDispatchTime();
+                break;
+            case 4:
+                return $this->getDbStatus();
                 break;
             default:
                 return null;
@@ -656,15 +762,17 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['CcPlayoutHistoryTemplate'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['CeleryTasks'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['CcPlayoutHistoryTemplate'][$this->getPrimaryKey()] = true;
-        $keys = CcPlayoutHistoryTemplatePeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['CeleryTasks'][$this->getPrimaryKey()] = true;
+        $keys = CeleryTasksPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getDbId(),
-            $keys[1] => $this->getDbName(),
-            $keys[2] => $this->getDbType(),
+            $keys[1] => $this->getDbTrackReference(),
+            $keys[2] => $this->getDbName(),
+            $keys[3] => $this->getDbDispatchTime(),
+            $keys[4] => $this->getDbStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -672,8 +780,8 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
         }
 
         if ($includeForeignObjects) {
-            if (null !== $this->collCcPlayoutHistoryTemplateFields) {
-                $result['CcPlayoutHistoryTemplateFields'] = $this->collCcPlayoutHistoryTemplateFields->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            if (null !== $this->aThirdPartyTrackReferences) {
+                $result['ThirdPartyTrackReferences'] = $this->aThirdPartyTrackReferences->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
         }
 
@@ -693,7 +801,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = CcPlayoutHistoryTemplatePeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = CeleryTasksPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -713,10 +821,16 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
                 $this->setDbId($value);
                 break;
             case 1:
-                $this->setDbName($value);
+                $this->setDbTrackReference($value);
                 break;
             case 2:
-                $this->setDbType($value);
+                $this->setDbName($value);
+                break;
+            case 3:
+                $this->setDbDispatchTime($value);
+                break;
+            case 4:
+                $this->setDbStatus($value);
                 break;
         } // switch()
     }
@@ -740,11 +854,13 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = CcPlayoutHistoryTemplatePeer::getFieldNames($keyType);
+        $keys = CeleryTasksPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setDbName($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDbType($arr[$keys[2]]);
+        if (array_key_exists($keys[1], $arr)) $this->setDbTrackReference($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDbName($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbDispatchTime($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbStatus($arr[$keys[4]]);
     }
 
     /**
@@ -754,11 +870,13 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(CcPlayoutHistoryTemplatePeer::DATABASE_NAME);
+        $criteria = new Criteria(CeleryTasksPeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::ID)) $criteria->add(CcPlayoutHistoryTemplatePeer::ID, $this->id);
-        if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::NAME)) $criteria->add(CcPlayoutHistoryTemplatePeer::NAME, $this->name);
-        if ($this->isColumnModified(CcPlayoutHistoryTemplatePeer::TYPE)) $criteria->add(CcPlayoutHistoryTemplatePeer::TYPE, $this->type);
+        if ($this->isColumnModified(CeleryTasksPeer::ID)) $criteria->add(CeleryTasksPeer::ID, $this->id);
+        if ($this->isColumnModified(CeleryTasksPeer::TRACK_REFERENCE)) $criteria->add(CeleryTasksPeer::TRACK_REFERENCE, $this->track_reference);
+        if ($this->isColumnModified(CeleryTasksPeer::NAME)) $criteria->add(CeleryTasksPeer::NAME, $this->name);
+        if ($this->isColumnModified(CeleryTasksPeer::DISPATCH_TIME)) $criteria->add(CeleryTasksPeer::DISPATCH_TIME, $this->dispatch_time);
+        if ($this->isColumnModified(CeleryTasksPeer::STATUS)) $criteria->add(CeleryTasksPeer::STATUS, $this->status);
 
         return $criteria;
     }
@@ -773,15 +891,15 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(CcPlayoutHistoryTemplatePeer::DATABASE_NAME);
-        $criteria->add(CcPlayoutHistoryTemplatePeer::ID, $this->id);
+        $criteria = new Criteria(CeleryTasksPeer::DATABASE_NAME);
+        $criteria->add(CeleryTasksPeer::ID, $this->id);
 
         return $criteria;
     }
 
     /**
      * Returns the primary key for this object (row).
-     * @return int
+     * @return string
      */
     public function getPrimaryKey()
     {
@@ -791,7 +909,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     /**
      * Generic method to set the primary key (id column).
      *
-     * @param  int $key Primary key.
+     * @param  string $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
@@ -815,15 +933,17 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of CcPlayoutHistoryTemplate (or compatible) type.
+     * @param object $copyObj An object of CeleryTasks (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setDbTrackReference($this->getDbTrackReference());
         $copyObj->setDbName($this->getDbName());
-        $copyObj->setDbType($this->getDbType());
+        $copyObj->setDbDispatchTime($this->getDbDispatchTime());
+        $copyObj->setDbStatus($this->getDbStatus());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -831,12 +951,6 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
             $copyObj->setNew(false);
             // store object hash to prevent cycle
             $this->startCopy = true;
-
-            foreach ($this->getCcPlayoutHistoryTemplateFields() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addCcPlayoutHistoryTemplateField($relObj->copy($deepCopy));
-                }
-            }
 
             //unflag object copy
             $this->startCopy = false;
@@ -857,7 +971,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return CcPlayoutHistoryTemplate Clone of current object.
+     * @return CeleryTasks Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -877,256 +991,67 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return CcPlayoutHistoryTemplatePeer
+     * @return CeleryTasksPeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new CcPlayoutHistoryTemplatePeer();
+            self::$peer = new CeleryTasksPeer();
         }
 
         return self::$peer;
     }
 
-
     /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
+     * Declares an association between this object and a ThirdPartyTrackReferences object.
      *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('CcPlayoutHistoryTemplateField' == $relationName) {
-            $this->initCcPlayoutHistoryTemplateFields();
-        }
-    }
-
-    /**
-     * Clears out the collCcPlayoutHistoryTemplateFields collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
-     * @see        addCcPlayoutHistoryTemplateFields()
-     */
-    public function clearCcPlayoutHistoryTemplateFields()
-    {
-        $this->collCcPlayoutHistoryTemplateFields = null; // important to set this to null since that means it is uninitialized
-        $this->collCcPlayoutHistoryTemplateFieldsPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collCcPlayoutHistoryTemplateFields collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialCcPlayoutHistoryTemplateFields($v = true)
-    {
-        $this->collCcPlayoutHistoryTemplateFieldsPartial = $v;
-    }
-
-    /**
-     * Initializes the collCcPlayoutHistoryTemplateFields collection.
-     *
-     * By default this just sets the collCcPlayoutHistoryTemplateFields collection to an empty array (like clearcollCcPlayoutHistoryTemplateFields());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initCcPlayoutHistoryTemplateFields($overrideExisting = true)
-    {
-        if (null !== $this->collCcPlayoutHistoryTemplateFields && !$overrideExisting) {
-            return;
-        }
-        $this->collCcPlayoutHistoryTemplateFields = new PropelObjectCollection();
-        $this->collCcPlayoutHistoryTemplateFields->setModel('CcPlayoutHistoryTemplateField');
-    }
-
-    /**
-     * Gets an array of CcPlayoutHistoryTemplateField objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this CcPlayoutHistoryTemplate is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|CcPlayoutHistoryTemplateField[] List of CcPlayoutHistoryTemplateField objects
+     * @param                  ThirdPartyTrackReferences $v
+     * @return CeleryTasks The current object (for fluent API support)
      * @throws PropelException
      */
-    public function getCcPlayoutHistoryTemplateFields($criteria = null, PropelPDO $con = null)
+    public function setThirdPartyTrackReferences(ThirdPartyTrackReferences $v = null)
     {
-        $partial = $this->collCcPlayoutHistoryTemplateFieldsPartial && !$this->isNew();
-        if (null === $this->collCcPlayoutHistoryTemplateFields || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collCcPlayoutHistoryTemplateFields) {
-                // return empty collection
-                $this->initCcPlayoutHistoryTemplateFields();
-            } else {
-                $collCcPlayoutHistoryTemplateFields = CcPlayoutHistoryTemplateFieldQuery::create(null, $criteria)
-                    ->filterByCcPlayoutHistoryTemplate($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collCcPlayoutHistoryTemplateFieldsPartial && count($collCcPlayoutHistoryTemplateFields)) {
-                      $this->initCcPlayoutHistoryTemplateFields(false);
-
-                      foreach ($collCcPlayoutHistoryTemplateFields as $obj) {
-                        if (false == $this->collCcPlayoutHistoryTemplateFields->contains($obj)) {
-                          $this->collCcPlayoutHistoryTemplateFields->append($obj);
-                        }
-                      }
-
-                      $this->collCcPlayoutHistoryTemplateFieldsPartial = true;
-                    }
-
-                    $collCcPlayoutHistoryTemplateFields->getInternalIterator()->rewind();
-
-                    return $collCcPlayoutHistoryTemplateFields;
-                }
-
-                if ($partial && $this->collCcPlayoutHistoryTemplateFields) {
-                    foreach ($this->collCcPlayoutHistoryTemplateFields as $obj) {
-                        if ($obj->isNew()) {
-                            $collCcPlayoutHistoryTemplateFields[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collCcPlayoutHistoryTemplateFields = $collCcPlayoutHistoryTemplateFields;
-                $this->collCcPlayoutHistoryTemplateFieldsPartial = false;
-            }
+        if ($v === null) {
+            $this->setDbTrackReference(NULL);
+        } else {
+            $this->setDbTrackReference($v->getDbId());
         }
 
-        return $this->collCcPlayoutHistoryTemplateFields;
-    }
+        $this->aThirdPartyTrackReferences = $v;
 
-    /**
-     * Sets a collection of CcPlayoutHistoryTemplateField objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $ccPlayoutHistoryTemplateFields A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
-     */
-    public function setCcPlayoutHistoryTemplateFields(PropelCollection $ccPlayoutHistoryTemplateFields, PropelPDO $con = null)
-    {
-        $ccPlayoutHistoryTemplateFieldsToDelete = $this->getCcPlayoutHistoryTemplateFields(new Criteria(), $con)->diff($ccPlayoutHistoryTemplateFields);
-
-
-        $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion = $ccPlayoutHistoryTemplateFieldsToDelete;
-
-        foreach ($ccPlayoutHistoryTemplateFieldsToDelete as $ccPlayoutHistoryTemplateFieldRemoved) {
-            $ccPlayoutHistoryTemplateFieldRemoved->setCcPlayoutHistoryTemplate(null);
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ThirdPartyTrackReferences object, it will not be re-added.
+        if ($v !== null) {
+            $v->addCeleryTasks($this);
         }
 
-        $this->collCcPlayoutHistoryTemplateFields = null;
-        foreach ($ccPlayoutHistoryTemplateFields as $ccPlayoutHistoryTemplateField) {
-            $this->addCcPlayoutHistoryTemplateField($ccPlayoutHistoryTemplateField);
-        }
-
-        $this->collCcPlayoutHistoryTemplateFields = $ccPlayoutHistoryTemplateFields;
-        $this->collCcPlayoutHistoryTemplateFieldsPartial = false;
 
         return $this;
     }
 
+
     /**
-     * Returns the number of related CcPlayoutHistoryTemplateField objects.
+     * Get the associated ThirdPartyTrackReferences object
      *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related CcPlayoutHistoryTemplateField objects.
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return ThirdPartyTrackReferences The associated ThirdPartyTrackReferences object.
      * @throws PropelException
      */
-    public function countCcPlayoutHistoryTemplateFields(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    public function getThirdPartyTrackReferences(PropelPDO $con = null, $doQuery = true)
     {
-        $partial = $this->collCcPlayoutHistoryTemplateFieldsPartial && !$this->isNew();
-        if (null === $this->collCcPlayoutHistoryTemplateFields || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collCcPlayoutHistoryTemplateFields) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getCcPlayoutHistoryTemplateFields());
-            }
-            $query = CcPlayoutHistoryTemplateFieldQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByCcPlayoutHistoryTemplate($this)
-                ->count($con);
+        if ($this->aThirdPartyTrackReferences === null && ($this->track_reference !== null) && $doQuery) {
+            $this->aThirdPartyTrackReferences = ThirdPartyTrackReferencesQuery::create()->findPk($this->track_reference, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aThirdPartyTrackReferences->addCeleryTaskss($this);
+             */
         }
 
-        return count($this->collCcPlayoutHistoryTemplateFields);
-    }
-
-    /**
-     * Method called to associate a CcPlayoutHistoryTemplateField object to this object
-     * through the CcPlayoutHistoryTemplateField foreign key attribute.
-     *
-     * @param    CcPlayoutHistoryTemplateField $l CcPlayoutHistoryTemplateField
-     * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
-     */
-    public function addCcPlayoutHistoryTemplateField(CcPlayoutHistoryTemplateField $l)
-    {
-        if ($this->collCcPlayoutHistoryTemplateFields === null) {
-            $this->initCcPlayoutHistoryTemplateFields();
-            $this->collCcPlayoutHistoryTemplateFieldsPartial = true;
-        }
-
-        if (!in_array($l, $this->collCcPlayoutHistoryTemplateFields->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddCcPlayoutHistoryTemplateField($l);
-
-            if ($this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion and $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion->contains($l)) {
-                $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion->remove($this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	CcPlayoutHistoryTemplateField $ccPlayoutHistoryTemplateField The ccPlayoutHistoryTemplateField object to add.
-     */
-    protected function doAddCcPlayoutHistoryTemplateField($ccPlayoutHistoryTemplateField)
-    {
-        $this->collCcPlayoutHistoryTemplateFields[]= $ccPlayoutHistoryTemplateField;
-        $ccPlayoutHistoryTemplateField->setCcPlayoutHistoryTemplate($this);
-    }
-
-    /**
-     * @param	CcPlayoutHistoryTemplateField $ccPlayoutHistoryTemplateField The ccPlayoutHistoryTemplateField object to remove.
-     * @return CcPlayoutHistoryTemplate The current object (for fluent API support)
-     */
-    public function removeCcPlayoutHistoryTemplateField($ccPlayoutHistoryTemplateField)
-    {
-        if ($this->getCcPlayoutHistoryTemplateFields()->contains($ccPlayoutHistoryTemplateField)) {
-            $this->collCcPlayoutHistoryTemplateFields->remove($this->collCcPlayoutHistoryTemplateFields->search($ccPlayoutHistoryTemplateField));
-            if (null === $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion) {
-                $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion = clone $this->collCcPlayoutHistoryTemplateFields;
-                $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion->clear();
-            }
-            $this->ccPlayoutHistoryTemplateFieldsScheduledForDeletion[]= clone $ccPlayoutHistoryTemplateField;
-            $ccPlayoutHistoryTemplateField->setCcPlayoutHistoryTemplate(null);
-        }
-
-        return $this;
+        return $this->aThirdPartyTrackReferences;
     }
 
     /**
@@ -1135,8 +1060,10 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     public function clear()
     {
         $this->id = null;
+        $this->track_reference = null;
         $this->name = null;
-        $this->type = null;
+        $this->dispatch_time = null;
+        $this->status = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -1159,19 +1086,14 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collCcPlayoutHistoryTemplateFields) {
-                foreach ($this->collCcPlayoutHistoryTemplateFields as $o) {
-                    $o->clearAllReferences($deep);
-                }
+            if ($this->aThirdPartyTrackReferences instanceof Persistent) {
+              $this->aThirdPartyTrackReferences->clearAllReferences($deep);
             }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collCcPlayoutHistoryTemplateFields instanceof PropelCollection) {
-            $this->collCcPlayoutHistoryTemplateFields->clearIterator();
-        }
-        $this->collCcPlayoutHistoryTemplateFields = null;
+        $this->aThirdPartyTrackReferences = null;
     }
 
     /**
@@ -1181,7 +1103,7 @@ abstract class BaseCcPlayoutHistoryTemplate extends BaseObject implements Persis
      */
     public function __toString()
     {
-        return (string) $this->exportTo(CcPlayoutHistoryTemplatePeer::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(CeleryTasksPeer::DEFAULT_STRING_FORMAT);
     }
 
     /**

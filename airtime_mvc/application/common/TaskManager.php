@@ -9,14 +9,25 @@ final class TaskManager {
      * @var array tasks to be run
      */
     protected $_taskList = [
-        AirtimeTask::SOUNDCLOUD,
-        AirtimeTask::UPGRADE
+        AirtimeTask::UPGRADE,  // Always run the upgrade first
+        AirtimeTask::CELERY
     ];
 
     /**
      * @var TaskManager singleton instance object
      */
     protected static $_instance;
+
+    /**
+     * @var int TASK_INTERVAL_SECONDS how often, in seconds, to run the TaskManager tasks,
+     *                                if they need to be run
+     */
+    const TASK_INTERVAL_SECONDS = 60;
+
+    /**
+     * @var $con PDO Propel connection object
+     */
+    private $_con;
 
     /**
      * Private constructor so class is uninstantiable
@@ -40,12 +51,61 @@ final class TaskManager {
      * Run all tasks that need to be run
      */
     public function runTasks() {
+        // If there is data in auth storage, this could be a user request
+        // so we should lock the TaskManager to avoid blocking
+        if ($this->_isUserSessionRequest()) return;
+        $this->_con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
+        $this->_con->beginTransaction();
+        try {
+            $lock = $this->_getLock();
+            if ($lock && microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS) return;
+            $this->_updateLock($lock);
+            $this->_con->commit();
+        } catch (Exception $e) {
+            // We get here if there are simultaneous requests trying to fetch the lock row
+            $this->_con->rollBack();
+            Logging::info($e->getMessage());
+            return;
+        }
         foreach ($this->_taskList as $task) {
             $task = TaskFactory::getTask($task);
-            assert(is_subclass_of($task, 'AirtimeTask'));  // Sanity check
-            /** @var $task AirtimeTask */
             if ($task && $task->shouldBeRun()) $task->run();
         }
+    }
+
+    /**
+     * Check if the current session is a user request
+     *
+     * @return bool
+     */
+    private function _isUserSessionRequest() {
+        $auth = Zend_Auth::getInstance();
+        $data = $auth->getStorage()->read();
+        return !empty($data);
+    }
+
+    /**
+     * Get the task_manager_lock from cc_pref with a row-level lock for atomicity
+     *
+     * @return array|bool an array containing the row values, or false on failure
+     */
+    private function _getLock() {
+        $sql = "SELECT * FROM cc_pref WHERE keystr='task_manager_lock' LIMIT 1 FOR UPDATE NOWAIT";
+        $st = $this->_con->prepare($sql);
+        $st->execute();
+        return $st->fetch();
+    }
+
+    /**
+     * Update and commit the new lock value, or insert it if it doesn't exist
+     *
+     * @param $lock array cc_pref lock row values
+     */
+    private function _updateLock($lock) {
+        $sql = empty($lock) ? "INSERT INTO cc_pref (keystr, valstr) VALUES ('task_manager_lock', :value)"
+            : "UPDATE cc_pref SET valstr=:value WHERE keystr='task_manager_lock'";
+        $st = $this->_con->prepare($sql);
+        $st->execute(array(":value" => microtime(true)));
     }
 
 }
@@ -60,8 +120,8 @@ interface AirtimeTask {
      * Task types - values don't really matter as long as they're unique
      */
 
-    const SOUNDCLOUD = "soundcloud";
     const UPGRADE = "upgrade";
+    const CELERY = "celery";
 
     /**
      * Check whether the task should be run
@@ -94,10 +154,10 @@ class TaskFactory {
      */
     public static function getTask($task) {
         switch($task) {
-            case AirtimeTask::SOUNDCLOUD:
-                return new SoundcloudUploadTask();
             case AirtimeTask::UPGRADE:
                 return new UpgradeTask();
+            case AirtimeTask::CELERY:
+                return new CeleryTask();
         }
         return null;
     }
@@ -128,33 +188,24 @@ class UpgradeTask implements AirtimeTask {
 }
 
 /**
- * Class SoundcloudUploadTask
+ * Class CeleryTask
  */
-class SoundcloudUploadTask implements AirtimeTask {
+class CeleryTask implements AirtimeTask {
 
     /**
-     * @var SoundcloudService
-     */
-    protected $_service;
-
-    public function __construct() {
-        $this->_service = new SoundcloudService();
-    }
-
-    /**
-     * Check the ThirdPartyTrackReferences table to see if there are any pending SoundCloud tasks
+     * Check the ThirdPartyTrackReferences table to see if there are any pending tasks
      *
      * @return bool true if there are pending tasks in ThirdPartyTrackReferences
      */
     public function shouldBeRun() {
-        return !$this->_service->isBrokerTaskQueueEmpty();
+        return !CeleryService::isBrokerTaskQueueEmpty();
     }
 
     /**
      * Poll the task queue for any completed Celery tasks
      */
     public function run() {
-        $this->_service->pollBrokerTaskQueue();
+        CeleryService::pollBrokerTaskQueue();
     }
 
 }

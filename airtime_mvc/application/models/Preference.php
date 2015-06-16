@@ -1461,4 +1461,14 @@ class Application_Model_Preference
         self::setValue("soundcloud_request_token", $value);
     }
 
+    // TaskManager Lock Timestamp
+
+    public static function getTaskManagerLock() {
+        return self::getValue("task_manager_lock");
+    }
+
+    public static function setTaskManagerLock($value) {
+        self::setValue("task_manager_lock", $value);
+    }
+
 }
