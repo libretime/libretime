@@ -46,12 +46,13 @@ class WidgetHelper
             );
 
             $result[$dow[$i]] = $shows;
-
-            // XSS exploit prevention
-            self::convertSpecialChars($result, array("name", "url"));
-            // convert image paths to point to api endpoints
-            self::findAndConvertPaths($result);
         }
+
+        // XSS exploit prevention
+        SecurityHelper::htmlescape_recursive($result);
+
+        // convert image paths to point to api endpoints
+        self::findAndConvertPaths($result);
 
         return $result;
     }
@@ -124,37 +125,18 @@ class WidgetHelper
                 }
                 $result[$weekCounter][$dayOfWeekCounter]["shows"] = $shows;
 
-                // XSS exploit prevention
-                self::convertSpecialChars($result, array("name", "url"));
-                // convert image paths to point to api endpoints
-                self::findAndConvertPaths($result);
-
             }
             $weekCounter += 1;
         }
 
-        return $result;
-    }
 
-    /**
-     * Go through a given array and sanitize any potentially exploitable fields
-     * by passing them through htmlspecialchars
-     *
-     * @param unknown $arr    the array to sanitize
-     * @param unknown $keys    indexes of values to be sanitized
-     */
-    public static function convertSpecialChars(&$arr, $keys)
-    {
-        foreach ($arr as &$a) {
-            if (is_array($a)) {
-                foreach ($keys as &$key) {
-                    if (array_key_exists($key, $a)) {
-                        $a[$key] = htmlspecialchars($a[$key]);
-                    }
-                }
-                self::convertSpecialChars($a, $keys);
-            }
-        }
+        // XSS exploit prevention
+        SecurityHelper::htmlescape_recursive($result);
+
+        // convert image paths to point to api endpoints
+        self::findAndConvertPaths($result);
+
+        return $result;
     }
 
     /**

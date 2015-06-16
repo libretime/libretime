@@ -980,7 +980,7 @@ class Application_Service_HistoryService
 	        	$this->populateTemplateItem($values, $id, $instanceId);
 	        }
 	        else {
-	        	$json["form"] = $form;
+	        	$json["form"] = SecurityHelper::htmlescape_recursive($form);
 	        }
 
 	        return $json;
@@ -1008,7 +1008,8 @@ class Application_Service_HistoryService
 	            $this->populateTemplateFile($values, $id);
 	        }
 	        else {
-	        	$json["error"] = $msgs;
+	        	$json["error"] = $form->getErrorMessages();
+				$json["error"] = SecurityHelper::htmlescape_recursive($json["error"]);
 	        }
 
 	        return $json;
