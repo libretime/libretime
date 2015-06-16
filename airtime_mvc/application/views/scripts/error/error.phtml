@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="error-content">
-        <h2><?php echo _("Page not found!")?></h2>
+        <h2><?php echo $this->escape($this->message)?></h2>
         <p><?php echo _("Looks like the page you were looking for doesn't exist!")?></p>
         <div class="button-bar">
             <a class="toggle-button" href="<?php echo $this->baseUrl('dashboard/help'); ?>"><?php echo _("Help") ?></a>
