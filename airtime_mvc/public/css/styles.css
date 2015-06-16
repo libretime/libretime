@@ -150,7 +150,7 @@ select {
     width: 100%;
     left: 0;
     top: 0;
-    z-index: 2000;
+    z-index: 1000;
     border-top: 0;
 }
 
@@ -377,8 +377,9 @@ select {
 
 .wrapper {
     position: absolute;
-    top: 139px;
-    margin: 0 5px 0 5px;
+    top: 141px;
+    left: 10px;
+    right: 10px;
     padding:10px 0 0 0;
 }
 
@@ -435,7 +436,7 @@ fieldset.plain {
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
 }
 
-input[readonly]{
+input[readonly], textarea[readonly] {
     background-color:#b1b1b1
 }
 
@@ -912,11 +913,15 @@ input[type="checkbox"] {
 }
 /*---//////////////////// LOGIN & PASSWORD RESET  ////////////////////---*/
 
-#csrf-label, #csrf-element {
-    /* Remove any visible csrf form token footprint */
-    height: 0;
+/* Remove any visible csrf form token footprint */
+#csrf-label {
+    display: none;
+}
+
+#csrf-element {
     padding: 0;
     margin: 0;
+    display: inline-block;
 }
 
 .login_box {
@@ -1036,7 +1041,6 @@ input[type="checkbox"] {
 #pref_form p.description {
     color: #3b3b3b;
     font-size: 12px;
-    float: left;
 }
 
   dt.block-display, dd.block-display {
@@ -1715,7 +1719,7 @@ ul.errors {
     width:278px;
 }
 
-ul.errors li {
+ul.errors li, .warning {
     color:#902d2d;
     font-size:11px;
     padding:2px 4px;
@@ -1723,6 +1727,11 @@ ul.errors li {
     margin-bottom:2px;
     border:1px solid #c83f3f;
     list-style: none;
+}
+
+.warning-label {
+    font-size: medium;
+    text-align: center;
 }
 
 div.success{
@@ -2182,13 +2191,8 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .radio-inline-list label {
     margin-right:12px;
 }
-.preferences.simple-formblock dd.block-display {
-    width: 100%;
-}
-
-.preferences.simple-formblock dd.block-display select, .stream-config.simple-formblock dd.block-display select {
-    width: 100%;
-}
+.preferences.simple-formblock dd.block-display,
+ .preferences.simple-formblock dd.block-display select, .stream-config.simple-formblock dd.block-display select,
 .preferences dd.block-display .input_select, .stream-config dd.block-display .input_select {
     width: 100%;
 }
@@ -2207,12 +2211,17 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 }
 
 .preferences #logo-remove-btn {
-    float: right;
+    /*float: left;*/
     margin-bottom: 4px;
 }
 
 .preferences #Logo-img-container {
     margin-top: 30px;
+}
+
+.centered {
+    margin: 0 auto;
+    display: block;
 }
 
 #show_time_info {
