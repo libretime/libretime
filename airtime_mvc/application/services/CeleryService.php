@@ -81,6 +81,10 @@ class CeleryService {
         // If the message isn't ready yet (Celery hasn't finished the task),
         // only throw an exception if the message has timed out.
         if ($message == FALSE && self::_checkMessageTimeout($task)) {
+            // If the task times out, mark it as failed. We don't want to remove the
+            // track reference here in case it was a deletion that failed, for example.
+            $task->setDbStatus(CELERY_FAILED_STATUS);
+            $task->save();
             throw new CeleryTimeoutException("Celery task " . $task->getDbName()
                                              . " with ID " . $task->getDbId() . " timed out");
         }
@@ -117,11 +121,6 @@ class CeleryService {
                 $message = self::_getTaskMessage($task);
                 self::_processTaskMessage($task, $message);
             } catch (CeleryTimeoutException $e) {
-                // If the task times out, mark it as failed. We don't want to remove the
-                // track reference here in case it was a deletion that failed, for example.
-                // TODO: Move this somewhere more appropriate
-                $task->setDbStatus(CELERY_FAILED_STATUS);
-                $task->save();
                 Logging::info($e->getMessage());
             } catch (Exception $e) {
                 // Because $message->result can be either an object or a string, sometimes

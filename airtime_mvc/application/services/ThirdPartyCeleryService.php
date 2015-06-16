@@ -115,6 +115,15 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     }
 
     /**
+     * Field accessor for $_CELERY_DELETE_TASK_NAME
+     *
+     * @return string the Celery task name for deleting tracks from this service
+     */
+    public function getCeleryDeleteTaskName() {
+        return static::$_CELERY_DELETE_TASK_NAME;
+    }
+
+    /**
      * Build a parameter array for the file being uploaded to a third party service
      *
      * @param $file Application_Model_StoredFile the file being uploaded
@@ -122,14 +131,5 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
      * @return array the track array to send to the third party service
      */
     abstract protected function _getUploadData($file);
-
-    /**
-     * Field accessor for $_CELERY_DELETE_TASK_NAME
-     *
-     * @return string the Celery task name for deleting tracks from this service
-     */
-    public function getCeleryDeleteTaskName() {
-        return self::$_CELERY_DELETE_TASK_NAME;
-    }
 
 }
