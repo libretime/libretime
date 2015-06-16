@@ -100,10 +100,10 @@ try {
         echo "<pre>";
         echo $e->getTraceAsString();
         echo "</pre>";
-        Logging::info($e->getMessage());
-        Logging::info($e->getTraceAsString());
+        Logging::error($e->getMessage());
+        Logging::error($e->getTraceAsString());
     } else {
-        Logging::info($e->getTrace());
+        Logging::error($e->getTrace());
     }
     throw $e;
 }

@@ -134,7 +134,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                     //$r->gotoSimpleAndExit('index', 'login', $request->getModuleName());
 
                     //die();
-                    throw new Zend_Controller_Exception("hi", 401);
+                    throw new Zend_Controller_Exception("Incorrect API key", 401);
                 }
             }
             else  //Non-REST, regular Airtime web app requests
