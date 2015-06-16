@@ -241,6 +241,7 @@ class Application_Service_ShowService
                 }
 
                 $this->adjustSchedule($showData);
+
             }
 
             $con->commit();
