@@ -181,27 +181,27 @@
                 ?>
             </td>
         </tr>
- */?>
-        <tr id="partitions" class="even">
-            <th colspan="5"><?php echo _("Disk Space") ?></th>
-        </tr>
-        <tr class="partition-info">
-            <td><span class="strong"><?php echo _("Disk") ?></span>
-                <ul id="watched-dir-list">
-                </ul>
-            </td>
-            <td>
-                <?php
-                    echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30))
-                ?>
-            </td>
-            <td colspan="3">
-                <div class="big">
-                    <div class="diskspace" style="width:<?php echo sprintf("%01.1f%%", $used/$total*100) ?>;">
-                    </div>
-                </div>
-                <div><?php echo sprintf("%01.1f%% ", $used/$total*100) .  _("in use") ?></div>
-            </td>
-        </tr>
     </tbody>
+ */?>
+    <tr id="partitions" class="even">
+        <th colspan="5"><?php echo _("Disk Space") ?></th>
+    </tr>
+    <tr class="partition-info">
+        <td><span class="strong"><?php echo _("Disk") ?></span>
+            <ul id="watched-dir-list">
+            </ul>
+        </td>
+        <td>
+            <?php
+                echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30))
+            ?>
+        </td>
+        <td colspan="3">
+            <div class="big">
+                <div class="diskspace" style="width:<?php echo sprintf("%01.1f%%", $used/$total*100) ?>;">
+                </div>
+            </div>
+            <div><?php echo sprintf("%01.1f%% ", $used/$total*100) .  _("in use") ?></div>
+        </td>
+    </tr>
 </table>

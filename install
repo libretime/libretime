@@ -467,11 +467,11 @@ verbose "\n * Installing pypo..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
-for i in /etc/init/airtime*.template; do
-    chmod 644 $i
-    sed -i "s/WEB_USER/${web_user}/g" $i
-    mv $i ${i%.template}
-done
+#for i in /etc/init/airtime*.template; do
+#    chmod 644 $i
+#    sed -i "s/WEB_USER/${web_user}/g" $i
+#    mv $i ${i%.template}
+#done
 
 set +e
 loudCmd "initctl reload-configuration"
