@@ -3,21 +3,30 @@
 </head>
 
 <?php
+/* Disabling most of the status page for Airtime Pro
+
     $phpDependencies = checkPhpDependencies();
     $externalServices = checkExternalServices();
     $zend = $phpDependencies["zend"];
     $postgres = $phpDependencies["postgres"];
-    
+
     $database =      $externalServices["database"];
     $rabbitmq =      $externalServices["rabbitmq"];
-    
+
     $pypo =          $externalServices["pypo"];
     $liquidsoap =    $externalServices["liquidsoap"];
     $mediamonitor = $externalServices["media-monitor"];
-    
+
     $r1 = array_reduce($phpDependencies, "booleanReduce", true);
     $r2 = array_reduce($externalServices, "booleanReduce", true);
     $result = $r1 && $r2;
+*/
+
+    // Disk information. We only use the [0]th index
+    // because we don't have Watched/Media Folders
+    $disk = $this->status->partitions[0];
+    $used = $disk->totalSpace-$disk->totalFreeSpace;
+    $total = $disk->totalSpace;
 ?>
 
 <table width="60%" cellpadding="0" cellspacing="0" border="0" class="statustable">
@@ -175,6 +184,24 @@
  */?>
         <tr id="partitions" class="even">
             <th colspan="5"><?php echo _("Disk Space") ?></th>
+        </tr>
+        <tr class="partition-info">
+            <td><span class="strong"><?php echo _("Disk") ?></span>
+                <ul id="watched-dir-list">
+                </ul>
+            </td>
+            <td>
+                <?php
+                    echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30))
+                ?>
+            </td>
+            <td colspan="3">
+                <div class="big">
+                    <div class="diskspace" style="width:<?php echo sprintf("%01.1f%%", $used/$total*100) ?>;">
+                    </div>
+                </div>
+                <div><?php echo sprintf("%01.1f%% ", $used/$total*100) .  _("in use") ?></div>
+            </td>
         </tr>
     </tbody>
 </table>
