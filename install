@@ -551,7 +551,7 @@ EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
 # Ignore errors in this check to avoid dying when vhost isn't found
 set +e
-rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST} > /dev/null
+rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
 RESULT="$?"
 set -e
 
