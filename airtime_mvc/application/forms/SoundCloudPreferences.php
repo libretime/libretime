@@ -10,30 +10,6 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
             array('ViewScript', array('viewScript' => 'form/preferences_soundcloud.phtml'))
         ));
 
-//        $select = new Zend_Form_Element_Select('SoundCloudTrackType');
-//        $select->setLabel(_('Default Track Type:'));
-//        $select->setAttrib('class', 'input_select');
-//        $select->setMultiOptions(array(
-//                "" => "",
-//                "original" => _("Original"),
-//                "remix" => _("Remix"),
-//                "live" => _("Live"),
-//                "recording" => _("Recording"),
-//                "spoken" => _("Spoken"),
-//                "podcast" => _("Podcast"),
-//                "demo" => _("Demo"),
-//                "in progress" => _("Work in progress"),
-//                "stem" => _("Stem"),
-//                "loop" => _("Loop"),
-//                "sound effect" => _("Sound Effect"),
-//                "sample" => _("One Shot Sample"),
-//                "other" => _("Other")
-//            ));
-//        $select->setRequired(false);
-//        $select->setValue(Application_Model_Preference::GetSoundCloudTrackType());
-//        $select->setDecorators(array('ViewHelper'));
-//        $this->addElement($select);
-
         $select = new Zend_Form_Element_Select('SoundCloudLicense');
         $select->setLabel(_('Default License:'));
         $select->setAttrib('class', 'input_select');

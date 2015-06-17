@@ -48,17 +48,27 @@ final class TaskManager {
     }
 
     /**
-     * Run all tasks that need to be run
+     * Run all tasks that need to be run.
+     *
+     * To prevent blocking and making too many requests to the database,
+     * we implement a row-level, non-blocking, read-protected lock on a
+     * timestamp that we check each time the application is bootstrapped,
+     * which, assuming enough time has passed, is updated before running
+     * the tasks.
      */
     public function runTasks() {
         // If there is data in auth storage, this could be a user request
         // so we should lock the TaskManager to avoid blocking
-        if ($this->_isUserSessionRequest()) return;
+        if ($this->_isUserSessionRequest()) {
+            return;
+        }
         $this->_con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
         $this->_con->beginTransaction();
         try {
             $lock = $this->_getLock();
-            if ($lock && microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS) return;
+            if ($lock && microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS) {
+                return;
+            }
             $this->_updateLock($lock);
             $this->_con->commit();
         } catch (Exception $e) {
@@ -70,14 +80,17 @@ final class TaskManager {
         }
         foreach ($this->_taskList as $task) {
             $task = TaskFactory::getTask($task);
-            if ($task && $task->shouldBeRun()) $task->run();
+            if ($task && $task->shouldBeRun()) {
+                $task->run();
+            }
         }
     }
 
     /**
      * Check if the current session is a user request
      *
-     * @return bool
+     * @return bool true if there is a Zend_Auth object in the current session,
+     *              otherwise false
      */
     private function _isUserSessionRequest() {
         $auth = Zend_Auth::getInstance();
@@ -87,6 +100,10 @@ final class TaskManager {
 
     /**
      * Get the task_manager_lock from cc_pref with a row-level lock for atomicity
+     *
+     * The lock is exclusive (prevent reads) and will only last for the duration
+     * of the transaction. We add NOWAIT so reads on the row during the transaction
+     * won't block
      *
      * @return array|bool an array containing the row values, or false on failure
      */
