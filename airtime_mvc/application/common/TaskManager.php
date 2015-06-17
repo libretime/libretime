@@ -64,7 +64,8 @@ final class TaskManager {
         } catch (Exception $e) {
             // We get here if there are simultaneous requests trying to fetch the lock row
             $this->_con->rollBack();
-            Logging::info($e->getMessage());
+            // Logging::info($e->getMessage()); // We actually get here a lot, so it's
+                                                // better to be silent here to avoid log bloat
             return;
         }
         foreach ($this->_taskList as $task) {
