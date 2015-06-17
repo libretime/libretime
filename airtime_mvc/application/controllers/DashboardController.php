@@ -99,10 +99,10 @@ class DashboardController extends Zend_Controller_Action
         $this->_helper->layout->setLayout('livestream');
 
         $logo = Application_Model_Preference::GetStationLogo();
-        if ($logo) {
-            $this->view->logo = "data:image/png;base64,$logo";
+        if ($logo === DEFAULT_LOGO_PLACEHOLDER) {
+            $this->view->logo = "/".DEFAULT_LOGO_FILE;
         } else {
-            $this->view->logo = $baseUrl."css/images/airtime_logo_jp.png";
+            $this->view->logo = "data:image/png;base64,".$logo;
         }
     }
 

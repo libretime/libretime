@@ -15,7 +15,7 @@ body {
 
 
 .bck_cover {
-    position: absolute;
+    position: fixed;
     top: 0px;
     right: 0px;
     bottom: 0px;
@@ -59,13 +59,12 @@ span.login-img {
     text-align: center;
     width: 770px;
     max-width: 770px;
-    margin: 0 auto;
-    margin-bottom: 140px;
+    margin: 0 auto 0px -380px;
     padding: 10px;
     padding-left: 0px;
+    padding-bottom: 140px;
     position: absolute;
     left: 50%;
-    margin-left: -380px;
     /*	-webkit-transition-delay: 1s;
         transition-delay: 1s;*/
 }
@@ -87,7 +86,7 @@ span.login-img {
     opacity: 0;
 }
 
-.about_us.current, .login.current {
+.about_us.current, .login.current, .schedule.current {
     opacity: 1;
     -webkit-transition-delay: 0.4s;
     transition-delay: 0.4s;

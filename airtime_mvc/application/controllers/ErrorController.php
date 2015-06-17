@@ -7,7 +7,6 @@ class ErrorController extends Zend_Controller_Action {
         //We cannot show that.
         $this->view->layout()->disableLayout();
         $this->setupCSS();
-
     }
 
     public function errorAction() {
@@ -31,9 +30,9 @@ class ErrorController extends Zend_Controller_Action {
                     break;
             }
         } else {
-            $exceptions = $this->_getAllParams();
-            Logging::error($exceptions);
-            $this->error500Action();
+            //$exceptions = $this->_getAllParams();
+            //Logging::error($exceptions);
+            $this->error404Action();
             return;
         }
 
@@ -74,7 +73,7 @@ class ErrorController extends Zend_Controller_Action {
      * 404 error - route or controller
      */
     public function error404Action() {
-        $this->_helper->viewRenderer('error-404');
+        $this->_helper->viewRenderer('error');
         $this->getResponse()->setHttpResponseCode(404);
         $this->view->message = _('Page not found.');
     }

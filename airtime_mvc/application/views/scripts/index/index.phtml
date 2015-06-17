@@ -4,10 +4,11 @@ var newheight;
 var newwidth;
 
 if(document.getElementById){
-newheight=document.getElementById(id).contentWindow.document .body.scrollHeight;
-newwidth=document.getElementById(id).contentWindow.document .body.scrollWidth;
+    newheight=document.getElementById(id).contentWindow.document.body.scrollHeight;
+    // Hack to get height in Firefox
+    if (newheight == 0) newheight = newheight = document.getElementById(id).contentWindow.document.documentElement.scrollHeight;
+    newwidth=document.getElementById(id).contentWindow.document.body.scrollWidth;
 }
-
 document.getElementById(id).height= (newheight) + "px";
 document.getElementById(id).width= (newwidth) + "px";
 }
@@ -31,7 +32,6 @@ document.getElementById(id).width= (newwidth) + "px";
     </div>
 
     <div id="tab-1" class="schedule tab_content current">
-        <?php //echo $this->action('weekly-program','embed', 'default', array('style' => 'premium', 'useiframe' => '1')); ?>
         <iframe onLoad="autoResize('schedule_iframe');" id="schedule_iframe" height="300px" scrolling="yes" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program?style=premium"?>></iframe>
     </div>
 
@@ -68,6 +68,7 @@ document.getElementById(id).width= (newwidth) + "px";
                 $("#player_iframe").contents().find('.bottom_bar .button').removeClass('current');
                 $('.tab_content').removeClass('current');
 
+                window.scrollTo(0,0);
                 $(this).addClass('current');
                 $("#"+tab_id).addClass('current');
             });
