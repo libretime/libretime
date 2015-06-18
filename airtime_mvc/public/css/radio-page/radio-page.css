@@ -26,6 +26,7 @@ body {
 
 .logo img {
     margin: 40px 0px 0px 60px;
+    max-width: 180px;
 }
 
 .login-btn {

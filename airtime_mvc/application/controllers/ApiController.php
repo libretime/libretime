@@ -199,9 +199,7 @@ class ApiController extends Zend_Controller_Action
             } else {
                 $result = Application_Model_Schedule::GetPlayOrderRangeOld($limit);
             }
-    
-            // XSS exploit prevention
-            WidgetHelper::convertSpecialChars($result, array("name", "url"));
+
             // apply user-defined timezone, or default to station
             Application_Common_DateHelper::convertTimestampsToTimezone(
                 $result['currentShow'],
@@ -218,6 +216,10 @@ class ApiController extends Zend_Controller_Action
             $result["schedulerTime"] = Application_Common_DateHelper::UTCStringToTimezoneString($result["schedulerTime"], $timezone);
             $result["timezone"] = $upcase ? strtoupper($timezone) : $timezone;
             $result["timezoneOffset"] = Application_Common_DateHelper::getTimezoneOffset($timezone);
+
+            // XSS exploit prevention
+            SecurityHelper::htmlescape_recursive($result);
+
             // convert image paths to point to api endpoints
             WidgetHelper::findAndConvertPaths($result);
     
@@ -288,10 +290,12 @@ class ApiController extends Zend_Controller_Action
 
             $result = Application_Model_Schedule::GetPlayOrderRange($utcTimeEnd, $showsToRetrieve);
             
-            // XSS exploit prevention
-            WidgetHelper::convertSpecialChars($result, array("name", "url"));
             // apply user-defined timezone, or default to station
             $this->applyLiveTimezoneAdjustments($result, $timezone, $upcase);
+
+            // XSS exploit prevention
+            SecurityHelper::htmlescape_recursive($result);
+
             // convert image paths to point to api endpoints
             WidgetHelper::findAndConvertPaths($result);
             

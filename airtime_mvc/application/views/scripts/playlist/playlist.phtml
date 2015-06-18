@@ -54,7 +54,7 @@ if (isset($this->obj)) {
         <dl class="zend_form">
             <dt id="description-label"><label for="description"><?php echo _("Description") ?></label></dt>
             <dd id="description-element">
-                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->obj->getDescription(); ?></textarea>
+                <textarea cols="80" rows="24" id="description" name="description"><?php echo $this->escape($this->obj->getDescription()); ?></textarea>
             </dd>
         </dl>
     </fieldset>
