@@ -83,17 +83,17 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     protected function _createTaskReference($fileId, $brokerTaskId, $taskName) {
         $trackId = $this->createTrackReference($fileId);
         // First, check if the track already has an entry in the database
-        $ref = CeleryTasksQuery::create()->findOneByDbId($brokerTaskId);
-        if (is_null($ref)) {
-            $ref = new CeleryTasks();
+        $task = CeleryTasksQuery::create()->findOneByDbId($brokerTaskId);
+        if (is_null($task)) {
+            $task = new CeleryTasks();
         }
-        $ref->setDbId($brokerTaskId);
-        $ref->setDbName($taskName);
+        $task->setDbId($brokerTaskId);
+        $task->setDbName($taskName);
         $utc = new DateTimeZone("UTC");
-        $ref->setDbDispatchTime(new DateTime("now", $utc));
-        $ref->setDbStatus(CELERY_PENDING_STATUS);
-        $ref->setDbTrackReference($trackId);
-        $ref->save();
+        $task->setDbDispatchTime(new DateTime("now", $utc));
+        $task->setDbStatus(CELERY_PENDING_STATUS);
+        $task->setDbTrackReference($trackId);
+        $task->save();
     }
 
     /**
