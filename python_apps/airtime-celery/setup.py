@@ -11,6 +11,8 @@ if sys.argv[1] in install_args and "--no-init-script" not in sys.argv:
     data_files = [('/etc/default', ['install/conf/airtime-celery']),
                   ('/etc/init.d', ['install/initd/airtime-celery'])]
 else:
+    if "--no-init-script" in sys.argv:
+        sys.argv.remove("--no-init-script")
     data_files = []
 
 
@@ -19,6 +21,10 @@ def postinst():
     # permissions for the defaults config file
     os.chmod('/etc/init.d/airtime-celery', 0755)
     os.chmod('/etc/default/airtime-celery', 0640)
+    print "Reloading initctl configuration"
+    call(['initctl', 'reload-configuration'])
+    print "Setting Celery to start on boot"
+    call(['update-rc.d', 'airtime-celery', 'defaults'])
     print "Run \"sudo service airtime-celery restart\" now."
 
 setup(name='airtime-celery',
@@ -36,11 +42,6 @@ setup(name='airtime-celery',
       ],
       zip_safe=False,
       data_files=data_files)
-
-print "Reloading initctl configuration"
-call(['initctl', 'reload-configuration'])
-print "Setting Celery to start on boot"
-call(['update-rc.d', 'airtime-celery', 'defaults'])
 
 if data_files:
     postinst()
