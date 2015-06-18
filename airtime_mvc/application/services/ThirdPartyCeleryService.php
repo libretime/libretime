@@ -108,10 +108,10 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
      * @throws PropelException
      */
     public function updateTrackReference($trackId, $track, $status) {
-        $ref = CeleryTasksQuery::create()
+        $task = CeleryTasksQuery::create()
             ->findOneByDbTrackReference($trackId);
-        $ref->setDbStatus($status);
-        $ref->save();
+        $task->setDbStatus($status);
+        $task->save();
     }
 
     /**

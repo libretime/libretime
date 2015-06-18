@@ -102,6 +102,8 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
         $ref->setDbService(static::$_SERVICE_NAME);
         // Only set the SoundCloud fields if the task was successful
         if ($status == CELERY_SUCCESS_STATUS) {
+            $utc = new DateTimeZone("UTC");
+            $ref->setDbUploadTime(new DateTime("now", $utc));
             // TODO: fetch any additional SoundCloud parameters we want to store
             $ref->setDbForeignId($track->id);  // SoundCloud identifier
         }
