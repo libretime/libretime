@@ -15,14 +15,10 @@ else:
 
 
 def postinst():
-    print "Reloading initctl configuration"
-    call(['initctl', 'reload-configuration'])
     # Make /etc/init.d file executable and set proper
     # permissions for the defaults config file
     os.chmod('/etc/init.d/airtime-celery', 0755)
     os.chmod('/etc/default/airtime-celery', 0640)
-    # print "Setting Celery to start on boot"
-    call(['update-rc.d', 'airtime-celery', 'defaults'])
     print "Run \"sudo service airtime-celery restart\" now."
 
 setup(name='airtime-celery',
@@ -40,6 +36,11 @@ setup(name='airtime-celery',
       ],
       zip_safe=False,
       data_files=data_files)
+
+print "Reloading initctl configuration"
+call(['initctl', 'reload-configuration'])
+print "Setting Celery to start on boot"
+call(['update-rc.d', 'airtime-celery', 'defaults'])
 
 if data_files:
     postinst()
