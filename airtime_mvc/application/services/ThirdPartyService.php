@@ -74,7 +74,7 @@ abstract class ThirdPartyService {
      * Given a CcFiles identifier for a file that's been uploaded to a third-party service,
      * return the third-party identifier for the remote file
      *
-     * @param int $fileId the local CcFiles identifier
+     * @param int $fileId the cc_files identifier
      *
      * @return string the service foreign identifier
      */
@@ -86,10 +86,24 @@ abstract class ThirdPartyService {
     }
 
     /**
+     * Check if a reference exists for a given CcFiles identifier
+     *
+     * @param int $fileId the cc_files identifier
+     *
+     * @return string the service foreign identifier
+     */
+    public function referenceExists($fileId) {
+        $ref = ThirdPartyTrackReferencesQuery::create()
+            ->filterByDbService(static::$_SERVICE_NAME)
+            ->findOneByDbFileId($fileId);  // There shouldn't be duplicates!
+        return !empty($ref);
+    }
+
+    /**
      * Given a CcFiles identifier for a file that's been uploaded to a third-party service,
      * return a link to the remote file
      *
-     * @param int $fileId CcFiles identifier
+     * @param int $fileId the cc_files identifier
      *
      * @return string the link to the remote file
      */
@@ -101,14 +115,14 @@ abstract class ThirdPartyService {
     /**
      * Upload the file with the given identifier to a third-party service
      *
-     * @param int $fileId CcFiles identifier
+     * @param int $fileId the cc_files identifier
      */
     abstract function upload($fileId);
 
     /**
      * Delete the file with the given identifier from a third-party service
      *
-     * @param int $fileId the local CcFiles identifier
+     * @param int $fileId the cc_files identifier
      *
      * @throws ServiceNotFoundException when a $fileId with no corresponding
      *                                  service identifier is given

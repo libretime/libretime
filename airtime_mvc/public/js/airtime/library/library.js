@@ -1016,9 +1016,20 @@ var AIRTIME = (function(AIRTIME) {
                         if (soundcloud.upload !== undefined) {
 
                             callback = function() {
+                                alert($.i18n._("Your track is being uploaded to SoundCloud"));
                                 $.post(soundcloud.upload.url, function(){});
                             };
                             soundcloud.upload.callback = callback;
+                        }
+
+                        // define an upload to soundcloud callback.
+                        if (soundcloud.remove !== undefined) {
+
+                            callback = function() {
+                                alert($.i18n._("Your track is being deleted from SoundCloud"));
+                                $.post(soundcloud.remove.url, function(){});
+                            };
+                            soundcloud.remove.callback = callback;
                         }
 
                         // define a view on soundcloud callback

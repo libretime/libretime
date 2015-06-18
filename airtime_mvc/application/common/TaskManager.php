@@ -22,7 +22,7 @@ final class TaskManager {
      * @var int TASK_INTERVAL_SECONDS how often, in seconds, to run the TaskManager tasks,
      *                                if they need to be run
      */
-    const TASK_INTERVAL_SECONDS = 60;
+    const TASK_INTERVAL_SECONDS = 30;
 
     /**
      * @var $con PDO Propel connection object
@@ -67,6 +67,11 @@ final class TaskManager {
         try {
             $lock = $this->_getLock();
             if ($lock && microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS) {
+                // Fun fact: Propel caches the database connection and uses it persistently
+                // (thus why calling Propel::getConnection explicitly and passing a connection
+                // parameter is often not necessary when making Propel queries). Long story short,
+                // if we don't use commit() here, we end up blocking other queries made within this request
+                $this->_con->commit();
                 return;
             }
             $this->_updateLock($lock);

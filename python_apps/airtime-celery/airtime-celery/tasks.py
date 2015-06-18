@@ -9,7 +9,7 @@ celery = Celery()
 logger = get_task_logger(__name__)
 
 
-@celery.task(name='soundcloud-upload')
+@celery.task(name='soundcloud-upload', acks_late=True)
 def soundcloud_upload(data, token, file_path):
     """
     Upload a file to SoundCloud
@@ -33,7 +33,7 @@ def soundcloud_upload(data, token, file_path):
     data['asset_data'].close()
     return json.dumps(track.fields())
 
-@celery.task(name='soundcloud-delete')
+@celery.task(name='soundcloud-delete', acks_late=True)
 def soundcloud_delete(token, track_id):
     """
     Delete a file from SoundCloud
