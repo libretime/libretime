@@ -112,6 +112,6 @@ class PluploadController extends Zend_Controller_Action
         $this->view->sEcho = intval($request->getParam('sEcho'));
         $this->view->iTotalDisplayRecords = $numTotalDisplayUploads;
         $this->view->iTotalRecords = $numTotalRecentUploads;
-        $this->view->files = $uploadsArray;
+        $this->view->files = SecurityHelper::htmlescape_recursive($uploadsArray);
     }
 }

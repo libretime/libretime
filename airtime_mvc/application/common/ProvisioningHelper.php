@@ -112,8 +112,12 @@ class ProvisioningHelper
         $this->dbowner = $_POST['dbowner'];
         $this->instanceId = $_POST['instanceid'];
 
-        $this->stationName = $_POST['station_name'];
-        $this->description = $_POST['description'];
+        if (isset($_POST['station_name'])) {
+            $this->stationName = $_POST['station_name'];
+        }
+        if (isset($_POST['description'])) {
+            $this->description = $_POST['description'];
+        }
     }
 
     /**

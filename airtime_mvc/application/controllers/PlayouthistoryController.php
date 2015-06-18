@@ -89,6 +89,7 @@ class PlayouthistoryController extends Zend_Controller_Action
 	        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
 	        $this->view->iTotalRecords = $r["iTotalRecords"];
 	        $this->view->history = $r["history"];
+            $this->view->history = SecurityHelper::htmlescape_recursive($this->view->history);
         }
         catch (Exception $e) {
         	Logging::info($e);
@@ -112,7 +113,9 @@ class PlayouthistoryController extends Zend_Controller_Action
 	        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
 	        $this->view->iTotalRecords = $r["iTotalRecords"];
 	        $this->view->history = $r["history"];
-    	}
+            $this->view->history = SecurityHelper::htmlescape_recursive($this->view->history);
+
+        }
     	catch (Exception $e) {
     		Logging::info($e);
     		Logging::info($e->getMessage());
@@ -130,6 +133,7 @@ class PlayouthistoryController extends Zend_Controller_Action
 
     		$historyService = new Application_Service_HistoryService();
     		$shows = $historyService->getShowList($startsDT, $endsDT);
+            $shows = SecurityHelper::htmlescape_recursive($shows);
 
     		$this->_helper->json->sendJson($shows);
     	}
