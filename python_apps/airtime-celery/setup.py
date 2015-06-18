@@ -2,7 +2,6 @@ from setuptools import setup
 from subprocess import call
 import os
 import sys
-from glob import glob
 
 install_args = ['install', 'install_data', 'develop']
 
@@ -38,7 +37,8 @@ setup(name='airtime-celery',
       install_requires=[
           'soundcloud',
           'celery',
-          'kombu'
+          'kombu',
+          'configobj'
       ],
       zip_safe=False,
       data_files=data_files)
