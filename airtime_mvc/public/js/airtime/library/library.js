@@ -722,17 +722,19 @@ var AIRTIME = (function(AIRTIME) {
                 // icon.
                 $(nRow).find("td:not(.library_checkbox, .library_type)").qtip({
                     content: {
-                        text: $.i18n._("Loading..."),
+                        text: function(event, api) {
+                            $.get(baseUrl+"library/get-file-metadata",
+                                ({format: "html", id : aData.id, type: aData.ftype}),
+                                function (html) {
+                                    api.set('content.text', html);
+                                }, "html")
+                                .fail(function (xhr, status, error) {
+                                    api.set('content.text', status + ': ' + error)
+                                });
+                            return 'Loading...';
+                        },
                         title: {
                             text: aData.track_title
-                        },
-                        ajax: {
-                            url: baseUrl+"Library/get-file-metadata",
-                            type: "get",
-                            data: ({format: "html", id : aData.id, type: aData.ftype}),
-                            success: function(data, status) {
-                                this.set('content.text', data);
-                            }
                         }
                     },
                     position: {
@@ -755,7 +757,7 @@ var AIRTIME = (function(AIRTIME) {
                        show: function(event, api) {
                          // Only show the tooltip if it was a right-click
                          if(event.originalEvent.button !== 2) {
-                            event.preventDefault();
+                             event.preventDefault();
                          }
                        }
                     },
