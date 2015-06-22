@@ -150,6 +150,7 @@ class ListenerStat(Thread):
                 self.logger.error('Exception: %s', e)
 
             time.sleep(120)
+        self.logger.info('ListenerStat thread exiting')
 
 
 if __name__ == "__main__":
