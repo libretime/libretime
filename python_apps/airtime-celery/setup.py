@@ -4,13 +4,16 @@ import os
 import sys
 
 install_args = ['install', 'install_data', 'develop']
+run_postinst = False
 
 # XXX Definitely not the best way of doing this...
 if sys.argv[1] in install_args and "--no-init-script" not in sys.argv:
+    run_postinst = True
     data_files = [('/etc/default', ['install/conf/airtime-celery']),
                   ('/etc/init.d', ['install/initd/airtime-celery'])]
 else:
     if "--no-init-script" in sys.argv:
+        run_postinst = True  # We still want to run the postinst here
         sys.argv.remove("--no-init-script")
     data_files = []
 
@@ -20,6 +23,14 @@ def postinst():
     # permissions for the defaults config file
     os.chmod('/etc/init.d/airtime-celery', 0755)
     os.chmod('/etc/default/airtime-celery', 0640)
+    # Make the airtime log directory group-writable
+    os.chmod('/var/log/airtime', 0775)
+
+    # Create the Celery user
+    call(['adduser', '--no-create-home', '--home', '/var/lib/celery', '--gecos', '""', '--disabled-login', 'celery'])
+    # Add celery to the www-data group
+    call(['usermod', '-G', 'www-data', '-a', 'celery'])
+
     print "Reloading initctl configuration"
     call(['initctl', 'reload-configuration'])
     print "Setting Celery to start on boot"
@@ -43,5 +54,5 @@ setup(name='airtime-celery',
       zip_safe=False,
       data_files=data_files)
 
-if data_files:
+if run_postinst:
     postinst()

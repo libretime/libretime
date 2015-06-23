@@ -67,10 +67,8 @@ final class TaskManager {
         try {
             $lock = $this->_getLock();
             if ($lock && microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS) {
-                // Fun fact: Propel caches the database connection and uses it persistently
-                // (thus why calling Propel::getConnection explicitly and passing a connection
-                // parameter is often not necessary when making Propel queries). Long story short,
-                // if we don't use commit() here, we end up blocking other queries made within this request
+                // Propel caches the database connection and uses it persistently, so if we don't
+                // use commit() here, we end up blocking other queries made within this request
                 $this->_con->commit();
                 return;
             }

@@ -25,8 +25,16 @@ This program must be run with sudo:
 Developers
 ==========
 
+To debug, you can run celery directly from the command line:
+
+    $ cd /my/airtime/root/python_apps/airtime-celery
+    $ RMQ_CONFIG_FILE=/etc/airtime/airtime.conf celery -A airtime-celery.tasks worker --loglevel=info
+
+This worker can be run alongside the service without issue.
+
 You may want to use the setuptools develop target to install:
 
+    $ cd /my/airtime/root/python_apps/airtime-celery
     $ sudo python setup.py develop
 
 You will need to allow the "airtime" RabbitMQ user to access all exchanges and queues within the /airtime vhost:
@@ -39,3 +47,19 @@ Logging
 By default, logs are saved to:
 
     /var/log/airtime/airtime-celery[-DEV_ENV].log
+
+Troubleshooting
+===============
+
+If you run into issues getting Celery to accept tasks from Airtime:
+
+    1) Make sure Celery is running ($ sudo service airtime-celery status).
+
+    2) Check the log file (/var/log/airtime/airtime-celery[-DEV_ENV].log) to make sure Celery started correctly.
+
+    3) Check your /etc/airtime/airtime.conf rabbitmq settings. Make sure the settings here align with
+       /etc/airtime-saas/production/rabbitmq.ini.
+
+    4) Check RabbitMQ to make sure the celeryresults and task queues were created in the correct vhost.
+
+    5) Make sure the RabbitMQ user (the default is airtime) has permissions on all vhosts being used.

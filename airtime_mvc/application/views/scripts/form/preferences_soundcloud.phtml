@@ -1,19 +1,5 @@
 <fieldset class="padded">
     <dl class="zend_form">
-<!--        <dt id="SoundCloudTrackType-label" class="block-display">-->
-<!--             <label class="optional" for="SoundCloudTrackType">--><?php //echo $this->element->getElement('SoundCloudTrackType')->getLabel() ?><!--</label>-->
-<!--        </dt>-->
-<!--        <dd id="SoundCloudTrackType-element" class="block-display">-->
-<!--            --><?php //echo $this->element->getElement('SoundCloudTrackType') ?>
-<!--            --><?php //if($this->element->getElement('SoundCloudTrackType')->hasErrors()) : ?>
-<!--                <ul class='errors'>-->
-<!--                    --><?php //foreach($this->element->getElement('SoundCloudTrackType')->getMessages() as $error): ?>
-<!--                        <li>--><?php //echo $error; ?><!--</li>-->
-<!--                    --><?php //endforeach; ?>
-<!--                </ul>-->
-<!--            --><?php //endif; ?>
-<!--        </dd>-->
-
         <?php
             $soundcloudService = new SoundcloudService();
             if ($soundcloudService->hasAccessToken()) {
