@@ -96,7 +96,12 @@ abstract class ThirdPartyService {
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->filterByDbService(static::$_SERVICE_NAME)
             ->findOneByDbFileId($fileId);  // There shouldn't be duplicates!
-        return !empty($ref);
+        if (!empty($ref)) {
+            $task = CeleryTasksQuery::create()
+                ->findOneByDbTrackReference($ref->getDbId());
+            return $task->getDbStatus() != CELERY_FAILED_STATUS;
+        }
+        return false;
     }
 
     /**
