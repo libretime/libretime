@@ -7,6 +7,7 @@ Communication and the Celery results backend are both handled with amqp (RabbitM
 Installation
 ============
 
+    $ sudo adduser --system --no-create-home --disabled-login --disabled-password --group celery
     $ sudo python setup.py install
 
 Each instance of airtime-celery has its own worker, and multiple instances can be run in parallel.
