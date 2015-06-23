@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the Airtime package.
 # 
 # Translators:
-# Andrey Podshivalov, 2014
+# Andrey Podshivalov, 2014-2015
 # Andrey Podshivalov, 2014
 # Andrey Podshivalov, 2014
 # Sourcefabric <contact@sourcefabric.org>, 2012
@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-13 13:55-0500\n"
-"PO-Revision-Date: 2014-11-14 09:58+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2015-06-23 12:48+0000\n"
+"Last-Translator: Andrey Podshivalov\n"
 "Language-Team: Russian (Russia) (http://www.transifex.com/projects/p/airtime/language/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: airtime_mvc/application/layouts/scripts/audio-player.phtml:5
 #: airtime_mvc/application/controllers/LocaleController.php:28
@@ -2281,7 +2281,7 @@ msgstr "Показать программу"
 
 #: airtime_mvc/application/controllers/LocaleController.php:317
 msgid "DJs can do the following:"
-msgstr ""
+msgstr "DJ-ю доступно:"
 
 #: airtime_mvc/application/controllers/LocaleController.php:318
 msgid "Manage assigned show content"
