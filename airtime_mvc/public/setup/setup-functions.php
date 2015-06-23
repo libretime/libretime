@@ -1,6 +1,7 @@
 <?php
 define("BUILD_PATH", dirname(dirname(__DIR__)) . "/build/");
 define("AIRTIME_CONF_TEMP_PATH", "/tmp/airtime.conf.temp");
+define("RMQ_INI_TEMP_PATH", "/tmp/rabbitmq.ini.tmp");
 
 /**
  * Class Setup
@@ -11,50 +12,59 @@ define("AIRTIME_CONF_TEMP_PATH", "/tmp/airtime.conf.temp");
  */
 abstract class Setup {
 
+    protected static $_section;
+
+    /**
+     * Array of key->value pairs for airtime.conf
+     *
+     * @var array
+     */
+    protected static $_properties;
+
     abstract function __construct($settings);
 
     abstract function runSetup();
 
     /**
      * Write new property values to a given section in airtime.conf.temp
-     *
-     * @param string $section
-     *            the configuration section to write to
-     * @param array $properties
-     *            the configuration properties and values to overwrite
      */
-    protected function writeToTemp($section, $properties) {
+    protected function writeToTemp() {
         if (!file_exists(AIRTIME_CONF_TEMP_PATH)) {
             copy(BUILD_PATH . "airtime.example.conf", AIRTIME_CONF_TEMP_PATH);
         }
-        
-        $file = file(AIRTIME_CONF_TEMP_PATH);
+
+        $this->_write(AIRTIME_CONF_TEMP_PATH);
+    }
+
+    protected function _write($filePath) {
+        $file = file($filePath);
         $fileOutput = "";
-        
+
         $inSection = false;
-        
+
         foreach ($file as $line) {
-            if (strpos($line, $section) !== false) {
+            if (strpos($line, static::$_section) !== false) {
                 $inSection = true;
             } else if (strpos($line, "[") !== false) {
                 $inSection = false;
             }
-            
+
             if (substr(trim($line), 0, 1) == "#") {
                 /* Workaround to strip comments from airtime.conf.
                  * We need to do this because python's ConfigObj and PHP
-                 * have different (and equally strict) rules about comment 
+                 * have different (and equally strict) rules about comment
                  * characters in configuration files.
                  */
             } else if ($inSection) {
                 $key = trim(@substr($line, 0, strpos($line, "=")));
-                $fileOutput .= $key && isset($properties[$key]) ? $key . " = " . $properties[$key] . "\n" : $line;
+                $fileOutput .= $key && isset(static::$_properties[$key]) ?
+                    $key . " = " . static::$_properties[$key] . "\n" : $line;
             } else {
                 $fileOutput .= $line;
             }
         }
-        
-        file_put_contents(AIRTIME_CONF_TEMP_PATH, $fileOutput);
+
+        file_put_contents($filePath, $fileOutput);
     }
 
     /**

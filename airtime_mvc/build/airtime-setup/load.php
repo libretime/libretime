@@ -63,7 +63,7 @@ function checkDatabaseDependencies() {
 function checkExternalServices() {
     return array(
             "database" => checkDatabaseConfiguration(),
-            "media-monitor" => checkMediaMonitorService(),
+            "analyzer" => checkAnalyzerService(),
             "pypo" => checkPlayoutService(),
             "liquidsoap" => checkLiquidsoapService(),
             "rabbitmq" => checkRMQConnection()
@@ -123,8 +123,8 @@ function checkRMQConnection() {
  * 
  * @return boolean true if airtime-media-monitor is running
  */
-function checkMediaMonitorService() {
-    exec("pgrep -f -u www-data airtime-media-monitor", $out, $status);
+function checkAnalyzerService() {
+    exec("pgrep -f -u www-data airtime_analyzer", $out, $status);
     if (array_key_exists(0, $out) && $status == 0) {
         return posix_kill(rtrim($out[0]), 0);
     }
