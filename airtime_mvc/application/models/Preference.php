@@ -1032,7 +1032,7 @@ class Application_Model_Preference
     public static function GetDiskQuota()
     {
         $val = self::getValue("disk_quota");
-        return (strlen($val) == 0) ? 0 : $val;
+        return empty($val) ? 2147483648 : $val;  # If there is no value for disk quota, return 2GB
     }
 
     public static function SetLiveStreamMasterUsername($value)
