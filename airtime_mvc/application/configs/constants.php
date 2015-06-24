@@ -23,8 +23,10 @@ define('AIRTIME_REST_VERSION'   , '1.1');
 define('AIRTIME_API_VERSION'    , '1.1');
 define('AIRTIME_CODE_VERSION'   , '2.5.13');
 
+// Defaults
 define('DEFAULT_LOGO_PLACEHOLDER', 1);
 define('DEFAULT_LOGO_FILE', 'images/airtime_logo.png');
+define('DEFAULT_TIMESTAMP_FORMAT', 'Y-m-d H:i:s');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');
@@ -102,4 +104,3 @@ define('CELERY_FAILED_STATUS', 'FAILED');
 
 // Celery Services
 define('SOUNDCLOUD_SERVICE_NAME', 'soundcloud');
-
