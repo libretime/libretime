@@ -73,6 +73,9 @@ class Application_Model_StoredFile
         return $this->_file->getDbFtype();
     }
 
+    /**
+     * @return CcFiles
+     */
     public function getPropelOrm()
     {
         return $this->_file;
