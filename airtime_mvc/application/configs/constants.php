@@ -102,3 +102,4 @@ define('PROVISIONING_STATUS_ACTIVE' , 'Active');
 //TuneIn integration
 define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
 
+define('DEFAULT_TIMESTAMP_FORMAT', 'Y-m-d H:i:s');

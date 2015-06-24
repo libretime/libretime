@@ -2,6 +2,11 @@
 
 class Application_Model_Schedule
 {
+
+    const MASTER_SOURCE_NAME = "Master";
+    const SHOW_SOURCE_NAME = "Live";
+    const SCHEDULED_SOURCE_NAME = "Scheduled";
+
     /**
      * Return TRUE if file is going to be played in the future.
      *
@@ -199,6 +204,7 @@ SQL;
             $currentMedia["ends"] = $currentMedia["show_ends"];
         }
 
+        $source = self::_getSource();
         $currentMediaFileId = $currentMedia["file_id"];
         $currentMediaStreamId = $currentMedia["stream_id"];
         if (isset($currentMediaFileId)) {
@@ -223,12 +229,20 @@ SQL;
         } else {
             $currentMediaType = null;
         }
+
+        if ($source != self::SCHEDULED_SOURCE_NAME) {
+            $show = Application_Model_Show::getCurrentShow();
+            $currentMediaName = isset($show[0])?$show[0]["name"]:"";
+            $currentMediaName .= " - " . _($source . " Stream");
+        }
+
         $results["current"] = array(
             "starts" => $currentMedia["starts"],
             "ends" => $currentMedia["ends"],
             "type" => $currentMediaType,
             "name" => $currentMediaName,
             "media_item_played" => $currentMedia["media_item_played"],
+            "source_enabled" => $source,
             "record" => "0"
         );
 
@@ -299,6 +313,14 @@ SQL;
 
         return $results;
 
+    }
+
+    private static function _getSource() {
+        $live_dj = Application_Model_Preference::GetSourceStatus("live_dj");
+        $master_dj = Application_Model_Preference::GetSourceStatus("master_dj");
+        $source = ($master_dj ? self::MASTER_SOURCE_NAME
+                              : ($live_dj ? self::SHOW_SOURCE_NAME : self::SCHEDULED_SOURCE_NAME));
+        return $source;
     }
 
     public static function GetLastScheduleItem($p_timeNow)
