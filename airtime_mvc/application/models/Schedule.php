@@ -6,6 +6,7 @@ class Application_Model_Schedule
     const MASTER_SOURCE_NAME = "Master";
     const SHOW_SOURCE_NAME = "Live";
     const SCHEDULED_SOURCE_NAME = "Scheduled";
+    const LIVE_STREAM = "Live Stream";
 
     /**
      * Return TRUE if file is going to be played in the future.
@@ -168,7 +169,7 @@ SQL;
      *
      * @param $utcNow                   DateTime current time in UTC
      * @param $currentShowInstanceId    int      id of the show instance currently playing
-     * @param $source                   string   id of the show instance currently playing
+     * @param $source                   string   the current prioritized source
      * @return array with data about the previous, current, and next media items playing.
      *      Returns an empty arrays if there is no media item currently playing
      */
@@ -195,54 +196,50 @@ SQL;
 
         $rows = Application_Common_Database::prepareAndExecute($sql, $params);
 
+        // If live streaming (master or show source) is enabled, set the current
+        // track information to the current show values
         if ($source != self::SCHEDULED_SOURCE_NAME) {
             $show = Application_Model_Show::getCurrentShow();
             $results["current"] = array(
                 "starts" => $show[0]["starts"],
                 "ends" => $show[0]["ends"],
-                "type" => _($source . " Stream"),
-                "name" => (isset($show[0])?$show[0]["name"]:"") . " - " . _($source . " Stream"),
+                "type" => _("livestream"),
+                "name" => (isset($show[0])?$show[0]["name"]:"") . " - " . _(self::LIVE_STREAM),
                 "media_item_played" => false,
                 "record" => "0"
             );
-        }
+        } else if (count($rows) >= 1) {
+            $currentMedia = $rows[0];
 
-        if (count($rows) < 1 || $rows[0]["show_ends"] < $utcNow->format(DEFAULT_TIMESTAMP_FORMAT)) {
-            return $results;
-        }
-
-        $currentMedia = $rows[0];
-
-        if ($currentMedia["ends"] > $currentMedia["show_ends"]) {
-            $currentMedia["ends"] = $currentMedia["show_ends"];
-        }
-
-        $currentMediaFileId = $currentMedia["file_id"];
-        $currentMediaStreamId = $currentMedia["stream_id"];
-        if (isset($currentMediaFileId)) {
-            $currentMediaType = "track";
-            $currentFile = CcFilesQuery::create()
-                ->filterByDbId($currentMediaFileId)
-                ->findOne();
-            $currentMediaName = $currentFile->getDbArtistName() . " - " . $currentFile->getDbTrackTitle();
-        } else if (isset($currentMediaStreamId)) {
-            $currentMediaType = "webstream";
-            $currentWebstream = CcWebstreamQuery::create()
-                ->filterByDbId($currentMediaStreamId)
-                ->findOne();
-            $currentWebstreamMetadata = CcWebstreamMetadataQuery::create()
-                ->filterByDbInstanceId($currentMedia["instance_id"])
-                ->orderByDbStartTime(Criteria::DESC)
-                ->findOne();
-            $currentMediaName = $currentWebstream->getDbName();
-            if (isset($currentWebstreamMetadata)) {
-                $currentMediaName .= " - " . $currentWebstreamMetadata->getDbLiquidsoapData();
+            if ($currentMedia["ends"] > $currentMedia["show_ends"]) {
+                $currentMedia["ends"] = $currentMedia["show_ends"];
             }
-        } else {
-            $currentMediaType = null;
-        }
 
-        if (is_null($results["current"])) {
+            $currentMediaFileId = $currentMedia["file_id"];
+            $currentMediaStreamId = $currentMedia["stream_id"];
+            if (isset($currentMediaFileId)) {
+                $currentMediaType = "track";
+                $currentFile = CcFilesQuery::create()
+                    ->filterByDbId($currentMediaFileId)
+                    ->findOne();
+                $currentMediaName = $currentFile->getDbArtistName() . " - " . $currentFile->getDbTrackTitle();
+            } else if (isset($currentMediaStreamId)) {
+                $currentMediaType = "webstream";
+                $currentWebstream = CcWebstreamQuery::create()
+                    ->filterByDbId($currentMediaStreamId)
+                    ->findOne();
+                $currentWebstreamMetadata = CcWebstreamMetadataQuery::create()
+                    ->filterByDbInstanceId($currentMedia["instance_id"])
+                    ->orderByDbStartTime(Criteria::DESC)
+                    ->findOne();
+                $currentMediaName = $currentWebstream->getDbName();
+                if (isset($currentWebstreamMetadata)) {
+                    $currentMediaName .= " - " . $currentWebstreamMetadata->getDbLiquidsoapData();
+                }
+            } else {
+                $currentMediaType = null;
+            }
+
             $results["current"] = array(
                 "starts" => $currentMedia["starts"],
                 "ends" => $currentMedia["ends"],
@@ -254,8 +251,7 @@ SQL;
         }
 
         $previousMedia = CcScheduleQuery::create()
-            ->filterByDbStarts($currentMedia["starts"], Criteria::LESS_THAN)
-            ->filterByDbId($currentMedia["id"], Criteria::NOT_EQUAL)
+            ->filterByDbEnds($utcNow, Criteria::LESS_THAN)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
             ->orderByDbStarts(Criteria::DESC)
             ->findOne();
@@ -287,8 +283,7 @@ SQL;
         }
 
         $nextMedia = CcScheduleQuery::create()
-            ->filterByDbStarts($currentMedia["starts"], Criteria::GREATER_THAN)
-            ->filterByDbId($currentMedia["id"], Criteria::NOT_EQUAL)
+            ->filterByDbStarts($utcNow, Criteria::GREATER_THAN)
             ->filterByDbPlayoutStatus(0, Criteria::GREATER_THAN)
             ->orderByDbStarts(Criteria::ASC)
             ->findOne();
@@ -322,6 +317,13 @@ SQL;
 
     }
 
+    /**
+     * Get the current prioritized source
+     *
+     * Priority order is Master->Live/Show->Scheduled.
+     *
+     * @return string the source name
+     */
     private static function _getSource() {
         $live_dj = Application_Model_Preference::GetSourceStatus("live_dj");
         $master_dj = Application_Model_Preference::GetSourceStatus("master_dj");
