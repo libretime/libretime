@@ -31,9 +31,15 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
 
     /**
      * The value for the id field.
-     * @var        string
+     * @var        int
      */
     protected $id;
+
+    /**
+     * The value for the task_id field.
+     * @var        string
+     */
+    protected $task_id;
 
     /**
      * The value for the track_reference field.
@@ -87,12 +93,23 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
     /**
      * Get the [id] column value.
      *
-     * @return string
+     * @return int
      */
     public function getDbId()
     {
 
         return $this->id;
+    }
+
+    /**
+     * Get the [task_id] column value.
+     *
+     * @return string
+     */
+    public function getDbTaskId()
+    {
+
+        return $this->task_id;
     }
 
     /**
@@ -166,13 +183,13 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
     /**
      * Set the value of [id] column.
      *
-     * @param  string $v new value
+     * @param  int $v new value
      * @return CeleryTasks The current object (for fluent API support)
      */
     public function setDbId($v)
     {
         if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
         if ($this->id !== $v) {
@@ -183,6 +200,27 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
 
         return $this;
     } // setDbId()
+
+    /**
+     * Set the value of [task_id] column.
+     *
+     * @param  string $v new value
+     * @return CeleryTasks The current object (for fluent API support)
+     */
+    public function setDbTaskId($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->task_id !== $v) {
+            $this->task_id = $v;
+            $this->modifiedColumns[] = CeleryTasksPeer::TASK_ID;
+        }
+
+
+        return $this;
+    } // setDbTaskId()
 
     /**
      * Set the value of [track_reference] column.
@@ -306,11 +344,12 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
     {
         try {
 
-            $this->id = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
-            $this->track_reference = ($row[$startcol + 1] !== null) ? (int) $row[$startcol + 1] : null;
-            $this->name = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->dispatch_time = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->status = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
+            $this->task_id = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
+            $this->track_reference = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->name = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->dispatch_time = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->status = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -320,7 +359,7 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 5; // 5 = CeleryTasksPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 6; // 6 = CeleryTasksPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CeleryTasks object", $e);
@@ -542,10 +581,27 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
+        $this->modifiedColumns[] = CeleryTasksPeer::ID;
+        if (null !== $this->id) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . CeleryTasksPeer::ID . ')');
+        }
+        if (null === $this->id) {
+            try {
+                $stmt = $con->query("SELECT nextval('celery_tasks_id_seq')");
+                $row = $stmt->fetch(PDO::FETCH_NUM);
+                $this->id = $row[0];
+            } catch (Exception $e) {
+                throw new PropelException('Unable to get sequence id.', $e);
+            }
+        }
+
 
          // check the columns in natural order for more readable SQL queries
         if ($this->isColumnModified(CeleryTasksPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '"id"';
+        }
+        if ($this->isColumnModified(CeleryTasksPeer::TASK_ID)) {
+            $modifiedColumns[':p' . $index++]  = '"task_id"';
         }
         if ($this->isColumnModified(CeleryTasksPeer::TRACK_REFERENCE)) {
             $modifiedColumns[':p' . $index++]  = '"track_reference"';
@@ -571,7 +627,10 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
                     case '"id"':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                        break;
+                    case '"task_id"':
+                        $stmt->bindValue($identifier, $this->task_id, PDO::PARAM_STR);
                         break;
                     case '"track_reference"':
                         $stmt->bindValue($identifier, $this->track_reference, PDO::PARAM_INT);
@@ -728,15 +787,18 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
                 return $this->getDbId();
                 break;
             case 1:
-                return $this->getDbTrackReference();
+                return $this->getDbTaskId();
                 break;
             case 2:
-                return $this->getDbName();
+                return $this->getDbTrackReference();
                 break;
             case 3:
-                return $this->getDbDispatchTime();
+                return $this->getDbName();
                 break;
             case 4:
+                return $this->getDbDispatchTime();
+                break;
+            case 5:
                 return $this->getDbStatus();
                 break;
             default:
@@ -769,10 +831,11 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
         $keys = CeleryTasksPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getDbId(),
-            $keys[1] => $this->getDbTrackReference(),
-            $keys[2] => $this->getDbName(),
-            $keys[3] => $this->getDbDispatchTime(),
-            $keys[4] => $this->getDbStatus(),
+            $keys[1] => $this->getDbTaskId(),
+            $keys[2] => $this->getDbTrackReference(),
+            $keys[3] => $this->getDbName(),
+            $keys[4] => $this->getDbDispatchTime(),
+            $keys[5] => $this->getDbStatus(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -821,15 +884,18 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
                 $this->setDbId($value);
                 break;
             case 1:
-                $this->setDbTrackReference($value);
+                $this->setDbTaskId($value);
                 break;
             case 2:
-                $this->setDbName($value);
+                $this->setDbTrackReference($value);
                 break;
             case 3:
-                $this->setDbDispatchTime($value);
+                $this->setDbName($value);
                 break;
             case 4:
+                $this->setDbDispatchTime($value);
+                break;
+            case 5:
                 $this->setDbStatus($value);
                 break;
         } // switch()
@@ -857,10 +923,11 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
         $keys = CeleryTasksPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setDbTrackReference($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDbName($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDbDispatchTime($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setDbStatus($arr[$keys[4]]);
+        if (array_key_exists($keys[1], $arr)) $this->setDbTaskId($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDbTrackReference($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbName($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbDispatchTime($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbStatus($arr[$keys[5]]);
     }
 
     /**
@@ -873,6 +940,7 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
         $criteria = new Criteria(CeleryTasksPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(CeleryTasksPeer::ID)) $criteria->add(CeleryTasksPeer::ID, $this->id);
+        if ($this->isColumnModified(CeleryTasksPeer::TASK_ID)) $criteria->add(CeleryTasksPeer::TASK_ID, $this->task_id);
         if ($this->isColumnModified(CeleryTasksPeer::TRACK_REFERENCE)) $criteria->add(CeleryTasksPeer::TRACK_REFERENCE, $this->track_reference);
         if ($this->isColumnModified(CeleryTasksPeer::NAME)) $criteria->add(CeleryTasksPeer::NAME, $this->name);
         if ($this->isColumnModified(CeleryTasksPeer::DISPATCH_TIME)) $criteria->add(CeleryTasksPeer::DISPATCH_TIME, $this->dispatch_time);
@@ -899,7 +967,7 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
 
     /**
      * Returns the primary key for this object (row).
-     * @return string
+     * @return int
      */
     public function getPrimaryKey()
     {
@@ -909,7 +977,7 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
     /**
      * Generic method to set the primary key (id column).
      *
-     * @param  string $key Primary key.
+     * @param  int $key Primary key.
      * @return void
      */
     public function setPrimaryKey($key)
@@ -940,6 +1008,7 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setDbTaskId($this->getDbTaskId());
         $copyObj->setDbTrackReference($this->getDbTrackReference());
         $copyObj->setDbName($this->getDbName());
         $copyObj->setDbDispatchTime($this->getDbDispatchTime());
@@ -1060,6 +1129,7 @@ abstract class BaseCeleryTasks extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
+        $this->task_id = null;
         $this->track_reference = null;
         $this->name = null;
         $this->dispatch_time = null;

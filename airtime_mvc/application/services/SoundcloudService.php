@@ -69,7 +69,6 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
      */
     protected function _getUploadData($file) {
         $file = $file->getPropelOrm();
-        Logging::info($file);
         // TODO: Move this into a proper serializer
         $trackArray = $this->_serializeTrack($file);
         foreach (self::$_SOUNDCLOUD_PREF_FUNCTIONS as $func => $param) {

@@ -36,9 +36,11 @@ class CeleryTasksTableMap extends TableMap
         $this->setPhpName('CeleryTasks');
         $this->setClassname('CeleryTasks');
         $this->setPackage('airtime');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('celery_tasks_id_seq');
         // columns
-        $this->addPrimaryKey('id', 'DbId', 'VARCHAR', true, 256, null);
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('task_id', 'DbTaskId', 'VARCHAR', true, 256, null);
         $this->addForeignKey('track_reference', 'DbTrackReference', 'INTEGER', 'third_party_track_references', 'id', true, null, null);
         $this->addColumn('name', 'DbName', 'VARCHAR', false, 256, null);
         $this->addColumn('dispatch_time', 'DbDispatchTime', 'TIMESTAMP', false, null, null);

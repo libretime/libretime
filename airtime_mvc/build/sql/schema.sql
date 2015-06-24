@@ -696,7 +696,8 @@ DROP TABLE IF EXISTS "celery_tasks" CASCADE;
 
 CREATE TABLE "celery_tasks"
 (
-    "id" VARCHAR(256) NOT NULL,
+    "id" serial NOT NULL,
+    "task_id" VARCHAR(256) NOT NULL,
     "track_reference" INTEGER NOT NULL,
     "name" VARCHAR(256),
     "dispatch_time" TIMESTAMP,

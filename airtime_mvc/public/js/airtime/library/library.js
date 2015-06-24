@@ -1018,7 +1018,8 @@ var AIRTIME = (function(AIRTIME) {
                         if (soundcloud.upload !== undefined) {
 
                             callback = function() {
-                                alert($.i18n._("Your track is being uploaded to SoundCloud"));
+                                alert($.i18n._("Your track is being uploaded and will " +
+                                               "appear on SoundCloud in a couple of minutes"));
                                 $.post(soundcloud.upload.url, function(){});
                             };
                             soundcloud.upload.callback = callback;

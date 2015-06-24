@@ -22,7 +22,9 @@ function getUpgrades() {
 
 class UpgradeManager
 {
-    /** Used to determine if the database schema needs an upgrade in order for this version of the Airtime codebase to work correctly.
+
+    /**
+     * Used to determine if the database schema needs an upgrade in order for this version of the Airtime codebase to work correctly.
      * @return array A list of schema versions that this version of the codebase supports.
      */
     public static function getSupportedSchemaVersions()
@@ -65,9 +67,34 @@ class UpgradeManager
     }
 
     /**
+     * Downgrade the Airtime schema version to match the given version
+     *
+     * @param string $toVersion the version we want to downgrade to
+     *
+     * @return boolean whether or not an upgrade was performed
+     */
+    public static function doDowngrade($toVersion)
+    {
+        $downgraders = array_reverse(getUpgrades());  // Reverse the array because we're downgrading
+        $dir = (dirname(__DIR__) . "/controllers");
+        $downgradePerformed = false;
+
+        foreach ($downgraders as $downgrader) {
+            /** @var AirtimeUpgrader $downgrader */
+            $downgrader = new $downgrader($dir);
+            if ($downgrader->getNewVersion() == $toVersion) {
+                break;  // We've reached the version we wanted to downgrade to, so break
+            }
+            $downgradePerformed = self::_runDowngrade($downgrader) ? true : $downgradePerformed;
+        }
+
+        return $downgradePerformed;
+    }
+
+    /**
      * Run the given upgrade
      *
-     * @param $upgrader AirtimeUpgrader the upgrade class to be executed
+     * @param $upgrader AirtimeUpgrader the upgrader class to be executed
      *
      * @return bool true if the upgrade was successful, otherwise false
      */
@@ -75,11 +102,25 @@ class UpgradeManager
         return $upgrader->checkIfUpgradeSupported() && $upgrader->upgrade();
     }
 
+    /**
+     * Run the given downgrade
+     *
+     * @param $downgrader           AirtimeUpgrader the upgrader class to be executed
+     * @param $supportedVersions    array           array of supported versions
+     *
+     * @return bool true if the downgrade was successful, otherwise false
+     */
+    private static function _runDowngrade(AirtimeUpgrader $downgrader) {
+        return $downgrader->checkIfDowngradeSupported() && $downgrader->downgrade();
+    }
+
 }
 
 abstract class AirtimeUpgrader
 {
     protected $_dir;
+
+    protected $username, $password, $host, $database;
 
     /**
      * @param $dir string directory housing upgrade files
@@ -105,7 +146,17 @@ abstract class AirtimeUpgrader
      */
     public function checkIfUpgradeSupported()
     {
-        return in_array(AirtimeUpgrader::getCurrentSchemaVersion(), $this->getSupportedSchemaVersions());
+        return in_array(static::getCurrentSchemaVersion(), $this->getSupportedSchemaVersions());
+    }
+
+    /**
+     * This function checks to see if this class can perform a downgrade of your version of Airtime
+     *
+     * @return boolean True if we can downgrade your version of Airtime.
+     */
+    public function checkIfDowngradeSupported()
+    {
+        return static::getCurrentSchemaVersion() == $this->getNewVersion();
     }
 
     protected function toggleMaintenanceScreen($toggle)
@@ -143,6 +194,7 @@ abstract class AirtimeUpgrader
             // $this->toggleMaintenanceScreen(true);
             Cache::clear();
 
+            $this->_getDbValues();
             $this->_runUpgrade();
 
             Application_Model_Preference::SetSchemaVersion($this->getNewVersion());
@@ -157,18 +209,57 @@ abstract class AirtimeUpgrader
         return true;
     }
 
-    protected function _runUpgrade() {
+    /**
+     * Implement this for each new version of Airtime
+     * This function abstracts out the core downgrade functionality,
+     * allowing child classes to overwrite _runDowngrade to reduce duplication
+     */
+    public function downgrade() {
+        Cache::clear();
+
+        try {
+            $this->_getDbValues();
+            $this->_runDowngrade();
+
+            $highestSupportedVersion = null;
+            foreach ($this->getSupportedSchemaVersions() as $v) {
+                // version_compare returns 1 (true) if the second parameter is lower
+                if (!$highestSupportedVersion || version_compare($v, $highestSupportedVersion)) {
+                    $highestSupportedVersion = $v;
+                }
+            }
+
+            // Set the schema version to the highest supported version so we don't skip versions when downgrading
+            Application_Model_Preference::SetSchemaVersion($highestSupportedVersion);
+
+            Cache::clear();
+        } catch(Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function _getDbValues() {
         $airtimeConf = isset($_SERVER['AIRTIME_CONF']) ? $_SERVER['AIRTIME_CONF'] : "/etc/airtime/airtime.conf";
         $values = parse_ini_file($airtimeConf, true);
 
-        $username = $values['database']['dbuser'];
-        $password = $values['database']['dbpass'];
-        $host = $values['database']['host'];
-        $database = $values['database']['dbname'];
-
-        passthru("export PGPASSWORD=$password && psql -h $host -U $username -q -f ".$this->_dir."/upgrade_sql/airtime_"
-                 .$this->getNewVersion()."/upgrade.sql $database 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
+        $this->username = $values['database']['dbuser'];
+        $this->password = $values['database']['dbpass'];
+        $this->host     = $values['database']['host'];
+        $this->database = $values['database']['dbname'];
     }
+
+    protected function _runUpgrade() {
+        passthru("export PGPASSWORD=".$this->password." && psql -h ".$this->host." -U ".$this->username." -q -f ".$this->_dir."/upgrade_sql/airtime_"
+                 .$this->getNewVersion()."/upgrade.sql ".$this->database." 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
+    }
+
+    protected function _runDowngrade() {
+        passthru("export PGPASSWORD=".$this->password." && psql -h ".$this->host." -U ".$this->username." -q -f ".$this->_dir."/downgrade_sql/airtime_"
+                 .$this->getNewVersion()."/downgrade.sql ".$this->database." 2>&1 | grep -v -E \"will create implicit sequence|will create implicit index\"");
+    }
+
 }
 
 class AirtimeUpgrader253 extends AirtimeUpgrader
@@ -330,18 +421,27 @@ class AirtimeUpgrader2512 extends AirtimeUpgrader
 /**
  * Class AirtimeUpgrader2513 - Celery and SoundCloud upgrade
  *
- * Adds third_party_track_references table for third party service
+ * Adds third_party_track_references and celery_tasks tables for third party service
  * authentication and task architecture.
  *
- * Schema:
- *      id                          -> int          PK
- *      service                     -> string       internal service name
- *      foreign_id                  -> int          external unique service id
- *      broker_task_id              -> int          external unique amqp results identifier
- *      broker_task_name            -> string       external Celery task name
- *      broker_task_dispatch_time   -> timestamp    internal message dispatch time
- *      file_id                     -> int          internal FK->cc_files track id
- *      status                      -> string       external Celery task status - PENDING, SUCCESS, or FAILED
+ * <br/><b>third_party_track_references</b> schema:
+ *
+ *      id              -> int          PK
+ *      service         -> string       internal service name
+ *      foreign_id      -> int          external unique service id
+ *      file_id         -> int          internal FK->cc_files track id
+ *      upload_time     -> timestamp    internal upload timestamp
+ *      status          -> string       external service status
+ *
+ * <br/><b>celery_tasks</b> schema:
+ *
+ *      id              -> int          PK
+ *      task_id         -> string       external unique amqp results identifier
+ *      track_reference -> int          internal FK->third_party_track_references id
+ *      name            -> string       external Celery task name
+ *      dispatch_time   -> timestamp    internal message dispatch time
+ *      status          -> string       external Celery task status
+ *
  */
 class AirtimeUpgrader2513 extends AirtimeUpgrader
 {

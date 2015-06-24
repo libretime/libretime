@@ -75,7 +75,7 @@ class CeleryService {
         $config = parse_ini_file(Application_Model_RabbitMq::getRmqConfigPath(), true);
         $queue = self::$_CELERY_RESULTS_EXCHANGE . "." . $task;
         $c = self::_setupCeleryExchange($config, self::$_CELERY_RESULTS_EXCHANGE, $queue);
-        $message = $c->getAsyncResultMessage($task->getDbName(), $task->getDbId());
+        $message = $c->getAsyncResultMessage($task->getDbName(), $task->getDbTaskId());
 
         // If the message isn't ready yet (Celery hasn't finished the task),
         // only throw an exception if the message has timed out.
@@ -85,12 +85,12 @@ class CeleryService {
                 // track reference here in case it was a deletion that failed, for example.
                 $task->setDbStatus(CELERY_FAILED_STATUS)->save();
                 throw new CeleryTimeoutException("Celery task " . $task->getDbName()
-                                                 . " with ID " . $task->getDbId() . " timed out");
+                                                 . " with ID " . $task->getDbTaskId() . " timed out");
             } else {
                 // The message hasn't timed out, but it's still false, which means it hasn't been
                 // sent back from Celery yet.
                 throw new CeleryException("Waiting on Celery task " . $task->getDbName()
-                                          . " with ID " . $task->getDbId());
+                                          . " with ID " . $task->getDbTaskId());
             }
         }
         return $message;
@@ -147,7 +147,7 @@ class CeleryService {
     protected static function _getPendingTasks($taskName, $serviceName) {
         $query = CeleryTasksQuery::create()
             ->filterByDbStatus(CELERY_PENDING_STATUS)
-            ->filterByDbId('', Criteria::NOT_EQUAL);
+            ->filterByDbTaskId('', Criteria::NOT_EQUAL);
         if (!empty($taskName)) {
             $query->filterByDbName($taskName);
         }

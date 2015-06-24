@@ -548,7 +548,8 @@
   </table>
 
   <table name="celery_tasks" phpName="CeleryTasks">
-    <column name="id" phpName="DbId" primaryKey="true" type="VARCHAR" size="256" required="true" />
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="task_id" phpName="DbTaskId" type="VARCHAR" size="256" required="true" />
     <column name="track_reference" phpName="DbTrackReference" type="INTEGER" required="true" />
     <column name="name" phpName="DbName" type="VARCHAR" size="256" />
     <column name="dispatch_time" phpName="DbDispatchTime" type="TIMESTAMP" />

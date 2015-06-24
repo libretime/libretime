@@ -24,16 +24,19 @@ abstract class BaseCeleryTasksPeer
     const TM_CLASS = 'CeleryTasksTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 5;
+    const NUM_COLUMNS = 6;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 5;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /** the column name for the id field */
     const ID = 'celery_tasks.id';
+
+    /** the column name for the task_id field */
+    const TASK_ID = 'celery_tasks.task_id';
 
     /** the column name for the track_reference field */
     const TRACK_REFERENCE = 'celery_tasks.track_reference';
@@ -66,12 +69,12 @@ abstract class BaseCeleryTasksPeer
      * e.g. CeleryTasksPeer::$fieldNames[CeleryTasksPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTrackReference', 'DbName', 'DbDispatchTime', 'DbStatus', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTrackReference', 'dbName', 'dbDispatchTime', 'dbStatus', ),
-        BasePeer::TYPE_COLNAME => array (CeleryTasksPeer::ID, CeleryTasksPeer::TRACK_REFERENCE, CeleryTasksPeer::NAME, CeleryTasksPeer::DISPATCH_TIME, CeleryTasksPeer::STATUS, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TRACK_REFERENCE', 'NAME', 'DISPATCH_TIME', 'STATUS', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'track_reference', 'name', 'dispatch_time', 'status', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTaskId', 'DbTrackReference', 'DbName', 'DbDispatchTime', 'DbStatus', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTaskId', 'dbTrackReference', 'dbName', 'dbDispatchTime', 'dbStatus', ),
+        BasePeer::TYPE_COLNAME => array (CeleryTasksPeer::ID, CeleryTasksPeer::TASK_ID, CeleryTasksPeer::TRACK_REFERENCE, CeleryTasksPeer::NAME, CeleryTasksPeer::DISPATCH_TIME, CeleryTasksPeer::STATUS, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TASK_ID', 'TRACK_REFERENCE', 'NAME', 'DISPATCH_TIME', 'STATUS', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'task_id', 'track_reference', 'name', 'dispatch_time', 'status', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -81,12 +84,12 @@ abstract class BaseCeleryTasksPeer
      * e.g. CeleryTasksPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTrackReference' => 1, 'DbName' => 2, 'DbDispatchTime' => 3, 'DbStatus' => 4, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTrackReference' => 1, 'dbName' => 2, 'dbDispatchTime' => 3, 'dbStatus' => 4, ),
-        BasePeer::TYPE_COLNAME => array (CeleryTasksPeer::ID => 0, CeleryTasksPeer::TRACK_REFERENCE => 1, CeleryTasksPeer::NAME => 2, CeleryTasksPeer::DISPATCH_TIME => 3, CeleryTasksPeer::STATUS => 4, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TRACK_REFERENCE' => 1, 'NAME' => 2, 'DISPATCH_TIME' => 3, 'STATUS' => 4, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'track_reference' => 1, 'name' => 2, 'dispatch_time' => 3, 'status' => 4, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTaskId' => 1, 'DbTrackReference' => 2, 'DbName' => 3, 'DbDispatchTime' => 4, 'DbStatus' => 5, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTaskId' => 1, 'dbTrackReference' => 2, 'dbName' => 3, 'dbDispatchTime' => 4, 'dbStatus' => 5, ),
+        BasePeer::TYPE_COLNAME => array (CeleryTasksPeer::ID => 0, CeleryTasksPeer::TASK_ID => 1, CeleryTasksPeer::TRACK_REFERENCE => 2, CeleryTasksPeer::NAME => 3, CeleryTasksPeer::DISPATCH_TIME => 4, CeleryTasksPeer::STATUS => 5, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TASK_ID' => 1, 'TRACK_REFERENCE' => 2, 'NAME' => 3, 'DISPATCH_TIME' => 4, 'STATUS' => 5, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'task_id' => 1, 'track_reference' => 2, 'name' => 3, 'dispatch_time' => 4, 'status' => 5, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -161,12 +164,14 @@ abstract class BaseCeleryTasksPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(CeleryTasksPeer::ID);
+            $criteria->addSelectColumn(CeleryTasksPeer::TASK_ID);
             $criteria->addSelectColumn(CeleryTasksPeer::TRACK_REFERENCE);
             $criteria->addSelectColumn(CeleryTasksPeer::NAME);
             $criteria->addSelectColumn(CeleryTasksPeer::DISPATCH_TIME);
             $criteria->addSelectColumn(CeleryTasksPeer::STATUS);
         } else {
             $criteria->addSelectColumn($alias . '.id');
+            $criteria->addSelectColumn($alias . '.task_id');
             $criteria->addSelectColumn($alias . '.track_reference');
             $criteria->addSelectColumn($alias . '.name');
             $criteria->addSelectColumn($alias . '.dispatch_time');
@@ -409,7 +414,7 @@ abstract class BaseCeleryTasksPeer
     public static function getPrimaryKeyFromRow($row, $startcol = 0)
     {
 
-        return (string) $row[$startcol];
+        return (int) $row[$startcol];
     }
 
     /**
@@ -764,6 +769,10 @@ abstract class BaseCeleryTasksPeer
             $criteria = $values->buildCriteria(); // build Criteria from CeleryTasks object
         }
 
+        if ($criteria->containsKey(CeleryTasksPeer::ID) && $criteria->keyContainsValue(CeleryTasksPeer::ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.CeleryTasksPeer::ID.')');
+        }
+
 
         // Set the correct dbName
         $criteria->setDbName(CeleryTasksPeer::DATABASE_NAME);
@@ -952,7 +961,7 @@ abstract class BaseCeleryTasksPeer
     /**
      * Retrieve a single object by pkey.
      *
-     * @param string $pk the primary key.
+     * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
      * @return CeleryTasks
      */

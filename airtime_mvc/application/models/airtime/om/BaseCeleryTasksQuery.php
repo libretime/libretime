@@ -7,12 +7,14 @@
  *
  *
  * @method CeleryTasksQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method CeleryTasksQuery orderByDbTaskId($order = Criteria::ASC) Order by the task_id column
  * @method CeleryTasksQuery orderByDbTrackReference($order = Criteria::ASC) Order by the track_reference column
  * @method CeleryTasksQuery orderByDbName($order = Criteria::ASC) Order by the name column
  * @method CeleryTasksQuery orderByDbDispatchTime($order = Criteria::ASC) Order by the dispatch_time column
  * @method CeleryTasksQuery orderByDbStatus($order = Criteria::ASC) Order by the status column
  *
  * @method CeleryTasksQuery groupByDbId() Group by the id column
+ * @method CeleryTasksQuery groupByDbTaskId() Group by the task_id column
  * @method CeleryTasksQuery groupByDbTrackReference() Group by the track_reference column
  * @method CeleryTasksQuery groupByDbName() Group by the name column
  * @method CeleryTasksQuery groupByDbDispatchTime() Group by the dispatch_time column
@@ -29,12 +31,14 @@
  * @method CeleryTasks findOne(PropelPDO $con = null) Return the first CeleryTasks matching the query
  * @method CeleryTasks findOneOrCreate(PropelPDO $con = null) Return the first CeleryTasks matching the query, or a new CeleryTasks object populated from the query conditions when no match is found
  *
+ * @method CeleryTasks findOneByDbTaskId(string $task_id) Return the first CeleryTasks filtered by the task_id column
  * @method CeleryTasks findOneByDbTrackReference(int $track_reference) Return the first CeleryTasks filtered by the track_reference column
  * @method CeleryTasks findOneByDbName(string $name) Return the first CeleryTasks filtered by the name column
  * @method CeleryTasks findOneByDbDispatchTime(string $dispatch_time) Return the first CeleryTasks filtered by the dispatch_time column
  * @method CeleryTasks findOneByDbStatus(string $status) Return the first CeleryTasks filtered by the status column
  *
- * @method array findByDbId(string $id) Return CeleryTasks objects filtered by the id column
+ * @method array findByDbId(int $id) Return CeleryTasks objects filtered by the id column
+ * @method array findByDbTaskId(string $task_id) Return CeleryTasks objects filtered by the task_id column
  * @method array findByDbTrackReference(int $track_reference) Return CeleryTasks objects filtered by the track_reference column
  * @method array findByDbName(string $name) Return CeleryTasks objects filtered by the name column
  * @method array findByDbDispatchTime(string $dispatch_time) Return CeleryTasks objects filtered by the dispatch_time column
@@ -146,10 +150,10 @@ abstract class BaseCeleryTasksQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "track_reference", "name", "dispatch_time", "status" FROM "celery_tasks" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "task_id", "track_reference", "name", "dispatch_time", "status" FROM "celery_tasks" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
-            $stmt->bindValue(':p0', $key, PDO::PARAM_STR);
+            $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
             $stmt->execute();
         } catch (Exception $e) {
             Propel::log($e->getMessage(), Propel::LOG_ERR);
@@ -240,28 +244,70 @@ abstract class BaseCeleryTasksQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByDbId('fooValue');   // WHERE id = 'fooValue'
-     * $query->filterByDbId('%fooValue%'); // WHERE id LIKE '%fooValue%'
+     * $query->filterByDbId(1234); // WHERE id = 1234
+     * $query->filterByDbId(array(12, 34)); // WHERE id IN (12, 34)
+     * $query->filterByDbId(array('min' => 12)); // WHERE id >= 12
+     * $query->filterByDbId(array('max' => 12)); // WHERE id <= 12
      * </code>
      *
-     * @param     string $dbId The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     mixed $dbId The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return CeleryTasksQuery The current query, for fluid interface
      */
     public function filterByDbId($dbId = null, $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($dbId)) {
+        if (is_array($dbId)) {
+            $useMinMax = false;
+            if (isset($dbId['min'])) {
+                $this->addUsingAlias(CeleryTasksPeer::ID, $dbId['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbId['max'])) {
+                $this->addUsingAlias(CeleryTasksPeer::ID, $dbId['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbId)) {
-                $dbId = str_replace('*', '%', $dbId);
-                $comparison = Criteria::LIKE;
             }
         }
 
         return $this->addUsingAlias(CeleryTasksPeer::ID, $dbId, $comparison);
+    }
+
+    /**
+     * Filter the query on the task_id column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbTaskId('fooValue');   // WHERE task_id = 'fooValue'
+     * $query->filterByDbTaskId('%fooValue%'); // WHERE task_id LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbTaskId The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CeleryTasksQuery The current query, for fluid interface
+     */
+    public function filterByDbTaskId($dbTaskId = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbTaskId)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbTaskId)) {
+                $dbTaskId = str_replace('*', '%', $dbTaskId);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CeleryTasksPeer::TASK_ID, $dbTaskId, $comparison);
     }
 
     /**
