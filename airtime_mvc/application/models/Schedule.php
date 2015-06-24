@@ -195,8 +195,19 @@ SQL;
 
         $rows = Application_Common_Database::prepareAndExecute($sql, $params);
 
-        if ((count($rows) < 1 || $rows[0]["show_ends"] < $utcNow->format(DEFAULT_TIMESTAMP_FORMAT)
-            && ($source == self::SCHEDULED_SOURCE_NAME))) {  // Only return if the show is using scheduled playback
+        if ($source != self::SCHEDULED_SOURCE_NAME) {
+            $show = Application_Model_Show::getCurrentShow();
+            $results["current"] = array(
+                "starts" => $show[0]["starts"],
+                "ends" => $show[0]["ends"],
+                "type" => _($source . " Stream"),
+                "name" => (isset($show[0])?$show[0]["name"]:"") . " - " . _($source . " Stream"),
+                "media_item_played" => false,
+                "record" => "0"
+            );
+        }
+
+        if (count($rows) < 1 || $rows[0]["show_ends"] < $utcNow->format(DEFAULT_TIMESTAMP_FORMAT)) {
             return $results;
         }
 
@@ -231,20 +242,16 @@ SQL;
             $currentMediaType = null;
         }
 
-        if ($source != self::SCHEDULED_SOURCE_NAME) {
-            $show = Application_Model_Show::getCurrentShow();
-            $currentMediaName = isset($show[0])?$show[0]["name"]:"";
-            $currentMediaName .= " - " . _($source . " Stream");
+        if (is_null($results["current"])) {
+            $results["current"] = array(
+                "starts" => $currentMedia["starts"],
+                "ends" => $currentMedia["ends"],
+                "type" => $currentMediaType,
+                "name" => $currentMediaName,
+                "media_item_played" => $currentMedia["media_item_played"],
+                "record" => "0"
+            );
         }
-
-        $results["current"] = array(
-            "starts" => $currentMedia["starts"],
-            "ends" => $currentMedia["ends"],
-            "type" => $currentMediaType,
-            "name" => $currentMediaName,
-            "media_item_played" => $currentMedia["media_item_played"],
-            "record" => "0"
-        );
 
         $previousMedia = CcScheduleQuery::create()
             ->filterByDbStarts($currentMedia["starts"], Criteria::LESS_THAN)
