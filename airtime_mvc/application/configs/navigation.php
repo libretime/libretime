@@ -134,6 +134,11 @@ $pages = array(
                 'resource'   =>    'dashboard'
             ),
             array(
+                'label'      => _('FAQ'),
+                'uri'        => "https://sourcefabricberlin.zendesk.com/hc/en-us/sections/200994309-Airtime-FAQ",
+                'target'     => "_blank"
+            ),
+            array(
                 'label'      => _('User Manual'),
                 'uri'        => "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters",
                 'target'     => "_blank"
