@@ -104,12 +104,14 @@ SQL;
 
         $shows = Application_Model_Show::getPrevCurrentNext($utcNow, $utcTimeEnd, $showsToRetrieve);
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow']['instance_id']:null;
-        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID);
+        $source = self::_getSource();
+        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID, $source);
 
         $range = array(
             "station" => array (
                 "env"           => APPLICATION_ENV,
-                "schedulerTime" => $utcNow->format("Y-m-d H:i:s")
+                "schedulerTime" => $utcNow->format("Y-m-d H:i:s"),
+                "source_enabled" => $source
             ),
             //Previous, current, next songs!
             "tracks" => array(
@@ -162,12 +164,13 @@ SQL;
      * If a current media item is currently playing, this function then attempts to
      * find an item that played previously and is scheduled to play next.
      *
-     * @param $utcNow DateTime current time in UTC
-     * @param $currentShowInstanceId cc_show_instance id of the show instance currently playing
+     * @param $utcNow                   DateTime current time in UTC
+     * @param $currentShowInstanceId    int      id of the show instance currently playing
+     * @param $source                   string   id of the show instance currently playing
      * @return array with data about the previous, current, and next media items playing.
      *      Returns an empty arrays if there is no media item currently playing
      */
-    public static function getPreviousCurrentNextMedia($utcNow, $currentShowInstanceId)
+    public static function getPreviousCurrentNextMedia($utcNow, $currentShowInstanceId, $source)
     {
         $timeZone = new DateTimeZone("UTC"); //This function works entirely in UTC.
         assert(get_class($utcNow) === "DateTime");
@@ -183,18 +186,15 @@ SQL;
                 and s.ends >= :p2 and s.instance_id = :p3 order by starts desc limit 1";
 
         $params = array(
-            ":p1" => $utcNow->format("Y-m-d H:i:s"),
-            ":p2" => $utcNow->format("Y-m-d H:i:s"),
+            ":p1" => $utcNow->format(DEFAULT_TIMESTAMP_FORMAT),
+            ":p2" => $utcNow->format(DEFAULT_TIMESTAMP_FORMAT),
             ":p3" => $currentShowInstanceId
         );
 
         $rows = Application_Common_Database::prepareAndExecute($sql, $params);
 
-        if (count($rows) < 1) {
-            return $results;
-        }
-
-        if ($rows[0]["show_ends"] < $utcNow->format("Y-m-d H:i:s")) {
+        if ((count($rows) < 1 || $rows[0]["show_ends"] < $utcNow->format(DEFAULT_TIMESTAMP_FORMAT)
+            && ($source == self::SCHEDULED_SOURCE_NAME))) {  // Only return if the show is using scheduled playback
             return $results;
         }
 
@@ -204,7 +204,6 @@ SQL;
             $currentMedia["ends"] = $currentMedia["show_ends"];
         }
 
-        $source = self::_getSource();
         $currentMediaFileId = $currentMedia["file_id"];
         $currentMediaStreamId = $currentMedia["stream_id"];
         if (isset($currentMediaFileId)) {
@@ -242,7 +241,6 @@ SQL;
             "type" => $currentMediaType,
             "name" => $currentMediaName,
             "media_item_played" => $currentMedia["media_item_played"],
-            "source_enabled" => $source,
             "record" => "0"
         );
 
