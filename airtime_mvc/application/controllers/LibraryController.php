@@ -266,28 +266,35 @@ class LibraryController extends Zend_Controller_Action
         }
 
         // SOUNDCLOUD MENU OPTION
-        $soundcloudService = new SoundcloudService();
-        if ($type === "audioclip" && $soundcloudService->hasAccessToken()) {
+        $ownerId = empty($obj) ? $file->getFileOwnerId() : $obj->getCreatorId();
+        if ($isAdminOrPM || $ownerId == $user->getId()) {
+            $soundcloudService = new SoundcloudService();
+            if ($type === "audioclip" && $soundcloudService->hasAccessToken()) {
 
-            //create a menu separator
-            $menu["sep1"] = "-----------";
+                //create a menu separator
+                $menu["sep1"] = "-----------";
 
-            //create a sub menu for Soundcloud actions.
-            $menu["soundcloud"] = array("name" => _("Soundcloud"), "icon" => "soundcloud", "items" => array());
+                //create a sub menu for Soundcloud actions.
+                $menu["soundcloud"] = array("name" => _("Soundcloud"), "icon" => "soundcloud", "items" => array());
 
-            $serviceId = $soundcloudService->getServiceId($id);
-            if (!is_null($file) && $serviceId != 0) {
-                $menu["soundcloud"]["items"]["view"] = array("name" => _("View track"), "icon" => "soundcloud", "url" => $baseUrl."soundcloud/view-on-sound-cloud/id/{$id}");
-                $menu["soundcloud"]["items"]["remove"] = array("name" => _("Remove track"), "icon" => "soundcloud", "url" => $baseUrl."soundcloud/delete/id/{$id}");
-            } else {
-                // If a reference exists for this file ID, that means the user has uploaded the track
-                // but we haven't yet gotten a response from Celery, so disable the menu item
-                if ($soundcloudService->referenceExists($id)) {
-                    $menu["soundcloud"]["items"]["upload"] = array("name" => _("Upload track"), "icon" => "soundcloud",
-                                                                   "url" => $baseUrl."soundcloud/upload/id/{$id}", "disabled" => true);
+                $serviceId = $soundcloudService->getServiceId($id);
+                if (!is_null($file) && $serviceId != 0) {
+                    $menu["soundcloud"]["items"]["view"] = array("name" => _("View track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/view-on-sound-cloud/id/{$id}");
+                    $menu["soundcloud"]["items"]["remove"] = array("name" => _("Remove track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/delete/id/{$id}");
                 } else {
-                    $menu["soundcloud"]["items"]["upload"] = array("name" => _("Upload track"), "icon" => "soundcloud",
-                                                                   "url" => $baseUrl."soundcloud/upload/id/{$id}");
+                    // If a reference exists for this file ID, that means the user has uploaded the track
+                    // but we haven't yet gotten a response from Celery, so disable the menu item
+                    if ($soundcloudService->referenceExists($id)) {
+                        $menu["soundcloud"]["items"]["upload"] = array(
+                            "name" => _("Upload track"), "icon" => "soundcloud",
+                            "url" => $baseUrl . "soundcloud/upload/id/{$id}", "disabled" => true
+                        );
+                    } else {
+                        $menu["soundcloud"]["items"]["upload"] = array(
+                            "name" => _("Upload track"), "icon" => "soundcloud",
+                            "url" => $baseUrl . "soundcloud/upload/id/{$id}"
+                        );
+                    }
                 }
             }
         }
