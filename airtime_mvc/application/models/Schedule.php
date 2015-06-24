@@ -105,7 +105,7 @@ SQL;
         $shows = Application_Model_Show::getPrevCurrentNext($utcNow, $utcTimeEnd, $showsToRetrieve);
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow']['instance_id']:null;
         $source = self::_getSource();
-        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID, $source);
+        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID, self::_getSource());
 
         $range = array(
             "station" => array (
@@ -142,8 +142,9 @@ SQL;
     
         $shows = Application_Model_Show::getPrevCurrentNextOld($utcNow);
         $currentShowID = count($shows['currentShow'])>0?$shows['currentShow'][0]['instance_id']:null;
-        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID);
-    
+        $source = self::_getSource();
+        $results = Application_Model_Schedule::getPreviousCurrentNextMedia($utcNow, $currentShowID, $source);
+
         $range = array(
                 "env" => APPLICATION_ENV,
                 "schedulerTime" => $utcNow->format("Y-m-d H:i:s"),
@@ -153,7 +154,8 @@ SQL;
                 "next"=> $results['next'] !=null?$results['next']:(count($shows['nextShow'])>0?$shows['nextShow'][0]:null),
                 //Current and next shows
                 "currentShow"=>$shows['currentShow'],
-                "nextShow"=>$shows['nextShow']
+                "nextShow"=>$shows['nextShow'],
+                "source_enabled" => $source
         );
     
         return $range;
