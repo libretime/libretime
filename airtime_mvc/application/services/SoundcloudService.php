@@ -69,12 +69,9 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
      */
     protected function _getUploadData($file) {
         $file = $file->getPropelOrm();
+        Logging::info($file);
         // TODO: Move this into a proper serializer
-        $trackArray = array(
-            'title' => $file->getDbName(),
-            'genre' => $file->getDbGenre(),
-            'bpm'   => $file->getDbBpm(),
-        );
+        $trackArray = $this->_serializeTrack($file);
         foreach (self::$_SOUNDCLOUD_PREF_FUNCTIONS as $func => $param) {
             $val = Application_Model_Preference::$func();
             if (!empty($val)) {
@@ -82,6 +79,31 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
             }
         }
 
+        return $trackArray;
+    }
+
+    /**
+     * Serialize Airtime file data to send to SoundCloud
+     *
+     * Ignores any null fields, as these will cause the upload to throw a 422
+     * Unprocessable Entity error
+     *
+     * @param $file CcFiles file object
+     *
+     * @return array the serialized data
+     */
+    protected function _serializeTrack($file) {
+        $fileData = array(
+            'title' => $file->getDbTrackTitle(),
+            'genre' => $file->getDbGenre(),
+            'bpm'   => $file->getDbBpm(),
+        );
+        $trackArray = array();
+        foreach ($fileData as $k => $v) {
+            if (!empty($v)) {
+                $trackArray[$k] = $v;
+            }
+        }
         return $trackArray;
     }
 
