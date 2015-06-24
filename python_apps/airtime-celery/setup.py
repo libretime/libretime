@@ -9,6 +9,7 @@ print script_path
 os.chdir(script_path)
 
 install_args = ['install', 'install_data', 'develop']
+no_init = False
 run_postinst = False
 
 # XXX Definitely not the best way of doing this...
@@ -18,16 +19,18 @@ if sys.argv[1] in install_args and "--no-init-script" not in sys.argv:
                   ('/etc/init.d', ['install/initd/airtime-celery'])]
 else:
     if "--no-init-script" in sys.argv:
+        no_init = True
         run_postinst = True  # We still want to run the postinst here
         sys.argv.remove("--no-init-script")
     data_files = []
 
 
 def postinst():
-    # Make /etc/init.d file executable and set proper
-    # permissions for the defaults config file
-    os.chmod('/etc/init.d/airtime-celery', 0755)
-    os.chmod('/etc/default/airtime-celery', 0640)
+    if not no_init:
+        # Make /etc/init.d file executable and set proper
+        # permissions for the defaults config file
+        os.chmod('/etc/init.d/airtime-celery', 0755)
+        os.chmod('/etc/default/airtime-celery', 0640)
     # Make the airtime log directory group-writable
     os.chmod('/var/log/airtime', 0775)
 
