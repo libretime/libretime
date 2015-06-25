@@ -117,16 +117,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
                                         ));
         $this->addElement($third_party_api);
 
-        // Add the description element
-        $this->addElement('textarea', 'widgetCode', array(
-            'label' => 'Javascript Code:',
-            'required' => false,
-            'readonly' => true,
-            'style' => 'font-family: Consolas, "Liberation Mono", Courier,
-                monospace;',
-            'value' => self::getWidgetCode(),
-        ));
-
         $locale = new Zend_Form_Element_Select("locale");
         $locale->setLabel(_("Default Language"));
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
@@ -146,48 +136,6 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
         $week_start_day->setMultiOptions($this->getWeekStartDays());
         $week_start_day->setValue(Application_Model_Preference::GetWeekStartDay());
         $this->addElement($week_start_day);
-    }
-
-    private static function getWidgetCode() {
-        
-        $host = $_SERVER['SERVER_NAME'];
-        $code = <<<CODE
-<!-- READ THESE INSTRUCTIONS CAREFULLY:
-    Step 1 of 2: Paste these next 4 lines in the <head> section of your HTML page -->
-<script src="https://$host/widgets/js/jquery-1.6.1.min.js" type="text/javascript"></script>
-<script src="https://$host/widgets/js/jquery-ui-1.8.10.custom.min.js" type="text/javascript"></script>
-<script src="https://$host/widgets/js/jquery.showinfo.js" type="text/javascript"></script>
-<link rel="stylesheet" href="https://$host/widgets/css/airtime-widgets.css"></link>
-
-<!-- Step 2 of 2: Paste these remaining lines in the <body> section of your HTML page -->
-<div id="headerLiveHolder" style="border: 1px solid #999999; padding: 10px;"></div>
-<div id="onAirToday"></div>
-<div id="scheduleTabs"></div>
-
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#headerLiveHolder").airtimeLiveInfo({
-        sourceDomain: "http://$host",
-        updatePeriod: 20 //seconds
-    });
-
-    $("#onAirToday").airtimeShowSchedule({
-        sourceDomain: "http://$host",
-        updatePeriod: 5, //seconds
-        showLimit: 10
-    });
-
-    $("#scheduleTabs").airtimeWeekSchedule({
-        sourceDomain:"http://$host",
-        updatePeriod: 600 //seconds
-    });
-    var d = new Date().getDay();
-    $('#scheduleTabs').tabs({selected: d === 0 ? 6 : d-1, fx: { opacity: 'toggle' }});               
-});
-</script>
-CODE;
-
-        return $code;
     }
 
     private function getWeekStartDays()

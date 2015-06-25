@@ -198,7 +198,7 @@ function buildplaylist(p_url, p_playIndex) {
         	width = 490;
         }
         
-        window.resizeTo(width, height);    
+        window.resizeTo(width, height);
     });
 }
 
@@ -247,6 +247,4 @@ function playOne(uri, mime) {
         _playlist_jplayer.setPlaylist(playlist);
         _playlist_jplayer.play(0);
     }
-    
-    window.resizeTo(490, 167);
 }
