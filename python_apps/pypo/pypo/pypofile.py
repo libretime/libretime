@@ -5,6 +5,8 @@ from Queue import Empty
 
 import logging
 import shutil
+import time
+import traceback
 import os
 import sys
 import stat
@@ -203,5 +205,10 @@ class PypoFile(Thread):
         """
         Entry point of the thread
         """
-        self.main()
+        try: self.main()
+        except Exception, e:
+            top = traceback.format_exc()
+            self.logger.error('PypoFile Exception: %s', top)
+            time.sleep(5)
+        self.logger.info('PypoFile thread exiting')
 

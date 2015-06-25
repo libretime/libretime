@@ -138,8 +138,13 @@ class UserController extends Zend_Controller_Action
                         $formData['cu_last_name'] = "admin"; //ditto, avoid non-null DB constraint
                     }
                 }
-                $user->setFirstName($formData['cu_first_name']);
-                $user->setLastName($formData['cu_last_name']);
+                if (isset($formData['cu_first_name'])) {
+                    $user->setFirstName($formData['cu_first_name']);
+                }
+
+                if (isset($formData['cu_last_name'])) {
+                    $user->setLastName($formData['cu_last_name']);
+                }
                 // We don't allow 6 x's as a password.
                 // The reason is because we use that as a password placeholder
                 // on the client side.

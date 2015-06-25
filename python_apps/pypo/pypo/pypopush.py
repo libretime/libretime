@@ -153,4 +153,5 @@ class PypoPush(Thread):
                 top = traceback.format_exc()
                 self.logger.error('Pypo Push Exception: %s', top)
                 time.sleep(5)
+        self.logger.info('PypoPush thread exiting')
 
