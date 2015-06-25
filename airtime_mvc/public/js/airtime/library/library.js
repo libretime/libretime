@@ -6,7 +6,9 @@ var AIRTIME = (function(AIRTIME) {
         $libTable,
         LIB_SELECTED_CLASS = "lib-selected",
         chosenItems = {},
-        visibleChosenItems = {};
+        visibleChosenItems = {},
+        $previouslySelected;
+
 
     // we need to know whether the criteria value is string or
     // numeric in order to provide a single textbox or range textboxes
@@ -870,28 +872,35 @@ var AIRTIME = (function(AIRTIME) {
             });
         
         $libTable.find("tbody").on("click", "input[type=checkbox]", function(ev) {
-            
+
             var $cb = $(this),
-                $prev,
                 $tr = $cb.parents("tr"),
-                $trs;
-            
+                // Get the ID of the selected row
+                $rowId = $tr.attr("id");
+
             if ($cb.is(":checked")) {
-                
-                if (ev.shiftKey) {
-                    $prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
-                    $trs = $prev.nextUntil($tr);
-                    
-                    $trs.each(function(i, el){
-                        mod.selectItem($(el));
-                    });
+                if (ev.shiftKey && $previouslySelected !== undefined) {
+                    // If the selected row comes before the previously selected row,
+                    // we want to select previous rows, otherwise we select next
+                    if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
+                        $previouslySelected.prevUntil($tr).each(function(i, el){
+                            mod.selectItem($(el));
+                        });
+                    } else {
+                        $previouslySelected.nextUntil($tr).each(function(i, el){
+                            mod.selectItem($(el));
+                        });
+                    }
                 }
 
                 mod.selectItem($tr);
+                // Remember this row so we can properly multiselect
+                $previouslySelected = $tr;
             }
             else {
-                mod.deselectItem($tr);  
+                mod.deselectItem($tr);
             }
+            
         });
        
         checkLibrarySCUploadStatus();
