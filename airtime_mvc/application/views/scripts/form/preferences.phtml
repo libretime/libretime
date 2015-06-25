@@ -9,10 +9,11 @@
     </div>
 
 
-    <?php //No soundcloud stuff on Airtime Pro -- Albert ?>
+    <!-- No soundcloud stuff on Airtime Pro -- Albert -->
 
-    <h3 class="collapsible-header" id="dangerous-heading"><span class="arrow-icon"></span><?php echo _("Dangerous Options") ?></h3>
-    <div class="collapsible-content" id="dangerous-settings">
+    <!-- Hide the 'dangerous settings' by default -->
+    <h3 class="collapsible-header closed" id="dangerous-heading"><span class="arrow-icon"></span><?php echo _("Dangerous Options") ?></h3>
+    <div class="collapsible-content" id="dangerous-settings" style="display:none;">
         <?php echo $this->element->getSubform('preferences_danger') ?>
     </div>
 

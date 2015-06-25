@@ -99,41 +99,6 @@ function setMsAuthenticationFieldsReadonly(ele) {
     }
 }
 
-function setCollapsibleWidgetJsCode() {
-    var x = function() {
-        var val = $('input:radio[name=thirdPartyApi]:checked').val();
-        if (val == "1") {
-            //show js textarea
-            $('#widgetCode-label').show("fast");
-            $('#widgetCode-element').show("fast");
-        } else {
-            if ($('#widgetCode-label').is(":visible")) {
-                //hide js textarea
-                $('#widgetCode-label').hide();
-                $('#widgetCode-element').hide();
-            }
-        }
-    }
-    x();
-    $('#thirdPartyApi-element input').click(x);
-}
-
-function setSoundCloudCheckBoxListener() {
-    var subCheckBox= $("#UseSoundCloud,#SoundCloudDownloadbleOption");
-    var mainCheckBox= $("#UploadToSoundcloudOption");
-    subCheckBox.change(function(e){
-        if (subCheckBox.is(':checked')) {
-            mainCheckBox.attr("checked", true);
-        }
-    });
-
-    mainCheckBox.change(function(e){
-         if (!mainCheckBox.is(':checked')) {
-            $("#UseSoundCloud,#SoundCloudDownloadbleOption").attr("checked", false);
-        }   
-    });
-}
-
 function removeLogo() {
     $.post(baseUrl+'Preference/remove-logo', function(json){});
     location.reload();
@@ -153,7 +118,7 @@ $(document).ready(function() {
         $(this).next().toggle('fast');
         $(this).toggleClass("closed");
         return false;
-    }).next().hide();
+    });
 
     if ($("#tunein-settings").find(".errors").length > 0) {
         $(".collapsible-content#tunein-settings").show();
@@ -176,12 +141,10 @@ $(document).ready(function() {
 
     showErrorSections();
     
-    setSoundCloudCheckBoxListener();
     setMailServerInputReadonly();
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();
-    setCollapsibleWidgetJsCode();
     setTuneInSettingsReadonly();
     setTuneInSettingsListener();
 });
