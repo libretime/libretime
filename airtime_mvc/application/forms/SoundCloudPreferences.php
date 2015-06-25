@@ -14,8 +14,8 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
         $select->setLabel(_('Default License:'));
         $select->setAttrib('class', 'input_select');
         $select->setMultiOptions(array(
-                                     "no-rights-reserved" => _("The work is in the public domain"),
                                      "all-rights-reserved" => _("All rights are reserved"),
+                                     "no-rights-reserved" => _("The work is in the public domain"),
                                      "cc-by" => _("Creative Commons Attribution"),
                                      "cc-by-nc" => _("Creative Commons Attribution Noncommercial"),
                                      "cc-by-nd" => _("Creative Commons Attribution No Derivative Works"),

@@ -1452,7 +1452,9 @@ class Application_Model_Preference
     // SoundCloud
 
     public static function getDefaultSoundCloudLicenseType() {
-        return self::getValue("soundcloud_license_type");
+        $val = self::getValue("soundcloud_license_type");
+        // If we don't have a value set, return all-rights-reserved by default
+        return empty($val) ? DEFAULT_SOUNDCLOUD_LICENSE_TYPE : $val;
     }
 
     public static function setDefaultSoundCloudLicenseType($value) {
@@ -1460,7 +1462,9 @@ class Application_Model_Preference
     }
 
     public static function getDefaultSoundCloudSharingType() {
-        return self::getValue("soundcloud_sharing_type");
+        $val = self::getValue("soundcloud_sharing_type");
+        // If we don't have a value set, return public by default
+        return empty($val) ? DEFAULT_SOUNDCLOUD_SHARING_TYPE : $val;
     }
 
     public static function setDefaultSoundCloudSharingType($value) {

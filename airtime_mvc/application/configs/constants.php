@@ -97,6 +97,10 @@ define('PROVISIONING_STATUS_ACTIVE' , 'Active');
 //TuneIn integration
 define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
 
+// SoundCloud
+define('DEFAULT_SOUNDCLOUD_LICENSE_TYPE', 'all-rights-reserved');
+define('DEFAULT_SOUNDCLOUD_SHARING_TYPE', 'public');
+
 // Celery
 define('CELERY_PENDING_STATUS', 'PENDING');
 define('CELERY_SUCCESS_STATUS', 'SUCCESS');

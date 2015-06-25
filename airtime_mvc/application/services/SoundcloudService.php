@@ -69,7 +69,6 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
      */
     protected function _getUploadData($file) {
         $file = $file->getPropelOrm();
-        // TODO: Move this into a proper serializer
         $trackArray = $this->_serializeTrack($file);
         foreach (self::$_SOUNDCLOUD_PREF_FUNCTIONS as $func => $param) {
             $val = Application_Model_Preference::$func();
@@ -87,15 +86,18 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
      * Ignores any null fields, as these will cause the upload to throw a 422
      * Unprocessable Entity error
      *
+     * TODO: Move this into a proper serializer
+     *
      * @param $file CcFiles file object
      *
      * @return array the serialized data
      */
     protected function _serializeTrack($file) {
         $fileData = array(
-            'title' => $file->getDbTrackTitle(),
-            'genre' => $file->getDbGenre(),
-            'bpm'   => $file->getDbBpm(),
+            'title'         => $file->getDbTrackTitle(),
+            'genre'         => $file->getDbGenre(),
+            'bpm'           => $file->getDbBpm(),
+            'release_year'  => $file->getDbYear(),
         );
         $trackArray = array();
         foreach ($fileData as $k => $v) {
@@ -108,6 +110,7 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
 
     /**
      * Update a ThirdPartyTrackReferences object for a completed upload
+     *
      * TODO: should we have a database layer class to handle Propel operations?
      *
      * @param $trackId int    ThirdPartyTrackReferences identifier
