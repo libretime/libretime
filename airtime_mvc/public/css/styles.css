@@ -994,19 +994,6 @@ input[type="checkbox"] {
     display: inline-block;
 }
 
-a#translate_link {
-    font-size: 13px;
-    text-decoration: none;
-}
-
-a#translate_link:active, a#translate_link:visited {
-    color: #eee;
-}
-
-a#translate_link:hover {
-    color: #ddd;
-}
-
 /*
 #csrf-label .errors li, #csrf-element .errors li {
     margin: 0;

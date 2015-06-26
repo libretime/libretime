@@ -149,6 +149,11 @@ $pages = array(
                 'controller' => 'dashboard',
                 'action'     => 'about',
                 'resource'   =>    'dashboard'
+            ),
+            array(
+                'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
+                'uri'        => AIRTIME_TRANSIFEX_URL,
+                'target'     => "_blank"
             )
         )
     ),
