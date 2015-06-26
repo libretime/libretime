@@ -96,6 +96,8 @@ class Application_Service_ShowFormService
         $forms["repeats"]->disable();
         $forms["who"]->disable();
         $forms["style"]->disable();
+        // Hide the show logo fields when users are editing a single instance
+        $forms["style"]->hideShowLogo();
         $forms["live"]->disable();
         $forms["record"]->disable();
         $forms["rebroadcast"]->disable();
