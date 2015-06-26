@@ -157,10 +157,13 @@ class Application_Form_EditUser extends Zend_Form
 
     // We need to add the password identical validator here in case
     // Zend version is less than 1.10.5
-    public function isValid($data) {
-        $passwordIdenticalValidator = Application_Form_Helper_ValidationTypes::overridePasswordIdenticalValidator(
-            $data['cu_password']);
-        $this->getElement('cu_passwordVerify')->addValidator($passwordIdenticalValidator);
+    public function isValid($data)
+    {
+        if (isset($data['cu_password'])) {
+            $passwordIdenticalValidator = Application_Form_Helper_ValidationTypes::overridePasswordIdenticalValidator(
+                $data['cu_password']);
+            $this->getElement('cu_passwordVerify')->addValidator($passwordIdenticalValidator);
+        }
         return parent::isValid($data);
     }
 }

@@ -35,7 +35,7 @@ def postinst():
     os.chmod('/var/log/airtime', 0775)
 
     # Create the Celery user
-    call(['adduser', '--no-create-home', '--home', '/var/lib/celery', '--gecos', '""', '--disabled-login', 'celery'])
+    call(['adduser', '--no-create-home', '--home', '/var/lib/celery', '--gecos', '', '--disabled-login', 'celery'])
     # Add celery to the www-data group
     call(['usermod', '-G', 'www-data', '-a', 'celery'])
 

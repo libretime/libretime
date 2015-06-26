@@ -113,25 +113,6 @@ function setMsAuthenticationFieldsReadonly(ele) {
     }
 }
 
-function setCollapsibleWidgetJsCode() {
-    var x = function() {
-        var val = $('input:radio[name=thirdPartyApi]:checked').val();
-        if (val == "1") {
-            //show js textarea
-            $('#widgetCode-label').show("fast");
-            $('#widgetCode-element').show("fast");
-        } else {
-            if ($('#widgetCode-label').is(":visible")) {
-                //hide js textarea
-                $('#widgetCode-label').hide();
-                $('#widgetCode-element').hide();
-            }
-        }
-    }
-    x();
-    $('#thirdPartyApi-element input').click(x);
-}
-
 function removeLogo() {
     $.post(baseUrl+'Preference/remove-logo', function(json){});
     location.reload();
@@ -151,7 +132,7 @@ $(document).ready(function() {
         $(this).next().toggle('fast');
         $(this).toggleClass("closed");
         return false;
-    }).next().hide();
+    });
 
     if ($("#tunein-settings").find(".errors").length > 0) {
         $(".collapsible-content#tunein-settings").show();
@@ -178,7 +159,6 @@ $(document).ready(function() {
     setSystemFromEmailReadonly();
     setConfigureMailServerListener();
     setEnableSystemEmailsListener();
-    setCollapsibleWidgetJsCode();
     setTuneInSettingsReadonly();
     setTuneInSettingsListener();
     setSoundCloudSettingsListener();

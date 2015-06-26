@@ -8,6 +8,7 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
     <script type="text/javascript">
 
+        var RETRY_DELAY_MSECS = 2000; //Delay before trying to reconnect to stream after an error.
         var MAX_MOBILE_SCREEN_WIDTH = 760;
 
         // We are creating a custom player object that acts as a wrapper
@@ -31,6 +32,7 @@
                 'title': 'test',
                 'bgcolor': '#FFFFFF',
                 'skin': 'mcclean',
+                'reconnectTime' : 2000, //Doesn't seem to do anything
                 'width': 180,
                 'height': 60
             };
@@ -64,21 +66,19 @@
             if (!this.flashDetect) {
 
                 MRP.html.audio.addEventListener('error', function failed(e) {
+                    var streamUrl = "";
+                    if (musesPlayer.playerMode == "auto") {
+                        var nextAvailableStream = musesPlayer.getNextAvailableStream();
+                        streamUrl = nextAvailableStream["url"];
+                    } else {
+                        streamUrl = musesPlayer.settings.url;
+                    }
+
                     switch (e.target.error.code) {
                         case e.target.error.MEDIA_ERR_NETWORK:
                             // If there is a network error keep retrying to connect
                             // to a stream.
-                            var stream;
-                            if (musesPlayer.playerMode == "auto") {
-                                var nextAvailableStream = musesPlayer.getNextAvailableStream();
-                                stream = nextAvailableStream["url"];
-                            } else {
-                                stream = musesPlayer.settings.url;
-                            }
-                            var audio = $(MRP.html.audio);
-                            audio[0].src = stream;
-                            audio[0].load();
-                            audio[0].play();
+                            musesPlayer.deferredPlay(streamUrl, RETRY_DELAY_MSECS);
                             break;
                         case e.target.error.MEDIA_ERR_DECODE:
                             // If there was a corruption error or a problem with the browser
@@ -92,11 +92,7 @@
                             // or the max number of listeners has been reached
                             // retry connection with the next available stream.
                             if (musesPlayer.playerMode == "auto") {
-                                var nextAvailableStream = musesPlayer.getNextAvailableStream();
-                                var audio = $(MRP.html.audio);
-                                audio[0].src = nextAvailableStream["url"];;
-                                audio[0].load();
-                                audio[0].play();
+                                musesPlayer.deferredPlay(nextAvailableStream["url"], RETRY_DELAY_MSECS);
                             } else {
                                 // If in manual mode and the current stream format is not supported
                                 // or the max number of listeners has been reached
@@ -179,27 +175,44 @@
             MRP.setUrl(url);
         };
 
+        /** Retry playback after a few seconds (used to throttle attempts to reconnect/play). */
+        MusesPlayer.prototype.deferredPlay = function(streamUrl, delayMSec) {
+            if (!this.flashDetect) {
+                setTimeout(function() {
+                    var audio = $(MRP.html.audio);
+                    audio[0].src = streamUrl;
+                    audio[0].load();
+                    audio[0].play();
+                }, delayMSec);
+
+            } else {
+                setTimeout(function() {
+                    musesPlayer.setURL(streamUrl);
+                    musesPlayer.play();
+                }, delayMSec);
+            }
+        };
+
         // detects errors in FLASH mode
         function musesCallback(event,value) {
             switch (event) {
                 case "ioError":
                     // problem connecting to stream
-                    var stream;
+                    var streamUrl = "";
                     if (musesPlayer.playerMode == "auto") {
-                        stream = musesPlayer.getNextAvailableStream();
-                        musesPlayer.setURL(stream["url"]);
+                        streamUrl = musesPlayer.getNextAvailableStream()["url"];
                     } else {
-                        stream = musesPlayer.settings.url;
-                        musesPlayer.setURL(stream);
+                        streamUrl = musesPlayer.settings.url;
                     }
-                    musesPlayer.play();
+
+                    //Retry playback but only after sleeping for a bit, to avoid spinning.
+                    musesPlayer.deferredPlay(streamUrl, RETRY_DELAY_MSECS);
                     break;
                 case "securityError":
                     // max listeners reached
                     if (musesPlayer.playerMode == "auto") {
                         var stream = musesPlayer.getNextAvailableStream();
-                        musesPlayer.setURL(stream["url"]);
-                        musesPlayer.play();
+                        musesPlayer.deferredPlay(stream["url"], RETRY_DELAY_MSECS);
                     } else {
                         // If in manual mode and there is a problem connecting to
                         // the stream display an error and stop play back.
@@ -275,7 +288,14 @@
                     } else {
                         var artist = data.current.name.split(" - ")[0];
                         var track = data.current.name.split(" - ")[1];
-                        $("p.now_playing").html(artist + "<span>" + track + "</span>");
+                        var nowPlayingHtml = "";
+                        if (artist) {
+                            nowPlayingHtml += artist;
+                        }
+                        if (track) {
+                            nowPlayingHtml += "<span>" + track + "</span>";
+                        }
+                        $("p.now_playing").html(nowPlayingHtml);
 
                         var current_track_end_time = new Date(data.current.ends);
                         if (current_track_end_time == "Invalid Date" || isNaN(current_track_end_time)) {
