@@ -134,12 +134,15 @@ var AIRTIME = (function(AIRTIME){
     
     mod.checkDeleteButton = function() {
         var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked");
-        
+
+        var button = $("#show_builder").find(".icon-trash").parent(),
+            DISABLED_CLASS = 'ui-state-disabled';
         if ($selected.length !== 0) {
-            AIRTIME.button.enableButton("icon-trash", true);
-        }
-        else {
-            AIRTIME.button.disableButton("icon-trash", true);
+            button.removeClass(DISABLED_CLASS);
+            button.removeAttr('disabled');
+        } else {
+            button.addClass(DISABLED_CLASS);
+            button.attr('disabled', 'disabled');
         }
     };
     

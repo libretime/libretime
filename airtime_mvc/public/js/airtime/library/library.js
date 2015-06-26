@@ -148,7 +148,7 @@ var AIRTIME = (function(AIRTIME) {
     mod.checkDeleteButton = function() {
         var selected = mod.getChosenItemsLength(),
             check = false;
-        
+
         if (selected !== 0) {
             check = true;
         }
