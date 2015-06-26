@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
+    <script src="<?php echo $this->jquery ?>" type="text/javascript"></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.tabs li').click(function(){
+                var tab_id = $(this).attr('data-tab');
+
+                $('.tabs li').removeClass('active');
+                $('.schedule_item').removeClass('active');
+
+                $(this).addClass('active');
+                $("#"+tab_id).addClass('active');
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+
+<div class="schedule tab_content current">
+    <ul class="tabs">
+        <?php
+        foreach($this->weeklyScheduleData as $day => $data) {
+            $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
+            echo "<li class='".$activeClass."' data-tab='day-".$data["dayOfMonth"]."'>" . $data["dayOfWeek"] . "<span>" . $data["dayOfMonth"] . "</span></li>";
+        }?>
+    </ul>
+
+    <div class="schedule_content">
+        <?php
+        foreach($this->weeklyScheduleData as $day => $data) {
+            $activeClass = $this->currentDayOfMonth == $data["dayOfMonth"] ? "active" : "";
+
+            echo "<div id='day-".$data["dayOfMonth"]."' class='schedule_item ".$activeClass."'>";
+                if (count($data["shows"]) == 0) {
+                    echo "<div class='row empty-schedule'>Looks like there are no shows scheduled on this day.</div>";
+                } else {
+                    foreach ($data["shows"] as $show => $showData) {
+                        echo "<div class='row'>";
+                        echo "<div class='time_grid'>" . $showData["show_start_hour"] . ' - ' . $showData["show_end_hour"] . "</div>";
+                        echo "<div class='name_grid'>" . $showData["name"] . "</div>";
+                        echo "</div>";
+                    }
+                }
+            echo "</div>";
+        }?>
+    </div>
+
+    <div class="weekly-schedule-widget-footer" <?php if ($this->widgetStyle == "premium") echo "style='display:none'"; ?>>
+        <a href="https://airtime.pro" target="_blank">Powered by <span>Airtime Pro</span></a>
+    </div>
+</div>
+
+</body>
+
+</html>
+
+

@@ -98,7 +98,8 @@ class EmbedController extends Zend_Controller_Action
         $weeklyScheduleData = WidgetHelper::getWeekInfoV2($this->getRequest()->getParam("timezone"));
 
         // Return only the current week's schedule data. In the future we may use the next week's data.
-        $this->view->weeklyScheduleData = ($weeklyScheduleData[0]);
+        $this->view->schedule_data = json_encode($weeklyScheduleData);
+        $this->view->weeklyScheduleData = $weeklyScheduleData;
 
         $currentDay = new DateTime("now", new DateTimeZone(Application_Model_Preference::GetTimezone()));
         //day of the month without leading zeros (1 to 31)

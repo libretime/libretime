@@ -61,11 +61,9 @@ class WidgetHelper
     // Removing "next" days and creating two weekly arrays
     public static function getWeekInfoV2($timezone)
     {
-        //weekStart is in station time.
-        //$weekStartDateTime = Application_Common_DateHelper::getWeekStartDateTime();
         $weekStartDateTime = new DateTime("now", new DateTimeZone(Application_Model_Preference::GetTimezone()));
 
-        $maxNumOFWeeks = 2;
+        //$maxNumOFWeeks = 2;
 
         $result = array();
 
@@ -84,50 +82,57 @@ class WidgetHelper
         // a time of "00:00". $utcDayStart is used below when querying for shows.
         $utcDayStartDT = clone $weekStartDateTime;
         $utcDayStartDT->setTime(0, 0, 0);
-        $utcDayStart = $utcDayStartDT->format(DEFAULT_TIMESTAMP_FORMAT);
-        $weekCounter = 0;
-        while ($weekCounter < $maxNumOFWeeks) {
-            for ($dayOfWeekCounter = 0; $dayOfWeekCounter < DAYS_PER_WEEK; $dayOfWeekCounter++) {
-                $dateParse = date_parse($weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT));
 
-                $result[$weekCounter][$dayOfWeekCounter]["dayOfMonth"] = $dateParse["day"];
-                $result[$weekCounter][$dayOfWeekCounter]["dayOfWeek"] = strtoupper(date("D", $weekStartDateTime->getTimestamp()));
+        $utcDayStart = $utcDayStartDT->format("Y-m-d H:i:s");
+        //$weekCounter = 0;
+        //while ($weekCounter < $maxNumOFWeeks) {
 
-                //have to be in station timezone when adding 1 day for daylight savings.
-                $weekStartDateTime->setTimezone(new DateTimeZone($timezone));
-                $weekStartDateTime->add(new DateInterval('P1D'));
+        Logging::info($utcDayStart);
+        for ($dayOfWeekCounter = 0; $dayOfWeekCounter < DAYS_PER_WEEK; $dayOfWeekCounter++) {
+            $dateParse = date_parse($weekStartDateTime->format("Y-m-d H:i:s"));
 
-                //convert back to UTC to get the actual timestamp used for search.
-                $weekStartDateTime->setTimezone($utcTimezone);
+            $result["scheduleData"][$weekStartDateTime->getTimestamp()] = array();
+            $result["scheduleData"][$weekStartDateTime->getTimestamp()]["dayOfMonth"] = $dateParse["day"];
+            $result["scheduleData"][$weekStartDateTime->getTimestamp()]["dayOfWeek"] = strtoupper(date("D", $weekStartDateTime->getTimestamp()));
 
-                // When querying for shows we need the start and end date range to have
-                // a time of "00:00".
-                $utcDayEndDT = clone $weekStartDateTime;
-                $utcDayEndDT->setTime(0, 0, 0);
-                $utcDayEnd = $utcDayEndDT->format(DEFAULT_TIMESTAMP_FORMAT);
-                $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
-                $utcDayStart = $utcDayEnd;
+            //have to be in station timezone when adding 1 day for daylight savings.
+            $weekStartDateTime->setTimezone(new DateTimeZone($timezone));
+            $weekStartDateTime->add(new DateInterval('P1D'));
 
-                // convert to user-defined timezone, or default to station
-                Application_Common_DateHelper::convertTimestampsToTimezone(
-                    $shows,
-                    array("starts", "ends", "start_timestamp", "end_timestamp"),
-                    $timezone
-                );
-
-
-                foreach($shows as &$show) {
-                    $startParseDate = date_parse($show['starts']);
-                    $show["show_start_hour"] = str_pad($startParseDate["hour"], 2, "0", STR_PAD_LEFT).":".str_pad($startParseDate["minute"], 2, 0, STR_PAD_LEFT);
-
-                    $endParseDate = date_parse($show['ends']);
-                    $show["show_end_hour"] = str_pad($endParseDate["hour"], 2, 0, STR_PAD_LEFT).":".str_pad($endParseDate["minute"],2, 0, STR_PAD_LEFT);
-                }
-                $result[$weekCounter][$dayOfWeekCounter]["shows"] = $shows;
-
-            }
-            $weekCounter += 1;
+            //convert back to UTC to get the actual timestamp used for search.
+            $weekStartDateTime->setTimezone($utcTimezone);
         }
+        Logging::info($weekStartDateTime->format("Y-m-d H:i:s"));
+
+        // When querying for shows we need the start and end date range to have
+        // a time of "00:00".
+        /*$utcDayEndDT = clone $weekStartDateTime;
+        $utcDayEndDT->setTime(0, 0, 0);
+        $utcDayEnd = $utcDayEndDT->format("Y-m-d H:i:s");
+        $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
+        $utcDayStart = $utcDayEnd;
+
+        // convert to user-defined timezone, or default to station
+        /*Application_Common_DateHelper::convertTimestampsToTimezone(
+            $shows,
+            array("starts", "ends", "start_timestamp", "end_timestamp"),
+            $timezone
+        );*/
+
+
+        /*foreach($shows as &$show) {
+            $startParseDate = date_parse($show['starts']);
+            $show["show_start_hour"] = str_pad($startParseDate["hour"], 2, "0", STR_PAD_LEFT).":".str_pad($startParseDate["minute"], 2, 0, STR_PAD_LEFT);
+
+            $endParseDate = date_parse($show['ends']);
+            $show["show_end_hour"] = str_pad($endParseDate["hour"], 2, 0, STR_PAD_LEFT).":".str_pad($endParseDate["minute"],2, 0, STR_PAD_LEFT);
+        }
+        //$result[$weekCounter][$dayOfWeekCounter]["shows"] = $shows;
+        array_push($result, $shows);*/
+
+    //}
+            //$weekCounter += 1;
+        //}
 
 
         // XSS exploit prevention
