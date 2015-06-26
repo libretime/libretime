@@ -536,6 +536,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     width: 150px;
 }
 
+/***** Show Builder *****/
+
+#show_builder {
+    min-width: 470px;
+}
+
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
 table.library-track-md{
     width: 280px;
@@ -988,6 +994,19 @@ input[type="checkbox"] {
     display: inline-block;
 }
 
+a#translate_link {
+    font-size: 13px;
+    text-decoration: none;
+}
+
+a#translate_link:active, a#translate_link:visited {
+    color: #eee;
+}
+
+a#translate_link:hover {
+    color: #ddd;
+}
+
 /*
 #csrf-label .errors li, #csrf-element .errors li {
     margin: 0;
@@ -1243,10 +1262,13 @@ input[type="checkbox"] {
     margin: 0;
 }
 
+.dataTables_scrolling {
+    min-height: 150px;
+}
+
 .ui-dialog #schedule_playlist_dialog.ui-dialog-content {
     padding:0;
 }
-
 
 #schedule_playlist_dialog > div {
     background: none repeat scroll 0 0 transparent;

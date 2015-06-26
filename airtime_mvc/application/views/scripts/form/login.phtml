@@ -27,6 +27,9 @@
     <dd id="locale-element">
       <?php echo $this->element->getElement('locale') ?>
     </dd>
+    <a id="translate_link" href=<?php echo AIRTIME_TRANSIFEX_URL?>>
+        <?php echo _(sprintf("Help Translate %s", PRODUCT_NAME)) ?>
+    </a>
 
     <?php echo $this->element->getElement('csrf') ?>
     
