@@ -314,7 +314,7 @@ class Application_Service_CalendarService
             //check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
             $rebroadcasts = CcShowInstancesQuery::create()
                 ->filterByDbOriginalShow($this->ccShow->getDbId())
-                ->filterByDbStarts($minRebroadcastStart->format('Y-m-d H:i:s'), Criteria::LESS_THAN)
+                ->filterByDbStarts($minRebroadcastStart->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::LESS_THAN)
                 ->find();
 
             if (count($rebroadcasts) > 0) {

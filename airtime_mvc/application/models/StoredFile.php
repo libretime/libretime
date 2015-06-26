@@ -918,16 +918,16 @@ SQL;
             //convert mtime and utime to localtime
             $row['mtime'] = new DateTime($row['mtime'], $utcTimezone);
             $row['mtime']->setTimeZone($displayTimezone);
-            $row['mtime'] = $row['mtime']->format('Y-m-d H:i:s');
+            $row['mtime'] = $row['mtime']->format(DEFAULT_TIMESTAMP_FORMAT);
             $row['utime'] = new DateTime($row['utime'], $utcTimezone);
             $row['utime']->setTimeZone($displayTimezone);
-            $row['utime'] = $row['utime']->format('Y-m-d H:i:s');
+            $row['utime'] = $row['utime']->format(DEFAULT_TIMESTAMP_FORMAT);
             
             //need to convert last played to localtime if it exists.
             if (isset($row['lptime'])) {
             	$row['lptime'] = new DateTime($row['lptime'], $utcTimezone);
             	$row['lptime']->setTimeZone($displayTimezone);
-            	$row['lptime'] = $row['lptime']->format('Y-m-d H:i:s');
+            	$row['lptime'] = $row['lptime']->format(DEFAULT_TIMESTAMP_FORMAT);
             }
 
             // we need to initalize the checkbox and image row because we do not retrieve
@@ -1329,7 +1329,7 @@ SQL;
         $futureScheduledFilesSelectCriteria = new Criteria();
         $futureScheduledFilesSelectCriteria->addSelectColumn(CcSchedulePeer::FILE_ID);
         $futureScheduledFilesSelectCriteria->setDistinct();
-        $futureScheduledFilesSelectCriteria->add(CcSchedulePeer::ENDS, gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN);
+        $futureScheduledFilesSelectCriteria->add(CcSchedulePeer::ENDS, gmdate(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN);
         $stmt = CcSchedulePeer::doSelectStmt($futureScheduledFilesSelectCriteria);
         $filesScheduledInFuture = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
         

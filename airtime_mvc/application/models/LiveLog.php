@@ -275,7 +275,7 @@ class Application_Model_LiveLog
         if ($log['end_time'] == null) {
             $current_time = new DateTime("now", new DateTimeZone('UTC'));
             $log['end_time'] = $current_time;
-            $log['end_time'] = $log['end_time']->format("Y-m-d H:i:s");
+            $log['end_time'] = $log['end_time']->format(DEFAULT_TIMESTAMP_FORMAT);
             self::SetEndTime($log['state'], $current_time, true);
             self::SetNewLogTime($log['state'], $current_time);
         }
@@ -309,7 +309,7 @@ class Application_Model_LiveLog
                 ." VALUES (:state, :start)";
                 $params = array(
                     ':state'=>$state,
-                    ':start'=>$dateTime->format("Y-m-d H:i:s")
+                    ':start'=>$dateTime->format(DEFAULT_TIMESTAMP_FORMAT)
                 );
                 Application_Common_Database::prepareAndExecute($sql_insert, $params,
                     Application_Common_Database::EXECUTE);
@@ -346,7 +346,7 @@ class Application_Model_LiveLog
                     ." SET end_time = :end"
                     ." WHERE id = :id";
                     $params = array(
-                        ':end'=>$dateTime->format("Y-m-d H:i:s"),
+                        ':end'=>$dateTime->format(DEFAULT_TIMESTAMP_FORMAT),
                         ':id'=>$row['id']
                     );
                     Application_Common_Database::prepareAndExecute($update_sql, $params,

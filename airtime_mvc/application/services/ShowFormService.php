@@ -210,7 +210,7 @@ class Application_Service_ShowFormService
                 'add_show_end_date_no_repeat' => $showEnd->format("Y-m-d"),
                 'add_show_end_time' => $showEnd->format("H:i"),
                 'add_show_duration' => $this->calculateDuration(
-                    $showStart->format("Y-m-d H:i:s"), $showEnd->format("Y-m-d H:i:s"), $timezone),
+                    $showStart->format(DEFAULT_TIMESTAMP_FORMAT), $showEnd->format(DEFAULT_TIMESTAMP_FORMAT), $timezone),
                 'add_show_timezone' => $timezone,
                 'add_show_repeats' => 0));
 

@@ -98,7 +98,7 @@ SQL;
             $end = new DateTime();
             $end->add(new DateInterval("P2D")); // Add 2 days
             $end->setTimezone(new DateTimeZone("UTC"));
-            $utcTimeEnd = $end->format("Y-m-d H:i:s");
+            $utcTimeEnd = $end->format(DEFAULT_TIMESTAMP_FORMAT);
         }
 
         $utcNow = new DateTime("now", new DateTimeZone("UTC"));
@@ -111,7 +111,7 @@ SQL;
         $range = array(
             "station" => array (
                 "env"           => APPLICATION_ENV,
-                "schedulerTime" => $utcNow->format("Y-m-d H:i:s"),
+                "schedulerTime" => $utcNow->format(DEFAULT_TIMESTAMP_FORMAT),
                 "source_enabled" => $source
             ),
             //Previous, current, next songs!
@@ -148,7 +148,7 @@ SQL;
 
         $range = array(
                 "env" => APPLICATION_ENV,
-                "schedulerTime" => $utcNow->format("Y-m-d H:i:s"),
+                "schedulerTime" => $utcNow->format(DEFAULT_TIMESTAMP_FORMAT),
                 //Previous, current, next songs!
                 "previous"=>$results['previous'] !=null?$results['previous']:(count($shows['previousShow'])>0?$shows['previousShow'][0]:null),
                 "current"=>$results['current'] !=null?$results['current']:((count($shows['currentShow'])>0 && $shows['currentShow'][0]['record'] == 1)?$shows['currentShow'][0]:null),
@@ -410,13 +410,13 @@ SQL;
      */
     public static function GetScheduleDetailItems($p_start, $p_end, $p_shows, $p_show_instances)
     {
-        $p_start_str = $p_start->format("Y-m-d H:i:s");
-        $p_end_str = $p_end->format("Y-m-d H:i:s");
+        $p_start_str = $p_start->format(DEFAULT_TIMESTAMP_FORMAT);
+        $p_end_str = $p_end->format(DEFAULT_TIMESTAMP_FORMAT);
 
         //We need to search 48 hours before and after the show times so that that we
         //capture all of the show's contents.
-        $p_track_start= $p_start->sub(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
-        $p_track_end = $p_end->add(new DateInterval("PT48H"))->format("Y-m-d H:i:s");
+        $p_track_start= $p_start->sub(new DateInterval("PT48H"))->format(DEFAULT_TIMESTAMP_FORMAT);
+        $p_track_end = $p_end->add(new DateInterval("PT48H"))->format(DEFAULT_TIMESTAMP_FORMAT);
 
         $templateSql = <<<SQL
 SELECT DISTINCT sched.starts AS sched_starts,
@@ -600,7 +600,7 @@ SQL;
 
     public static function UpdateBrodcastedStatus($dateTime, $value)
     {
-        $now = $dateTime->format("Y-m-d H:i:s");
+        $now = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
 
         $sql = <<<SQL
 UPDATE cc_schedule
@@ -762,7 +762,7 @@ SQL;
         if (count($rows) < 3) {
             $dt = new DateTime("@".time());
             $dt->add(new DateInterval("PT24H"));
-            $range_end = $dt->format("Y-m-d H:i:s");
+            $range_end = $dt->format(DEFAULT_TIMESTAMP_FORMAT);
 
             $predicates = <<<SQL
 WHERE st.ends > :startTime1
@@ -814,7 +814,7 @@ SQL;
             $transition_time   = intval($temp[0]);
             $switchOffDataTime = new DateTime($kick_time, $utcTimeZone);
             $switch_off_time   = $switchOffDataTime->sub(new DateInterval('PT'.$transition_time.'S'));
-            $switch_off_time   = $switch_off_time->format("Y-m-d H:i:s");
+            $switch_off_time   = $switch_off_time->format(DEFAULT_TIMESTAMP_FORMAT);
 
             $kick_start = self::AirtimeTimeToPypoTime($kick_time);
             $data["media"][$kick_start]['start']             = $kick_start;
@@ -900,7 +900,7 @@ SQL;
         $buffer_start = new DateTime($item["start"], new DateTimeZone('UTC'));
         $buffer_start->sub(new DateInterval("PT5S"));
 
-        $stream_buffer_start = self::AirtimeTimeToPypoTime($buffer_start->format("Y-m-d H:i:s"));
+        $stream_buffer_start = self::AirtimeTimeToPypoTime($buffer_start->format(DEFAULT_TIMESTAMP_FORMAT));
 
         $schedule_item = array(
             'start'             => $stream_buffer_start,
@@ -930,7 +930,7 @@ SQL;
         $dt = new DateTime($item["end"], new DateTimeZone('UTC'));
         $dt->sub(new DateInterval("PT1S"));
 
-        $stream_end = self::AirtimeTimeToPypoTime($dt->format("Y-m-d H:i:s"));
+        $stream_end = self::AirtimeTimeToPypoTime($dt->format(DEFAULT_TIMESTAMP_FORMAT));
 
         $schedule_item = array(
             'start'             => $stream_end,
@@ -962,7 +962,7 @@ SQL;
             then set range * from "now" to "now + 24 hours". */
         if (is_null($p_fromDateTime)) {
             $t1 = new DateTime("@".time(), $utcTimeZone);
-            $range_start = $t1->format("Y-m-d H:i:s");
+            $range_start = $t1->format(DEFAULT_TIMESTAMP_FORMAT);
         } else {
             $range_start = Application_Model_Schedule::PypoTimeToAirtimeTime($p_fromDateTime);
         }
@@ -979,7 +979,7 @@ SQL;
             }
 
             $t2->add(new DateInterval("PT".$cache_ahead_hours."H"));
-            $range_end = $t2->format("Y-m-d H:i:s");
+            $range_end = $t2->format(DEFAULT_TIMESTAMP_FORMAT);
         } else {
             $range_end = Application_Model_Schedule::PypoTimeToAirtimeTime($p_toDateTime);
         }
@@ -1008,7 +1008,7 @@ SQL;
                 $di = $trackStartDateTime->diff($showEndDateTime);
 
                 $item["cue_out"] = $di->format("%H:%i:%s").".000";
-                $item["end"] = $showEndDateTime->format("Y-m-d H:i:s");
+                $item["end"] = $showEndDateTime->format(DEFAULT_TIMESTAMP_FORMAT);
             }
 
             if (!is_null($item['file_id'])) {
@@ -1138,7 +1138,7 @@ SQL;
         if (!is_null($showId)) {
             $ccShowInstance = CcShowInstancesQuery::create()
                 ->filterByDbShowId($showId)
-                ->filterByDbStarts($show_start->format("Y-m-d H:i:s"))
+                ->filterByDbStarts($show_start->format(DEFAULT_TIMESTAMP_FORMAT))
                 ->findOne();
         } elseif (!is_null($instanceId)) {
             $ccShowInstance = CcShowInstancesQuery::create()
@@ -1152,9 +1152,9 @@ SQL;
         $overlapping = false;
 
         $params = array(
-            ':show_end1'  => $show_end->format('Y-m-d H:i:s'),
-            ':show_end2'  => $show_end->format('Y-m-d H:i:s'),
-            ':show_end3'  => $show_end->format('Y-m-d H:i:s')
+            ':show_end1'  => $show_end->format(DEFAULT_TIMESTAMP_FORMAT),
+            ':show_end2'  => $show_end->format(DEFAULT_TIMESTAMP_FORMAT),
+            ':show_end3'  => $show_end->format(DEFAULT_TIMESTAMP_FORMAT)
         );
 
 
@@ -1201,9 +1201,9 @@ ORDER BY ends
 SQL;
 
             $rows = Application_Common_Database::prepareAndExecute($sql, array(
-                ':show_end1' => $show_end->format('Y-m-d H:i:s'),
-                ':show_end2' => $show_end->format('Y-m-d H:i:s'),
-                ':show_end3' => $show_end->format('Y-m-d H:i:s')), 'all');
+                ':show_end1' => $show_end->format(DEFAULT_TIMESTAMP_FORMAT),
+                ':show_end2' => $show_end->format(DEFAULT_TIMESTAMP_FORMAT),
+                ':show_end3' => $show_end->format(DEFAULT_TIMESTAMP_FORMAT)), 'all');
         }
 
         foreach ($rows as $row) {

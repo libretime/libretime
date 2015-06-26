@@ -10,6 +10,9 @@ define('COMPANY_SUFFIX'     , 'z.ú.');
 define('COMPANY_SITE'       , 'Sourcefabric.org');
 define('COMPANY_SITE_URL'   , 'http://sourcefabric.org/');
 
+
+define('HELP_URL'                   , 'http://help.sourcefabric.org/');
+define('FAQ_URL'                    , 'https://sourcefabricberlin.zendesk.com/hc/en-us/sections/200994309-Airtime-FAQ');
 define('WHOS_USING_URL'             , 'http://sourcefabric.org/en/airtime/whosusing');
 define('TERMS_AND_CONDITIONS_URL'   , 'http://www.sourcefabric.org/en/about/policy/');
 define('PRIVACY_POLICY_URL'         , 'http://www.sourcefabric.org/en/about/policy/');
@@ -19,13 +22,16 @@ define('AIRTIME_TRANSIFEX_URL'      , 'https://www.transifex.com/projects/p/airt
 define('LICENSE_VERSION'    , 'GNU AGPL v.3');
 define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.html');
 
-define('AIRTIME_COPYRIGHT_DATE' , '2010-2012');
+define('AIRTIME_COPYRIGHT_DATE' , '2010-2015');
 define('AIRTIME_REST_VERSION'   , '1.1');
 define('AIRTIME_API_VERSION'    , '1.1');
 define('AIRTIME_CODE_VERSION'   , '2.5.13');
 
+// Defaults
 define('DEFAULT_LOGO_PLACEHOLDER', 1);
 define('DEFAULT_LOGO_FILE', 'images/airtime_logo.png');
+define('DEFAULT_TIMESTAMP_FORMAT', 'Y-m-d H:i:s');
+define('DEFAULT_MICROTIME_FORMAT', 'Y-m-d H:i:s.u');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');
@@ -102,5 +108,3 @@ define('PROVISIONING_STATUS_ACTIVE' , 'Active');
 
 //TuneIn integration
 define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
-
-define('DEFAULT_TIMESTAMP_FORMAT', 'Y-m-d H:i:s');

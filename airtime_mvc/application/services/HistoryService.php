@@ -28,8 +28,8 @@ class Application_Service_HistoryService
 		$paramMap = array();
 		$sqlTypes = $this->getSqlTypes();
 
-		$start = $startDT->format("Y-m-d H:i:s");
-		$end = $endDT->format("Y-m-d H:i:s");
+		$start = $startDT->format(DEFAULT_TIMESTAMP_FORMAT);
+		$end = $endDT->format(DEFAULT_TIMESTAMP_FORMAT);
 
 		$template = $this->getConfiguredItemTemplate();
 		$fields = $template["fields"];
@@ -292,13 +292,13 @@ class Application_Service_HistoryService
 			//need to display the results in the station's timezone.
 			$dateTime = new DateTime($result["starts"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
-			$result["starts"] = $dateTime->format("Y-m-d H:i:s");
+			$result["starts"] = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
 
 			//if ends is null we don't want it to default to "now"
 			if (isset($result["ends"])) {
 				$dateTime = new DateTime($result["ends"], $timezoneUTC);
 				$dateTime->setTimezone($timezoneLocal);
-				$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+				$result["ends"] = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
 			}
 
 			if (isset($result[MDATA_KEY_DURATION])) {
@@ -334,8 +334,8 @@ class Application_Service_HistoryService
 
 		$mainSqlQuery = "";
 		$paramMap = array();
-		$start = $startDT->format("Y-m-d H:i:s");
-		$end = $endDT->format("Y-m-d H:i:s");
+		$start = $startDT->format(DEFAULT_TIMESTAMP_FORMAT);
+		$end = $endDT->format(DEFAULT_TIMESTAMP_FORMAT);
 
 		$paramMap["starts"] = $start;
 		$paramMap["ends"] = $end;
@@ -458,8 +458,8 @@ class Application_Service_HistoryService
         }
 		$shows = Application_Model_Show::getShows($startDT, $endDT);
 
-		Logging::info($startDT->format("Y-m-d H:i:s"));
-		Logging::info($endDT->format("Y-m-d H:i:s"));
+		Logging::info($startDT->format(DEFAULT_TIMESTAMP_FORMAT));
+		Logging::info($endDT->format(DEFAULT_TIMESTAMP_FORMAT));
 
 		Logging::info($shows);
 
@@ -508,11 +508,11 @@ class Application_Service_HistoryService
 			//need to display the results in the station's timezone.
 			$dateTime = new DateTime($result["starts"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
-			$result["starts"] = $dateTime->format("Y-m-d H:i:s");
+			$result["starts"] = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
 
 			$dateTime = new DateTime($result["ends"], $timezoneUTC);
 			$dateTime->setTimezone($timezoneLocal);
-			$result["ends"] = $dateTime->format("Y-m-d H:i:s");
+			$result["ends"] = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
 
 		}
 
@@ -687,7 +687,7 @@ class Application_Service_HistoryService
 
 						$dateTime = new DateTime($value, $timezoneUTC);
 						$dateTime->setTimezone($timezoneLocal);
-						$value = $dateTime->format("Y-m-d H:i:s");
+						$value = $dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
 					}
 
 					$formValues["$prefix{$key}"] = $value;
@@ -795,11 +795,11 @@ class Application_Service_HistoryService
 
 	    	$dateTime = new DateTime($values[$prefix."starts"], $timezoneLocal);
 	    	$dateTime->setTimezone($timezoneUTC);
-	    	$historyRecord->setDbStarts($dateTime->format("Y-m-d H:i:s"));
+	    	$historyRecord->setDbStarts($dateTime->format(DEFAULT_TIMESTAMP_FORMAT));
 
 	    	$dateTime = new DateTime($values[$prefix."ends"], $timezoneLocal);
 	    	$dateTime->setTimezone($timezoneUTC);
-	    	$historyRecord->setDbEnds($dateTime->format("Y-m-d H:i:s"));
+	    	$historyRecord->setDbEnds($dateTime->format(DEFAULT_TIMESTAMP_FORMAT));
 
 	    	$templateValues = $values[$prefix."template"];
 
@@ -1157,7 +1157,7 @@ class Application_Service_HistoryService
 		$fields[] = array("name" => MDATA_KEY_TITLE, "label"=> _("Title"), "type" => TEMPLATE_STRING, "isFileMd" => true); //these fields can be populated from an associated file.
 		$fields[] = array("name" => MDATA_KEY_CREATOR, "label"=> _("Creator"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 
-		$template["name"] = "Log Sheet ".date("Y-m-d H:i:s")." Template";
+		$template["name"] = "Log Sheet ".date(DEFAULT_TIMESTAMP_FORMAT)." Template";
 		$template["fields"] = $fields;
 
 		return $template;
@@ -1178,7 +1178,7 @@ class Application_Service_HistoryService
 		$fields[] = array("name" => MDATA_KEY_COMPOSER, "label"=> _("Composer"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 		$fields[] = array("name" => MDATA_KEY_COPYRIGHT, "label"=> _("Copyright"), "type" => TEMPLATE_STRING, "isFileMd" => true);
 
-		$template["name"] = "File Summary ".date("Y-m-d H:i:s")." Template";
+		$template["name"] = "File Summary ".date(DEFAULT_TIMESTAMP_FORMAT)." Template";
 		$template["fields"] = $fields;
 
 		return $template;
