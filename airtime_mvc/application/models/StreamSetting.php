@@ -76,7 +76,7 @@ class Application_Model_StreamSetting
             $port = $streamData[$prefix."port"];
             $mount = $streamData[$prefix."mount"];
             if ($streamData[$prefix."output"] == "shoutcast") {
-                $url = "http://$host:$port/";
+                $url = "http://$host:$port/;"; //The semi-colon is important to make Shoutcast stream URLs play instead turn into a page.
             } else { //Icecast
                 $url = "http://$host:$port/$mount";
             }
