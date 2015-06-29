@@ -144,7 +144,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $view->headLink(array('rel' => 'icon', 'href' => $baseUrl . 'favicon.ico', 'type' => 'image/x-icon'), 'PREPEND')
+        $view->headLink(array('rel' => 'icon',
+                              'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'],
+                              'type' => 'image/x-icon'), 'PREPEND')
             ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/pro_dropdown_3.css?' . $CC_CONFIG['airtime_version'])
