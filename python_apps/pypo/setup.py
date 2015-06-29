@@ -18,8 +18,8 @@ else:
             pypo_files.append(os.path.join(root, filename))
         
     data_files = [
-                  # ('/etc/init', ['install/upstart/airtime-playout.conf.template']),
-                  # ('/etc/init', ['install/upstart/airtime-liquidsoap.conf.template']),
+                  ('/etc/init', ['install/upstart/airtime-playout.conf.template']),
+                  ('/etc/init', ['install/upstart/airtime-liquidsoap.conf.template']),
                   ('/etc/init.d', ['install/sysvinit/airtime-playout']),
                   ('/etc/init.d', ['install/sysvinit/airtime-liquidsoap']),
                   ('/var/log/airtime/pypo', []),
