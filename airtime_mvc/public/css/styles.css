@@ -1250,7 +1250,7 @@ input[type="checkbox"] {
 }
 
 .dataTables_scrolling {
-    min-height: 150px;
+    /*min-height: 150px;*/
 }
 
 .ui-dialog #schedule_playlist_dialog.ui-dialog-content {
