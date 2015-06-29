@@ -103,7 +103,7 @@ class PluploadController extends Zend_Controller_Action
             //TODO: $this->sanitizeResponse($upload));
             $upload['utime'] = new DateTime($upload['utime'], $utcTimezone);
             $upload['utime']->setTimeZone($displayTimezone);
-            $upload['utime'] = $upload['utime']->format('Y-m-d H:i:s');
+            $upload['utime'] = $upload['utime']->format(DEFAULT_TIMESTAMP_FORMAT);
 
             //TODO: Invoke sanitization here (MediaController's removeBlacklist stuff)
             array_push($uploadsArray, $upload);

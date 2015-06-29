@@ -211,7 +211,7 @@ class Application_Model_Preference
     public static function SetShowsPopulatedUntil($dateTime)
     {
         $dateTime->setTimezone(new DateTimeZone("UTC"));
-        self::setValue("shows_populated_until", $dateTime->format("Y-m-d H:i:s"));
+        self::setValue("shows_populated_until", $dateTime->format(DEFAULT_TIMESTAMP_FORMAT));
     }
 
     /**
@@ -625,7 +625,7 @@ class Application_Model_Preference
         $outputArray['NUM_OF_SONGS'] = Application_Model_StoredFile::getFileCount();
         $outputArray['NUM_OF_PLAYLISTS'] = Application_Model_Playlist::getPlaylistCount();
         $outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Application_Model_Schedule::getSchduledPlaylistCount();
-        $outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(gmdate("Y-m-d H:i:s"));
+        $outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(gmdate(DEFAULT_TIMESTAMP_FORMAT));
         $outputArray['UNIQUE_ID'] = self::GetUniqueId();
         $outputArray['SAAS'] = self::GetPlanLevel();
         $outputArray['TRIAL_END_DATE'] = self::GetTrialEndingDate();

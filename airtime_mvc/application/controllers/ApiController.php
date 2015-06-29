@@ -170,7 +170,7 @@ class ApiController extends Zend_Controller_Action
     
             $request = $this->getRequest();
     
-            $utcTimeNow = gmdate("Y-m-d H:i:s");
+            $utcTimeNow = gmdate(DEFAULT_TIMESTAMP_FORMAT);
             $utcTimeEnd = "";   // if empty, getNextShows will use interval instead of end of day
     
             // default to the station timezone
@@ -192,7 +192,7 @@ class ApiController extends Zend_Controller_Action
                 // make getNextShows use end of day
                 $end = Application_Common_DateHelper::getTodayStationEndDateTime();
                 $end->setTimezone(new DateTimeZone("UTC"));
-                $utcTimeEnd = $end->format("Y-m-d H:i:s");
+                $utcTimeEnd = $end->format(DEFAULT_TIMESTAMP_FORMAT);
                 
                 $result = array(
                     "env" => APPLICATION_ENV,

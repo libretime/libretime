@@ -500,7 +500,7 @@ class PreferenceController extends Zend_Controller_Action
         $utcTimezone = new DateTimeZone("UTC");
         $nowDateTime = new DateTime("now", $utcTimezone);
         $scheduleItems = CcScheduleQuery::create()
-            ->filterByDbEnds($nowDateTime->format("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->filterByDbEnds($nowDateTime->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
             ->find();
 
         // Delete all the schedule items

@@ -305,7 +305,7 @@ SQL;
             array(
                 ':deltaDay1'          => "$deltaDay days",
                 ':interval1'          => "$hours:$mins",
-                ':current_timestamp1' =>  $nowDateTime->format("Y-m-d H:i:s"),
+                ':current_timestamp1' =>  $nowDateTime->format(DEFAULT_TIMESTAMP_FORMAT),
                 ':deltaDay2'          => "$deltaDay days",
                 ':interval2'          => "$hours:$mins"
             ), "execute");
@@ -336,7 +336,7 @@ SQL;
             CcShowInstancesPeer::clearInstancePool();
 
             $instances = CcShowInstancesQuery::create()
-                ->filterByDbEnds($nowDateTime->format("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+                ->filterByDbEnds($nowDateTime->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
                 ->filterByDbId($instanceIds, Criteria::IN)
                 ->find($con);
 
@@ -525,7 +525,7 @@ WHERE starts > :timestamp::TIMESTAMP
   AND show_id = :showId
 SQL;
         Application_Common_Database::prepareAndExecute( $sql,
-            array( ':timestamp' => gmdate("Y-m-d H:i:s"),
+            array( ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
                    ':showId'    => $this->getId()), 'execute');
     }
 
@@ -544,7 +544,7 @@ WHERE starts > :timestamp::TIMESTAMP
 SQL;
         Application_Common_Database::prepareAndExecute( $sql,
             array( ':showId' => $this->getId(),
-                   ':timestamp' => gmdate("Y-m-d H:i:s")), 'execute');
+                   ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT)), 'execute');
     }
 
     /**
@@ -658,7 +658,7 @@ SQL;
      */
     public function isStartDateTimeInPast()
     {
-        return (gmdate("Y-m-d H:i:s") > ($this->getStartDate()." ".$this->getStartTime()));
+        return (gmdate(DEFAULT_TIMESTAMP_FORMAT) > ($this->getStartDate()." ".$this->getStartTime()));
     }
 
     /**
@@ -679,7 +679,7 @@ WHERE show_id = :showId
 SQL;
         $rows = Application_Common_Database::prepareAndExecute($sql,
             array( ':showId'    => $this->getId(),
-                   ':timestamp' => gmdate("Y-m-d H:i:s")), "all");
+                   ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT)), "all");
 
         $res = array();
         foreach ($rows as $r) {
@@ -699,7 +699,7 @@ SQL;
     {
         //need to update cc_show_instances, cc_show_days
         $con = Propel::getConnection();
-        $timestamp = gmdate("Y-m-d H:i:s");
+        $timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
 
         $stmt =  $con->prepare("UPDATE cc_show_days "
                  ."SET duration = :add_show_duration "
@@ -811,7 +811,7 @@ SQL;
      *      row in the cc_show_instances table. */
     public function getInstanceOnDate($p_dateTime)
     {
-        $timestamp = $p_dateTime->format("Y-m-d H:i:s");
+        $timestamp = $p_dateTime->format(DEFAULT_TIMESTAMP_FORMAT);
         $sql = <<<SQL
 SELECT id
 FROM cc_show_instances
@@ -898,8 +898,8 @@ LEFT JOIN cc_files          AS f    ON f.id            = si1.file_id
 WHERE si1.modified_instance = FALSE
 SQL;
         //only want shows that are starting at the time or later.
-        $start_string = $start_timestamp->format("Y-m-d H:i:s");
-        $end_string = $end_timestamp->format("Y-m-d H:i:s");
+        $start_string = $start_timestamp->format(DEFAULT_TIMESTAMP_FORMAT);
+        $end_string = $end_timestamp->format(DEFAULT_TIMESTAMP_FORMAT);
 
         $params = array();
 
@@ -1012,8 +1012,8 @@ SQL;
 
             $event["id"]            = intval($show["instance_id"]);
             $event["title"]         = $show["name"];
-            $event["start"]         = $startsDT->format("Y-m-d H:i:s");
-            $event["end"]           = $endsDT->format("Y-m-d H:i:s");
+            $event["start"]         = $startsDT->format(DEFAULT_TIMESTAMP_FORMAT);
+            $event["end"]           = $endsDT->format(DEFAULT_TIMESTAMP_FORMAT);
             $event["allDay"]        = false;
             $event["showId"]        = intval($show["show_id"]);
             $event["linked"]        = intval($show["linked"]);
@@ -1080,7 +1080,7 @@ SQL;
     {
         $con = Propel::getConnection();
         if ($timeNow == null) {
-            $timeNow = gmdate("Y-m-d H:i:s");
+            $timeNow = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         }
         //TODO, returning starts + ends twice (once with an alias). Unify this after the 2.0 release. --Martin
         $sql = <<<SQL
@@ -1169,7 +1169,7 @@ SQL;
 
         $stmt = $con->prepare($sql);
         
-        $utcNowStr = $utcNow->format("Y-m-d H:i:s");
+        $utcNowStr = $utcNow->format(DEFAULT_TIMESTAMP_FORMAT);
         $stmt->bindValue(':timeNow', $utcNowStr);
         $stmt->bindValue(':timeEnd', $utcEndStr);
         $stmt->bindValue(':lim', $showsToRetrieve);
@@ -1250,7 +1250,7 @@ SQL;
     
         $stmt = $con->prepare($sql);
     
-        $utcNowStr = $utcNow->format("Y-m-d H:i:s");
+        $utcNowStr = $utcNow->format(DEFAULT_TIMESTAMP_FORMAT);
         $stmt->bindValue(':timeNow1', $utcNowStr);
         $stmt->bindValue(':timeNow2', $utcNowStr);
     

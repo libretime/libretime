@@ -57,7 +57,8 @@ class ListenerstatController extends Zend_Controller_Action
     public function getDataAction(){
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
         
-        $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format("Y-m-d H:i:s"), $endsDT->format("Y-m-d H:i:s"));
+        $data = Application_Model_ListenerStat::getDataPointsWithinRange($startsDT->format(DEFAULT_TIMESTAMP_FORMAT),
+                                                                         $endsDT->format(DEFAULT_TIMESTAMP_FORMAT));
         $this->_helper->json->sendJson($data);
     }
 }

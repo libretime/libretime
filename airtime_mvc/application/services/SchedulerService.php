@@ -177,7 +177,7 @@ class Application_Service_SchedulerService
 
             $showInstanceWithMostRecentSchedule = CcShowInstancesQuery::create()
                 ->filterByDbShowId($showId)
-                ->filterByDbStarts($showsPopulatedUntil->format("Y-m-d H:i:s"), Criteria::LESS_THAN)
+                ->filterByDbStarts($showsPopulatedUntil->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::LESS_THAN)
                 ->filterByDbId($instancsIdsToFill, Criteria::NOT_IN)
                 ->orderByDbStarts(Criteria::DESC)
                 ->limit(1)
@@ -266,8 +266,8 @@ class Application_Service_SchedulerService
                         $item["stream_id"] = "null";
                     }
                     
-                    $values[] = "(" . "'{$nextStartDT->format("Y-m-d H:i:s")}', " .
-                             "'{$endTimeDT->format("Y-m-d H:i:s")}', " .
+                    $values[] = "(" . "'{$nextStartDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
+                             "'{$endTimeDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
                              "'{$item["clip_length"]}', " .
                              "'{$item["fade_in"]}', " . "'{$item["fade_out"]}', " .
                              "'{$item["cue_in"]}', " . "'{$item["cue_out"]}', " .
@@ -293,7 +293,7 @@ class Application_Service_SchedulerService
            } //foreach linked instance
 
             //update time_filled and last_scheduled in cc_show_instances
-            $now = gmdate("Y-m-d H:i:s");
+            $now = gmdate(DEFAULT_TIMESTAMP_FORMAT);
             $whereClause = new Criteria();
             $whereClause->add(CcShowInstancesPeer::ID, $instanceIdsToFill, Criteria::IN);
             
@@ -350,7 +350,7 @@ class Application_Service_SchedulerService
 
                 $ccShowInstance
                     ->setDbTimeFilled($timeFilled)
-                    ->setDbLastScheduled(gmdate("Y-m-d H:i:s"))
+                    ->setDbLastScheduled(gmdate(DEFAULT_TIMESTAMP_FORMAT))
                     ->save();
             }
         }
