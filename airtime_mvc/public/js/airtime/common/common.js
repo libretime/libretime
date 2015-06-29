@@ -143,7 +143,8 @@ function open_show_preview(p_showID, p_showIndex) {
 }
 
 function openPreviewWindow(url) {
-    _preview_window = window.open(url, $.i18n._('Audio Player'), 'width=450,height=100,scrollbars=yes');
+    // Hardcoding this here is kinda gross, but the alternatives aren't much better...
+    _preview_window = window.open(url, $.i18n._('Audio Player'), 'width=482,height=110,scrollbars=yes');
     return false;
 }
 

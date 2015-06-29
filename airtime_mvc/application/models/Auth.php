@@ -13,7 +13,7 @@ class Application_Model_Auth
        $info->setDbUserId($user_id);
        $info->setDbAction($action);
        $info->setDbToken(sha1($token.$salt));
-       $info->setDbCreated(gmdate('Y-m-d H:i:s'));
+       $info->setDbCreated(gmdate(DEFAULT_TIMESTAMP_FORMAT));
        $info->save();
 
        Logging::debug("generated token {$token}");

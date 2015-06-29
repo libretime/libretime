@@ -25,7 +25,7 @@ class WidgetHelper
         $utcTimezone = new DateTimeZone("UTC");
 
         $weekStartDateTime->setTimezone($utcTimezone);
-        $utcDayStart = $weekStartDateTime->format("Y-m-d H:i:s");
+        $utcDayStart = $weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT);
         for ($i = 0; $i < 14; $i++) {
             //have to be in station timezone when adding 1 day for daylight savings.
             $weekStartDateTime->setTimezone(new DateTimeZone($timezone));
@@ -34,7 +34,7 @@ class WidgetHelper
             //convert back to UTC to get the actual timestamp used for search.
             $weekStartDateTime->setTimezone($utcTimezone);
 
-            $utcDayEnd = $weekStartDateTime->format("Y-m-d H:i:s");
+            $utcDayEnd = $weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT);
             $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
             $utcDayStart = $utcDayEnd;
 
@@ -84,11 +84,11 @@ class WidgetHelper
         // a time of "00:00". $utcDayStart is used below when querying for shows.
         $utcDayStartDT = clone $weekStartDateTime;
         $utcDayStartDT->setTime(0, 0, 0);
-        $utcDayStart = $utcDayStartDT->format("Y-m-d H:i:s");
+        $utcDayStart = $utcDayStartDT->format(DEFAULT_TIMESTAMP_FORMAT);
         $weekCounter = 0;
         while ($weekCounter < $maxNumOFWeeks) {
             for ($dayOfWeekCounter = 0; $dayOfWeekCounter < DAYS_PER_WEEK; $dayOfWeekCounter++) {
-                $dateParse = date_parse($weekStartDateTime->format("Y-m-d H:i:s"));
+                $dateParse = date_parse($weekStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT));
 
                 $result[$weekCounter][$dayOfWeekCounter]["dayOfMonth"] = $dateParse["day"];
                 $result[$weekCounter][$dayOfWeekCounter]["dayOfWeek"] = strtoupper(date("D", $weekStartDateTime->getTimestamp()));
@@ -104,7 +104,7 @@ class WidgetHelper
                 // a time of "00:00".
                 $utcDayEndDT = clone $weekStartDateTime;
                 $utcDayEndDT->setTime(0, 0, 0);
-                $utcDayEnd = $utcDayEndDT->format("Y-m-d H:i:s");
+                $utcDayEnd = $utcDayEndDT->format(DEFAULT_TIMESTAMP_FORMAT);
                 $shows = Application_Model_Show::getNextShows($utcDayStart, "ALL", $utcDayEnd);
                 $utcDayStart = $utcDayEnd;
 

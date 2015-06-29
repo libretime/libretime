@@ -723,6 +723,9 @@ abstract class BaseCcFilesPeer
         // Invalidate objects in CcPlayoutHistoryPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcPlayoutHistoryPeer::clearInstancePool();
+        // Invalidate objects in ThirdPartyTrackReferencesPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        ThirdPartyTrackReferencesPeer::clearInstancePool();
     }
 
     /**

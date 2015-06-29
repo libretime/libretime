@@ -55,23 +55,6 @@ class Application_Service_CalendarService
                         "icon" => "overview",
                         "url" => $baseUrl."library/edit-file-md/id/".$ccFile->getDbId());
                 }
-
-                //recorded show can be uploaded to soundcloud
-                if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                    $scid = $ccFile->getDbSoundcloudId();
-
-                    if ($scid > 0) {
-                        $menu["soundcloud_view"] = array(
-                            "name" => _("View on Soundcloud"),
-                            "icon" => "soundcloud",
-                            "url" => $ccFile->getDbSoundcloudLinkToFile());
-                    }
-
-                    $text = is_null($scid) ? _('Upload to SoundCloud') : _('Re-upload to SoundCloud');
-                    $menu["soundcloud_upload"] = array(
-                        "name"=> $text,
-                        "icon" => "soundcloud");
-                }
             } else {
                 $menu["content"] = array(
                     "name"=> _("Show Content"),
@@ -314,7 +297,7 @@ class Application_Service_CalendarService
             //check if we are moving a recorded show less than 1 hour before any of its own rebroadcasts.
             $rebroadcasts = CcShowInstancesQuery::create()
                 ->filterByDbOriginalShow($this->ccShow->getDbId())
-                ->filterByDbStarts($minRebroadcastStart->format('Y-m-d H:i:s'), Criteria::LESS_THAN)
+                ->filterByDbStarts($minRebroadcastStart->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::LESS_THAN)
                 ->find();
 
             if (count($rebroadcasts) > 0) {

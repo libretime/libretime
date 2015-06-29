@@ -9,14 +9,13 @@ class UpgradeController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
         
-        if (!$this->verifyAuth()) {
+        if (!RestAuth::verifyAuth(true, false, $this)) {
             return;
         }
 
         try {
-            $upgradeManager = new UpgradeManager();
-            $didWePerformAnUpgrade = $upgradeManager->doUpgrade();
-            
+            $didWePerformAnUpgrade = UpgradeManager::doUpgrade();
+
             if (!$didWePerformAnUpgrade) {
                 $this->getResponse()
                      ->setHttpResponseCode(200)
@@ -35,27 +34,34 @@ class UpgradeController extends Zend_Controller_Action
         }
     }
 
-    private function verifyAuth()
-    {
-        //The API key is passed in via HTTP "basic authentication":
-        //http://en.wikipedia.org/wiki/Basic_access_authentication
-        
-        $CC_CONFIG = Config::getConfig();
-        
-        //Decode the API key that was passed to us in the HTTP request.
-        $authHeader = $this->getRequest()->getHeader("Authorization");
+    public function downgradeAction() {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
 
-        $encodedRequestApiKey = substr($authHeader, strlen("Basic "));
-        $encodedStoredApiKey = base64_encode($CC_CONFIG["apiKey"][0] . ":");
-
-        if ($encodedRequestApiKey !== $encodedStoredApiKey)
-        {
-            $this->getResponse()
-                 ->setHttpResponseCode(401)
-                 ->appendBody("Error: Incorrect API key.<br>");
-            return false;
+        if (!RestAuth::verifyAuth(true, false, $this)) {
+            return;
         }
-        return true;
+
+        $request = $this->getRequest();
+        $toVersion = $request->getParam("version");
+
+        try {
+            $downgradePerformed = UpgradeManager::doDowngrade($toVersion);
+
+            if (!$downgradePerformed) {
+                $this->getResponse()
+                    ->setHttpResponseCode(200)
+                    ->appendBody("No downgrade was performed. The current schema version is " . Application_Model_Preference::GetSchemaVersion() . ".<br>");
+            } else {
+                $this->getResponse()
+                    ->setHttpResponseCode(200)
+                    ->appendBody("Downgrade to Airtime schema version " . Application_Model_Preference::GetSchemaVersion() . " OK<br>");
+            }
+        } catch (Exception $e) {
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody($e->getMessage());
+        }
     }
 
 }

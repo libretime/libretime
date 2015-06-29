@@ -6,7 +6,9 @@ var AIRTIME = (function(AIRTIME) {
         $libTable,
         LIB_SELECTED_CLASS = "lib-selected",
         chosenItems = {},
-        visibleChosenItems = {};
+        visibleChosenItems = {},
+        $previouslySelected;
+
 
     // we need to know whether the criteria value is string or
     // numeric in order to provide a single textbox or range textboxes
@@ -146,7 +148,7 @@ var AIRTIME = (function(AIRTIME) {
     mod.checkDeleteButton = function() {
         var selected = mod.getChosenItemsLength(),
             check = false;
-        
+
         if (selected !== 0) {
             check = true;
         }
@@ -612,17 +614,6 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                //add soundcloud icon
-                if (aData.soundcloud_id !== undefined) {
-                    if (aData.soundcloud_id === "-2") {
-                        $(nRow).find("td.library_title").append('<span class="small-icon progress"/>');
-                    } else if (aData.soundcloud_id === "-3") {
-                        $(nRow).find("td.library_title").append('<span class="small-icon sc-error"/>');
-                    } else if (aData.soundcloud_id !== null) {
-                        $(nRow).find("td.library_title").append('<span class="small-icon soundcloud"/>');
-                    }
-                }
-
                 // add checkbox
                 $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
 
@@ -722,17 +713,19 @@ var AIRTIME = (function(AIRTIME) {
                 // icon.
                 $(nRow).find("td:not(.library_checkbox, .library_type)").qtip({
                     content: {
-                        text: $.i18n._("Loading..."),
+                        text: function(event, api) {
+                            $.get(baseUrl+"library/get-file-metadata",
+                                ({format: "html", id : aData.id, type: aData.ftype}),
+                                function (html) {
+                                    api.set('content.text', html);
+                                }, "html")
+                                .fail(function (xhr, status, error) {
+                                    api.set('content.text', status + ': ' + error)
+                                });
+                            return 'Loading...';
+                        },
                         title: {
                             text: aData.track_title
-                        },
-                        ajax: {
-                            url: baseUrl+"Library/get-file-metadata",
-                            type: "get",
-                            data: ({format: "html", id : aData.id, type: aData.ftype}),
-                            success: function(data, status) {
-                                this.set('content.text', data);
-                            }
                         }
                     },
                     position: {
@@ -755,7 +748,7 @@ var AIRTIME = (function(AIRTIME) {
                        show: function(event, api) {
                          // Only show the tooltip if it was a right-click
                          if(event.originalEvent.button !== 2) {
-                            event.preventDefault();
+                             event.preventDefault();
                          }
                        }
                     },
@@ -868,33 +861,36 @@ var AIRTIME = (function(AIRTIME) {
             });
         
         $libTable.find("tbody").on("click", "input[type=checkbox]", function(ev) {
-            
+
             var $cb = $(this),
-                $prev,
                 $tr = $cb.parents("tr"),
-                $trs;
-            
+                // Get the ID of the selected row
+                $rowId = $tr.attr("id");
+
             if ($cb.is(":checked")) {
-                
-                if (ev.shiftKey) {
-                    $prev = $libTable.find("tbody").find("tr."+LIB_SELECTED_CLASS).eq(-1);
-                    $trs = $prev.nextUntil($tr);
-                    
-                    $trs.each(function(i, el){
-                        mod.selectItem($(el));
-                    });
+                if (ev.shiftKey && $previouslySelected !== undefined) {
+                    // If the selected row comes before the previously selected row,
+                    // we want to select previous rows, otherwise we select next
+                    if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
+                        $previouslySelected.prevUntil($tr).each(function(i, el){
+                            mod.selectItem($(el));
+                        });
+                    } else {
+                        $previouslySelected.nextUntil($tr).each(function(i, el){
+                            mod.selectItem($(el));
+                        });
+                    }
                 }
 
                 mod.selectItem($tr);
+                // Remember this row so we can properly multiselect
+                $previouslySelected = $tr;
             }
             else {
-                mod.deselectItem($tr);  
+                mod.deselectItem($tr);
             }
+            
         });
-       
-        checkLibrarySCUploadStatus();
-        
-        addQtipToSCIcons();
        
         // begin context menu initialization.
         $.contextMenu({
@@ -1026,21 +1022,31 @@ var AIRTIME = (function(AIRTIME) {
                     // add callbacks for Soundcloud menu items.
                     if (oItems.soundcloud !== undefined) {
                         var soundcloud = oItems.soundcloud.items;
-                        
+
                         // define an upload to soundcloud callback.
                         if (soundcloud.upload !== undefined) {
-                            
+
                             callback = function() {
-                                $.post(soundcloud.upload.url, function(){
-                                    addProgressIcon(data.id);
-                                });
+                                alert($.i18n._("Your track is being uploaded and will " +
+                                               "appear on SoundCloud in a couple of minutes"));
+                                $.post(soundcloud.upload.url, function(){});
                             };
                             soundcloud.upload.callback = callback;
                         }
-                        
+
+                        // define an upload to soundcloud callback.
+                        if (soundcloud.remove !== undefined) {
+
+                            callback = function() {
+                                alert($.i18n._("Your track is being deleted from SoundCloud"));
+                                $.post(soundcloud.remove.url, function(){});
+                            };
+                            soundcloud.remove.callback = callback;
+                        }
+
                         // define a view on soundcloud callback
                         if (soundcloud.view !== undefined) {
-                            
+
                             callback = function() {
                                 window.open(soundcloud.view.url);
                             };
@@ -1140,122 +1146,6 @@ function addProgressIcon(id) {
     }
 }
     
-function checkLibrarySCUploadStatus(){
-    var url = baseUrl+'Library/get-upload-to-soundcloud-status',
-        span,
-        id;
-    
-    function checkSCUploadStatusCallback(json) {
-        
-        if (json.sc_id > 0) {
-            span.removeClass("progress").addClass("soundcloud");
-            
-        }
-        else if (json.sc_id == "-3") {
-            span.removeClass("progress").addClass("sc-error");
-        }
-    }
-    
-    function checkSCUploadStatusRequest() {
-        
-        span = $(this);
-        id = span.parents("tr").data("aData").id;
-       
-        $.post(url, {format: "json", id: id, type:"file"}, checkSCUploadStatusCallback);
-    }
-    
-    $("#library_display span.progress").each(checkSCUploadStatusRequest);
-    setTimeout(checkLibrarySCUploadStatus, 5000);
-}
-    
-function addQtipToSCIcons() {
-    $("#content")
-    	.on('mouseover', ".progress, .soundcloud, .sc-error", function() {
-        
-    	var aData = $(this).parents("tr").data("aData"),
-        	id = aData.id,
-        	sc_id = aData.soundcloud_id;
-        
-        if ($(this).hasClass("progress")){
-            $(this).qtip({
-                content: {
-                    text: $.i18n._("Uploading in progress...")
-                },
-                position:{
-                    adjust: {
-                    resize: true,
-                    method: "flip flip"
-                    },
-                    at: "right center",
-                    my: "left top",
-                    viewport: $(window)
-                },
-                style: {
-                    classes: "ui-tooltip-dark file-md-long"
-                },
-                show: {
-                    ready: true // Needed to make it show on first mouseover event
-                }
-            });
-        }
-        else if ($(this).hasClass("soundcloud")){
-        	
-            $(this).qtip({
-                content: {
-                    text: $.i18n._("The soundcloud id for this file is: ") + sc_id
-                },
-                position:{
-                    adjust: {
-                    resize: true,
-                    method: "flip flip"
-                    },
-                    at: "right center",
-                    my: "left top",
-                    viewport: $(window)
-                },
-                style: {
-                    classes: "ui-tooltip-dark file-md-long"
-                },
-                show: {
-                    ready: true // Needed to make it show on first mouseover event
-                }
-            });
-        }
-        else if ($(this).hasClass("sc-error")) {
-            $(this).qtip({
-                content: {
-                    text: $.i18n._("Retreiving data from the server..."),
-                    ajax: {
-                        url: baseUrl+"Library/get-upload-to-soundcloud-status",
-                        type: "post",
-                        data: ({format: "json", id : id, type: "file"}),
-                        success: function(json, status){
-                            this.set('content.text', $.i18n._("There was an error while uploading to soundcloud.")+"<br>"+
-                                    $.i18n._("Error code: ")+json.error_code+
-                                    "<br>"+$.i18n._("Error msg: ")+json.error_msg+"<br>");
-                        }
-                    }
-                },
-                position:{
-                    adjust: {
-                    resize: true,
-                    method: "flip flip"
-                    },
-                    at: "right center",
-                    my: "left top",
-                    viewport: $(window)
-                },
-                style: {
-                    classes: "ui-tooltip-dark file-md-long"
-                },
-                show: {
-                    ready: true // Needed to make it show on first mouseover event
-                }
-            });
-        }
-    });
-}
-
 /*
  * This function is called from dataTables.columnFilter.js
  */

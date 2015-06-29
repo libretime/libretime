@@ -36,7 +36,7 @@ class Application_Model_ShowInstance
 
     public function deleteRebroadcasts()
     {
-        $timestamp = gmdate("Y-m-d H:i:s");
+        $timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         $instance_id = $this->getShowInstanceId();
         $sql = <<<SQL
 DELETE FROM cc_show_instances
@@ -86,18 +86,18 @@ SQL;
 
     /**
      * Return the start time of the Show (UTC time)
-     * @return string in format "Y-m-d H:i:s" (PHP time notation)
+     * @return string in format DEFAULT_TIMESTAMP_FORMAT (PHP time notation)
      */
-    public function getShowInstanceStart($format="Y-m-d H:i:s")
+    public function getShowInstanceStart($format=DEFAULT_TIMESTAMP_FORMAT)
     {
         return $this->_showInstance->getDbStarts($format);
     }
 
     /**
      * Return the end time of the Show (UTC time)
-     * @return string in format "Y-m-d H:i:s" (PHP time notation)
+     * @return string in format DEFAULT_TIMESTAMP_FORMAT (PHP time notation)
      */
-    public function getShowInstanceEnd($format="Y-m-d H:i:s")
+    public function getShowInstanceEnd($format=DEFAULT_TIMESTAMP_FORMAT)
     {
         return $this->_showInstance->getDbEnds($format);
     }
@@ -116,19 +116,6 @@ SQL;
         $showStartExplode = explode(" ", $showStart);
 
         return $showStartExplode[1];
-    }
-
-    public function setSoundCloudFileId($p_soundcloud_id)
-    {
-        $file = Application_Model_StoredFile::RecallById($this->_showInstance->getDbRecordedFile());
-        $file->setSoundCloudFileId($p_soundcloud_id);
-    }
-
-    public function getSoundCloudFileId()
-    {
-        $file = Application_Model_StoredFile::RecallById($this->_showInstance->getDbRecordedFile());
-
-        return $file->getSoundCloudId();
     }
 
     public function getRecordedFile()
@@ -354,7 +341,7 @@ SQL;
 
         $show = $this->getShow();
 
-        $current_timestamp = gmdate("Y-m-d H:i:s");
+        $current_timestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
 
         if ($current_timestamp <= $this->getShowInstanceEnd()) {
             if ($show->isRepeating()) {
@@ -623,7 +610,7 @@ SQL;
 
             $dt = new DateTime($row["starts"], $utcTimezone);
             $dt->setTimezone($displayTimezone);
-            $row["starts"] = $dt->format("Y-m-d H:i:s");
+            $row["starts"] = $dt->format(DEFAULT_TIMESTAMP_FORMAT);
 
             if (isset($row['length'])) {
                 $formatter = new LengthFormatter($row["length"]);

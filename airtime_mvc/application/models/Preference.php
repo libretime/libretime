@@ -211,7 +211,7 @@ class Application_Model_Preference
     public static function SetShowsPopulatedUntil($dateTime)
     {
         $dateTime->setTimezone(new DateTimeZone("UTC"));
-        self::setValue("shows_populated_until", $dateTime->format("Y-m-d H:i:s"));
+        self::setValue("shows_populated_until", $dateTime->format(DEFAULT_TIMESTAMP_FORMAT));
     }
 
     /**
@@ -328,77 +328,6 @@ class Application_Model_Preference
     public static function SetStationName($station_name)
     {
         self::setValue("station_name", $station_name);
-    }
-
-    public static function SetAutoUploadRecordedShowToSoundcloud($upload)
-    {
-        self::setValue("soundcloud_auto_upload_recorded_show", $upload);
-    }
-
-    public static function GetAutoUploadRecordedShowToSoundcloud()
-    {
-        return self::getValue("soundcloud_auto_upload_recorded_show");
-    }
-
-    public static function SetSoundCloudUser($user)
-    {
-        self::setValue("soundcloud_user", $user);
-    }
-
-    public static function GetSoundCloudUser()
-    {
-        return self::getValue("soundcloud_user");
-    }
-
-    public static function SetSoundCloudPassword($password)
-    {
-        if (strlen($password) > 0)
-            self::setValue("soundcloud_password", $password);
-    }
-
-    public static function GetSoundCloudPassword()
-    {
-        return self::getValue("soundcloud_password");
-    }
-
-    public static function SetSoundCloudTags($tags)
-    {
-        self::setValue("soundcloud_tags", $tags);
-    }
-
-    public static function GetSoundCloudTags()
-    {
-        return self::getValue("soundcloud_tags");
-    }
-
-    public static function SetSoundCloudGenre($genre)
-    {
-        self::setValue("soundcloud_genre", $genre);
-    }
-
-    public static function GetSoundCloudGenre()
-    {
-        return self::getValue("soundcloud_genre");
-    }
-
-    public static function SetSoundCloudTrackType($track_type)
-    {
-        self::setValue("soundcloud_tracktype", $track_type);
-    }
-
-    public static function GetSoundCloudTrackType()
-    {
-        return self::getValue("soundcloud_tracktype");
-    }
-
-    public static function SetSoundCloudLicense($license)
-    {
-        self::setValue("soundcloud_license", $license);
-    }
-
-    public static function GetSoundCloudLicense()
-    {
-        return self::getValue("soundcloud_license");
     }
 
     public static function SetAllow3rdPartyApi($bool)
@@ -673,12 +602,6 @@ class Application_Model_Preference
 
         $outputArray['LIVE_DURATION'] = Application_Model_LiveLog::GetLiveShowDuration($p_testing);
         $outputArray['SCHEDULED_DURATION'] = Application_Model_LiveLog::GetScheduledDuration($p_testing);
-        $outputArray['SOUNDCLOUD_ENABLED'] = self::GetUploadToSoundcloudOption();
-        if ($outputArray['SOUNDCLOUD_ENABLED']) {
-            $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = Application_Model_StoredFile::getSoundCloudUploads();
-        } else {
-            $outputArray['NUM_SOUNDCLOUD_TRACKS_UPLOADED'] = NULL;
-        }
 
         $outputArray['STATION_NAME'] = self::GetStationName();
         $outputArray['PHONE'] = self::GetPhone();
@@ -702,7 +625,7 @@ class Application_Model_Preference
         $outputArray['NUM_OF_SONGS'] = Application_Model_StoredFile::getFileCount();
         $outputArray['NUM_OF_PLAYLISTS'] = Application_Model_Playlist::getPlaylistCount();
         $outputArray['NUM_OF_SCHEDULED_PLAYLISTS'] = Application_Model_Schedule::getSchduledPlaylistCount();
-        $outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(gmdate("Y-m-d H:i:s"));
+        $outputArray['NUM_OF_PAST_SHOWS'] = Application_Model_ShowInstance::GetShowInstanceCount(gmdate(DEFAULT_TIMESTAMP_FORMAT));
         $outputArray['UNIQUE_ID'] = self::GetUniqueId();
         $outputArray['SAAS'] = self::GetPlanLevel();
         $outputArray['TRIAL_END_DATE'] = self::GetTrialEndingDate();
@@ -723,12 +646,6 @@ class Application_Model_Preference
                     foreach ($s_info as $k => $v) {
                         $outputString .= "\t".strtoupper($k)." : ".$v."\n";
                     }
-                }
-            } elseif ($key == "SOUNDCLOUD_ENABLED") {
-                if ($out) {
-                    $outputString .= $key." : TRUE\n";
-                } elseif (!$out) {
-                    $outputString .= $key." : FALSE\n";
                 }
             } elseif ($key == "SAAS") {
                 $outputString .= $key.' : '.$out."\n";
@@ -976,26 +893,6 @@ class Application_Model_Preference
         }
     }
 
-    public static function SetUploadToSoundcloudOption($upload)
-    {
-        self::setValue("soundcloud_upload_option", $upload);
-    }
-
-    public static function GetUploadToSoundcloudOption()
-    {
-        return self::getValue("soundcloud_upload_option");
-    }
-
-    public static function SetSoundCloudDownloadbleOption($upload)
-    {
-        self::setValue("soundcloud_downloadable", $upload);
-    }
-
-    public static function GetSoundCloudDownloadbleOption()
-    {
-        return self::getValue("soundcloud_downloadable");
-    }
-
     public static function SetWeekStartDay($day)
     {
         self::setValue("week_start_day", $day);
@@ -1135,7 +1032,7 @@ class Application_Model_Preference
     public static function GetDiskQuota()
     {
         $val = self::getValue("disk_quota");
-        return (strlen($val) == 0) ? 0 : $val;
+        return empty($val) ? 2147483648 : $val;  # If there is no value for disk quota, return 2GB
     }
 
     public static function SetLiveStreamMasterUsername($value)
@@ -1549,4 +1446,47 @@ class Application_Model_Preference
     {
         self::setValue("last_tunein_metadata_update", $value);
     }
+
+    /* Third Party */
+
+    // SoundCloud
+
+    public static function getDefaultSoundCloudLicenseType() {
+        $val = self::getValue("soundcloud_license_type");
+        // If we don't have a value set, return all-rights-reserved by default
+        return empty($val) ? DEFAULT_SOUNDCLOUD_LICENSE_TYPE : $val;
+    }
+
+    public static function setDefaultSoundCloudLicenseType($value) {
+        self::setValue("soundcloud_license_type", $value);
+    }
+
+    public static function getDefaultSoundCloudSharingType() {
+        $val = self::getValue("soundcloud_sharing_type");
+        // If we don't have a value set, return public by default
+        return empty($val) ? DEFAULT_SOUNDCLOUD_SHARING_TYPE : $val;
+    }
+
+    public static function setDefaultSoundCloudSharingType($value) {
+        self::setValue("soundcloud_sharing_type", $value);
+    }
+
+    public static function getSoundCloudRequestToken() {
+        return self::getValue("soundcloud_request_token");
+    }
+
+    public static function setSoundCloudRequestToken($value) {
+        self::setValue("soundcloud_request_token", $value);
+    }
+
+    // TaskManager Lock Timestamp
+
+    public static function getTaskManagerLock() {
+        return self::getValue("task_manager_lock");
+    }
+
+    public static function setTaskManagerLock($value) {
+        self::setValue("task_manager_lock", $value);
+    }
+
 }

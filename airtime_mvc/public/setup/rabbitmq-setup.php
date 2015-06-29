@@ -13,7 +13,10 @@ require_once dirname(dirname( __DIR__)) . '/library/php-amqplib/amqp.inc';
 class RabbitMQSetup extends Setup {
 
     // airtime.conf section header
-    const SECTION = "[rabbitmq]";
+    protected static $_section = "[rabbitmq]";
+
+    // Array of key->value pairs for airtime.conf
+    protected static $_properties;
 
     // Constant form field names for passing errors back to the front-end
     const RMQ_USER = "rmqUser",
@@ -22,29 +25,17 @@ class RabbitMQSetup extends Setup {
         RMQ_HOST = "rmqHost",
         RMQ_VHOST = "rmqVHost";
 
-    // Form field values
-    static $user, $pass, $host, $port, $vhost;
-
-    // Array of key->value pairs for airtime.conf
-    static $properties;
-
     // Message and error fields to return to the front-end
     static $message = null;
     static $errors = array();
 
     function __construct($settings) {
-        self::$user = $settings[self::RMQ_USER];
-        self::$pass = $settings[self::RMQ_PASS];
-        self::$port = $settings[self::RMQ_PORT];
-        self::$host = $settings[self::RMQ_HOST];
-        self::$vhost = $settings[self::RMQ_VHOST];
-
-        self::$properties = array(
-            "host" => self::$host,
-            "port" => self::$port,
-            "user" => self::$user,
-            "password" => self::$pass,
-            "vhost" => self::$vhost,
+        static::$_properties = array(
+            "host"      => $settings[self::RMQ_HOST],
+            "port"      => $settings[self::RMQ_PORT],
+            "user"      => $settings[self::RMQ_USER],
+            "password"  => $settings[self::RMQ_PASS],
+            "vhost"     => $settings[self::RMQ_VHOST],
         );
     }
 
@@ -72,29 +63,33 @@ class RabbitMQSetup extends Setup {
         );
     }
 
-    function writeToTemp() {
-        parent::writeToTemp(self::SECTION, self::$properties);
-    }
-
     function checkRMQConnection() {
-        $conn = new AMQPConnection(self::$host,
-                                   self::$port,
-                                   self::$user,
-                                   self::$pass,
-                                   self::$vhost);
+        $conn = new AMQPConnection(self::$_properties["host"],
+                                   self::$_properties["port"],
+                                   self::$_properties["user"],
+                                   self::$_properties["password"],
+                                   self::$_properties["vhost"]);
         return isset($conn);
     }
 
     function identifyRMQConnectionError() {
         // It's impossible to identify errors coming out of amqp.inc without a major
         // rewrite, so for now just tell the user ALL THE THINGS went wrong
-        self::$message = "Couldn't connect to RabbitMQ server! Please check if the server "
-            . "is running and your credentials are correct.";
+        self::$message = _("Couldn't connect to RabbitMQ server! Please check if the server "
+            . "is running and your credentials are correct.");
         self::$errors[] = self::RMQ_USER;
         self::$errors[] = self::RMQ_PASS;
         self::$errors[] = self::RMQ_HOST;
         self::$errors[] = self::RMQ_PORT;
         self::$errors[] = self::RMQ_VHOST;
+    }
+
+    protected function writeToTemp() {
+        if (!file_exists(RMQ_INI_TEMP_PATH)) {
+            copy(BUILD_PATH . "rabbitmq-analyzer.ini", RMQ_INI_TEMP_PATH);
+        }
+        $this->_write(RMQ_INI_TEMP_PATH);
+        parent::writeToTemp();
     }
 
 }

@@ -26,7 +26,9 @@ class MediaSetup extends Setup {
 
     const MEDIA_FOLDER = "mediaFolder";
     const AIRTIME_CONF_PATH = "/etc/airtime/airtime.conf";
-    
+    const RMQ_INI_BASE_PATH = "/etc/airtime-saas/";
+    const RMQ_INI_FILE_NAME = "rabbitmq-analyzer.ini";
+
     static $path;
     static $message = null;
     static $errors = array();
@@ -62,10 +64,14 @@ class MediaSetup extends Setup {
         // Finalize and move airtime.conf.temp
         if (file_exists("/etc/airtime/")) {
             if (!$this->moveAirtimeConfig()) {
-                $message = "Error moving airtime.conf or deleting /tmp/airtime.conf.temp!";
-                $errors[] = "ERR";
+                self::$message = "Error moving airtime.conf or deleting /tmp/airtime.conf.temp!";
+                self::$errors[] = "ERR";
             }
-            
+            if (!$this->moveRmqConfig()) {
+                self::$message = "Error moving rabbitmq-analyzer.ini or deleting /tmp/rabbitmq.ini.tmp!";
+                self::$errors[] = "ERR";
+            }
+
             /* 
              * If we're upgrading from an old Airtime instance (pre-2.5.2) we rename their old 
              * airtime.conf to airtime.conf.tmp during the setup process. Now that we're done,
@@ -75,8 +81,8 @@ class MediaSetup extends Setup {
                 rename(self::AIRTIME_CONF_PATH . ".tmp", self::AIRTIME_CONF_PATH . ".bak");
             }
         } else {
-            $message = "Failed to move airtime.conf; /etc/airtime doesn't exist!";
-            $errors[] = "ERR";
+            self::$message = "Failed to move airtime.conf; /etc/airtime doesn't exist!";
+            self::$errors[] = "ERR";
         }
         
         return array(
@@ -84,7 +90,7 @@ class MediaSetup extends Setup {
             "errors" => self::$errors
         );
     }
-    
+
     /**
      * Moves /tmp/airtime.conf.temp to /etc/airtime.conf and then removes it to complete setup
      * @return boolean false if either of the copy or removal operations fail
@@ -92,6 +98,16 @@ class MediaSetup extends Setup {
     function moveAirtimeConfig() {
         return copy(AIRTIME_CONF_TEMP_PATH, self::AIRTIME_CONF_PATH)
             && unlink(AIRTIME_CONF_TEMP_PATH);
+    }
+
+    /**
+     * Moves /tmp/airtime.conf.temp to /etc/airtime.conf and then removes it to complete setup
+     * @return boolean false if either of the copy or removal operations fail
+     */
+    function moveRmqConfig() {
+        return copy(RMQ_INI_TEMP_PATH, self::RMQ_INI_BASE_PATH . self::RMQ_INI_FILE_NAME)
+            && copy(RMQ_INI_TEMP_PATH, self::RMQ_INI_BASE_PATH . "production/" . self::RMQ_INI_FILE_NAME)
+            && unlink(RMQ_INI_TEMP_PATH);
     }
 
     /**

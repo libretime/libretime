@@ -62,14 +62,9 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::setTuneinPartnerKey($values["tunein_partner_key"]);
                 Application_Model_Preference::setTuneinPartnerId($values["tunein_partner_id"]);
 
-                /*Application_Model_Preference::SetUploadToSoundcloudOption($values["UploadToSoundcloudOption"]);
-                Application_Model_Preference::SetSoundCloudDownloadbleOption($values["SoundCloudDownloadbleOption"]);
-                Application_Model_Preference::SetSoundCloudUser($values["SoundCloudUser"]);
-                Application_Model_Preference::SetSoundCloudPassword($values["SoundCloudPassword"]);
-                Application_Model_Preference::SetSoundCloudTags($values["SoundCloudTags"]);
-                Application_Model_Preference::SetSoundCloudGenre($values["SoundCloudGenre"]);
-                Application_Model_Preference::SetSoundCloudTrackType($values["SoundCloudTrackType"]);
-                Application_Model_Preference::SetSoundCloudLicense($values["SoundCloudLicense"]);*/
+                // SoundCloud Preferences
+                Application_Model_Preference::setDefaultSoundCloudLicenseType($values["SoundCloudLicense"]);
+                Application_Model_Preference::setDefaultSoundCloudSharingType($values["SoundCloudSharing"]);
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $form = new Application_Form_Preferences();
@@ -505,7 +500,7 @@ class PreferenceController extends Zend_Controller_Action
         $utcTimezone = new DateTimeZone("UTC");
         $nowDateTime = new DateTime("now", $utcTimezone);
         $scheduleItems = CcScheduleQuery::create()
-            ->filterByDbEnds($nowDateTime->format("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->filterByDbEnds($nowDateTime->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
             ->find();
 
         // Delete all the schedule items

@@ -253,25 +253,6 @@ class ScheduleController extends Zend_Controller_Action
         $this->view->show_id = $showId;
     }
 
-    public function uploadToSoundCloudAction()
-    {
-        $show_instance = $this->_getParam('id');
-        
-        try {
-            $show_inst = new Application_Model_ShowInstance($show_instance);
-        } catch (Exception $e) {
-            $this->view->show_error = true;
-
-            return false;
-        }
-
-        $file = $show_inst->getRecordedFile();
-        $id = $file->getId();
-        Application_Model_Soundcloud::uploadSoundcloud($id);
-        // we should die with ui info
-        $this->_helper->json->sendJson(null);
-    }
-
     public function makeContextMenuAction()
     {
         $instanceId = $this->_getParam('instanceId');

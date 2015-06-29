@@ -7,17 +7,17 @@
  * along with steps to fix them if they're not found or misconfigured.
  */
 
-$phpDependencies = checkPhpDependencies();
-$externalServices = checkExternalServices();
-$zend = $phpDependencies["zend"];
-$postgres = $phpDependencies["postgres"];
+$phpDependencies    = checkPhpDependencies();
+$externalServices   = checkExternalServices();
+$zend               = $phpDependencies["zend"];
+$postgres           = $phpDependencies["postgres"];
 
-$database =      $externalServices["database"];
-$rabbitmq =      $externalServices["rabbitmq"];
+$database           = $externalServices["database"];
+$rabbitmq           = $externalServices["rabbitmq"];
 
-$pypo =          $externalServices["pypo"];
-$liquidsoap =    $externalServices["liquidsoap"];
-$mediamonitor = $externalServices["media-monitor"];
+$pypo               = $externalServices["pypo"];
+$liquidsoap         = $externalServices["liquidsoap"];
+$analyzer       = $externalServices["analyzer"];
 
 $r1 = array_reduce($phpDependencies, "booleanReduce", true);
 $r2 = array_reduce($externalServices, "booleanReduce", true);
@@ -174,28 +174,27 @@ $result = $r1 && $r2;
                             Make sure RabbitMQ is installed correctly, and that your settings in /etc/airtime/airtime.conf
                             are correct. Try using <code>sudo rabbitmqctl list_users</code> and <code>sudo rabbitmqctl list_vhosts</code>
                             to see if the airtime user (or your custom RabbitMQ user) exists, then checking that 
-                            <code>sudo rabbitmqctl list_exchanges</code> contains entries for airtime-media-monitor, airtime-pypo, 
-                            and airtime-uploads.
+                            <code>sudo rabbitmqctl list_exchanges</code> contains entries for airtime-pypo and airtime-uploads.
                         <?php
                         }
                         ?>
                     </td>
                 </tr>
-                <tr class="<?=$mediamonitor ? 'success' : 'danger';?>">
+                <tr class="<?=$analyzer ? 'success' : 'danger';?>">
                     <td class="component">
-                        Media Monitor
+                        Airtime Analyzer
                     </td>
                     <td class="description">
-                        Airtime media-monitor service
+                        Airtime Upload and File Analysis service
                     </td>
-                    <td class="solution <?php if ($mediamonitor) {echo 'check';?>">
+                    <td class="solution <?php if ($analyzer) {echo 'check';?>">
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-media-monitor service is installed correctly in <code>/etc/init</code>, 
+                            Check that the airtime_analyzer service is installed correctly in <code>/etc/init.d</code>,
                             and ensure that it's running with
-                            <br/><code>initctl list | grep airtime-media-monitor</code><br/>
-                            If not, try running <code>sudo service airtime-media-monitor start</code>
+                            <br/><code>initctl list | grep airtime_analyzer</code><br/>
+                            If not, try running <code>sudo service airtime_analyzer start</code>
                         <?php
                         }
                         ?>
@@ -212,7 +211,7 @@ $result = $r1 && $r2;
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-playout service is installed correctly in <code>/etc/init</code>, 
+                            Check that the airtime-playout service is installed correctly in <code>/etc/init.d</code>,
                             and ensure that it's running with
                             <br/><code>initctl list | grep airtime-playout</code><br/>
                             If not, try running <code>sudo service airtime-playout restart</code>
@@ -232,7 +231,7 @@ $result = $r1 && $r2;
                         <?php
                         } else {
                             ?>">
-                            Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init</code>, 
+                            Check that the airtime-liquidsoap service is installed correctly in <code>/etc/init.d</code>,
                             and ensure that it's running with
                             <br/><code>initctl list | grep airtime-liquidsoap</code><br/>
                             If not, try running <code>sudo service airtime-liquidsoap restart</code>

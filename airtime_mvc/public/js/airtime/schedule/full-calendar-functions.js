@@ -194,31 +194,6 @@ function eventRender(event, element, view) {
 
         $(element).find(".fc-event-content").append(div);
     }
-   
-    //add the record/rebroadcast/soundcloud icons if needed
-    if (event.record === 1) {
-        if (view.name === 'agendaDay' || view.name === 'agendaWeek') {
-            if (event.soundcloud_id === -1) {
-                $(element).find(".fc-event-time").before('<span class="small-icon recording"></span>');
-            } else if ( event.soundcloud_id > 0) {
-                $(element).find(".fc-event-time").before('<span class="small-icon recording"></span><span class="small-icon soundcloud"></span>');
-            } else if (event.soundcloud_id === -2) {
-                $(element).find(".fc-event-time").before('<span class="small-icon recording"></span><span class="small-icon progress"></span>');
-            } else if (event.soundcloud_id === -3) {
-                $(element).find(".fc-event-time").before('<span class="small-icon recording"></span><span class="small-icon sc-error"></span>');
-            }
-        } else if (view.name === 'month') {
-            if(event.soundcloud_id === -1) {
-                $(element).find(".fc-event-title").after('<span class="small-icon recording"></span>');
-            } else if (event.soundcloud_id > 0) {
-                $(element).find(".fc-event-title").after('<span class="small-icon recording"></span><span class="small-icon soundcloud"></span>');
-            } else if (event.soundcloud_id === -2) {
-                $(element).find(".fc-event-title").after('<span class="small-icon recording"></span><span class="small-icon progress"></span>');
-            } else if (event.soundcloud_id === -3) {
-                $(element).find(".fc-event-title").after('<span class="small-icon recording"></span><span class="small-icon sc-error"></span>');
-            }
-        }
-    }
 
     if (event.record === 0 && event.rebroadcast === 0) {
         if (view.name === 'agendaDay' || view.name === 'agendaWeek') {

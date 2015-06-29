@@ -23,6 +23,7 @@ dropAirtimeDatabase() {
     su postgres <<'EOF'
     set +e
     # DROP DATABASE cannot be executed from a function or multi-command string
+    psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime_test"
     psql -d postgres -tAc "DROP DATABASE IF EXISTS airtime"
     psql -d postgres -tAc "DROP USER IF EXISTS airtime"
     set -e
@@ -87,7 +88,10 @@ else
 fi
 
 echo -e "\nUninstalling Airtime..."
+service airtime-celery stop
+set +e
 removeRabbitmqAirtimeSettings
+set -e
 
 for i in ${FILES[*]}; do
     rm -rf $i

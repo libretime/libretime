@@ -12,7 +12,8 @@ var AIRTIME = (function(AIRTIME){
         cursors = [],
         cursorIds = [],
         showInstanceIds = [],
-        headerFooter = [];
+        headerFooter = [],
+        DISABLED_CLASS = 'ui-state-disabled';
     
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -134,12 +135,14 @@ var AIRTIME = (function(AIRTIME){
     
     mod.checkDeleteButton = function() {
         var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked");
-        
+
+        var button = $("#show_builder").find(".icon-trash").parent();
         if ($selected.length !== 0) {
-            AIRTIME.button.enableButton("icon-trash", true);
-        }
-        else {
-            AIRTIME.button.disableButton("icon-trash", true);
+            button.removeClass(DISABLED_CLASS);
+            button.removeAttr('disabled');
+        } else {
+            button.addClass(DISABLED_CLASS);
+            button.attr('disabled', 'disabled');
         }
     };
     
@@ -532,9 +535,6 @@ var AIRTIME = (function(AIRTIME){
                     cl = 'sb-header';
                     
                     if (aData.record === true) {
-                        
-                        headerIcon =  (aData.soundcloud_id > 0) ? "soundcloud" : "recording";
-                        
                         $div = $("<div/>", {
                             "class": "small-icon " + headerIcon
                         });
@@ -1188,8 +1188,10 @@ var AIRTIME = (function(AIRTIME){
         //delete selected tracks
         $toolbar.find('.icon-trash').parent()
             .click(function() {
-                
-                if (AIRTIME.button.isDisabled('icon-trash', true) === true) {
+
+                var button = $("#show_builder").find(".icon-trash").parent();
+
+                if (button.hasClass(DISABLED_CLASS)) {
                     return;
                 }
                 

@@ -44,7 +44,7 @@ SQL;
                 $t = new DateTime($r['timestamp'], $utcTimezone);
                 $t->setTimezone($displayTimezone);
                 // tricking javascript so it thinks the server timezone is in UTC
-                $dt = new DateTime($t->format("Y-m-d H:i:s"), $utcTimezone);
+                $dt = new DateTime($t->format(DEFAULT_TIMESTAMP_FORMAT), $utcTimezone);
 
                 $r['timestamp'] = $dt->format("U");
                 $out[$r['mount_name']][] = $r;

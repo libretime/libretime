@@ -1,5 +1,6 @@
 <?php
 require_once 'php-amqplib/amqp.inc';
+require_once 'massivescale/celery-php/celery.php';
 
 class Application_Model_RabbitMq
 {
@@ -79,12 +80,10 @@ class Application_Model_RabbitMq
         self::sendMessage($exchange, 'direct', true, $data);
     }
 
-    public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
-                                                $callbackUrl, $apiKey, $storageBackend, $filePrefix)
-    {
+    public static function getRmqConfigPath() {
         //Hack for Airtime Pro. The RabbitMQ settings for communicating with airtime_analyzer are global
         //and shared between all instances on Airtime Pro.
-        $CC_CONFIG = Config::getConfig();        
+        $CC_CONFIG = Config::getConfig();
         $devEnv = "production"; //Default
         if (array_key_exists("dev_env", $CC_CONFIG)) {
             $devEnv = $CC_CONFIG["dev_env"];
@@ -95,7 +94,13 @@ class Application_Model_RabbitMq
             // to the production rabbitmq-analyzer.ini
             $rmq_config_path = "/etc/airtime-saas/production/rabbitmq-analyzer.ini";
         }
-        $config = parse_ini_file($rmq_config_path, true);
+        return $rmq_config_path;
+    }
+
+    public static function SendMessageToAnalyzer($tmpFilePath, $importedStorageDirectory, $originalFilename,
+                                                $callbackUrl, $apiKey, $storageBackend, $filePrefix)
+    {
+        $config = parse_ini_file(self::getRmqConfigPath(), true);
         $conn = new AMQPConnection($config["rabbitmq"]["host"],
                 $config["rabbitmq"]["port"],
                 $config["rabbitmq"]["user"],
@@ -146,5 +151,6 @@ class Application_Model_RabbitMq
     
     public static function SendMessageToHaproxyConfigDaemon($md){
         //XXX: This function has been deprecated and is no longer needed
-    }        
+    }
+
 }

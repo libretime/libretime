@@ -405,12 +405,12 @@ class Application_Service_ShowService
 
     private function getShowDaysInRange($start, $end)
     {
-        $endTimeString = $end->format("Y-m-d H:i:s");
+        $endTimeString = $end->format(DEFAULT_TIMESTAMP_FORMAT);
         if (!is_null($start)) {
-            $startTimeString = $start->format("Y-m-d H:i:s");
+            $startTimeString = $start->format(DEFAULT_TIMESTAMP_FORMAT);
         } else {
             $today_timestamp = new DateTime("now", new DateTimeZone("UTC"));
-            $startTimeString = $today_timestamp->format("Y-m-d H:i:s");
+            $startTimeString = $today_timestamp->format(DEFAULT_TIMESTAMP_FORMAT);
         }
 
         $c = new Criteria();
@@ -462,7 +462,7 @@ AND rebroadcast = 1;
 SQL;
         Application_Common_Database::prepareAndExecute( $sql, array(
             ':showId' => $this->ccShow->getDbId(),
-            ':timestamp'  => gmdate("Y-m-d H:i:s")), 'execute');
+            ':timestamp'  => gmdate(DEFAULT_TIMESTAMP_FORMAT)), 'execute');
     }
 
     private function deleteAllShowDays($showId)
@@ -678,7 +678,7 @@ WHERE date(starts) >= :endDate::DATE
   AND show_id = :showId
 SQL;
         Application_Common_Database::prepareAndExecute($sql, array(
-            ':endDate' => $endDate, ':timestamp' => gmdate("Y-m-d H:i:s"),
+            ':endDate' => $endDate, ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
             ':showId' => $showId), 'execute');
     }
 
@@ -693,7 +693,7 @@ WHERE date(starts) < :newStartDate::DATE
 SQL;
 
         Application_Common_Database::prepareAndExecute($sql, array(
-            ":newStartDate" => $newStartDate, ":timestamp" =>  gmdate("Y-m-d H:i:s"),
+            ":newStartDate" => $newStartDate, ":timestamp" =>  gmdate(DEFAULT_TIMESTAMP_FORMAT),
             ":showId" => $showId), "execute");
     }
 
@@ -738,7 +738,7 @@ WHERE EXTRACT(DOW FROM starts) IN ($uncheckedDays)
 SQL;
 
         Application_Common_Database::prepareAndExecute( $sql, array(
-            ":timestamp" => gmdate("Y-m-d H:i:s"), ":showId"    => $showId),
+            ":timestamp" => gmdate(DEFAULT_TIMESTAMP_FORMAT), ":showId"    => $showId),
             "execute");
 
     }
@@ -777,7 +777,7 @@ SQL;
                     ->find();
             }
 
-            if (gmdate("Y-m-d H:i:s") <= $ccShowInstance->getDbEnds()) {
+            if (gmdate(DEFAULT_TIMESTAMP_FORMAT) <= $ccShowInstance->getDbEnds()) {
                 $this->deleteShowInstances($ccShowInstances, $showId);
             } else {
                 throw new Exception("Cannot delete a show instance in the past");
@@ -925,7 +925,7 @@ WHERE starts > :timestamp::TIMESTAMP
   AND show_id = :showId
 SQL;
         Application_Common_Database::prepareAndExecute( $sql,
-            array( ':timestamp' => gmdate("Y-m-d H:i:s"),
+            array( ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
                    ':showId'    => $showId), 'execute');
     }
 
@@ -941,9 +941,9 @@ WHERE starts > :timestamp::TIMESTAMP
   AND starts != :firstShow
 SQL;
         Application_Common_Database::prepareAndExecute( $sql,
-            array( ':timestamp' => gmdate("Y-m-d H:i:s"),
+            array( ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT),
                    ':showId'    => $showId,
-                   ':firstShow' => $firstShow->format("Y-m-d H:i:s")), 'execute');
+                   ':firstShow' => $firstShow->format(DEFAULT_TIMESTAMP_FORMAT)), 'execute');
     }
 
     /**
@@ -1027,7 +1027,7 @@ SQL;
 
         Application_Common_Database::prepareAndExecute($sql,
             array(':diff1' => $diff, ':diff2' => $diff,
-                ':showId' => $this->ccShow->getDbId(), ':timestamp' => gmdate("Y-m-d H:i:s")),
+                ':showId' => $this->ccShow->getDbId(), ':timestamp' => gmdate(DEFAULT_TIMESTAMP_FORMAT)),
             'execute');
     }
 
@@ -1040,7 +1040,7 @@ SQL;
      */
     private function createRebroadcastInstances($showDay, $showStartDate, $instanceId)
     {
-        $currentUtcTimestamp = gmdate("Y-m-d H:i:s");
+        $currentUtcTimestamp = gmdate(DEFAULT_TIMESTAMP_FORMAT);
         $showId = $this->ccShow->getDbId();
 
         $sql = "SELECT * FROM cc_show_rebroadcast WHERE show_id=:show_id";
@@ -1055,7 +1055,7 @@ SQL;
             list($utcStartDateTime, $utcEndDateTime) = $this->createUTCStartEndDateTime(
                 $showStartDate, $showDay->getDbDuration(), $offset);
 
-            if ($utcStartDateTime->format("Y-m-d H:i:s") > $currentUtcTimestamp) {
+            if ($utcStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT) > $currentUtcTimestamp) {
                 $ccShowInstance = new CcShowInstances();
                 $ccShowInstance->setDbShowId($showId);
                 $ccShowInstance->setDbStarts($utcStartDateTime);
@@ -1093,7 +1093,7 @@ SQL;
                 $origStartDateTime->setTimezone(new DateTimeZone("UTC"));
                 $ccShowInstance = $this->getInstance($origStartDateTime);
                 if (!$ccShowInstance) {
-                    throw new Exception("Could not find show instance with start time: ".$origStartDateTime->format("Y-m-d H:i:s"));
+                    throw new Exception("Could not find show instance with start time: ".$origStartDateTime->format(DEFAULT_TIMESTAMP_FORMAT));
                 }
             }
 
@@ -1182,7 +1182,7 @@ SQL;
                 /* When editing the start/end time of a repeating show, we don't want to
                  * change shows that are in the past so we check the end time.
                  */
-                if ($newInstance || $ccShowInstance->getDbEnds() > gmdate("Y-m-d H:i:s")) {
+                if ($newInstance || $ccShowInstance->getDbEnds() > gmdate(DEFAULT_TIMESTAMP_FORMAT)) {
                     $ccShowInstance->setDbShowId($show_id);
                     $ccShowInstance->setDbStarts($utcStartDateTime);
                     $ccShowInstance->setDbEnds($utcEndDateTime);
@@ -1277,7 +1277,7 @@ SQL;
                 /* When editing the start/end time of a repeating show, we don't want to
                  * change shows that started in the past. So check the start time.
                  */
-                if ($newInstance || $ccShowInstance->getDbStarts() > gmdate("Y-m-d H:i:s")) {
+                if ($newInstance || $ccShowInstance->getDbStarts() > gmdate(DEFAULT_TIMESTAMP_FORMAT)) {
                     $ccShowInstance->setDbShowId($show_id);
                     $ccShowInstance->setDbStarts($utcStartDateTime);
                     $ccShowInstance->setDbEnds($utcEndDateTime);
@@ -1481,7 +1481,7 @@ SQL;
         $temp->setTimezone(new DateTimeZone("UTC"));
 
         $ccShowInstance = CcShowInstancesQuery::create()
-            ->filterByDbStarts($temp->format("Y-m-d H:i:s"), Criteria::EQUAL)
+            ->filterByDbStarts($temp->format(DEFAULT_TIMESTAMP_FORMAT), Criteria::EQUAL)
             ->filterByDbShowId($this->ccShow->getDbId(), Criteria::EQUAL)
             //->filterByDbModifiedInstance(false, Criteria::EQUAL)
             ->filterByDbRebroadcast(0, Criteria::EQUAL)

@@ -320,9 +320,10 @@ if [ -f /etc/airtime/airtime.conf ]; then
     
         set +e
         verbose "Stopping airtime services..."
-        loudCmd "service airtime-playout stop-with-monit"
-        loudCmd "service airtime-media-monitor stop-with-monit"
-        loudCmd "service airtime-liquidsoap stop-with-monit"
+        loudCmd "service airtime-playout stop"
+        loudCmd "service airtime-media-monitor stop"
+        loudCmd "service airtime_analyzer stop"
+        loudCmd "service airtime-liquidsoap stop"
         verbose "...Done"
         
         echo "Looks like you have an old version of Airtime. Your current /etc/airtime/airtime.conf \
@@ -332,7 +333,7 @@ will be moved to /etc/airtime/airtime.conf.tmp"
         if [ -d /usr/lib/airtime/ ]; then
             rm -rf /usr/lib/airtime/
         fi
-        
+
         rm /etc/init.d/airtime-*
     
         if [ "$apache" = "t" ]; then
@@ -459,26 +460,31 @@ verbose "\n * Installing API client..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/api_clients/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
-verbose "\n * Installing media-monitor..."
-loudCmd "python ${AIRTIMEROOT}/python_apps/media-monitor/setup.py install --install-scripts=/usr/bin"
-verbose "...Done"
-
-verbose "\n * Installing pypo..."
+verbose "\n * Installing pypo and liquidsoap..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/pypo/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
-for i in /etc/init/airtime*.template; do
-    chmod 644 $i
-    sed -i "s/WEB_USER/${web_user}/g" $i
-    mv $i ${i%.template}
-done
+verbose "\n * Installing airtime-celery..."
+loudCmd "python ${AIRTIMEROOT}/python_apps/airtime-celery/setup.py install"
+verbose "...Done"
+
+verbose "\n * Installing airtime_analyzer..."
+loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin"
+verbose "...Done"
+
+#for i in /etc/init/airtime*.template; do
+#    chmod 644 $i
+#    sed -i "s/WEB_USER/${web_user}/g" $i
+#    mv $i ${i%.template}
+#done
 
 set +e
 loudCmd "initctl reload-configuration"
 loudCmd "systemctl daemon-reload" #systemd hipsters
-loudCmd "update-rc.d airtime-playout defaults" # Start at bootup, on Debian
-loudCmd "update-rc.d airtime-media-monitor defaults" # Start at bootup, on Debian
-loudCmd "update-rc.d airtime-liquidsoap defaults" # Start at bootup, on Debian
+loudCmd "update-rc.d airtime-playout defaults"      # Start at bootup, on Debian
+loudCmd "update-rc.d airtime-celery defaults"       # Start at bootup, on Debian
+loudCmd "update-rc.d airtime-liquidsoap defaults"   # Start at bootup, on Debian
+loudCmd "update-rc.d airtime_analyzer defaults"   # Start at bootup, on Debian
 set -e
 
 if [ ! -d /var/log/airtime ]; then
@@ -551,7 +557,7 @@ EXCHANGES="airtime-pypo|pypo-fetch|airtime-media-monitor|media-monitor"
 
 # Ignore errors in this check to avoid dying when vhost isn't found
 set +e
-rabbitmqctl list_vhosts | grep -w ${RABBITMQ_VHOST} > /dev/null
+rabbitmqctl list_vhosts | grep -w "^${RABBITMQ_VHOST}$" > /dev/null
 RESULT="$?"
 set -e
 
@@ -566,7 +572,8 @@ else
 fi
 
 verbose "\n * Setting RabbitMQ user permissions..."
-loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
+#loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} \"$EXCHANGES\" \"$EXCHANGES\" \"$EXCHANGES\""
+loudCmd "rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} ${RABBITMQ_USER} .\* .\* .\*"
 
 if [ ! -d "/etc/airtime" ]; then
     loud "\n-----------------------------------------------------"
@@ -575,8 +582,12 @@ if [ ! -d "/etc/airtime" ]; then
 
     verbose "\n * Creating /etc/airtime/ directory..."
     mkdir /etc/airtime
+    verbose "\n * Creating /etc/airtime-saas/ directory..."
+    # Default saas directory for the analyzer, cloud storage, and celery
+    mkdir -p /etc/airtime-saas/production
 fi
 chown -R ${web_user}:${web_user} /etc/airtime
+chown -R ${web_user}:${web_user} /etc/airtime-saas
 
 if [ ! -d "/srv/airtime" ]; then
     mkdir -p /srv/airtime

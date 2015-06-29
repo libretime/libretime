@@ -123,7 +123,7 @@ $pages = array(
         'pages'      => array(
             array(
                 'label'      => _('Help Center'),
-                'uri'        => "http://help.sourcefabric.org/",
+                'uri'        => HELP_URL,
                 'target'     => "_blank"
             ),
             array(
@@ -135,12 +135,12 @@ $pages = array(
             ),
             array(
                 'label'      => _('FAQ'),
-                'uri'        => "https://sourcefabricberlin.zendesk.com/hc/en-us/sections/200994309-Airtime-FAQ",
+                'uri'        => FAQ_URL,
                 'target'     => "_blank"
             ),
             array(
                 'label'      => _('User Manual'),
-                'uri'        => "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters",
+                'uri'        => USER_MANUAL_URL,
                 'target'     => "_blank"
             ),
             array(
@@ -149,6 +149,11 @@ $pages = array(
                 'controller' => 'dashboard',
                 'action'     => 'about',
                 'resource'   =>    'dashboard'
+            ),
+            array(
+                'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
+                'uri'        => AIRTIME_TRANSIFEX_URL,
+                'target'     => "_blank"
             )
         )
     ),

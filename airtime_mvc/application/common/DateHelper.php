@@ -15,7 +15,7 @@ class Application_Common_DateHelper
      */
     function getTimestamp()
     {
-        return date("Y-m-d H:i:s", $this->_dateTime);
+        return date(DEFAULT_TIMESTAMP_FORMAT, $this->_dateTime);
     }
 
     /**
@@ -24,7 +24,7 @@ class Application_Common_DateHelper
      */
     function getUtcTimestamp()
     {
-        return gmdate("Y-m-d H:i:s", $this->_dateTime);
+        return gmdate(DEFAULT_TIMESTAMP_FORMAT, $this->_dateTime);
     }
 
     /**
@@ -249,7 +249,7 @@ class Application_Common_DateHelper
      * 
      * @return string in $format default Y-m-d H:i:s in station timezone
      */
-    public static function UTCStringToStationTimezoneString($datetime, $format="Y-m-d H:i:s") {
+    public static function UTCStringToStationTimezoneString($datetime, $format=DEFAULT_TIMESTAMP_FORMAT) {
         $stationTimezone = new DateTimeZone(Application_Model_Preference::GetDefaultTimezone());
         $utcTimezone = new DateTimeZone("UTC");
         
@@ -264,7 +264,7 @@ class Application_Common_DateHelper
     *
     * @return string Y-m-d H:i:s in user's timezone
     */
-    public static function UTCStringToUserTimezoneString($datetime, $format="Y-m-d H:i:s") {
+    public static function UTCStringToUserTimezoneString($datetime, $format=DEFAULT_TIMESTAMP_FORMAT) {
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone("UTC");
         
@@ -279,7 +279,7 @@ class Application_Common_DateHelper
     *
     * @return string Y-m-d H:i:s in UTC timezone
     */
-    public static function UserTimezoneStringToUTCString($datetime, $format="Y-m-d H:i:s") {
+    public static function UserTimezoneStringToUTCString($datetime, $format=DEFAULT_TIMESTAMP_FORMAT) {
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
         $utcTimezone = new DateTimeZone("UTC");
          
@@ -321,7 +321,7 @@ class Application_Common_DateHelper
      * @param string $timezone           convert to the given timezone.
      * @param string $format           time format to convert to
      */
-    public static function convertTimestampsToTimezone(&$rows, $columnsToConvert, $timezone, $format="Y-m-d H:i:s")
+    public static function convertTimestampsToTimezone(&$rows, $columnsToConvert, $timezone, $format=DEFAULT_TIMESTAMP_FORMAT)
     {
         $timezone = strtolower($timezone);
         // Check that the timezone is valid and rows is an array
@@ -370,7 +370,7 @@ class Application_Common_DateHelper
      * @param unknown  $timezone   the timezone to convert to
      * @param string   $format     the formatted string
      */
-    public static function UTCStringToTimezoneString($datetime, $timezone, $format="Y-m-d H:i:s") {
+    public static function UTCStringToTimezoneString($datetime, $timezone, $format=DEFAULT_TIMESTAMP_FORMAT) {
         $d = new DateTime($datetime, new DateTimeZone("UTC"));
         $timezone = strtolower($timezone);
         $newTimezone = new DateTimeZone($timezone);

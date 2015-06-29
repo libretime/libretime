@@ -536,6 +536,12 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     width: 150px;
 }
 
+/***** Show Builder *****/
+
+#show_builder {
+    min-width: 470px;
+}
+
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
 table.library-track-md{
     width: 280px;
@@ -1243,10 +1249,13 @@ input[type="checkbox"] {
     margin: 0;
 }
 
+.dataTables_scrolling {
+    /*min-height: 150px;*/
+}
+
 .ui-dialog #schedule_playlist_dialog.ui-dialog-content {
     padding:0;
 }
-
 
 #schedule_playlist_dialog > div {
     background: none repeat scroll 0 0 transparent;
@@ -1841,7 +1850,6 @@ span.errors.sp-errors{
 }
 .collapsible-content {
     margin-top:-1px;
-    display:none;
 }
 .collapsible-header .arrow-icon, .collapsible-header-disabled  .arrow-icon {
     display:block;
@@ -1853,9 +1861,8 @@ span.errors.sp-errors{
     top:8px;
     
 }
-.collapsible-header.closed .arrow-icon, collapsible-header-disabled.close  .arrow-icon {
+.collapsible-header.closed .arrow-icon, .collapsible-header-disabled.close  .arrow-icon {
     background-position: 0 -11px !important;
-    
 }
 #schedule-add-show .button-bar {
     height: 28px;

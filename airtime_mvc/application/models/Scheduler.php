@@ -170,7 +170,7 @@ class Application_Model_Scheduler
                     //get all the linked shows instances and check if
                     //any of them are currently playing
                     $ccShowInstances = $ccShow->getCcShowInstancess();
-                    $timeNowUTC = gmdate("Y-m-d H:i:s");
+                    $timeNowUTC = gmdate(DEFAULT_TIMESTAMP_FORMAT);
                     foreach ($ccShowInstances as $ccShowInstance) {
 
                         if ($ccShowInstance->getDbStarts() <= $timeNowUTC &&
@@ -472,8 +472,8 @@ class Application_Model_Scheduler
             $itemEndDT = $this->findEndTime($itemStartDT, $item["clip_length"]);
 
             $update_sql = "UPDATE cc_schedule SET ".
-                "starts = '{$itemStartDT->format("Y-m-d H:i:s.u")}', ".
-                "ends = '{$itemEndDT->format("Y-m-d H:i:s.u")}' ".
+                "starts = '{$itemStartDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
+                "ends = '{$itemEndDT->format(DEFAULT_MICROTIME_FORMAT)}' ".
                 "WHERE id = {$item["id"]}";
             Application_Common_Database::prepareAndExecute(
                 $update_sql, array(), Application_Common_Database::EXECUTE);
@@ -608,7 +608,7 @@ class Application_Model_Scheduler
                 if ($linked) {
                     $instances = CcShowInstancesQuery::create()
                         ->filterByDbShowId($ccShow["id"])
-                        ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+                        ->filterByDbStarts(gmdate(DEFAULT_TIMESTAMP_FORMAT), Criteria::GREATER_THAN)
                         ->find();
                 } else {
                     $instances = CcShowInstancesQuery::create()
@@ -807,8 +807,8 @@ class Application_Model_Scheduler
                         $endTimeDT = $this->findEndTime($nextStartDT, $file['cliplength']);
                         if ($doInsert) {
                             $values[] = "(".
-                                "'{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
-                                "'{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
+                                "'{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
+                                "'{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
                                 "'{$file["cuein"]}', ".
                                 "'{$file["cueout"]}', ".
                                 "'{$file["fadein"]}', ".
@@ -821,8 +821,8 @@ class Application_Model_Scheduler
 
                         } elseif ($doUpdate) {
                             $update_sql = "UPDATE cc_schedule SET ".
-                                "starts = '{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
-                                "ends = '{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
+                                "starts = '{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
+                                "ends = '{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
                                 "cue_in = '{$file["cuein"]}', ".
                                 "cue_out = '{$file["cueout"]}', ".
                                 "fade_in = '{$file["fadein"]}', ".
@@ -871,7 +871,7 @@ class Application_Model_Scheduler
                     if ($adjustSched === true) {
 
                         $followingItems_sql = "SELECT * FROM cc_schedule ".
-                            "WHERE starts >= '{$initalStartDT->format("Y-m-d H:i:s.u")}' ".
+                            "WHERE starts >= '{$initalStartDT->format(DEFAULT_MICROTIME_FORMAT)}' ".
                             "AND instance_id = {$instanceId} ";
                         if (count($excludeIds) > 0) {
                             $followingItems_sql .= "AND id NOT IN (". implode($excludeIds, ",").") ";
@@ -887,8 +887,8 @@ class Application_Model_Scheduler
                             $endTimeDT = $this->findEndTime($nextStartDT, $item["clip_length"]);
                             $endTimeDT = $this->findTimeDifference($endTimeDT, $this->crossfadeDuration);
                             $update_sql = "UPDATE cc_schedule SET ".
-                                "starts = '{$nextStartDT->format("Y-m-d H:i:s.u")}', ".
-                                "ends = '{$endTimeDT->format("Y-m-d H:i:s.u")}', ".
+                                "starts = '{$nextStartDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
+                                "ends = '{$endTimeDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
                                 "position = {$pos} ".
                                 "WHERE id = {$item["id"]}";
                             Application_Common_Database::prepareAndExecute(

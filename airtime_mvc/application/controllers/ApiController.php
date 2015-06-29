@@ -5,6 +5,10 @@ require_once('TuneIn.php');
 class ApiController extends Zend_Controller_Action
 {
 
+    const DEFAULT_SHOWS_TO_RETRIEVE = "5";
+
+    const DEFAULT_DAYS_TO_RETRIEVE = "2";
+
     public function init()
     {
         $ignoreAuth = array("live-info", 
@@ -166,14 +170,14 @@ class ApiController extends Zend_Controller_Action
     
             $request = $this->getRequest();
     
-            $utcTimeNow = gmdate("Y-m-d H:i:s");
+            $utcTimeNow = gmdate(DEFAULT_TIMESTAMP_FORMAT);
             $utcTimeEnd = "";   // if empty, getNextShows will use interval instead of end of day
     
             // default to the station timezone
             $timezone = Application_Model_Preference::GetDefaultTimezone();
             $userDefinedTimezone = strtolower($request->getParam('timezone'));
             $upcase = false; // only upcase the timezone abbreviations
-            $this->checkTimezone($userDefinedTimezone, $timezone, $upcase);
+            $this->updateTimezone($userDefinedTimezone, $timezone, $upcase);
     
             $type = $request->getParam('type');
             $limit = $request->getParam('limit');
@@ -188,7 +192,7 @@ class ApiController extends Zend_Controller_Action
                 // make getNextShows use end of day
                 $end = Application_Common_DateHelper::getTodayStationEndDateTime();
                 $end->setTimezone(new DateTimeZone("UTC"));
-                $utcTimeEnd = $end->format("Y-m-d H:i:s");
+                $utcTimeEnd = $end->format(DEFAULT_TIMESTAMP_FORMAT);
                 
                 $result = array(
                     "env" => APPLICATION_ENV,
@@ -263,22 +267,19 @@ class ApiController extends Zend_Controller_Action
 
             $request = $this->getRequest();
             
-            $utcTimeNow = gmdate("Y-m-d H:i:s");
-            $utcTimeEnd = "";   // if empty, getNextShows will use interval instead of end of day
-
             // default to the station timezone
             $timezone = Application_Model_Preference::GetDefaultTimezone();
             $userDefinedTimezone = strtolower($request->getParam('timezone'));
             $upcase = false; // only upcase the timezone abbreviations
-            $this->checkTimezone($userDefinedTimezone, $timezone, $upcase);
+            $this->updateTimezone($userDefinedTimezone, $timezone, $upcase);
             
             $daysToRetrieve = $request->getParam('days');
             $showsToRetrieve = $request->getParam('shows');
             if ($daysToRetrieve == "" || !is_numeric($daysToRetrieve)) {
-                $daysToRetrieve = "2";
+                $daysToRetrieve = self::DEFAULT_DAYS_TO_RETRIEVE;
             }
             if ($showsToRetrieve == "" || !is_numeric($showsToRetrieve)) {
-                $showsToRetrieve = "5";
+                $showsToRetrieve = self::DEFAULT_SHOWS_TO_RETRIEVE;
             }
             
             // set the end time to the day's start n days from now.
@@ -286,7 +287,7 @@ class ApiController extends Zend_Controller_Action
             // days=2 will return shows until the end of tomorrow, etc.
             $end = Application_Common_DateHelper::getEndDateTime($timezone, $daysToRetrieve);
             $end->setTimezone(new DateTimeZone("UTC"));
-            $utcTimeEnd = $end->format("Y-m-d H:i:s");
+            $utcTimeEnd = $end->format(DEFAULT_TIMESTAMP_FORMAT);
 
             $result = Application_Model_Schedule::GetPlayOrderRange($utcTimeEnd, $showsToRetrieve);
             
@@ -326,7 +327,7 @@ class ApiController extends Zend_Controller_Action
      * @param string    $timezone               the default timezone
      * @param boolean   $upcase                 whether the timezone output should be upcased
      */
-    private function checkTimezone($userDefinedTimezone, &$timezone, &$upcase) 
+    private function updateTimezone($userDefinedTimezone, &$timezone, &$upcase)
     {
         $delimiter = "/";
         // if the user passes in a timezone in standard form ("Continent/City")
@@ -347,7 +348,7 @@ class ApiController extends Zend_Controller_Action
      * If the user passed in a timezone parameter, adjust timezone-dependent 
      * variables in the result to reflect the given timezone.
      * 
-     * @param object    $result     reference to the object to send back to the user
+     * @param array     $result     reference to the object to send back to the user
      * @param string    $timezone   the user's timezone parameter value
      * @param boolean   $upcase     whether the timezone output should be upcased
      */
@@ -359,9 +360,9 @@ class ApiController extends Zend_Controller_Action
             $timezone
         );
         
-           //Convert the UTC scheduler time ("now") to the user-defined timezone.
-           $result["station"]["schedulerTime"] = Application_Common_DateHelper::UTCStringToTimezoneString($result["station"]["schedulerTime"], $timezone);
-           $result["station"]["timezone"] = $upcase ? strtoupper($timezone) : $timezone;
+        //Convert the UTC scheduler time ("now") to the user-defined timezone.
+        $result["station"]["schedulerTime"] = Application_Common_DateHelper::UTCStringToTimezoneString($result["station"]["schedulerTime"], $timezone);
+        $result["station"]["timezone"] = $upcase ? strtoupper($timezone) : $timezone;
     }
     
     public function weekInfoAction()
@@ -647,11 +648,6 @@ class ApiController extends Zend_Controller_Action
         // fields
         $file->setMetadataValue('MDATA_KEY_CREATOR', "Airtime Show Recorder");
         $file->setMetadataValue('MDATA_KEY_TRACKNUMBER', $show_instance_id);
-
-        if (!$showCanceled && Application_Model_Preference::GetAutoUploadRecordedShowToSoundcloud()) {
-            $id = $file->getId();
-            Application_Model_Soundcloud::uploadSoundcloud($id);
-        }
     }
 
     public function mediaMonitorSetupAction()

@@ -236,8 +236,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $end->setTimezone($displayTimeZone);
 
         $show_name = $instance->getCcShow()->getDbName();
-        $start_time = $start->format("Y-m-d H:i:s");
-        $end_time = $end->format("Y-m-d H:i:s");
+        $start_time = $start->format(DEFAULT_TIMESTAMP_FORMAT);
+        $end_time = $end->format(DEFAULT_TIMESTAMP_FORMAT);
 
         $this->view->title = "{$show_name}:    {$start_time} - {$end_time}";
         $this->view->start = $start_time;
