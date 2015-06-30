@@ -9,7 +9,8 @@
     </p>
     <pre style="text-align: left">sudo service airtime-playout start
 sudo service airtime-liquidsoap start
-sudo service airtime-media-monitor start</pre>
+sudo service airtime_analyzer start
+sudo service airtime-celery start</pre>
     <p>
         Click "Done!" to bring up the Airtime configuration checklist; if your configuration is all green, 
         you're ready to get started with your personal Airtime station!

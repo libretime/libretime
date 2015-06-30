@@ -28,6 +28,10 @@ require_once "SecurityHelper.php";
 require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
 require_once "Auth.php";
+require_once "interface/OAuth2.php";
+require_once "TaskManager.php";
+require_once __DIR__.'/services/CeleryService.php';
+require_once __DIR__.'/services/SoundcloudService.php';
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';
@@ -123,11 +127,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->appendScript("var COMPANY_NAME = '" . COMPANY_NAME . "';");
     }
     
-    protected function _initUpgrade() {
+    protected function _initTasks() {
         /* We need to wrap this here so that we aren't checking when we're running the unit test suite
          */
         if (getenv("AIRTIME_UNIT_TEST") != 1) {
-            UpgradeManager::checkIfUpgradeIsNeeded(); //This will do the upgrade too if it's needed...
+            //This will do the upgrade too if it's needed...
+            TaskManager::getInstance()->runTasks();
         }
     }
 
@@ -139,7 +144,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $view->headLink(array('rel' => 'icon', 'href' => $baseUrl . 'favicon.ico', 'type' => 'image/x-icon'), 'PREPEND')
+        $view->headLink(array('rel' => 'icon',
+                              'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'],
+                              'type' => 'image/x-icon'), 'PREPEND')
             ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version'])
             ->appendStylesheet($baseUrl . 'css/pro_dropdown_3.css?' . $CC_CONFIG['airtime_version'])

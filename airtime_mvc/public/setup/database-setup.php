@@ -9,7 +9,7 @@
 class DatabaseSetup extends Setup {
 
     // airtime.conf section header
-    const SECTION = "[database]";
+    protected static $_settings = "[database]";
 
     // Constant form field names for passing errors back to the front-end
     const DB_USER = "dbUser",
@@ -17,31 +17,26 @@ class DatabaseSetup extends Setup {
         DB_NAME = "dbName",
         DB_HOST = "dbHost";
 
-    // Form field values
-    private $user, $pass, $name, $host;
-
     // Array of key->value pairs for airtime.conf
-    static $properties;
+    protected static $_properties;
 
+    /**
+     * @var PDO
+     */
     static $dbh = null;
 
     public function __construct($settings) {
-        $this->user = $settings[self::DB_USER];
-        $this->pass = $settings[self::DB_PASS];
-        $this->name = $settings[self::DB_NAME];
-        $this->host = $settings[self::DB_HOST];
-
-        self::$properties = array(
-            "host" => $this->host,
-            "dbname" => $this->name,
-            "dbuser" => $this->user,
-            "dbpass" => $this->pass,
+        static::$_properties = array(
+            "host"   => $settings[self::DB_HOST],
+            "dbname" => $settings[self::DB_NAME],
+            "dbuser" => $settings[self::DB_USER],
+            "dbpass" => $settings[self::DB_PASS],
         );
     }
 
     private function setNewDatabaseConnection($dbName) {
-        self::$dbh = new PDO("pgsql:host=" . $this->host . ";dbname=" . $dbName . ";port=5432"
-                             . ";user=" . $this->user . ";password=" . $this->pass);
+        self::$dbh = new PDO("pgsql:host=" . self::$_properties["host"] . ";dbname=" . $dbName . ";port=5432"
+                             . ";user=" . self::$_properties["dbuser"] . ";password=" . self::$_properties["dbpass"]);
         $err = self::$dbh->errorInfo();
         if ($err[1] != null) {
             throw new PDOException();
@@ -69,11 +64,7 @@ class DatabaseSetup extends Setup {
             throw new AirtimeDatabaseException("Couldn't establish a connection to the database! "
                                                . "Please check your credentials and try again. "
                                                . "PDO Exception: " .  $e->getMessage(),
-                                               array(
-                                                   self::DB_NAME,
-                                                   self::DB_USER,
-                                                   self::DB_PASS,
-                                               ));
+                                               array(self::DB_NAME, self::DB_USER, self::DB_PASS));
         }
 
         $this->writeToTemp();
@@ -85,13 +76,9 @@ class DatabaseSetup extends Setup {
         );
     }
 
-    protected function writeToTemp() {
-        parent::writeToTemp(self::SECTION, self::$properties);
-    }
-
     private function installDatabaseTables() {
         $this->checkDatabaseEncoding();
-        $this->setNewDatabaseConnection($this->name);
+        $this->setNewDatabaseConnection(self::$_properties["dbname"]);
         $this->checkSchemaExists();
         $this->createDatabaseTables();
     }
@@ -102,7 +89,7 @@ class DatabaseSetup extends Setup {
      */
     private function checkDatabaseExists() {
         $statement = self::$dbh->prepare("SELECT datname FROM pg_database WHERE datname = :dbname");
-        $statement->execute(array(":dbname" => $this->name));
+        $statement->execute(array(":dbname" => self::$_properties["dbname"]));
         $result = $statement->fetch();
         return isset($result[0]);
     }
@@ -126,16 +113,13 @@ class DatabaseSetup extends Setup {
      */
     private function checkUserCanCreateDb() {
         $statement = self::$dbh->prepare("SELECT 1 FROM pg_roles WHERE rolname=:dbuser AND rolcreatedb='t'");
-        $statement->execute(array(":dbuser" => $this->user));
+        $statement->execute(array(":dbuser" => self::$_properties["dbuser"]));
         $result = $statement->fetch();
         if (!isset($result[0])) {
-            throw new AirtimeDatabaseException("No database " . $this->name . " exists; user '" . $this->user
-                                               . "' does not have permission to create databases on " . $this->host,
-                                               array(
-                                                   self::DB_NAME,
-                                                   self::DB_USER,
-                                                   self::DB_PASS,
-                                               ));
+            throw new AirtimeDatabaseException("No database " . self::$_properties["dbname"] . " exists; user '"
+                                               . self::$_properties["dbuser"] . "' does not have permission to "
+                                               . "create databases on " . self::$_properties["host"],
+                                               array(self::DB_NAME, self::DB_USER, self::DB_PASS));
         }
     }
 
@@ -144,9 +128,9 @@ class DatabaseSetup extends Setup {
      * @throws AirtimeDatabaseException
      */
     private function createDatabase() {
-        $statement = self::$dbh->prepare("CREATE DATABASE " . pg_escape_string($this->name)
+        $statement = self::$dbh->prepare("CREATE DATABASE " . pg_escape_string(self::$_properties["dbname"])
                                          . " WITH ENCODING 'UTF8' TEMPLATE template0"
-                                         . " OWNER " . pg_escape_string($this->user));
+                                         . " OWNER " . pg_escape_string(self::$_properties["dbuser"]));
         if (!$statement->execute()) {
             throw new AirtimeDatabaseException("There was an error creating the database!",
                                                array(self::DB_NAME,));
@@ -169,8 +153,9 @@ class DatabaseSetup extends Setup {
                  * have multiple issues; they similarly die on any SQL errors, fail to read in multi-line
                  * commands, and fail on any unescaped ? or $ characters.
                  */
-                exec("export PGPASSWORD=" . $this->pass . " && psql -U " . $this->user . " --dbname "
-                     . $this->name . " -h " . $this->host . " -f $sqlDir$f 2>/dev/null", $out, $status);
+                exec("export PGPASSWORD=" . self::$_properties["dbpass"] . " && psql -U " . self::$_properties["dbuser"]
+                     . " --dbname " . self::$_properties["dbname"] . " -h " . self::$_properties["host"]
+                     . " -f $sqlDir$f 2>/dev/null", $out, $status);
             } catch (Exception $e) {
                 throw new AirtimeDatabaseException("There was an error setting up the Airtime schema!",
                                                    array(self::DB_NAME,));
@@ -185,7 +170,7 @@ class DatabaseSetup extends Setup {
     private function checkDatabaseEncoding() {
         $statement = self::$dbh->prepare("SELECT pg_encoding_to_char(encoding) "
                                          . "FROM pg_database WHERE datname = :dbname");
-        $statement->execute(array(":dbname" => $this->name));
+        $statement->execute(array(":dbname" => self::$_properties["dbname"]));
         $encoding = $statement->fetch();
         if (!($encoding && $encoding[0] == "UTF8")) {
             throw new AirtimeDatabaseException("The database was installed with an incorrect encoding type!",

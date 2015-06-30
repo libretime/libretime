@@ -74,6 +74,8 @@ class CcFiles extends BaseCcFiles {
     /** Used to create a CcFiles object from an array containing metadata and a file uploaded by POST.
      *  This is used by our Media REST API!
      * @param $fileArray An array containing metadata for a CcFiles object.
+     *
+     * @return object the sanitized response
      * @throws Exception
      */
     public static function createFromUpload($fileArray)
@@ -94,7 +96,7 @@ class CcFiles extends BaseCcFiles {
         $tempFilePath = $_FILES['file']['tmp_name'];
 
         try {
-            self::createAndImport($fileArray, $tempFilePath, $originalFilename);
+            return self::createAndImport($fileArray, $tempFilePath, $originalFilename);
         } catch (Exception $e) {
             if (file_exists($tempFilePath)) {
                 unlink($tempFilePath);

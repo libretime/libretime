@@ -200,14 +200,14 @@ SQL;
         // track information to the current show values
         if ($source != self::SCHEDULED_SOURCE_NAME) {
             $show = Application_Model_Show::getCurrentShow();
-            $results["current"] = array(
-                "starts" => $show[0]["starts"],
-                "ends" => $show[0]["ends"],
-                "type" => _("livestream"),
-                "name" => (isset($show[0])?$show[0]["name"]:"") . " - " . _(self::LIVE_STREAM),
+            $results["current"] = isset($show[0]) ? array(
+                "starts"            => $show[0]["starts"],
+                "ends"              => $show[0]["ends"],
+                "type"              => _("livestream"),
+                "name"              => $show[0]["name"] . " - " . _(self::LIVE_STREAM),
                 "media_item_played" => false,
-                "record" => "0"
-            );
+                "record"            => "0"
+            ) : null;
         } else if (count($rows) >= 1) {
             $currentMedia = $rows[0];
 

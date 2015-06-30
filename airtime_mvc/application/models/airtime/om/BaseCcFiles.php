@@ -522,6 +522,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $collCcPlayoutHistorysPartial;
 
     /**
+     * @var        PropelObjectCollection|ThirdPartyTrackReferences[] Collection to store aggregation of ThirdPartyTrackReferences objects.
+     */
+    protected $collThirdPartyTrackReferencess;
+    protected $collThirdPartyTrackReferencessPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      * @var        boolean
@@ -576,6 +582,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $ccPlayoutHistorysScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $thirdPartyTrackReferencessScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -3298,6 +3310,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
             $this->collCcPlayoutHistorys = null;
 
+            $this->collThirdPartyTrackReferencess = null;
+
         } // if (deep)
     }
 
@@ -3544,6 +3558,23 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
             if ($this->collCcPlayoutHistorys !== null) {
                 foreach ($this->collCcPlayoutHistorys as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->thirdPartyTrackReferencessScheduledForDeletion !== null) {
+                if (!$this->thirdPartyTrackReferencessScheduledForDeletion->isEmpty()) {
+                    ThirdPartyTrackReferencesQuery::create()
+                        ->filterByPrimaryKeys($this->thirdPartyTrackReferencessScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->thirdPartyTrackReferencessScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collThirdPartyTrackReferencess !== null) {
+                foreach ($this->collThirdPartyTrackReferencess as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -4187,6 +4218,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     }
                 }
 
+                if ($this->collThirdPartyTrackReferencess !== null) {
+                    foreach ($this->collThirdPartyTrackReferencess as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
 
             $this->alreadyInValidation = false;
         }
@@ -4568,6 +4607,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             if (null !== $this->collCcPlayoutHistorys) {
                 $result['CcPlayoutHistorys'] = $this->collCcPlayoutHistorys->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collThirdPartyTrackReferencess) {
+                $result['ThirdPartyTrackReferencess'] = $this->collThirdPartyTrackReferencess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -5170,6 +5212,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 }
             }
 
+            foreach ($this->getThirdPartyTrackReferencess() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addThirdPartyTrackReferences($relObj->copy($deepCopy));
+                }
+            }
+
             //unflag object copy
             $this->startCopy = false;
         } // if ($deepCopy)
@@ -5404,6 +5452,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
         if ('CcPlayoutHistory' == $relationName) {
             $this->initCcPlayoutHistorys();
+        }
+        if ('ThirdPartyTrackReferences' == $relationName) {
+            $this->initThirdPartyTrackReferencess();
         }
     }
 
@@ -6958,6 +7009,231 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
+     * Clears out the collThirdPartyTrackReferencess collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return CcFiles The current object (for fluent API support)
+     * @see        addThirdPartyTrackReferencess()
+     */
+    public function clearThirdPartyTrackReferencess()
+    {
+        $this->collThirdPartyTrackReferencess = null; // important to set this to null since that means it is uninitialized
+        $this->collThirdPartyTrackReferencessPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collThirdPartyTrackReferencess collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialThirdPartyTrackReferencess($v = true)
+    {
+        $this->collThirdPartyTrackReferencessPartial = $v;
+    }
+
+    /**
+     * Initializes the collThirdPartyTrackReferencess collection.
+     *
+     * By default this just sets the collThirdPartyTrackReferencess collection to an empty array (like clearcollThirdPartyTrackReferencess());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initThirdPartyTrackReferencess($overrideExisting = true)
+    {
+        if (null !== $this->collThirdPartyTrackReferencess && !$overrideExisting) {
+            return;
+        }
+        $this->collThirdPartyTrackReferencess = new PropelObjectCollection();
+        $this->collThirdPartyTrackReferencess->setModel('ThirdPartyTrackReferences');
+    }
+
+    /**
+     * Gets an array of ThirdPartyTrackReferences objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcFiles is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|ThirdPartyTrackReferences[] List of ThirdPartyTrackReferences objects
+     * @throws PropelException
+     */
+    public function getThirdPartyTrackReferencess($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collThirdPartyTrackReferencessPartial && !$this->isNew();
+        if (null === $this->collThirdPartyTrackReferencess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collThirdPartyTrackReferencess) {
+                // return empty collection
+                $this->initThirdPartyTrackReferencess();
+            } else {
+                $collThirdPartyTrackReferencess = ThirdPartyTrackReferencesQuery::create(null, $criteria)
+                    ->filterByCcFiles($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collThirdPartyTrackReferencessPartial && count($collThirdPartyTrackReferencess)) {
+                      $this->initThirdPartyTrackReferencess(false);
+
+                      foreach ($collThirdPartyTrackReferencess as $obj) {
+                        if (false == $this->collThirdPartyTrackReferencess->contains($obj)) {
+                          $this->collThirdPartyTrackReferencess->append($obj);
+                        }
+                      }
+
+                      $this->collThirdPartyTrackReferencessPartial = true;
+                    }
+
+                    $collThirdPartyTrackReferencess->getInternalIterator()->rewind();
+
+                    return $collThirdPartyTrackReferencess;
+                }
+
+                if ($partial && $this->collThirdPartyTrackReferencess) {
+                    foreach ($this->collThirdPartyTrackReferencess as $obj) {
+                        if ($obj->isNew()) {
+                            $collThirdPartyTrackReferencess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collThirdPartyTrackReferencess = $collThirdPartyTrackReferencess;
+                $this->collThirdPartyTrackReferencessPartial = false;
+            }
+        }
+
+        return $this->collThirdPartyTrackReferencess;
+    }
+
+    /**
+     * Sets a collection of ThirdPartyTrackReferences objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $thirdPartyTrackReferencess A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setThirdPartyTrackReferencess(PropelCollection $thirdPartyTrackReferencess, PropelPDO $con = null)
+    {
+        $thirdPartyTrackReferencessToDelete = $this->getThirdPartyTrackReferencess(new Criteria(), $con)->diff($thirdPartyTrackReferencess);
+
+
+        $this->thirdPartyTrackReferencessScheduledForDeletion = $thirdPartyTrackReferencessToDelete;
+
+        foreach ($thirdPartyTrackReferencessToDelete as $thirdPartyTrackReferencesRemoved) {
+            $thirdPartyTrackReferencesRemoved->setCcFiles(null);
+        }
+
+        $this->collThirdPartyTrackReferencess = null;
+        foreach ($thirdPartyTrackReferencess as $thirdPartyTrackReferences) {
+            $this->addThirdPartyTrackReferences($thirdPartyTrackReferences);
+        }
+
+        $this->collThirdPartyTrackReferencess = $thirdPartyTrackReferencess;
+        $this->collThirdPartyTrackReferencessPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ThirdPartyTrackReferences objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related ThirdPartyTrackReferences objects.
+     * @throws PropelException
+     */
+    public function countThirdPartyTrackReferencess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collThirdPartyTrackReferencessPartial && !$this->isNew();
+        if (null === $this->collThirdPartyTrackReferencess || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collThirdPartyTrackReferencess) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getThirdPartyTrackReferencess());
+            }
+            $query = ThirdPartyTrackReferencesQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCcFiles($this)
+                ->count($con);
+        }
+
+        return count($this->collThirdPartyTrackReferencess);
+    }
+
+    /**
+     * Method called to associate a ThirdPartyTrackReferences object to this object
+     * through the ThirdPartyTrackReferences foreign key attribute.
+     *
+     * @param    ThirdPartyTrackReferences $l ThirdPartyTrackReferences
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function addThirdPartyTrackReferences(ThirdPartyTrackReferences $l)
+    {
+        if ($this->collThirdPartyTrackReferencess === null) {
+            $this->initThirdPartyTrackReferencess();
+            $this->collThirdPartyTrackReferencessPartial = true;
+        }
+
+        if (!in_array($l, $this->collThirdPartyTrackReferencess->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddThirdPartyTrackReferences($l);
+
+            if ($this->thirdPartyTrackReferencessScheduledForDeletion and $this->thirdPartyTrackReferencessScheduledForDeletion->contains($l)) {
+                $this->thirdPartyTrackReferencessScheduledForDeletion->remove($this->thirdPartyTrackReferencessScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	ThirdPartyTrackReferences $thirdPartyTrackReferences The thirdPartyTrackReferences object to add.
+     */
+    protected function doAddThirdPartyTrackReferences($thirdPartyTrackReferences)
+    {
+        $this->collThirdPartyTrackReferencess[]= $thirdPartyTrackReferences;
+        $thirdPartyTrackReferences->setCcFiles($this);
+    }
+
+    /**
+     * @param	ThirdPartyTrackReferences $thirdPartyTrackReferences The thirdPartyTrackReferences object to remove.
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function removeThirdPartyTrackReferences($thirdPartyTrackReferences)
+    {
+        if ($this->getThirdPartyTrackReferencess()->contains($thirdPartyTrackReferences)) {
+            $this->collThirdPartyTrackReferencess->remove($this->collThirdPartyTrackReferencess->search($thirdPartyTrackReferences));
+            if (null === $this->thirdPartyTrackReferencessScheduledForDeletion) {
+                $this->thirdPartyTrackReferencessScheduledForDeletion = clone $this->collThirdPartyTrackReferencess;
+                $this->thirdPartyTrackReferencessScheduledForDeletion->clear();
+            }
+            $this->thirdPartyTrackReferencessScheduledForDeletion[]= clone $thirdPartyTrackReferences;
+            $thirdPartyTrackReferences->setCcFiles(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -7086,6 +7362,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collThirdPartyTrackReferencess) {
+                foreach ($this->collThirdPartyTrackReferencess as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->aFkOwner instanceof Persistent) {
               $this->aFkOwner->clearAllReferences($deep);
             }
@@ -7123,6 +7404,10 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->collCcPlayoutHistorys->clearIterator();
         }
         $this->collCcPlayoutHistorys = null;
+        if ($this->collThirdPartyTrackReferencess instanceof PropelCollection) {
+            $this->collThirdPartyTrackReferencess->clearIterator();
+        }
+        $this->collThirdPartyTrackReferencess = null;
         $this->aFkOwner = null;
         $this->aCcSubjsRelatedByDbEditedby = null;
         $this->aCcMusicDirs = null;

@@ -35,6 +35,8 @@ class Config {
         $CC_CONFIG['baseDir'] = $values['general']['base_dir'];
         $CC_CONFIG['baseUrl'] = $values['general']['base_url'];
         $CC_CONFIG['basePort'] = $values['general']['base_port'];
+        $CC_CONFIG['stationId'] = $values['general']['station_id'];
+        $CC_CONFIG['phpDir'] = $values['general']['airtime_dir'];
         if (isset($values['general']['dev_env'])) {
             $CC_CONFIG['dev_env'] = $values['general']['dev_env'];
         } else {
@@ -83,7 +85,18 @@ class Config {
 
         $CC_CONFIG['soundcloud-connection-retries'] = $values['soundcloud']['connection_retries'];
         $CC_CONFIG['soundcloud-connection-wait'] = $values['soundcloud']['time_between_retries'];
-        
+
+        $globalAirtimeConfig = "/etc/airtime-saas/".$CC_CONFIG['dev_env']."/airtime.conf";
+        if (!file_exists($globalAirtimeConfig)) {
+            // If the dev env specific airtime.conf doesn't exist default
+            // to the production airtime.conf
+            $globalAirtimeConfig = "/etc/airtime-saas/production/airtime.conf";
+        }
+        $globalAirtimeConfigValues = parse_ini_file($globalAirtimeConfig, true);
+        $CC_CONFIG['soundcloud-client-id'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_id'];
+        $CC_CONFIG['soundcloud-client-secret'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_secret'];
+        $CC_CONFIG['soundcloud-redirect-uri'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_redirect_uri'];
+
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];
         }

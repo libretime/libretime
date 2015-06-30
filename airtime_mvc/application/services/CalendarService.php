@@ -55,23 +55,6 @@ class Application_Service_CalendarService
                         "icon" => "overview",
                         "url" => $baseUrl."library/edit-file-md/id/".$ccFile->getDbId());
                 }
-
-                //recorded show can be uploaded to soundcloud
-                if (Application_Model_Preference::GetUploadToSoundcloudOption()) {
-                    $scid = $ccFile->getDbSoundcloudId();
-
-                    if ($scid > 0) {
-                        $menu["soundcloud_view"] = array(
-                            "name" => _("View on Soundcloud"),
-                            "icon" => "soundcloud",
-                            "url" => $ccFile->getDbSoundcloudLinkToFile());
-                    }
-
-                    $text = is_null($scid) ? _('Upload to SoundCloud') : _('Re-upload to SoundCloud');
-                    $menu["soundcloud_upload"] = array(
-                        "name"=> $text,
-                        "icon" => "soundcloud");
-                }
             } else {
                 $menu["content"] = array(
                     "name"=> _("Show Content"),

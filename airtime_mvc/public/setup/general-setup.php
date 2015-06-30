@@ -11,35 +11,26 @@
 class GeneralSetup extends Setup {
 
     // airtime.conf section header
-    const SECTION = "[general]";
+    protected static $_section = "[general]";
 
     // Constant form field names for passing errors back to the front-end
     const GENERAL_PORT = "generalPort",
         GENERAL_HOST = "generalHost";
 
-    // Form field values
-    static $user, $host, $port, $root;
-
     // Array of key->value pairs for airtime.conf
-    static $properties;
+    protected static $_properties;
 
     // Message and error fields to return to the front-end
     static $message = null;
     static $errors = array();
 
     function __construct($settings) {
-        self::$host = $settings[self::GENERAL_HOST];
-        self::$port = $settings[self::GENERAL_PORT];
 
-        self::$properties = array(
+        self::$_properties = array(
             "api_key" => $this->generateRandomString(),
-            "base_url" => self::$host,
-            "base_port" => self::$port,
+            "base_url" => $settings[self::GENERAL_HOST],
+            "base_port" => $settings[self::GENERAL_PORT],
         );
-    }
-
-    function writeToTemp() {
-        parent::writeToTemp(self::SECTION, self::$properties);
     }
 
     /**

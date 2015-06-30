@@ -212,16 +212,6 @@ class Application_Model_ShowBuilder
             $row["rebroadcast_title"] = sprintf(_("Rebroadcast of %s from %s"), $name, $time);
         } elseif (intval($p_item["si_record"]) === 1) {
             $row["record"] = true;
-
-            // at the time of creating on show, the recorded file is not in the DB yet.
-            // therefore, 'si_file_id' is null. So we need to check it.
-            if (Application_Model_Preference::GetUploadToSoundcloudOption() && isset($p_item['si_file_id'])) {
-                $file = Application_Model_StoredFile::RecallById($p_item['si_file_id']);
-                if (isset($file)) {
-                    $sid = $file->getSoundCloudId();
-                    $row['soundcloud_id'] = $sid;
-                }
-            }
         }
 
         if ($startsEpoch < $this->epoch_now && $endsEpoch > $this->epoch_now) {

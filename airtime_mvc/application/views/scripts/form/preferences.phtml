@@ -8,8 +8,10 @@
         <?php echo $this->element->getSubform('preferences_tunein') ?>
     </div>
 
-
-    <!-- No soundcloud stuff on Airtime Pro -- Albert -->
+    <h3 class="collapsible-header" id="soundcloud-heading"><span class="arrow-icon"></span><?php echo _("SoundCloud Settings") ?></h3>
+    <div class="collapsible-content" id="soundcloud-settings">
+        <?php echo $this->element->getSubform('preferences_soundcloud') ?>
+    </div>
 
     <!-- Hide the 'dangerous settings' by default -->
     <h3 class="collapsible-header closed" id="dangerous-heading"><span class="arrow-icon"></span><?php echo _("Dangerous Options") ?></h3>

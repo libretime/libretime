@@ -10,7 +10,7 @@ import time
 from kombu.connection import BrokerConnection
 from kombu.messaging import Exchange, Queue
 from kombu.simple import SimpleQueue
-from amqplib.client_0_8.exceptions import AMQPConnectionException
+from amqp.exceptions import AMQPError
 import json
 
 from std_err_override import LogWriter
@@ -29,21 +29,21 @@ class PypoMessageHandler(Thread):
 
     def init_rabbit_mq(self):
         self.logger.info("Initializing RabbitMQ stuff")
+        simple_queue = None
         try:
             schedule_exchange = Exchange("airtime-pypo", "direct", durable=True, auto_delete=True)
             schedule_queue = Queue("pypo-fetch", exchange=schedule_exchange, key="foo")
-            connection = BrokerConnection(self.config["host"], \
-                    self.config["user"], \
-                    self.config["password"], \
-                    self.config["vhost"])
+            connection = BrokerConnection(self.config["host"],
+                                          self.config["user"],
+                                          self.config["password"],
+                                          self.config["vhost"])
 
             channel = connection.channel()
-            self.simple_queue = SimpleQueue(channel, schedule_queue)
+            simple_queue = SimpleQueue(channel, schedule_queue)
         except Exception, e:
             self.logger.error(e)
-            return False
 
-        return True
+        return simple_queue
 
     """
     Handle a message from RabbitMQ, put it into our yucky global var.
@@ -91,39 +91,18 @@ class PypoMessageHandler(Thread):
             self.logger.error("Exception in handling RabbitMQ message: %s", e)
 
     def main(self):
-        while not self.init_rabbit_mq():
-            self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
-            time.sleep(5)
-
-        loops = 1
-        while True:
-            self.logger.info("Loop #%s", loops)
-            try:
-                message = self.simple_queue.get(block=True)
-                self.handle_message(message.payload)
-                # ACK the message to take it off the queue
-                message.ack()
-            except (IOError, AttributeError, AMQPConnectionException), e:
-                self.logger.error('Exception: %s', e)
-                self.logger.error("traceback: %s", traceback.format_exc())
-                while not self.init_rabbit_mq():
-                    self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
-                    time.sleep(5)
-            except Exception, e:
-                """
-                sleep 5 seconds so that we don't spin inside this
-                while loop and eat all the CPU
-                """
-                time.sleep(5)
-
-                """
-                There is a problem with the RabbitMq messenger service. Let's
-                log the error and get the schedule via HTTP polling
-                """
-                self.logger.error('Exception: %s', e)
-                self.logger.error("traceback: %s", traceback.format_exc())
-
-            loops += 1
+        try:
+            with self.init_rabbit_mq() as queue:
+                while True:
+                    message = queue.get(block=True)
+                    self.handle_message(message.payload)
+                    # ACK the message to take it off the queue
+                    message.ack()
+        except Exception, e:
+            self.logger.error('Exception: %s', e)
+            self.logger.error("traceback: %s", traceback.format_exc())
+        self.logger.error("Error connecting to RabbitMQ Server. Trying again in few seconds")
+        time.sleep(5)
 
     """
     Main loop of the thread:

@@ -10,7 +10,8 @@ var AIRTIME = (function(AIRTIME) {
     mod.checkAddButton = function() {
         var selected = mod.getChosenItemsLength(), $cursor = $('tr.sb-selected'), check = false,
             shows = $('tr.sb-header'), current = $('tr.sb-current-show'),
-            cursorText = $.i18n._('Add to next show');
+        // TODO: this is an ugly way of doing this... we should find a more robust way of checking which view we're in.
+            cursorText = (window.location.href.toLowerCase().indexOf("schedule") > -1) ? $.i18n._('Add to show') : $.i18n._('Add to next show');
 
         // make sure library items are selected and a cursor is selected.
         if (selected !== 0) {

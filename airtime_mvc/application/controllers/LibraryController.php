@@ -265,29 +265,38 @@ class LibraryController extends Zend_Controller_Action
             }
         }
 
-        //SOUNDCLOUD MENU OPTIONS
-        if ($type === "audioclip" && Application_Model_Preference::GetUploadToSoundcloudOption()) {
+        // SOUNDCLOUD MENU OPTION
+        $ownerId = empty($obj) ? $file->getFileOwnerId() : $obj->getCreatorId();
+        if ($isAdminOrPM || $ownerId == $user->getId()) {
+            $soundcloudService = new SoundcloudService();
+            if ($type === "audioclip" && $soundcloudService->hasAccessToken()) {
 
-            //create a menu separator
-            $menu["sep1"] = "-----------";
+                //create a menu separator
+                $menu["sep1"] = "-----------";
 
-            //create a sub menu for Soundcloud actions.
-            $menu["soundcloud"] = array("name" => _("Soundcloud"), "icon" => "soundcloud", "items" => array());
+                //create a sub menu for Soundcloud actions.
+                $menu["soundcloud"] = array("name" => _("Soundcloud"), "icon" => "soundcloud", "items" => array());
 
-            $scid = $file->getSoundCloudId();
-
-            if ($scid > 0) {
-                $url = $file->getSoundCloudLinkToFile();
-                $menu["soundcloud"]["items"]["view"] = array("name" => _("View on Soundcloud"), "icon" => "soundcloud", "url" => $url);
+                $serviceId = $soundcloudService->getServiceId($id);
+                if (!is_null($file) && $serviceId != 0) {
+                    $menu["soundcloud"]["items"]["view"] = array("name" => _("View track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/view-on-sound-cloud/id/{$id}");
+                    $menu["soundcloud"]["items"]["remove"] = array("name" => _("Remove track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/delete/id/{$id}");
+                } else {
+                    // If a reference exists for this file ID, that means the user has uploaded the track
+                    // but we haven't yet gotten a response from Celery, so disable the menu item
+                    if ($soundcloudService->referenceExists($id)) {
+                        $menu["soundcloud"]["items"]["upload"] = array(
+                            "name" => _("Upload track"), "icon" => "soundcloud",
+                            "url" => $baseUrl . "soundcloud/upload/id/{$id}", "disabled" => true
+                        );
+                    } else {
+                        $menu["soundcloud"]["items"]["upload"] = array(
+                            "name" => _("Upload track"), "icon" => "soundcloud",
+                            "url" => $baseUrl . "soundcloud/upload/id/{$id}"
+                        );
+                    }
+                }
             }
-
-            if (!is_null($scid)) {
-                $text = _("Re-upload to SoundCloud");
-            } else {
-                $text = _("Upload to SoundCloud");
-            }
-
-            $menu["soundcloud"]["items"]["upload"] = array("name" => $text, "icon" => "soundcloud", "url" => $baseUrl."library/upload-file-soundcloud/id/{$id}");
         }
 
         if (empty($menu)) {
@@ -523,35 +532,6 @@ class LibraryController extends Zend_Controller_Action
             }
         } catch (Exception $e) {
             Logging::info($e->getMessage());
-        }
-    }
-
-    public function uploadFileSoundcloudAction()
-    {
-        $id = $this->_getParam('id');
-        Application_Model_Soundcloud::uploadSoundcloud($id);
-        // we should die with ui info
-        $this->_helper->json->sendJson(null);
-    }
-
-    public function getUploadToSoundcloudStatusAction()
-    {
-        $id = $this->_getParam('id');
-        $type = $this->_getParam('type');
-
-        if ($type == "show") {
-            $show_instance = new Application_Model_ShowInstance($id);
-            $this->view->sc_id = $show_instance->getSoundCloudFileId();
-            $file = $show_instance->getRecordedFile();
-            $this->view->error_code = $file->getSoundCloudErrorCode();
-            $this->view->error_msg = $file->getSoundCloudErrorMsg();
-        } elseif ($type == "file") {
-            $file                   = Application_Model_StoredFile::RecallById($id);
-            $this->view->sc_id      = $file->getSoundCloudId();
-            $this->view->error_code = $file->getSoundCloudErrorCode();
-            $this->view->error_msg  = $file->getSoundCloudErrorMsg();
-        } else {
-            Logging::warn("Trying to upload unknown type: $type with id: $id");
         }
     }
 }

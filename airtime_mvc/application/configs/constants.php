@@ -10,7 +10,6 @@ define('COMPANY_SUFFIX'     , 'z.ú.');
 define('COMPANY_SITE'       , 'Sourcefabric.org');
 define('COMPANY_SITE_URL'   , 'http://sourcefabric.org/');
 
-
 define('HELP_URL'                   , 'http://help.sourcefabric.org/');
 define('FAQ_URL'                    , 'https://sourcefabricberlin.zendesk.com/hc/en-us/sections/200994309-Airtime-FAQ');
 define('WHOS_USING_URL'             , 'http://sourcefabric.org/en/airtime/whosusing');
@@ -88,13 +87,6 @@ define('UI_PLAYLISTCONTROLLER_OBJ_SESSNAME', 'PLAYLISTCONTROLLER_OBJ');
 /*define('UI_PLAYLIST_SESSNAME', 'PLAYLIST');
 define('UI_BLOCK_SESSNAME', 'BLOCK');*/
 
-
-// Soundcloud contants
-define('SOUNDCLOUD_NOT_UPLOADED_YET' , -1);
-define('SOUNDCLOUD_PROGRESS'         , -2);
-define('SOUNDCLOUD_ERROR'            , -3);
-
-
 //WHMCS integration
 define("WHMCS_API_URL", "https://account.sourcefabric.com/includes/api.php");
 define("SUBDOMAIN_WHMCS_CUSTOM_FIELD_NAME", "Choose your domain");
@@ -108,3 +100,15 @@ define('PROVISIONING_STATUS_ACTIVE' , 'Active');
 
 //TuneIn integration
 define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
+
+// SoundCloud
+define('DEFAULT_SOUNDCLOUD_LICENSE_TYPE', 'all-rights-reserved');
+define('DEFAULT_SOUNDCLOUD_SHARING_TYPE', 'public');
+
+// Celery
+define('CELERY_PENDING_STATUS', 'PENDING');
+define('CELERY_SUCCESS_STATUS', 'SUCCESS');
+define('CELERY_FAILED_STATUS', 'FAILED');
+
+// Celery Services
+define('SOUNDCLOUD_SERVICE_NAME', 'soundcloud');

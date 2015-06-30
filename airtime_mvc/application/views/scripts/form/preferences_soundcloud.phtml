@@ -1,112 +1,16 @@
 <fieldset class="padded">
     <dl class="zend_form">
-        <dd id="UploadToSoundcloudOption-element" class="block-display" style=" margin:6px 0 10px 0">
-            <label class="optional" for="UploadToSoundcloudOption">
-                <?php echo $this->element->getElement('UploadToSoundcloudOption') ?>
-                <strong><?php echo $this->element->getElement('UploadToSoundcloudOption')->getLabel() ?></strong>
-            </label>
-            <?php if($this->element->getElement('UploadToSoundcloudOption')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('UploadToSoundcloudOption')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dd id="SoundCloudDownloadbleOption-element" class="block-display" style="padding-left:20px; margin:6px 0 10px 0">
-            <label class="optional" for="SoundCloudDownloadbleOption">
-                <?php echo $this->element->getElement('SoundCloudDownloadbleOption') ?>
-                <strong><?php echo $this->element->getElement('SoundCloudDownloadbleOption')->getLabel() ?></strong>
-            </label>
-            <?php if($this->element->getElement('SoundCloudDownloadbleOption')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SoundCloudDownloadbleOption')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dt id="SoundCloudUser-label" class="block-display">
-            <label class="optional" for="SoundCloudUser"><?php echo $this->element->getElement('SoundCloudUser')->getLabel() ?>
-                <span class="info-text-small"><?php echo _("(Required)")?></span> :
-            </label>
-        </dt>
-        <dd id="SoundCloudUser-element" class="block-display">
-            <?php echo $this->element->getElement('SoundCloudUser') ?>
-            <?php if($this->element->getElement('SoundCloudUser')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SoundCloudUser')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dt id="SoundCloudPassword-label" class="block-display">
-            <label class="optional" for="SoundCloudPassword"><?php echo $this->element->getElement('SoundCloudPassword')->getLabel() ?>
-                <span class="info-text-small"><?php echo _("(Required)")?></span> :
-            </label>
-        </dt>
-        <dd id="SoundCloudPassword-element" class="block-display">
-            <?php echo $this->element->getElement('SoundCloudPassword') ?>
-            <?php if($this->element->getElement('SoundCloudPassword')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SoundCloudPassword')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?> 
-        </dd>
-        <dt id="SoundCloudTags-label" class="block-display">
-            <label class="optional" for="SoundCloudTags"><?php echo $this->element->getElement('SoundCloudTags')->getLabel() ?></label>
-        </dt>
-        <dd id="SoundCloudTags-element" class="block-display clearfix">
-            <?php echo $this->element->getElement('SoundCloudTags') ?>
-            <?php if($this->element->getElement('SoundCloudTags')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SoundCloudTags')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="SoundCloudGenre-label" class="block-display">
-            <label class="optional" for="SoundCloudGenre"><?php echo $this->element->getElement('SoundCloudGenre')->getLabel() ?></label>
-        </dt>
-        <dd id="SoundCloudGenre-element" class="block-display">
-            <?php echo $this->element->getElement('SoundCloudGenre') ?>
-             <?php if($this->element->getElement('SoundCloudGenre')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SoundCloudGenre')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="SoundCloudTrackType-label" class="block-display">
-             <label class="optional" for="SoundCloudTrackType"><?php echo $this->element->getElement('SoundCloudTrackType')->getLabel() ?></label>
-        </dt>
-        <dd id="SoundCloudTrackType-element" class="block-display">
-            <?php echo $this->element->getElement('SoundCloudTrackType') ?>
-            <?php if($this->element->getElement('SoundCloudTrackType')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SoundCloudTrackType')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="SoundCloudLicense-label" class="block-display">
-            <label class="optional" for="SoundCloudLicense"><?php echo $this->element->getElement('SoundCloudLicense')->getLabel() ?></label>
-        </dt>
-        <dd id="SoundCloudLicense-element" class="block-display">
-            <?php echo $this->element->getElement('SoundCloudLicense') ?>
-            <?php if($this->element->getElement('SoundCloudLicense')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('SoundCloudLicense')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
+        <?php
+            $soundcloudService = new SoundcloudService();
+            if ($soundcloudService->hasAccessToken()) {
+                echo $this->element->getElement('SoundCloudDisconnect')->render();
+            } else {
+                echo $this->element->getElement('SoundCloudConnect')->render();
+            }
+        ?>
+
+        <?php echo $this->element->getElement('SoundCloudLicense')->render() ?>
+
+        <?php echo $this->element->getElement('SoundCloudSharing')->render() ?>
     </dl>
 </fieldset>

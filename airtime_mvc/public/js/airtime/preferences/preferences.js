@@ -82,6 +82,20 @@ function setTuneInSettingsReadonly() {
     }
 }
 
+function setSoundCloudSettingsListener() {
+    var connect = $("#SoundCloudConnect"),
+        disconnect = $("#SoundCloudDisconnect");
+    connect.click(function(e){
+        e.preventDefault();
+        window.location.replace(baseUrl + "soundcloud/authorize");
+    });
+
+    disconnect.click(function(e){
+        e.preventDefault();
+        window.location.replace(baseUrl + "soundcloud/deauthorize");
+    });
+}
+
 /*
  * Enable/disable mail server authentication fields
  */
@@ -147,4 +161,5 @@ $(document).ready(function() {
     setEnableSystemEmailsListener();
     setTuneInSettingsReadonly();
     setTuneInSettingsListener();
+    setSoundCloudSettingsListener();
 });
