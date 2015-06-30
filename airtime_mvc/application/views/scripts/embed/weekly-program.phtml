@@ -25,13 +25,41 @@
             });
         });
 
+        String.prototype.paddingLeft = function(paddingValue) {
+            return String(paddingValue + this).slice(-paddingValue.length);
+        };
 
         var schedule_data = <?php echo $this->schedule_data; ?>;
-        console.log(schedule_data);
 
         var app = angular.module('scheduleWidget', []);
         app.controller('scheduleController', ['$scope', '$window', function($scope, $window) {
-            $scope.schedule_data = $window.schedule_data["scheduleData"];
+
+            // Loop through every show and assign it to the corresponding day of the week's
+            // show array.
+            angular.forEach($window.schedule_data["shows"], function(value, key) {
+
+                // First we have to create a Date object out of the show time in UTC.
+                // Then we can format the string in the client's local timezone.
+                var start_date = new Date(value.starts + " UTC");
+                var end_date = new Date(value.ends + " UTC");
+
+                // This variable is used to identify which schedule_data object (which day of the week)
+                // we should assign the show to.
+                // NOTE: we have to add 1 to the month because javascript's Date.getMonth()
+                // function returns the month number starting with an index of 0. In PHP,
+                // the months are indexed starting at 1.
+                var format_start_date = start_date.getFullYear() + "-" + (start_date.getMonth()+1) + "-" + start_date.getDate();
+
+                if ($window.schedule_data["weekDays"][format_start_date] !== undefined) {
+                    $window.schedule_data["weekDays"][format_start_date]["shows"].push(
+                        {
+                            "show_start_hour": start_date.getHours().toString().paddingLeft("00")+":"+ start_date.getMinutes().toString().paddingLeft("00"),
+                            "show_end_hour": end_date.getHours().toString().paddingLeft("00")+":"+ end_date.getMinutes().toString().paddingLeft("00"),
+                            "name": value.name
+                        });
+                }
+            });
+            $scope.weekDays = $window.schedule_data["weekDays"];
 
             $scope.isEmpty = function(obj) {
                 return obj.length == 0;
@@ -43,13 +71,13 @@
 <body ng-app="scheduleWidget" ng-controller="scheduleController">
 <div class="schedule tab_content current">
     <ul class="tabs">
-        <li ng-repeat="x in schedule_data track by $index">
+        <li ng-repeat="x in weekDays track by $index">
             {{x.dayOfWeek}}<span>{{x.dayOfMonth}}</span>
         </li>
     </ul>
 
     <div class="schedule_content">
-        <div ng-repeat="x in schedule_data track by $index" ng-attr-id="{{'day-' + x.dayOfMonth}}" class="schedule_item">
+        <div ng-repeat="x in weekDays track by $index" ng-attr-id="{{'day-' + x.dayOfMonth}}" class="schedule_item">
             <div ng-if="isEmpty(x.shows)" class="row empty-schedule">Looks like there are no shows scheduled on this day.</div>
             <div ng-repeat="show in x.shows" class="row">
                 <div class="time_grid">{{show.show_start_hour}} - {{show.show_end_hour}}</div>
