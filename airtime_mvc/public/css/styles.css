@@ -539,7 +539,8 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
 /***** Show Builder *****/
 
 #show_builder {
-    min-width: 470px;
+    /* This breaks the add content dialog at low resolutions :(
+    min-width: 470px;*/
 }
 
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
