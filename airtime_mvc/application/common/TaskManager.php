@@ -2,15 +2,19 @@
 
 /**
  * Class TaskManager
+ *
+ * When adding a new task, the new AirtimeTask class will need to be added to the internal task list,
+ * as an ENUM value to the AirtimeTask interface, and as a case in the TaskFactory.
  */
 final class TaskManager {
 
     /**
-     * @var array tasks to be run
+     * @var array tasks to be run. Maps task names to a boolean value denoting
+     *            whether the task has been checked/run
      */
     protected $_taskList = [
-        AirtimeTask::UPGRADE,  // Always run the upgrade first
-        AirtimeTask::CELERY
+        AirtimeTask::UPGRADE    => false,
+        AirtimeTask::CELERY     => false,
     ];
 
     /**
@@ -19,8 +23,7 @@ final class TaskManager {
     protected static $_instance;
 
     /**
-     * @var int TASK_INTERVAL_SECONDS how often, in seconds, to run the TaskManager tasks,
-     *                                if they need to be run
+     * @var int TASK_INTERVAL_SECONDS how often, in seconds, to run the TaskManager tasks
      */
     const TASK_INTERVAL_SECONDS = 30;
 
@@ -45,6 +48,22 @@ final class TaskManager {
             self::$_instance = new TaskManager();
         }
         return self::$_instance;
+    }
+
+    /**
+     * Run a single task.
+     *
+     * @param string $taskName the ENUM name of the task to be run
+     */
+    public function runTask($taskName) {
+        $task = TaskFactory::getTask($taskName);
+        if ($task && $task->shouldBeRun()) {
+            $task->run();
+        }
+        $this->_taskList[$taskName] = true;  // Mark that the task has been checked/run.
+                                             // This is important for prioritized tasks that
+                                             // we need to run on every request (such as the
+                                             // schema check/upgrade)
     }
 
     /**
@@ -81,10 +100,9 @@ final class TaskManager {
                                                 // better to be silent here to avoid log bloat
             return;
         }
-        foreach ($this->_taskList as $task) {
-            $task = TaskFactory::getTask($task);
-            if ($task && $task->shouldBeRun()) {
-                $task->run();
+        foreach ($this->_taskList as $task => $hasTaskRun) {
+            if (!$hasTaskRun) {
+                $this->runTask($task);
             }
         }
     }
