@@ -22,7 +22,7 @@ else:
             mm2_files.append(os.path.join(root, filename))
         
     data_files = [
-                  # ('/etc/init', ['install/upstart/airtime-media-monitor.conf.template']),
+                  ('/etc/init', ['install/upstart/airtime-media-monitor.conf.template']),
                   ('/etc/init.d', ['install/sysvinit/airtime-media-monitor']),
                   ('/etc/airtime', ['install/media_monitor_logging.cfg']),
                   ('/var/log/airtime/media-monitor', []),
