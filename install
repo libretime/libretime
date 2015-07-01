@@ -312,6 +312,14 @@ else
     checkCommandExists "psql"
 fi
 
+# Check if composer exists and install if it doesn't
+eval hash "composer" 2>/dev/null
+commandFound=$?
+if [[ ! ${commandFound} -eq 0 ]]; then
+    curl -sS https://getcomposer.org/installer | php
+    mv composer.phar /usr/local/bin/composer
+fi
+
 # Run composer (install PHP dependencies) and create a VERSION file
 loudCmd "./build.sh"
 
