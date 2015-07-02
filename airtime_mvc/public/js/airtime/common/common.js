@@ -1,3 +1,6 @@
+var previewWidth = 482,
+    previewHeight = 110;
+
 $(document).ready(function() {
 
     /* Removed as this is now (hopefully) unnecessary */
@@ -95,7 +98,7 @@ function open_audio_preview(type, id) {
     // The reason that we need to encode artist and title string is that
     // sometime they contain '/' or '\' and apache reject %2f or %5f
     // so the work around is to encode it twice.
-    openPreviewWindow(baseUrl+'audiopreview/audio-preview/audioFileID/'+id+'/type/'+type);
+    openPreviewWindow(baseUrl+'audiopreview/audio-preview/audioFileID/'+id+'/type/'+type, previewWidth, previewHeight);
     _preview_window.focus();
 }
 
@@ -113,7 +116,7 @@ function open_playlist_preview(p_playlistID, p_playlistIndex) {
     if (_preview_window != null && !_preview_window.closed)
         _preview_window.playAllPlaylist(p_playlistID, p_playlistIndex);
     else
-        openPreviewWindow(baseUrl+'audiopreview/playlist-preview/playlistIndex/'+p_playlistIndex+'/playlistID/'+p_playlistID);
+        openPreviewWindow(baseUrl+'audiopreview/playlist-preview/playlistIndex/'+p_playlistIndex+'/playlistID/'+p_playlistID, previewWidth, previewHeight);
     _preview_window.focus();
 }
 
@@ -124,7 +127,7 @@ function open_block_preview(p_blockId, p_blockIndex) {
     if (_preview_window != null && !_preview_window.closed)
         _preview_window.playBlock(p_blockId, p_blockIndex);
     else
-        openPreviewWindow(baseUrl+'audiopreview/block-preview/blockIndex/'+p_blockIndex+'/blockId/'+p_blockId);
+        openPreviewWindow(baseUrl+'audiopreview/block-preview/blockIndex/'+p_blockIndex+'/blockId/'+p_blockId, previewWidth, previewHeight);
     _preview_window.focus();
 }
 
@@ -138,13 +141,14 @@ function open_show_preview(p_showID, p_showIndex) {
     if (_preview_window != null && !_preview_window.closed)
         _preview_window.playAllShow(p_showID, p_showIndex);
     else 
-        openPreviewWindow(baseUrl+'audiopreview/show-preview/showID/'+p_showID+'/showIndex/'+p_showIndex);
+        openPreviewWindow(baseUrl+'audiopreview/show-preview/showID/'+p_showID+'/showIndex/'+p_showIndex, previewWidth, previewHeight);
     _preview_window.focus();
 }
 
-function openPreviewWindow(url) {
+function openPreviewWindow(url, w, h) {
+    var dim = (w && h) ? 'width=' + w + ',height=' + h + ',' : '';
     // Hardcoding this here is kinda gross, but the alternatives aren't much better...
-    _preview_window = window.open(url, $.i18n._('Audio Player'), 'width=482,height=110,scrollbars=yes');
+    _preview_window = window.open(url, $.i18n._('Audio Player'), dim + 'scrollbars=yes');
     return false;
 }
 
