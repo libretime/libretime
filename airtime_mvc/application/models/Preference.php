@@ -1489,4 +1489,14 @@ class Application_Model_Preference
         self::setValue("task_manager_lock", $value);
     }
 
+    // SAAS-876 - Toggle indicating whether user is using custom stream settings
+
+    public static function getUsingCustomStreamSettings() {
+        return self::getValue("using_custom_stream_settings");
+    }
+
+    public static function setUsingCustomStreamSettings($value) {
+        self::setValue("using_custom_stream_settings", $value);
+    }
+
 }

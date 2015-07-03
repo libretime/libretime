@@ -42,7 +42,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $this->setIsArray(true);
         $this->setElementsBelongTo($prefix."_data");
 
-        $disable_all = Application_Model_Preference::GetEnableStreamConf() == "false";
+        $disable_all = !Application_Model_Preference::getUsingCustomStreamSettings();
 
         $enable = new Zend_Form_Element_Checkbox('enable');
         $enable->setLabel(_('Enabled:'))
@@ -221,10 +221,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $adminPass->setAttrib('alt', 'regular_text');
         $this->addElement($adminPass);
 
-        $liquidsopa_error_msg = '<div class="stream-status status-info"><h3>'._('Getting information from the server...').'</h3></div>';
+        $liquidsoap_error_msg = '<div class="stream-status status-info"><h3>'._('Getting information from the server...').'</h3></div>';
 
         $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number, "enabled"=>$enable->getValue(), "liquidsoap_error_msg"=>$liquidsopa_error_msg))
+            array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml', "stream_number"=>$stream_number, "enabled"=>$enable->getValue(), "liquidsoap_error_msg"=>$liquidsoap_error_msg))
         ));
     }
 
@@ -232,22 +232,24 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
     {
         $f_data = $data['s'.$this->prefix."_data"];
         $isValid = parent::isValid($f_data);
-        if ($f_data['enable'] == 1) {
-            if ($f_data['host'] == '') {
-                $element = $this->getElement("host");
-                $element->addError(_("Server cannot be empty."));
-                $isValid = false;
-            }
-            if ($f_data['port'] == '') {
-                $element = $this->getElement("port");
-                $element->addError(_("Port cannot be empty."));
-                $isValid = false;
-            }
-            if ($f_data['output'] == 'icecast') {
-                if ($f_data['mount'] == '') {
-                    $element = $this->getElement("mount");
-                    $element->addError(_("Mount cannot be empty with Icecast server."));
+        if ($f_data) {
+            if ($f_data['enable'] == 1) {
+                if ($f_data['host'] == '') {
+                    $element = $this->getElement("host");
+                    $element->addError(_("Server cannot be empty."));
                     $isValid = false;
+                }
+                if ($f_data['port'] == '') {
+                    $element = $this->getElement("port");
+                    $element->addError(_("Port cannot be empty."));
+                    $isValid = false;
+                }
+                if ($f_data['output'] == 'icecast') {
+                    if ($f_data['mount'] == '') {
+                        $element = $this->getElement("mount");
+                        $element->addError(_("Mount cannot be empty with Icecast server."));
+                        $isValid = false;
+                    }
                 }
             }
         }

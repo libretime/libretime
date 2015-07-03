@@ -16,6 +16,10 @@ class Application_Form_StreamSetting extends Zend_Form
 
     public function startFrom()
     {
+        $this->setDecorators(array(
+                                 array('ViewScript', array('viewScript' => 'preference/stream-setting.phtml'))
+                             ));
+
         $setting = $this->setting;
 
         $icecast_vorbis_metadata = new Zend_Form_Element_Checkbox('icecast_vorbis_metadata');
@@ -55,6 +59,13 @@ class Application_Form_StreamSetting extends Zend_Form
         ->setAttribs(array('style' => "border: 0; color: #f6931f; font-weight: bold;"))
         ->setDecorators(array('ViewHelper'));
         $this->addElement($replay_gain);
+
+        $custom = Application_Model_Preference::getUsingCustomStreamSettings();
+        $customSettings = new Zend_Form_Element_Radio('customStreamSettings');
+        $customSettings->setLabel(_('Stream Settings:'));
+        $customSettings->setMultiOptions(array(_("Default"), _("Use Custom")));
+        $customSettings->setValue(!empty($custom) ? $custom : 0);
+        $this->addElement($customSettings);
     }
 
     public function isValid($data)

@@ -2252,6 +2252,10 @@ span.errors.sp-errors{
     width: 1100px;
 }
 
+#stream_save_bottom {
+    bottom: 0;
+}
+
 .preferences .padded {
     margin-top: 5px; /* Firefox needs this */
 }

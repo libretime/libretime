@@ -469,7 +469,7 @@ $(document).ready(function() {
     setSliderForReplayGain();
     getAdminPasswordStatus();
     
-    $('#stream_save').live('click', function(){
+    $("[id^='stream_save']").live('click', function(){
         var confirm_pypo_restart_text = sprintf($.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If %s is recording, and if the change causes a playout engine restart, the recording will be interrupted."), PRODUCT_NAME);
         if (confirm(confirm_pypo_restart_text)) {
             var data = $('#stream_form').serialize();
