@@ -98,7 +98,7 @@ class WidgetHelper
             // javascript date formats so it's easier to sort the shows by day.
             $result["weekDays"][$weekStartDateTime->format("Y-n-j")] = array();
             $result["weekDays"][$weekStartDateTime->format("Y-n-j")]["dayOfMonth"] = $dateParse["day"];
-            $result["weekDays"][$weekStartDateTime->format("Y-n-j")]["dayOfWeek"] = _(strtoupper(date("D", $weekStartDateTime->getTimestamp())));
+            $result["weekDays"][$weekStartDateTime->format("Y-n-j")]["dayOfWeek"] = strtoupper(_(date("D", $weekStartDateTime->getTimestamp())));
 
             // Shows scheduled for this day will get added to this array when
             // we convert the show times to the client's local timezone in weekly-program.phtml
