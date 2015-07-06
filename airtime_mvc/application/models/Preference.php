@@ -27,17 +27,17 @@ class Application_Model_Preference
     private static function setValue($key, $value, $isUserValue = false)
     {
         $cache = new Cache();
-        
-        try {
-            
-            $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
-            $con->beginTransaction();
+        $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
+        $con->beginTransaction();
 
+        try {
+            static::_lock($con);
             $userId = self::getUserId();
             
-            if ($isUserValue && is_null($userId))
+            if ($isUserValue && is_null($userId)) {
                 throw new Exception("User id can't be null for a user preference {$key}.");
-            
+            }
+
             //Check if key already exists
             $sql = "SELECT COUNT(*) FROM cc_pref"
                 ." WHERE keystr = :key";
@@ -111,6 +111,28 @@ class Application_Model_Preference
         }
 
         $cache->store($key, $value, $isUserValue, $userId);
+    }
+
+    /**
+     * Given a PDO connection, lock the cc_pref table for the current transaction
+     *
+     * Creates a table level lock, which defaults to ACCESS EXCLUSIVE mode;
+     * see http://www.postgresql.org/docs/9.1/static/explicit-locking.html
+     *
+     * @param PDO $con
+     */
+    private static function _lock($con) {
+        // If we're not in a transaction, a lock is pointless
+        if (!$con->inTransaction()) {
+            return;
+        }
+        // Don't specify NOWAIT here; we should block on obtaining this lock
+        // in case we're handling simultaneous requests.
+        // Locks only last until the end of the transaction, so we shouldn't have to
+        // worry about this causing any noticeable difference in request processing speed
+        $sql = "LOCK TABLE cc_pref";
+        $st = $con->prepare($sql);
+        $st->execute();
     }
 
     private static function getValue($key, $isUserValue = false)
