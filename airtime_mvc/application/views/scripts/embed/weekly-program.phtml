@@ -59,7 +59,11 @@
                         });
                 }
             });
-            $scope.weekDays = $window.schedule_data["weekDays"];
+            // Convert the object into an array to maintain the same order when we
+            // iterate over each weekday
+            $scope.weekDays = $.map($window.schedule_data["weekDays"], function(value, index) {
+                return [value];
+            });
 
             $scope.isEmpty = function(obj) {
                 return obj.length == 0;
