@@ -31,7 +31,8 @@ class Application_Model_Preference
         $con->beginTransaction();
 
         try {
-            static::_lock($con);
+            /* Comment this out while we reevaluate it in favor of a unique constraint
+            static::_lock($con); */
             $userId = self::getUserId();
             
             if ($isUserValue && is_null($userId)) {
