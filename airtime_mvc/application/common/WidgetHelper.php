@@ -127,6 +127,16 @@ class WidgetHelper
             "ALL",
             $showQueryDateRangeEnd->format("Y-m-d H:i:s"));
 
+        // Convert each start and end time string to DateTime objects
+        // so we can get a real timestamp. The timestamps will be used
+        // to convert into javascript Date objects.
+        foreach($shows as &$show) {
+            $dtStarts = new DateTime($show["starts"], new DateTimeZone("UTC"));
+            $show["starts_timestamp"] = $dtStarts->getTimestamp();
+
+            $dtEnds = new DateTime($show["ends"], new DateTimeZone("UTC"));
+            $show["ends_timestamp"] = $dtEnds->getTimestamp();
+        }
         $result["shows"] = $shows;
 
         // XSS exploit prevention
