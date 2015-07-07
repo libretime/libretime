@@ -205,11 +205,6 @@ class CcFiles extends BaseCcFiles {
                 $cloudFile->save();
 
                 Application_Model_Preference::updateDiskUsage($fileSizeBytes);
-
-                $now = new DateTime("now", new DateTimeZone("UTC"));
-                $file->setDbMtime($now);
-                $file->save();
-
             } else if ($file) {
 
                 // Since we check for this value when deleting files, set it first
@@ -238,14 +233,13 @@ class CcFiles extends BaseCcFiles {
                         $file->setDbFilepath($filePathRelativeToStor);
                     }
                 }
-
-                $now = new DateTime("now", new DateTimeZone("UTC"));
-                $file->setDbMtime($now);
-                $file->save();
-
             } else {
                 throw new FileNotFoundException();
             }
+
+            $now = new DateTime("now", new DateTimeZone("UTC"));
+            $file->setDbMtime($now);
+            $file->save();
         }
         catch (FileNotFoundException $e)
         {
@@ -356,17 +350,27 @@ class CcFiles extends BaseCcFiles {
     /**
      *
      * Strips out the private fields we do not want to send back in API responses
-     * @param $file string a CcFiles object
+     *
+     * @param CcFiles $file a CcFiles object
+     *
+     * @return array
      */
     //TODO: rename this function?
-    public static function sanitizeResponse($file)
-    {
+    public static function sanitizeResponse($file) {
         $response = $file->toArray(BasePeer::TYPE_FIELDNAME);
-    
+
         foreach (self::$privateFields as $key) {
             unset($response[$key]);
         }
-    
+
+        $mime = $file->getDbMime();
+        if (!empty($mime)) {
+            // Get an extension based on the file's mime type and change the path to use this extension
+            $path = pathinfo($file->getDbFilepath());
+            $ext = FileDataHelper::getFileExtensionFromMime($mime);
+            $response["filepath"] = ($path["dirname"] . '/' . $path["filename"] . $ext);
+        }
+
         return $response;
     }
 

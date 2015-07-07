@@ -24,4 +24,31 @@ class FileDataHelper {
             $data["bpm"] = intval($data["bpm"]);
         }
     }
+
+    /**
+     * Return a suitable extension for the given file
+     *
+     * @param string $mime
+     *
+     * @return string file extension with(!) a dot
+     *
+     * @throws Exception
+     */
+    public static function getFileExtensionFromMime($mime)
+    {
+        if ($mime == "audio/ogg" || $mime == "application/ogg" || $mime == "audio/vorbis") {
+            return ".ogg";
+        } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg" || $mime == "audio/mpeg3") {
+            return ".mp3";
+        } elseif ($mime == "audio/x-flac") {
+            return ".flac";
+        } elseif ($mime == "audio/mp4") {
+            return ".mp4";
+        } elseif ($mime == "audio/wav" || $mime == "audio/x-wav") {
+            return ".wav";
+        } else {
+            throw new Exception("Unknown $mime");
+        }
+    }
+
 }
