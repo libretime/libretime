@@ -2,6 +2,25 @@
 
 class FileDataHelper {
 
+    public static function getAudioMimeTypeArray() {
+        return array(
+            "audio/ogg" => "ogg",
+            "application/ogg" => "ogg",
+            "audio/vorbis" => "ogg",
+            "audio/mp3" => "mp3",
+            "audio/mpeg" => "mp3",
+            "audio/mpeg3" => "mp3",
+            "audio/mp4" => "mp4",
+            "audio/x-flac" => "flac",
+            "audio/wav" => "wav",
+            "audio/x-wav" => "wav",
+            "audio/mp2" => "mp2",
+            "audio/mp1" => "mp1",
+            "audio/x-ms-wma" => "wma",
+            "audio/basic" => "au",
+        );
+    }
+
     /**
      * We want to throw out invalid data and process the upload successfully
      * at all costs, so check the data and sanitize it if necessary
@@ -30,28 +49,17 @@ class FileDataHelper {
      *
      * @param string $mime
      *
-     * @return string file extension with(!) a dot
+     * @return string file extension with(!) a dot (for convenience)
      *
      * @throws Exception
      */
     public static function getFileExtensionFromMime($mime)
     {
-        if ($mime == "audio/ogg" || $mime == "application/ogg" || $mime == "audio/vorbis") {
-            return ".ogg";
-        } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg" || $mime == "audio/mpeg3") {
-            return ".mp3";
-        } elseif ($mime == "audio/mp2") {
-            return ".mp2";
-        } elseif ($mime == "audio/mp1") {
-            return ".mp1";
-        } elseif ($mime == "audio/x-flac") {
-            return ".flac";
-        } elseif ($mime == "audio/mp4") {
-            return ".mp4";
-        } elseif ($mime == "audio/wav" || $mime == "audio/x-wav") {
-            return ".wav";
-        } else {
-            throw new Exception("Unknown $mime");
+        $mime = trim(strtolower($mime));
+        try {
+            return ('.' . static::getAudioMimeTypeArray()[$mime]);
+        } catch (Exception $e) {
+            throw new Exception("Unknown file type: $mime");
         }
     }
 
