@@ -24,7 +24,8 @@ define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.h
 define('AIRTIME_COPYRIGHT_DATE' , '2010-2015');
 define('AIRTIME_REST_VERSION'   , '1.1');
 define('AIRTIME_API_VERSION'    , '1.1');
-define('AIRTIME_CODE_VERSION'   , '2.5.13');
+// XXX: it's important that we upgrade this every time we add an upgrade!
+define('AIRTIME_CODE_VERSION'   , '2.5.14');
 
 // Defaults
 define('DEFAULT_LOGO_PLACEHOLDER', 1);
