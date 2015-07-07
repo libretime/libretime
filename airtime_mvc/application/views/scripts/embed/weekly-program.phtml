@@ -55,8 +55,8 @@
                 if ($window.schedule_data["weekDays"][format_start_date] !== undefined) {
                     $window.schedule_data["weekDays"][format_start_date]["shows"].push(
                         {
-                            "show_start_hour": start_date.getHours().toString().paddingLeft("00")+":"+ start_date.getMinutes().toString().paddingLeft("00"),
-                            "show_end_hour": end_date.getHours().toString().paddingLeft("00")+":"+ end_date.getMinutes().toString().paddingLeft("00"),
+                            "show_start_hour": start_date.toLocaleTimeString([], { hour: 'numeric', minute : 'numeric' }),
+                            "show_end_hour": end_date.toLocaleTimeString([], { hour: 'numeric', minute : 'numeric' }),
                             "name": value.name
                         });
                 }
