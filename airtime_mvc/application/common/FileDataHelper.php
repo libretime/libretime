@@ -40,6 +40,10 @@ class FileDataHelper {
             return ".ogg";
         } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg" || $mime == "audio/mpeg3") {
             return ".mp3";
+        } elseif ($mime == "audio/mp2") {
+            return ".mp2";
+        } elseif ($mime == "audio/mp1") {
+            return ".mp1";
         } elseif ($mime == "audio/x-flac") {
             return ".flac";
         } elseif ($mime == "audio/mp4") {

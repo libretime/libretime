@@ -527,7 +527,7 @@ SQL;
      */
     public function getRelativeFileUrl($baseUrl)
     {
-        return $baseUrl."api/get-media/file/".$this->getId().FileDataHelper::getFileExtensionFromMime($this->_file->getDbMime());
+        return $baseUrl."api/get-media/file/".$this->getId();
     }
     
     public function getResourceId()
