@@ -2,6 +2,27 @@
 
 class FileDataHelper {
 
+    public static function getAudioMimeTypeArray() {
+        return array(
+            "audio/ogg" => "ogg",
+            "application/ogg" => "ogg",
+            "audio/vorbis" => "ogg",
+            "audio/mp3" => "mp3",
+            "audio/mpeg" => "mp3",
+            "audio/mpeg3" => "mp3",
+            "audio/aac" => "aac",
+            "audio/aacp" => "aac",
+            "audio/mp4" => "mp4",
+            "audio/x-flac" => "flac",
+            "audio/wav" => "wav",
+            "audio/x-wav" => "wav",
+            "audio/mp2" => "mp2",
+            "audio/mp1" => "mp1",
+            "audio/x-ms-wma" => "wma",
+            "audio/basic" => "au",
+        );
+    }
+
     /**
      * We want to throw out invalid data and process the upload successfully
      * at all costs, so check the data and sanitize it if necessary
@@ -24,4 +45,24 @@ class FileDataHelper {
             $data["bpm"] = intval($data["bpm"]);
         }
     }
+
+    /**
+     * Return a suitable extension for the given file
+     *
+     * @param string $mime
+     *
+     * @return string file extension with(!) a dot (for convenience)
+     *
+     * @throws Exception
+     */
+    public static function getFileExtensionFromMime($mime)
+    {
+        $mime = trim(strtolower($mime));
+        try {
+            return ('.' . static::getAudioMimeTypeArray()[$mime]);
+        } catch (Exception $e) {
+            throw new Exception("Unknown file type: $mime");
+        }
+    }
+
 }

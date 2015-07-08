@@ -97,7 +97,7 @@ body {
 
 .schedule_item div.time_grid {
     /*padding-right: 10px;*/
-    width: 20%;
+    width: 30%;
     font-weight: 300;
     color: #AAAAAA;
     display: inline-block;
@@ -107,7 +107,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     padding-left: 10px;
-    width: 77%;
+    width: 67%;
     display:inline-block;
     vertical-align: middle;
 }
@@ -132,11 +132,11 @@ body {
 
 @media (max-width: 630px) {
     .schedule_item div.time_grid {
-        width: 25%;
+        width: 37%;
     }
 
     .schedule_item div.name_grid {
-        width: 72%;
+        width: 58%;
     }
 }
 
@@ -147,31 +147,31 @@ body {
     }
 
     .schedule_item div.time_grid {
-        width: 30%;
+        width: 35%;
     }
 
     .schedule_item div.name_grid {
-        width: 67%;
+        width: 60%;
     }
 }
 
 @media (max-width: 500px) {
     .schedule_item div.time_grid {
-        width: 35%;
+        width: 40%;
     }
 
     .schedule_item div.name_grid {
-        width: 62%;
+        width: 55%;
     }
 }
 
 @media (max-width: 400px) {
     .schedule_item div.time_grid {
-        width: 40%;
+        width: 90%;
     }
 
     .schedule_item div.name_grid {
-        width: 50%;
+        width: 90%;
     }
 }
 

@@ -786,6 +786,11 @@ function setAddShowEvents(form) {
                     scheduleRefetchEvents(json);
                     $addShowForm.hide();
                 }
+
+                /* CC-6062: Resize the window to avoid stretching the last column */
+                windowResize();
+                makeAddShowButton();
+
             }
         });
     });

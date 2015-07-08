@@ -17,6 +17,7 @@ class Application_Model_StoredFile
 {
     /**
      * @holds propel database object
+     * @var CcFiles
      */
     private $_file;
 
@@ -467,48 +468,6 @@ SQL;
         $this->_file->save();
     }
 
-
-    public function getRealFileExtension() {
-        $path = $this->_file->getDbFilepath();
-        $path_elements = explode('.', $path);
-        if (count($path_elements) < 2) {
-            return "";
-        } else {
-            return $path_elements[count($path_elements) - 1];
-        }
-    }
-
-    /**
-     * Return suitable extension.
-     *
-     * @return string
-     *         file extension without a dot
-     */
-    public function getFileExtension()
-    {
-        $possible_ext = $this->getRealFileExtension();
-        if ($possible_ext !== "") {
-            return $possible_ext;
-        }
-
-        // We fallback to guessing the extension from the mimetype if we
-        // cannot extract it from the file name
-
-        $mime = $this->_file->getDbMime();
-
-        if ($mime == "audio/ogg" || $mime == "application/ogg" || $mime == "audio/vorbis") {
-            return "ogg";
-        } elseif ($mime == "audio/mp3" || $mime == "audio/mpeg") {
-            return "mp3";
-        } elseif ($mime == "audio/x-flac") {
-            return "flac";
-        } elseif ($mime == "audio/mp4") {
-            return "mp4";
-        } else {
-            throw new Exception("Unknown $mime");
-        }
-    }
-
     /**
      * Get the absolute filepath
      *
@@ -568,7 +527,7 @@ SQL;
      */
     public function getRelativeFileUrl($baseUrl)
     {
-        return $baseUrl."api/get-media/file/".$this->getId().".".$this->getFileExtension();
+        return $baseUrl."api/get-media/file/".$this->getId();
     }
     
     public function getResourceId()

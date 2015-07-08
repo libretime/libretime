@@ -98,7 +98,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $showSourceMount = new Zend_Form_Element_Text('show_source_mount');
         $showSourceMount->setAttrib('readonly', true)
             ->setLabel(_('Mount:'))
-            ->setValue(isset($showSourceParams["mount"])?$showSourceParams["mount"]:"");
+            ->setValue(isset($showSourceParams["path"])?$showSourceParams["path"]:"");
         $this->addElement($showSourceMount);
 
         // demo only code
@@ -127,10 +127,10 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
                       'viewScript'                  => 'form/preferences_livestream.phtml',
                       'master_source_host'          => isset($masterSourceParams["host"])?$masterSourceParams["host"]:"",
                       'master_source_port'          => isset($masterSourceParams["port"])?$masterSourceParams["port"]:"",
-                      'master_source_mount'         => isset($masterSourceParams["mount"])?$masterSourceParams["mount"]:"",
+                      'master_source_mount'         => isset($masterSourceParams["path"])?$masterSourceParams["path"]:"",
                       'show_source_host'            => isset($showSourceParams["host"])?$showSourceParams["host"]:"",
                       'show_source_port'            => isset($showSourceParams["port"])?$showSourceParams["port"]:"",
-                      'show_source_mount'           => isset($showSourceParams["mount"])?$showSourceParams["mount"]:"",
+                      'show_source_mount'           => isset($showSourceParams["path"])?$showSourceParams["path"]:"",
                       'isDemo'                      => $isDemo,
                     )
                 )
