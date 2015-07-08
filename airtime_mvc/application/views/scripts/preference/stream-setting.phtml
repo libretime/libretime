@@ -38,11 +38,6 @@
                 <?php echo $this->form->getElement('icecast_vorbis_metadata') ?>
             </dd>
 
-            <?php
-                // TODO: replace this with something that looks good
-                echo $this->form->getElement('customStreamSettings')->render();
-            ?>
-
             <dt id="streamFormat-label">
                 <label class="optional"><?php echo $this->form->getElement('streamFormat')->getLabel() ?></label>
             </dt>
@@ -110,12 +105,10 @@
     <fieldset class="padded">
     <legend><?php echo _("Output Stream Settings") ?></legend>
         <?php
-            if (Application_Model_Preference::getUsingCustomStreamSettings()) {
-                for($i=1;$i<=$this->num_stream;$i++){
-                    echo $this->form->getSubform("s".$i."_subform");
-                }
-            } else {
-                // TODO: replace this with something that looks good
+            // TODO: replace this with something that looks good
+            echo $this->form->getElement('customStreamSettings')->render();
+            for($i=1;$i<=$this->num_stream;$i++){
+                echo $this->form->getSubform("s".$i."_subform");
             }
         ?>
     </fieldset>

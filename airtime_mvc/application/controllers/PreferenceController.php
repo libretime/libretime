@@ -248,9 +248,7 @@ class PreferenceController extends Zend_Controller_Action
                     Application_Model_StreamSetting::setLiquidsoapError($i, "waiting");
                 }
 
-                if (Application_Model_Preference::getUsingCustomStreamSettings()) {
-                    Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
-                }
+                Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
                 $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
             }
         }
@@ -293,6 +291,7 @@ class PreferenceController extends Zend_Controller_Action
             $subform->setStreamTypes($stream_types);
             $subform->setStreamBitrates($stream_bitrates);
             $subform->startForm();
+            $subform->toggleState();
             $form->addSubForm($subform, "s".$i."_subform");
         }
 

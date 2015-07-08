@@ -1867,6 +1867,7 @@ span.errors.sp-errors{
     margin:8px 0 0 0;
     cursor:pointer;
     position:relative;
+    clear: both;
 }
 .collapsible-content {
     margin-top:-1px;
