@@ -47,6 +47,11 @@ select {
     border:1px solid #9d9d9d;
 }
 
+/* Fix for Firefox */
+fieldset {
+    clear: both;
+}
+
 .logo {
     background: transparent url(images/airtime_logo.png) no-repeat 0 0;
     height: 35px;
