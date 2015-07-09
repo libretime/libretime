@@ -1512,4 +1512,13 @@ class Application_Model_Preference
         self::setValue("task_manager_lock", $value);
     }
 
+    public static function getRadioPageDisplayLoginButton()
+    {
+        return self::getValue("radio_page_display_login_button");
+    }
+
+    public static function setRadioPageDisplayLoginButton($value)
+    {
+        self::setValue("radio_page_display_login_button", $value);
+    }
 }
