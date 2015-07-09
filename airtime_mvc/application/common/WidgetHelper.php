@@ -69,6 +69,8 @@ class WidgetHelper
      * We don't do any timezone conversion in this function on purpose. All timezone conversion
      * and show time ordering should be done on the frontend.
      *
+     * *** This function does no HTML encoding. It is up to the caller to escape or encode the data appropriately.
+     *
      * @return array
      */
     public static function getWeekInfoV2()
@@ -138,9 +140,6 @@ class WidgetHelper
             $show["ends_timestamp"] = $dtEnds->getTimestamp();
         }
         $result["shows"] = $shows;
-
-        // XSS exploit prevention
-        SecurityHelper::htmlescape_recursive($result);
 
         // convert image paths to point to api endpoints
         //TODO: do we need this here?
