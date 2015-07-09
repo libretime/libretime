@@ -27,7 +27,11 @@ class IndexController extends Zend_Controller_Action
 
         $this->view->stationUrl = Application_Common_HTTPHelper::getStationUrl();
 
-        $this->view->displayLoginButton = Application_Model_Preference::getRadioPageDisplayLoginButton();
+        $displayRadioPageLoginButtonValue = Application_Model_Preference::getRadioPageDisplayLoginButton();
+        if ($displayRadioPageLoginButtonValue == "") {
+            $displayRadioPageLoginButtonValue = true;
+        }
+        $this->view->displayLoginButton = $displayRadioPageLoginButtonValue;
 
     }
 

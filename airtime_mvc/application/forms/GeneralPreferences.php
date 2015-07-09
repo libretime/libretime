@@ -143,9 +143,13 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
             'Errors',
             'Label'
         ));
+        $displayRadioPageLoginButtonValue = Application_Model_Preference::getRadioPageDisplayLoginButton();
+        if ($displayRadioPageLoginButtonValue == "") {
+            $displayRadioPageLoginButtonValue = true;
+        }
         $radioPageLoginButton->addDecorator('Label', array("class" => "enable-tunein"));
         $radioPageLoginButton->setLabel(_("Display login button on your Radio Page?"));
-        $radioPageLoginButton->setValue(Application_Model_Preference::getRadioPageDisplayLoginButton());
+        $radioPageLoginButton->setValue($displayRadioPageLoginButtonValue);
         $this->addElement($radioPageLoginButton);
     }
 
