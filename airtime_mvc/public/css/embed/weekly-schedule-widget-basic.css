@@ -217,11 +217,11 @@ background: rgba(53, 53, 53, 1.0);
 
 @media (max-width: 400px) {
     .schedule_item div.time_grid {
-        width: 90%;
+        width: 95%;
     }
 
     .schedule_item div.name_grid {
-        width: 90%;
+        width: 95%;
     }
 }
 
