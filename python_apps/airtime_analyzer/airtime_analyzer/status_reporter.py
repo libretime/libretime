@@ -9,7 +9,10 @@ import pickle
 import threading 
 from urlparse import urlparse
 
-requests.packages.urllib3.disable_warnings()
+# Disable urllib3 warnings because these can cause a rare deadlock due to Python 2's crappy internal non-reentrant locking
+# around POSIX stuff. See SAAS-714. The hasattr() is for compatibility with older versions of requests.
+if hasattr(requests, 'packages'):
+    requests.packages.urllib3.disable_warnings()
 
 class PicklableHttpRequest:
     def __init__(self, method, url, data, api_key):

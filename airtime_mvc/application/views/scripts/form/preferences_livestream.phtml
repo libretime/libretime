@@ -1,102 +1,34 @@
 <fieldset class="padded stream-setting-global" style="margin-top: 15px">
     <legend><?php echo _("Input Stream Settings") ?></legend>
     <dl class="zend_form">
-        <dt id="auto_transition-label">
-            <label class="optional" for="auto_transition"><?php echo $this->element->getElement('auto_transition')->getLabel() ?> :
-                <span class="icecast_metadata_help_icon" id="auto_transition_help">
-                </span>
-            </label>
-        </dt>
-        <dd id="auto_transition-element">
-            <?php echo $this->element->getElement('auto_transition') ?>
-            <?php if($this->element->getElement('auto_transition')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('auto_transition')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="auto_switch-label">
-            <label class="optional" for="auto_transition"><?php echo $this->element->getElement('auto_switch')->getLabel() ?> :
-                <span class="icecast_metadata_help_icon" id="auto_switch_help">
-                </span>
-            </label>
-        </dt>
-        <dd id="auto_switch-element">
-            <?php echo $this->element->getElement('auto_switch') ?>
-            <?php if($this->element->getElement('auto_switch')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('auto_switch')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="transition_fade-label">
-            <label class="optional" for="transition_fade"><?php echo $this->element->getElement('transition_fade')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="transition_fade-element">
-            <?php echo $this->element->getElement('transition_fade') ?>
-            <?php if($this->element->getElement('transition_fade')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('transition_fade')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="master_username-label">
-            <label class="optional" for="master_username"><?php echo $this->element->getElement('master_username')->getLabel() ?> :
-            <span class='master_username_help_icon'></span>
-            </label>
-        </dt>
-        <dd id="master_username-element">
-            <?php echo $this->element->getElement('master_username') ?>
-            <?php if($this->element->getElement('master_username')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('master_username')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="master_password-label">
-            <label class="optional" for="master_password"><?php echo $this->element->getElement('master_password')->getLabel() ?> :
-            </label>
-        </dt>
-        <dd id="master_password-element">
-            <?php echo $this->element->getElement('master_password') ?>
-            <?php if($this->element->getElement('master_password')->hasErrors()) : ?>
-                <ul class='errors'>
-                    <?php foreach($this->element->getElement('master_password')->getMessages() as $error): ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </dd>
-        <dt id="master_dj_connection_url-label">
-            <label class="optional" for="master_dj_connection_url" style="white-space: nowrap">
-                <?php echo _("Master Source Connection URL:")?>
-            </label>
-        </dt>
-        <dd id="master_dj_connection_url-element">
-            <span id="stream_url"><?php echo $this->element->getElement('master_dj_connection_url')->setValue($this->master_dj_connection_url) ?></span>
-            <div id="master_dj_connection_url_actions" style="display:none">
-                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
-            </div>
-        </dd>
-        <dt id="live_dj_connection_url-label">
-            <label class="optional" for="live_dj_connection_url" style="white-space: nowrap">
-                <?php echo _("Show Source Connection URL:")?>
-            </label>
-        </dt>
-        <dd id="live_dj_connection_url-element">
-            <span id="stream_url"><?php echo $this->element->getElement('live_dj_connection_url')->setValue($this->live_dj_connection_url) ?></span>
-            <div id="live_dj_connection_url_actions" style="display:none">
-                <a href=# id="ok" style="font-size: 12px;"><?php echo _("OK") ?></a> <a href=# id="reset" style="font-size: 12px;"><?php echo _("RESET"); ?></a>
-            </div>
-        </dd>
+        <?php echo $this->element->getElement('auto_transition')->render() ?>
+        <span class="icecast_metadata_help_icon" id="auto_transition_help"></span>
+        <?php echo $this->element->getElement('auto_switch')->render() ?>
+        <span class="icecast_metadata_help_icon" id="auto_switch_help"></span>
+        <?php echo $this->element->getElement('transition_fade')->render() ?>
+
+        <fieldset class="padded stream-setting-global" style="margin-top: 15px">
+            <legend><?php echo _("Master Source") ?></legend>
+            <p class="input-settings-inline-p">
+                <?php echo _("Use these settings in your broadcasting software to stream live at any time.") ?>
+            </p>
+            <?php echo $this->element->getElement('master_username')->render() ?>
+            <span class="master_username_help_icon"></span>
+            <?php echo $this->element->getElement('master_password')->render() ?>
+
+            <?php echo $this->element->getElement("master_source_host")->render() ?>
+            <?php echo $this->element->getElement("master_source_port")->render() ?>
+            <?php echo $this->element->getElement("master_source_mount")->render() ?>
+        </fieldset>
+
+        <fieldset class="padded stream-setting-global" style="margin-top: 15px">
+            <legend><?php echo _("Show Source") ?></legend>
+            <p class="input-settings-inline-p">
+                <?php echo _("DJs can use these settings in their broadcasting software to broadcast live only during shows assigned to them.") ?>
+            </p>
+            <?php echo $this->element->getElement("show_source_host")->render() ?>
+            <?php echo $this->element->getElement("show_source_port")->render() ?>
+            <?php echo $this->element->getElement("show_source_mount")->render() ?>
+        </fieldset>
     </dl>
 </fieldset>

@@ -455,3 +455,21 @@ class AirtimeUpgrader2513 extends AirtimeUpgrader
         return '2.5.13';
     }
 }
+
+/**
+ * Class AirtimeUpgrader2514
+ *
+ * SAAS-923 - Add a partial constraint to cc_pref so that keystrings must be unique
+ */
+class AirtimeUpgrader2514 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array (
+            '2.5.13'
+        );
+    }
+
+    public function getNewVersion() {
+        return '2.5.14';
+    }
+}

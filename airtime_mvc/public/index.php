@@ -63,6 +63,12 @@ if (file_exists($filename)) {
 }
 // Otherwise, we'll need to run our configuration setup
 else {
+    // Sometimes we can get into a weird NFS state where a station's airtime.conf has
+    // been neg-cached - redirect to a 404 instead until the NFS cache is updated
+    if (strpos($_SERVER['SERVER_NAME'], "airtime.pro") !== false) {
+        header($_SERVER['SERVER_PROTOCOL'] . ' 404 Page Not Found', true, 404);
+        exit;
+    }
     $airtimeSetup = true;
     require_once(SETUP_PATH . 'setup-config.php');
 }

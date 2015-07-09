@@ -45,8 +45,6 @@ class Application_Common_HTTPHelper
 
 class ZendActionHttpException extends Exception {
 
-    private $_action;
-
     /**
      * @param Zend_Controller_Action $action
      * @param int                    $statusCode
@@ -58,17 +56,12 @@ class ZendActionHttpException extends Exception {
      */
     public function __construct(Zend_Controller_Action $action, $statusCode, $message,
                                 $code = 0, Exception $previous = null) {
-        $this->_action = $action;
-        Logging::info("Error in action " . $action->getRequest()->getActionName()
+        Logging::error("Error in action " . $action->getRequest()->getActionName()
                       . " with status code $statusCode: $message");
         $action->getResponse()
             ->setHttpResponseCode($statusCode)
             ->appendBody($message);
         parent::__construct($message, $code, $previous);
-    }
-
-    public function getAction() {
-        return $this->_action;
     }
 
 }

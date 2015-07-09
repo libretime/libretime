@@ -1,60 +1,20 @@
 <fieldset>
     <dl>
-        <dt id="cb_airtime_auth_override-label">
-            <label class="optional" for="cb_airtime_auth">
-            <?php echo $this->element->getElement('cb_airtime_auth')->getLabel() ?>
-            <span class='airtime_auth_help_icon'></span>
-            </label>
-        </dt>
-        <dd id="cb_airtime_auth_override-element">
-            <?php echo $this->element->getElement('cb_airtime_auth') ?>
-        </dd>
-        <dt id="cb_custom_auth_override-label">
-            <label class="optional" for="cb_custom_auth">
-            <?php echo $this->element->getElement('cb_custom_auth')->getLabel() ?>
-            <span class='custom_auth_help_icon'></span>
-            </label>
-        </dt>
-        <dd id="cb_custom_auth_override-element">
-            <?php echo $this->element->getElement('cb_custom_auth') ?>
-        </dd>
+        <?php echo $this->element->getElement('cb_airtime_auth')->render(); ?>
+        <?php echo $this->element->getElement('cb_custom_auth')->render(); ?>
         <div id="custom_auth_div">
-            <dt id="custom_username-label" class="block-display">
-                <label class="optional" for="custom_username"><?php echo $this->element->getElement('custom_username')->getLabel() ?> :
-                <span class='stream_username_help_icon'></span>
-                </label>
-            </dt>
-            <dd id="custom_username-element" class="block-display">
-                <?php echo $this->element->getElement('custom_username') ?>
-                <?php if($this->element->getElement('custom_username')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('custom_username')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?> 
-            </dd>
-            <dt id="custom_password-label" class="block-display">
-                <label class="optional" for="custom_password"><?php echo $this->element->getElement('custom_password')->getLabel() ?> :
-                </label>
-            </dt>
-            <dd id="custom_password-element" class="block-display">
-                <?php echo $this->element->getElement('custom_password') ?>
-                <?php if($this->element->getElement('custom_password')->hasErrors()) : ?>
-                    <ul class='errors'>
-                        <?php foreach($this->element->getElement('custom_password')->getMessages() as $error): ?>
-                            <li><?php echo $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?> 
-            </dd>
+            <?php echo $this->element->getElement('custom_username')->render(); ?>
+            <?php echo $this->element->getElement('custom_password')->render(); ?>
         </div>
-        <dt id="Connection_URL-label">
-            <label for="outputStreamURL"><?php echo _("Connection URL: "); ?></label>
-        </dt>
-        <dd id="Connection_URL-element">
-            <span id="stream_url" class="static_text"><?php echo $this->connection_url; ?></span>
-        </dd>
+        <fieldset>
+            <legend><?php echo _("Show Source") ?></legend>
+            <p class="input-settings-inline-p">
+                <?php echo _("DJs can use these settings to connect with compatible software and broadcast live during this show. Assign a DJ below.") ?>
+            </p>
+            <?php echo $this->element->getElement("show_source_host")->render() ?>
+            <?php echo $this->element->getElement("show_source_port")->render() ?>
+            <?php echo $this->element->getElement("show_source_mount")->render() ?>
+        </fieldset>
      </dl>
 </fieldset>
 

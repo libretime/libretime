@@ -47,6 +47,11 @@ select {
     border:1px solid #9d9d9d;
 }
 
+/* Fix for Firefox */
+fieldset {
+    clear: both;
+}
+
 .logo {
     background: transparent url(images/airtime_logo.png) no-repeat 0 0;
     height: 35px;
@@ -111,19 +116,38 @@ select {
     margin-left: 7px !important;
 }
 
-.override_help_icon, .icecast_metadata_help_icon {
-        cursor: help;
-        position: relative;
-        
-        display:inline-block; zoom:1; display:inline;
-        width:14px; height:14px;
-        background:url(images/icon_info.png) 0 0 no-repeat;
-        float:right; position:relative; top:2px; right:7px;
-        line-height:16px !important;
+.override_help_icon, .icecast_metadata_help_icon, .master_username_help_icon {
+    cursor: help;
+    position: relative;
+
+    display: inline-block;
+    zoom:1;
+    width:14px; height:14px;
+    background:url(images/icon_info.png) 0 0 no-repeat;
+    float:right;
+    top:2px;
+    right:7px;
+    line-height:16px !important;
+}
+
+#auto_switch_help, #auto_transition_help {
+    right: 200px;
+}
+
+.master_username_help_icon {
+    margin-top: 6px;
+}
+
+.input-settings-inline-p {
+    color: #4F4F4F;
+    font-size: 12px;
+    line-height: 140%;
+    margin-top: 0;
+
 }
 
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
-.playlist_type_help_icon, .master_username_help_icon, .repeat_tracks_help_icon,
+.playlist_type_help_icon, .repeat_tracks_help_icon,
 .admin_username_help_icon, .stream_type_help_icon, .show_linking_help_icon,
 .show_timezone_help_icon{
         cursor: help;
@@ -1510,7 +1534,7 @@ h2#scheduled_playlist_name span {
     border-color:#343434;
     border-width: 1px 0 0 1px;
 }
-/*---//////////////////// Advenced Search ////////////////////---*/
+/*---//////////////////// Advanced Search ////////////////////---*/
 
 .search_control {
     padding:8px;

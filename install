@@ -312,6 +312,17 @@ else
     checkCommandExists "psql"
 fi
 
+# Check if composer exists and install if it doesn't
+eval hash "composer" 2>/dev/null
+commandFound=$?
+if [[ ! ${commandFound} -eq 0 ]]; then
+    curl -sS https://getcomposer.org/installer | php
+    mv composer.phar /usr/local/bin/composer
+fi
+
+# Run composer (install PHP dependencies) and create a VERSION file
+loudCmd "./build.sh"
+
 if [ -f /etc/airtime/airtime.conf ]; then
     OLD_CONF=$(grep "[media-monitor]" /etc/airtime/airtime.conf)
     
@@ -472,19 +483,27 @@ verbose "\n * Installing airtime_analyzer..."
 loudCmd "python ${AIRTIMEROOT}/python_apps/airtime_analyzer/setup.py install --install-scripts=/usr/bin"
 verbose "...Done"
 
-#for i in /etc/init/airtime*.template; do
-#    chmod 644 $i
-#    sed -i "s/WEB_USER/${web_user}/g" $i
-#    mv $i ${i%.template}
-#done
+for i in /etc/init/airtime*.template; do
+    chmod 644 $i
+    sed -i "s/WEB_USER/${web_user}/g" $i
+    mv $i ${i%.template}
+done
 
 set +e
 loudCmd "initctl reload-configuration"
-loudCmd "systemctl daemon-reload" #systemd hipsters
-loudCmd "update-rc.d airtime-playout defaults"      # Start at bootup, on Debian
+
+# airtime-celery only has an init.d startup script
 loudCmd "update-rc.d airtime-celery defaults"       # Start at bootup, on Debian
-loudCmd "update-rc.d airtime-liquidsoap defaults"   # Start at bootup, on Debian
-loudCmd "update-rc.d airtime_analyzer defaults"   # Start at bootup, on Debian
+
+# On Ubuntu, we already have the upstart configs, so this is redundant
+# and causes multiple processes to spawn on startup
+if [ "$dist" != "ubuntu" ]; then
+    loudCmd "systemctl daemon-reload" #systemd hipsters
+
+    loudCmd "update-rc.d airtime-playout defaults"      # Start at bootup, on Debian
+    loudCmd "update-rc.d airtime-liquidsoap defaults"   # Start at bootup, on Debian
+    loudCmd "update-rc.d airtime_analyzer defaults"     # Start at bootup, on Debian
+fi
 set -e
 
 if [ ! -d /var/log/airtime ]; then

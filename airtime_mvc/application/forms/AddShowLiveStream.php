@@ -8,14 +8,13 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
     {
         $cb_airtime_auth = new Zend_Form_Element_Checkbox("cb_airtime_auth");
         $cb_airtime_auth->setLabel(sprintf(_("Use %s Authentication:"), PRODUCT_NAME))
-                          ->setRequired(false)
-                          ->setDecorators(array('ViewHelper'));
+                          ->setChecked(true)
+                          ->setRequired(false);
         $this->addElement($cb_airtime_auth);
 
         $cb_custom_auth = new Zend_Form_Element_Checkbox("cb_custom_auth");
         $cb_custom_auth  ->setLabel(_("Use Custom Authentication:"))
-                            ->setRequired(false)
-                            ->setDecorators(array('ViewHelper'));
+                            ->setRequired(false);
         $this->addElement($cb_custom_auth);
 
         //custom username
@@ -26,8 +25,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                         ->setLabel(_('Custom Username'))
                         ->setFilters(array('StringTrim'))
                         ->setValidators(array(
-                            new ConditionalNotEmpty(array("cb_custom_auth"=>"1"))))
-                        ->setDecorators(array('ViewHelper'));
+                            new ConditionalNotEmpty(array("cb_custom_auth"=>"1"))));
         $this->addElement($custom_username);
 
         //custom password
@@ -39,18 +37,34 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
                         ->setLabel(_('Custom Password'))
                         ->setFilters(array('StringTrim'))
                         ->setValidators(array(
-                            new ConditionalNotEmpty(array("cb_custom_auth"=>"1"))))
-                        ->setDecorators(array('ViewHelper'));
+                            new ConditionalNotEmpty(array("cb_custom_auth"=>"1"))));
         $this->addElement($custom_password);
 
-        $connection_url = Application_Model_Preference::GetLiveDJSourceConnectionURL();
-        if (trim($connection_url) == "") {
-            $connection_url = "N/A";
-        }
+        $showSourceParams = parse_url(Application_Model_Preference::GetLiveDJSourceConnectionURL());
 
-        $this->setDecorators(array(
-            array('ViewScript', array('viewScript' => 'form/add-show-live-stream.phtml', "connection_url"=>$connection_url))
-        ));
+        // Show source connection url parameters
+        $showSourceHost = new Zend_Form_Element_Text('show_source_host');
+        $showSourceHost->setAttrib('readonly', true)
+            ->setLabel(_('Host:'))
+            ->setValue(isset($showSourceParams["host"])?$showSourceParams["host"]:"");
+        $this->addElement($showSourceHost);
+
+        $showSourcePort = new Zend_Form_Element_Text('show_source_port');
+        $showSourcePort->setAttrib('readonly', true)
+            ->setLabel(_('Port:'))
+            ->setValue(isset($showSourceParams["port"])?$showSourceParams["port"]:"");
+        $this->addElement($showSourcePort);
+
+        $showSourceMount = new Zend_Form_Element_Text('show_source_mount');
+        $showSourceMount->setAttrib('readonly', true)
+            ->setLabel(_('Mount:'))
+            ->setValue(isset($showSourceParams["path"])?$showSourceParams["path"]:"");
+        $this->addElement($showSourceMount);
+
+        $this->setDecorators(
+            array(
+                array('ViewScript', array('viewScript' => 'form/add-show-live-stream.phtml'))
+            ));
     }
 
     public function isValid($data)

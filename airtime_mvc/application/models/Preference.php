@@ -163,9 +163,9 @@ class Application_Model_Preference
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $userId;
             }
-            
+
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
-            
+
             //return an empty string if the result doesn't exist.
             if ($result == 0) {
                 $res = "";
