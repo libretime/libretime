@@ -63,7 +63,7 @@ class Application_Form_StreamSetting extends Zend_Form
         $custom = Application_Model_Preference::getUsingCustomStreamSettings();
         $customSettings = new Zend_Form_Element_Radio('customStreamSettings');
         $customSettings->setLabel(_('Streaming Server:'));
-        $customSettings->setMultiOptions(array(_("Airtime Pro Streaming"), _("Custom / 3rd Party")));
+        $customSettings->setMultiOptions(array(_("Airtime Pro Streaming"), _("Custom / 3rd Party Streaming")));
         $customSettings->setValue(!empty($custom) ? $custom : 0);
         $this->addElement($customSettings);
     }

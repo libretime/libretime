@@ -192,8 +192,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
     {
         $f_data = $data['s'.$this->prefix."_data"];
         $isValid = parent::isValid($f_data);
+        // XXX: A couple of ugly workarounds here, but I guess that's what you get when you
+        // combine an already-complex POST and GET into a single action...
         if (Application_Model_Preference::getUsingCustomStreamSettings() && $f_data) {
-            if ($f_data['enable'] == 1) {
+            if ($f_data['enable'] == 1 && isset($f_data["host"])) {
                 if ($f_data['host'] == '') {
                     $element = $this->getElement("host");
                     $element->addError(_("Server cannot be empty."));

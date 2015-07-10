@@ -28,7 +28,7 @@ function rebuildStreamURL(ele){
     }else{
         streamurl = "http://"+host+":"+port+"/"
     }
-    div.find("#stream_url").text(streamurl)
+    div.find("#stream_url").html('<a href="' + streamurl + '" target="_blank">' + streamurl + '</a>')
 }
 function restrictOggBitrate(ele, on){
     var div = ele.closest("div")
