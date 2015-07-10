@@ -8,6 +8,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
     {
         $cb_airtime_auth = new Zend_Form_Element_Checkbox("cb_airtime_auth");
         $cb_airtime_auth->setLabel(sprintf(_("Use %s Authentication:"), PRODUCT_NAME))
+                          ->setChecked(true)
                           ->setRequired(false);
         $this->addElement($cb_airtime_auth);
 
@@ -57,7 +58,7 @@ class Application_Form_AddShowLiveStream extends Zend_Form_SubForm
         $showSourceMount = new Zend_Form_Element_Text('show_source_mount');
         $showSourceMount->setAttrib('readonly', true)
             ->setLabel(_('Mount:'))
-            ->setValue(isset($showSourceParams["mount"])?$showSourceParams["mount"]:"");
+            ->setValue(isset($showSourceParams["path"])?$showSourceParams["path"]:"");
         $this->addElement($showSourceMount);
 
         $this->setDecorators(

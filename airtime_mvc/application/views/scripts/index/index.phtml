@@ -24,12 +24,14 @@ document.getElementById(id).width= (newwidth) + "px";
         echo "<a href='#' class='logo'><img src='data:image/png;base64," . $this->stationLogo . "'></a>";
     } ?>
 
-    <div class="login-btn">
-        <a href="/login" target="_parent">
+    <?php if ($this->displayLoginButton) {
+        echo "<div class='login-btn'>
+        <a href='/login' target='_parent'>
         <span>Login</span>
-        <span class="login-img"></span>
+        <span class='login-img'></span>
         </a>
-    </div>
+    </div>";
+            }?>
 
     <div id="tab-1" class="schedule tab_content current">
         <iframe onLoad="autoResize('schedule_iframe');" id="schedule_iframe" height="300px" scrolling="yes" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program?style=premium"?>></iframe>
