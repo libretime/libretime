@@ -158,7 +158,11 @@ class Application_Service_ShowFormService
             if (!$ccShowDay->isRepeating()) {
                 $form->disableStartDateAndTime();
             } else {
-                list($showStart, $showEnd) = $this->getNextFutureRepeatShowTime();
+                $showStartAndEnd = $this->getNextFutureRepeatShowTime();
+                if (!is_null($showStartAndEnd)) {
+                    $showStart = $showStartAndEnd["starts"];
+                    $showEnd = $showStartAndEnd["ends"];
+                }
                 if ($this->hasShowStarted($showStart)) {
                     $form->disableStartDateAndTime();
                 }
@@ -198,7 +202,7 @@ class Application_Service_ShowFormService
         $starts->setTimezone(new DateTimeZone($showTimezone));
         $ends->setTimezone(new DateTimeZone($showTimezone));
 
-        return array($starts, $ends);
+        return array("starts" => $starts, "ends" => $ends);
     }
 
     private function populateInstanceFormWhen($form)
