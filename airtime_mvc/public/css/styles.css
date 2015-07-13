@@ -3330,3 +3330,16 @@ dd .stream-status {
 #schedule_iframe {
     margin: 0 auto;
 }
+
+.usability_hint {
+    padding: 5px 10px 5px 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ff611f;
+    background-color: #ff611f;
+    color: white;
+    font-size: 14px;
+}
+
+.usability_hint a {
+    color: white;
+}
