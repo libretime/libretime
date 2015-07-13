@@ -32,6 +32,7 @@ define('DEFAULT_LOGO_PLACEHOLDER', 1);
 define('DEFAULT_LOGO_FILE', 'images/airtime_logo.png');
 define('DEFAULT_TIMESTAMP_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_MICROTIME_FORMAT', 'Y-m-d H:i:s.u');
+define('DEFAULT_ICECAST_PASS', 'hackme');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');

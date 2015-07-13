@@ -41,6 +41,10 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $stream_types = $this->stream_types;
         $stream_bitrates = $this->stream_bitrates;
 
+        $streamDefaults = Application_Model_StreamSetting::getDefaults($prefix);
+        // If we're not using custom stream settings, use the defaults
+        $useDefaults = !Application_Model_Preference::getUsingCustomStreamSettings();
+
         $this->setIsArray(true);
         $this->setElementsBelongTo($prefix."_data");
 
@@ -77,7 +81,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $output = new Zend_Form_Element_Select('output');
         $output->setLabel(_("Service Type:"))
                 ->setMultiOptions(array("icecast"=>"Icecast", "shoutcast"=>"SHOUTcast"))
-                ->setValue(isset($setting[$prefix.'_output'])?$setting[$prefix.'_output']:"icecast")
+                ->setValue($useDefaults ? $streamDefaults['output'] :
+                               (isset($setting[$prefix.'_output'])?$setting[$prefix.'_output']:"icecast"))
                 ->setDecorators(array('ViewHelper'));
         $this->addElement($output);
 
@@ -91,7 +96,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 
         $host = new Zend_Form_Element_Text('host');
         $host->setLabel(_("Server"))
-                ->setValue(isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:"")
+                ->setValue($useDefaults ? $streamDefaults['host'] :
+                               (isset($setting[$prefix.'_host'])?$setting[$prefix.'_host']:""))
                 ->setValidators(array(
                         array('regex', false, array('/^[0-9a-zA-Z-_.]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
@@ -100,7 +106,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 
         $port = new Zend_Form_Element_Text('port');
         $port->setLabel(_("Port"))
-                ->setValue(isset($setting[$prefix.'_port'])?$setting[$prefix.'_port']:"")
+                ->setValue($useDefaults ? $streamDefaults['port'] :
+                               (isset($setting[$prefix.'_port'])?$setting[$prefix.'_port']:""))
                 ->setValidators(array(new Zend_Validate_Between(array('min'=>0, 'max'=>99999))))
                 ->addValidator('regex', false, array('pattern'=>'/^[0-9]+$/', 'messages'=>array('regexNotMatch'=>_('Only numbers are allowed.'))))
                 ->setDecorators(array('ViewHelper'));
@@ -108,7 +115,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 
         $pass = new Zend_Form_Element_Text('pass');
         $pass->setLabel(_("Password"))
-                ->setValue(isset($setting[$prefix.'_pass'])?$setting[$prefix.'_pass']:"")
+                ->setValue($useDefaults ? $streamDefaults['pass'] :
+                               (isset($setting[$prefix.'_pass'])?$setting[$prefix.'_pass']:""))
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
@@ -144,7 +152,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 
         $mount = new Zend_Form_Element_Text('mount');
         $mount->setLabel(_("Mount Point"))
-                ->setValue(isset($setting[$prefix.'_mount'])?$setting[$prefix.'_mount']:"")
+                ->setValue($useDefaults ? $streamDefaults['mount'] :
+                               (isset($setting[$prefix.'_mount'])?$setting[$prefix.'_mount']:""))
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));
@@ -153,7 +162,8 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
 
         $user = new Zend_Form_Element_Text('user');
         $user->setLabel(_("Username"))
-                ->setValue(isset($setting[$prefix.'_user'])?$setting[$prefix.'_user']:"")
+                ->setValue($useDefaults ? $streamDefaults['user'] :
+                               (isset($setting[$prefix.'_user'])?$setting[$prefix.'_user']:""))
                 ->setValidators(array(
                         array('regex', false, array('/^[^ &<>]+$/', 'messages' => _('Invalid character entered')))))
                 ->setDecorators(array('ViewHelper'));

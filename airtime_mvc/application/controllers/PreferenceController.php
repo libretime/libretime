@@ -218,14 +218,8 @@ class PreferenceController extends Zend_Controller_Action
                 $s4_set_admin_pass = !empty($values["s4_data"]["admin_pass"]);
 
                 // this goes into cc_pref table
-                Application_Model_Preference::setUsingCustomStreamSettings($values['customStreamSettings']);
-                Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
-                Application_Model_Preference::SetLiveStreamMasterUsername($values["master_username"]);
-                Application_Model_Preference::SetLiveStreamMasterPassword($values["master_password"]);
-                Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
-                Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
-                Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
-                
+                $this->setStreamPreferences($values);
+
                 // compare new values with current value
                 $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values["enableReplayGain"];
                 $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values["replayGainModifier"];
@@ -315,6 +309,21 @@ class PreferenceController extends Zend_Controller_Action
                 $this->_helper->json->sendJson(array("valid" => "false", "html" => $this->view->render('preference/stream-setting.phtml')));
             }
         }
+    }
+
+    /**
+     * Set stream settings preferences
+     *
+     * @param array $values stream setting preference values
+     */
+    private function setStreamPreferences($values) {
+        Application_Model_Preference::setUsingCustomStreamSettings($values['customStreamSettings']);
+        Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
+        Application_Model_Preference::SetLiveStreamMasterUsername($values["master_username"]);
+        Application_Model_Preference::SetLiveStreamMasterPassword($values["master_password"]);
+        Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
+        Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
+        Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
     }
 
     public function serverBrowseAction()
