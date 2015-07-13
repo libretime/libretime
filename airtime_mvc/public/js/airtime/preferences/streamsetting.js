@@ -468,9 +468,12 @@ $(document).ready(function() {
     setupEventListeners();
     setSliderForReplayGain();
     getAdminPasswordStatus();
-    
-    $("[id^='stream_save']").live('click', function(){
-        var confirm_pypo_restart_text = sprintf($.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If %s is recording, and if the change causes a playout engine restart, the recording will be interrupted."), PRODUCT_NAME);
+    var s = $("[name^='customStreamSettings']:checked");
+
+    $("[id^='stream_save'], [name^='customStreamSettings']").live('click', function() {
+        var e = $(this);
+        if (e[0] == s[0]) { return; }
+        var confirm_pypo_restart_text = $.i18n._("WARNING: This will restart your stream and may cause a short dropout for your listeners!");
         if (confirm(confirm_pypo_restart_text)) {
             var data = $('#stream_form').serialize();
             var url = baseUrl+'Preference/stream-setting';
@@ -482,6 +485,13 @@ $(document).ready(function() {
                 //setSliderForReplayGain();
                 //setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass, json.s4_set_admin_pass);
             });
+        } else {
+            if (e.prop('checked')) {
+                if (e[0] != s[0]) {
+                    e.prop('checked', false);
+                    s.prop('checked', true);
+                }
+            }
         }
     });
 });
