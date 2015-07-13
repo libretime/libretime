@@ -24,17 +24,9 @@ class Application_Common_UsabilityHints
      */
     public static function isFutureOrCurrentShowScheduled()
     {
-        $now = new DateTime("now", new DateTimeZone("UTC"));
-        $futureShow = CcShowInstancesQuery::create()
-            ->filterByDbStarts($now, Criteria::GREATER_THAN)
-            ->filterByDbModifiedInstance(false)
-            ->findOne();
+        $futureShow = self::getNextFutureShow();
+        $currentShow = self::getCurrentShow();
 
-        $currentShow = CcShowInstancesQuery::create()
-            ->filterByDbStarts($now, Criteria::LESS_THAN)
-            ->filterByDbEnds($now, Criteria::GREATER_THAN)
-            ->filterByDbModifiedInstance(false)
-            ->findOne();
         if (is_null($futureShow) && is_null($currentShow)) {
             return false;
         } else {
@@ -50,28 +42,49 @@ class Application_Common_UsabilityHints
      */
     public static function isCurrentOrNextShowEmpty()
     {
-        $schedule = Application_Model_Schedule::GetPlayOrderRange();
-        $shows = $schedule["shows"];
+        $futureShow = self::getNextFutureShow();
+        $currentShow = self::getCurrentShow();
 
-        if (empty($shows["current"]) && empty($shows["next"])) {
+        if (is_null($futureShow) && is_null($currentShow)) {
             return false;
         } else {
-            if ($shows["current"]) {
+            if ($currentShow) {
                 $scheduledTracks = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($shows["current"]["instance_id"])
+                    ->filterByDbInstanceId($currentShow->getDbId())
                     ->find();
                 if ($scheduledTracks->count() == 0) {
                     return true;
                 }
-            } else if ($shows["next"]) {
-                $nextShow = $shows["next"][0];
+            } else if ($futureShow) {
                 $scheduledTracks = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($nextShow["instance_id"])
+                    ->filterByDbInstanceId($futureShow->getDbId())
                     ->find();
                 if ($scheduledTracks->count() == 0) {
                     return true;
                 }
             }
         }
+    }
+
+    private static function getCurrentShow()
+    {
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+
+        return CcShowInstancesQuery::create()
+            ->filterByDbStarts($now, Criteria::LESS_THAN)
+            ->filterByDbEnds($now, Criteria::GREATER_THAN)
+            ->filterByDbModifiedInstance(false)
+            ->findOne();
+    }
+
+    private static function getNextFutureShow()
+    {
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+
+        return CcShowInstancesQuery::create()
+            ->filterByDbStarts($now, Criteria::GREATER_THAN)
+            ->filterByDbModifiedInstance(false)
+            ->orderByDbStarts()
+            ->findOne();
     }
 }
