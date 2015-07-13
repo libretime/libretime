@@ -279,8 +279,8 @@ class Application_Model_StreamSetting
     public static function getDefaults($prefix) {
         $config = Config::getConfig();
         return array(
-            'host'   => $config['stationId'] . '.out.airtime.pro',
-            'port'   => 8000,
+            'host'   => $config['baseUrl'],
+            'port'   => DEFAULT_ICECAST_PORT,
             'output' => 'icecast',
             'user'   => $config['stationId'],
             'pass'   => Application_Model_Preference::getDefaultIcecastPassword(),
