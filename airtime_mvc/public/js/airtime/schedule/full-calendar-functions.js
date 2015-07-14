@@ -354,6 +354,7 @@ function getFullCalendarEvents(start, end, callback) {
         var d = new Date();
             $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
                 callback(json.events);
+                getUsabilityHint();
             });
     }
 }

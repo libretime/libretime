@@ -165,20 +165,24 @@ function removeSuccessMsg() {
 function getUsabilityHint() {
     var pathname = window.location.pathname;
     $.getJSON("/api/get-usability-hint", {"format": "json", "userPath": pathname}, function(json) {
-        console.log(json);
         var $hint_div = $('.usability_hint');
         var current_hint = $hint_div.html();
         if (json === "") {
+            // there are no more hints to display to the user
             $hint_div.hide();
         } else if (current_hint !== json) {
-            console.log($hint_div);
+            // we only change the message if it is new
             if ($hint_div.is(":hidden")) {
-                console.log("hidden");
                 $hint_div.show();
             }
             $hint_div.slideUp("slow");
             $hint_div.html(json);
             $hint_div.slideDown("slow");
+        } else {
+            // hint is the same before we hid it so we just need to show it
+            if ($hint_div.is(":hidden")) {
+                $hint_div.show();
+            }
         }
     });
 }
