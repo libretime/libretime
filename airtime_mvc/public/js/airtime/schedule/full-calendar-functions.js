@@ -99,6 +99,11 @@ function dayClick(date, allDay, jsEvent, view){
             chosenDate = selected.getFullYear() + '-' + pad(selected.getMonth()+1,2) + '-' + pad(selected.getDate(),2);
             var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
 
+
+            //TODO: This should all be refactored into a proper initialize() function for the show form.
+            $("#add_show_start_now-future").attr('checked', 'checked');
+            $("#add_show_start_now-now").removeProp('disabled');
+            setupStartTimeWidgets(); //add-show.js
             $("#add_show_start_date").val(chosenDate);
             $("#add_show_end_date_no_repeat").val(endDateFormat);
             $("#add_show_end_date").val(endDateFormat);
