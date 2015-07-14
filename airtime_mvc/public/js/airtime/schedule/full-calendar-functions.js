@@ -115,6 +115,8 @@ function dayClick(date, allDay, jsEvent, view){
             $("#schedule-show-when").show();
 
             openAddShowForm();
+            makeAddShowButton();
+            toggleAddShowButton();
         }
     }
 }

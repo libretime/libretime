@@ -22,24 +22,26 @@ function openAddShowForm(nowOrFuture) {
     }
 }
 
-function makeAddShowButton(){
-    $('.fc-header-left')
-        .append('<span class="fc-header-space"></span>')
-        .append('<span class="fc-button"><a href="#" class="add-button"><span class="add-icon"></span>'+$.i18n._("Show")+'</a></span>')
-        .find('span.fc-button:last > a')
-            .click(function(){
-                openAddShowForm(true);
-                removeAddShowButton();
-            });
+function makeAddShowButton() {
+    if($('.add-button').length === 0) {
+        $('.fc-header-left')
+            .append('<span class="fc-header-space"></span>')
+            .append('<span class="fc-button">' +
+                        '<button onclick="showForm()" class="add-button">' +
+                            '<span class="add-icon"></span>' + $.i18n._("Create New Show") +
+                        '</button>' +
+                    '</span>');
+    }
 }
 
-function removeAddShowButton(){
-    var aTag = $('.fc-header-left')
-        .find("span.fc-button:last > a");
+function showForm() {
+    openAddShowForm(true);
+    toggleAddShowButton();
+}
 
-    var span = aTag.parent();
-    span.prev().remove();
-    span.remove();
+function toggleAddShowButton(){
+    var aTag = $('.add-button');
+    aTag.prop('disabled', function(i, v) { return !v; });
 }
 
 function setupStartTimeWidgets() {
@@ -94,11 +96,11 @@ function closeAddShowForm(event) {
     windowResize();
 
     $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json) {
-        
+
         redrawAddShowForm($el, json.form);
     });
 
-    makeAddShowButton();
+    toggleAddShowButton();
 }
 
 //dateText mm-dd-yy
@@ -177,7 +179,7 @@ function beginEditShow(data){
     }
     
     redrawAddShowForm($("#add-show-form"), data.newForm);
-    removeAddShowButton();
+    toggleAddShowButton();
     openAddShowForm();
 }
 
@@ -798,20 +800,20 @@ function setAddShowEvents(form) {
                         .fullCalendar('render');
     
                     $addShowForm.hide();
+                    toggleAddShowButton();
                     $.get(baseUrl+"Schedule/get-form", {format:"json"}, function(json){
                         redrawAddShowForm($addShowForm, json.form);
                     });
-                    makeAddShowButton();
                 } else {
                     redrawAddShowForm($addShowForm, json.newForm);
                     scheduleRefetchEvents(json);
                     $addShowForm.hide();
+                    toggleAddShowButton();
                 }
 
                 /* CC-6062: Resize the window to avoid stretching the last column */
                 windowResize();
                 makeAddShowButton();
-
             }
         });
     });
