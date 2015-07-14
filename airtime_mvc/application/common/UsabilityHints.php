@@ -66,12 +66,19 @@ class Application_Common_UsabilityHints
                     "<a href=\"/schedule\">",
                     "</a>");
             }
-        } else if (self::isCurrentOrNextShowEmpty()) {
+        } else if (self::isCurrentShowEmpty()) {
             if ($userIsOnCalendarPage) {
-                return _("To start broadcasting click on your show and select 'Add / Remove Content'");
+                return _("To start broadcasting click on the current show and select 'Add / Remove Content'");
             } else {
-                //TODO: break this into two functions (current and next) so message is more clear
-                return sprintf(_("It looks like your show is empty. %sAdd tracks to your show now.%s"),
+                return sprintf(_("It looks like the current show is empty. %sAdd tracks to your show now.%s"),
+                    "<a href=\"/schedule\">",
+                    "</a>");
+            }
+        } else if (!self::getCurrentShow() && self::isNextShowEmpty()) {
+            if ($userIsOnCalendarPage) {
+                return _("To start broadcasting click on the show starting next and select 'Add / Remove Content'");
+            } else {
+                return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now.%s"),
                     "<a href=\"/schedule\">",
                     "</a>");
             }
@@ -80,12 +87,10 @@ class Application_Common_UsabilityHints
         }
     }
 
-    //TODO: make functions below private?
-
     /**
      * Returns true if no files have been uploaded.
      */
-    public static function zeroFilesUploaded()
+    private static function zeroFilesUploaded()
     {
         $fileCount = CcFilesQuery::create()
             ->filterByDbFileExists(true)
@@ -102,7 +107,7 @@ class Application_Common_UsabilityHints
     /**
      * Returns true if there is at least one show scheduled in the future.
      */
-    public static function isFutureOrCurrentShowScheduled()
+    private static function isFutureOrCurrentShowScheduled()
     {
         $futureShow = self::getNextFutureShow();
         $currentShow = self::getCurrentShow();
@@ -114,37 +119,42 @@ class Application_Common_UsabilityHints
         }
     }
 
-    /**
-     * Returns true if the current show does not have anything scheduled in it.
-     *
-     * Returns true if there is nothing currently scheduled and the next show
-     * is empty.
-     */
-    public static function isCurrentOrNextShowEmpty()
+    private static function isCurrentShowEmpty()
     {
-        $futureShow = self::getNextFutureShow();
         $currentShow = self::getCurrentShow();
 
-        if (is_null($futureShow) && is_null($currentShow)) {
+        if (is_null($currentShow)) {
             return false;
         } else {
             $now = new DateTime("now", new DateTimeZone("UTC"));
-            if ($currentShow) {
-                $scheduledTracks = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($currentShow->getDbId())
-                    ->filterByDbEnds($now, Criteria::GREATER_EQUAL)
-                    ->find();
-                if ($scheduledTracks->count() == 0) {
-                    return true;
-                }
-            } else if ($futureShow) {
-                $scheduledTracks = CcScheduleQuery::create()
-                    ->filterByDbInstanceId($futureShow->getDbId())
-                    ->filterByDbStarts($now, Criteria::GREATER_EQUAL)
-                    ->find();
-                if ($scheduledTracks->count() == 0) {
-                    return true;
-                }
+            $scheduledTracks = CcScheduleQuery::create()
+                ->filterByDbInstanceId($currentShow->getDbId())
+                ->filterByDbEnds($now, Criteria::GREATER_EQUAL)
+                ->find();
+            if ($scheduledTracks->count() == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private static function isNextShowEmpty()
+    {
+        $futureShow = self::getNextFutureShow();
+
+        if (is_null($futureShow)) {
+            return false;
+        } else {
+            $now = new DateTime("now", new DateTimeZone("UTC"));
+            $scheduledTracks = CcScheduleQuery::create()
+                ->filterByDbInstanceId($futureShow->getDbId())
+                ->filterByDbStarts($now, Criteria::GREATER_EQUAL)
+                ->find();
+            if ($scheduledTracks->count() == 0) {
+                return true;
+            } else {
+                return false;
             }
         }
     }

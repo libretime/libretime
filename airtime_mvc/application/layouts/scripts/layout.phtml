@@ -79,26 +79,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
     ?>
 
-    <!--
-    <?php if (Application_Common_UsabilityHints::zeroFilesUploaded()) { ?>
-        <div class="usability_hint">
-            <?php echo sprintf(_("It looks like you have not uploaded any audio files yet. %shere%s to upload a file."), "Click <a href='/plupload'>", "</a>"); ?>
-        </div>
-    <?php }?>
-
-    <?php if (!Application_Common_UsabilityHints::isFutureOrCurrentShowScheduled()) { ?>
-        <div class="usability_hint">
-            <?php echo sprintf(_("It looks like you don't have any shows scheduled. Click %shere%s to create a show."), "<a href='/schedule'>", "</a>"); ?>
-        </div>
-    <?php } ?>
-
-    <?php if (Application_Common_UsabilityHints::isCurrentOrNextShowEmpty()) { ?>
-        <div class="usability_hint">
-            <?php echo sprintf(_("To start broadcasting click %shere%s to schedule a track into your show."), "<a href='/showbuilder'>", "</a>"); ?>
-        </div>
-    <?php } ?>
-    -->
-
     <?php echo $this->layout()->content ?></div>
 
 <script id="tmpl-pl-cues" type="text/template">
