@@ -3320,3 +3320,7 @@ dd .stream-status {
 .usability_hint a {
     color: white;
 }
+
+.context-menu-list {
+    width: 200px !important;
+}
