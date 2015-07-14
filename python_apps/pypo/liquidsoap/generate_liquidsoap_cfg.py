@@ -20,7 +20,7 @@ def generate_liquidsoap_config(ss):
             str_buffer = "%s = %s\n" % (key, int(value))
         except ValueError:
             try: # Is it a boolean?
-                if "true" in value or "false" in value:
+                if value=="true" or value=="false":
                     str_buffer = "%s = %s\n" % (key, value.lower())
                 else:
                     raise ValueError() # Just drop into the except below

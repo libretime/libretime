@@ -1901,44 +1901,6 @@ span.errors.sp-errors{
     height:38px;
 }
 
-.add-button, .ui-widget-content a.add-button {
-    border: 1px solid #242424;
-    background-color: #353535;
-    background: -moz-linear-gradient(top, #494949 0, #353535 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #494949), color-stop(100%, #353535));
-    color: #ffffff;
-    margin:0;
-    font-size:12px;
-    font-weight:bold;
-    padding:4px 12px 4px 22px;
-    text-decoration:none;
-    text-shadow: #000 0px -1px;
-    display:block;
-    float:left;
-    position:relative;
-}
-.add-button:hover, .ui-widget-content a.add-button:hover  {
-    border: 1px solid #000000;
-    background-color: #353535;
-    background: -moz-linear-gradient(top, #353535 0, #000000 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #353535), color-stop(100%, #000000));
-    color: #ffffff;
-}
-.add-button span {
-    position:absolute;
-    top:3px;
-    left:3px;
-    height:16px;
-    width:16px;
-    display:block;
-    background:url(redmond/images/ui-icons_ffffff_256x240.png) no-repeat;
-}
-.add-button:hover span {
-    background:url(redmond/images/ui-icons_ff5d1a_256x240.png) no-repeat;
-}
-.add-button span.add-icon {
-    background-position: -32px -128px;
-}
 
 /*---//////////////////// NOW PLAYING COLORS ////////////////////---*/
 .playing-song, .datatable tr.playing-song:hover td {
@@ -1957,7 +1919,6 @@ span.errors.sp-errors{
     background-color:#0aa2be;
     color:#FFF;
 }
-
 
 /*---//////////////////// END NOW PLAYING COLORS ////////////////////---*/
 .icon-link, .ui-widget-content a.icon-link {
