@@ -8,8 +8,11 @@ function openAddShowForm(nowOrFuture) {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
 
-            $('#add_show_start_now-now').attr('checked', 'checked');
-            setupStartTimeWidgets();
+            if (nowOrFuture === true) //true means "now"
+            {
+                $('#add_show_start_now-now').attr('checked', 'checked');
+                setupStartTimeWidgets();
+            }
             $("#add-show-form").show();
 
             windowResize();
@@ -180,7 +183,7 @@ function beginEditShow(data){
     
     redrawAddShowForm($("#add-show-form"), data.newForm);
     toggleAddShowButton();
-    openAddShowForm();
+    openAddShowForm(false);
 }
 
 function onStartTimeSelect(){
