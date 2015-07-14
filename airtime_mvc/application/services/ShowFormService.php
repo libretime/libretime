@@ -155,20 +155,22 @@ class Application_Service_ShowFormService
         if ($ccShowDay->isShowStartInPast()) {
             //for a non-repeating show, we should never allow user to change the start time.
             //for a repeating show, we should allow because the form works as repeating template form
-            $form->disableStartDateAndTime();
-
-            // Removing this - if there is no future instance, this will throw an error.
-            // If there is a future instance, then we get a WHEN block representing the next instance
-            // which may be confusing.
-            /*if (!$ccShowDay->isRepeating()) {
+            if (!$ccShowDay->isRepeating()) {
                 $form->disableStartDateAndTime();
             } else {
-                list($showStart, $showEnd) = $this->getNextFutureRepeatShowTime();
+                $showStartAndEnd = $this->getNextFutureRepeatShowTime();
+                if (!is_null($showStartAndEnd)) {
+                    $showStart = $showStartAndEnd["starts"];
+                    $showEnd = $showStartAndEnd["ends"];
+                }
                 if ($this->hasShowStarted($showStart)) {
                     $form->disableStartDateAndTime();
                 }
-            }*/
+            }
         }
+
+        //Disable starting a show 'now' when editing an existing show.
+        $form->getElement('add_show_start_now')->setAttrib('disable', array('now'));
 
         $form->populate(
             array(
@@ -181,6 +183,29 @@ class Application_Service_ShowFormService
                 'add_show_repeats' => $ccShowDay->isRepeating() ? 1 : 0));
 
         return $showStart;
+    }
+
+    public function getNextFutureRepeatShowTime()
+    {
+        $ccShowInstance = CcShowInstancesQuery::create()
+            ->filterByDbShowId($this->ccShow->getDbId())
+            ->filterByDbModifiedInstance(false)
+            ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_THAN)
+            ->orderByDbStarts()
+            ->findOne();
+
+        if (!$ccShowInstance) {
+            return null;
+        }
+
+        $starts = new DateTime($ccShowInstance->getDbStarts(), new DateTimeZone("UTC"));
+        $ends = new DateTime($ccShowInstance->getDbEnds(), new DateTimeZone("UTC"));
+        $showTimezone = $this->ccShow->getFirstCcShowDay()->getDbTimezone();
+
+        $starts->setTimezone(new DateTimeZone($showTimezone));
+        $ends->setTimezone(new DateTimeZone($showTimezone));
+
+        return array("starts" => $starts, "ends" => $ends);
     }
 
     private function populateInstanceFormWhen($form)
@@ -203,8 +228,12 @@ class Application_Service_ShowFormService
             $form->disableStartDateAndTime();
         }
 
+        //Disable starting a show 'now' when editing an existing show.
+        $form->getElement('add_show_start_now')->setAttrib('disable', array('now'));
+
         $form->populate(
             array(
+                'add_show_start_now' => 'future',
                 'add_show_start_date' => $showStart->format("Y-m-d"),
                 'add_show_start_time' => $showStart->format("H:i"),
                 'add_show_end_date_no_repeat' => $showEnd->format("Y-m-d"),
@@ -437,7 +466,7 @@ class Application_Service_ShowFormService
         $ccShowInstance = CcShowInstancesQuery::create()
             ->filterByDbShowId($this->ccShow->getDbId())
             ->filterByDbModifiedInstance(false)
-            ->filterByDbStarts(gmdate("Y-m-d"), Criteria::GREATER_EQUAL)
+            ->filterByDbStarts(gmdate("Y-m-d H:i:s"), Criteria::GREATER_EQUAL)
             ->orderByDbStarts()
             ->findOne();
 

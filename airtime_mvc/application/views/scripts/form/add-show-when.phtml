@@ -1,8 +1,18 @@
 <fieldset>
     <dl>
+        <dt id="add_show_start_now-label">
+            <label for="add_show_start_now">
+                <?php echo $this->element->getElement('add_show_start_now')->getLabel()?>
+            </label>
+        </dt>
+        <dd>
+            <?php echo $this->element->getElement('add_show_start_now') ?>
+        </dd>
+
+
         <dt id="add_show_start_date-label">
             <label for="add_show_start_date" class="required">
-                <?php echo $this->element->getElement('add_show_start_date')->getLabel()?>
+                <?php //echo $this->element->getElement('add_show_start_date')->getLabel()?>
             </label>
         </dt>
         <dd>
@@ -19,6 +29,9 @@
                     <?php endforeach; ?>
                 </ul>
         <?php } ?>
+
+
+
         <dt id="add_show_end_date_no_repeat-label">
             <label for="add_show_end_date_no_repeat" class="required">
                 <?php echo $this->element->getElement('add_show_end_date_no_repeat')->getLabel()?>
