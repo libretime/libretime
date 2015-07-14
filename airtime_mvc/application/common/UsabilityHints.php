@@ -68,15 +68,15 @@ class Application_Common_UsabilityHints
             }
         } else if (self::isCurrentShowEmpty()) {
             if ($userIsOnCalendarPage) {
-                return _("To start broadcasting click on the current show and select 'Add / Remove Content'");
+                return _("To start broadcasting, click on the current show and select 'Add / Remove Content'");
             } else {
-                return sprintf(_("It looks like the current show is empty. %sAdd tracks to your show now.%s"),
+                return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now.%s"),
                     "<a href=\"/schedule\">",
                     "</a>");
             }
         } else if (!self::getCurrentShow() && self::isNextShowEmpty()) {
             if ($userIsOnCalendarPage) {
-                return _("To start broadcasting click on the show starting next and select 'Add / Remove Content'");
+                return _("Click on the show starting next and select 'Add / Remove Content'");
             } else {
                 return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now.%s"),
                     "<a href=\"/schedule\">",
