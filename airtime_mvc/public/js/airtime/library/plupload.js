@@ -146,6 +146,9 @@ $(document).ready(function() {
 						} else {
 							self.stopRefreshingRecentUploads();
 						}
+
+						// Update usability hint - in common.js
+						getUsabilityHint();
 					}
 				} );
 			 }

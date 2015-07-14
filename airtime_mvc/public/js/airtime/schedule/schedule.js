@@ -154,6 +154,7 @@ function buildScheduleDialog (json, instance_id) {
                 "class": "btn",
                 click: function() {
                     $(this).dialog("close");
+                    //getUsabilityHint();
                 }
             }
         ]

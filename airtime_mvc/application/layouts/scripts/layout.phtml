@@ -71,6 +71,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 <div class="wrapper" id="content">
+    <?php
+    $hint = Application_Common_UsabilityHints::getUsabilityHint();
+    if ($hint != "") { ?>
+        <div class="usability_hint"><?php echo $hint; ?></div>
+    <?php
+    }
+    ?>
+
+    <!--
     <?php if (Application_Common_UsabilityHints::zeroFilesUploaded()) { ?>
         <div class="usability_hint">
             <?php echo sprintf(_("It looks like you have not uploaded any audio files yet. %shere%s to upload a file."), "Click <a href='/plupload'>", "</a>"); ?>
@@ -88,6 +97,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <?php echo sprintf(_("To start broadcasting click %shere%s to schedule a track into your show."), "<a href='/showbuilder'>", "</a>"); ?>
         </div>
     <?php } ?>
+    -->
 
     <?php echo $this->layout()->content ?></div>
 
