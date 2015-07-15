@@ -12,7 +12,7 @@ class Application_Common_UsabilityHints
         // We want to display hints in this order:
         // 1. Check if files are uploaded
         // 2. Check if a show is scheduled
-        // 3. Check if scheduled show needs content
+        // 3. Check if current or next show needs content
 
         // Once the user is on the page linked to from the hint we want to
         // display a new message further describing what to do. Once this
@@ -105,7 +105,8 @@ class Application_Common_UsabilityHints
     }
 
     /**
-     * Returns true if there is at least one show scheduled in the future.
+     * Returns true if there is at least one show currently scheduled
+     * or in the future.
      */
     private static function isFutureOrCurrentShowScheduled()
     {
