@@ -319,6 +319,7 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
+
     checkCalendarSCUploadStatus();
     
     $.contextMenu({
@@ -483,6 +484,7 @@ $(document).ready(function() {
             });
 
             return {
+                className: 'calendar-context-menu',
                 items: items,
                 determinePosition : function($menu, x, y) {
                     $menu.css('display', 'block')
