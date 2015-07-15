@@ -46,7 +46,7 @@ class Amazon_S3StorageBackend extends StorageBackend
     {
         $urls = array();
 
-        $s3args = array('response-content-disposition', "attachment; filename=" . urlencode($contentDispositionFilename));
+        $s3args = array('ResponseContentDisposition' => 'attachment; filename="' . $contentDispositionFilename. '"');
         $signedS3Url = $this->s3Client->getObjectUrl($this->getBucket(), $resourceId, '+60 minutes', $s3args);
 
         //If we're using the proxy cache, we need to modify the request URL after it has
