@@ -382,7 +382,7 @@ class CcFiles extends BaseCcFiles {
         $mime = $this->getDbMime();
         $extension = FileDataHelper::getFileExtensionFromMime($mime);
 
-        return $info['filename'].".".$extension;
+        return $info['filename'] . $extension;
     }
 
     /**
