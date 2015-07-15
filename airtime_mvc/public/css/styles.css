@@ -3321,6 +3321,7 @@ dd .stream-status {
     color: white;
 }
 
-.context-menu-list {
-    width: 200px !important;
+.calendar-context-menu {
+    min-width: 200px !important;
 }
+
