@@ -149,7 +149,7 @@ class CcFiles extends BaseCcFiles {
 
             //Only accept files with a file extension that we support.
             $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-            if (!in_array(strtolower($fileExtension), explode(",", "ogg,mp3,oga,flac,wav,m4a,mp4,opus"))) {
+            if (!in_array(strtolower($fileExtension), array_values(FileDataHelper::getAudioMimeTypeArray()))) {
                 throw new Exception("Bad file extension.");
             }
 
