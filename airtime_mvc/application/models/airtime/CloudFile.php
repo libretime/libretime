@@ -32,7 +32,7 @@ class CloudFile extends BaseCloudFile
         if ($this->proxyStorageBackend == null) {
             $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
         }
-        return $this->proxyStorageBackend->getDownloadURLs($this->getResourceId());
+        return $this->proxyStorageBackend->getDownloadURLs($this->getResourceId(), $this->getFilename());
     }
     
     /**
@@ -49,7 +49,14 @@ class CloudFile extends BaseCloudFile
     
     public function getFilename()
     {
-        return $this->getDbFilepath();
+        $filename = $this->getDbFilepath();
+        $info = pathinfo($filename);
+
+        //Add the correct file extension based on the MIME type, for files that were uploaded with the wrong extension.
+        $mime = $this->getDbMime();
+        $extension = FileDataHelper::getFileExtensionFromMime($mime);
+
+        return $info['filename'] . $extension;
     }
     
     /**
