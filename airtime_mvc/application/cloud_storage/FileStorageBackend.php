@@ -13,7 +13,7 @@ class FileStorageBackend extends StorageBackend
         return $resourceId;
     }
 
-    public function getDownloadURLs($resourceId)
+    public function getDownloadURLs($resourceId, $contentDispositionFilename)
     {
         return "";
     }

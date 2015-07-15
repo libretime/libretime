@@ -363,14 +363,6 @@ class CcFiles extends BaseCcFiles {
             unset($response[$key]);
         }
 
-        $mime = $file->getDbMime();
-        if (!empty($mime)) {
-            // Get an extension based on the file's mime type and change the path to use this extension
-            $path = pathinfo($file->getDbFilepath());
-            $ext = FileDataHelper::getFileExtensionFromMime($mime);
-            $response["filepath"] = ($path["dirname"] . '/' . $path["filename"] . $ext);
-        }
-
         return $response;
     }
 
@@ -385,8 +377,12 @@ class CcFiles extends BaseCcFiles {
     public function getFilename()
     {
         $info = pathinfo($this->getAbsoluteFilePath());
+
         //filename doesn't contain the extension because PHP is awful
-        return $info['filename'].".".$info['extension'];
+        $mime = $this->getDbMime();
+        $extension = FileDataHelper::getFileExtensionFromMime($mime);
+
+        return $info['filename'] . $extension;
     }
 
     /**

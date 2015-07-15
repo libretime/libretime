@@ -62,6 +62,7 @@ class Application_Service_MediaService
 
         if ($media->getPropelOrm()->isValidPhysicalFile()) {
             $filename = $media->getPropelOrm()->getFilename();
+
             //Download user left clicks a track and selects Download.
             if (!$inline) {
                 //We are using Content-Disposition to specify
