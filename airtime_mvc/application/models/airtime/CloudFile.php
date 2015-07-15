@@ -32,7 +32,7 @@ class CloudFile extends BaseCloudFile
         if ($this->proxyStorageBackend == null) {
             $this->proxyStorageBackend = new ProxyStorageBackend($this->getStorageBackend());
         }
-        return $this->proxyStorageBackend->getDownloadURLs($this->getResourceId());
+        return $this->proxyStorageBackend->getDownloadURLs($this->getResourceId(), $this->getFilename());
     }
     
     /**
