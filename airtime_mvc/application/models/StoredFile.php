@@ -907,6 +907,112 @@ SQL;
         return $results;
     }
 
+    public static function searchLibraryFilesTest($datatables)
+    {
+        $con = Propel::getConnection(CcFilesPeer::DATABASE_NAME);
+        $displayColumns = self::getLibraryColumns();
+
+        $fileSelect   = array();
+        foreach ($displayColumns as $key) {
+            if ($key === "id") {
+                $fileSelect[]   = "FILES.id AS $key";
+            } elseif ($key === "owner_id") {
+                $fileSelect[]   = "sub.login AS $key";
+            } //file length is displayed based on cueout - cuein.
+            else if ($key === "length") {
+                $fileSelect[]   = "(cueout - cuein)::INTERVAL AS length";
+            } elseif ($key === "year") {
+                $fileSelect[]   = "year AS ".$key;
+            } else {
+                $fileSelect[]   = $key;
+            }
+        }
+
+        $fileSelect   = "SELECT ". join(",", $fileSelect);
+        $fileTable = "({$fileSelect} FROM cc_files AS FILES LEFT JOIN cc_subjs AS sub ON (sub.id = FILES.owner_id) WHERE file_exists = 'TRUE' AND hidden='FALSE')";
+        $fromTable = $fileTable." AS File"; //need an alias for the table if it's standalone.
+
+        // update is_scheduled to false for tracks that
+        // have already played out
+        self::updatePastFilesIsScheduled();
+        $results = Application_Model_Datatables::findEntries($con, $displayColumns, $fromTable, $datatables);
+
+        $displayTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());
+        $utcTimezone = new DateTimeZone("UTC");
+
+        foreach ($results['aaData'] as &$row) {
+            $row['id'] = intval($row['id']);
+
+            //taken from Datatables.php, needs to be cleaned up there.
+            if (isset($r['ftype'])) {
+                if ($r['ftype'] == 'playlist') {
+                    $pl = new Application_Model_Playlist($r['id']);
+                    $r['length'] = $pl->getLength();
+                } elseif ($r['ftype'] == "block") {
+                    $bl = new Application_Model_Block($r['id']);
+                    $r['bl_type'] = $bl->isStatic() ? 'static' : 'dynamic';
+                    $r['length']  = $bl->getLength();
+                }
+            }
+
+            if ($row['ftype'] === "audioclip") {
+
+                $cuein_formatter = new LengthFormatter($row["cuein"]);
+                $row["cuein"] = $cuein_formatter->format();
+
+                $cueout_formatter = new LengthFormatter($row["cueout"]);
+                $row["cueout"] = $cueout_formatter->format();
+
+                $cuein = Application_Common_DateHelper::playlistTimeToSeconds($row["cuein"]);
+                $cueout = Application_Common_DateHelper::playlistTimeToSeconds($row["cueout"]);
+                $row_length = Application_Common_DateHelper::secondsToPlaylistTime($cueout - $cuein);
+
+                $formatter = new SamplerateFormatter($row['sample_rate']);
+                $row['sample_rate'] = $formatter->format();
+
+                $formatter = new BitrateFormatter($row['bit_rate']);
+                $row['bit_rate'] = $formatter->format();
+
+                // for audio preview
+                $row['audioFile'] = $row['id'].".".pathinfo($row['filepath'], PATHINFO_EXTENSION);
+
+            }
+            else {
+
+                $row['audioFile'] = $row['id'];
+                $row_length = $row['length'];
+            }
+
+            $len_formatter = new LengthFormatter($row_length);
+            $row['length'] = $len_formatter->format();
+
+            //convert mtime and utime to localtime
+            $row['mtime'] = new DateTime($row['mtime'], $utcTimezone);
+            $row['mtime']->setTimeZone($displayTimezone);
+            $row['mtime'] = $row['mtime']->format(DEFAULT_TIMESTAMP_FORMAT);
+            $row['utime'] = new DateTime($row['utime'], $utcTimezone);
+            $row['utime']->setTimeZone($displayTimezone);
+            $row['utime'] = $row['utime']->format(DEFAULT_TIMESTAMP_FORMAT);
+
+            //need to convert last played to localtime if it exists.
+            if (isset($row['lptime'])) {
+                $row['lptime'] = new DateTime($row['lptime'], $utcTimezone);
+                $row['lptime']->setTimeZone($displayTimezone);
+                $row['lptime'] = $row['lptime']->format(DEFAULT_TIMESTAMP_FORMAT);
+            }
+
+            // we need to initalize the checkbox and image row because we do not retrieve
+            // any data from the db for these and datatables will complain
+            $row['checkbox'] = "";
+            $row['image'] = "";
+
+            $type = substr($row['ftype'], 0, 2);
+            $row['tr_id'] = "{$type}_{$row['id']}";
+        }
+
+        return $results;
+    }
+
     /** 
      * Copy a newly uploaded audio file from its temporary upload directory 
      * on the local disk (like /tmp) over to Airtime's "stor" directory, 

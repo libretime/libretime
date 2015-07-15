@@ -125,7 +125,9 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (aSchedIds.length == 0) {
-            addToCurrentOrNext(aSchedIds);
+            if (!addToCurrentOrNext(aSchedIds)) {
+                return;
+            }
         }
 
         AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
@@ -139,6 +141,12 @@ var AIRTIME = (function(AIRTIME) {
         // the Now Playing screen if multiple shows are in view).
         el = $("[si_id="+$("#0").attr("si_id")+"]");
         var temp = el.eq(-2).data("aData");
+
+        if (temp === undefined) {
+            alert($.i18n._("Cannot schedule outside a show."));
+            return false;
+        }
+
         arr.push({
             "id" : temp.id,
             "instance" : temp.instance,

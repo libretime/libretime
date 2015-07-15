@@ -7,13 +7,13 @@ var AIRTIME = (function(AIRTIME){
         $sbContent,
         $sbTable,
         $toolbar,
-        $ul,
         $lib,
         cursors = [],
         cursorIds = [],
         showInstanceIds = [],
         headerFooter = [],
-        DISABLED_CLASS = 'ui-state-disabled';
+        DISABLED_CLASS = 'ui-state-disabled',
+        $previouslySelected;
     
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -70,7 +70,7 @@ var AIRTIME = (function(AIRTIME){
                 .find(".fc-event-inner")
                 .append('<span id="'+instance_id+'" title="'+$.i18n._("Show is partially filled")+'" class="small-icon show-partial-filled"></span>');
         }
-    }
+    };
     
     mod.getTimestamp = function() {
         
@@ -107,18 +107,18 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkSelectButton = function() {
-        var $selectable = $sbTable.find("tbody").find("input:checkbox");
+        var $selectable = $sbTable.find("tr");
         
         if ($selectable.length !== 0) {
             AIRTIME.button.enableButton("btn-group #timeline-select", false);
-        }
-        else {
+        } else {
             AIRTIME.button.disableButton("btn-group #timeline-select", false);
         }
         
         //need to check if the 'Select' button is disabled
-        if ($(".btn-group #timeline-select").is(":disabled")) {
-            $(".btn-group #timeline-select").removeAttr("disabled");
+        var select = $(".btn-group #timeline-select");
+        if (select.is(":disabled")) {
+            select.removeAttr("disabled");
         }
     };
     
@@ -134,7 +134,7 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.checkDeleteButton = function() {
-        var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked");
+        var $selected = $sbTable.find("tr."+SB_SELECTED_CLASS);
 
         var button = $("#show_builder").find(".icon-trash").parent();
         if ($selected.length !== 0) {
@@ -210,7 +210,7 @@ var AIRTIME = (function(AIRTIME){
      * sNot is an optional string to filter selected elements by. (ex removing the currently playing item)
      */
     mod.getSelectedData = function(sNot) {
-        var $selected = $sbTable.find("tbody").find("input:checkbox").filter(":checked").parents("tr"),
+        var $selected = $sbTable.find("tr."+SB_SELECTED_CLASS),
             aData = [],
             i, length,
             $item;
@@ -218,32 +218,24 @@ var AIRTIME = (function(AIRTIME){
         if (sNot !== undefined) {
             $selected = $selected.not("."+sNot);
         }
-        
+
         for (i = 0, length = $selected.length; i < length; i++) {
             $item = $($selected.get(i));
             aData.push($item.data('aData'));
         }
-        
+
         return aData.reverse();
     };
     
     mod.selectAll = function () {
-        $inputs = $sbTable.find("input:checkbox");
-        
-        $inputs.attr("checked", true);
-        
-        $trs = $inputs.parents("tr");
+        var $trs = $sbTable.find("tr.lib-audio").not(".sb-past");
         $trs.addClass(SB_SELECTED_CLASS);
         
         mod.checkToolBarIcons();
     };
     
     mod.selectNone = function () {
-        $inputs = $sbTable.find("input:checkbox");
-        
-        $inputs.attr("checked", false);
-        
-        $trs = $inputs.parents("tr");
+        var $trs = $sbTable.find("tr.lib-audio");
         $trs.removeClass(SB_SELECTED_CLASS);
         
         mod.checkToolBarIcons();
@@ -265,7 +257,6 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.enableUI = function() {
-        
         $lib.unblock();
         $sbContent.unblock();
         
@@ -314,9 +305,16 @@ var AIRTIME = (function(AIRTIME){
         
     mod.fnAdd = function(aMediaIds, aSchedIds) {
         mod.disableUI();
-        
-        $.post(baseUrl+"showbuilder/schedule-add", 
-            {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
+        for (var i in aSchedIds) {
+            if ($("#"+aSchedIds[i].id).hasClass("sb-past")) {
+                alert($.i18n._("Cannot add media before currently playing track."));
+                mod.enableUI();
+                return;
+            }
+        }
+
+        $.post(baseUrl+"showbuilder/schedule-add",
+            {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds},
             mod.fnItemCallback
         );
     };
@@ -396,12 +394,11 @@ var AIRTIME = (function(AIRTIME){
         var $scroll = $sbContent.find(".dataTables_scrolling");
         var scrolled = $scroll.scrollTop();
         var scrollingTop = $scroll.offset().top;
-        var oTable = $('#show_builder_table').dataTable();
         var current = $sbTable.find("."+NOW_PLAYING_CLASS);
         var currentTop = current.offset().top;
 
         $scroll.scrollTop(currentTop - scrollingTop + scrolled);
-    }
+    };
 
     mod.builderDataTable = function() {
         $sbContent = $('#show_builder');
@@ -409,7 +406,6 @@ var AIRTIME = (function(AIRTIME){
         $sbTable = $sbContent.find('table');
         var isInitialized = false;
 
-        var emptyNode = document.createElement('div');
         var lockedPreviewIcon = document.createElement('span');
         lockedPreviewIcon.setAttribute('class', 'ui-icon ui-icon-locked');
         var previewIcon = document.createElement('img');
@@ -418,7 +414,6 @@ var AIRTIME = (function(AIRTIME){
 
         oSchedTable = $sbTable.dataTable( {
             "aoColumns": [
-            /* checkbox */ {"mDataProp": "allowed", "sTitle": "", "sWidth": "15px", "sClass": "sb-checkbox"},
             /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "16px"},
             /* starts */ {"mDataProp": "starts", "sTitle": $.i18n._("Start"), "sClass": "sb-starts", "sWidth": "60px"},
             /* ends */ {"mDataProp": "ends", "sTitle": $.i18n._("End"), "sClass": "sb-ends", "sWidth": "60px"},
@@ -449,16 +444,7 @@ var AIRTIME = (function(AIRTIME){
                 delete oData.aoSearchCols;
             },
             "fnStateSave": function fnStateSave(oSettings, oData) {
-               
                 localStorage.setItem('datatables-timeline', JSON.stringify(oData));
-
-                /*
-                $.ajax({
-                  url: baseUrl+"usersettings/set-timeline-datatable",
-                  type: "POST",
-                  data: {settings : oData, format: "json"},
-                  dataType: "json"
-                });*/
             },
             "fnStateLoad": function fnBuilderStateLoad(oSettings) {
                 var settings = localStorage.getItem('datatables-timeline');
@@ -480,16 +466,6 @@ var AIRTIME = (function(AIRTIME){
                     }
                 }
 
-                /*
-                a = oData.ColReorder;
-                if (a) {
-                    for (i = 0, length = a.length; i < length; i++) {
-                        if (typeof(a[i]) === "string") {
-                            a[i] = parseInt(a[i], 10);
-                        }
-                    }
-                }*/
-               
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },
             
@@ -510,7 +486,6 @@ var AIRTIME = (function(AIRTIME){
                 fnPrepareSeparatorRow = function fnPrepareSeparatorRow(sRowContent, sClass, iNodeIndex) {
                     //Albert:
                     //$(nRow.children[iNodeIndex]).replaceWith(emptyNode);
-
 
                     $node = $(nRow.children[iNodeIndex]);
                     $node.html(sRowContent);
@@ -565,7 +540,7 @@ var AIRTIME = (function(AIRTIME){
                     }
                     
                     sSeparatorHTML += '</span>';
-                    
+
                     fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
                 }
                 else if (aData.footer === true) {
@@ -625,12 +600,6 @@ var AIRTIME = (function(AIRTIME){
                             //$image.html('<span class="ui-icon ui-icon-locked"></span>');
                             $image.append(lockedPreviewIcon);
                         } else {
-                            /*
-                            $image.html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png"></img>')
-                            .click(function() {
-                                open_show_preview(aData.instance, aData.pos);
-                                return false;
-                            });*/
                             $image.append(previewIcon.cloneNode(false));
                             $image.click(function() {
                                 open_show_preview(aData.instance, aData.pos);
@@ -651,14 +620,6 @@ var AIRTIME = (function(AIRTIME){
                             show: 'mouseover',
                             hide: 'mouseout'
                         });
-                    }
-
-                    $node = $(nRow.children[0]);
-                    if (aData.allowed === true && aData.scheduled >= 1 && aData.linked_allowed) {
-                        $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
-                    }
-                    else {
-                        $node.empty();
                     }
                 }
                 
@@ -716,14 +677,6 @@ var AIRTIME = (function(AIRTIME){
                 if (aData.currentShow === true) {
                     $nRow.addClass("sb-current-show");
                 }
-              
-                //call the context menu so we can prevent the event from propagating.
-                $nRow.find('td:gt(1)').click(function(e){
-                    
-                    $(this).contextMenu({x: e.pageX, y: e.pageY});
-                    
-                    return false;
-                });
             },
             //remove any selected nodes before the draw.
             "fnPreDrawCallback": function( oSettings ) {
@@ -742,95 +695,12 @@ var AIRTIME = (function(AIRTIME){
                 }
 
                 isInitialized = true;
-                var wrapperDiv,
-                    markerDiv,
-                    $td,
-                    aData,
+                var aData,
                     elements,
-                    i, length, temp,
-                    $cursorRows,
-                    $table = $(this),
-                    $parent = $table.parent(),
-                    $tr,
-                    //use this array to cache DOM heights then we can detach the table to manipulate it to increase speed.
-                    heights = [];
-                
+                    i, length, temp;
+
                 clearTimeout(mod.timeout);
 
-                /*
-                //only create the cursor arrows if the library is on the page.
-                if ($lib.length > 0 && $lib.filter(":visible").length > 0) {
-
-                    $cursorRows = $sbTable.find("tbody tr.sb-future.sb-allowed:not(.sb-header, .sb-empty)");
-                    
-                    //need to get heights of tds while elements are still in the DOM.
-                    for (i = 0, length = $cursorRows.length; i < length; i++) {
-                        $td = $($cursorRows.get(i)).find("td:first");
-                        heights.push($td.height());
-                    }
-                    
-                    //detach the table to increase speed.
-                    $table.detach();
-                    
-                    for (i = 0, length = $cursorRows.length; i < length; i++) {
-                        
-                        $td = $($cursorRows.get(i)).find("td:first");
-                        if ($td.hasClass("dataTables_empty")) {
-                            $parent.append($table);
-                            return false;
-                        }
-                        
-                        wrapperDiv = $("<div />", {
-                            "class": "innerWrapper",
-                            "css": {
-                                "height": heights[i]
-                            }
-                        });
-                        markerDiv = $("<div />", {
-                            "class": "marker"
-                        });
-                        
-                        $td.append(markerDiv).wrapInner(wrapperDiv);
-                        
-                    }
-                    
-                    //re-highlight selected cursors before draw took place
-                    for (i = 0; i < cursorIds.length; i++) {
-                        if (headerFooter[i] == "f") {
-                            $tr = $table.find("tbody tr.sb-footer[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
-                        } else {
-                            $tr = $table.find("tr[id="+cursorIds[i]+"][si_id="+showInstanceIds[i]+"]");
-                        }
-						
-                        //If the currently playing track's cursor is selected,
-                        //and that track is deleted, the cursor position becomes
-                        //unavailble. We have to check the position is available
-                         // before re-highlighting it.
-                        //
-                        if ($tr.find(".sb-checkbox").children().hasClass("innerWrapper")) {
-                            mod.selectCursor($tr);
-                            
-                        // If the selected cursor is the footer row we need to
-                         //explicitly select it because that row does not have
-                         // innerWrapper class
-                         //
-                        } else if ($tr.hasClass("sb-footer")) {
-                            mod.selectCursor($tr);	
-                        }
-                    }
-                    
-                    //if there is only 1 cursor on the page highlight it by default.
-                    if ($cursorRows.length === 1) {
-                        $td = $cursorRows.find("td:first");
-                        if (!$td.hasClass("dataTables_empty")) {
-                            $cursorRows.addClass("cursor-selected-row");
-                        }
-                    }
-                    
-                    $parent.append($table);
-
-                }
-                 */
                 //order of importance of elements for setting the next timeout.
                 elements = [
                     $sbTable.find("tr."+NOW_PLAYING_CLASS),
@@ -876,30 +746,39 @@ var AIRTIME = (function(AIRTIME){
             "sAjaxSource": baseUrl+"showbuilder/builder-feed"  
         });
         
-        $sbTable.find("tbody").on("click", "input:checkbox", function(ev) {
-          
-            var $cb = $(this),
-                $tr = $cb.parents("tr"),
-                $prev;
-            
-            if ($cb.is(":checked")) {
-                
-                if (ev.shiftKey) {
-                    $prev = $sbTable.find("tbody").find("tr."+SB_SELECTED_CLASS).eq(-1);
-                    
-                    $prev.nextUntil($tr)
-                        .addClass(SB_SELECTED_CLASS)
-                        .find("input:checkbox")
-                            .attr("checked", true)
-                            .end();
+        $sbTable.find("tbody").on("click", "tr:not(.sb-past)", function(ev) {
+
+            var $tr = $(this),
+            // Get the ID of the selected row
+                $rowId = $tr.attr("id");
+
+            if (ev.shiftKey && $previouslySelected !== undefined) {
+                if ($previouslySelected.attr("id") == $rowId) {
+                    return;
                 }
-                
+
+                // If the selected row comes before the previously selected row,
+                // we want to select previous rows, otherwise we select next
+                if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
+                    $previouslySelected.prevUntil($tr).each(function(i, el){
+                        $(el).addClass(SB_SELECTED_CLASS);
+                    });
+                } else {
+                    $previouslySelected.nextUntil($tr).each(function(i, el){
+                        $(el).addClass(SB_SELECTED_CLASS);
+                    });
+                }
+                $tr.addClass(SB_SELECTED_CLASS);
+            } else if (ev.ctrlKey && $previouslySelected !== undefined) {
+                $tr.addClass(SB_SELECTED_CLASS);
+            } else {
+                $("."+SB_SELECTED_CLASS).removeClass(SB_SELECTED_CLASS);
                 $tr.addClass(SB_SELECTED_CLASS);
             }
-            else {
-                $tr.removeClass(SB_SELECTED_CLASS);
-            }
-            
+
+            // Remember this row so we can properly multiselect
+            $previouslySelected = $tr;
+
             mod.checkToolBarIcons();
         });
         
@@ -1013,7 +892,7 @@ var AIRTIME = (function(AIRTIME){
                     if (selected.length === 0) {
                         selected = [item.data("aData")];
                     }
-                    
+
                     if (selected.length === 1) {
                         message = sprintf($.i18n._("Moving %s"), selected[0].title);
                         //draggingContainer = item; //Default DataTables drag and drop
@@ -1045,25 +924,14 @@ var AIRTIME = (function(AIRTIME){
 
                     helperData = selected;
                     
-                    return draggingContainer; 
+                    return draggingContainer;
                 },
                 items: 'tr:not(:first, :last, .sb-header, .sb-not-allowed, .sb-past, .sb-now-playing, .sb-empty)',
                 cancel: '.sb-footer',
                 receive: fnReceive,
                 update: fnUpdate,
                 start: function(event, ui) {
-                    /*
-                    var elements = $sbTable.find('tr input:checked').parents('tr')
-                        .not(ui.item)
-                        .not("."+NOW_PLAYING_CLASS);
-                    
-                    //remove all other items from the screen, 
-                    //don't remove ui.item or else we can not get position information when the user drops later.
-                    elements.remove();
-                    */
-                    
-                    var elements = $sbTable.find('tr input:checked').parents('tr').not("."+NOW_PLAYING_CLASS);
-                    
+                    var elements = $sbTable.find('tr.'+SB_SELECTED_CLASS).not("."+NOW_PLAYING_CLASS);
                     elements.hide();
                 },
                 stop: function() {
@@ -1236,106 +1104,6 @@ var AIRTIME = (function(AIRTIME){
             else {
                 $el.removeAttr("disabled");
             }       
-        });
-        
-        
-        //begin context menu initialization.
-        $.contextMenu({
-            selector: '.sb-content table tbody tr:not(.sb-empty, .sb-footer, .sb-header, .sb-record) td:not(.sb-checkbox, .sb-image)',
-            trigger: "left",
-            ignoreRightClick: true,
-            
-            build: function($el, e) {
-                var items,  
-                    $tr = $el.parent(),
-                    data = $tr.data("aData"), 
-                    cursorClass = "cursor-selected-row",
-                    callback;
-
-                function processMenuItems(oItems) {
-                    
-                    //define a preview callback.
-                    if (oItems.preview !== undefined) {
-                        
-                        callback = function() {
-                            open_show_preview(data.instance, data.pos);
-                        };
-                        
-                        oItems.preview.callback = callback;
-                    }
-                    
-                    //define a select cursor callback.
-                    if (oItems.selCurs !== undefined) {
-                        
-                        callback = function() {
-                            var $tr = $(this).parents('tr').next();
-                            
-                            mod.selectCursor($tr);
-                        };
-                        
-                        oItems.selCurs.callback = callback;
-                    }
-                    
-                   //define a remove cursor callback.
-                    if (oItems.delCurs !== undefined) {
-                        
-                        callback = function() {
-                            var $tr = $(this).parents('tr').next();
-                            
-                            mod.removeCursor($tr);
-                        };
-                        
-                        oItems.delCurs.callback = callback;
-                    }
-                    
-                    //define a delete callback.
-                    if (oItems.del !== undefined) {
-                        
-                        callback = function() {
-                            AIRTIME.showbuilder.fnRemove([{
-                                id: data.id,
-                                timestamp: data.timestamp,
-                                instance: data.instance
-                            }]);
-                        };
-                        
-                        oItems.del.callback = callback;
-                    }
-                    
-                    //only show the cursor selecting options if the library is visible on the page.
-                    if ($tr.next().find('.marker').length === 0) {
-                        delete oItems.selCurs;
-                        delete oItems.delCurs;
-                    }
-                    //check to include either select or remove cursor.
-                    else {
-                        if ($tr.next().hasClass(cursorClass)) {
-                            delete oItems.selCurs;
-                        }
-                        else {
-                            delete oItems.delCurs;
-                        }
-                    }       
-                           
-                    items = oItems;
-                }
-                
-                request = $.ajax({
-                  url: baseUrl+"showbuilder/context-menu",
-                  type: "GET",
-                  data: {id : data.id, format: "json"},
-                  dataType: "json",
-                  async: false,
-                  success: function(json){
-                      processMenuItems(json.items);
-                  }
-                });
-
-                return {
-                    items: items
-                };
-    
-            }
         });
     };
     

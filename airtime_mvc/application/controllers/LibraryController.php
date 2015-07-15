@@ -11,6 +11,7 @@ class LibraryController extends Zend_Controller_Action
     {
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('contents-feed', 'json')
+                    ->addActionContext('contents-feed-test', 'json')
                     ->addActionContext('delete', 'json')
                     ->addActionContext('duplicate', 'json')
                     ->addActionContext('delete-group', 'json')
@@ -413,6 +414,19 @@ class LibraryController extends Zend_Controller_Action
     }
 
     public function contentsFeedAction()
+    {
+        $params = $this->getRequest()->getParams();
+
+        # terrible name for the method below. it does not only search files.
+        $r = Application_Model_StoredFile::searchLibraryFiles($params);
+
+        $this->view->sEcho = $r["sEcho"];
+        $this->view->iTotalDisplayRecords = $r["iTotalDisplayRecords"];
+        $this->view->iTotalRecords = $r["iTotalRecords"];
+        $this->view->files = SecurityHelper::htmlescape_recursive($r["aaData"]);
+    }
+
+    public function contentsFeedTestAction()
     {
         $params = $this->getRequest()->getParams();
 

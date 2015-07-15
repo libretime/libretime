@@ -62,9 +62,8 @@ var AIRTIME = (function(AIRTIME) {
             selected,
             $trs;
 
-
         // Get visible items and check if any chosenItems are visible
-        $trs = $libTable.find("tbody input:checkbox").parents("tr");
+        $trs = $libTable.find("tr");
         $trs.each(function(i){
             for (cItem in chosenItems) {
                 if (cItem === $(this).attr("id")) {
@@ -88,7 +87,7 @@ var AIRTIME = (function(AIRTIME) {
             reAudio=/^(au|st|pl|bl)/ ;
             
         // Get visible items and check if any chosenItems are visible
-        $trs = $libTable.find("tbody input:checkbox").parents("tr");
+        $trs = $libTable.find("tr");
         $trs.each(function(i){
             for (cItem in chosenItems) {
                 if (cItem === $(this).attr("id")) {
@@ -176,7 +175,7 @@ var AIRTIME = (function(AIRTIME) {
         $.fn.reverse = [].reverse;
         
         // Get visible items and check if any chosenItems are visible
-        $trs = $libTable.find("tbody input:checkbox").parents("tr").reverse();
+        $trs = $libTable.find("tr").reverse();
         $trs.each(function(i){
             for (cItem in chosenItems) {
                 if (cItem === $(this).attr("id")) {
@@ -212,7 +211,7 @@ var AIRTIME = (function(AIRTIME) {
         var id = $el.attr("id"),
             item = chosenItems[id];
 
-        return item !== undefined ? true : false;
+        return item !== undefined;
     };
     
     mod.addToChosen = function($el) {
@@ -231,21 +230,14 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.highlightItem = function($el) {
-        var $input = $el.find("input");
-    
-        $input.attr("checked", true);
         $el.addClass(LIB_SELECTED_CLASS);
     };
     
     mod.unHighlightItem = function($el) {
-        var $input = $el.find("input");
-    
-        $input.attr("checked", false);
         $el.removeClass(LIB_SELECTED_CLASS);
     };
     
     mod.selectItem = function($el) {
-        
         mod.highlightItem($el);
         mod.addToChosen($el);
         
@@ -253,10 +245,8 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.deselectItem = function($el) {
-        
         mod.unHighlightItem($el);
         mod.removeFromChosen($el);
-        
         mod.checkToolBarIcons();
     };
     
@@ -269,10 +259,7 @@ var AIRTIME = (function(AIRTIME) {
      */
     mod.selectCurrentPage = function() {
         $.fn.reverse = [].reverse;
-        var $inputs = $libTable.find("tbody input:checkbox"),
-            $trs = $inputs.parents("tr").reverse();
-            
-        $inputs.attr("checked", true);
+        var $trs = $libTable.find("tbody").find("tr").reverse();
         $trs.addClass(LIB_SELECTED_CLASS);
 
         $trs.each(function(i, el){
@@ -289,11 +276,7 @@ var AIRTIME = (function(AIRTIME) {
      * from gmail)
      */
     mod.deselectCurrentPage = function() {
-        var $inputs = $libTable.find("tbody input:checkbox"),
-            $trs = $inputs.parents("tr"),
-            id;
-        
-        $inputs.attr("checked", false);
+        var $trs = $libTable.find("tr"), id;
         $trs.removeClass(LIB_SELECTED_CLASS);
         
         $trs.each(function(i, el){
@@ -306,10 +289,7 @@ var AIRTIME = (function(AIRTIME) {
     };
     
     mod.selectNone = function() {
-        var $inputs = $libTable.find("tbody input:checkbox"),
-            $trs = $inputs.parents("tr");
-        
-        $inputs.attr("checked", false);
+        var $trs = $libTable.find("tr");
         $trs.removeClass(LIB_SELECTED_CLASS);
         
         chosenItems = {};
@@ -484,41 +464,39 @@ var AIRTIME = (function(AIRTIME) {
             //IMPORTANT: WHEN ADDING A NEW COLUMN PLEASE CONSULT WITH THE WIKI
             // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
             "aoColumns": [
-              /* ftype */  { "sTitle" : ""              , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          ,
-              /* Checkbox */  { "sTitle" : ""              , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "25px"         , "sClass"    : "library_checkbox" }  ,
-              /* Type */  { "sTitle" : ""              , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "25px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
-              /* Is Scheduled */  { "sTitle" : $.i18n._("Scheduled")              , "mDataProp" : "is_scheduled"        , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
-              /* Is Playlist */  { "sTitle" : $.i18n._("Playlist / Block")              , "mDataProp" : "is_playlist"        , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
-              /* Title */  { "sTitle" : $.i18n._("Title")         , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          ,
-              /* Creator */  { "sTitle" : $.i18n._("Creator")       , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,
-              /* Album */  { "sTitle" : $.i18n._("Album")         , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          ,
-              /* Bit Rate */  { "sTitle" : $.i18n._("Bit Rate")      , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         },
-              /* BPM */  { "sTitle" : $.i18n._("BPM")           , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         },
-              /* Composer */  { "sTitle" : $.i18n._("Composer")      , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        },
-              /* Conductor */  { "sTitle" : $.i18n._("Conductor")     , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
-              /* Copyright */  { "sTitle" : $.i18n._("Copyright")     , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        },
-              /* Cue In */  { "sTitle" : $.i18n._("Cue In")     , "mDataProp" : "cuein"    , "bVisible"    : false                 , "sClass"      : "library_length"     , "sWidth" : "80px"        },
-              /* Cue Out */  { "sTitle" : $.i18n._("Cue Out")     , "mDataProp" : "cueout"    , "bVisible"    : false                 , "sClass"      : "library_length"     , "sWidth" : "80px"        },
-              /* Encoded */  { "sTitle" : $.i18n._("Encoded By")    , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
-              /* Genre */  { "sTitle" : $.i18n._("Genre")         , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        },
-              /* ISRC Number */  { "sTitle" : $.i18n._("ISRC")          , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
-              /* Label */  { "sTitle" : $.i18n._("Label")         , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
-              /* Language */  { "sTitle" : $.i18n._("Language")      , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
-              /* Last Modified */  { "sTitle" : $.i18n._("Last Modified") , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },
-              /* Last Played */  { "sTitle" : $.i18n._("Last Played") , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },
-              /* Length */  { "sTitle" : $.i18n._("Length")        , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          ,
-              /* Mime */  { "sTitle" : $.i18n._("Mime")          , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         },
-              /* Mood */  { "sTitle" : $.i18n._("Mood")          , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         },
-              /* Owner */  { "sTitle" : $.i18n._("Owner")         , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
-              /* Replay Gain */  { "sTitle" : $.i18n._("Replay Gain")   , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"      , "sWidth" : "80px"      },
-              /* Sample Rate */  { "sTitle" : $.i18n._("Sample Rate")   , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "80px"         },
-              /* Track Number */  { "sTitle" : $.i18n._("Track Number")  , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         },
-              /* Upload Time */  { "sTitle" : $.i18n._("Uploaded")      , "mDataProp" : "utime"        , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          ,
-              /* Website */  { "sTitle" : $.i18n._("Website")       , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
-              /* Year */  { "sTitle" : $.i18n._("Year")          , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
+              /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          ,
+              /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "16px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
+              ///* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
+              /* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
+              /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          ,
+              /* Creator */         { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,
+              /* Album */           { "sTitle" : $.i18n._("Album")              , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 }          ,
+              /* Bit Rate */        { "sTitle" : $.i18n._("Bit Rate")           , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         },
+              /* BPM */             { "sTitle" : $.i18n._("BPM")                , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         },
+              /* Composer */        { "sTitle" : $.i18n._("Composer")           , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        },
+              /* Conductor */       { "sTitle" : $.i18n._("Conductor")          , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
+              /* Copyright */       { "sTitle" : $.i18n._("Copyright")          , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        },
+              /* Cue In */          { "sTitle" : $.i18n._("Cue In")             , "mDataProp" : "cuein"        , "bVisible"    : false                 , "sClass"      : "library_length"     , "sWidth" : "80px"        },
+              /* Cue Out */         { "sTitle" : $.i18n._("Cue Out")            , "mDataProp" : "cueout"       , "bVisible"    : false                 , "sClass"      : "library_length"     , "sWidth" : "80px"        },
+              /* Encoded */         { "sTitle" : $.i18n._("Encoded By")         , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
+              /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        },
+              /* ISRC Number */     { "sTitle" : $.i18n._("ISRC")               , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
+              /* Label */           { "sTitle" : $.i18n._("Label")              , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
+              /* Language */        { "sTitle" : $.i18n._("Language")           , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
+              /* Last Modified */   { "sTitle" : $.i18n._("Last Modified")      , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },
+              /* Last Played */     { "sTitle" : $.i18n._("Last Played")        , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "125px"        },
+              /* Length */          { "sTitle" : $.i18n._("Length")             , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  }          ,
+              /* Mime */            { "sTitle" : $.i18n._("Mime")               , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         },
+              /* Mood */            { "sTitle" : $.i18n._("Mood")               , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         },
+              /* Owner */           { "sTitle" : $.i18n._("Owner")              , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
+              /* Replay Gain */     { "sTitle" : $.i18n._("Replay Gain")        , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"      , "sWidth" : "80px"      },
+              /* Sample Rate */     { "sTitle" : $.i18n._("Sample Rate")        , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "80px"         },
+              /* Track Number */    { "sTitle" : $.i18n._("Track Number")       , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "65px"         },
+              /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "bVisible"    : false                 , "sClass"      : "library_upload_time" , "sWidth"      : "125px"                 }          ,
+              /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
+              /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
               ],
             
-                          
             "bProcessing": true,
             "bServerSide": true,
             
@@ -582,7 +560,7 @@ var AIRTIME = (function(AIRTIME) {
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },
             
-            "sAjaxSource": baseUrl+"Library/contents-feed",
+            "sAjaxSource": baseUrl+"Library/contents-feed-test",
             "sAjaxDataProp": "files",
             
             "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -600,8 +578,8 @@ var AIRTIME = (function(AIRTIME) {
                 aoData.push( { name: "advSearch", value: advSearchValid} );
                 
                 // push whether to search files/playlists or all.
-                type = $("#library_display_type").find("select").val();
-                type = (type === undefined) ? 0 : type;
+                type = $(".media_type_selector.selected").attr("selection_id");
+                type = (type === undefined) ? 1 : type;
                 aoData.push( { name: "type", value: type} );
                 
                 $.ajax( {
@@ -614,9 +592,6 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                // add checkbox
-                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
-
                 // add audio preview image/button
                 if (aData.ftype === "audioclip") {
                     $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png">');
@@ -655,104 +630,6 @@ var AIRTIME = (function(AIRTIME) {
                         open_block_preview(aData.audioFile, 0);
                     }
                     return false;
-                });
-                
-                alreadyclicked=false;
-                // call the context menu so we can prevent the event from
-                // propagating.
-                $(nRow).find('td:not(.library_checkbox, .library_type)').click(function(e){
-                    var el=$(this);
-                    if (alreadyclicked)
-                    {
-                        alreadyclicked=false; // reset
-                        clearTimeout(alreadyclickedTimeout); // prevent this
-                                                                // from
-                                                                // happening
-                        // do what needs to happen on double click.
-                        
-                        $tr = $(el).parent();
-                        data = $tr.data("aData");
-                        AIRTIME.library.dblClickAdd(data, data.ftype);
-                    }
-                    else
-                    {
-                        alreadyclicked=true;
-                        alreadyclickedTimeout=setTimeout(function(){
-                            alreadyclicked=false; // reset when it happens
-                            // do what needs to happen on single click.
-                            // use el instead of $(this) because $(this) is
-                            // no longer the element
-                            el.contextMenu({x: e.pageX, y: e.pageY});
-                        },300); // <-- dblclick tolerance here
-                    }
-                    return false;
-                });
-
-                /*$(nRow).find(".media-item-in-use").qtip({
-                    content: {
-                        text: aData.status_msg
-                    },
-                    hide: {
-                        delay: 500,
-                        fixed: true
-                    },
-                    style: {
-                        border: {
-                            width: 0,
-                            radius: 4
-                        },
-                        classes: "ui-tooltip-dark ui-tooltip-rounded"
-                    },
-                    position: {
-                        my: "left bottom",
-                        at: "right center"
-                    },
-                });*/
-
-                // add a tool tip to appear when the user clicks on the type
-                // icon.
-                $(nRow).find("td:not(.library_checkbox, .library_type)").qtip({
-                    content: {
-                        text: function(event, api) {
-                            $.get(baseUrl+"library/get-file-metadata",
-                                ({format: "html", id : aData.id, type: aData.ftype}),
-                                function (html) {
-                                    api.set('content.text', html);
-                                }, "html")
-                                .fail(function (xhr, status, error) {
-                                    api.set('content.text', status + ': ' + error)
-                                });
-                            return 'Loading...';
-                        },
-                        title: {
-                            text: aData.track_title
-                        }
-                    },
-                    position: {
-                        target: 'event',
-                        adjust: {
-                            resize: true,
-                            method: "flip flip"
-                        },
-                        my: 'left center',
-                        at: 'right center',
-                        viewport: $(window), // Keep the tooltip on-screen at
-                                                // all times
-                        effect: false // Disable positioning animation
-                    },
-                    style: {
-                        classes: "ui-tooltip-dark file-md-long"
-                    },
-                    show: 'mousedown',
-                    events: {
-                       show: function(event, api) {
-                         // Only show the tooltip if it was a right-click
-                         if(event.originalEvent.button !== 2) {
-                             event.preventDefault();
-                         }
-                       }
-                    },
-                    hide: {event:'mouseout', delay: 50, fixed:true}  
                 });
             },
            // remove any selected nodes before the draw.
@@ -845,247 +722,47 @@ var AIRTIME = (function(AIRTIME) {
         $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
         
         AIRTIME.library.setupLibraryToolbar(oTable);
-        
-        $("#library_display_type")
-            .addClass("dataTables_type")
-            .append('<select name="library_display_type" />')
-            .find("select")
-                .append('<option value="0">'+$.i18n._("All")+'</option>')
-                .append('<option value="1">'+$.i18n._("Files")+'</option>')
-                .append('<option value="2">'+$.i18n._("Playlists")+'</option>')
-                .append('<option value="3">'+$.i18n._("Smart Blocks")+'</option>')
-                .append('<option value="4">'+$.i18n._("Web Streams")+'</option>')
-                .end()
-            .change(function(ev){
-                oTable.fnDraw();
-            });
-        
-        $libTable.find("tbody").on("click", "input[type=checkbox]", function(ev) {
 
-            var $cb = $(this),
-                $tr = $cb.parents("tr"),
-                // Get the ID of the selected row
+        $libTable.find("tbody").on("dblclick", "tr", function(ev) {
+            var $tr = $(this),
+                data = $tr.data("aData");
+            AIRTIME.library.dblClickAdd(data, data.ftype);
+        });
+
+        $libTable.find("tbody").on("click", "tr", function(ev) {
+            var $tr = $(this),
+            // Get the ID of the selected row
                 $rowId = $tr.attr("id");
 
-            if ($cb.is(":checked")) {
-                if (ev.shiftKey && $previouslySelected !== undefined) {
-                    // If the selected row comes before the previously selected row,
-                    // we want to select previous rows, otherwise we select next
-                    if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
-                        $previouslySelected.prevUntil($tr).each(function(i, el){
-                            mod.selectItem($(el));
-                        });
-                    } else {
-                        $previouslySelected.nextUntil($tr).each(function(i, el){
-                            mod.selectItem($(el));
-                        });
-                    }
+            if (ev.shiftKey && $previouslySelected !== undefined) {
+                if ($previouslySelected.attr("id") == $rowId) {
+                    return;
+                }
+
+                // If the selected row comes before the previously selected row,
+                // we want to select previous rows, otherwise we select next
+                if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
+                    $previouslySelected.prevUntil($tr).each(function(i, el){
+                        mod.selectItem($(el));
+                    });
+                } else {
+                    $previouslySelected.nextUntil($tr).each(function(i, el){
+                        mod.selectItem($(el));
+                    });
                 }
 
                 mod.selectItem($tr);
-                // Remember this row so we can properly multiselect
-                $previouslySelected = $tr;
-            }
-            else {
-                mod.deselectItem($tr);
-            }
-            
-        });
-       
-        // begin context menu initialization.
-        $.contextMenu({
-            selector: '#library_display td:not(.library_checkbox)',
-            trigger: "left",
-            ignoreRightClick: true,
-            
-            build: function($el, e) {
-                var data, screen, items, callback, $tr;
-                
-                $tr = $el.parent();
-                data = $tr.data("aData");
-                screen = $tr.data("screen");
-                
-                function processMenuItems(oItems) {
-                    
-                    // define an add to playlist callback.
-                    if (oItems.pl_add !== undefined) {
-                        var aItems = [];
-                        
-                        callback = function() {
-                            aItems.push(new Array(data.id, data.ftype));
-                            AIRTIME.playlist.fnAddItems(aItems, undefined, 'after');
-                        };
-                        
-                        oItems.pl_add.callback = callback;
-                    }
-                    
-                    // define an edit callback.
-                    if (oItems.edit !== undefined) {
-                        
-                        if (data.ftype === "audioclip") {
-                            callback = function() {
-                                $.get(oItems.edit.url, {format: "json"}, function(json){
-                                    buildEditMetadataDialog(json);
-                                });
-                            };
-                        } else if (data.ftype === "playlist" || data.ftype === "block") {
-                            callback = function() {
-		                        var url = baseUrl+'Playlist/edit';
-                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
-                                AIRTIME.playlist.validatePlaylistElements();
-                            };
-                        } else if (data.ftype === "stream") {
-                            callback = function() {
-		                        var url = baseUrl+'Webstream/edit';
-                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
-                            }
-                        } else {
-                            throw new Exception($.i18n._("Unknown type: ") + data.ftype);
-                        }
-                        oItems.edit.callback = callback;
-                    }
-
-                    // define a play callback.
-                    if (oItems.play !== undefined) {
-
-                        if (oItems.play.mime !== undefined) {
-                            if (!isAudioSupported(oItems.play.mime)) {
-                                oItems.play.disabled = true;
-                            }
-                        }
-
-                        callback = function() {
-                           if (data.ftype === 'playlist' && data.length !== '0.0'){
-                                playlistIndex = $(this).parent().attr('id').substring(3); // remove
-                                                                                            // the
-                                                                                            // pl_
-                                open_playlist_preview(playlistIndex, 0);
-                            } else if (data.ftype === 'audioclip' || data.ftype === 'stream') {
-                                open_audio_preview(data.ftype, data.id);
-                            } else if (data.ftype === 'block') {
-                                blockIndex = $(this).parent().attr('id').substring(3); // remove
-                                                                                        // the
-                                                                                        // pl_
-                                open_block_preview(blockIndex, 0);
-                            }
-                        };
-                        oItems.play.callback = callback;
-                    }
-                    
-                    // define a delete callback.
-                    if (oItems.del !== undefined) {
-                        
-                        // delete through the playlist controller, will reset
-                        // playlist screen if this is the currently edited
-                        // playlist.
-                        if ((data.ftype === "playlist" || data.ftype === "block") && screen === "playlist") {
-                            callback = function() {
-                                aMedia = [];
-                                aMedia.push({"id": data.id, "type": data.ftype});
-                                if (confirm($.i18n._('Are you sure you want to delete the selected item?'))) {
-                                    AIRTIME.library.fnDeleteItems(aMedia);
-                                }
-                            };
-                        }
-                        else {
-                            callback = function() {
-                                var media = [];
-                                
-                                if (confirm($.i18n._('Are you sure you want to delete the selected item?'))) {
-                                    
-                                    media.push({"id": data.id, "type": data.ftype});
-                                    $.post(oItems.del.url, {format: "json", media: media }, function(json){
-                                        var oTable;
-                                        
-                                        if (json.message) {
-                                            alert(json.message);
-                                        }
-                                        
-                                        oTable = $("#library_display").dataTable();
-                                        oTable.fnDeleteRow( $tr[0] );
-                                    });
-                                }
-                            };
-                        }
-                        
-                        oItems.del.callback = callback;
-                    }
-                    
-                    // define a download callback.
-                    if (oItems.download !== undefined) {
-                        
-                        callback = function() {
-                            document.location.href = oItems.download.url;
-                        };
-                        oItems.download.callback = callback;
-                    }
-                    // add callbacks for Soundcloud menu items.
-                    if (oItems.soundcloud !== undefined) {
-                        var soundcloud = oItems.soundcloud.items;
-
-                        // define an upload to soundcloud callback.
-                        if (soundcloud.upload !== undefined) {
-
-                            callback = function() {
-                                alert($.i18n._("Your track is being uploaded and will " +
-                                               "appear on SoundCloud in a couple of minutes"));
-                                $.post(soundcloud.upload.url, function(){});
-                            };
-                            soundcloud.upload.callback = callback;
-                        }
-
-                        // define an upload to soundcloud callback.
-                        if (soundcloud.remove !== undefined) {
-
-                            callback = function() {
-                                alert($.i18n._("Your track is being deleted from SoundCloud"));
-                                $.post(soundcloud.remove.url, function(){});
-                            };
-                            soundcloud.remove.callback = callback;
-                        }
-
-                        // define a view on soundcloud callback
-                        if (soundcloud.view !== undefined) {
-
-                            callback = function() {
-                                window.open(soundcloud.view.url);
-                            };
-                            soundcloud.view.callback = callback;
-                        }
-                    }
-                    // add callbacks for duplicate menu items.
-                    if (oItems.duplicate !== undefined) {
-                        var url = oItems.duplicate.url;
-                        callback = function() {
-                            $.post(url, {format: "json", id: data.id }, function(json){
-                                oTable.fnStandingRedraw();
-                            });
-                        };
-                        oItems.duplicate.callback = callback;
-                    }
-                    // remove 'Add to smart block' option if the current
-                    // block is dynamic
-                    if ($('input:radio[name=sp_type]:checked').val() === "1") {
-                        delete oItems.pl_add;
-                    }
-                    items = oItems;
-                }
-                
-                request = $.ajax({
-                  url: baseUrl+"library/context-menu",
-                  type: "GET",
-                  data: {id : data.id, type: data.ftype, format: "json", "screen": screen},
-                  dataType: "json",
-                  async: false,
-                  success: function(json){
-                      processMenuItems(json.items);
-                  }
+            } else if (ev.ctrlKey && $previouslySelected !== undefined) {
+                mod.selectItem($tr);
+            } else {
+                $("."+LIB_SELECTED_CLASS).each(function(i, el) {
+                    mod.deselectItem($(el))
                 });
-    
-                return {
-                    items: items
-                };
+                mod.selectItem($tr);
             }
+
+            // Remember this row so we can properly multiselect
+            $previouslySelected = $tr;
         });
     };
     mod.libraryInit = libraryInit;
@@ -1113,39 +790,6 @@ function closeDialogLibrary(event, ui) {
     $(this).remove();
 }
 
-function checkImportStatus() {
-    $.getJSON(baseUrl+'Preference/is-import-in-progress', function(data){
-        var $div = $('#import_status');
-        var table = $('#library_display').dataTable();
-        if (data == true){
-            $div.show();
-        }
-        else{
-            if ($div.is(':visible')) {
-                table.fnStandingRedraw();
-            }
-            $div.hide();
-        }
-        setTimeout(checkImportStatus, 5000);
-    });
-}
-    
-function addProgressIcon(id) {
-    var tr = $("#au_"+id),
-        span;
-    
-    span = tr.find("td.library_title").find("span");
-    
-    if (span.length > 0){   
-        span.removeClass()
-            .addClass("small-icon progress");
-    }
-    else{
-        tr.find("td.library_title")
-            .append('<span class="small-icon progress"></span>');
-    }
-}
-    
 /*
  * This function is called from dataTables.columnFilter.js
  */
@@ -1321,6 +965,14 @@ $(document).ready(function() {
         if (event.keyCode === 13) {
             $('#editmdsave').click();
         }
+    });
+
+    $(".media_type_selector").on("click", function() {
+        $(".media_type_selector").each(function() {
+            $(this).removeClass("selected");
+        });
+        $(this).addClass("selected");
+        oTable.fnDraw();
     });
 });
 

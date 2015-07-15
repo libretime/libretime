@@ -830,9 +830,9 @@ dl.inline-list dd {
 .datatable tr.odd.selected td {
     background-color: #c5deeb;
 }
-.datatable tr.odd:hover td, .datatable tr.even:hover td  {
-    background-color: #95d5f7 !important;
-}
+/*.datatable tr.odd:hover td, .datatable tr.even:hover td  {*/
+    /*background-color: #95d5f7 !important;*/
+/*}*/
 
 .datatable tr td:first-child, .datatable tr th:first-child, .datatable tr th.ui-state-default:first-child {
     border-left-width:0 !important;
@@ -3290,4 +3290,83 @@ dd .stream-status {
 
 #schedule_iframe {
     margin: 0 auto;
+}
+
+/* Show Builder*/
+
+@media screen and (max-width: 1015px) {
+    .lib-test, .sb-test {
+        width: 100% !important;
+    }
+}
+
+.lib-test legend, .lib-test label, .lib-test span {
+    color: #efefef;
+}
+
+.lib-test {
+    margin: 2em 2em 2em 0;
+    overflow: hidden !important;
+}
+
+.sb-test {
+    margin-top: 2em;
+}
+
+.lib-test, .sb-test {
+    /* 1em for the middle margin, 6 for half the width of the left pane */
+    width: calc(50% - 8em);
+    min-width: 470px;
+}
+
+#media_type_nav {
+    float: left;
+    margin: 2em 0 0 0;
+
+    width: 12em;
+
+    background: none;
+    padding: 0 2em 0 0;
+}
+
+#new_media_selector {
+    width: 100%;
+}
+
+.media_type_selector {
+    cursor: pointer;
+    color: #cecece;
+    font-family: Roboto, "Open Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    width: 100%;
+    margin: 1em 1em 0 0;
+}
+
+.media_type_selector.selected {
+    color: #fff;
+}
+
+.media_type_selector:hover {
+    color: #fff;
+    -webkit-transition: color 0.2s linear;
+    -moz-transition: color 0.2s linear;
+    -o-transition: color 0.2s linear;
+    transition: color 0.2s linear;
+}
+
+/* Uploads */
+
+#upload_form {
+    width: 100%;
+    min-width: 470px;
+
+    background: none;
+    border: 2px dashed #efefef;
+
+    color: #efefef;
+    font-family: Roboto, "Open Sans", sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.4rem;
 }

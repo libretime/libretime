@@ -1,0 +1,43 @@
+<style>
+    body {
+        background: #242424;
+    }
+
+    .wrapper {
+        position: absolute;
+        background: #242424;
+        top: 138px;
+        left: 0;
+        right: 0;
+        /*padding: 0;*/
+        padding: 2em;
+    }
+</style>
+<form action="/rest/media" method="post" id="upload_form" class="dropzone dz-clickable" <?php if ($this->quotaLimitReached) { ?> class="hidden" <?php } ?>>
+    <?php echo $this->csrf ?>
+    <div class="dz-message">
+        <?php echo _("Drop files here or click to upload") ?>
+    </div>
+</form>
+
+<div id="media_type_nav">
+    <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+        New <span class="caret"></span>
+    </button>
+    <div class="media_type_selector selected" selection_id="1">Files</div>
+    <div class="media_type_selector" selection_id="2">Playlists</div>
+    <div class="media_type_selector" selection_id="3">Smart Blocks</div>
+    <div class="media_type_selector" selection_id="4">Webstreams</div>
+</div>
+
+<div id="library_content" class="lib-content tabs lib-test">
+    <?php echo $this->render('widgets/lib-table.phtml') ?>
+</div>
+
+<div id="show_builder" class="sb-content sb-test">
+    <div class="sb-timerange">
+        <?php echo $this->sb_form; ?>
+    </div>
+    <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+</div>
+<?php echo $this->dialog ?>
