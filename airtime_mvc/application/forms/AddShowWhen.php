@@ -15,11 +15,26 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
             "/^[0-2]?[0-9]:[0-5][0-9]$/",
             _("'%value%' does not fit the time format 'HH:mm'"));
 
+
+        // Add start date element
+        $startNow = new Zend_Form_Element_Radio('add_show_start_now');
+        $startNow->setRequired(false)
+            ->setLabel(_('Start Time:'))
+            ->addMultiOptions(array(
+                'now' => 'Now',
+                'future' => 'In the Future:'
+            ))
+            ->setValue('future')
+            ->setDecorators(array('ViewHelper'));
+        //$startDate->setAttrib('alt', 'date');
+        $this->addElement($startNow);
+
+
         // Add start date element
         $startDate = new Zend_Form_Element_Text('add_show_start_date');
         $startDate->class = 'input_text';
         $startDate->setRequired(true)
-                    ->setLabel(_('Date/Time Start:'))
+                    ->setLabel(_('In the Future:'))
                     ->setValue(date("Y-m-d"))
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
@@ -46,7 +61,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $endDate = new Zend_Form_Element_Text('add_show_end_date_no_repeat');
         $endDate->class = 'input_text';
         $endDate->setRequired(true)
-                    ->setLabel(_('Date/Time End:'))
+                    ->setLabel(_('End Time:'))
                     ->setValue(date("Y-m-d"))
                     ->setFilters(array('StringTrim'))
                     ->setValidators(array(
@@ -119,7 +134,7 @@ class Application_Form_AddShowWhen extends Zend_Form_SubForm
         $showStartDateTime = new DateTime($start_time, $showTimezone);
         $showEndDateTime = new DateTime($end_time, $showTimezone);
 
-        if ($validateStartDate) {
+        if ($validateStartDate && ($formData['add_show_start_now'] != "now")) {
             if ($showStartDateTime < $nowDateTime) {
                 $this->getElement('add_show_start_time')->setErrors(array(_('Cannot create show in the past')));
                 $valid = false;
