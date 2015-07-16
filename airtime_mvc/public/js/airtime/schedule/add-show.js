@@ -4,24 +4,18 @@
 *
 */
 
-function openAddShowForm() {
+function openAddShowForm(nowOrFuture) {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
-            $("#add-show-form").show();
-            
-            /*
-            var windowWidth = $(window).width();
-            // margin on showform are 16 px on each side
-            var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
-            var widthPercent = parseInt(calendarWidth)+"%";
-            $("#schedule_calendar").css("width", widthPercent);
 
-            // 200 px for top dashboard and 50 for padding on main content
-            // this calculation was copied from schedule.js line 326
-            var mainHeight = document.documentElement.clientHeight - 200 - 50;
-            $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
-            */
-           windowResize();
+            if (nowOrFuture === true) //true means "now"
+            {
+                $('#add_show_start_now-now').attr('checked', 'checked');
+                setupStartTimeWidgets();
+            }
+            $("#add-show-form").show();
+
+            windowResize();
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
@@ -44,13 +38,37 @@ function makeAddShowButton() {
 }
 
 function showForm() {
-    openAddShowForm();
+    openAddShowForm(true);
     toggleAddShowButton();
 }
 
 function toggleAddShowButton(){
     var aTag = $('.add-button');
     aTag.prop('disabled', function(i, v) { return !v; });
+}
+
+function setupStartTimeWidgets() {
+
+    if ($('input[name=add_show_start_now]:checked').val() == 'now') {
+        $('#add_show_start_date').prop('disabled', 'true');
+        $('#add_show_start_time').prop('disabled', 'true');
+        var currentTimezone = $("#add_show_timezone").val();
+
+        //Set the show start time to now (in the show timezone)
+        var now = moment(new Date()).tz(currentTimezone);
+        $('#add_show_start_date').val(now.format('YYYY-MM-DD'));
+        $('#add_show_start_time').val(now.format('HH:mm'));
+
+        //Set the show end time to be now + 1 hour.
+        var nowShowEnd = now.add(1, 'h');
+        $('#add_show_end_date').val(nowShowEnd.format('YYYY-MM-DD'));
+        $('#add_show_end_date_no_repeat').val(nowShowEnd.format('YYYY-MM-DD'));
+        $('#add_show_end_time').val(nowShowEnd.format('HH:mm'));
+
+    } else {
+        $('#add_show_start_date').removeProp('disabled');
+        $('#add_show_start_time').removeProp('disabled');
+    }
 }
 
 //$el is DOM element #add-show-form
@@ -165,7 +183,7 @@ function beginEditShow(data){
     
     redrawAddShowForm($("#add-show-form"), data.newForm);
     toggleAddShowButton();
-    openAddShowForm();
+    openAddShowForm(false);
 }
 
 function onStartTimeSelect(){
@@ -219,6 +237,12 @@ function setAddShowEvents(form) {
     form.find("h3").click(function(){
         $(this).next().toggle();
     });
+
+
+    form.find('input:radio[name=add_show_start_now]').click(function() {
+        setupStartTimeWidgets();
+    });
+
 
     if(!form.find("#add_show_repeats").attr('checked')) {
         form.find("#schedule-show-when > fieldset:last").hide();

@@ -603,7 +603,9 @@ var AIRTIME = (function(AIRTIME) {
                 type = $("#library_display_type").find("select").val();
                 type = (type === undefined) ? 0 : type;
                 aoData.push( { name: "type", value: type} );
-                
+
+                getUsabilityHint();
+
                 $.ajax( {
                     "dataType": 'json',
                     "type": "POST",

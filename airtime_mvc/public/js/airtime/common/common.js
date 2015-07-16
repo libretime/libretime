@@ -161,3 +161,28 @@ function removeSuccessMsg() {
     
     $status.fadeOut("slow", function(){$status.empty()});
 }
+
+function getUsabilityHint() {
+    var pathname = window.location.pathname;
+    $.getJSON("/api/get-usability-hint", {"format": "json", "userPath": pathname}, function(json) {
+        var $hint_div = $('.usability_hint');
+        var current_hint = $hint_div.html();
+        if (json === "") {
+            // there are no more hints to display to the user
+            $hint_div.hide();
+        } else if (current_hint !== json) {
+            // we only change the message if it is new
+            if ($hint_div.is(":visible")) {
+                $hint_div.hide();
+            }
+            $hint_div.html(json);
+            $hint_div.show("slow");
+
+        } else {
+            // hint is the same before we hid it so we just need to show it
+            if ($hint_div.is(":hidden")) {
+                $hint_div.show();
+            }
+        }
+    });
+}

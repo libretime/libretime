@@ -154,6 +154,7 @@ function buildScheduleDialog (json, instance_id) {
                 "class": "btn",
                 click: function() {
                     $(this).dialog("close");
+                    //getUsabilityHint();
                 }
             }
         ]
@@ -318,12 +319,14 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
+
     checkCalendarSCUploadStatus();
     
     $.contextMenu({
         selector: 'div.fc-event',
         trigger: "left",
         ignoreRightClick: true,
+        className: 'calendar-context-menu',
         
         build: function($el, e) {
             var data, 
@@ -481,6 +484,7 @@ $(document).ready(function() {
             });
 
             return {
+                className: 'calendar-context-menu',
                 items: items,
                 determinePosition : function($menu, x, y) {
                     $menu.css('display', 'block')

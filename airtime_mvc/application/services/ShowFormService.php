@@ -169,6 +169,9 @@ class Application_Service_ShowFormService
             }
         }
 
+        //Disable starting a show 'now' when editing an existing show.
+        $form->getElement('add_show_start_now')->setAttrib('disable', array('now'));
+
         $form->populate(
             array(
                 'add_show_start_date' => $showStart->format("Y-m-d"),
@@ -225,8 +228,12 @@ class Application_Service_ShowFormService
             $form->disableStartDateAndTime();
         }
 
+        //Disable starting a show 'now' when editing an existing show.
+        $form->getElement('add_show_start_now')->setAttrib('disable', array('now'));
+
         $form->populate(
             array(
+                'add_show_start_now' => 'future',
                 'add_show_start_date' => $showStart->format("Y-m-d"),
                 'add_show_start_time' => $showStart->format("H:i"),
                 'add_show_end_date_no_repeat' => $showEnd->format("Y-m-d"),
