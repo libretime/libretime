@@ -1,0 +1,17 @@
+audio/ogg           ogg
+application/ogg     ogg
+audio/vorbis        ogg
+audio/mp3           mp3
+audio/mpeg          mp3
+audio/mpeg3         mp3
+audio/x-aac         aac
+audio/aac           aac
+audio/aacp          aac
+audio/mp4           mp4
+audio/x-flac        flac
+audio/wav           wav
+audio/x-wav         wav
+audio/mp2           mp2
+audio/mp1           mp1
+audio/x-ms-wma      wma
+audio/basic         au
