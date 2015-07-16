@@ -30,6 +30,11 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
     protected static $_CELERY_UPLOAD_TASK_NAME = 'soundcloud-upload';
 
     /**
+     * @var string celery task name for third party uploads
+     */
+    protected static $_CELERY_DOWNLOAD_TASK_NAME = 'soundcloud-download';
+
+    /**
      * @var string celery task name for third party deletions
      */
     protected static $_CELERY_DELETE_TASK_NAME = 'soundcloud-delete';

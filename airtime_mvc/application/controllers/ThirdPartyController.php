@@ -78,6 +78,19 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     }
 
     /**
+     * Download the file with the given id from a third-party service
+     *
+     * @return void
+     *
+     * @throws Zend_Controller_Response_Exception thrown if download fails for any reason
+     */
+    public function downloadAction() {
+        $request = $this->getRequest();
+        $id = $request->getParam('id');
+        $this->_service->download($id);
+    }
+
+    /**
      * Delete the file with the given id from a third-party service
      *
      * @return void
