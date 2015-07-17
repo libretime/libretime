@@ -48,7 +48,6 @@ function toggleAddShowButton(){
 }
 
 function setupStartTimeWidgets() {
-
     if ($('input[name=add_show_start_now]:checked').val() == 'now') {
         $('#add_show_start_date').prop('disabled', 'true');
         $('#add_show_start_time').prop('disabled', 'true');
@@ -66,8 +65,16 @@ function setupStartTimeWidgets() {
         $('#add_show_end_time').val(nowShowEnd.format('HH:mm'));
 
     } else {
-        $('#add_show_start_date').removeProp('disabled');
-        $('#add_show_start_time').removeProp('disabled');
+        //Prevent enabling of elements that should always be disabled.
+        //i.e. when editing a show that has already started
+        if (!$('#add_show_start_date').prop('disabled')) {
+            $('#add_show_start_date').removeProp('disabled');
+        }
+
+        if (!$('#add_show_start_time').prop('disabled')) {
+            $('#add_show_start_time').removeProp('disabled');
+        }
+
     }
 }
 
