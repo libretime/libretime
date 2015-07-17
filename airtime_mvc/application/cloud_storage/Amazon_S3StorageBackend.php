@@ -46,7 +46,7 @@ class Amazon_S3StorageBackend extends StorageBackend
     {
         $urls = array();
 
-        $s3args = array('ResponseContentDisposition' => 'attachment; filename="' . $contentDispositionFilename. '"');
+        $s3args = array('ResponseContentDisposition' => 'attachment; filename="' . urlencode($contentDispositionFilename) . '"');
         $signedS3Url = $this->s3Client->getObjectUrl($this->getBucket(), $resourceId, '+60 minutes', $s3args);
 
         //If we're using the proxy cache, we need to modify the request URL after it has
@@ -65,7 +65,7 @@ class Amazon_S3StorageBackend extends StorageBackend
                 $p["path"] = substr($p["path"], 1 + strlen($this->getBucket()));
             }
             $proxyUrl = $p["scheme"] . "://" . $p["host"] . $p["path"] . "?" . $p["query"];
-            //Add this proxy cache URL to the list of download URLs.
+            //Add this proxy cache URL to the list of download URLs.s
             array_push($urls, $proxyUrl);
         }
 
