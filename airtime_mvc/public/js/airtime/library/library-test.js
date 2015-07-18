@@ -576,12 +576,12 @@ var AIRTIME = (function(AIRTIME) {
                 var type;
                 aoData.push( { name: "format", value: "json"} );
                 aoData.push( { name: "advSearch", value: advSearchValid} );
-                
+
                 // push whether to search files/playlists or all.
                 type = $(".media_type_selector.selected").attr("selection_id");
                 type = (type === undefined) ? 1 : type;
                 aoData.push( { name: "type", value: type} );
-                
+
                 $.ajax( {
                     "dataType": 'json',
                     "type": "POST",
@@ -968,11 +968,14 @@ $(document).ready(function() {
     });
 
     $(".media_type_selector").on("click", function() {
-        $(".media_type_selector").each(function() {
-            $(this).removeClass("selected");
-        });
-        $(this).addClass("selected");
-        oTable.fnDraw();
+        if (!$(this).hasClass("selected")) {
+            // TODO: deselect any highlighted items when we switch filtering
+            $(".media_type_selector").each(function () {
+                $(this).removeClass("selected");
+            });
+            $(this).addClass("selected");
+            oTable.fnDraw();
+        }
     });
 });
 
