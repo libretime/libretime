@@ -64,14 +64,14 @@ function setupStartTimeWidgets() {
         $('#add_show_end_date_no_repeat').val(nowShowEnd.format('YYYY-MM-DD'));
         $('#add_show_end_time').val(nowShowEnd.format('HH:mm'));
 
-    } else {
-        //Prevent enabling of elements that should always be disabled.
-        //i.e. when editing a show that has already started
-        if (!$('#add_show_start_date').prop('disabled')) {
-            $('#add_show_start_date').removeProp('disabled');
-        }
+        //Disabled linked show option since user won't be able to schedule
+        //content
+        $('#add_show_linked').prop('disabled', 'true');
 
-        if (!$('#add_show_start_time').prop('disabled')) {
+    } else {
+        //Do not enable start date and time option when a show has already started
+        if (!$('#add_show_start_now-now').prop('disabled')) {
+            $('#add_show_start_date').removeProp('disabled');
             $('#add_show_start_time').removeProp('disabled');
         }
 
@@ -248,6 +248,10 @@ function setAddShowEvents(form) {
 
     form.find('input:radio[name=add_show_start_now]').click(function() {
         setupStartTimeWidgets();
+
+        if ($(this).val() == "future") {
+            $('#add_show_linked').removeProp('disabled');
+        }
     });
 
 
