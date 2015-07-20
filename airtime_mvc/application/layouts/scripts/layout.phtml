@@ -70,7 +70,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </div>
 
 
-<div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>
+<div class="wrapper" id="content">
+    <?php
+    $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
+
+    <div class="usability_hint" <?php if ($hint == "") { echo "style='display:none'"; } ?>><?php echo $hint; ?></div>
+
+    <?php echo $this->layout()->content ?></div>
 
 <script id="tmpl-pl-cues" type="text/template">
 <div class="waveform-cues">

@@ -103,6 +103,7 @@ define('PROVISIONING_STATUS_ACTIVE' , 'Active');
 define("TUNEIN_API_URL", "http://air.radiotime.com/Playing.ashx");
 
 // SoundCloud
+define('SOUNDCLOUD', 'SoundCloud');
 define('DEFAULT_SOUNDCLOUD_LICENSE_TYPE', 'all-rights-reserved');
 define('DEFAULT_SOUNDCLOUD_SHARING_TYPE', 'public');
 

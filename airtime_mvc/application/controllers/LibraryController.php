@@ -17,8 +17,6 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('delete-group', 'json')
                     ->addActionContext('context-menu', 'json')
                     ->addActionContext('get-file-metadata', 'html')
-                    ->addActionContext('upload-file-soundcloud', 'json')
-                    ->addActionContext('get-upload-to-soundcloud-status', 'json')
                     ->addActionContext('set-num-entries', 'json')
                     ->addActionContext('edit-file-md', 'json')
                     ->initContext();
@@ -276,7 +274,7 @@ class LibraryController extends Zend_Controller_Action
                 $menu["sep1"] = "-----------";
 
                 //create a sub menu for Soundcloud actions.
-                $menu["soundcloud"] = array("name" => _("Soundcloud"), "icon" => "soundcloud", "items" => array());
+                $menu["soundcloud"] = array("name" => _(SOUNDCLOUD), "icon" => "soundcloud", "items" => array());
 
                 $serviceId = $soundcloudService->getServiceId($id);
                 if (!is_null($file) && $serviceId != 0) {

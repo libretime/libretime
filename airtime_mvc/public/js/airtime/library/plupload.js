@@ -22,7 +22,7 @@ $(document).ready(function() {
 		unique_names    : 'true',
 		multiple_queues : 'true',
 		filters : [
-			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,wav,m4a,mp4,opus"}
+			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,wav,m4a,mp4,opus,aac,oga,mp1,mp2,wma,au"}
 		],
                 multipart_params : {
                     "csrf_token" : $("#csrf").attr('value'),
@@ -146,6 +146,9 @@ $(document).ready(function() {
 						} else {
 							self.stopRefreshingRecentUploads();
 						}
+
+						// Update usability hint - in common.js
+						getUsabilityHint();
 					}
 				} );
 			 }

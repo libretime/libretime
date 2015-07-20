@@ -567,6 +567,22 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     min-width: 470px;*/
 }
 
+#builder-dialog-hint {
+    text-align: center;
+    /*line-height: 62px;*/
+    height: 62px;
+    display: table;
+    width: 100%;
+}
+
+#builder-dialog-hint p
+{
+    font-size: 14px;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
 /***** LIBRARY QTIP METADATA SPECIFIC STYLES BEGIN *****/
 table.library-track-md{
     width: 280px;
@@ -3369,4 +3385,23 @@ dd .stream-status {
     font-size: 20px;
     font-weight: 300;
     line-height: 1.4rem;
+}
+
+/* Usability Hints */
+
+.usability_hint {
+    padding: 5px 10px 5px 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ff611f;
+    background-color: #ff611f;
+    color: white;
+    font-size: 14px;
+}
+
+.usability_hint a {
+    color: white;
+}
+
+.calendar-context-menu {
+    min-width: 200px !important;
 }

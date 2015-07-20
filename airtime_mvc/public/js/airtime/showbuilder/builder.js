@@ -283,6 +283,8 @@ var AIRTIME = (function(AIRTIME){
         mod.enableUI();
         //Unneccessary reload of the library pane after moving tracks in the showbuilder pane.
         //$("#library_content").find("#library_display").dataTable().fnStandingRedraw();
+
+        getUsabilityHint();
     };
     
     mod.getSelectedCursors = function() {
@@ -316,7 +318,7 @@ var AIRTIME = (function(AIRTIME){
         mod.disableUI();
         
         $.post(baseUrl+"showbuilder/schedule-add", 
-            {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds}, 
+            {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds},
             mod.fnItemCallback
         );
     };
