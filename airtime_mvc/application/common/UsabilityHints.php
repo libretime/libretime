@@ -72,8 +72,8 @@ class Application_Common_UsabilityHints
                 if ($userIsOnCalendarPage) {
                     return _("To start broadcasting, first you need to cancel the current linked show by clicking on it and selecting 'Cancel Current Show'.");
                 } else {
-                    return sprintf(_("Linked shows need to be filled with tracks before it starts. You need to schedule a non-linked show to start broadcasting.
-                    %sCreate a non-linked show now.%s"), "<a href=\"/schedule\">", "</a>");
+                    return sprintf(_("Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.
+                    %sCreate an unlinked show now.%s"), "<a href=\"/schedule\">", "</a>");
                 }
             } else {
                 if ($userIsOnCalendarPage) {
