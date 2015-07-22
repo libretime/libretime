@@ -140,43 +140,43 @@ class LoginController extends Zend_Controller_Action
         
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
-        if (!Application_Model_Preference::GetEnableSystemEmail()) {
-            $this->_redirect('login');
-        } else {
-            //uses separate layout without a navigation.
-            $this->_helper->layout->setLayout('login');
+//        if (!Application_Model_Preference::GetEnableSystemEmail()) {
+//            $this->_redirect('login');
+//        } else {
+        //uses separate layout without a navigation.
+        $this->_helper->layout->setLayout('login');
 
-            $form = new Application_Form_PasswordRestore();
+        $form = new Application_Form_PasswordRestore();
 
-            $request = $this->getRequest();
-            if ($request->isPost() && $form->isValid($request->getPost())) {
-                if (is_null($form->username->getValue()) || $form->username->getValue() == '') {
-                    $user = CcSubjsQuery::create()
-                        ->filterByDbEmail($form->email->getValue())
-                        ->findOne();
-                } else {
-                    $user = CcSubjsQuery::create()
-                        ->filterByDbEmail($form->email->getValue())
-                        ->filterByDbLogin($form->username->getValue())
-                        ->findOne();
-                }
-
-                if (!empty($user)) {
-                    $auth = new Application_Model_Auth();
-
-                    $success = $auth->sendPasswordRestoreLink($user, $this->view);
-                    if ($success) {
-                        $this->_helper->redirector('password-restore-after', 'login');
-                    } else {
-                        $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
-                    }
-                } else {
-                    $form->email->addError($this->view->translate(_("Given email not found.")));
-                }
+        $request = $this->getRequest();
+        if ($request->isPost() && $form->isValid($request->getPost())) {
+            if (is_null($form->username->getValue()) || $form->username->getValue() == '') {
+                $user = CcSubjsQuery::create()
+                    ->filterByDbEmail($form->email->getValue())
+                    ->findOne();
+            } else {
+                $user = CcSubjsQuery::create()
+                    ->filterByDbEmail($form->email->getValue())
+                    ->filterByDbLogin($form->username->getValue())
+                    ->findOne();
             }
 
-            $this->view->form = $form;
+            if (!empty($user)) {
+                $auth = new Application_Model_Auth();
+
+                $success = $auth->sendPasswordRestoreLink($user, $this->view);
+                if ($success) {
+                    $this->_helper->redirector('password-restore-after', 'login');
+                } else {
+                    $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
+                }
+            } else {
+                $form->email->addError($this->view->translate(_("Given email not found.")));
+            }
         }
+
+        $this->view->form = $form;
+//        }
     }
 
     public function passwordRestoreAfterAction()
