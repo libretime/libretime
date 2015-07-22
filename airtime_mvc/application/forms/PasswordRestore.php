@@ -11,7 +11,7 @@ class Application_Form_PasswordRestore extends Zend_Form
         ));
 
         $this->addElement('text', 'email', array(
-            'label' => _('E-mail'),
+            'label' => _('Email'),
             'required' => true,
             'filters' => array(
                 'stringTrim',
@@ -43,7 +43,7 @@ class Application_Form_PasswordRestore extends Zend_Form
 
         $cancel = new Zend_Form_Element_Button("cancel");
         $cancel->class = 'ui-button ui-widget ui-state-default ui-button-text-only center';
-        $cancel->setLabel(_("Cancel"))
+        $cancel->setLabel(_("Return to login"))
                ->setIgnore(True)
                ->setAttrib('onclick', 'redirectToLogin();')
                ->setDecorators(array('ViewHelper'));
