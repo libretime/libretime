@@ -1521,4 +1521,14 @@ class Application_Model_Preference
     {
         self::setValue("radio_page_display_login_button", $value);
     }
+
+    public static function getLangTimezoneSetupComplete()
+    {
+        return self::getValue("lang_tz_setup_complete");
+    }
+
+    public static function setLangTimezoneSetupComplete($value)
+    {
+        self::setValue("lang_tz_setup_complete", $value);
+    }
 }

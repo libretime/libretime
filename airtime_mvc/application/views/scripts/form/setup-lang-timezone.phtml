@@ -1,0 +1,13 @@
+<div id="lang-timezone-popup" class="dialogPopup register-dialog" title="<?php echo _("Setup Station Language and Timezone") ?>" style="display: none;">
+    <form id="lang-timezone-form">
+        <fieldset>
+            <dl class="zend_form">
+                <?php echo $this->element->getElement('csrf') ?>
+
+                <?php echo $this->element->getElement('setup_language')->render(); ?>
+
+                <?php echo $this->element->getElement('setup_timezone')->render(); ?>
+            </dl>
+        </fieldset>
+    </form>
+</div>

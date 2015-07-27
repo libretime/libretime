@@ -55,8 +55,23 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
-        $refer_sses = new Zend_Session_Namespace('referrer');
+        $setupComplete = Application_Model_Preference::getLangTimezoneSetupComplete();
+        $previousPage = $request->getHeader('Referer');
+        $userService = new Application_Service_UserService();
+        $currentUser = $userService->getCurrentUser();
 
+        // If current user is Super Admin, and they came from the login page,
+        // and they have not seen the setup popup before
+        if ($currentUser->getDbType() == "S" && strpos(strtolower($previousPage), 'login') !== false
+            && empty($setupComplete)) {
+            Logging::info("hello");
+            $lang_tz_popup_form = new Application_Form_SetupLanguageTimezone();
+            $this->view->lang_tz_popup_form = $lang_tz_popup_form;
+            $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/lang-timezone-setup.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        }
+
+        //TODO: is it safe to remove this??
+        /*
         if ($request->isPost()) {
             $form = new Application_Form_RegisterAirtime();
 
@@ -115,6 +130,7 @@ class ShowbuilderController extends Zend_Controller_Action
             $this->view->dialog = $form;
             $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         }
+        */
 
         //determine whether to remove/hide/display the library.
         $showLib = false;

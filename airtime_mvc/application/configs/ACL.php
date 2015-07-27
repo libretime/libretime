@@ -40,7 +40,8 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('provisioning'))
       ->add(new Zend_Acl_Resource('player'))
       ->add(new Zend_Acl_Resource('soundcloud'))
-      ->add(new Zend_Acl_Resource('embeddablewidgets'));
+      ->add(new Zend_Acl_Resource('embeddablewidgets'))
+      ->add(new Zend_Acl_Resource('setup'));
 
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
@@ -60,6 +61,7 @@ $ccAcl->allow('G', 'index')
       ->allow('G', 'downgrade')
       ->allow('G', 'rest:show-image', 'get')
       ->allow('G', 'rest:media', 'get')
+      ->allow('G', 'setup')
       ->allow('H', 'soundcloud')
       ->allow('H', 'rest:show-image')
       ->allow('H', 'rest:media')
