@@ -164,7 +164,7 @@ var AIRTIME = (function(AIRTIME) {
     mod.checkToolBarIcons = function() {
         
         AIRTIME.library.checkAddButton();
-        AIRTIME.library.checkDeleteButton();        
+        AIRTIME.library.checkDeleteButton();
     };
     
     mod.getSelectedData = function() {

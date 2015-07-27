@@ -316,7 +316,7 @@ var AIRTIME = (function(AIRTIME){
         
     mod.fnAdd = function(aMediaIds, aSchedIds) {
         mod.disableUI();
-        
+
         $.post(baseUrl+"showbuilder/schedule-add", 
             {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds},
             mod.fnItemCallback

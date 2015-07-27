@@ -1,6 +1,10 @@
 <style>
-    body {
+    html, body {
         background: #242424;
+    }
+
+    div.ColVis_collectionBackground {
+        background-color: transparent;
     }
 
     .wrapper {
@@ -21,13 +25,26 @@
 </form>
 
 <div id="media_type_nav">
-    <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
-        New <span class="caret"></span>
-    </button>
-    <div class="media_type_selector selected" selection_id="1">Files</div>
-    <div class="media_type_selector" selection_id="2">Playlists</div>
-    <div class="media_type_selector" selection_id="3">Smart Blocks</div>
-    <div class="media_type_selector" selection_id="4">Webstreams</div>
+    <div class="btn-group">
+        <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+            New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id="new-playlist">
+                <a href="#"><?php echo _("Playlist") ?></a>
+            </li>
+            <li id="new-smart-block">
+                <a href="#"><?php echo _("Smart Block") ?></a>
+            </li>
+            <li id="new-webstream">
+                <a href="#"><?php echo _("Webstream") ?></a>
+            </li>
+        </ul>
+    </div>
+    <div class="media_type_selector selected" selection_id="1"><?php echo _("Files") ?></div>
+    <div class="media_type_selector" selection_id="2"><?php echo _("Playlists") ?></div>
+    <div class="media_type_selector" selection_id="3"><?php echo _("Smart Blocks") ?></div>
+    <div class="media_type_selector" selection_id="4"><?php echo _("Webstreams") ?></div>
 </div>
 
 <div id="library_content" class="lib-content tabs lib-test">
@@ -40,4 +57,8 @@
     </div>
     <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
 </div>
+
+<div id="side_playlist" class="pl-content media-builder-test">
+</div>
+
 <?php echo $this->dialog ?>

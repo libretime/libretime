@@ -1,0 +1,144 @@
+/* Show Builder*/
+
+@media screen and (max-width: 1015px) {
+    .lib-test, .sb-test, .media-builder-test, #media_type_nav {
+        width: 100% !important;
+    }
+    .media-builder-test {
+        margin-top: 0 !important;
+    }
+    #media_type_nav div {
+        float: left;
+        width: 20%;
+        text-align: center;
+        margin: auto;
+    }
+    #media_type_nav .media_type_selector {
+        margin-top: .25em;
+    }
+}
+
+@media screen and (max-width: 780px) {
+    .lib-test .dataTables_filter input[type="text"] {
+        position: relative;
+        width: calc(100% - 1em) !important;
+        margin: 0 .5em .5em 0;
+    }
+}
+
+.lib-test .dataTables_filter {
+    margin: 0;
+}
+
+.lib-test .dataTables_filter input[type="text"], .lib-test .dataTables_filter select {
+    margin-top: .5em;
+    width: 30%;
+    float: right;
+    height: 26px;
+}
+
+.lib-test label {
+    padding: 0;
+}
+
+.lib-test .dataTables_length {
+    padding: 5px;
+}
+
+.lib-test .dataTables_length label {
+    color: #555555;
+}
+
+.lib-test legend, .lib-test span, .lib-test label {
+    font-weight: normal;
+    color: #efefef;
+}
+
+.lib-test {
+    margin: 2em 2em 2em 0;
+    overflow: hidden !important;
+}
+
+.sb-test, .media-builder-test {
+    margin-top: 4.6em; /* Standardize this somehow */
+}
+
+.lib-test, .sb-test, .media-builder-test {
+    /* 1em for the middle margin, 6 for half the width of the left pane */
+    width: calc(50% - 8em);
+    min-width: 470px;
+}
+
+/* Media builder */
+
+.media-builder-test {
+    color: #efefef;
+}
+
+#side_playlist {
+    width: calc(50% - 8em);
+    font-size: inherit;
+}
+
+/* Media type selector */
+
+#media_type_nav {
+    float: left;
+    margin: 2em 0 0 0;
+
+    width: 12em;
+
+    background: none;
+    padding: 0 2em 0 0;
+}
+
+#new_media_selector {
+    width: 100%;
+}
+
+.media_type_selector {
+    cursor: pointer;
+    color: #cecece;
+    font-family: Roboto, "Open Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    width: 100%;
+    margin: 1em 1em 0 0;
+
+    -webkit-transition: color 0.2s linear;
+    -moz-transition: color 0.2s linear;
+    -o-transition: color 0.2s linear;
+    transition: color 0.2s linear;
+}
+
+.media_type_selector.selected {
+    color: #fff;
+    -webkit-transition: color 0.2s linear;
+    -moz-transition: color 0.2s linear;
+    -o-transition: color 0.2s linear;
+    transition: color 0.2s linear;
+}
+
+.media_type_selector:hover {
+    color: #fff;
+    -webkit-transition: color 0.2s linear;
+    -moz-transition: color 0.2s linear;
+    -o-transition: color 0.2s linear;
+    transition: color 0.2s linear;
+}
+
+/* Uploads/Dropzone */
+
+#upload_form {
+    width: 100%;
+    min-width: 470px;
+
+    background: none;
+    border: 2px dashed #efefef;
+
+    color: #efefef;
+    font-family: Roboto, "Open Sans", sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.4rem;
+}

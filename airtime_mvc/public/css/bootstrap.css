@@ -972,7 +972,7 @@ input[type="submit"].btn.btn-mini {
   margin-left: 5px;
 }
 .btn-toolbar {
-  font-size: 0;
+  /*font-size: 0;*/
   margin-top: 10px;
   margin-bottom: 10px;
 }

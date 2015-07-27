@@ -144,8 +144,27 @@ AIRTIME = (function(AIRTIME) {
     }
 
     mod.onReady = function() {
+        // Normally we would just use audio/*, but it includes file types that we can't handle (like .m4a)
+        var acceptedTypes = ["audio/ogg",
+                             "application/ogg",
+                             "audio/vorbis",
+                             "audio/mp3",
+                             "audio/mpeg",
+                             "audio/mpeg3",
+                             "audio/x-aac",
+                             "audio/aac",
+                             "audio/aacp",
+                             "audio/mp4",
+                             "audio/x-flac",
+                             "audio/wav",
+                             "audio/x-wav",
+                             "audio/mp2",
+                             "audio/mp1",
+                             "audio/x-ms-wma",
+                             "audio/basic"];
 
         Dropzone.options.uploadForm = {
+            acceptedFiles: acceptedTypes.join(),
             init: function () {
                 this.on("sending", function (file, xhr, data) {
                     data.append("csrf_token", $("#csrf").val());

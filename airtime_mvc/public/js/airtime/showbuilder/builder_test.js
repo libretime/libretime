@@ -305,13 +305,6 @@ var AIRTIME = (function(AIRTIME){
         
     mod.fnAdd = function(aMediaIds, aSchedIds) {
         mod.disableUI();
-        for (var i in aSchedIds) {
-            if ($("#"+aSchedIds[i].id).hasClass("sb-past")) {
-                alert($.i18n._("Cannot add media before currently playing track."));
-                mod.enableUI();
-                return;
-            }
-        }
 
         $.post(baseUrl+"showbuilder/schedule-add",
             {"format": "json", "mediaIds": aMediaIds, "schedIds": aSchedIds},
@@ -381,7 +374,7 @@ var AIRTIME = (function(AIRTIME){
             "url": sSource,
             "data": aoData,
             "success": function(json) {
-                mod.updateCalendarStatusIcon(json)
+                mod.updateCalendarStatusIcon(json);
                 mod.setTimestamp(json.timestamp);
                 mod.setShowInstances(json.instances);
                 mod.getSelectedCursors();
@@ -402,7 +395,7 @@ var AIRTIME = (function(AIRTIME){
 
     mod.builderDataTable = function() {
         $sbContent = $('#show_builder');
-        $lib = $("#library_content"),
+        $lib = $("#library_content");
         $sbTable = $sbContent.find('table');
         var isInitialized = false;
 

@@ -131,9 +131,19 @@ var AIRTIME = (function(AIRTIME) {
                             "<span id='lib-plus-text'></span>" +
                         "</button>" +
                     "</div>")
-            .append("<div class='btn-group'>" +
+            .append("<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
                         "<button class='btn btn-small' id='sb-trash'>" +
                             "<i class='icon-white icon-trash'></i>" +
+                        "</button>" +
+                    "</div>")
+            .append("<div class='btn-group' title=" + $.i18n._('Edit') + ">" +
+                        "<button class='btn btn-small' id='sb-edit'>" +
+                            "<i class='icon-white icon-pencil'></i>" +
+                        "</button>" +
+                    "</div>")
+            .append("<div class='btn-group' title=" + $.i18n._('New') + ">" +
+                        "<button class='btn btn-small' id='sb-new'>" +
+                            "<i class='icon-white icon-plus'></i>" +
                         "</button>" +
                     "</div>");
     };
@@ -143,7 +153,7 @@ var AIRTIME = (function(AIRTIME) {
         $('#sb-dselect-page').click(function(){mod.deselectCurrentPage();});
         $('#sb-dselect-all').click(function(){mod.selectNone();});
     };
-    
+
     mod.checkDeleteButton = function() {
         var selected = mod.getChosenItemsLength(),
             check = false;
@@ -151,7 +161,7 @@ var AIRTIME = (function(AIRTIME) {
         if (selected !== 0) {
             check = true;
         }
-        
+
         if (check === true) {
             AIRTIME.button.enableButton("btn-group #sb-trash", false);
         }
@@ -159,11 +169,44 @@ var AIRTIME = (function(AIRTIME) {
             AIRTIME.button.disableButton("btn-group #sb-trash", false);
         }
     };
-    
+
+    mod.checkEditButton = function() {
+        var selected = mod.getChosenItemsLength(),
+            check = false;
+
+        if (selected === 1) {
+            check = true;
+        }
+
+        if (check === true) {
+            AIRTIME.button.enableButton("btn-group #sb-edit", false);
+        }
+        else {
+            AIRTIME.button.disableButton("btn-group #sb-edit", false);
+        }
+    };
+
+    mod.checkNewButton = function() {
+        var selected = $(".media_type_selector.selected").attr("selection_id"),
+            check = false;
+
+        if (selected != 1) {
+            check = true;
+        }
+
+        if (check === true) {
+            AIRTIME.button.enableButton("btn-group #sb-new", false);
+        }
+        else {
+            AIRTIME.button.disableButton("btn-group #sb-new", false);
+        }
+    };
+
     mod.checkToolBarIcons = function() {
-        
         AIRTIME.library.checkAddButton();
-        AIRTIME.library.checkDeleteButton();        
+        AIRTIME.library.checkDeleteButton();
+        AIRTIME.library.checkEditButton();
+        AIRTIME.library.checkNewButton();
     };
     
     mod.getSelectedData = function() {
@@ -301,8 +344,6 @@ var AIRTIME = (function(AIRTIME) {
 
         //Prevent the user from spamming the delete button while the AJAX request is in progress
         AIRTIME.button.disableButton("btn-group #sb-trash", false);
-        //Hack to immediately show the "Processing" div in DataTables to give the user some sort of feedback.
-        $(".dataTables_processing").css('visibility','visible');
 
         $.post(baseUrl+"library/delete", 
             {"format": "json", "media": aMedia}, 
@@ -560,7 +601,7 @@ var AIRTIME = (function(AIRTIME) {
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },
             
-            "sAjaxSource": baseUrl+"Library/contents-feed-test",
+            "sAjaxSource": baseUrl+"Library/contents-feed",
             "sAjaxDataProp": "files",
             
             "fnServerData": function ( sSource, aoData, fnCallback ) {
@@ -648,7 +689,7 @@ var AIRTIME = (function(AIRTIME) {
             "oLanguage": datatables_dict,
             
             // R = ColReorder, C = ColVis
-            "sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
+            "sDom": 'R<"#library_display_type"><"dt-process-rel"r><"H"<"library_toolbar"Cf>><"dataTables_scrolling"t><"F"ilp>>',
             
             "oColVis": {
                 "sAlign": "right",
