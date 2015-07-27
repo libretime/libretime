@@ -18,31 +18,24 @@ class SetupController extends Zend_Controller_Action
 
         if ($request->isPost()) {
 
-            $postData = $request->getPost();
-            $formData = array();
-            foreach ($postData["data"] as $key => $value) {
-                if ($value["name"] == "csrf") continue;
-                $formData[$value["name"]] = $value["value"];
-            }
+            $formData = $request->getPost();
             if ($form->isValid($formData)) {
                 $userService = new Application_Service_UserService();
                 $currentUser = $userService->getCurrentUser();
                 $currentUserId = $currentUser->getDbId();
                 
-                Application_Model_Preference::SetUserTimezone($formData["timezone"], $currentUserId);
-                Application_Model_Preference::SetDefaultTimezone($formData["timezone"]);
+                Application_Model_Preference::SetUserTimezone($formData["setup_timezone"], $currentUserId);
+                Application_Model_Preference::SetDefaultTimezone($formData["setup_timezone"]);
 
-                Application_Model_Preference::SetUserLocale($formData["language"], $currentUserId);
-                Application_Model_Preference::SetDefaultLocale($formData["language"]);
+                Application_Model_Preference::SetUserLocale($formData["setup_language"], $currentUserId);
+                Application_Model_Preference::SetDefaultLocale($formData["setup_language"]);
 
                 Application_Model_Preference::setLangTimezoneSetupComplete(true);
 
-                $this->_helper->json->sendJson(null);
-            } else {
-                $this->_helper->json->sendJson($form->get);
+                $this->_redirect('/Showbuilder');
             }
-        } else {
-            $this->_helper->json->sendJson($form);
         }
+        $this->_redirect('/Showbuilder');
     }
+
 }

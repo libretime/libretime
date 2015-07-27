@@ -22,19 +22,25 @@ $(document).ready(function() {
                     text: $.i18n._("OK"),
                     "class": "btn",
                     click: function() {
-                        var formValues = $("#lang-timezone-form").serializeArray();
-                        $.post(baseUrl+"setup/setup-language-timezone",
-                            {
-                                format: "json",
-                                data: formValues
-                            }, function(json) {
-                                console.log(json);
-                                $("#lang-timezone-popup").dialog("close");
-                            });
+                        $("#lang-timezone-form").submit();
                     }
                 }
             ]
     });
+
+    var language = window.navigator.userLanguage || window.navigator.language;
+    if (language === undefined) {
+        language = "en_CA";
+    }
+    language = language.replace("-", "_");
+    $("#setup_language").val(language);
+
+    var timezone = jstz.determine();
+    var timezone_name = timezone.name();
+    if (timezone_name === undefined) {
+        timezone_name = "America/Toronto";
+    }
+    $("#setup_timezone").val(timezone_name);
 
     dialog.dialog('open');
 });

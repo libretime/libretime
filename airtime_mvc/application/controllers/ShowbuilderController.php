@@ -45,6 +45,7 @@ class ShowbuilderController extends Zend_Controller_Action
         //$this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/js-timezone-detect/jstz-1.0.4.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -64,7 +65,6 @@ class ShowbuilderController extends Zend_Controller_Action
         // and they have not seen the setup popup before
         if ($currentUser->getDbType() == "S" && strpos(strtolower($previousPage), 'login') !== false
             && empty($setupComplete)) {
-            Logging::info("hello");
             $lang_tz_popup_form = new Application_Form_SetupLanguageTimezone();
             $this->view->lang_tz_popup_form = $lang_tz_popup_form;
             $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/lang-timezone-setup.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
