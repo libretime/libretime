@@ -67,12 +67,22 @@ class Application_Common_UsabilityHints
                     "</a>");
             }
         } else if (self::isCurrentShowEmpty()) {
-            if ($userIsOnCalendarPage) {
-                return _("To start broadcasting, click on the current show and select 'Add / Remove Content'");
+            // If the current show is linked users cannot add content to it so we have to provide a different message.
+            if (self::isCurrentShowLinked()) {
+                if ($userIsOnCalendarPage) {
+                    return _("To start broadcasting, first you need to cancel the current linked show by clicking on it and selecting 'Cancel Current Show'.");
+                } else {
+                    return sprintf(_("Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.
+                    %sCreate an unlinked show now.%s"), "<a href=\"/schedule\">", "</a>");
+                }
             } else {
-                return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now.%s"),
-                    "<a href=\"/schedule\">",
-                    "</a>");
+                if ($userIsOnCalendarPage) {
+                    return _("To start broadcasting, click on the current show and select 'Add / Remove Content'");
+                } else {
+                    return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now.%s"),
+                        "<a href=\"/schedule\">",
+                        "</a>");
+                }
             }
         } else if (!self::getCurrentShow() && self::isNextShowEmpty()) {
             if ($userIsOnCalendarPage) {
@@ -180,5 +190,22 @@ class Application_Common_UsabilityHints
             ->filterByDbModifiedInstance(false)
             ->orderByDbStarts()
             ->findOne();
+    }
+
+    private static function isCurrentShowLinked()
+    {
+        $currentShow = self::getCurrentShow();
+        if (!is_null($currentShow)) {
+            $show = CcShowQuery::create()
+                ->filterByDbId($currentShow->getDbShowId())
+                ->findOne();
+            if ($show->isLinked()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }

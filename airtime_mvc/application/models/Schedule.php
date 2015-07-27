@@ -288,6 +288,7 @@ SQL;
             ->orderByDbStarts(Criteria::ASC)
             ->findOne();
         if (isset($nextMedia)) {
+            $nextMediaName = "";
             $nextMediaFileId = $nextMedia->getDbFileId();
             $nextMediaStreamId = $nextMedia->getDbStreamId();
             if (isset($nextMediaFileId)) {
