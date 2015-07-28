@@ -158,19 +158,21 @@ class LoginController extends Zend_Controller_Action
             }
             $user = $query->findOne();
 
-            if (!empty($user)) {
-                $auth = new Application_Model_Auth();
+                if (!empty($user)) {
+                    $auth = new Application_Model_Auth();
 
-                $success = $auth->sendPasswordRestoreLink($user, $this->view);
-                if ($success) {
-                    $this->_helper->redirector('password-restore-after', 'login');
+                    $success = $auth->sendPasswordRestoreLink($user, $this->view);
+                    if ($success) {
+                        $this->_helper->redirector('password-restore-after', 'login');
+                    } else {
+                        $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
+                    }
                 } else {
                     $form->email->addError($this->view->translate(_("There was a problem sending the recovery email.")));
                 }
             } else {
-                $form->email->addError($this->view->translate(_("We couldn't find the email you entered - you can also try <a href='https://account.sourcefabric.com/pwreset.php'>here</a>.")));
+                $form->email->addError($this->view->translate(_("We couldn't find the email you entered - you can also try <a href='".WHMCS_PASSWORD_RESET_URL."'>here</a>.")));
             }
-        }
 
         $this->view->form = $form;
     }
