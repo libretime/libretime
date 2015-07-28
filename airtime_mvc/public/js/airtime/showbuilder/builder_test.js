@@ -228,7 +228,7 @@ var AIRTIME = (function(AIRTIME){
     };
     
     mod.selectAll = function () {
-        var $trs = $sbTable.find("tr.lib-audio").not(".sb-past");
+        var $trs = $sbTable.find("tr.lib-audio").not(".sb-past, .sb-empty");
         $trs.addClass(SB_SELECTED_CLASS);
         
         mod.checkToolBarIcons();
@@ -643,7 +643,7 @@ var AIRTIME = (function(AIRTIME){
                 if (aData.scheduled === 1) {
                     $nRow.addClass(NOW_PLAYING_CLASS);
                 }
-                else if (aData.scheduled === 0) {
+                else if (aData.scheduled === 0 || aData.scheduled === undefined) {
                     $nRow.addClass("sb-past");
                 }
                 else {
@@ -739,7 +739,7 @@ var AIRTIME = (function(AIRTIME){
             "sAjaxSource": baseUrl+"showbuilder/builder-feed"  
         });
         
-        $sbTable.find("tbody").on("click", "tr:not(.sb-past)", function(ev) {
+        $sbTable.find("tbody").on("click", "tr:not(.sb-past, .sb-empty)", function(ev) {
 
             var $tr = $(this),
             // Get the ID of the selected row

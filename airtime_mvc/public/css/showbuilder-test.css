@@ -1,6 +1,6 @@
 /* Show Builder*/
 
-@media screen and (max-width: 1015px) {
+@media screen and (max-width: 1175px) {
     .lib-test, .sb-test, .media-builder-test, #media_type_nav {
         width: 100% !important;
     }
@@ -12,6 +12,10 @@
         width: 20%;
         text-align: center;
         margin: auto;
+    }
+    #media_type_nav .dropdown-menu {
+        width: 100%;
+        text-align: center;
     }
     #media_type_nav .media_type_selector {
         margin-top: .25em;
@@ -59,25 +63,39 @@
     overflow: hidden !important;
 }
 
-.sb-test, .media-builder-test {
-    margin-top: 4.6em; /* Standardize this somehow */
-}
-
 .lib-test, .sb-test, .media-builder-test {
     /* 1em for the middle margin, 6 for half the width of the left pane */
     width: calc(50% - 8em);
     min-width: 470px;
 }
 
+/* Timeline */
+
+.sb-test {
+    margin-top: 1.5em;
+}
+
+#sb_submit {
+    text-decoration: none;
+    padding: .35em;
+    color: #efefef;
+}
+
+.sb-timerange {
+    margin-bottom: 5px;
+}
+
 /* Media builder */
 
 .media-builder-test {
     color: #efefef;
+    margin-top: 2em; /* Standardize this somehow */
 }
 
 #side_playlist {
     width: calc(50% - 8em);
     font-size: inherit;
+    overflow: hidden;
 }
 
 /* Media type selector */

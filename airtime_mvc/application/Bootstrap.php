@@ -93,6 +93,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
+
+        $mimeTypes = FileDataHelper::getAudioMimeTypeArray();
+        $view->headScript()->appendScript("var acceptedMimeTypes = ['".implode("','", array_keys($mimeTypes))."'];");
     }
 
     /**

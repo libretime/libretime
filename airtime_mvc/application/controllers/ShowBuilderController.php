@@ -53,6 +53,30 @@ class ShowBuilderController extends Zend_Controller_Action {
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
         $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
         $this->view->csrf = $csrf_element;
+
+        $request = $this->getRequest();
+        //populate date range form for show builder.
+        $now  = time();
+        $from = $request->getParam("from", $now);
+        $to   = $request->getParam("to", $now + (3*60*60));
+
+        $utcTimezone = new DateTimeZone("UTC");
+        $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
+
+        $start = DateTime::createFromFormat("U", $from, $utcTimezone);
+        $start->setTimezone($displayTimeZone);
+        $end = DateTime::createFromFormat("U", $to, $utcTimezone);
+        $end->setTimezone($displayTimeZone);
+
+        $form = new Application_Form_ShowBuilderTest();
+        $form->populate(array(
+                            'sb_date_start' => $start->format("Y-m-d"),
+                            'sb_time_start' => $start->format("H:i"),
+                            'sb_date_end'   => $end->format("Y-m-d"),
+                            'sb_time_end'   => $end->format("H:i")
+                        ));
+
+        $this->view->sb_form = $form;
     }
 
 }
