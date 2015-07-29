@@ -120,6 +120,19 @@ function configureByCountry(countryCode)
 	});
 }
 
+function promoEligibilityCheck()
+{
+    var newproductid = $("input[type='radio'][name='newproductid']:checked");
+    var newproductbillingcycle = $("input[type='radio'][name='newproductbillingcycle']:checked");
+    console.log(newproductid.val());
+    console.log(newproductbillingcycle.val());
+    $.post("/billing/promo-eligibility-check", {"newproductid": newproductid,
+        "newproductbillingcycle": newproductbillingcycle})
+        .success(function(data) {
+            console.log(data);
+    });
+}
+
 $(document).ready(function() {
 	
 	configureByCountry($("#country").val());
@@ -128,9 +141,11 @@ $(document).ready(function() {
     $("input[name='newproductid']").change(function() {
         validatePlan();
         recalculateTotals();
+        promoEligibilityCheck();
     });
     $("input[name='newproductbillingcycle']").change(function() {
     	recalculateTotals();
+        promoEligibilityCheck();
     });
 
     $("#country").change(function() {

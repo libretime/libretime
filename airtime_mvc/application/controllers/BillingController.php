@@ -10,6 +10,7 @@ class BillingController extends Zend_Controller_Action {
         //Two of the actions in this controller return JSON because they're used for AJAX:
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('vat-validator', 'json')
+                    ->addActionContext('promo-eligibility-check', 'json')
                     ->addActionContext('is-country-in-eu', 'json')
                     ->initContext();
     }
@@ -17,6 +18,22 @@ class BillingController extends Zend_Controller_Action {
     public function indexAction()
     {
         $this->_redirect('billing/upgrade');
+    }
+
+    public function promoEligibilityCheckAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $request = $this->getRequest();
+        if (!$request->isPost()) {
+            throw new Exception("Must POST data to promoEligibilityCheckAction.");
+        }
+        $data = $request->getPost();
+        Logging::info($data);
+
+        //Set the return JSON value
+        $this->_helper->json(array("result"=>"ok"));
     }
 
     public function upgradeAction()
@@ -29,9 +46,13 @@ class BillingController extends Zend_Controller_Action {
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
         if ($request->isPost()) {
+            $doUpgrade = false;
                         
             $formData = $request->getPost();
-            if ($form->isValid($formData)) {
+            Logging::info($formData);
+            if ($doUpgrade && $form->isValid($formData)) {
+                Logging::info("---upgrading----");
+
                 $credentials = Billing::getAPICredentials();
                 
                 //Check if VAT should be applied or not to this invoice.
