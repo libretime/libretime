@@ -10,11 +10,14 @@
     .wrapper {
         position: absolute;
         background: #242424;
-        top: 138px;
         left: 0;
         right: 0;
-        /*padding: 0;*/
-        padding: 2em;
+        padding: 0 12em;
+        height: calc(100% - 141px); /* Height of top panel + border */
+    }
+
+    .usability_hint {
+        margin-top: 1em;
     }
 </style>
 <form action="/rest/media" method="post" id="upload_form" class="dropzone dz-clickable" <?php if ($this->quotaLimitReached) { ?> class="hidden" <?php } ?>>

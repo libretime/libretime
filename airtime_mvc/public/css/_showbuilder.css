@@ -1,7 +1,8 @@
 /* Show Builder*/
 
-@media screen and (max-width: 1175px) {
+@media screen and (max-width: 1475px) {
     .lib-test, .sb-test, .media-builder-test, #media_type_nav {
+        height: auto !important;
         width: 100% !important;
     }
     .media-builder-test {
@@ -28,6 +29,20 @@
         width: calc(100% - 1em) !important;
         margin: 0 .5em .5em 0;
     }
+    .wrapper {
+        padding: 1em !important;
+    }
+}
+
+@media screen and (max-width: 555px) {
+    #sb_show_filter {
+        float: none !important;
+        margin-top: 4px;
+    }
+}
+
+.btn {
+    color: #efefef;
 }
 
 .lib-test .dataTables_filter {
@@ -36,7 +51,7 @@
 
 .lib-test .dataTables_filter input[type="text"], .lib-test .dataTables_filter select {
     margin-top: .5em;
-    width: 30%;
+    width: 20%;
     float: right;
     height: 26px;
 }
@@ -63,26 +78,56 @@
     overflow: hidden !important;
 }
 
+.lib-test .dataTables_scrolling {
+    /* Subtract Advanced search (32) + header (38) + footer (38) */
+    height: calc(100% - 108px);
+}
+
+#library_display_wrapper, #show_builder_table_wrapper {
+    background-color: #474747;
+}
+
 .lib-test, .sb-test, .media-builder-test {
+    height: 70%;
     /* 1em for the middle margin, 6 for half the width of the left pane */
     width: calc(50% - 8em);
     min-width: 470px;
 }
 
+#library_display_wrapper, #show_builder_table_wrapper {
+    height: 100%;
+}
+
 /* Timeline */
 
 .sb-test {
-    margin-top: 1.5em;
+    margin-top: 2em;
 }
 
 #sb_submit {
     text-decoration: none;
     padding: .35em;
     color: #efefef;
+    float: none;
 }
 
-.sb-timerange {
-    margin-bottom: 5px;
+.sb-options-form {
+    width: 100%;
+    float: left;
+    padding-bottom: 5px;
+}
+
+.sb-options-form label {
+    color: #efefef;
+    line-height: 26px;
+}
+
+#sb_show_filter {
+    float: right;
+}
+
+#show_builder_table_wrapper {
+    clear: both;
 }
 
 /* Media builder */
@@ -102,7 +147,7 @@
 
 #media_type_nav {
     float: left;
-    margin: 2em 0 0 0;
+    margin: 5.2em 0 0 0;
 
     width: 12em;
 
@@ -159,4 +204,6 @@
     font-size: 20px;
     font-weight: 300;
     line-height: 1.4rem;
+
+    margin-top: 1em;
 }

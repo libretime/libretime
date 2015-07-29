@@ -166,7 +166,7 @@ td.library_bitrate {
 		}
 	.lib-content fieldset.closed {
 		border-width: 1px 0 0;
-		margin-bottom: -6px;
+		margin-bottom: 0;
 		margin-left: 1px;
 		}
 .dataTables_filter input[type="text"], .dataTables_filter select {

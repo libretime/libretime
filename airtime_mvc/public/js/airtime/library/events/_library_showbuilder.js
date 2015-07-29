@@ -228,7 +228,7 @@ var AIRTIME = (function(AIRTIME) {
         $toolbar.append($menu);
         // add to timeline button
         $toolbar
-            .find('.icon-plus').parent()
+            .find('#library-plus')
             .click(
                     function() {
 
@@ -286,7 +286,6 @@ var AIRTIME = (function(AIRTIME) {
             }
 
             var selection = $(".media_type_selector.selected").attr("selection_id");
-            console.log(selection);
 
             if (selection == 2) {
                 AIRTIME.playlist.fnNew();
