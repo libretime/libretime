@@ -48,29 +48,17 @@ class BillingController extends Zend_Controller_Action {
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
         if ($request->isPost()) {
-            // for testing
-            $doUpgrade = false;
                         
             $formData = $request->getPost();
 
-            if ($doUpgrade && $form->isValid($formData)) {
-                // for testing
-                Logging::info("---upgrading----");
-
-                // Maps current paid plans to the promo plan ids
-                // TODO: update these to the correct values
-                $promoPlanIdMap = array(
-                    "25" => "50", //hobbyist
-                    "26" => "51", //starter
-                    "27" => "52", //plus
-                    "28" => "53"  //premium
-                );
+            if ($form->isValid($formData)) {
 
                 // Check if client is eligible for promo and update the new product id if so
                 $eligibleForPromo = Billing::isClientEligibleForPromo(
                     $formData["newproductid"], $formData["newproductbillingcycle"]);
                 if ($eligibleForPromo) {
-                    $formData["newproductid"] = $promoPlanIdMap[$formData["newproductid"]];
+                    $newProductName = Billing::getProductName($formData["newproductid"]);
+                    $formData["newproductid"] = Billing::getEligibleAwesomeAugustPromoPlanId($newProductName);
                 }
 
                 $credentials = Billing::getAPICredentials();
