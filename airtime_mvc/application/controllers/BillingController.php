@@ -30,10 +30,12 @@ class BillingController extends Zend_Controller_Action {
             throw new Exception("Must POST data to promoEligibilityCheckAction.");
         }
         $data = $request->getPost();
-        Logging::info($data);
+
+        $eligible = Billing::isClientEligibleForPromo(
+            $data["newproductid"], $data["newproductbillingcycle"]);
 
         //Set the return JSON value
-        $this->_helper->json(array("result"=>"ok"));
+        $this->_helper->json(array("result"=>$eligible));
     }
 
     public function upgradeAction()
@@ -46,24 +48,42 @@ class BillingController extends Zend_Controller_Action {
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
         if ($request->isPost()) {
+            // for testing
             $doUpgrade = false;
                         
             $formData = $request->getPost();
-            Logging::info($formData);
+
             if ($doUpgrade && $form->isValid($formData)) {
+                // for testing
                 Logging::info("---upgrading----");
 
+                // Maps current paid plans to the promo plan ids
+                // TODO: update these to the correct values
+                $promoPlanIdMap = array(
+                    "25" => "50", //hobbyist
+                    "26" => "51", //starter
+                    "27" => "52", //plus
+                    "28" => "53"  //premium
+                );
+
+                // Check if client is eligible for promo and update the new product id if so
+                $eligibleForPromo = Billing::isClientEligibleForPromo(
+                    $formData["newproductid"], $formData["newproductbillingcycle"]);
+                if ($eligibleForPromo) {
+                    $formData["newproductid"] = $promoPlanIdMap[$formData["newproductid"]];
+                }
+
                 $credentials = Billing::getAPICredentials();
-                
+
                 //Check if VAT should be applied or not to this invoice.
                 if (in_array("7", $formData["customfields"])) {
                     $apply_vat = Billing::checkIfVatShouldBeApplied($formData["customfields"]["7"], $formData["country"]);
                 } else {
                     $apply_vat = false;
                 }
-                
+
                 $placeAnUpgradeOrder = true;
-                
+
                 $currentPlanProduct = Billing::getClientCurrentAirtimeProduct();
                 $currentPlanProductId = $currentPlanProduct["pid"];
                 $currentPlanProductBillingCycle = strtolower($currentPlanProduct["billingcycle"]);
@@ -76,29 +96,29 @@ class BillingController extends Zend_Controller_Action {
                 {
                     $placeAnUpgradeOrder = false;
                 }
-                
+
                 $postfields = array();
                 $postfields["username"] = $credentials["username"];
                 $postfields["password"] = md5($credentials["password"]);
                 $postfields["action"] = "upgradeproduct";
                 $postfields["clientid"] = Application_Model_Preference::GetClientId();
-                
+
                 $postfields["serviceid"] = Billing::getClientInstanceId();
                 $postfields["type"] = "product";
                 $postfields["newproductid"] = $formData["newproductid"];
                 $postfields["newproductbillingcycle"] = $formData["newproductbillingcycle"];
                 $postfields["paymentmethod"] = $formData["paymentmethod"];
                 $postfields["responsetype"] = "json";
-                
+
                 $upgrade_query_string = "";
-                foreach ($postfields AS $k=>$v) $upgrade_query_string .= "$k=".urlencode($v)."&";
-                
+                foreach ($postfields AS $k => $v) $upgrade_query_string .= "$k=" . urlencode($v) . "&";
+
                 //update client info
 
                 $clientfields = array();
                 $clientfields["username"] = $credentials["username"];
                 $clientfields["password"] = md5($credentials["password"]);
-                $clientfields["action"] = "updateclient";                
+                $clientfields["action"] = "updateclient";
                 $clientfields["clientid"] = Application_Model_Preference::GetClientId();
                 $clientfields["customfields"] = base64_encode(serialize($formData["customfields"]));
                 unset($formData["customfields"]);
@@ -111,8 +131,8 @@ class BillingController extends Zend_Controller_Action {
                 unset($clientfields["password2verify"]);
                 unset($clientfields["submit"]);
                 $client_query_string = "";
-                foreach ($clientfields AS $k=>$v) $client_query_string .= "$k=".urlencode($v)."&";
-                
+                foreach ($clientfields AS $k => $v) $client_query_string .= "$k=" . urlencode($v) . "&";
+
                 //Update the client details in WHMCS first
                 $result = Billing::makeRequest($credentials["url"], $client_query_string);
                 Logging::info($result);
@@ -121,29 +141,28 @@ class BillingController extends Zend_Controller_Action {
                     $this->view->form = $form;
                     return;
                 }
-                
+
                 //If there were no changes to the plan or billing cycle, we just redirect you to the
                 //invoices screen and show a message.
-                if (!$placeAnUpgradeOrder)
-                {
+                if (!$placeAnUpgradeOrder) {
                     $this->_redirect('billing/invoices?planupdated');
                     return;
                 }
-                
+
                 //Then place an upgrade order in WHMCS
                 $result = Billing::makeRequest($credentials["url"], $upgrade_query_string);
                 if ($result["result"] == "error") {
-                    Logging::info($_SERVER['HTTP_HOST']." - Account upgrade failed. - ".$result["message"]);
+                    Logging::info($_SERVER['HTTP_HOST'] . " - Account upgrade failed. - " . $result["message"]);
                     $this->setErrorMessage();
                     $this->view->form = $form;
                 } else {
-                    Logging::info($_SERVER['HTTP_HOST']. "Account plan upgrade request:");
+                    Logging::info($_SERVER['HTTP_HOST'] . "Account plan upgrade request:");
                     Logging::info($result);
-                    
+
                     // Disable the view and the layout here, squashes an error.
                     $this->view->layout()->disableLayout();
                     $this->_helper->viewRenderer->setNoRender(true);
-                    
+
                     if ($apply_vat) {
                         Billing::addVatToInvoice($result["invoiceid"]);
                     }

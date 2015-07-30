@@ -122,14 +122,23 @@ function configureByCountry(countryCode)
 
 function promoEligibilityCheck()
 {
-    var newproductid = $("input[type='radio'][name='newproductid']:checked");
-    var newproductbillingcycle = $("input[type='radio'][name='newproductbillingcycle']:checked");
-    console.log(newproductid.val());
-    console.log(newproductbillingcycle.val());
+    var newproductid = $("input[type='radio'][name='newproductid']:checked").val();
+
+    // newproductid can be undefined if the client is currently on an old plan
+    // and they just change the billing cycle value without selecting a new plan type.
+    // In this case, let's not check if they are eligible for the promo because
+    // they won't be able to upgrade without selecting a new plan first.
+    if (newproductid === undefined) {
+        return;
+    }
+    var newproductbillingcycle = $("input[type='radio'][name='newproductbillingcycle']:checked").val();
+
     $.post("/billing/promo-eligibility-check", {"newproductid": newproductid,
         "newproductbillingcycle": newproductbillingcycle})
         .success(function(data) {
-            console.log(data);
+            if (data.result == true) {
+                $("#promo-plan-eligible").show();
+            }
     });
 }
 
@@ -137,7 +146,7 @@ $(document).ready(function() {
 	
 	configureByCountry($("#country").val());
 	recalculateTotals();
-    
+
     $("input[name='newproductid']").change(function() {
         validatePlan();
         recalculateTotals();
@@ -289,6 +298,9 @@ echo($currentProduct["name"]);
     <div id="billingcycle_disclaimer">
     Save 15% on annual plans (Hobbyist plan excluded).
     </div>
+     <div id="promo-plan-eligible" style="display:none;">
+         Congratulations, you are eligible for our Awesome Promotional Plan!
+     </div>
     <div class="clearfix"></div>
     <div id="subtotal_box">
         <b>Subtotal:</b><br>

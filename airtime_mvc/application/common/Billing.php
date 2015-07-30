@@ -1,5 +1,7 @@
 <?php
 
+define("AIRTIME_PRO_FREE_TRIAL_PLAN_ID", 34);
+
 class Billing
 {
     public static function getAPICredentials()
@@ -55,7 +57,6 @@ class Billing
 
         //Blacklist all free plans
         foreach ($products as $k => $p) {
-            Logging::info($p);
             if ($p["paytype"] === "free")
             {
                 unset($products[$k]);
@@ -324,6 +325,48 @@ class Billing
 
         //TODO: error checking
         $result = Billing::makeRequest($credentials["url"], $query_string);
+    }
+
+    public static function isClientEligibleForPromo($newProductId, $newProductBillingCycle)
+    {
+        $currentPaidPlanProductIds = array(
+            "25",
+            "26",
+            "27",
+            "28"
+        );
+
+        $currentPlanProduct = self::getClientCurrentAirtimeProduct();
+        $currentPlanProductId = $currentPlanProduct["pid"];
+        $currentPlanBillingCycle = strtolower($currentPlanProduct["billingcycle"]);
+
+        // if client is on trial plan, YES
+        if ($currentPlanProductId == AIRTIME_PRO_FREE_TRIAL_PLAN_ID) {
+            return true;
+        }
+
+        // if client is currently on monthly or old plan AND (upgrading OR  upgrading/downgrading to annual plan), YES
+        if ($currentPlanBillingCycle == "monthly" || $currentPlanBillingCycle == "free account") {
+            // is the client changing billing cycle to annual?
+            if ($newProductBillingCycle == "annually") {
+                return true;
+            }
+
+            // Is the client staying on monthly and upgrading?
+            // This won't hold true if the client is on an old plan because the old
+            // plan ids are higher than the current plan ids.
+            if ($newProductBillingCycle == "monthly" && $newProductId > $currentPlanProductId) {
+                return true;
+            }
+
+            // Is the client staying on monthly and upgrading from an old plan?
+            if ($newProductBillingCycle == "monthly" && !in_array($currentPlanProductId, $currentPaidPlanProductIds)
+                && in_array($newProductId, $currentPaidPlanProductIds)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
