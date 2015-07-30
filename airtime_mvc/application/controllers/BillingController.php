@@ -31,11 +31,20 @@ class BillingController extends Zend_Controller_Action {
         }
         $data = $request->getPost();
 
-        $eligible = Billing::isClientEligibleForPromo(
-            $data["newproductid"], $data["newproductbillingcycle"]);
+        $current_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $observed_csrf_token = $this->_getParam('csrf_token');
+        $expected_csrf_token = $current_namespace->authtoken;
 
-        //Set the return JSON value
-        $this->_helper->json(array("result"=>$eligible));
+        if($observed_csrf_token == $expected_csrf_token) {
+            $eligible = Billing::isClientEligibleForPromo(
+                $data["newproductid"], $data["newproductbillingcycle"]);
+
+            //Set the return JSON value
+            $this->_helper->json(array("result"=>$eligible));
+        } else {
+            $this->getResponse()->setHttpResponseCode(403);
+            $this->_helper->json(array("result"=>false, "error"=>"CSRF token did not match."));
+        }
     }
 
     public function upgradeAction()
@@ -47,6 +56,7 @@ class BillingController extends Zend_Controller_Action {
         
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
+
         if ($request->isPost()) {
                         
             $formData = $request->getPost();
@@ -80,8 +90,8 @@ class BillingController extends Zend_Controller_Action {
                 //and it freaks out and does the wrong thing if we do it via the API
                 //so we have to do avoid that.
                 if (($currentPlanProductId == $formData["newproductid"]) &&
-                    ($currentPlanProductBillingCycle == $formData["newproductbillingcycle"]))
-                {
+                    ($currentPlanProductBillingCycle == $formData["newproductbillingcycle"])
+                ) {
                     $placeAnUpgradeOrder = false;
                 }
 

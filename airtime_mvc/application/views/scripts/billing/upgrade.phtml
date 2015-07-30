@@ -134,7 +134,7 @@ function promoEligibilityCheck()
     var newproductbillingcycle = $("input[type='radio'][name='newproductbillingcycle']:checked").val();
 
     $.post("/billing/promo-eligibility-check", {"newproductid": newproductid,
-        "newproductbillingcycle": newproductbillingcycle})
+        "newproductbillingcycle": newproductbillingcycle, "csrf_token": $("#csrf").attr('value')})
         .success(function(data) {
             if (data.result == true) {
                 $("#promo-plan-eligible").show();
@@ -306,6 +306,8 @@ echo($currentProduct["name"]);
 <h3>Choose a plan:</h3>
  <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
     $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
+
+     <?php echo $form->csrf ?>
     
     <div id="plantype">
         <?php echo $form->newproductid ?>

@@ -1,6 +1,7 @@
 <?php
 
 define("AIRTIME_PRO_FREE_TRIAL_PLAN_ID", 34);
+define("WHMCS_AIRTIME_GROUP_ID", 15);
 
 class Billing
 {
@@ -46,7 +47,7 @@ class Billing
         $postfields["action"] = "getproducts";
         $postfields["responsetype"] = "json";
         //gid is the Airtime product group id on whmcs
-        $postfields["gid"] = "15";
+        $postfields["gid"] = WHMCS_AIRTIME_GROUP_ID;
 
         $query_string = "";
         foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
@@ -356,7 +357,7 @@ class Billing
         $postfields["action"] = "getproducts";
         $postfields["responsetype"] = "json";
         //gid is the Airtime product group id on whmcs
-        $postfields["gid"] = "15";
+        $postfields["gid"] = WHMCS_AIRTIME_GROUP_ID;
 
         $query_string = "";
         foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
