@@ -423,8 +423,9 @@ class Billing
             return true;
         }
 
-        // if client is currently on monthly or old plan AND (upgrading OR  upgrading/downgrading to annual plan), YES
-        if ($currentPlanBillingCycle == "monthly" || $currentPlanBillingCycle == "free account") {
+        // if client is currently on monthly or annually or old plan AND (upgrading OR  upgrading/downgrading to annual plan), YES
+        if ($currentPlanBillingCycle == "monthly" || $currentPlanBillingCycle == "free account"
+            || $currentPlanBillingCycle == "annually") {
             // is the client changing billing cycle to annual?
             if ($newProductBillingCycle == "annually") {
                 return true;

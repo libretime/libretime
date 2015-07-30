@@ -138,6 +138,8 @@ function promoEligibilityCheck()
         .success(function(data) {
             if (data.result == true) {
                 $("#promo-plan-eligible").show();
+            } else if ($("#promo-plan-eligible").is(":visible")) {
+                $("#promo-plan-eligible").hide();
             }
     });
 }
@@ -197,10 +199,10 @@ $(document).ready(function() {
 <div class="pricing-grid">
     <table>
         <tr>
-            <th>Hobbyist</th>
-            <th>Starter</th>
-            <th>Plus</th>
-            <th>Premium</th>
+            <th>Awesome Hobbyist</th>
+            <th>Awesome Starter</th>
+            <th>Awesome Plus</th>
+            <th>Awesome Premium</th>
         </tr>
         <tr>
             <td>1 Stream
@@ -222,24 +224,40 @@ $(document).ready(function() {
             <td>64kbps, 128kbps, and 196kbps Stream Quality
             </td>
         </tr> 
-        <tr>
-            <td>5 Listeners
+        <tr class="august-promo">
+            <td>
+                <span>5 Listeners</span><br>
+                <div>10 Listeners</div>
             </td>
-            <td>40 Listeners per stream
+            <td>
+                <span>40 Listeners per stream</span><br>
+                <div>80 Listeners per stream</div>
             </td>
-            <td>100 Listeners per stream
+            <td>
+                <span>100 Listeners per stream</span><br>
+                <div>200 Listeners per stream</div>
             </td>
-            <td>500 Listeners per stream
+            <td>
+                <span>500 Listeners per stream</span><br>
+                <div>1000 Listeners per stream</div>
             </td>
         </tr> 
-        <tr>
-            <td>2GB Storage
+        <tr class="august-promo">
+            <td>
+                <span>2GB Storage</span><br>
+                <div>4GB Storage</div>
             </td>
-            <td>5GB Storage
+            <td>
+                <span>5GB Storage</span><br>
+                <div>10GB Storage</div>
             </td>
-            <td>30GB Storage
+            <td>
+                <span>30GB Storage</span><br>
+                <div>60GB Storage</div>
             </td>
-            <td>150GB Storage
+            <td>
+                <span>150GB Storage</span><br>
+                <div>300GB Storage</div>
             </td>
         </tr> 
         <tr>
@@ -298,8 +316,9 @@ echo($currentProduct["name"]);
     <div id="billingcycle_disclaimer">
     Save 15% on annual plans (Hobbyist plan excluded).
     </div>
+     <div class="clearfix"></div>
      <div id="promo-plan-eligible" style="display:none;">
-         Congratulations, you are eligible for our Awesome Promotional Plan!
+         Congratulations, you are eligible for an Awesome Promotional Plan!
      </div>
     <div class="clearfix"></div>
     <div id="subtotal_box">
