@@ -489,13 +489,6 @@ var AIRTIME = (function(AIRTIME) {
             } else {
                 $el.hide();
             }
-
-            //resize to prevent double scroll bars.
-            var $fs = $el.parents("fieldset"),
-                tableHeight = getTableHeight(),
-                searchHeight = $fs.height();
-
-            $libContent.find(".dataTables_scrolling").css("max-height", tableHeight - searchHeight);
         }
 
         oTable = $libTable.dataTable( {
@@ -733,10 +726,6 @@ var AIRTIME = (function(AIRTIME) {
                 $(".dataTables_filter input").val("").keyup();
 
                 $simpleSearch.addClass("sp-invisible");
-
-                //resize the library table to avoid a double scroll bar. CC-4504
-                height = tableHeight - searchHeight;
-                $libContent.find(".dataTables_scrolling").css("max-height", height);
             }
             else {
                 // clear the advanced search fields
@@ -758,14 +747,8 @@ var AIRTIME = (function(AIRTIME) {
 
                 $simpleSearch.removeClass("sp-invisible");
                 $fs.addClass("closed");
-
-                //resize the library table to avoid a double scroll bar. CC-4504
-                $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
             }
         });
-
-        var tableHeight = getTableHeight();
-        $libContent.find(".dataTables_scrolling").css("max-height", tableHeight);
 
         AIRTIME.library.setupLibraryToolbar(oTable);
 
@@ -819,6 +802,200 @@ var AIRTIME = (function(AIRTIME) {
                     mod.deselectItem($(el))
                 });
                 mod.selectItem($(this));
+            }
+        });
+        // begin context menu initialization.
+        $.contextMenu({
+            selector: '#library_display tr',
+            trigger: "right",
+
+            build: function($el, e) {
+                var data, screen, items, callback, $tr;
+
+                $tr = $el;
+                data = $tr.data("aData");
+                screen = $tr.data("screen");
+
+                function processMenuItems(oItems) {
+
+                    // define an add to playlist callback.
+                    if (oItems.pl_add !== undefined) {
+                        var aItems = [];
+
+                        callback = function() {
+                            aItems.push(new Array(data.id, data.ftype));
+                            AIRTIME.playlist.fnAddItems(aItems, undefined, 'after');
+                        };
+
+                        oItems.pl_add.callback = callback;
+                    }
+
+                    // define an edit callback.
+                    if (oItems.edit !== undefined) {
+
+                        if (data.ftype === "audioclip") {
+                            callback = function() {
+                                $.get(oItems.edit.url, {format: "json"}, function(json){
+                                    buildEditMetadataDialog(json);
+                                });
+                            };
+                        } else if (data.ftype === "playlist" || data.ftype === "block") {
+                            callback = function() {
+                                var url = baseUrl+'Playlist/edit';
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                                AIRTIME.playlist.validatePlaylistElements();
+                            };
+                        } else if (data.ftype === "stream") {
+                            callback = function() {
+                                var url = baseUrl+'Webstream/edit';
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                            }
+                        } else {
+                            throw new Exception($.i18n._("Unknown type: ") + data.ftype);
+                        }
+                        oItems.edit.callback = callback;
+                    }
+
+                    // define a play callback.
+                    if (oItems.play !== undefined) {
+
+                        if (oItems.play.mime !== undefined) {
+                            if (!isAudioSupported(oItems.play.mime)) {
+                                oItems.play.disabled = true;
+                            }
+                        }
+
+                        callback = function() {
+                            if (data.ftype === 'playlist' && data.length !== '0.0'){
+                                playlistIndex = $(this).parent().attr('id').substring(3); // remove
+                                // the
+                                // pl_
+                                open_playlist_preview(playlistIndex, 0);
+                            } else if (data.ftype === 'audioclip' || data.ftype === 'stream') {
+                                open_audio_preview(data.ftype, data.id);
+                            } else if (data.ftype === 'block') {
+                                blockIndex = $(this).parent().attr('id').substring(3); // remove
+                                // the
+                                // pl_
+                                open_block_preview(blockIndex, 0);
+                            }
+                        };
+                        oItems.play.callback = callback;
+                    }
+
+                    // define a delete callback.
+                    if (oItems.del !== undefined) {
+
+                        // delete through the playlist controller, will reset
+                        // playlist screen if this is the currently edited
+                        // playlist.
+                        if ((data.ftype === "playlist" || data.ftype === "block") && screen === "playlist") {
+                            callback = function() {
+                                aMedia = [];
+                                aMedia.push({"id": data.id, "type": data.ftype});
+                                if (confirm($.i18n._('Are you sure you want to delete the selected item?'))) {
+                                    AIRTIME.library.fnDeleteItems(aMedia);
+                                }
+                            };
+                        }
+                        else {
+                            callback = function() {
+                                var media = [];
+
+                                if (confirm($.i18n._('Are you sure you want to delete the selected item?'))) {
+
+                                    media.push({"id": data.id, "type": data.ftype});
+                                    $.post(oItems.del.url, {format: "json", media: media }, function(json){
+                                        var oTable;
+
+                                        if (json.message) {
+                                            alert(json.message);
+                                        }
+
+                                        oTable = $("#library_display").dataTable();
+                                        oTable.fnDeleteRow( $tr[0] );
+                                    });
+                                }
+                            };
+                        }
+
+                        oItems.del.callback = callback;
+                    }
+
+                    // define a download callback.
+                    if (oItems.download !== undefined) {
+
+                        callback = function() {
+                            document.location.href = oItems.download.url;
+                        };
+                        oItems.download.callback = callback;
+                    }
+                    // add callbacks for Soundcloud menu items.
+                    if (oItems.soundcloud !== undefined) {
+                        var soundcloud = oItems.soundcloud.items;
+
+                        // define an upload to soundcloud callback.
+                        if (soundcloud.upload !== undefined) {
+
+                            callback = function() {
+                                alert($.i18n._("Your track is being uploaded and will " +
+                                    "appear on SoundCloud in a couple of minutes"));
+                                $.post(soundcloud.upload.url, function(){});
+                            };
+                            soundcloud.upload.callback = callback;
+                        }
+
+                        // define an upload to soundcloud callback.
+                        if (soundcloud.remove !== undefined) {
+
+                            callback = function() {
+                                alert($.i18n._("Your track is being deleted from SoundCloud"));
+                                $.post(soundcloud.remove.url, function(){});
+                            };
+                            soundcloud.remove.callback = callback;
+                        }
+
+                        // define a view on soundcloud callback
+                        if (soundcloud.view !== undefined) {
+
+                            callback = function() {
+                                window.open(soundcloud.view.url);
+                            };
+                            soundcloud.view.callback = callback;
+                        }
+                    }
+                    // add callbacks for duplicate menu items.
+                    if (oItems.duplicate !== undefined) {
+                        var url = oItems.duplicate.url;
+                        callback = function() {
+                            $.post(url, {format: "json", id: data.id }, function(json){
+                                oTable.fnStandingRedraw();
+                            });
+                        };
+                        oItems.duplicate.callback = callback;
+                    }
+                    // remove 'Add to smart block' option if the current
+                    // block is dynamic
+                    if ($('input:radio[name=sp_type]:checked').val() === "1") {
+                        delete oItems.pl_add;
+                    }
+                    items = oItems;
+                }
+
+                request = $.ajax({
+                    url: baseUrl+"library/context-menu",
+                    type: "GET",
+                    data: {id : data.id, type: data.ftype, format: "json", "screen": screen},
+                    dataType: "json",
+                    async: false,
+                    success: function(json){
+                        processMenuItems(json.items);
+                    }
+                });
+
+                return {
+                    items: items
+                };
             }
         });
     };

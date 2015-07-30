@@ -60,13 +60,13 @@ AIRTIME = (function(AIRTIME) {
         //set the heights of the main widgets.
         $builder//.height(widgetHeight)
             .find(".dataTables_scrolling")
-                    .css("max-height", builderTableHeight)
+                    //.css("max-height", builderTableHeight)
                     .end();
             //.width(screenWidth);
         
         $lib//.height(widgetHeight)
             .find(".dataTables_scrolling")
-                .css("max-height", libTableHeight)
+                //.css("max-height", libTableHeight)
                 .end();
         
         if ($lib.filter(':visible').length > 0) {
@@ -201,8 +201,8 @@ AIRTIME = (function(AIRTIME) {
         setWidgetSize();
 
         $libWrapper = $lib.find("#library_display_wrapper");
-        $builder.find('.dataTables_scrolling').css("max-height",
-                widgetHeight - 95);
+        //$builder.find('.dataTables_scrolling').css("max-height",
+        //        widgetHeight - 95);
 
         $builder.on("click", "#sb_submit", showSearchSubmit);
 
@@ -265,8 +265,8 @@ AIRTIME = (function(AIRTIME) {
                     if ($fs.hasClass("closed")) {
 
                         $fs.removeClass("closed");
-                        $builder.find('.dataTables_scrolling').css(
-                                "max-height", widgetHeight - 150);
+                        //$builder.find('.dataTables_scrolling').css(
+                        //        "max-height", widgetHeight - 150);
                     } else {
                         $fs.addClass("closed");
 
@@ -274,8 +274,8 @@ AIRTIME = (function(AIRTIME) {
                         $fs.find('select').val(0);
                         $fs.find('input[type="checkbox"]').attr("checked",
                                 false);
-                        $builder.find('.dataTables_scrolling').css(
-                                "max-height", widgetHeight - 110);
+                        //$builder.find('.dataTables_scrolling').css(
+                        //        "max-height", widgetHeight - 110);
                     }
                 });
 
