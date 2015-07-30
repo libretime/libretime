@@ -55,8 +55,7 @@ class Billing
 
         //Blacklist all free plans
         foreach ($products as $k => $p) {
-            Logging::info($p);
-            if ($p["paytype"] === "free")
+            if ($p["paytype"] === "free" || strpos($p["name"], "Awesome August 2015") !== false)
             {
                 unset($products[$k]);
             }
