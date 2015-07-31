@@ -392,7 +392,7 @@ var AIRTIME = (function(AIRTIME) {
                 $.post(baseUrl+"playlist/close-playlist",
                     {"format": "json", "type": currentObjType},
                     function(json) {
-                        $("#side_playlist").empty().append(json.html);
+                        $("#editor_pane_wrapper").empty().append(json.html);
                     });
             }
         }
@@ -685,7 +685,7 @@ var AIRTIME = (function(AIRTIME) {
             "oLanguage": datatables_dict,
 
             // R = ColReorder, C = ColVis
-            "sDom": 'R<"#library_display_type"><"dt-process-rel"r><"H"<"library_toolbar"Cf>><"dataTables_scrolling"t><"F"ilp>>',
+            "sDom": 'R<"dt-process-rel"r><"H"<"library_toolbar"Cf>><"dataTables_scrolling"t><"F"ilp>>',
 
             "oColVis": {
                 "sAlign": "right",

@@ -6,16 +6,16 @@ if (isset($this->obj)) {
 ?>
 <a href="#" class="close-round" id="lib_pl_close"></a>
 <div class="btn-toolbar spl-no-top-margin clearfix">
-<!--    <div class="btn-group pull-left">-->
-<!--        <button id="spl_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">-->
-<!--            --><?php //echo _("New")?><!-- <span class="caret"></span>-->
-<!--        </button>-->
-<!--        <ul class="dropdown-menu">-->
-<!--            <li id='lib-new-pl'><a href="#">--><?php //echo _("New Playlist") ?><!--</a></li>-->
-<!--            <li id='lib-new-bl'><a href="#">--><?php //echo _("New Smart Block") ?><!--</a></li>-->
-<!--            <li id='lib-new-ws'><a href="#">--><?php //echo _("New Webstream") ?><!--</a></li>-->
-<!--        </ul>-->
-<!--    </div>-->
+    <div class="btn-group pull-left">
+        <button id="spl_new" class="btn dropdown-toggle" data-toggle="dropdown" aria-disabled="false">
+            <?php echo _("New")?> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id='lib-new-pl'><a href="#"><?php echo _("New Playlist") ?></a></li>
+            <li id='lib-new-bl'><a href="#"><?php echo _("New Smart Block") ?></a></li>
+            <li id='lib-new-ws'><a href="#"><?php echo _("New Webstream") ?></a></li>
+        </ul>
+    </div>
 <?php if (isset($this->obj)) : ?>
     <div class='btn-group pull-right'>
         <button class="btn btn-inverse" title='<?php echo _("Empty playlist content") ?>' type="button" id="pl-bl-clear-content"><?php echo _("Clear") ?></button>

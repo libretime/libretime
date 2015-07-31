@@ -11,7 +11,7 @@ class Application_Model_Library
             $info['className'] = 'Application_Model_Playlist';
         } elseif (strcmp($p_type, 'block')==0) {
             $info['className'] = 'Application_Model_Block';
-        } elseif (strcmp($p_type, 'stream')==0) {
+        } elseif (strcmp($p_type, 'webstream')==0) {
             $info['className'] = 'Application_Model_Webstream';
         } else {
             throw new Exception("Unknown object type: '$p_type'");

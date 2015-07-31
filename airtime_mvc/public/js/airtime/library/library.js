@@ -540,7 +540,7 @@ var AIRTIME = (function(AIRTIME) {
                     dataType: "json"
                   });
                   */
-                
+
                 colReorderMap = oData.ColReorder;
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {

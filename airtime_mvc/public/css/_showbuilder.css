@@ -9,17 +9,12 @@ div.ColVis_collectionBackground {
 }
 
 .wrapper {
-    position: absolute;
-    /* Height of the top panel */
-    top: 141px;
-    bottom: 0;
     /*background: #242424;*/
     background: #111;
     left: 0;
     right: 0;
+    bottom: 0;
     padding: 10px;
-    overflow-y: auto;
-    overflow-x: hidden;
 
     display: -webkit-box;
     display: -moz-box;
@@ -28,6 +23,8 @@ div.ColVis_collectionBackground {
     display: flex;
     -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
+
+    overflow: auto;
 }
 
 /* Usability hint */
@@ -57,40 +54,98 @@ div.ColVis_collectionBackground {
 
 /* Show Builder*/
 
+.content-pane {
+    position: relative;
+
+    border: 1px solid #202020;
+    border-top: 1px solid #353535;
+    border-left: 1px solid #2a2a2a;
+
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+    -moz-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+    box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+
+    background-color: #242424;
+}
+
+.wide-panel {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column;
+    flex-flow: column;
+
+    /* Account for the left pane */
+    flex: 6 auto;
+    min-width: 555px;
+}
+
+.btn {
+    color: #efefef;
+}
+
+.outer-datatable-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+@media screen and (max-height: 650px) {
+    #master-panel {
+        display: none;
+    }
+    .wrapper {
+        top: 40px !important;
+    }
+}
+
 @media screen and (max-width: 1475px) {
-    #library_content, #show_builder, #side_playlist, #media_type_nav {
-        /*height: auto !important;*/
-        max-height: 50% !important;
+    .wrapper {
+        -webkit-flex-flow: column !important;
+        flex-flow: column !important;
+    }
+    .content-pane {
+        height: auto !important;
         width: 100% !important;
+    }
+    .wide-panel {
+        flex: 8 100%;
+        min-height: 50%;
     }
     #side_playlist {
         margin-top: 0 !important;
     }
-    #media_type_nav div {
-        float: left;
-        width: 20%;
-        text-align: center;
-        margin: auto;
+    #media_type_nav {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-flow: row;
+        flex-flow: row;
+
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+    }
+    #media_type_nav .btn-group {
+        flex: 1 100%;
     }
     #media_type_nav .dropdown-menu {
         width: 100%;
-        text-align: center;
     }
     #media_type_nav .media_type_selector {
+        flex: 1 100%;
         margin-top: 3px;
     }
 }
 
 @media screen and (max-width: 780px) {
-    #library_content .dataTables_filter input[type="text"] {
-        position: relative;
-        width: calc(100% - 10px) !important;
-        margin: 0 .5em .5em 0;
-    }
     .wrapper {
-        height: calc(100% - 166px) !important; /* Correct for margins */
+        height: 100% !important; /* Correct for margins */
         padding: 0 15px 15px !important;
-        margin-top: 10px; /* This is only necessary if we aren't using a responsive menu! */
     }
 }
 
@@ -101,23 +156,11 @@ div.ColVis_collectionBackground {
     }
 }
 
-.btn {
-    color: #efefef;
-}
-
 /* Library */
 
 #library_content {
     margin-right: 10px;
     overflow: hidden !important;
-
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
 }
 
 #library_content .dataTables_filter {
@@ -143,67 +186,56 @@ div.ColVis_collectionBackground {
     color: #555555;
 }
 
+#library_content legend {
+    position: absolute;
+    top: 0;
+
+    padding-top: 4px;
+    font-size: 14px;
+}
+
 #library_content legend, #library_content span, #library_content label {
     font-weight: normal;
     color: #efefef;
 }
 
-#library_content .fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
+.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
     position: absolute;
     right: 0;
     left: 0;
     bottom: 0;
 }
 
-#library_display_wrapper {
-    flex: 1 100%;
-}
-
 #library_display_wrapper, #show_builder_table_wrapper {
     position: absolute;
-    top: 36px;
+    top: 4px;
     bottom: 4px;
     right: 4px;
     left: 4px;
-    /*background-color: #474747;*/
 }
 
-#library_content, #show_builder, #side_playlist, #media_type_nav {
-    position: relative;
-    height: 95%;
-
-    border: 1px solid #202020;
-    border-top: 1px solid #272727;
-    border-left: 1px solid #272727;
-
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
-       -moz-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
-            box-shadow: inset 0 0 6px rgba(0,0,0,.65);
-
-    background-color: #242424;
-}
-
-#library_content, #show_builder, #side_playlist {
-    /* Account for the left pane */
-    flex: 5 auto;
-    min-width: 470px;
-}
-
-#library_content .dataTables_scrolling {
+.dataTables_scrolling {
     position: absolute;
-    bottom: 38px;
+    bottom: 38px; /* 38 px is the size of the header/footer */
     top: 38px;
-    left: 0;
+    left: 1px; /* Border */
     right: 0;
 }
 
-#filter_options{
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
+#filter_options {
+    text-align: center;
+    padding: 15px 0 15px 15px;
+    margin: 0;
+    border: none;
+}
 
-    flex: 1 100%;
+#advanced_search {
+    margin-top: 15px;
+}
+
+.panel-header {
+    position: relative;
+    top: 4px;
 }
 
 /* Timeline */
@@ -221,6 +253,7 @@ div.ColVis_collectionBackground {
 }
 
 #sb_submit {
+    font-weight: normal;
     text-decoration: none;
     padding: 4px;
     color: #efefef;
@@ -228,10 +261,8 @@ div.ColVis_collectionBackground {
 }
 
 .sb-options-form {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
+    position: relative;
+    padding: 5px;
     float: left;
 }
 
@@ -240,29 +271,64 @@ div.ColVis_collectionBackground {
     line-height: 26px;
 }
 
-.dataTables_scrolling.sb-padded {
-    position: absolute;
-    top: 38px;
-    bottom: 4px;
-    right: 0;
-    left: 0;
-}
-
 #sb_show_filter {
     float: right;
+    margin-left: 4px;
 }
 
-#show_builder_table_wrapper {
-    bottom: 0;
+.nav-tabs {
+    border-bottom: 1px solid #474747;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    padding: 0;
+    margin: 0 4px 0;
+}
+
+.nav-tabs a {
+    padding: 4px 8px !important;
+
+    color: #efefef;
+    font-size: 14px;
+    text-decoration: none;
+
+    background-color: rgba(71,71,71,.5);
+
+}
+
+.nav-tabs :not(.active) a:hover {
+    background-color: rgba(239, 76, 10, .5) !important;
+    border: 1px solid transparent !important;
+    border-bottom: 1px solid #474747 !important;
+}
+
+.nav-tabs > .active > a, .nav-tabs > .active > a:hover {
+    color: #efefef;
+
+    background-color: #474747;
+    border: 1px solid #474747;
+    border-bottom-color: transparent;
+    cursor: default;
 }
 
 /* Media editors */
 
 #side_playlist {
-    float: right;
-    color: #efefef;
-    font-size: inherit;
-    overflow: hidden;
+    width: 100%; /* Override because we're using flexbox */
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    position: relative;
+
+    flex: 1;
+}
+
+.editor_pane_wrapper {
+    padding: 4px;
+}
+
+#spl_sortable .list-item-container {
+    cursor: move;
 }
 
 /* Media type selector */
@@ -270,6 +336,7 @@ div.ColVis_collectionBackground {
 #media_type_nav {
     flex: 1 auto;
     margin-right: 10px;
+    text-align: center;
 }
 
 #media_type_nav div {
@@ -278,6 +345,7 @@ div.ColVis_collectionBackground {
 
 #new_media_selector {
     width: 100%;
+    font-size: 14px;
 }
 
 .media_type_selector {
@@ -286,7 +354,6 @@ div.ColVis_collectionBackground {
     font-family: Roboto, "Open Sans", sans-serif;
     font-size: 16px;
     font-weight: 400;
-    width: 100%;
     margin: 10px 10px 0 0;
 
     -webkit-transition: color 0.2s linear;
@@ -318,19 +385,21 @@ div.ColVis_collectionBackground {
     overflow: auto;
 }
 
-.helper.ui-draggable-dragging {
-    z-index: 9999;
-}
-
 .datatable tr, .datatable td {
     border: none !important;
+}
+
+/* This is so dragged items show up above the layout */
+.ui-draggable-dragging {
+    z-index: 9999;
+    position: fixed !important;
 }
 
 /* Uploads/Dropzone */
 
 #upload_form {
     width: 100%;
-    min-width: 470px;
+    min-width: 555px;
 
     background: none;
     border: 2px dashed #efefef;

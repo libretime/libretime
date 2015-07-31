@@ -3310,13 +3310,27 @@ dd .stream-status {
 
 /* Usability Hints */
 
+/*
+ * This is a temporary solution to a larger issue;
+ * we should revisit this (and really all of the
+ * absolute positioning in Airtime) when we want
+ * to focus on responsive design.
+ */
+.usability_hint + .wrapper {
+    top: 170px;
+}
+
 .usability_hint {
     padding: 5px 10px 5px 10px;
-    margin-bottom: 10px;
     border: 1px solid #ff611f;
     background-color: #ff611f;
     color: white;
     font-size: 14px;
+
+    position: absolute;
+    top: 139px;
+    width: 100%;
+    z-index: 1;
 }
 
 .usability_hint a {

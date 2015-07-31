@@ -160,6 +160,10 @@ AIRTIME = (function(AIRTIME) {
         $builder = $("#show_builder");
         $fs = $builder.find('fieldset');
 
+        $("#timeline-tab").on("click", function() {
+            AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
+        });
+
         /*
          * Icon hover states for search.
          */

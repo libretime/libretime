@@ -28,7 +28,7 @@ var AIRTIME = (function(AIRTIME) {
             AIRTIME.button.disableButton("btn-group #library-plus", false);
         }
 
-        if ($("#show_builder").is(":visible")) {
+        if ($("#show_builder_table").is(":visible")) {
             if ($cursor.length !== 0) {
                 btnText = $.i18n._('Add after selected items');
             } else if (current.length !== 0) {
@@ -70,7 +70,7 @@ var AIRTIME = (function(AIRTIME) {
         mod.redrawChosen();
         mod.checkToolBarIcons();
 
-        if ($("#show_builder").is(":visible")) {
+        if ($("#show_builder_table").is(":visible")) {
             $('#library_display tr.lib-audio, tr.lib-pl, tr.lib-stream')
                 .draggable(
                 {
@@ -154,7 +154,7 @@ var AIRTIME = (function(AIRTIME) {
     mod.dblClickAdd = function(data, type) {
         var i, length, temp, aMediaIds = [], aSchedIds = [], aData = [];
 
-        if ($("#show_builder").is(":visible")) {
+        if ($("#show_builder_table").is(":visible")) {
             // process selected files/playlists.
             aMediaIds.push({
                 "id": data.id,
@@ -309,10 +309,10 @@ var AIRTIME = (function(AIRTIME) {
                     buildEditMetadataDialog(json);
                 });
             } else if (data.ftype === "playlist" || data.ftype === "block") {
-                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'Playlist/edit');
+                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'new-playlist/edit');
                 AIRTIME.playlist.validatePlaylistElements();
             } else if (data.ftype === "stream") {
-                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'Webstream/edit');
+                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'new-webstream/edit');
             }
         });
 

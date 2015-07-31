@@ -106,6 +106,19 @@ var AIRTIME = (function(AIRTIME){
         }
     };
 
+    mod.switchTab = function(tab, el) {
+        $(".active-tab").hide().removeClass("active-tab");
+        tab.addClass("active-tab").show();
+
+        $(".nav.nav-tabs .active").removeClass("active");
+        el.addClass("active");
+
+        if (tab.hasClass("pl-content")) {
+            AIRTIME.playlist.setAsActive();
+        }
+    };
+
+
     mod.checkSelectButton = function() {
         var $selectable = $sbTable.find("tr");
 
@@ -260,10 +273,6 @@ var AIRTIME = (function(AIRTIME){
     mod.enableUI = function() {
         $lib.unblock();
         $sbContent.unblock();
-
-        //Block UI changes the postion to relative to display the messages.
-        $lib.css("position", "static");
-        $sbContent.css("position", "static");
     };
 
     mod.fnItemCallback = function(json) {
@@ -726,7 +735,7 @@ var AIRTIME = (function(AIRTIME){
             },
 
             // R = ColReorder, C = ColVis
-            "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t>',
+            "sDom": 'R<"dt-process-rel"r><"sb-padded"<"H"C>><"dataTables_scrolling sb-padded"t><"F">',
 
             "oColVis": {
                 "aiExclude": [ 0, 1 ],
@@ -950,7 +959,10 @@ var AIRTIME = (function(AIRTIME){
         $sbTable.sortable(sortableConf);
 
         //start setup of the builder toolbar.
-        $toolbar = $(".sb-content .fg-toolbar");
+        $toolbar = $(".sb-content .fg-toolbar:first");
+        var footer = $(".sb-content .fg-toolbar:last"),
+            timerange = $(".sb-timerange");
+        footer.append(timerange);
 
         $menu = $("<div class='btn-toolbar'/>");
         $menu.append("<div class='btn-group'>" +
