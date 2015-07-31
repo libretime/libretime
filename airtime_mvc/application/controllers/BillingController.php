@@ -165,7 +165,13 @@ class BillingController extends Zend_Controller_Action {
                         Billing::addVatToInvoice($result["invoiceid"]);
                     }
 
-                    self::viewInvoice($result["invoiceid"]);
+                    // there may not be an invoice created if the client is downgrading
+                    if (!empty($result["invoiceid"])) {
+                        self::viewInvoice($result["invoiceid"]);
+                    } else {
+                        $this->_redirect('billing/invoices?planupdated');
+                        return;
+                    }
                 }
             } else {
                 $this->view->form = $form;
