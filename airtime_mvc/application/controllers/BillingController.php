@@ -169,6 +169,8 @@ class BillingController extends Zend_Controller_Action {
                     // owe any money
                     if (!empty($result["invoiceid"])) {
                         self::viewInvoice($result["invoiceid"]);
+                    } else {
+                        $this->view->form = $form;
                     }
                 }
             } else {
