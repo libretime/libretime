@@ -1,5 +1,8 @@
 <?php
 
+define("AIRTIME_PRO_FREE_TRIAL_PLAN_ID", 34);
+define("WHMCS_AIRTIME_GROUP_ID", 15);
+
 class Billing
 {
     public static function getAPICredentials()
@@ -30,10 +33,10 @@ class Billing
     {
         //Making this static to cache the products during a single HTTP request.
         //This saves us roundtrips to WHMCS if getProducts() is called multiple times.
-        static $result = array();
-        if (!empty($result))
+        static $products = array();
+        if (!empty($products))
         {
-            return $result["products"]["product"];
+            return $products;
         }
 
         $credentials = self::getAPICredentials();
@@ -44,7 +47,7 @@ class Billing
         $postfields["action"] = "getproducts";
         $postfields["responsetype"] = "json";
         //gid is the Airtime product group id on whmcs
-        $postfields["gid"] = "15";
+        $postfields["gid"] = WHMCS_AIRTIME_GROUP_ID;
 
         $query_string = "";
         foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
@@ -54,6 +57,7 @@ class Billing
         $products = $result["products"]["product"];
 
         //Blacklist all free plans
+        //Hide the promo plans - we will tell the user if they are eligible for a promo plan
         foreach ($products as $k => $p) {
             if ($p["paytype"] === "free" || strpos($p["name"], "Awesome August 2015") !== false)
             {
@@ -323,6 +327,152 @@ class Billing
 
         //TODO: error checking
         $result = Billing::makeRequest($credentials["url"], $query_string);
+    }
+
+    /**
+     * Returns an array of the current Airtime Pro plan IDs.
+     * This excludes any old, free, promotional, or custom plans.
+     */
+    public static function getCurrentPaidProductIds()
+    {
+        $products = self::getProducts();
+        $productIds = array();
+        foreach ($products as $k => $p) {
+            array_push($productIds, $p["pid"]);
+        }
+
+        return $productIds;
+    }
+
+    /**
+     * Returns an array of the Awesome August 2015 Promotional plans
+     */
+    public static function getAwesomeAugustPromoProducts()
+    {
+        $credentials = self::getAPICredentials();
+
+        $postfields = array();
+        $postfields["username"] = $credentials["username"];
+        $postfields["password"] = md5($credentials["password"]);
+        $postfields["action"] = "getproducts";
+        $postfields["responsetype"] = "json";
+        //gid is the Airtime product group id on whmcs
+        $postfields["gid"] = WHMCS_AIRTIME_GROUP_ID;
+
+        $query_string = "";
+        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+
+        $result = self::makeRequest($credentials["url"], $query_string);
+        $promoProducts = $result["products"]["product"];
+
+        foreach ($promoProducts as $k => $p) {
+            if (strpos($p["name"], "Awesome August 2015") === false) {
+                unset($promoProducts[$k]);
+            }
+        }
+
+        return $promoProducts;
+    }
+
+    /**
+     * Returns the eligible promo plan ID that corresponds to the regular paid plan.
+     *
+     * i.e. if the client wants to upgrade to the Plus plan this function returns the
+     * plan id of the Awesome August 2015 Plus plan.
+     */
+    public static function getEligibleAwesomeAugustPromoPlanId($productName)
+    {
+        $promoPlans = self::getAwesomeAugustPromoProducts();
+        $promoPlanId = "";
+
+        foreach($promoPlans as $k => $p) {
+            if (strpos($p["name"], $productName) !== false) {
+                $promoPlanId = $p["pid"];
+                break;
+            }
+        }
+
+        return $promoPlanId;
+    }
+
+    public static function getProductName($productId)
+    {
+        $products = self::getProducts();
+        $productName = "";
+
+        foreach($products as $k => $p) {
+            if ($p["pid"] == $productId) {
+                $productName = $p["name"];
+                break;
+            }
+        }
+
+        return $productName;
+    }
+
+    public static function isClientEligibleForPromo($newProductId, $newProductBillingCycle)
+    {
+        // use this to check if client is upgrading from an old plan
+        $currentPaidPlanProductIds = self::getCurrentPaidProductIds();
+
+        $currentPlanProduct = self::getClientCurrentAirtimeProduct();
+        $currentPlanProductId = $currentPlanProduct["pid"];
+        $currentPlanBillingCycle = strtolower($currentPlanProduct["billingcycle"]);
+
+        if (self::isClientOnAwesomeAugustPromoPlan($currentPlanProductId)) {
+
+            $newEligiblePromoId = self::getEligibleAwesomeAugustPromoPlanId(
+                self::getProductName($newProductId)
+            );
+
+            if ($newProductBillingCycle == "annually" || $newEligiblePromoId > $currentPlanProductId) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // if client is on trial plan, YES
+        if ($currentPlanProductId == AIRTIME_PRO_FREE_TRIAL_PLAN_ID) {
+            return true;
+        }
+
+        // if client is currently on monthly or annually or old/free plan AND (upgrading OR  upgrading/downgrading to annual plan), YES
+        if ($currentPlanBillingCycle == "monthly" || $currentPlanBillingCycle == "free account"
+            || $currentPlanBillingCycle == "annually") {
+            // is the client changing billing cycle to annual?
+            if ($newProductBillingCycle == "annually") {
+                return true;
+            }
+
+            // Is the client staying on monthly and upgrading?
+            // This won't hold true if the client is on an old/free plan because the
+            // old/free plan ids are higher than the current paid plan ids.
+            if ($newProductBillingCycle == "monthly" && $newProductId > $currentPlanProductId) {
+                return true;
+            }
+
+            // Is the client staying on monthly and upgrading from an old plan?
+            if ($newProductBillingCycle == "monthly" && !in_array($currentPlanProductId, $currentPaidPlanProductIds)
+                && in_array($newProductId, $currentPaidPlanProductIds)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function isClientOnAwesomeAugustPromoPlan($currentPlanId)
+    {
+        $promoPlans = self::getAwesomeAugustPromoProducts();
+
+        foreach ($promoPlans as $k => $p) {
+            if ($p["pid"] == $currentPlanId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
