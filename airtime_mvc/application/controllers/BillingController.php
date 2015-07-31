@@ -164,7 +164,12 @@ class BillingController extends Zend_Controller_Action {
                     if ($apply_vat) {
                         Billing::addVatToInvoice($result["invoiceid"]);
                     }
-                    self::viewInvoice($result["invoiceid"]);
+
+                    // invoice id can be 0 if client is downgrading and they don't
+                    // owe any money
+                    if (!empty($result["invoiceid"])) {
+                        self::viewInvoice($result["invoiceid"]);
+                    }
                 }
             } else {
                 $this->view->form = $form;
