@@ -419,12 +419,25 @@ class Billing
         $currentPlanProductId = $currentPlanProduct["pid"];
         $currentPlanBillingCycle = strtolower($currentPlanProduct["billingcycle"]);
 
+        if (self::isClientOnAwesomeAugustPromoPlan($currentPlanProductId)) {
+
+            $newEligiblePromoId = self::getEligibleAwesomeAugustPromoPlanId(
+                self::getProductName($newProductId)
+            );
+
+            if ($newProductBillingCycle == "annually" || $newEligiblePromoId > $currentPlanProductId) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         // if client is on trial plan, YES
         if ($currentPlanProductId == AIRTIME_PRO_FREE_TRIAL_PLAN_ID) {
             return true;
         }
 
-        // if client is currently on monthly or annually or old plan AND (upgrading OR  upgrading/downgrading to annual plan), YES
+        // if client is currently on monthly or annually or old/free plan AND (upgrading OR  upgrading/downgrading to annual plan), YES
         if ($currentPlanBillingCycle == "monthly" || $currentPlanBillingCycle == "free account"
             || $currentPlanBillingCycle == "annually") {
             // is the client changing billing cycle to annual?
@@ -433,8 +446,8 @@ class Billing
             }
 
             // Is the client staying on monthly and upgrading?
-            // This won't hold true if the client is on an old plan because the old
-            // plan ids are higher than the current plan ids.
+            // This won't hold true if the client is on an old/free plan because the
+            // old/free plan ids are higher than the current paid plan ids.
             if ($newProductBillingCycle == "monthly" && $newProductId > $currentPlanProductId) {
                 return true;
             }
@@ -442,6 +455,19 @@ class Billing
             // Is the client staying on monthly and upgrading from an old plan?
             if ($newProductBillingCycle == "monthly" && !in_array($currentPlanProductId, $currentPaidPlanProductIds)
                 && in_array($newProductId, $currentPaidPlanProductIds)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static function isClientOnAwesomeAugustPromoPlan($currentPlanId)
+    {
+        $promoPlans = self::getAwesomeAugustPromoProducts();
+
+        foreach ($promoPlans as $k => $p) {
+            if ($p["pid"] == $currentPlanId) {
                 return true;
             }
         }

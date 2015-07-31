@@ -246,3 +246,8 @@
 	border-radius: 5px;
 	color: #ffffff;
 }
+
+.promo-banner {
+	margin-top:10px;
+	background: url('images/august_aweomse_promo_banner.png') no-repeat;
+}
