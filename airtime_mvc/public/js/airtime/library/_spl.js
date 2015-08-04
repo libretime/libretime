@@ -16,7 +16,7 @@ var AIRTIME = (function(AIRTIME){
         widgetHeight,
         resizeTimeout,
         width,
-        $plCount = 0,
+        $tabCount = 0,
         $openTabs = {};
 
     function isTimeValid(time) {
@@ -432,29 +432,63 @@ var AIRTIME = (function(AIRTIME){
         $pl.find("#obj_lastMod").val(modified);
     }
 
-    function openPlaylist(json) {
-        $plCount++;
+    /*
+     * Should all be moved to builder.js eventually
+     */
+    function openFileMdEditor(json) {
+        $tabCount++;
         var tabId = $openTabs[json.id];
         if ($openTabs[json.id] !== undefined) {
             AIRTIME.showbuilder.switchTab($(".pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
             return;
         }
 
-        var wrapper = "<div id='side_playlist' class='pl-content pl-tab-content-" + $plCount + "'><div class='editor_pane_wrapper'></div></div>",
-            t = $("#show_builder").append(wrapper).find(".pl-tab-content-" + $plCount),
+        var wrapper = "<div id='side_playlist' class='pl-content pl-tab-content-" + $tabCount + "'><div class='editor_pane_wrapper'></div></div>",
+            t = $("#show_builder").append(wrapper).find(".pl-tab-content-" + $tabCount),
             pane = $(".editor_pane_wrapper:last"),
-            name = pane.append(json.html).find("#playlist_name_display").text(),
-            tab = "<li id='pl-tab-" + $plCount + "' role='presentation' class='active'><a href='#'>" + name + "</a></li>",
+            name = pane.append(json.dialog).find("#track_title").val() + $.i18n._(" - Metadata Editor"),
+            tab = "<li id='pl-tab-" + $tabCount + "' role='presentation' class='active'><a href='#'>" + name + "</a></li>",
             tabs = $(".nav.nav-tabs");
 
         if (json.id) {
-            $openTabs[json.id] = $plCount;
+            $openTabs[json.id] = $tabCount;
         }
-
 
         $(".nav.nav-tabs li").removeClass("active");
         tabs.append(tab);
-        var newTab = $("#pl-tab-" + $plCount);
+        var newTab = $("#pl-tab-" + $tabCount);
+
+        newTab.on("click", function() {
+            AIRTIME.showbuilder.switchTab(t, newTab);
+        });
+        pane.find("#editmdcancel").on("click", function() {
+            closeTab();
+        });
+        AIRTIME.showbuilder.switchTab(t, newTab);
+    }
+
+    function openPlaylist(json) {
+        $tabCount++;
+        var tabId = $openTabs[json.id];
+        if ($openTabs[json.id] !== undefined) {
+            AIRTIME.showbuilder.switchTab($(".pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
+            return;
+        }
+
+        var wrapper = "<div id='side_playlist' class='pl-content pl-tab-content-" + $tabCount + "'><div class='editor_pane_wrapper'></div></div>",
+            t = $("#show_builder").append(wrapper).find(".pl-tab-content-" + $tabCount),
+            pane = $(".editor_pane_wrapper:last"),
+            name = pane.append(json.html).find("#playlist_name_display").text(),
+            tab = "<li id='pl-tab-" + $tabCount + "' role='presentation' class='active'><a href='#'>" + name + "</a></li>",
+            tabs = $(".nav.nav-tabs");
+
+        if (json.id) {
+            $openTabs[json.id] = $tabCount;
+        }
+
+        $(".nav.nav-tabs li").removeClass("active");
+        tabs.append(tab);
+        var newTab = $("#pl-tab-" + $tabCount);
 
         newTab.on("click", function() {
             AIRTIME.showbuilder.switchTab(t, newTab);
@@ -463,10 +497,6 @@ var AIRTIME = (function(AIRTIME){
         });
         AIRTIME.showbuilder.switchTab(t, newTab);
         AIRTIME.playlist.init();
-
-        //setUpPlaylist();
-        //setCueEvents();
-        //setFadeEvents();
 
         // functions in smart_blockbuilder.js
         setupUI();
@@ -491,6 +521,10 @@ var AIRTIME = (function(AIRTIME){
         $pl.remove();
         AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $("#timeline-tab"));
     }
+
+    mod.closeTab = function() {
+        closeTab();
+    };
 
     //Purpose of this function is to iterate over all playlist elements
     //and verify whether they can be previewed by the browser or not. If not
@@ -1071,6 +1105,10 @@ var AIRTIME = (function(AIRTIME){
                 openPlaylist(json);
                 redrawLib();
             });
+    };
+
+    mod.fileMdEdit = function(json) {
+        openFileMdEditor(json);
     };
 
     mod.fnEdit = function(id, type, url) {

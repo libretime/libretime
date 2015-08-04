@@ -307,7 +307,8 @@ var AIRTIME = (function(AIRTIME) {
 
             if (data.ftype === "audioclip") {
                 $.get(baseUrl + "library/edit-file-md/id/" + data.id, {format: "json"}, function(json){
-                    buildEditMetadataDialog(json);
+                    AIRTIME.playlist.fileMdEdit(json);
+                    //buildEditMetadataDialog(json);
                 });
             } else if (data.ftype === "playlist" || data.ftype === "block") {
                 AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'new-playlist/edit');
