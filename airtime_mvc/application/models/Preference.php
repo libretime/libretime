@@ -203,7 +203,7 @@ class Application_Model_Preference
         if (strlen($title) > 0)
             $title .= " - ";
 
-        return $title."Airtime";
+        return $title.PRODUCT_NAME;
     }
 
     public static function SetHeadTitle($title, $view=null)
