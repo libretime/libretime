@@ -224,6 +224,7 @@ var AIRTIME = (function(AIRTIME) {
         var $toolbar = $(".lib-content .fg-toolbar:first");
 
         mod.createToolbarButtons();
+        mod.moveSearchBarToHeader();
         
         $toolbar.append($menu);
         // add to timeline button

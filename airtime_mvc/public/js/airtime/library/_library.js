@@ -148,6 +148,13 @@ var AIRTIME = (function(AIRTIME) {
                     "</div>");
     };
 
+    mod.moveSearchBarToHeader = function() {
+        $("#library_display_filter").appendTo("#library_content > .panel-header");
+        $("#advanced_search").click(function(e) {
+            e.stopPropagation();
+        });
+    };
+
     mod.createToolbarDropDown = function() {
         $('#sb-select-page').click(function(){mod.selectCurrentPage();});
         $('#sb-dselect-page').click(function(){mod.deselectCurrentPage();});
@@ -449,7 +456,7 @@ var AIRTIME = (function(AIRTIME) {
                     if (ele.bVisible) {
                         advanceSearchDiv.append(
                             "<div id='advanced_search_col_"+currentColId+"' class='control-group'>" +
-                            "<label class='control-label'"+labelStyle+">"+ele.sTitle+" : </label>" +
+                            "<label class='control-label'"+labelStyle+">"+ele.sTitle+"</label>" +
                             "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
                             "</div>");
                     } else {
@@ -501,7 +508,7 @@ var AIRTIME = (function(AIRTIME) {
             "aoColumns": [
                 /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          ,
                 /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "16px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
-                ///* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
+                /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
                 /* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
                 /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          ,
                 /* Creator */         { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,
@@ -575,7 +582,7 @@ var AIRTIME = (function(AIRTIME) {
                     // sure everything works properly.
                     for (i = 0, length = a.length; i < length; i++) {
                         if (typeof(a[i]) === "string") {
-                            a[i] = (a[i] === "true") ? true : false;
+                            a[i] = (a[i] === "true");
                         }
                     }
                 }
@@ -685,7 +692,7 @@ var AIRTIME = (function(AIRTIME) {
             "oLanguage": datatables_dict,
 
             // R = ColReorder, C = ColVis
-            "sDom": 'R<"dt-process-rel"r><"H"<"library_toolbar"Cf>><"dataTables_scrolling"t><"F"ilp>>',
+            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ilp>>',
 
             "oColVis": {
                 "sAlign": "right",
@@ -1044,7 +1051,7 @@ function validateAdvancedSearch(divs) {
     searchTerm[0] = "";
     searchTerm[1] = "";
     $.each(divs, function(i, div){
-        fieldName = $(div).children(':nth-child(2)').attr('id');
+        fieldName = $(div).children('div').attr('id');
         fields = $(div).children().find('input');
         searchTermType = validationTypes[fieldName];
         valid = true;
@@ -1088,9 +1095,9 @@ function validateAdvancedSearch(divs) {
                  */
             } else if (searchTerm[0] === "" && searchTerm[1] !== "" ||
                 searchTerm[0] === "" && searchTerm[1] === ""){
-                if ($(field).closest('div').children(':last-child').hasClass('checked-icon') ||
-                    $(field).closest('div').children(':last-child').hasClass('not-available-icon')) {
-                    $(field).closest('div').children(':last-child').remove();
+                if ($(field).closest('div').prev().hasClass('checked-icon') ||
+                    $(field).closest('div').prev().hasClass('not-available-icon')) {
+                    $(field).closest('div').prev().remove();
                 }
             }
 
@@ -1119,22 +1126,28 @@ function addRemoveValidationIcons(valid, field, searchTermType) {
         invalidIndicator = " <span title='"+title+"' class='not-available-icon sp-checked-icon'></span>";
 
     if (valid) {
-        if (!field.closest('div').children(':last-child').hasClass('checked-icon')) {
+        if (!field.closest('div').prev().hasClass('checked-icon')) {
             // remove invalid icon before adding valid icon
-            if (field.closest('div').children(':last-child').hasClass('not-available-icon')) {
-                field.closest('div').children(':last-child').remove();
+            if (field.closest('div').prev().hasClass('not-available-icon')) {
+                field.closest('div').prev().remove();
             }
-            field.closest('div').append(validIndicator);
+            field.closest('div').before(validIndicator);
         }
     } else {
-        if (!field.closest('div').children(':last-child').hasClass('not-available-icon')) {
+        if (!field.closest('div').prev().hasClass('not-available-icon')) {
             // remove valid icon before adding invalid icon
-            if (field.closest('div').children(':last-child').hasClass('checked-icon')) {
-                field.closest('div').children(':last-child').remove();
+            if (field.closest('div').prev().hasClass('checked-icon')) {
+                field.closest('div').prev().remove();
             }
-            field.closest('div').append(invalidIndicator);
+            field.closest('div').before(invalidIndicator);
         }
     }
+}
+
+function resizeAdvancedSearch() {
+    var s = $("#advanced_search");
+    s.css("max-height", $(window).height() / 4);
+    s.css("overflow", "auto");
 }
 
 /*
@@ -1211,6 +1224,14 @@ $(document).ready(function() {
             $(this).addClass("selected");
             oTable.fnDraw();
         }
+    });
+
+    $("#advanced-options").on("click", function() {
+        resizeAdvancedSearch();
+    });
+
+    $(window).resize(function() {
+        resizeAdvancedSearch();
     });
 });
 
