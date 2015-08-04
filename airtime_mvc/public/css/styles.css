@@ -340,6 +340,41 @@ fieldset {
         width: 25%;
     }
 }
+@media screen and (max-width: 970px) {
+    #nav {
+        height: inherit;
+        overflow-y: visible;
+    }
+    #nav .responsive-menu {
+        position: absolute;
+        left: 0;
+        background: #353535;
+        width: 120px;
+        display: none;
+
+        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+    }
+    .mobile-nav {
+        display: block;
+    }
+    #menu-btn {
+        width: 24px;
+
+        margin: 0;
+
+        cursor: pointer;
+    }
+    #menu-btn span {
+        display: block;
+        width: 19px;
+        height: 3px;
+        margin: 4px 2px;
+        background: #efefef;
+        z-index: 99;
+    }
+}
 @media screen and (max-width: 920px) {
     .now-playing-block {
         width: 50%;
@@ -369,17 +404,6 @@ fieldset {
     #nav li.top {
         display: -webkit-flex;
         width: 110px;
-    }
-    .personal-block.solo {
-        float: none;
-        text-align: left;
-    }
-    .personal-block.solo ol {
-        padding-left: 12px;
-    }
-    .logo {
-        float: none;
-        margin-left: 12px;
     }
 }
 @media screen and (max-width: 380px) {

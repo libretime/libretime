@@ -140,7 +140,7 @@ div.ColVis_collectionBackground {
 @media screen and (max-width: 780px) {
     .wrapper {
         height: 100% !important; /* Correct for margins */
-        padding: 0 15px 15px !important;
+        padding: 0 !important;
     }
 }
 
@@ -394,6 +394,8 @@ div.ColVis_collectionBackground {
     flex: 1 auto;
     margin-right: 10px;
     text-align: center;
+
+    min-width: 555px;
 }
 
 #media_type_nav div {

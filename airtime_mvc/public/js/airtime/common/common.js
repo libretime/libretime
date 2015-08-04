@@ -186,3 +186,11 @@ function getUsabilityHint() {
         }
     });
 }
+
+$(document).mouseup(function (e) {
+    var mb = $("#menu-btn"),
+        w = $(window).width();
+    if (!mb.is(e.target) && mb.has(e.target).length === 0 && w <= 970) {
+        $('#nav .responsive-menu').slideUp();
+    }
+});
