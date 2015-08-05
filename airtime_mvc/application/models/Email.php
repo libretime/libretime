@@ -2,18 +2,20 @@
 
 class Application_Model_Email
 {
+
     /**
      * Send email
      *
      * @param  string $subject
      * @param  string $message
-     * @param  mixed  $tos
-     * @return void
+     * @param  mixed  $to
+     * @return boolean
      */
-    public static function send($subject, $message, $tos, $from = null)
-    {
+    public static function send($subject, $message, $to) {
 
-        return mail($tos, $subject, $message);
+        $headers = 'From: Airtime <noreply@account.sourcefabric.com>';
+        return mail($to, $subject, $message, $headers);
 
     }
+
 }
