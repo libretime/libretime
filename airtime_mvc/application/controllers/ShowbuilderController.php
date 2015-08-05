@@ -45,6 +45,7 @@ class ShowbuilderController extends Zend_Controller_Action
         //$this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/js-timezone-detect/jstz-1.0.4.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/buttons/buttons.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -55,66 +56,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
 
-        $refer_sses = new Zend_Session_Namespace('referrer');
-
-        if ($request->isPost()) {
-            $form = new Application_Form_RegisterAirtime();
-
-            $values = $request->getPost();
-            if ($values["Publicise"] != 1 && $form->isValid($values)) {
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-                session_start();  //open session for writing again
-                // unset referrer
-                Zend_Session::namespaceUnset('referrer');
-            } elseif ($values["Publicise"] == '1' && $form->isValid($values)) {
-                Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
-                Application_Model_Preference::SetPhone($values["Phone"]);
-                Application_Model_Preference::SetEmail($values["Email"]);
-                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                Application_Model_Preference::SetPublicise($values["Publicise"]);
-
-                $form->Logo->receive();
-                $imagePath = $form->Logo->getFileName();
-
-                Application_Model_Preference::SetStationCountry($values["Country"]);
-                Application_Model_Preference::SetStationCity($values["City"]);
-                Application_Model_Preference::SetStationDescription($values["Description"]);
-                Application_Model_Preference::SetStationLogo($imagePath);
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-                session_start();  //open session for writing again
-                // unset referrer
-                Zend_Session::namespaceUnset('referrer');
-            } else {
-                $logo = Application_Model_Preference::GetStationLogo();
-                if ($logo) {
-                    $this->view->logoImg = $logo;
-                }
-                $this->view->dialog = $form;
-                $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-            }
-        }
-
-        //popup if previous page was login
-        if ($refer_sses->referrer == 'login' && Application_Model_Preference::ShouldShowPopUp()
-                && !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
-
-            $form = new Application_Form_RegisterAirtime();
-
-            $logo = Application_Model_Preference::GetStationLogo();
-            if ($logo) {
-                $this->view->logoImg = $logo;
-            }
-            $this->view->dialog = $form;
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        }
+        //Show the timezone and language setup popup, if needed.
+        $this->checkAndShowSetupPopup($request);
 
         //determine whether to remove/hide/display the library.
         $showLib = false;
@@ -184,6 +127,26 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
+    }
+
+    /** Check if we need to show the timezone/language setup popup and display it. (eg. on first run) */
+    public function checkAndShowSetupPopup($request)
+    {
+        $CC_CONFIG = Config::getConfig();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $setupComplete = Application_Model_Preference::getLangTimezoneSetupComplete();
+        $previousPage = $request->getHeader('Referer');
+        $userService = new Application_Service_UserService();
+        $currentUser = $userService->getCurrentUser();
+        $previousPageWasLoginScreen = strpos(strtolower($previousPage), 'login') !== false;
+
+        // If current user is Super Admin, and they came from the login page,
+        // and they have not seen the setup popup before
+        if ($currentUser->isSuperAdmin() && $previousPageWasLoginScreen && empty($setupComplete)) {
+            $lang_tz_popup_form = new Application_Form_SetupLanguageTimezone();
+            $this->view->lang_tz_popup_form = $lang_tz_popup_form;
+            $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/lang-timezone-setup.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        }
     }
 
     public function contextMenuAction()

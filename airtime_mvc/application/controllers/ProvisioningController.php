@@ -41,6 +41,9 @@ class ProvisioningController extends Zend_Controller_Action
             if (isset($_POST['provisioning_status'])) {
                 Application_Model_Preference::setProvisioningStatus($_POST['provisioning_status']);
             }
+            if (isset($_POST['icecast_pass'])) {
+                Application_Model_Preference::setDefaultIcecastPassword($_POST['icecast_pass']);
+            }
         } catch (Exception $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)

@@ -1888,6 +1888,7 @@ span.errors.sp-errors{
     margin:8px 0 0 0;
     cursor:pointer;
     position:relative;
+    clear: both;
 }
 .collapsible-content {
     margin-top:-1px;
@@ -2232,6 +2233,10 @@ span.errors.sp-errors{
 
 .stream-config {
     width: 1100px;
+}
+
+#stream_save_bottom {
+    bottom: 0;
 }
 
 .preferences .padded {
