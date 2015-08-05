@@ -142,7 +142,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
         // If current user is Super Admin, and they came from the login page,
         // and they have not seen the setup popup before
-        if ($currentUser->isSuperAdmin() && $previousPageWasLoginScreen /*&& empty($setupComplete)*/) {
+        if ($currentUser->isSuperAdmin() && $previousPageWasLoginScreen && empty($setupComplete)) {
             $lang_tz_popup_form = new Application_Form_SetupLanguageTimezone();
             $this->view->lang_tz_popup_form = $lang_tz_popup_form;
             $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/lang-timezone-setup.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
