@@ -200,7 +200,7 @@ class PlaylistController extends Zend_Controller_Action
             $obj = new $objInfo['className']($id);
             $this->createFullResponse($obj);
         } catch (PlaylistNotFoundException $e) {
-            $this->playlistNotFound();
+            $this->playlistNotFound($type);
         } catch (Exception $e) {
             $this->playlistUnknownError($e);
         }
