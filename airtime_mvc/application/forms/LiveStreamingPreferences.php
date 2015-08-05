@@ -7,7 +7,6 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
     {
         $CC_CONFIG = Config::getConfig();
         $isDemo = isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1;
-        $isStreamConfigable = Application_Model_Preference::GetEnableStreamConf() == "true";
 
         $defaultFade = Application_Model_Preference::GetDefaultTransitionFade();
 
@@ -103,7 +102,7 @@ class Application_Form_LiveStreamingPreferences extends Zend_Form_SubForm
         $this->addElement($showSourceMount);
 
         // demo only code
-        if (!$isStreamConfigable) {
+        if ($isDemo) {
             $elements = $this->getElements();
             foreach ($elements as $element) {
                 if ($element->getType() != 'Zend_Form_Element_Hidden') {

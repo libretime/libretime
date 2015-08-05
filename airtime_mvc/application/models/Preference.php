@@ -1512,6 +1512,28 @@ class Application_Model_Preference
         self::setValue("task_manager_lock", $value);
     }
 
+    // SAAS-876 - Toggle indicating whether user is using custom stream settings
+
+    public static function getUsingCustomStreamSettings() {
+        return self::getValue("using_custom_stream_settings");
+    }
+
+    public static function setUsingCustomStreamSettings($value) {
+        self::setValue("using_custom_stream_settings", $value);
+    }
+
+    // SAAS-876 - Store the default Icecast password to restore when switching
+    //            back to Airtime Pro streaming settings
+
+    public static function getDefaultIcecastPassword() {
+        $val = self::getValue("default_icecast_password");
+        return empty($val) ? DEFAULT_ICECAST_PASS : $val;
+    }
+
+    public static function setDefaultIcecastPassword($value) {
+        self::setValue("default_icecast_password", $value);
+    }
+
     public static function getRadioPageDisplayLoginButton()
     {
         return self::getValue("radio_page_display_login_button");

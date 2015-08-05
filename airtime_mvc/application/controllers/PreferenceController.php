@@ -149,9 +149,6 @@ class PreferenceController extends Zend_Controller_Action
 
         session_start(); //Open session for writing.
 
-        // get current settings
-        $setting = Application_Model_StreamSetting::getStreamSetting();
-
         $name_map = array(
 				'ogg' => 'Ogg Vorbis',
                 'fdkaac' => 'AAC+',
@@ -160,55 +157,14 @@ class PreferenceController extends Zend_Controller_Action
                 'mp3' => 'MP3',
         );
 
-        // get predefined type and bitrate from pref table
-        $temp_types = Application_Model_Preference::GetStreamType();
-        $stream_types = array();
-        foreach ($temp_types as $type) {
-            $type = strtolower(trim($type));
-            if (isset($name_map[$type])) {
-                $name = $name_map[$type];
-            } else {
-                $name = $type;
-            }
-            $stream_types[$type] = $name;
-        }
-
-        $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
-        $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
-        $stream_bitrates = array();
-        foreach ($temp_bitrate as $type) {
-            if (intval($type) <= $max_bitrate) {
-                $stream_bitrates[trim($type)] = strtoupper(trim($type))." kbit/s";
-            }
-        }
-
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());
         $form = new Application_Form_StreamSetting();
-
-        // $form->addElement('hash', 'csrf', array(
-        //     'salt' => 'unique'
-        // ));
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
         $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
         $form->addElement($csrf_element);
 
-        $form->setSetting($setting);
-        $form->startFrom();
-
-        $live_stream_subform = new Application_Form_LiveStreamingPreferences();
-        $form->addSubForm($live_stream_subform, "live_stream_subform");
-
-        for ($i=1; $i<=$num_of_stream; $i++) {
-            $subform = new Application_Form_StreamSettingSubForm();
-            $subform->setPrefix($i);
-            $subform->setSetting($setting);
-            $subform->setStreamTypes($stream_types);
-            $subform->setStreamBitrates($stream_bitrates);
-            $subform->startForm();
-            $form->addSubForm($subform, "s".$i."_subform");
-        }
         if ($request->isPost()) {
             $params = $request->getPost();
             /* Parse through post data and put in format
@@ -246,7 +202,6 @@ class PreferenceController extends Zend_Controller_Action
             $values["s3_data"] = $s3_data;
             $values["s4_data"] = $s4_data;
 
-            $error = false;
             if ($form->isValid($values)) {
 
                 $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
@@ -263,13 +218,8 @@ class PreferenceController extends Zend_Controller_Action
                 $s4_set_admin_pass = !empty($values["s4_data"]["admin_pass"]);
 
                 // this goes into cc_pref table
-                Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
-                Application_Model_Preference::SetLiveStreamMasterUsername($values["master_username"]);
-                Application_Model_Preference::SetLiveStreamMasterPassword($values["master_password"]);
-                Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
-                Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
-                Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
-                
+                $this->setStreamPreferences($values);
+
                 // compare new values with current value
                 $changeRGenabled = Application_Model_Preference::GetEnableReplayGain() != $values["enableReplayGain"];
                 $changeRGmodifier = Application_Model_Preference::getReplayGainModifier() != $values["replayGainModifier"];
@@ -294,27 +244,50 @@ class PreferenceController extends Zend_Controller_Action
                 }
 
                 Application_Model_RabbitMq::SendMessageToPypo("update_stream_setting", $data);
-
-                $live_stream_subform->updateVariables();
-                $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
-                $this->view->form = $form;
-                $this->view->num_stream = $num_of_stream;
                 $this->view->statusMsg = "<div class='success'>"._("Stream Setting Updated.")."</div>";
-                $this->_helper->json->sendJson(array(
-                    "valid"=>"true",
-                    "html"=>$this->view->render('preference/stream-setting.phtml'),
-                    "s1_set_admin_pass"=>$s1_set_admin_pass,
-                    "s2_set_admin_pass"=>$s2_set_admin_pass,
-                    "s3_set_admin_pass"=>$s3_set_admin_pass,
-                    "s4_set_admin_pass"=>$s4_set_admin_pass,
-                ));
-            } else {
-                $live_stream_subform->updateVariables();
-                $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
-                $this->view->form = $form;
-                $this->view->num_stream = $num_of_stream;
-                $this->_helper->json->sendJson(array("valid"=>"false", "html"=>$this->view->render('preference/stream-setting.phtml')));
             }
+        }
+
+        // get predefined type and bitrate from pref table
+        $temp_types = Application_Model_Preference::GetStreamType();
+        $stream_types = array();
+        foreach ($temp_types as $type) {
+            $type = strtolower(trim($type));
+            if (isset($name_map[$type])) {
+                $name = $name_map[$type];
+            } else {
+                $name = $type;
+            }
+            $stream_types[$type] = $name;
+        }
+
+        $temp_bitrate = Application_Model_Preference::GetStreamBitrate();
+        $max_bitrate = intval(Application_Model_Preference::GetMaxBitrate());
+        $stream_bitrates = array();
+        foreach ($temp_bitrate as $type) {
+            if (intval($type) <= $max_bitrate) {
+                $stream_bitrates[trim($type)] = strtoupper(trim($type))." kbit/s";
+            }
+        }
+
+        // get current settings
+        $setting = Application_Model_StreamSetting::getStreamSetting();
+
+        $form->setSetting($setting);
+        $form->startFrom();
+
+        $live_stream_subform = new Application_Form_LiveStreamingPreferences();
+        $form->addSubForm($live_stream_subform, "live_stream_subform");
+
+        for ($i=1; $i<=$num_of_stream; $i++) {
+            $subform = new Application_Form_StreamSettingSubForm();
+            $subform->setPrefix($i);
+            $subform->setSetting($setting);
+            $subform->setStreamTypes($stream_types);
+            $subform->setStreamBitrates($stream_bitrates);
+            $subform->startForm();
+            $subform->toggleState();
+            $form->addSubForm($subform, "s".$i."_subform");
         }
 
         $live_stream_subform->updateVariables();
@@ -322,6 +295,35 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->num_stream = $num_of_stream;
         $this->view->enable_stream_conf = Application_Model_Preference::GetEnableStreamConf();
         $this->view->form = $form;
+        if ($request->isPost()) {
+            if ($form->isValid($values)) {
+                $this->_helper->json->sendJson(array(
+                                                   "valid" => "true",
+                                                   "html" => $this->view->render('preference/stream-setting.phtml'),
+                                                   "s1_set_admin_pass" => $s1_set_admin_pass,
+                                                   "s2_set_admin_pass" => $s2_set_admin_pass,
+                                                   "s3_set_admin_pass" => $s3_set_admin_pass,
+                                                   "s4_set_admin_pass" => $s4_set_admin_pass,
+                                               ));
+            } else {
+                $this->_helper->json->sendJson(array("valid" => "false", "html" => $this->view->render('preference/stream-setting.phtml')));
+            }
+        }
+    }
+
+    /**
+     * Set stream settings preferences
+     *
+     * @param array $values stream setting preference values
+     */
+    private function setStreamPreferences($values) {
+        Application_Model_Preference::setUsingCustomStreamSettings($values['customStreamSettings']);
+        Application_Model_Preference::SetStreamLabelFormat($values['streamFormat']);
+        Application_Model_Preference::SetLiveStreamMasterUsername($values["master_username"]);
+        Application_Model_Preference::SetLiveStreamMasterPassword($values["master_password"]);
+        Application_Model_Preference::SetDefaultTransitionFade($values["transition_fade"]);
+        Application_Model_Preference::SetAutoTransition($values["auto_transition"]);
+        Application_Model_Preference::SetAutoSwitch($values["auto_switch"]);
     }
 
     public function serverBrowseAction()

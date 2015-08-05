@@ -1,12 +1,10 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong stream-config">
-    <h2 <?php if($this->enable_stream_conf == "true"){?>style="float:left"<?php }?>><?php echo _("Stream Settings") ?></h2>
+    <h2 style="float:left"><?php echo _("Stream Settings") ?></h2>
     <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
-    <?php if($this->enable_stream_conf == "true"){?>
     <form method="post" id="stream_form" enctype="application/x-www-form-urlencoded">
-    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><?php echo _("Save") ?></button>
+    <button name="stream_save" id="stream_save_top" type="button" class="btn btn-small right-floated"><?php echo _("Save") ?></button>
     <?php echo $this->form->getElement('csrf') ?>
     <div style="clear:both"></div>
-    <?php }?>
   <?php echo $this->statusMsg;?>
   <div style="float: left; margin-right: 10px; width: 490px; overflow: auto;">
     <fieldset class="padded stream-setting-global">
@@ -39,6 +37,7 @@
             <dd id="vorbisMetadata-element">
                 <?php echo $this->form->getElement('icecast_vorbis_metadata') ?>
             </dd>
+
             <dt id="streamFormat-label">
                 <label class="optional"><?php echo $this->form->getElement('streamFormat')->getLabel() ?></label>
             </dt>
@@ -105,16 +104,16 @@
   <div style="float: left; width: 600px;">
     <fieldset class="padded">
     <legend><?php echo _("Output Stream Settings") ?></legend>
-    <?php
-        for($i=1;$i<=$this->num_stream;$i++){
-            echo $this->form->getSubform("s".$i."_subform");
-        }
-    ?>
+        <?php
+            // TODO: replace this with something that looks good
+            echo $this->form->getElement('customStreamSettings')->render();
+            for($i=1;$i<=$this->num_stream;$i++){
+                echo $this->form->getSubform("s".$i."_subform");
+            }
+        ?>
     </fieldset>
-    <?php if($this->enable_stream_conf == "true"){?>
     <br />
-    <button name="stream_save" id="stream_save" type="button" class="btn btn-small right-floated"><?php echo _("Save") ?></button>
-    <?php }?>
+    <button name="stream_save" id="stream_save_bottom" type="button" class="btn btn-small right-floated"><?php echo _("Save") ?></button>
   </div>
     </form>
 </div>
