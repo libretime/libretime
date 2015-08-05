@@ -34,9 +34,7 @@ class Application_Model_Auth
         $message .= "{$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
 
         $str = sprintf(_('%s Password Reset'), PRODUCT_NAME);
-        $success = Application_Model_Email::send($str, $message, $user->getDbEmail());
-
-        return $success;
+        return Application_Model_Email::send($str, $message, $user->getDbEmail());
     }
 
     public function invalidateTokens($user, $action)

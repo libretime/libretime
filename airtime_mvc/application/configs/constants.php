@@ -17,6 +17,7 @@ define('TERMS_AND_CONDITIONS_URL'   , 'http://www.sourcefabric.org/en/about/poli
 define('PRIVACY_POLICY_URL'         , 'http://www.sourcefabric.org/en/about/policy/');
 define('USER_MANUAL_URL'            , 'http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters');
 define('AIRTIME_TRANSIFEX_URL'      , 'https://www.transifex.com/projects/p/airtime/');
+define('WHMCS_PASSWORD_RESET_URL'   , 'https://account.sourcefabric.com/pwreset.php');
 
 define('LICENSE_VERSION'    , 'GNU AGPL v.3');
 define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.html');

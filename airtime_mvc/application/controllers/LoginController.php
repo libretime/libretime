@@ -140,26 +140,23 @@ class LoginController extends Zend_Controller_Action
         
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
-        if (!Application_Model_Preference::GetEnableSystemEmail()) {
-            $this->_redirect('login');
-        } else {
-            //uses separate layout without a navigation.
-            $this->_helper->layout->setLayout('login');
+        //uses separate layout without a navigation.
+        $this->_helper->layout->setLayout('login');
 
-            $form = new Application_Form_PasswordRestore();
+        $form = new Application_Form_PasswordRestore();
 
-            $request = $this->getRequest();
-            if ($request->isPost() && $form->isValid($request->getPost())) {
-                if (is_null($form->username->getValue()) || $form->username->getValue() == '') {
-                    $user = CcSubjsQuery::create()
-                        ->filterByDbEmail($form->email->getValue())
-                        ->findOne();
-                } else {
-                    $user = CcSubjsQuery::create()
-                        ->filterByDbEmail($form->email->getValue())
-                        ->filterByDbLogin($form->username->getValue())
-                        ->findOne();
-                }
+        $request = $this->getRequest();
+        if ($request->isPost() && $form->isValid($request->getPost())) {
+            $query = CcSubjsQuery::create();
+            if (empty($form->username->getValue())) {
+                $query->filterByDbEmail($form->email->getValue());
+            } else if (empty($form->email->getValue())) {
+                $query->filterByDbLogin($form->username->getValue());
+            } else {
+                $query->filterByDbEmail($form->email->getValue())
+                      ->filterByDbLogin($form->username->getValue());
+            }
+            $user = $query->findOne();
 
                 if (!empty($user)) {
                     $auth = new Application_Model_Auth();
@@ -171,12 +168,13 @@ class LoginController extends Zend_Controller_Action
                         $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
                     }
                 } else {
-                    $form->email->addError($this->view->translate(_("Given email not found.")));
+                    $form->email->addError($this->view->translate(_("There was a problem sending the recovery email.")));
                 }
+            } else {
+                $form->email->addError($this->view->translate(_("We couldn't find the email you entered - you can also try <a href='".WHMCS_PASSWORD_RESET_URL."'>here</a>.")));
             }
 
-            $this->view->form = $form;
-        }
+        $this->view->form = $form;
     }
 
     public function passwordRestoreAfterAction()
