@@ -469,6 +469,7 @@ var AIRTIME = (function(AIRTIME){
 
     function openPlaylist(json) {
         $tabCount++;
+        console.log(json);
         var tabId = $openTabs[json.id];
         if ($openTabs[json.id] !== undefined) {
             AIRTIME.showbuilder.switchTab($(".pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
@@ -1526,6 +1527,9 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.onResize = function() {
+        var h = $(".panel-header .nav").height();
+        $(".pl-content").css("margin-top", h + 4); // 8px extra for padding
+        $("#show_builder_table_wrapper").css("top", h + 4);
     };
 
     return AIRTIME;

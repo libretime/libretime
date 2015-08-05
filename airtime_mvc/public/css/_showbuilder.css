@@ -233,6 +233,19 @@ div.ColVis_collectionBackground {
     border: none;
 }
 
+/* Library Context Menu */
+
+.context-menu-item.icon {
+    min-height: 26px;
+    padding: 0 5px;
+    background-position: 4px 5px;
+}
+
+.context-menu-item > span {
+    padding: 0 20px;
+    line-height: 26px;
+}
+
 /* Library Search */
 
 #filter_options {
@@ -297,6 +310,8 @@ div.ColVis_collectionBackground {
     right: 4px;
     left: 4px;
     z-index: 1; /* Display above the content wrapper */
+
+    flex: 1 100%;
 }
 
 /* Timeline */
@@ -389,7 +404,7 @@ div.ColVis_collectionBackground {
     color: #efefef;
 }
 
-#side_playlist .zend_form dt {
+#edit-md-dialog .zend_form dt {
     float: left;
     width: 40%;
 
@@ -400,7 +415,7 @@ div.ColVis_collectionBackground {
     padding-right: 4px;
 }
 
-#side_playlist .zend_form dd {
+#edit-md-dialog .zend_form dd {
     float: left;
     width: auto;
 
@@ -411,7 +426,7 @@ div.ColVis_collectionBackground {
 /* Playlist/Block/Webstream Editors */
 
 #side_playlist {
-    margin-top: 34px;
+    /*margin-top: 34px;*/
     width: 100%; /* Override because we're using flexbox */
 
     overflow-x: hidden;

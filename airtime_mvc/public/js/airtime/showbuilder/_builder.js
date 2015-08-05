@@ -116,6 +116,7 @@ var AIRTIME = (function(AIRTIME){
         if (tab.hasClass("pl-content")) {
             AIRTIME.playlist.setAsActive();
         }
+        AIRTIME.playlist.onResize();
     };
 
 

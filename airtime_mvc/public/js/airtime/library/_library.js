@@ -507,8 +507,9 @@ var AIRTIME = (function(AIRTIME) {
             // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
             "aoColumns": [
                 /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          ,
+                /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "10px"         , "sClass"    : "library_checkbox" }  ,
                 /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "16px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
-                ///* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
+                /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
                 ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
                 /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 }          ,
                 /* Creator */         { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 }          ,
@@ -636,6 +637,9 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                // add checkbox
+                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
+
                 // add audio preview image/button
                 if (aData.ftype === "audioclip") {
                     $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png">');
@@ -759,9 +763,37 @@ var AIRTIME = (function(AIRTIME) {
 
         AIRTIME.library.setupLibraryToolbar(oTable);
 
+        $libTable.find("tbody").on("click", ".library_checkbox", function(ev) {
+            var $cb = $(this),
+                $tr = $cb.parents("tr"),
+            // Get the ID of the selected row
+                $rowId = $tr.attr("id");
+
+            if (!$tr.hasClass(LIB_SELECTED_CLASS)) {
+                if (ev.shiftKey && $previouslySelected !== undefined) {
+                    // If the selected row comes before the previously selected row,
+                    // we want to select previous rows, otherwise we select next
+                    if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
+                        $previouslySelected.prevUntil($tr).each(function(i, el) {
+                            mod.selectItem($(el));
+                        });
+                    } else {
+                        $previouslySelected.nextUntil($tr).each(function(i, el) {
+                            mod.selectItem($(el));
+                        });
+                    }
+                }
+
+                mod.selectItem($tr);
+                // Remember this row so we can properly multiselect
+                $previouslySelected = $tr;
+            } else {
+                mod.deselectItem($tr);
+            }
+        });
+
         $libTable.find("tbody").on("dblclick", "tr", function(ev) {
-            var $tr = $(this),
-                data = $tr.data("aData");
+            var data = $(this).data("aData");
             AIRTIME.library.dblClickAdd(data, data.ftype);
         });
 
@@ -811,6 +843,7 @@ var AIRTIME = (function(AIRTIME) {
                 mod.selectItem($(this));
             }
         });
+
         // begin context menu initialization.
         $.contextMenu({
             selector: '#library_display tr',
@@ -1219,7 +1252,7 @@ $(document).ready(function() {
 
     $(".media_type_selector").on("click", function() {
         if (!$(this).hasClass("selected")) {
-            // TODO: deselect any highlighted items when we switch filtering
+            AIRTIME.library.selectNone();
             $(".media_type_selector").each(function () {
                 $(this).removeClass("selected");
             });
