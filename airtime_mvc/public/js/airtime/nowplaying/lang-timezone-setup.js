@@ -7,11 +7,11 @@ $(document).ready(function() {
             width: 500,
             resizable: false,
             modal: true,
-            position:['center',50],
+            position:['center','center'],
             buttons: [
                 {
                     id: "setup-later",
-                    text: $.i18n._("Set Later"),
+                    text: $.i18n._("Not Now"),
                     "class": "btn",
                     click: function() {
                         $(this).dialog("close");
