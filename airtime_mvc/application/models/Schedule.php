@@ -215,6 +215,7 @@ SQL;
                 $currentMedia["ends"] = $currentMedia["show_ends"];
             }
 
+            $currentMediaName = "";
             $currentMediaFileId = $currentMedia["file_id"];
             $currentMediaStreamId = $currentMedia["stream_id"];
             if (isset($currentMediaFileId)) {
@@ -256,6 +257,7 @@ SQL;
             ->orderByDbStarts(Criteria::DESC)
             ->findOne();
         if (isset($previousMedia)) {
+            $previousMediaName = "";
             $previousMediaFileId = $previousMedia->getDbFileId();
             $previousMediaStreamId = $previousMedia->getDbStreamId();
             if (isset($previousMediaFileId)) {
