@@ -1096,6 +1096,13 @@ class Application_Model_Preference
 
     public static function GetSourceSwitchStatus($sourcename)
     {
+        // Scheduled play switch should always be "on".
+        // Even though we've hidden this element in the dashboard we should
+        // always make sure it's on or else a station's stream could go offline.
+        if ($sourcename == "scheduled_play") {
+            return "on";
+        }
+
         $value = self::getValue($sourcename."_switch");
         return ($value == null || $value == "off") ? 'off' : 'on';
     }
