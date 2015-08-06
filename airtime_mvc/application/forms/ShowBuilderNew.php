@@ -85,7 +85,7 @@ class Application_Form_ShowBuilderNew extends Zend_Form_SubForm
 
     private function getShowNames()
     {
-        $showNames = array("0" => "Filter by Show");
+        $showNames = array("0" => _("Filter by Show"));
 
         $shows = CcShowQuery::create()
             ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)

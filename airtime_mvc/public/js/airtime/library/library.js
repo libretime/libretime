@@ -345,8 +345,8 @@ var AIRTIME = (function(AIRTIME) {
                 item,
                 temp,
                 aMedia = [],
-                currentObjId = $("#side_playlist").find("#obj_id").val(),
-                currentObjType = $("#side_playlist").find("#obj_type").val(),
+                currentObjId = $(".side_playlist").find(".obj_id").val(),
+                currentObjType = $(".side_playlist").find(".obj_type").val(),
                 closeObj = false;
 
             // process selected files/playlists.
@@ -370,7 +370,7 @@ var AIRTIME = (function(AIRTIME) {
                 $.post(baseUrl+"playlist/close-playlist",
                     {"format": "json", "type": currentObjType},
                     function(json) {
-                        $("#side_playlist").empty().append(json.html);
+                        $(".side_playlist").empty().append(json.html);
                     });
             }
         }

@@ -809,6 +809,104 @@ var AIRTIME = (function(AIRTIME){
             }
         });
 
+        //begin context menu initialization.
+        $.contextMenu({
+            selector: '#show_builder tr.lib-audio:not(.sb-past)',
+            trigger: "right",
+
+            build: function($el, e) {
+                var items,
+                    $tr = $el,
+                    data = $tr.data("aData"),
+                    cursorClass = "cursor-selected-row",
+                    callback;
+
+                function processMenuItems(oItems) {
+
+                    //define a preview callback.
+                    if (oItems.preview !== undefined) {
+
+                        callback = function() {
+                            open_show_preview(data.instance, data.pos);
+                        };
+
+                        oItems.preview.callback = callback;
+                    }
+
+                    //define a select cursor callback.
+                    if (oItems.selCurs !== undefined) {
+
+                        callback = function() {
+                            var $tr = $(this).parents('tr').next();
+
+                            mod.selectCursor($tr);
+                        };
+
+                        oItems.selCurs.callback = callback;
+                    }
+
+                    //define a remove cursor callback.
+                    if (oItems.delCurs !== undefined) {
+
+                        callback = function() {
+                            var $tr = $(this).parents('tr').next();
+
+                            mod.removeCursor($tr);
+                        };
+
+                        oItems.delCurs.callback = callback;
+                    }
+
+                    //define a delete callback.
+                    if (oItems.del !== undefined) {
+
+                        callback = function() {
+                            AIRTIME.showbuilder.fnRemove([{
+                                id: data.id,
+                                timestamp: data.timestamp,
+                                instance: data.instance
+                            }]);
+                        };
+
+                        oItems.del.callback = callback;
+                    }
+
+                    //only show the cursor selecting options if the library is visible on the page.
+                    if ($tr.next().find('.marker').length === 0) {
+                        delete oItems.selCurs;
+                        delete oItems.delCurs;
+                    }
+                    //check to include either select or remove cursor.
+                    else {
+                        if ($tr.next().hasClass(cursorClass)) {
+                            delete oItems.selCurs;
+                        }
+                        else {
+                            delete oItems.delCurs;
+                        }
+                    }
+
+                    items = oItems;
+                }
+
+                request = $.ajax({
+                    url: baseUrl+"showbuilder/context-menu",
+                    type: "GET",
+                    data: {id : data.id, format: "json"},
+                    dataType: "json",
+                    async: false,
+                    success: function(json){
+                        processMenuItems(json.items);
+                    }
+                });
+
+                return {
+                    items: items
+                };
+
+            }
+        });
+
         var sortableConf = (function(){
             var origTrs,
                 aItemData = [],
@@ -973,7 +1071,7 @@ var AIRTIME = (function(AIRTIME){
         $toolbar = $(".sb-content .fg-toolbar:first");
         var footer = $(".sb-content .fg-toolbar:last"),
             timerange = $(".sb-timerange");
-        footer.append(timerange);
+        $toolbar.append(timerange);
 
         $menu = $("<div class='btn-toolbar'/>");
         $menu.append("<div class='btn-group'>" +

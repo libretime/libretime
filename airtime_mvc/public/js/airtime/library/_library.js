@@ -7,7 +7,8 @@ var AIRTIME = (function(AIRTIME) {
         LIB_SELECTED_CLASS = "lib-selected",
         chosenItems = {},
         visibleChosenItems = {},
-        $previouslySelected;
+        $previouslySelected,
+        flagForDeselection = false;
 
 
     // we need to know whether the criteria value is string or
@@ -253,6 +254,7 @@ var AIRTIME = (function(AIRTIME) {
 
             if ($el.length !== 0) {
                 mod.highlightItem($el);
+                mod.checkItem($el);
             }
         }
     };
@@ -277,6 +279,14 @@ var AIRTIME = (function(AIRTIME) {
         if (!$el.hasClass(LIB_SELECTED_CLASS)) {
             delete chosenItems[id];
         }
+    };
+
+    mod.checkItem = function($el) {
+        $el.find(".library_checkbox > input").prop('checked', true);
+    };
+
+    mod.uncheckItem = function($el) {
+        $el.find(".library_checkbox > input").prop('checked', false);
     };
 
     mod.highlightItem = function($el) {
@@ -310,11 +320,10 @@ var AIRTIME = (function(AIRTIME) {
     mod.selectCurrentPage = function() {
         $.fn.reverse = [].reverse;
         var $trs = $libTable.find("tbody").find("tr").reverse();
-        $trs.addClass(LIB_SELECTED_CLASS);
 
         $trs.each(function(i, el){
-            $el = $(this);
-            mod.addToChosen($el);
+            mod.selectItem($(el));
+            mod.checkItem($(el));
         });
 
         mod.checkToolBarIcons();
@@ -326,13 +335,11 @@ var AIRTIME = (function(AIRTIME) {
      * from gmail)
      */
     mod.deselectCurrentPage = function() {
-        var $trs = $libTable.find("tr"), id;
-        $trs.removeClass(LIB_SELECTED_CLASS);
+        var $trs = $libTable.find("tr");
 
         $trs.each(function(i, el){
-            $el = $(this);
-            id = $el.attr("id");
-            delete chosenItems[id];
+            mod.deselectItem($(el));
+            mod.uncheckItem($(el));
         });
 
         mod.checkToolBarIcons();
@@ -340,7 +347,10 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.selectNone = function() {
         var $trs = $libTable.find("tr");
-        $trs.removeClass(LIB_SELECTED_CLASS);
+        $trs.each(function(i, el){
+            mod.deselectItem($(el));
+            mod.uncheckItem($(el));
+        });
         $previouslySelected = undefined;
 
         chosenItems = {};
@@ -349,9 +359,20 @@ var AIRTIME = (function(AIRTIME) {
     };
 
     mod.fnDeleteItems = function(aMedia) {
-
         //Prevent the user from spamming the delete button while the AJAX request is in progress
         AIRTIME.button.disableButton("btn-group #sb-trash", false);
+        var openTabObjectIds = $(".obj_id"),
+            mediaIds = [];
+        for (var i in aMedia) {
+            mediaIds.push(aMedia[i].id);
+        }
+        openTabObjectIds.each(function(i, el) {
+            var v = $(el).val();
+            if ($.inArray(v, mediaIds)) {
+                AIRTIME.playlist.fnOpenPlaylist({id: v});
+                AIRTIME.playlist.closeTab();
+            }
+        });
 
         $.post(baseUrl+"library/delete",
             {"format": "json", "media": aMedia},
@@ -374,8 +395,8 @@ var AIRTIME = (function(AIRTIME) {
                 item,
                 temp,
                 aMedia = [],
-                currentObjId = $("#side_playlist").find("#obj_id").val(),
-                currentObjType = $("#side_playlist").find("#obj_type").val(),
+                currentObjId = $(".side_playlist.active-tab").find(".obj_id").val(),
+                currentObjType = $(".side_playlist.active-tab").find(".obj_type").val(),
                 closeObj = false;
 
             // process selected files/playlists.
@@ -763,35 +784,6 @@ var AIRTIME = (function(AIRTIME) {
 
         AIRTIME.library.setupLibraryToolbar(oTable);
 
-        $libTable.find("tbody").on("click", ".library_checkbox", function(ev) {
-            var $cb = $(this),
-                $tr = $cb.parents("tr"),
-            // Get the ID of the selected row
-                $rowId = $tr.attr("id");
-
-            if (!$tr.hasClass(LIB_SELECTED_CLASS)) {
-                if (ev.shiftKey && $previouslySelected !== undefined) {
-                    // If the selected row comes before the previously selected row,
-                    // we want to select previous rows, otherwise we select next
-                    if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
-                        $previouslySelected.prevUntil($tr).each(function(i, el) {
-                            mod.selectItem($(el));
-                        });
-                    } else {
-                        $previouslySelected.nextUntil($tr).each(function(i, el) {
-                            mod.selectItem($(el));
-                        });
-                    }
-                }
-
-                mod.selectItem($tr);
-                // Remember this row so we can properly multiselect
-                $previouslySelected = $tr;
-            } else {
-                mod.deselectItem($tr);
-            }
-        });
-
         $libTable.find("tbody").on("dblclick", "tr", function(ev) {
             var data = $(this).data("aData");
             AIRTIME.library.dblClickAdd(data, data.ftype);
@@ -802,33 +794,28 @@ var AIRTIME = (function(AIRTIME) {
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
 
-            if (ev.shiftKey && $previouslySelected !== undefined) {
-                if ($previouslySelected.attr("id") == $rowId) {
-                    return;
-                }
+            if (!$tr.hasClass(LIB_SELECTED_CLASS)) {
+                if (ev.shiftKey && $previouslySelected !== undefined) {
+                    if ($previouslySelected.attr("id") == $rowId) {
+                        return;
+                    }
 
-                // If the selected row comes before the previously selected row,
-                // we want to select previous rows, otherwise we select next
-                if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
-                    $previouslySelected.prevUntil($tr).each(function(i, el){
-                        mod.selectItem($(el));
-                    });
-                } else {
-                    $previouslySelected.nextUntil($tr).each(function(i, el){
-                        mod.selectItem($(el));
-                    });
+                    // If the selected row comes before the previously selected row,
+                    // we want to select previous rows, otherwise we select next
+                    if ($previouslySelected.prevAll("#" + $rowId).length !== 0) {
+                        $previouslySelected.prevUntil($tr).each(function (i, el) {
+                            mod.selectItem($(el));
+                        });
+                    } else {
+                        $previouslySelected.nextUntil($tr).each(function (i, el) {
+                            mod.selectItem($(el));
+                        });
+                    }
                 }
-
                 mod.selectItem($tr);
-            } else if (ev.ctrlKey) {
-                mod.selectItem($tr);
+                mod.checkItem($tr);
             } else {
-                if (!$tr.hasClass(LIB_SELECTED_CLASS)) {
-                    $("." + LIB_SELECTED_CLASS).each(function (i, el) {
-                        mod.deselectItem($(el))
-                    });
-                }
-                mod.selectItem($tr);
+                flagForDeselection = true;
             }
 
             // Remember this row so we can properly multiselect
@@ -836,11 +823,14 @@ var AIRTIME = (function(AIRTIME) {
         });
 
         $libTable.find("tbody").on("click", "tr", function(ev) {
-            if (!ev.ctrlKey && !ev.shiftKey) {
-                $("." + LIB_SELECTED_CLASS).each(function (i, el) {
-                    mod.deselectItem($(el))
-                });
-                mod.selectItem($(this));
+            //ev.preventDefault();
+
+            if (flagForDeselection) {
+                flagForDeselection = false;
+                mod.deselectItem($(this));
+                mod.uncheckItem($(this));
+            } else {
+                mod.checkItem($(this));
             }
         });
 
@@ -872,23 +862,20 @@ var AIRTIME = (function(AIRTIME) {
 
                     // define an edit callback.
                     if (oItems.edit !== undefined) {
-
                         if (data.ftype === "audioclip") {
                             callback = function() {
                                 $.get(oItems.edit.url, {format: "json"}, function(json){
-                                    buildEditMetadataDialog(json);
+                                    AIRTIME.playlist.fileMdEdit(json);
                                 });
                             };
                         } else if (data.ftype === "playlist" || data.ftype === "block") {
                             callback = function() {
-                                var url = baseUrl+'Playlist/edit';
-                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'new-playlist/edit');
                                 AIRTIME.playlist.validatePlaylistElements();
                             };
                         } else if (data.ftype === "stream") {
                             callback = function() {
-                                var url = baseUrl+'Webstream/edit';
-                                AIRTIME.playlist.fnEdit(data.id, data.ftype, url);
+                                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'new-webstream/edit');
                             }
                         } else {
                             throw new Exception($.i18n._("Unknown type: ") + data.ftype);

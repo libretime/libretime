@@ -350,7 +350,7 @@ function setupUI() {
     /* Activate or Deactivate shuffle button
      * It is only active if playlist is not empty
      */
-    var plContents = $('#spl_sortable').children();
+    var plContents = $('.spl_sortable').children();
     var shuffleButton = $('button[id="shuffle_button"], button[id="playlist_shuffle_button"], button[id="pl-bl-clear-content"]');
 
     if (!plContents.hasClass('spl_empty')) {
@@ -364,15 +364,15 @@ function setupUI() {
     }
     
     var dynamic_length = target_length;
-    if ($('#obj_type').val() == 'block') {
+    if ($('.obj_type').val() == 'block') {
         if (playlist_type == "0") {
             $('button[id="generate_button"]').show();
             $('button[id="shuffle_button"]').show();
-            $('#spl_sortable').show();
+            $('.spl_sortable').show();
         } else {
             $('button[id="generate_button"]').hide();
             $('button[id="shuffle_button"]').hide();
-            $('#spl_sortable').hide();
+            $('.spl_sortable').hide();
         }
     }
     
@@ -548,7 +548,7 @@ function removeButtonCheck() {
 }
 
 function enableLoadingIcon() {
-    $("#side_playlist").block({ 
+    $(".side_playlist").block({
         message: $.i18n._("Processing..."),
         theme: true,
         allowBodyStretch: true,
@@ -557,7 +557,7 @@ function enableLoadingIcon() {
 }
 
 function disableLoadingIcon() {
-    $("#side_playlist").unblock()
+    $(".side_playlist").unblock()
 }
 // We need to know if the criteria value will be a string
 // or numeric value in order to populate the modifier

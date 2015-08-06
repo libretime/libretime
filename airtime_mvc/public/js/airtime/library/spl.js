@@ -72,7 +72,7 @@ var AIRTIME = (function(AIRTIME){
             li = span.parents("li"),
             unqid = li.attr("unqid"),
             lastMod = getModified(),
-            type = $('#obj_type').val();
+            type = $('.obj_type').val();
         
         if (!isTimeValid(cueIn)){
             showError(span, $.i18n._("please put in a time '00:00:00 (.0)'"));
@@ -93,7 +93,7 @@ var AIRTIME = (function(AIRTIME){
 
                 setPlaylistContent(json);
 
-                li = $('#side_playlist li[unqid='+unqid+']');
+                li = $('.side_playlist li[unqid='+unqid+']');
                 li.find(".cue-edit").toggle();
                 highlightActive(li);
                 highlightActive(li.find('.spl_cue'));
@@ -109,7 +109,7 @@ var AIRTIME = (function(AIRTIME){
             li = span.parents("li"),
             unqid = li.attr("unqid"),
             lastMod = getModified(),
-            type = $('#obj_type').val();
+            type = $('.obj_type').val();
 
         if (!isTimeValid(cueOut)){
             showError(span, $.i18n._("please put in a time '00:00:00 (.0)'"));
@@ -131,7 +131,7 @@ var AIRTIME = (function(AIRTIME){
 
                 setPlaylistContent(json);
 
-                li = $('#side_playlist li[unqid='+unqid+']');
+                li = $('.side_playlist li[unqid='+unqid+']');
                 li.find(".cue-edit").toggle();
                 highlightActive(li);
                 highlightActive(li.find('.spl_cue'));
@@ -143,7 +143,7 @@ var AIRTIME = (function(AIRTIME){
         
         var url = baseUrl+"Playlist/set-cue",
             lastMod = getModified(),
-            type = $('#obj_type').val(),
+            type = $('.obj_type').val(),
             li,
             span;
         
@@ -176,7 +176,7 @@ var AIRTIME = (function(AIRTIME){
                 }
                 if (json.cue_error !== undefined) {
                     
-                    li = $('#side_playlist li[unqid='+id+']');
+                    li = $('.side_playlist li[unqid='+id+']');
                     
                     if (json.code === 0) {
                         
@@ -201,7 +201,7 @@ var AIRTIME = (function(AIRTIME){
 
                 setPlaylistContent(json);
 
-                li = $('#side_playlist li[unqid='+id+']');
+                li = $('.side_playlist li[unqid='+id+']');
                 li.find(".cue-edit").toggle();
                 highlightActive(li);
                 highlightActive(li.find('.spl_cue'));
@@ -213,7 +213,7 @@ var AIRTIME = (function(AIRTIME){
         
         var url = baseUrl+"Playlist/set-crossfade",
             lastMod = getModified(),
-            type = $('#obj_type').val();
+            type = $('.obj_type').val();
         
         $.post(url, 
             {format: "json", fadeIn: fadeIn, fadeOut: fadeOut, id1: id1, id2: id2, offset: offset, modified: lastMod, type: type}, 
@@ -229,7 +229,7 @@ var AIRTIME = (function(AIRTIME){
                 
                 setPlaylistContent(json);
 
-                $li = $('#side_playlist li[unqid='+id+']');
+                $li = $('.side_playlist li[unqid='+id+']');
                 $li.find('.crossfade').toggle();
                 highlightActive($li.find('.spl_fade_control'));
             });
@@ -245,7 +245,7 @@ var AIRTIME = (function(AIRTIME){
             li = span.parents("li"),
             unqid = li.attr("unqid"),
             lastMod = getModified(),
-            type = $('#obj_type').val();
+            type = $('.obj_type').val();
 
         if (!isFadeValid(fadeIn)){
             showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
@@ -267,7 +267,7 @@ var AIRTIME = (function(AIRTIME){
 
                 setPlaylistContent(json);
 
-                li = $('#side_playlist li[unqid='+unqid+']');
+                li = $('.side_playlist li[unqid='+unqid+']');
                 li.find('.crossfade').toggle();
                 highlightActive(li.find('.spl_fade_control'));
             });
@@ -283,7 +283,7 @@ var AIRTIME = (function(AIRTIME){
             li = span.parents("li"),
             unqid = li.attr("unqid"),
             lastMod = getModified(),
-            type = $('#obj_type').val();
+            type = $('.obj_type').val();
 
         if (!isFadeValid(fadeOut)){
             showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
@@ -305,7 +305,7 @@ var AIRTIME = (function(AIRTIME){
     
                 setPlaylistContent(json);
                 
-                li = $('#side_playlist li[unqid='+unqid+']');
+                li = $('.side_playlist li[unqid='+unqid+']');
                 li.find('.crossfade').toggle();
                 highlightActive(li.find('.spl_fade_control'));
             });
@@ -357,7 +357,7 @@ var AIRTIME = (function(AIRTIME){
     function editName() {
         var nameElement = $(this),
             lastMod = getModified(),
-            type = $('#obj_type').val();
+            type = $('.obj_type').val();
             //remove any newlines if user somehow snuck them in (easy to do if dragging/dropping text)
             nameElement.text(nameElement.text().replace("\n", ""));
        
@@ -401,8 +401,8 @@ var AIRTIME = (function(AIRTIME){
             .empty()
             .val(json.description);
         
-        $('#spl_sortable').off('focusout keydown');
-        $('#spl_sortable')
+        $('.spl_sortable').off('focusout keydown');
+        $('.spl_sortable')
         .empty()
         .append($html);
         setCueEvents();
@@ -413,7 +413,7 @@ var AIRTIME = (function(AIRTIME){
     }
     
     function setFadeIcon(){
-        var contents = $("#spl_sortable");
+        var contents = $(".spl_sortable");
         var show = contents.is(":visible");
         var empty = $(".spl_empty");
         
@@ -436,19 +436,19 @@ var AIRTIME = (function(AIRTIME){
     }
     
     function getId() {
-        return parseInt($("#obj_id").val(), 10);
+        return parseInt($(".obj_id").val(), 10);
     }
     
     function getModified() {
-        return parseInt($("#obj_lastMod").val(), 10);
+        return parseInt($(".obj_lastMod").val(), 10);
     }
     
     function setModified(modified) {
-        $("#obj_lastMod").val(modified);
+        $(".obj_lastMod").val(modified);
     }
     
     function openPlaylist(json) {
-        $("#side_playlist")
+        $(".side_playlist")
             .empty()
             .append(json.html);
                 
@@ -541,7 +541,7 @@ var AIRTIME = (function(AIRTIME){
     //sets events dynamically for playlist entries (each row in the playlist)
     function setPlaylistEntryEvents() {
         
-        $pl.delegate("#spl_sortable .ui-icon-closethick", 
+        $pl.delegate(".spl_sortable .ui-icon-closethick", 
                 {"click": function(ev){
                     var id;
                     id = parseInt($(this).attr("id").split("_").pop(), 10);
@@ -608,7 +608,7 @@ var AIRTIME = (function(AIRTIME){
     
     //sets events dynamically for the cue editor.
     function setCueEvents() {
-        var temp = $('#spl_sortable');
+        var temp = $('.spl_sortable');
         temp.on("focusout", ".spl_cue_in span", changeCueIn);
         temp.on("keydown", ".spl_cue_in span", submitOnEnter);
         
@@ -625,7 +625,7 @@ var AIRTIME = (function(AIRTIME){
     
     //sets events dynamically for the fade editor.
     function setFadeEvents() {
-        var temp = $('#spl_sortable');
+        var temp = $('.spl_sortable');
         temp.on("focusout", ".spl_fade_in span", changeFadeIn);
         temp.on("keydown", ".spl_fade_in span", submitOnEnter);
         
@@ -646,7 +646,7 @@ var AIRTIME = (function(AIRTIME){
         //main playlist fades events
         $pl.on("click", "#spl_crossfade", function() {
             var lastMod = getModified(),
-                type = $('#obj_type').val();
+                type = $('.obj_type').val();
 
             if ($(this).hasClass("ui-state-active")) {
                 $(this).removeClass("ui-state-active");
@@ -696,7 +696,7 @@ var AIRTIME = (function(AIRTIME){
                 span = $(this),
                 fadeIn = $.trim(span.text()), 
                 lastMod = getModified(),
-                type = $('#obj_type').val();
+                type = $('.obj_type').val();
             
             if (!isFadeValid(fadeIn)){
                 showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
@@ -720,7 +720,7 @@ var AIRTIME = (function(AIRTIME){
                 span = $(this),
                 fadeOut = $.trim(span.text()), 
                 lastMod = getModified(),
-                type = $('#obj_type').val();
+                type = $('.obj_type').val();
 
             if (!isFadeValid(fadeOut)){
                 showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
@@ -788,14 +788,14 @@ var AIRTIME = (function(AIRTIME){
             //stream url
             //default_length  
             //playlist name
-            var id = $pl.find("#obj_id").attr("value"); 
+            var id = $pl.find(".obj_id").attr("value"); 
             var description = $pl.find("#description").val();
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
             var name = $pl.find("#playlist_name_display").text(); 
             
             //hide any previous errors (if any)
-            $("#side_playlist .errors").empty().hide();
+            $(".side_playlist .errors").empty().hide();
         
             var url = baseUrl+'Webstream/save';
             $.post(url, 
@@ -807,23 +807,23 @@ var AIRTIME = (function(AIRTIME){
                             
                             if (!field[0]) {
                                 var elemId = "#"+s+"-error";
-                                var $div = $("#side_playlist " + elemId).text(field[1]).show();
+                                var $div = $(".side_playlist " + elemId).text(field[1]).show();
                             }
                         }
                     } else {
-                        var $status = $("#side_playlist .status");
+                        var $status = $(".side_playlist .status");
                         $status.html(json.statusMessage);
                         $status.show();
                         setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
 
-                        var $ws_id = $("#obj_id");
+                        var $ws_id = $(".obj_id");
                         $ws_id.attr("value", json.streamId);
 
                         var $ws_id = $("#ws_delete");
                         $ws_id.show();
 
 
-                        var length = $("#side_playlist #ws_length");
+                        var length = $(".side_playlist #ws_length");
                         length.text(json.length);
 
                         //redraw the library to show the new webstream
@@ -877,7 +877,7 @@ var AIRTIME = (function(AIRTIME){
                 block_desc = $('textarea[name="description"]').val(),
                 save_action = baseUrl+'Playlist/save',
                 obj_id = $('input[id="obj_id"]').val(),
-                obj_type = $('#obj_type').val(),
+                obj_type = $('.obj_type').val(),
                 lastMod = getModified(),
                 dt = $('table[id="library_display"]').dataTable();
             enableLoadingIcon();
@@ -1000,7 +1000,7 @@ var AIRTIME = (function(AIRTIME){
             };
         }());
 
-        $pl.find("#spl_sortable").sortable(sortableConf);
+        $pl.find(".spl_sortable").sortable(sortableConf);
         AIRTIME.playlist.validatePlaylistElements();
     }
     
@@ -1064,7 +1064,7 @@ var AIRTIME = (function(AIRTIME){
         stopAudioPreview();    
         id = (plid === undefined) ? getId() : plid;
         lastMod = getModified();
-        type = $('#obj_type').val();
+        type = $('.obj_type').val();
         url = baseUrl+'Playlist/delete';
 
         $.post(url, 
@@ -1081,7 +1081,7 @@ var AIRTIME = (function(AIRTIME){
         stopAudioPreview();    
         id = (wsid === undefined) ? getId() : wsid;
         lastMod = getModified();
-        type = $('#obj_type').val();
+        type = $('.obj_type').val();
         url = baseUrl+'Webstream/delete';
         
         $.post(url, 
@@ -1137,7 +1137,7 @@ var AIRTIME = (function(AIRTIME){
     
     function playlistRequest(sUrl, oData) {
         var lastMod,
-            obj_type = $('#obj_type').val();
+            obj_type = $('.obj_type').val();
         
         mod.disableUI();
         
@@ -1473,7 +1473,7 @@ var AIRTIME = (function(AIRTIME){
     
     mod.onReady = function() {
         $lib = $("#library_content");
-        $pl = $("#side_playlist");
+        $pl = $(".side_playlist");
 
         setWidgetSize();
         

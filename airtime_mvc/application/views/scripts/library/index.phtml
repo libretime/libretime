@@ -9,7 +9,7 @@ if ($this->showPlaylist) {
     $display = "display:none";
 }
 ?>
-<div id="side_playlist" class="pl-content ui-widget ui-widget-content block-shadow omega-block padded" style="height:697px; width:720px;<?php echo $display?>">
+<div class="side_playlist pl-content ui-widget ui-widget-content block-shadow omega-block padded" style="height:697px; width:720px;<?php echo $display?>">
     <?php if ($this->type == 'block') {
             echo $this->render('playlist/smart-block.phtml');
         } else if ($this->type == 'playlist') {

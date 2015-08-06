@@ -82,8 +82,8 @@ function openAudioPreview(p_event) {
     p_event.stopPropagation();
     
     var audioFileID = $(this).attr('audioFile');
-    var objId = $('#obj_id:first').attr('value');
-    var objType = $('#obj_type:first').attr('value');
+    var objId = $('.obj_id:first').attr('value');
+    var objType = $('.obj_type:first').attr('value');
     var playIndex = $(this).parent().parent().attr('id');
     playIndex = playIndex.substring(4); //remove the spl_
     
@@ -169,19 +169,18 @@ function getUsabilityHint() {
         var current_hint = $hint_div.html();
         if (json === "") {
             // there are no more hints to display to the user
-            $hint_div.hide();
+            $hint_div.hide("slow").addClass("hidden");
         } else if (current_hint !== json) {
             // we only change the message if it is new
             if ($hint_div.is(":visible")) {
-                $hint_div.hide();
+                $hint_div.hide("slow").addClass("hidden");
             }
             $hint_div.html(json);
-            $hint_div.show("slow");
-
+            $hint_div.show("slow").removeClass("hidden");
         } else {
             // hint is the same before we hid it so we just need to show it
             if ($hint_div.is(":hidden")) {
-                $hint_div.show();
+                $hint_div.show("slow").removeClass("hidden");
             }
         }
     });

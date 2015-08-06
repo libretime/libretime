@@ -35,7 +35,7 @@ var AIRTIME = (function(AIRTIME) {
                 btnText = $.i18n._('Add to current show');
             }
         } else {
-            var objType = $('#obj_type').val();
+            var objType = $('.active-tab .obj_type').val();
             if (objType === 'block') {
                 btnText = ' ' + $.i18n._('Add to current smart block');
             } else {
@@ -115,7 +115,7 @@ var AIRTIME = (function(AIRTIME) {
                     helper: function () {
 
                         var $el = $(this), selected = mod
-                                .getChosenAudioFilesLength(), container, message, li = $("#side_playlist ul[id='spl_sortable'] li:first"),
+                                .getChosenAudioFilesLength(), container, message, li = $(".side_playlist.active-tab ul.spl_sortable li:first"),
                             width = li.width(), height = 55;
                         if (width > 798) width = 798;
 
@@ -146,7 +146,7 @@ var AIRTIME = (function(AIRTIME) {
                         top: 30,
                         left: 100
                     },
-                    connectToSortable: '#spl_sortable'
+                    connectToSortable: '.active-tab .spl_sortable'
                 });
         }
     };

@@ -160,10 +160,10 @@ fieldset {
 }
 
 /* Clearfix */
-.clearfix:after, #side_playlist li:after { content: "."; display: block;    height: 0; clear: both;  visibility: hidden;}
-.clearfix, #side_playlist li {    display: inline-block; }
+.clearfix:after, .side_playlist li:after { content: "."; display: block;    height: 0; clear: both;  visibility: hidden;}
+.clearfix, .side_playlist li {    display: inline-block; }
 * html .clearfix, * html li { height: 1%;}
-.clearfix, #side_playlist li {    display: block;    }
+.clearfix, .side_playlist li {    display: block;    }
 
 /* Master Panel */
 
@@ -2000,19 +2000,19 @@ span.errors.sp-errors{
 #show_content_dialog .datatable {
     margin-top:8px;
 }
-.simple-formblock.metadata, #side_playlist .simple-formblock.metadata {
+.simple-formblock.metadata, .side_playlist .simple-formblock.metadata {
     border:none;
     width:auto;
     display:block;
     padding: 2px;
 }
-#side_playlist .simple-formblock.metadata .input_text, #side_playlist .simple-formblock.metadata .input_text_area {
+.side_playlist .simple-formblock.metadata .input_text, .side_playlist .simple-formblock.metadata .input_text_area {
     width:95%;
 }
-#side_playlist .simple-formblock.metadata.simple-formblock dd {
+.side_playlist .simple-formblock.metadata.simple-formblock dd {
     width:70%;
 }
-#side_playlist h3.plain {
+.side_playlist h3.plain {
     float:none;
     font-size:18px;
     margin:2px 0 20px 0;
@@ -3345,8 +3345,13 @@ dd .stream-status {
  * absolute positioning in Airtime) when we want
  * to focus on responsive design.
  */
-.usability_hint + .wrapper {
+.usability_hint:not(.hidden) + .wrapper {
     top: 170px;
+
+    -webkit-transition: top 0.2s linear;
+    -moz-transition: top 0.2s linear;
+    -o-transition: top 0.2s linear;
+    transition: top 0.2s linear;
 }
 
 .usability_hint {

@@ -25,6 +25,11 @@ div.ColVis_collectionBackground {
     flex-flow: row wrap;
 
     overflow: auto;
+
+    -webkit-transition: top 0.2s linear;
+    -moz-transition: top 0.2s linear;
+    -o-transition: top 0.2s linear;
+    transition: top 0.2s linear;
 }
 
 /* Usability hint */
@@ -65,6 +70,8 @@ div.ColVis_collectionBackground {
 
 .content-pane {
     position: relative;
+    box-sizing: border-box;
+    height: 100%;
 
     border: 1px solid #202020;
     border-top: 1px solid #353535;
@@ -207,6 +214,7 @@ div.ColVis_collectionBackground {
     right: 0;
     left: 0;
     bottom: 0;
+    height: 36px;
 }
 
 #library_display_processing {
@@ -337,9 +345,10 @@ div.ColVis_collectionBackground {
 }
 
 .sb-options-form {
-    position: relative;
-    padding: 5px;
-    float: left;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
 }
 
 .sb-options-form label {
@@ -348,8 +357,8 @@ div.ColVis_collectionBackground {
 }
 
 #sb_show_filter {
-    float: right;
-    margin-left: 4px;
+    right: 0;
+    position: absolute;
 }
 
 .nav-tabs {
@@ -425,7 +434,7 @@ div.ColVis_collectionBackground {
 
 /* Playlist/Block/Webstream Editors */
 
-#side_playlist {
+.side_playlist {
     /*margin-top: 34px;*/
     width: 100%; /* Override because we're using flexbox */
 
@@ -441,7 +450,7 @@ div.ColVis_collectionBackground {
     padding: 4px;
 }
 
-#spl_sortable .list-item-container {
+.spl_sortable .list-item-container {
     cursor: move;
 }
 
@@ -497,6 +506,41 @@ div.ColVis_collectionBackground {
 .ColVis_collection.TableTools_collection.ui-buttonset.ui-buttonset-multi {
     max-height: 50%;
     overflow: auto;
+}
+
+#show_builder .ColVis.TableTools {
+    margin: 0;
+    position: absolute;
+    top: 36px;
+    right: 6px;
+}
+
+.ColVis.TableTools {
+    margin: 5px 5px 0 0;
+}
+
+.ColVis.TableTools > button {
+    padding: 3px 9px;
+}
+
+#show_builder .fg-toolbar > .btn-toolbar {
+    position: absolute;
+    top: 36px;
+    left: 6px;
+    padding: 0;
+}
+
+#show_builder .dataTables_scrolling {
+    top: 69px;
+}
+
+.sb-padded > .fg-toolbar {
+    height: 66px;
+}
+
+.fg-toolbar .btn-toolbar {
+    margin: 0;
+    padding: 5px;
 }
 
 .datatable tr, .datatable td {
