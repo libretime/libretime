@@ -22,7 +22,7 @@
     </div>
   <div class="source-info-block">
  	<h3><?php echo _("Source Streams") ?></h3>
-    <ul>
+    <ul style="padding-top: 10px;">
       <li>
         <div id="master_dj_div" class="source-label">
           <a id="master_dj" class="source-kick-button" onclick="kickSource(this)"></a>
@@ -39,12 +39,6 @@
         </div>
         <div class="line-to-switch"></div>
         <a href="#" id="live_dj" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->live_dj_switch?></span></a>
-        <div class="line-to-on-air"></div>
-      </li>
-      <li>
-        <div id="scheduled_play_div" class="source-label"><?php echo " "._("Scheduled Play") ?></div>
-        <div class="line-to-switch"></div>
-        <a href="#" id="scheduled_play" class="source-switch-button" onclick="setSwitchListener(this);"><span><?php echo $this->scheduled_play_switch?></span></a>
         <div class="line-to-on-air"></div>
       </li>
     </ul>
