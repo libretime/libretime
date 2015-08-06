@@ -13,6 +13,7 @@ var AIRTIME = (function(AIRTIME){
         showInstanceIds = [],
         headerFooter = [],
         DISABLED_CLASS = 'ui-state-disabled',
+        selected,
         $previouslySelected;
 
     if (AIRTIME.showbuilder === undefined) {
@@ -280,9 +281,10 @@ var AIRTIME = (function(AIRTIME){
         checkError(json);
 
         mod.getSelectedCursors();
+        selected = $(".sb-selected");
         oSchedTable.fnDraw();
-
         mod.enableUI();
+
         //Unneccessary reload of the library pane after moving tracks in the showbuilder pane.
         //$("#library_content").find("#library_display").dataTable().fnStandingRedraw();
 
@@ -343,7 +345,7 @@ var AIRTIME = (function(AIRTIME){
                 {"items": aItems, "format": "json"},
                 mod.fnItemCallback
             );
-        }else{
+        } else {
             mod.enableUI();
         }
     };
@@ -468,7 +470,7 @@ var AIRTIME = (function(AIRTIME){
                 //sure everything works properly.
                 for (i = 0, length = a.length; i < length; i++) {
                     if (typeof(a[i]) === "string") {
-                        a[i] = (a[i] === "true") ? true : false;
+                        a[i] = (a[i] === "true");
                     }
                 }
 
@@ -733,6 +735,14 @@ var AIRTIME = (function(AIRTIME){
 
 
                 mod.checkToolBarIcons();
+
+                var sid;
+                if (selected !== undefined) {
+                    selected.each(function (i, el) {
+                        sid = $(el).attr("id");
+                        $("#" + sid).addClass(SB_SELECTED_CLASS);
+                    });
+                }
             },
 
             // R = ColReorder, C = ColVis

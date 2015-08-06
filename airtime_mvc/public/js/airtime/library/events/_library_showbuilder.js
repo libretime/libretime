@@ -197,7 +197,7 @@ var AIRTIME = (function(AIRTIME) {
     function addToCurrentOrNext(arr) {
         var el;
         // Add to the end of the current show by getting the footer
-        el = $(".sb-footer.sb-current-show");
+        el = $(".sb-footer.sb-future:first");
         var data = el.prev().data("aData");
 
         if (data === undefined) {
