@@ -90,6 +90,7 @@ class NewPlaylistController extends Zend_Controller_Action
 
                 $this->view->form = $form;
                 $this->view->obj = $obj;
+                $this->view->type = "sb";
                 $this->view->id = $obj->getId();
 
                 if ($isJson) {
@@ -99,6 +100,7 @@ class NewPlaylistController extends Zend_Controller_Action
                 }
             } else {
                 $this->view->obj = $obj;
+                $this->view->type = "pl";
                 $this->view->id = $obj->getId();
                 if ($isJson) {
                     return $this->view->html = $this->view->render($viewPath);

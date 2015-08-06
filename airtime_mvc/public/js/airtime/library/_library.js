@@ -182,7 +182,7 @@ var AIRTIME = (function(AIRTIME) {
         var selected = mod.getChosenItemsLength(),
             check = false;
 
-        if (selected === 1) {
+        if (selected >= 1) {
             check = true;
         }
 
@@ -364,11 +364,12 @@ var AIRTIME = (function(AIRTIME) {
         var openTabObjectIds = $(".obj_id"),
             mediaIds = [];
         for (var i in aMedia) {
-            mediaIds.push(aMedia[i].id);
+            mediaIds.push(aMedia[i].id.toString());
         }
+
         openTabObjectIds.each(function(i, el) {
             var v = $(el).val();
-            if ($.inArray(v, mediaIds)) {
+            if ($.inArray(v, mediaIds) > -1) {
                 AIRTIME.playlist.fnOpenPlaylist({id: v});
                 AIRTIME.playlist.closeTab();
             }
@@ -805,10 +806,12 @@ var AIRTIME = (function(AIRTIME) {
                     if ($previouslySelected.prevAll("#" + $rowId).length !== 0) {
                         $previouslySelected.prevUntil($tr).each(function (i, el) {
                             mod.selectItem($(el));
+                            mod.checkItem($(el));
                         });
                     } else {
                         $previouslySelected.nextUntil($tr).each(function (i, el) {
                             mod.selectItem($(el));
+                            mod.checkItem($(el));
                         });
                     }
                 }
@@ -1211,11 +1214,11 @@ var validationTypes = {
 };
 
 $(document).ready(function() {
-    $('#editmdsave').live("click", function() {
+    $('.active-tab .md-save').live("click", function() {
         var file_id = $('#file_id').val(),
-            data = $("#edit-md-dialog form").serializeArray();
+            data = $(".active-tab #edit-md-dialog form").serializeArray();
         $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
-            $("#edit-md-dialog").dialog().remove();
+            //$("#edit-md-dialog").dialog().remove();
 
             // don't redraw the library table if we are on calendar page
             // we would be on calendar if viewing recorded file metadata
@@ -1225,10 +1228,6 @@ $(document).ready(function() {
         });
 
         AIRTIME.playlist.closeTab();
-    });
-
-    $('#editmdcancel').live("click", function() {
-        $("#edit-md-dialog").dialog().remove();
     });
 
     $('#edit-md-dialog').live("keyup", function(event) {

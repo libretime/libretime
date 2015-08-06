@@ -395,7 +395,15 @@ div.ColVis_collectionBackground {
     cursor: default;
 }
 
+.nav-tabs .close-round {
+    margin: 1px 0 0 10px;
+}
+
 /* Media editors */
+
+textarea {
+    resize: none;
+}
 
 /* File Metadata Editor */
 
@@ -434,20 +442,59 @@ div.ColVis_collectionBackground {
 
 /* Playlist/Block/Webstream Editors */
 
+.inner_playlist_wrapper {
+    flex: 1 100%;
+}
+
 .side_playlist {
-    /*margin-top: 34px;*/
+    position: relative;
     width: 100%; /* Override because we're using flexbox */
 
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    position: relative;
+    overflow: hidden;
 
     flex: 1;
 }
 
+.side_playlist h3 {
+    color: #efefef;
+    font-size: 20px;
+}
+
+.side_playlist .playlist_title h3 a:hover {
+     background-color: transparent;
+}
+
+.side_playlist label, .side_playlist h4, .side_playlist span {
+    color: #efefef;
+    font-size: 14px;
+    font-weight: normal;
+}
+
 .editor_pane_wrapper {
-    padding: 4px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column;
+    flex-flow: column;
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    top: 4px;
+    left: 4px;
+}
+
+.spl-no-margin {
+    margin: 0;
+    padding-bottom: 4px;
+}
+
+.spl_sortable {
+    position: relative;
+    overflow: auto;
+    flex: 1 100%;
+    padding: 0;
 }
 
 .spl_sortable .list-item-container {
@@ -530,6 +577,7 @@ div.ColVis_collectionBackground {
     padding: 0;
 }
 
+/* Hacky stuff here */
 #show_builder .dataTables_scrolling {
     top: 69px;
 }
@@ -542,6 +590,7 @@ div.ColVis_collectionBackground {
     margin: 0;
     padding: 5px;
 }
+/* ~~~~~~~~~~~~~~~~ */
 
 .datatable tr, .datatable td {
     border: none !important;

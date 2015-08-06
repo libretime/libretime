@@ -303,19 +303,23 @@ var AIRTIME = (function(AIRTIME) {
                 return;
             }
 
-            var data = $(".lib-selected:first").data("aData");
+            var selected = $(".lib-selected");
 
-            if (data.ftype === "audioclip") {
-                $.get(baseUrl + "library/edit-file-md/id/" + data.id, {format: "json"}, function(json){
-                    AIRTIME.playlist.fileMdEdit(json);
-                    //buildEditMetadataDialog(json);
-                });
-            } else if (data.ftype === "playlist" || data.ftype === "block") {
-                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'new-playlist/edit');
-                AIRTIME.playlist.validatePlaylistElements();
-            } else if (data.ftype === "stream") {
-                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'new-webstream/edit');
-            }
+            selected.each(function(i, el) {
+                var data = $(el).data("aData");
+
+                if (data.ftype === "audioclip") {
+                    $.get(baseUrl + "library/edit-file-md/id/" + data.id, {format: "json"}, function(json){
+                        AIRTIME.playlist.fileMdEdit(json);
+                        //buildEditMetadataDialog(json);
+                    });
+                } else if (data.ftype === "playlist" || data.ftype === "block") {
+                    AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'new-playlist/edit');
+                    AIRTIME.playlist.validatePlaylistElements();
+                } else if (data.ftype === "stream") {
+                    AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'new-webstream/edit');
+                }
+            });
         });
 
         mod.createToolbarDropDown();

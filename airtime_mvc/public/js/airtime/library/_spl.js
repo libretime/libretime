@@ -363,7 +363,7 @@ var AIRTIME = (function(AIRTIME){
             nameElement.text(nameElement.text().replace("\n", ""));
 
         var name = $pl.find("#playlist_name_display").text();
-        $(".nav.nav-tabs .active a").text(name);
+        $(".nav.nav-tabs .active a > span.tab-name").text(name);
     }
 
     function redrawLib() {
@@ -435,67 +435,65 @@ var AIRTIME = (function(AIRTIME){
     /*
      * Should all be moved to builder.js eventually
      */
-    function openFileMdEditor(json) {
-        var tabId = $openTabs[json.id];
-        if ($openTabs[json.id] !== undefined) {
-            AIRTIME.showbuilder.switchTab($(".pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
-            return;
+    function buildNewTab(json) {
+        var tabId = $openTabs[json.type + json.id];
+        if (tabId !== undefined) {
+            AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
+            return undefined;
         }
         $tabCount++;
 
-        var wrapper = "<div class='side_playlist pl-content pl-tab-content-" + $tabCount + "'><div class='editor_pane_wrapper'></div></div>",
-            t = $("#show_builder").append(wrapper).find(".pl-tab-content-" + $tabCount),
+        var wrapper = "<div id='pl-tab-content-" + $tabCount + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
+            t = $("#show_builder").append(wrapper).find("#pl-tab-content-" + $tabCount),
             pane = $(".editor_pane_wrapper:last"),
-            name = pane.append(json.dialog).find("#track_title").val() + $.i18n._(" - Metadata Editor"),
-            tab = "<li id='pl-tab-" + $tabCount + "' role='presentation' class='active'><a href='#'>" + name + "</a></li>",
+            name = json.type == "md" ?  // file
+                pane.append(json.html).find("#track_title").val() + $.i18n._(" - Metadata Editor")
+                : pane.append(json.html).find("#playlist_name_display").text(),
+            tab =
+                "<li tab-id='" + $tabCount + "' tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
+                    "<a href='#'><span class='tab-name'></span>" +
+                        "<span href='#' class='close-round lib_pl_close'></span>" +
+                    "</a>" +
+                "</li>",
             tabs = $(".nav.nav-tabs");
 
         if (json.id) {
-            $openTabs[json.id] = $tabCount;
+            $openTabs[json.type + json.id] = $tabCount;
         }
 
         $(".nav.nav-tabs li").removeClass("active");
         tabs.append(tab);
-        var newTab = $("#pl-tab-" + $tabCount);
+        tabs.find("#pl-tab-" + $tabCount + " span.tab-name").text(name);
 
-        newTab.on("click", function() {
-            AIRTIME.showbuilder.switchTab(t, newTab);
+        var newTab = $("#pl-tab-" + $tabCount);
+        AIRTIME.showbuilder.switchTab(t, newTab);
+
+        return {wrapper: pane, tab: newTab, pane: t};
+    }
+
+    function openFileMdEditor(json) {
+        var newTab = buildNewTab(json);
+        if (newTab === undefined) {
+            return;
+        }
+        newTab.tab.on("click", function() {
+            AIRTIME.showbuilder.switchTab(newTab.pane, newTab.tab);
         });
-        pane.find("#editmdcancel").on("click", function() {
+        newTab.wrapper.find(".md-cancel").on("click", function() {
             closeTab();
         });
-        AIRTIME.showbuilder.switchTab(t, newTab);
     }
 
     function openPlaylist(json) {
-        var tabId = $openTabs[json.id];
-        if ($openTabs[json.id] !== undefined) {
-            AIRTIME.showbuilder.switchTab($(".pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
+        var newTab = buildNewTab(json);
+        if (newTab === undefined) {
             return;
         }
-        $tabCount++;
-
-        var wrapper = "<div class='side_playlist pl-content pl-tab-content-" + $tabCount + "'><div class='editor_pane_wrapper'></div></div>",
-            t = $("#show_builder").append(wrapper).find(".pl-tab-content-" + $tabCount),
-            pane = $(".editor_pane_wrapper:last"),
-            name = pane.append(json.html).find("#playlist_name_display").text(),
-            tab = "<li id='pl-tab-" + $tabCount + "' role='presentation' class='active'><a href='#'>" + name + "</a></li>",
-            tabs = $(".nav.nav-tabs");
-
-        if (json.id) {
-            $openTabs[json.id] = $tabCount;
-        }
-
-        $(".nav.nav-tabs li").removeClass("active");
-        tabs.append(tab);
-        var newTab = $("#pl-tab-" + $tabCount);
-
-        newTab.on("click", function() {
-            AIRTIME.showbuilder.switchTab(t, newTab);
+        newTab.tab.on("click", function() {
+            AIRTIME.showbuilder.switchTab(newTab.pane, newTab.tab);
             $.post(baseUrl+'new-playlist/edit',
-                {format: "json", id: t.find(".obj_id").val(), type: t.find(".obj_type").val()});
+                {format: "json", id: newTab.pane.find(".obj_id").val(), type: newTab.pane.find(".obj_type").val()});
         });
-        AIRTIME.showbuilder.switchTab(t, newTab);
         AIRTIME.playlist.init();
 
         // functions in smart_blockbuilder.js
@@ -516,10 +514,14 @@ var AIRTIME = (function(AIRTIME){
     }
 
     function closeTab() {
-        delete $openTabs[$(".active-tab").find(".obj_id").val()];
-        $(".nav.nav-tabs .active").remove();
+        var pane = $(".active-tab"),
+            tab = $(".nav.nav-tabs .active"),
+            toPane = pane.next().length > 0 ? pane.next() : pane.prev(),
+            toTab = tab.next().length > 0 ? tab.next() : tab.prev();
+        delete $openTabs[tab.attr("tab-type") + pane.find(".obj_id").val()];
+        tab.remove();
         $pl.remove();
-        AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $("#timeline-tab"));
+        AIRTIME.showbuilder.switchTab(toPane, toTab);
     }
 
     mod.closeTab = function() {
@@ -901,7 +903,10 @@ var AIRTIME = (function(AIRTIME){
             });
         });
 
-        $pl.on("click", "#lib_pl_close", function() {
+        $(".lib_pl_close").unbind().click(function() {
+            var tabId = $(this).closest("li").attr("tab-id");
+            AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
+
             $pl.hide();
             // We need to update the text on the add button
             AIRTIME.library.checkAddButton();

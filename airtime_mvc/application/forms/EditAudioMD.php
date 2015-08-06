@@ -171,7 +171,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         // Add the submit button
         $this->addElement('button', 'editmdsave', array(
             'ignore'     => true,
-            'class'      => 'btn btn-small',
+            'class'      => 'btn btn-small md-save',
             'label'      => _('Save'),
             'decorators' => array(
                 'ViewHelper'

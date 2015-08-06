@@ -459,7 +459,9 @@ class LibraryController extends Zend_Controller_Action
         }
 
         $this->view->form = $form;
-        $this->view->dialog = $this->view->render('library/edit-file-md.phtml');
+        $this->view->id = $file_id;
+        $this->view->type = "md";
+        $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
 
     public function getFileMetadataAction()
