@@ -167,10 +167,10 @@ class LoginController extends Zend_Controller_Action
                         $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
                     }
                 } else {
-                    $form->email->addError($this->view->translate(_("There was a problem sending the recovery email.")));
+                    $form->email->addError($this->view->translate(sprintf(_pro("That username or email address could not be found. If you are the station owner, you should <a href=\"%s\">reset your here</a>."), WHMCS_PASSWORD_RESET_URL)));
                 }
-            } else {
-                $form->email->addError($this->view->translate(sprintf(_pro("We couldn't find the email you entered - you can also try <a href=\"%s\">here</a>."), WHMCS_PASSWORD_RESET_URL)));
+            } else { //Form is not valid
+                $form->email->addError($this->view->translate(_("There was a problem with the username or email address you entered.")));
             }
         }
 
