@@ -38,6 +38,7 @@ div.ColVis_collectionBackground {
 /* Usability hint */
 
 .usability_hint {
+    left: 130px;
     flex: 0 100%;
     width: 100%;
 }
@@ -493,6 +494,10 @@ textarea {
     bottom: 4px;
     top: 4px;
     left: 4px;
+}
+
+.inner_editor_wrapper {
+    width: 100%;
 }
 
 .spl-no-margin {

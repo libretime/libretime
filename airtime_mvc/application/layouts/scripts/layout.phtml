@@ -78,9 +78,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <?php endif; //suspended ?>
 </div>
 
-<?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
-<div class="usability_hint" <?php if ($hint == "") { echo "style='display:none'"; } ?>><?php echo $hint; ?></div>
-
 <div id="media_type_nav"> <!-- class="content-pane" -->
     <div class="btn-group">
         <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
@@ -103,6 +100,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="media_type_selector" selection_id="3"><?php echo _("Smart Blocks") ?></div>
     <div class="media_type_selector" selection_id="4"><?php echo _("Webstreams") ?></div>
 </div>
+
+<?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
+<div class="usability_hint" <?php if ($hint == "") { echo "style='display:none'"; } ?>><?php echo $hint; ?></div>
 
 <div class="wrapper dropzone" id="content">
     <?php echo $this->layout()->content ?>

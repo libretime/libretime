@@ -775,51 +775,6 @@ var AIRTIME = (function(AIRTIME){
             "bScrollCollapseY": false
         });
 
-        //$sbTable.find("tbody").on("mousedown", "tr:not(.sb-past, .sb-empty)", function(ev) {
-        //
-        //    var $tr = $(this),
-        //    // Get the ID of the selected row
-        //        $rowId = $tr.attr("id");
-        //
-        //    if (ev.shiftKey && $previouslySelected !== undefined) {
-        //        if ($previouslySelected.attr("id") == $rowId) {
-        //            return;
-        //        }
-        //
-        //        // If the selected row comes before the previously selected row,
-        //        // we want to select previous rows, otherwise we select next
-        //        if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
-        //            $previouslySelected.prevUntil($tr).each(function(i, el){
-        //                $(el).addClass(SB_SELECTED_CLASS);
-        //            });
-        //        } else {
-        //            $previouslySelected.nextUntil($tr).each(function(i, el){
-        //                $(el).addClass(SB_SELECTED_CLASS);
-        //            });
-        //        }
-        //        $tr.addClass(SB_SELECTED_CLASS);
-        //    } else if (ev.ctrlKey && $previouslySelected !== undefined) {
-        //        $tr.addClass(SB_SELECTED_CLASS);
-        //    } else {
-        //        if (!$tr.hasClass(SB_SELECTED_CLASS)) {
-        //            $("."+SB_SELECTED_CLASS).removeClass(SB_SELECTED_CLASS);
-        //        }
-        //        $tr.addClass(SB_SELECTED_CLASS);
-        //    }
-        //
-        //    // Remember this row so we can properly multiselect
-        //    $previouslySelected = $tr;
-        //
-        //    mod.checkToolBarIcons();
-        //});
-        //
-        //$sbTable.find("tbody").on("click", "tr:not(.sb-past, .sb-empty)", function(ev) {
-        //    if (!ev.ctrlKey && !ev.shiftKey) {
-        //        $("."+SB_SELECTED_CLASS).removeClass(SB_SELECTED_CLASS);
-        //        $(this).addClass(SB_SELECTED_CLASS);
-        //    }
-        //});
-
         $sbTable.find("tbody").on("mousedown", "tr:not(.sb-past, .sb-empty)", function(ev) {
             var $tr = $(this),
             // Get the ID of the selected row
