@@ -38,11 +38,9 @@ class LoginController extends Zend_Controller_Action
         
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/login.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
         $form = new Application_Form_Login();
 
-        $message = _("Please enter your user name and password");
+        $message = _("Please enter your username and password.");
 
         if ($request->isPost()) {
             // if the post contains recaptcha field, which means form had recaptcha field.
@@ -132,12 +130,12 @@ class LoginController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
-        
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/login/password-restore.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
-        
+
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         //uses separate layout without a navigation.
@@ -146,17 +144,18 @@ class LoginController extends Zend_Controller_Action
         $form = new Application_Form_PasswordRestore();
 
         $request = $this->getRequest();
-        if ($request->isPost() && $form->isValid($request->getPost())) {
-            $query = CcSubjsQuery::create();
-            if (empty($form->username->getValue())) {
-                $query->filterByDbEmail($form->email->getValue());
-            } else if (empty($form->email->getValue())) {
-                $query->filterByDbLogin($form->username->getValue());
-            } else {
-                $query->filterByDbEmail($form->email->getValue())
-                      ->filterByDbLogin($form->username->getValue());
-            }
-            $user = $query->findOne();
+        if ($request->isPost()) {
+            if ($form->isValid($request->getPost())) {
+                $query = CcSubjsQuery::create();
+                if (empty($form->username->getValue())) {
+                    $query->filterByDbEmail($form->email->getValue());
+                } else if (empty($form->email->getValue())) {
+                    $query->filterByDbLogin($form->username->getValue());
+                } else {
+                    $query->filterByDbEmail($form->email->getValue())
+                        ->filterByDbLogin($form->username->getValue());
+                }
+                $user = $query->findOne();
 
                 if (!empty($user)) {
                     $auth = new Application_Model_Auth();
@@ -171,8 +170,9 @@ class LoginController extends Zend_Controller_Action
                     $form->email->addError($this->view->translate(_("There was a problem sending the recovery email.")));
                 }
             } else {
-                $form->email->addError($this->view->translate(_("We couldn't find the email you entered - you can also try <a href='".WHMCS_PASSWORD_RESET_URL."'>here</a>.")));
+                $form->email->addError($this->view->translate(sprintf(_pro("We couldn't find the email you entered - you can also try <a href=\"%s\">here</a>."), WHMCS_PASSWORD_RESET_URL)));
             }
+        }
 
         $this->view->form = $form;
     }
