@@ -13,6 +13,8 @@ class ShowBuilderController extends Zend_Controller_Action {
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
         $this->view->headScript()->appendScript(Application_Common_GoogleAnalytics::generateGoogleTagManagerDataLayerJavaScript());
 
+        $this->view->headLink()->appendStylesheet($baseUrl . 'css/redmond/_jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version']);
+
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');

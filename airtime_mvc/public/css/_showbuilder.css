@@ -211,6 +211,16 @@ div.ColVis_collectionBackground {
     color: #efefef;
 }
 
+#library_content .icon-white {
+    margin-right: 4px;
+}
+
+div.btn > span
+{
+    color: red;
+}
+
+
 .fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
     position: absolute;
     right: 0;
@@ -559,7 +569,7 @@ textarea {
     width: 130px;
 
     flex: 1 auto;
-    padding: 4px;
+    padding: 0px;
     /*margin-right: 10px;*/
     /*text-align: center;*/
 
@@ -572,9 +582,10 @@ textarea {
     box-shadow: 0 2px 5px rgba(0,0,0,.35);
 
     z-index: 100;
+    text-align: left;
 }
 
-#media_type_nav div {
+#media_type_nav .btn-group {
     padding: 4px;
 }
 
@@ -589,28 +600,31 @@ textarea {
     font-family: Roboto, "Open Sans", sans-serif;
     font-size: 16px;
     font-weight: 400;
-    margin: 10px 10px 0 0;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    /*margin: 20px 20px 0 5px;*/
+    padding: 10px 10px 10px 10px;
 
-    -webkit-transition: color 0.2s linear;
-    -moz-transition: color 0.2s linear;
-    -o-transition: color 0.2s linear;
-    transition: color 0.2s linear;
+    -webkit-transition: color 0.1s linear;
+    -moz-transition: color 0.1s linear;
+    -o-transition: color 0.1s linear;
+    transition: color 0.1s linear;
 }
 
 .media_type_selector.selected {
     color: #fff;
-    -webkit-transition: color 0.2s linear;
-    -moz-transition: color 0.2s linear;
-    -o-transition: color 0.2s linear;
-    transition: color 0.2s linear;
+    background-color: #444;
+    -webkit-transition: color 0.1s linear;
+    -moz-transition: color 0.1s linear;
+    -o-transition: color 0.1s linear;
+    transition: color 0.1s linear;
 }
 
 .media_type_selector:hover {
     color: #fff;
-    -webkit-transition: color 0.2s linear;
-    -moz-transition: color 0.2s linear;
-    -o-transition: color 0.2s linear;
-    transition: color 0.2s linear;
+    -webkit-transition: color 0.1s linear;
+    -moz-transition: color 0.1s linear;
+    -o-transition: color 0.1s linear;
+    transition: color 0.1s linear;
 }
 
 /* DataTables */
@@ -657,8 +671,9 @@ textarea {
 }
 /* ~~~~~~~~~~~~~~~~ */
 
+
 .datatable tr, .datatable td {
-    border: none !important;
+    border: none;
 }
 
 /* This is so dragged items show up above the layout */
@@ -687,4 +702,57 @@ textarea {
 
 .dropzone .dz-message {
     margin: 0;
+}
+
+/* jQuery UI overrides */
+.ui-widget {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 1.2em;
+}
+.ui-widget .ui-widget {
+    font-size: 1em;
+}
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+}
+.ui-widget-content {
+    border: 1px solid #5b5b5b;
+    background: #aaaaaa url(images/ui-bg_default_aaaaaa.png) repeat-x 0 0;
+    color: #1c1c1c;
+}
+.ui-widget-content a {
+    color: #444444;
+}
+.ui-widget-header {
+    border: 1px solid #5b5b5b;
+    background: #4a4a4a url(images/ui-bg_highlight.png) 0 0 repeat-x;
+    color: #CCC;
+    font-weight: bold;
+}
+.ui-widget-header a {
+    color: #444444;
+}
+
+/* Bootstrap.css overrides */
+.btn {
+    border-color: rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.55)
+}
+
+/* showbuilder.css overrides */
+.sb-now-playing, tr.sb-now-playing > td {
+    background-color: #1adeff;/* #1aff60; */ /* #5b1aff; */
+    color: #000;
+}
+
+tr.ui-state-error > td {
+    color: #d00000;
+}
+
+tr.ui-state-highlight > td {
+    color: #65a539;
+}
+
+#show_builder_table tr.sb-footer {
+    border-top: 10px solid #000;
 }

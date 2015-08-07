@@ -37,12 +37,12 @@ var AIRTIME = (function(AIRTIME) {
         } else {
             var objType = $('.active-tab .obj_type').val();
             if (objType === 'block') {
-                btnText = ' ' + $.i18n._('Add to current smart block');
+                btnText = $.i18n._('Add to current smart block');
             } else {
-                btnText = ' ' + $.i18n._('Add to current playlist');
+                btnText = $.i18n._('Add to current playlist');
             }
         }
-        AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), ' '+ btnText);
+        AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), btnText);
     };
 
     mod.fnRowCallback = function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {

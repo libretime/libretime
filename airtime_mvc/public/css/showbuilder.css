@@ -201,15 +201,17 @@ table.dataTable td.sb-image {
 
 table.datatable tr.sb-header.odd td, table.datatable tr.sb-header.even td,
 table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hover td{
+    background: #555;
+    /*
     background: -moz-linear-gradient(top, #a4a4a4 0, #bcbcbc 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #a4a4a4), color-stop(100%, #bcbcbc));
 	background: linear-gradient(top, #a4a4a4 0, #bcbcbc 100%);
+	*/
 	border-top-color:#6b6a6a !important;
 }
 
-.sb-content tr:last-child td {
-	border-bottom-width: 1px !important;
-    border-bottom-color:#6b6a6a !important;	
+.datatable .ui-state-error {
+    color: #d00000 !important;
 }
 
 .sb-header div.ui-state-default {

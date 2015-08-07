@@ -116,7 +116,7 @@
 }
 .ui-widget-header {
 	border: 1px solid #5b5b5b;
-	background: #4a4a4a url(images/ui-bg_highlight.png) 0 0 repeat-x;
+	background: #4a4a4a ;
 	color: #444444;
 	font-weight: bold;
 }
@@ -130,8 +130,8 @@
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
 	border: 1px solid #5b5b5b;
 	background-color: #6e6e6e;
-	background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
+    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
 	color: #ffffff;
 }
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
@@ -141,8 +141,8 @@
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
 	border: 1px solid #242424;
 	background-color: #292929;
-	background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
+    background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
 	color: #ffffff;
 }
 .ui-state-hover a, .ui-state-hover a:hover {
@@ -215,7 +215,7 @@
 	background-image: url(images/ui-icons_ffffff_256x240.png);
 }
 .ui-widget-content .ui-icon-alert {
-	background-image: url(images/ui-icons_ff5d1a_256x240.png);
+        background-image: url(images/ui-icons_ff5d1a_256x240.png);
 }
 .ui-widget-header .ui-icon {
 	background-image: url(images/ui-icons_ffffff_256x240.png);
@@ -1127,7 +1127,7 @@ button.ui-button.::-moz-focus-inner {
 	padding: 0;
 }
 
-/* reset extra padding in Firefox */
+ /* reset extra padding in Firefox */
 /*
  * jQuery UI Dialog 1.8.6
  *
@@ -1175,16 +1175,16 @@ button.ui-button.::-moz-focus-inner {
 	background: none;
 	overflow: auto;
 	zoom: 1;
-
+	
 }
 .ui-dialog .ui-dialog-buttonpane {
 	text-align: left;
 	border-width: 1px 0 0 0;
 	background: none;
 	margin: .5em 0 0 0;
-	margin: 0.3em -0.4em 0;
-	padding: 0.3em 1em 0 0.4em;
-	border-color: #9f9f9f;
+    margin: 0.3em -0.4em 0;
+    padding: 0.3em 1em 0 0.4em;
+    border-color: #9f9f9f;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
 	float: right;

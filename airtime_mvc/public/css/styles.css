@@ -859,25 +859,24 @@ dl.inline-list dd {
 }
 
 .datatable tr td, .datatable tr th {
-    border-color: #b1b1b1;
-    border-style: solid;
-    border-width: 1px 0 0 1px;
     font-size: 13px;
     padding: 5px 5px;
+    color: #CCC;
 }
 .odd {
-    background-color: #d8d8d8;
+    background-color: #282828;
 }
 .even {
-    background-color:#c7c7c7;
+    background-color: #2f2f2f;
 }
     
-.datatable tr.even.selected td {
+.datatable tr .selected td {
     background-color: #abcfe2;
 }
+/*
 .datatable tr.odd.selected td {
     background-color: #c5deeb;
-}
+}*/
 /*.datatable tr.odd:hover td, .datatable tr.even:hover td  {*/
     /*background-color: #95d5f7 !important;*/
 /*}*/
@@ -971,7 +970,6 @@ dl.inline-list dd {
     float: left;
     padding: 10px;
     font-size:12px;
-    color:#555555;
     font-weight:normal;
 }
 
