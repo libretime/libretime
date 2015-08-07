@@ -35,7 +35,6 @@ class ShowBuilderController extends Zend_Controller_Action {
 
         // PLUPLOAD
         $this->view->headScript()->appendFile($baseUrl.'js/libs/dropzone.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/dropzone/dropzone.min.css?'.$CC_CONFIG['airtime_version']);
 
         $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/_builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');

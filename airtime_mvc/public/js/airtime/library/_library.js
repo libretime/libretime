@@ -529,7 +529,7 @@ var AIRTIME = (function(AIRTIME) {
             // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
             "aoColumns": [
                 /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   }          ,
-                /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "10px"         , "sClass"    : "library_checkbox" }  ,
+                /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass"    : "library_checkbox" }  ,
                 /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSearchable" : false                 , "sWidth"      : "16px"                  , "sClass" : "library_type" , "iDataSort" : 0                  }  ,
                 /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                 , "sWidth"      : "90px"                  , "sClass" : "library_is_scheduled"}  ,
                 ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,

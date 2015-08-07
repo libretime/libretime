@@ -362,7 +362,7 @@ var AIRTIME = (function(AIRTIME){
             //remove any newlines if user somehow snuck them in (easy to do if dragging/dropping text)
             nameElement.text(nameElement.text().replace("\n", ""));
 
-        var name = $pl.find("#playlist_name_display").text();
+        var name = $pl.find(".playlist_name_display").text();
         $(".nav.nav-tabs .active a > span.tab-name").text(name);
     }
 
@@ -379,7 +379,7 @@ var AIRTIME = (function(AIRTIME){
         $('#spl_name > a')
             .empty()
             .append(json.name);
-        $('#obj_length')
+        $pl.find('.obj_length')
             .empty()
             .append(json.length);
         $('#fieldset-metadate_change textarea')
@@ -448,11 +448,11 @@ var AIRTIME = (function(AIRTIME){
             pane = $(".editor_pane_wrapper:last"),
             name = json.type == "md" ?  // file
                 pane.append(json.html).find("#track_title").val() + $.i18n._(" - Metadata Editor")
-                : pane.append(json.html).find("#playlist_name_display").text(),
+                : pane.append(json.html).find(".playlist_name_display").text(),
             tab =
                 "<li tab-id='" + $tabCount + "' tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
                     "<a href='#'><span class='tab-name'></span>" +
-                        "<span href='#' class='close-round lib_pl_close'></span>" +
+                        "<span href='#' class='lib_pl_close icon-remove'></span>" +
                     "</a>" +
                 "</li>",
             tabs = $(".nav.nav-tabs");
@@ -482,6 +482,7 @@ var AIRTIME = (function(AIRTIME){
         newTab.wrapper.find(".md-cancel").on("click", function() {
             closeTab();
         });
+        initialEvents();
     }
 
     function openPlaylist(json) {
@@ -517,8 +518,9 @@ var AIRTIME = (function(AIRTIME){
         var pane = $(".active-tab"),
             tab = $(".nav.nav-tabs .active"),
             toPane = pane.next().length > 0 ? pane.next() : pane.prev(),
-            toTab = tab.next().length > 0 ? tab.next() : tab.prev();
-        delete $openTabs[tab.attr("tab-type") + pane.find(".obj_id").val()];
+            toTab = tab.next().length > 0 ? tab.next() : tab.prev(),
+            objId = pane.find(".obj_id").val();
+        delete $openTabs[tab.attr("tab-type") + objId];
         tab.remove();
         $pl.remove();
         AIRTIME.showbuilder.switchTab(toPane, toTab);
@@ -799,8 +801,8 @@ var AIRTIME = (function(AIRTIME){
         //end main playlist fades.
 
         //edit playlist name event
-        $pl.on("keydown", "#playlist_name_display", submitOnEnter);
-        $pl.on("blur", "#playlist_name_display", editName);
+        $pl.on("keydown", ".playlist_name_display", submitOnEnter);
+        $pl.on("blur", ".playlist_name_display", editName);
 
         //edit playlist description events
         $pl.on("click", "legend", function(){
@@ -845,7 +847,7 @@ var AIRTIME = (function(AIRTIME){
             var description = $pl.find("#description").val();
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
-            var name = $pl.find("#playlist_name_display").text();
+            var name = $pl.find(".playlist_name_display").text();
 
             //hide any previous errors (if any)
             $(".side_playlist.active-tab .errors").empty().hide();
@@ -876,7 +878,7 @@ var AIRTIME = (function(AIRTIME){
                         $ws_id.show();
 
 
-                        var length = $(".side_playlist.active-tab #ws_length");
+                        var length = $(".side_playlist.active-tab .ws_length");
                         length.text(json.length);
 
                         //redraw the library to show the new webstream
@@ -903,7 +905,13 @@ var AIRTIME = (function(AIRTIME){
             });
         });
 
-        $(".lib_pl_close").unbind().click(function() {
+        // Unbind so each tab is only handled by its own close button
+        $(".lib_pl_close").unbind().click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            $(this).unbind("click"); // Prevent repeated clicks in quick succession from closing multiple tabs
+
             var tabId = $(this).closest("li").attr("tab-id");
             AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
 
@@ -913,7 +921,7 @@ var AIRTIME = (function(AIRTIME){
             // We also need to run the draw callback to update how dragged items are drawn
             AIRTIME.library.fnDrawCallback();
 
-            var name = $pl.find('#playlist_name_display').text().trim();
+            var name = $pl.find('.playlist_name_display').text().trim();
 
             if ((name == "Untitled Playlist"
                 || name == "Untitled Smart Block")
@@ -941,7 +949,7 @@ var AIRTIME = (function(AIRTIME){
              * Playlists: get name, description
              */
             var criteria = $pl.find('form').serializeArray(),
-                block_name = $pl.find('#playlist_name_display').text(),
+                block_name = $pl.find('.playlist_name_display').text(),
                 block_desc = $pl.find('textarea[name="description"]').val(),
                 save_action = baseUrl+'new-playlist/save',
                 obj_id = $pl.find(".obj_id").val(),

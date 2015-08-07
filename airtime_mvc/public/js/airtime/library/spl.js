@@ -394,7 +394,7 @@ var AIRTIME = (function(AIRTIME){
         $('#spl_name > a')
             .empty()
             .append(json.name);
-        $('#obj_length')
+        $('.obj_length')
             .empty()
             .append(json.length);
         $('#fieldset-metadate_change textarea')
@@ -746,8 +746,8 @@ var AIRTIME = (function(AIRTIME){
         //end main playlist fades.
 
         //edit playlist name event
-        $pl.on("keydown", "#playlist_name_display", submitOnEnter);
-        $pl.on("blur", "#playlist_name_display", editName);
+        $pl.on("keydown", ".playlist_name_display", submitOnEnter);
+        $pl.on("blur", ".playlist_name_display", editName);
         
         //edit playlist description events
         $pl.on("click", "legend", function(){
@@ -792,7 +792,7 @@ var AIRTIME = (function(AIRTIME){
             var description = $pl.find("#description").val();
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
-            var name = $pl.find("#playlist_name_display").text(); 
+            var name = $pl.find(".playlist_name_display").text();
             
             //hide any previous errors (if any)
             $(".side_playlist .errors").empty().hide();
@@ -823,7 +823,7 @@ var AIRTIME = (function(AIRTIME){
                         $ws_id.show();
 
 
-                        var length = $(".side_playlist #ws_length");
+                        var length = $(".side_playlist .ws_length");
                         length.text(json.length);
 
                         //redraw the library to show the new webstream
@@ -873,7 +873,7 @@ var AIRTIME = (function(AIRTIME){
              * Playlists: get name, description
              */
             var criteria = $('form').serializeArray(),
-                block_name = $('#playlist_name_display').text(),
+                block_name = $('.playlist_name_display').text(),
                 block_desc = $('textarea[name="description"]').val(),
                 save_action = baseUrl+'Playlist/save',
                 obj_id = $('input[id="obj_id"]').val(),

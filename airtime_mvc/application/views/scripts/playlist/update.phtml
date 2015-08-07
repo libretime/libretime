@@ -129,13 +129,10 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
 <?php endforeach; ?>
 
 <?php else : ?>
-<li class="spl_empty">
+<div class="spl_empty">
 <?php
-    if ($this->obj instanceof Application_Model_Block) {
-        echo _("Empty smart block");
-    } else {
-        echo _("Empty playlist");
-    }
+    echo _("Drag tracks here from your library to add them to the "
+           . ($this->obj instanceof Application_Model_Block ? "smart block" : "playlist"));
 ?>
-</li>
+</div>
 <?php endif; ?>

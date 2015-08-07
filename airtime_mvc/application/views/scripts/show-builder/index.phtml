@@ -5,37 +5,32 @@
 <!--    </div>-->
 <!--</form>-->
 
-<div id="media_type_nav" class="content-pane">
-    <div class="btn-group">
-        <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
-            New <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li id="new-playlist">
-                <a href="#"><?php echo _("Playlist") ?></a>
-            </li>
-            <li id="new-smart-block">
-                <a href="#"><?php echo _("Smart Block") ?></a>
-            </li>
-            <li id="new-webstream">
-                <a href="#"><?php echo _("Webstream") ?></a>
-            </li>
-        </ul>
-    </div>
-    <div class="media_type_selector selected" selection_id="1"><?php echo _("Files") ?></div>
-    <div class="media_type_selector" selection_id="2"><?php echo _("Playlists") ?></div>
-    <div class="media_type_selector" selection_id="3"><?php echo _("Smart Blocks") ?></div>
-    <div class="media_type_selector" selection_id="4"><?php echo _("Webstreams") ?></div>
-</div>
+<!--<div id="media_type_nav"> <!-- class="content-pane" -->
+<!--    <div class="btn-group">-->
+<!--        <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">-->
+<!--            New <span class="caret"></span>-->
+<!--        </button>-->
+<!--        <ul class="dropdown-menu">-->
+<!--            <li id="new-playlist">-->
+<!--                <a href="#">--><?php //echo _("Playlist") ?><!--</a>-->
+<!--            </li>-->
+<!--            <li id="new-smart-block">-->
+<!--                <a href="#">--><?php //echo _("Smart Block") ?><!--</a>-->
+<!--            </li>-->
+<!--            <li id="new-webstream">-->
+<!--                <a href="#">--><?php //echo _("Webstream") ?><!--</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+<!--    <div class="media_type_selector selected" selection_id="1">--><?php //echo _("Files") ?><!--</div>-->
+<!--    <div class="media_type_selector" selection_id="2">--><?php //echo _("Playlists") ?><!--</div>-->
+<!--    <div class="media_type_selector" selection_id="3">--><?php //echo _("Smart Blocks") ?><!--</div>-->
+<!--    <div class="media_type_selector" selection_id="4">--><?php //echo _("Webstreams") ?><!--</div>-->
+<!--</div>-->
+<?php echo $this->csrf ?>
 
 <div id="library_content" class="lib-content tabs content-pane wide-panel">
     <div class="panel-header">
-<!--        <fieldset class="toggle closed" id="filter_options">-->
-<!--            <legend style="cursor: pointer;">-->
-<!--                <span class="ui-icon ui-icon-triangle-2-n-s"></span>-->
-<!--                --><?php //echo _("Advanced Search Options") ?>
-<!--            </legend>-->
-<!--        </fieldset>-->
         <div id="advanced-options" class="btn-group">
             <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>

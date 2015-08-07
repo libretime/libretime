@@ -187,8 +187,8 @@ var AIRTIME = (function(AIRTIME) {
             aMediaIds.push(new Array(data.id, data.ftype));
 
             // check if a playlist/block is open before adding items
-            if ($('input[id="obj_type"]').val() == 'playlist'
-                || $('input[id="obj_type"]').val() == 'block') {
+            if ($('.active-tab .obj_type').val() == 'playlist'
+                || $('.active-tab .obj_type').val() == 'block') {
                 AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
             }
         }
@@ -196,7 +196,7 @@ var AIRTIME = (function(AIRTIME) {
 
     function addToCurrentOrNext(arr) {
         var el;
-        // Add to the end of the current show by getting the footer
+        // Add to the end of the current or next show by getting the footer
         el = $(".sb-footer.sb-future:first");
         var data = el.prev().data("aData");
 
@@ -236,39 +236,53 @@ var AIRTIME = (function(AIRTIME) {
                         if (AIRTIME.button.isDisabled('btn-group #library-plus') === true) {
                             return;
                         }
-    
-                        var selected = AIRTIME.library.getSelectedData(), data, i, length, temp, aMediaIds = [], aSchedIds = [], aData = [];
-    
-                        // process selected files/playlists.
-                        for (i = 0, length = selected.length; i < length; i++) {
-                            data = selected[i];
-                            aMediaIds.push( {
-                                "id" : data.id,
-                                "type" : data.ftype
-                            });
-                        }
-    
-                        $("#show_builder_table tr.sb-selected")
-                                .each(function(i, el) {
-                                    aData.push($(el).data("aData"));
-                                });
-    
-                        // process selected schedule rows to add media
-                        // after.
-                        for (i = 0, length = aData.length; i < length; i++) {
-                            temp = aData[i];
-                            aSchedIds.push( {
-                                "id" : temp.id,
-                                "instance" : temp.instance,
-                                "timestamp" : temp.timestamp
-                            });
-                        }
 
-                        if (aSchedIds.length == 0) {
-                            addToCurrentOrNext(aSchedIds);
+                        var selected = AIRTIME.library.getSelectedData(), data, i, length, temp, aMediaIds = [], aSchedIds = [], aData = [];
+
+                        if ($("#show_builder_table").is(":visible")) {
+                            for (i = 0, length = selected.length; i < length; i++) {
+                                data = selected[i];
+                                aMediaIds.push( {
+                                    "id" : data.id,
+                                    "type" : data.ftype
+                                });
+                            }
+
+                            // process selected files/playlists.
+                            $("#show_builder_table tr.sb-selected").each(function(i, el) {
+                                aData.push($(el).data("aData"));
+                            });
+
+                            // process selected schedule rows to add media
+                            // after.
+                            for (i = 0, length = aData.length; i < length; i++) {
+                                temp = aData[i];
+                                aSchedIds.push( {
+                                    "id" : temp.id,
+                                    "instance" : temp.instance,
+                                    "timestamp" : temp.timestamp
+                                });
+                            }
+
+                            if (aSchedIds.length == 0) {
+                                if (!addToCurrentOrNext(aSchedIds)) {
+                                    return;
+                                }
+                            }
+
+                            AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
+                        } else {
+                            for (i = 0, length = selected.length; i < length; i++) {
+                                data = selected[i];
+                                aMediaIds.push([data.id, data.ftype]);
+                            }
+
+                            // check if a playlist/block is open before adding items
+                            if ($('.active-tab .obj_type').val() == 'playlist'
+                                || $('.active-tab .obj_type').val() == 'block') {
+                                AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+                            }
                         }
-    
-                        AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
                     });
 
         // delete from library.

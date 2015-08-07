@@ -15,6 +15,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $file_id->setValue($p_id);
         $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
         $file_id->removeDecorator('Label');
+        $file_id->setAttrib('class', 'obj_id');
         $this->addElement($file_id);
 
         // Add title field

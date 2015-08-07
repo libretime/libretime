@@ -146,13 +146,18 @@ AIRTIME = (function(AIRTIME) {
     mod.onReady = function() {
         // Normally we would just use audio/*, but it includes file types that we can't handle (like .m4a)
         // We initialize the acceptedMimeTypes variable in Bootstrap so we don't have to duplicate the list
-        Dropzone.options.uploadForm = {
+        Dropzone.options.content = {
+            url:'/rest/media',
+            clickable: false,
             acceptedFiles: acceptedMimeTypes.join(),
             init: function () {
                 this.on("sending", function (file, xhr, data) {
                     data.append("csrf_token", $("#csrf").val());
                 });
-            }
+            },
+            dictDefaultMessage: '',
+            createImageThumbnails: false,
+            previewTemplate : '<div style="display:none"></div>'
         };
 
         // define module vars.

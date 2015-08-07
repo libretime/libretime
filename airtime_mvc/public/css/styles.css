@@ -341,10 +341,6 @@ fieldset {
     }
 }
 @media screen and (max-width: 970px) {
-    #nav {
-        height: inherit;
-        overflow-y: visible;
-    }
     #nav .responsive-menu {
         position: absolute;
         left: 0;
@@ -393,7 +389,6 @@ fieldset {
 }
 @media screen and (max-width: 1100px) {
     #nav {
-        height: inherit;
         overflow-y: visible;
     }
 }

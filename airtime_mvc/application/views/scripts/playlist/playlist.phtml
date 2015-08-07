@@ -42,10 +42,10 @@ if (isset($this->obj)) {
     <input class="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"></input>
     <input class='obj_type' type='hidden' value='playlist'></input>
     <div class="playlist_title">
-        <h3 id="obj_name">
-            <a id="playlist_name_display" contenteditable="true"><?php echo $this->escape($this->obj->getName()); ?></a>
+        <h3 class="obj_name">
+            <a class="playlist_name_display" contenteditable="true"><?php echo $this->escape($this->obj->getName()); ?></a>
         </h3>
-        <h4 id="obj_length"><?php echo $this->length; ?></h4>
+        <h4 class="obj_length"><?php echo $this->length; ?></h4>
     </div>
     <div id='sp-success' class='success' style='display:none'></div>
 

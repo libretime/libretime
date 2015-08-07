@@ -14,7 +14,8 @@ var AIRTIME = (function(AIRTIME){
         headerFooter = [],
         DISABLED_CLASS = 'ui-state-disabled',
         selected,
-        $previouslySelected;
+        $previouslySelected,
+        flagForDeselection;
 
     if (AIRTIME.showbuilder === undefined) {
         AIRTIME.showbuilder = {};
@@ -244,15 +245,16 @@ var AIRTIME = (function(AIRTIME){
 
     mod.selectAll = function () {
         var $trs = $sbTable.find("tr.lib-audio").not(".sb-past, .sb-empty");
-        $trs.addClass(SB_SELECTED_CLASS);
+        $trs.addClass(SB_SELECTED_CLASS).find(".sb-checkbox > input").prop('checked', true);
 
         mod.checkToolBarIcons();
     };
 
     mod.selectNone = function () {
         var $trs = $sbTable.find("tr.lib-audio");
-        $trs.removeClass(SB_SELECTED_CLASS);
+        $trs.removeClass(SB_SELECTED_CLASS).find(".sb-checkbox > input").prop('checked', false);
         $previouslySelected = undefined;
+        selected = undefined;
 
         mod.checkToolBarIcons();
     };
@@ -422,6 +424,7 @@ var AIRTIME = (function(AIRTIME){
 
         oSchedTable = $sbTable.dataTable( {
             "aoColumns": [
+                /* checkbox */ {"mDataProp": "allowed", "sTitle": "", "sWidth": "16px", "sClass": "sb-checkbox"},
                 /* Type */ {"mDataProp": "image", "sTitle": "", "sClass": "library_image sb-image", "sWidth": "16px"},
                 /* starts */ {"mDataProp": "starts", "sTitle": $.i18n._("Start"), "sClass": "sb-starts", "sWidth": "60px"},
                 /* ends */ {"mDataProp": "ends", "sTitle": $.i18n._("End"), "sClass": "sb-ends", "sWidth": "60px"},
@@ -629,6 +632,14 @@ var AIRTIME = (function(AIRTIME){
                             hide: 'mouseout'
                         });
                     }
+
+                    $node = $(nRow.children[0]);
+                    if (aData.allowed === true && aData.scheduled >= 1 && aData.linked_allowed) {
+                        $node.html('<input type="checkbox" name="'+aData.id+'"></input>');
+                    }
+                    else {
+                        $node.empty();
+                    }
                 }
 
                 //add the show colour to the leftmost td
@@ -764,48 +775,93 @@ var AIRTIME = (function(AIRTIME){
             "bScrollCollapseY": false
         });
 
-        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-past, .sb-empty)", function(ev) {
+        //$sbTable.find("tbody").on("mousedown", "tr:not(.sb-past, .sb-empty)", function(ev) {
+        //
+        //    var $tr = $(this),
+        //    // Get the ID of the selected row
+        //        $rowId = $tr.attr("id");
+        //
+        //    if (ev.shiftKey && $previouslySelected !== undefined) {
+        //        if ($previouslySelected.attr("id") == $rowId) {
+        //            return;
+        //        }
+        //
+        //        // If the selected row comes before the previously selected row,
+        //        // we want to select previous rows, otherwise we select next
+        //        if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
+        //            $previouslySelected.prevUntil($tr).each(function(i, el){
+        //                $(el).addClass(SB_SELECTED_CLASS);
+        //            });
+        //        } else {
+        //            $previouslySelected.nextUntil($tr).each(function(i, el){
+        //                $(el).addClass(SB_SELECTED_CLASS);
+        //            });
+        //        }
+        //        $tr.addClass(SB_SELECTED_CLASS);
+        //    } else if (ev.ctrlKey && $previouslySelected !== undefined) {
+        //        $tr.addClass(SB_SELECTED_CLASS);
+        //    } else {
+        //        if (!$tr.hasClass(SB_SELECTED_CLASS)) {
+        //            $("."+SB_SELECTED_CLASS).removeClass(SB_SELECTED_CLASS);
+        //        }
+        //        $tr.addClass(SB_SELECTED_CLASS);
+        //    }
+        //
+        //    // Remember this row so we can properly multiselect
+        //    $previouslySelected = $tr;
+        //
+        //    mod.checkToolBarIcons();
+        //});
+        //
+        //$sbTable.find("tbody").on("click", "tr:not(.sb-past, .sb-empty)", function(ev) {
+        //    if (!ev.ctrlKey && !ev.shiftKey) {
+        //        $("."+SB_SELECTED_CLASS).removeClass(SB_SELECTED_CLASS);
+        //        $(this).addClass(SB_SELECTED_CLASS);
+        //    }
+        //});
 
+        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-past, .sb-empty)", function(ev) {
             var $tr = $(this),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
 
-            if (ev.shiftKey && $previouslySelected !== undefined) {
-                if ($previouslySelected.attr("id") == $rowId) {
-                    return;
-                }
+            if (!$tr.hasClass(SB_SELECTED_CLASS)) {
+                if (ev.shiftKey && $previouslySelected !== undefined) {
+                    if ($previouslySelected.attr("id") == $rowId) {
+                        return;
+                    }
 
-                // If the selected row comes before the previously selected row,
-                // we want to select previous rows, otherwise we select next
-                if ($previouslySelected.prevAll("#"+$rowId).length !== 0) {
-                    $previouslySelected.prevUntil($tr).each(function(i, el){
-                        $(el).addClass(SB_SELECTED_CLASS);
-                    });
-                } else {
-                    $previouslySelected.nextUntil($tr).each(function(i, el){
-                        $(el).addClass(SB_SELECTED_CLASS);
-                    });
+                    // If the selected row comes before the previously selected row,
+                    // we want to select previous rows, otherwise we select next
+                    if ($previouslySelected.prevAll("#" + $rowId).length !== 0) {
+                        $previouslySelected.prevUntil($tr).each(function (i, el) {
+                            $(el).addClass(SB_SELECTED_CLASS);
+                            $(el).find(".sb-checkbox > input").prop('checked', true);
+                        });
+                    } else {
+                        $previouslySelected.nextUntil($tr).each(function (i, el) {
+                            $(el).addClass(SB_SELECTED_CLASS);
+                            $(el).find(".sb-checkbox > input").prop('checked', true);
+                        });
+                    }
                 }
                 $tr.addClass(SB_SELECTED_CLASS);
-            } else if (ev.ctrlKey && $previouslySelected !== undefined) {
-                $tr.addClass(SB_SELECTED_CLASS);
+                $tr.find(".sb-checkbox > input").prop('checked', true);
             } else {
-                if (!$tr.hasClass(SB_SELECTED_CLASS)) {
-                    $("."+SB_SELECTED_CLASS).removeClass(SB_SELECTED_CLASS);
-                }
-                $tr.addClass(SB_SELECTED_CLASS);
+                flagForDeselection = true;
             }
 
             // Remember this row so we can properly multiselect
             $previouslySelected = $tr;
-
-            mod.checkToolBarIcons();
         });
 
         $sbTable.find("tbody").on("click", "tr:not(.sb-past, .sb-empty)", function(ev) {
-            if (!ev.ctrlKey && !ev.shiftKey) {
-                $("."+SB_SELECTED_CLASS).removeClass(SB_SELECTED_CLASS);
-                $(this).addClass(SB_SELECTED_CLASS);
+            if (flagForDeselection) {
+                flagForDeselection = false;
+                $(this).removeClass(SB_SELECTED_CLASS);
+                $(this).find(".sb-checkbox > input").prop('checked', false);
+            } else {
+                $(this).find(".sb-checkbox > input").prop('checked', true);
             }
         });
 

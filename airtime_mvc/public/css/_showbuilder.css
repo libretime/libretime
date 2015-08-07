@@ -11,10 +11,13 @@ div.ColVis_collectionBackground {
 .wrapper {
     /*background: #242424;*/
     background: #111;
-    left: 0;
+    top: 139px;
+    left: 130px;
     right: 0;
     bottom: 0;
-    padding: 10px;
+    padding: 10px 10px 40px;
+    /*padding: 0;*/
+    border: none;
 
     display: -webkit-box;
     display: -moz-box;
@@ -120,40 +123,39 @@ div.ColVis_collectionBackground {
         flex: 8 100%;
         min-height: 50%;
     }
-    #media_type_nav {
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-flow: row;
-        flex-flow: row;
+    /*#media_type_nav {*/
+        /*display: -webkit-box;*/
+        /*display: -moz-box;*/
+        /*display: -ms-flexbox;*/
+        /*display: -webkit-flex;*/
+        /*display: flex;*/
+        /*-webkit-flex-flow: row;*/
+        /*flex-flow: row;*/
 
-        -webkit-align-items: center;
-        align-items: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-    }
-    #media_type_nav .btn-group {
-        flex: 1 100%;
-    }
-    #media_type_nav .dropdown-menu {
-        width: 100%;
-    }
-    #media_type_nav .media_type_selector {
-        flex: 1 100%;
-        margin-top: 3px;
-    }
+        /*-webkit-align-items: center;*/
+        /*align-items: center;*/
+        /*-webkit-justify-content: center;*/
+        /*justify-content: center;*/
+    /*}*/
+    /*#media_type_nav .btn-group {*/
+        /*flex: 1 100%;*/
+    /*}*/
+    /*#media_type_nav .dropdown-menu {*/
+        /*width: 100%;*/
+    /*}*/
+    /*#media_type_nav .media_type_selector {*/
+        /*flex: 1 100%;*/
+        /*margin-top: 3px;*/
+    /*}*/
 }
 
 @media screen and (max-width: 780px) {
     .wrapper {
-        /*height: 100% !important; /!* Correct for margins *!/*/
-        padding: 4px !important;
+        padding: 4px 4px 40px !important;
     }
-    #media_type_nav {
-        min-width: 555px;
-    }
+    /*#media_type_nav {*/
+        /*min-width: 555px;*/
+    /*}*/
 }
 
 @media screen and (max-width: 555px) {
@@ -395,8 +397,10 @@ div.ColVis_collectionBackground {
     cursor: default;
 }
 
-.nav-tabs .close-round {
-    margin: 1px 0 0 10px;
+.lib_pl_close {
+    cursor: pointer;
+    margin-left: 10px;
+    z-index: 1;
 }
 
 /* Media editors */
@@ -442,10 +446,6 @@ textarea {
 
 /* Playlist/Block/Webstream Editors */
 
-.inner_playlist_wrapper {
-    flex: 1 100%;
-}
-
 .side_playlist {
     position: relative;
     width: 100%; /* Override because we're using flexbox */
@@ -487,13 +487,19 @@ textarea {
 
 .spl-no-margin {
     margin: 0;
-    padding-bottom: 4px;
+}
+
+.spl-no-margin > div:last-child {
+    margin-left: 0 !important;
 }
 
 .spl_sortable {
     position: relative;
+    min-height: 0;
     overflow: auto;
     flex: 1 100%;
+
+    margin: 4px 0;
     padding: 0;
 }
 
@@ -501,12 +507,71 @@ textarea {
     cursor: move;
 }
 
+.spl_empty {
+    width: 100%;
+
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+
+    font-size: 20px;
+}
+
+.crossfade-main {
+    float: left;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.crossfade-main > dl {
+    padding: 4px;
+}
+
+#save_button, #webstream_save {
+    background: #ff5d1a;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    height: 38px;
+    width: 120px;
+}
+
+#save_button:active, #webstream_save {
+    color: #fff !important;
+}
+
+#save_button:focus, #webstream_save {
+    outline-width: 0;
+}
+
 /* Media type selector */
 
 #media_type_nav {
+    position: relative;
+    top: 139px;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    height: 100%;
+    width: 130px;
+
     flex: 1 auto;
-    margin-right: 10px;
-    text-align: center;
+    padding: 4px;
+    /*margin-right: 10px;*/
+    /*text-align: center;*/
+
+    background: #353535;
+    border: 1px solid #242424;
+    border-top: 1px solid #7e7e7e;
+    /* border: 1px solid #242424; */
+    -moz-box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    box-shadow: 0 2px 5px rgba(0,0,0,.35);
+
+    z-index: 100;
 }
 
 #media_type_nav div {
@@ -618,4 +683,8 @@ textarea {
     line-height: 14px;
 
     margin-top: 10px;
+}
+
+.dropzone .dz-message {
+    margin: 0;
 }
