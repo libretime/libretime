@@ -13,7 +13,7 @@ class Application_Model_Email
      */
     public static function send($subject, $message, $to) {
 
-        $headers = 'From: Airtime <noreply@account.sourcefabric.com>';
+        $headers = sprintf('From: %s <noreply@account.sourcefabric.com>', SAAS_PRODUCT_BRANDING_NAME);
         return mail($to, $subject, $message, $headers);
 
     }
