@@ -33,7 +33,7 @@ class Application_Model_Auth
         $message = sprintf(_("Hi %s, \n\nPlease click this link to reset your password: "), $user->getDbLogin());
         $message .= "{$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
         $message .= sprintf(_pro("\n\nIf you have any problems, please contact our support team: %s"), SUPPORT_EMAIL_ADDRESS);
-        $message .= sprintf(_pro("\n\nThank you, The %s Team"), SAAS_PRODUCT_BRANDING_NAME);
+        $message .= sprintf(_pro("\n\nThank you,\nThe %s Team"), SAAS_PRODUCT_BRANDING_NAME);
 
         $str = sprintf(_('%s Password Reset'), SAAS_PRODUCT_BRANDING_NAME);
         return Application_Model_Email::send($str, $message, $user->getDbEmail());
