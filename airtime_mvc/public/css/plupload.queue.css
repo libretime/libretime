@@ -3,27 +3,51 @@
 ------------------------------------------------------------------- */
 
 .plupload_button {
-	display: -moz-inline-box; /* FF < 3*/
 	display: inline-block;
-	font: normal 12px sans-serif;
-	text-decoration: none;
-    color: #42454a;
-    border: 1px solid #bababa;
-    padding: 2px 8px 3px 20px;
-	margin-right: 4px;
-    background: #f3f3f3 url('img/buttons.png') no-repeat 0 center;
-	outline: 0;
+	*display: inline;
+	/* IE7 inline-block hack */
+	*zoom: 1;
+	padding: 4px 14px;
+	margin-bottom: 0;
+	font-size: 14px;
+	line-height: 20px;
+	*line-height: 20px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	color: #efefef;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	background-color: #676767;
+	background-image: -moz-linear-gradient(top, #676767, #535353);
+	background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#676767), to(#535353));
+	background-image: -webkit-linear-gradient(top, #676767, #535353);
+	background-image: -o-linear-gradient(top, #676767, #535353);
+	background-image: linear-gradient(to bottom, #676767, #535353);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#676767', endColorstr='#535353', GradientType=0);
 
-    /* Optional rounded corners for browsers that support it */
-    -moz-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+	border-color: #5b5b5b #5b5b5b #4f4f4f;
+	*background-color: #676767;
+	/* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+	filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+	border: 1px solid #525252;
+	border-color: rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.55);
+	*border: 0;
+	border-bottom-color: #323232;
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	border-radius: 1px;
+	*margin-left: .3em;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
 }
 
 .plupload_button:hover {
-	color: #000;
-	text-decoration: none;
+	color: #fff;
+	background-color: #535353;
+	*background-color: #535353;
 }
 
 .plupload_disabled, a.plupload_disabled:hover {
@@ -38,14 +62,26 @@
 }
 
 .plupload_wrapper {
-	font: normal 11px Verdana,sans-serif;
 	width: 100%;
 }
 
 .plupload_container {
 	padding: 8px;
-	background: url('img/transp50.png');
+	/*background: url('img/transp50.png');*/
 	/*-moz-border-radius: 5px;*/
+
+
+	border: 1px solid #202020;
+	border-top: 1px solid #353535;
+	border-left: 1px solid #2a2a2a;
+
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+	-moz-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+	box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+
+	background-color: #242424;
+	color: #efefef;
+
 }
 
 .plupload_container input {

@@ -14,6 +14,67 @@ $(document).ready(function() {
 		Object.freeze(self.IMPORT_STATUS_CODES);
 	}
 
+	Dropzone.options.addMediaDropzone = {
+		url:'/rest/media',
+		//clickable: false,
+		acceptedFiles: acceptedMimeTypes.join(),
+		init: function () {
+			this.on("sending", function (file, xhr, data) {
+				data.append("csrf_token", $("#csrf").val());
+			});
+
+			this.on("success", function(file, xhr, data) {
+				//Refresh the upload table:
+				self.recentUploadsTable.fnDraw(); //Only works because we're using bServerSide
+				//In DataTables 1.10 and greater, we can use .fnAjaxReload()
+			});
+		}
+	};
+
+	/*
+	var uploader = new plupload.Uploader({
+		runtimes: 'html5, flash, html4',
+		browse_button: 'pickfiles',
+		container: $("#container"),
+		url :  baseUrl+'rest/media',
+		filters : [
+			{title: "Audio Files", extensions: "ogg,mp3,oga,flac,wav,m4a,mp4,opus,aac,oga,mp1,mp2,wma,au"}
+		],
+		multipart_params : {
+			"csrf_token" : $("#csrf").attr('value')
+		},
+
+		init: {
+			PostInit: function() {
+				document.getElementById('filelist').innerHTML = '';
+
+				document.getElementById('uploadfiles').onclick = function() {
+					uploader.start();
+					return false;
+				};
+			},
+
+			FilesAdded: function(up, files) {
+				plupload.each(files, function(file) {
+					document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+				});
+			},
+
+			UploadProgress: function(up, file) {
+				document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+			},
+
+			Error: function(up, err) {
+				document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+			}
+		}
+	});
+
+	uploader.init();
+	*/
+
+
+	/*
 	$("#plupload_files").pluploadQueue({
 		// General settings
 		runtimes        : 'gears, html5, html4',
@@ -46,7 +107,7 @@ $(document).ready(function() {
 	
 	uploader.bind('UploadComplete', function(){
 		uploadProgress = false;
-	});
+	});*/
 	
 	$(window).bind('beforeunload', function(){
 		if(uploadProgress){
