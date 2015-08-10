@@ -13,7 +13,7 @@ var AIRTIME = (function(AIRTIME){
         showInstanceIds = [],
         headerFooter = [],
         DISABLED_CLASS = 'ui-state-disabled',
-        selected,
+        selectedRows,
         $previouslySelected,
         flagForDeselection;
 
@@ -254,7 +254,7 @@ var AIRTIME = (function(AIRTIME){
         var $trs = $sbTable.find("tr.lib-audio");
         $trs.removeClass(SB_SELECTED_CLASS).find(".sb-checkbox > input").prop('checked', false);
         $previouslySelected = undefined;
-        selected = undefined;
+        selectedRows = undefined;
 
         mod.checkToolBarIcons();
     };
@@ -283,7 +283,7 @@ var AIRTIME = (function(AIRTIME){
         checkError(json);
 
         mod.getSelectedCursors();
-        selected = $(".sb-selected");
+        selectedRows = $("." + SB_SELECTED_CLASS);
         oSchedTable.fnDraw();
         mod.enableUI();
 
@@ -748,10 +748,12 @@ var AIRTIME = (function(AIRTIME){
                 mod.checkToolBarIcons();
 
                 var sid;
-                if (selected !== undefined) {
-                    selected.each(function (i, el) {
+                if (selectedRows !== undefined) {
+                    selectedRows.each(function (i, el) {
                         sid = $(el).attr("id");
-                        $("#" + sid).addClass(SB_SELECTED_CLASS);
+                        var tr = $("#" + sid);
+                        tr.addClass(SB_SELECTED_CLASS);
+                        tr.find("input[type='checkbox']").prop("checked", true);
                     });
                 }
             },
@@ -806,6 +808,7 @@ var AIRTIME = (function(AIRTIME){
                 flagForDeselection = true;
             }
 
+            selectedRows = $("." + SB_SELECTED_CLASS);
             // Remember this row so we can properly multiselect
             $previouslySelected = $tr;
         });
@@ -818,6 +821,7 @@ var AIRTIME = (function(AIRTIME){
             } else {
                 $(this).find(".sb-checkbox > input").prop('checked', true);
             }
+            selectedRows = $("." + SB_SELECTED_CLASS);
         });
 
         //begin context menu initialization.
