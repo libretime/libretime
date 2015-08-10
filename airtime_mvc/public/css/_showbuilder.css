@@ -1,4 +1,3 @@
-
 div.ColVis_collectionBackground {
     background-color: transparent;
 }
@@ -115,39 +114,12 @@ div.ColVis_collectionBackground {
         flex: 8 100%;
         min-height: 50%;
     }
-    /*#media_type_nav {*/
-        /*display: -webkit-box;*/
-        /*display: -moz-box;*/
-        /*display: -ms-flexbox;*/
-        /*display: -webkit-flex;*/
-        /*display: flex;*/
-        /*-webkit-flex-flow: row;*/
-        /*flex-flow: row;*/
-
-        /*-webkit-align-items: center;*/
-        /*align-items: center;*/
-        /*-webkit-justify-content: center;*/
-        /*justify-content: center;*/
-    /*}*/
-    /*#media_type_nav .btn-group {*/
-        /*flex: 1 100%;*/
-    /*}*/
-    /*#media_type_nav .dropdown-menu {*/
-        /*width: 100%;*/
-    /*}*/
-    /*#media_type_nav .media_type_selector {*/
-        /*flex: 1 100%;*/
-        /*margin-top: 3px;*/
-    /*}*/
 }
 
 @media screen and (max-width: 780px) {
     .wrapper {
         padding: 4px 4px 40px !important;
     }
-    /*#media_type_nav {*/
-        /*min-width: 555px;*/
-    /*}*/
 }
 
 @media screen and (max-width: 555px) {
@@ -187,7 +159,9 @@ div.ColVis_collectionBackground {
 }
 
 #library_content .dataTables_length label {
-    color: #555555;
+    color: #efefef;
+    line-height: 26px;
+    font-weight: normal;
 }
 
 #library_content legend {
@@ -207,11 +181,20 @@ div.ColVis_collectionBackground {
     margin-right: 4px;
 }
 
+#library_content input[type="checkbox"], #library_content img,
+.sb-content input[type="checkbox"], .sb-content img {
+    position: relative;
+    top: 2px;
+}
+
 div.btn > span
 {
     color: red;
 }
 
+.fg-toolbar.ui-toolbar {
+    border: none;
+}
 
 .fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
     position: absolute;
@@ -235,13 +218,13 @@ div.btn > span
 
 .dataTables_scrolling {
     position: absolute;
-    bottom: 39px; /* 38 px is the size of the header/footer + 1px because there's no internal border */
-    top: 39px;
-    left: 1px; /* Border */
+    bottom: 37px; /* 36 px is the size of the header/footer + 1px because there's no internal border */
+    top: 37px;
+    left: 0;
     right: 0;
 }
 
-#library_display {
+#library_display, #show_builder_table {
     border: none;
 }
 
@@ -556,7 +539,7 @@ textarea {
 #media_type_nav {
     position: absolute;
     top: 139px;
-    bottom: 0px;
+    bottom: 0;
 
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -565,7 +548,7 @@ textarea {
     width: 130px;
 
     flex: 1 auto;
-    padding: 0px;
+    padding: 0;
     /*margin-right: 10px;*/
     /*text-align: center;*/
 
@@ -654,7 +637,7 @@ textarea {
 
 /* Hacky stuff here */
 #show_builder .dataTables_scrolling {
-    top: 69px;
+    top: 67px;
 }
 
 .sb-padded > .fg-toolbar {
@@ -667,6 +650,29 @@ textarea {
 }
 /* ~~~~~~~~~~~~~~~~ */
 
+#library_display td, #show_builder td {
+    font-size: 14px;
+}
+
+#library_display td > span > span,
+#show_builder td > span > span {
+    color: #efefef;
+}
+
+.datatable tr td[class$='checkbox'], .datatable tr td[class$='type'] {
+    text-align: center;
+}
+
+.datatable tr td { /*, .datatable tr th {*/
+    line-height: 28px;
+    font-size: 14px;
+    padding: 5px;
+    color: #CCC;
+}
+
+.datatable tr[class$='selected'] td {
+    color: #efefef;
+}
 
 .datatable tr, .datatable td,
 .dataTable tr, .dataTable td
@@ -675,6 +681,7 @@ textarea {
 }
 
 /* This is so dragged items show up above the layout */
+
 .ui-draggable-dragging {
     z-index: 9999;
     position: fixed !important;
@@ -701,4 +708,3 @@ textarea {
 .dropzone .dz-message {
     margin: 0;
 }
-

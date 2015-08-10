@@ -56,8 +56,8 @@
 }
 
 .sb-content input[type="checkbox"] {
-	position: relative;
-	top: 3px;
+    position: relative;
+    top: 3px;
 }
 
 .sb-content fieldset {

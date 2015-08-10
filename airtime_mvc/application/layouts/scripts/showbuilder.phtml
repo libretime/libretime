@@ -78,6 +78,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <?php endif; //suspended ?>
 </div>
 
+<div id="media_type_nav"> <!-- class="content-pane" -->
+    <div class="btn-group">
+        <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+            New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id="new-playlist">
+                <a href="#"><?php echo _("Playlist") ?></a>
+            </li>
+            <li id="new-smart-block">
+                <a href="#"><?php echo _("Smart Block") ?></a>
+            </li>
+            <li id="new-webstream">
+                <a href="#"><?php echo _("Webstream") ?></a>
+            </li>
+        </ul>
+    </div>
+    <div class="media_type_selector selected" selection_id="1"><?php echo _("Files") ?></div>
+    <div class="media_type_selector" selection_id="2"><?php echo _("Playlists") ?></div>
+    <div class="media_type_selector" selection_id="3"><?php echo _("Smart Blocks") ?></div>
+    <div class="media_type_selector" selection_id="4"><?php echo _("Webstreams") ?></div>
+</div>
+
 <?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
 <div class="usability_hint" <?php if ($hint == "") { echo "style='display:none'"; } ?>><?php echo $hint; ?></div>
 
