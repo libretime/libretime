@@ -667,7 +667,6 @@ textarea {
     line-height: 28px;
     font-size: 14px;
     padding: 5px;
-    color: #CCC;
 }
 
 .datatable tr[class$='selected'] td,

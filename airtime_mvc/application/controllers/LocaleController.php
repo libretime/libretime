@@ -232,10 +232,10 @@ class LocaleController extends Zend_Controller_Action
             "Oct" => _("Oct"),
             "Nov" => _("Nov"),
             "Dec" => _("Dec"),
-            "today" => _("today"),
-            "day" => _("day"),
-            "week" => _("week"),
-            "month" => _("month"),
+            "Today" => _("Today"),
+            "Day" => _("Day"),
+            "Week" => _("Week"),
+            "Month" => _("Month"),
             "Sunday" => _("Sunday"),
             "Monday" => _("Monday"),
             "Tuesday" => _("Tuesday"),
@@ -390,7 +390,8 @@ class LocaleController extends Zend_Controller_Action
             "No Show" => _("No Show"),
             "All" => _("All"),
             "Copied %s row%s to the clipboard" => _("Copied %s row%s to the clipboard"),
-            "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished.")
+            "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."),
+            "New Show" => _("New Show")
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

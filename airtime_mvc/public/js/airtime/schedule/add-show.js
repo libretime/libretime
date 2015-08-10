@@ -28,10 +28,11 @@ function openAddShowForm(nowOrFuture) {
 function makeAddShowButton() {
     if($('.add-button').length === 0) {
         $('.fc-header-left')
-            .append('<span class="fc-header-space"></span>')
-            .append('<span class="fc-button">' +
-                        '<button onclick="showForm()" class="add-button">' +
-                            '<span class="add-icon"></span>' + $.i18n._("Create New Show") +
+            .prepend('<span class="fc-header-space"></span>')
+            .prepend('<span class="btn-group">' +
+                        '<button onclick="showForm()" class="add-button btn btn-small">' +
+                            '<i class="icon-white icon-plus"></i>' +
+                            '<span>' + $.i18n._("New Show") + '</span>' +
                         '</button>' +
                     '</span>');
     }

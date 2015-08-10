@@ -152,7 +152,6 @@ fieldset {
 }
 
 .input-settings-inline-p {
-    color: #4F4F4F;
     font-size: 12px;
     line-height: 140%;
     margin-top: 0;
@@ -1042,9 +1041,11 @@ button.ColVis_Button.ColVis_ShowAll {
 /*----END Data Table----*/
 
 fieldset {
-    border: 1px solid #8f8f8f;
+    border: 1px solid #222;
     margin: 0;
     padding: 0;
+    background-color: #333;
+
 }
 fieldset.plain {
     border: none;
@@ -1880,7 +1881,7 @@ ul.errors {
 
 ul.errors li, .warning {
     color:#902d2d;
-    font-size:11px;
+    font-size:14px;
     padding:2px 4px;
     background:#c6b4b4;
     margin-bottom:2px;
@@ -1917,12 +1918,11 @@ span.errors.sp-errors{
 }
 
 .collapsible-header, .collapsible-header-disabled {
-    border: 1px solid #8f8f8f;
-    background-color: #cccccc;
-    background: -moz-linear-gradient(top, #cccccc 0, #b9b9b9 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #cccccc), color-stop(100%, #b9b9b9));
+    border: 1px solid #333333;
+    border-top: 1px solid #5c5c5c;
+    background-color: #4a4a4a;
     font-size:13px;
-    color:#353535;
+    color:#ccc;
     font-weight:bold;
     padding:6px 0 6px 20px;
     margin:8px 0 0 0;
@@ -2564,7 +2564,6 @@ label span {
 }
 
 fieldset > legend {
-    color: #4F4F4F;
     font-size: 12px;
     line-height: 140%;
 }
@@ -2585,6 +2584,11 @@ fieldset.closed dl, fieldset.closed textarea, fieldset.closed div, fieldset.clos
 fieldset legend .ui-icon, .ui-widget-content fieldset legend .ui-icon {
     background-image: url(redmond/images/ui-icons_454545_256x240.png);
     float: left;
+}
+
+#add-show-show-source
+{
+    margin-top: 20px;
 }
 
 input[type="checkbox"][disabled] {

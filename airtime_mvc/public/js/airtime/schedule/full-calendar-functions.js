@@ -364,6 +364,9 @@ function getFullCalendarEvents(start, end, callback) {
                 getUsabilityHint();
             });
     }
+
+    $(".fc-button").addClass("btn").addClass("btn-small");
+    //$("span.fc-button > :button").addClass("btn btn-small");
 }
 
 function checkSCUploadStatus(){

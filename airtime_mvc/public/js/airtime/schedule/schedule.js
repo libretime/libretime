@@ -269,10 +269,10 @@ function createFullCalendar(data){
             $.i18n._('Dec')
         ],
         buttonText: {
-            today: $.i18n._('today'),
-            month: $.i18n._('month'),
-            week: $.i18n._('week'),
-            day: $.i18n._('day')
+            today: $.i18n._('Today'),
+            month: $.i18n._('Month'),
+            week: $.i18n._('Week'),
+            day: $.i18n._('Day')
         },
         dayNames: [
             $.i18n._('Sunday'),

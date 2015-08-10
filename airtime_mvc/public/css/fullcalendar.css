@@ -102,8 +102,7 @@ html .fc,
 .fc-header .ui-state-active {
 	z-index: 4;
 	}
-	
-	
+
 	
 /* Content
 ------------------------------------------------------------------------*/
@@ -167,8 +166,8 @@ html .fc,
 .fc-button-content {
 	position: relative;
 	float: left;
-	height: 1.9em;
-	line-height: 1.9em;
+	height: 1.4em;
+	line-height: 1.4em;
 	padding: 0 .6em;
 	white-space: nowrap;
 	}
@@ -614,5 +613,14 @@ table.fc-border-separate {
 .fc-agenda .ui-resizable-resizing { /* TODO: better selector */
 	_overflow: hidden;
 	}
-	
-	
+
+
+/** Prevent jQuery UI ui-widget-content box shadow from applying... */
+.fc-view-month > table > tbody > tr > td.ui-widget-content,
+.fc-agenda-days > tbody > tr > td.ui-widget-content,
+.fc-agenda-slots > tbody > tr > td.ui-widget-content
+{
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}
