@@ -107,18 +107,26 @@
 	font-size: 12px;
 }
 .ui-widget-content {
-	border: 1px solid #5b5b5b;
-	background: #aaaaaa url(images/ui-bg_default_aaaaaa.png) repeat-x 0 0;
-	color: #1c1c1c;
+
+	border: 1px solid #202020;
+	border-top: 1px solid #353535;
+	border-left: 1px solid #2a2a2a;
+
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+	-moz-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+	box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+
+	background-color: #242424;
+	color: #efefef;
+
 }
 .ui-widget-content a {
 	color: #444444;
 }
 .ui-widget-header {
 	border: 1px solid #5b5b5b;
-	background: #4a4a4a url(images/ui-bg_highlight.png) 0 0 repeat-x;
-	color: #444444;
-	font-weight: bold;
+	background: #4a4a4a ;
+	color: #ccc;
 }
 .ui-widget-header a {
 	color: #444444;

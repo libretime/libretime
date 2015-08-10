@@ -35,7 +35,7 @@ html, body {
 
 
 h2 {
-    color: #000000;
+    color: #efefef;
     font-size: 2.1em;
     font-weight: normal;
     margin: 0;
@@ -787,7 +787,6 @@ input.input_text.sp_extra_input_text{
 
 label {
     font-size:13px;
-    color:#5b5b5b;
     padding:0 16px 0 0;
 }
 .static_text {
@@ -863,6 +862,14 @@ dl.inline-list dd {
     padding: 5px 5px;
     color: #CCC;
 }
+
+.datatable tr, .datatable td,
+.dataTable tr, .dataTable td
+{
+    border: none;
+    border-spacing: 0;
+}
+
 .odd {
     background-color: #282828;
 }
@@ -924,7 +931,6 @@ dl.inline-list dd {
 .dataTables_length label {
     padding:0;
     font-size:12px;
-    color:#404040;
     line-height:24px;
 }
 .dataTables_filter {

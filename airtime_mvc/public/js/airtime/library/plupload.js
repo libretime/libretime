@@ -111,7 +111,7 @@ $(document).ready(function() {
 			//"sScrollY": "200px",
 			"bFilter": false,
 			"bSort": false,
-			"sDom": '<"H"l>frtip',
+			"sDom": '<"H">frtip<"F"l>',
 			"bPaginate" : true,
             "sPaginationType": "full_numbers",
 			"aoColumns": [

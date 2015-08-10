@@ -287,3 +287,21 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 .ui-dialog .sb_content .padded {
     padding: 5px 10px 5px 16px;
 }
+
+#show_builder_table tr.sb-footer {
+    border-top: 10px solid #000;
+}
+
+.sb-now-playing, tr.sb-now-playing > td {
+    background-color: #1adeff;/* #1aff60; */ /* #5b1aff; */
+    color: #000;
+}
+
+tr.ui-state-error > td {
+    color: #d00000;
+}
+
+tr.ui-state-highlight > td {
+    color: #65a539;
+}
+

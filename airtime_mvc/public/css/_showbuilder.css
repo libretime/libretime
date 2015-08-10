@@ -101,10 +101,6 @@ div.ColVis_collectionBackground {
     min-width: 555px;
 }
 
-.btn {
-    color: #efefef;
-}
-
 .outer-datatable-wrapper {
     position: relative;
     flex: 1;
@@ -672,7 +668,9 @@ textarea {
 /* ~~~~~~~~~~~~~~~~ */
 
 
-.datatable tr, .datatable td {
+.datatable tr, .datatable td,
+.dataTable tr, .dataTable td
+{
     border: none;
 }
 
@@ -704,55 +702,3 @@ textarea {
     margin: 0;
 }
 
-/* jQuery UI overrides */
-.ui-widget {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 1.2em;
-}
-.ui-widget .ui-widget {
-    font-size: 1em;
-}
-.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-    font-family: Helvetica, Arial, sans-serif;
-    font-size: 12px;
-}
-.ui-widget-content {
-    border: 1px solid #5b5b5b;
-    background: #aaaaaa url(images/ui-bg_default_aaaaaa.png) repeat-x 0 0;
-    color: #1c1c1c;
-}
-.ui-widget-content a {
-    color: #444444;
-}
-.ui-widget-header {
-    border: 1px solid #5b5b5b;
-    background: #4a4a4a url(images/ui-bg_highlight.png) 0 0 repeat-x;
-    color: #CCC;
-    font-weight: bold;
-}
-.ui-widget-header a {
-    color: #444444;
-}
-
-/* Bootstrap.css overrides */
-.btn {
-    border-color: rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.55)
-}
-
-/* showbuilder.css overrides */
-.sb-now-playing, tr.sb-now-playing > td {
-    background-color: #1adeff;/* #1aff60; */ /* #5b1aff; */
-    color: #000;
-}
-
-tr.ui-state-error > td {
-    color: #d00000;
-}
-
-tr.ui-state-highlight > td {
-    color: #65a539;
-}
-
-#show_builder_table tr.sb-footer {
-    border-top: 10px solid #000;
-}
