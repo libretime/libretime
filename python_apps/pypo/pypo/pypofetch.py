@@ -12,7 +12,7 @@ import signal
 from datetime import datetime
 import traceback
 import pure
-
+import mimetypes
 from Queue import Empty
 from threading import Thread, Timer
 from subprocess import Popen, PIPE
@@ -376,6 +376,21 @@ class PypoFetch(Thread):
     def sanity_check_media_item(self, media_item):
         start = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
         end = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
+
+        root, ext = os.path.splitext(media_item['uri'])
+        mime = media_item['metadata']['mime']
+        mimetypes.init()
+        mime_ext = mimetypes.guess_extension(mime, strict=False)
+
+        if mime_ext is None:
+            mimes = mimetypes.read_mime_types("%s/mime.types" % os.path.dirname(os.path.realpath(__file__)))
+            for k, v in mimes.iteritems():
+                if v == mime:
+                    mime_ext = k
+
+        if mime_ext is not None and mime_ext != ext:
+            self.logger.info("Invalid extension %s for file %s, changing to %s" % (ext, root, mime_ext))
+            media_item['uri'] = root + mime_ext
 
         length1 = pure.date_interval_to_seconds(end - start)
         length2 = media_item['cue_out'] - media_item['cue_in']

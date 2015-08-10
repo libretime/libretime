@@ -38,11 +38,9 @@ class LoginController extends Zend_Controller_Action
         
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/login.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
         $form = new Application_Form_Login();
 
-        $message = _("Please enter your user name and password");
+        $message = _("Please enter your username and password.");
 
         if ($request->isPost()) {
             // if the post contains recaptcha field, which means form had recaptcha field.
@@ -132,34 +130,32 @@ class LoginController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
-        
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/login/password-restore.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+
+        $this->view->headScript()->appendFile($baseUrl . 'js/airtime/login/password-restore.js?' . $CC_CONFIG['airtime_version'], 'text/javascript');
 
         $request = $this->getRequest();
         $stationLocale = Application_Model_Preference::GetDefaultLocale();
-        
+
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
-        if (!Application_Model_Preference::GetEnableSystemEmail()) {
-            $this->_redirect('login');
-        } else {
-            //uses separate layout without a navigation.
-            $this->_helper->layout->setLayout('login');
+        //uses separate layout without a navigation.
+        $this->_helper->layout->setLayout('login');
 
-            $form = new Application_Form_PasswordRestore();
+        $form = new Application_Form_PasswordRestore();
 
-            $request = $this->getRequest();
-            if ($request->isPost() && $form->isValid($request->getPost())) {
-                if (is_null($form->username->getValue()) || $form->username->getValue() == '') {
-                    $user = CcSubjsQuery::create()
-                        ->filterByDbEmail($form->email->getValue())
-                        ->findOne();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            if ($form->isValid($request->getPost())) {
+                $query = CcSubjsQuery::create();
+                if (empty($form->username->getValue())) {
+                    $query->filterByDbEmail($form->email->getValue());
+                } else if (empty($form->email->getValue())) {
+                    $query->filterByDbLogin($form->username->getValue());
                 } else {
-                    $user = CcSubjsQuery::create()
-                        ->filterByDbEmail($form->email->getValue())
-                        ->filterByDbLogin($form->username->getValue())
-                        ->findOne();
+                    $query->filterByDbEmail($form->email->getValue())
+                        ->filterByDbLogin($form->username->getValue());
                 }
+                $user = $query->findOne();
 
                 if (!empty($user)) {
                     $auth = new Application_Model_Auth();
@@ -171,12 +167,14 @@ class LoginController extends Zend_Controller_Action
                         $form->email->addError($this->view->translate(_("Email could not be sent. Check your mail server settings and ensure it has been configured properly.")));
                     }
                 } else {
-                    $form->email->addError($this->view->translate(_("Given email not found.")));
+                    $form->email->addError($this->view->translate(sprintf(_pro("That username or email address could not be found. If you are the station owner, you should <a href=\"%s\">reset your here</a>."), WHMCS_PASSWORD_RESET_URL)));
                 }
+            } else { //Form is not valid
+                $form->email->addError($this->view->translate(_("There was a problem with the username or email address you entered.")));
             }
-
-            $this->view->form = $form;
         }
+
+        $this->view->form = $form;
     }
 
     public function passwordRestoreAfterAction()

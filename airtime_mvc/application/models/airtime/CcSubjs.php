@@ -18,6 +18,11 @@ class CcSubjs extends BaseCcSubjs {
         return $this->type === UTYPE_SUPERADMIN || $this->type === UTYPE_ADMIN || $this->type === UTYPE_PROGRAM_MANAGER;
     }
 
+    public function isSuperAdmin()
+    {
+        return $this->type === UTYPE_SUPERADMIN;
+    }
+
     public function isHostOfShow($showId)
     {
         return CcShowHostsQuery::create()

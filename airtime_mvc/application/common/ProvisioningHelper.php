@@ -11,6 +11,7 @@ class ProvisioningHelper
     private $dbuser, $dbpass, $dbname, $dbhost, $dbowner, $apikey;
     private $instanceId;
     private $stationName, $description;
+    private $defaultIcecastPassword;
 
     public function __construct($apikey)
     {
@@ -122,6 +123,9 @@ class ProvisioningHelper
         if (isset($_POST['description'])) {
             $this->description = $_POST['description'];
         }
+        if (isset($_POST['icecast_pass'])) {
+            $this->defaultIcecastPassword = $_POST['icecast_pass'];
+        }
     }
 
     /**
@@ -211,6 +215,9 @@ class ProvisioningHelper
         }
         if ($this->description) {
             Application_Model_Preference::SetStationDescription($this->description);
+        }
+        if (isset($this->defaultIcecastPassword)) {
+            Application_Model_Preference::setDefaultIcecastPassword($this->defaultIcecastPassword);
         }
     }
 

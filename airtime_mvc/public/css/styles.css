@@ -21,6 +21,19 @@ html, body {
     text-align:center;
 }
 
+#login-page fieldset
+{
+    padding: 10px;
+    border: 1px solid #555;
+    margin-bottom: 10px;
+}
+
+#login-page legend {
+    font-weight: bold;
+    color: #919191;
+}
+
+
 h2 {
     color: #000000;
     font-size: 2.1em;
@@ -1070,7 +1083,7 @@ input[type="checkbox"] {
     margin:0;
     padding:8px 0 16px 0;
     font-size:12px;
-    color:#717171;
+    color: #919191;
     text-align:left;
 }
 .logobox {
@@ -1195,13 +1208,17 @@ input[type="checkbox"] {
 .login-content .text-right, .text-right {
     text-align:right;
 }
-.login-content .link {
+.login-content a {
     color:#FF5D1A;
     text-decoration:none;
-    }
-    .login-content .link:hover {
-        text-decoration:underline;
-        }
+}
+.login-content a:hover {
+    text-decoration:underline;
+}
+
+.login-content .errors a {
+    color: #ff1c13;
+}
 
 /*---//////////////////// END LOGIN ////////////////////---*/
 
@@ -1888,6 +1905,7 @@ span.errors.sp-errors{
     margin:8px 0 0 0;
     cursor:pointer;
     position:relative;
+    clear: both;
 }
 .collapsible-content {
     margin-top:-1px;
@@ -2232,6 +2250,10 @@ span.errors.sp-errors{
 
 .stream-config {
     width: 1100px;
+}
+
+#stream_save_bottom {
+    bottom: 0;
 }
 
 .preferences .padded {

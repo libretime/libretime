@@ -1,0 +1,15 @@
+<div id="lang-timezone-popup" class="dialogPopup register-dialog" title="<?php echo sprintf(_("Welcome to %s!"), SAAS_PRODUCT_BRANDING_NAME); ?>" style="display: none;">
+    <form id="lang-timezone-form" method="post" action="/setup/setup-language-timezone">
+        <fieldset>
+            <dl class="zend_form">
+                <?php echo $this->element->getElement('csrf') ?>
+
+                <?php echo $this->element->getElement('setup_language')->render(); ?>
+
+                <?php echo $this->element->getElement('setup_timezone')->render(); ?>
+            </dl>
+        </fieldset>
+        <p style="margin-bottom: 0px; text-align: center;">You can change these later in your preferences and user settings.</p>
+
+    </form>
+</div>

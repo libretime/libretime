@@ -9,6 +9,7 @@ define('COMPANY_NAME'       , 'Sourcefabric');
 define('COMPANY_SUFFIX'     , 'z.ú.');
 define('COMPANY_SITE'       , 'Sourcefabric.org');
 define('COMPANY_SITE_URL'   , 'http://sourcefabric.org/');
+define('SUPPORT_EMAIL_ADDRESS', "help@sourcefabric.org");
 
 define('HELP_URL'                   , 'http://help.sourcefabric.org/');
 define('FAQ_URL'                    , 'https://sourcefabricberlin.zendesk.com/hc/en-us/sections/200994309-Airtime-FAQ');
@@ -17,6 +18,7 @@ define('TERMS_AND_CONDITIONS_URL'   , 'http://www.sourcefabric.org/en/about/poli
 define('PRIVACY_POLICY_URL'         , 'http://www.sourcefabric.org/en/about/policy/');
 define('USER_MANUAL_URL'            , 'http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters');
 define('AIRTIME_TRANSIFEX_URL'      , 'https://www.transifex.com/projects/p/airtime/');
+define('WHMCS_PASSWORD_RESET_URL'   , 'https://account.sourcefabric.com/pwreset.php');
 
 define('LICENSE_VERSION'    , 'GNU AGPL v.3');
 define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.html');
@@ -32,6 +34,8 @@ define('DEFAULT_LOGO_PLACEHOLDER', 1);
 define('DEFAULT_LOGO_FILE', 'images/airtime_logo.png');
 define('DEFAULT_TIMESTAMP_FORMAT', 'Y-m-d H:i:s');
 define('DEFAULT_MICROTIME_FORMAT', 'Y-m-d H:i:s.u');
+define('DEFAULT_ICECAST_PORT', 8000);
+define('DEFAULT_ICECAST_PASS', 'hackme');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');

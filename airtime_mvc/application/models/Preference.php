@@ -1096,6 +1096,13 @@ class Application_Model_Preference
 
     public static function GetSourceSwitchStatus($sourcename)
     {
+        // Scheduled play switch should always be "on".
+        // Even though we've hidden this element in the dashboard we should
+        // always make sure it's on or else a station's stream could go offline.
+        if ($sourcename == "scheduled_play") {
+            return "on";
+        }
+
         $value = self::getValue($sourcename."_switch");
         return ($value == null || $value == "off") ? 'off' : 'on';
     }
@@ -1160,87 +1167,6 @@ class Application_Model_Preference
     public static function GetAutoSwitch()
     {
         return self::getValue("auto_switch");
-    }
-
-    public static function SetEnableSystemEmail($upload)
-    {
-        self::setValue("enable_system_email", $upload);
-    }
-
-    public static function GetEnableSystemEmail()
-    {
-        $v =  self::getValue("enable_system_email");
-        return ($v === "") ?  0 : $v;
-    }
-
-    public static function SetSystemEmail($value)
-    {
-        self::setValue("system_email", $value, false);
-    }
-
-    public static function GetSystemEmail()
-    {
-        return self::getValue("system_email");
-    }
-
-    public static function SetMailServerConfigured($value)
-    {
-        self::setValue("mail_server_configured", $value, false);
-    }
-
-    public static function GetMailServerConfigured()
-    {
-        return self::getValue("mail_server_configured");
-    }
-
-    public static function SetMailServer($value)
-    {
-        self::setValue("mail_server", $value, false);
-    }
-
-    public static function GetMailServer()
-    {
-        return self::getValue("mail_server");
-    }
-
-    public static function SetMailServerEmailAddress($value)
-    {
-        self::setValue("mail_server_email_address", $value, false);
-    }
-
-    public static function GetMailServerEmailAddress()
-    {
-        return self::getValue("mail_server_email_address");
-    }
-
-    public static function SetMailServerPassword($value)
-    {
-        self::setValue("mail_server_password", $value, false);
-    }
-
-    public static function GetMailServerPassword()
-    {
-        return self::getValue("mail_server_password");
-    }
-
-    public static function SetMailServerPort($value)
-    {
-        self::setValue("mail_server_port", $value, false);
-    }
-
-    public static function GetMailServerPort()
-    {
-        return self::getValue("mail_server_port");
-    }
-
-    public static function SetMailServerRequiresAuth($value)
-    {
-        self::setValue("mail_server_requires_auth", $value, false);
-    }
-
-    public static function GetMailServerRequiresAuth()
-    {
-        return self::getValue("mail_server_requires_auth");
     }
     /* User specific preferences end */
 
@@ -1512,6 +1438,29 @@ class Application_Model_Preference
         self::setValue("task_manager_lock", $value);
     }
 
+    // SAAS-876 - Toggle indicating whether user is using custom stream settings
+
+    public static function getUsingCustomStreamSettings() {
+        $val = self::getValue("using_custom_stream_settings");
+        return empty($val) ? false : $val;
+    }
+
+    public static function setUsingCustomStreamSettings($value) {
+        self::setValue("using_custom_stream_settings", $value);
+    }
+
+    // SAAS-876 - Store the default Icecast password to restore when switching
+    //            back to Airtime Pro streaming settings
+
+    public static function getDefaultIcecastPassword() {
+        $val = self::getValue("default_icecast_password");
+        return empty($val) ? DEFAULT_ICECAST_PASS : $val;
+    }
+
+    public static function setDefaultIcecastPassword($value) {
+        self::setValue("default_icecast_password", $value);
+    }
+
     public static function getRadioPageDisplayLoginButton()
     {
         return self::getValue("radio_page_display_login_button");
@@ -1520,5 +1469,15 @@ class Application_Model_Preference
     public static function setRadioPageDisplayLoginButton($value)
     {
         self::setValue("radio_page_display_login_button", $value);
+    }
+
+    public static function getLangTimezoneSetupComplete()
+    {
+        return self::getValue("lang_tz_setup_complete");
+    }
+
+    public static function setLangTimezoneSetupComplete($value)
+    {
+        self::setValue("lang_tz_setup_complete", $value);
     }
 }

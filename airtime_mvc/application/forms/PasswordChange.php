@@ -40,7 +40,7 @@ class Application_Form_PasswordChange extends Zend_Form
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => _('Get new password'),
+            'label' => _('Save'),
             'ignore' => true,
             'class' => 'ui-button ui-widget ui-state-default ui-button-text-only center',
             'decorators' => array(
