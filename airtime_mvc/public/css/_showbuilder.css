@@ -670,7 +670,8 @@ textarea {
     color: #CCC;
 }
 
-.datatable tr[class$='selected'] td {
+.datatable tr[class$='selected'] td,
+.datatable tr.sb-now-playing td {
     color: #efefef;
 }
 
