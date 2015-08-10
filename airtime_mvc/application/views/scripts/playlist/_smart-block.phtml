@@ -34,7 +34,7 @@ if (isset($this->obj)) {
         </dl>
 
         <?php echo $this->form; ?>
-        <div class="btn-toolbar spl-no-top-margin clearfix">
+        <div class="btn-toolbar spl-no-margin clearfix left-floated">
             <div class='btn-group pull-right'>
                 <button class="btn btn-inverse" title='<?php echo _("Empty smart block content") ?>' type="button" id="pl-bl-clear-content"><?php echo _("Clear") ?></button>
             </div>
@@ -45,7 +45,7 @@ if (isset($this->obj)) {
             </div>
         </div>
 
-        <div id="crossfade_main" class="crossfade-main clearfix left-floated" style="display:none;">
+        <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
             <span class="ui-icon ui-icon-closethick"></span>
             <dl id="spl_editor-main" class="inline-list">
                 <dt><?php echo _("Fade in: "); ?><span class='spl_cue_hint'><?php echo _("(ss.t)")?></span></dt>
@@ -61,7 +61,7 @@ if (isset($this->obj)) {
         <?php $this->contents = $contents;
             echo $this->render('playlist/update.phtml') ?>
     </ul>
-    <div class="btn-toolbar spl-no-top-margin clearfix">
+    <div class="btn-toolbar spl-no-margin clearfix">
         <div class='btn-group pull-right'>
             <button class="btn btn-inverse" title='Save smart block&#39s title, description, and criteria' type="button" id="save_button"><?php echo _("Save") ?></button>
         </div>

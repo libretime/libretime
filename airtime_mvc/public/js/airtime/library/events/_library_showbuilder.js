@@ -102,10 +102,11 @@ var AIRTIME = (function(AIRTIME) {
                         return container;
                     },
                     cursor: 'pointer',
-                    cursorAt: {
-                        top: 30,
-                        left: 100
-                    },
+                    //cursorAt: {
+                    //    top: 30,
+                    //    right: 10
+                    //},
+                    distance: 25, // min-distance for dragging
                     connectToSortable: '#show_builder_table'
                 });
         } else {
@@ -142,10 +143,11 @@ var AIRTIME = (function(AIRTIME) {
                         return container;
                     },
                     cursor: 'pointer',
-                    cursorAt: {
-                        top: 30,
-                        left: 100
-                    },
+                    //cursorAt: {
+                    //    top: 30,
+                    //    right: 10
+                    //},
+                    distance: 25, // min-distance for dragging
                     connectToSortable: '.active-tab .spl_sortable'
                 });
         }

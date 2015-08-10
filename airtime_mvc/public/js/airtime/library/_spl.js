@@ -34,8 +34,8 @@ var AIRTIME = (function(AIRTIME){
 
     function playlistError(json) {
         alert(json.error);
-        closeTab();
-        openPlaylist(json);
+        //closeTab();
+        //openPlaylist(json);
     }
 
     function stopAudioPreview() {
@@ -827,7 +827,10 @@ var AIRTIME = (function(AIRTIME){
                 if (json.error !== undefined) {
                     alert(json.error);
                 }
-                $pl.find(".editor_pane_wrapper").empty().append(json.html);
+                if (json.html !== undefined) {
+                    closeTab();
+                    openPlaylist(json);
+                }
                 if (json.result == "0") {
                     $pl.find('.success').text($.i18n._('Playlist shuffled'));
                     $pl.find('.success').show();
@@ -964,7 +967,8 @@ var AIRTIME = (function(AIRTIME){
                             alert(json.error);
                         }
                         if (json.html !== undefined) {
-                            AIRTIME.playlist.fnOpenPlaylist(json);
+                            closeTab();
+                            openPlaylist(json);
                         }
                         setModified(json.modified);
                         if (obj_type == "block") {
@@ -981,7 +985,7 @@ var AIRTIME = (function(AIRTIME){
             );
         });
 
-        $pl.find("#pl-bl-clear-content").live("click", function(event) {
+        $pl.find("#pl-bl-clear-content").unbind().on("click", function(event) {
             var sUrl = baseUrl+"new-playlist/empty-content",
                 oData = {};
             playlistRequest(sUrl, oData);
@@ -1483,13 +1487,13 @@ var AIRTIME = (function(AIRTIME){
     mod.init = function() {
         AIRTIME.playlist.setAsActive();
 
-        $pl.delegate("#spl_delete", {"click": function(ev){
-            AIRTIME.playlist.fnDelete();
-        }});
-
-        $pl.delegate("#ws_delete", {"click": function(ev){
-            AIRTIME.playlist.fnWsDelete();
-        }});
+        //$pl.delegate("#spl_delete", {"click": function(ev){
+        //    AIRTIME.playlist.fnDelete();
+        //}});
+        //
+        //$pl.delegate("#ws_delete", {"click": function(ev){
+        //    AIRTIME.playlist.fnWsDelete();
+        //}});
 
         $pl.delegate(".pl-waveform-cues-btn", {"click": function(ev){
             AIRTIME.playlist.showCuesWaveform(ev);

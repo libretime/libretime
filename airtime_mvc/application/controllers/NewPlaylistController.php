@@ -48,6 +48,8 @@ class NewPlaylistController extends Zend_Controller_Action
             $modified = $this->_getParam('modified', null);
             if ($obj->getLastModified("U") !== $modified) {
                 $this->createFullResponse($obj);
+                Logging::info($obj->getLastModified("U"));
+                Logging::info($modified);
                 throw new PlaylistOutDatedException(sprintf(_("You are viewing an older version of %s"), $obj->getName()));
             }
         }
