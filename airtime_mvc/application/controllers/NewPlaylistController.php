@@ -539,14 +539,16 @@ class NewPlaylistController extends Zend_Controller_Action
                 $result['html'] = $this->createFullResponse($bl, true, true);
                 $result['result'] = 0;
             } else {
-                $this->view->obj = $bl;
-                $this->view->id = $bl->getId();
                 $this->view->form = $form;
                 $this->view->unsavedName = $params['name'];
                 $this->view->unsavedDesc = $params['description'];
                 $viewPath = 'playlist/_smart-block.phtml';
+                $this->view->obj = $bl;
+                $this->view->id = $bl->getId();
                 $result['html'] = $this->view->render($viewPath);
                 $result['result'] = 1;
+                $result['type'] = "sb";
+                $result['id'] = $bl->getId();
             }
         } else if ($params['type'] == 'playlist') {
             $this->setPlaylistNameDescAction();

@@ -443,7 +443,7 @@ var AIRTIME = (function(AIRTIME){
         }
         $tabCount++;
 
-        var wrapper = "<div id='pl-tab-content-" + $tabCount + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
+        var wrapper = "<div tab-id='" + $tabCount + "' id='pl-tab-content-" + $tabCount + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
             t = $("#show_builder").append(wrapper).find("#pl-tab-content-" + $tabCount),
             pane = $(".editor_pane_wrapper:last"),
             name = json.type == "md" ?  // file
@@ -514,20 +514,21 @@ var AIRTIME = (function(AIRTIME){
         $("#pl_edit").hide();
     }
 
-    function closeTab() {
-        var pane = $(".active-tab"),
-            tab = $(".nav.nav-tabs .active"),
+    function closeTab(id) {
+        var pane = id ? $(".pl-content[tab-id='" + id + "']") : $(".active-tab"),
+            tab = id ? $(".nav.nav-tabs [tab-id='" + id + "']") : $(".nav.nav-tabs .active"),
             toPane = pane.next().length > 0 ? pane.next() : pane.prev(),
             toTab = tab.next().length > 0 ? tab.next() : tab.prev(),
-            objId = pane.find(".obj_id").val();
+            objId = id ? id : pane.find(".obj_id").val();
         delete $openTabs[tab.attr("tab-type") + objId];
+
         tab.remove();
         $pl.remove();
         AIRTIME.showbuilder.switchTab(toPane, toTab);
     }
 
-    mod.closeTab = function() {
-        closeTab();
+    mod.closeTab = function(id) {
+        closeTab(id);
     };
 
     //Purpose of this function is to iterate over all playlist elements
@@ -967,6 +968,7 @@ var AIRTIME = (function(AIRTIME){
                             alert(json.error);
                         }
                         if (json.html !== undefined) {
+                            console.log(json);
                             closeTab();
                             openPlaylist(json);
                         }
@@ -1063,7 +1065,6 @@ var AIRTIME = (function(AIRTIME){
                 //http://stackoverflow.com/questions/2150002/jquery-ui-sortable-how-can-i-change-the-appearance-of-the-placeholder-object
                 placeholder: {
                     element: function(currentItem) {
-
                         return $('<li class="placeholder ui-state-highlight"></li>')[0];
                     },
                     update: function(container, p) {
@@ -1071,10 +1072,12 @@ var AIRTIME = (function(AIRTIME){
                     }
                 },
                 forcePlaceholderSize: true,
-                handle: 'div.list-item-container',
+                //handle: 'div.list-item-container',
                 start: function(event, ui) {
                     ui.placeholder.height(56);
                 },
+                axis: "y",
+                containment: "document",
                 receive: fnReceive,
                 update: fnUpdate
             };

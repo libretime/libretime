@@ -119,6 +119,7 @@ var AIRTIME = (function(AIRTIME){
             AIRTIME.playlist.setAsActive();
         }
         AIRTIME.playlist.onResize();
+        AIRTIME.library.fnRedraw();
     };
 
 
@@ -822,6 +823,7 @@ var AIRTIME = (function(AIRTIME){
                 $(this).find(".sb-checkbox > input").prop('checked', true);
             }
             selectedRows = $("." + SB_SELECTED_CLASS);
+            mod.checkToolBarIcons();
         });
 
         //begin context menu initialization.
@@ -1017,7 +1019,7 @@ var AIRTIME = (function(AIRTIME){
             return {
                 placeholder: "sb-placeholder ui-state-highlight",
                 //forcePlaceholderSize: true,
-                distance: 10,
+                distance: 25,
                 helper:
                     function(event, item) {
                         var selected = mod.getSelectedData(NOW_PLAYING_CLASS),
@@ -1069,6 +1071,8 @@ var AIRTIME = (function(AIRTIME){
                 cancel: '.sb-footer',
                 receive: fnReceive,
                 update: fnUpdate,
+                axis: "y",
+                containment: "document",
                 start: function(event, ui) {
                     var elements = $sbTable.find('tr.'+SB_SELECTED_CLASS).not("."+NOW_PLAYING_CLASS);
                     elements.hide();

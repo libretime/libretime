@@ -549,8 +549,6 @@ textarea {
 
     flex: 1 auto;
     padding: 0;
-    /*margin-right: 10px;*/
-    /*text-align: center;*/
 
     background: #353535;
     border: 1px solid #242424;
@@ -663,15 +661,19 @@ textarea {
     text-align: center;
 }
 
+th.library_checkbox {
+    text-align: center !important;
+}
+
 .datatable tr td { /*, .datatable tr th {*/
     line-height: 28px;
     font-size: 14px;
     padding: 5px;
 }
 
-.datatable tr[class$='selected'] td,
+.datatable tr[class*='selected'] td,
 .datatable tr.sb-now-playing td {
-    color: #efefef;
+    color: #000;
 }
 
 .datatable tr, .datatable td,
@@ -685,6 +687,11 @@ textarea {
 .ui-draggable-dragging {
     z-index: 9999;
     position: fixed !important;
+}
+
+.datatable .ui-state-highlight, .spl_sortable .ui-state-highlight {
+    background: rgba(255, 93, 26, .6);
+    border: none;
 }
 
 /* Uploads/Dropzone */

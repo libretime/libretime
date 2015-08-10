@@ -287,10 +287,14 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.checkItem = function($el) {
         $el.find(".library_checkbox > input").prop('checked', true);
+        $("#super-checkbox").prop("checked", true);
     };
 
     mod.uncheckItem = function($el) {
         $el.find(".library_checkbox > input").prop('checked', false);
+        if ($("." + LIB_SELECTED_CLASS.length == 0)) {
+            $("#super-checkbox").prop("checked", false);
+        }
     };
 
     mod.highlightItem = function($el) {
@@ -362,20 +366,23 @@ var AIRTIME = (function(AIRTIME) {
         mod.checkToolBarIcons();
     };
 
+    mod.fnRedraw = function() {
+        oTable.fnStandingRedraw();
+    };
+
     mod.fnDeleteItems = function(aMedia) {
         //Prevent the user from spamming the delete button while the AJAX request is in progress
         AIRTIME.button.disableButton("btn-group #sb-trash", false);
         var openTabObjectIds = $(".obj_id"),
             mediaIds = [];
         for (var i in aMedia) {
-            mediaIds.push(aMedia[i].id.toString());
+            mediaIds.push(parseInt(aMedia[i].id));
         }
 
         openTabObjectIds.each(function(i, el) {
-            var v = $(el).val();
+            var v = parseInt($(el).val());
             if ($.inArray(v, mediaIds) > -1) {
-                AIRTIME.playlist.fnOpenPlaylist({id: v});
-                AIRTIME.playlist.closeTab();
+                AIRTIME.playlist.closeTab($(el).closest(".pl-content").attr("tab-id"));
             }
         });
 
@@ -841,9 +848,19 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
 
+        $libTable.find("thead").on("click", "th > input[type='checkbox']", function(ev) {
+            if ($(this).is(":checked")) {
+                AIRTIME.library.selectCurrentPage();
+                $(this).prop("checked", true);
+            } else {
+                AIRTIME.library.selectNone();
+                $(this).prop("checked", false);
+            }
+        });
+
         // begin context menu initialization.
         $.contextMenu({
-            selector: '#library_display tr',
+            selector: '#library_display tr:has(td)',
             trigger: "right",
 
             build: function($el, e) {

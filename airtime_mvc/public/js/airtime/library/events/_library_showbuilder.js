@@ -70,6 +70,11 @@ var AIRTIME = (function(AIRTIME) {
         mod.redrawChosen();
         mod.checkToolBarIcons();
 
+        var cb = $('th.library_checkbox');
+            if (cb.find("input").length == 0) {
+                cb.append("<input id='super-checkbox' type='checkbox'>");
+            }
+
         if ($("#show_builder_table").is(":visible")) {
             $('#library_display tr.lib-audio, tr.lib-pl, tr.lib-stream')
                 .draggable(
@@ -116,9 +121,8 @@ var AIRTIME = (function(AIRTIME) {
                     helper: function () {
 
                         var $el = $(this), selected = mod
-                                .getChosenAudioFilesLength(), container, message, li = $(".side_playlist.active-tab ul.spl_sortable li:first"),
-                            width = li.width(), height = 55;
-                        if (width > 798) width = 798;
+                                .getChosenAudioFilesLength(), container, message,
+                            width = $(this).width(), height = 55;
 
                         // dragging an element that has an unselected
                         // checkbox.
