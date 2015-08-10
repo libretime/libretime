@@ -1,8 +1,3 @@
-html, body {
-    /*background: #242424;*/
-    background: #111;
-    overflow: hidden;
-}
 
 div.ColVis_collectionBackground {
     background-color: transparent;
@@ -559,14 +554,14 @@ textarea {
 /* Media type selector */
 
 #media_type_nav {
-    position: relative;
+    position: absolute;
     top: 139px;
+    bottom: 0px;
 
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
-    height: 100%;
     width: 130px;
 
     flex: 1 auto;
