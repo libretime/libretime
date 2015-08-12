@@ -188,7 +188,7 @@ class Application_Form_StreamSettingSubForm extends Zend_Form_SubForm
         $adminPass->setAttrib('alt', 'regular_text');
         $this->addElement($adminPass);
 
-        $liquidsoap_error_msg = '<div class="stream-status status-info"><h3>'._('Getting information from the server...').'</h3></div>';
+        $liquidsoap_error_msg = '<div class="stream-status status-info"><p>'._('Getting information from the server...').'</p></div>';
 
         $this->setDecorators(array(
             array('ViewScript', array('viewScript' => 'form/stream-setting-form.phtml',

@@ -2,6 +2,7 @@
 
   <div>
     <div><h4><?php echo _("Log Sheet Templates") ?></h4></div>
+    <button id="new_item_template" class="btn"><?php echo _("New Log Sheet Template") ?></button>
     <ul id="template_list">
       <?php if (count($this->template_list) == 0): ?>
         <li><?php echo _("No Log Sheet Templates") ?></li>
@@ -28,11 +29,11 @@
         </li>
       <?php endforeach; ?>
     </ul>
-    <button id="new_item_template" class="btn"><?php echo _("New Log Sheet Template") ?></button>
   </div>
   <br><br>
   <div>
     <div><h4><?php echo _("File Summary Templates") ?></h4></div>
+    <button id="new_file_template" class="btn"><?php echo _("New File Summary Template") ?></button>
     <ul id="template_file">
       <?php if (count($this->template_file) == 0): ?>
         <li><?php echo _("No File Summary Templates") ?></li>
@@ -59,6 +60,5 @@
         </li>
       <?php endforeach; ?>
     </ul>
-    <button id="new_file_template" class="btn"><?php echo _("New File Summary Template") ?></button>
   </div>
 </div>

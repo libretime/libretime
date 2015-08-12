@@ -44,9 +44,11 @@ h2 {
 h3 {
     font-size:1.7em;
     font-weight:normal;
-    color:#000;
-    padding:0 0 10px 0;
+    color: #efefef;
+    padding: 10px;
     margin:0;
+    background-color: #5E5E5E;
+    border-top:1px solid #9d9d9d;
 }
 a, a:focus {
     outline:none;
@@ -1701,6 +1703,10 @@ h2#scheduled_playlist_name span {
     /*width: 60%;*/
 }
 
+.stream-setting-global {
+    margin-bottom: 30px;
+}
+
 .simple-formblock.padded-strong {
     padding:12px;
 }
@@ -2070,7 +2076,7 @@ span.errors.sp-errors{
 }
 
 .qtip {
-    font-size:11px;
+    font-size:14px;
     line-height:160%;
 }
 
@@ -2599,8 +2605,17 @@ label span {
 }
 
 fieldset > legend {
-    font-size: 12px;
+    font-size: 16px;
     line-height: 140%;
+    background: #333;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+}
+
+fieldset.padded > legend {
+    padding-left: -8px;
 }
 fieldset.closed, fieldset.display_field.closed {
     border-width: 1px 0 0;
@@ -2655,7 +2670,7 @@ input[type="checkbox"][disabled] {
 }
 
 .info-text-small {
-    color: #5B5B5B;
+    color: #adadad;
     font-size: 11px;
     line-height: 150%;
     margin: 0;
@@ -2685,7 +2700,7 @@ dd .info-text-small {
 
 .stream-config input[type="text"], .stream-config input[type="password"] {
     /*width:98.5%;*/
-    min-width:172px;
+    min-width:168px;
 }
 .stream-config .display_field dd input[type="text"], .stream-config .display_field dd input[type="password"], .stream-config .display_field dd textarea {
     min-width:99%;
@@ -3080,25 +3095,19 @@ tfoot tr th    {
 /*---////////////////////    STREAM SETTINGS STATUS    ////////////////////---*/
 .stream-status {
     border: 1px solid;
-    padding:2px 10px 4px 22px;
+    padding:2px 12px 4px 26px;
     margin:2px 1px 10px 0px;
     width: auto;
 }
 dd .stream-status {
     margin-bottom:1px;
 }
-.stream-status h3 {
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 12px;
-    padding:0;
-    margin:5px 4px 2px 4px;
-}
+
 .stream-status p {
     padding:0;
-    margin:2px 3px 1px 4px;
+    padding-top: 1px;
+    margin:4px;
     color:#4F4F4F;
-    font-size: 11px;
 }
 .stream-config dd.stream-status    {
     padding:2px 10px 4px 22px;
@@ -3106,31 +3115,31 @@ dd .stream-status {
     width: 65%;
 }
 .status-good {
-    background:#e3ffc9 url(images/stream_status.png) no-repeat 5px 5px;
+    background:#e3ffc9 url(images/stream_status.png) no-repeat 8px 5px;
     border-color:#54b300;
 }
-.status-good h3 {
+.status-good p {
     color:#54b300;
 }
 .status-error {
-    background:#ffeded url(images/stream_status.png) no-repeat 5px -128px;
+    background:#ffeded url(images/stream_status.png) no-repeat 8px -126px;
     border-color:#f90000;
 }
-.status-error h3 {
+.status-error p {
     color:#DA0101;
 }
 .status-info {
-    background:#fff7e0 url(images/stream_status.png) no-repeat 5px -278px;
+    background:#fff7e0 url(images/stream_status.png) no-repeat 8px -275px;
     border-color:#f68826;
 }
-.status-info h3 {
+.status-info p {
     color:#f1830c;
 }
 .status-disabled {
-    background:#c8ccc8 url(images/stream_status.png) no-repeat 5px -429px;
+    background:#c8ccc8 url(images/stream_status.png) no-repeat 8px -426px;
     border-color:#7f827f;
 }
-.status-disabled h3 {
+.status-disabled p {
     color:#646664;
 }
 

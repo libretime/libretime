@@ -7,8 +7,9 @@
     <div style="clear:both"></div>
   <?php echo $this->statusMsg;?>
   <div style="float: left; margin-right: 10px; width: 490px; overflow: auto;">
+
+    <h3><?php echo _("Global") ?></h3>
     <fieldset class="padded stream-setting-global">
-        <legend><?php echo _("Global Settings") ?></legend>
         <dl class="zend_form">
         <?php if($this->form->getElement('output_sound_device') != null){?>
             <dt id="hardwareOut-label">
@@ -102,8 +103,8 @@
     <?php echo $this->form->getSubform('live_stream_subform'); ?>
   </div>
   <div style="float: left; width: 600px;">
+      <h3><?php echo _("Output Streams") ?></h3>
     <fieldset class="padded">
-    <legend><?php echo _("Output Stream Settings") ?></legend>
         <?php
             // TODO: replace this with something that looks good
             echo $this->form->getElement('customStreamSettings')->render();

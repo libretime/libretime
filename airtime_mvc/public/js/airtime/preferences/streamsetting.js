@@ -94,13 +94,13 @@ function checkLiquidsoapStatus(){
             }
             var html;
             if(status == "OK"){
-                html = '<div class="stream-status status-good"><h3>'+$.i18n._("Connected to the streaming server")+'</h3></div>';
+                html = '<div class="stream-status status-good"><hp3>'+$.i18n._("Connected to the streaming server")+'</p></div>';
             }else if(status == "N/A"){
-                html = '<div class="stream-status status-disabled"><h3>'+$.i18n._("The stream is disabled")+'</h3></div>';
+                html = '<div class="stream-status status-disabled"><p>'+$.i18n._("The stream is disabled")+'</p></div>';
             }else if(status == "waiting"){
-            	html = '<div class="stream-status status-info"><h3>'+$.i18n._("Getting information from the server...")+'</h3></div>';
+            	html = '<div class="stream-status status-info"><p>'+$.i18n._("Getting information from the server...")+'</p></div>';
             }else{
-                html = '<div class="stream-status status-error"><h3>'+$.i18n._("Can not connect to the streaming server")+'</h3><p>'+status+'</p></div>';
+                html = '<div class="stream-status status-error"><p>'+$.i18n._("Can not connect to the streaming server")+'</p><p>'+status+'</p></div>';
             }
             $("#s"+id+"Liquidsoap-error-msg-element").html(html);
         }

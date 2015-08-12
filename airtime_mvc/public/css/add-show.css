@@ -10,7 +10,7 @@
 }
 
 #schedule-add-show textarea {
-    width: 99%;
+    width: 96%;
     height: 80px;
 }
 
@@ -36,11 +36,10 @@
 }
 
 #schedule-add-show dd {
-    padding: 4px 0;
-    float: left;
     font-size: 1.2em;
     margin: 0;
-    padding: 4px 0 4px 15px;
+    margin-bottom: 8px;
+    /* padding: 4px 0 4px 15px;*/
 }
 
 #schedule-add-show dt, #schedule-add-show dt.big {
@@ -49,9 +48,9 @@
     font-size: 1.2em;
     font-weight: bold;
     margin: 0;
-    padding: 4px 0;
     text-align: left;
     min-width: 103px;
+    padding-top: 4px;
     clear: left;
 }
 
@@ -87,7 +86,7 @@ label.wrapp-label input[type="checkbox"] {
 }
 
 #schedule-add-show fieldset dd input[type="checkbox"] {
-    margin-top: 2px;
+    margin-top: 6px;
 }
 
 #add_show_day_check-element.block-display {
@@ -117,7 +116,6 @@ label.wrapp-label input[type="checkbox"] {
 #add_show_hosts-element {
     max-height: 80px;
     min-width: 150px;
-    overflow: auto;
 }
 
 #add_show_start_time, #add_show_end_time {
@@ -208,4 +206,9 @@ label.wrapp-label input[type="checkbox"] {
 
 .ui-state-hover {
     background: inherit;
+}
+
+#cb_airtime_auth-label,
+#cb_custom_auth-label {
+    width: 80%;
 }
