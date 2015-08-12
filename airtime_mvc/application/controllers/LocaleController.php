@@ -290,7 +290,7 @@ class LocaleController extends Zend_Controller_Action
             //"Select" => _("Select"),
             "Select all" => _("Select all"),
             "Select none" => _("Select none"),
-            "Remove overbooked tracks" => _("Remove overbooked tracks"),
+            "Trim overbooked shows" => _("Trim overbooked shows"),
             "Remove selected scheduled items" => _("Remove selected scheduled items"),
             "Jump to the current playing track" => _("Jump to the current playing track"),
             "Cancel current show" => _("Cancel current show"),

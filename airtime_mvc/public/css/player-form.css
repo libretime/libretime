@@ -14,6 +14,9 @@
 }
 .player-preview {
     width: 100%;
+    background-color: #111;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 .player-preview iframe {
     margin: 0 auto;
@@ -31,15 +34,13 @@
     padding-bottom: 10px;
     font-size: 14px;
     /*font-weight: bold;*/
-    color: #333;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 .player-title {
     clear: left;
-    color: #5b5b5b;
     float: left;
     font-size: 13px;
-    font-weight: bold;
     width: 40px;
     padding: 4px 0;
     text-align: left;
@@ -55,7 +56,6 @@
 #player_embed_src-element p {
     margin: 0px;
     font-size: 13px;
-    color: #333;
 }
 
 
@@ -75,7 +75,7 @@ table#player_compatibility_chart{
 
 #player_compatibility_chart th
 {
-    color: #5b5b5b;
+    color: #1f1f1f;
     border: 0px;
 }
 

@@ -1103,21 +1103,29 @@ var AIRTIME = (function(AIRTIME){
             "</ul>" +
             "</div>")
             .append("<div class='btn-group'>" +
-            "<button title='"+$.i18n._("Remove overbooked tracks")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
-            "<i class='icon-white icon-cut'></i></button></div>")
+            "<button title='"+$.i18n._("Trim overbooked shows")+"' class='ui-state-disabled btn btn-small btn-icon-text' disabled='disabled'>" +
+            "<i class='icon-white icon-cut'></i>" +
+            "<span>" + $.i18n._('Trim overbooked shows') + "</span>" +
+            "</button></div>")
             .append("<div class='btn-group'>" +
-            "<button title='"+$.i18n._("Remove selected scheduled items")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
-            "<i class='icon-white icon-trash'></i></button></div>");
+            "<button title='"+$.i18n._("Remove selected scheduled items")+"' class='ui-state-disabled btn btn-small btn-icon-text btn-danger' disabled='disabled'>" +
+            "<i class='icon-white icon-trash'></i>" +
+            "<span>" + $.i18n._('Remove') + "</span>" +
+            "</button></div>");
 
         //if 'Add/Remove content' was chosen from the context menu
         //in the Calendar do not append these buttons
         if ($(".ui-dialog-content").length === 0) {
             $menu.append("<div class='btn-group'>" +
-                "<button  title='"+$.i18n._("Jump to the current playing track")+"' class='ui-state-disabled btn btn-small' disabled='disabled'>" +
-                "<i class='icon-white icon-step-forward'></i></button></div>")
+                "<button  title='"+$.i18n._("Jump to the current playing track")+"' class='ui-state-disabled btn btn-small btn-icon-text' disabled='disabled'>" +
+                "<i class='icon-white icon-step-forward'></i>" +
+                "<span>" + $.i18n._('Jump to Current') + "</span>" +
+                "</button></div>")
                 .append("<div class='btn-group'>" +
-                "<button title='"+$.i18n._("Cancel current show")+"' class='ui-state-disabled btn btn-small btn-danger' disabled='disabled'>" +
-                "<i class='icon-white icon-ban-circle'></i></button></div>");
+                "<button title='"+$.i18n._("Cancel current show")+"' class='ui-state-disabled btn btn-small btn-icon-text btn-danger' disabled='disabled'>" +
+                "<i class='icon-white icon-ban-circle'></i>" +
+                "<span>" + $.i18n._('Cancel current show') + "</span>" +
+                "</button></div>");
         }
 
         if (localStorage.getItem('user-type') != 'G') {

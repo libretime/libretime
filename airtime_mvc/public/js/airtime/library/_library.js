@@ -136,7 +136,7 @@ var AIRTIME = (function(AIRTIME) {
                         "</button>" +
                     "</div>")
             .append("<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
-                        "<button class='btn btn-small' id='sb-trash'>" +
+                        "<button class='btn btn-small btn-danger' id='sb-trash'>" +
                             "<i class='icon-white icon-trash'></i>" +
                             "<span>" + $.i18n._('Delete') + "</span>" +
                     "</button>" +

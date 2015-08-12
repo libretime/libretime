@@ -3395,15 +3395,12 @@ dd .stream-status {
     margin-bottom: 20px;
 }
 
-#weekly-schedule-widget label {
-    font-weight: bold;
-}
-
 .schedule_iframe_wrapper {
-    width: 100%;
-    float: left;
     text-align: center;
-    padding: 10px;
+    background-color: #111;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
 }
 
 #schedule_iframe {
@@ -3441,4 +3438,8 @@ dd .stream-status {
 
 #upload_form, #recent_uploads_wrapper {
     box-sizing: border-box;
+}
+
+button.btn-icon-text > i.icon-white {
+    margin-right: 4px;
 }
