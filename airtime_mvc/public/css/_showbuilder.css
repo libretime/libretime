@@ -615,9 +615,7 @@ li.ui-state-default {
     margin: 0 4px;
 }
 
-/* Hacky */
-.smart-block-form + .btn-toolbar,
-.smart-block-form + .btn-toolbar + .btn-toolbar {
+.smart-block-form ~ .btn-toolbar {
     padding-top: 4px;
 }
 

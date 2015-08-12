@@ -54,7 +54,7 @@ class Application_Common_UsabilityHints
             if ($userIsOnAddMediaPage) {
                 return _("Click the 'Add files' button and select files from your computer to upload.");
             } else {
-                return sprintf(_("It looks like you have not uploaded any audio files yet. %sUpload a file now.%s "),
+                return sprintf(_("It looks like you have not uploaded any audio files yet. %sUpload a file now%s."),
                     "<a href=\"/plupload\">",
                     "</a>");
             }
@@ -62,7 +62,7 @@ class Application_Common_UsabilityHints
             if ($userIsOnCalendarPage) {
                 return _("Click the 'Create New Show' button and fill out the required fields.");
             } else {
-                return sprintf(_("It looks like you don't have any shows scheduled. %sCreate a show now.%s"),
+                return sprintf(_("It looks like you don't have any shows scheduled. %sCreate a show now%s."),
                     "<a href=\"/schedule\">",
                     "</a>");
             }
@@ -73,13 +73,13 @@ class Application_Common_UsabilityHints
                     return _("To start broadcasting, first you need to cancel the current linked show by clicking on it and selecting 'Cancel Current Show'.");
                 } else {
                     return sprintf(_("Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.
-                    %sCreate an unlinked show now.%s"), "<a href=\"/schedule\">", "</a>");
+                    %sCreate an unlinked show now%s."), "<a href=\"/schedule\">", "</a>");
                 }
             } else {
                 if ($userIsOnCalendarPage) {
                     return _("To start broadcasting, click on the current show and select 'Add / Remove Content'");
                 } else {
-                    return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now.%s"),
+                    return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now%s."),
                         "<a href=\"/schedule\">",
                         "</a>");
                 }
@@ -88,7 +88,7 @@ class Application_Common_UsabilityHints
             if ($userIsOnCalendarPage) {
                 return _("Click on the show starting next and select 'Add / Remove Content'");
             } else {
-                return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now.%s"),
+                return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now%s."),
                     "<a href=\"/schedule\">",
                     "</a>");
             }
