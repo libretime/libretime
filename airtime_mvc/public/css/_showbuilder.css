@@ -238,11 +238,17 @@ div.btn > span {
 }
 
 thead th.ui-state-default {
-    cursor: move;
-
     border: solid #666;
     border-width: 0 0 1px 1px;
     color: #ccc;
+}
+
+thead th.ui-state-default:not([class*='checkbox']):not([class*='type']):not([class*='image']) {
+    cursor: move;
+}
+
+thead th.ui-state-default:focus {
+    outline: none;
 }
 
 /* Library Context Menu */
@@ -720,7 +726,7 @@ li.ui-state-default {
 
 /* Hacky stuff here */
 #show_builder .dataTables_scrolling {
-    top: 67px;
+    top: 66px;
 }
 
 .sb-padded > .fg-toolbar {
@@ -742,7 +748,7 @@ li.ui-state-default {
     color: #efefef;
 }
 
-.datatable tr td[class$='checkbox'], .datatable tr td[class$='type'] {
+.datatable tr td[class*='checkbox'], .datatable tr td[class*='type'] {
     text-align: center;
 }
 
