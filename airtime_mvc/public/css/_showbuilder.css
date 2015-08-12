@@ -665,22 +665,6 @@ th.library_checkbox {
     text-align: center !important;
 }
 
-.datatable tr td { /*, .datatable tr th {*/
-    line-height: 28px;
-    font-size: 14px;
-    padding: 5px;
-}
-
-.datatable tr[class*='selected'] td,
-.datatable tr.sb-now-playing td {
-    color: #000;
-}
-
-.datatable tr, .datatable td,
-.dataTable tr, .dataTable td
-{
-    border: none;
-}
 
 /* This is so dragged items show up above the layout */
 

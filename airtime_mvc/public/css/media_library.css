@@ -58,11 +58,6 @@
     word-wrap: break-word;
 }
 
-#library_display th,
-#library_display td,
-.paginationControl {
-	font-size: 13px;
-}
 
 #library_content .ui-tabs-panel {
 	padding-top:16px;

@@ -841,10 +841,6 @@ dl.inline-list dd {
 }
 /*----Data Table----*/
 
-.datatable tr th.ui-state-default {
-    border: 1px solid #CCC;
-    border-width: 0 0 0 1px !important;
-}
 .datatable {
     border-color: #5b5b5b;
     border-style: solid;
@@ -854,12 +850,18 @@ dl.inline-list dd {
 
 .datatable th {
     text-align: left;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    font-size: 14px;
+    line-height: 28px;
+    border: 0px;
+    background: #575757;
 }
 
 .datatable tr td, .datatable tr th {
-    font-size: 13px;
     padding: 5px 5px;
-    color: #CCC;
+    line-height: 28px;
+    font-size: 14px;
+    color: #ccc;
 }
 
 .datatable tr, .datatable td,
@@ -868,6 +870,7 @@ dl.inline-list dd {
     border: none;
     border-spacing: 0;
 }
+
 
 .odd {
     background-color: #282828;
@@ -879,6 +882,20 @@ dl.inline-list dd {
 .datatable tr .selected td {
     background-color: #abcfe2;
 }
+
+.selected.even {
+    background-color: rgba(240, 109, 53, 1);
+}
+.selected.odd {
+    background-color: rgba(255, 136, 56, 1);
+}
+
+.datatable tr[class*='selected'] td,
+.datatable tr.sb-now-playing td {
+    color: #000;
+}
+
+
 /*
 .datatable tr.odd.selected td {
     background-color: #c5deeb;
@@ -913,8 +930,8 @@ dl.inline-list dd {
 
 .DataTables_sort_wrapper .ui-icon {
     display: block;
-    float: left;
-    margin: 0 3px 0 -2px;
+    float: right;
+    margin: 5px 5px 5px 5px;
 }
 .dataTables_type {
     float:right;
@@ -1011,11 +1028,7 @@ table.dataTable span.DataTables_sort_icon {
 }
 
 table.dataTable th.ui-state-default {
-    background: -moz-linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2b2b2), color-stop(100%, #a2a2a2));
-    background: linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-    border: 1px solid #8F8F8F;
-    color: #363636;
+    color: #eee;
 }
 
 .ColVis.TableTools .ui-button {
@@ -1643,10 +1656,10 @@ h2#scheduled_playlist_name span {
 }
 .simple-formblock dt {
     clear: left;
-    color: #666666;
+    color: #CDCDCD;
     float: left;
     font-size: 1.2em;
-    font-weight: bold;
+    font-weight: normal;
     margin: 0;
     min-width: 90px;
     padding: 4px 0;
@@ -1746,24 +1759,43 @@ button, input {
     margin-bottom:0;
 }
 
+#user_details
+{
+    visibility: hidden;
+}
+
 .user-management {
     width:910px;
-    /*width:380px;*/
+    height: 410px;
 }
 .user-management-expanded {
     width:910px;
 }
 .user-data {
-    float:left;
+    float:right;
     width:420px;
     margin-left:10px;
-    /*display:none;*/
 }
 .user-list-wrapper {
     float:left;
     width:480px;
+    position: absolute;
+    height: 373px;
     /*margin-right:10px;*/
 }
+
+#users_datatable {
+    border: 0px;
+}
+
+#users_datatable_wrapper > div.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix
+{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 
 .user-management div.user-list-wrapper .ui-widget-header:first-child {
     background: none repeat scroll 0 0 transparent;
@@ -1795,7 +1827,6 @@ button, input {
 
 .user-list-wrapper .button-holder {
     padding:0;
-    text-align:right;
     height:37px;
 }
 .user-list-wrapper .button-holder .ui-button {
@@ -2797,8 +2828,6 @@ thead tr th    {
     padding: 5px 5px;
     border-color:#CCCCCC;
     background-color: #6e6e6e;
-    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
     border-style: solid;
     border-width: 0 0 0 1px;
 }
