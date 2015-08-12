@@ -274,6 +274,8 @@ var AIRTIME = (function(AIRTIME) {
     		animated: false,
     		create: function( event, ui ) {
     			var $div = $showList.find(".ui-accordion-content-active");
+				console.log(event);
+				//$div.css()
     			createShowTable($div);
     		},
 		    change: function( event, ui ) {
@@ -288,8 +290,16 @@ var AIRTIME = (function(AIRTIME) {
     
     function createToolbarButtons ($el) {
         var $menu = $("<div class='btn-toolbar' />");
-        
-        $menu.append("<div class='btn-group'>" +
+
+		$menu.append("<div class='btn-group'>" +
+				"<button class='btn btn-small' id='his_create'>" +
+				"<i class='icon-white icon-plus'></i>" +
+				$.i18n._("New Log Entry") +
+				"</button>" +
+			"</div>");
+
+
+		$menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
                 $.i18n._("Select")+" <span class='caret'></span>" +
             "</button>" +
@@ -298,13 +308,6 @@ var AIRTIME = (function(AIRTIME) {
                 "<li class='his-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
                 "<li class='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
             "</ul>" +
-        "</div>");
-        
-        $menu.append("<div class='btn-group'>" +
-            "<button class='btn btn-small' id='his_create'>" +
-                "<i class='icon-white icon-plus'></i>" +
-                $.i18n._("Create Entry") +
-            "</button>" +
         "</div>");
         
         $menu.append("<div class='btn-group'>" +

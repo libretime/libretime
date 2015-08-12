@@ -391,7 +391,8 @@ class LocaleController extends Zend_Controller_Action
             "All" => _("All"),
             "Copied %s row%s to the clipboard" => _("Copied %s row%s to the clipboard"),
             "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."),
-            "New Show" => _("New Show")
+            "New Show" => _("New Show"),
+            "New Log Entry" => _("New Log Entry")
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

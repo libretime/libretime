@@ -67,7 +67,6 @@ class Application_Model_Show
     public function getColor()
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
-
         return $show->getDbColor();
     }
 
@@ -111,7 +110,12 @@ class Application_Model_Show
     {
         $show = CcShowQuery::create()->findPK($this->_showId);
 
-        return $show->getDbBackgroundColor();
+        $color = $show->getDbBackgroundColor();
+        if (empty($color)) {
+            return DEFAULT_SHOW_COLOR;
+        } else {
+            return $color;
+        }
     }
 
     public function setBackgroundColor($backgroundColor)
@@ -1035,8 +1039,10 @@ SQL;
                 $event["textColor"] = "#".$show["color"];
             }
 
-            if ($show["background_color"] != "") {
-                $event["color"] = "#".$show["background_color"];
+            if (!empty($show["background_color"])) {
+                $event["color"] = "#" . $show["background_color"];
+            } else {
+                $event["color"] = "#" . DEFAULT_SHOW_COLOR;
             }
 
             foreach ($options as $key => $value) {

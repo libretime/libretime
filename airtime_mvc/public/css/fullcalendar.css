@@ -36,6 +36,24 @@ html .fc,
 /* Header
 ------------------------------------------------------------------------*/
 
+table.fc-header  {
+	background: #4a4a4a;
+}
+
+#schedule_calendar > table > tbody > tr > td.fc-header-left
+{
+	padding: 5px 0px 0px 5px;
+}
+#schedule_calendar > table > tbody > tr > td.fc-header-center
+{
+	padding: 10px 5px 0px 0px;
+}
+#schedule_calendar > table > tbody > tr > td.fc-header-right
+{
+	padding: 5px 5px 0px 0px;
+}
+
+
 .fc-header td {
 	white-space: nowrap;
 	}

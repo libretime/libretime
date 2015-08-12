@@ -136,7 +136,7 @@
 
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-	border:0px solid #5b5b5b;
+	border:1px solid #5b5b5b;
 	background-color: #6e6e6e;
 	color: #ffffff;
 }
