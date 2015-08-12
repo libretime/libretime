@@ -251,18 +251,6 @@ thead th.ui-state-default:focus {
     outline: none;
 }
 
-/* Library Context Menu */
-
-.context-menu-item.icon {
-    min-height: 26px;
-    padding: 0 5px;
-    background-position: 4px 5px;
-}
-
-.context-menu-item > span {
-    padding: 0 20px;
-    line-height: 26px;
-}
 
 /* Library Search */
 
