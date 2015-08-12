@@ -584,7 +584,7 @@ var AIRTIME = (function(AIRTIME){
                         $node.empty();
                     }
 
-                    sSeparatorHTML = '<span>'+$.i18n._("Show Empty")+'</span>';
+                    sSeparatorHTML = '<span>'+$.i18n._("Drag tracks here from the library")+'</span>';
                     cl = cl + " sb-empty odd";
 
                     fnPrepareSeparatorRow(sSeparatorHTML, cl, 1);
@@ -773,12 +773,12 @@ var AIRTIME = (function(AIRTIME){
 
             "sAjaxDataProp": "schedule",
             "oLanguage": datatables_dict,
-            "sAjaxSource": baseUrl+"showbuilder/builder-feed"  ,
+            "sAjaxSource": baseUrl+"showbuilder/builder-feed",
 
             "bScrollCollapseY": false
         });
 
-        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-past, .sb-empty)", function(ev) {
+        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty))", function(ev) {
             var $tr = $(this),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -814,7 +814,7 @@ var AIRTIME = (function(AIRTIME){
             $previouslySelected = $tr;
         });
 
-        $sbTable.find("tbody").on("click", "tr:not(.sb-past, .sb-empty)", function(ev) {
+        $sbTable.find("tbody").on("click", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty))", function(ev) {
             if (flagForDeselection) {
                 flagForDeselection = false;
                 $(this).removeClass(SB_SELECTED_CLASS);

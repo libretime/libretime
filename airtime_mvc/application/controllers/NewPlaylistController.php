@@ -86,7 +86,7 @@ class NewPlaylistController extends Zend_Controller_Action
             $this->view->length = $formatter->format();
 
             if ($isBlock) {
-                $form = new Application_Form_SmartBlockCriteria();
+                $form = new Application_Form_SmartBlockCriteriaNew();
                 $form->removeDecorator('DtDdWrapper');
                 $form->startForm($obj->getId(), $formIsValid);
 
@@ -531,7 +531,7 @@ class NewPlaylistController extends Zend_Controller_Action
             } catch (BlockNotFoundException $e) {
                 $this->playlistNotFound('block', true);
             }
-            $form = new Application_Form_SmartBlockCriteria();
+            $form = new Application_Form_SmartBlockCriteriaNew();
             $form->startForm($params['obj_id']);
             if ($form->isValid($params)) {
                 $this->setPlaylistNameDescAction();
@@ -547,14 +547,15 @@ class NewPlaylistController extends Zend_Controller_Action
                 $this->view->id = $bl->getId();
                 $result['html'] = $this->view->render($viewPath);
                 $result['result'] = 1;
-                $result['type'] = "sb";
-                $result['id'] = $bl->getId();
             }
+            $result['type'] = "sb";
+            $result['id'] = $bl->getId();
+            $result["modified"] = $bl->getLastModified("U");
         } else if ($params['type'] == 'playlist') {
+            $result["modified"] = $this->view->modified;
             $this->setPlaylistNameDescAction();
         }
 
-        $result["modified"] = $this->view->modified;
         $this->_helper->json->sendJson($result);
     }
 
@@ -567,7 +568,7 @@ class NewPlaylistController extends Zend_Controller_Action
         try {
             $bl = new Application_Model_Block($params['obj_id']);
             
-            $form = new Application_Form_SmartBlockCriteria();
+            $form = new Application_Form_SmartBlockCriteriaNew();
             $form->startForm($params['obj_id']);
             if ($form->isValid($params)) {
                 $result = $bl->generateSmartBlock($params['data']);

@@ -68,7 +68,11 @@ div.ColVis_collectionBackground {
 
 .content-pane {
     position: relative;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
+
     height: 100%;
 
     border: 1px solid #202020;
@@ -105,6 +109,7 @@ div.ColVis_collectionBackground {
     .wrapper {
         -webkit-flex-flow: column !important;
         flex-flow: column !important;
+        padding-top: 10px !important;
     }
     .content-pane {
         height: auto !important;
@@ -114,11 +119,15 @@ div.ColVis_collectionBackground {
         flex: 8 100%;
         min-height: 50%;
     }
-}
-
-@media screen and (max-width: 780px) {
-    .wrapper {
-        padding: 4px 4px 40px !important;
+    .usability_hint {
+        left: 0;
+        top: auto;
+        bottom: 0;
+        width: 100%;
+        z-index: 100;
+    }
+    .spl_sortable {
+        max-height: 50%;
     }
 }
 
@@ -187,13 +196,8 @@ div.ColVis_collectionBackground {
     top: 2px;
 }
 
-div.btn > span
-{
+div.btn > span {
     color: red;
-}
-
-.fg-toolbar.ui-toolbar {
-    border: none;
 }
 
 .fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
@@ -226,6 +230,25 @@ div.btn > span
 
 #library_display, #show_builder_table {
     border: none;
+}
+
+#library_display_wrapper > .dataTables_scrolling,
+#show_builder_table_wrapper > .dataTables_scrolling {
+    border: 1px solid #5b5b5b;
+}
+
+thead th.ui-state-default {
+    border: solid #666;
+    border-width: 0 0 1px 1px;
+    color: #ccc;
+}
+
+thead th.ui-state-default:not([class*='checkbox']):not([class*='type']):not([class*='image']) {
+    cursor: move;
+}
+
+thead th.ui-state-default:focus {
+    outline: none;
 }
 
 /* Library Context Menu */
@@ -315,6 +338,10 @@ div.btn > span
     float: right;
 }
 
+#show_builder .fg-toolbar.ui-corner-tl.ui-corner-tr {
+    border-top: none;
+}
+
 .sb-content .dataTables_wrapper {
     margin: 0;
 }
@@ -349,7 +376,7 @@ div.btn > span
 }
 
 .nav-tabs {
-    border-bottom: 1px solid #474747;
+    border-bottom: 1px solid #5b5b5b;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     padding: 0;
@@ -364,13 +391,12 @@ div.btn > span
     text-decoration: none;
 
     background-color: rgba(71,71,71,.5);
-
 }
 
 .nav-tabs :not(.active) a:hover {
     background-color: rgba(239, 76, 10, .5) !important;
     border: 1px solid transparent !important;
-    border-bottom: 1px solid #474747 !important;
+    border-bottom: 1px solid transparent !important;
 }
 
 .nav-tabs > .active > a, .nav-tabs > .active > a:hover {
@@ -431,6 +457,20 @@ textarea {
 
 /* Playlist/Block/Webstream Editors */
 
+dl > dd > input, dl > dd > textarea {
+    margin: 0;
+}
+
+span.errors.sp-errors {
+    color: #902d2d;
+}
+
+li.ui-state-default {
+    border: 1px solid #7e7e7e;
+}
+
+/* Playlist Editor */
+
 .side_playlist {
     position: relative;
     width: 100%; /* Override because we're using flexbox */
@@ -452,7 +492,12 @@ textarea {
 .side_playlist label, .side_playlist h4, .side_playlist span {
     color: #efefef;
     font-size: 14px;
+    line-height: 24px;
     font-weight: normal;
+}
+
+.sb-content fieldset label {
+    font-size: 14px;
 }
 
 .editor_pane_wrapper {
@@ -471,7 +516,14 @@ textarea {
 }
 
 .inner_editor_wrapper {
+    max-height: 60%;
+    overflow-x: hidden;
     width: 100%;
+    flex: 1 0 100%;
+}
+
+.clearfix:after, .side_playlist li:after {
+    display: none !important;
 }
 
 .spl-no-margin {
@@ -534,10 +586,45 @@ textarea {
     outline-width: 0;
 }
 
+/* Smart Block Editor */
+
+.btn-toolbar {
+    margin: 0;
+}
+
+.sp-button {
+     margin-left: 0;
+}
+
+.sp-button + .sp-button {
+    margin: 0 5px 0 0;
+}
+
+.side_playlist .zend_form input {
+    box-sizing: border-box;
+    height: 26px;
+}
+
+.smart-block-form input[type='radio'] {
+    vertical-align: bottom;
+    margin: 0 5px -2px;
+}
+
+.smart-block-form input[type='checkbox'] {
+    vertical-align: bottom;
+    margin: 0 4px;
+}
+
+/* Hacky */
+.smart-block-form + .btn-toolbar,
+.smart-block-form + .btn-toolbar + .btn-toolbar {
+    padding-top: 4px;
+}
+
 /* Media type selector */
 
 #media_type_nav {
-    position: absolute;
+    position: fixed;
     top: 139px;
     bottom: 0;
 
@@ -626,6 +713,10 @@ textarea {
     padding: 3px 9px;
 }
 
+.ColVis_title {
+    color: #000;
+}
+
 #show_builder .fg-toolbar > .btn-toolbar {
     position: absolute;
     top: 36px;
@@ -635,7 +726,7 @@ textarea {
 
 /* Hacky stuff here */
 #show_builder .dataTables_scrolling {
-    top: 67px;
+    top: 66px;
 }
 
 .sb-padded > .fg-toolbar {
@@ -657,8 +748,12 @@ textarea {
     color: #efefef;
 }
 
-.datatable tr td[class$='checkbox'], .datatable tr td[class$='type'] {
+.datatable tr td[class*='checkbox'], .datatable tr td[class*='type'] {
     text-align: center;
+}
+
+.datatable tr td {
+    text-align: left;
 }
 
 th.library_checkbox {
@@ -671,6 +766,11 @@ th.library_checkbox {
 .ui-draggable-dragging {
     z-index: 9999;
     position: fixed !important;
+}
+
+/* Since the z-index gets applied dynamically to the  */
+#ui-datepicker-div {
+    z-index: 1000 !important;
 }
 
 .datatable .ui-state-highlight, .spl_sortable .ui-state-highlight {

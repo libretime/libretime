@@ -495,13 +495,17 @@ fieldset {
 
 /* END Master Panel */
 
-
 .wrapper {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
     position: absolute;
     top: 141px;
-    left: 10px;
-    right: 10px;
-    padding:10px 0 0 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
 }
 
 .alpha-block {
@@ -934,7 +938,7 @@ dl.inline-list dd {
 .DataTables_sort_wrapper .ui-icon {
     display: block;
     float: right;
-    margin: 5px 5px 5px 5px;
+    margin: 5px 0;
 }
 .dataTables_type {
     float:right;
@@ -993,9 +997,10 @@ dl.inline-list dd {
 
 .dataTables_info {
     float: left;
-    padding: 10px;
-    font-size:12px;
-    font-weight:normal;
+    padding-left: 10px;
+    font-size: 15px;
+    font-weight: normal;
+    line-height: 36px;
 }
 
 .dataTables_paginate {
@@ -1021,9 +1026,12 @@ dl.inline-list dd {
     font-family: Arial,Helvetica,sans-serif;
     font-size: 12px;
     height: 25px;
-    margin: 0;
+    margin: 0 0 0 4px;
     padding: 2px 2px 2px 0;
     vertical-align: top;
+}
+.dataTables_empty {
+    cursor: auto;
 }
 table.dataTable tbody tr, 
 table.dataTable span.DataTables_sort_icon {
@@ -1372,10 +1380,14 @@ input[type="checkbox"] {
 }
 
 #schedule_calendar {
+    box-sizing: border-box;
+
     width: 100%;
+    margin: 0;
 }
 
 #schedule_block_table {
+    padding-right: 5px;
     width: 100%;
 }
 
@@ -1401,8 +1413,7 @@ div.fc-agenda > div:nth-child(2)
 {
     width: 100%;
     height: 100%;
-    padding: 0px;
-    padding-right: 20px !important;
+    padding: 0 5px 0 0;
 }
 
 .schedule_change_slots /** The time span combobox */
@@ -1411,7 +1422,7 @@ div.fc-agenda > div:nth-child(2)
 }
 
 #schedule_block_table td {
-    padding: 0px;
+    padding: 0;
     vertical-align: top;
 }
 
@@ -3401,29 +3412,18 @@ dd .stream-status {
 
 /* Usability Hints */
 
-/*
- * This is a temporary solution to a larger issue;
- * we should revisit this (and really all of the
- * absolute positioning in Airtime) when we want
- * to focus on responsive design.
- */
-.usability_hint:not(.hidden) + .wrapper {
-    top: 170px;
-
-    -webkit-transition: top 0.2s linear;
-    -moz-transition: top 0.2s linear;
-    -o-transition: top 0.2s linear;
-    transition: top 0.2s linear;
-}
-
 .usability_hint {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
     padding: 5px 10px 5px 10px;
     border: 1px solid #ff611f;
     background-color: #ff611f;
     color: white;
     font-size: 14px;
 
-    position: absolute;
+    position: fixed;
     top: 139px;
     width: 100%;
     z-index: 1;
@@ -3435,4 +3435,10 @@ dd .stream-status {
 
 .calendar-context-menu {
     min-width: 200px !important;
+}
+
+/* Add Media Page */
+
+#upload_form, #recent_uploads_wrapper {
+    box-sizing: border-box;
 }

@@ -1,5 +1,6 @@
 var previewWidth = 482,
-    previewHeight = 110;
+    previewHeight = 110,
+    USABILITY_HINT_PADDING = 40;
 
 $(document).ready(function() {
 
@@ -12,6 +13,9 @@ $(document).ready(function() {
 
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
+    if ($('.usability_hint:visible')) {
+        $(".wrapper").css("padding-top", USABILITY_HINT_PADDING); // Account for usability hint
+    }
 });
 
 /*
@@ -162,6 +166,17 @@ function removeSuccessMsg() {
     $status.fadeOut("slow", function(){$status.empty()});
 }
 
+function hideHint(h) {
+    h.hide("slow").addClass("hidden");
+    $(".wrapper").css("padding-top", 10);
+}
+
+function showHint(h) {
+    console.log("test");
+    h.show("slow").removeClass("hidden");
+    $(".wrapper").css("padding-top", USABILITY_HINT_PADDING); // Account for usability hint
+}
+
 function getUsabilityHint() {
     var pathname = window.location.pathname;
     $.getJSON("/api/get-usability-hint", {"format": "json", "userPath": pathname}, function(json) {
@@ -169,26 +184,25 @@ function getUsabilityHint() {
         var current_hint = $hint_div.html();
         if (json === "") {
             // there are no more hints to display to the user
-            $hint_div.hide("slow").addClass("hidden");
+            hideHint($hint_div);
         } else if (current_hint !== json) {
             // we only change the message if it is new
             if ($hint_div.is(":visible")) {
-                $hint_div.hide("slow").addClass("hidden");
+                hideHint($hint_div);
             }
             $hint_div.html(json);
-            $hint_div.show("slow").removeClass("hidden");
+            showHint($hint_div);
         } else {
             // hint is the same before we hid it so we just need to show it
             if ($hint_div.is(":hidden")) {
-                $hint_div.show("slow").removeClass("hidden");
+                showHint($hint_div);
             }
         }
     });
 }
 
 $(document).mouseup(function (e) {
-    var mb = $("#menu-btn"),
-        w = $(window).width();
+    var mb = $("#menu-btn"), w = $(window).width();
     if (!mb.is(e.target) && mb.has(e.target).length === 0 && w <= 970) {
         $('#nav .responsive-menu').slideUp();
     }

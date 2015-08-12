@@ -477,7 +477,9 @@ var AIRTIME = (function(AIRTIME){
             return;
         }
         newTab.tab.on("click", function() {
-            AIRTIME.showbuilder.switchTab(newTab.pane, newTab.tab);
+            if (!$(this).hasClass('active')) {
+                AIRTIME.showbuilder.switchTab(newTab.pane, newTab.tab);
+            }
         });
         newTab.wrapper.find(".md-cancel").on("click", function() {
             closeTab();
@@ -491,9 +493,11 @@ var AIRTIME = (function(AIRTIME){
             return;
         }
         newTab.tab.on("click", function() {
-            AIRTIME.showbuilder.switchTab(newTab.pane, newTab.tab);
-            $.post(baseUrl+'new-playlist/edit',
-                {format: "json", id: newTab.pane.find(".obj_id").val(), type: newTab.pane.find(".obj_type").val()});
+            if (!$(this).hasClass('active')) {
+                AIRTIME.showbuilder.switchTab(newTab.pane, newTab.tab);
+                $.post(baseUrl+'new-playlist/edit',
+                    {format: "json", id: newTab.pane.find(".obj_id").val(), type: newTab.pane.find(".obj_type").val()});
+            }
         });
         AIRTIME.playlist.init();
 
@@ -515,16 +519,22 @@ var AIRTIME = (function(AIRTIME){
     }
 
     function closeTab(id) {
-        var pane = id ? $(".pl-content[tab-id='" + id + "']") : $(".active-tab"),
+        var curr = $(".active-tab"),
+            pane = id ? $(".pl-content[tab-id='" + id + "']") : curr,
             tab = id ? $(".nav.nav-tabs [tab-id='" + id + "']") : $(".nav.nav-tabs .active"),
             toPane = pane.next().length > 0 ? pane.next() : pane.prev(),
             toTab = tab.next().length > 0 ? tab.next() : tab.prev(),
-            objId = id ? id : pane.find(".obj_id").val();
-        delete $openTabs[tab.attr("tab-type") + objId];
+            objId = pane.find(".obj_id").val(),
+            pl = id ? pane : $pl;
+        delete $openTabs[tab.attr("tab-type") + objId]; // Remove the closed tab from our open tabs array
 
+        // Remove the relevant DOM elements (the tab and the tab content)
         tab.remove();
-        $pl.remove();
-        AIRTIME.showbuilder.switchTab(toPane, toTab);
+        pl.remove();
+
+        if (pane.get(0) == curr.get(0)) { // Closing the current tab, otherwise we don't need to switch tabs
+            AIRTIME.showbuilder.switchTab(toPane, toTab);
+        }
     }
 
     mod.closeTab = function(id) {
@@ -586,7 +596,7 @@ var AIRTIME = (function(AIRTIME){
                         position: {
                             my: "left bottom",
                             at: "right center"
-                        },
+                        }
                     })
                 } else {
                     $(value).bind("click", openAudioPreview);
@@ -917,9 +927,9 @@ var AIRTIME = (function(AIRTIME){
             $(this).unbind("click"); // Prevent repeated clicks in quick succession from closing multiple tabs
 
             var tabId = $(this).closest("li").attr("tab-id");
-            AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
+            //AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
+            //$pl.hide();
 
-            $pl.hide();
             // We need to update the text on the add button
             AIRTIME.library.checkAddButton();
             // We also need to run the draw callback to update how dragged items are drawn
@@ -930,9 +940,9 @@ var AIRTIME = (function(AIRTIME){
             if ((name == "Untitled Playlist"
                 || name == "Untitled Smart Block")
                 && $pl.find(".spl_sortable .spl_empty").length == 1) {
-                mod.fnDelete();
+                mod.fnDelete(undefined, tabId);
             } else {
-                closeTab();
+                closeTab(tabId);
             }
 
             $.ajax( {
@@ -968,7 +978,6 @@ var AIRTIME = (function(AIRTIME){
                             alert(json.error);
                         }
                         if (json.html !== undefined) {
-                            console.log(json);
                             closeTab();
                             openPlaylist(json);
                         }
@@ -1144,20 +1153,19 @@ var AIRTIME = (function(AIRTIME){
     };
 
 
-    mod.fnDelete = function(plid) {
-        var url, id, lastMod;
+    mod.fnDelete = function(plid, tabId) {
+        var url, id, lastMod, type, pl = (tabId === undefined) ? $pl : $('#pl-tab-content' + tabId);
 
         stopAudioPreview();
         id = (plid === undefined) ? getId() : plid;
         lastMod = getModified();
-        type = $pl.find('.obj_type').val();
+        type = pl.find('.obj_type').val();
         url = baseUrl+'new-playlist/delete';
 
         $.post(url,
             {format: "json", ids: id, modified: lastMod, type: type},
             function(json) {
-                closeTab();
-                // openPlaylist(json);
+                closeTab(tabId);
                 redrawLib();
             });
     };
@@ -1547,8 +1555,8 @@ var AIRTIME = (function(AIRTIME){
 
     mod.onResize = function() {
         var h = $(".panel-header .nav").height();
-        $(".pl-content").css("margin-top", h + 4); // 8px extra for padding
-        $("#show_builder_table_wrapper").css("top", h + 4);
+        $(".pl-content").css("margin-top", h + 5); // 8px extra for padding
+        $("#show_builder_table_wrapper").css("top", h + 5);
     };
 
     return AIRTIME;
