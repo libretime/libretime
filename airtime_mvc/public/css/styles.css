@@ -547,7 +547,7 @@ fieldset.plain {
     font-size: 12px;
     /*height: 23px;*/
     margin: 0;
-    padding: 4px 3px;
+    padding: 5px;
     /*text-indent: 3px;*/
     width:auto;
     background-color: #dddddd;
@@ -560,7 +560,7 @@ input[readonly], textarea[readonly] {
 }
 
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_text_area:focus {
-    border: 1px solid #0088f1;
+    border: 1px solid #FF5D1A;
     outline: none;
 }
 .auto-search {
@@ -573,6 +573,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2) inset;
     font-size: 13px;
     text-indent: 3px;
+    padding: 5px;
     margin:0;
 }
 .input_select, select {
@@ -583,7 +584,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, .input_t
     font-size: 12px;
     height: 26px;
     margin: 0;
-    padding: 2px 2px 2px 0;
+    padding: 2px 2px 2px 1px;
     vertical-align: top;
 }
 
@@ -1206,7 +1207,7 @@ input[type="checkbox"] {
 }
 
 #pref_form p.description {
-    color: #3b3b3b;
+    color: #d6d6d6;
     font-size: 12px;
 }
 
@@ -1955,11 +1956,11 @@ span.errors.sp-errors{
     border: 1px solid #333333;
     border-top: 1px solid #5c5c5c;
     background-color: #4a4a4a;
-    font-size:13px;
+    font-size:14px;
     color:#ccc;
     font-weight:bold;
-    padding:6px 0 6px 20px;
-    margin:8px 0 0 0;
+    padding:10px 0 10px 20px;
+    margin:20px 0 0 0;
     cursor:pointer;
     position:relative;
     clear: both;
@@ -1974,7 +1975,7 @@ span.errors.sp-errors{
     width:11px;
     position:absolute;
     left:5px;
-    top:8px;
+    top:12px;
     
 }
 .collapsible-header.closed .arrow-icon, .collapsible-header-disabled.close  .arrow-icon {

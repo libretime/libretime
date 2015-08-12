@@ -401,10 +401,10 @@ var AIRTIME = (function(AIRTIME) {
             	$nRow.find(".his_"+b).html(text);
             }
         };
-        	
-        oTable = $historyTableDiv.dataTable( {
-            
-            "aoColumns": columns,             
+
+		oTable = $historyTableDiv.dataTable( {
+
+		"aoColumns": columns,
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": baseUrl+"playouthistory/item-history-feed",
@@ -412,7 +412,7 @@ var AIRTIME = (function(AIRTIME) {
             "fnServerData": fnServerData,
             "fnRowCallback": fnRowCallback,
             "oLanguage": datatables_dict,
-            "aLengthMenu": lengthMenu,
+			"aLengthMenu": lengthMenu,
             "iDisplayLength": 25,
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
