@@ -586,7 +586,7 @@ var AIRTIME = (function(AIRTIME){
                         position: {
                             my: "left bottom",
                             at: "right center"
-                        },
+                        }
                     })
                 } else {
                     $(value).bind("click", openAudioPreview);
@@ -968,7 +968,6 @@ var AIRTIME = (function(AIRTIME){
                             alert(json.error);
                         }
                         if (json.html !== undefined) {
-                            console.log(json);
                             closeTab();
                             openPlaylist(json);
                         }
@@ -1547,8 +1546,8 @@ var AIRTIME = (function(AIRTIME){
 
     mod.onResize = function() {
         var h = $(".panel-header .nav").height();
-        $(".pl-content").css("margin-top", h + 4); // 8px extra for padding
-        $("#show_builder_table_wrapper").css("top", h + 4);
+        $(".pl-content").css("margin-top", h + 5); // 8px extra for padding
+        $("#show_builder_table_wrapper").css("top", h + 5);
     };
 
     return AIRTIME;

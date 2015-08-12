@@ -165,8 +165,10 @@ AIRTIME = (function(AIRTIME) {
         $builder = $("#show_builder");
         $fs = $builder.find('fieldset');
 
-        $("#timeline-tab").on("click", function() {
-            AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
+        $("#schedule-tab").on("click", function() {
+            if (!$(this).hasClass('active')) {
+                AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
+            }
         });
 
         /*

@@ -101,10 +101,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <div class="media_type_selector" selection_id="4"><?php echo _("Webstreams") ?></div>
 </div>
 
-<?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
-<div class="usability_hint" <?php if ($hint == "") { echo "style='display:none'"; } ?>><?php echo $hint; ?></div>
-
 <div class="wrapper dropzone" id="content">
+    <?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
+    <div class="usability_hint" <?php if ($hint == "") { echo "style='display:none'"; } ?>><?php echo $hint; ?></div>
+
     <?php echo $this->layout()->content ?>
 </div>
 
