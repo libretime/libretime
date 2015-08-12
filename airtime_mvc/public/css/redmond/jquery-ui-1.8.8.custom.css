@@ -127,6 +127,7 @@
 	border: 1px solid #5b5b5b;
 	background: #4a4a4a ;
 	color: #ccc;
+	text-shadow: #343434 0px -1px;
 }
 .ui-widget-header a {
 	color: #444444;
@@ -139,6 +140,7 @@
 	border:1px solid #5b5b5b;
 	background-color: #6e6e6e;
 	color: #ffffff;
+	text-shadow: rgba(0, 0, 0, 0.2) 0px -1px;
 }
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
 	color: #ffffff;
@@ -157,8 +159,11 @@
 }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
 	border: 1px solid #5b5b5b;
-	background: #c6c6c6;
+	background: #ccc9c7;
 	color: #000;
+	text-shadow: rgba(255, 255, 255, 0.2) 0px 1px;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+
 	outline:none;
 }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
@@ -177,8 +182,8 @@
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-	border: 1px solid #ff5d1a;
-	background: rgba(255, 93, 26, 0.1);
+	border: 1px solid #696969;
+	background: rgba(255, 255, 255, 0.15);
 	color: #1adeff;
 }
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a, .ui-widget-header .ui-state-highlight a {

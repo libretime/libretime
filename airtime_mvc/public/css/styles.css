@@ -1380,7 +1380,7 @@ input[type="checkbox"] {
 thead tr.fc-first
 {
     height: 32px;
-    line-height: 32px;    
+    line-height: 32px;
 }
 
 /** Extremely nasty workaround for a fullcalendar bug, where clicking "Add Show"
@@ -2828,7 +2828,7 @@ tbody tr th    {
 }
 thead tr th    {
     color: #FFFFFF;
-    font-size: 12px;
+    font-size: 16px;
     padding: 5px 5px;
     border-color:#CCCCCC;
     background-color: #6e6e6e;

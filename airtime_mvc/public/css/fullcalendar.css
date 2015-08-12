@@ -38,6 +38,7 @@ html .fc,
 
 table.fc-header  {
 	background: #4a4a4a;
+	border-bottom: 1px solid #222;
 }
 
 #schedule_calendar > table > tbody > tr > td.fc-header-left
@@ -437,7 +438,7 @@ table.fc-border-separate {
 	
 .fc-border-separate tr.fc-last th,
 .fc-border-separate tr.fc-last td {
-	border-bottom-width: 1px;
+	border-bottom: 1px solid #222;
 	}
 	
 .fc-border-separate tbody tr.fc-first td,
