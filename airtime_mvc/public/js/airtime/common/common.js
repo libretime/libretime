@@ -11,6 +11,10 @@ $(document).ready(function() {
     //    savePanelSpace: true
     //});
 
+    if($('#livechat-compact-container:not(:visible)')) {
+        $('.wrapper').css('padding-bottom', 10);
+    }
+
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
     if ($('.usability_hint:visible')) {
