@@ -1787,7 +1787,7 @@ button, input {
 
 .user-management {
     width:910px;
-    height: 410px;
+    min-height: 410px;
 }
 .user-management-expanded {
     width:910px;
