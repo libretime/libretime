@@ -480,12 +480,12 @@ function setCurrentUserPseudoPassword() {
     $('#cu_passwordVerify').val("xxxxxx");
 }
 
-$(window).resize(function() {
-    /* If we don't do this, the menu can stay hidden after resizing */
+/*$(window).resize(function() {
+    *//* If we don't do this, the menu can stay hidden after resizing *//*
     if ($(this).width() > 970) {
         $("#nav .responsive-menu").show();
     }
-});
+});*/
 
 $(document).ready(function() {
     if ($('#master-panel').length > 0)
@@ -509,7 +509,7 @@ $(document).ready(function() {
     // text. This differs depending on the language setting
     $('#popup-link').css('width', $('.jp-container h1').css('width'));
 
-    $('#menu-btn').click(function() {
+    /*$('#menu-btn').click(function() {
         $('#nav .responsive-menu').slideToggle();
-    });
+    });*/
 });

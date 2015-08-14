@@ -1,3 +1,8 @@
+
+
+
+
+
 <?php echo $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -31,7 +36,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             $scs = $this->SourceConnectionStatus();
     ?>
     <?php echo $this->partial('partialviews/header.phtml', array("live_dj_switch"=>$sss['live_dj'], "live_dj_connection"=>$scs['live_dj'], "master_dj_switch"=>$sss['master_dj'], "master_dj_connection"=>$scs['master_dj'],
-                "scheduled_play_switch"=>$sss['scheduled_play'])) ?>
+                "scheduled_play_switch"=>$sss['scheduled_play'], "baseUrl"=>$baseUrl)) ?>
 <?php 	$partial = array('menu.phtml', 'default');
     $this->navigation()->menu()->setPartial($partial); ?>
 
@@ -50,12 +55,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     </script>
 
+        <!--
     <div id="nav">
         <div class="logo"></div>
         <div class="personal-block solo">
             <ol>
                 <li>
-                    <!-- <span class="trial-box-button"><a title="Billing" href=<?php echo $baseUrl . 'billing/upgrade'?>>Upgrade</a></span>&nbsp;-->
+                    <span class="trial-box-button"><a title="Billing" href=<?php echo $baseUrl . 'billing/upgrade'?>>Upgrade</a></span>&nbsp;
                     <a id="current-user" href=<?php echo $baseUrl . "user/edit-user"?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
                     | <a href=<?php echo $baseUrl . "login/logout"?>><?php echo _("Logout")?></a>
                 </li>
@@ -69,12 +75,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <span></span>
             </div>
         </div>
+
         <div class="responsive-menu">
             <?php echo $this->navigation()->menu() ?>
         </div>
 
         <div style="clear:both;"></div>
     </div>
+        -->
     <?php endif; //suspended ?>
 </div>
 
@@ -95,10 +103,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </li>
         </ul>
     </div>
-    <div class="media_type_selector selected" selection_id="1"><?php echo _("Files") ?></div>
-    <div class="media_type_selector" selection_id="2"><?php echo _("Playlists") ?></div>
-    <div class="media_type_selector" selection_id="3"><?php echo _("Smart Blocks") ?></div>
-    <div class="media_type_selector" selection_id="4"><?php echo _("Webstreams") ?></div>
+    <div class="media_type_selector" selection_id="1">
+        <a href="/show-builder"><?php echo _("Dashboard") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="1">
+        <a href="/show-builder#files"><?php echo _("Files") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="2">
+        <a href="/show-builder#playlists"><?php echo _("Playlists") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="3">
+        <a href="/show-builder#smart-blocks"><?php echo _("Smart Blocks") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="4">
+        <a href="/show-builder#webstreams"><?php echo _("Webstreams") ?></a></div>
+    <div id="nav">
+        <?php echo $this->navigation()->menu() ?>
+    </div>
+
 </div>
 
 <div class="wrapper dropzone" id="content">

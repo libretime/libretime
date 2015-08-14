@@ -2,15 +2,15 @@ div.ColVis_collectionBackground {
     background-color: transparent;
 }
 
-.wrapper {
-    /*background: #242424;*/
+/*.wrapper {
+    *//*background: #242424;*//*
     background: #111;
-    top: 139px;
+    top: 105px;
     left: 130px;
     right: 0;
     bottom: 0;
-    padding: 10px 10px 40px;
-    /*padding: 0;*/
+    padding: 5px 10px 40px;
+    *//*padding: 0;*//*
     border: none;
 
     display: -webkit-box;
@@ -29,13 +29,13 @@ div.ColVis_collectionBackground {
     transition: top 0.2s linear;
 }
 
-/* Usability hint */
+*//* Usability hint *//*
 
 .usability_hint {
     left: 130px;
     flex: 0 100%;
     width: 100%;
-}
+}*/
 
 /* Scroll bars */
 
@@ -607,76 +607,6 @@ li.ui-state-default {
     padding-top: 4px;
 }
 
-/* Media type selector */
-
-#media_type_nav {
-    position: fixed;
-    top: 139px;
-    bottom: 0;
-
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    width: 130px;
-
-    flex: 1 auto;
-    padding: 0;
-
-    background: #353535;
-    border: 1px solid #242424;
-    border-top: 1px solid #7e7e7e;
-    /* border: 1px solid #242424; */
-    -moz-box-shadow: 0 2px 5px rgba(0,0,0,.35);
-    -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.35);
-    box-shadow: 0 2px 5px rgba(0,0,0,.35);
-
-    z-index: 100;
-    text-align: left;
-}
-
-#media_type_nav .btn-group {
-    padding: 4px;
-}
-
-#new_media_selector {
-    width: 100%;
-    font-size: 14px;
-}
-
-.media_type_selector {
-    cursor: pointer;
-    color: #cecece;
-    font-family: Roboto, "Open Sans", sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    /*margin: 20px 20px 0 5px;*/
-    padding: 10px 10px 10px 10px;
-
-    -webkit-transition: color 0.1s linear;
-    -moz-transition: color 0.1s linear;
-    -o-transition: color 0.1s linear;
-    transition: color 0.1s linear;
-}
-
-.media_type_selector.selected {
-    color: #fff;
-    background-color: #444;
-    -webkit-transition: color 0.1s linear;
-    -moz-transition: color 0.1s linear;
-    -o-transition: color 0.1s linear;
-    transition: color 0.1s linear;
-}
-
-.media_type_selector:hover {
-    color: #fff;
-    -webkit-transition: color 0.1s linear;
-    -moz-transition: color 0.1s linear;
-    -o-transition: color 0.1s linear;
-    transition: color 0.1s linear;
-}
-
 /* DataTables */
 
 .ColVis_collection.TableTools_collection.ui-buttonset.ui-buttonset-multi {
@@ -764,24 +694,3 @@ th.library_checkbox {
     border: none;
 }
 
-/* Uploads/Dropzone */
-
-#upload_form {
-    width: 100%;
-    min-width: 555px;
-
-    background: none;
-    border: 2px dashed #efefef;
-
-    color: #efefef;
-    font-family: Roboto, "Open Sans", sans-serif;
-    font-size: 20px;
-    font-weight: 300;
-    line-height: 14px;
-
-    margin-top: 10px;
-}
-
-.dropzone .dz-message {
-    margin: 0;
-}

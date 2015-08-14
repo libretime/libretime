@@ -1257,6 +1257,11 @@ $(document).ready(function() {
         }
     });
 
+    if (location.hash === "") {
+        $("a[href$='#files']").parent().addClass("selected");
+    }
+    $("a[href$='"+location.hash+"']").parent().addClass("selected");
+
     $(".media_type_selector").on("click", function() {
         if (!$(this).hasClass("selected")) {
             AIRTIME.library.selectNone();
