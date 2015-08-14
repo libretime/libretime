@@ -260,7 +260,9 @@ fieldset {
 }
 .now-playing-block {
     width:35%;
-    padding-left:144px;
+    background: url(images/masterpanel_spacer.png) no-repeat 0 0;
+    margin-left: 130px;
+    padding-left: 14px;
 }
 .show-block {
     width:30%;
@@ -3472,7 +3474,7 @@ button.btn-icon-text > i.icon-white {
     /* border: 1px solid #242424; */
     -moz-box-shadow: 0 2px 5px rgba(0,0,0,.35);
     -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.35);
-    box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    box-shadow: 2px 0 5px rgba(0,0,0,.35);
 
     z-index: 100;
     text-align: left;
@@ -3582,7 +3584,7 @@ button.btn-icon-text > i.icon-white {
     font-size: 14px;
     text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
 
-    z-index: 1000; /* Need to be above elements like the shows in the calendar! */
+    z-index: 99; /* Need to be above elements like the shows in the calendar! */
     /*margin: 5px 10px;*/
 }
 
