@@ -142,6 +142,10 @@ div.ColVis_collectionBackground {
 
 /* Library */
 
+#library_title {
+    padding: 5px 5px 0;
+}
+
 #library_content {
     margin-right: 10px;
     overflow: hidden !important;
@@ -310,6 +314,10 @@ thead th.ui-state-default:focus {
 
 #advanced-options > button > span {
     border-top: 4px solid #242424;
+}
+
+#library_content > .panel-header {
+    top: 33px;
 }
 
 .panel-header {
@@ -611,16 +619,25 @@ li.ui-state-default {
 
 /* DataTables */
 
-.ColVis_collection.TableTools_collection.ui-buttonset.ui-buttonset-multi {
-    max-height: 50%;
-    overflow: auto;
+#show_builder .fg-toolbar > .btn-toolbar,
+#show_builder .ColVis.TableTools {
+    position: absolute;
+    top: 35px;
+}
+
+#show_builder .fg-toolbar > .btn-toolbar {
+    left: 6px;
+    padding: 0;
 }
 
 #show_builder .ColVis.TableTools {
-    margin: 0;
-    position: absolute;
-    top: 36px;
     right: 6px;
+    margin: 0;
+}
+
+.ColVis_collection.TableTools_collection.ui-buttonset.ui-buttonset-multi {
+    max-height: 50%;
+    overflow: auto;
 }
 
 .ColVis.TableTools {
@@ -633,13 +650,6 @@ li.ui-state-default {
 
 .ColVis_title {
     color: #000;
-}
-
-#show_builder .fg-toolbar > .btn-toolbar {
-    position: absolute;
-    top: 36px;
-    left: 6px;
-    padding: 0;
 }
 
 /* Hacky stuff here */
