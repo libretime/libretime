@@ -1263,12 +1263,18 @@ $(document).ready(function() {
     $("a[href$='"+location.hash+"']").parent().addClass("selected");
 
     $(window).on('hashchange', function() {
+        // If we click Dashboard from one of the media views, do nothing
+        if (!location.hash) {
+            return;
+        }
         $(".media_type_selector").each(function () {
             $(this).removeClass("selected");
         });
         $("a[href$='"+location.hash+"']").parent().addClass("selected");
         oTable.fnDraw();
     });
+
+    /* Overridden by hashchange function
 
     $(".media_type_selector").on("click", function() {
         if (!$(this).hasClass("selected")) {
@@ -1280,6 +1286,7 @@ $(document).ready(function() {
             oTable.fnDraw();
         }
     });
+    */
 
     $("#advanced-options").on("click", function() {
         resizeAdvancedSearch();

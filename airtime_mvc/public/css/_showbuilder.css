@@ -2,7 +2,9 @@ div.ColVis_collectionBackground {
     background-color: transparent;
 }
 
-/*.wrapper {
+/* ~ Moved to styles.css ~
+
+.wrapper {
     *//*background: #242424;*//*
     background: #111;
     top: 105px;
@@ -29,13 +31,13 @@ div.ColVis_collectionBackground {
     transition: top 0.2s linear, padding 0.2s linear;
 }
 
-*//* Usability hint *//*
-
 .usability_hint {
     left: 130px;
     flex: 0 100%;
     width: 100%;
-}*/
+}
+
+*/
 
 /* Scroll bars */
 

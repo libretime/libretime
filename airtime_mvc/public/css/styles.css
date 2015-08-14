@@ -68,12 +68,16 @@ fieldset {
 }
 
 .logo {
+    position: absolute;
+    float: left;
+
     background: transparent url(images/airtime_logo.png) no-repeat 0 0;
     height: 35px;
     width: 66px;
-    float: right;
-    padding: 0 5px 0 10px;
-    margin-top: -5px;
+    left: 35px;
+    top: 32px;
+    /*margin: 25px 5px 0 10px;*/
+    /*margin-top: -5px;*/
 }
 
 /* Version Notification Starts*/
@@ -203,12 +207,15 @@ fieldset {
 }
 
 #master-panel {
-    background:#3d3d3d url(images/masterpanel_bg.png) repeat-x 0 0;
+    position:relative;
     height:100px;
+    background:#3d3d3d url(images/masterpanel_bg.png) repeat-x 0 0;
     border:1px solid #000;
     border-width: 1px 0;
+    -moz-box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    box-shadow: 0 2px 5px rgba(0,0,0,.35);
     overflow:hidden;
-    position:relative;
 }
 
 .now-playing-block, .show-block, .on-air-block, .time-info-block, .personal-block, .listen-control-block, .trial-info-block {
@@ -253,7 +260,7 @@ fieldset {
 }
 .now-playing-block {
     width:35%;
-    padding-left:10px;
+    padding-left:144px;
 }
 .show-block {
     width:30%;
@@ -346,7 +353,7 @@ fieldset {
 #nav li.top {
     /*float: none;*/
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1575px) {
     .now-playing-block {
         width: 30%;
     }
@@ -354,38 +361,38 @@ fieldset {
         width: 25%;
     }
 }
-@media screen and (max-width: 970px) {
-    #nav .responsive-menu {
-        position: absolute;
-        left: 0;
-        background: #353535;
-        width: 120px;
-        display: none;
+/*@media screen and (max-width: 1120px) {*/
+    /*#nav .responsive-menu {*/
+        /*position: absolute;*/
+        /*left: 0;*/
+        /*background: #353535;*/
+        /*width: 120px;*/
+        /*display: none;*/
 
-        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-        -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-    }
-    .mobile-nav {
-        display: block;
-    }
-    #menu-btn {
-        width: 24px;
+        /*-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);*/
+        /*-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);*/
+        /*box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);*/
+    /*}*/
+    /*.mobile-nav {*/
+        /*display: block;*/
+    /*}*/
+    /*#menu-btn {*/
+        /*width: 24px;*/
 
-        margin: 0;
+        /*margin: 0;*/
 
-        cursor: pointer;
-    }
-    #menu-btn span {
-        display: block;
-        width: 19px;
-        height: 3px;
-        margin: 4px 2px;
-        background: #efefef;
-        z-index: 99;
-    }
-}
-@media screen and (max-width: 920px) {
+        /*cursor: pointer;*/
+    /*}*/
+    /*#menu-btn span {*/
+        /*display: block;*/
+        /*width: 19px;*/
+        /*height: 3px;*/
+        /*margin: 4px 2px;*/
+        /*background: #efefef;*/
+        /*z-index: 99;*/
+    /*}*/
+/*}*/
+@media screen and (max-width: 1250px) {
     .now-playing-block {
         width: 50%;
     }
@@ -396,31 +403,44 @@ fieldset {
         right: 10px !important;
     }
 }
-@media screen and (max-width: 810px) {
+@media screen and (max-width: 1075px) {
     .now-playing-block {
         width: 40%;
     }
 }
-@media screen and (max-width: 1100px) {
-    #nav {
-        overflow-y: visible;
-    }
-}
-@media screen and (max-width: 680px) {
+/*@media screen and (max-width: 1250px) {*/
+    /*#nav {*/
+        /*overflow-y: visible;*/
+    /*}*/
+/*}*/
+@media screen and (max-width: 900px) {
     .now-playing-block {
-        display: none;
+        width: 30%;
+        /*display: none;*/
     }
     #nav li.top {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
         display: -webkit-flex;
+        display: flex;
         width: 110px;
     }
 }
-@media screen and (max-width: 380px) {
-    .time-info-block {
-	display: none;
+@media screen and (max-width: 775px) {
+    .now-playing-block {
+        display: none;
     }
-    .on-air-block {
-	margin: 0;
+    .source-info-block {
+        margin-left: 130px;
+    }
+}
+@media screen and (max-width: 520px) {
+    .logo {
+        display: none;
+    }
+    .source-info-block {
+        margin-left: 0;
     }
 }
 .time-info-block ul {
@@ -494,19 +514,6 @@ fieldset {
 }
 
 /* END Master Panel */
-
-.wrapper {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    position: absolute;
-    top: 141px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 10px;
-}
 
 .alpha-block {
     padding:0;
@@ -3416,31 +3423,12 @@ dd .stream-status {
  * to focus on responsive design.
  */
 .usability_hint:not(.hidden) + .wrapper {
-    top: 105px;
+    top: 102px;
 
     -webkit-transition: top 0.2s linear;
     -moz-transition: top 0.2s linear;
     -o-transition: top 0.2s linear;
     transition: top 0.2s linear;
-}
-
-.usability_hint {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    padding: 5px 10px 5px 10px;
-    border: 1px solid #ff611f;
-    background-color: #ff611f;
-    color: white;
-    font-size: 14px;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
-
-    position: fixed;
-    top: 105px;
-    width: 90%;
-    z-index: 1;
-    margin: 5px 10px;
 }
 
 .usability_hint a {
@@ -3466,7 +3454,7 @@ button.btn-icon-text > i.icon-white {
 
 #media_type_nav {
     position: absolute;
-    top: 105px;
+    top: 102px;
     bottom: 0;
 
     -webkit-box-sizing: border-box;
@@ -3542,16 +3530,21 @@ button.btn-icon-text > i.icon-white {
 }
 
 .wrapper {
+    position: absolute;
+
     /*background: #242424;*/
-    background: #111;
-    top: 105px;
+    top: 102px;
     left: 130px;
     right: 0;
     bottom: 0;
     padding: 5px 10px 40px;
-    /*padding: 0;*/
     border: none;
 
+    background: #111;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -3571,9 +3564,26 @@ button.btn-icon-text > i.icon-white {
 /* Usability hint */
 
 .usability_hint {
+    position: fixed;
+    top: 102px;
     left: 130px;
-    flex: 0 100%;
+
     width: 100%;
+    flex: 0 100%;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    padding: 5px 10px 5px 10px;
+    border: 1px solid #ff611f;
+    background-color: #ff611f;
+    color: white;
+    font-size: 14px;
+    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
+
+    z-index: 1000; /* Need to be above elements like the shows in the calendar! */
+    /*margin: 5px 10px;*/
 }
 
 /* Uploads/Dropzone */

@@ -1,4 +1,5 @@
 <div id="master-panel">
+  <div class="logo"></div>
   <div class="now-playing-block">
     <div class="text-row"><strong><?php echo _("Previous:"); ?></strong> <span id='previous'></span> <span id='prev-length'></span></div>
     <div class="now-playing-info song">
@@ -49,7 +50,10 @@
     <a href="#" class="listen-control-button"><span><?php echo _("Listen") ?></span></a>
   </div>
   <div class="time-info-block pull-right">
-    <div class="logo"></div>
+    <ul>
+      <li class="time" id="time"></li>
+      <li class="time-zone"><span id="time-zone"></span></li>
+    </ul>
     <div class="personal-block solo">
       <ol>
         <li>
@@ -58,10 +62,6 @@
         </li>
       </ol>
     </div>
-    <ul>
-      <li class="time" id="time"></li>
-      <li class="time-zone"><span id="time-zone"></span></li>
-    </ul>
   </div>
 </div>
 <div id="jquery_jplayer_1" class="jp-jplayer" style="width:0px; height:0px;"></div>
