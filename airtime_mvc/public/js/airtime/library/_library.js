@@ -1262,6 +1262,14 @@ $(document).ready(function() {
     }
     $("a[href$='"+location.hash+"']").parent().addClass("selected");
 
+    $(window).on('hashchange', function() {
+        $(".media_type_selector").each(function () {
+            $(this).removeClass("selected");
+        });
+        $("a[href$='"+location.hash+"']").parent().addClass("selected");
+        oTable.fnDraw();
+    });
+
     $(".media_type_selector").on("click", function() {
         if (!$(this).hasClass("selected")) {
             AIRTIME.library.selectNone();
