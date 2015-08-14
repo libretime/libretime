@@ -11,13 +11,9 @@ $(document).ready(function() {
     //    savePanelSpace: true
     //});
 
-    if($('#livechat-compact-container:not(:visible)')) {
-        $('.wrapper').css('padding-bottom', 10);
-    }
-
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
-    if ($('.usability_hint:visible')) {
+    if ($('.usability_hint').is(':visible')) {
         $(".wrapper").css("padding-top", USABILITY_HINT_PADDING); // Account for usability hint
     }
 });
@@ -208,6 +204,6 @@ function getUsabilityHint() {
 $(document).mouseup(function (e) {
     var mb = $("#menu-btn"), w = $(window).width();
     if (!mb.is(e.target) && mb.has(e.target).length === 0 && w <= 970) {
-        $('#nav .responsive-menu').slideUp();
+        $('#nav').find('.responsive-menu').slideUp();
     }
 });

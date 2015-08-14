@@ -17,4 +17,19 @@ function setupLiveChat() {
 
 $(document).ready(function() {
     setupLiveChat();
+
+    var lcLoadListener = setInterval(function() {
+        var ifr = document.getElementById('livechat-compact-container');
+        if (ifr !== undefined) {
+            LC_API.on_chat_state_changed = function(data) {
+                console.log('Chat state changed to: ' + data.state);
+                if (data.state == 'offline') {
+                    $('.wrapper').css('padding-bottom', 10);
+                } else {
+                    $('.wrapper').css('padding-bottom', 40);
+                }
+            };
+            clearInterval(lcLoadListener);
+        }
+    }, 100);
 });

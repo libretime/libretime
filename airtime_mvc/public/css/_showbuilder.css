@@ -23,10 +23,10 @@ div.ColVis_collectionBackground {
 
     overflow: auto;
 
-    -webkit-transition: top 0.2s linear;
-    -moz-transition: top 0.2s linear;
-    -o-transition: top 0.2s linear;
-    transition: top 0.2s linear;
+    -webkit-transition: top 0.2s linear, padding 0.2s linear;
+    -moz-transition: top 0.2s linear, padding 0.2s linear;
+    -o-transition: top 0.2s linear, padding 0.2s linear;
+    transition: top 0.2s linear, padding 0.2s linear;
 }
 
 /* Usability hint */
