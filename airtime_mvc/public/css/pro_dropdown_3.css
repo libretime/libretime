@@ -10,7 +10,7 @@ way to fit your requirements.
 =================================================================== */
 
 #nav {
-	padding:7px 0 0 6px;
+	/*padding:7px 0 0 6px;*/
 	margin:0;
 	list-style:none;
 	height:28px;
@@ -18,16 +18,17 @@ way to fit your requirements.
 	position:relative;
 	z-index:500;
 	font-family:Arial, Helvetica, sans-serif;
-	border-top:1px solid #7e7e7e;
+	/*border-top:1px solid #7e7e7e;
 	border-bottom:1px solid #242424;
     -moz-box-shadow: 0 2px 5px rgba(0,0,0,.35);
     -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.35);
-    box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    box-shadow: 0 2px 5px rgba(0,0,0,.35);*/
 }
 #nav li.top {
 	display:block;
 	float:left;
-	margin:0 5px 0 0;
+	/*margin:0 5px 0 0;*/
+	padding: 10px;
 }
 #nav li a.top_link {
 	display:block;
@@ -35,16 +36,16 @@ way to fit your requirements.
 	height:18px;
 	color:#ccc;
 	text-decoration:none;
-	font-size:11px;
-	text-transform:uppercase;
-	font-weight:bold;
-	padding:4px 0 0 14px;
+	font-size:16px;
+	/*text-transform:uppercase;*/
+	/*font-weight:bold;*/
+	/*padding:4px 0 0 10px;*/
 	cursor:pointer;
 }
 #nav li a.top_link span {
 	float:left;
 	display:block;
-	padding:0 14px 0 0;
+	padding: 0 14px 0 0;
 }
 #nav li a.top_link span.down {
 	float:left;
@@ -55,7 +56,7 @@ way to fit your requirements.
 }
 #nav li:hover a.top_link, #nav li.active a.top_link, #nav li.active:hover a.top_link {
 	color:#fff;
-	background:#000;
+	/*background:#000;*/
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;

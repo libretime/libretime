@@ -50,14 +50,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     </script>
 
-    <div id="nav">
+    <!--<div id="nav">
         <div class="logo"></div>
         <div class="personal-block solo">
             <ol>
                 <li>
-                    <!-- <span class="trial-box-button"><a title="Billing" href=<?php echo $baseUrl . 'billing/upgrade'?>>Upgrade</a></span>&nbsp;-->
-                    <a id="current-user" href=<?php echo $baseUrl . "user/edit-user"?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
-                    | <a href=<?php echo $baseUrl . "login/logout"?>><?php echo _("Logout")?></a>
+                    <a id="current-user" href=<?php /*echo $baseUrl . "user/edit-user"*/?>><span class="name"><?php /*echo $this->escape($this->loggedInAs()); */?></span></a>
+                    | <a href=<?php /*echo $baseUrl . "login/logout"*/?>><?php /*echo _("Logout")*/?></a>
                 </li>
             </ol>
         </div>
@@ -70,12 +69,46 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
         </div>
         <div class="responsive-menu">
-            <?php echo $this->navigation()->menu() ?>
+            <?php /*echo $this->navigation()->menu() */?>
         </div>
 
         <div style="clear:both;"></div>
-    </div>
+    </div>-->
     <?php endif; //suspended ?>
+</div>
+
+<div id="media_type_nav"> <!-- class="content-pane" -->
+    <div class="btn-group">
+        <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+            New <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li id="new-playlist">
+                <a href="#"><?php echo _("Playlist") ?></a>
+            </li>
+            <li id="new-smart-block">
+                <a href="#"><?php echo _("Smart Block") ?></a>
+            </li>
+            <li id="new-webstream">
+                <a href="#"><?php echo _("Webstream") ?></a>
+            </li>
+        </ul>
+    </div>
+    <div class="media_type_selector" selection_id="1">
+        <a href="/show-builder"><?php echo _("Dashboard") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="1">
+        <a href="/show-builder#files"><?php echo _("Files") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="2">
+        <a href="/show-builder#playlists"><?php echo _("Playlists") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="3">
+        <a href="/show-builder#smart-blocks"><?php echo _("Smart Blocks") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" selection_id="4">
+        <a href="/show-builder#webstreams"><?php echo _("Webstreams") ?></a></div>
+    <hr style="margin-left: 5px; margin-right: 5px">
+    <div id="nav">
+        <?php echo $this->navigation()->menu() ?>
+    </div>
+
 </div>
 
 <?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
@@ -129,3 +162,4 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </script>
 </body>
 </html>
+

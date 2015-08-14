@@ -1787,7 +1787,7 @@ button, input {
 
 .user-management {
     width:910px;
-    height: 410px;
+    min-height: 410px;
 }
 .user-management-expanded {
     width:910px;
@@ -3395,15 +3395,12 @@ dd .stream-status {
     margin-bottom: 20px;
 }
 
-#weekly-schedule-widget label {
-    font-weight: bold;
-}
-
 .schedule_iframe_wrapper {
-    width: 100%;
-    float: left;
     text-align: center;
-    padding: 10px;
+    background-color: #111;
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin-bottom: 25px;
 }
 
 #schedule_iframe {
@@ -3411,6 +3408,21 @@ dd .stream-status {
 }
 
 /* Usability Hints */
+
+/*
+ * This is a temporary solution to a larger issue;
+ * we should revisit this (and really all of the
+ * absolute positioning in Airtime) when we want
+ * to focus on responsive design.
+ */
+.usability_hint:not(.hidden) + .wrapper {
+    top: 105px;
+
+    -webkit-transition: top 0.2s linear;
+    -moz-transition: top 0.2s linear;
+    -o-transition: top 0.2s linear;
+    transition: top 0.2s linear;
+}
 
 .usability_hint {
     -webkit-box-sizing: border-box;
@@ -3425,9 +3437,10 @@ dd .stream-status {
     text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
 
     position: fixed;
-    top: 139px;
-    width: 100%;
+    top: 105px;
+    width: 90%;
     z-index: 1;
+    margin: 5px 10px;
 }
 
 .usability_hint a {
@@ -3443,3 +3456,131 @@ dd .stream-status {
 #upload_form, #recent_uploads_wrapper {
     box-sizing: border-box;
 }
+
+button.btn-icon-text > i.icon-white {
+    margin-right: 4px;
+}
+
+
+/* Media type selector */
+
+#media_type_nav {
+    position: absolute;
+    top: 105px;
+    bottom: 0;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    width: 130px;
+
+    flex: 1 auto;
+    padding: 0;
+
+    background: #353535;
+    border: 1px solid #242424;
+    border-top: 1px solid #7e7e7e;
+    /* border: 1px solid #242424; */
+    -moz-box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.35);
+    box-shadow: 0 2px 5px rgba(0,0,0,.35);
+
+    z-index: 100;
+    text-align: left;
+}
+
+#media_type_nav .btn-group {
+    padding: 4px;
+}
+
+#new_media_selector {
+    width: 100%;
+    font-size: 14px;
+}
+
+.media_type_selector {
+    cursor: pointer;
+    color: #cecece;
+    font-family: Roboto, "Open Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    /*margin: 20px 20px 0 5px;*/
+    padding: 10px 10px 10px 10px;
+
+    -webkit-transition: color 0.1s linear;
+    -moz-transition: color 0.1s linear;
+    -o-transition: color 0.1s linear;
+    transition: color 0.1s linear;
+}
+
+.media_type_selector.selected {
+    color: #fff;
+    background-color: #444;
+    -webkit-transition: color 0.1s linear;
+    -moz-transition: color 0.1s linear;
+    -o-transition: color 0.1s linear;
+    transition: color 0.1s linear;
+}
+
+.media_type_selector:hover, .media_type_selector a:hover {
+    color: #fff;
+    -webkit-transition: color 0.1s linear;
+    -moz-transition: color 0.1s linear;
+    -o-transition: color 0.1s linear;
+    transition: color 0.1s linear;
+}
+
+.media_type_selector a {
+    text-decoration: none;
+    color: #cecece;
+}
+
+.dashboard_sub_nav {
+    padding-left: 20px;
+}
+
+.wrapper {
+    /*background: #242424;*/
+    background: #111;
+    top: 105px;
+    left: 130px;
+    right: 0;
+    bottom: 0;
+    padding: 5px 10px 40px;
+    /*padding: 0;*/
+    border: none;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+
+    overflow: auto;
+
+    -webkit-transition: top 0.2s linear;
+    -moz-transition: top 0.2s linear;
+    -o-transition: top 0.2s linear;
+    transition: top 0.2s linear;
+}
+
+/* Usability hint */
+
+.usability_hint {
+    left: 130px;
+    flex: 0 100%;
+    width: 100%;
+}
+
+/* Uploads/Dropzone */
+
+#upload_form {
+    width: 100%;
+    min-width: 555px;
+    margin-bottom: 10px;
+}
+

@@ -8,27 +8,27 @@
 * the navigation container below.
 */
 $pages = array(
-    array(
+    /*array(
         'label'      => _('Now Playing'),
         'module'     => 'default',
         'controller' => 'Showbuilder',
         'action'     => 'index',
         'resource'   =>    'showbuilder'
-    ),
+    ),*/
     array(
         'label'      => _('Add Media'),
         'module'     => 'default',
         'controller' => 'Plupload',
         'action'     => 'index',
         'resource'   => 'plupload'
-    ),
+    ),/*
     array(
         'label'      => _('Library'),
         'module'     => 'default',
         'controller' => 'Library',
         'action'     => 'index',
         'resource'   =>    'playlist'
-    ),
+    ),*/
     array(
         'label'      => _('Calendar'),
         'module'     => 'default',

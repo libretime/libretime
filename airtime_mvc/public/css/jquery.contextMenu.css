@@ -167,3 +167,16 @@
 .context-menu-accesskey {
     text-decoration: underline;
 }
+
+
+/* Library Context Menu */
+.context-menu-item.icon {
+    min-height: 26px;
+    padding: 0 5px;
+    background-position: 4px 5px;
+}
+
+.context-menu-item > span {
+    padding: 0 20px;
+    line-height: 26px;
+}

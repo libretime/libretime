@@ -136,7 +136,7 @@ var AIRTIME = (function(AIRTIME) {
                         "</button>" +
                     "</div>")
             .append("<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
-                        "<button class='btn btn-small' id='sb-trash'>" +
+                        "<button class='btn btn-small btn-danger' id='sb-trash'>" +
                             "<i class='icon-white icon-trash'></i>" +
                             "<span>" + $.i18n._('Delete') + "</span>" +
                     "</button>" +
@@ -1255,6 +1255,19 @@ $(document).ready(function() {
         if (event.keyCode === 13) {
             $('#editmdsave').click();
         }
+    });
+
+    if (location.hash === "") {
+        $("a[href$='#files']").parent().addClass("selected");
+    }
+    $("a[href$='"+location.hash+"']").parent().addClass("selected");
+
+    $(window).on('hashchange', function() {
+        $(".media_type_selector").each(function () {
+            $(this).removeClass("selected");
+        });
+        $("a[href$='"+location.hash+"']").parent().addClass("selected");
+        oTable.fnDraw();
     });
 
     $(".media_type_selector").on("click", function() {

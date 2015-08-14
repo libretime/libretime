@@ -10,7 +10,7 @@ class ShowBuilderController extends Zend_Controller_Action {
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $userType = Application_Model_User::GetCurrentUser()->getType();
 
-        $this->_helper->layout->setLayout("showbuilder");
+        //$this->_helper->layout->setLayout("showbuilder");
 
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
         $this->view->headScript()->appendScript(Application_Common_GoogleAnalytics::generateGoogleTagManagerDataLayerJavaScript());
