@@ -1297,11 +1297,18 @@ $(document).ready(function() {
     }
     $("a[href$='"+location.hash+"']").parent().addClass("selected");
 
+    // Slightly hacky way of triggering the click event when it's outside of the anchor text
+    $(".media_type_selector").on("click", function() {
+        // Need get(0) here so we don't create a stack overflow by recurring the click on the parent
+        $(this).find("a").get(0).click();
+    });
+
     $(window).on('hashchange', function() {
         // If we click Dashboard from one of the media views, do nothing
         if (!location.hash) {
             return;
         }
+        AIRTIME.library.selectNone();
         $(".media_type_selector").each(function () {
             $(this).removeClass("selected");
         });

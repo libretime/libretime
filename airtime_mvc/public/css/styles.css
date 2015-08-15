@@ -71,11 +71,11 @@ fieldset {
     position: absolute;
     float: left;
 
-    background: transparent url(images/airtime_logo.png) no-repeat 0 0;
-    height: 35px;
-    width: 66px;
-    left: 35px;
-    top: 32px;
+    background: transparent url(images/airtime_logo_med.png) no-repeat 0 0;
+    height: 46px;
+    width: 120px;
+    left: 5px;
+    top: 26px;
     /*margin: 25px 5px 0 10px;*/
     /*margin-top: -5px;*/
 }
