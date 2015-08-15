@@ -531,6 +531,41 @@ var AIRTIME = (function(AIRTIME) {
             }
         }
 
+        function getLibraryDatatableStrings() {
+            //Set up the datatables string translation table with different strings depending on
+            //whether you're viewing files, playlists, smart blocks, etc.
+            var type = parseInt($(".media_type_selector.selected").attr("selection_id"));
+            type = (type === undefined) ? 1 : type;
+
+            //FIXME: The code that calls this function doesn't work as intended because you can't
+            //       change the oLanguage property of a datatable dynamically. :(
+
+            switch (type) {
+                case 0:
+                    return getDatatablesStrings({
+                        "sEmptyTable": $.i18n._("No files found"),
+                    });
+                    break;
+                case 1:
+                    return getDatatablesStrings({
+                        "sEmptyTable": $.i18n._("No playlists found"),
+                    });
+                    break;
+                case 2:
+                    return getDatatablesStrings({
+                        "sEmptyTable": $.i18n._("No smart blocks found"),
+                    });
+                    break;
+                default:
+                    return getDatatablesStrings({
+                        "sEmptyTable": $.i18n._(""),
+                        "sZeroRecords": $.i18n._("")
+                    });
+                    break;
+            };
+
+        }
+
         oTable = $libTable.dataTable( {
 
             // put hidden columns at the top to insure they can never be visible
@@ -726,7 +761,7 @@ var AIRTIME = (function(AIRTIME) {
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
             "bAutoWidth": false,
-            "oLanguage": datatables_dict,
+            "oLanguage": getLibraryDatatableStrings(),
 
             // R = ColReorder, C = ColVis
             "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ilp>>',

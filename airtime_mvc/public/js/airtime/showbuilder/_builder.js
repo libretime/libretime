@@ -772,7 +772,10 @@ var AIRTIME = (function(AIRTIME){
             },
 
             "sAjaxDataProp": "schedule",
-            "oLanguage": datatables_dict,
+            "oLanguage": getDatatablesStrings({
+                "sZeroRecords":    $.i18n._("There are no shows scheduled during the specified time period."),
+                "sEmptyTable":     $.i18n._("There are no shows scheduled during the specified time period."),
+            }),
             "sAjaxSource": baseUrl+"showbuilder/builder-feed",
 
             "bScrollCollapseY": false

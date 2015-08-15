@@ -207,7 +207,7 @@ var AIRTIME = (function(AIRTIME) {
         var data = el.prev().data("aData");
 
         if (data === undefined) {
-            alert($.i18n._("Cannot schedule outside a show."));
+            alert($.i18n._("Cannot schedule outside a show.\nTry creating a show first."));
             return false;
         }
 

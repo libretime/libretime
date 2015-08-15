@@ -94,7 +94,7 @@ function checkLiquidsoapStatus(){
             }
             var html;
             if(status == "OK"){
-                html = '<div class="stream-status status-good"><hp3>'+$.i18n._("Connected to the streaming server")+'</p></div>';
+                html = '<div class="stream-status status-good"><p>'+$.i18n._("Connected to the streaming server")+'</p></div>';
             }else if(status == "N/A"){
                 html = '<div class="stream-status status-disabled"><p>'+$.i18n._("The stream is disabled")+'</p></div>';
             }else if(status == "waiting"){

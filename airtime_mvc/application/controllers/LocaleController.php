@@ -392,7 +392,25 @@ class LocaleController extends Zend_Controller_Action
             "Copied %s row%s to the clipboard" => _("Copied %s row%s to the clipboard"),
             "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."),
             "New Show" => _("New Show"),
-            "New Log Entry" => _("New Log Entry")
+            "New Log Entry" => _("New Log Entry"),
+            //Datatables:
+            "No data available in table",
+            "Showing _START_ to _END_ of _TOTAL_ entries",
+            "Showing 0 to 0 of 0 entries",
+            "(filtered from _MAX_ total entries)",
+            "",
+            ",",
+            "Show _MENU_",
+            "Loading...",
+            "Processing...",
+            "No matching records found",
+            "First",
+            "Last",
+            "Next",
+            "Previous",
+            ": activate to sort column ascending",
+            ": activate to sort column descending"
+            //End of datatables
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

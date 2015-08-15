@@ -62,6 +62,35 @@ var i18n_days_short = [
     $.i18n._("Sa")
 ];
 
+function getDatatablesStrings(overrideDict) {
+
+    var dict = {
+        "sEmptyTable":     $.i18n._("No data available in table"),
+        "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ entries"),
+        "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 entries"),
+        "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total entries)"),
+        "sInfoPostFix":    $.i18n._(""),
+        "sInfoThousands":  $.i18n._("),"),
+        "sLengthMenu":     $.i18n._("Show _MENU_"),
+        "sLoadingRecords": $.i18n._("Loading..."),
+        "sProcessing":     $.i18n._("Processing..."),
+        "sSearch":         $.i18n._(""),
+        "sZeroRecords":    $.i18n._("No matching records found"),
+        "oPaginate": {
+        "sFirst":    $.i18n._("First"),
+            "sLast":     $.i18n._("Last"),
+            "sNext":     $.i18n._("Next"),
+            "sPrevious": $.i18n._("Previous")
+        },
+        "oAria": {
+        "sSortAscending":  $.i18n._(": activate to sort column ascending"),
+            "sSortDescending": $.i18n._(": activate to sort column descending")
+        }
+    };
+
+    return $.extend({}, dict, overrideDict);
+}
+
 function adjustDateToServerDate(date, serverTimezoneOffset){
     //date object stores time in the browser's localtime. We need to artificially shift 
     //it to 

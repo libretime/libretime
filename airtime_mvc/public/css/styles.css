@@ -3135,7 +3135,7 @@ dd .stream-status {
     width: 65%;
 }
 .status-good {
-    background:#e3ffc9 url(images/stream_status.png) no-repeat 8px 5px;
+    background:#e3ffc9 url(images/stream_status.png) no-repeat 8px 8px;
     border-color:#54b300;
 }
 .status-good p {

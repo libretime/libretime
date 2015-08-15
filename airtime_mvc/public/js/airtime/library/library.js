@@ -770,7 +770,9 @@ var AIRTIME = (function(AIRTIME) {
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
             "bAutoWidth": false,
-            "oLanguage": datatables_dict,
+            "oLanguage": getDatatablesStrings({
+                "sZeroRecords":    $.i18n._("No matching records found."),
+            }),
             
             // R = ColReorder, C = ColVis
             "sDom": 'Rl<"#library_display_type">f<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ip>',
