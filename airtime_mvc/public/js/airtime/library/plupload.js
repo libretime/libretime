@@ -175,7 +175,14 @@ $(document).ready(function() {
 			"sDom": '<"H">frtip<"F"l>',
 			"bPaginate" : true,
             "sPaginationType": "full_numbers",
-			"aoColumns": [
+            "oLanguage": getDatatablesStrings({
+                "sEmptyTable": $.i18n._("No files have been uploaded yet."),
+                "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 uploads"),
+                "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ uploads"),
+                "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 uploads"),
+                "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total uploads)"),
+            }),
+            "aoColumns": [
 	   		   { "mData" : "artist_name", "sTitle" : $.i18n._("Creator") },
 			   { "mData" : "track_title", "sTitle" : $.i18n._("Title") },
 			   { "mData" : "import_status", "sTitle" : $.i18n._("Import Status"), 

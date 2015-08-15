@@ -104,8 +104,14 @@ function populateUserTable() {
         "bJQueryUI": true,
         "bAutoWidth": false,
         "bLengthChange": false,
-        "oLanguage": datatables_dict,
-        
+        "oLanguage": getDatatablesStrings({
+            "sEmptyTable": $.i18n._("No users were found."),
+            "sEmptyTable":     $.i18n._("No users found"),
+            "sZeroRecords":    $.i18n._("No matching users found"),
+            "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ users"),
+            "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 users"),
+            "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total users)"),
+        }),
         "sDom": '<"H"lf<"dt-process-rel"r>>t<"F"ip>',
     });
 }
