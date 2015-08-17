@@ -17,7 +17,6 @@ $(document).ready(function() {
     	var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
    	 	var start = oRange.start;
         var end = oRange.end;
-
         getDataAndPlot(start, end);
     });
 });
@@ -90,11 +89,12 @@ function plot(datasets){
         tickSize = (lastTimestamp.getTime() - firstTimestamp.getTime())/1000/numOfTicks;
         
         plot = $.plot($("#flot_placeholder"), data, {
-            yaxis: { min: 0, tickDecimals: 0 },
-            xaxis: { mode: "time", timeformat:"%y/%m/%0d %H:%M", tickSize: [tickSize, "second"] },
+            yaxis: { min: 0, tickDecimals: 0, color: '#d6d6d6', tickColor: '#d6d6d6' },
+            xaxis: { mode: "time", timeformat:"%y/%m/%0d %H:%M", tickSize: [tickSize, "second"],
+                    color: '#d6d6d6', tickColor: '#d6d6d6' },
             grid: {
                 hoverable: true,
-                backgroundColor: { colors: ["#888888", "#999999"] }
+                backgroundColor: { colors: ["#333", "#555"] }
             },
             series: {
                 lines: {
@@ -106,6 +106,7 @@ function plot(datasets){
             legend: {
                 container: $('#legend'),
                 noColumns: 5,
+                color: '#c0c0c0',
                 labelFormatter: function (label, series) {
                     var cb = '<input style="float:left;" class="legendCB" type="checkbox" ';
                     if (series.data.length > 0){

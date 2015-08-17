@@ -111,13 +111,13 @@
 	border: 1px solid #202020;
 	border-top: 1px solid #353535;
 	border-left: 1px solid #2a2a2a;
+	background-color: #242424;
+	color: #e2e2e2;
 
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
 	-moz-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
 	box-shadow: inset 0 0 6px rgba(0,0,0,.65);
 
-	background-color: #242424;
-	color: #e2e2e2;
 
 }
 .ui-widget-content a {
