@@ -904,6 +904,11 @@ var AIRTIME = (function(AIRTIME){
 
         });
 
+        $pl.find("#webstream_cancel, #cancel_button").on("click", function() {
+            var tabId = $pl.attr("tab-id");
+            $("li[tab-id=" + tabId + "] .lib_pl_close").click();
+        });
+
         $lib.on("click", "#pl_edit", function() {
             openPlaylistPanel();
             $.ajax({
