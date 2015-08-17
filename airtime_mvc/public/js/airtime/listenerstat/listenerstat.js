@@ -6,8 +6,8 @@ $(document).ready(function() {
     timeEndId = "#his_time_end";
     
     // set width dynamically
-    var width = $("#content").width();
-    width = width - 120;
+    var width = $("#listenerstat_content").width();
+    width = width * .91;
     $("#listenerstat_content").find("#flot_placeholder").width(width);
     $("#listenerstat_content").find("#legend").width(width);
     

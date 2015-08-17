@@ -51,7 +51,9 @@ way to fit your requirements.
 	float:left;
 	display:block;
 	padding:0 28px 0 0px;
+	/* Hide the drop down sub menu
 	background:url(images/down_arrow.png) no-repeat right 50%;
+	*/
 
 }
 #nav li:hover a.top_link, #nav li.active a.top_link, #nav li.active:hover a.top_link {
@@ -64,9 +66,11 @@ way to fit your requirements.
 #nav li:hover a.top_link span {
 
 }
+/* Hide the drop down sub menu
 #nav li:hover a.top_link span.down {
 	background:url(images/down_arrow.png) no-repeat right 50%;
 }
+*/
 /* Default list styling */
 
 #nav li:hover {
@@ -86,6 +90,8 @@ way to fit your requirements.
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	/* Hide the drop down sub menu */
+	display:none;
 
 }
 #nav li:hover ul.sub li {

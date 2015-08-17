@@ -21,6 +21,10 @@ class BillingController extends Zend_Controller_Action {
 
     public function upgradeAction()
     {
+
+        $this->_helper->layout->setLayout("page-sub-menu");
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Billing');
+
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
@@ -207,6 +211,9 @@ class BillingController extends Zend_Controller_Action {
 
     public function clientAction()
     {
+        $this->_helper->layout->setLayout("page-sub-menu");
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Billing');
+
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
@@ -257,6 +264,9 @@ class BillingController extends Zend_Controller_Action {
 
     public function invoicesAction()
     {
+        $this->_helper->layout->setLayout("page-sub-menu");
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Billing');
+
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);

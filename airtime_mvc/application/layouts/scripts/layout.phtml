@@ -79,7 +79,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <div id="media_type_nav"> <!-- class="content-pane" -->
     <div class="btn-group">
-        <button id="new_media_selector" class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+        <button id="new_media_selector" class="btn btn-small dropdown-toggle dashboard-btn" data-toggle="dropdown">
             New <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
@@ -93,6 +93,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <a href="#"><?php echo _("Webstream") ?></a>
             </li>
         </ul>
+        <a href="/Plupload">
+            <button id="add_media_btn" class="btn btn-small dashboard-btn">Upload</button>
+        </a>
     </div>
     <div class="media_type_selector" selection_id="1">
         <a href="/show-builder#"><?php echo _("Dashboard") ?></a></div>
@@ -106,7 +109,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a href="/show-builder#webstreams"><?php echo _("Webstreams") ?></a></div>
     <hr style="margin-left: 5px; margin-right: 5px">
     <div id="nav">
-        <?php echo $this->navigation()->menu() ?>
+        <?php echo $this->navigation()->menu(); ?>
     </div>
 
 </div>

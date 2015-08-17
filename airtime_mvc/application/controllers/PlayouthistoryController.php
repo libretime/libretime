@@ -24,6 +24,9 @@ class PlayouthistoryController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
+        $this->_helper->layout->setLayout("page-sub-menu");
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
+
         list($startsDT, $endsDT) = Application_Common_HTTPHelper::getStartEndFromRequest($this->getRequest());
        
         $userTimezone = new DateTimeZone(Application_Model_Preference::GetUserTimezone());

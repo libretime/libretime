@@ -2333,7 +2333,7 @@ span.errors.sp-errors{
 }
 
 .stream-config {
-    width: 1100px;
+    width: 85%;
 }
 
 #stream_save_bottom {
@@ -3485,7 +3485,6 @@ button.btn-icon-text > i.icon-white {
 }
 
 #new_media_selector {
-    width: 100%;
     font-size: 14px;
 }
 
@@ -3596,3 +3595,32 @@ button.btn-icon-text > i.icon-white {
     margin-bottom: 10px;
 }
 
+#sub-menu {
+    width: 10%;
+    border-right: 1px solid #5b5b5b;
+    font-size: 14px;
+    color: #cecece;
+    padding: 10px;
+}
+
+#sub-menu .navigation {
+    list-style: none;
+    padding-left: 0px;
+}
+
+#sub-menu .navigation li {
+    padding-bottom: 10px;
+}
+
+#sub-menu .navigation a {
+    color: #cecece;
+    text-decoration: none;
+}
+
+#listenerstat_content {
+    width: 100%;
+}
+
+.dashboard-btn {
+    width: 50%;
+}
