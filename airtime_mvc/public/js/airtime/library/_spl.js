@@ -1154,7 +1154,7 @@ var AIRTIME = (function(AIRTIME){
 
 
     mod.fnDelete = function(plid, tabId) {
-        var url, id, lastMod, type, pl = (tabId === undefined) ? $pl : $('#pl-tab-content' + tabId);
+        var url, id, lastMod, type, pl = (tabId === undefined) ? $pl : $('#pl-tab-content-' + tabId);
 
         stopAudioPreview();
         id = (plid === undefined) ? getId() : plid;
