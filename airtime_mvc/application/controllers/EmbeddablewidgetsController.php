@@ -8,8 +8,11 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
 
     }
 
-    public function indexAction()
+    public function playerAction()
     {
+        $this->_helper->layout->setLayout("page-sub-menu");
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
+
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/player-form.css?'.$CC_CONFIG['airtime_version']);
@@ -27,6 +30,14 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
             1. Enable at least one MP3, AAC, or OGG stream under System -> Streams<br>
             2. Enable the Public Airtime API under System -> Preferences");
         }
+    }
+
+    public function scheduleAction()
+    {
+        $this->_helper->layout->setLayout("page-sub-menu");
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
+
+        $apiEnabled = Application_Model_Preference::GetAllow3rdPartyApi();
 
         if (!$apiEnabled) {
             $this->view->weekly_schedule_error_msg = _("To use the embeddable weekly schedule widget you must:<br><br>
