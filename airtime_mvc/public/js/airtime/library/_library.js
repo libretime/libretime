@@ -438,6 +438,11 @@ var AIRTIME = (function(AIRTIME) {
         }
     };
 
+    mod.initializeContextMenus = function() {
+        
+    };
+
+
     libraryInit = function() {
 
         $libContent = $("#library_content");
@@ -565,6 +570,7 @@ var AIRTIME = (function(AIRTIME) {
             };
 
         }
+
 
         oTable = $libTable.dataTable( {
 
@@ -893,6 +899,9 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
 
+        AIRTIME.library.initializeContextMenus();
+
+        /*
         // begin context menu initialization.
         $.contextMenu({
             selector: '#library_display tr:has(td)',
@@ -1084,6 +1093,7 @@ var AIRTIME = (function(AIRTIME) {
                 };
             }
         });
+        */
     };
 
     mod.libraryInit = libraryInit;
