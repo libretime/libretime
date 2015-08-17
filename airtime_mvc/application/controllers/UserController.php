@@ -125,6 +125,9 @@ class UserController extends Zend_Controller_Action
     
     public function editUserAction()
     {
+        $this->_helper->layout->setLayout("page-sub-menu");
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
+
         session_start(); //Reopen session for writing.
         $request = $this->getRequest();
         $form = new Application_Form_EditUser();

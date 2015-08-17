@@ -35,6 +35,12 @@ $pages = array(
                 'controller' => 'Preference'
             ),
             array(
+                'label' => _('My Profile'),
+                'controller' => 'user',
+                'action' => 'edit-user',
+                'resource' => 'user'
+            ),
+            array(
                 'label'      => _('Users'),
                 'module'     => 'default',
                 'controller' => 'user',
