@@ -143,6 +143,35 @@ AIRTIME = (function(AIRTIME) {
         }
     }
 
+    function highlightMediaTypeSelector()
+    {
+        if (location.hash === "") {
+            $("a[href$='#files']").parent().addClass("selected");
+        }
+        $("a[href$='"+location.hash+"']").parent().addClass("selected");
+
+        // Slightly hacky way of triggering the click event when it's outside of the anchor text
+        $(".media_type_selector").on("click", function() {
+            // Need get(0) here so we don't create a stack overflow by recurring the click on the parent
+            $(this).find("a").get(0).click();
+        });
+
+        $(window).on('hashchange', function() {
+
+            // If we click Dashboard from one of the media views, do nothing
+            if (!location.hash) {
+                return;
+            }
+            AIRTIME.library.selectNone();
+            $(".media_type_selector").each(function () {
+                $(this).removeClass("selected");
+            });
+            $("a[href$='"+location.hash+"']").parent().addClass("selected");
+            oTable.fnDraw();
+        });
+    }
+
+
     mod.onReady = function() {
         // Normally we would just use audio/*, but it includes file types that we can't handle (like .m4a)
         // We initialize the acceptedMimeTypes variable in Bootstrap so we don't have to duplicate the list
@@ -170,6 +199,9 @@ AIRTIME = (function(AIRTIME) {
                 AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
             }
         });
+
+        //Highlight the media type selector we're currently on.
+        highlightMediaTypeSelector();
 
         /*
          * Icon hover states for search.

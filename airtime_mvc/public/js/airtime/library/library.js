@@ -1322,6 +1322,7 @@ var validationTypes = {
     "year" : "i"
 };
 
+
 $(document).ready(function() {
     $('.active-tab .md-save').live("click", function() {
         var file_id = $('#file_id').val(),
@@ -1344,44 +1345,6 @@ $(document).ready(function() {
             $('#editmdsave').click();
         }
     });
-
-    if (location.hash === "") {
-        $("a[href$='#files']").parent().addClass("selected");
-    }
-    $("a[href$='"+location.hash+"']").parent().addClass("selected");
-
-    // Slightly hacky way of triggering the click event when it's outside of the anchor text
-    $(".media_type_selector").on("click", function() {
-        // Need get(0) here so we don't create a stack overflow by recurring the click on the parent
-        $(this).find("a").get(0).click();
-    });
-
-    $(window).on('hashchange', function() {
-        // If we click Dashboard from one of the media views, do nothing
-        if (!location.hash) {
-            return;
-        }
-        AIRTIME.library.selectNone();
-        $(".media_type_selector").each(function () {
-            $(this).removeClass("selected");
-        });
-        $("a[href$='"+location.hash+"']").parent().addClass("selected");
-        oTable.fnDraw();
-    });
-
-    /* Overridden by hashchange function
-
-     $(".media_type_selector").on("click", function() {
-     if (!$(this).hasClass("selected")) {
-     AIRTIME.library.selectNone();
-     $(".media_type_selector").each(function () {
-     $(this).removeClass("selected");
-     });
-     $(this).addClass("selected");
-     oTable.fnDraw();
-     }
-     });
-     */
 
     $("#advanced-options").on("click", function() {
         resizeAdvancedSearch();
