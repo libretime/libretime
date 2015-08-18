@@ -436,6 +436,8 @@ var AIRTIME = (function(AIRTIME){
      * Should all be moved to builder.js eventually
      */
     function buildNewTab(json) {
+        AIRTIME.library.selectNone();
+
         var tabId = $openTabs[json.type + json.id];
         if (tabId !== undefined) {
             AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
