@@ -914,6 +914,7 @@ var AIRTIME = (function(AIRTIME) {
             var tr = $(this).parent();
             if (flagForDeselection) {
                 flagForDeselection = false;
+                $previouslySelected = undefined;
                 mod.deselectItem(tr);
             } else {
                 mod.checkItem(tr);

@@ -782,8 +782,8 @@ var AIRTIME = (function(AIRTIME){
             "bScrollCollapseY": false
         });
 
-        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty))", function(ev) {
-            var $tr = $(this),
+        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td.sb-checkbox", function(ev) {
+            var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
 
@@ -807,6 +807,7 @@ var AIRTIME = (function(AIRTIME){
                         });
                     }
                 }
+
                 $tr.addClass(SB_SELECTED_CLASS);
                 $tr.find(".sb-checkbox > input").prop('checked', true);
             } else {
@@ -818,16 +819,68 @@ var AIRTIME = (function(AIRTIME){
             $previouslySelected = $tr;
         });
 
-        $sbTable.find("tbody").on("click", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty))", function(ev) {
+        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td:not(.sb-checkbox)", function(ev) {
+            var $tr = $(this).parent(),
+            // Get the ID of the selected row
+                $rowId = $tr.attr("id");
+
+            if (!$tr.hasClass(SB_SELECTED_CLASS)) {
+                if (ev.shiftKey && $previouslySelected !== undefined) {
+                    if ($previouslySelected.attr("id") == $rowId) {
+                        return;
+                    }
+
+                    // If the selected row comes before the previously selected row,
+                    // we want to select previous rows, otherwise we select next
+                    if ($previouslySelected.prevAll("#" + $rowId).length !== 0) {
+                        $previouslySelected.prevUntil($tr).each(function (i, el) {
+                            $(el).addClass(SB_SELECTED_CLASS);
+                            $(el).find(".sb-checkbox > input").prop('checked', true);
+                        });
+                    } else {
+                        $previouslySelected.nextUntil($tr).each(function (i, el) {
+                            $(el).addClass(SB_SELECTED_CLASS);
+                            $(el).find(".sb-checkbox > input").prop('checked', true);
+                        });
+                    }
+                } else if (!ev.ctrlKey) {
+                    mod.selectNone();
+                }
+
+                $tr.addClass(SB_SELECTED_CLASS);
+                $tr.find(".sb-checkbox > input").prop('checked', true);
+            } else if (ev.ctrlKey) {
+                $tr.removeClass(SB_SELECTED_CLASS);
+                $tr.find(".sb-checkbox > input").prop('checked', false);
+            }
+
+            selectedRows = $("." + SB_SELECTED_CLASS);
+            // Remember this row so we can properly multiselect
+            $previouslySelected = $tr;
+        });
+
+        $sbTable.find("tbody").on("click", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td.sb-checkbox", function() {
+            var tr = $(this).parent();
             if (flagForDeselection) {
                 flagForDeselection = false;
-                $(this).removeClass(SB_SELECTED_CLASS);
-                $(this).find(".sb-checkbox > input").prop('checked', false);
+                $previouslySelected = undefined;
+                tr.removeClass(SB_SELECTED_CLASS);
+                tr.find(".sb-checkbox > input").prop('checked', false);
             } else {
-                $(this).find(".sb-checkbox > input").prop('checked', true);
+                tr.find(".sb-checkbox > input").prop('checked', true);
             }
             selectedRows = $("." + SB_SELECTED_CLASS);
-            mod.checkToolBarIcons();
+        });
+
+        $sbTable.find("tbody").on("click", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td:not(.sb-checkbox)", function(e) {
+            var tr = $(this).parent();
+            if (!(e.shiftKey || e.ctrlKey)) {
+                mod.selectNone();
+                tr.addClass(SB_SELECTED_CLASS);
+                tr.find(".sb-checkbox > input").prop('checked', true);
+                $previouslySelected = tr;
+            }
+            selectedRows = $("." + SB_SELECTED_CLASS);
         });
 
         //begin context menu initialization.
