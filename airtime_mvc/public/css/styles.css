@@ -3605,6 +3605,7 @@ button.btn-icon-text > i.icon-white {
 #sub-menu {
     width: 130px;
     border-right: 1px solid #5b5b5b;
+    background: #212121;
     font-size: 14px;
     color: #cecece;
     padding: 10px;
@@ -3631,6 +3632,10 @@ button.btn-icon-text > i.icon-white {
 #sub-menu .navigation .active a {
     color: #fff;
     text-decoration: none;
+}
+
+.page-sub-menu {
+    /*background-color: #252525;*/
 }
 
 #listenerstat_content {
