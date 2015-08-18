@@ -3610,6 +3610,10 @@ button.btn-icon-text > i.icon-white {
     padding: 10px;
 }
 
+#sub-menu h3 {
+    padding: 0px;
+}
+
 #sub-menu .navigation {
     list-style: none;
     padding-left: 0px;
@@ -3645,4 +3649,10 @@ button.btn-icon-text > i.icon-white {
 #his_submit {
     height: 19px;
     margin-top: -2px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
 }

@@ -30,7 +30,7 @@ $pages = array(
         'controller' => 'preference',
         'pages' => array(
             array(
-                'label'      => _('Preferences'),
+                'label'      => _('General'),
                 'module'     => 'default',
                 'controller' => 'Preference'
             ),

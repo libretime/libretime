@@ -120,8 +120,8 @@
 
 <div class="wrapper" id="content">
     <div id="sub-menu">
-        <?php //parent_page is passed in from controller
-        echo $this->layout()->parent_page; ?>
+        <h3><?php //parent_page is passed in from controller
+        echo $this->layout()->parent_page; ?></h3>
         <hr>
         <?php
         $page = $this->navigation()->findOneBy('label', $this->layout()->parent_page);
