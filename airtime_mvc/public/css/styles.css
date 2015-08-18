@@ -47,8 +47,6 @@ h3 {
     color: #efefef;
     padding: 10px;
     margin:0;
-    background-color: #5E5E5E;
-    border-top:1px solid #9d9d9d;
 }
 a, a:focus {
     outline:none;
@@ -62,6 +60,8 @@ select {
     border:1px solid #9d9d9d;
 }
 
+
+
 /* Fix for Firefox */
 fieldset {
     clear: both;
@@ -70,8 +70,6 @@ fieldset {
 .logo {
     position: absolute;
     float: left;
-
-    background: transparent url(images/airtime_logo_med.png) no-repeat 0 0;
     height: 46px;
     width: 120px;
     left: 5px;
@@ -1078,7 +1076,6 @@ fieldset {
     border: 1px solid #222;
     margin: 0;
     padding: 0;
-    background-color: #333;
 
 }
 fieldset.plain {
@@ -1717,6 +1714,11 @@ h2#scheduled_playlist_name span {
 
 .simple-formblock dd.block-display {
     width: 100%;
+}
+
+#stream_form h3 {
+    background-color: #5E5E5E;
+    border-top:1px solid #9d9d9d;
 }
 
 .stream-setting-content dd.block-display {
@@ -3533,15 +3535,12 @@ button.btn-icon-text > i.icon-white {
 .wrapper {
     position: absolute;
 
-    /*background: #242424;*/
     top: 102px;
     left: 130px;
     right: 0;
     bottom: 0;
     padding: 5px 10px 40px;
     border: none;
-
-    background: #111;
 
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -3621,6 +3620,16 @@ button.btn-icon-text > i.icon-white {
     width: 100%;
 }
 
+#listenerstat_content .legendLabel
+{
+    color: #d6d6d6;
+}
+
 .dashboard-btn {
     width: 50%;
+}
+
+#his_submit {
+    height: 19px;
+    margin-top: -2px;
 }

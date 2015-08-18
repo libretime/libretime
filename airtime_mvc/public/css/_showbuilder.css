@@ -567,21 +567,25 @@ li.ui-state-default {
     padding: 4px;
 }
 
-#save_button, #webstream_save {
-    background: #ff5d1a;
-    color: #fff;
-    border-radius: 4px;
-    font-size: 16px;
-    height: 38px;
-    width: 120px;
-}
+/*#save_button, #webstream_save {*/
+    /*background: #ff5d1a;*/
+    /*color: #fff;*/
+    /*border-radius: 4px;*/
+    /*font-size: 16px;*/
+    /*height: 38px;*/
+    /*width: 120px;*/
+/*}*/
 
-#save_button:active, #webstream_save {
-    color: #fff !important;
-}
+/*#save_button:active, #webstream_save {*/
+    /*color: #fff !important;*/
+/*}*/
 
 #save_button:focus, #webstream_save {
     outline-width: 0;
+}
+
+#edit-md-dialog .zend_form dd:last-child {
+    width: 160px;
 }
 
 /* Smart Block Editor */

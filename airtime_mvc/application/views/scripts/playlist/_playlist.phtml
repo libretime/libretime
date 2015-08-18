@@ -58,8 +58,11 @@ if (isset($this->obj)) {
             echo $this->render('playlist/update.phtml') ?>
     </ul>
     <div class="btn-toolbar spl-no-margin clearfix">
+        <div class="btn-group pull-right">
+            <button class="btn" type="button" id="cancel_button" name="submit"><?php echo _("Cancel") ?></button>
+        </div>
         <div class='btn-group pull-right'>
-            <button class="btn btn-inverse" title='<?php echo _("Save playlist") ?>' type="button" id="save_button"><?php echo _("Save") ?></button>
+            <button class="btn" title='<?php echo _("Save playlist") ?>' type="button" id="save_button"><?php echo _("Save") ?></button>
         </div>
     </div>
 
