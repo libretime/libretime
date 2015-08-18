@@ -1010,12 +1010,12 @@ var AIRTIME = (function(AIRTIME) {
 
                         callback = function() {
                             if (data.ftype === 'playlist' && data.length !== '0.0'){
-                                playlistIndex = $(this).parent().attr('id').substring(3); // remove the pl_
+                                playlistIndex = $(this).attr('id').substring(3); // remove the pl_
                                 open_playlist_preview(playlistIndex, 0);
                             } else if (data.ftype === 'audioclip' || data.ftype === 'stream') {
                                 open_audio_preview(data.ftype, data.id);
                             } else if (data.ftype === 'block') {
-                                blockIndex = $(this).parent().attr('id').substring(3); // remove the pl_
+                                blockIndex = $(this).attr('id').substring(3); // remove the pl_
                                 open_block_preview(blockIndex, 0);
                             }
                         };
