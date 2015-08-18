@@ -513,6 +513,10 @@ li.ui-state-default {
     left: 4px;
 }
 
+[tab-type='md'] > .editor_pane_wrapper {
+    overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
+}
+
 .inner_editor_wrapper {
     max-height: 60%;
     overflow-x: hidden;
