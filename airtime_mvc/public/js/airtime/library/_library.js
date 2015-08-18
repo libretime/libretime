@@ -543,6 +543,7 @@ var AIRTIME = (function(AIRTIME) {
             //       change the oLanguage property of a datatable dynamically. :(
 
             switch (type) {
+                /*
                 case 0:
                     return getDatatablesStrings({
                         "sEmptyTable": $.i18n._("No files found"),
@@ -557,11 +558,11 @@ var AIRTIME = (function(AIRTIME) {
                     return getDatatablesStrings({
                         "sEmptyTable": $.i18n._("No smart blocks found"),
                     });
-                    break;
+                    break;*/
                 default:
                     return getDatatablesStrings({
                         "sEmptyTable": $.i18n._(""),
-                        "sZeroRecords": $.i18n._("")
+                        "sZeroRecords": $.i18n._("No matching results found.")
                     });
                     break;
             };
