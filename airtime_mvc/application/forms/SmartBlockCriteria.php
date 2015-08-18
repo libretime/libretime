@@ -341,7 +341,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         }
 
         $generate = new Zend_Form_Element_Button('generate_button');
-        $generate->setAttrib('class', 'btn btn-small');
+        $generate->setAttrib('class', 'sp-button btn');
         $generate->setAttrib('title', _('Generate playlist content and save criteria'));
         $generate->setIgnore(true);
         $generate->setLabel(_('Generate'));
@@ -349,7 +349,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $this->addElement($generate);
 
         $shuffle = new Zend_Form_Element_Button('shuffle_button');
-        $shuffle->setAttrib('class', 'btn btn-small');
+        $shuffle->setAttrib('class', 'sp-button btn');
         $shuffle->setAttrib('title', _('Shuffle playlist content'));
         $shuffle->setIgnore(true);
         $shuffle->setLabel(_('Shuffle'));

@@ -41,6 +41,7 @@ class PlaylistController extends Zend_Controller_Action
         $objInfo = Application_Model_Library::getObjInfo($p_type);
 
         $obj_sess = new Zend_Session_Namespace(UI_PLAYLISTCONTROLLER_OBJ_SESSNAME);
+
         if (isset($obj_sess->id)) {
             $obj = new $objInfo['className']($obj_sess->id);
 
@@ -89,6 +90,7 @@ class PlaylistController extends Zend_Controller_Action
 
                 $this->view->form = $form;
                 $this->view->obj = $obj;
+                $this->view->type = "sb";
                 $this->view->id = $obj->getId();
 
                 if ($isJson) {
@@ -98,6 +100,7 @@ class PlaylistController extends Zend_Controller_Action
                 }
             } else {
                 $this->view->obj = $obj;
+                $this->view->type = "pl";
                 $this->view->id = $obj->getId();
                 if ($isJson) {
                     return $this->view->html = $this->view->render($viewPath);
@@ -194,9 +197,9 @@ class PlaylistController extends Zend_Controller_Action
         $objInfo = Application_Model_Library::getObjInfo($type);
         Logging::info("editing {$type} {$id}");
 
-        if (!is_null($id)) {
-            Application_Model_Library::changePlaylist($id, $type);
-        }
+//        if (!is_null($id)) {
+        Application_Model_Library::changePlaylist($id, $type);
+//        }
 
         try {
             $obj = new $objInfo['className']($id);
@@ -519,7 +522,7 @@ class PlaylistController extends Zend_Controller_Action
         $request = $this->getRequest();
         $params = $request->getPost();
         $result = array();
-        
+
         if ($params['type'] == 'block') {
             try {
                 $bl = new Application_Model_Block($params['obj_id']);
@@ -534,20 +537,23 @@ class PlaylistController extends Zend_Controller_Action
                 $result['html'] = $this->createFullResponse($bl, true, true);
                 $result['result'] = 0;
             } else {
-                $this->view->obj = $bl;
-                $this->view->id = $bl->getId();
                 $this->view->form = $form;
                 $this->view->unsavedName = $params['name'];
                 $this->view->unsavedDesc = $params['description'];
                 $viewPath = 'playlist/smart-block.phtml';
+                $this->view->obj = $bl;
+                $this->view->id = $bl->getId();
                 $result['html'] = $this->view->render($viewPath);
                 $result['result'] = 1;
             }
+            $result['type'] = "sb";
+            $result['id'] = $bl->getId();
+            $result["modified"] = $bl->getLastModified("U");
         } else if ($params['type'] == 'playlist') {
             $this->setPlaylistNameDescAction();
+            $result["modified"] = $this->view->modified;
         }
 
-        $result["modified"] = $this->view->modified;
         $this->_helper->json->sendJson($result);
     }
 
