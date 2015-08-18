@@ -3510,7 +3510,7 @@ button.btn-icon-text > i.icon-white {
     transition: color 0.1s linear;
 }
 
-.media_type_selector.selected {
+.media_type_selector.selected, .media_type_selector.selected a {
     color: #fff;
     background-color: #444;
     -webkit-transition: color 0.1s linear;
