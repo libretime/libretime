@@ -322,8 +322,8 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.selectAll = function($els) {
         $els.each(function(i, el){
-            mod.highlightItem(el);
-            mod.addToChosen(el);
+            mod.highlightItem($(el));
+            mod.addToChosen($(el));
         });
         $previouslySelected = $els.last();
         mod.checkToolBarIcons();
@@ -331,8 +331,9 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.deselectAll = function($els) {
         $els.each(function(i, el){
-            mod.unHighlightItem(el);
-            mod.removeFromChosen(el);
+            mod.unHighlightItem($(el));
+            mod.removeFromChosen($(el));
+            mod.uncheckItem($(el));
         });
         $previouslySelected = undefined;
         mod.checkToolBarIcons();
