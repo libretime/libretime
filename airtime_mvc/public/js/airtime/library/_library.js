@@ -150,7 +150,8 @@ var AIRTIME = (function(AIRTIME) {
                         "<li id='sb-dselect-page'><a href='#'>" + $.i18n._("Deselect this page") + "</a></li>" +
                         "<li id='sb-dselect-all'><a href='#'>" + $.i18n._("Deselect all") + "</a></li>" +
                     "</ul>" +
-                "</div>");
+                "</div>"
+        );
     };
 
     mod.moveSearchBarToHeader = function() {
@@ -438,10 +439,6 @@ var AIRTIME = (function(AIRTIME) {
         }
     };
 
-    mod.initializeContextMenus = function() {
-        
-    };
-
 
     libraryInit = function() {
 
@@ -611,7 +608,8 @@ var AIRTIME = (function(AIRTIME) {
                 /* Track Number */    { "sTitle" : $.i18n._("Track Number")       , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "125px"        },
                 /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "bVisible"    : false                 , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },
                 /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
-                /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         }
+                /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
+                /* Context Menu */    { "sTitle" : ""                             , "mData" : null               , "bSortable"   : false                 , "sClass" : "library_actions" , "bSearchable" : false                   , "sWidth" : "16px" }
             ],
 
             "bProcessing": true,
@@ -714,6 +712,12 @@ var AIRTIME = (function(AIRTIME) {
                 // add checkbox
                 $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
 
+                $(nRow).find('td.library_actions')
+                    .text("...")
+                    .on('click', function(e) {
+                    $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
+                }).html("<div class='library_actions_btn'>...</div>");
+
                 // add audio preview image/button
                 if (aData.ftype === "audioclip") {
                     $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png">');
@@ -774,13 +778,14 @@ var AIRTIME = (function(AIRTIME) {
 
             "oColVis": {
                 "sAlign": "right",
-                "aiExclude": [0, 1, 2],
+                "aiExclude": [0, 1, 2, 31],
                 "sSize": "css",
                 "fnStateChange": setFilterElement,
                 "buttonText": $.i18n._("Columns")
             },
 
             "oColReorder": {
+                "iFixedColumnsRight": 1,
                 "iFixedColumns": 3
             },
 
@@ -933,13 +938,15 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
 
-        AIRTIME.library.initializeContextMenus();
+        $('#sb-actions').on("click", function(e) {
+            $("#library_display tr:has(td)").contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top});
+        });
 
-        /*
         // begin context menu initialization.
-        $.contextMenu({
+        AIRTIME.library.ctxMenu = $.contextMenu({
             selector: '#library_display tr:has(td)',
-            trigger: "right",
+            //trigger: "left",
+            trigger: "custom",
 
             build: function($el, e) {
                 var data, screen, items, callback, $tr;
@@ -1127,7 +1134,6 @@ var AIRTIME = (function(AIRTIME) {
                 };
             }
         });
-        */
     };
 
     mod.libraryInit = libraryInit;

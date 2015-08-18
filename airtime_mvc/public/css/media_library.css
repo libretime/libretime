@@ -109,6 +109,38 @@ td.library_bitrate {
     text-align: right;
 }
 
+td.library_actions
+{
+	padding: 0px !important;
+}
+
+.library_actions_btn {
+	float: left;
+	font-weight: bold;
+	white-space: nowrap;
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	height: 24px;
+	width: 18px;
+	padding: 0px !important;
+	margin: 0px !important;
+	margin-top: 0px !important;
+	margin-right: 6px !important;
+	line-height: 17px !important;
+	padding-left: 6px !important;
+}
+
+.library_actions_btn:hover {
+	background: #555;
+}
+tr.lib-selected > td > div.library_actions_btn  {
+	border-color: #000;
+}
+tr.lib-selected > td > div.library_actions_btn:hover {
+	background: #000;
+	color: #eee;
+}
+
 .library_import {  
     padding-bottom: 5px;
 }
