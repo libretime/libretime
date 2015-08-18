@@ -992,8 +992,8 @@ var AIRTIME = (function(AIRTIME){
                         if (obj_type == "block") {
                             callback(json, "save");
                         } else {
-                            $('.success').text($.i18n._('Playlist saved'));
-                            $('.success').show();
+                            $pl.find('.success').text($.i18n._('Playlist saved'));
+                            $pl.find('.success').show();
                             setTimeout(removeSuccessMsg, 5000);
                             dt.fnStandingRedraw();
                         }
