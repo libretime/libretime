@@ -14,7 +14,6 @@ class WebstreamController extends Zend_Controller_Action
 
     public function newAction()
     {
-
         $userInfo = Zend_Auth::getInstance()->getStorage()->read();
         if (!$this->isAuthorized(-1)) {
             // TODO: this header call does not actually print any error message

@@ -15,12 +15,6 @@ AIRTIME = (function(AIRTIME) {
         timeStartId = "#sb_time_start",
         dateEndId = "#sb_date_end",
         timeEndId = "#sb_time_end",
-        $toggleLib = $("<a id='sb_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open library to add or remove content")+"'>"+$.i18n._("Add / Remove Content")+"</a>"),
-        $libClose = $('<a />', {
-            "class": "close-round",
-            "href": "#",
-            "id": "sb_lib_close"
-        }),
         mod;
     
     if (AIRTIME.builderMain === undefined) {
@@ -64,22 +58,22 @@ AIRTIME = (function(AIRTIME) {
         }
         
         //set the heights of the main widgets.
-        $builder.height(widgetHeight)
+        $builder//.height(widgetHeight)
             .find(".dataTables_scrolling")
-                    .css("max-height", builderTableHeight)
-                    .end()
-            .width(screenWidth);
+                    //.css("max-height", builderTableHeight)
+                    .end();
+            //.width(screenWidth);
         
-        $lib.height(widgetHeight)
+        $lib//.height(widgetHeight)
             .find(".dataTables_scrolling")
-                .css("max-height", libTableHeight)
+                //.css("max-height", libTableHeight)
                 .end();
         
         if ($lib.filter(':visible').length > 0) {
             
-            $lib.width(Math.floor(screenWidth * 0.47));
+            //$lib.width(Math.floor(screenWidth * 0.47));
                 
-            $builder.width(Math.floor(screenWidth * 0.47))
+            $builder//.width(Math.floor(screenWidth * 0.47))
                 .find("#sb_edit")
                     .remove()
                     .end()
@@ -150,10 +144,32 @@ AIRTIME = (function(AIRTIME) {
     }
 
     mod.onReady = function() {
+        // Normally we would just use audio/*, but it includes file types that we can't handle (like .m4a)
+        // We initialize the acceptedMimeTypes variable in Bootstrap so we don't have to duplicate the list
+        Dropzone.options.content = {
+            url:'/rest/media',
+            clickable: false,
+            acceptedFiles: acceptedMimeTypes.join(),
+            init: function () {
+                this.on("sending", function (file, xhr, data) {
+                    data.append("csrf_token", $("#csrf").val());
+                });
+            },
+            dictDefaultMessage: '',
+            createImageThumbnails: false,
+            previewTemplate : '<div style="display:none"></div>'
+        };
+
         // define module vars.
         $lib = $("#library_content");
         $builder = $("#show_builder");
         $fs = $builder.find('fieldset');
+
+        $("#schedule-tab").on("click", function() {
+            if (!$(this).hasClass('active')) {
+                AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
+            }
+        });
 
         /*
          * Icon hover states for search.
@@ -196,10 +212,8 @@ AIRTIME = (function(AIRTIME) {
         setWidgetSize();
 
         $libWrapper = $lib.find("#library_display_wrapper");
-        $libWrapper.prepend($libClose);
-
-        $builder.find('.dataTables_scrolling').css("max-height",
-                widgetHeight - 95);
+        //$builder.find('.dataTables_scrolling').css("max-height",
+        //        widgetHeight - 95);
 
         $builder.on("click", "#sb_submit", showSearchSubmit);
 
@@ -236,11 +250,9 @@ AIRTIME = (function(AIRTIME) {
             var schedTable = $("#show_builder_table").dataTable();
 
             $lib.hide();
-            $builder.width(screenWidth).find(".sb-timerange").prepend(
-                    $toggleLib).find("#sb_date_start").css("margin-left", 30)
+            $builder.width(screenWidth).find(".sb-timerange").find("#sb_date_start").css("margin-left", 30)
                     .end().end();
 
-            $toggleLib.removeClass("ui-state-hover");
             schedTable.fnDraw();
 
             $.ajax( {
@@ -264,8 +276,8 @@ AIRTIME = (function(AIRTIME) {
                     if ($fs.hasClass("closed")) {
 
                         $fs.removeClass("closed");
-                        $builder.find('.dataTables_scrolling').css(
-                                "max-height", widgetHeight - 150);
+                        //$builder.find('.dataTables_scrolling').css(
+                        //        "max-height", widgetHeight - 150);
                     } else {
                         $fs.addClass("closed");
 
@@ -273,8 +285,8 @@ AIRTIME = (function(AIRTIME) {
                         $fs.find('select').val(0);
                         $fs.find('input[type="checkbox"]').attr("checked",
                                 false);
-                        $builder.find('.dataTables_scrolling').css(
-                                "max-height", widgetHeight - 110);
+                        //$builder.find('.dataTables_scrolling').css(
+                        //        "max-height", widgetHeight - 110);
                     }
                 });
 

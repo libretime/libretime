@@ -1,25 +1,16 @@
-<?php echo $this->element->getElement('sb_date_start'); ?>
-<?php echo $this->element->getElement('sb_time_start'); ?>
-<?php echo $this->element->getElement('sb_date_end'); ?>
-<?php echo $this->element->getElement('sb_time_end'); ?>
+<div class="sb-options-form">
+    <?php echo $this->element->getElement('sb_date_start'); ?>
+    <?php echo $this->element->getElement('sb_time_start'); ?>
+    <?php echo $this->element->getElement('sb_date_end'); ?>
+    <?php echo $this->element->getElement('sb_time_end'); ?>
+    <a id="sb_submit" class="btn btn-small" href="#" title="Display shows in the specified date and time range">
+        <i class="icon-white icon-search"></i><?php echo " "._("Find Shows") ?>
+    </a>
 
-<a id="sb_submit" class="btn btn-small" href="#" title="Display shows in the specified date and time range">
-    <i class="icon-white icon-search"></i><?php echo " "._("Find Shows") ?></a>
-<div class="sb-advanced-options">
-    <fieldset class="padded display_field push-down-8 closed">
-        <legend style="cursor: pointer;">
-        	<span class="ui-icon ui-icon-triangle-2-n-s"></span>
-        <?php echo _("Filter By Show:")?>
-        </legend>
+    <?php echo $this->element->getElement('sb_show_filter') ?>
 
-        <div class="sb-options-form">
-            <label><?php echo $this->element->getElement('sb_show_filter')->getLabel() ?></label>
-            <?php echo $this->element->getElement('sb_show_filter') ?>
-
-            <?php if ($this->element->getElement('sb_my_shows')):?>
-            <label><?php echo $this->element->getElement('sb_my_shows')->getLabel(); ?></label>
-            <?php echo $this->element->getElement('sb_my_shows'); ?>
-            <?php endif;?>
-        </div>
-    </fieldset>
+    <?php if ($this->element->getElement('sb_my_shows')):?>
+        <label><?php echo $this->element->getElement('sb_my_shows')->getLabel(); ?></label>
+        <?php echo $this->element->getElement('sb_my_shows'); ?>
+    <?php endif;?>
 </div>
