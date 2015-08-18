@@ -48,8 +48,6 @@ class NewPlaylistController extends Zend_Controller_Action
             $modified = $this->_getParam('modified', null);
             if ($obj->getLastModified("U") !== $modified) {
                 $this->createFullResponse($obj);
-                Logging::info($obj->getLastModified("U"));
-                Logging::info($modified);
                 throw new PlaylistOutDatedException(sprintf(_("You are viewing an older version of %s"), $obj->getName()));
             }
         }
@@ -199,9 +197,9 @@ class NewPlaylistController extends Zend_Controller_Action
         $objInfo = Application_Model_Library::getObjInfo($type);
         Logging::info("editing {$type} {$id}");
 
-        if (!is_null($id)) {
-            Application_Model_Library::changePlaylist($id, $type);
-        }
+//        if (!is_null($id)) {
+        Application_Model_Library::changePlaylist($id, $type);
+//        }
 
         try {
             $obj = new $objInfo['className']($id);
@@ -552,8 +550,8 @@ class NewPlaylistController extends Zend_Controller_Action
             $result['id'] = $bl->getId();
             $result["modified"] = $bl->getLastModified("U");
         } else if ($params['type'] == 'playlist') {
-            $result["modified"] = $this->view->modified;
             $this->setPlaylistNameDescAction();
+            $result["modified"] = $this->view->modified;
         }
 
         $this->_helper->json->sendJson($result);

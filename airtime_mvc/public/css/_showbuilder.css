@@ -513,6 +513,10 @@ li.ui-state-default {
     left: 4px;
 }
 
+[tab-type='md'] > .editor_pane_wrapper {
+    overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
+}
+
 .inner_editor_wrapper {
     max-height: 60%;
     overflow-x: hidden;
@@ -534,12 +538,16 @@ li.ui-state-default {
 
 .spl_sortable {
     position: relative;
-    min-height: 0;
+    height: 100%;
     overflow: auto;
     flex: 1 100%;
 
     margin: 4px 0;
     padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .spl_sortable .list-item-container {
@@ -551,7 +559,6 @@ li.ui-state-default {
 
     color: white;
     text-align: center;
-    vertical-align: middle;
 
     font-size: 20px;
 }

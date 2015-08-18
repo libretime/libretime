@@ -2627,13 +2627,15 @@ label span {
 }
 
 fieldset > legend {
-    font-size: 16px;
-    line-height: 140%;
-    background: #333;
     width: 100%;
-    margin: 0px;
-    padding: 0px;
-    border: 0px;
+    box-sizing: border-box;
+
+    background: #333;
+    font-size: 16px;
+    line-height: 1em;
+    border: 0;
+    margin: 0;
+    padding: 10px 0 10px 10px;
 }
 
 fieldset.padded > legend {

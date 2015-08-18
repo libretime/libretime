@@ -436,6 +436,8 @@ var AIRTIME = (function(AIRTIME){
      * Should all be moved to builder.js eventually
      */
     function buildNewTab(json) {
+        AIRTIME.library.selectNone();
+
         var tabId = $openTabs[json.type + json.id];
         if (tabId !== undefined) {
             AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
@@ -443,7 +445,7 @@ var AIRTIME = (function(AIRTIME){
         }
         $tabCount++;
 
-        var wrapper = "<div tab-id='" + $tabCount + "' id='pl-tab-content-" + $tabCount + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
+        var wrapper = "<div tab-type='" + json.type + "' tab-id='" + $tabCount + "' id='pl-tab-content-" + $tabCount + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
             t = $("#show_builder").append(wrapper).find("#pl-tab-content-" + $tabCount),
             pane = $(".editor_pane_wrapper:last"),
             name = json.type == "md" ?  // file
@@ -1250,6 +1252,7 @@ var AIRTIME = (function(AIRTIME){
     }
 
     mod.fnAddItems = function(aItems, iAfter, sAddType) {
+        AIRTIME.library.selectNone();
         var sUrl = baseUrl+"new-playlist/add-items";
             oData = {"aItems": aItems, "afterItem": iAfter, "type": sAddType};
         playlistRequest(sUrl, oData);

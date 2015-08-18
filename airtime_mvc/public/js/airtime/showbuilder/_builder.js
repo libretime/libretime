@@ -322,6 +322,7 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.fnAdd = function(aMediaIds, aSchedIds) {
+        AIRTIME.library.selectNone();
         mod.disableUI();
 
         $.post(baseUrl+"showbuilder/schedule-add",

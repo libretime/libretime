@@ -22,7 +22,6 @@ $(document).ready(function() {
         var ifr = document.getElementById('livechat-compact-container');
         if (ifr) {
             LC_API.on_chat_state_changed = function(data) {
-                console.log('Chat state changed to: ' + data.state);
                 if (data.state == 'offline') {
                     $('.wrapper').css('padding-bottom', 10);
                 } else {

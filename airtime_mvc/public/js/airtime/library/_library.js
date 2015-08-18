@@ -842,8 +842,8 @@ var AIRTIME = (function(AIRTIME) {
             AIRTIME.library.dblClickAdd(data, data.ftype);
         });
 
-        $libTable.find("tbody").on("mousedown", "tr", function(ev) {
-            var $tr = $(this),
+        $libTable.find("tbody").on("mousedown", "tr > td.library_checkbox", function(ev) {
+            var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
 
@@ -877,19 +877,53 @@ var AIRTIME = (function(AIRTIME) {
             $previouslySelected = $tr;
         });
 
-        $libTable.find("tbody").on("click", "tr", function(ev) {
-            //ev.preventDefault();
+        $libTable.find("tbody").on("mousedown", "tr > td:not(.library_checkbox)", function(ev) {
+            var $tr = $(this).parent(),
+            // Get the ID of the selected row
+                $rowId = $tr.attr("id");
+
+            if (ev.shiftKey && $previouslySelected !== undefined) {
+                if ($previouslySelected.attr("id") == $rowId) {
+                    return;
+                }
+
+                // If the selected row comes before the previously selected row,
+                // we want to select previous rows, otherwise we select next
+                if ($previouslySelected.prevAll("#" + $rowId).length !== 0) {
+                    $previouslySelected.prevUntil($tr).each(function (i, el) {
+                        mod.selectItem($(el));
+                        mod.checkItem($(el));
+                    });
+                } else {
+                    $previouslySelected.nextUntil($tr).each(function (i, el) {
+                        mod.selectItem($(el));
+                        mod.checkItem($(el));
+                    });
+                }
+            } else if (!ev.ctrlKey) {
+                AIRTIME.library.selectNone();
+            }
+
+            mod.selectItem($tr);
+            mod.checkItem($tr);
+
+            // Remember this row so we can properly multiselect
+            $previouslySelected = $tr;
+        });
+
+        $libTable.find("tbody").on("click", "tr", function() {
+            var tr = $(this);
 
             if (flagForDeselection) {
                 flagForDeselection = false;
-                mod.deselectItem($(this));
-                mod.uncheckItem($(this));
+                mod.deselectItem(tr);
+                mod.uncheckItem(tr);
             } else {
-                mod.checkItem($(this));
+                mod.checkItem(tr);
             }
         });
 
-        $libTable.find("thead").on("click", "th > input[type='checkbox']", function(ev) {
+        $libTable.find("thead").on("click", "th > input[type='checkbox']", function() {
             if ($(this).is(":checked")) {
                 AIRTIME.library.selectCurrentPage();
                 $(this).prop("checked", true);
