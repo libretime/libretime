@@ -26,11 +26,9 @@ way to fit your requirements.
 }
 #nav li.top {
 	/*margin:0 5px 0 0;*/
-	padding: 10px;
-	padding-left: 0px;
 }
 #nav li a.top_link {
-	padding: 10px;
+	padding: 0px;
 	height:18px;
 	color:#ccc;
 	text-decoration:none;
@@ -39,6 +37,9 @@ way to fit your requirements.
 	/*font-weight:bold;*/
 	/*padding:4px 0 0 10px;*/
 	cursor:pointer;
+	display: block;
+	padding: 10px;
+	white-space: nowrap;
 }
 #nav li a.top_link span {
 	padding: 0 14px 0 0;
@@ -55,6 +56,7 @@ way to fit your requirements.
 {
 	color: #fff;
 	background-color: #444;
+	border-right: 2px solid #FF5D1A;
 }
 
 #nav li:hover {

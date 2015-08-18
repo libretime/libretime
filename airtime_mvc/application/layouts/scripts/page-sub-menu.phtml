@@ -121,15 +121,16 @@
 <div class="wrapper" id="content">
     <div id="sub-menu">
         <?php //parent_page is passed in from controller
-         echo $this->layout()->parent_page; ?>
+        echo $this->layout()->parent_page; ?>
         <hr>
         <?php
         $page = $this->navigation()->findOneBy('label', $this->layout()->parent_page);
         echo $this->navigation()->menu()->renderMenu($page);
         ?>
-        </div>
-    <div style="width:87%">
-    <?php echo $this->layout()->content ?></div>
+    </div>
+    <div>
+        <?php echo $this->layout()->content ?>
+    </div>
 </div>
 
 <script id="tmpl-pl-cues" type="text/template">

@@ -1667,7 +1667,6 @@ h2#scheduled_playlist_name span {
 /*---//////////////////// USERS ////////////////////---*/
 
 .simple-formblock {
-    width: 30%;
 }
 
 .simple-formblock dl, .simple-formblock dl.zend_form {
@@ -2335,7 +2334,7 @@ span.errors.sp-errors{
 }
 
 .stream-config {
-    width: 85%;
+    min-width: 800px;
 }
 
 #stream_save_bottom {
@@ -3513,6 +3512,7 @@ button.btn-icon-text > i.icon-white {
 .media_type_selector.selected, .media_type_selector.selected a {
     color: #fff;
     background-color: #444;
+    border-right: 1px solid #FF5D1A;
     -webkit-transition: color 0.1s linear;
     -moz-transition: color 0.1s linear;
     -o-transition: color 0.1s linear;
@@ -3603,7 +3603,7 @@ button.btn-icon-text > i.icon-white {
 }
 
 #sub-menu {
-    width: 10%;
+    width: 130px;
     border-right: 1px solid #5b5b5b;
     font-size: 14px;
     color: #cecece;
@@ -3621,6 +3621,11 @@ button.btn-icon-text > i.icon-white {
 
 #sub-menu .navigation a {
     color: #cecece;
+    text-decoration: none;
+}
+
+#sub-menu .navigation .active a {
+    color: #fff;
     text-decoration: none;
 }
 
