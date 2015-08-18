@@ -292,7 +292,7 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.uncheckItem = function($el) {
         $el.find(".library_checkbox > input").prop('checked', false);
-        if ($("." + LIB_SELECTED_CLASS.length == 0)) {
+        if ($("." + LIB_SELECTED_CLASS).length == 0) {
             $("#super-checkbox").prop("checked", false);
         }
     };
@@ -308,6 +308,7 @@ var AIRTIME = (function(AIRTIME) {
     mod.selectItem = function($el) {
         mod.highlightItem($el);
         mod.addToChosen($el);
+        mod.checkItem($el);
         // Remember this row so we can properly multiselect
         $previouslySelected = $el;
 
@@ -317,6 +318,7 @@ var AIRTIME = (function(AIRTIME) {
     mod.deselectItem = function($el) {
         mod.unHighlightItem($el);
         mod.removeFromChosen($el);
+        mod.uncheckItem($el);
         mod.checkToolBarIcons();
     };
 
@@ -324,6 +326,7 @@ var AIRTIME = (function(AIRTIME) {
         $els.each(function(i, el){
             mod.highlightItem($(el));
             mod.addToChosen($(el));
+            mod.checkItem($(el));
         });
         $previouslySelected = $els.last();
         mod.checkToolBarIcons();
@@ -862,17 +865,14 @@ var AIRTIME = (function(AIRTIME) {
                     if ($previouslySelected.prevAll("#" + $rowId).length !== 0) {
                         $previouslySelected.prevUntil($tr).each(function (i, el) {
                             mod.selectItem($(el));
-                            mod.checkItem($(el));
                         });
                     } else {
                         $previouslySelected.nextUntil($tr).each(function (i, el) {
                             mod.selectItem($(el));
-                            mod.checkItem($(el));
                         });
                     }
                 }
                 mod.selectItem($tr);
-                mod.checkItem($tr);
             } else {
                 flagForDeselection = true;
             }
@@ -894,12 +894,10 @@ var AIRTIME = (function(AIRTIME) {
                     if ($previouslySelected.prevAll("#" + $rowId).length !== 0) {
                         $previouslySelected.prevUntil($tr).each(function (i, el) {
                             mod.selectItem($(el));
-                            mod.checkItem($(el));
                         });
                     } else {
                         $previouslySelected.nextUntil($tr).each(function (i, el) {
                             mod.selectItem($(el));
-                            mod.checkItem($(el));
                         });
                     }
                 } else if (!ev.ctrlKey) {
@@ -907,7 +905,6 @@ var AIRTIME = (function(AIRTIME) {
                 }
 
                 mod.selectItem($tr);
-                mod.checkItem($tr);
             } else if (ev.ctrlKey) {
                 mod.deselectItem($tr);
             }
@@ -915,11 +912,9 @@ var AIRTIME = (function(AIRTIME) {
 
         $libTable.find("tbody").on("click", "tr > td.library_checkbox", function() {
             var tr = $(this).parent();
-
             if (flagForDeselection) {
                 flagForDeselection = false;
                 mod.deselectItem(tr);
-                mod.uncheckItem(tr);
             } else {
                 mod.checkItem(tr);
             }
@@ -931,7 +926,6 @@ var AIRTIME = (function(AIRTIME) {
                 mod.selectNone();
                 mod.selectItem(tr);
             }
-            mod.checkItem(tr);
         });
 
         $libTable.find("thead").on("click", "th > input[type='checkbox']", function() {
