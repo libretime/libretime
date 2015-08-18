@@ -125,20 +125,8 @@ function buildScheduleDialog (json, instance_id) {
         viewport = findViewportDimensions(),
         height = Math.floor(viewport.height * 0.96),
         width = Math.floor(viewport.width * 0.96),
-        fnServer = AIRTIME.showbuilder.fnServerData,
-        //subtract padding in pixels
-        widgetWidth = width - 60,
-        libWidth = Math.floor(widgetWidth * 0.5),
-        builderWidth = Math.floor(widgetWidth * 0.5);
-    
-    dialog.find("#library_content")
-        .height(height - 115)
-        .width(libWidth);
-    
-    dialog.find("#show_builder")
-        .height(height - 115)
-        .width(builderWidth);
-    
+        fnServer = AIRTIME.showbuilder.fnServerData;
+
     dialog.dialog({
         autoOpen: false,
         title: json.title,
@@ -170,13 +158,6 @@ function buildScheduleDialog (json, instance_id) {
     
     AIRTIME.library.libraryInit();
     AIRTIME.showbuilder.builderDataTable();
-    
-    //set max heights of datatables.
-    dialog.find(".lib-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 200);
-    
-    dialog.find(".sb-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 65);
     
     dialog.dialog('open');
 }
@@ -341,7 +322,6 @@ $(document).ready(function() {
                 if (oItems.schedule !== undefined) {
                     
                     callback = function() {
-                        
                         $.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
                             buildScheduleDialog(json, data.id);
                         });

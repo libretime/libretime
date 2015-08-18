@@ -320,24 +320,36 @@ var AIRTIME = (function(AIRTIME) {
         mod.checkToolBarIcons();
     };
 
+    mod.selectAll = function($els) {
+        $els.each(function(i, el){
+            mod.highlightItem($(el));
+            mod.addToChosen($(el));
+        });
+        $previouslySelected = $els.last();
+        mod.checkToolBarIcons();
+    };
+
+    mod.deselectAll = function($els) {
+        $els.each(function(i, el){
+            mod.unHighlightItem($(el));
+            mod.removeFromChosen($(el));
+            mod.uncheckItem($(el));
+        });
+        $previouslySelected = undefined;
+        mod.checkToolBarIcons();
+    };
+
     /*
      * selects all items which the user can currently see. (behaviour taken from
      * gmail)
-     * 
+     *
      * by default the items are selected in reverse order so we need to reverse
      * it back
      */
     mod.selectCurrentPage = function() {
         $.fn.reverse = [].reverse;
         var $trs = $libTable.find("tbody").find("tr").reverse();
-
-        $trs.each(function(i, el){
-            mod.selectItem($(el));
-            mod.checkItem($(el));
-        });
-
-        mod.checkToolBarIcons();
-
+        mod.selectAll($trs);
     };
 
     /*
@@ -346,26 +358,13 @@ var AIRTIME = (function(AIRTIME) {
      */
     mod.deselectCurrentPage = function() {
         var $trs = $libTable.find("tr");
-
-        $trs.each(function(i, el){
-            mod.deselectItem($(el));
-            mod.uncheckItem($(el));
-        });
-
-        mod.checkToolBarIcons();
+        mod.selectAll($trs);
     };
 
     mod.selectNone = function() {
         var $trs = $libTable.find("tr");
-        $trs.each(function(i, el){
-            mod.deselectItem($(el));
-            mod.uncheckItem($(el));
-        });
-        $previouslySelected = undefined;
-
         chosenItems = {};
-
-        mod.checkToolBarIcons();
+        mod.deselectAll($trs);
     };
 
     mod.fnRedraw = function() {
