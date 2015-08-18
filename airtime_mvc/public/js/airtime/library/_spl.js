@@ -1250,6 +1250,7 @@ var AIRTIME = (function(AIRTIME){
     }
 
     mod.fnAddItems = function(aItems, iAfter, sAddType) {
+        AIRTIME.library.selectNone();
         var sUrl = baseUrl+"new-playlist/add-items";
             oData = {"aItems": aItems, "afterItem": iAfter, "type": sAddType};
         playlistRequest(sUrl, oData);
