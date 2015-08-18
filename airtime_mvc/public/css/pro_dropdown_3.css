@@ -25,14 +25,12 @@ way to fit your requirements.
     box-shadow: 0 2px 5px rgba(0,0,0,.35);*/
 }
 #nav li.top {
-	display:block;
-	float:left;
 	/*margin:0 5px 0 0;*/
 	padding: 10px;
+	padding-left: 0px;
 }
 #nav li a.top_link {
-	display:block;
-	float:left;
+	padding: 10px;
 	height:18px;
 	color:#ccc;
 	text-decoration:none;
@@ -43,19 +41,26 @@ way to fit your requirements.
 	cursor:pointer;
 }
 #nav li a.top_link span {
-	float:left;
-	display:block;
 	padding: 0 14px 0 0;
 }
 #nav li a.top_link span.down {
-	float:left;
-	display:block;
 	padding:0 28px 0 0px;
 	/* Hide the drop down sub menu
 	background:url(images/down_arrow.png) no-repeat right 50%;
 	*/
 
 }
+
+#nav li.active
+{
+	color: #fff;
+	background-color: #444;
+}
+
+#nav li:hover {
+	background-color: #3a3a3a;
+}
+
 #nav li:hover a.top_link, #nav li.active a.top_link, #nav li.active:hover a.top_link {
 	color:#fff;
 	/*background:#000;*/
