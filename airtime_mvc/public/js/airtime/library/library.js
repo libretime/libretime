@@ -909,6 +909,8 @@ var AIRTIME = (function(AIRTIME) {
 
                 mod.selectItem($tr);
                 mod.checkItem($tr);
+            } else if (ev.ctrlKey) {
+                mod.deselectItem($tr);
             }
         });
 
