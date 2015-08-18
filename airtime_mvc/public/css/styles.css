@@ -3605,9 +3605,14 @@ button.btn-icon-text > i.icon-white {
 #sub-menu {
     width: 130px;
     border-right: 1px solid #5b5b5b;
+    background: #212121;
     font-size: 14px;
     color: #cecece;
     padding: 10px;
+}
+
+#sub-menu h3 {
+    padding: 0px;
 }
 
 #sub-menu .navigation {
@@ -3629,6 +3634,10 @@ button.btn-icon-text > i.icon-white {
     text-decoration: none;
 }
 
+.page-sub-menu {
+    /*background-color: #252525;*/
+}
+
 #listenerstat_content {
     width: 100%;
 }
@@ -3645,4 +3654,10 @@ button.btn-icon-text > i.icon-white {
 #his_submit {
     height: 19px;
     margin-top: -2px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
 }
