@@ -35,6 +35,12 @@ $pages = array(
                 'controller' => 'Preference'
             ),
             array(
+                'label' => _('My Profile'),
+                'controller' => 'user',
+                'action' => 'edit-user',
+                'resource' => 'user'
+            ),
+            array(
                 'label'      => _('Users'),
                 'module'     => 'default',
                 'controller' => 'user',
@@ -83,7 +89,21 @@ $pages = array(
         'label'      => _('Widgets'),
         'module'     => 'default',
         'controller' => 'embeddablewidgets',
-        'action'     => 'index'
+        'action'     => 'player',
+        'pages' => array(
+            array(
+                'label'      => _('Player'),
+                'module'     => 'default',
+                'controller' => 'embeddablewidgets',
+                'action'     => 'player',
+            ),
+            array(
+                'label'      => _('Weekly Schedule'),
+                'module'     => 'default',
+                'controller' => 'embeddablewidgets',
+                'action'     => 'schedule',
+            )
+        )
     ),
     array(
         'label'      => _('Help'),

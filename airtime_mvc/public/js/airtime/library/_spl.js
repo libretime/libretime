@@ -904,6 +904,11 @@ var AIRTIME = (function(AIRTIME){
 
         });
 
+        $pl.find("#webstream_cancel, #cancel_button").on("click", function() {
+            var tabId = $pl.attr("tab-id");
+            $("li[tab-id=" + tabId + "] .lib_pl_close").click();
+        });
+
         $lib.on("click", "#pl_edit", function() {
             openPlaylistPanel();
             $.ajax({
@@ -1154,7 +1159,7 @@ var AIRTIME = (function(AIRTIME){
 
 
     mod.fnDelete = function(plid, tabId) {
-        var url, id, lastMod, type, pl = (tabId === undefined) ? $pl : $('#pl-tab-content' + tabId);
+        var url, id, lastMod, type, pl = (tabId === undefined) ? $pl : $('#pl-tab-content-' + tabId);
 
         stopAudioPreview();
         id = (plid === undefined) ? getId() : plid;

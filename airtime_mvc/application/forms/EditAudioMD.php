@@ -172,7 +172,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         // Add the submit button
         $this->addElement('button', 'editmdsave', array(
             'ignore'     => true,
-            'class'      => 'btn btn-small md-save',
+            'class'      => 'btn md-save right-floated',
             'label'      => _('Save'),
             'decorators' => array(
                 'ViewHelper'
@@ -182,7 +182,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         // Add the submit button
         $this->addElement('button', 'editmdcancel', array(
             'ignore'   => true,
-            'class'    => 'btn btn-small md-cancel',
+            'class'    => 'btn md-cancel right-floated',
             'label'    => _('Cancel'),
             'decorators' => array(
                 'ViewHelper'
@@ -190,10 +190,10 @@ class Application_Form_EditAudioMD extends Zend_Form
         ));
 
         $this->addDisplayGroup(array('editmdsave', 'editmdcancel'), 'submitButtons', array(
-                'decorators' => array(
-                    'FormElements',
-                    'DtDdWrapper'
-                    )
+            'decorators' => array(
+                'FormElements',
+                'DtDdWrapper'
+                )
         ));
     }
 
