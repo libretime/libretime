@@ -115,7 +115,7 @@
 </div>
 
 <?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
-<div class="usability_hint" <?php if ($hint == "") { echo "style='display:none'"; } ?>><?php echo $hint; ?></div>
+<div class="usability_hint <?php if ($hint == "") { echo "hidden"; } ?>"><?php echo $hint; ?></div>
 
 
 <div class="wrapper" id="content">

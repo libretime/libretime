@@ -3434,6 +3434,7 @@ dd .stream-status {
     -moz-transition: top 0.2s linear;
     -o-transition: top 0.2s linear;
     transition: top 0.2s linear;
+    padding-top: 40px;
 }
 
 .usability_hint a {
@@ -3547,7 +3548,7 @@ button.btn-icon-text > i.icon-white {
     left: 130px;
     right: 0;
     bottom: 0;
-    padding: 5px 10px 40px;
+    padding: 10px 10px 40px;
     border: none;
 
     -webkit-box-sizing: border-box;

@@ -13,9 +13,6 @@ $(document).ready(function() {
 
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
-    if ($('.usability_hint').is(':visible')) {
-        $(".wrapper").css("padding-top", USABILITY_HINT_PADDING); // Account for usability hint
-    }
 });
 
 /*
@@ -197,11 +194,9 @@ function removeSuccessMsg() {
 
 function hideHint(h) {
     h.hide("slow").addClass("hidden");
-    $(".wrapper").css("padding-top", 10);
 }
 
 function showHint(h) {
-    console.log("test");
     h.show("slow").removeClass("hidden");
     $(".wrapper").css("padding-top", USABILITY_HINT_PADDING); // Account for usability hint
 }
