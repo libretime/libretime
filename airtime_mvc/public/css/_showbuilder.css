@@ -108,6 +108,10 @@ div.ColVis_collectionBackground {
 }
 
 @media screen and (max-width: 1475px) {
+    .wrapper {
+        -webkit-flex-flow: column !important;
+        flex-flow: column !important;
+    }
     .content-pane {
         height: auto !important;
         width: 100% !important;
@@ -532,10 +536,6 @@ li.ui-state-default {
 
     margin: 4px 0;
     padding: 0;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 .spl_sortable .list-item-container {
@@ -695,7 +695,7 @@ th.library_checkbox {
     position: fixed !important;
 }
 
-/* Since the z-index gets applied dynamically to the  */
+/* Since the z-index gets applied dynamically */
 #ui-datepicker-div {
     z-index: 1000 !important;
 }
