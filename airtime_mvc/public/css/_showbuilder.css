@@ -2,43 +2,6 @@ div.ColVis_collectionBackground {
     background-color: transparent;
 }
 
-/* ~ Moved to styles.css ~
-
-.wrapper {
-    *//*background: #242424;*//*
-    background: #111;
-    top: 105px;
-    left: 130px;
-    right: 0;
-    bottom: 0;
-    padding: 5px 10px 40px;
-    *//*padding: 0;*//*
-    border: none;
-
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
-
-    overflow: auto;
-
-    -webkit-transition: top 0.2s linear, padding 0.2s linear;
-    -moz-transition: top 0.2s linear, padding 0.2s linear;
-    -o-transition: top 0.2s linear, padding 0.2s linear;
-    transition: top 0.2s linear, padding 0.2s linear;
-}
-
-.usability_hint {
-    left: 130px;
-    flex: 0 100%;
-    width: 100%;
-}
-
-*/
-
 /* Scroll bars */
 
 ::-webkit-scrollbar {
@@ -107,7 +70,7 @@ div.ColVis_collectionBackground {
     flex: 1;
 }
 
-@media screen and (max-width: 1475px) {
+@media screen and (max-width: 1280px) {
     .wrapper {
         -webkit-flex-flow: column !important;
         flex-flow: column !important;
@@ -115,10 +78,6 @@ div.ColVis_collectionBackground {
     .content-pane {
         height: auto !important;
         width: 100% !important;
-    }
-    .wide-panel {
-        flex: 8 100%;
-        min-height: 50%;
     }
     .spl_sortable {
         max-height: 50%;
@@ -535,6 +494,7 @@ li.ui-state-default {
     flex: 1 100%;
 
     margin: 4px 0;
+    min-height: 0;
     padding: 0;
 }
 
@@ -561,19 +521,6 @@ li.ui-state-default {
 .crossfade-main > dl {
     padding: 4px;
 }
-
-/*#save_button, #webstream_save {*/
-    /*background: #ff5d1a;*/
-    /*color: #fff;*/
-    /*border-radius: 4px;*/
-    /*font-size: 16px;*/
-    /*height: 38px;*/
-    /*width: 120px;*/
-/*}*/
-
-/*#save_button:active, #webstream_save {*/
-    /*color: #fff !important;*/
-/*}*/
 
 #save_button:focus, #webstream_save {
     outline-width: 0;

@@ -134,11 +134,9 @@ $pages = array(
                 'target'     => "_blank"
             ),
             array(
-                'label'      => _('About'),
-                'module'     => 'default',
-                'controller' => 'dashboard',
-                'action'     => 'about',
-                'resource'   =>    'dashboard'
+                'label'      => _(sprintf("About %s", PRODUCT_NAME)),
+                'uri'        => ABOUT_AIRTIME_URL,
+                'target'     => "_blank"
             ),
             array(
                 'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),

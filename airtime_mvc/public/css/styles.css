@@ -2108,17 +2108,17 @@ span.errors.sp-errors{
 }
 .text-content {
     padding:20px 10px 40px 58px;
-    background: url(images/sf_arror.png) no-repeat 60% 0; 
+    /*background: url(images/sf_arror.png) no-repeat 60% 0; */
     min-height: 300px;
 }
 .text-content h2 {
     font-size:2.4em;
-    color:#1f1f1f;
+    color:#efefef;
 }
 .text-content p {
     font-size:1.6em;
     line-height:140%;
-    color:#1f1f1f;
+    color:#efefef;
     margin:0 0 1.4em 0;
 }
 .text-content a {
@@ -2139,7 +2139,7 @@ span.errors.sp-errors{
     margin:0 0 6px 0;
     font-size:1.7em;
     display:list-item;
-    color:#1f1f1f;
+    color:#efefef;
 }
 .gray-logo {
     margin:5px 0 0 20px;

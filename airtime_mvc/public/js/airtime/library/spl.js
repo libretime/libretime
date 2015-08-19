@@ -415,6 +415,8 @@ var AIRTIME = (function(AIRTIME){
                 $pl.find("#spl_crossfade").show();
             }
         }
+
+        $('.zend_form + .spl-no-margin > div:has(*:visible):last').css('margin-left', 0);
     }
 
     function getId() {
