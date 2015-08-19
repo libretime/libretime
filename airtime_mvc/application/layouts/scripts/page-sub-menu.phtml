@@ -98,15 +98,15 @@
         </a>
     </div>
     <div class="media_type_selector" selection_id="1">
-        <a href="/showbuilder"><?php echo _("Dashboard") ?></a></div>
+        <a href="/showbuilder#"><i class='icon-home icon-white'></i><?php echo _("Dashboard") ?></a></div>
     <div class="media_type_selector dashboard_sub_nav" selection_id="1">
-        <a href="/showbuilder#files"><?php echo _("Files") ?></a></div>
+        <a href="/showbuilder#files"><i class='icon-file icon-white'></i><?php echo _("Files") ?></a></div>
     <div class="media_type_selector dashboard_sub_nav" selection_id="2">
-        <a href="/showbuilder#playlists"><?php echo _("Playlists") ?></a></div>
+        <a href="/showbuilder#playlists"><i class='icon-list icon-white'></i><?php echo _("Playlists") ?></a></div>
     <div class="media_type_selector dashboard_sub_nav" selection_id="3">
-        <a href="/showbuilder#smart-blocks"><?php echo _("Smart Blocks") ?></a></div>
+        <a href="/showbuilder#smart-blocks"><i class='icon-time icon-white'></i><?php echo _("Smart Blocks") ?></a></div>
     <div class="media_type_selector dashboard_sub_nav" selection_id="4">
-        <a href="/showbuilder#webstreams"><?php echo _("Webstreams") ?></a></div>
+        <a href="/showbuilder#webstreams"><i class='icon-random icon-white'></i><?php echo _("Webstreams") ?></a></div>
     <hr style="margin-left: 5px; margin-right: 5px">
     <div id="nav">
         <?php echo $this->navigation()->menu(); ?>
@@ -125,7 +125,7 @@
                 echo $this->layout()->parent_page; ?></h3>
             <hr>
             <?php
-            $page = $this->navigation()->findOneBy('label', $this->layout()->parent_page);
+            $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
             echo $this->navigation()->menu()->renderMenu($page);
             ?>
         </div>
