@@ -3467,7 +3467,7 @@ button.btn-icon-text > i.icon-white {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
-    width: 130px;
+    width: 150px;
 
     flex: 1 auto;
     padding: 0;
@@ -3545,7 +3545,7 @@ button.btn-icon-text > i.icon-white {
     position: absolute;
 
     top: 102px;
-    left: 130px;
+    left: 150px;
     right: 0;
     bottom: 0;
     padding: 10px 10px 40px;
@@ -3575,7 +3575,7 @@ button.btn-icon-text > i.icon-white {
 .usability_hint {
     position: fixed;
     top: 102px;
-    left: 130px;
+    left: 150px;
 
     width: 100%;
     flex: 0 100%;
@@ -3661,4 +3661,14 @@ hr {
     border: 0;
     height: 1px;
     background: rgba(255,255,255,0.2);
+}
+
+.icon-white {
+    margin-right: 4px;
+}
+
+.nav-ui-icon-formatter {
+    width:16px !important;
+    display:inline;
+    margin-right:4px
 }

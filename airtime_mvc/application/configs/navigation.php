@@ -9,25 +9,26 @@
 */
 $pages = array(
     array(
-        'label'      => _('Calendar'),
+        'label'      => "<i class='icon-calendar icon-white'></i>"._('Calendar'),
         'module'     => 'default',
         'controller' => 'Schedule',
         'action'     => 'index',
         'resource'   =>    'schedule'
     ),
     array(
-        'label' => _('Radio Page'),
+        'label' => "<i class='icon-globe icon-white'></i>"._('Radio Page'),
         'uri' => '/',
         'resource' => '',
         'pages' => array(
         )
     ),
     array(
-        'label' => _("Settings"),
+        'label' => "<i class='icon-cog icon-white'></i>"._("Settings"),
         'resource' => 'preference',
         'action' => 'index',
         'module' => 'default',
         'controller' => 'preference',
+        'title' => 'Settings',
         'pages' => array(
             array(
                 'label'      => _('General'),
@@ -56,11 +57,12 @@ $pages = array(
         )
     ),
     array(
-        'label' => _("Analytics"),
+        'label' =>  "<i class='icon-signal icon-white'></i>"._("Analytics"),
         'module'     => 'default',
         'controller' => 'listenerstat',
         'action'     => 'index',
         'resource'   => 'listenerstat',
+        'title' => 'Analytics',
         'pages' => array(
             array(
                 'label'      => _('Listener Stats'),
@@ -86,10 +88,11 @@ $pages = array(
         )
     ),
     array(
-        'label'      => _('Widgets'),
+        'label'      =>  "<i class='icon-wrench icon-white'></i>"._('Widgets'),
         'module'     => 'default',
         'controller' => 'embeddablewidgets',
         'action'     => 'player',
+        'title' => 'Widgets',
         'pages' => array(
             array(
                 'label'      => _('Player'),
@@ -106,10 +109,11 @@ $pages = array(
         )
     ),
     array(
-        'label'      => _('Help'),
+        'label'      =>  "<i class='icon-question-sign icon-white'></i>"._('Help'),
         'controller' => 'dashboard',
         'action'     => 'help',
         'resource'    =>    'dashboard',
+        'title' => 'Help',
         'pages'      => array(
             array(
                 'label'      => _('Getting Started'),
@@ -148,10 +152,11 @@ $pages = array(
         )
     ),
     array(
-        'label' => _('Billing'),
+        'label' =>  "<i class='icon-user icon-white'></i>"._('Billing'),
         'controller' => 'billing',
         'action' => 'client',
         'resource' => 'billing',
+        'title' => 'Billing',
         'pages' => array(
             array(
                 'label' => _('Account Details'),

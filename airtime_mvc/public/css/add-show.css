@@ -158,10 +158,6 @@ label.wrapp-label input[type="checkbox"] {
     cursor: pointer;
 }
 
-/* Hack for calendar page icons */
-.icon-white {
-    margin-right: 4px;
-}
 /*
 .add-button {
     border: 1px solid #5b5b5b;
