@@ -123,7 +123,7 @@ fieldset {
 }
 
 .edit-current-user label {
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .stream-player-label {
@@ -1664,7 +1664,18 @@ h2#scheduled_playlist_name span {
     top: 50%;
 }
 
+
+.prefpanel
+{
+    color: #CDCDCD;
+}
+.prefpanel a {
+    color: #b2b2b2;
+}
+
+
 /*---//////////////////// USERS ////////////////////---*/
+
 
 .simple-formblock {
 }
@@ -2335,6 +2346,7 @@ span.errors.sp-errors{
 
 .stream-config {
     min-width: 800px;
+    max-width: 1000px;
 }
 
 #stream_save_bottom {
@@ -3386,9 +3398,7 @@ dd .stream-status {
 }
 
 #weekly-schedule-widget {
-    margin: 0 auto;
-    margin-bottom: 20px;
-    width: 60%;
+    width: 800px;
 }
 
 #widget-menu {
@@ -3405,6 +3415,7 @@ dd .stream-status {
 
 #player-widget {
     margin-bottom: 20px;
+    width: 600px;
 }
 
 .schedule_iframe_wrapper {
@@ -3570,6 +3581,10 @@ button.btn-icon-text > i.icon-white {
     transition: top 0.2s linear;
 }
 
+.wrapper_panel {
+    background-color: #242424;
+}
+
 /* Usability hint */
 
 .usability_hint {
@@ -3605,11 +3620,14 @@ button.btn-icon-text > i.icon-white {
 
 #sub-menu {
     width: 130px;
+    min-width: 130px;
+    flex-grow: 0;
     border-right: 1px solid #5b5b5b;
     background: #212121;
     font-size: 14px;
     color: #cecece;
     padding: 10px;
+    float: left;
 }
 
 #sub-menu h3 {
@@ -3639,13 +3657,23 @@ button.btn-icon-text > i.icon-white {
     /*background-color: #252525;*/
 }
 
+#sub-menu-content-panel
+{
+    flex-grow: 1
+}
+
 #listenerstat_content {
     width: 100%;
+    display: block;
 }
 
 #listenerstat_content .legendLabel
 {
     color: #d6d6d6;
+}
+
+#listenerstat_content .tickLabel {
+    font-size: 12px;
 }
 
 .dashboard-btn {

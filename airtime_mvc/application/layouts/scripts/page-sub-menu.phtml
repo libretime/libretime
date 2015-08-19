@@ -118,18 +118,20 @@
 <div class="usability_hint <?php if ($hint == "") { echo "hidden"; } ?>"><?php echo $hint; ?></div>
 
 
-<div class="wrapper" id="content">
-    <div id="sub-menu">
-        <h3><?php //parent_page is passed in from controller
-        echo $this->layout()->parent_page; ?></h3>
-        <hr>
-        <?php
-        $page = $this->navigation()->findOneBy('label', $this->layout()->parent_page);
-        echo $this->navigation()->menu()->renderMenu($page);
-        ?>
-    </div>
-    <div>
-        <?php echo $this->layout()->content ?>
+<div class="wrapper wrapper_panel" id="content">
+    <div style="display: flex; width: 100%">
+        <div id="sub-menu">
+            <h3><?php //parent_page is passed in from controller
+                echo $this->layout()->parent_page; ?></h3>
+            <hr>
+            <?php
+            $page = $this->navigation()->findOneBy('label', $this->layout()->parent_page);
+            echo $this->navigation()->menu()->renderMenu($page);
+            ?>
+        </div>
+        <div id="sub-menu-content-panel">
+            <?php echo $this->layout()->content ?>
+        </div>
     </div>
 </div>
 
