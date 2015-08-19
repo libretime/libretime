@@ -3589,7 +3589,7 @@ button.btn-icon-text > i.icon-white {
     background-color: #ff611f;
     color: white;
     font-size: 14px;
-    text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1);
 
     z-index: 99; /* Need to be above elements like the shows in the calendar! */
     /*margin: 5px 10px;*/
