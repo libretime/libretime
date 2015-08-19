@@ -70,10 +70,9 @@ fieldset {
 .logo {
     position: absolute;
     float: left;
-    height: 46px;
-    width: 120px;
-    left: 5px;
-    top: 26px;
+    left: 22px;
+    top: 30px;
+    width: 100px;
 }
 
 /* Version Notification Starts*/
