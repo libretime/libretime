@@ -63,16 +63,13 @@ select {
 
 
 /* Fix for Firefox */
-fieldset {
-    clear: both;
-}
-
 .logo {
     position: absolute;
     float: left;
     left: 22px;
     top: 30px;
     width: 100px;
+    height: 46px;
 }
 
 /* Version Notification Starts*/
@@ -116,7 +113,7 @@ fieldset {
 }
 
 .edit-current-user {
-    width: 450px;
+    width: 365px;
 }
 
 .edit-current-user label {
@@ -1031,10 +1028,11 @@ button.ColVis_Button.ColVis_ShowAll {
 /*----END Data Table----*/
 
 fieldset {
-    border: 1px solid #222;
+    /*border: 1px solid #222;*/
+    border: none;
     margin: 0;
     padding: 0;
-
+    clear: both;
 }
 fieldset.plain {
     border: none;
@@ -2298,6 +2296,10 @@ span.errors.sp-errors{
     width: 500px;
     margin-bottom: 40px;
 }
+#preferences_header {
+    float: left;
+    padding-left: 9px;
+}
 .manage-folders {
     width: 610px;
 }
@@ -2373,6 +2375,10 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 .preferences #Logo-img-container {
     margin-top: 30px;
 }
+
+/*#submit {*/
+    /*margin-right: 10px;*/
+/*}*/
 
 .centered {
     margin: 0 auto;
@@ -2992,7 +2998,7 @@ tfoot tr th    {
     bottom:10px;
     background-color:#222;
     background-color:rgba(0, 0, 0, 0.7);
-    z-index:100;
+    z-index:101;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -3397,13 +3403,13 @@ dd .stream-status {
  * to focus on responsive design.
  */
 .usability_hint:not(.hidden) + .wrapper {
-    top: 102px;
+    top: 130px;
 
     -webkit-transition: top 0.2s linear;
     -moz-transition: top 0.2s linear;
     -o-transition: top 0.2s linear;
     transition: top 0.2s linear;
-    padding-top: 40px;
+    /*padding-top: 40px;*/
 }
 
 .usability_hint a {
@@ -3466,21 +3472,24 @@ button.btn-icon-text > i.icon-white {
 }
 
 .media_type_selector {
-
     cursor: pointer;
     color: #cecece;
-    font-family: Roboto, "Open Sans", sans-serif;
+    /*font-family: Roboto, "Open Sans", sans-serif;*/
     font-size: 16px;
     font-weight: 400;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     /*margin: 20px 20px 0 5px;*/
     /*padding: 10px 0px 10px 0px;*/
-    padding: 0px;
+    padding: 0;
 
     -webkit-transition: color 0.1s linear;
     -moz-transition: color 0.1s linear;
     -o-transition: color 0.1s linear;
     transition: color 0.1s linear;
+}
+
+#nav i, .media_type_selector i {
+    margin-right: 10px;
 }
 
 .media_type_selector.selected, .media_type_selector.selected a {
@@ -3581,24 +3590,25 @@ button.btn-icon-text > i.icon-white {
 }
 
 #sub-menu {
-    width: 130px;
+    position: fixed;
+    left: 150px;
+    top: 130px;
+    height: 100%;
     min-width: 130px;
-    flex-grow: 0;
     border-right: 1px solid #5b5b5b;
-    background: #212121;
+    background: #242424;
     font-size: 14px;
     color: #cecece;
     padding: 10px;
-    float: left;
 }
 
 #sub-menu h3 {
-    padding: 0px;
+    padding: 0;
 }
 
 #sub-menu .navigation {
     list-style: none;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 #sub-menu .navigation li {

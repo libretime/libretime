@@ -1,6 +1,6 @@
 var previewWidth = 482,
     previewHeight = 110,
-    USABILITY_HINT_PADDING = 40;
+    USABILITY_HINT_TOP = 130;
 
 $(document).ready(function() {
 
@@ -198,7 +198,7 @@ function hideHint(h) {
 
 function showHint(h) {
     h.show("slow").removeClass("hidden");
-    $(".wrapper").css("padding-top", USABILITY_HINT_PADDING); // Account for usability hint
+    $(".wrapper").css("top", USABILITY_HINT_TOP); // Account for usability hint
 }
 
 function getUsabilityHint() {
