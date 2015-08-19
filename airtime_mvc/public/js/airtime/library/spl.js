@@ -12,10 +12,7 @@ var AIRTIME = (function(AIRTIME){
         viewport,
         $lib,
         $pl,
-        $togglePl = $("<button id='pl_edit' class='btn btn-small' href='#' title='"+$.i18n._("Open Media Builder")+"'>"+$.i18n._("Open Media Builder")+"</button>"),
         widgetHeight,
-        resizeTimeout,
-        width,
         $tabCount = 0,
         $openTabs = {};
 
