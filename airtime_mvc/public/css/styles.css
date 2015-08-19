@@ -3454,6 +3454,10 @@ button.btn-icon-text > i.icon-white {
     text-align: left;
 }
 
+#media_type_nav .icon-white {
+    opacity: 0.8;
+}
+
 #media_type_nav .btn-group {
     padding: 4px;
 }
