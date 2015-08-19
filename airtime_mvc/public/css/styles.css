@@ -2747,7 +2747,7 @@ dt.block-display.info-block {
 }
 
 .stream-config #output_setting {
-    width: 96%;
+    width: 100%;
 }
 
 .stream-config dt.block-display, .stream-config dd.block-display {
@@ -3084,8 +3084,9 @@ tfoot tr th    {
     border-width: 0 1px 1px;
 }
 .stream-setting-content fieldset.display_field {
-    border: 1px solid #8F8F8F;
-    padding: 10px;
+    /*border: 1px solid #8F8F8F;*/
+    border: none;
+    padding: 0 0 10px;
 }
 .stream-setting-content fieldset.display_field.closed {
     border-width: 1px 0 0;
@@ -3378,7 +3379,7 @@ dd .stream-status {
 }
 
 #player-widget {
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
     width: 600px;
 }
 
