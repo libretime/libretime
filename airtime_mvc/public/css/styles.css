@@ -2994,8 +2994,8 @@ tfoot tr th    {
     height:38px;
     display:block;
     position:fixed;
-    left:20px;
-    bottom:10px;
+    left:160px;
+    bottom:0px;
     background-color:#222;
     background-color:rgba(0, 0, 0, 0.7);
     z-index:101;
