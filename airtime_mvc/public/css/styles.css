@@ -1041,6 +1041,11 @@ button.ColVis_Button.ColVis_ShowAll {
     text-align: center;
     margin-top: 10px;
 }
+
+.ColVis_Button {
+    text-shadow: none;
+}
+
 .library_toolbar .ui-button, .ColVis.TableTools .ui-button {
     float: right;
     text-align:center;
@@ -3739,3 +3744,15 @@ hr {
     z-index: 2;
     position:absolute;
 }
+
+.dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a
+{
+    background: #ff5d1a;
+    color: #333;
+    border: 0px;
+}
+
+li .ui-state-hover {
+    border: 0px;
+}
+

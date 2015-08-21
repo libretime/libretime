@@ -449,20 +449,6 @@ var AIRTIME = (function(AIRTIME) {
         /*
          * Icon hover states in the toolbar.
          */
-        $libContent.on("mouseenter", ".fg-toolbar ul li", function(ev) {
-            $el = $(this);
-
-            if (!$el.hasClass("ui-state-disabled")) {
-                $el.addClass("ui-state-hover");
-            }
-        });
-        $libContent.on("mouseleave", ".fg-toolbar ul li", function(ev) {
-            $el = $(this);
-
-            if (!$el.hasClass("ui-state-disabled")) {
-                $el.removeClass("ui-state-hover");
-            }
-        });
 
         var colReorderMap = new Array();
 
@@ -783,7 +769,8 @@ var AIRTIME = (function(AIRTIME) {
                 "aiExclude": [0, 1, 2, 31],
                 "sSize": "css",
                 "fnStateChange": setFilterElement,
-                "buttonText": $.i18n._("Columns")
+                "buttonText": $.i18n._("Columns"),
+                "iOverlayFade": 0
             },
 
             "oColReorder": {
