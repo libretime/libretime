@@ -2930,23 +2930,7 @@ tfoot tr th    {
     -moz-border-radius: 4px;
     font-size:13px;
 }
-.statustable .big    {
-    width:120px;
-    height:10px;
-    background:#444444;
-    background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3e3e3e), color-stop(100%, #464646));
-    border-bottom:1px solid #fff;
-    margin: 0 auto;
-    padding: 1px;
-    display:inline-block;
-}
-.diskspace    {
-    background-color:#e76400;
-    background: -moz-linear-gradient(top, #ff6f01 0, #bc5200 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff6f01), color-stop(100%, #bc5200));
-    height:10px;
-}
+
 .statustable a            {
     color: #222;
     text-decoration: underline;
@@ -3672,4 +3656,47 @@ hr {
     width:16px !important;
     display:inline;
     margin-right:4px
+}
+
+#disk_usage {
+    border-radius: 1px;
+    position: fixed;
+    width: 120px;
+    font-size: 14px;
+    text-align: center;
+    bottom: 5px;
+    left: 10px;
+    padding: 3px 5px;
+    background-color: #242424;
+    border: 1px solid #5b5b5b;
+    color: #ccc;
+}
+
+.disk_usage_progress_bar {
+    width:120px;
+    height:13px;
+    background:#444444;
+    background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3e3e3e), color-stop(100%, #464646));
+    margin: 0 auto;
+    z-index: 1;
+    position:absolute;
+}
+
+.disk_usage_percent_in_use {
+    color: #fff;
+    font-size: 10px;
+    z-index: 3;
+    position:absolute;
+    width: 120px;
+    line-height: 13px;
+}
+
+.disk_usage_used {
+    background-color:#e76400;
+    background: -moz-linear-gradient(top, #ff6f01 0, #bc5200 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff6f01), color-stop(100%, #bc5200));
+    height:13px;
+    z-index: 2;
+    position:absolute;
 }
