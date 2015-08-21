@@ -199,7 +199,7 @@ var AIRTIME = (function(AIRTIME) {
     };
 
     mod.checkNewButton = function() {
-        var selected = $(".media_type_selector.selected").attr("selection_id"),
+        var selected = $(".media_type_selector.selected").attr("data-selection-id"),
             check = false;
 
         if (selected != 1) {
@@ -386,7 +386,7 @@ var AIRTIME = (function(AIRTIME) {
         openTabObjectIds.each(function(i, el) {
             var v = parseInt($(el).val());
             if ($.inArray(v, mediaIds) > -1) {
-                AIRTIME.playlist.closeTab($(el).closest(".pl-content").attr("tab-id"));
+                AIRTIME.playlist.closeTab($(el).closest(".pl-content").attr("data-tab-id"));
             }
         });
 
@@ -524,7 +524,7 @@ var AIRTIME = (function(AIRTIME) {
         function getLibraryDatatableStrings() {
             //Set up the datatables string translation table with different strings depending on
             //whether you're viewing files, playlists, smart blocks, etc.
-            var type = parseInt($(".media_type_selector.selected").attr("selection_id"));
+            var type = parseInt($(".media_type_selector.selected").attr("data-selection-id"));
             type = (type === undefined) ? 1 : type;
 
             //FIXME: The code that calls this function doesn't work as intended because you can't
@@ -681,7 +681,7 @@ var AIRTIME = (function(AIRTIME) {
                 aoData.push( { name: "advSearch", value: advSearchValid} );
 
                 // push whether to search files/playlists or all.
-                type = $(".media_type_selector.selected").attr("selection_id");
+                type = $(".media_type_selector.selected").attr("data-selection-id");
                 type = (type === undefined) ? 1 : type;
                 aoData.push( { name: "type", value: type} );
 
@@ -836,7 +836,7 @@ var AIRTIME = (function(AIRTIME) {
             AIRTIME.library.dblClickAdd(data, data.ftype);
         });
 
-        $libTable.find("tbody").on("mousedown", "tr.lib-audio > td.library_checkbox", function(ev) {
+        $libTable.find("tbody").on("mousedown", "tr[class*='lib'] > td.library_checkbox", function(ev) {
             var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -865,7 +865,7 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
 
-        $libTable.find("tbody").on("mousedown", "tr.lib-audio > td:not(.library_checkbox)", function(ev) {
+        $libTable.find("tbody").on("mousedown", "tr[class*='lib'] > td:not(.library_checkbox)", function(ev) {
             var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -894,6 +894,9 @@ var AIRTIME = (function(AIRTIME) {
                 mod.selectItem($tr);
             } else if (ev.ctrlKey) {
                 mod.deselectItem($tr);
+            } else if (ev.which === 3 /* Right click */) {
+                mod.selectNone();
+                mod.selectItem($tr);
             }
         });
 
@@ -932,7 +935,7 @@ var AIRTIME = (function(AIRTIME) {
 
         // begin context menu initialization.
         AIRTIME.library.ctxMenu = $.contextMenu({
-            selector: '#library_display tr.lib-audio:has(td)',
+            selector: "#library_display tr[class*='lib']:has(td)",
             //trigger: "left",
             trigger: "custom",
 

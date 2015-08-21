@@ -306,7 +306,7 @@ var AIRTIME = (function(AIRTIME) {
                 return;
             }
 
-            var selection = $(".media_type_selector.selected").attr("selection_id");
+            var selection = $(".media_type_selector.selected").attr("data-selection-id");
 
             if (selection == 2) {
                 AIRTIME.playlist.fnNew();

@@ -433,7 +433,7 @@ li.ui-state-default {
     left: 4px;
 }
 
-[tab-type='md'] > .editor_pane_wrapper {
+[data-tab-type='md'] > .editor_pane_wrapper {
     overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
 }
 

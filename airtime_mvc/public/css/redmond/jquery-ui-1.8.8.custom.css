@@ -1186,6 +1186,8 @@ button.ui-button.::-moz-focus-inner {
 	overflow: auto;
 	zoom: 1;
 
+	box-shadow: none;
+
 }
 .ui-dialog .ui-dialog-buttonpane {
 	text-align: left;

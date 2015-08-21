@@ -444,14 +444,14 @@ var AIRTIME = (function(AIRTIME){
         }
         $tabCount++;
 
-        var wrapper = "<div tab-type='" + json.type + "' tab-id='" + $tabCount + "' id='pl-tab-content-" + $tabCount + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
+        var wrapper = "<div data-tab-type='" + json.type + "' data-tab-id='" + $tabCount + "' id='pl-tab-content-" + $tabCount + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
             t = $("#show_builder").append(wrapper).find("#pl-tab-content-" + $tabCount),
             pane = $(".editor_pane_wrapper:last"),
             name = json.type == "md" ?  // file
                 pane.append(json.html).find("#track_title").val() + $.i18n._(" - Metadata Editor")
                 : pane.append(json.html).find(".playlist_name_display").text(),
             tab =
-                "<li tab-id='" + $tabCount + "' tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
+                "<li data-tab-id='" + $tabCount + "' data-tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
                     "<a href='#'><span class='tab-name'></span>" +
                         "<span href='#' class='lib_pl_close icon-remove'></span>" +
                     "</a>" +
@@ -521,13 +521,13 @@ var AIRTIME = (function(AIRTIME){
 
     function closeTab(id) {
         var curr = $(".active-tab"),
-            pane = id ? $(".pl-content[tab-id='" + id + "']") : curr,
-            tab = id ? $(".nav.nav-tabs [tab-id='" + id + "']") : $(".nav.nav-tabs .active"),
+            pane = id ? $(".pl-content[data-tab-id='" + id + "']") : curr,
+            tab = id ? $(".nav.nav-tabs [data-tab-id='" + id + "']") : $(".nav.nav-tabs .active"),
             toPane = pane.next().length > 0 ? pane.next() : pane.prev(),
             toTab = tab.next().length > 0 ? tab.next() : tab.prev(),
             objId = pane.find(".obj_id").val(),
             pl = id ? pane : $pl;
-        delete $openTabs[tab.attr("tab-type") + objId]; // Remove the closed tab from our open tabs array
+        delete $openTabs[tab.attr("data-tab-type") + objId]; // Remove the closed tab from our open tabs array
 
         // Remove the relevant DOM elements (the tab and the tab content)
         tab.remove();
@@ -906,8 +906,8 @@ var AIRTIME = (function(AIRTIME){
         });
 
         $pl.find("#webstream_cancel, #cancel_button").on("click", function() {
-            var tabId = $pl.attr("tab-id");
-            $("li[tab-id=" + tabId + "] .lib_pl_close").click();
+            var tabId = $pl.attr("data-tab-id");
+            $("li[data-tab-id=" + tabId + "] .lib_pl_close").click();
         });
 
         $lib.on("click", "#pl_edit", function() {
@@ -932,7 +932,7 @@ var AIRTIME = (function(AIRTIME){
 
             $(this).unbind("click"); // Prevent repeated clicks in quick succession from closing multiple tabs
 
-            var tabId = $(this).closest("li").attr("tab-id");
+            var tabId = $(this).closest("li").attr("data-tab-id");
             //AIRTIME.showbuilder.switchTab($("#pl-tab-content-" + tabId), $("#pl-tab-" + tabId));
             //$pl.hide();
 

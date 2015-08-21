@@ -120,6 +120,29 @@ function findViewportDimensions() {
     };
 }
 
+function highlightMediaTypeSelector(dialog)
+{
+    if (location.hash === "") {
+        dialog.find("a[href$='#files']").parent().addClass("selected");
+    }
+    dialog.find("a[href$='"+location.hash+"']").parent().addClass("selected");
+
+    // Slightly hacky way of triggering the click event when it's outside of the anchor text
+    dialog.find(".media_type_selector").on("click", function() {
+        // Need get(0) here so we don't create a stack overflow by recurring the click on the parent
+        $(this).find("a").get(0).click();
+    });
+
+    $(window).on('hashchange', function() {
+        AIRTIME.library.selectNone();
+        dialog.find(".media_type_selector").each(function () {
+            $(this).removeClass("selected");
+        });
+        dialog.find("a[href$='"+location.hash+"']").parent().addClass("selected");
+        oTable.fnDraw();
+    });
+}
+
 function buildScheduleDialog (json, instance_id) {
     var dialog = $(json.dialog),
         viewport = findViewportDimensions(),
@@ -160,6 +183,7 @@ function buildScheduleDialog (json, instance_id) {
     AIRTIME.showbuilder.builderDataTable();
     
     dialog.dialog('open');
+    highlightMediaTypeSelector(dialog);
 }
 
 function buildContentDialog (json){

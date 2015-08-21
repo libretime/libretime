@@ -1836,7 +1836,7 @@ button, input {
     font-weight: bold;
 }
 .user-list-wrapper .ui-widget-header:first-child .dataTables_filter {
-    margin:0;
+    /*margin:0;*/
 }
 .user-management h2 {
     font-size: 1.7em;

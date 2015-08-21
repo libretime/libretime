@@ -856,7 +856,7 @@ input[type="submit"].btn.btn-mini {
 }
 .icon-random {
   background-position: -216px -120px;
-  width: 16px;
+  /*width: 16px;*/
 }
 .icon-comment {
   background-position: -240px -120px;

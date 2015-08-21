@@ -853,6 +853,11 @@ var AIRTIME = (function(AIRTIME){
             } else if (ev.ctrlKey) {
                 $tr.removeClass(SB_SELECTED_CLASS);
                 $tr.find(".sb-checkbox > input").prop('checked', false);
+            } else if (ev.which === 3 /* Right click */) {
+                mod.selectNone();
+                $tr.addClass(SB_SELECTED_CLASS);
+                $tr.find(".sb-checkbox > input").prop('checked', true);
+                mod.checkToolBarIcons();
             }
 
             selectedRows = $("." + SB_SELECTED_CLASS);

@@ -23,9 +23,9 @@ $(document).ready(function() {
         if (ifr) {
             LC_API.on_chat_state_changed = function(data) {
                 if (data.state == 'offline') {
-                    $('.wrapper').css('padding-bottom', 10);
+                    $('body > .wrapper').css('padding-bottom', 10);
                 } else {
-                    $('.wrapper').css('padding-bottom', 40);
+                    $('body > .wrapper').css('padding-bottom', 40);
                 }
             };
             clearInterval(lcLoadListener);
