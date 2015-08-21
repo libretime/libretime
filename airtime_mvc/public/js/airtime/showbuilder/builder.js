@@ -824,6 +824,14 @@ var AIRTIME = (function(AIRTIME){
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
 
+            if (ev.which === 3 /* Right click */) {
+                mod.selectNone();
+                $tr.addClass(SB_SELECTED_CLASS);
+                $tr.find(".sb-checkbox > input").prop('checked', true);
+                mod.checkToolBarIcons();
+                return;
+            }
+
             if (!$tr.hasClass(SB_SELECTED_CLASS)) {
                 if (ev.shiftKey && $previouslySelected !== undefined) {
                     if ($previouslySelected.attr("id") == $rowId) {
@@ -851,13 +859,7 @@ var AIRTIME = (function(AIRTIME){
                 $tr.find(".sb-checkbox > input").prop('checked', true);
                 mod.checkToolBarIcons();
             } else if (ev.ctrlKey) {
-                $tr.removeClass(SB_SELECTED_CLASS);
-                $tr.find(".sb-checkbox > input").prop('checked', false);
-            } else if (ev.which === 3 /* Right click */) {
-                mod.selectNone();
-                $tr.addClass(SB_SELECTED_CLASS);
-                $tr.find(".sb-checkbox > input").prop('checked', true);
-                mod.checkToolBarIcons();
+                flagForDeselection = true;
             }
 
             selectedRows = $("." + SB_SELECTED_CLASS);
@@ -882,7 +884,13 @@ var AIRTIME = (function(AIRTIME){
 
         $sbTable.find("tbody").on("click", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td:not(.sb-checkbox)", function(e) {
             var tr = $(this).parent();
-            if (!(e.shiftKey || e.ctrlKey)) {
+            if (flagForDeselection) {
+                flagForDeselection = false;
+                $previouslySelected = undefined;
+                tr.removeClass(SB_SELECTED_CLASS);
+                tr.find(".sb-checkbox > input").prop('checked', false);
+                mod.checkToolBarIcons();
+            } else if (!(e.shiftKey || e.ctrlKey)) {
                 mod.selectNone();
                 tr.addClass(SB_SELECTED_CLASS);
                 tr.find(".sb-checkbox > input").prop('checked', true);

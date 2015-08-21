@@ -870,6 +870,12 @@ var AIRTIME = (function(AIRTIME) {
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
 
+            if (ev.which === 3 /* Right click */) {
+                mod.selectNone();
+                mod.selectItem($tr);
+                return;
+            }
+
             if (!$tr.hasClass(LIB_SELECTED_CLASS)) {
                 if (ev.shiftKey && $previouslySelected !== undefined) {
                     if ($previouslySelected.attr("id") == $rowId) {
@@ -893,10 +899,7 @@ var AIRTIME = (function(AIRTIME) {
 
                 mod.selectItem($tr);
             } else if (ev.ctrlKey) {
-                mod.deselectItem($tr);
-            } else if (ev.which === 3 /* Right click */) {
-                mod.selectNone();
-                mod.selectItem($tr);
+                flagForDeselection = true;
             }
         });
 
@@ -913,7 +916,11 @@ var AIRTIME = (function(AIRTIME) {
 
         $libTable.find("tbody").on("click", "tr > td:not(.library_checkbox)", function(e) {
             var tr = $(this).parent();
-            if (!(e.shiftKey || e.ctrlKey)) {
+            if (flagForDeselection) {
+                flagForDeselection = false;
+                $previouslySelected = undefined;
+                mod.deselectItem(tr);
+            } else if (!(e.shiftKey || e.ctrlKey)) {
                 mod.selectNone();
                 mod.selectItem(tr);
             }
