@@ -849,7 +849,7 @@ var AIRTIME = (function(AIRTIME) {
             AIRTIME.library.dblClickAdd(data, data.ftype);
         });
 
-        $libTable.find("tbody").on("mousedown", "tr > td.library_checkbox", function(ev) {
+        $libTable.find("tbody").on("mousedown", "tr.lib-audio > td.library_checkbox", function(ev) {
             var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -878,7 +878,7 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
 
-        $libTable.find("tbody").on("mousedown", "tr > td:not(.library_checkbox)", function(ev) {
+        $libTable.find("tbody").on("mousedown", "tr.lib-audio > td:not(.library_checkbox)", function(ev) {
             var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -945,7 +945,7 @@ var AIRTIME = (function(AIRTIME) {
 
         // begin context menu initialization.
         AIRTIME.library.ctxMenu = $.contextMenu({
-            selector: '#library_display tr:has(td)',
+            selector: '#library_display tr.lib-audio:has(td)',
             //trigger: "left",
             trigger: "custom",
 

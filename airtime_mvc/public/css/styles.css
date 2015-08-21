@@ -3416,15 +3416,16 @@ dd .stream-status {
  * absolute positioning in Airtime) when we want
  * to focus on responsive design.
  */
-.usability_hint:not(.hidden) + .wrapper {
+.usability_hint:not(.hidden) + .wrapper,
+.usability_hint:not(.hidden) ~ #sub-menu {
     top: 130px;
-
-    -webkit-transition: top 0.2s linear;
-    -moz-transition: top 0.2s linear;
-    -o-transition: top 0.2s linear;
-    transition: top 0.2s linear;
-    /*padding-top: 40px;*/
 }
+
+.usability_hint.hidden ~ #sub-menu,
+.usability_hint.hidden + .wrapper{
+    top: 102px;
+}
+
 
 .usability_hint a {
     color: white;
@@ -3621,6 +3622,11 @@ button.btn-icon-text > i.icon-white {
     color: #cecece;
     padding: 10px;
     z-index: 1;
+
+    -webkit-transition: top 0.2s linear;
+    -moz-transition: top 0.2s linear;
+    -o-transition: top 0.2s linear;
+    transition: top 0.2s linear;
 }
 
 #sub-menu h3 {
