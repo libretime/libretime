@@ -111,8 +111,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
 <div class="usability_hint <?php if ($hint == "") { echo "hidden"; } ?>"><?php echo $hint; ?></div>
 
-<div class="wrapper" id="content">
-    <?php echo $this->layout()->content ?>
+<div class="wrapper <?php if (isset($this->layout()->parent_page)) echo "wrapper_panel";?>" id="content">
+    <?php if (isset($this->layout()->parent_page)) { ?>
+    <div style="display: flex; width: 100%">
+        <div style="flex: 0 140px;"> <!-- placeholder object so we can fixed position the submenu -->
+            <div id="sub-menu">
+                <h3><?php //parent_page is passed in from controller
+                    echo $this->layout()->parent_page; ?></h3>
+                <hr>
+                <?php
+                $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
+                echo $this->navigation()->menu()->renderMenu($page);
+                ?>
+            </div>
+        </div>
+        <div id="sub-menu-content-panel">
+            <?php echo $this->layout()->content ?>
+        </div>
+    </div>
+    <?php } else { echo $this->layout()->content; } ?>
+
 </div>
 
 <script id="tmpl-pl-cues" type="text/template">

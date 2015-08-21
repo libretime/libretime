@@ -108,13 +108,11 @@ class DashboardController extends Zend_Controller_Action
 
     public function helpAction()
     {
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
     }
 
     public function aboutAction()
     {
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
         $this->view->airtime_version = Application_Model_Preference::GetAirtimeVersion();
     }

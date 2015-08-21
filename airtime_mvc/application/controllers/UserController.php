@@ -23,7 +23,6 @@ class UserController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
         $baseUrl = Application_Common_OsPath::getBaseDir();
@@ -125,7 +124,6 @@ class UserController extends Zend_Controller_Action
     
     public function editUserAction()
     {
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
         session_start(); //Reopen session for writing.
