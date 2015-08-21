@@ -1,6 +1,7 @@
 var previewWidth = 482,
     previewHeight = 110,
-    USABILITY_HINT_TOP = 130;
+    USABILITY_HINT_HIDDEN_TOP = 102,
+    USABILITY_HINT_VISIBLE_TOP = 130;
 
 $(document).ready(function() {
 
@@ -13,6 +14,7 @@ $(document).ready(function() {
 
     //this statement tells the browser to fade out any success message after 5 seconds
     setTimeout(function(){$(".success").fadeOut("slow", function(){$(this).empty()});}, 5000);
+    adjustForUsabilityHint();
 });
 
 /*
@@ -192,13 +194,18 @@ function removeSuccessMsg() {
     $status.fadeOut("slow", function(){$status.empty()});
 }
 
+function adjustForUsabilityHint() {
+    var topVal = ($(".usability_hint").is(":visible") ? USABILITY_HINT_VISIBLE_TOP : USABILITY_HINT_HIDDEN_TOP);
+    $("#sub-menu").css("top", topVal);
+}
+
 function hideHint(h) {
     h.hide("slow").addClass("hidden");
 }
 
 function showHint(h) {
     h.show("slow").removeClass("hidden");
-    $(".wrapper").css("top", USABILITY_HINT_TOP); // Account for usability hint
+    $(".wrapper, #sub-menu").css("top", USABILITY_HINT_VISIBLE_TOP);
 }
 
 function getUsabilityHint() {

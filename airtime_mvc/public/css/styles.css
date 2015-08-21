@@ -60,13 +60,42 @@ select {
     border:1px solid #9d9d9d;
 }
 
+/* Scroll bars */
 
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent none;
+}
+
+.wrapper::-webkit-scrollbar-track {
+    background-color: rgba(255, 93, 26, .2);
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ff5d1a;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.75);
+}
+
+::-webkit-scrollbar-corner {
+    background-color: #000;
+}
+
+.wrapper_panel::-webkit-scrollbar-corner {
+    background-color: #242424;
+}
 
 /* Fix for Firefox */
 .logo {
     position: absolute;
     float: left;
-    left: 22px;
+    left: 23px;
     top: 30px;
     width: 100px;
     height: 46px;
@@ -253,7 +282,7 @@ select {
 .now-playing-block {
     width:35%;
     background: url(images/masterpanel_spacer.png) no-repeat 0 0;
-    margin-left: 149px;
+    margin-left: 152px;
     padding-left: 14px;
 }
 .show-block {
@@ -373,21 +402,21 @@ select {
         width: 30%;
         /*display: none;*/
     }
-    #nav li.top {
-        display: -webkit-box;
-        display: -moz-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        width: 110px;
-    }
+    /*#nav li.top {*/
+        /*display: -webkit-box;*/
+        /*display: -moz-box;*/
+        /*display: -ms-flexbox;*/
+        /*display: -webkit-flex;*/
+        /*display: flex;*/
+        /*width: 110px;*/
+    /*}*/
 }
 @media screen and (max-width: 775px) {
     .now-playing-block {
         display: none;
     }
     .source-info-block {
-        margin-left: 149px;
+        margin-left: 152px;
     }
 }
 @media screen and (max-width: 520px) {
@@ -3443,7 +3472,7 @@ button.btn-icon-text > i.icon-white {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
-    width: 150px;
+    width: 152px;
 
     flex: 1 auto;
     padding: 0;
@@ -3528,7 +3557,7 @@ button.btn-icon-text > i.icon-white {
     position: absolute;
 
     top: 102px;
-    left: 150px;
+    left: 152px;
     right: 0;
     bottom: 0;
     padding: 10px 10px 40px;
@@ -3554,6 +3583,7 @@ button.btn-icon-text > i.icon-white {
 }
 
 .wrapper_panel {
+    left: 303px;
     background-color: #242424;
 }
 
@@ -3562,7 +3592,7 @@ button.btn-icon-text > i.icon-white {
 .usability_hint {
     position: fixed;
     top: 102px;
-    left: 150px;
+    left: 152px;
 
     width: 100%;
     flex: 0 100%;
@@ -3590,17 +3620,23 @@ button.btn-icon-text > i.icon-white {
     margin-bottom: 10px;
 }
 
+#sub-menu-wrapper {
+    flex: 0 140px;
+    min-width: 140px;
+}
+
 #sub-menu {
     position: fixed;
-    left: 150px;
-    top: 130px;
-    height: 100%;
+    left: 152px;
+    top: 102px;
+    bottom: 0; /* Account for scrollbars */
     min-width: 130px;
     border-right: 1px solid #5b5b5b;
     background: #242424;
     font-size: 14px;
     color: #cecece;
     padding: 10px;
+    z-index: 1;
 }
 
 #sub-menu h3 {
@@ -3638,6 +3674,7 @@ button.btn-icon-text > i.icon-white {
 #listenerstat_content {
     width: 100%;
     display: block;
+    box-sizing: border-box;
 }
 
 #listenerstat_content .legendLabel

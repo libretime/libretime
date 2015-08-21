@@ -151,7 +151,7 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.checkDeleteButton = function() {
-        var $selected = $sbTable.find("tr."+SB_SELECTED_CLASS);
+        var $selected = $("."+SB_SELECTED_CLASS);
 
         var button = $("#show_builder").find(".icon-trash").parent();
         if ($selected.length !== 0) {
@@ -849,6 +849,7 @@ var AIRTIME = (function(AIRTIME){
 
                 $tr.addClass(SB_SELECTED_CLASS);
                 $tr.find(".sb-checkbox > input").prop('checked', true);
+                mod.checkToolBarIcons();
             } else if (ev.ctrlKey) {
                 $tr.removeClass(SB_SELECTED_CLASS);
                 $tr.find(".sb-checkbox > input").prop('checked', false);
@@ -866,8 +867,10 @@ var AIRTIME = (function(AIRTIME){
                 $previouslySelected = undefined;
                 tr.removeClass(SB_SELECTED_CLASS);
                 tr.find(".sb-checkbox > input").prop('checked', false);
+                mod.checkToolBarIcons();
             } else {
                 tr.find(".sb-checkbox > input").prop('checked', true);
+                mod.checkToolBarIcons();
             }
             selectedRows = $("." + SB_SELECTED_CLASS);
         });
@@ -879,6 +882,7 @@ var AIRTIME = (function(AIRTIME){
                 tr.addClass(SB_SELECTED_CLASS);
                 tr.find(".sb-checkbox > input").prop('checked', true);
                 $previouslySelected = tr;
+                mod.checkToolBarIcons();
             }
             selectedRows = $("." + SB_SELECTED_CLASS);
         });

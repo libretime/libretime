@@ -106,21 +106,22 @@
 
 
 <div class="wrapper wrapper_panel" id="content">
-    <div style="display: flex; width: 100%">
-        <div style="flex: 0 140px;"> <!-- placeholder object so we can fixed position the submenu -->
-            <div id="sub-menu">
-                <h3><?php //parent_page is passed in from controller
-                    echo $this->layout()->parent_page; ?></h3>
-                <hr>
-                <?php
-                $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
-                echo $this->navigation()->menu()->renderMenu($page);
-                ?>
-            </div>
-        </div>
-        <div id="sub-menu-content-panel">
+<!--    <div style="display: flex; width: 100%">-->
+<!--        <div id="sub-menu-content-panel">-->
             <?php echo $this->layout()->content ?>
-        </div>
+<!--        </div>-->
+<!--    </div>-->
+</div>
+<!-- Since we're position fixing the submenu, we don't need it to be inside the page wrapper -->
+<div id="sub-menu-wrapper"> <!-- placeholder object so we can fixed position the submenu -->
+    <div id="sub-menu">
+        <h3><?php //parent_page is passed in from controller
+            echo $this->layout()->parent_page; ?></h3>
+        <hr>
+        <?php
+            $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
+            echo $this->navigation()->menu()->renderMenu($page);
+        ?>
     </div>
 </div>
 
