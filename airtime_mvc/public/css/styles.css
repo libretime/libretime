@@ -98,7 +98,7 @@ select {
     left: 23px;
     top: 30px;
     width: 100px;
-    height: 46px;
+    height: 42px;
 }
 
 /* Version Notification Starts*/
@@ -2959,23 +2959,7 @@ tfoot tr th    {
     -moz-border-radius: 4px;
     font-size:13px;
 }
-.statustable .big    {
-    width:120px;
-    height:10px;
-    background:#444444;
-    background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3e3e3e), color-stop(100%, #464646));
-    border-bottom:1px solid #fff;
-    margin: 0 auto;
-    padding: 1px;
-    display:inline-block;
-}
-.diskspace    {
-    background-color:#e76400;
-    background: -moz-linear-gradient(top, #ff6f01 0, #bc5200 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff6f01), color-stop(100%, #bc5200));
-    height:10px;
-}
+
 .statustable a            {
     color: #222;
     text-decoration: underline;
@@ -3023,8 +3007,8 @@ tfoot tr th    {
     height:38px;
     display:block;
     position:fixed;
-    left:20px;
-    bottom:10px;
+    left:160px;
+    bottom:0px;
     background-color:#222;
     background-color:rgba(0, 0, 0, 0.7);
     z-index:101;
@@ -3662,10 +3646,6 @@ button.btn-icon-text > i.icon-white {
     text-decoration: none;
 }
 
-.page-sub-menu {
-    /*background-color: #252525;*/
-}
-
 #sub-menu-content-panel
 {
     flex-grow: 1
@@ -3709,4 +3689,47 @@ hr {
     width:16px !important;
     display:inline;
     margin-right:4px
+}
+
+#disk_usage {
+    border-radius: 1px;
+    /*position: fixed;
+    bottom: 5px;
+    left: 10px;*/
+    width: 118px;
+    font-size: 14px;
+    text-align: center;
+    padding: 5px 5px;
+    background-color: #242424;
+    border: 1px solid #5b5b5b;
+    color: #ccc;
+}
+
+.disk_usage_progress_bar {
+    width:118px;
+    height:13px;
+    background:#444444;
+    background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3e3e3e), color-stop(100%, #464646));
+    margin: 0 auto;
+    z-index: 1;
+    position:absolute;
+}
+
+.disk_usage_percent_in_use {
+    color: #fff;
+    font-size: 10px;
+    z-index: 3;
+    position:absolute;
+    width: 120px;
+    line-height: 13px;
+}
+
+.disk_usage_used {
+    background-color:#e76400;
+    background: -moz-linear-gradient(top, #ff6f01 0, #bc5200 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff6f01), color-stop(100%, #bc5200));
+    height:13px;
+    z-index: 2;
+    position:absolute;
 }

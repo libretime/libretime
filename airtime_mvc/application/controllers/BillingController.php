@@ -22,7 +22,6 @@ class BillingController extends Zend_Controller_Action {
     public function upgradeAction()
     {
 
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Billing');
 
         $CC_CONFIG = Config::getConfig();
@@ -211,7 +210,6 @@ class BillingController extends Zend_Controller_Action {
 
     public function clientAction()
     {
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Billing');
 
         $CC_CONFIG = Config::getConfig();
@@ -264,7 +262,6 @@ class BillingController extends Zend_Controller_Action {
 
     public function invoicesAction()
     {
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Billing');
 
         $CC_CONFIG = Config::getConfig();

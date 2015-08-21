@@ -24,7 +24,6 @@ class PreferenceController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
         $request = $this->getRequest();
 
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
                 
         $baseUrl = Application_Common_OsPath::getBaseDir();
@@ -146,7 +145,6 @@ class PreferenceController extends Zend_Controller_Action
 
         $request = $this->getRequest();
 
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
 
         $baseUrl = Application_Common_OsPath::getBaseDir();

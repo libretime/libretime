@@ -9,6 +9,13 @@
 */
 $pages = array(
     array(
+        'label' => "<i class='icon-globe icon-white'></i>"._('Radio Page'),
+        'uri' => '/',
+        'resource' => '',
+        'pages' => array(
+        )
+    ),
+    array(
         'label'      => "<i class='icon-calendar icon-white'></i>"._('Calendar'),
         'module'     => 'default',
         'controller' => 'Schedule',
@@ -16,10 +23,24 @@ $pages = array(
         'resource'   =>    'schedule'
     ),
     array(
-        'label' => "<i class='icon-globe icon-white'></i>"._('Radio Page'),
-        'uri' => '/',
-        'resource' => '',
+        'label'      =>  "<i class='icon-wrench icon-white'></i>"._('Widgets'),
+        'module'     => 'default',
+        'controller' => 'embeddablewidgets',
+        'action'     => 'player',
+        'title' => 'Widgets',
         'pages' => array(
+            array(
+                'label'      => _('Player'),
+                'module'     => 'default',
+                'controller' => 'embeddablewidgets',
+                'action'     => 'player',
+            ),
+            array(
+                'label'      => _('Weekly Schedule'),
+                'module'     => 'default',
+                'controller' => 'embeddablewidgets',
+                'action'     => 'schedule',
+            )
         )
     ),
     array(
@@ -88,23 +109,32 @@ $pages = array(
         )
     ),
     array(
-        'label'      =>  "<i class='icon-wrench icon-white'></i>"._('Widgets'),
-        'module'     => 'default',
-        'controller' => 'embeddablewidgets',
-        'action'     => 'player',
-        'title' => 'Widgets',
+        'label' =>  "<i class='icon-briefcase icon-white'></i>"._('Billing'),
+        'controller' => 'billing',
+        'action' => 'client',
+        'resource' => 'billing',
+        'title' => 'Billing',
         'pages' => array(
             array(
-                'label'      => _('Player'),
-                'module'     => 'default',
-                'controller' => 'embeddablewidgets',
-                'action'     => 'player',
+                'label' => _('Account Details'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'client',
+                'resource' => 'billing'
             ),
             array(
-                'label'      => _('Weekly Schedule'),
-                'module'     => 'default',
-                'controller' => 'embeddablewidgets',
-                'action'     => 'schedule',
+                'label' => _('Account Plans'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'upgrade',
+                'resource' => 'billing'
+            ),
+            array(
+                'label' => _('View Invoices'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'invoices',
+                'resource' => 'billing'
             )
         )
     ),
@@ -149,36 +179,6 @@ $pages = array(
             )
         )
     ),
-    array(
-        'label' =>  "<i class='icon-user icon-white'></i>"._('Billing'),
-        'controller' => 'billing',
-        'action' => 'client',
-        'resource' => 'billing',
-        'title' => 'Billing',
-        'pages' => array(
-            array(
-                'label' => _('Account Details'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'client',
-                'resource' => 'billing'
-            ),
-            array(
-                'label' => _('Account Plans'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'upgrade',
-                'resource' => 'billing'
-            ),
-            array(
-                'label' => _('View Invoices'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'invoices',
-                'resource' => 'billing'
-            )
-        )
-    )
 );
 
 

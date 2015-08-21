@@ -10,7 +10,6 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
 
     public function playerAction()
     {
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
 
         $CC_CONFIG = Config::getConfig();
@@ -34,7 +33,6 @@ class EmbeddableWidgetsController extends Zend_Controller_Action
 
     public function scheduleAction()
     {
-        $this->_helper->layout->setLayout("page-sub-menu");
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Widgets');
 
         $apiEnabled = Application_Model_Preference::GetAllow3rdPartyApi();
