@@ -345,9 +345,8 @@ class PypoFetch(Thread):
             for key in media:
                 media_item = media[key]
                 if (media_item['type'] == 'file'):
-                    self.sanity_check_media_item(media_item)
-                    fileExt = os.path.splitext(media_item['uri'])[1]
-                    dst = os.path.join(download_dir, unicode(media_item['id']) + fileExt)
+                    fileExt = self.sanity_check_media_item(media_item)
+                    dst = os.path.join(download_dir, unicode(media_item['id']) + unicode(fileExt))
                     media_item['dst'] = dst
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
@@ -377,20 +376,9 @@ class PypoFetch(Thread):
         start = datetime.strptime(media_item['start'], "%Y-%m-%d-%H-%M-%S")
         end = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
 
-        root, ext = os.path.splitext(media_item['uri'])
         mime = media_item['metadata']['mime']
-        mimetypes.init()
+        mimetypes.init(["%s/mime.types" % os.path.dirname(os.path.realpath(__file__))])
         mime_ext = mimetypes.guess_extension(mime, strict=False)
-
-        if mime_ext is None:
-            mimes = mimetypes.read_mime_types("%s/mime.types" % os.path.dirname(os.path.realpath(__file__)))
-            for k, v in mimes.iteritems():
-                if v == mime:
-                    mime_ext = k
-
-        if mime_ext is not None and mime_ext != ext:
-            self.logger.info("Invalid extension %s for file %s, changing to %s" % (ext, root, mime_ext))
-            media_item['uri'] = root + mime_ext
 
         length1 = pure.date_interval_to_seconds(end - start)
         length2 = media_item['cue_out'] - media_item['cue_in']
@@ -399,6 +387,10 @@ class PypoFetch(Thread):
             self.logger.error("end - start length: %s", length1)
             self.logger.error("cue_out - cue_in length: %s", length2)
             self.logger.error("Two lengths are not equal!!!")
+
+        media_item['file_ext'] = mime_ext
+
+        return mime_ext
 
     def is_file_opened(self, path):
         #Capture stderr to avoid polluting py-interpreter.log
@@ -418,8 +410,7 @@ class PypoFetch(Thread):
         for mkey in media:
             media_item = media[mkey]
             if media_item['type'] == 'file':
-                fileExt = os.path.splitext(media_item['uri'])[1]
-                scheduled_file_set.add(unicode(media_item["id"]) + fileExt)
+                scheduled_file_set.add(unicode(media_item["id"]) + unicode(media_item["file_ext"]))
 
         expired_files = cached_file_set - scheduled_file_set
 
