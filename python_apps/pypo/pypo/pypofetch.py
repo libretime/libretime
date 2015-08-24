@@ -348,7 +348,6 @@ class PypoFetch(Thread):
                     fileExt = self.sanity_check_media_item(media_item)
                     dst = os.path.join(download_dir, unicode(media_item['id']) + unicode(fileExt))
                     media_item['dst'] = dst
-                    self.logger.info(media_item['dst'])
                     media_item['file_ready'] = False
                     media_filtered[key] = media_item
 
@@ -378,7 +377,7 @@ class PypoFetch(Thread):
         end = datetime.strptime(media_item['end'], "%Y-%m-%d-%H-%M-%S")
 
         mime = media_item['metadata']['mime']
-        mimetypes.init("%s/mime.types" % os.path.dirname(os.path.realpath(__file__)))
+        mimetypes.init(["%s/mime.types" % os.path.dirname(os.path.realpath(__file__))])
         mime_ext = mimetypes.guess_extension(mime, strict=False)
 
         length1 = pure.date_interval_to_seconds(end - start)
