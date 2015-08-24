@@ -1399,7 +1399,7 @@ button.ui-button.::-moz-focus-inner {
 .ui-datepicker th {
 	padding: .7em .3em;
 	text-align: center;
-	font-weight: bold;
+	font-weight: normal;
 	border: 0;
 }
 .ui-datepicker td {

@@ -120,8 +120,7 @@ function findViewportDimensions() {
     };
 }
 
-function highlightMediaTypeSelector(dialog)
-{
+function highlightMediaTypeSelector(dialog) {
     if (location.hash === "") {
         dialog.find("a[href$='#files']").parent().addClass("selected");
     }
@@ -141,6 +140,54 @@ function highlightMediaTypeSelector(dialog)
         dialog.find("a[href$='"+location.hash+"']").parent().addClass("selected");
         oTable.fnDraw();
     });
+}
+
+function buildTimerange(dialog) {
+    var builder = dialog.find("#show_builder"),
+        oBaseDatePickerSettings = {
+            dateFormat: 'yy-mm-dd',
+            //i18n_months, i18n_days_short are in common.js
+            monthNames: i18n_months,
+            dayNamesMin: i18n_days_short,
+            onClick: function(sDate, oDatePicker) {
+                $(this).datepicker("setDate", sDate);
+            },
+            onClose: validateTimeRange
+        },
+        oBaseTimePickerSettings = {
+            showPeriodLabels: false,
+            showCloseButton: true,
+            closeButtonText: $.i18n._("Done"),
+            showLeadingZero: false,
+            defaultTime: '0:00',
+            hourText: $.i18n._("Hour"),
+            minuteText: $.i18n._("Minute"),
+            onClose: validateTimeRange
+        };
+
+    /*
+     * Icon hover states for search.
+     */
+    builder.on("mouseenter", ".sb-timerange .ui-button", function(ev) {
+        $(this).addClass("ui-state-hover");
+    });
+    builder.on("mouseleave", ".sb-timerange .ui-button", function(ev) {
+        $(this).removeClass("ui-state-hover");
+    });
+
+    builder.find(dateStartId)
+        .datepicker(oBaseDatePickerSettings);
+    builder.find(timeStartId)
+        .timepicker(oBaseTimePickerSettings);
+    builder.find(dateEndId)
+        .datepicker(oBaseDatePickerSettings);
+    builder.find(timeEndId)
+        .timepicker(oBaseTimePickerSettings);
+
+    var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId,
+        dateEndId, timeEndId);
+    AIRTIME.showbuilder.fnServerData.start = oRange.start;
+    AIRTIME.showbuilder.fnServerData.end = oRange.end;
 }
 
 function buildScheduleDialog (json, instance_id) {
@@ -184,6 +231,7 @@ function buildScheduleDialog (json, instance_id) {
     
     dialog.dialog('open');
     highlightMediaTypeSelector(dialog);
+    buildTimerange(dialog);
 }
 
 function buildContentDialog (json){

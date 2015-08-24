@@ -86,32 +86,6 @@ AIRTIME = (function(AIRTIME) {
         }   
     }
     
-    function validateTimeRange() {
-    	 var oRange,
-	         inputs = $('.sb-timerange > input'),
-	         start, end;
-    	 
-    	 oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
-    	 
-    	 start = oRange.start;
-         end = oRange.end;
-         
-         if (end >= start) {
-        	 inputs.removeClass('error');
-         }
-         else {
-        	 if (!inputs.hasClass('error')) {
-        		 inputs.addClass('error');  
-        	 } 
-         }
-         
-         return {
-        	 start: start,
-        	 end: end,
-        	 isValid: end >= start
-         };
-    }
-    
     function showSearchSubmit() {
         var fn,
             op,
@@ -121,25 +95,24 @@ AIRTIME = (function(AIRTIME) {
         check = validateTimeRange();
         
         if (check.isValid) {
-        	
-	        //reset timestamp value since input values could have changed.
-	        AIRTIME.showbuilder.resetTimestamp();
-	            
-	        fn = oTable.fnSettings().fnServerData;
-	        fn.start = check.start;
-	        fn.end = check.end;
-	            
-	        op = $("div.sb-advanced-options");
-	        if (op.is(":visible")) {
-	                
-	            if (fn.ops === undefined) {
-	                fn.ops = {};
-	            }
-	            fn.ops.showFilter = op.find("#sb_show_filter").val();
-	            fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
-	        }
-	            
-	        oTable.fnDraw();
+            //reset timestamp value since input values could have changed.
+            AIRTIME.showbuilder.resetTimestamp();
+
+            fn = oTable.fnSettings().fnServerData;
+            fn.start = check.start;
+            fn.end = check.end;
+
+            op = $("div.sb-advanced-options");
+            if (op.is(":visible")) {
+
+                if (fn.ops === undefined) {
+                    fn.ops = {};
+                }
+                fn.ops.showFilter = op.find("#sb_show_filter").val();
+                fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+            }
+
+            oTable.fnDraw();
         }
     }
 

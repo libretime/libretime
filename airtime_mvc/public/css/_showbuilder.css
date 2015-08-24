@@ -616,9 +616,9 @@ th.library_checkbox {
 }
 
 /* Since the z-index gets applied dynamically */
-#ui-datepicker-div {
-    z-index: 1000 !important;
-}
+/*#ui-datepicker-div {*/
+    /*z-index: 1000 !important;*/
+/*}*/
 
 .datatable .ui-state-highlight, .spl_sortable .ui-state-highlight {
     background: rgba(255, 93, 26, .6);

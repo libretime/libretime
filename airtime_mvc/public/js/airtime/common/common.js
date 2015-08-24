@@ -58,6 +58,11 @@ var i18n_days_short = [
     $.i18n._("Sa")
 ];
 
+var dateStartId = "#sb_date_start",
+    timeStartId = "#sb_time_start",
+    dateEndId = "#sb_date_end",
+    timeEndId = "#sb_time_end";
+
 function getDatatablesStrings(overrideDict) {
 
     var dict = {
@@ -179,6 +184,31 @@ function openPreviewWindow(url, w, h) {
     // Hardcoding this here is kinda gross, but the alternatives aren't much better...
     _preview_window = window.open(url, $.i18n._('Audio Player'), dim + 'scrollbars=yes');
     return false;
+}
+
+function validateTimeRange() {
+    var oRange,
+        inputs = $('.sb-timerange > input'),
+        start, end;
+
+    oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+
+    start = oRange.start;
+    end = oRange.end;
+
+    if (end >= start) {
+        inputs.removeClass('error');
+    } else {
+        if (!inputs.hasClass('error')) {
+            inputs.addClass('error');
+        }
+    }
+
+    return {
+        start: start,
+        end: end,
+        isValid: end >= start
+    };
 }
 
 function pad(number, length) {

@@ -175,6 +175,16 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->start = $start_time;
         $this->view->end = $end_time;
 
+        $form = new Application_Form_ShowBuilder();
+        $form->populate(array(
+                            'sb_date_start' => $start->format("Y-m-d"),
+                            'sb_time_start' => $start->format("H:i"),
+                            'sb_date_end'   => $end->format("Y-m-d"),
+                            'sb_time_end'   => $end->format("H:i")
+                        ));
+
+        $this->view->sb_form = $form;
+
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
 
