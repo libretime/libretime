@@ -25,8 +25,12 @@ class ProvisioningHelper
      */
     public function createAction()
     {
-        $apikey = $_SERVER['PHP_AUTH_USER'];
-        if (!isset($apikey) || $apikey != $this->apikey) {
+        $apikey = "";
+        if (isset($_SERVER['PHP_AUTH_USER']))
+        {
+            $apikey = $_SERVER['PHP_AUTH_USER'];
+        }
+        if ($apikey != $this->apikey) {
             Logging::info("Invalid API Key: $apikey");
             http_response_code(403);
             echo "ERROR: Incorrect API key";
