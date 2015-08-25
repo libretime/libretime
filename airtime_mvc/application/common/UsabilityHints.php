@@ -60,7 +60,7 @@ class Application_Common_UsabilityHints
             }
         } else if (!self::isFutureOrCurrentShowScheduled()) {
             if ($userIsOnCalendarPage) {
-                return _("Click the 'Create New Show' button and fill out the required fields.");
+                return _("Click the 'New Show' button and fill out the required fields.");
             } else {
                 return sprintf(_("It looks like you don't have any shows scheduled. %sCreate a show now%s."),
                     "<a href=\"/Schedule\">",
