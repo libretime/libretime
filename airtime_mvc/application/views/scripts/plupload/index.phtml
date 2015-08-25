@@ -18,8 +18,16 @@
     <div id="plupload_files"></div>	
 </form>
 -->
-<div id="upload_form" class="lib-content ui-widget ui-widget-content block-shadow padded <?php if ($this->quotaLimitReached) { ?> hidden <?php } ?>">
+<div id="upload_form" class="lib-content ui-widget ui-widget-content block-shadow padded wide-panel <?php if ($this->quotaLimitReached) { ?> hidden <?php } ?>">
     <H2>Upload Audio Files</H2>
+    <?php
+    $partitions = Application_Model_Systemstatus::GetDiskInfo();
+    $status = new StdClass;
+    $partitions = $partitions;
+    $disk = $partitions[0];
+    $used = $disk->totalSpace-$disk->totalFreeSpace;
+    $total = $disk->totalSpace;
+    ?>
     <div>
         <form action="/rest/media" method="post" id="add-media-dropzone" class="dropzone dz-clickable">
             <?php echo $this->form->getElement('csrf') ?>
@@ -37,14 +45,24 @@
         </div>
         -->
     </div>
+    <div id="disk_usage" style="position:absolute;width:95%; margin-top:10px; bottom: 10px;">
+        <div style="padding-bottom: 2px;">Storage</div>
+        <div class="disk_usage_progress_bar" style="width:98%"></div>
+        <div class="disk_usage_percent_in_use" style="width:98%"><?php echo sprintf("%01.1f%% ", $used/$total*100) .  _("in use") ?></div>
+        <div class="disk_usage_used" style="width:<?php echo sprintf("%01.1f%%", $used/$total*100) ?>;"></div>
+
+        <div style="margin-top: 17px; font-size: 12px;"><?php echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30)); ?></div>
+
+    </div>
 </div>
+
 <div id="plupload_error">
 	<table></table>
 </div>
 
+<div id="recent_uploads_wrapper" class="lib-content ui-widget ui-widget-content block-shadow wide-panel">
 
-<div id="recent_uploads_wrapper" class="lib-content ui-widget ui-widget-content block-shadow">
-    <div id="recent_uploads" class="padded">
+    <div id="recent_uploads" class="outer-datatable-wrapper padded">
     
             <div id="recent_uploads_filter">
             <form>
@@ -54,8 +72,10 @@
             </form>        
         </div>
         <H2><?php echo _("Recent Uploads")?></H2>
+        <div class="dataTables_scrolling padded">
         <table id="recent_uploads_table" class="datatable lib-content ui-widget ui-widget-content block-shadow alpha-block "
                cellpadding="0" cellspacing="0"></table>
+        </div>
     </div>
     <div style="clear: both;"></div>
 </div>

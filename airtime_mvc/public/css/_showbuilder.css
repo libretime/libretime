@@ -20,25 +20,6 @@
     background-color: #242424;
 }
 
-.wide-panel {
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-flow: column;
-    flex-flow: column;
-
-    /* Account for the left pane */
-    flex: 6 auto;
-    min-width: 555px;
-}
-
-.outer-datatable-wrapper {
-    position: relative;
-    flex: 1;
-}
-
 @media screen and (max-width: 1280px) {
     .wrapper {
         -webkit-flex-flow: column !important;
@@ -144,14 +125,6 @@ div.btn > span {
     bottom: 4px;
     right: 4px;
     left: 4px;
-}
-
-.dataTables_scrolling {
-    position: absolute;
-    bottom: 37px; /* 36 px is the size of the header/footer + 1px because there's no internal border */
-    top: 37px;
-    left: 0;
-    right: 0;
 }
 
 #library_display, #show_builder_table {
