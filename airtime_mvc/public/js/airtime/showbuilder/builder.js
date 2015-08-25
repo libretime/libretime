@@ -342,9 +342,9 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.fnRemove = function(aItems) {
-
         mod.disableUI();
         if (confirm($.i18n._("Delete selected item(s)?"))) {
+            mod.selectNone();
             $.post( baseUrl+"showbuilder/schedule-remove",
                 {"items": aItems, "format": "json"},
                 mod.fnItemCallback
