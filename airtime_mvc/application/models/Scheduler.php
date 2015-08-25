@@ -412,6 +412,8 @@ class Application_Model_Scheduler
 
     private function findNextStartTime($DT, $instanceId)
     {
+        // TODO: there is at least one case where this function creates a filler block with
+        //       an incorrect length; should keep an eye on it
         $sEpoch = $DT->format("U.u");
         $nEpoch = $this->epochNow;
 
@@ -450,55 +452,43 @@ class Application_Model_Scheduler
     private function calculateCrossfades($instanceId)
     {
         Logging::info("adjusting start, end times of scheduled items to account for crossfades show instance #".$instanceId);
-
-        $sql = "SELECT * FROM cc_show_instances ".
-            "WHERE id = {$instanceId}";
-        $instance = Application_Common_Database::prepareAndExecute(
-            $sql, array(), Application_Common_Database::SINGLE);
+        $instance = CcShowInstancesQuery::create()->findPk($instanceId);
 
         if (is_null($instance)) {
             throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
         }
 
-        $itemStartDT = new DateTime($instance["starts"], new DateTimeZone("UTC"));
-        $itemEndDT = null;
+        $schedule = CcScheduleQuery::create()
+            ->filterByDbInstanceId($instanceId)
+            ->orderByDbStarts()
+            ->find($this->con);
 
-        $schedule_sql = "SELECT * FROM cc_schedule ".
-            "WHERE instance_id = {$instanceId} ".
-            "ORDER BY starts";
-        $schedule = Application_Common_Database::prepareAndExecute($schedule_sql);
-
+        $itemStartDT = $instance->getDbStarts(null);
         foreach ($schedule as $item) {
-            $itemEndDT = $this->findEndTime($itemStartDT, $item["clip_length"]);
-
-            $update_sql = "UPDATE cc_schedule SET ".
-                "starts = '{$itemStartDT->format(DEFAULT_MICROTIME_FORMAT)}', ".
-                "ends = '{$itemEndDT->format(DEFAULT_MICROTIME_FORMAT)}' ".
-                "WHERE id = {$item["id"]}";
-            Application_Common_Database::prepareAndExecute(
-                $update_sql, array(), Application_Common_Database::EXECUTE);
-
+            $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+            Logging::info($itemEndDT);
+            $item->setDbStarts($itemStartDT)
+                ->setDbEnds($itemEndDT)
+                ->save($this->con);
             $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
         }
     }
 
     /*
      * @param int $showInstance
-    * @param array $exclude
-    *   ids of sched items to remove from the calulation.
-    *   This function squeezes all items of a show together so that
-    *   there are no gaps between them.
-    */
+     * @param array $exclude
+     *   ids of sched items to remove from the calculation.
+     *   This function squeezes all items of a show together so that
+     *   there are no gaps between them.
+     */
     public function removeGaps($showInstance, $exclude=null)
     {
         Logging::info("removing gaps from show instance #".$showInstance);
 
-        $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
+        $instance = CcShowInstancesQuery::create()->findPk($showInstance, $this->con);
         if (is_null($instance)) {
             throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
         }
-
-        $itemStartDT = $instance->getDbStarts(null);
 
         $schedule = CcScheduleQuery::create()
             ->filterByDbInstanceId($showInstance)
@@ -506,17 +496,14 @@ class Application_Model_Scheduler
             ->orderByDbStarts()
             ->find($this->con);
 
+        $itemStartDT = $instance->getDbStarts(null);
         foreach ($schedule as $item) {
-
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
-
             $item->setDbStarts($itemStartDT)
-                ->setDbEnds($itemEndDT);
-
-            $itemStartDT = $itemEndDT;
+                ->setDbEnds($itemEndDT)
+                ->save($this->con);
+            $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
         }
-
-        $schedule->save($this->con);
     }
 
     /**

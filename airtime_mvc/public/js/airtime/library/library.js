@@ -403,6 +403,7 @@ var AIRTIME = (function(AIRTIME) {
                 //Re-enable the delete button
                 AIRTIME.button.enableButton("btn-group #sb-trash", false);
             });
+        mod.selectNone();
     };
 
     mod.fnDeleteSelectedItems = function() {
@@ -432,13 +433,14 @@ var AIRTIME = (function(AIRTIME) {
             // close the object (playlist/block/webstream)
             // on the right side if it was just deleted
             // from the library
-            if (closeObj) {
-                $.post(baseUrl+"playlist/close-playlist",
-                    {"format": "json", "type": currentObjType},
-                    function(json) {
-                        $("#editor_pane_wrapper").empty().append(json.html);
-                    });
-            }
+
+            //if (closeObj) {
+            //    $.post(baseUrl+"playlist/close-playlist",
+            //        {"format": "json", "type": currentObjType},
+            //        function(json) {
+            //            $("#editor_pane_wrapper").empty().append(json.html);
+            //        });
+            //}
         }
     };
 
