@@ -120,17 +120,43 @@ function configureByCountry(countryCode)
 	});
 }
 
+function promoEligibilityCheck()
+{
+    var newproductid = $("input[type='radio'][name='newproductid']:checked").val();
+
+    // newproductid can be undefined if the client is currently on an old plan
+    // and they just change the billing cycle value without selecting a new plan type.
+    // In this case, let's not check if they are eligible for the promo because
+    // they won't be able to upgrade without selecting a new plan first.
+    if (newproductid === undefined) {
+        return;
+    }
+    var newproductbillingcycle = $("input[type='radio'][name='newproductbillingcycle']:checked").val();
+
+    $.post("/billing/promo-eligibility-check", {"newproductid": newproductid,
+        "newproductbillingcycle": newproductbillingcycle, "csrf_token": $("#csrf").attr('value')})
+        .success(function(data) {
+            if (data.result == true) {
+                $("#promo-plan-eligible").show();
+            } else if ($("#promo-plan-eligible").is(":visible")) {
+                $("#promo-plan-eligible").hide();
+            }
+    });
+}
+
 $(document).ready(function() {
 	
 	configureByCountry($("#country").val());
 	recalculateTotals();
-    
+
     $("input[name='newproductid']").change(function() {
         validatePlan();
         recalculateTotals();
+        promoEligibilityCheck();
     });
     $("input[name='newproductbillingcycle']").change(function() {
     	recalculateTotals();
+        promoEligibilityCheck();
     });
 
     $("#country").change(function() {
@@ -170,13 +196,17 @@ $(document).ready(function() {
 <div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
 <H2><?=_("Account Plans")?></H2>
 <H4><?=_("Upgrade today to get more listeners and storage space!")?></H4>
+<div>
+        <a href="https://www.airtime.pro/pricing#promo-details" target="_blank">
+            <img width="400px" height="133px" class="promo-banner" /></a>
+    </div>
 <div class="pricing-grid">
     <table>
         <tr>
-            <th>Hobbyist</th>
-            <th>Starter</th>
-            <th>Plus</th>
-            <th>Premium</th>
+            <th>Awesome Hobbyist</th>
+            <th>Awesome Starter</th>
+            <th>Awesome Plus</th>
+            <th>Awesome Premium</th>
         </tr>
         <tr>
             <td>1 Stream
@@ -198,24 +228,40 @@ $(document).ready(function() {
             <td>64kbps, 128kbps, and 196kbps Stream Quality
             </td>
         </tr> 
-        <tr>
-            <td>5 Listeners
+        <tr class="august-promo">
+            <td>
+                <span>5 Listeners</span><br>
+                <div>10 Listeners</div>
             </td>
-            <td>40 Listeners per stream
+            <td>
+                <span>40 Listeners per stream</span><br>
+                <div>80 Listeners per stream</div>
             </td>
-            <td>100 Listeners per stream
+            <td>
+                <span>100 Listeners per stream</span><br>
+                <div>200 Listeners per stream</div>
             </td>
-            <td>500 Listeners per stream
+            <td>
+                <span>500 Listeners per stream</span><br>
+                <div>1000 Listeners per stream</div>
             </td>
         </tr> 
-        <tr>
-            <td>2GB Storage
+        <tr class="august-promo">
+            <td>
+                <span>2GB Storage</span><br>
+                <div>4GB Storage</div>
             </td>
-            <td>5GB Storage
+            <td>
+                <span>5GB Storage</span><br>
+                <div>10GB Storage</div>
             </td>
-            <td>30GB Storage
+            <td>
+                <span>30GB Storage</span><br>
+                <div>60GB Storage</div>
             </td>
-            <td>150GB Storage
+            <td>
+                <span>150GB Storage</span><br>
+                <div>300GB Storage</div>
             </td>
         </tr> 
         <tr>
@@ -264,6 +310,8 @@ echo($currentProduct["name"]);
 <h3>Choose a plan:</h3>
  <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
     $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
+
+     <?php echo $form->csrf ?>
     
     <div id="plantype">
         <?php echo $form->newproductid ?>
@@ -274,6 +322,10 @@ echo($currentProduct["name"]);
     <div id="billingcycle_disclaimer">
     Save 15% on annual plans (Hobbyist plan excluded).
     </div>
+     <div class="clearfix"></div>
+     <div id="promo-plan-eligible" style="display:none;">
+         Congratulations, you are eligible for an Awesome Promotional Plan!
+     </div>
     <div class="clearfix"></div>
     <div id="subtotal_box">
         <b>Subtotal:</b><br>

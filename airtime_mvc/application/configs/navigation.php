@@ -48,7 +48,7 @@ $pages = array(
         'resource' => 'preference',
         'action' => 'index',
         'module' => 'default',
-        'controller' => 'preference',
+        'controller' => 'Preference',
         'title' => 'Settings',
         'pages' => array(
             array(

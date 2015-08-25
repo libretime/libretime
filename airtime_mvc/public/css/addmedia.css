@@ -2,18 +2,20 @@
 
 #recent_uploads_wrapper
 {
-	width: 100%;
-	margin-bottom: 40px;
+	position: relative;
+	min-height: 500px;
+
 }
 
 #recent_uploads_table
 {
 	width: 100%;
+	table-layout: fixed;
 }
 
 #recent_uploads_table_wrapper
 {
-	width: 100%;
+	position: absolute;
 }
 
 table#recent_uploads_table td
@@ -263,16 +265,16 @@ table#recent_uploads_table td
 }
 
 .dropzone {
-	min-height: 150px;
+	min-height: 30%;
 	border: 2px solid rgba(0, 0, 0, 0.3);
 	background: #333;
 	padding: 20px 20px;
-	max-height: 300px;
+	max-height: 75%;
 	overflow-y: auto;
 }
 
 .dropzone.dz-clickable {
-	cursor: pointer
+	cursor: pointer;
 }
 
 .dropzone.dz-clickable * {
@@ -303,7 +305,7 @@ table#recent_uploads_table td
 	border: 2px dashed rgba(255, 255, 255, 0.2);
 	border-radius: 15px;
 	display: block;
-	width: 50%;
+	position: relative;
 	background-color: rgba(0, 0, 0, 0.1);
 
 	-webkit-box-shadow: inset 0px -7px 27px -4px rgba(0,0,0,0.55);
@@ -319,7 +321,6 @@ table#recent_uploads_table td
 	display: inline-block;
 	vertical-align: top;
 	margin: 16px;
-	/*min-height: 100px*/
 }
 
 .dropzone .dz-preview:hover {

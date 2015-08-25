@@ -231,7 +231,7 @@ function showHint(h) {
 
 function getUsabilityHint() {
     var pathname = window.location.pathname;
-    $.getJSON("/api/get-usability-hint", {"format": "json", "userPath": pathname}, function(json) {
+    $.getJSON(baseUrl + "api/get-usability-hint", {"format": "json", "userPath": pathname}, function(json) {
         var $hint_div = $('.usability_hint');
         var current_hint = $hint_div.html();
         if (json === "") {
