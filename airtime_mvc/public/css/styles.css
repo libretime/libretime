@@ -3611,6 +3611,7 @@ button.btn-icon-text > i.icon-white {
     margin-right: 10px;
     height: 100%;
     position:relative;
+    max-width: 50%;
 }
 
 #sub-menu-wrapper {
