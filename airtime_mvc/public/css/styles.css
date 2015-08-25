@@ -3605,9 +3605,13 @@ button.btn-icon-text > i.icon-white {
 /* Uploads/Dropzone */
 
 #upload_form {
-    width: 100%;
-    min-width: 555px;
+   /* width: 100%;
+    min-width: 555px;*/
     margin-bottom: 10px;
+    margin-right: 10px;
+    height: 100%;
+    position:relative;
+    max-width: 50%;
 }
 
 #sub-menu-wrapper {
@@ -3756,3 +3760,29 @@ li .ui-state-hover {
     border: 0px;
 }
 
+.wide-panel {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column;
+    flex-flow: column;
+
+    /* Account for the left pane */
+    flex: 6 auto;
+    min-width: 500px;
+}
+
+.outer-datatable-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.dataTables_scrolling {
+    position: absolute;
+    bottom: 37px; /* 36 px is the size of the header/footer + 1px because there's no internal border */
+    top: 37px;
+    left: 0;
+    right: 0;
+}
