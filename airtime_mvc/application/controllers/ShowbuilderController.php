@@ -66,7 +66,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/_showbuilder.css?'.$CC_CONFIG['airtime_version']); // TODO
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/dashboard.css?'.$CC_CONFIG['airtime_version']); // TODO
 
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
         $csrf_element = new Zend_Form_Element_Hidden('csrf');

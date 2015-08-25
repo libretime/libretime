@@ -121,10 +121,15 @@ function findViewportDimensions() {
 }
 
 function highlightMediaTypeSelector(dialog) {
+    var selected;
     if (location.hash === "") {
-        dialog.find("a[href$='#files']").parent().addClass("selected");
+        selected = dialog.find("a[href$='#tracks']");
+    } else {
+        selected = dialog.find("a[href$='"+location.hash+"']")
     }
-    dialog.find("a[href$='"+location.hash+"']").parent().addClass("selected");
+
+    selected.parent().addClass("selected");
+    $("#library_filter").text(selected.text());
 
     // Slightly hacky way of triggering the click event when it's outside of the anchor text
     dialog.find(".media_type_selector").on("click", function() {
@@ -133,11 +138,13 @@ function highlightMediaTypeSelector(dialog) {
     });
 
     $(window).on('hashchange', function() {
+        var selected = dialog.find("a[href$='"+location.hash+"']");
         AIRTIME.library.selectNone();
         dialog.find(".media_type_selector").each(function () {
             $(this).removeClass("selected");
         });
-        dialog.find("a[href$='"+location.hash+"']").parent().addClass("selected");
+        $("#library_filter").text(selected.text());
+        selected.parent().addClass("selected");
         oTable.fnDraw();
     });
 }

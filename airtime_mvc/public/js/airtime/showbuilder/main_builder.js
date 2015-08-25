@@ -118,10 +118,16 @@ AIRTIME = (function(AIRTIME) {
 
     function highlightMediaTypeSelector()
     {
+        $(".media_type_selector:first").addClass("highlight");
+        var selected;
         if (location.hash === "") {
-            $("a[href$='#files']").parent().addClass("selected");
+            selected = $("a[href$='#tracks']");
+        } else {
+            selected = $("a[href$='"+location.hash+"']");
         }
-        $("a[href$='"+location.hash+"']").parent().addClass("selected");
+
+        selected.parent().addClass("selected");
+        $("#library_filter").text(selected.text());
 
         // Slightly hacky way of triggering the click event when it's outside of the anchor text
         $(".media_type_selector").on("click", function() {
@@ -130,7 +136,7 @@ AIRTIME = (function(AIRTIME) {
         });
 
         $(window).on('hashchange', function() {
-
+            var selected = $("a[href$='"+location.hash+"']");
             // If we click Dashboard from one of the media views, do nothing
             if (!location.hash) {
                 return;
@@ -139,8 +145,11 @@ AIRTIME = (function(AIRTIME) {
             $(".media_type_selector").each(function () {
                 $(this).removeClass("selected");
             });
-            $("a[href$='"+location.hash+"']").parent().addClass("selected");
+            selected.parent().addClass("selected");
             oTable.fnDraw();
+            $("#library_filter").text(selected.text());
+            // Highlight the dashboard link
+            $(".media_type_selector:first").addClass("highlight");
         });
     }
 

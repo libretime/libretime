@@ -361,7 +361,7 @@ var AIRTIME = (function(AIRTIME) {
      */
     mod.deselectCurrentPage = function() {
         var $trs = $libTable.find("tr");
-        mod.selectAll($trs);
+        mod.deselectAll($trs);
     };
 
     mod.selectNone = function() {
@@ -599,7 +599,7 @@ var AIRTIME = (function(AIRTIME) {
                 /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "bVisible"    : false                 , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },
                 /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
                 /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
-                /* Context Menu */    { "sTitle" : ""                             , "mData" : null               , "bSortable"   : false                 , "sClass" : "library_actions" , "bSearchable" : false                   , "sWidth" : "16px" }
+                /* Context Menu */    { "sTitle" : ""                             , "mDataProp" : "options"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px", "sClass" : "library_actions" }
             ],
 
             "bProcessing": true,
@@ -678,6 +678,7 @@ var AIRTIME = (function(AIRTIME) {
                  */
                 var advSearchFields = $("div#advanced_search").children(':visible');
                 var advSearchValid = validateAdvancedSearch(advSearchFields);
+                advSearchFields.val("TEST");
                 var type;
                 aoData.push( { name: "format", value: "json"} );
                 aoData.push( { name: "advSearch", value: advSearchValid} );

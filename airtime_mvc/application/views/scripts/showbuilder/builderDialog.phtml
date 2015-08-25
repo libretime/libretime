@@ -1,29 +1,28 @@
-<div>
-    <!-- jQuery UI changes the styling on the outermost div; use a blank div so as not to break the .wrapper styling-->
+<div><!-- jQuery UI changes the styling on the outermost div; use a blank div so as not to break the .wrapper styling-->
     <div class="wrapper">
-        <div>
+        <div id="media_selector_wrapper">
             <div class="media_type_selector dashboard_sub_nav" data-selection-id="1">
-                <a href="#files">
+                <a href="#tracks">
                     <i class='icon-music icon-white'></i>
-                    <span class="selector-name hidden"><?php echo _("Tracks") ?></span>
+                    <span class="selector-name"><?php echo _("Tracks") ?></span>
                 </a>
             </div>
             <div class="media_type_selector dashboard_sub_nav" data-selection-id="2">
                 <a href="#playlists">
                     <i class='icon-list icon-white'></i>
-                    <span class="selector-name hidden"><?php echo _("Playlists") ?></span>
+                    <span class="selector-name"><?php echo _("Playlists") ?></span>
                 </a>
             </div>
             <div class="media_type_selector dashboard_sub_nav" data-selection-id="3">
                 <a href="#smart-blocks">
                     <i class='icon-time icon-white'></i>
-                    <span class="selector-name hidden"><?php echo _("Smart Blocks") ?></span>
+                    <span class="selector-name"><?php echo _("Smart Blocks") ?></span>
                 </a>
             </div>
             <div class="media_type_selector dashboard_sub_nav" data-selection-id="4">
                 <a href="#webstreams">
                     <i class='icon-random icon-white'></i>
-                    <span class="selector-name hidden"><?php echo _("Webstreams") ?></span>
+                    <span class="selector-name"><?php echo _("Webstreams") ?></span>
                 </a>
             </div>
         </div>
@@ -31,7 +30,7 @@
 
         <div id="library_content" class="lib-content tabs content-pane wide-panel">
             <div>
-                <h2 id="library_title">Library</h2>
+                <h2 id="library_title"><?php echo _("Dashboard")." - " ?><span id="library_filter"></span></h2>
             </div>
             <div class="panel-header">
                 <div id="advanced-options" class="btn-group">

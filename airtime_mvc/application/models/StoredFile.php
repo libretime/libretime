@@ -899,6 +899,7 @@ SQL;
             // any data from the db for these and datatables will complain
             $row['checkbox'] = "";
             $row['image'] = "";
+            $row['options'] = "";
 
             $type = substr($row['ftype'], 0, 2);
             $row['tr_id'] = "{$type}_{$row['id']}";

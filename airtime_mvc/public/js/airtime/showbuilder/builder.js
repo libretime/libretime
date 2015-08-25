@@ -198,7 +198,6 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.checkToolBarIcons = function() {
-
         //library may not be on the page.
         if (AIRTIME.library !== undefined) {
             AIRTIME.library.checkAddButton();
@@ -332,7 +331,6 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.fnMove = function(aSelect, aAfter) {
-
         mod.disableUI();
 
         $.post(baseUrl+"showbuilder/schedule-move",
@@ -757,6 +755,7 @@ var AIRTIME = (function(AIRTIME){
                         tr.addClass(SB_SELECTED_CLASS);
                         tr.find("input[type='checkbox']").prop("checked", true);
                     });
+                    mod.checkToolBarIcons();
                 }
             },
 
@@ -874,11 +873,12 @@ var AIRTIME = (function(AIRTIME){
                 $previouslySelected = undefined;
                 tr.removeClass(SB_SELECTED_CLASS);
                 tr.find(".sb-checkbox > input").prop('checked', false);
-                mod.checkToolBarIcons();
             } else {
+                tr.addClass(SB_SELECTED_CLASS);
                 tr.find(".sb-checkbox > input").prop('checked', true);
-                mod.checkToolBarIcons();
             }
+
+            mod.checkToolBarIcons();
             selectedRows = $("." + SB_SELECTED_CLASS);
         });
 
@@ -889,14 +889,14 @@ var AIRTIME = (function(AIRTIME){
                 $previouslySelected = undefined;
                 tr.removeClass(SB_SELECTED_CLASS);
                 tr.find(".sb-checkbox > input").prop('checked', false);
-                mod.checkToolBarIcons();
             } else if (!(e.shiftKey || e.ctrlKey)) {
                 mod.selectNone();
                 tr.addClass(SB_SELECTED_CLASS);
                 tr.find(".sb-checkbox > input").prop('checked', true);
                 $previouslySelected = tr;
-                mod.checkToolBarIcons();
             }
+
+            mod.checkToolBarIcons();
             selectedRows = $("." + SB_SELECTED_CLASS);
         });
 

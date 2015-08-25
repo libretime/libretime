@@ -36,7 +36,7 @@ html, body {
 
 h2 {
     color: #efefef;
-    font-size: 2.1em;
+    font-size: 20px;
     font-weight: normal;
     margin: 0;
     padding: 0 0 10px;
@@ -3498,8 +3498,6 @@ button.btn-icon-text > i.icon-white {
     font-size: 16px;
     font-weight: 400;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    /*margin: 20px 20px 0 5px;*/
-    /*padding: 10px 0px 10px 0px;*/
     padding: 0;
 
     -webkit-transition: color 0.1s linear;
@@ -3508,14 +3506,43 @@ button.btn-icon-text > i.icon-white {
     transition: color 0.1s linear;
 }
 
+#media_selector_wrapper {
+    flex: 0 0 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+}
+
+.ui-dialog-content .media_type_selector {
+    padding-left: 0;
+    flex: 1 auto;
+}
+
+.ui-dialog-content .media_type_selector.selected,
+.ui-dialog-content .media_type_selector.selected a {
+    border: none;
+    border-bottom: 1px solid #FF5D1A;
+}
+
 #nav i, .media_type_selector i {
     margin-right: 10px;
+}
+
+.media_type_selector.highlight,
+.media_type_selector.highlight a {
+    color: #fff;
+    background-color: #444;
+    border-right: 1px solid #FF5D1A;
 }
 
 .media_type_selector.selected, .media_type_selector.selected a {
     color: #fff;
     background-color: #444;
-    border-right: 1px solid #FF5D1A;
+    border-right: 1px solid #1ADEFF;
     -webkit-transition: color 0.1s linear;
     -moz-transition: color 0.1s linear;
     -o-transition: color 0.1s linear;
