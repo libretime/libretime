@@ -1441,7 +1441,8 @@ class Application_Model_Preference
     // SAAS-876 - Toggle indicating whether user is using custom stream settings
 
     public static function getUsingCustomStreamSettings() {
-        return self::getValue("using_custom_stream_settings");
+        $val = self::getValue("using_custom_stream_settings");
+        return empty($val) ? false : $val;
     }
 
     public static function setUsingCustomStreamSettings($value) {

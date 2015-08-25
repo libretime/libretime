@@ -1019,9 +1019,11 @@ SQL;
                 $media_id = $item['file_id'];
                 $storedFile = Application_Model_StoredFile::RecallById($media_id);
                 $file = $storedFile->getPropelOrm();
-                $uri = $file->getAbsoluteFilePath();
+                //Even local files are downloaded through the REST API in case we need to transform
+                //their filenames (eg. in the case of a bad file extension, because Liquidsoap won't play them)
+                $uri = Application_Common_HTTPHelper::getStationUrl() . "/rest/media/" . $media_id;
+                //$uri = $file->getAbsoluteFilePath();
                 
-                $baseUrl = Application_Common_OsPath::getBaseDir();
                 $filesize = $file->getFileSize();
                 self::createFileScheduleEvent($data, $item, $media_id, $uri, $filesize);
             } 
