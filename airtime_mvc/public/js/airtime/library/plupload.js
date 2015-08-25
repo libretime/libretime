@@ -14,10 +14,11 @@ $(document).ready(function() {
 		Object.freeze(self.IMPORT_STATUS_CODES);
 	}
 
+	console.log(acceptedMimeTypes.join());
 	Dropzone.options.addMediaDropzone = {
 		url:'/rest/media',
 		//clickable: false,
-		acceptedFiles: acceptedMimeTypes.join(),
+		acceptedFiles: acceptedMimeTypes.join() + ",.flac",
 		init: function () {
 			this.on("sending", function (file, xhr, data) {
 				data.append("csrf_token", $("#csrf").val());
