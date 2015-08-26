@@ -60,7 +60,7 @@
 	table-layout: fixed;
 	margin-top: 20px;
 	margin-bottom: 20px;
-	box-shadow: 0px 5px 5px rgba(0,0,0,0.5);
+	/*box-shadow: 0px 5px 5px rgba(0,0,0,0.5);*/
 	color: #000;
 }
 
@@ -99,13 +99,13 @@
 
 .pricing-grid th
 {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     border: 0px;
 	color: #CDCDCD;
-	background-color:#ff5d1a;
-	background: -moz-linear-gradient(top, #dd4202 0, #ff5d1a 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #dd4202), color-stop(100%, #ff5d1a));
+	background-color:#5E5E5E;
+	background: #5E5E5E;
+	border-top: 1px solid #9d9d9d;
+	/*background: -moz-linear-gradient(top, #dd4202 0, #ff5d1a 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #dd4202), color-stop(100%, #ff5d1a));*/
 }
 
 
