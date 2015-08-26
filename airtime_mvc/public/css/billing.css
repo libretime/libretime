@@ -8,7 +8,7 @@
 
 .billing-panel h3
 {
-	/*color: #222;*/
+	padding-left: 0px;
 }
 
 .billing-panel h4
@@ -276,4 +276,14 @@
 
 .billing-details-checkbox {
 	width: auto;
+}
+
+#current_plan {
+	padding-top: 10px;
+	font-size: 16px;
+}
+
+#current_plan span {
+	color: #ff611f;
+	font-weight: bold;
 }

@@ -299,7 +299,7 @@ $(document).ready(function() {
 <!-- 
 <p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_("View Plans")?></a> (Opens in a new window)</p>
  -->
-<p id="current_plan"><b>Current Plan:</b> 
+<p id="current_plan"><span>Your Current Plan:</span>
 <?php 
 $currentProduct = Billing::getClientCurrentAirtimeProduct();
 echo($currentProduct["name"]);
