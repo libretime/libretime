@@ -3,7 +3,7 @@
 #recent_uploads_wrapper
 {
 	position: relative;
-	min-height: 500px;
+	/*min-height: 500px;*/
 
 }
 
@@ -16,6 +16,8 @@
 #recent_uploads_table_wrapper
 {
 	position: absolute;
+	left: 8px;
+	right: 8px;
 }
 
 table#recent_uploads_table td

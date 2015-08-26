@@ -3642,7 +3642,7 @@ button.btn-icon-text > i.icon-white {
 #upload_form {
    /* width: 100%;
     min-width: 555px;*/
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     margin-right: 10px;
     height: 100%;
     position:relative;
@@ -3739,6 +3739,24 @@ hr {
     width:16px !important;
     display:inline;
     margin-right:4px
+}
+
+#uploads_disk_usage {
+    position:absolute;
+    left: 8px;
+    right: 8px;
+
+    bottom: 8px;
+    margin-top: 8px;
+
+    border-radius: 1px;
+    font-size: 14px;
+    text-align: center;
+    padding: 5px;
+    background-color: #242424;
+    border: 1px solid #5b5b5b;
+    color: #ccc;
+
 }
 
 #disk_usage {
