@@ -359,7 +359,7 @@ var AIRTIME = (function(AIRTIME){
             //remove any newlines if user somehow snuck them in (easy to do if dragging/dropping text)
             nameElement.text(nameElement.text().replace("\n", ""));
 
-        var name = $pl.find(".playlist_name_display").text();
+        var name = $pl.find(".playlist_name_display").val();
         $(".nav.nav-tabs .active a > span.tab-name").text(name);
     }
 
@@ -449,7 +449,7 @@ var AIRTIME = (function(AIRTIME){
             pane = $(".editor_pane_wrapper:last"),
             name = json.type == "md" ?  // file
                 pane.append(json.html).find("#track_title").val() + $.i18n._(" - Metadata Editor")
-                : pane.append(json.html).find(".playlist_name_display").text(),
+                : pane.append(json.html).find(".playlist_name_display").val(),
             tab =
                 "<li data-tab-id='" + $tabCount + "' data-tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
                     "<a href='#'><span class='tab-name'></span>" +
@@ -862,7 +862,7 @@ var AIRTIME = (function(AIRTIME){
             var description = $pl.find("#description").val();
             var streamurl = $pl.find("#streamurl-element input").val();
             var length = $pl.find("#streamlength-element input").val();
-            var name = $pl.find(".playlist_name_display").text();
+            var name = $pl.find(".playlist_name_display").val();
 
             //hide any previous errors (if any)
             $(".side_playlist.active-tab .errors").empty().hide();
@@ -941,10 +941,14 @@ var AIRTIME = (function(AIRTIME){
             // We also need to run the draw callback to update how dragged items are drawn
             AIRTIME.library.fnDrawCallback();
 
-            var name = $pl.find('.playlist_name_display').text().trim();
+            var playlistNameElem = $pl.find('.playlist_name_display');
+            var name = "";
+            if (playlistNameElem.val() !== undefined) {
+                name = playlistNameElem.val().trim();
+            }
 
-            if ((name == "Untitled Playlist"
-                || name == "Untitled Smart Block")
+            if ((name == $.i18n._("Untitled Playlist")
+                || name == $.i18n._("Untitled Smart Block"))
                 && $pl.find(".spl_sortable .spl_empty").length == 1) {
                 mod.fnDelete(undefined, tabId);
             } else {
@@ -969,7 +973,7 @@ var AIRTIME = (function(AIRTIME){
              * Playlists: get name, description
              */
             var criteria = $pl.find('form').serializeArray(),
-                block_name = $pl.find('.playlist_name_display').text(),
+                block_name = $pl.find('.playlist_name_display').val(),
                 block_desc = $pl.find('textarea[name="description"]').val(),
                 save_action = baseUrl+'playlist/save',
                 obj_id = $pl.find(".obj_id").val(),

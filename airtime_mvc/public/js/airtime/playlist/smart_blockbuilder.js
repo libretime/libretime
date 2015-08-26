@@ -351,7 +351,7 @@ function setupUI() {
      */
     var sortable = activeTab.find('.spl_sortable'),
         plContents = sortable.children(),
-        shuffleButton = activeTab.find('.sp-button, #pl-bl-clear-content');
+        shuffleButton = activeTab.find('button[name="shuffle_button"], #pl-bl-clear-content');
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {

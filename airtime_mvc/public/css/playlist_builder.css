@@ -28,12 +28,18 @@
     height: 28px;
     margin: 0 7px 20px 0;
 }*/
-.side_playlist textarea {
+
+.playlist_editor dt {
+    float: left;
+}
+
+.playlist_editor input, .playlist_editor textarea {
     width: 200px;
+    box-sizing: border-box;
 }
 
 .side_playlist textarea {
-    height: 100px;
+    height: 3.2em;
 }
 
 .spl_sortable {
@@ -157,17 +163,22 @@
 
 .side_playlist h4 {
     font-size: 15px;
-    margin: 8px 0 10px 0;
+    margin: 3px 8px 0px 0;
     padding: 0;
     color: #4f4f4f;
     font-weight: normal;
-    clear: both;
-    float: left;
+    float: right;
 }
 
 .side_playlist h3+h4 {
     margin: 0 0 11px 0;
 }
+
+.btn-toolbar {
+    margin: 0;
+    padding: 5px;
+}
+
 
 .spl_sortable div.big_play {
     display: block;
@@ -458,13 +469,6 @@
     padding: 0;
 }
 
-.side_playlist .zend_form dt,.side_playlist .zend_form dd {
-    display: block;
-    float: none;
-    margin: 4px 0 0;
-    padding: 0;
-    width: 100%;
-}
 
 .side_playlist .zend_form dd.buttons {
     margin-top: 8px;
@@ -475,17 +479,37 @@
     margin: 0 0 0 10px;
 }
 
-.side_playlist .zend_form dt {
-    color: #5B5B5B;
-    font-weight: bold;
-    margin: 9px 0 0;
-    padding: 0 2px;
-}
-
 .side_playlist .zend_form dt:first-child {
     margin-top: 0;
 }
 
+.side_playlist .zend_form dt {
+    width: 170px;
+}
+
+.side_playlist .zend_form dd {
+    margin-bottom: 10px;
+}
+.search-criteria dt label.sp_label
+{
+    width: 150px;
+}
+
+.search-criteria dt {
+    float: left;
+    clear: left;
+    width: 170px;
+}
+
+.search-criteria dd {
+    margin: 0px;
+}
+
+#sp_criteria-element {
+    clear: both;
+}
+
+/*
 .side_playlist .zend_form dd textarea {
     background-color: #dddddd;
     border: 1px solid #5B5B5B;
@@ -496,8 +520,7 @@
     -moz-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
     box-shadow: inset 0px 2px 2px rgba(0, 0, 0, 0.1);
-    width: 99.7%;
-}
+}*/
 
 .side_playlist fieldset {
     border: 1px solid #9a9a9a;
@@ -526,9 +549,6 @@ fieldset>legend {
     background-image: url(redmond/images/ui-icons_454545_256x240.png);
 }
 
-.side_playlist .zend_form input,.side_playlist .zend_form textarea {
-    width: auto;
-}
 
 #fieldset-metadate_change {
     clear: both;

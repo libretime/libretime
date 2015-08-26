@@ -109,7 +109,7 @@ class Billing
         $result = self::makeRequest($credentials["url"], $query_string);
 
         //XXX: Debugging / local testing
-        if ($_SERVER['SERVER_NAME'] == "airtime.localhost") {
+        if ($_SERVER['SERVER_NAME'] == "localhost") {
             $_SERVER['SERVER_NAME'] = "bananas.airtime.pro";
         }
 

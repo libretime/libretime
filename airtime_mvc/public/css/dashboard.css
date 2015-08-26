@@ -385,6 +385,7 @@ li.ui-state-default {
     font-size: 14px;
     line-height: 24px;
     font-weight: normal;
+    text-align: right;
 }
 
 .sb-content fieldset label {
@@ -415,6 +416,8 @@ li.ui-state-default {
     overflow-x: hidden;
     width: 100%;
     flex: 1 0 100%;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .clearfix:after, .side_playlist li:after {
@@ -425,7 +428,7 @@ li.ui-state-default {
     margin: 0;
 }
 
-.spl-no-margin > div:last-child {
+.spl-no-margin > div:first-child {
     margin-left: 0 !important;
 }
 
@@ -437,7 +440,11 @@ li.ui-state-default {
 
     margin: 4px 0;
     min-height: 0;
-    padding: 0;
+    padding: 5px;
+    border: 1px solid #444;
+    border-radius: 3px;
+    box-sizing: border-box;
+    background-color: #111;
 }
 
 .spl_sortable .list-item-container {
@@ -447,7 +454,8 @@ li.ui-state-default {
 .spl_empty {
     width: 100%;
 
-    color: white;
+    margin-top: 100px;
+    color: #efefef;
     text-align: center;
 
     font-size: 20px;

@@ -127,9 +127,9 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
     {
         if (!isset($this->sortOptions)) {
             $this->sortOptions = array(
-                "random"   => _("random"),
-                "newest" => _("newest"),
-                "oldest"   => _("oldest")
+                "random"   => _("Randomly"),
+                "newest" => _("Newest"),
+                "oldest"   => _("Oldest")
             );
         }
         return $this->sortOptions;
@@ -176,7 +176,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         }
 
         $spType = new Zend_Form_Element_Radio('sp_type');
-        $spType->setLabel(_('Set smart block type:'))
+        $spType->setLabel(_('Type:'))
                ->setDecorators(array('viewHelper'))
                ->setMultiOptions(array(
                     'static' => _('Static'),
@@ -294,7 +294,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $repeatTracks = new Zend_Form_Element_Checkbox('sp_repeat_tracks');
         $repeatTracks->setDecorators(array('viewHelper'))
-                     ->setLabel(_('Allow Repeat Tracks:'));
+                     ->setLabel(_('Allow Repeated Tracks:'));
         if (isset($storedCrit["repeat_tracks"])) {
                 $repeatTracks->setChecked($storedCrit["repeat_tracks"]["value"] == 1?true:false);
         }
@@ -303,6 +303,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
         $sort = new Zend_Form_Element_Select('sp_sort_options');
         $sort->setAttrib('class', 'sp_input_select')
               ->setDecorators(array('viewHelper'))
+              ->setLabel(_("Sort Tracks:"))
               ->setMultiOptions($this->getSortOptions());
         if (isset($storedCrit["sort"])) {
             $sort->setValue($storedCrit["sort"]["value"]);
@@ -320,7 +321,7 @@ class Application_Form_SmartBlockCriteria extends Zend_Form_SubForm
 
         $limitValue = new Zend_Form_Element_Text('sp_limit_value');
         $limitValue->setAttrib('class', 'sp_input_text_limit')
-                   ->setLabel(_('Limit to'))
+                   ->setLabel(_('Limit to:'))
                    ->setDecorators(array('viewHelper'));
         $this->addElement($limitValue);
         if (isset($storedCrit["limit"])) {
