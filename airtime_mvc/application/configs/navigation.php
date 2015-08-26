@@ -168,11 +168,6 @@ $pages = array(
                 'target'     => "_blank"
             ),
             array(
-                'label'      => _(sprintf("About %s", PRODUCT_NAME)),
-                'uri'        => ABOUT_AIRTIME_URL,
-                'target'     => "_blank"
-            ),
-            array(
                 'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
                 'uri'        => AIRTIME_TRANSIFEX_URL,
                 'target'     => "_blank"
