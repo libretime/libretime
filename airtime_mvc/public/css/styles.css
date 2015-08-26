@@ -1203,7 +1203,7 @@ input[type="checkbox"] {
 }
 
 #pref_form dt, #pref_form dd,
-#pref_form textarea {
+#pref_form textarea, #clientdetails_form dd {
     display:block;
     float:none;
     margin-left:0;

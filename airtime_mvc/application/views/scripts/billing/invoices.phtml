@@ -1,4 +1,4 @@
-<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
+<div class="ui-widget prefpanel clearfix padded-strong billing-panel">
 <H2>Invoices</H2>
 <?php 
 $topTextClass = "";
@@ -8,11 +8,11 @@ if (array_key_exists("planupdated", $_GET))
     $topTextClass = "status-good";
 }
 else {
-    $topText = _pro("Tip: To pay an invoice, click \"View Invoice\"<br> and look for the \"Checkout\" button.");
+    $topText = _pro("Tip: To pay an invoice, click \"View Invoice\" and look for the \"Checkout\" button.");
 }
     
 ?>
-<p style="text-align: center; padding-left: 20px;" class="<?=$topTextClass?>"><?=$topText?></p>
+<p class="<?=$topTextClass?>"><?=$topText?></p>
 <table id="invoices_table">
     <tr class="header">
         <th>Date Issued</th>

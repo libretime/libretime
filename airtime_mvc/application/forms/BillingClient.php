@@ -162,7 +162,7 @@ class Application_Form_BillingClient extends Zend_Form
         $subscribe->setLabel(_('Subscribe to Sourcefabric newsletter'))
             ->setValue($subscribevalue)
             ->setBelongsTo('customfields')
-            ->setAttrib('class', 'input_text')
+            ->setAttrib('class', 'billing-details-checkbox')
             ->setRequired(true)
             ->addValidator($notEmptyValidator)
             ->addFilter('StringTrim');

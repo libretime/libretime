@@ -1,9 +1,9 @@
 <?php 
-$this->form->getElement("submit")->setAttrib("class", "right-align");
+$this->form->getElement("submit")->setAttrib("class", "btn right-floated");
 $this->form->getElement("country")->setAttrib("class", "right-align");
 $this->form->getElement("securityqid")->setAttrib("class", "right-align");
 ?>
-<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
+<div class="ui-widget prefpanel simple-formblock clearfix padded-strong">
 <H2>Billing Account Details</H2>
 <?php if (isset($this->errorMessage)) {?>
 <div class="errors"><?php echo $this->errorMessage ?></div>

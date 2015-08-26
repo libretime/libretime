@@ -193,7 +193,7 @@ $(document).ready(function() {
 });
 </script>
 
-<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
+<div class="ui-widget prefpanel clearfix padded-strong billing-panel">
 <H2><?=_("Account Plans")?></H2>
 <H4><?=_("Upgrade today to get more listeners and storage space!")?></H4>
 <div>
@@ -215,7 +215,7 @@ $(document).ready(function() {
             </td>
             <td>2 Streams
             </td>
-            <td>3 Streams
+            <td class="last-column">3 Streams
             </td>
         </tr> 
         <tr>
@@ -225,7 +225,7 @@ $(document).ready(function() {
             </td>
             <td>64kbps and 196kbps Stream Quality
             </td>
-            <td>64kbps, 128kbps, and 196kbps Stream Quality
+            <td class="last-column">64kbps, 128kbps, and 196kbps Stream Quality
             </td>
         </tr> 
         <tr class="august-promo">
@@ -241,7 +241,7 @@ $(document).ready(function() {
                 <span>100 Listeners per stream</span><br>
                 <div>200 Listeners per stream</div>
             </td>
-            <td>
+            <td class="last-column">
                 <span>500 Listeners per stream</span><br>
                 <div>1000 Listeners per stream</div>
             </td>
@@ -259,7 +259,7 @@ $(document).ready(function() {
                 <span>30GB Storage</span><br>
                 <div>60GB Storage</div>
             </td>
-            <td>
+            <td class="last-column">
                 <span>150GB Storage</span><br>
                 <div>300GB Storage</div>
             </td>
@@ -271,7 +271,7 @@ $(document).ready(function() {
             </td>
             <td>Live Chat, Ticket, Email, Forum Support
             </td>
-            <td>Live Chat, Ticket, Email, Forum Support
+            <td class="last-column">Live Chat, Ticket, Email, Forum Support
             </td>
         </tr> 
         <tr>
@@ -281,17 +281,17 @@ $(document).ready(function() {
             </td>
             <td>Save 15% if paid annually
             </td>
-            <td>Save 15% if paid annually
+            <td class="last-column">Save 15% if paid annually
             </td>
         </tr> 
-        <tr class="price">
+        <tr class="price last-row">
             <td id="hobbyist_grid_price">
             </td>
             <td id="starter_grid_price">
             </td>
             <td id="plus_grid_price">
             </td>
-            <td id="premium_grid_price">
+            <td class="last-column" id="premium_grid_price">
             </td>
         </tr> 
     </table>
@@ -416,7 +416,7 @@ echo($currentProduct["name"]);
         <b>Total:</b> <span id="total"></span>
     </div>
     
-    <input type="submit" value="Submit Order" id="atpro_submitorder"></input>
+    <input type="submit" class="btn right-floated" value="Submit Order" id="atpro_submitorder"></input>
     <div class="clearfix"></div>
 </form>
 </div>
