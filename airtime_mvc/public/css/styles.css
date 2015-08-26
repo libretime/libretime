@@ -3525,6 +3525,10 @@ button.btn-icon-text > i.icon-white {
     flex-flow: row wrap;
 }
 
+.ui-dialog-content input {
+    z-index: 1003;
+}
+
 .ui-dialog-content .media_type_selector {
     padding-left: 0;
     flex: 1 auto;
