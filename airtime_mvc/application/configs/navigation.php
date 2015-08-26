@@ -111,22 +111,22 @@ $pages = array(
     array(
         'label' =>  "<i class='icon-briefcase icon-white'></i>"._('Billing'),
         'controller' => 'billing',
-        'action' => 'client',
+        'action' => 'upgrade',
         'resource' => 'billing',
         'title' => 'Billing',
         'pages' => array(
-            array(
-                'label' => _('Account Details'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'client',
-                'resource' => 'billing'
-            ),
             array(
                 'label' => _('Account Plans'),
                 'module' => 'default',
                 'controller' => 'billing',
                 'action' => 'upgrade',
+                'resource' => 'billing'
+            ),
+            array(
+                'label' => _('Account Details'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'client',
                 'resource' => 'billing'
             ),
             array(
