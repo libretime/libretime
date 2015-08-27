@@ -22,7 +22,7 @@ class WhmcsLoginController extends Zend_Controller_Action
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', 'en_CA'));
         if (Zend_Auth::getInstance()->hasIdentity())
         {
-            $this->_redirect('Showbuilder');
+            $this->_redirect('showbuilder');
         }
         
         $authAdapter = new WHMCS_Auth_Adapter($username, $email, $password);
@@ -58,7 +58,7 @@ class WhmcsLoginController extends Zend_Controller_Action
             //$locale = $form->getValue('locale');
             //Application_Model_Preference::SetUserLocale($locale);
 
-            $this->_redirect('Showbuilder');
+            $this->_redirect('showbuilder');
         }     
         else {
             echo("Sorry, that username or password was incorrect.");

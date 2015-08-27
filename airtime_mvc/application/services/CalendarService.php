@@ -57,7 +57,8 @@ class Application_Service_CalendarService
                 }
             } else {
                 $menu["content"] = array(
-                    "name"=> _("Show Content"),
+                    // "name"=> _("Show Content"),
+                    "name"=> _("View"),
                     "icon" => "overview",
                     "url" => $baseUrl."schedule/show-content-dialog");
             }
@@ -76,22 +77,10 @@ class Application_Service_CalendarService
                 if (!$showIsLinked || ($showIsLinked  && $currentShowId != $this->ccShow->getDbId())) {
 
                     $menu["schedule"] = array(
-                        "name"=> _("Add / Remove Content"),
+                        // "name"=> _("Add / Remove Content"),
+                        "name" => _("Schedule Show"),
                         "icon" => "add-remove-content",
                         "url" => $baseUrl."showbuilder/builder-dialog/");
-                }
-            }
-            
-            //user can remove all content if the show has not started
-            if ($now < $start && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded() ) {
-                //if the show is not linked OR if the show is linked AND not the current playing show
-                //the user can remove all content
-                if (!$showIsLinked || ($showIsLinked  && $currentShowId != $this->ccShow->getDbId())) {
-
-                   $menu["clear"] = array(
-                        "name"=> _("Remove All Content"),
-                        "icon" => "remove-all-content",
-                        "url" => $baseUrl."schedule/clear-show");
                 }
             }
 
@@ -100,21 +89,40 @@ class Application_Service_CalendarService
             if (!$this->ccShowInstance->isRecorded()) {
 
                 $menu["content"] = array(
-                    "name"=> _("Show Content"),
+                    // "name"=> _("Show Content"),
+                    "name"=> _("View"),
                     "icon" => "overview",
                     "url" => $baseUrl."schedule/show-content-dialog");
             }
 
+            //user can remove all content if the show has not started
+            if ($now < $start && ($isAdminOrPM || $isHostOfShow) && !$this->ccShowInstance->isRecorded() ) {
+                //if the show is not linked OR if the show is linked AND not the current playing show
+                //the user can remove all content
+                if (!$showIsLinked || ($showIsLinked  && $currentShowId != $this->ccShow->getDbId())) {
+
+                   $menu["clear"] = array(
+                       // "name"=> _("Remove All Content"),
+                       "name"=> _("Clear Show"),
+                       "icon" => "remove-all-content",
+                       "url" => $baseUrl."schedule/clear-show");
+                }
+            }
+
             //show is currently playing and user is admin
             if ($start <= $now && $now < $end && $isAdminOrPM) {
+                // Menu separator
+                $menu["sep1"] = "-----------";
 
                 if ($this->ccShowInstance->isRecorded()) {
                     $menu["cancel_recorded"] = array(
-                        "name"=> _("Cancel Current Show"),
+                        // "name"=> _("Cancel Current Show"),
+                        "name"=> _("Cancel Show"),
                         "icon" => "delete");
                 } else {
                     $menu["cancel"] = array(
-                        "name"=> _("Cancel Current Show"),
+                        // "name"=> _("Cancel Current Show"),
+                        "name"=> _("Cancel Show"),
                         "icon" => "delete");
                 }
             }
@@ -128,6 +136,9 @@ class Application_Service_CalendarService
             }
 
             if (!$this->ccShowInstance->isRebroadcast() && $isAdminOrPM) {
+                // Menu separator
+                $menu["sep2"] = "-----------";
+
                 if ($isRepeating) {
                     if ($populateInstance) {
                         $menu["edit"] = array(
@@ -165,6 +176,9 @@ class Application_Service_CalendarService
 
             //show hasn't started yet and user is admin
             if ($now < $start && $isAdminOrPM) {
+                // Menu separator
+                $menu["sep3"] = "-----------";
+
                 //show is repeating so give user the option to delete all
                 //repeating instances or just the one
                 if ($isRepeating) {
