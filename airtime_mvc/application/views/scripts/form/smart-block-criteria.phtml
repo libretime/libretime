@@ -65,7 +65,9 @@
 
         <dt><label><?php echo(_("Search Criteria:"));?></label></dt>
         <dd id='sp_criteria-element' class='criteria-element'>
-        <?php for ($i = 0; $i < $this->criteriasLength; $i++) {
+            <a class='btn btn-small' id='criteria_add'><i class='icon-white icon-plus'></i><?php echo(_("New Criteria")); ?></a>
+
+            <?php for ($i = 0; $i < $this->criteriasLength; $i++) {
         // modRowMap holds the number of modifier rows for each criteria element
         // i.e. if we have 'Album contains 1' and 'Album contains 2' the modRowMap
         // for Album is 2
@@ -93,16 +95,17 @@
                 <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
+                <a class='btn btn-small' id='modifier_add_<?php echo $i ?>'>
+                    <i class='icon-white icon-plus'></i><?php echo(_("New Modifier")); ?>
+                </a>
+
                 <span class='sp_text_font' id="extra_criteria" <?php echo $this->element->getElement("sp_criteria_extra_".$i."_".$j)->getAttrib("disabled") == "disabled"?'style="display:none;"':""?>><?php echo _(" to "); ?><?php echo $this->element->getElement('sp_criteria_extra_'.$i."_".$j) ?></span>
                 <a style='margin-right:3px' class='btn btn-small btn-danger' id='criteria_remove_<?php echo $i ?>'>
-                    <i class='icon-white icon-remove'></i>
+                    <i class='icon-white icon-remove spl-no-r-margin'></i>
                 </a>
                 <span class='db-logic-label' <?php if ($nextDisabled) echo "style='display:none'"?>>
                     <?php echo $logicLabel;?>
                 </span>
-                <a class='btn btn-small' id='modifier_add_<?php echo $i ?>'>
-                    <i class='icon-white icon-plus'></i>
-                </a>
 
                 <?php if($this->element->getElement("sp_criteria_field_".$i."_".$j)->hasErrors()) : ?>
                     <?php foreach($this->element->getElement("sp_criteria_field_".$i."_".$j)->getMessages() as $error): ?>

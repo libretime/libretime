@@ -140,6 +140,9 @@ select {
 #current-user-container {
     padding-bottom: 20px;
 }
+#current-user-container p {
+    font-size: 1.0rem;
+}
 
 .edit-current-user {
     width: 365px;
@@ -538,7 +541,7 @@ fieldset.plain {
 .padded-strong {
     padding:10px;
 }
-.input_text, input[type="text"], input[type="password"] {
+.input_text, input[type="text"], input[type="password"], input[type="url"] {
     font-family:Arial, Helvetica, sans-serif;
     border: 1px solid #5b5b5b;
     font-size: 12px;
@@ -1323,6 +1326,10 @@ input[type="checkbox"] {
     z-index:999;
 }
 
+#user_details_superadmin_message a {
+    color: inherit;
+    font-weight: bold;
+}
 
 /*---//////////////////// Schedule Show ////////////////////---*/
 

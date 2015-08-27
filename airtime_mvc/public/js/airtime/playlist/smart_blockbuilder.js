@@ -5,7 +5,7 @@ $(document).ready(function() {
 function setSmartBlockEvents() {
     var activeTab = $('.active-tab'),
         form = activeTab.find('.smart-block-form');
-    
+
     /********** ADD CRITERIA ROW **********/
     form.find('#criteria_add').live('click', function(){
         
@@ -190,7 +190,7 @@ function setSmartBlockEvents() {
 	
     /********** SAVE ACTION **********/
     // moved to spl.js
-    
+
     /********** GENERATE ACTION **********/
     activeTab.find('button[id="generate_button"]').live("click", function(){
         buttonClickAction('generate', 'playlist/smart-block-generate');
@@ -203,6 +203,8 @@ function setSmartBlockEvents() {
 	
     /********** CHANGE PLAYLIST TYPE **********/
     form.find('dd[id="sp_type-element"]').live("change", function(){
+        //buttonClickAction('generate', 'playlist/empty-content');
+        $(".active-tab").find('button[id="save_button"]').click();
         setupUI();
         AIRTIME.library.checkAddButton();
     });
@@ -336,7 +338,9 @@ function buttonClickAction(clickType, url){
         obj_id = $('.active-tab .obj_id').val();
     
     enableLoadingIcon();
-    $.post(url, {format: "json", data: data, obj_id: obj_id}, function(data){
+    $.post(url, {format: "json", data: data, obj_id: obj_id, obj_type: "block",
+                 modified: AIRTIME.playlist.getModified()
+    }, function(data){
         callback(data, clickType);
         disableLoadingIcon();
     });
@@ -351,7 +355,9 @@ function setupUI() {
      */
     var sortable = activeTab.find('.spl_sortable'),
         plContents = sortable.children(),
-        shuffleButton = activeTab.find('button[name="shuffle_button"], #pl-bl-clear-content');
+        shuffleButton = activeTab.find('button[name="shuffle_button"], #pl-bl-clear-content'),
+        generateButton = activeTab.find('button[name="generate_button"], #pl-bl-clear-content'),
+        fadesButton = activeTab.find('#spl_crossfade, #pl-bl-clear-content');
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {
@@ -365,11 +371,15 @@ function setupUI() {
     
     if (activeTab.find('.obj_type').val() == 'block') {
         if (playlist_type == "0") {
-            shuffleButton.parent().show();
-            sortable.show();
+            shuffleButton.removeAttr("disabled");
+            generateButton.removeAttr("disabled");
+            fadesButton.removeAttr("disabled");
+            //sortable.children().show();
         } else {
-            shuffleButton.parent().hide();
-            sortable.hide();
+            shuffleButton.attr("disabled", "disabled");
+            generateButton.attr("disabled", "disabled");
+            fadesButton.attr("disabled", "disabled");
+            //sortable.children().hide();
         }
     }
     
@@ -481,41 +491,47 @@ function callback(json, type) {
     var dt = $('table[id="library_display"]').dataTable(),
         form = $('.active-tab .smart-block-form');
 
+    if (json.modified !== undefined) {
+        AIRTIME.playlist.setModified(json.modified);
+    }
+
     if (type == 'shuffle' || type == 'generate') {
         if (json.error !== undefined) {
             alert(json.error);
         }
-        AIRTIME.playlist.closeTab();
-        AIRTIME.playlist.fnOpenPlaylist(json);
         if (json.result == "0") {
             if (type == 'shuffle') {
                 form.find('.success').text($.i18n._('Smart block shuffled'));
             } else if (type == 'generate') {
             	form.find('.success').text($.i18n._('Smart block generated and criteria saved'));
-            	//redraw library table so the length gets updated
+                //redraw library table so the length gets updated
                 dt.fnStandingRedraw();
             }
+
+            AIRTIME.playlist.playlistResponse(json);
+
             form.find('.success').show();
         }
-	    form.find('#smart_block_options').removeClass("closed");
+	    form.find('.smart-block-form').removeClass("closed");
     } else {
-        AIRTIME.playlist.closeTab();
-        AIRTIME.playlist.fnOpenPlaylist(json);
         if (json.result == "0") {
             $('.active-tab #sp-success-saved').text($.i18n._('Smart block saved')).show();
-        
+
+            AIRTIME.playlist.playlistResponse(json);
+
             //redraw library table so the length gets updated
             dt.fnStandingRedraw();
         }
-        form.find('#smart_block_options').removeClass("closed");
+        form.find('.smart-block-form').removeClass("closed");
     }
     setTimeout(removeSuccessMsg, 5000);
 }
 
 function appendAddButton() {
+    /*
     var add_button = "<a class='btn btn-small' id='criteria_add'>" +
-                     "<i class='icon-white icon-plus'></i></a>";
-    var rows = $('.active-tab #smart_block_options'),
+                     "<i class='icon-white icon-plus'></i>Add Criteria</a>";
+    var rows = $('.active-tab .smart-block-form'),
         enabled = rows.find('select[name^="sp_criteria_field"]:enabled');
 
     rows.find('#criteria_add').remove();
@@ -528,6 +544,7 @@ function appendAddButton() {
         enabled.siblings('span[id="extra_criteria"]')
                .after(add_button);
     }
+    */
 }
 
 function removeButtonCheck() {

@@ -6,6 +6,10 @@ if (isset($this->obj)) {
 ?>
 
 <?php if (isset($this->obj)) : ?>
+    <div class="inner_editor_title">
+        <H2><?php echo(_("Editing "));?>"<span class="title_obj_name"><?php if (isset($this->unsavedName)) echo $this->unsavedName;
+                else echo $this->escape($this->obj->getName());?></span>"</H2>
+    </div>
     <div class="inner_editor_wrapper">
         <input class="obj_id" type="hidden" value="<?php echo $this->obj->getId(); ?>"/>
         <input class="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"/>
@@ -40,6 +44,9 @@ if (isset($this->obj)) {
         <h4 class="obj_length"><?php echo($this->length); ?></h4>
         <h4 class="obj_length_label"><?php echo(_("Duration:"));?></h4>
 
+        <div class='btn-group'>
+            <button class="btn toggle-editor-form" title='<?php echo _("Toggle Details") ?>' type="button"><span class="icon-white spl-no-r-margin icon-chevron-up"></span></button>
+        </div>
         <div class='btn-group'>
             <?php echo $this->form->getElement('generate_button');?>
         </div>

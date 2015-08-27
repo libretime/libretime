@@ -605,3 +605,7 @@ li.spl_empty {
 .expand-block-separate {
     border-top: 1px solid #5B5B5B;
 }
+
+#criteria_add {
+    margin-bottom: 5px;
+}

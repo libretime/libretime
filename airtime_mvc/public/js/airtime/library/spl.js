@@ -31,8 +31,6 @@ var AIRTIME = (function(AIRTIME){
 
     function playlistError(json) {
         alert(json.error);
-        //closeTab();
-        //openPlaylist(json);
     }
 
     function stopAudioPreview() {
@@ -71,7 +69,7 @@ var AIRTIME = (function(AIRTIME){
             cueIn = $.trim(span.text()),
             li = span.parents("li"),
             unqid = li.attr("unqid"),
-            lastMod = getModified(),
+            lastMod = mod.getModified(),
             type = $pl.find('.obj_type').val();
 
         if (!isTimeValid(cueIn)){
@@ -108,7 +106,7 @@ var AIRTIME = (function(AIRTIME){
             cueOut = $.trim(span.text()),
             li = span.parents("li"),
             unqid = li.attr("unqid"),
-            lastMod = getModified(),
+            lastMod = mod.getModified(),
             type = $pl.find('.obj_type').val();
 
         if (!isTimeValid(cueOut)){
@@ -142,7 +140,7 @@ var AIRTIME = (function(AIRTIME){
     function changeCues($el, id, cueIn, cueOut) {
 
         var url = baseUrl+"playlist/set-cue",
-            lastMod = getModified(),
+            lastMod = mod.getModified(),
             type = $pl.find('.obj_type').val(),
             li,
             span;
@@ -212,7 +210,7 @@ var AIRTIME = (function(AIRTIME){
     function changeCrossfade($el, id1, id2, fadeIn, fadeOut, offset, id) {
 
         var url = baseUrl+"playlist/set-crossfade",
-            lastMod = getModified(),
+            lastMod = mod.getModified(),
             type = $pl.find('.obj_type').val();
 
         $.post(url,
@@ -244,7 +242,7 @@ var AIRTIME = (function(AIRTIME){
             fadeIn = $.trim(span.text()),
             li = span.parents("li"),
             unqid = li.attr("unqid"),
-            lastMod = getModified(),
+            lastMod = mod.getModified(),
             type = $pl.find('.obj_type').val();
 
         if (!isFadeValid(fadeIn)){
@@ -282,7 +280,7 @@ var AIRTIME = (function(AIRTIME){
             fadeOut = $.trim(span.text()),
             li = span.parents("li"),
             unqid = li.attr("unqid"),
-            lastMod = getModified(),
+            lastMod = mod.getModified(),
             type = $pl.find('.obj_type').val();
 
         if (!isFadeValid(fadeOut)){
@@ -354,13 +352,15 @@ var AIRTIME = (function(AIRTIME){
         }
     }
 
-    function editName() {
+    function updateActiveTabName(newTabName) {
+        /*
         var nameElement = $(this);
             //remove any newlines if user somehow snuck them in (easy to do if dragging/dropping text)
             nameElement.text(nameElement.text().replace("\n", ""));
 
         var name = $pl.find(".playlist_name_display").val();
-        $(".nav.nav-tabs .active a > span.tab-name").text(name);
+        */
+        $(".nav.nav-tabs .active a > span.tab-name").text(newTabName);
     }
 
     function redrawLib() {
@@ -389,7 +389,9 @@ var AIRTIME = (function(AIRTIME){
         .append($html);
         setCueEvents();
         setFadeEvents();
-        setModified(json.modified);
+        mod.setModified(json.modified);
+        updateActiveTabName(json.name);
+
         AIRTIME.playlist.validatePlaylistElements();
         redrawLib();
     }
@@ -423,13 +425,18 @@ var AIRTIME = (function(AIRTIME){
         return parseInt($pl.find(".obj_id").val(), 10);
     }
 
-    function getModified() {
+    mod.getModified = function() {
         return parseInt($pl.find(".obj_lastMod").val(), 10);
     }
 
-    function setModified(modified) {
+    mod.setModified = function(modified) {
         $pl.find(".obj_lastMod").val(modified);
     }
+
+    function setTitleLabel(title) {
+        $pl.find(".title_obj_name").text(title);
+    }
+
 
     /*
      * Should all be moved to builder.js eventually
@@ -712,7 +719,7 @@ var AIRTIME = (function(AIRTIME){
 
         //main playlist fades events
         $pl.on("click", "#spl_crossfade", function() {
-            var lastMod = getModified(),
+            var lastMod = mod.getModified(),
                 type = $pl.find('.obj_type').val();
 
             if ($(this).hasClass("ui-state-active")) {
@@ -762,7 +769,7 @@ var AIRTIME = (function(AIRTIME){
             var url = baseUrl+"playlist/set-playlist-fades",
                 span = $(this),
                 fadeIn = $.trim(span.text()),
-                lastMod = getModified(),
+                lastMod = mod.getModified(),
                 type = $pl.find('.obj_type').val();
 
             if (!isFadeValid(fadeIn)){
@@ -775,7 +782,7 @@ var AIRTIME = (function(AIRTIME){
                 function(json){
                     hideError(span);
                     if (json.modified !== undefined) {
-                        setModified(json.modified);
+                        mod.setModified(json.modified);
                     }
                 });
         });
@@ -786,7 +793,7 @@ var AIRTIME = (function(AIRTIME){
             var url = baseUrl+"playlist/set-playlist-fades",
                 span = $(this),
                 fadeOut = $.trim(span.text()),
-                lastMod = getModified(),
+                lastMod = mod.getModified(),
                 type = $pl.find('.obj_type').val();
 
             if (!isFadeValid(fadeOut)){
@@ -799,7 +806,7 @@ var AIRTIME = (function(AIRTIME){
                 function(json){
                     hideError(span);
                     if (json.modified !== undefined) {
-                        setModified(json.modified);
+                        mod.setModified(json.modified);
                     }
                 });
         });
@@ -814,7 +821,7 @@ var AIRTIME = (function(AIRTIME){
 
         //edit playlist name event
         $pl.on("keydown", ".playlist_name_display", submitOnEnter);
-        $pl.on("blur", ".playlist_name_display", editName);
+        //$pl.on("blur", ".playlist_name_display", editName);
 
         //edit playlist description events
         $pl.on("click", "legend", function(){
@@ -838,14 +845,12 @@ var AIRTIME = (function(AIRTIME){
 
                 if (json.error !== undefined) {
                     alert(json.error);
-                }
-                if (json.html !== undefined) {
-                    closeTab();
-                    openPlaylist(json);
-                }
-                if (json.result == "0") {
-                    $pl.find('.success').text($.i18n._('Playlist shuffled'));
-                    $pl.find('.success').show();
+                } else {
+                    if (json.result == "0") {
+                        $pl.find('.success').text($.i18n._('Playlist shuffled'));
+                        $pl.find('.success').show();
+                        mod.playlistResponse(json);
+                    }
                 }
                 disableLoadingIcon();
                 setTimeout(removeSuccessMsg, 5000);
@@ -886,12 +891,15 @@ var AIRTIME = (function(AIRTIME){
                         $status.show();
                         setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
 
+                        $pl.find(".title_obj_name").val(name);
+                        updateActiveTabName(name);
+
                         var $ws_id = $(".active-tab .obj_id");
                         $ws_id.attr("value", json.streamId);
 
                         var $ws_id = $("#ws_delete");
                         $ws_id.show();
-
+                        editName();
 
                         var length = $(".side_playlist.active-tab .ws_length");
                         length.text(json.length);
@@ -978,7 +986,7 @@ var AIRTIME = (function(AIRTIME){
                 save_action = baseUrl+'playlist/save',
                 obj_id = $pl.find(".obj_id").val(),
                 obj_type = $pl.find('.obj_type').val(),
-                lastMod = getModified(),
+                lastMod = mod.getModified(),
                 dt = $('table[id="library_display"]').dataTable();
             enableLoadingIcon();
             $.post(save_action,
@@ -986,19 +994,19 @@ var AIRTIME = (function(AIRTIME){
                     function(json){
                         if (json.error !== undefined) {
                             alert(json.error);
-                        }
-                        if (json.html !== undefined) {
-                            closeTab();
-                            openPlaylist(json);
-                        }
-                        setModified(json.modified);
-                        if (obj_type == "block") {
-                            callback(json, "save");
                         } else {
-                            $pl.find('.success').text($.i18n._('Playlist saved'));
-                            $pl.find('.success').show();
-                            setTimeout(removeSuccessMsg, 5000);
-                            dt.fnStandingRedraw();
+
+                            setTitleLabel(json.name);
+                            mod.setModified(json.modified);
+
+                            if (obj_type == "block") {
+                                callback(json, "save");
+                            } else {
+                                $pl.find('.success').text($.i18n._('Playlist saved'));
+                                $pl.find('.success').show();
+                                setTimeout(removeSuccessMsg, 5000);
+                                dt.fnStandingRedraw();
+                            }
                         }
                         setFadeIcon();
                         disableLoadingIcon();
@@ -1010,6 +1018,13 @@ var AIRTIME = (function(AIRTIME){
             var sUrl = baseUrl+"playlist/empty-content",
                 oData = {};
             playlistRequest(sUrl, oData);
+        });
+
+        $pl.find(".toggle-editor-form").unbind().on("click", function(event) {
+            $pl.find(".inner_editor_wrapper").slideToggle(200);
+            var buttonIcon = $(this).find('span.icon-white');
+            buttonIcon.toggleClass('icon-chevron-up');
+            buttonIcon.toggleClass('icon-chevron-down');
         });
     }
 
@@ -1094,6 +1109,7 @@ var AIRTIME = (function(AIRTIME){
                 //handle: 'div.list-item-container',
                 start: function(event, ui) {
                     ui.placeholder.height(56);
+                    ui.placeholder.css('min-height', 56);
                 },
                 axis: "y",
                 containment: "document",
@@ -1168,7 +1184,7 @@ var AIRTIME = (function(AIRTIME){
 
         stopAudioPreview();
         id = (plid === undefined) ? getId() : plid;
-        lastMod = getModified();
+        lastMod = mod.getModified();
         type = pl.find('.obj_type').val();
         url = baseUrl+'playlist/delete';
 
@@ -1185,7 +1201,7 @@ var AIRTIME = (function(AIRTIME){
 
         stopAudioPreview();
         id = (wsid === undefined) ? getId() : wsid;
-        lastMod = getModified();
+        lastMod = mod.getModified();
         type = $pl.find('.obj_type').val();
         url = baseUrl+'webstream/delete';
 
@@ -1223,7 +1239,7 @@ var AIRTIME = (function(AIRTIME){
         setupUI();
     };
 
-    function playlistResponse(json){
+    mod.playlistResponse = function(json){
         if (json.error !== undefined) {
             playlistError(json);
         }
@@ -1241,7 +1257,7 @@ var AIRTIME = (function(AIRTIME){
 
         mod.disableUI();
 
-        lastMod = getModified();
+        lastMod = mod.getModified();
 
         oData["modified"] = lastMod;
         oData["obj_type"] = obj_type;
@@ -1250,7 +1266,7 @@ var AIRTIME = (function(AIRTIME){
         $.post(
             sUrl,
             oData,
-            playlistResponse
+            mod.playlistResponse
         );
     }
 

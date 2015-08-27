@@ -420,6 +420,14 @@ li.ui-state-default {
     box-sizing: border-box;
 }
 
+.inner_editor_title h2 {
+    margin: 10px 0 0 10px;
+}
+.inner_editor_title span {
+    font-size: inherit;
+    line-height: inherit;
+}
+
 .clearfix:after, .side_playlist li:after {
     display: none !important;
 }
@@ -430,6 +438,10 @@ li.ui-state-default {
 
 .spl-no-margin > div:first-child {
     margin-left: 0 !important;
+}
+
+.spl-no-r-margin {
+    margin-right: 0px;
 }
 
 .spl_sortable {
@@ -445,6 +457,8 @@ li.ui-state-default {
     border-radius: 3px;
     box-sizing: border-box;
     background-color: #111;
+    display: flex;
+    flex-direction: column;
 }
 
 .spl_sortable .list-item-container {
@@ -454,11 +468,16 @@ li.ui-state-default {
 .spl_empty {
     width: 100%;
 
-    margin-top: 100px;
     color: #efefef;
     text-align: center;
 
     font-size: 20px;
+
+    flex: 1 1 auto;
+    /* Position the text label inside it centered*/
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .crossfade-main {
