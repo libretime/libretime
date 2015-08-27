@@ -52,9 +52,9 @@ class Application_Common_UsabilityHints
 
         if (self::zeroFilesUploaded()) {
             if ($userIsOnAddMediaPage) {
-                return _("Click the 'Add files' button and select files from your computer to upload.");
+                return _("Upload some tracks below to add them to your library!");
             } else {
-                return sprintf(_("It looks like you have not uploaded any audio files yet. %sUpload a file now%s."),
+                return sprintf(_("It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."),
                     "<a href=\"/Plupload\">",
                     "</a>");
             }
@@ -70,14 +70,14 @@ class Application_Common_UsabilityHints
             // If the current show is linked users cannot add content to it so we have to provide a different message.
             if (self::isCurrentShowLinked()) {
                 if ($userIsOnCalendarPage) {
-                    return _("To start broadcasting, first you need to cancel the current linked show by clicking on it and selecting 'Cancel Current Show'.");
+                    return _("To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'.");
                 } else {
                     return sprintf(_("Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.
                     %sCreate an unlinked show now%s."), "<a href=\"/Schedule\">", "</a>");
                 }
             } else {
                 if ($userIsOnCalendarPage) {
-                    return _("To start broadcasting, click on the current show and select 'Add / Remove Content'");
+                    return _("To start broadcasting, click on the current show and select 'Schedule Show'");
                 } else {
                     return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now%s."),
                         "<a href=\"/Schedule\">",
@@ -86,7 +86,7 @@ class Application_Common_UsabilityHints
             }
         } else if (!self::getCurrentShow() && self::isNextShowEmpty()) {
             if ($userIsOnCalendarPage) {
-                return _("Click on the show starting next and select 'Add / Remove Content'");
+                return _("Click on the show starting next and select 'Schedule Show'");
             } else {
                 return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now%s."),
                     "<a href=\"/Schedule\">",

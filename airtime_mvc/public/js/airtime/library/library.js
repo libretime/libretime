@@ -115,42 +115,52 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.createToolbarButtons = function () {
         $menu = $("<div class='btn-toolbar' />");
-        $menu
-            .append("<div class='btn-group' title=" + $.i18n._('New') + ">" +
-            "<button class='btn btn-small' id='sb-new'>" +
-            "<i class='icon-white icon-plus'></i>" +
-            "<span>" + $.i18n._('New') + "</span>" +
-            "</button>" +
-            "</div>")
-            .append("<div class='btn-group' title=" + $.i18n._('Edit') + ">" +
-            "<button class='btn btn-small' id='sb-edit'>" +
-            "<i class='icon-white icon-pencil'></i>" +
-            "<span>" + $.i18n._('Edit') + "</span>" +
-            "</button>" +
-            "</div>")
+        if ($(".ui-dialog-content").length === 0) {
+            $menu
+                .append(
+                    "<div class='btn-group' title=" + $.i18n._('New') + ">" +
+                        "<button class='btn btn-small' id='sb-new'>" +
+                            "<i class='icon-white icon-plus'></i>" +
+                            "<span>" + $.i18n._('New') + "</span>" +
+                        "</button>" +
+                    "</div>"
+                ).append(
+                    "<div class='btn-group' title=" + $.i18n._('Edit') + ">" +
+                        "<button class='btn btn-small' id='sb-edit'>" +
+                            "<i class='icon-white icon-pencil'></i>" +
+                            "<span>" + $.i18n._('Edit') + "</span>" +
+                        "</button>" +
+                    "</div>"
+                );
+        }
 
-            .append("<div class='btn-group'>" +
-            "<button class='btn btn-small' id='library-plus'>" +
-            "<i class='icon-white icon-plus'></i>" +
-            "<span id='lib-plus-text'></span>" +
-            "</button>" +
-            "</div>")
-            .append("<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
-            "<button class='btn btn-small btn-danger' id='sb-trash'>" +
-            "<i class='icon-white icon-trash'></i>" +
-            "<span>" + $.i18n._('Delete') + "</span>" +
-            "</button>" +
-            "</div>")
-            .append("<div class='btn-group'>" +
-            "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
-            $.i18n._("Select") + " <span class='caret'></span>" +
-            "</button>" +
-            "<ul class='dropdown-menu'>" +
-            "<li id='sb-select-page'><a href='#'>" + $.i18n._("Select this page") + "</a></li>" +
-            "<li id='sb-dselect-page'><a href='#'>" + $.i18n._("Deselect this page") + "</a></li>" +
-            "<li id='sb-dselect-all'><a href='#'>" + $.i18n._("Deselect all") + "</a></li>" +
-            "</ul>" +
-            "</div>");
+        $menu
+            .append(
+                "<div class='btn-group'>" +
+                    "<button class='btn btn-small' id='library-plus'>" +
+                        "<i class='icon-white icon-plus'></i>" +
+                        "<span id='lib-plus-text'></span>" +
+                    "</button>" +
+                "</div>"
+            ).append(
+                "<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
+                    "<button class='btn btn-small btn-danger' id='sb-trash'>" +
+                        "<i class='icon-white icon-trash'></i>" +
+                        "<span>" + $.i18n._('Delete') + "</span>" +
+                    "</button>" +
+                "</div>"
+            ).append(
+                "<div class='btn-group'>" +
+                    "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+                        $.i18n._("Select") + " <span class='caret'></span>" +
+                    "</button>" +
+                    "<ul class='dropdown-menu'>" +
+                        "<li id='sb-select-page'><a href='#'>" + $.i18n._("Select this page") + "</a></li>" +
+                        "<li id='sb-dselect-page'><a href='#'>" + $.i18n._("Deselect this page") + "</a></li>" +
+                        "<li id='sb-dselect-all'><a href='#'>" + $.i18n._("Deselect all") + "</a></li>" +
+                    "</ul>" +
+                "</div>"
+            );
     };
 
     mod.moveSearchBarToHeader = function() {

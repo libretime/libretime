@@ -18,9 +18,9 @@ $pages = array(
     array(
         'label'      => "<i class='icon-calendar icon-white'></i>"._('Calendar'),
         'module'     => 'default',
-        'controller' => 'Schedule',
+        'controller' => 'schedule',
         'action'     => 'index',
-        'resource'   =>    'schedule'
+        'resource'   => 'schedule'
     ),
     array(
         'label'      =>  "<i class='icon-wrench icon-white'></i>"._('Widgets'),
@@ -48,13 +48,13 @@ $pages = array(
         'resource' => 'preference',
         'action' => 'index',
         'module' => 'default',
-        'controller' => 'Preference',
+        'controller' => 'preference',
         'title' => 'Settings',
         'pages' => array(
             array(
                 'label'      => _('General'),
                 'module'     => 'default',
-                'controller' => 'Preference'
+                'controller' => 'preference'
             ),
             array(
                 'label' => _('My Profile'),
@@ -72,7 +72,7 @@ $pages = array(
             array(
                 'label'      => _('Streams'),
                 'module'     => 'default',
-                'controller' => 'Preference',
+                'controller' => 'preference',
                 'action'     => 'stream-setting'
             )
         )
@@ -165,11 +165,6 @@ $pages = array(
             array(
                 'label'      => _('User Manual'),
                 'uri'        => USER_MANUAL_URL,
-                'target'     => "_blank"
-            ),
-            array(
-                'label'      => _(sprintf("About %s", PRODUCT_NAME)),
-                'uri'        => ABOUT_AIRTIME_URL,
                 'target'     => "_blank"
             ),
             array(

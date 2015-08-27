@@ -34,10 +34,10 @@ class SetupController extends Zend_Controller_Action
 
                 Application_Model_Preference::setLangTimezoneSetupComplete(true);
 
-                $this->_redirect('/Showbuilder');
+                $this->_redirect('/showbuilder');
             }
         }
-        $this->_redirect('/Showbuilder');
+        $this->_redirect('/showbuilder');
     }
 
 }

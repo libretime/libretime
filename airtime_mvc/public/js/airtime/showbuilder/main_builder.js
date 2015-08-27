@@ -121,6 +121,7 @@ AIRTIME = (function(AIRTIME) {
         $(".media_type_selector:first").addClass("highlight");
         var selected;
         if (location.hash === "") {
+            location.hash = "tracks";
             selected = $("a[href$='#tracks']");
         } else {
             selected = $("a[href$='"+location.hash+"']");
@@ -137,10 +138,9 @@ AIRTIME = (function(AIRTIME) {
 
         $(window).on('hashchange', function() {
             var selected = $("a[href$='"+location.hash+"']");
-            // If we click Dashboard from one of the media views, do nothing
-            if (!location.hash) {
-                return;
-            }
+            var dashboardLink = $(".media_type_selector:first");
+
+            dashboardLink.find("a").attr("href", selected.attr("href"));
             AIRTIME.library.selectNone();
             $(".media_type_selector").each(function () {
                 $(this).removeClass("selected");
@@ -149,7 +149,7 @@ AIRTIME = (function(AIRTIME) {
             oTable.fnDraw();
             $("#library_filter").text(selected.text());
             // Highlight the dashboard link
-            $(".media_type_selector:first").addClass("highlight");
+            dashboardLink.addClass("highlight");
         });
     }
 

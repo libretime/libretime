@@ -7,7 +7,7 @@ class Application_Form_RegisterAirtime extends Zend_Form
 
     public function init()
     {
-        $this->setAction(Application_Common_OsPath::getBaseDir().'Showbuilder');
+        $this->setAction(Application_Common_OsPath::getBaseDir().'showbuilder');
         $this->setMethod('post');
 
         $country_list = Application_Model_Preference::GetCountryList();

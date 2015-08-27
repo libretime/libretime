@@ -28,7 +28,7 @@ class LoginController extends Zend_Controller_Action
         $auth = Zend_Auth::getInstance();
         
         if ($auth->hasIdentity()) {
-            $this->_redirect('Showbuilder');
+            $this->_redirect('showbuilder');
         }
 
         //uses separate layout without a navigation.
@@ -76,7 +76,7 @@ class LoginController extends Zend_Controller_Action
                     //set the user locale in case user changed it in when logging in
                     Application_Model_Preference::SetUserLocale($locale);
 
-                    $this->_redirect('Showbuilder');
+                    $this->_redirect('showbuilder');
                 } else {
                     $email = $form->getValue('username');
                     $authAdapter = new WHMCS_Auth_Adapter("admin", $email, $password);
@@ -87,7 +87,7 @@ class LoginController extends Zend_Controller_Action
                         //set the user locale in case user changed it in when logging in
                         Application_Model_Preference::SetUserLocale($locale);
                         
-                        $this->_redirect('Showbuilder');
+                        $this->_redirect('showbuilder');
                     }
                     else {
                         $message = _("Wrong username or password provided. Please try again.");

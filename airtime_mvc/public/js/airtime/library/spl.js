@@ -459,7 +459,7 @@ var AIRTIME = (function(AIRTIME){
                 : pane.append(json.html).find(".playlist_name_display").val(),
             tab =
                 "<li data-tab-id='" + $tabCount + "' data-tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
-                    "<a href='#'><span class='tab-name'></span>" +
+                    "<a href='javascript:void(0)'><span class='tab-name'></span>" +
                         "<span href='#' class='lib_pl_close icon-remove'></span>" +
                     "</a>" +
                 "</li>",

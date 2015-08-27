@@ -2120,13 +2120,16 @@ span.errors.sp-errors{
     overflow:auto;
 }
 .text-content {
-    padding:20px 10px 40px 58px;
+    padding: 10px 22px;
     /*background: url(images/sf_arror.png) no-repeat 60% 0; */
     min-height: 300px;
 }
 .text-content h2 {
     font-size:2.4em;
     color:#efefef;
+}
+.text-content h4 {
+    margin-bottom: 3px;
 }
 .text-content p {
     font-size:1.6em;
@@ -2149,7 +2152,7 @@ span.errors.sp-errors{
 }
 
 .text-content ol li {
-    margin:0 0 6px 0;
+    margin:15px 0 6px 0;
     font-size:1.7em;
     display:list-item;
     color:#efefef;
@@ -3529,6 +3532,10 @@ button.btn-icon-text > i.icon-white {
     flex-flow: row wrap;
 }
 
+.ui-dialog-content input {
+    z-index: 1003;
+}
+
 .ui-dialog-content .media_type_selector {
     padding-left: 0;
     flex: 1 auto;
@@ -3646,7 +3653,7 @@ button.btn-icon-text > i.icon-white {
 #upload_form {
    /* width: 100%;
     min-width: 555px;*/
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
     margin-right: 10px;
     height: 100%;
     position:relative;
@@ -3745,6 +3752,19 @@ hr {
     margin-right:4px
 }
 
+#uploads_disk_usage {
+    position: relative;
+    margin-top: 8px;
+    border-radius: 1px;
+    font-size: 14px;
+    text-align: center;
+    padding: 5px;
+    background-color: #242424;
+    border: 1px solid #5b5b5b;
+    color: #ccc;
+    flex: 0 0 auto;
+}
+
 #disk_usage {
     border-radius: 1px;
     /*position: fixed;
@@ -3760,22 +3780,26 @@ hr {
 }
 
 .disk_usage_progress_bar {
-    width:118px;
-    height:13px;
-    background:#444444;
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    /* width: 118px; */
+    height: 13px;
+    background: #444444;
     background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3e3e3e), color-stop(100%, #464646));
-    margin: 0 auto;
+    /* margin: 0 auto; */
     z-index: 1;
-    position:absolute;
 }
 
 .disk_usage_percent_in_use {
+    position: absolute;
+    left: 0;
+    right: 0;
     color: #fff;
     font-size: 10px;
     z-index: 3;
-    position:absolute;
-    width: 120px;
+    /* width: 120px; */
     line-height: 13px;
 }
 
