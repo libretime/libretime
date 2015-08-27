@@ -3746,13 +3746,8 @@ hr {
 }
 
 #uploads_disk_usage {
-    position:absolute;
-    left: 8px;
-    right: 8px;
-
-    bottom: 8px;
+    position: relative;
     margin-top: 8px;
-
     border-radius: 1px;
     font-size: 14px;
     text-align: center;
@@ -3760,7 +3755,7 @@ hr {
     background-color: #242424;
     border: 1px solid #5b5b5b;
     color: #ccc;
-
+    flex: 0 0 auto;
 }
 
 #disk_usage {
@@ -3778,22 +3773,26 @@ hr {
 }
 
 .disk_usage_progress_bar {
-    width:118px;
-    height:13px;
-    background:#444444;
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    /* width: 118px; */
+    height: 13px;
+    background: #444444;
     background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3e3e3e), color-stop(100%, #464646));
-    margin: 0 auto;
+    /* margin: 0 auto; */
     z-index: 1;
-    position:absolute;
 }
 
 .disk_usage_percent_in_use {
+    position: absolute;
+    left: 0;
+    right: 0;
     color: #fff;
     font-size: 10px;
     z-index: 3;
-    position:absolute;
-    width: 120px;
+    /* width: 120px; */
     line-height: 13px;
 }
 
