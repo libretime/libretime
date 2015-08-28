@@ -630,3 +630,10 @@ th.library_checkbox {
     border: none;
 }
 
+.dataTables_scrolling {
+    position: absolute;
+    bottom: 37px; /* 36 px is the size of the header/footer + 1px because there's no internal border */
+    top: 37px;
+    left: 0;
+    right: 0;
+}

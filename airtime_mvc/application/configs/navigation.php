@@ -27,6 +27,7 @@ $pages = array(
         'module'     => 'default',
         'controller' => 'embeddablewidgets',
         'action'     => 'player',
+        'resource'   => 'embeddablewidgets',
         'title' => 'Widgets',
         'pages' => array(
             array(
@@ -153,11 +154,6 @@ $pages = array(
                 'resource'   =>    'dashboard'
             ),
             array(
-                'label'      => _('Help Center'),
-                'uri'        => HELP_URL,
-                'target'     => "_blank"
-            ),
-            array(
                 'label'      => _('FAQ'),
                 'uri'        => FAQ_URL,
                 'target'     => "_blank"
@@ -166,6 +162,11 @@ $pages = array(
                 'label'      => _('User Manual'),
                 'uri'        => USER_MANUAL_URL,
                 'target'     => "_blank"
+            ),
+            array(
+                'label'     => _('File a Support Ticket'),
+                'uri'       => SUPPORT_TICKET_URL,
+                'target'    => "_blank"
             ),
             array(
                 'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
