@@ -1028,7 +1028,7 @@ var AIRTIME = (function(AIRTIME){
                             if (obj_type == "block") {
                                 callback(json, "save");
                             } else {
-                                $pl.find('.success').text($.i18n._('Playlist saved'));
+                                $pl.find('.success').text($.i18n._('Playlist saved.'));
                                 $pl.find('.success').show();
                                 setTimeout(removeSuccessMsg, 5000);
                                 dt.fnStandingRedraw();
@@ -1266,16 +1266,27 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.playlistResponse = function(json){
-        if (json.error !== undefined) {
-            playlistError(json);
+        console.log(json);
+        if (json.error !== undefined || json.result != 0) {
+            if (json.error) {
+                playlistError(json);
+            }
+            AIRTIME.playlist.replaceForm(json);
         }
         else {
             setPlaylistContent(json);
             setFadeIcon();
+            $pl.find('.errors').hide();
         }
 
         mod.enableUI();
     }
+
+    mod.replaceForm = function(json){
+        $pl.find('.editor_pane_wrapper').html(json.html);
+        openPlaylist(json);
+    }
+
 
     function playlistRequest(sUrl, oData) {
         var lastMod,

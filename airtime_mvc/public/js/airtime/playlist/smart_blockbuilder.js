@@ -522,6 +522,9 @@ function callback(json, type) {
             //redraw library table so the length gets updated
             dt.fnStandingRedraw();
         }
+        else {
+            AIRTIME.playlist.playlistResponse(json);
+        }
         form.find('.smart-block-form').removeClass("closed");
     }
     setTimeout(removeSuccessMsg, 5000);

@@ -1970,20 +1970,29 @@ ul.errors li, .warning {
 
 div.success{
     color:#3B5323;
-    font-size:11px;
-    padding:2px 4px;
+    font-size:14px;
+    padding:2px 10px;
     background:#93DB70;
-    margin-bottom:2px;
+    margin-bottom:0px;
     border:1px solid #488214;
+    display: inline-block;
+    text-align: right;
+    float: right;
+    height: 30px;
+    line-height: 24px;
+    box-sizing: border-box;;
 }
 
 div.errors, span.errors{
     color:#902d2d;
-    font-size:11px;
-    padding:2px 4px;
+    font-size:14px;
+    padding:2px 10px;
     background:#c6b4b4;
-    margin-bottom:2px;
+    margin-bottom:0px;
     border:1px solid #c83f3f;
+    height: 30px;
+    line-height: 24px;
+    box-sizing: border-box;;
 }
 
 span.errors.sp-errors{

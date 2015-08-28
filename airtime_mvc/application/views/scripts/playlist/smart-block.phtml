@@ -15,8 +15,6 @@ if (isset($this->obj)) {
         <input class="obj_lastMod" type="hidden" value="<?php echo $this->obj->getLastModified('U'); ?>"/>
         <input class='obj_type' type='hidden' value='block'/>
 
-        <div id='sp-success-saved' class='success' style='display:none'></div>
-
         <dl class="zend_form playlist_editor">
             <dt>
                 <label><?php echo(_("Name:")); ?></label>
@@ -87,6 +85,7 @@ if (isset($this->obj)) {
         <div class='btn-group pull-right'>
             <button class="btn" title='Save smart block&#39s title, description, and criteria' type="button" id="save_button"><?php echo _("Save") ?></button>
         </div>
+        <div id='sp-success-saved' class='success' style='display:none'><span</div>
     </div>
 
 <?php else : ?>

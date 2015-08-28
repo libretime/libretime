@@ -48,7 +48,7 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             <div class="text-row top">
                 <span class="spl_playlength"><?php echo $item["length"] ?></span>
                 <?php if ($item['type'] == 0) {?>
-                <span class="spl_cue ui-state-default"></span>
+                <!-- <span class="spl_cue ui-state-default"></span> -->
                 <?php } else if ($item['type'] == 2) {
                         if ($staticBlock) {?>
                 <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">
@@ -71,7 +71,7 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             <?php //create the crossfade icon.
                 if (($i < count($items) -1) && !($items[$i]['type'] == 2 && $items[$i+1]['type'])):
             ?>
-            <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div>
+            <!-- <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div> -->
             <?php endif; ?>
             <span id="remove_<?php echo $item["id"] ?>" class="ui-icon ui-icon-closethick"></span>
         </div>
