@@ -74,7 +74,8 @@ function getDatatablesStrings(overrideDict) {
         "sInfoThousands":  $.i18n._("),"),
         "sLengthMenu":     $.i18n._("Show _MENU_"),
         "sLoadingRecords": $.i18n._("Loading..."),
-        "sProcessing":     $.i18n._("Processing..."),
+        //"sProcessing":     $.i18n._("Processing..."),
+        "sProcessing":     $.i18n._(""),
         "sSearch":         $.i18n._(""),
         "sZeroRecords":    $.i18n._("No matching records found"),
         "oPaginate": {

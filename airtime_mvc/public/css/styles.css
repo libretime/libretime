@@ -962,24 +962,18 @@ dl.inline-list dd {
     width:55%;
 }
 .dt-process-rel {
-    position: relative;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
 }
 .dataTables_processing {
     opacity: 1 !important;
-    position: absolute;
-    top: 100px;
-    left: 10%;
-    width: 80%;
-    height: 50px;
-    text-align: center;
-    font-size:14px;
-    font-weight:bold;
-    padding-top: 40px;
-    background: -moz-linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2b2b2), color-stop(100%, #a2a2a2));
-    background: linear-gradient(top, #b2b2b2 0, #a2a2a2 100%);
-    border: 1px solid #8F8F8F;
-    color: #ffffff;
+    width: 100%;
+    height: 100%;
+    background: url("img/loading.gif") no-repeat 50% 50% rgba(0, 0, 0, .25);
 }
 #library_display_wrapper .ui-widget-header:first-child {
     background:none;
