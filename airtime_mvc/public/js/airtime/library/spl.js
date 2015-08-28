@@ -1267,11 +1267,13 @@ var AIRTIME = (function(AIRTIME){
 
     mod.playlistResponse = function(json){
         console.log(json);
-        if (json.error !== undefined || json.result != 0) {
+        if (json.error !== undefined ||
+            (json.result !== undefined && json.result != 0)) {
             if (json.error) {
                 playlistError(json);
             }
             AIRTIME.playlist.replaceForm(json);
+            AIRTIME.playlist.init();
         }
         else {
             setPlaylistContent(json);
