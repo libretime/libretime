@@ -164,6 +164,11 @@ $pages = array(
                 'target'     => "_blank"
             ),
             array(
+                'label'     => _('File a Support Ticket'),
+                'uri'       => SUPPORT_TICKET_URL,
+                'target'    => "_blank"
+            ),
+            array(
                 'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
                 'uri'        => AIRTIME_TRANSIFEX_URL,
                 'target'     => "_blank"
