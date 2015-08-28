@@ -226,7 +226,9 @@ function intToRGB(i){
 
 function stringToColor(s)
 {
-    return intToRGB(hashCode(s));
+    var palette = ['d56f42', 'aad542', '7242d5', '42d563', 'd542be'];
+    return palette[Math.abs(hashCode(s)) % palette.length];
+    //return intToRGB(hashCode(s));
 }
 
 function getContrastYIQ(hexcolor){

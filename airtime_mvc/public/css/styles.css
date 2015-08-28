@@ -1215,6 +1215,7 @@ input[type="checkbox"] {
 }
 #pref_form textarea {
     width: 98.5%;
+    padding-left: 5px;
 }
 #pref_form select {
     width: 100%;
