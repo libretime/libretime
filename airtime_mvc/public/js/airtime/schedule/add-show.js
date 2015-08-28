@@ -75,8 +75,15 @@ function setupStartTimeWidgets() {
             $('#add_show_start_date').removeProp('disabled');
             $('#add_show_start_time').removeProp('disabled');
         }
-
     }
+}
+
+function calculateShowColor() {
+    var bgColorEle = $("#add_show_background_color");
+    var textColorEle = $("#add_show_color");
+    var colorCode = stringToColor($('#add_show_start_time').val());//$(this).val());
+    //bgColorEle.val(colorCode);
+    //textColorEle.val(getContrastYIQ(colorCode));
 }
 
 //$el is DOM element #add-show-form
@@ -226,7 +233,10 @@ function intToRGB(i){
 
 function stringToColor(s)
 {
-    var palette = ['d56f42', 'aad542', '7242d5', '42d563', 'd542be'];
+    var palette = ['42d5a1', '56bd99', '65ab93', '7b938b',
+        '42a4d5', '569bbd', '6594ab', '7b8b93',
+    '4264d5', '566fbd', '6576ab', '7b8193'];
+    //var palette = ['d56f42', 'aad542', '7242d5', '42d563', 'd542be'];
     return palette[Math.abs(hashCode(s)) % palette.length];
     //return intToRGB(hashCode(s));
 }
@@ -943,13 +953,12 @@ function setAddShowEvents(form) {
     
     // Since Zend's setAttrib won't apply through the wrapper, set accept=image/* here
     $("#add_show_logo").prop("accept", "image/*");
-    var bgColorEle = $("#add_show_background_color");
-    var textColorEle = $("#add_show_color");
-    $('#add_show_name').bind('input', 'change', function(){
-        var colorCode = stringToColor($(this).val());
-        bgColorEle.val(colorCode);
-        textColorEle.val(getContrastYIQ(colorCode));
+
+    //$('#add_show_name').bind('input', 'change', function(){
+    $('#add_show_start_time').bind('input', 'change', function(){
+        calculateShowColor();
     });
+
 }
 
 function showErrorSections() {

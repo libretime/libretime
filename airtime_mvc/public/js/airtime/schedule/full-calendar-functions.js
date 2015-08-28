@@ -112,6 +112,7 @@ function dayClick(date, allDay, jsEvent, view){
                 $("#add_show_start_time").val(startTime_string)
                 $("#add_show_end_time").val(endTimeString)
             }
+            calculateShowColor();
             $("#schedule-show-when").show();
 
             openAddShowForm();
