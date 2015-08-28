@@ -970,11 +970,14 @@ dl.inline-list dd {
     z-index: 1;
     pointer-events: none;
 }
-.dataTables_processing {
+.dataTables_processing, .block-overlay {
     opacity: 1 !important;
     width: 100%;
     height: 100%;
     background: url("img/loading.gif") no-repeat 50% 50% rgba(0, 0, 0, .25);
+}
+div.blockOverlay {
+    background: url("img/loading.gif") no-repeat 50% 50% rgba(0, 0, 0, .45);
 }
 #library_display_wrapper .ui-widget-header:first-child {
     background:none;

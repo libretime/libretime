@@ -561,8 +561,11 @@ function removeButtonCheck() {
 }
 
 function enableLoadingIcon() {
+    // Disable the default overlay style
+    $.blockUI.defaults.overlayCSS = {};
     $(".side_playlist.active-tab").block({
-        message: $.i18n._("Processing..."),
+        //message: $.i18n._("Processing..."),
+        message: $.i18n._(""),
         theme: true,
         allowBodyStretch: true,
         applyPlatformOpacityRules: false
