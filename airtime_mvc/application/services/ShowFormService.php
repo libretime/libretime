@@ -344,11 +344,21 @@ class Application_Service_ShowFormService
      * 		- the data URI representation of the image
      */
     private function imagePathToDataUri($path) {
-    	ob_start();
-    	header("Content-type: image/*");
-    	readfile($path);
-    	$imageData = base64_encode(ob_get_contents());
-    	ob_end_clean();
+        $imageData = null;
+    	$bytesRead = 0;
+        try {
+            ob_start();
+            header("Content-type: image/*");
+            $bytesRead = @readfile($path);
+            $imageData = base64_encode(ob_get_contents());
+            ob_end_clean();
+            if ($bytesRead === FALSE) {
+                $imageData = null;
+            }
+        } catch (Exception $e) {
+            Logging::error("Failed to read image: " . $path);
+            $imageData = null;
+        }
     	// return the data URI - data:{mime};base64,{data}
     	return ($imageData === null || $imageData === '') ? 
     		'' : 'data: '.mime_content_type($path).';base64,'.$imageData;
