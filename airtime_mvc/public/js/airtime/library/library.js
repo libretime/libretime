@@ -565,7 +565,7 @@ var AIRTIME = (function(AIRTIME) {
                         "sZeroRecords": $.i18n._("No matching results found.")
                     });
                     break;
-            };
+            }
 
         }
 
@@ -775,7 +775,7 @@ var AIRTIME = (function(AIRTIME) {
             "oLanguage": getLibraryDatatableStrings(),
 
             // R = ColReorder, C = ColVis
-            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t><"F"ilp>>',
+            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"ilp>>',
 
             "oColVis": {
                 "sAlign": "right",
@@ -844,8 +844,8 @@ var AIRTIME = (function(AIRTIME) {
 
         AIRTIME.library.setupLibraryToolbar(oTable);
 
-        $libTable.find("tbody").on("dblclick", "tr", function(ev) {
-            var data = $(this).data("aData");
+        $libTable.find("tbody").on("dblclick", "tr[class*='lib'] > td:not(.dataTables_empty)", function(ev) {
+            var tr = $(this).parent, data = tr.data("aData");
             AIRTIME.library.dblClickAdd(data, data.ftype);
         });
 
@@ -878,7 +878,7 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
 
-        $libTable.find("tbody").on("mousedown", "tr[class*='lib'] > td:not(.library_checkbox)", function(ev) {
+        $libTable.find("tbody").on("mousedown", "tr[class*='lib'] > td:not(.library_checkbox, .dataTables_empty)", function(ev) {
             var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -927,7 +927,7 @@ var AIRTIME = (function(AIRTIME) {
             }
         });
 
-        $libTable.find("tbody").on("click", "tr > td:not(.library_checkbox)", function(e) {
+        $libTable.find("tbody").on("click", "tr > td:not(.library_checkbox, .dataTables_empty)", function(e) {
             var tr = $(this).parent();
             if (flagForDeselection) {
                 flagForDeselection = false;

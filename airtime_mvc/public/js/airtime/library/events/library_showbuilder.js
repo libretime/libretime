@@ -70,10 +70,59 @@ var AIRTIME = (function(AIRTIME) {
         mod.redrawChosen();
         mod.checkToolBarIcons();
 
-        var cb = $('th.library_checkbox');
-            if (cb.find("input").length == 0) {
-                cb.append("<input id='super-checkbox' type='checkbox'>");
+        var cb = $('th.library_checkbox'),
+            emptyRow = $('#library_display').find('tr:has(td.dataTables_empty)');
+        if (cb.find("input").length == 0) {
+            cb.append("<input id='super-checkbox' type='checkbox'>");
+        }
+
+        if (emptyRow.length > 0) {
+            emptyRow.hide();
+            var opts = {},
+                mediaType = parseInt($('.media_type_selector.selected').attr('data-selection-id')),
+                img = $('#library_empty_image');
+            // TODO: once the new manual pages are added, change links!
+            if (mediaType > 1) {
+                opts.subtext = $.i18n._("Click 'New' to create one now.");
+                opts.href = "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/";
+            } else {
+                opts.subtext = $.i18n._("Click 'Upload' to add some now.");
+                opts.href = "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/";
             }
+
+            switch(mediaType) {
+                case 1:
+                    opts.media = $.i18n._('tracks');
+                    opts.icon = 'icon-music';
+                    break;
+                case 2:
+                    opts.media = $.i18n._('playlists');
+                    opts.icon = 'icon-list';
+                    break;
+                case 3:
+                    opts.media = $.i18n._('smart blocks');
+                    opts.icon = 'icon-time';
+                    break;
+                case 4:
+                    opts.media = $.i18n._('webstreams');
+                    opts.icon = 'icon-random';
+                    break;
+            }
+
+            // Remove all classes for when we change between empty media types
+            img.removeClass(function() {
+                return $( this ).attr( "class" );
+            });
+            img.addClass("icon-white " + opts.icon);
+            $('#library_empty_text').html(
+                $.i18n._("You haven't added any ") + opts.media + "."
+                + "<br/>" + opts.subtext
+                + "<br/><a href='" + opts.href + "'>" + $.i18n._("Learn about ") + opts.media + "</a>"
+            );
+            $('#library_empty').show();
+        } else {
+            $('#library_empty').hide();
+        }
 
         if ($("#show_builder_table").is(":visible")) {
             $('#library_display tr.lib-audio, tr.lib-pl, tr.lib-stream')

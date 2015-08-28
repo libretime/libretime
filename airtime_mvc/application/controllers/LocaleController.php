@@ -51,6 +51,9 @@ class LocaleController extends Zend_Controller_Action
             //library/events/library_showbuilder.js
             //already in library/events/library_playlistbuilder.js
             "Please select a cursor position on timeline." => _("Please select a cursor position on timeline."),
+            "You haven't added any " => _("You haven't added any "),
+            "Learn about " => _("Learn about "),
+            "Click 'New' to create one." => _("Click 'New' to create one."),
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
@@ -62,7 +65,8 @@ class LocaleController extends Zend_Controller_Action
             "Deselect all" => _("Deselect all"),
             "Are you sure you want to delete the selected item(s)?" => _("Are you sure you want to delete the selected item(s)?"),
             "Scheduled" => _("Scheduled"),
-            "Playlist" => _("Playlist / Block"),
+            "Tracks" => _("Tracks"),
+            "Playlist" => _("Playlist"),
             "Title" => _("Title"),
             "Creator" => _("Creator"),
             "Album" => _("Album"),
