@@ -27,6 +27,7 @@ $pages = array(
         'module'     => 'default',
         'controller' => 'embeddablewidgets',
         'action'     => 'player',
+        'resource'   => 'embeddablewidgets',
         'title' => 'Widgets',
         'pages' => array(
             array(
