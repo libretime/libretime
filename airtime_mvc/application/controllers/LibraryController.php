@@ -434,13 +434,16 @@ class LibraryController extends Zend_Controller_Action
         $file_id = $this->_getParam('id', null);
         $file = Application_Model_StoredFile::RecallById($file_id);
 
-        if (!$isAdminOrPM && $file->getFileOwnerId() != $user->getId()) {
-            return;
-        }
-
         $form = new Application_Form_EditAudioMD();
         $form->startForm($file_id);
         $form->populate($file->getDbColMetadata());
+
+        $this->view->permissionDenied = false;
+        if (!$isAdminOrPM && $file->getFileOwnerId() != $user->getId()) {
+            $form->makeReadOnly();
+            $form->removeActionButtons();
+            $this->view->permissionDenied = true;
+        }
 
         if ($request->isPost()) {
 
@@ -460,7 +463,6 @@ class LibraryController extends Zend_Controller_Action
         }
 
         $this->view->form = $form;
-        Logging::info($this->view->form);
         $this->view->id = $file_id;
         $this->view->title = $file->getPropelOrm()->getDbTrackTitle();
         $this->view->type = "md";
