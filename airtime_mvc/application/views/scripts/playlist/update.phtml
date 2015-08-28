@@ -1,6 +1,8 @@
 <?php
 $items = $this->contents;
-if (count($items) && ($this->obj instanceof Application_Model_Block && $this->obj->isStatic())) : ?>
+$isStaticSmartBlock = ($this->obj instanceof Application_Model_Block && $this->obj->isStatic());
+$isPlaylist = ($this->obj instanceof Application_Model_Playlist);
+if (count($items) && ($isStaticSmartBlock || $isPlaylist)) : ?>
 <?php $i = 0; ?>
 <?php foreach($items as $item) :
 $staticBlock = null;
