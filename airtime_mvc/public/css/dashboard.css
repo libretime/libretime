@@ -155,12 +155,14 @@ div.btn > span {
 }
 
 #library_empty a {
-    font-size: 0.85em;
+    font-size: 0.9em;
+    line-height: 37px;
     text-decoration: none;
+    color: #FF5D1A;
 }
 
 #library_empty a:visited {
-    color: #1683b0;
+    color: #CE3C01;
 }
 
 thead th.ui-state-default {
