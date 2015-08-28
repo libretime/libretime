@@ -1328,28 +1328,6 @@ var validationTypes = {
 
 
 $(document).ready(function() {
-    $('.active-tab .md-save').live("click", function() {
-        var file_id = $('#file_id').val(),
-            data = $(".active-tab #edit-md-dialog form").serializeArray();
-        $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
-            //$("#edit-md-dialog").dialog().remove();
-
-            // don't redraw the library table if we are on calendar page
-            // we would be on calendar if viewing recorded file metadata
-            if ($("#schedule_calendar").length === 0) {
-                oTable.fnStandingRedraw();
-            }
-        });
-
-        AIRTIME.playlist.closeTab();
-    });
-
-    $('#edit-md-dialog').live("keyup", function(event) {
-        if (event.keyCode === 13) {
-            $('#editmdsave').click();
-        }
-    });
-
     $("#advanced-options").on("click", function() {
         resizeAdvancedSearch();
     });
