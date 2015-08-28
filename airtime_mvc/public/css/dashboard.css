@@ -423,6 +423,10 @@ li.ui-state-default {
 
 .inner_editor_title h2 {
     margin: 10px 0 0 10px;
+    width: 85%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .inner_editor_title span {
     font-size: inherit;

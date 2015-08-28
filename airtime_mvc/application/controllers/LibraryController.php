@@ -460,7 +460,9 @@ class LibraryController extends Zend_Controller_Action
         }
 
         $this->view->form = $form;
+        Logging::info($this->view->form);
         $this->view->id = $file_id;
+        $this->view->title = $file->getPropelOrm()->getDbTrackTitle();
         $this->view->type = "md";
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
