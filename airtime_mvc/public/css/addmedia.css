@@ -628,3 +628,11 @@ table#recent_uploads_table td
 	/*border-bottom: 6px solid #be2626;*/
 	/*transform: rotate(-90deg);*/
 }
+
+.dataTables_scrolling {
+	position: absolute;
+	bottom: 37px; /* 36 px is the size of the header/footer + 1px because there's no internal border */
+	top: 37px;
+	left: 0;
+	right: 0;
+}
