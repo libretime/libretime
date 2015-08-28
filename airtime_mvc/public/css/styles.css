@@ -968,6 +968,7 @@ dl.inline-list dd {
     left: 0;
     right: 0;
     z-index: 1;
+    pointer-events: none;
 }
 .dataTables_processing {
     opacity: 1 !important;
