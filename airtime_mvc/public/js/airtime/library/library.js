@@ -119,7 +119,7 @@ var AIRTIME = (function(AIRTIME) {
             $menu
                 .append(
                     "<div class='btn-group' title=" + $.i18n._('New') + ">" +
-                        "<button class='btn btn-small' id='sb-new'>" +
+                        "<button class='btn btn-small btn-new' id='sb-new'>" +
                             "<i class='icon-white icon-plus'></i>" +
                             "<span>" + $.i18n._('New') + "</span>" +
                         "</button>" +

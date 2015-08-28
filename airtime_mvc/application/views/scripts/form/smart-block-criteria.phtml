@@ -65,7 +65,7 @@
 
         <dt><label><?php echo(_("Search Criteria:"));?></label></dt>
         <dd id='sp_criteria-element' class='criteria-element'>
-            <a class='btn btn-small' id='criteria_add'><i class='icon-white icon-plus'></i><?php echo(_("New Criteria")); ?></a>
+            <a class='btn btn-small btn-new' id='criteria_add'><i class='icon-white icon-plus'></i><?php echo(_("New Criteria")); ?></a>
 
             <?php for ($i = 0; $i < $this->criteriasLength; $i++) {
         // modRowMap holds the number of modifier rows for each criteria element
@@ -95,7 +95,7 @@
                 <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
-                <a class='btn btn-small' id='modifier_add_<?php echo $i ?>'>
+                <a class='btn btn-small btn-new' id='modifier_add_<?php echo $i ?>'>
                     <i class='icon-white icon-plus'></i><?php echo(_("New Modifier")); ?>
                 </a>
 

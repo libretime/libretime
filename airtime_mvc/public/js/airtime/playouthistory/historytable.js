@@ -292,7 +292,7 @@ var AIRTIME = (function(AIRTIME) {
         var $menu = $("<div class='btn-toolbar' />");
 
 		$menu.append("<div class='btn-group'>" +
-				"<button class='btn btn-small' id='his_create'>" +
+				"<button class='btn btn-small btn-new' id='his_create'>" +
 				"<i class='icon-white icon-plus'></i>" +
 				$.i18n._("New Log Entry") +
 				"</button>" +

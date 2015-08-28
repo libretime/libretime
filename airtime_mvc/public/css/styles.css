@@ -3298,6 +3298,19 @@ dd .stream-status {
     outline: 0;
     border-top-color:#333333
 }
+
+.btn-new {
+    background: none;
+    background-color: #237686;
+}
+.btn-new:hover {
+    background: none;
+    background-color: #1c606e;
+}
+.btn-new[disabled]:hover {
+    background: inherit;
+}
+
 .dark_class
 {
     background-color: black;

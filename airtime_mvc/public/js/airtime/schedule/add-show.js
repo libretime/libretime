@@ -30,7 +30,7 @@ function makeAddShowButton() {
         $('.fc-header-left')
             .prepend('<span class="fc-header-space"></span>')
             .prepend('<span class="btn-group">' +
-                        '<button onclick="showForm()" class="add-button btn btn-small">' +
+                        '<button onclick="showForm()" class="add-button btn btn-small btn-new">' +
                             '<i class="icon-white icon-plus"></i>' +
                             '<span>' + $.i18n._("New Show") + '</span>' +
                         '</button>' +
