@@ -154,11 +154,6 @@ $pages = array(
                 'resource'   =>    'dashboard'
             ),
             array(
-                'label'      => _('Help Center'),
-                'uri'        => HELP_URL,
-                'target'     => "_blank"
-            ),
-            array(
                 'label'      => _('FAQ'),
                 'uri'        => FAQ_URL,
                 'target'     => "_blank"
