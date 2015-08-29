@@ -74,6 +74,16 @@ class PlaylistController extends Zend_Controller_Action
     private function createFullResponse($obj = null, $isJson = false,
         $formIsValid = false)
     {
+        $user = Application_Model_User::getCurrentUser();
+        $isAdminOrPM = $user->isUserType(array(UTYPE_SUPERADMIN, UTYPE_ADMIN, UTYPE_PROGRAM_MANAGER));
+
+        if (!$isAdminOrPM && $obj->getCreatorId() != $user->getId()) {
+            $this->view->objType = $obj instanceof Application_Model_Block ? "block" : "playlist";
+            $this->view->obj = $obj;
+            $this->view->html = $this->view->render('playlist/permission-denied.phtml');
+            return;
+        }
+
         $isBlock = false;
         $viewPath = 'playlist/playlist.phtml';
         if ($obj instanceof Application_Model_Block) {
