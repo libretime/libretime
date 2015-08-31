@@ -149,18 +149,19 @@ var AIRTIME = (function(AIRTIME) {
                         "<span>" + $.i18n._('Delete') + "</span>" +
                     "</button>" +
                 "</div>"
-            ).append(
-                "<div class='btn-group'>" +
-                    "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
-                        $.i18n._("Select") + " <span class='caret'></span>" +
-                    "</button>" +
-                    "<ul class='dropdown-menu'>" +
-                        "<li id='sb-select-page'><a href='#'>" + $.i18n._("Select this page") + "</a></li>" +
-                        "<li id='sb-dselect-page'><a href='#'>" + $.i18n._("Deselect this page") + "</a></li>" +
-                        "<li id='sb-dselect-all'><a href='#'>" + $.i18n._("Deselect all") + "</a></li>" +
-                    "</ul>" +
-                "</div>"
             );
+            //).append(
+            //    "<div class='btn-group'>" +
+            //        "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
+            //            $.i18n._("Select") + " <span class='caret'></span>" +
+            //        "</button>" +
+            //        "<ul class='dropdown-menu'>" +
+            //            "<li id='sb-select-page'><a href='#'>" + $.i18n._("Select this page") + "</a></li>" +
+            //            "<li id='sb-dselect-page'><a href='#'>" + $.i18n._("Deselect this page") + "</a></li>" +
+            //            "<li id='sb-dselect-all'><a href='#'>" + $.i18n._("Deselect all") + "</a></li>" +
+            //        "</ul>" +
+            //    "</div>"
+            //);
     };
 
     mod.moveSearchBarToHeader = function() {
