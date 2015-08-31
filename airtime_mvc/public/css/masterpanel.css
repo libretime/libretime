@@ -3,10 +3,11 @@
 
 /*---////////////////////    SOURCE INFO    ////////////////////---*/
 .source-info-block {
-    padding:0 0 0 2px;
+    padding: 0;
 	background: url(images/masterpanel_spacer.png) no-repeat 0 0;
 	margin-right: 0;
-	}
+	flex: 0 0 0;
+}
 	.source-info-block h3, .on-air-block h3 {
 		margin: 0 0 10px -1px;
 		padding:3px 0 2px 8px;
@@ -226,6 +227,7 @@
 
 .source-info-block + .on-air-block {
 	padding-right:2px;
+	flex: 0 100px;
 }
 
 .source-info-block + .on-air-block .on-air-info, .source-info-block + .on-air-block .listen-control-button {

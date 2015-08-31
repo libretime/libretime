@@ -231,6 +231,14 @@ select {
 }
 
 #master-panel {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+
     position:relative;
     height:100px;
     background:#3d3d3d url(images/masterpanel_bg.png) repeat-x 0 0;
@@ -249,9 +257,9 @@ select {
 }
 
 .source-info-block {
-        height:100px;
-        float:left;
-        min-width:170px;
+    height:100px;
+    float:left;
+    min-width:170px;
 }
 
 .personal-block  {
@@ -283,13 +291,15 @@ select {
     color:#ff5d1a;
 }
 .now-playing-block {
-    width:35%;
+    /*width:35%;*/
+    flex: 1 auto;
     background: url(images/masterpanel_spacer.png) no-repeat 0 0;
     margin-left: 152px;
     padding-left: 14px;
 }
 .show-block {
-    width:30%;
+    /*width:30%;*/
+    flex: 1 auto;
 }
 .text-row {
     height:30px;
@@ -368,53 +378,21 @@ select {
     background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
 .time-info-block  {
-    position: absolute;
-    top: 0;
-    right: 0;
+    flex: 0 150px;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: 0;*/
 }
 #navlist {
     padding: 0;
     margin: 0;
 }
-@media screen and (max-width: 1575px) {
-    .now-playing-block {
-        width: 30%;
-    }
-    .show-block {
-        width: 25%;
-    }
-}
 @media screen and (max-width: 1250px) {
-    .now-playing-block {
-        width: 50%;
-    }
     .show-block {
         display: none;
     }
-    .personal-block.solo {
-        right: 10px !important;
-    }
 }
-@media screen and (max-width: 1075px) {
-    .now-playing-block {
-        width: 40%;
-    }
-}
-@media screen and (max-width: 900px) {
-    .now-playing-block {
-        width: 30%;
-        /*display: none;*/
-    }
-    /*#nav li.top {*/
-        /*display: -webkit-box;*/
-        /*display: -moz-box;*/
-        /*display: -ms-flexbox;*/
-        /*display: -webkit-flex;*/
-        /*display: flex;*/
-        /*width: 110px;*/
-    /*}*/
-}
-@media screen and (max-width: 775px) {
+@media screen and (max-width: 875px) {
     .now-playing-block {
         display: none;
     }
@@ -422,12 +400,10 @@ select {
         margin-left: 152px;
     }
 }
-@media screen and (max-width: 520px) {
-    .logo {
-        display: none;
-    }
-    .source-info-block {
-        margin-left: 0;
+@media screen and (max-width: 630px) {
+    #master-panel {
+        /*display: block;*/
+        min-width: 630px;
     }
 }
 .time-info-block ul {
