@@ -3285,14 +3285,9 @@ dd .stream-status {
 .btn-new {
     background: #237686;
 }
-.btn-new[disabled] {
+.btn-new:active, .btn-new:hover,
+.btn-new[disabled], .btn-new[disabled]:active {
     background-color: #1c606e;
-}
-.btn-new:hover {
-    background: #1c606e;
-}
-.btn-new[disabled]:hover {
-    background: inherit;
 }
 
 .dark_class
