@@ -834,7 +834,7 @@ var AIRTIME = (function(AIRTIME) {
         AIRTIME.library.setupLibraryToolbar(oTable);
 
         $libTable.find("tbody").on("dblclick", "tr[class*='lib'] > td:not(.dataTables_empty)", function(ev) {
-            var tr = $(this).parent, data = tr.data("aData");
+            var tr = $(this).parent(), data = tr.data("aData");
             AIRTIME.library.dblClickAdd(data, data.ftype);
         });
 
@@ -957,7 +957,7 @@ var AIRTIME = (function(AIRTIME) {
 
                 function processMenuItems(oItems) {
 
-                    // define an add to playlist callback.
+                        // define an add to playlist callback.
                     if (oItems.pl_add !== undefined) {
                         var aItems = [];
 
