@@ -399,10 +399,12 @@ select {
     .source-info-block {
         margin-left: 152px;
     }
+    .time-info-block {
+        flex: 1 150px;
+    }
 }
 @media screen and (max-width: 630px) {
     #master-panel {
-        /*display: block;*/
         min-width: 630px;
     }
 }

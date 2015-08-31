@@ -20,6 +20,15 @@
     background-color: #242424;
 }
 
+@media screen and (max-width: 1600px) {
+    button:not(.dropdown-toggle) > span {
+        display: none;
+    }
+    button:not(.dropdown-toggle) > i {
+        margin-right: 0 !important;
+    }
+}
+
 @media screen and (max-width: 1280px) {
     .wrapper {
         -webkit-flex-flow: column !important;
