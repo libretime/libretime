@@ -10,7 +10,6 @@ class BillingController extends Zend_Controller_Action {
         //Two of the actions in this controller return JSON because they're used for AJAX:
         $ajaxContext = $this->_helper->getHelper('AjaxContext');
         $ajaxContext->addActionContext('vat-validator', 'json')
-                    ->addActionContext('promo-eligibility-check', 'json')
                     ->addActionContext('is-country-in-eu', 'json')
                     ->initContext();
     }
@@ -18,33 +17,6 @@ class BillingController extends Zend_Controller_Action {
     public function indexAction()
     {
         $this->_redirect('billing/upgrade');
-    }
-
-    public function promoEligibilityCheckAction()
-    {
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $request = $this->getRequest();
-        if (!$request->isPost()) {
-            throw new Exception("Must POST data to promoEligibilityCheckAction.");
-        }
-        $data = $request->getPost();
-
-        $current_namespace = new Zend_Session_Namespace('csrf_namespace');
-        $observed_csrf_token = $this->_getParam('csrf_token');
-        $expected_csrf_token = $current_namespace->authtoken;
-
-        if($observed_csrf_token == $expected_csrf_token) {
-            $eligible = Billing::isClientEligibleForPromo(
-                $data["newproductid"], $data["newproductbillingcycle"]);
-
-            //Set the return JSON value
-            $this->_helper->json(array("result"=>$eligible));
-        } else {
-            $this->getResponse()->setHttpResponseCode(403);
-            $this->_helper->json(array("result"=>false, "error"=>"CSRF token did not match."));
-        }
     }
 
     public function upgradeAction()
@@ -62,14 +34,6 @@ class BillingController extends Zend_Controller_Action {
             $formData = $request->getPost();
 
             if ($form->isValid($formData)) {
-
-                // Check if client is eligible for promo and update the new product id if so
-                $eligibleForPromo = Billing::isClientEligibleForPromo(
-                    $formData["newproductid"], $formData["newproductbillingcycle"]);
-                if ($eligibleForPromo) {
-                    $newProductName = Billing::getProductName($formData["newproductid"]);
-                    $formData["newproductid"] = Billing::getEligibleAwesomeAugustPromoPlanId($newProductName);
-                }
 
                 $credentials = Billing::getAPICredentials();
 
