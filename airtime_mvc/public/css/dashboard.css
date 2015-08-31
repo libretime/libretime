@@ -21,10 +21,12 @@
 }
 
 @media screen and (max-width: 1600px) {
-    button:not(.dropdown-toggle) > span {
+    #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > span,
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > span {
         display: none;
     }
-    button:not(.dropdown-toggle) > i {
+    #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > i,
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > i {
         margin-right: 0 !important;
     }
 }
