@@ -173,7 +173,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('button', 'editmdsave', array(
             'ignore'     => true,
             'class'      => 'btn md-save right-floated',
-            'label'      => _('Save'),
+            'label'      => _('OK'),
             'decorators' => array(
                 'ViewHelper'
             )

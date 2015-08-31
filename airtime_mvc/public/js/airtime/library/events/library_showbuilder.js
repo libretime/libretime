@@ -18,17 +18,11 @@ var AIRTIME = (function(AIRTIME) {
             check = true;
         }
 
-        if (shows.length === 0) {
-            check = false;
-        }
-
-        if (check) {
-            AIRTIME.button.enableButton("btn-group #library-plus", false);
-        } else {
-            AIRTIME.button.disableButton("btn-group #library-plus", false);
-        }
-
         if ($("#show_builder_table").is(":visible")) {
+            if (shows.length === 0) {
+                check = false;
+            }
+
             if ($cursor.length !== 0) {
                 btnText = $.i18n._('Add after selected items');
             } else if (current.length !== 0) {
@@ -42,6 +36,13 @@ var AIRTIME = (function(AIRTIME) {
                 btnText = $.i18n._('Add to current playlist');
             }
         }
+
+        if (check) {
+            AIRTIME.button.enableButton("btn-group #library-plus", false);
+        } else {
+            AIRTIME.button.disableButton("btn-group #library-plus", false);
+        }
+
         AIRTIME.library.changeAddButtonText($('.btn-group #library-plus #lib-plus-text'), btnText);
     };
 

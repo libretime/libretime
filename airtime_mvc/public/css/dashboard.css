@@ -20,6 +20,17 @@
     background-color: #242424;
 }
 
+@media screen and (max-width: 1600px) {
+    #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > span,
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > span {
+        display: none;
+    }
+    #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > i,
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > i {
+        margin-right: 0 !important;
+    }
+}
+
 @media screen and (max-width: 1280px) {
     .wrapper {
         -webkit-flex-flow: column !important;

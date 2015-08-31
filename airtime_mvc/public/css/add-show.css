@@ -193,10 +193,10 @@ label.wrapp-label input[type="checkbox"] {
 .add-button[disabled] {
     cursor: auto;
     color: #e7e7e7;
-    border: 1px solid #a1a1a1;
-    background-color: #b1b1b1;
-    background: -moz-linear-gradient(top, #c7c7c7 0, #c7c7c7 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c7c7c7), color-stop(100%, #c7c7c7));
+    /*border: 1px solid #a1a1a1;*/
+    /*background-color: #b1b1b1;*/
+    /*background: -moz-linear-gradient(top, #c7c7c7 0, #c7c7c7 100%);*/
+    /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c7c7c7), color-stop(100%, #c7c7c7));*/
 }
 
 

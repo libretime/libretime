@@ -149,17 +149,6 @@ var AIRTIME = (function(AIRTIME) {
                         "<span>" + $.i18n._('Delete') + "</span>" +
                     "</button>" +
                 "</div>"
-            ).append(
-                "<div class='btn-group'>" +
-                    "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
-                        $.i18n._("Select") + " <span class='caret'></span>" +
-                    "</button>" +
-                    "<ul class='dropdown-menu'>" +
-                        "<li id='sb-select-page'><a href='#'>" + $.i18n._("Select this page") + "</a></li>" +
-                        "<li id='sb-dselect-page'><a href='#'>" + $.i18n._("Deselect this page") + "</a></li>" +
-                        "<li id='sb-dselect-all'><a href='#'>" + $.i18n._("Deselect all") + "</a></li>" +
-                    "</ul>" +
-                "</div>"
             );
     };
 
@@ -845,7 +834,7 @@ var AIRTIME = (function(AIRTIME) {
         AIRTIME.library.setupLibraryToolbar(oTable);
 
         $libTable.find("tbody").on("dblclick", "tr[class*='lib'] > td:not(.dataTables_empty)", function(ev) {
-            var tr = $(this).parent, data = tr.data("aData");
+            var tr = $(this).parent(), data = tr.data("aData");
             AIRTIME.library.dblClickAdd(data, data.ftype);
         });
 
@@ -968,7 +957,7 @@ var AIRTIME = (function(AIRTIME) {
 
                 function processMenuItems(oItems) {
 
-                    // define an add to playlist callback.
+                        // define an add to playlist callback.
                     if (oItems.pl_add !== undefined) {
                         var aItems = [];
 
