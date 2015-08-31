@@ -189,8 +189,8 @@ select {
 }
 
 .airtime_auth_help_icon, .custom_auth_help_icon, .stream_username_help_icon,
-.playlist_type_help_icon, .repeat_tracks_help_icon,
-.admin_username_help_icon, .stream_type_help_icon, .show_linking_help_icon,
+.playlist_type_help_icon, .repeat_tracks_help_icon, .show_linking_help_icon,
+.admin_username_help_icon, .stream_type_help_icon,
 .show_timezone_help_icon{
         cursor: help;
         position: relative;
@@ -2697,6 +2697,16 @@ fieldset legend .ui-icon, .ui-widget-content fieldset legend .ui-icon {
     margin-top: 20px;
 }
 
+#add-show-close {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+#add-show-close span {
+    padding-top: 1px;
+    position: absolute;
+}
+
 input[type="checkbox"][disabled] {
     opacity: 0.6;
 }
@@ -3288,6 +3298,13 @@ dd .stream-status {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#868686', endColorstr='#535353', GradientType=0);
 }---*/
 
+.add-show-submit.btn:hover {
+    background-position: 0 -30px !important;
+    background-color: #292929;
+    border: 1px solid #242424;
+    transition: none;
+}
+
 .btn.active,
 .btn:active {
     background-image: none;
@@ -3876,5 +3893,18 @@ li .ui-state-hover {
 
     vertical-align: top !important;
 }
+
+.show_linking_help_icon {
+    position: inherit;
+}
+
+#add_show_linked-element {
+    display: inline-block;
+}
+
+#add_show_no_end-element, #add_show_end_date-element {
+    float: left;
+}
+
 
 
