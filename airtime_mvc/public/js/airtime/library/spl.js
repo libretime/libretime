@@ -925,7 +925,6 @@ var AIRTIME = (function(AIRTIME){
 
                         var $ws_id = $("#ws_delete");
                         $ws_id.show();
-                        editName();
 
                         var length = $(".side_playlist.active-tab .ws_length");
                         length.text(json.length);
