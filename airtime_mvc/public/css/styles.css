@@ -3863,4 +3863,18 @@ li .ui-state-hover {
     flex: 1;
 }
 
+#users_datatable_wrapper {
+    position: absolute;
+    min-height: 300px;
+}
+
+#users_datatable {
+    overflow: auto;
+}
+
+#users_datatable tbody {
+
+    vertical-align: top !important;
+}
+
 
