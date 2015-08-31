@@ -1793,14 +1793,16 @@ button, input {
     border: 0px;
 }
 
-#users_datatable_wrapper > div.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix
-{
+#users_datatable_wrapper > div.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
 }
 
+#users_datatable_wrapper td {
+    vertical-align: middle;
+}
 
 .user-management div.user-list-wrapper .ui-widget-header:first-child {
     background: none repeat scroll 0 0 transparent;
@@ -1816,7 +1818,8 @@ button, input {
     padding-bottom: 12px;
 }
 .user-management .dataTables_filter input {
-    width: 93.8%;
+    width: 100%;
+    box-sizing: border-box;
     margin-bottom:8px;
 }
 .user-data.simple-formblock dd {
@@ -3843,7 +3846,7 @@ li .ui-state-hover {
 }
 
 #users_datatable_wrapper {
-    position: absolute;
+    /*position: absolute;*/
     min-height: 300px;
 }
 

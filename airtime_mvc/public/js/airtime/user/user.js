@@ -180,17 +180,17 @@ function assignUserRightsToUserTypes() {
         }
     });
 }
-$(document).ready(function() {
-    populateUserTable();
-    assignUserRightsToUserTypes();
 
-    $('#type').live("change", function(){
+function init() {
+    var type = $('#type');
+
+    type.live("change", function(){
         //when the title changes on live tipsy tooltips the changes take
         //affect the next time tipsy is shown so we need to hide and re-show it
         $(this).tipsy('hide').tipsy('show');
     });
-    
-    $('#type').tipsy({
+
+    type.tipsy({
         gravity: 'w',
         html: true,
         opacity: 0.9,
@@ -211,15 +211,21 @@ $(document).ready(function() {
         table.row('.selected').remove().draw( false );
     } );
 
-    $('#type').tipsy('show');
-    
+    type.tipsy('show');
+
     var newUser = {login:"", first_name:"", last_name:"", type:"G", id:""};
-    
+
     $('#add_user_button').live('click', function(){
         populateForm(newUser);
         $("#user_details").css("visibility", "visible");
     });
-    
+}
+
+$(document).ready(function() {
+    populateUserTable();
+    assignUserRightsToUserTypes();
+    init();
+
     $('#save_user').live('click', function(){
         var data = $('#user_form').serialize();
         var url = baseUrl+'User/add-user';
@@ -229,6 +235,7 @@ $(document).ready(function() {
                 $('#content').empty().append(json.html);
                 populateUserTable();
                 assignUserRightsToUserTypes();
+                init(); // Reinitialize
             } else {
                 //if form is invalid we only need to redraw the form
                 $('#user_form').empty().append($(json.html).find('#user_form').children());
