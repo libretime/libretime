@@ -1042,7 +1042,7 @@ SQL;
             if (!empty($show["background_color"])) {
                 $event["color"] = "#" . $show["background_color"];
             } else {
-                $event["color"] = "#" . DEFAULT_SHOW_COLOR;
+                $event["color"] = "#" . self::getDefaultBackgroundColor($startsDT);//DEFAULT_SHOW_COLOR;
             }
 
             foreach ($options as $key => $value) {
@@ -1052,6 +1052,22 @@ SQL;
             $events[] = $event;
         }
         return $events;
+    }
+
+    /** Get a palettized colour for the show. */
+    private static function getDefaultBackgroundColor($date) {
+
+        $palette = [['42d5a1', '56bd99', '65ab93', '7b938b'],
+                    ['42a4d5', '569bbd', '6594ab', '7b8b93'],
+                    ['4264d5', '566fbd', '6576ab', '7b8193']];
+
+        //$hashValue = (md5($date->format('d'))[0] % $cols) + ((intval($date->format('h'))/24) % $rows);
+        $row = intval($date->format('d')) % sizeof($palette);
+        $foo = $date->format('H');
+        $col = intval(intval($date->format('H'))/24.0 * sizeof($palette[0]));
+        //$color = $palette[$hashValue % sizeof($palette)];
+        $color = $palette[$row][$col];
+        return $color;
     }
 
     /**
