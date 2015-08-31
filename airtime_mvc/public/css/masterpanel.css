@@ -301,9 +301,17 @@
 
 
 .personal-block.solo {
-    width: auto;
-    height:auto;
-    margin: 0;
+	width: 200px;
+	line-height: 32px;
+	margin: 0;
+}
+.personal-block.solo span {
+	display: inline-block;
+	width: 100px;
+	text-overflow: ellipsis;
+	text-decoration: underline;
+	overflow: hidden;
+	float: left;
 }
 .personal-block.solo ol {
     margin-top: 6px;
