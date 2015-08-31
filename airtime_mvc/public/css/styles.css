@@ -3295,12 +3295,13 @@ dd .stream-status {
 }
 
 .btn-new {
-    background: none;
-    background-color: #237686;
+    background: #237686;
+}
+.btn-new[disabled] {
+    background-color: #1c606e;
 }
 .btn-new:hover {
-    background: none;
-    background-color: #1c606e;
+    background: #1c606e;
 }
 .btn-new[disabled]:hover {
     background: inherit;
