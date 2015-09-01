@@ -708,7 +708,7 @@ var AIRTIME = (function(AIRTIME) {
                     "url": sSource,
                     "data": aoData,
                     "success": fnCallback,
-                    "error": handleAjaxError,
+                    "error": handleAjaxError
                 });
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
