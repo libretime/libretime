@@ -763,15 +763,18 @@ var AIRTIME = (function(AIRTIME){
                             playlistError(json);
                         }
                         else {
-                            var fadeIn = $pl.find("span.spl_main_fade_in");
+                            var fadeIn = $pl.find("input.spl_main_fade_in");
                             var fadeOut = $pl.find("span.spl_main_fade_out");
                             if (json.fadeIn == null) {
                                 fadeIn.parent().prev().hide();
                                 fadeIn.hide();
                             } else {
+                                console.log(json.fadeIn);
+                                //console.log(fadeIn.val());
                                 fadeIn.parent().prev().show();
                                 fadeIn.show();
-                                fadeIn.empty().append(json.fadeIn);
+                                fadeIn.val(json.fadeIn);
+                                fadeIn.text(json.fadeIn);
                             }
                             if (json.fadeOut == null) {
                                 fadeOut.parent().prev().hide();
@@ -789,41 +792,41 @@ var AIRTIME = (function(AIRTIME){
             }
         });
 
-        $pl.on("blur", "span.spl_main_fade_in", function(event){
+        $pl.on("blur", "input.spl_main_fade_in", function(event){
             event.stopPropagation();
 
             var url = baseUrl+"playlist/set-playlist-fades",
-                span = $(this),
-                fadeIn = $.trim(span.text()),
+                input = $(this),
+                fadeIn = $.trim(input.val()),
                 lastMod = mod.getModified(),
                 type = $pl.find('.obj_type').val();
 
             if (!isFadeValid(fadeIn)){
-                showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
+                showError(input, $.i18n._("please put in a time in seconds '00 (.0)'"));
                 return;
             }
 
             $.post(url,
                 {format: "json", fadeIn: fadeIn, modified: lastMod, type: type},
                 function(json){
-                    hideError(span);
+                    hideError(input);
                     if (json.modified !== undefined) {
                         mod.setModified(json.modified);
                     }
                 });
         });
 
-        $pl.on("blur", "span.spl_main_fade_out", function(event){
+        $pl.on("blur", "input.spl_main_fade_out", function(event){
             event.stopPropagation();
 
             var url = baseUrl+"playlist/set-playlist-fades",
-                span = $(this),
-                fadeOut = $.trim(span.text()),
+                input = $(this),
+                fadeOut = $.trim(input.text()),
                 lastMod = mod.getModified(),
                 type = $pl.find('.obj_type').val();
 
             if (!isFadeValid(fadeOut)){
-                showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
+                showError(input, $.i18n._("please put in a time in seconds '00 (.0)'"));
                 return;
             }
 

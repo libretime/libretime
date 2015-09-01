@@ -345,7 +345,7 @@
 }
 
 .edit-error {
-    color: #b80000;
+    color: #bd362f;
     margin: 0;
     padding-bottom: 0;
     font-size: 12px;
@@ -359,12 +359,21 @@
     color: #fff;
 }
 
+.playlist_main_fade_input {
+    width: 100px;
+}
+
 .crossfade-main {
-    background: #debc9e;
+    /*background: #debc9e;*/
     border: 1px solid #5b5b5b;
     padding: 10px 10px 0 10px;
     margin: 0 1px 16px 0;
     position: relative;
+}
+
+.crossfade-main dt {
+    color: #ffffff !important;
+    width: 100px;
 }
 
 .crossfade-main .edit-error {
