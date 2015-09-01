@@ -610,6 +610,7 @@ div.ColVis_collectionBackground {
 
 .ColVis.TableTools > button {
     padding: 3px 9px;
+    margin: -1px -1px 5px 0;
 }
 
 .ColVis_title {

@@ -78,7 +78,7 @@ class Application_Service_CalendarService
 
                     $menu["schedule"] = array(
                         // "name"=> _("Add / Remove Content"),
-                        "name" => _("Schedule Show"),
+                        "name" => _("Schedule Tracks"),
                         "icon" => "add-remove-content",
                         "url" => $baseUrl."showbuilder/builder-dialog/");
                 }

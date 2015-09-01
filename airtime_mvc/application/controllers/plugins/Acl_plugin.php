@@ -204,7 +204,11 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                         $resourceName, 
                         $request->getActionName())) {
                 /** Redirect to access denied page */
-                $this->denyAccess();
+                $this->getResponse()
+                    ->setHttpResponseCode(403)
+                    ->appendBody("You don't have permission to access this resource.")
+                    ->sendResponse();
+                // $this->denyAccess(); /* This results in a 404! */
             }
         }
     }
