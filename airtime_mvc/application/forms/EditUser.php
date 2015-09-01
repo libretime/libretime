@@ -121,11 +121,14 @@ class Application_Form_EditUser extends Zend_Form
         $locale->setValue(Application_Model_Preference::GetUserLocale($currentUserId));
         $locale->setDecorators(array('ViewHelper'));
         $this->addElement($locale);
-        
+
+        $stationTz = Application_Model_Preference::GetTimezone($currentUserId);
+        $userTz = Application_Model_Preference::GetUserTimezone($currentUserId);
+
         $timezone = new Zend_Form_Element_Select("cu_timezone");
         $timezone->setLabel(_("Interface Timezone:"));
         $timezone->setMultiOptions(Application_Common_Timezone::getTimezones());
-        $timezone->setValue(Application_Model_Preference::GetUserTimezone($currentUserId));
+        $timezone->setValue($userTz == $stationTz ? null : $userTz);
         $timezone->setDecorators(array('ViewHelper'));
         $this->addElement($timezone);
         

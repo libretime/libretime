@@ -477,10 +477,6 @@ class Application_Model_Preference
 
     public static function SetUserTimezone($timezone = null)
     {
-        // When a new user is created they will get the default timezone
-        // setting which the admin sets on preferences page
-        if (is_null($timezone))
-            $timezone = self::GetDefaultTimezone();
         self::setValue("user_timezone", $timezone, true);
     }
 
@@ -520,10 +516,10 @@ class Application_Model_Preference
     public static function GetUserLocale()
     {
         $locale = self::getValue("user_locale", true);
-        if (!$locale) {
+        // empty() checks for null and empty strings - more robust than !val
+        if (empty($locale)) {
             return self::GetDefaultLocale();
-        } 
-        else {
+        } else {
             return $locale;
         }
     }
