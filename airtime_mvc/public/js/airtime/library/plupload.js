@@ -185,7 +185,7 @@ $(document).ready(function () {
             "bFilter": false,
             "bSort": false,
             //"sDom": '<"H">frtip<"F"l>',
-            "sDom": 'frt<"F"lip>',
+            "sDom": '<"dataTables_scrolling"frt><"F"lip>',
             "bPaginate": true,
             "sPaginationType": "full_numbers",
             "oLanguage": getDatatablesStrings({

@@ -558,6 +558,19 @@ var AIRTIME = (function(AIRTIME) {
 
         }
 
+        function handleAjaxError(r) {
+            // If the request was denied due to permissioning
+            if (r.status === 403) {
+                // Hide the processing div
+                $("#library_display_wrapper").find(".dt-process-rel").hide();
+                $.getJSON( "ajax/library_placeholders.json", function( data ) {
+                    $('#library_empty_text').text($.i18n._(data.unauthorized));
+                })  ;
+
+                $('#library_empty').show();
+            }
+        }
+
         oTable = $libTable.dataTable( {
 
             // put hidden columns at the top to insure they can never be visible
@@ -689,13 +702,14 @@ var AIRTIME = (function(AIRTIME) {
 
                 getUsabilityHint();
 
-                $.ajax( {
+                $.ajax({
                     "dataType": 'json',
                     "type": "POST",
                     "url": sSource,
                     "data": aoData,
-                    "success": fnCallback
-                } );
+                    "success": fnCallback,
+                    "error": handleAjaxError
+                });
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {

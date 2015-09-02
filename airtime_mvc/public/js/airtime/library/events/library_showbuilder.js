@@ -79,47 +79,23 @@ var AIRTIME = (function(AIRTIME) {
 
         if (emptyRow.length > 0) {
             emptyRow.hide();
-            var opts = {},
-                mediaType = parseInt($('.media_type_selector.selected').attr('data-selection-id')),
+            var mediaType = parseInt($('.media_type_selector.selected').attr('data-selection-id')),
                 img = $('#library_empty_image');
-            // TODO: once the new manual pages are added, change links!
-            if (mediaType > 1) {
-                opts.subtext = $.i18n._("Click 'New' to create one now.");
-                opts.href = "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/";
-            } else {
-                opts.subtext = $.i18n._("Click 'Upload' to add some now.");
-                opts.href = "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/";
-            }
-
-            switch(mediaType) {
-                case 1:
-                    opts.media = $.i18n._('tracks');
-                    opts.icon = 'icon-music';
-                    break;
-                case 2:
-                    opts.media = $.i18n._('playlists');
-                    opts.icon = 'icon-list';
-                    break;
-                case 3:
-                    opts.media = $.i18n._('smart blocks');
-                    opts.icon = 'icon-time';
-                    break;
-                case 4:
-                    opts.media = $.i18n._('webstreams');
-                    opts.icon = 'icon-random';
-                    break;
-            }
-
             // Remove all classes for when we change between empty media types
             img.removeClass(function() {
                 return $( this ).attr( "class" );
             });
-            img.addClass("icon-white " + opts.icon);
-            $('#library_empty_text').html(
-                $.i18n._("You haven't added any ") + opts.media + "."
-                + "<br/>" + opts.subtext
-                + "<br/><a href='" + opts.href + "'>" + $.i18n._("Learn about ") + opts.media + "</a>"
-            );
+            // TODO: once the new manual pages are added, change links!
+            $.getJSON( "ajax/library_placeholders.json", function( data ) {
+                var opts = data[mediaType];
+                img.addClass("icon-white " + opts.icon);
+                $('#library_empty_text').html(
+                    $.i18n._("You haven't added any " + opts.media + ".")
+                    + "<br/>" + $.i18n._(opts.subtext)
+                    + "<br/><a href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
+                );
+            })  ;
+
             $('#library_empty').show();
         } else {
             $('#library_empty').hide();
@@ -281,118 +257,119 @@ var AIRTIME = (function(AIRTIME) {
 
         mod.createToolbarButtons();
         mod.moveSearchBarToHeader();
-        
-        $toolbar.append($menu);
-        // add to timeline button
-        $toolbar
-            .find('#library-plus')
-            .click(
-                    function() {
 
-                        if (AIRTIME.button.isDisabled('btn-group #library-plus') === true) {
-                            return;
-                        }
+        if (localStorage.getItem('user-type') != 'G') {
+            $toolbar.append($menu);
+            // add to timeline button
+            $toolbar
+                .find('#library-plus')
+                .click(
+                function () {
 
-                        var selected = AIRTIME.library.getSelectedData(), data, i, length, temp, aMediaIds = [], aSchedIds = [], aData = [];
+                    if (AIRTIME.button.isDisabled('btn-group #library-plus') === true) {
+                        return;
+                    }
 
-                        if ($("#show_builder_table").is(":visible")) {
-                            for (i = 0, length = selected.length; i < length; i++) {
-                                data = selected[i];
-                                aMediaIds.push( {
-                                    "id" : data.id,
-                                    "type" : data.ftype
-                                });
-                            }
+                    var selected = AIRTIME.library.getSelectedData(), data, i, length, temp, aMediaIds = [], aSchedIds = [], aData = [];
 
-                            // process selected files/playlists.
-                            $("#show_builder_table tr.sb-selected").each(function(i, el) {
-                                aData.push($(el).data("aData"));
+                    if ($("#show_builder_table").is(":visible")) {
+                        for (i = 0, length = selected.length; i < length; i++) {
+                            data = selected[i];
+                            aMediaIds.push({
+                                "id": data.id,
+                                "type": data.ftype
                             });
+                        }
 
-                            // process selected schedule rows to add media
-                            // after.
-                            for (i = 0, length = aData.length; i < length; i++) {
-                                temp = aData[i];
-                                aSchedIds.push( {
-                                    "id" : temp.id,
-                                    "instance" : temp.instance,
-                                    "timestamp" : temp.timestamp
-                                });
-                            }
+                        // process selected files/playlists.
+                        $("#show_builder_table tr.sb-selected").each(function (i, el) {
+                            aData.push($(el).data("aData"));
+                        });
 
-                            if (aSchedIds.length == 0) {
-                                if (!addToCurrentOrNext(aSchedIds)) {
-                                    return;
-                                }
-                            }
+                        // process selected schedule rows to add media
+                        // after.
+                        for (i = 0, length = aData.length; i < length; i++) {
+                            temp = aData[i];
+                            aSchedIds.push({
+                                "id": temp.id,
+                                "instance": temp.instance,
+                                "timestamp": temp.timestamp
+                            });
+                        }
 
-                            AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
-                        } else {
-                            for (i = 0, length = selected.length; i < length; i++) {
-                                data = selected[i];
-                                aMediaIds.push([data.id, data.ftype]);
-                            }
-
-                            // check if a playlist/block is open before adding items
-                            if ($('.active-tab .obj_type').val() == 'playlist'
-                                || $('.active-tab .obj_type').val() == 'block') {
-                                AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+                        if (aSchedIds.length == 0) {
+                            if (!addToCurrentOrNext(aSchedIds)) {
+                                return;
                             }
                         }
-                    });
 
-        // delete from library.
-        $toolbar.find('.icon-trash').parent().click(function() {
+                        AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
+                    } else {
+                        for (i = 0, length = selected.length; i < length; i++) {
+                            data = selected[i];
+                            aMediaIds.push([data.id, data.ftype]);
+                        }
 
-            if (AIRTIME.button.isDisabled('icon-trash') === true) {
-                return;
-            }
+                        // check if a playlist/block is open before adding items
+                        if ($('.active-tab .obj_type').val() == 'playlist'
+                            || $('.active-tab .obj_type').val() == 'block') {
+                            AIRTIME.playlist.fnAddItems(aMediaIds, undefined, 'after');
+                        }
+                    }
+                });
 
-            AIRTIME.library.fnDeleteSelectedItems();
-        });
+            // delete from library.
+            $toolbar.find('.icon-trash').parent().click(function () {
+                if (AIRTIME.button.isDisabled('icon-trash') === true) {
+                    return;
+                }
 
-        $toolbar.find('#sb-new').click(function() {
-            if (AIRTIME.button.isDisabled('btn-group #sb-new') === true) {
-                return;
-            }
+                AIRTIME.library.fnDeleteSelectedItems();
+            });
 
-            var selection = $(".media_type_selector.selected").attr("data-selection-id");
+            $toolbar.find('#sb-new').click(function () {
+                if (AIRTIME.button.isDisabled('btn-group #sb-new') === true) {
+                    return;
+                }
 
-            if (selection == 2) {
-                AIRTIME.playlist.fnNew();
-            } else if (selection == 3) {
-                AIRTIME.playlist.fnNewBlock();
-            } else if (selection == 4) {
-                AIRTIME.playlist.fnWsNew();
-            }
-        });
+                var selection = $(".media_type_selector.selected").attr("data-selection-id");
 
-
-        $toolbar.find('#sb-edit').click(function() {
-            if (AIRTIME.button.isDisabled('btn-group #sb-edit') === true) {
-                return;
-            }
-
-            var selected = $(".lib-selected");
-
-            selected.each(function(i, el) {
-                var data = $(el).data("aData");
-
-                if (data.ftype === "audioclip") {
-                    $.get(baseUrl + "library/edit-file-md/id/" + data.id, {format: "json"}, function(json){
-                        AIRTIME.playlist.fileMdEdit(json);
-                        //buildEditMetadataDialog(json);
-                    });
-                } else if (data.ftype === "playlist" || data.ftype === "block") {
-                    AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'playlist/edit');
-                    AIRTIME.playlist.validatePlaylistElements();
-                } else if (data.ftype === "stream") {
-                    AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'webstream/edit');
+                if (selection == 2) {
+                    AIRTIME.playlist.fnNew();
+                } else if (selection == 3) {
+                    AIRTIME.playlist.fnNewBlock();
+                } else if (selection == 4) {
+                    AIRTIME.playlist.fnWsNew();
                 }
             });
-        });
 
-        mod.createToolbarDropDown();
+
+            $toolbar.find('#sb-edit').click(function () {
+                if (AIRTIME.button.isDisabled('btn-group #sb-edit') === true) {
+                    return;
+                }
+
+                var selected = $(".lib-selected");
+
+                selected.each(function (i, el) {
+                    var data = $(el).data("aData");
+
+                    if (data.ftype === "audioclip") {
+                        $.get(baseUrl + "library/edit-file-md/id/" + data.id, {format: "json"}, function (json) {
+                            AIRTIME.playlist.fileMdEdit(json);
+                            //buildEditMetadataDialog(json);
+                        });
+                    } else if (data.ftype === "playlist" || data.ftype === "block") {
+                        AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'playlist/edit');
+                        AIRTIME.playlist.validatePlaylistElements();
+                    } else if (data.ftype === "stream") {
+                        AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'webstream/edit');
+                    }
+                });
+            });
+
+            mod.createToolbarDropDown();
+        }
     };
 
     return AIRTIME;

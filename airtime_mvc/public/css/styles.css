@@ -3322,8 +3322,12 @@ dd .stream-status {
     padding-bottom: 5px;
 }
 
-.edit-user-global input, .edit-user-global select {
+.edit-user-global input {
     width: 200px;
+}
+
+.edit-user-global select {
+    width: 212px;
 }
 
 .edit-user-errors {
