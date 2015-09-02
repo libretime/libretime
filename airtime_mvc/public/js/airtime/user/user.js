@@ -43,10 +43,16 @@ function rowClickCallback(row_id){
 	  }});
 }
 
-function removeUserCallback(row_id, nRow){
-      $.ajax({ url: baseUrl+'User/remove-user/id/'+ row_id +'/format/json', dataType:"text", success:function(data){
-        var o = $('#users_datatable').dataTable().fnDeleteRow(nRow);
-	  }});
+function removeUserCallback(row_id, nRow) {
+    if (confirm($.i18n._("Are you sure you want to delete this user?"))) {
+        $.ajax({
+            url: baseUrl + 'User/remove-user/id/' + row_id + '/format/json',
+            dataType: "text",
+            success: function (data) {
+                var o = $('#users_datatable').dataTable().fnDeleteRow(nRow);
+            }
+        });
+    }
 }
 
 function rowCallback( nRow, aData, iDisplayIndex ){
