@@ -58,10 +58,9 @@ class Application_Model_Preference
 
             $result = Application_Common_Database::prepareAndExecute($sql, 
                     $paramMap, 
-                    Application_Common_Database::COLUMN,
-                    PDO::FETCH_ASSOC, 
+                    Application_Common_Database::ROW_COUNT,
+                    PDO::FETCH_ASSOC,
                     $con);
-            $result = count($result);
 
             $paramMap = array();
             if ($result > 1) {
@@ -103,8 +102,8 @@ class Application_Model_Preference
             $paramMap[':value'] = $value;
 
             Application_Common_Database::prepareAndExecute($sql, 
-                    $paramMap, 
-                    'execute', 
+                    $paramMap,
+                    Application_Common_Database::EXECUTE,
                     PDO::FETCH_ASSOC, 
                     $con);
 

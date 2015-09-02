@@ -678,41 +678,6 @@ function setAddShowEvents(form) {
         }
     });
     
-    // validate on upload
-    function validateImage(img, el) {
-        // remove any existing error messages
-        if ($("#img-err")) { $("#img-err").remove(); }
-        
-        if (img.size > 2048000) { // 2MB - pull this from somewhere instead?
-            // hack way of inserting an error message
-            var err = $.i18n._("Selected file is too large");
-            el.parent().after(
-                "<ul id='img-err' class='errors'>" +
-                    "<li>" + err + "</li>" +
-                "</ul>");
-            return false;
-        } else if (validateMimeType(img.type) < 0) {
-            var err = $.i18n._("File format is not supported");
-            el.parent().after(
-                "<ul id='img-err' class='errors'>" +
-                    "<li>" + err + "</li>" +
-                "</ul>");
-            return false;
-        }
-        return true;
-    }
-    
-    // Duplicate of the function in ShowImageController
-    function validateMimeType(mime) {
-        var extensions = [
-            'image/jpeg',
-            'image/png',
-            'image/gif'
-            // BMP?
-            ];
-        return $.inArray(mime, extensions);
-    }
-    
     form.find("#add_show_logo_current_remove").click(function() {
         if (confirm($.i18n._('Are you sure you want to delete the current logo?'))) {
             var showId = $("#add_show_id").attr("value");
