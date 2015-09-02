@@ -89,9 +89,9 @@
                 }
                 $nextDisabled = $this->element->getElement("sp_criteria_field_".$nextIndex)->getAttrib('disabled') == 'disabled'?true:false;
         ?>
-            <div <?php if (($i > 0) && $disabled) {
-                           echo 'style=display:none';
-                       } ?>>
+            <div <?php if (/*($i > 0) && */ $disabled) {
+                          echo 'style=display:none';
+                      } ?> >
                 <?php echo $this->element->getElement("sp_criteria_field_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_modifier_".$i."_".$j) ?>
                 <?php echo $this->element->getElement("sp_criteria_value_".$i."_".$j) ?>
