@@ -150,6 +150,9 @@ div.btn > span {
 #library_empty_image {
     opacity: .3;
 
+    width: 16px;
+    height: 20px;
+
     top: -20px;
     margin-top: -2px;
     padding-right: 2px; /* For the webstream icon */

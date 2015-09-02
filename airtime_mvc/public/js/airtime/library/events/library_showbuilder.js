@@ -77,6 +77,7 @@ var AIRTIME = (function(AIRTIME) {
             cb.append("<input id='super-checkbox' type='checkbox'>");
         }
 
+        var libEmpty = $('#library_empty');
         if (emptyRow.length > 0) {
             emptyRow.hide();
             var mediaType = parseInt($('.media_type_selector.selected').attr('data-selection-id')),
@@ -94,11 +95,11 @@ var AIRTIME = (function(AIRTIME) {
                     + "<br/>" + $.i18n._(opts.subtext)
                     + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
                 );
-            })  ;
+            });
 
-            $('#library_empty').show();
+            libEmpty.show();
         } else {
-            $('#library_empty').hide();
+            libEmpty.hide();
         }
 
         if ($("#show_builder_table").is(":visible")) {

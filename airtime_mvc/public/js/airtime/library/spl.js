@@ -569,6 +569,10 @@ var AIRTIME = (function(AIRTIME){
         if (pane.get(0) == curr.get(0)) { // Closing the current tab, otherwise we don't need to switch tabs
             AIRTIME.showbuilder.switchTab(toPane, toTab);
         }
+
+        // If we close a tab that was causing tabs to wrap to the next row, we need to resize to change the
+        // margin for the tab nav
+        AIRTIME.playlist.onResize();
     }
 
     mod.closeTab = function(id) {
