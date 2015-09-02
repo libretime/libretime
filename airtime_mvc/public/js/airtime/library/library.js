@@ -627,22 +627,24 @@ var AIRTIME = (function(AIRTIME) {
             },
             "fnStateSave": function (oSettings, oData) {
                 localStorage.setItem('datatables-library', JSON.stringify(oData));
-                /*
-                 $.ajax({
-                 url: baseUrl+"usersettings/set-library-datatable",
-                 type: "POST",
-                 data: {settings : oData, format: "json"},
-                 dataType: "json"
-                 });
-                 */
+
+                // Sadly, this is necessary because we need to unscramble the colReorder map on the backend
+                $.ajax({
+                    url: baseUrl + "usersettings/set-library-datatable",
+                    type: "POST",
+                    data: {settings: oData, format: "json"},
+                    dataType: "json"
+                });
 
                 colReorderMap = oData.ColReorder;
             },
             "fnStateLoad": function fnLibStateLoad(oSettings) {
-                var settings = localStorage.getItem('datatables-library');
+                var settings = JSON.parse(localStorage.getItem('datatables-library'));
+                // Hacky; always set the visibility of the last column (actions buttons) to true
+                settings.abVisCols[settings.abVisCols.length - 1] = true;
 
                 try {
-                    return JSON.parse(settings);
+                    return settings;
                 } catch (e) {
                     return null;
                 }
@@ -690,7 +692,6 @@ var AIRTIME = (function(AIRTIME) {
                  */
                 var advSearchFields = $("div#advanced_search").children(':visible');
                 var advSearchValid = validateAdvancedSearch(advSearchFields);
-                advSearchFields.val("TEST");
                 var type;
                 aoData.push( { name: "format", value: "json"} );
                 aoData.push( { name: "advSearch", value: advSearchValid} );
@@ -700,7 +701,7 @@ var AIRTIME = (function(AIRTIME) {
                 type = (type === undefined) ? 1 : type;
                 aoData.push( { name: "type", value: type} );
 
-                getUsabilityHint();
+                //getUsabilityHint();
 
                 $.ajax({
                     "dataType": 'json',
@@ -709,6 +710,11 @@ var AIRTIME = (function(AIRTIME) {
                     "data": aoData,
                     "success": fnCallback,
                     "error": handleAjaxError
+                }).done(function(data) {
+                    if (data.iTotalRecords > data.iTotalDisplayRecords) {
+                        $('#library_empty').hide();
+                        $('#library_display').find('tr:has(td.dataTables_empty)').show();
+                    }
                 });
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
