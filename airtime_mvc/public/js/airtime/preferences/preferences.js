@@ -33,10 +33,10 @@ function setSystemFromEmailReadonly() {
     var enableSystemEmails = $("#enableSystemEmail");
     var systemFromEmail = $("#systemEmail");
     if ($(enableSystemEmails).is(':checked')) {
-        systemFromEmail.removeAttr("readonly");	
+        systemFromEmail.removeAttr("readonly");
     } else {
         systemFromEmail.attr("readonly", "readonly");
-    }	
+    }
 }
 
 function setMailServerInputReadonly() {
@@ -114,14 +114,15 @@ function setMsAuthenticationFieldsReadonly(ele) {
 }
 
 function removeLogo() {
-    $.post(baseUrl+'Preference/remove-logo', function(json){});
-    location.reload();
+    $.post(baseUrl+'preference/remove-logo', function(json){});
+    // Reload without resubmitting the form
+    location.href = location.href.replace(location.hash,"");
 }
 
 function deleteAllFiles() {
     var resp = confirm($.i18n._("Are you sure you want to delete all the tracks in your library?"))
     if (resp) {
-        $.post(baseUrl+'Preference/delete-all-files', function(json){});
+        $.post(baseUrl+'preference/delete-all-files', function(json){});
         location.reload();
     }
 }
@@ -152,6 +153,36 @@ $(document).ready(function() {
             setEnableSystemEmailsListener();
         });
     });*/
+
+    // when an image is uploaded, preview it to the user
+    var logo = $("#stationLogo"),
+        preview = $("#logo-img");
+    logo.change(function(e) {
+        if (this.files && this.files[0]) {
+            preview.show();
+            var reader = new FileReader(); // browser compatibility?
+            reader.onload = function (e) {
+                console.log("Reader loaded");
+                preview.attr('src', e.target.result);
+            };
+
+            // check image size so we don't crash the page trying to render
+            if (validateImage(this.files[0], logo)) {
+                // read the image data as though it were a data URI
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                // remove the file element data
+                $(this).val('').replaceWith($(this).clone(true));
+                preview.hide();
+            }
+        } else {
+            preview.hide();
+        }
+    });
+
+    if (preview.attr('src').indexOf('images/') > -1) {
+        $("#logo-remove-btn").hide();
+    }
 
     showErrorSections();
     
