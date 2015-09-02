@@ -28,7 +28,9 @@ class Application_Model_Preference
     {
         $cache = new Cache();
         $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
-        $con->beginTransaction();
+
+        //We are using row-level locking in Postgres via "FOR UPDATE" instead of a transaction here
+        //because sometimes this function needs to be called while a transaction is already started.
 
         try {
             /* Comment this out while we reevaluate it in favor of a unique constraint
@@ -40,7 +42,7 @@ class Application_Model_Preference
             }
 
             //Check if key already exists
-            $sql = "SELECT COUNT(*) FROM cc_pref"
+            $sql = "SELECT valstr FROM cc_pref"
                 ." WHERE keystr = :key";
             
             $paramMap = array();
@@ -50,13 +52,16 @@ class Application_Model_Preference
             if ($isUserValue) {
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $userId;
-            } 
+            }
+
+            $sql .= " FOR UPDATE";
 
             $result = Application_Common_Database::prepareAndExecute($sql, 
                     $paramMap, 
                     Application_Common_Database::COLUMN,
                     PDO::FETCH_ASSOC, 
                     $con);
+            $result = count($result);
 
             $paramMap = array();
             if ($result > 1) {
@@ -103,9 +108,7 @@ class Application_Model_Preference
                     PDO::FETCH_ASSOC, 
                     $con);
 
-            $con->commit();
         } catch (Exception $e) {
-            $con->rollback();
             header('HTTP/1.0 503 Service Unavailable');
             Logging::info("Database error: ".$e->getMessage());
             exit;

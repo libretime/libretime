@@ -847,14 +847,24 @@ SQL;
      */
     public static function createAndFillShowInstancesPastPopulatedUntilDate($needScheduleUntil)
     {
-        //UTC DateTime object
-        $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
-        //if application is requesting shows past our previous populated until date, generate shows up until this point.
-        if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $needScheduleUntil->getTimestamp()) {
-            $service_show = new Application_Service_ShowService();
-            $ccShow = $service_show->delegateInstanceCreation(null, $needScheduleUntil, true);
-            Application_Model_Preference::SetShowsPopulatedUntil($needScheduleUntil);
+        $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
+        try {
+            $con->beginTransaction();
+
+            //UTC DateTime object
+            $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
+            //if application is requesting shows past our previous populated until date, generate shows up until this point.
+            if (is_null($showsPopUntil) || $showsPopUntil->getTimestamp() < $needScheduleUntil->getTimestamp()) {
+                $service_show = new Application_Service_ShowService();
+                $ccShow = $service_show->delegateInstanceCreation(null, $needScheduleUntil, true);
+                Application_Model_Preference::SetShowsPopulatedUntil($needScheduleUntil);
+            }
+            $con->commit();
+        } catch (Exception $e) {
+            $con->rollBack();
+            throw $e;
         }
+
     }
 
     /**
