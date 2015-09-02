@@ -11,18 +11,30 @@ function setSmartBlockEvents() {
         
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last');
 
-        div.find('.db-logic-label').text('and').show();
-        div = div.next().show();
+        if (div.length == 0) {
+            div = $('dd[id="sp_criteria-element"]').children('div:first');
+            div.children().removeAttr('disabled');
+            div.show();
 
-        div.children().removeAttr('disabled');
-        div = div.next();
-        if (div.length === 0) {
-            $(this).hide();
+            appendAddButton();
+            appendModAddButton();
+            removeButtonCheck();
+
+        } else {
+
+            div.find('.db-logic-label').text('and').show();
+            div = div.next().show();
+
+            div.children().removeAttr('disabled');
+            div = div.next();
+            if (div.length === 0) {
+                $(this).hide();
+            }
+
+            appendAddButton();
+            appendModAddButton();
+            removeButtonCheck();
         }
-        
-        appendAddButton();
-        appendModAddButton();
-        removeButtonCheck();
     });
     
     /********** ADD MODIFIER ROW **********/
@@ -512,7 +524,9 @@ function callback(json, type) {
 
             form.find('.success').show();
         }
-	    form.find('.smart-block-form').removeClass("closed");
+        removeButtonCheck();
+
+        form.find('.smart-block-form').removeClass("closed");
     } else {
         if (json.result == "0") {
             $('.active-tab #sp-success-saved').text($.i18n._('Smart block saved')).show();
@@ -524,6 +538,7 @@ function callback(json, type) {
         }
         else {
             AIRTIME.playlist.playlistResponse(json);
+            removeButtonCheck();
         }
         form.find('.smart-block-form').removeClass("closed");
     }
@@ -551,6 +566,7 @@ function appendAddButton() {
 }
 
 function removeButtonCheck() {
+    /*
     var rows = $('.active-tab dd[id="sp_criteria-element"]').children('div'),
         enabled = rows.find('select[name^="sp_criteria_field"]:enabled'),
         rmv_button = enabled.siblings('a[id^="criteria_remove"]');
@@ -560,7 +576,7 @@ function removeButtonCheck() {
     } else {
         rmv_button.removeAttr('disabled');
         rmv_button.show();
-    }
+    }*/
 }
 
 function enableLoadingIcon() {

@@ -3275,6 +3275,9 @@ dd .stream-status {
 
 #add_media_btn {
     width: 100%;
+    font-size: 16px;
+    height: 38px;
+    border-radius: 3px;
 }
 
 .add-show-submit.btn:hover {
@@ -3296,11 +3299,11 @@ dd .stream-status {
 }
 
 .btn-new {
-    background: #237686;
+    background: #246B86;
 }
 .btn-new:active, .btn-new:hover,
 .btn-new[disabled], .btn-new[disabled]:active {
-    background-color: #1c606e;
+    background-color: #185b6e;
 }
 
 .dark_class
