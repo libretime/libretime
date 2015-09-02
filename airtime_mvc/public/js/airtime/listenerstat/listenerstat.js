@@ -10,7 +10,7 @@ $(document).ready(function() {
     width = width * .91;
     $("#listenerstat_content").find("#flot_placeholder").width(width);
     $("#listenerstat_content").find("#legend").width(width);
-    
+
     getDataAndPlot();
     
     listenerstat_content.find("#his_submit").click(function(){
@@ -21,7 +21,17 @@ $(document).ready(function() {
     });
 });
 
-function getDataAndPlot(startTimestamp, endTimestamp){
+/**
+ * Toggle a spinner overlay so the user knows the page is processing
+ */
+function toggleOverlay() {
+    $('#flot_placeholder').toggleClass('processing');
+}
+
+function getDataAndPlot(startTimestamp, endTimestamp) {
+    // Turn on the processing overlay
+    toggleOverlay();
+
     // get data
     $.get(baseUrl+'Listenerstat/get-data', {start: startTimestamp, end: endTimestamp}, function(data){
         out = new Object();
@@ -37,6 +47,8 @@ function getDataAndPlot(startTimestamp, endTimestamp){
             out[mpName] = plotData;
         });
         plot(out);
+        // Turn off the processing overlay
+        toggleOverlay();
     })
 }
 

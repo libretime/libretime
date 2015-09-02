@@ -150,6 +150,9 @@ div.btn > span {
 #library_empty_image {
     opacity: .3;
 
+    width: 16px;
+    height: 20px;
+
     top: -20px;
     margin-top: -2px;
     padding-right: 2px; /* For the webstream icon */
@@ -456,8 +459,10 @@ li.ui-state-default {
     max-height: 60%;
     overflow-x: hidden;
     width: 100%;
-    flex: 1 0 100%;
+    flex: 1 0 auto;
     padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -500,6 +505,8 @@ li.ui-state-default {
     padding: 5px;
     border: 1px solid #444;
     border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     background-color: #111;
     display: flex;
@@ -559,6 +566,8 @@ li.ui-state-default {
 }
 
 .side_playlist .zend_form input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     height: 26px;
 }

@@ -82,7 +82,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
      * @param  string $module
      * @return void
      **/
-    public function setErrorPage($action, $controller = 'error', $module = null)
+    public function setErrorPage($action, $controller = 'error', $module = 'default')
     {
         $this->_errorPage = array('module' => $module,
                                   'controller' => $controller,
@@ -204,11 +204,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                         $resourceName, 
                         $request->getActionName())) {
                 /** Redirect to access denied page */
-                $this->getResponse()
-                    ->setHttpResponseCode(403)
-                    ->appendBody("You don't have permission to access this resource.")
-                    ->sendResponse();
-                // $this->denyAccess(); /* This results in a 404! */
+                $this->setErrorPage('error403');
+                $this->denyAccess(); /* This results in a 404! */
             }
         }
     }
