@@ -3462,6 +3462,10 @@ dd .stream-status {
     min-width: 200px !important;
 }
 
+.calendar-context-menu .context-menu-list {
+    min-width: 260px !important;
+}
+
 /* Add Media Page */
 
 #upload_form, #recent_uploads_wrapper {
