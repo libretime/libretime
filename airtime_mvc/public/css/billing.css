@@ -64,19 +64,6 @@
 	color: #000;
 }
 
-.pricing-grid .august-promo div {
-	display: inline-block;
-	background-color: #ff611f;
-	padding: 3px 5px;
-	border-radius: 5px;
-	margin-left: -5px;
-	color: #ffffff;
-}
-
-.pricing-grid .august-promo span {
-	text-decoration: line-through;
-}
-
 .pricing-grid td, .pricing-grid th
 {
 	border-bottom: 1px solid #5b5b5b;
