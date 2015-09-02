@@ -1001,7 +1001,7 @@ var AIRTIME = (function(AIRTIME){
             });
         });
 
-        $pl.on("click", "#save_button", function(event) {
+        $pl.unbind().on("click", "#save_button", function(event) {
             /* Smart blocks: get name, description, and criteria
              * Playlists: get name, description
              */

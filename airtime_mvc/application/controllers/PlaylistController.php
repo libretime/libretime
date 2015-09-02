@@ -595,10 +595,7 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->obj = $bl;
                 $this->view->id = $bl->getId();
                 $this->view->form = $form;
-                $viewPath = 'playlist/smart-block.phtml';
-                $result['html'] = $this->view->render($viewPath);
-                $result['result'] = 1;
-                $this->_helper->json->sendJson($result);
+                $this->createFullResponse($bl, false, true);
             }
         } catch (BlockNotFoundException $e) {
             $this->playlistNotFound('block', true);
