@@ -30,6 +30,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->addActionContext('get-block-info', 'json')
                     ->addActionContext('shuffle', 'json')
                     ->addActionContext('empty-content', 'json')
+                    ->addActionContext('change-playlist', 'json')
                     ->initContext();
 
         //This controller writes to the session all over the place, so we're going to reopen it for writing here.
@@ -201,6 +202,16 @@ class PlaylistController extends Zend_Controller_Action
         $this->createFullResponse($obj);
     }
 
+    public function changePlaylistAction() {
+        $this->view->layout()->disableLayout();  // Don't inject the standard Now Playing header.
+        $this->_helper->viewRenderer->setNoRender(true);  // Don't use (phtml) templates
+
+        $id = $this->_getParam('id', null);
+        $type = $this->_getParam('type');
+
+        Application_Model_Library::changePlaylist($id, $type);
+    }
+
     public function editAction()
     {
         $id = $this->_getParam('id', null);
@@ -241,7 +252,7 @@ class PlaylistController extends Zend_Controller_Action
             Logging::info("Currently active {$type} {$obj_sess->id}");
             if (in_array($obj_sess->id, $ids)) {
                 Logging::info("Deleting currently active {$type}");
-                Application_Model_Library::changePlaylist(null, $type);
+                // Application_Model_Library::changePlaylist(null, $type);
             } else {
                 Logging::info("Not deleting currently active {$type}");
                 $obj = new $objInfo['className']($obj_sess->id);

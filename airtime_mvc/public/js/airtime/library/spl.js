@@ -421,17 +421,19 @@ var AIRTIME = (function(AIRTIME){
         $('.zend_form + .spl-no-margin > div:has(*:visible):last').css('margin-left', 0);
     }
 
-    function getId() {
-        return parseInt($pl.find(".obj_id").val(), 10);
+    function getId(pl) {
+        pl = (pl === undefined) ? $pl : pl;
+        return parseInt(pl.find(".obj_id").val(), 10);
     }
 
-    mod.getModified = function() {
-        return parseInt($pl.find(".obj_lastMod").val(), 10);
-    }
+    mod.getModified = function(pl) {
+        pl = (pl === undefined) ? $pl : pl;
+        return parseInt(pl.find(".obj_lastMod").val(), 10);
+    };
 
     mod.setModified = function(modified) {
         $pl.find(".obj_lastMod").val(modified);
-    }
+    };
 
     function setTitleLabel(title) {
         $pl.find(".title_obj_name").text(title);
@@ -1212,8 +1214,8 @@ var AIRTIME = (function(AIRTIME){
         var url, id, lastMod, type, pl = (tabId === undefined) ? $pl : $('#pl-tab-content-' + tabId);
 
         stopAudioPreview();
-        id = (plid === undefined) ? getId() : plid;
-        lastMod = mod.getModified();
+        id = (plid === undefined) ? getId(pl) : plid;
+        lastMod = mod.getModified(pl);
         type = pl.find('.obj_type').val();
         url = baseUrl+'playlist/delete';
 
@@ -1562,6 +1564,7 @@ var AIRTIME = (function(AIRTIME){
 
     mod.setAsActive = function() {
         $pl = $(".active-tab");
+        $.post(baseUrl + "playlist/change-playlist", {"id": getId(), "type": $pl.find('.obj_type').val()});
     };
 
     mod.init = function() {
