@@ -1357,6 +1357,8 @@ input[type="checkbox"] {
 }
 
 #schedule_calendar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 
     width: 100%;
@@ -1819,6 +1821,8 @@ button, input {
 }
 .user-management .dataTables_filter input {
     width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin-bottom:8px;
 }
@@ -1945,7 +1949,9 @@ div.success{
     float: right;
     height: 30px;
     line-height: 24px;
-    box-sizing: border-box;;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 div.errors, span.errors{
@@ -1957,7 +1963,9 @@ div.errors, span.errors{
     border:1px solid #c83f3f;
     height: 30px;
     line-height: 24px;
-    box-sizing: border-box;;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 span.errors.sp-errors{
@@ -2625,6 +2633,8 @@ label span {
 
 fieldset > legend {
     width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 
     background: #333;
@@ -3469,6 +3479,8 @@ dd .stream-status {
 /* Add Media Page */
 
 #upload_form, #recent_uploads_wrapper {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -3597,6 +3609,8 @@ button.btn-icon-text > i.icon-white {
 
 .dashboard_sub_nav {
     padding: 0px 0px 0px 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -3726,6 +3740,8 @@ button.btn-icon-text > i.icon-white {
 #listenerstat_content {
     width: 100%;
     display: block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
