@@ -92,7 +92,7 @@ var AIRTIME = (function(AIRTIME) {
                 $('#library_empty_text').html(
                     $.i18n._("You haven't added any " + opts.media + ".")
                     + "<br/>" + $.i18n._(opts.subtext)
-                    + "<br/><a href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
+                    + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
                 );
             })  ;
 
