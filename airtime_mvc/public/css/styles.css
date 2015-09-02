@@ -3738,6 +3738,12 @@ button.btn-icon-text > i.icon-white {
     font-size: 12px;
 }
 
+#flot_placeholder.processing {
+    width: 100%;
+    height: 100%;
+    background: url("img/loading.gif") no-repeat 50% 50% rgba(0, 0, 0, .25);
+}
+
 .dashboard-btn {
     width: 50%;
 }
