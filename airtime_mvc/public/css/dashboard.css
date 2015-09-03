@@ -161,9 +161,9 @@ div.btn > span {
 #library_empty {
     display: none;
     font-size: 16px;
-    position: absolute;
-    width: 100%;
-    top: 44%;
+    position: fixed;
+    /*width: 100%;*/
+    /*top: 44%;*/
     text-align: center;
     color: #efefef;
 }
@@ -205,9 +205,9 @@ thead th.ui-state-default:focus {
 
 #advanced_search {
     position: absolute;
-    left: -420px;
+    left: -450px;
     padding: 5px;
-    margin-top: -2px;
+    margin-top: 28px;
     z-index: 1005;
 }
 
@@ -232,12 +232,19 @@ thead th.ui-state-default:focus {
     margin-top: 4px;
 }
 
+#filter_message {
+    border-top: none !important;
+    text-shadow: none;
+}
+
 #advanced-options {
     float: right;
     z-index: 1004;
 }
 
 #advanced-options > button {
+    position: absolute;
+    right: 0;
     background: transparent none;
     color: transparent;
     border: none;
@@ -250,6 +257,7 @@ thead th.ui-state-default:focus {
 }
 
 #advanced-options > button > span {
+    color: #000;
     border-top: 4px solid #242424;
 }
 
