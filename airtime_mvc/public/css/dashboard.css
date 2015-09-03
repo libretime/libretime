@@ -8,6 +8,7 @@
     box-sizing: border-box;
 
     height: 100%;
+    min-height: 300px;
 
     border: 1px solid #202020;
     border-top: 1px solid #353535;
@@ -22,16 +23,18 @@
 
 @media screen and (max-width: 1600px) {
     #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > span,
-    #show_builder button:not(.dropdown-toggle):not(.btn-new) > span {
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > span,
+    #show_builder #sb_submit > span {
         display: none;
     }
     #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > i,
-    #show_builder button:not(.dropdown-toggle):not(.btn-new) > i {
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > i,
+    #show_builder #sb_submit > i {
         margin-right: 0 !important;
     }
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1200px) {
     .wrapper {
         -webkit-flex-flow: column !important;
         flex-flow: column !important;

@@ -88,19 +88,16 @@ var AIRTIME = (function(AIRTIME) {
             });
             // TODO: once the new manual pages are added, change links!
             $.getJSON( "ajax/library_placeholders.json", function( data ) {
-                var opts = data[mediaType],
-                    wrapper = $('#library_display_wrapper').find('.dataTables_scrolling');
+                var opts = data[mediaType];
                 img.addClass("icon-white " + opts.icon);
                 $('#library_empty_text').html(
                     $.i18n._("You haven't added any " + opts.media + ".")
                     + "<br/>" + $.i18n._(opts.subtext)
                     + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
-
                 );
 
                 libEmpty.show();
-                libEmpty.css('margin-left', (wrapper.width() / 2) - (libEmpty.width() / 2));
-                libEmpty.css('margin-top', (wrapper.height() / 2) - (libEmpty.height() / 2)  - 19);
+                AIRTIME.library.onResize();
             });
         } else {
             libEmpty.hide();
@@ -379,8 +376,8 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.onResize = function() {
         var libEmpty = $('#library_empty'), wrapper = $('#library_display_wrapper').find('.dataTables_scrolling');
-        libEmpty.css('margin-left', (wrapper.width() / 2) - (libEmpty.width() / 2));
-        libEmpty.css('margin-top', (wrapper.height() / 2) - (libEmpty.height() / 2) - 19);
+        libEmpty.css('left', wrapper.offset().left + (wrapper.width() / 2) - (libEmpty.width() / 2) - $(window).scrollLeft());
+        libEmpty.css('top', wrapper.offset().top + (wrapper.height() / 2) - (libEmpty.height() / 2) + 19 - $(window).scrollTop());
     };
 
     return AIRTIME;
@@ -388,3 +385,7 @@ var AIRTIME = (function(AIRTIME) {
 }(AIRTIME || {}));
 
 $(window).resize(AIRTIME.library.onResize);
+$(window).scroll(AIRTIME.library.onResize);
+$(document).ready(function() {
+    $('#content').scroll(AIRTIME.library.onResize);
+});
