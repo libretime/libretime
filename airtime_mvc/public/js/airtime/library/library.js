@@ -641,7 +641,8 @@ var AIRTIME = (function(AIRTIME) {
             "fnStateLoad": function fnLibStateLoad(oSettings) {
                 var settings = JSON.parse(localStorage.getItem('datatables-library'));
                 // Hacky; always set the visibility of the last column (actions buttons) to true
-                settings.abVisCols[settings.abVisCols.length - 1] = true;
+                if (settings && settings.abVisCols) settings.abVisCols[settings.abVisCols.length - 1] = true;
+                // settings.abVisCols[settings.abVisCols.length - 1] = true;
 
                 try {
                     return settings;
