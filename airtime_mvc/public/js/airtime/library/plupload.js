@@ -170,7 +170,6 @@ $(document).ready(function () {
                 alert($.i18n._("Error: The file could not be deleted. Please try again later."));
             }
         });
-    });
 
     self.setupRecentUploadsTable = function () {
         recentUploadsTable = $("#recent_uploads_table").dataTable({

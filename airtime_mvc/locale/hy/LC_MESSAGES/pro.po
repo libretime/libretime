@@ -1,7 +1,51 @@
+#: airtime_mvc/application/models/Auth.php:35
+#, php-format
+msgid ""
+"\n"
+"\n"
+"If you have any problems, please contact our support team: %s"
+msgstr ""
+
+#: airtime_mvc/application/models/Auth.php:36
+#, php-format
+msgid ""
+"\n"
+"\n"
+"Thank you,\n"
+"The %s Team"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/thank-you/index.phtml:16
+msgid "Thank you!"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/thank-you/index.phtml:17
+msgid "Your station has been upgraded successfully."
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/thank-you/index.phtml:18
+msgid "Return to Airtime"
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/plupload/index.phtml:9
+#, php-format
+msgid "Disk quota exceeded. You cannot upload files until you %s upgrade your storage"
+msgstr ""
+
 #: airtime_mvc/application/views/scripts/billing/invoices.phtml:7
 msgid "<b>Thank you!</b> Your plan has been updated and you will be invoiced during your next billing cycle."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/billing/invoices.phtml:11
-msgid "Tip: To pay an invoice, click \"View Invoice\"<br> and look for the \"Checkout\" button."
+msgid "Tip: To pay an invoice, click \"View Invoice\" and look for the \"Checkout\" button."
+msgstr ""
+
+#: airtime_mvc/application/views/scripts/form/password-restore.phtml:4
+#, php-format
+msgid "If you are the primary owner of this station, <a href=\"%s\">please reset your password here</a>."
+msgstr ""
+
+#: airtime_mvc/application/controllers/LoginController.php:170
+#, php-format
+msgid "That username or email address could not be found. If you are the station owner, you should <a href=\"%s\">reset your here</a>."
 msgstr ""
