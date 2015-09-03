@@ -71,7 +71,7 @@ function getDatatablesStrings(overrideDict) {
         "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 entries"),
         "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total entries)"),
         "sInfoPostFix":    $.i18n._(""),
-        "sInfoThousands":  $.i18n._("),"),
+        "sInfoThousands":  $.i18n._(","),
         "sLengthMenu":     $.i18n._("Show _MENU_"),
         "sLoadingRecords": $.i18n._("Loading..."),
         //"sProcessing":     $.i18n._("Processing..."),

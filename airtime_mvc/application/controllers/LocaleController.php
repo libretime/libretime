@@ -273,6 +273,9 @@ class LocaleController extends Zend_Controller_Action
             "Start" => _("Start"),
             "End" => _("End"),
             "Duration" => _("Duration"),
+            "Filtering out " => _("Filtering out "),
+            " of " => _(" of "),
+            " records" => _(" records"),
             //already in library/library.js
             //"Title" => _("Title"),
             //"Creator" => _("Creator"),
