@@ -1007,7 +1007,7 @@ var AIRTIME = (function(AIRTIME){
             });
         });
 
-        $pl.unbind().on("click", "#save_button", function(event) {
+        $pl.find("#save_button").unbind().on("click", function(event) {
             /* Smart blocks: get name, description, and criteria
              * Playlists: get name, description
              */
@@ -1271,7 +1271,6 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.playlistResponse = function(json){
-        console.log(json);
         if (json.error !== undefined ||
             (json.result !== undefined && json.result != 0)) {
             if (json.error) {
@@ -1287,12 +1286,12 @@ var AIRTIME = (function(AIRTIME){
         }
 
         mod.enableUI();
-    }
+    };
 
     mod.replaceForm = function(json){
         $pl.find('.editor_pane_wrapper').html(json.html);
         openPlaylist(json);
-    }
+    };
 
 
     function playlistRequest(sUrl, oData) {
