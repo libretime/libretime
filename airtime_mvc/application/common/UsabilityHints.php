@@ -77,7 +77,7 @@ class Application_Common_UsabilityHints
                 }
             } else {
                 if ($userIsOnCalendarPage) {
-                    return _("To start broadcasting, click on the current show and select 'Schedule Show'");
+                    return _("To start broadcasting, click on the current show and select 'Schedule Tracks'");
                 } else {
                     return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now%s."),
                         "<a href=\"/schedule\">",
@@ -86,7 +86,7 @@ class Application_Common_UsabilityHints
             }
         } else if (!self::getCurrentShow() && self::isNextShowEmpty()) {
             if ($userIsOnCalendarPage) {
-                return _("Click on the show starting next and select 'Schedule Show'");
+                return _("Click on the show starting next and select 'Schedule Tracks'");
             } else {
                 return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now%s."),
                     "<a href=\"/schedule\">",
