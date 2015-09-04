@@ -164,9 +164,9 @@ div.btn > span {
 #library_empty {
     display: none;
     font-size: 16px;
-    position: fixed;
-    /*width: 100%;*/
-    /*top: 44%;*/
+    position: absolute;
+    width: 100%;
+    top: 44%;
     text-align: center;
     color: #efefef;
 }

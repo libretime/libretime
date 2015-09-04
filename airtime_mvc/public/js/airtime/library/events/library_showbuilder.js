@@ -95,10 +95,9 @@ var AIRTIME = (function(AIRTIME) {
                     + "<br/>" + $.i18n._(opts.subtext)
                     + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
                 );
-
-                libEmpty.show();
-                AIRTIME.library.onResize();
             });
+
+            libEmpty.show();
         } else {
             libEmpty.hide();
         }
@@ -374,18 +373,6 @@ var AIRTIME = (function(AIRTIME) {
         }
     };
 
-    mod.onResize = function() {
-        var libEmpty = $('#library_empty'), wrapper = $('#library_display_wrapper').find('.dataTables_scrolling');
-        libEmpty.css('left', wrapper.offset().left + (wrapper.width() / 2) - (libEmpty.width() / 2) - $(window).scrollLeft());
-        libEmpty.css('top', wrapper.offset().top + (wrapper.height() / 2) - (libEmpty.height() / 2) + 19 - $(window).scrollTop());
-    };
-
     return AIRTIME;
 
 }(AIRTIME || {}));
-
-$(window).resize(AIRTIME.library.onResize);
-$(window).scroll(AIRTIME.library.onResize);
-$(document).ready(function() {
-    $('#content').scroll(AIRTIME.library.onResize);
-});
