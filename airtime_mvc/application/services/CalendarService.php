@@ -78,7 +78,7 @@ class Application_Service_CalendarService
 
                     $menu["schedule"] = array(
                         // "name"=> _("Add / Remove Content"),
-                        "name" => _("Schedule Show"),
+                        "name" => _("Schedule Tracks"),
                         "icon" => "add-remove-content",
                         "url" => $baseUrl."showbuilder/builder-dialog/");
                 }
@@ -142,7 +142,8 @@ class Application_Service_CalendarService
                 if ($isRepeating) {
                     if ($populateInstance) {
                         $menu["edit"] = array(
-                            "name" => _("Edit This Instance"),
+                            // "name" => _("Edit This Instance"),
+                            "name" => _("Edit Instance"),
                             "icon" => "edit",
                             "url" => $baseUrl . "Schedule/populate-repeating-show-instance-form"
                         );
@@ -160,7 +161,8 @@ class Application_Service_CalendarService
                         );
 
                         $menu["edit"]["items"]["instance"] = array(
-                            "name" => _("Edit This Instance"),
+                            // "name" => _("Edit This Instance"),
+                            "name" => _("Edit Instance"),
                             "icon" => "edit",
                             "url" => $baseUrl . "Schedule/populate-repeating-show-instance-form"
                         );
@@ -188,12 +190,14 @@ class Application_Service_CalendarService
                         "items" => array());
 
                     $menu["del"]["items"]["single"] = array(
-                        "name"=> _("Delete This Instance"),
+                        // "name"=> _("Delete This Instance"),
+                        "name"=> _("Delete Instance"),
                         "icon" => "delete",
                         "url" => $baseUrl."schedule/delete-show-instance");
 
                     $menu["del"]["items"]["following"] = array(
-                        "name"=> _("Delete This Instance and All Following"),
+                        // "name"=> _("Delete This Instance and All Following"),
+                        "name"=> _("Delete Instance and All Following"),
                         "icon" => "delete",
                         "url" => $baseUrl."schedule/delete-show");
                 } elseif ($populateInstance) {

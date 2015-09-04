@@ -353,7 +353,9 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文'
 -- added in 2.5.2
 
 INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', 'UTC');
-INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', 'UTC');
+-- We don't want to set the user timezone by default - it should instead use the station timezone
+-- until the user changes it manually.
+-- INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', 'UTC');
 
 INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0');
 

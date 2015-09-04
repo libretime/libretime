@@ -421,17 +421,19 @@ var AIRTIME = (function(AIRTIME){
         $('.zend_form + .spl-no-margin > div:has(*:visible):last').css('margin-left', 0);
     }
 
-    function getId() {
-        return parseInt($pl.find(".obj_id").val(), 10);
+    function getId(pl) {
+        pl = (pl === undefined) ? $pl : pl;
+        return parseInt(pl.find(".obj_id").val(), 10);
     }
 
-    mod.getModified = function() {
-        return parseInt($pl.find(".obj_lastMod").val(), 10);
-    }
+    mod.getModified = function(pl) {
+        pl = (pl === undefined) ? $pl : pl;
+        return parseInt(pl.find(".obj_lastMod").val(), 10);
+    };
 
     mod.setModified = function(modified) {
         $pl.find(".obj_lastMod").val(modified);
-    }
+    };
 
     function setTitleLabel(title) {
         $pl.find(".title_obj_name").text(title);
@@ -569,6 +571,10 @@ var AIRTIME = (function(AIRTIME){
         if (pane.get(0) == curr.get(0)) { // Closing the current tab, otherwise we don't need to switch tabs
             AIRTIME.showbuilder.switchTab(toPane, toTab);
         }
+
+        // If we close a tab that was causing tabs to wrap to the next row, we need to resize to change the
+        // margin for the tab nav
+        AIRTIME.playlist.onResize();
     }
 
     mod.closeTab = function(id) {
@@ -1004,7 +1010,7 @@ var AIRTIME = (function(AIRTIME){
             });
         });
 
-        $pl.on("click", "#save_button", function(event) {
+        $pl.find("#save_button").unbind().on("click", function(event) {
             /* Smart blocks: get name, description, and criteria
              * Playlists: get name, description
              */
@@ -1211,8 +1217,8 @@ var AIRTIME = (function(AIRTIME){
         var url, id, lastMod, type, pl = (tabId === undefined) ? $pl : $('#pl-tab-content-' + tabId);
 
         stopAudioPreview();
-        id = (plid === undefined) ? getId() : plid;
-        lastMod = mod.getModified();
+        id = (plid === undefined) ? getId(pl) : plid;
+        lastMod = mod.getModified(pl);
         type = pl.find('.obj_type').val();
         url = baseUrl+'playlist/delete';
 
@@ -1268,7 +1274,6 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod.playlistResponse = function(json){
-        console.log(json);
         if (json.error !== undefined ||
             (json.result !== undefined && json.result != 0)) {
             if (json.error) {
@@ -1284,12 +1289,12 @@ var AIRTIME = (function(AIRTIME){
         }
 
         mod.enableUI();
-    }
+    };
 
     mod.replaceForm = function(json){
         $pl.find('.editor_pane_wrapper').html(json.html);
         openPlaylist(json);
-    }
+    };
 
 
     function playlistRequest(sUrl, oData) {
@@ -1561,6 +1566,7 @@ var AIRTIME = (function(AIRTIME){
 
     mod.setAsActive = function() {
         $pl = $(".active-tab");
+        $.post(baseUrl + "playlist/change-playlist", {"id": getId(), "type": $pl.find('.obj_type').val()});
     };
 
     mod.init = function() {

@@ -71,7 +71,7 @@ function getDatatablesStrings(overrideDict) {
         "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 entries"),
         "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total entries)"),
         "sInfoPostFix":    $.i18n._(""),
-        "sInfoThousands":  $.i18n._("),"),
+        "sInfoThousands":  $.i18n._(","),
         "sLengthMenu":     $.i18n._("Show _MENU_"),
         "sLoadingRecords": $.i18n._("Loading..."),
         //"sProcessing":     $.i18n._("Processing..."),
@@ -210,6 +210,41 @@ function validateTimeRange() {
         end: end,
         isValid: end >= start
     };
+}
+
+// validate uploaded images
+function validateImage(img, el) {
+    // remove any existing error messages
+    if ($("#img-err")) { $("#img-err").remove(); }
+
+    if (img.size > 2048000) { // 2MB - pull this from somewhere instead?
+        // hack way of inserting an error message
+        var err = $.i18n._("Selected file is too large");
+        el.parent().after(
+            "<ul id='img-err' class='errors'>" +
+            "<li>" + err + "</li>" +
+            "</ul>");
+        return false;
+    } else if (validateMimeType(img.type) < 0) {
+        var err = $.i18n._("File format is not supported");
+        el.parent().after(
+            "<ul id='img-err' class='errors'>" +
+            "<li>" + err + "</li>" +
+            "</ul>");
+        return false;
+    }
+    return true;
+}
+
+// validate image mime type
+function validateMimeType(mime) {
+    var extensions = [
+        'image/jpeg',
+        'image/png',
+        'image/gif'
+        // BMP?
+    ];
+    return $.inArray(mime, extensions);
 }
 
 function pad(number, length) {

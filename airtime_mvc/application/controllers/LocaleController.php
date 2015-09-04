@@ -51,8 +51,14 @@ class LocaleController extends Zend_Controller_Action
             //library/events/library_showbuilder.js
             //already in library/events/library_playlistbuilder.js
             "Please select a cursor position on timeline." => _("Please select a cursor position on timeline."),
-            "You haven't added any " => _("You haven't added any "),
-            "Learn about " => _("Learn about "),
+            "You haven't added any tracks" => _("You haven't added any tracks"),
+            "You haven't added any playlists" => _("You haven't added any playlists"),
+            "You haven't added any smart blocks" => _("You haven't added any smart blocks"),
+            "You haven't added any webstreams" => _("You haven't added any webstreams"),
+            "Learn about tracks" => _("Learn about tracks"),
+            "Learn about playlists" => _("Learn about playlists"),
+            "Learn about smart blocks" => _("Learn about smart blocks"),
+            "Learn about webstreams" => _("Learn about webstreams"),
             "Click 'New' to create one." => _("Click 'New' to create one."),
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
@@ -267,6 +273,9 @@ class LocaleController extends Zend_Controller_Action
             "Start" => _("Start"),
             "End" => _("End"),
             "Duration" => _("Duration"),
+            "Filtering out " => _("Filtering out "),
+            " of " => _(" of "),
+            " records" => _(" records"),
             //already in library/library.js
             //"Title" => _("Title"),
             //"Creator" => _("Creator"),

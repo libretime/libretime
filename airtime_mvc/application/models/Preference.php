@@ -28,7 +28,9 @@ class Application_Model_Preference
     {
         $cache = new Cache();
         $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
-        $con->beginTransaction();
+
+        //We are using row-level locking in Postgres via "FOR UPDATE" instead of a transaction here
+        //because sometimes this function needs to be called while a transaction is already started.
 
         try {
             /* Comment this out while we reevaluate it in favor of a unique constraint
@@ -40,7 +42,7 @@ class Application_Model_Preference
             }
 
             //Check if key already exists
-            $sql = "SELECT COUNT(*) FROM cc_pref"
+            $sql = "SELECT valstr FROM cc_pref"
                 ." WHERE keystr = :key";
             
             $paramMap = array();
@@ -50,12 +52,14 @@ class Application_Model_Preference
             if ($isUserValue) {
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $userId;
-            } 
+            }
+
+            $sql .= " FOR UPDATE";
 
             $result = Application_Common_Database::prepareAndExecute($sql, 
                     $paramMap, 
-                    Application_Common_Database::COLUMN,
-                    PDO::FETCH_ASSOC, 
+                    Application_Common_Database::ROW_COUNT,
+                    PDO::FETCH_ASSOC,
                     $con);
 
             $paramMap = array();
@@ -98,14 +102,12 @@ class Application_Model_Preference
             $paramMap[':value'] = $value;
 
             Application_Common_Database::prepareAndExecute($sql, 
-                    $paramMap, 
-                    'execute', 
+                    $paramMap,
+                    Application_Common_Database::EXECUTE,
                     PDO::FETCH_ASSOC, 
                     $con);
 
-            $con->commit();
         } catch (Exception $e) {
-            $con->rollback();
             header('HTTP/1.0 503 Service Unavailable');
             Logging::info("Database error: ".$e->getMessage());
             exit;
@@ -477,10 +479,6 @@ class Application_Model_Preference
 
     public static function SetUserTimezone($timezone = null)
     {
-        // When a new user is created they will get the default timezone
-        // setting which the admin sets on preferences page
-        if (is_null($timezone))
-            $timezone = self::GetDefaultTimezone();
         self::setValue("user_timezone", $timezone, true);
     }
 
@@ -520,10 +518,10 @@ class Application_Model_Preference
     public static function GetUserLocale()
     {
         $locale = self::getValue("user_locale", true);
-        if (!$locale) {
+        // empty() checks for null and empty strings - more robust than !val
+        if (empty($locale)) {
             return self::GetDefaultLocale();
-        } 
-        else {
+        } else {
             return $locale;
         }
     }

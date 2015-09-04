@@ -1,9 +1,8 @@
 @CHARSET "UTF-8";
 
-#recent_uploads > .dataTables_scrolling
+#recent_uploads .dataTables_scrolling
 {
-	top: 41px;
-	bottom: 8px;
+	top: 0;
 }
 
 #recent_uploads_wrapper
@@ -25,9 +24,10 @@
 	position: absolute;
 	left: 8px;
 	right: 8px;
-	bottom: 0;
-	top: 0;
+	bottom: 8px;
+	top: 41px;
 	border: 1px solid #5b5b5b;
+	overflow-x: hidden;
 }
 
 #recent_uploads_table_wrapper > .fg-toolbar
@@ -288,7 +288,12 @@ table#recent_uploads_table td
 }
 
 #upload_wrapper {
-	height: 100%;
+	/* height: 100%; */
+	position: absolute;
+	top: 8px;
+	bottom: 8px;
+	left: 8px;
+	right: 8px;
 
 	display: -webkit-box;
 	display: -moz-box;
@@ -296,8 +301,7 @@ table#recent_uploads_table td
 	display: -webkit-flex;
 	display: flex;
 	-webkit-flex-flow: column;
-	flex-flow: column;
-}
+	flex-flow: column;}
 
 .dropzone, .dropzone * {
 	box-sizing: border-box

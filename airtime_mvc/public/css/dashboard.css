@@ -8,6 +8,7 @@
     box-sizing: border-box;
 
     height: 100%;
+    min-height: 300px;
 
     border: 1px solid #202020;
     border-top: 1px solid #353535;
@@ -22,16 +23,18 @@
 
 @media screen and (max-width: 1600px) {
     #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > span,
-    #show_builder button:not(.dropdown-toggle):not(.btn-new) > span {
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > span,
+    #show_builder #sb_submit > span {
         display: none;
     }
     #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > i,
-    #show_builder button:not(.dropdown-toggle):not(.btn-new) > i {
+    #show_builder button:not(.dropdown-toggle):not(.btn-new) > i,
+    #show_builder #sb_submit > i {
         margin-right: 0 !important;
     }
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1200px) {
     .wrapper {
         -webkit-flex-flow: column !important;
         flex-flow: column !important;
@@ -150,6 +153,9 @@ div.btn > span {
 #library_empty_image {
     opacity: .3;
 
+    width: 16px;
+    height: 20px;
+
     top: -20px;
     margin-top: -2px;
     padding-right: 2px; /* For the webstream icon */
@@ -158,9 +164,9 @@ div.btn > span {
 #library_empty {
     display: none;
     font-size: 16px;
-    position: absolute;
-    width: 100%;
-    top: 44%;
+    position: fixed;
+    /*width: 100%;*/
+    /*top: 44%;*/
     text-align: center;
     color: #efefef;
 }
@@ -202,9 +208,9 @@ thead th.ui-state-default:focus {
 
 #advanced_search {
     position: absolute;
-    left: -420px;
+    left: -450px;
     padding: 5px;
-    margin-top: -2px;
+    margin-top: 28px;
     z-index: 1005;
 }
 
@@ -229,12 +235,19 @@ thead th.ui-state-default:focus {
     margin-top: 4px;
 }
 
+#filter_message {
+    border-top: none !important;
+    text-shadow: none;
+}
+
 #advanced-options {
     float: right;
     z-index: 1004;
 }
 
 #advanced-options > button {
+    position: absolute;
+    right: 0;
     background: transparent none;
     color: transparent;
     border: none;
@@ -247,6 +260,7 @@ thead th.ui-state-default:focus {
 }
 
 #advanced-options > button > span {
+    color: #000;
     border-top: 4px solid #242424;
 }
 
@@ -456,8 +470,10 @@ li.ui-state-default {
     max-height: 60%;
     overflow-x: hidden;
     width: 100%;
-    flex: 1 0 100%;
+    flex: 1 0 auto;
     padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -500,6 +516,8 @@ li.ui-state-default {
     padding: 5px;
     border: 1px solid #444;
     border-radius: 3px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     background-color: #111;
     display: flex;
@@ -559,6 +577,8 @@ li.ui-state-default {
 }
 
 .side_playlist .zend_form input {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     height: 26px;
 }
@@ -610,6 +630,7 @@ div.ColVis_collectionBackground {
 
 .ColVis.TableTools > button {
     padding: 3px 9px;
+    margin: -1px -1px 5px 0;
 }
 
 .ColVis_title {

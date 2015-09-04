@@ -55,7 +55,7 @@ class Application_Common_UsabilityHints
                 return _("Upload some tracks below to add them to your library!");
             } else {
                 return sprintf(_("It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."),
-                    "<a href=\"/Plupload\">",
+                    "<a href=\"/plupload\">",
                     "</a>");
             }
         } else if (!self::isFutureOrCurrentShowScheduled()) {
@@ -63,7 +63,7 @@ class Application_Common_UsabilityHints
                 return _("Click the 'New Show' button and fill out the required fields.");
             } else {
                 return sprintf(_("It looks like you don't have any shows scheduled. %sCreate a show now%s."),
-                    "<a href=\"/Schedule\">",
+                    "<a href=\"/schedule\">",
                     "</a>");
             }
         } else if (self::isCurrentShowEmpty()) {
@@ -73,23 +73,23 @@ class Application_Common_UsabilityHints
                     return _("To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'.");
                 } else {
                     return sprintf(_("Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.
-                    %sCreate an unlinked show now%s."), "<a href=\"/Schedule\">", "</a>");
+                    %sCreate an unlinked show now%s."), "<a href=\"/schedule\">", "</a>");
                 }
             } else {
                 if ($userIsOnCalendarPage) {
-                    return _("To start broadcasting, click on the current show and select 'Schedule Show'");
+                    return _("To start broadcasting, click on the current show and select 'Schedule Tracks'");
                 } else {
                     return sprintf(_("It looks like the current show needs more tracks. %sAdd tracks to your show now%s."),
-                        "<a href=\"/Schedule\">",
+                        "<a href=\"/schedule\">",
                         "</a>");
                 }
             }
         } else if (!self::getCurrentShow() && self::isNextShowEmpty()) {
             if ($userIsOnCalendarPage) {
-                return _("Click on the show starting next and select 'Schedule Show'");
+                return _("Click on the show starting next and select 'Schedule Tracks'");
             } else {
                 return sprintf(_("It looks like the next show is empty. %sAdd tracks to your show now%s."),
-                    "<a href=\"/Schedule\">",
+                    "<a href=\"/schedule\">",
                     "</a>");
             }
         } else {

@@ -1,0 +1,28 @@
+{
+  "1": {
+    "media": "tracks",
+    "icon": "icon-music",
+    "subtext": "Click 'Upload' to add some now.",
+    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/"
+  },
+  "2": {
+    "media": "playlists",
+    "icon": "icon-list",
+    "subtext": "Click 'New' to create one now.",
+    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+  },
+  "3": {
+    "media": "smart blocks",
+    "icon": "icon-time",
+    "subtext": "Click 'New' to create one now.",
+    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+
+  },
+  "4": {
+    "media": "webstreams",
+    "icon": "icon-random",
+    "subtext": "Click 'New' to create one now.",
+    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+  },
+  "unauthorized": "You don't have permission to view the library."
+}
