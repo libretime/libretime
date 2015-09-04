@@ -168,8 +168,8 @@ $(document).ready(function() {
 </script>
 
 <div class="ui-widget prefpanel clearfix padded-strong billing-panel">
-<H2><?=_("Account Plans")?></H2>
-<H4><?=_("Upgrade today to get more listeners and storage space!")?></H4>
+<H2><?=_pro("Account Plans")?></H2>
+<H4><?=_pro("Upgrade today to get more listeners and storage space!")?></H4>
 <div class="pricing-grid">
     <table>
         <tr>
@@ -252,9 +252,9 @@ $(document).ready(function() {
     </table>
 </div>
 <!-- 
-<p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_("View Plans")?></a> (Opens in a new window)</p>
+<p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_pro("View Plans")?></a> (Opens in a new window)</p>
  -->
-<p id="current_plan"><span>Your Current Plan:</span>
+<p id="current_plan"><span><?php echo(_pro('Your Current Plan:')); ?></span>
 <?php 
 $currentProduct = Billing::getClientCurrentAirtimeProduct();
 echo($currentProduct["name"]);
@@ -262,7 +262,7 @@ echo($currentProduct["name"]);
 ?>
 </p>
 
-<h3>Choose a plan:</h3>
+<h3>echo(_pro('Choose a plan: ')); ?></h3>
  <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
     $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
 
@@ -275,7 +275,7 @@ echo($currentProduct["name"]);
         <?php echo $form->newproductbillingcycle ?>
     </div>
     <div id="billingcycle_disclaimer">
-    Save 15% on annual plans (Hobbyist plan excluded).
+        Save 15% on annual plans (Hobbyist plan excluded).
     </div>
     <div class="clearfix"></div>
     <div id="subtotal_box">
@@ -288,7 +288,7 @@ echo($currentProduct["name"]);
     VAT will be added below if you are an EU resident without a valid VAT number.
     </div>
     
-    <h3>Enter your payment details:</h3>
+    <h3><?=_pro("Please enter your payment details:");?></h3>
     <?php if (isset($this->errorMessage)) {?>
     <div class="errors"><?php echo $this->errorMessage ?></div>
     <?php }?>
