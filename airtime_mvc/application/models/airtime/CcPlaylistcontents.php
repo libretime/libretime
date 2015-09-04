@@ -69,7 +69,9 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
         }
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEIN;
         $this->save();
-        
+
+        //FIXME(XXX): Propel silently drops the milliseconds from our fadein time. :(
+
         return $this;
     } // setDbFadein()
 
@@ -107,6 +109,8 @@ class CcPlaylistcontents extends BaseCcPlaylistcontents {
         }
         $this->modifiedColumns[] = CcPlaylistcontentsPeer::FADEOUT;
         $this->save();
+
+        //FIXME(XXX): Propel silently drops the milliseconds from our fadeout time. :(
         
         return $this;
     } // setDbFadeout()
