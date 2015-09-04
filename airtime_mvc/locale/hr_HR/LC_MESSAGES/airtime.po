@@ -1,7 +1,7 @@
 # LANGUAGE (xx_XX) translation for Airtime.
 # Copyright (C) 2012 Sourcefabric
 # This file is distributed under the same license as the Airtime package.
-#
+# 
 # Translators:
 # Sourcefabric <contact@sourcefabric.org>, 2013
 msgid ""
@@ -9,17 +9,19 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-03 10:24-0400\n"
-"PO-Revision-Date: 2014-11-14 09:58+0000\n"
+"PO-Revision-Date: 2015-09-04 08:15+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: Croatian (Croatia) (http://www.transifex.com/sourcefabric/airtime/language/hr_HR/)\n"
-"Language: hr_HR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: hr_HR\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #: airtime_mvc/public/setup/rabbitmq-setup.php:78
-msgid "Couldn't connect to RabbitMQ server! Please check if the server is running and your credentials are correct."
+msgid ""
+"Couldn't connect to RabbitMQ server! Please check if the server is running "
+"and your credentials are correct."
 msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1117
@@ -325,12 +327,14 @@ msgstr "%s nije valjana direktorija."
 
 #: airtime_mvc/application/models/MusicDir.php:232
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list"
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list"
 msgstr "%s je već postavljena kao mapa za pohranu ili je između popisa praćene mape"
 
 #: airtime_mvc/application/models/MusicDir.php:388
 #, php-format
-msgid "%s is already set as the current storage dir or in the watched folders list."
+msgid ""
+"%s is already set as the current storage dir or in the watched folders list."
 msgstr "%s je već postavljena kao mapa za pohranu ili je između popisa praćene mape."
 
 #: airtime_mvc/application/models/MusicDir.php:431
@@ -351,9 +355,7 @@ msgstr "Datum završetka i vrijeme ne može biti u prošlosti"
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
-msgstr ""
-"Ne može se zakazati preklapajuće emisije.\n"
-"Napomena: Promjena veličine ponovljene emisije utječe na sve njene ponavljanje"
+msgstr "Ne može se zakazati preklapajuće emisije.\nNapomena: Promjena veličine ponovljene emisije utječe na sve njene ponavljanje"
 
 #: airtime_mvc/application/models/Auth.php:33
 #, php-format
@@ -596,7 +598,9 @@ msgid "The show %s has been previously updated!"
 msgstr "Ranije je %s emisija već bila ažurirana!"
 
 #: airtime_mvc/application/models/Scheduler.php:178
-msgid "Content in linked shows must be scheduled before or after any one is broadcasted"
+msgid ""
+"Content in linked shows must be scheduled before or after any one is "
+"broadcasted"
 msgstr "Sadržaj u povezanim emisijama mora biti zakazan prije ili poslije bilo koje emisije"
 
 #: airtime_mvc/application/models/Scheduler.php:195
@@ -673,7 +677,10 @@ msgid "Email Sent!"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-restore-after.phtml:6
-msgid "A password reset link has been sent to your email address. Please check your email and follow the instructions inside to reset your password. If you don't see the email, please check your spam folder!"
+msgid ""
+"A password reset link has been sent to your email address. Please check your"
+" email and follow the instructions inside to reset your password. If you "
+"don't see the email, please check your spam folder!"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-restore-after.phtml:11
@@ -696,7 +703,9 @@ msgstr "Prijava"
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:7
 #, php-format
-msgid "Welcome to the %s demo! You can log in using the username 'admin' and the password 'admin'."
+msgid ""
+"Welcome to the %s demo! You can log in using the username 'admin' and the "
+"password 'admin'."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:2
@@ -816,7 +825,9 @@ msgstr "O projektu"
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:9
 #, php-format
-msgid "%1$s %2$s, the open radio software for scheduling and remote station management."
+msgid ""
+"%1$s %2$s, the open radio software for scheduling and remote station "
+"management."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:22
@@ -863,7 +874,9 @@ msgid "Upload audio tracks"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:7
-msgid "Click the 'Upload' button in the left corner to upload tracks to your library."
+msgid ""
+"Click the 'Upload' button in the left corner to upload tracks to your "
+"library."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:8
@@ -871,7 +884,9 @@ msgid "Schedule a show"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:9
-msgid "Click on 'Calendar' in the navigation bar on the left. From there click the '+ New Show' button and fill out the required fields."
+msgid ""
+"Click on 'Calendar' in the navigation bar on the left. From there click the "
+"'+ New Show' button and fill out the required fields."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:10
@@ -879,7 +894,9 @@ msgid "Add tracks to your show"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:11
-msgid "Click on your show in the calendar and select 'Schedule Show'. In the popup window drag tracks into your show."
+msgid ""
+"Click on your show in the calendar and select 'Schedule Show'. In the popup "
+"window drag tracks into your show."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:16
@@ -1132,7 +1149,11 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:6
 #, php-format
-msgid "Help improve %s by letting us know how you're using it. This information will be collected regularly in order to enhance your user experience.<br />Click the box below and we'll make sure the features you use are constantly improving."
+msgid ""
+"Help improve %s by letting us know how you're using it. This information "
+"will be collected regularly in order to enhance your user experience.<br "
+"/>Click the box below and we'll make sure the features you use are "
+"constantly improving."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:29
@@ -1142,7 +1163,8 @@ msgid "Click the box below to promote your station on %s."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
-msgid "(In order to promote your station, 'Send support feedback' must be enabled)."
+msgid ""
+"(In order to promote your station, 'Send support feedback' must be enabled)."
 msgstr "(Kako bi se promovirao svoju stanicu, 'Pošalji povratne informacije' mora biti omogućena)."
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:51
@@ -1181,7 +1203,9 @@ msgstr "Dodaj"
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:43
 #, php-format
-msgid "Rescan watched directory (This is useful if it is network mount and may be out of sync with %s)"
+msgid ""
+"Rescan watched directory (This is useful if it is network mount and may be "
+"out of sync with %s)"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
@@ -1193,7 +1217,9 @@ msgid "You are not watching any media folders."
 msgstr "Ne pratiš nijedne medijske mape."
 
 #: airtime_mvc/application/views/scripts/form/add-show-live-stream.phtml:12
-msgid "DJs can use these settings to connect with compatible software and broadcast live during this show. Assign a DJ below."
+msgid ""
+"DJs can use these settings to connect with compatible software and broadcast"
+" live during this show. Assign a DJ below."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:1
@@ -1201,11 +1227,14 @@ msgid "Live Broadcasting"
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:13
-msgid "Use these settings in your broadcasting software to stream live at any time."
+msgid ""
+"Use these settings in your broadcasting software to stream live at any time."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:27
-msgid "DJs can use these settings in their broadcasting software to broadcast live only during shows assigned to them."
+msgid ""
+"DJs can use these settings in their broadcasting software to broadcast live "
+"only during shows assigned to them."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
@@ -1242,7 +1271,8 @@ msgid "Additional Options"
 msgstr "Dodatne Opcije"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:144
-msgid "The following info will be displayed to listeners in their media player:"
+msgid ""
+"The following info will be displayed to listeners in their media player:"
 msgstr "Sljedeće informacije će biti prikazane slušateljima u medijskom plejerima:"
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:177
@@ -1314,7 +1344,9 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
 #, php-format
-msgid "<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."
+msgid ""
+"<b>Note:</b> Since you're the station owner, your account information can be"
+" edited in <a href=\"%s\">Billing Settings</a> instead."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:173
@@ -1512,11 +1544,15 @@ msgid "Expand Dynamic Block"
 msgstr "Proširenje Dinamičkog Bloka"
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:138
-msgid "Choose some search criteria above and click Generate to create this playlist."
+msgid ""
+"Choose some search criteria above and click Generate to create this "
+"playlist."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:140
-msgid "A track list will be generated when you schedule this smart block into a show."
+msgid ""
+"A track list will be generated when you schedule this smart block into a "
+"show."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:143
@@ -1574,7 +1610,9 @@ msgstr "Potrebno Ažuriranje"
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:80
 #, php-format
-msgid "To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."
+msgid ""
+"To play the media you will need to either update your browser to a recent "
+"version or update your %sFlash plugin%s."
 msgstr "Medija je potrebna za reprodukciju, i moraš ažurirati svoj preglednik na noviju verziju, ili ažurirati svoj %sFlash plugin%s."
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:2
@@ -1652,7 +1690,9 @@ msgstr "Tip Korisnika"
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:30
 #, php-format
-msgid "Super Admin details can be changed in your <a href=\"%s\">Billing Settings</a>."
+msgid ""
+"Super Admin details can be changed in your <a href=\"%s\">Billing "
+"Settings</a>."
 msgstr ""
 
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:7
@@ -1786,7 +1826,9 @@ msgstr ""
 
 #: airtime_mvc/application/forms/TuneInPreferences.php:77
 #: airtime_mvc/application/forms/TuneInPreferences.php:86
-msgid "Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and try again."
+msgid ""
+"Invalid TuneIn Settings. Please ensure your TuneIn settings are correct and "
+"try again."
 msgstr ""
 
 #: airtime_mvc/application/forms/Player.php:14
@@ -1818,7 +1860,9 @@ msgid "Embeddable code:"
 msgstr ""
 
 #: airtime_mvc/application/forms/Player.php:72
-msgid "Copy this code and paste it into your website's HTML to embed the player in your site."
+msgid ""
+"Copy this code and paste it into your website's HTML to embed the player in "
+"your site."
 msgstr ""
 
 #: airtime_mvc/application/forms/EditUser.php:37
@@ -2462,7 +2506,8 @@ msgid "Mount cannot be empty with Icecast server."
 msgstr "Montiranje ne može biti prazna s Icecast poslužiteljem."
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:19
-msgid "'%value%' is no valid email address in the basic format local-part@hostname"
+msgid ""
+"'%value%' is no valid email address in the basic format local-part@hostname"
 msgstr "'%value%' nije valjana e-mail adresa u osnovnom obliku local-part@hostname"
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:33
@@ -2568,7 +2613,9 @@ msgstr "'Dužina' trebala biti u '00:00:00' obliku"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:567
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:580
-msgid "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 00:00:00)"
+msgid ""
+"The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 "
+"00:00:00)"
 msgstr "Vrijednost mora biti u obliku vremenske oznake (npr. 0000-00-00 ili 0000-00-00 00:00:00)"
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:594
@@ -2797,7 +2844,9 @@ msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:57
 #, php-format
-msgid "It looks like you haven't uploaded any audio files yet. %sUpload a file now%s."
+msgid ""
+"It looks like you haven't uploaded any audio files yet. %sUpload a file "
+"now%s."
 msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:63
@@ -2806,11 +2855,14 @@ msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:65
 #, php-format
-msgid "It looks like you don't have any shows scheduled. %sCreate a show now%s."
+msgid ""
+"It looks like you don't have any shows scheduled. %sCreate a show now%s."
 msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:73
-msgid "To start broadcasting, cancel the current linked show by clicking on it and selecting 'Cancel Show'."
+msgid ""
+"To start broadcasting, cancel the current linked show by clicking on it and "
+"selecting 'Cancel Show'."
 msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:75
@@ -2821,12 +2873,15 @@ msgid ""
 msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:80
-msgid "To start broadcasting, click on the current show and select 'Schedule Show'"
+msgid ""
+"To start broadcasting, click on the current show and select 'Schedule Show'"
 msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:82
 #, php-format
-msgid "It looks like the current show needs more tracks. %sAdd tracks to your show now%s."
+msgid ""
+"It looks like the current show needs more tracks. %sAdd tracks to your show "
+"now%s."
 msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:89
@@ -3062,7 +3117,9 @@ msgstr "Mora biti u obliku: hh:mm:ss.t"
 
 #: airtime_mvc/application/controllers/LocaleController.php:121
 #, php-format
-msgid "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
+msgid ""
+"You are currently uploading files. %sGoing to another screen will cancel the"
+" upload process. %sAre you sure you want to leave the page?"
 msgstr "Trenutno je prijenos datoteke. %sOdlazak na drugom ekranu će otkazati proces slanja. %sJesi li siguran da želiš napustiti stranicu?"
 
 #: airtime_mvc/application/controllers/LocaleController.php:123
@@ -3098,7 +3155,10 @@ msgid "Playlist shuffled"
 msgstr "Popis pjesama je izmiješan"
 
 #: airtime_mvc/application/controllers/LocaleController.php:132
-msgid "Airtime is unsure about the status of this file. This can happen when the file is on a remote drive that is unaccessible or the file is in a directory that isn't 'watched' anymore."
+msgid ""
+"Airtime is unsure about the status of this file. This can happen when the "
+"file is on a remote drive that is unaccessible or the file is in a directory"
+" that isn't 'watched' anymore."
 msgstr "Airtime je nesiguran o statusu ove datoteke. To se također može dogoditi kada je datoteka na udaljenom disku ili je datoteka u nekoj direktoriji, koja se više nije 'praćena tj. nadzirana'."
 
 #: airtime_mvc/application/controllers/LocaleController.php:134
@@ -3124,15 +3184,24 @@ msgid "Image must be one of jpg, jpeg, png, or gif"
 msgstr "Slika mora biti jpg, jpeg, png, ili gif"
 
 #: airtime_mvc/application/controllers/LocaleController.php:142
-msgid "A static smart block will save the criteria and generate the block content immediately. This allows you to edit and view it in the Library before adding it to a show."
+msgid ""
+"A static smart block will save the criteria and generate the block content "
+"immediately. This allows you to edit and view it in the Library before "
+"adding it to a show."
 msgstr "Statički pametni blokovi spremaju kriterije i odmah generiraju blok sadržaja. To ti omogućuje da urediš i vidiš ga u knjižnici prije nego što ga dodaš na emisiju."
 
 #: airtime_mvc/application/controllers/LocaleController.php:144
-msgid "A dynamic smart block will only save the criteria. The block content will get generated upon adding it to a show. You will not be able to view and edit the content in the Library."
+msgid ""
+"A dynamic smart block will only save the criteria. The block content will "
+"get generated upon adding it to a show. You will not be able to view and "
+"edit the content in the Library."
 msgstr "Dinamički pametni blokovi samo kriterije spremaju. Blok sadržaja će se generira nakon što ga dodate na emisiju. Nećeš moći pregledavati i uređivati sadržaj u knjižnici."
 
 #: airtime_mvc/application/controllers/LocaleController.php:146
-msgid "The desired block length will not be reached if Airtime cannot find enough unique tracks to match your criteria. Enable this option if you wish to allow tracks to be added multiple times to the smart block."
+msgid ""
+"The desired block length will not be reached if Airtime cannot find enough "
+"unique tracks to match your criteria. Enable this option if you wish to "
+"allow tracks to be added multiple times to the smart block."
 msgstr "Željena duljina bloka neće biti postignut jer Airtime ne mogu naći dovoljno jedinstvene pjesme koje odgovaraju tvojim kriterijima. Omogući ovu opciju ako želiš dopustiti da neke pjesme mogu se više puta ponavljati."
 
 #: airtime_mvc/application/controllers/LocaleController.php:147
@@ -3163,9 +3232,7 @@ msgstr "Odaberi Mapu za Praćenje"
 msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
-msgstr ""
-"Jesi li siguran da želiš promijeniti mapu za pohranu?\n"
-"To će ukloniti datoteke iz tvoje knjižnice!"
+msgstr "Jesi li siguran da želiš promijeniti mapu za pohranu?\nTo će ukloniti datoteke iz tvoje knjižnice!"
 
 #: airtime_mvc/application/controllers/LocaleController.php:167
 msgid "Are you sure you want to remove the watched folder?"
@@ -3177,7 +3244,9 @@ msgstr "Ovaj put nije trenutno dostupan."
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
-msgid "Some stream types require extra configuration. Details about enabling %sAAC+ Support%s or %sOpus Support%s are provided."
+msgid ""
+"Some stream types require extra configuration. Details about enabling %sAAC+"
+" Support%s or %sOpus Support%s are provided."
 msgstr "Neke vrste emitiranje zahtijevaju dodatnu konfiguraciju. Detalji oko omogućavanja %sAAC+ Podrške%s ili %sOpus Podrške%s su ovdje dostupni."
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
@@ -3193,7 +3262,12 @@ msgid "Can not connect to the streaming server"
 msgstr "Ne može se povezati na poslužitelju"
 
 #: airtime_mvc/application/controllers/LocaleController.php:176
-msgid "If Airtime is behind a router or firewall, you may need to configure port forwarding and this field information will be incorrect. In this case you will need to manually update this field so it shows the correct host/port/mount that your DJ's need to connect to. The allowed range is between 1024 and 49151."
+msgid ""
+"If Airtime is behind a router or firewall, you may need to configure port "
+"forwarding and this field information will be incorrect. In this case you "
+"will need to manually update this field so it shows the correct "
+"host/port/mount that your DJ's need to connect to. The allowed range is "
+"between 1024 and 49151."
 msgstr "Ako je iza Airtime-a usmjerivač ili vatrozid, možda ćeš morati konfigurirati polje porta prosljeđivanje i ovo informacijsko polje će biti netočan. U tom slučaju morat ćeš ručno ažurirati ovo polje, da bi pokazao točno host/port/mount da se mogu povezati tvoji Disk Džokeji. Dopušteni raspon je između 1024 i 49151."
 
 #: airtime_mvc/application/controllers/LocaleController.php:177
@@ -3202,36 +3276,56 @@ msgid "For more details, please read the %sAirtime Manual%s"
 msgstr "Za više detalja, pročitaj %sPriručniku za korisnike%s"
 
 #: airtime_mvc/application/controllers/LocaleController.php:179
-msgid "Check this option to enable metadata for OGG streams (stream metadata is the track title, artist, and show name that is displayed in an audio player). VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that has metadata information enabled: they will disconnect from the stream after every song. If you are using an OGG stream and your listeners do not require support for these audio players, then feel free to enable this option."
+msgid ""
+"Check this option to enable metadata for OGG streams (stream metadata is the"
+" track title, artist, and show name that is displayed in an audio player). "
+"VLC and mplayer have a serious bug when playing an OGG/VORBIS stream that "
+"has metadata information enabled: they will disconnect from the stream after"
+" every song. If you are using an OGG stream and your listeners do not "
+"require support for these audio players, then feel free to enable this "
+"option."
 msgstr "Provjeri ovu opciju kako bi se omogućilo metapodataka za OGG potoke."
 
 #: airtime_mvc/application/controllers/LocaleController.php:180
-msgid "Check this box to automatically switch off Master/Show source upon source disconnection."
+msgid ""
+"Check this box to automatically switch off Master/Show source upon source "
+"disconnection."
 msgstr "Provjeri ovu kućicu za automatsko isključenje Majstor/Emisija izvora, nakon prestanka rada izvora."
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
-msgid "Check this box to automatically switch on Master/Show source upon source connection."
+msgid ""
+"Check this box to automatically switch on Master/Show source upon source "
+"connection."
 msgstr "Provjeri ovu kućicu za automatsko prebacivanje na Majstor/Emisija izvora, nakon što je spojen izvor."
 
 #: airtime_mvc/application/controllers/LocaleController.php:182
-msgid "If your Icecast server expects a username of 'source', this field can be left blank."
+msgid ""
+"If your Icecast server expects a username of 'source', this field can be "
+"left blank."
 msgstr "Ako tvoj Icecast poslužitelj očekuje korisničko ime iz 'izvora', ovo polje može ostati prazno."
 
 #: airtime_mvc/application/controllers/LocaleController.php:183
 #: airtime_mvc/application/controllers/LocaleController.php:193
-msgid "If your live streaming client does not ask for a username, this field should be 'source'."
+msgid ""
+"If your live streaming client does not ask for a username, this field should"
+" be 'source'."
 msgstr "Ako tvoj 'live streaming' klijent ne pita za korisničko ime, ovo polje trebalo biti 'izvor'."
 
 #: airtime_mvc/application/controllers/LocaleController.php:184
-msgid "WARNING: This will restart your stream and may cause a short dropout for your listeners!"
+msgid ""
+"WARNING: This will restart your stream and may cause a short dropout for "
+"your listeners!"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:185
-msgid "This is the admin username and password for Icecast/SHOUTcast to get listener statistics."
+msgid ""
+"This is the admin username and password for Icecast/SHOUTcast to get "
+"listener statistics."
 msgstr "Ovo je admin korisničko ime i lozinka za Icecast/SHOUTcast da bi dobio slušateljsku statistiku."
 
 #: airtime_mvc/application/controllers/LocaleController.php:189
-msgid "Warning: You cannot change this field while the show is currently playing"
+msgid ""
+"Warning: You cannot change this field while the show is currently playing"
 msgstr "Upozorenje: Ne možeš promijeniti sadržaj polja, dok se sadašnja emisija ne završava"
 
 #: airtime_mvc/application/controllers/LocaleController.php:190
@@ -3239,7 +3333,9 @@ msgid "No result found"
 msgstr "Nema pronađenih rezultata"
 
 #: airtime_mvc/application/controllers/LocaleController.php:191
-msgid "This follows the same security pattern for the shows: only users assigned to the show can connect."
+msgid ""
+"This follows the same security pattern for the shows: only users assigned to"
+" the show can connect."
 msgstr "To slijedi isti uzorak sigurnosti za emisije: samo dodijeljeni korisnici se mogu povezati na emisiju."
 
 #: airtime_mvc/application/controllers/LocaleController.php:192
@@ -3255,11 +3351,16 @@ msgid "Warning: Shows cannot be re-linked"
 msgstr "Upozorenje: Emisije ne može ponovno se povezati"
 
 #: airtime_mvc/application/controllers/LocaleController.php:196
-msgid "By linking your repeating shows any media items scheduled in any repeat show will also get scheduled in the other repeat shows"
+msgid ""
+"By linking your repeating shows any media items scheduled in any repeat show"
+" will also get scheduled in the other repeat shows"
 msgstr "Povezivanjem svoje ponavljajuće emisije svaka zakazana medijska stavka u svakoj ponavljajućim emisijama dobit će isti raspored također i u drugim ponavljajućim emisijama"
 
 #: airtime_mvc/application/controllers/LocaleController.php:197
-msgid "Timezone is set to the station timezone by default. Shows in the calendar will be displayed in your local time defined by the Interface Timezone in your user settings."
+msgid ""
+"Timezone is set to the station timezone by default. Shows in the calendar "
+"will be displayed in your local time defined by the Interface Timezone in "
+"your user settings."
 msgstr "Vremenska zona je postavljena po staničnu zonu prema zadanim. Emisije u kalendaru će se prikazati po tvojim lokalnom vremenu koja je definirana u sučelji vremenske zone u tvojim korisničkim postavcima."
 
 #: airtime_mvc/application/controllers/LocaleController.php:201
@@ -3416,7 +3517,8 @@ msgid "Month"
 msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:263
-msgid "Shows longer than their scheduled time will be cut off by a following show."
+msgid ""
+"Shows longer than their scheduled time will be cut off by a following show."
 msgstr "Emisija dulje od predviđenog vremena će biti odsječen."
 
 #: airtime_mvc/application/controllers/LocaleController.php:264
@@ -3496,7 +3598,8 @@ msgid "Cue Editor"
 msgstr "Cue Uređivač"
 
 #: airtime_mvc/application/controllers/LocaleController.php:298
-msgid "Waveform features are available in a browser supporting the Web Audio API"
+msgid ""
+"Waveform features are available in a browser supporting the Web Audio API"
 msgstr "Valni oblik značajke su dostupne u sporednu Web Audio API pregledniku"
 
 #: airtime_mvc/application/controllers/LocaleController.php:301
@@ -3795,7 +3898,9 @@ msgstr "%s red%s je kopiran u međumemoriju"
 
 #: airtime_mvc/application/controllers/LocaleController.php:403
 #, php-format
-msgid "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."
+msgid ""
+"%sPrint view%sPlease use your browser's print function to print this table. "
+"Press escape when finished."
 msgstr "%sIspis pogled%sMolimo, koristi preglednika ispis funkciju za ispis ovu tablicu. Kad završiš, pritisni Escape."
 
 #: airtime_mvc/application/controllers/LocaleController.php:404
@@ -3833,7 +3938,8 @@ msgid "An internal application error has occurred."
 msgstr ""
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
-msgid "Please make sure admin user/password is correct on System->Streams page."
+msgid ""
+"Please make sure admin user/password is correct on System->Streams page."
 msgstr "Molimo, provjeri da li je ispravan/na admin korisnik/lozinka na stranici Sustav->Prijenosi."
 
 #: airtime_mvc/application/controllers/PlaylistController.php:53
@@ -3886,7 +3992,9 @@ msgid "Wrong username or password provided. Please try again."
 msgstr "Pogrešno korisničko ime ili lozinka. Molimo pokušaj ponovno."
 
 #: airtime_mvc/application/controllers/LoginController.php:167
-msgid "Email could not be sent. Check your mail server settings and ensure it has been configured properly."
+msgid ""
+"Email could not be sent. Check your mail server settings and ensure it has "
+"been configured properly."
 msgstr "E-mail nije mogao biti poslan. Provjeri svoje postavke poslužitelja pošte i uvjeri se da je ispravno podešen."
 
 #: airtime_mvc/application/controllers/LoginController.php:173
@@ -4068,7 +4176,9 @@ msgstr "Neispravan zahtjev"
 
 #: airtime_mvc/application/layouts/scripts/login.phtml:24
 #, php-format
-msgid "%1$s copyright &copy; %2$s All rights reserved.<br />Maintained and distributed under the %3$s by %4$s"
+msgid ""
+"%1$s copyright &copy; %2$s All rights reserved.<br />Maintained and "
+"distributed under the %3$s by %4$s"
 msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:63
@@ -4104,402 +4214,3 @@ msgstr "Podesi Cue Out"
 #: airtime_mvc/application/layouts/scripts/layout.phtml:166
 msgid "Cursor"
 msgstr "Pokazivač"
-
-#~ msgid "Show:"
-#~ msgstr "Program:"
-
-#~ msgid "enter a time in seconds 0{.0}"
-#~ msgstr "unesi vrijeme u sekundama 0{.0}"
-
-#~ msgid "Allow Remote Websites To Access \"Schedule\" Info?%s (Enable this to make front-end widgets work.)"
-#~ msgstr "Dopusti daljinske Web stranice za pristup \"Raspored\" Info?%s (Omogući ovo da bi front-end widgets rad.)"
-
-#~ msgid "Default Interface Language"
-#~ msgstr "Zadani Jezik Sučelja"
-
-#~ msgid "Get new password"
-#~ msgstr "Nabavi novu lozinku"
-
-#~ msgid "Set smart block type:"
-#~ msgstr "Postavi smart block tipa:"
-
-#~ msgid "Allow Repeat Tracks:"
-#~ msgstr "Dopusti Ponavljanje Pjesama:"
-
-#~ msgid "Limit to"
-#~ msgstr "Ograničeno na"
-
-#~ msgid "Auto Switch Off"
-#~ msgstr "Automatsko Isključivanje"
-
-#~ msgid "Auto Switch On"
-#~ msgstr "Automatsko Uključivanje"
-
-#~ msgid "Switch Transition Fade (s)"
-#~ msgstr "Prijelazni Fade Prekidač (s)"
-
-#~ msgid "enter a time in seconds 00{.000000}"
-#~ msgstr "unesi vrijeme u sekundama 00{.000000}"
-
-#~ msgid "Master Username"
-#~ msgstr "Majstorsko Kor. Ime"
-
-#~ msgid "Master Password"
-#~ msgstr "Majstorska Lozinka"
-
-#~ msgid "Master Source Connection URL"
-#~ msgstr "URL veza Majstorskog izvora"
-
-#~ msgid "Show Source Connection URL"
-#~ msgstr "URL veza Programskog izvora"
-
-#~ msgid "Master Source Port"
-#~ msgstr "Port Majstorskog Izvora"
-
-#~ msgid "Master Source Mount Point"
-#~ msgstr "Točka Majstorskog Izvora"
-
-#~ msgid "Show Source Port"
-#~ msgstr "Port Programskog Izvora"
-
-#~ msgid "Show Source Mount Point"
-#~ msgstr "Točka Programskog Izvora"
-
-#~ msgid "You cannot use same port as Master DJ port."
-#~ msgstr "Ne možeš koristiti isti port kao Majstor DJ priključak."
-
-#~ msgid "Port %s is not available"
-#~ msgstr "Port %s nije dostupan"
-
-#~ msgid "E-mail"
-#~ msgstr "E-mail"
-
-#~ msgid "Restore password"
-#~ msgstr "Vraćanje lozinke"
-
-#~ msgid "Hardware Audio Output"
-#~ msgstr "Hardver Audio Izlaz"
-
-#~ msgid "Output Type"
-#~ msgstr "Tip Izlaza"
-
-#~ msgid "Date/Time Start:"
-#~ msgstr "Datum/Vrijeme Početka:"
-
-#~ msgid "Date/Time End:"
-#~ msgstr "Datum/Vrijeme Završetka:"
-
-#~ msgid "Automatically Upload Recorded Shows"
-#~ msgstr "Automatski Prijenos (Upload) Snimljene Emisije"
-
-#~ msgid "Enable SoundCloud Upload"
-#~ msgstr "Omogući SoundCloud Prijenos"
-
-#~ msgid "Automatically Mark Files \"Downloadable\" on SoundCloud"
-#~ msgstr "Automatski Obilježeni Fajlovi \"može se preuzeti\" sa SoundCloud"
-
-#~ msgid "SoundCloud Email"
-#~ msgstr "SoundCloud E-mail"
-
-#~ msgid "SoundCloud Password"
-#~ msgstr "SoundCloud Lozinka"
-
-#~ msgid "SoundCloud Tags: (separate tags with spaces)"
-#~ msgstr "SoundCloud Tagovi: (zasebne oznake s razmacima)"
-
-#~ msgid "Default Genre:"
-#~ msgstr "Zadani Žanr:"
-
-#~ msgid "Default Track Type:"
-#~ msgstr "Zadana Vrsta Pjesme:"
-
-#~ msgid "Original"
-#~ msgstr "Izvorni"
-
-#~ msgid "Remix"
-#~ msgstr "Remix"
-
-#~ msgid "Live"
-#~ msgstr "Uživo"
-
-#~ msgid "Recording"
-#~ msgstr "Snimanje"
-
-#~ msgid "Spoken"
-#~ msgstr "Govorni"
-
-#~ msgid "Podcast"
-#~ msgstr "Podcast"
-
-#~ msgid "Demo"
-#~ msgstr "Ogledni"
-
-#~ msgid "Work in progress"
-#~ msgstr "Radovi su u tijeku"
-
-#~ msgid "Stem"
-#~ msgstr "Podrijetlo"
-
-#~ msgid "Loop"
-#~ msgstr "Petlja"
-
-#~ msgid "Sound Effect"
-#~ msgstr "Zvučni Efekt"
-
-#~ msgid "One Shot Sample"
-#~ msgstr "Jedan Metak Uzorak"
-
-#~ msgid "Other"
-#~ msgstr "Ostalo"
-
-#~ msgid "Enable System Emails (Password Reset)"
-#~ msgstr "Omogućavanje sustava e-pošte (Ponovno postavljanje zaporke)"
-
-#~ msgid "Reset Password 'From' Email"
-#~ msgstr "Ponovno postavi zaporku 'iz' e-pošte"
-
-#~ msgid "Configure Mail Server"
-#~ msgstr "Konfiguriranje Mail poslužitelja"
-
-#~ msgid "Requires Authentication"
-#~ msgstr "Zahtijeva Provjeru Autentičnosti"
-
-#~ msgid "Mail Server"
-#~ msgstr "Mail Poslužitelj"
-
-#~ msgid "Email Address"
-#~ msgstr "E-mail Adresa"
-
-#~ msgid "Please enter your user name and password"
-#~ msgstr "Molimo unesi svoje korisničko ime i lozinku"
-
-#~ msgid "Given email not found."
-#~ msgstr "S obzirom e-mail nije pronađen."
-
-#~ msgid "Page not found"
-#~ msgstr "Stranica nije pronađena"
-
-#~ msgid "Application error"
-#~ msgstr "Pogreška aplikacije"
-
-#~ msgid "Playlist / Block"
-#~ msgstr "Playlista / Block"
-
-#~ msgid "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."
-#~ msgstr "Oprezno pri ažuriranju podataka!"
-
-#~ msgid "today"
-#~ msgstr "danas"
-
-#~ msgid "day"
-#~ msgstr "dan"
-
-#~ msgid "week"
-#~ msgstr "tjedan"
-
-#~ msgid "month"
-#~ msgstr "mjesec"
-
-#~ msgid "Remove overbooked tracks"
-#~ msgstr "Ukloni prebukirane pjesme"
-
-#~ msgid "Soundcloud"
-#~ msgstr "Soundcloud"
-
-#~ msgid "View on Soundcloud"
-#~ msgstr "Prikaz na Soundcloud"
-
-#~ msgid "Re-upload to SoundCloud"
-#~ msgstr "Ponovno-prenijeti na Soundcloud"
-
-#~ msgid "Upload to SoundCloud"
-#~ msgstr "Prijenos na Soundcloud"
-
-#~ msgid "Could not delete some scheduled files."
-#~ msgstr "Ne može se izbrisati neke zakazane datoteke."
-
-#~ msgid "Add Media"
-#~ msgstr "Dodaj Medije"
-
-#~ msgid "Library"
-#~ msgstr "Knjižnica"
-
-#~ msgid "System"
-#~ msgstr "Sustav"
-
-#~ msgid "Preferences"
-#~ msgstr "Postavke"
-
-#~ msgid "Media Folders"
-#~ msgstr "Medijska Mapa"
-
-#~ msgid "History"
-#~ msgstr "Povijest"
-
-#~ msgid "Service"
-#~ msgstr "Usluga"
-
-#~ msgid "Uptime"
-#~ msgstr "Radno Vrijeme"
-
-#~ msgid "CPU"
-#~ msgstr "CPU"
-
-#~ msgid "Memory"
-#~ msgstr "Memorija"
-
-#~ msgid "Email / Mail Server Settings"
-#~ msgstr "Postavka E-mail / Mail Poslužitelja"
-
-#~ msgid "Connection URL: "
-#~ msgstr "Priključni URL:"
-
-#~ msgid "Input Stream Settings"
-#~ msgstr "Postavke Ulaznog Signala"
-
-#~ msgid "Master Source Connection URL:"
-#~ msgstr "URL veza Majstorskog izvora:"
-
-#~ msgid "Override"
-#~ msgstr "Nadjačaj"
-
-#~ msgid "RESET"
-#~ msgstr "Resetiranje"
-
-#~ msgid "Show Source Connection URL:"
-#~ msgstr "URL veza Programskog izvora:"
-
-#~ msgid "Filter By Show:"
-#~ msgstr "Po Emisiji:"
-
-#~ msgid "%s's Settings"
-#~ msgstr "%s Postavke"
-
-#~ msgid "Sourcefabric Privacy Policy"
-#~ msgstr "Sourcefabric Pravila o Privatnosti"
-
-#~ msgid "Smart Block Options"
-#~ msgstr "Smart Block Opcije"
-
-#~ msgid "file meet the criteria"
-#~ msgstr "datoteka zadovoljava kriterije"
-
-#~ msgid "New"
-#~ msgstr "Novi"
-
-#~ msgid "New Playlist"
-#~ msgstr "Novi Popis Pjesama"
-
-#~ msgid "New Smart Block"
-#~ msgstr "Novi Pametni Blok"
-
-#~ msgid "New Webstream"
-#~ msgstr "Novi Prijenos"
-
-#~ msgid "View / edit description"
-#~ msgstr "Pregled / ured opisa"
-
-#~ msgid "Global Settings"
-#~ msgstr "Globalne Postavke"
-
-#~ msgid "Output Stream Settings"
-#~ msgstr "Izlazne Prijenosne Postavke"
-
-#~ msgid "Listener Count Over Time"
-#~ msgstr "Statistika Slušalaca"
-
-#~ msgid "Begin by adding your files to the library using the 'Add Media' menu button. You can drag and drop your files to this window too."
-#~ msgstr "Započni dodavanjem datoteke u knjižnicu pomoću 'Dodaj Medije' meni tipkom. Možeš povući i ispustiti datoteke na ovom prozoru."
-
-#~ msgid "Create a show by going to 'Calendar' in the menu bar, and then clicking the '+ Show' icon. This can be either a one-time or repeating show. Only admins and program managers can add shows."
-#~ msgstr "Kreiraj jednu emisiju tako da ideš na 'Kalendar' na traci izbornika, a zatim klikom na '+ Emisija' ikonu. One mogu biti bilo jednokratne ili ponavljajuće emisije. Samo administratori i urednici mogu dodati emisije."
-
-#~ msgid "Add media to the show by going to your show in the Schedule calendar, left-clicking on it and selecting 'Add / Remove Content'"
-#~ msgstr "Dodaj medije za emisiju u kalendaru, klikni sa lijevom klikom na njega i izaberi opciju 'Dodaj / Ukloni sadržaj'"
-
-#~ msgid "Select your media from the left pane and drag them to your show in the right pane."
-#~ msgstr "Odaberi svoje medije na lijevom oknu i povuci ih na svoju emisiju u desnom oknu."
-
-#~ msgid "Then you're good to go!"
-#~ msgstr "I već je završeno!"
-
-#~ msgid "Please enter your account e-mail address. You will receive a link to create a new password via e-mail."
-#~ msgstr "Unesi svoju e-mail adresu računa. Primit ćeš link za novu lozinku putem e-maila."
-
-#~ msgid "Email sent"
-#~ msgstr "E-mail je poslan"
-
-#~ msgid "An email has been sent"
-#~ msgstr "E-mail je poslan"
-
-#~ msgid "Back to login screen"
-#~ msgstr "Povratak na zaslon za prijavu"
-
-#~ msgid "Scheduled Play"
-#~ msgstr "Zakazana Predstava"
-
-#~ msgid "Station time"
-#~ msgstr "Glavno vrijeme"
-
-#~ msgid "Zend Framework Default Application"
-#~ msgstr "Zend Framework Zadana Aplikacija"
-
-#~ msgid "Empty smart block"
-#~ msgstr "Prazan pametni blok"
-
-#~ msgid "Empty playlist"
-#~ msgstr "Prazan popis pjesama"
-
-#~ msgid "Empty smart block content"
-#~ msgstr "Prazan sadržaj pametnog bloka"
-
-#~ msgid "No open smart block"
-#~ msgstr "Nema otvoreni pametni blok"
-
-#~ msgid "Record & Rebroadcast"
-#~ msgstr "Snimanje & Reemitiranje"
-
-#~ msgid "Failed to create 'organize' directory."
-#~ msgstr "Nije uspjelo stvaranje 'organiziranje' direktorija."
-
-#~ msgid "The file was not uploaded, there is %s MB of disk space left and the file you are uploading has a size of %s MB."
-#~ msgstr "Prijenos datoteke nije uspio jer je slobodan prostor je samo %s MB od željenih datoteke veličine od %s MB."
-
-#~ msgid "This file appears to be corrupted and will not be added to media library."
-#~ msgstr "Ova datoteka čini se da je oštećena i neće biti dodana u medijskoj knjižnici."
-
-#~ msgid "The file was not uploaded, this error can occur if the computer hard drive does not have enough disk space or the stor directory does not have correct write permissions."
-#~ msgstr "Datoteka nije poslana, ova pogreška može se pojaviti ako hard disk računala nema dovoljno prostora na disku ili stor direktorija nema ispravnih ovlasti za zapisivanje."
-
-#~ msgid ""
-#~ "Hi %s, \n"
-#~ "\n"
-#~ "Click this link to reset your password: "
-#~ msgstr ""
-#~ "Bok %s, \n"
-#~ "\n"
-#~ "Klikni na ovaj link kako bi poništio lozinku: "
-
-#~ msgid "Show Content"
-#~ msgstr "Programski Sadržaj"
-
-#~ msgid "Remove All Content"
-#~ msgstr "Ukloni Sve Sadržaje"
-
-#~ msgid "Cancel Current Show"
-#~ msgstr "Prekid Programa"
-
-#~ msgid "Edit This Instance"
-#~ msgstr "Uredi u tom slučaju"
-
-#~ msgid "Delete This Instance"
-#~ msgstr "Izbriši u tom slučaju"
-
-#~ msgid "Delete This Instance and All Following"
-#~ msgstr "Izbriši u tom slučaju i svi prateći"
-
-#~ msgid "Please selection an option"
-#~ msgstr "Molimo, odaberi opciju"
-
-#~ msgid "No Records"
-#~ msgstr "Nema Zapisa"
