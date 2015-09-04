@@ -226,10 +226,11 @@ var AIRTIME = (function(AIRTIME) {
             cItem,
             $trs;
 
-        $.fn.reverse = [].reverse;
+        //$.fn.reverse = [].reverse;
+        //$trs = $libTable.find("tr").reverse();
 
         // Get visible items and check if any chosenItems are visible
-        $trs = $libTable.find("tr").reverse();
+        $trs = $libTable.find("tr");
         $trs.each(function(i){
             for (cItem in chosenItems) {
                 if (cItem === $(this).attr("id")) {

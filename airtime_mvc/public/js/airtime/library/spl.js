@@ -439,6 +439,10 @@ var AIRTIME = (function(AIRTIME){
         $pl.find(".title_obj_name").text(title);
     }
 
+    function setTabName(name) {
+        var id = $pl.data("tab-id");
+        $("#show_builder").find("[data-tab-id='" + id + "']").find(".tab-name").text(name);
+    }
 
     /*
      * Should all be moved to builder.js eventually
@@ -980,7 +984,7 @@ var AIRTIME = (function(AIRTIME){
             // We also need to run the draw callback to update how dragged items are drawn
             AIRTIME.library.fnDrawCallback();
 
-            var playlistNameElem = $pl.find('.playlist_name_display');
+            var playlistNameElem = $pl.siblings("[data-tab-id='" + tabId + "']").find('.playlist_name_display');
             var name = "";
             if (playlistNameElem.val() !== undefined) {
                 name = playlistNameElem.val().trim();
@@ -1028,6 +1032,7 @@ var AIRTIME = (function(AIRTIME){
                         } else {
 
                             setTitleLabel(json.name);
+                            setTabName(json.name);
                             mod.setModified(json.modified);
 
                             if (obj_type == "block") {
@@ -1080,6 +1085,7 @@ var AIRTIME = (function(AIRTIME){
                 aSelected = AIRTIME.library.getSelectedData();
 
                 for (i = 0, length = aSelected.length; i < length; i++) {
+                    console.log(aSelected[i]);
                     aItems.push(new Array(aSelected[i].id, aSelected[i].ftype));
                 }
 
