@@ -334,7 +334,7 @@
 
 .crossfade dl.inline-list dt,.cue-edit dl.inline-list dt,.crossfade-main dl.inline-list dt
     {
-    min-width: 90px;
+    min-width: 80px;
 }
 
 .crossfade dl.inline-list dd,.cue-edit dl.inline-list dd,.crossfade-main dl.inline-list dd
@@ -360,7 +360,7 @@
 }
 
 .playlist_main_fade_input {
-    width: 100px;
+    width: 30px;
 }
 
 .crossfade-main {
@@ -369,11 +369,13 @@
     padding: 10px 10px 0 10px;
     margin: 0 1px 16px 0;
     position: relative;
+    box-sizing: border-box;
+    border-top: 0px;
 }
 
 .crossfade-main dt {
     color: #ffffff !important;
-    width: 100px;
+    line-height: 24px;
 }
 
 .crossfade-main .edit-error {
@@ -382,7 +384,7 @@
 }
 
 .crossfade-main .edit-error:last-child {
-    padding-bottom: 2px;
+    padding-top: 5px;
 }
 
 .crossfade-main .ui-icon-closethick {

@@ -122,7 +122,7 @@ class LocaleController extends Zend_Controller_Action
             //library/spl.js
             "Open Media Builder" => _("Open Media Builder"),
             "please put in a time '00:00:00 (.0)'" => _("please put in a time '00:00:00 (.0)'"),
-            "please put in a time in seconds '00 (.0)'" => _("please put in a time in seconds '00 (.0)'"),
+            "Please enter a valid time in seconds. Eg. 0.5'" => _("Please enter a valid time in seconds. Eg. 0.5"),
             "Your browser does not support playing this file type: " => _("Your browser does not support playing this file type: "),
             "Dynamic block is not previewable" => _("Dynamic block is not previewable"),
             "Limit to: " => _("Limit to: "),

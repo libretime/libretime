@@ -24,7 +24,7 @@ var AIRTIME = (function(AIRTIME){
     }
 
     function isFadeValid(fade) {
-        var regExpr = new RegExp("^\\d{1}(\\d{1})?([.]\\d{1})?$");
+        var regExpr = new RegExp("^[0-9]+(\\.\\d+)?$");
 
         return regExpr.test(fade);
     }
@@ -246,8 +246,10 @@ var AIRTIME = (function(AIRTIME){
             type = $pl.find('.obj_type').val();
 
         if (!isFadeValid(fadeIn)){
-            showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
+            showError(span, $.i18n._("Please enter a valid time in seconds. Eg. 0.5"));
             return;
+        } else {
+            hideError(span);
         }
 
         $.post(url,
@@ -284,8 +286,10 @@ var AIRTIME = (function(AIRTIME){
             type = $pl.find('.obj_type').val();
 
         if (!isFadeValid(fadeOut)){
-            showError(span, $.i18n._("please put in a time in seconds '00 (.0)'"));
+            showError(span, $.i18n._("Please enter a valid time in seconds. Eg. 0.5"));
             return;
+        } else {
+            hideError(span);
         }
 
         $.post(url,
@@ -808,10 +812,11 @@ var AIRTIME = (function(AIRTIME){
                 type = $pl.find('.obj_type').val();
 
             if (!isFadeValid(fadeIn)){
-                showError(input, $.i18n._("please put in a time in seconds '00 (.0)'"));
+                showError(input, $.i18n._("Please enter a valid time in seconds. Eg. 0.5"));
                 return;
+            } else {
+                hideError(input);
             }
-
             $.post(url,
                 {format: "json", fadeIn: fadeIn, modified: lastMod, type: type},
                 function(json){
@@ -827,19 +832,21 @@ var AIRTIME = (function(AIRTIME){
 
             var url = baseUrl+"playlist/set-playlist-fades",
                 input = $(this),
-                fadeOut = $.trim(input.text()),
+                fadeOut = $.trim(input.val()),
                 lastMod = mod.getModified(),
                 type = $pl.find('.obj_type').val();
 
             if (!isFadeValid(fadeOut)){
-                showError(input, $.i18n._("please put in a time in seconds '00 (.0)'"));
+                showError(input, $.i18n._("Please enter a valid time in seconds. Eg. 0.5"));
                 return;
+            } else {
+                hideError(input);
             }
 
             $.post(url,
                 {format: "json", fadeOut: fadeOut, modified: lastMod, type: type},
                 function(json){
-                    hideError(span);
+                    hideError(input);
                     if (json.modified !== undefined) {
                         mod.setModified(json.modified);
                     }
