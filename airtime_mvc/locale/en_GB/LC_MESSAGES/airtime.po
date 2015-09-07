@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-04 11:17-0400\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
+"PO-Revision-Date: 2015-09-07 10:33+0000\n"
 "Last-Translator: Daniel James <daniel@64studio.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/sourcefabric/airtime/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
@@ -1384,15 +1384,15 @@ msgstr "Duration"
 
 #: airtime_mvc/application/controllers/LocaleController.php:276
 msgid "Filtering out "
-msgstr ""
+msgstr "Filtering out "
 
 #: airtime_mvc/application/controllers/LocaleController.php:277
 msgid " of "
-msgstr ""
+msgstr " of "
 
 #: airtime_mvc/application/controllers/LocaleController.php:278
 msgid " records"
-msgstr ""
+msgstr " records"
 
 #: airtime_mvc/application/controllers/LocaleController.php:284
 #: airtime_mvc/application/layouts/scripts/layout.phtml:140
@@ -1901,7 +1901,7 @@ msgstr "Linked shows need to be filled with tracks before they start. To start b
 msgid ""
 "To start broadcasting, click on the current show and select 'Schedule "
 "Tracks'"
-msgstr ""
+msgstr "To start broadcasting, click on the current show and select 'Schedule Tracks'"
 
 #: airtime_mvc/application/common/UsabilityHints.php:82
 #, php-format
@@ -1912,7 +1912,7 @@ msgstr "It looks like the current show needs more tracks. %sAdd tracks to your s
 
 #: airtime_mvc/application/common/UsabilityHints.php:89
 msgid "Click on the show starting next and select 'Schedule Tracks'"
-msgstr ""
+msgstr "Click on the show starting next and select 'Schedule Tracks'"
 
 #: airtime_mvc/application/common/UsabilityHints.php:91
 #, php-format
