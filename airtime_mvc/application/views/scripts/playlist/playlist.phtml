@@ -43,8 +43,8 @@ if (isset($this->obj)) {
         <div class='btn-group'>
             <button class="btn" title='<?php echo _("Shuffle playlist") ?>' type="button" id="playlist_shuffle_button"><?php echo _("Shuffle") ?></button>
         </div>
-        <div class='btn-group'>
-            <a href="#" id="spl_crossfade" class="btn crossfade-main-button" style="display:<?php echo $count > 0 ?"inherit;":"none;"?>">
+        <div class='btn-group' style="display:<?php echo $count > 0 ?"inherit;":"none;"?>">
+            <a href="#" id="spl_crossfade" class="btn crossfade-main-button">
                 <i class='crossfade-main-icon'></i><span class="ui-button-text"><?php echo _("Playlist crossfade") ?></span>
             </a>
         </div>
