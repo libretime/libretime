@@ -28,7 +28,7 @@ function rebuildStreamURL(ele){
     }else{
         streamurl = "http://"+host+":"+port+"/"
     }
-    div.find("#stream_url").text(streamurl)
+    div.find("#stream_url").html('<a href="' + streamurl + '" target="_blank">' + streamurl + '</a>')
 }
 function restrictOggBitrate(ele, on){
     var div = ele.closest("div")
@@ -94,13 +94,13 @@ function checkLiquidsoapStatus(){
             }
             var html;
             if(status == "OK"){
-                html = '<div class="stream-status status-good"><h3>'+$.i18n._("Connected to the streaming server")+'</h3></div>';
+                html = '<div class="stream-status status-good"><p>'+$.i18n._("Connected to the streaming server")+'</p></div>';
             }else if(status == "N/A"){
-                html = '<div class="stream-status status-disabled"><h3>'+$.i18n._("The stream is disabled")+'</h3></div>';
+                html = '<div class="stream-status status-disabled"><p>'+$.i18n._("The stream is disabled")+'</p></div>';
             }else if(status == "waiting"){
-            	html = '<div class="stream-status status-info"><h3>'+$.i18n._("Getting information from the server...")+'</h3></div>';
+            	html = '<div class="stream-status status-info"><p>'+$.i18n._("Getting information from the server...")+'</p></div>';
             }else{
-                html = '<div class="stream-status status-error"><h3>'+$.i18n._("Can not connect to the streaming server")+'</h3><p>'+status+'</p></div>';
+                html = '<div class="stream-status status-error"><p>'+$.i18n._("Can not connect to the streaming server")+'</p><p>'+status+'</p></div>';
             }
             $("#s"+id+"Liquidsoap-error-msg-element").html(html);
         }
@@ -468,19 +468,30 @@ $(document).ready(function() {
     setupEventListeners();
     setSliderForReplayGain();
     getAdminPasswordStatus();
-    
-    $('#stream_save').live('click', function(){
-        var confirm_pypo_restart_text = sprintf($.i18n._("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If %s is recording, and if the change causes a playout engine restart, the recording will be interrupted."), PRODUCT_NAME);
+    var s = $("[name^='customStreamSettings']:checked");
+
+    $("[id^='stream_save'], [name^='customStreamSettings']").live('click', function() {
+        var e = $(this);
+        if (e[0] == s[0]) { return; }
+        var confirm_pypo_restart_text = $.i18n._("WARNING: This will restart your stream and may cause a short dropout for your listeners!");
         if (confirm(confirm_pypo_restart_text)) {
             var data = $('#stream_form').serialize();
             var url = baseUrl+'Preference/stream-setting';
 
             $.post(url, {format:"json", data: data}, function(json){
-                $('#content').empty().append(json.html);
-                setupEventListeners();
-                setSliderForReplayGain();
-                setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass, json.s4_set_admin_pass);
+                window.location.reload();
+                //$('#content').empty().append(json.html);
+                //setupEventListeners();
+                //setSliderForReplayGain();
+                //setPseudoAdminPassword(json.s1_set_admin_pass, json.s2_set_admin_pass, json.s3_set_admin_pass, json.s4_set_admin_pass);
             });
+        } else {
+            if (e.prop('checked')) {
+                if (e[0] != s[0]) {
+                    e.prop('checked', false);
+                    s.prop('checked', true);
+                }
+            }
         }
     });
 });

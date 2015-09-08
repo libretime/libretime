@@ -20,30 +20,25 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function indexAction()
     {
-
         $CC_CONFIG = Config::getConfig();
-
-        $request = $this->getRequest();
-        $response = $this->getResponse();
-        
-        //Enable AJAX requests from www.airtime.pro because the autologin during the seamless sign-up follows
-        //a redirect here.
-        CORSHelper::enableATProCrossOriginRequests($request, $response);
-        
         $baseUrl = Application_Common_OsPath::getBaseDir();
+        $userType = Application_Model_User::GetCurrentUser()->getType();
 
-        $user = Application_Model_User::GetCurrentUser();
-        $userType = $user->getType();
+        //$this->_helper->layout->setLayout("showbuilder");
+
         $this->view->headScript()->appendScript("localStorage.setItem( 'user-type', '$userType' );");
         $this->view->headScript()->appendScript(Application_Common_GoogleAnalytics::generateGoogleTagManagerDataLayerJavaScript());
+
+        $this->view->headLink()->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version']);
 
         $this->view->headScript()->appendFile($baseUrl.'js/contextmenu/jquery.contextMenu.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/js/jquery.dataTables.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.pluginAPI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.fnSetFilteringDelay.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColVis.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        //$this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.ColReorder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.colReorder.min.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedColumns.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.FixedHeader.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/datatables/plugin/dataTables.columnFilter.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
 
         $this->view->headScript()->appendFile($baseUrl.'js/blockui/jquery.blockUI.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
@@ -53,108 +48,32 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headLink()->appendStylesheet($baseUrl.'css/media_library.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.contextMenu.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColVis.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/ColReorder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/datatables/css/dataTables.colReorder.min.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        $refer_sses = new Zend_Session_Namespace('referrer');
+        // PLUPLOAD
+        $this->view->headScript()->appendFile($baseUrl.'js/libs/dropzone.min.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        if ($request->isPost()) {
-            $form = new Application_Form_RegisterAirtime();
+        $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/main_builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-            $values = $request->getPost();
-            if ($values["Publicise"] != 1 && $form->isValid($values)) {
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
+        // MEDIA BUILDER
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-                session_start();  //open session for writing again
-                // unset referrer
-                Zend_Session::namespaceUnset('referrer');
-            } elseif ($values["Publicise"] == '1' && $form->isValid($values)) {
-                Application_Model_Preference::SetHeadTitle($values["stnName"], $this->view);
-                Application_Model_Preference::SetPhone($values["Phone"]);
-                Application_Model_Preference::SetEmail($values["Email"]);
-                Application_Model_Preference::SetStationWebSite($values["StationWebSite"]);
-                Application_Model_Preference::SetPublicise($values["Publicise"]);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/dashboard.css?'.$CC_CONFIG['airtime_version']); // TODO
 
-                $form->Logo->receive();
-                $imagePath = $form->Logo->getFileName();
+        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrf_element = new Zend_Form_Element_Hidden('csrf');
+        $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
+        $this->view->csrf = $csrf_element;
 
-                Application_Model_Preference::SetStationCountry($values["Country"]);
-                Application_Model_Preference::SetStationCity($values["City"]);
-                Application_Model_Preference::SetStationDescription($values["Description"]);
-                Application_Model_Preference::SetStationLogo($imagePath);
-                Application_Model_Preference::SetSupportFeedback($values["SupportFeedback"]);
-
-                if (isset($values["Privacy"])) {
-                    Application_Model_Preference::SetPrivacyPolicyCheck($values["Privacy"]);
-                }
-                session_start();  //open session for writing again
-                // unset referrer
-                Zend_Session::namespaceUnset('referrer');
-            } else {
-                $logo = Application_Model_Preference::GetStationLogo();
-                if ($logo) {
-                    $this->view->logoImg = $logo;
-                }
-                $this->view->dialog = $form;
-                $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-            }
-        }
-
-        //popup if previous page was login
-        if ($refer_sses->referrer == 'login' && Application_Model_Preference::ShouldShowPopUp()
-                && !Application_Model_Preference::GetSupportFeedback() && $user->isAdmin()){
-
-            $form = new Application_Form_RegisterAirtime();
-
-            $logo = Application_Model_Preference::GetStationLogo();
-            if ($logo) {
-                $this->view->logoImg = $logo;
-            }
-            $this->view->dialog = $form;
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/register.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        }
-
-        //determine whether to remove/hide/display the library.
-        $showLib = false;
-        if (!$user->isGuest()) {
-            $disableLib = false;
-
-            $data = Application_Model_Preference::getNowPlayingScreenSettings();
-            if (!is_null($data)) {
-                if ($data["library"] == "true") {
-                    $showLib = true;
-                }
-            }
-        } else {
-            $disableLib = true;
-        }
-        $this->view->disableLib = $disableLib;
-        $this->view->showLib    = $showLib;
-
-        //only include library things on the page if the user can see it.
-        if (!$disableLib) {
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/library.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-            $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/events/library_showbuilder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-
-            $data = Application_Model_Preference::getCurrentLibraryTableSetting();
-            if (!is_null($data)) {
-                $libraryTable = json_encode($data);
-                $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', JSON.stringify($libraryTable) );");
-            } else {
-                $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-library', '' );");
-            }
-        }
-
-        $data = Application_Model_Preference::getTimelineDatatableSetting();
-        if (!is_null($data)) {
-            $timelineTable = json_encode($data);
-            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', JSON.stringify($timelineTable) );");
-        } else {
-            $this->view->headScript()->appendScript("localStorage.setItem( 'datatables-timeline', '' );");
-        }
-
+        $request = $this->getRequest();
         //populate date range form for show builder.
         $now  = time();
         $from = $request->getParam("from", $now);
@@ -170,20 +89,33 @@ class ShowbuilderController extends Zend_Controller_Action
 
         $form = new Application_Form_ShowBuilder();
         $form->populate(array(
-            'sb_date_start' => $start->format("Y-m-d"),
-            'sb_time_start' => $start->format("H:i"),
-            'sb_date_end'   => $end->format("Y-m-d"),
-            'sb_time_end'   => $end->format("H:i")
-        ));
+                            'sb_date_start' => $start->format("Y-m-d"),
+                            'sb_time_start' => $start->format("H:i"),
+                            'sb_date_end'   => $end->format("Y-m-d"),
+                            'sb_time_end'   => $end->format("H:i")
+                        ));
 
         $this->view->sb_form = $form;
+    }
 
-        $this->view->headScript()->appendFile($baseUrl.'js/timepicker/jquery.ui.timepicker.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
-        $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/main_builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+    /** Check if we need to show the timezone/language setup popup and display it. (eg. on first run) */
+    public function checkAndShowSetupPopup($request)
+    {
+        $CC_CONFIG = Config::getConfig();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+        $setupComplete = Application_Model_Preference::getLangTimezoneSetupComplete();
+        $previousPage = $request->getHeader('Referer');
+        $userService = new Application_Service_UserService();
+        $currentUser = $userService->getCurrentUser();
+        $previousPageWasLoginScreen = strpos(strtolower($previousPage), 'login') !== false;
 
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/jquery.ui.timepicker.css?'.$CC_CONFIG['airtime_version']);
-        $this->view->headLink()->appendStylesheet($baseUrl.'css/showbuilder.css?'.$CC_CONFIG['airtime_version']);
+        // If current user is Super Admin, and they came from the login page,
+        // and they have not seen the setup popup before
+        if ($currentUser->isSuperAdmin() && $previousPageWasLoginScreen && empty($setupComplete)) {
+            $lang_tz_popup_form = new Application_Form_SetupLanguageTimezone();
+            $this->view->lang_tz_popup_form = $lang_tz_popup_form;
+            $this->view->headScript()->appendFile($baseUrl.'js/airtime/nowplaying/lang-timezone-setup.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
+        }
     }
 
     public function contextMenuAction()
@@ -229,7 +161,7 @@ class ShowbuilderController extends Zend_Controller_Action
         }
 
         $displayTimeZone = new DateTimeZone(Application_Model_Preference::GetTimezone());
-        
+
         $start = $instance->getDbStarts(null);
         $start->setTimezone($displayTimeZone);
         $end = $instance->getDbEnds(null);
@@ -243,9 +175,19 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->start = $start_time;
         $this->view->end = $end_time;
 
+        $form = new Application_Form_ShowBuilder();
+        $form->populate(array(
+                            'sb_date_start' => $start->format("Y-m-d"),
+                            'sb_time_start' => $start->format("H:i"),
+                            'sb_date_end'   => $end->format("Y-m-d"),
+                            'sb_time_end'   => $end->format("H:i")
+                        ));
+
+        $this->view->sb_form = $form;
+
         $this->view->dialog = $this->view->render('showbuilder/builderDialog.phtml');
     }
-    
+
     public function checkBuilderFeedAction()
     {
         $request = $this->getRequest();
@@ -268,7 +210,7 @@ class ShowbuilderController extends Zend_Controller_Action
     public function builderFeedAction()
     {
     	$current_time = time();
-    	
+
         $request = $this->getRequest();
         $show_filter = intval($request->getParam("showFilter", 0));
         $show_instance_filter = intval($request->getParam("showInstanceFilter", 0));
@@ -290,10 +232,10 @@ class ShowbuilderController extends Zend_Controller_Action
     public function scheduleAddAction()
     {
         $request = $this->getRequest();
-        
+
         $mediaItems = $request->getParam("mediaIds", array());
         $scheduledItems = $request->getParam("schedIds", array());
-        
+
         $log_vars = array();
         $log_vars["url"] = $_SERVER['HTTP_HOST'];
         $log_vars["action"] = "showbuilder/schedule-add";
@@ -301,7 +243,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $log_vars["params"]["media_items"] = $mediaItems;
         $log_vars["params"]["scheduled_items"] = $scheduledItems;
         Logging::info($log_vars);
-        
+
         try {
             $scheduler = new Application_Model_Scheduler();
             $scheduler->scheduleAfter($scheduledItems, $mediaItems);
@@ -318,7 +260,7 @@ class ShowbuilderController extends Zend_Controller_Action
     {
         $request = $this->getRequest();
         $items = $request->getParam("items", array());
-        
+
         $log_vars = array();
         $log_vars["url"] = $_SERVER['HTTP_HOST'];
         $log_vars["action"] = "showbuilder/schedule-remove";
@@ -368,8 +310,7 @@ class ShowbuilderController extends Zend_Controller_Action
 
     public function scheduleReorderAction()
     {
-        throw new Exception("this controller is/was a no-op please fix your
-           code");
+        throw new Exception("this controller is/was a no-op please fix your code");
     }
 
 }

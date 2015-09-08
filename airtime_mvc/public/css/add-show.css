@@ -10,7 +10,7 @@
 }
 
 #schedule-add-show textarea {
-    width: 99%;
+    width: 96%;
     height: 80px;
 }
 
@@ -36,23 +36,21 @@
 }
 
 #schedule-add-show dd {
-    padding: 4px 0;
-    float: left;
     font-size: 1.2em;
     margin: 0;
-    padding: 4px 0 4px 15px;
+    margin-bottom: 8px;
+    /* padding: 4px 0 4px 15px;*/
 }
 
 #schedule-add-show dt, #schedule-add-show dt.big {
     clear: left;
-    color: #666666;
     float: left;
     font-size: 1.2em;
     font-weight: bold;
     margin: 0;
-    padding: 4px 0;
     text-align: left;
     min-width: 103px;
+    padding-top: 4px;
     clear: left;
 }
 
@@ -88,7 +86,7 @@ label.wrapp-label input[type="checkbox"] {
 }
 
 #schedule-add-show fieldset dd input[type="checkbox"] {
-    margin-top: 2px;
+    margin-top: 6px;
 }
 
 #add_show_day_check-element.block-display {
@@ -118,7 +116,6 @@ label.wrapp-label input[type="checkbox"] {
 #add_show_hosts-element {
     max-height: 80px;
     min-width: 150px;
-    overflow: auto;
 }
 
 #add_show_start_time, #add_show_end_time {
@@ -161,6 +158,7 @@ label.wrapp-label input[type="checkbox"] {
     cursor: pointer;
 }
 
+/*
 .add-button {
     border: 1px solid #5b5b5b;
     background-color: #767676;
@@ -169,21 +167,13 @@ label.wrapp-label input[type="checkbox"] {
     color: #ffffff;
     margin:0;
     font-size:12px;
-    font-weight:bold;
     padding:4px 12px 4px 22px;
     text-decoration:none;
-    /*text-shadow: #000 0px -1px;*/
     display:block;
     float:left;
     position:relative;
 }
-.add-button:hover {
-    border: 1px solid #000000;
-    background-color: #353535;
-    background: -moz-linear-gradient(top, #353535 0, #000000 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #353535), color-stop(100%, #000000));
-    color: #ffffff;
-}
+
 .add-button span {
     position:absolute;
     top:3px;
@@ -203,8 +193,18 @@ label.wrapp-label input[type="checkbox"] {
 .add-button[disabled] {
     cursor: auto;
     color: #e7e7e7;
-    border: 1px solid #a1a1a1;
-    background-color: #b1b1b1;
-    background: -moz-linear-gradient(top, #c7c7c7 0, #c7c7c7 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c7c7c7), color-stop(100%, #c7c7c7));
+    /*border: 1px solid #a1a1a1;*/
+    /*background-color: #b1b1b1;*/
+    /*background: -moz-linear-gradient(top, #c7c7c7 0, #c7c7c7 100%);*/
+    /*background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #c7c7c7), color-stop(100%, #c7c7c7));*/
+}
+
+
+.ui-state-hover {
+    background: inherit;
+}
+
+#cb_airtime_auth-label,
+#cb_custom_auth-label {
+    width: 80%;
 }

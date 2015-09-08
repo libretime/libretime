@@ -899,6 +899,7 @@ SQL;
             // any data from the db for these and datatables will complain
             $row['checkbox'] = "";
             $row['image'] = "";
+            $row['options'] = "";
 
             $type = substr($row['ftype'], 0, 2);
             $row['tr_id'] = "{$type}_{$row['id']}";
@@ -907,7 +908,7 @@ SQL;
         return $results;
     }
 
-    /** 
+    /**
      * Copy a newly uploaded audio file from its temporary upload directory 
      * on the local disk (like /tmp) over to Airtime's "stor" directory, 
      * which is where all ingested music/media live.

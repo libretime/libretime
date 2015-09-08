@@ -116,7 +116,6 @@ a.badge:hover {
   display: inline-block;
   *display: inline;
   /* IE7 inline-block hack */
-
   *zoom: 1;
   padding: 4px 14px;
   margin-bottom: 0;
@@ -126,7 +125,7 @@ a.badge:hover {
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
-  color: #fff;
+  color: #efefef;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #676767;
   background-image: -moz-linear-gradient(top, #676767, #535353);
@@ -138,14 +137,14 @@ a.badge:hover {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#676767', endColorstr='#535353', GradientType=0);
 
   border-color: #5b5b5b #5b5b5b #4f4f4f;
-  border-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.75);
   *background-color: #676767;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  border: 1px solid #5b5b5b;
+  border: 1px solid #525252;
+  border-color: rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.55);
   *border: 0;
-  border-bottom-color: #4f4f4f;
+  border-bottom-color: #323232;
   -webkit-border-radius: 1px;
   -moz-border-radius: 1px;
   border-radius: 1px;
@@ -259,10 +258,6 @@ a.badge:hover {
 .btn-info.active,
 .btn-inverse.active {
   color: rgba(255, 255, 255, 0.75);
-}
-.btn {
-  border-color: #c5c5c5;
-  border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25);
 }
 .btn-primary {
   color: #ffffff;
@@ -861,7 +856,7 @@ input[type="submit"].btn.btn-mini {
 }
 .icon-random {
   background-position: -216px -120px;
-  width: 16px;
+  /*width: 16px;*/
 }
 .icon-comment {
   background-position: -240px -120px;
@@ -972,7 +967,7 @@ input[type="submit"].btn.btn-mini {
   margin-left: 5px;
 }
 .btn-toolbar {
-  font-size: 0;
+  /*font-size: 0;*/
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -2104,7 +2099,6 @@ input[type="submit"].btn.btn-mini {
   text-decoration: none;
   color: #ffffff;
   background-color: #858585;
-  background-color: #858585;
   background-image: -moz-linear-gradient(top, #858585, #686868);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#858585), to(#686868));
   background-image: -webkit-linear-gradient(top, #858585, #686868);
@@ -2118,7 +2112,6 @@ input[type="submit"].btn.btn-mini {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
-  background-color: #0088cc;
   background-color: #0081c2;
   background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));

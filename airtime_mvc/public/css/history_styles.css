@@ -4,13 +4,10 @@
 
 #history_template li, #configure_item_template li {
 	clear: both;
-	background: #AAAAAA;
+	background: #222;
 	margin: 2px 0 4px 0;
 	padding: 4px 8px 4px 8px;
 	position: relative;
-	border-radius: 4px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
 	border: 1px solid #9F9F9F;
 	min-height: 15px;
 }
@@ -167,12 +164,9 @@
 }
 
 #configure_item_template .template_item_list li.field_other {
-	background-color: #CACACA;
+	background-color: #333;
 }
 
-.ui-widget-content {
-	background: #C0C0C0 !important;
-}
 
 #history_content .btn-toolbar {
 	margin: 10px;

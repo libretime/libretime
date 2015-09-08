@@ -353,7 +353,9 @@ INSERT INTO cc_locale (locale_code, locale_lang) VALUES ('zh_CN', '简体中文'
 -- added in 2.5.2
 
 INSERT INTO cc_pref (keystr, valstr) VALUES ('timezone', 'UTC');
-INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', 'UTC');
+-- We don't want to set the user timezone by default - it should instead use the station timezone
+-- until the user changes it manually.
+-- INSERT INTO cc_pref (subjid, keystr, valstr) VALUES (1, 'user_timezone', 'UTC');
 
 INSERT INTO cc_pref (keystr, valstr) VALUES ('import_timestamp', '0');
 
@@ -378,7 +380,6 @@ INSERT INTO cc_stream_setting (keyname, value, type) VALUES ('s4_channels', 'ste
 
 -- added in 2.5.14 - this can't be set up in Propel's XML schema, so we need to do it here -- Duncan
 
-ALTER TABLE cc_pref ALTER COLUMN subjid SET NULL;
 ALTER TABLE cc_pref ALTER COLUMN subjid SET DEFAULT NULL;
 CREATE UNIQUE INDEX cc_pref_key_idx ON cc_pref (keystr) WHERE subjid IS NULL;
 ANALYZE cc_pref; -- this validates the new partial index

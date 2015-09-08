@@ -3,10 +3,11 @@
 
 /*---////////////////////    SOURCE INFO    ////////////////////---*/
 .source-info-block {
-    padding:0 0 0 2px;
+    padding: 0;
 	background: url(images/masterpanel_spacer.png) no-repeat 0 0;
 	margin-right: 0;
-	}
+	flex: 0 0 0;
+}
 	.source-info-block h3, .on-air-block h3 {
 		margin: 0 0 10px -1px;
 		padding:3px 0 2px 8px;
@@ -15,6 +16,7 @@
 		font-size:10px;
 		text-transform:uppercase;
 		border-bottom:1px solid #494949;
+		border-top: none;
 		-webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07);
 		-moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07);
 		box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07);
@@ -225,6 +227,7 @@
 
 .source-info-block + .on-air-block {
 	padding-right:2px;
+	flex: 0 100px;
 }
 
 .source-info-block + .on-air-block .on-air-info, .source-info-block + .on-air-block .listen-control-button {
@@ -300,9 +303,17 @@
 
 
 .personal-block.solo {
-    width: auto;
-    height:auto;
-    margin: 0 10px 0 0;
+	width: 200px;
+	line-height: 32px;
+	margin: 0;
+}
+.personal-block.solo span {
+	display: inline-block;
+	width: 100px;
+	text-overflow: ellipsis;
+	text-decoration: underline;
+	overflow: hidden;
+	float: left;
 }
 .personal-block.solo ol {
     margin-top: 6px;

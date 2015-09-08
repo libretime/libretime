@@ -30,6 +30,8 @@ require_once "Timezone.php";
 require_once "Auth.php";
 require_once "interface/OAuth2.php";
 require_once "TaskManager.php";
+require_once "UsabilityHints.php";
+require_once __DIR__.'/models/formatters/LengthFormatter.php';
 require_once __DIR__.'/services/CeleryService.php';
 require_once __DIR__.'/services/SoundcloudService.php';
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
@@ -92,6 +94,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $userType = "";
         }
         $view->headScript()->appendScript("var userType = '$userType';");
+
+        // Dropzone also accept file extensions and doesn't correctly extract certain mimetypes (eg. FLAC - try it),
+        // so we append the file extensions to the list of mimetypes and that makes it work.
+        $mimeTypes = FileDataHelper::getAudioMimeTypeArray();
+        $fileExtensions = array_values($mimeTypes);
+        foreach($fileExtensions as &$extension) {
+            $extension = '.' . $extension;
+        }
+        $view->headScript()->appendScript("var acceptedMimeTypes = " . json_encode(array_merge(array_keys($mimeTypes), $fileExtensions)) . ";");
     }
 
     /**
@@ -130,9 +141,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initTasks() {
         /* We need to wrap this here so that we aren't checking when we're running the unit test suite
          */
-        $taskManager = TaskManager::getInstance();
-        $taskManager->runTask(AirtimeTask::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
         if (getenv("AIRTIME_UNIT_TEST") != 1) {
+            $taskManager = TaskManager::getInstance();
+            $taskManager->runTask(AirtimeTask::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
             //This will do the upgrade too if it's needed...
             $taskManager->runTasks();
         }

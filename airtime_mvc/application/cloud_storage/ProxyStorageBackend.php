@@ -38,9 +38,9 @@ class ProxyStorageBackend extends StorageBackend
         return $this->storageBackend->getAbsoluteFilePath($resourceId);
     }
 
-    public function getDownloadURLs($resourceId)
+    public function getDownloadURLs($resourceId, $contentDispositionFilename)
     {
-        return $this->storageBackend->getDownloadURLs($resourceId);
+        return $this->storageBackend->getDownloadURLs($resourceId, $contentDispositionFilename);
     }
 
     public function deletePhysicalFile($resourceId)

@@ -11,7 +11,7 @@ class Application_Form_PasswordRestore extends Zend_Form
         ));
 
         $this->addElement('text', 'email', array(
-            'label' => _('E-mail'),
+            'label' => _('Email'),
             'required' => true,
             'filters' => array(
                 'stringTrim',
@@ -33,7 +33,7 @@ class Application_Form_PasswordRestore extends Zend_Form
         ));
 
         $this->addElement('submit', 'submit', array(
-            'label' => _('Restore password'),
+            'label' => _('Reset password'),
             'ignore' => true,
             'class' => 'ui-button ui-widget ui-state-default ui-button-text-only center',
             'decorators' => array(
@@ -41,12 +41,14 @@ class Application_Form_PasswordRestore extends Zend_Form
             )
         ));
 
+        /*
         $cancel = new Zend_Form_Element_Button("cancel");
         $cancel->class = 'ui-button ui-widget ui-state-default ui-button-text-only center';
-        $cancel->setLabel(_("Cancel"))
+        $cancel->setLabel(_("Back"))
                ->setIgnore(True)
-               ->setAttrib('onclick', 'redirectToLogin();')
+               ->setAttrib('onclick', 'window.location = ' . Zend_Controller_Front::getInstance()->getBaseUrl('login'))
                ->setDecorators(array('ViewHelper'));
         $this->addElement($cancel);
+        */
     }
 }

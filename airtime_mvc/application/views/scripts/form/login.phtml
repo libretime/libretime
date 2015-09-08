@@ -30,17 +30,15 @@
 
     <?php echo $this->element->getElement('csrf') ?>
     
-    <?php if (Application_Model_Preference::GetEnableSystemEmail()): ?>
-        <dt id="reset-label" class="hidden">&nbsp;</dt>
-        <dd id="reset-element" class="text-right">
-          <a href="<?php echo $this->baseUrl('login/password-restore'); ?>" class="link reset"><?php echo _("Reset password") ?></a>
-        </dd>
-    <?php endif; ?>
     <?php echo $this->element->getElement('captcha') ?>
     <dt id="submit-label">&nbsp;</dt>
     <dd id="submit-element">
       <?php echo $this->element->getElement('submit') ?>
     </dd>
-    
+
+    <dt id="reset-label" class="hidden">&nbsp;</dt>
+    <dd id="reset-element" class="text-right">
+      <a href="<?php echo $this->baseUrl('login/password-restore'); ?>" class="link reset"><?php echo _("Forgot your password?") ?></a>
+    </dd>
   </dl>
 </form>

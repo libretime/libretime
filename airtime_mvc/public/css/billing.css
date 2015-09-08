@@ -2,21 +2,20 @@
 
 .billing-panel
 {
-	width: 400px;
-	margin: 0 auto;
+	width: 500px;
 	margin-bottom: 30px;
 }
 
 .billing-panel h3
 {
-	color: #222;
+	padding-left: 0px;
 }
 
 .billing-panel h4
 {
     font-size: 1.25em;
     margin: 0px;
-    color: #333;
+    /*color: #333;*/
     font-weight: normal;
 }
 
@@ -24,16 +23,16 @@
 {
 	border: 0px solid #000;
 	margin: 0 auto;
-	color: #000;
+	/*color: #000;*/
 }
 
 #upgrade-downgrade label
 {
-	color: rgb(28,28,28);
+	/*color: rgb(28,28,28);*/
 }
 #upgrade-downgrade label.disabled
 {
-	color: rgb(108,108,108);
+	/*color: rgb(108,108,108);*/
 }
 
 #upgrade-downgrade dl
@@ -55,29 +54,45 @@
 {
 	border-spacing: 0px;
     border-collapse: separate;
-	border: 1px solid #777;
-	width: 600px;
-	margin-left: -100px;
+	width: 680px;
+	/*border: 1px solid #777;*/
 	/*background-color: #555;*/
 	table-layout: fixed;
 	margin-top: 20px;
 	margin-bottom: 20px;
-	box-shadow: 0px 5px 5px rgba(0,0,0,0.5);
+	/*box-shadow: 0px 5px 5px rgba(0,0,0,0.5);*/
+	color: #000;
 }
 
 .pricing-grid td, .pricing-grid th
 {
-	border-bottom: 1px solid #999;
-	border-right: 1px solid #bbb;
-	background-color: #ccc;
+	border-bottom: 1px solid #5b5b5b;
+	border-right: 1px solid #5b5b5b;
 	padding: 10px;
+}
+
+.pricing-grid td {
+	background: #2f2f2f;
+	color: #cdcdcd;
+}
+
+.pricing-grid .last-column {
+	border-right: none;
+}
+
+.pricing-grid .last-row td {
+	border-bottom: none;
 }
 
 .pricing-grid th
 {
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     border: 0px;
+	color: #CDCDCD;
+	background-color:#5E5E5E;
+	background: #5E5E5E;
+	border-top: 1px solid #9d9d9d;
+	/*background: -moz-linear-gradient(top, #dd4202 0, #ff5d1a 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #dd4202), color-stop(100%, #ff5d1a));*/
 }
 
 
@@ -86,11 +101,8 @@
 	text-align: right;
     background-color: #ddd;
     font-weight: bold;
-}
-
-#current_plan
-{
-	text-align: center;
+	background-color: #2f2f2f;
+	color: #cdcdcd;
 }
 
 #plantype
@@ -133,6 +145,7 @@
 	border: 1px solid #777;
 	background: #ccc;
 	padding: 5px;
+	color: #000;
 }
 #total_box
 {
@@ -176,7 +189,6 @@
 
 #invoices_table
 {
-	margin: 0 auto;
     border-spacing: 0px;
     border-collapse: separate;
     border: 1px solid #777;
@@ -184,18 +196,24 @@
     table-layout: fixed;
     margin-top: 20px;
     margin-bottom: 35px;
-    background: #ccc;
+	width: 500px;
 }
 
 #invoices_table tbody tr th
 {
 	border: 0px;
+	color: #efefef;
+	background: #5E5E5E;
+	background-color: #5E5E5E;
+	border-top: 1px solid #9d9d9d;
+
 }
 
 #invoices_table .header
 {
     box-shadow: 0px 2px 2px rgba(0,0,0,0.5);
 }
+
 
 #invoices_table tr
 {
@@ -208,11 +226,15 @@
 }
 
 /** This form is the separate one on the Billing Account Details page (BillingClient.php) */
+#clientdetails_form {
+	width: 500px;
+}
+
 #clientdetails_form dt {
     float: left;
     clear: both;
     width: 50%;
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
 }
 #clientdetails_form dd {
 	float: left;
@@ -223,4 +245,32 @@
 {
 	/*text-align: right;*/
 	width: 100%;
+}
+
+#promo-plan-eligible {
+	margin-top: 10px;
+	font-size: 13px;
+	background-color: #ff611f;
+	padding: 3px 5px;
+	border-radius: 5px;
+	color: #ffffff;
+}
+
+.promo-banner {
+	margin-top:10px;
+	background: url('images/august_aweomse_promo_banner.png') no-repeat;
+}
+
+.billing-details-checkbox {
+	width: auto;
+}
+
+#current_plan {
+	padding-top: 10px;
+	font-size: 16px;
+}
+
+#current_plan span {
+	color: #ff611f;
+	font-weight: bold;
 }

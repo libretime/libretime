@@ -1,24 +1,35 @@
-<?php if (!$this->disableLib): ?>
-<div id="library_content" class="lib-content tabs ui-widget ui-widget-content block-shadow alpha-block padded"
-    <?php if (!$this->showLib): ?>
-    style="display:none"
-    <?php endif; ?>
->
-    <?php echo $this->render('library/library.phtml') ?>
-</div>
-<?php endif; ?>
+<?php echo $this->csrf ?>
 
-<div id="show_builder" class="sb-content ui-widget ui-widget-content block-shadow omega-block padded">
-    <div class="sb-timerange">
-        <?php if(!$this->disableLib && !$this->showLib):?>
-        <a id="sb_edit" class="btn btn-small" href="#" title="Open library to add or remove content">
-            <?php echo _("Add / Remove Content")?>
-        </a> 
-        <?php endif; ?>
-    <?php echo $this->sb_form; ?>
+<div id="library_content" class="lib-content tabs content-pane wide-panel">
+    <div>
+        <h2 id="library_title"><?php echo _("Dashboard")." - " ?><span id="library_filter"></span></h2>
     </div>
-    <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+    <div class="panel-header">
+        <div id="advanced-options" class="btn-group">
+            <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                <span id="filter_message"></span>
+                <span class="caret"></span>
+            </button>
+            <div id="advanced_search" class="advanced_search form-horizontal dropdown-menu"></div>
+        </div>
+    </div>
+    <div class="outer-datatable-wrapper">
+        <table id="library_display" cellpadding="0" cellspacing="0" class="datatable"></table>
+    </div>
 </div>
 
+<div id="show_builder" class="sb-content content-pane wide-panel">
+    <div class="panel-header">
+        <ul class="nav nav-tabs">
+            <li id="schedule-tab" role="presentation" class="active"><a href="javascript:void(0)">Scheduled Shows</a></li>
+        </ul>
+    </div>
+    <div class="outer-datatable-wrapper active-tab">
+        <table id="show_builder_table" cellpadding="0" cellspacing="0" class="datatable"></table>
+        <div class="sb-timerange">
+            <?php echo $this->sb_form; ?>
+        </div>
+    </div>
+</div>
 
 <?php echo $this->dialog ?>

@@ -50,27 +50,82 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     </script>
 
-
-    <div id="nav">
-        <div class="logo"></div>
-        <div class="personal-block solo">
-            <ol>
-              <li>
-                <!-- <span class="trial-box-button"><a title="Billing" href=<?php echo $baseUrl . 'billing/upgrade'?>>Upgrade</a></span>&nbsp;-->
-                <a id="current-user" href=<?php echo $baseUrl . "User/edit-user"?>><span class="name"><?php echo $this->escape($this->loggedInAs()); ?></span></a>
-                 | <a href=<?php echo $baseUrl . "Login/logout"?>><?php echo _("Logout")?></a>
-              </li>
-            </ol>
-        </div>
-
-        <?php echo $this->navigation()->menu() ?>
-        <div style="clear:both;"></div>
-    </div>
     <?php endif; //suspended ?>
 </div>
 
+<div id="media_type_nav"> <!-- class="content-pane" -->
+    <div class="btn-group">
+        <ul class="dropdown-menu">
+            <li id="new-playlist">
+                <a href="#"><?php echo _("Playlist") ?></a>
+            </li>
+            <li id="new-smart-block">
+                <a href="#"><?php echo _("Smart Block") ?></a>
+            </li>
+            <li id="new-webstream">
+                <a href="#"><?php echo _("Webstream") ?></a>
+            </li>
+        </ul>
+        <a href="/Plupload">
+            <button id="add_media_btn" class="btn btn-small dashboard-btn btn-new">
+                <span><?php echo _("Upload") ?></span>
+            </button>
+        </a>
+    </div>
+    <div class="media_type_selector top-link" data-selection-id="1">
+        <a href="/showbuilder#"><i class='icon-home icon-white'></i><?php echo _("Dashboard") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" data-selection-id="1">
+        <a href="/showbuilder#tracks"><i class='icon-music icon-white'></i><?php echo _("Tracks") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" data-selection-id="2">
+        <a href="/showbuilder#playlists"><i class='icon-list icon-white'></i><?php echo _("Playlists") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" data-selection-id="3">
+        <a href="/showbuilder#smart-blocks"><i class='icon-time icon-white'></i><?php echo _("Smart Blocks") ?></a></div>
+    <div class="media_type_selector dashboard_sub_nav" data-selection-id="4">
+        <a href="/showbuilder#webstreams"><i class='icon-random icon-white'></i><?php echo _("Webstreams") ?></a></div>
+    <hr style="margin-left: 5px; margin-right: 5px">
+    <div id="nav">
+        <?php echo $this->navigation()->menu(); ?>
+    </div>
 
-<div class="wrapper" id="content"><?php echo $this->layout()->content ?></div>
+    <?php
+    $partitions = Application_Model_Systemstatus::GetDiskInfo();
+    $status = new StdClass;
+    $partitions = $partitions;
+    $disk = $partitions[0];
+    $used = $disk->totalSpace-$disk->totalFreeSpace;
+    $total = $disk->totalSpace;
+    ?>
+    <div id="disk_usage" style="height: 13px; position:fixed; bottom: 5px; left: 10px;">
+        <!--<div style="padding-bottom: 2px;">Disk Usage</div>-->
+        <div class="disk_usage_progress_bar"></div>
+        <div class="disk_usage_percent_in_use"><?php echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30)); ?></div>
+        <div class="disk_usage_used" style="width:<?php echo sprintf("%01.1f%%", $used/$total*100) ?>;"></div>
+
+        <!--<div style="margin-top: 15px; font-size: 12px;">
+            <?php //echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30)); ?>
+        </div>-->
+
+    </div>
+
+</div>
+
+<?php $hint = Application_Common_UsabilityHints::getUsabilityHint(); ?>
+<div class="usability_hint <?php if ($hint == "") { echo "hidden"; } ?>"><?php echo $hint; ?></div>
+
+<div class="wrapper <?php if (isset($this->layout()->parent_page)) echo "wrapper_panel";?>" id="content">
+    <?php echo $this->layout()->content ?>
+</div>
+<?php if (isset($this->layout()->parent_page)) { ?>
+    <div id="sub-menu">
+        <h3><?php //parent_page is passed in from controller
+            echo $this->layout()->parent_page; ?></h3>
+        <hr>
+        <?php
+        $page = $this->navigation()->findOneBy('title', $this->layout()->parent_page);
+        echo $this->navigation()->menu()->renderMenu($page);
+        ?>
+    </div>
+<?php } ?>
 
 <script id="tmpl-pl-cues" type="text/template">
 <div class="waveform-cues">
@@ -116,3 +171,4 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </script>
 </body>
 </html>
+

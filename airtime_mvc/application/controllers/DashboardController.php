@@ -108,11 +108,12 @@ class DashboardController extends Zend_Controller_Action
 
     public function helpAction()
     {
-        // action body
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
     }
 
     public function aboutAction()
     {
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
         $this->view->airtime_version = Application_Model_Preference::GetAirtimeVersion();
     }
 

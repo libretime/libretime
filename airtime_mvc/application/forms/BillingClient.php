@@ -14,7 +14,7 @@ class Application_Form_BillingClient extends Zend_Form
         $emailValidator = Application_Form_Helper_ValidationTypes::overrideEmailAddressValidator();
         
         $firstname = new Zend_Form_Element_Text('firstname');
-        $firstname->setLabel(_('First Name:'))
+        $firstname->setLabel(_pro('First Name:'))
             ->setValue($client["firstname"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -23,7 +23,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($firstname);
 
         $lastname = new Zend_Form_Element_Text('lastname');
-        $lastname->setLabel(_('Last Name:'))
+        $lastname->setLabel(_pro('Last Name:'))
             ->setValue($client["lastname"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -32,7 +32,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($lastname);
 
         $companyname = new Zend_Form_Element_Text('companyname');
-        $companyname->setLabel(_('Company Name:'))
+        $companyname->setLabel(_pro('Company Name:'))
             ->setValue($client["companyname"])
             ->setAttrib('class', 'input_text')
             ->setRequired(false)
@@ -41,7 +41,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($companyname);
 
         $email = new Zend_Form_Element_Text('email');
-        $email->setLabel(_('Email Address:'))
+        $email->setLabel(_pro('Email Address:'))
             ->setValue($client["email"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -51,7 +51,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($email);
 
         $address1 = new Zend_Form_Element_Text('address1');
-        $address1->setLabel(_('Address 1:'))
+        $address1->setLabel(_pro('Address 1:'))
             ->setValue($client["address1"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -60,14 +60,14 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($address1);
 
         $address2 = new Zend_Form_Element_Text('address2');
-        $address2->setLabel(_('Address 2:'))
+        $address2->setLabel(_pro('Address 2:'))
             ->setValue($client["address2"])
             ->setAttrib('class', 'input_text')
             ->addFilter('StringTrim');
         $this->addElement($address2);
 
         $city = new Zend_Form_Element_Text('city');
-        $city->setLabel(_('City:'))
+        $city->setLabel(_pro('City:'))
             ->setValue($client["city"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -77,7 +77,7 @@ class Application_Form_BillingClient extends Zend_Form
 
         //TODO: get list from whmcs?
         $state = new Zend_Form_Element_Text('state');
-        $state->setLabel(_('State/Region:'))
+        $state->setLabel(_pro('State/Region:'))
             ->setValue($client["state"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -86,7 +86,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($state);
 
         $postcode = new Zend_Form_Element_Text('postcode');
-        $postcode->setLabel(_('Zip Code / Postal Code:'))
+        $postcode->setLabel(_pro('Zip Code / Postal Code:'))
             ->setValue($client["postcode"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -99,7 +99,7 @@ class Application_Form_BillingClient extends Zend_Form
         asort($countries, SORT_LOCALE_STRING);
         
         $country = new Zend_Form_Element_Select('country');
-        $country->setLabel(_('Country:'))
+        $country->setLabel(_pro('Country:'))
             ->setValue($client["country"])
             ->setAttrib('class', 'input_text')
             ->setMultiOptions($countries)
@@ -109,7 +109,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($country);
 
         $phonenumber = new Zend_Form_Element_Text('phonenumber');
-        $phonenumber->setLabel(_('Phone Number:'))
+        $phonenumber->setLabel(_pro('Phone Number:'))
             ->setValue($client["phonenumber"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -118,7 +118,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($phonenumber);
 
         $securityqid = new Zend_Form_Element_Select('securityqid');
-        $securityqid->setLabel(_('Please choose a security question:'))
+        $securityqid->setLabel(_pro('Please choose a security question:'))
             ->setValue($client["securityqid"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -132,7 +132,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($securityqid);
 
         $securityqans = new Zend_Form_Element_Text('securityqans');
-        $securityqans->setLabel(_('Please enter an answer:'))
+        $securityqans->setLabel(_pro('Please enter an answer:'))
             ->setValue($client["securityqans"])
             ->setAttrib('class', 'input_text')
             ->setRequired(true)
@@ -149,7 +149,7 @@ class Application_Form_BillingClient extends Zend_Form
         }
 
         $vat = new Zend_Form_Element_Text("7");
-        $vat->setLabel(_('VAT/Tax ID (EU only)'))
+        $vat->setLabel(_pro('VAT/Tax ID (EU only)'))
             ->setBelongsTo('customfields')
             ->setValue($vatvalue)
             ->setAttrib('class', 'input_text')
@@ -159,17 +159,17 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($vat);
 
         $subscribe = new Zend_Form_Element_Checkbox('71');
-        $subscribe->setLabel(_('Subscribe to Sourcefabric newsletter'))
+        $subscribe->setLabel(_pro('Subscribe to Sourcefabric newsletter'))
             ->setValue($subscribevalue)
             ->setBelongsTo('customfields')
-            ->setAttrib('class', 'input_text')
+            ->setAttrib('class', 'billing-details-checkbox')
             ->setRequired(true)
             ->addValidator($notEmptyValidator)
             ->addFilter('StringTrim');
         $this->addElement($subscribe);
 
         $password = new Zend_Form_Element_Password('password2');
-        $password->setLabel(_('Password:'));
+        $password->setLabel(_pro('Password:'));
         $password->setAttrib('class', 'input_text');
         $password->setValue("xxxxxx");
         $password->setRequired(true);
@@ -178,7 +178,7 @@ class Application_Form_BillingClient extends Zend_Form
         $this->addElement($password);
 
         $passwordVerify = new Zend_Form_Element_Password('password2verify');
-        $passwordVerify->setLabel(_('Verify Password:'));
+        $passwordVerify->setLabel(_pro('Verify Password:'));
         $passwordVerify->setAttrib('class', 'input_text');
         $passwordVerify->setValue("xxxxxx");
         $passwordVerify->setRequired(true);
@@ -190,7 +190,7 @@ class Application_Form_BillingClient extends Zend_Form
 
         $submit = new Zend_Form_Element_Submit("submit");
         $submit->setIgnore(true)
-                ->setLabel(_("Save"));
+                ->setLabel(_pro("Save"));
         $this->addElement($submit);
     }
 }

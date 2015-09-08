@@ -30,13 +30,13 @@ class Application_Model_Auth
         $e_link_port = $_SERVER['SERVER_PORT'];
         $e_link_path = $view->url(array('user_id' => $user->getDbId(), 'token' => $token), 'password-change');
 
-        $message = sprintf(_("Hi %s, \n\nClick this link to reset your password: "), $user->getDbLogin());
+        $message = sprintf(_("Hi %s, \n\nPlease click this link to reset your password: "), $user->getDbLogin());
         $message .= "{$e_link_protocol}://{$e_link_base}:{$e_link_port}{$e_link_path}";
+        $message .= sprintf(_pro("\n\nIf you have any problems, please contact our support team: %s"), SUPPORT_EMAIL_ADDRESS);
+        $message .= sprintf(_pro("\n\nThank you,\nThe %s Team"), SAAS_PRODUCT_BRANDING_NAME);
 
-        $str = sprintf(_('%s Password Reset'), PRODUCT_NAME);
-        $success = Application_Model_Email::send($str, $message, $user->getDbEmail());
-
-        return $success;
+        $str = sprintf(_('%s Password Reset'), SAAS_PRODUCT_BRANDING_NAME);
+        return Application_Model_Email::send($str, $message, $user->getDbEmail());
     }
 
     public function invalidateTokens($user, $action)

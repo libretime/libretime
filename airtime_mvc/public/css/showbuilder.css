@@ -56,8 +56,8 @@
 }
 
 .sb-content input[type="checkbox"] {
-	position: relative;
-	top: 3px;
+    position: relative;
+    top: 3px;
 }
 
 .sb-content fieldset {
@@ -180,8 +180,8 @@ table.datatable tr.cursor-selected-row td, table.datatable tr.cursor-selected-ro
     background-color: rgba(255, 0, 0, 0.5);
 }
 
-.sb-now-playing td {
-    background-color: rgba(23, 235, 37, 1) !important;
+.sb-now-playing {
+    background-color: rgba(23, 235, 37, 1);
 }
 
 .sb-content.padded {
@@ -201,15 +201,17 @@ table.dataTable td.sb-image {
 
 table.datatable tr.sb-header.odd td, table.datatable tr.sb-header.even td,
 table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hover td{
+    background: #555;
+    /*
     background: -moz-linear-gradient(top, #a4a4a4 0, #bcbcbc 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #a4a4a4), color-stop(100%, #bcbcbc));
 	background: linear-gradient(top, #a4a4a4 0, #bcbcbc 100%);
+	*/
 	border-top-color:#6b6a6a !important;
 }
 
-.sb-content tr:last-child td {
-	border-bottom-width: 1px !important;
-    border-bottom-color:#6b6a6a !important;	
+.datatable .ui-state-error {
+    color: #d00000 !important;
 }
 
 .sb-header div.ui-state-default {
@@ -260,7 +262,7 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 
 .ui-dialog .wrapper {
     margin: 0;
-    padding: 10px 0 0 0;
+    padding: 10px 0 40px;
     overflow: hidden;
     top: 0;
     left: 0;
@@ -285,3 +287,21 @@ table.datatable tr.sb-header.odd:hover td, table.datatable tr.sb-header.even:hov
 .ui-dialog .sb_content .padded {
     padding: 5px 10px 5px 16px;
 }
+
+#show_builder_table tr.sb-footer {
+    border-top: 10px solid #000;
+}
+
+.sb-now-playing, tr.sb-now-playing > td {
+    background-color: #1adeff;/* #1aff60; */ /* #5b1aff; */
+    color: #000;
+}
+
+tr.ui-state-error > td {
+    color: #d00000;
+}
+
+tr.ui-state-highlight > td {
+    color: #65a539;
+}
+

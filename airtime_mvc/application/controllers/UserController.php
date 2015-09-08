@@ -22,6 +22,9 @@ class UserController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
+
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
+
         $baseUrl = Application_Common_OsPath::getBaseDir();
 
         $js_files = array(
@@ -121,6 +124,8 @@ class UserController extends Zend_Controller_Action
     
     public function editUserAction()
     {
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Settings');
+
         session_start(); //Reopen session for writing.
         $request = $this->getRequest();
         $form = new Application_Form_EditUser();

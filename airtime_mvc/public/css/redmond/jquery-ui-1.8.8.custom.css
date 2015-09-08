@@ -107,18 +107,26 @@
 	font-size: 12px;
 }
 .ui-widget-content {
-	border: 1px solid #5b5b5b;
-	background: #aaaaaa url(images/ui-bg_default_aaaaaa.png) repeat-x 0 0;
-	color: #1c1c1c;
+
+	border: 1px solid #202020;
+	border-top: 1px solid #353535;
+	border-left: 1px solid #2a2a2a;
+	background-color: #2F2F2F; /*#242424*/
+	color: #e2e2e2;
+
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+	-moz-box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+	box-shadow: inset 0 0 6px rgba(0,0,0,.65);
+
+
 }
 .ui-widget-content a {
-	color: #444444;
+	color: #b2b2b2;
 }
 .ui-widget-header {
 	border: 1px solid #5b5b5b;
-	background: #9a9a9a url(images/ui-bg_highlight.png) 0 0 repeat-x;
-	color: #444444;
-	font-weight: bold;
+	background: #4a4a4a ;
+	color: #ccc;
 }
 .ui-widget-header a {
 	color: #444444;
@@ -128,11 +136,10 @@
 
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-	border: 1px solid #5b5b5b;
+	border:1px solid #5b5b5b;
 	background-color: #6e6e6e;
-    background: -moz-linear-gradient(top, #868686 0, #6e6e6e 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #868686), color-stop(100%, #6e6e6e));
 	color: #ffffff;
+	text-shadow: rgba(0, 0, 0, 0.2) 0px -1px;
 }
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
 	color: #ffffff;
@@ -141,8 +148,8 @@
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
 	border: 1px solid #242424;
 	background-color: #292929;
-    background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
+	background: -moz-linear-gradient(top, #3b3b3b 0, #292929 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3b3b3b), color-stop(100%, #292929));
 	color: #ffffff;
 }
 .ui-state-hover a, .ui-state-hover a:hover {
@@ -151,8 +158,11 @@
 }
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
 	border: 1px solid #5b5b5b;
-	background: #c6c6c6;
+	background: #ccc9c7;
 	color: #000;
+	text-shadow: rgba(255, 255, 255, 0.2) 0px 1px;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.2);
+
 	outline:none;
 }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
@@ -171,9 +181,9 @@
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-	border: 1px solid #65a539;
-	background: #eff6eb url(images/ui-bg_flat_55_eff6eb_40x100.png) 50% 50% repeat-x;
-	color: #65a539;
+	border: 1px solid #696969;
+	background: rgba(255, 255, 255, 0.15);
+	color: #1adeff;
 }
 .ui-state-highlight a, .ui-widget-content .ui-state-highlight a, .ui-widget-header .ui-state-highlight a {
 	color: #65a539;
@@ -211,11 +221,16 @@
 	height: 16px;
 	background-image: url(images/ui-icons_ffffff_256x240.png);
 }
+.selected .ui-icon {
+	width: 16px;
+	height: 16px;
+	background-image: url(images/ui-icons_454545_256x240.png);
+}
 .ui-widget-content .ui-icon {
 	background-image: url(images/ui-icons_ffffff_256x240.png);
 }
 .ui-widget-content .ui-icon-alert {
-        background-image: url(images/ui-icons_ff5d1a_256x240.png);
+	background-image: url(images/ui-icons_ff5d1a_256x240.png);
 }
 .ui-widget-header .ui-icon {
 	background-image: url(images/ui-icons_ffffff_256x240.png);
@@ -1127,7 +1142,7 @@ button.ui-button.::-moz-focus-inner {
 	padding: 0;
 }
 
- /* reset extra padding in Firefox */
+/* reset extra padding in Firefox */
 /*
  * jQuery UI Dialog 1.8.6
  *
@@ -1175,16 +1190,18 @@ button.ui-button.::-moz-focus-inner {
 	background: none;
 	overflow: auto;
 	zoom: 1;
-	
+
+	box-shadow: none;
+
 }
 .ui-dialog .ui-dialog-buttonpane {
 	text-align: left;
 	border-width: 1px 0 0 0;
 	background: none;
-	margin: .5em 0 0 0;
-    margin: 0.3em -0.4em 0;
-    padding: 0.3em 1em 0 0.4em;
-    border-color: #9f9f9f;
+	margin: 0.3em -0.4em 0;
+	padding: 0.3em 1em 0 0.4em;
+	border-color: #9f9f9f;
+	box-shadow: none;
 }
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
 	float: right;
@@ -1387,7 +1404,7 @@ button.ui-button.::-moz-focus-inner {
 .ui-datepicker th {
 	padding: .7em .3em;
 	text-align: center;
-	font-weight: bold;
+	font-weight: normal;
 	border: 0;
 }
 .ui-datepicker td {

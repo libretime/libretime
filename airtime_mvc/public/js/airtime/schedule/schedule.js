@@ -120,25 +120,90 @@ function findViewportDimensions() {
     };
 }
 
+function highlightMediaTypeSelector(dialog) {
+    var selected;
+    if (location.hash === "") {
+        selected = dialog.find("a[href$='#tracks']");
+    } else {
+        selected = dialog.find("a[href$='"+location.hash+"']")
+    }
+
+    selected.parent().addClass("selected");
+    $("#library_filter").text(selected.text());
+
+    // Slightly hacky way of triggering the click event when it's outside of the anchor text
+    dialog.find(".media_type_selector").on("click", function() {
+        // Need get(0) here so we don't create a stack overflow by recurring the click on the parent
+        $(this).find("a").get(0).click();
+    });
+
+    $(window).on('hashchange', function() {
+        var selected = dialog.find("a[href$='"+location.hash+"']");
+        AIRTIME.library.selectNone();
+        dialog.find(".media_type_selector").each(function () {
+            $(this).removeClass("selected");
+        });
+        $("#library_filter").text(selected.text());
+        selected.parent().addClass("selected");
+        oTable.fnDraw();
+    });
+}
+
+function buildTimerange(dialog) {
+    var builder = dialog.find("#show_builder"),
+        oBaseDatePickerSettings = {
+            dateFormat: 'yy-mm-dd',
+            //i18n_months, i18n_days_short are in common.js
+            monthNames: i18n_months,
+            dayNamesMin: i18n_days_short,
+            onClick: function(sDate, oDatePicker) {
+                $(this).datepicker("setDate", sDate);
+            },
+            onClose: validateTimeRange
+        },
+        oBaseTimePickerSettings = {
+            showPeriodLabels: false,
+            showCloseButton: true,
+            closeButtonText: $.i18n._("Done"),
+            showLeadingZero: false,
+            defaultTime: '0:00',
+            hourText: $.i18n._("Hour"),
+            minuteText: $.i18n._("Minute"),
+            onClose: validateTimeRange
+        };
+
+    /*
+     * Icon hover states for search.
+     */
+    builder.on("mouseenter", ".sb-timerange .ui-button", function(ev) {
+        $(this).addClass("ui-state-hover");
+    });
+    builder.on("mouseleave", ".sb-timerange .ui-button", function(ev) {
+        $(this).removeClass("ui-state-hover");
+    });
+
+    builder.find(dateStartId)
+        .datepicker(oBaseDatePickerSettings);
+    builder.find(timeStartId)
+        .timepicker(oBaseTimePickerSettings);
+    builder.find(dateEndId)
+        .datepicker(oBaseDatePickerSettings);
+    builder.find(timeEndId)
+        .timepicker(oBaseTimePickerSettings);
+
+    var oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId,
+        dateEndId, timeEndId);
+    AIRTIME.showbuilder.fnServerData.start = oRange.start;
+    AIRTIME.showbuilder.fnServerData.end = oRange.end;
+}
+
 function buildScheduleDialog (json, instance_id) {
     var dialog = $(json.dialog),
         viewport = findViewportDimensions(),
         height = Math.floor(viewport.height * 0.96),
         width = Math.floor(viewport.width * 0.96),
-        fnServer = AIRTIME.showbuilder.fnServerData,
-        //subtract padding in pixels
-        widgetWidth = width - 60,
-        libWidth = Math.floor(widgetWidth * 0.5),
-        builderWidth = Math.floor(widgetWidth * 0.5);
-    
-    dialog.find("#library_content")
-        .height(height - 115)
-        .width(libWidth);
-    
-    dialog.find("#show_builder")
-        .height(height - 115)
-        .width(builderWidth);
-    
+        fnServer = AIRTIME.showbuilder.fnServerData;
+
     dialog.dialog({
         autoOpen: false,
         title: json.title,
@@ -154,6 +219,7 @@ function buildScheduleDialog (json, instance_id) {
                 "class": "btn",
                 click: function() {
                     $(this).dialog("close");
+                    //getUsabilityHint();
                 }
             }
         ]
@@ -170,14 +236,9 @@ function buildScheduleDialog (json, instance_id) {
     AIRTIME.library.libraryInit();
     AIRTIME.showbuilder.builderDataTable();
     
-    //set max heights of datatables.
-    dialog.find(".lib-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 200);
-    
-    dialog.find(".sb-content .dataTables_scrolling")
-        .css("max-height", height - 90 - 65);
-    
     dialog.dialog('open');
+    highlightMediaTypeSelector(dialog);
+    buildTimerange(dialog);
 }
 
 function buildContentDialog (json){
@@ -268,10 +329,10 @@ function createFullCalendar(data){
             $.i18n._('Dec')
         ],
         buttonText: {
-            today: $.i18n._('today'),
-            month: $.i18n._('month'),
-            week: $.i18n._('week'),
-            day: $.i18n._('day')
+            today: $.i18n._('Today'),
+            month: $.i18n._('Month'),
+            week: $.i18n._('Week'),
+            day: $.i18n._('Day')
         },
         dayNames: [
             $.i18n._('Sunday'),
@@ -318,12 +379,14 @@ function alertShowErrorAndReload(){
 }
 
 $(document).ready(function() {
+
     checkCalendarSCUploadStatus();
     
     $.contextMenu({
         selector: 'div.fc-event',
         trigger: "left",
         ignoreRightClick: true,
+        className: 'calendar-context-menu',
         
         build: function($el, e) {
             var data, 
@@ -338,7 +401,6 @@ $(document).ready(function() {
                 if (oItems.schedule !== undefined) {
                     
                     callback = function() {
-                        
                         $.post(oItems.schedule.url, {format: "json", id: data.id}, function(json){
                             buildScheduleDialog(json, data.id);
                         });
@@ -481,6 +543,7 @@ $(document).ready(function() {
             });
 
             return {
+                className: 'calendar-context-menu',
                 items: items,
                 determinePosition : function($menu, x, y) {
                     $menu.css('display', 'block')

@@ -246,6 +246,10 @@ class Application_Model_StreamSetting
             } elseif (is_array($d)) {
                 $temp = explode('_', $key);
                 $prefix = $temp[0];
+                // SAAS-876 - If we're using Airtime Pro streaming, set the stream to use the default settings
+                if (!Application_Model_Preference::getUsingCustomStreamSettings()) {
+                    $d = array_merge($d, static::getDefaults($prefix));
+                }
                 foreach ($d as $k => $v) {
                     $keyname = $prefix . "_" . $k;
                     if ($k == 'enable') {
@@ -265,8 +269,28 @@ class Application_Model_StreamSetting
         }
     }
 
+    /**
+     * SAAS-876 - Get the default stream settings values for Airtime Pro streaming
+     *
+     * @param int $prefix
+     *
+     * @return array array of default stream setting values
+     */
+    public static function getDefaults($prefix) {
+        $config = Config::getConfig();
+        return array(
+            'host'   => $config['stationId'] . ".out.airtime.pro",
+            'port'   => DEFAULT_ICECAST_PORT,
+            'output' => 'icecast',
+            'user'   => $config['stationId'],
+            'pass'   => Application_Model_Preference::getDefaultIcecastPassword(),
+            // Kind of ugly... convert prefix int to ascii char
+            'mount'  => $config['stationId'] . '_' . chr($prefix[1] + 96),
+        );
+    }
+
     /*
-     * Sets indivisual stream setting.
+     * Sets individual stream setting.
      *
      * $data - data array. $data is [].
      * TODO: Make this SQL a prepared statement!

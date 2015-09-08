@@ -11,6 +11,7 @@ class ProvisioningHelper
     private $dbuser, $dbpass, $dbname, $dbhost, $dbowner, $apikey;
     private $instanceId;
     private $stationName, $description;
+    private $defaultIcecastPassword;
 
     public function __construct($apikey)
     {
@@ -24,8 +25,12 @@ class ProvisioningHelper
      */
     public function createAction()
     {
-        $apikey = $_SERVER['PHP_AUTH_USER'];
-        if (!isset($apikey) || $apikey != $this->apikey) {
+        $apikey = "";
+        if (isset($_SERVER['PHP_AUTH_USER']))
+        {
+            $apikey = $_SERVER['PHP_AUTH_USER'];
+        }
+        if ($apikey != $this->apikey) {
             Logging::info("Invalid API Key: $apikey");
             http_response_code(403);
             echo "ERROR: Incorrect API key";
@@ -118,6 +123,9 @@ class ProvisioningHelper
         if (isset($_POST['description'])) {
             $this->description = $_POST['description'];
         }
+        if (isset($_POST['icecast_pass'])) {
+            $this->defaultIcecastPassword = $_POST['icecast_pass'];
+        }
     }
 
     /**
@@ -207,6 +215,9 @@ class ProvisioningHelper
         }
         if ($this->description) {
             Application_Model_Preference::SetStationDescription($this->description);
+        }
+        if (isset($this->defaultIcecastPassword)) {
+            Application_Model_Preference::setDefaultIcecastPassword($this->defaultIcecastPassword);
         }
     }
 

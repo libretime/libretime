@@ -37,7 +37,6 @@
 
 #library_content {
 	float: left;
-	width: 50%;
 	overflow: auto;
 }
 
@@ -59,11 +58,6 @@
     word-wrap: break-word;
 }
 
-#library_display th,
-#library_display td,
-.paginationControl {
-	font-size: 13px;
-}
 
 #library_content .ui-tabs-panel {
 	padding-top:16px;
@@ -113,6 +107,38 @@ td.library_track,
 td.library_sr,
 td.library_bitrate {
     text-align: right;
+}
+
+td.library_actions
+{
+	padding: 0px !important;
+}
+
+.library_actions_btn {
+	float: left;
+	font-weight: bold;
+	white-space: nowrap;
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	height: 24px;
+	width: 18px;
+	padding: 0px !important;
+	margin: 0px !important;
+	margin-top: 0px !important;
+	margin-right: 6px !important;
+	line-height: 17px !important;
+	padding-left: 6px !important;
+}
+
+.library_actions_btn:hover {
+	background: #555;
+}
+tr.lib-selected > td > div.library_actions_btn  {
+	border-color: #000;
+}
+tr.lib-selected > td > div.library_actions_btn:hover {
+	background: #000;
+	color: #eee;
 }
 
 .library_import {  
@@ -167,14 +193,14 @@ td.library_bitrate {
 		}
 	.lib-content fieldset.closed {
 		border-width: 1px 0 0;
-		margin-bottom: -6px;
+		margin-bottom: 0;
 		margin-left: 1px;
 		}
 .dataTables_filter input[type="text"], .dataTables_filter select {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	height: 25px;
+	height: 26px;
 	width:60%;
 	}
 .dataTables_filter label {
@@ -192,13 +218,13 @@ td.library_bitrate {
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
-		height: 25px;
+		height: 26px;
 		}
 	.search-criteria .criteria-element > div .btn-small {
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
 		box-sizing: border-box;
-		height: 25px;
+		height: 26px;
 		padding: 3px 6px;
 		}
 
@@ -206,7 +232,7 @@ td.library_bitrate {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	height: 25px;
+	height: 26px;
 	vertical-align: middle;
 	margin: 0 !important;
 	line-height: 16px;
@@ -219,7 +245,7 @@ td.library_bitrate {
 	display: inline-block;
 	float: none !important;
 	margin: 0 !important;
-	height: 25px;
+	height: 26px;
 	outline: none;
 	vertical-align: middle !important;
 	}			

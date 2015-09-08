@@ -1,6 +1,8 @@
 <?php
 $items = $this->contents;
-if (count($items)) : ?>
+$isStaticSmartBlock = ($this->obj instanceof Application_Model_Block && $this->obj->isStatic());
+$isPlaylist = ($this->obj instanceof Application_Model_Playlist);
+if (count($items) && ($isStaticSmartBlock || $isPlaylist)) : ?>
 <?php $i = 0; ?>
 <?php foreach($items as $item) :
 $staticBlock = null;
@@ -46,7 +48,7 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             <div class="text-row top">
                 <span class="spl_playlength"><?php echo $item["length"] ?></span>
                 <?php if ($item['type'] == 0) {?>
-                <span class="spl_cue ui-state-default"></span>
+                <!-- <span class="spl_cue ui-state-default"></span> -->
                 <?php } else if ($item['type'] == 2) {
                         if ($staticBlock) {?>
                 <span class="spl_block_expand close" blockId="<?php echo $item["item_id"]; ?>" id="expand_block_<?php echo $item["id"]?>">
@@ -69,7 +71,7 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
             <?php //create the crossfade icon.
                 if (($i < count($items) -1) && !($items[$i]['type'] == 2 && $items[$i+1]['type'])):
             ?>
-            <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div>
+            <!-- <div id="fade_<?php echo $i ?>" class="spl_fade_control ui-state-default"></div> -->
             <?php endif; ?>
             <span id="remove_<?php echo $item["id"] ?>" class="ui-icon ui-icon-closethick"></span>
         </div>
@@ -129,13 +131,17 @@ if (($i < count($items) -1) && ($items[$i+1]['type'] == 0)) {
 <?php endforeach; ?>
 
 <?php else : ?>
-<li class="spl_empty">
+<div class="spl_empty">
 <?php
     if ($this->obj instanceof Application_Model_Block) {
-        echo _("Empty smart block");
+        if ($this->obj->isStatic()) {
+            echo _("Choose some search criteria above and click Generate to create this playlist.");
+        } else {
+            echo _("A track list will be generated when you schedule this smart block into a show.");
+        }
     } else {
-        echo _("Empty playlist");
+        echo _("Drag tracks here from your library to add them to the playlist");
     }
 ?>
-</li>
+</div>
 <?php endif; ?>

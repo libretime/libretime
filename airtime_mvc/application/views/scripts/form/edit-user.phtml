@@ -1,9 +1,11 @@
-<h2><?php echo sprintf(_("%s's Settings"), $this->escape($this->currentUser)) ?></h2>
+<h2><?php echo _("My Profile") ?></h2>
 <div id="current-user-container">
 
   <?php if(Application_Model_User::getCurrentUser()->isSuperAdmin()) : ?>
-    <div class="user-data" id="user_details_superadmin_message" style="text-align: center;">
-        <?=sprintf(_("<b>Note:</b> You are a special \"Super Admin\" type of user.<br>Account details for Super Admins can be changed in your <a href=\"%s\">Billing Settings</a> instead."), "/billing/client");?>
+    <div id="user_details_superadmin_message">
+        <p class="alert alert-error">
+            <?=sprintf(_("<b>Note:</b> Since you're the station owner, your account information can be edited in <a href=\"%s\">Billing Settings</a> instead."), "/billing/client");?>
+        </p>
         <br><br>
     </div>
   <?php endif; ?>
@@ -168,6 +170,6 @@
         </dd>
         <?php echo $this->element->getElement('csrf') ?>
     </dl>
-    <button type="submit" id="cu_save_user" class="btn btn-small right-floated"><?php echo _("Save")?></button>
+    <button type="submit" id="cu_save_user" class="btn right-floated"><?php echo _("Save")?></button>
 </form>
 </div>

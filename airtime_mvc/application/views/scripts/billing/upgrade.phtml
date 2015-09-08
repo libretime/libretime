@@ -124,7 +124,7 @@ $(document).ready(function() {
 	
 	configureByCountry($("#country").val());
 	recalculateTotals();
-    
+
     $("input[name='newproductid']").change(function() {
         validatePlan();
         recalculateTotals();
@@ -167,9 +167,9 @@ $(document).ready(function() {
 });
 </script>
 
-<div class="ui-widget ui-widget-content block-shadow clearfix padded-strong billing-panel">
-<H2><?=_("Account Plans")?></H2>
-<H4><?=_("Upgrade today to get more listeners and storage space!")?></H4>
+<div class="ui-widget prefpanel clearfix padded-strong billing-panel">
+<H2><?=_pro("Account Plans")?></H2>
+<H4><?=_pro("Upgrade today to get more listeners and storage space!")?></H4>
 <div class="pricing-grid">
     <table>
         <tr>
@@ -185,7 +185,7 @@ $(document).ready(function() {
             </td>
             <td>2 Streams
             </td>
-            <td>3 Streams
+            <td class="last-column">3 Streams
             </td>
         </tr> 
         <tr>
@@ -195,7 +195,7 @@ $(document).ready(function() {
             </td>
             <td>64kbps and 196kbps Stream Quality
             </td>
-            <td>64kbps, 128kbps, and 196kbps Stream Quality
+            <td class="last-column">64kbps, 128kbps, and 196kbps Stream Quality
             </td>
         </tr> 
         <tr>
@@ -205,7 +205,7 @@ $(document).ready(function() {
             </td>
             <td>100 Listeners per stream
             </td>
-            <td>500 Listeners per stream
+            <td class="last-column">500 Listeners per stream
             </td>
         </tr> 
         <tr>
@@ -215,7 +215,8 @@ $(document).ready(function() {
             </td>
             <td>30GB Storage
             </td>
-            <td>150GB Storage
+            <td class="last-column">
+                150GB Storage
             </td>
         </tr> 
         <tr>
@@ -225,7 +226,7 @@ $(document).ready(function() {
             </td>
             <td>Live Chat, Ticket, Email, Forum Support
             </td>
-            <td>Live Chat, Ticket, Email, Forum Support
+            <td class="last-column">Live Chat, Ticket, Email, Forum Support
             </td>
         </tr> 
         <tr>
@@ -235,25 +236,25 @@ $(document).ready(function() {
             </td>
             <td>Save 15% if paid annually
             </td>
-            <td>Save 15% if paid annually
+            <td class="last-column">Save 15% if paid annually
             </td>
         </tr> 
-        <tr class="price">
+        <tr class="price last-row">
             <td id="hobbyist_grid_price">
             </td>
             <td id="starter_grid_price">
             </td>
             <td id="plus_grid_price">
             </td>
-            <td id="premium_grid_price">
+            <td class="last-column" id="premium_grid_price">
             </td>
         </tr> 
     </table>
 </div>
 <!-- 
-<p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_("View Plans")?></a> (Opens in a new window)</p>
+<p> <a target="_blank" href="https://www.airtime.pro/pricing"><?=_pro("View Plans")?></a> (Opens in a new window)</p>
  -->
-<p id="current_plan"><b>Current Plan:</b> 
+<p id="current_plan"><span><?php echo(_pro('Your Current Plan:')); ?></span>
 <?php 
 $currentProduct = Billing::getClientCurrentAirtimeProduct();
 echo($currentProduct["name"]);
@@ -261,9 +262,11 @@ echo($currentProduct["name"]);
 ?>
 </p>
 
-<h3>Choose a plan:</h3>
+<h3><?php echo(_pro('Choose a plan: ')); ?></h3>
  <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
     $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
+
+     <?php echo $form->csrf ?>
     
     <div id="plantype">
         <?php echo $form->newproductid ?>
@@ -272,7 +275,7 @@ echo($currentProduct["name"]);
         <?php echo $form->newproductbillingcycle ?>
     </div>
     <div id="billingcycle_disclaimer">
-    Save 15% on annual plans (Hobbyist plan excluded).
+        Save 15% on annual plans (Hobbyist plan excluded).
     </div>
     <div class="clearfix"></div>
     <div id="subtotal_box">
@@ -285,7 +288,7 @@ echo($currentProduct["name"]);
     VAT will be added below if you are an EU resident without a valid VAT number.
     </div>
     
-    <h3>Enter your payment details:</h3>
+    <h3><?=_pro("Please enter your payment details:");?></h3>
     <?php if (isset($this->errorMessage)) {?>
     <div class="errors"><?php echo $this->errorMessage ?></div>
     <?php }?>
@@ -356,6 +359,10 @@ echo($currentProduct["name"]);
     <div id="paymentmethod">
         <?php echo $form->paymentmethod ?>
     </div>
+     <!-- PayPal Logo --><table border="0" cellpadding="10" cellspacing="0"><tr><td></td></tr><tr><td align="center"><img src="https://www.paypalobjects.com/webstatic/en_CA/mktg/logo-image/bdg_secured_by_pp_2line.png" border="0" alt="Secured by PayPal"></td></tr></table><!-- PayPal Logo -->
+     <div>
+     <img src="https://www.2checkout.com/upload/images/paymentlogoshorizontal.png" alt="2Checkout.com is a worldwide leader in online payment services" />
+     </div>
     
     <div class="clearfix"></div>
     <div id="total_box">
@@ -364,7 +371,7 @@ echo($currentProduct["name"]);
         <b>Total:</b> <span id="total"></span>
     </div>
     
-    <input type="submit" value="Submit Order" id="atpro_submitorder"></input>
+    <input type="submit" class="btn right-floated" value="Submit Order" id="atpro_submitorder"></input>
     <div class="clearfix"></div>
 </form>
 </div>

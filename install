@@ -313,8 +313,10 @@ else
 fi
 
 # Check if composer exists and install if it doesn't
+set +e
 eval hash "composer" 2>/dev/null
 commandFound=$?
+set -e
 if [[ ! ${commandFound} -eq 0 ]]; then
     curl -sS https://getcomposer.org/installer | php
     mv composer.phar /usr/local/bin/composer

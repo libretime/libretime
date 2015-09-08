@@ -51,6 +51,15 @@ class LocaleController extends Zend_Controller_Action
             //library/events/library_showbuilder.js
             //already in library/events/library_playlistbuilder.js
             "Please select a cursor position on timeline." => _("Please select a cursor position on timeline."),
+            "You haven't added any tracks" => _("You haven't added any tracks"),
+            "You haven't added any playlists" => _("You haven't added any playlists"),
+            "You haven't added any smart blocks" => _("You haven't added any smart blocks"),
+            "You haven't added any webstreams" => _("You haven't added any webstreams"),
+            "Learn about tracks" => _("Learn about tracks"),
+            "Learn about playlists" => _("Learn about playlists"),
+            "Learn about smart blocks" => _("Learn about smart blocks"),
+            "Learn about webstreams" => _("Learn about webstreams"),
+            "Click 'New' to create one." => _("Click 'New' to create one."),
             //"Adding 1 Item" => _("Adding 1 Item"),
             //"Adding %s Items" => _("Adding %s Items"),
             //library/library.js
@@ -62,7 +71,8 @@ class LocaleController extends Zend_Controller_Action
             "Deselect all" => _("Deselect all"),
             "Are you sure you want to delete the selected item(s)?" => _("Are you sure you want to delete the selected item(s)?"),
             "Scheduled" => _("Scheduled"),
-            "Playlist" => _("Playlist / Block"),
+            "Tracks" => _("Tracks"),
+            "Playlist" => _("Playlist"),
             "Title" => _("Title"),
             "Creator" => _("Creator"),
             "Album" => _("Album"),
@@ -112,7 +122,7 @@ class LocaleController extends Zend_Controller_Action
             //library/spl.js
             "Open Media Builder" => _("Open Media Builder"),
             "please put in a time '00:00:00 (.0)'" => _("please put in a time '00:00:00 (.0)'"),
-            "please put in a time in seconds '00 (.0)'" => _("please put in a time in seconds '00 (.0)'"),
+            "Please enter a valid time in seconds. Eg. 0.5'" => _("Please enter a valid time in seconds. Eg. 0.5"),
             "Your browser does not support playing this file type: " => _("Your browser does not support playing this file type: "),
             "Dynamic block is not previewable" => _("Dynamic block is not previewable"),
             "Limit to: " => _("Limit to: "),
@@ -171,8 +181,7 @@ class LocaleController extends Zend_Controller_Action
             "Check this box to automatically switch on Master/Show source upon source connection." => _("Check this box to automatically switch on Master/Show source upon source connection."),
             "If your Icecast server expects a username of 'source', this field can be left blank." => _("If your Icecast server expects a username of 'source', this field can be left blank."),
             "If your live streaming client does not ask for a username, this field should be 'source'." => _("If your live streaming client does not ask for a username, this field should be 'source'."),
-            "If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."
-                => _("If you change the username or password values for an enabled stream the playout engine will be rebooted and your listeners will hear silence for 5-10 seconds. Changing the following fields will NOT cause a reboot: Stream Label (Global Settings), and Switch Transition Fade(s), Master Username, and Master Password (Input Stream Settings). If Airtime is recording, and if the change causes a playout engine restart, the recording will be interrupted."),
+            "WARNING: This will restart your stream and may cause a short dropout for your listeners!" => _("WARNING: This will restart your stream and may cause a short dropout for your listeners!"),
             "This is the admin username and password for Icecast/SHOUTcast to get listener statistics." => _("This is the admin username and password for Icecast/SHOUTcast to get listener statistics."),
             //preferences/support-setting.js
             "Image must be one of jpg, jpeg, png, or gif" => _("Image must be one of jpg, jpeg, png, or gif"),
@@ -233,10 +242,10 @@ class LocaleController extends Zend_Controller_Action
             "Oct" => _("Oct"),
             "Nov" => _("Nov"),
             "Dec" => _("Dec"),
-            "today" => _("today"),
-            "day" => _("day"),
-            "week" => _("week"),
-            "month" => _("month"),
+            "Today" => _("Today"),
+            "Day" => _("Day"),
+            "Week" => _("Week"),
+            "Month" => _("Month"),
             "Sunday" => _("Sunday"),
             "Monday" => _("Monday"),
             "Tuesday" => _("Tuesday"),
@@ -264,6 +273,9 @@ class LocaleController extends Zend_Controller_Action
             "Start" => _("Start"),
             "End" => _("End"),
             "Duration" => _("Duration"),
+            "Filtering out " => _("Filtering out "),
+            " of " => _(" of "),
+            " records" => _(" records"),
             //already in library/library.js
             //"Title" => _("Title"),
             //"Creator" => _("Creator"),
@@ -291,7 +303,7 @@ class LocaleController extends Zend_Controller_Action
             //"Select" => _("Select"),
             "Select all" => _("Select all"),
             "Select none" => _("Select none"),
-            "Remove overbooked tracks" => _("Remove overbooked tracks"),
+            "Trim overbooked shows" => _("Trim overbooked shows"),
             "Remove selected scheduled items" => _("Remove selected scheduled items"),
             "Jump to the current playing track" => _("Jump to the current playing track"),
             "Cancel current show" => _("Cancel current show"),
@@ -391,7 +403,27 @@ class LocaleController extends Zend_Controller_Action
             "No Show" => _("No Show"),
             "All" => _("All"),
             "Copied %s row%s to the clipboard" => _("Copied %s row%s to the clipboard"),
-            "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished.")
+            "%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished." => _("%sPrint view%sPlease use your browser's print function to print this table. Press escape when finished."),
+            "New Show" => _("New Show"),
+            "New Log Entry" => _("New Log Entry"),
+            //Datatables:
+            "No data available in table",
+            "Showing _START_ to _END_ of _TOTAL_ entries",
+            "Showing 0 to 0 of 0 entries",
+            "(filtered from _MAX_ total entries)",
+            "",
+            ",",
+            "Show _MENU_",
+            "Loading...",
+            "Processing...",
+            "No matching records found",
+            "First",
+            "Last",
+            "Next",
+            "Previous",
+            ": activate to sort column ascending",
+            ": activate to sort column descending"
+            //End of datatables
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);

@@ -1,13 +1,16 @@
-<div id="listenerstat_content" class="ui-widget ui-widget-content block-shadow alpha-block padded">
-    <?php echo _("Listener Count Over Time")?><br>
-    <div id="flot_placeholder" style="width:600px;height:300px;margin:0px 50px 0px 50px"></div>
+<div id="listenerstat_content" class="alpha-block padded">
+    <H2><?php echo _("Listeners")?></H2>
+    <div id="flot_placeholder" style="height:300px;margin:0px 50px 0px 50px"></div>
     <div id="legend" style="width:600px;height:70px;margin:0px 50px 0px 50px"></div>
-    <div id="date_form" style="float:left; margin:0px 50px 0px 50px"><?php echo $this->date_form; ?></div>
+    <div id="date_form" style="float:left; margin:0px 0px">
+        <h3 style="padding-left: 0px">Date Range</h3>
+        <?php echo $this->date_form; ?>
+    </div>
     <div id="errorStatus" style="float:right; width: 400px">
+        <h3><?php echo _("Stream Data Collection Status")?></h3>
         <fieldset class="padded stream-setting-global">
-        <legend><?php echo _("Status")?></legend>
         <?php foreach ($this->errorStatus as $k=>$v) {?>
-        <div class='stream-status <?php echo ($v == 'OK')? 'status-good' : 'status-error' ?>'><h3><?php echo $k?>: <?php echo $v?></h3></div>
+        <div class='stream-status <?php echo ($v == 'OK')? 'status-good' : 'status-error' ?>'><p><?php echo $k?>: <?php echo $v?></p></div>
         <?php }?>
         </fieldset>
     </div>

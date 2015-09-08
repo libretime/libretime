@@ -36,6 +36,25 @@ html .fc,
 /* Header
 ------------------------------------------------------------------------*/
 
+table.fc-header  {
+	background: #4a4a4a;
+	border-bottom: 1px solid #222;
+}
+
+#schedule_calendar > table > tbody > tr > td.fc-header-left
+{
+	padding: 5px 0px 0px 5px;
+}
+#schedule_calendar > table > tbody > tr > td.fc-header-center
+{
+	padding: 10px 5px 0px 0px;
+}
+#schedule_calendar > table > tbody > tr > td.fc-header-right
+{
+	padding: 5px 5px 0px 0px;
+}
+
+
 .fc-header td {
 	white-space: nowrap;
 	}
@@ -102,8 +121,7 @@ html .fc,
 .fc-header .ui-state-active {
 	z-index: 4;
 	}
-	
-	
+
 	
 /* Content
 ------------------------------------------------------------------------*/
@@ -167,8 +185,8 @@ html .fc,
 .fc-button-content {
 	position: relative;
 	float: left;
-	height: 1.9em;
-	line-height: 1.9em;
+	height: 1.4em;
+	line-height: 1.4em;
 	padding: 0 .6em;
 	white-space: nowrap;
 	}
@@ -281,7 +299,7 @@ a.fc-event {
 .fc-event-skin {
 	border-color: #36c;     /* default BORDER color */
 	background-color: #36c; /* default BACKGROUND color */
-	color: #fff;            /* default TEXT color */
+	color: #000;            /* default TEXT color */
 	}
 	
 .fc-event-inner {
@@ -420,7 +438,7 @@ table.fc-border-separate {
 	
 .fc-border-separate tr.fc-last th,
 .fc-border-separate tr.fc-last td {
-	border-bottom-width: 1px;
+	border-bottom: 1px solid #222;
 	}
 	
 .fc-border-separate tbody tr.fc-first td,
@@ -588,7 +606,7 @@ table.fc-border-separate {
 	width: 100%;
 	height: 100%;
 	background: #fff;
-	opacity: .3;
+	opacity: 0.3;
 	filter: alpha(opacity=30);
 	}
 	
@@ -614,5 +632,14 @@ table.fc-border-separate {
 .fc-agenda .ui-resizable-resizing { /* TODO: better selector */
 	_overflow: hidden;
 	}
-	
-	
+
+
+/** Prevent jQuery UI ui-widget-content box shadow from applying... */
+.fc-view-month > table > tbody > tr > td.ui-widget-content,
+.fc-agenda-days > tbody > tr > td.ui-widget-content,
+.fc-agenda-slots > tbody > tr > td.ui-widget-content
+{
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+}

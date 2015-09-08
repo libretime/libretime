@@ -4,8 +4,8 @@ cd ..
 
 #generate a new .po file
 #this will generate a file called messages.po
-find . -iname "*.phtml" -o -name "*.php" | xargs xgettext -L php --from-code=UTF-8
-find . -iname "*.phtml" -o -name "*.php" | xargs xgettext -L php --from-code=UTF-8 -k --keyword=_pro:1 -d pro --force-po
+find airtime_mvc -iname "*.phtml" -o -name "*.php" | xargs xgettext -L php --from-code=UTF-8
+find airtime_mvc -iname "*.phtml" -o -name "*.php" | xargs xgettext -L php --from-code=UTF-8 -k --keyword=_pro:1 -d pro --force-po
 
 #merge the new messages from messages.po into each existing .po file
 #this will generate new .po files

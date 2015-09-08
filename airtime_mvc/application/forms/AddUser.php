@@ -105,7 +105,7 @@ class Application_Form_AddUser extends Zend_Form
         $this->addElement($select);
 
         $saveBtn = new Zend_Form_Element_Button('save_user');
-        $saveBtn->setAttrib('class', 'btn btn-small right-floated');
+        $saveBtn->setAttrib('class', 'btn right-floated');
         $saveBtn->setIgnore(true);
         $saveBtn->setLabel(_('Save'));
         $this->addElement($saveBtn);

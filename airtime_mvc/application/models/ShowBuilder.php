@@ -107,7 +107,7 @@ class Application_Model_ShowBuilder
     private function getItemColor($p_item, &$row)
     {
         $defaultColor      = "ffffff";
-        $defaultBackground = "3366cc";
+        $defaultBackground = DEFAULT_SHOW_COLOR;
 
         $color = $p_item["show_color"];
         if ($color === '') {

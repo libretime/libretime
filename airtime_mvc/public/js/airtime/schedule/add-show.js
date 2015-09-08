@@ -4,24 +4,18 @@
 *
 */
 
-function openAddShowForm() {
+function openAddShowForm(nowOrFuture) {
      if($("#add-show-form").length == 1) {
         if( ($("#add-show-form").css('display')=='none')) {
-            $("#add-show-form").show();
-            
-            /*
-            var windowWidth = $(window).width();
-            // margin on showform are 16 px on each side
-            var calendarWidth = 100-(($("#schedule-add-show").width() + (16 * 4))/windowWidth*100);
-            var widthPercent = parseInt(calendarWidth)+"%";
-            $("#schedule_calendar").css("width", widthPercent);
 
-            // 200 px for top dashboard and 50 for padding on main content
-            // this calculation was copied from schedule.js line 326
-            var mainHeight = document.documentElement.clientHeight - 200 - 50;
-            $('#schedule_calendar').fullCalendar('option', 'contentHeight', mainHeight);
-            */
-           windowResize();
+            if (nowOrFuture === true) //true means "now"
+            {
+                $('#add_show_start_now-now').attr('checked', 'checked');
+                setupStartTimeWidgets();
+            }
+            $("#add-show-form").show();
+
+            windowResize();
         }
         $("#schedule-show-what").show(0, function(){
             $add_show_name = $("#add_show_name");
@@ -34,23 +28,62 @@ function openAddShowForm() {
 function makeAddShowButton() {
     if($('.add-button').length === 0) {
         $('.fc-header-left')
-            .append('<span class="fc-header-space"></span>')
-            .append('<span class="fc-button">' +
-                        '<button onclick="showForm()" class="add-button">' +
-                            '<span class="add-icon"></span>' + $.i18n._("Create New Show") +
+            .prepend('<span class="fc-header-space"></span>')
+            .prepend('<span class="btn-group">' +
+                        '<button onclick="showForm()" class="add-button btn btn-small btn-new">' +
+                            '<i class="icon-white icon-plus"></i>' +
+                            '<span>' + $.i18n._("New Show") + '</span>' +
                         '</button>' +
                     '</span>');
     }
 }
 
 function showForm() {
-    openAddShowForm();
+    openAddShowForm(true);
     toggleAddShowButton();
 }
 
 function toggleAddShowButton(){
     var aTag = $('.add-button');
     aTag.prop('disabled', function(i, v) { return !v; });
+}
+
+function setupStartTimeWidgets() {
+    if ($('input[name=add_show_start_now]:checked').val() == 'now') {
+        $('#add_show_start_date').prop('disabled', 'true');
+        $('#add_show_start_time').prop('disabled', 'true');
+        var currentTimezone = $("#add_show_timezone").val();
+
+        //Set the show start time to now (in the show timezone)
+        var now = moment(new Date()).tz(currentTimezone);
+        $('#add_show_start_date').val(now.format('YYYY-MM-DD'));
+        $('#add_show_start_time').val(now.format('HH:mm'));
+
+        //Set the show end time to be now + 1 hour.
+        var nowShowEnd = now.add(1, 'h');
+        $('#add_show_end_date').val(nowShowEnd.format('YYYY-MM-DD'));
+        $('#add_show_end_date_no_repeat').val(nowShowEnd.format('YYYY-MM-DD'));
+        $('#add_show_end_time').val(nowShowEnd.format('HH:mm'));
+
+        //Disabled linked show option since user won't be able to schedule
+        //content
+        $('#add_show_linked').prop('disabled', 'true');
+
+    } else {
+        //Do not enable start date and time option when a show has already started
+        if (!$('#add_show_start_now-now').prop('disabled')) {
+            $('#add_show_start_date').removeProp('disabled');
+            $('#add_show_start_time').removeProp('disabled');
+        }
+    }
+}
+
+function calculateShowColor() {
+    var bgColorEle = $("#add_show_background_color");
+    var textColorEle = $("#add_show_color");
+    var colorCode = stringToColor($('#add_show_start_time').val());//$(this).val());
+    //bgColorEle.val(colorCode);
+    //textColorEle.val(getContrastYIQ(colorCode));
 }
 
 //$el is DOM element #add-show-form
@@ -165,7 +198,7 @@ function beginEditShow(data){
     
     redrawAddShowForm($("#add-show-form"), data.newForm);
     toggleAddShowButton();
-    openAddShowForm();
+    openAddShowForm(false);
 }
 
 function onStartTimeSelect(){
@@ -200,7 +233,12 @@ function intToRGB(i){
 
 function stringToColor(s)
 {
-    return intToRGB(hashCode(s));
+    var palette = ['42d5a1', '56bd99', '65ab93', '7b938b',
+        '42a4d5', '569bbd', '6594ab', '7b8b93',
+    '4264d5', '566fbd', '6576ab', '7b8193'];
+    //var palette = ['d56f42', 'aad542', '7242d5', '42d563', 'd542be'];
+    return palette[Math.abs(hashCode(s)) % palette.length];
+    //return intToRGB(hashCode(s));
 }
 
 function getContrastYIQ(hexcolor){
@@ -219,6 +257,16 @@ function setAddShowEvents(form) {
     form.find("h3").click(function(){
         $(this).next().toggle();
     });
+
+
+    form.find('input:radio[name=add_show_start_now]').click(function() {
+        setupStartTimeWidgets();
+
+        if ($(this).val() == "future") {
+            $('#add_show_linked').removeProp('disabled');
+        }
+    });
+
 
     if(!form.find("#add_show_repeats").attr('checked')) {
         form.find("#schedule-show-when > fieldset:last").hide();
@@ -630,41 +678,6 @@ function setAddShowEvents(form) {
         }
     });
     
-    // validate on upload
-    function validateImage(img, el) {
-        // remove any existing error messages
-        if ($("#img-err")) { $("#img-err").remove(); }
-        
-        if (img.size > 2048000) { // 2MB - pull this from somewhere instead?
-            // hack way of inserting an error message
-            var err = $.i18n._("Selected file is too large");
-            el.parent().after(
-                "<ul id='img-err' class='errors'>" +
-                    "<li>" + err + "</li>" +
-                "</ul>");
-            return false;
-        } else if (validateMimeType(img.type) < 0) {
-            var err = $.i18n._("File format is not supported");
-            el.parent().after(
-                "<ul id='img-err' class='errors'>" +
-                    "<li>" + err + "</li>" +
-                "</ul>");
-            return false;
-        }
-        return true;
-    }
-    
-    // Duplicate of the function in ShowImageController
-    function validateMimeType(mime) {
-        var extensions = [
-            'image/jpeg',
-            'image/png',
-            'image/gif'
-            // BMP?
-            ];
-        return $.inArray(mime, extensions);
-    }
-    
     form.find("#add_show_logo_current_remove").click(function() {
         if (confirm($.i18n._('Are you sure you want to delete the current logo?'))) {
             var showId = $("#add_show_id").attr("value");
@@ -905,13 +918,12 @@ function setAddShowEvents(form) {
     
     // Since Zend's setAttrib won't apply through the wrapper, set accept=image/* here
     $("#add_show_logo").prop("accept", "image/*");
-    var bgColorEle = $("#add_show_background_color");
-    var textColorEle = $("#add_show_color");
-    $('#add_show_name').bind('input', 'change', function(){
-        var colorCode = stringToColor($(this).val());
-        bgColorEle.val(colorCode);
-        textColorEle.val(getContrastYIQ(colorCode));
+
+    //$('#add_show_name').bind('input', 'change', function(){
+    $('#add_show_start_time').bind('input', 'change', function(){
+        calculateShowColor();
     });
+
 }
 
 function showErrorSections() {

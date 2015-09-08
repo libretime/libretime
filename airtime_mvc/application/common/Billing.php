@@ -1,5 +1,8 @@
 <?php
 
+define("AIRTIME_PRO_FREE_TRIAL_PLAN_ID", 34);
+define("WHMCS_AIRTIME_GROUP_ID", 15);
+
 class Billing
 {
     public static function getAPICredentials()
@@ -30,10 +33,10 @@ class Billing
     {
         //Making this static to cache the products during a single HTTP request.
         //This saves us roundtrips to WHMCS if getProducts() is called multiple times.
-        static $result = array();
-        if (!empty($result))
+        static $products = array();
+        if (!empty($products))
         {
-            return $result["products"]["product"];
+            return $products;
         }
 
         $credentials = self::getAPICredentials();
@@ -44,7 +47,7 @@ class Billing
         $postfields["action"] = "getproducts";
         $postfields["responsetype"] = "json";
         //gid is the Airtime product group id on whmcs
-        $postfields["gid"] = "15";
+        $postfields["gid"] = WHMCS_AIRTIME_GROUP_ID;
 
         $query_string = "";
         foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
@@ -54,9 +57,9 @@ class Billing
         $products = $result["products"]["product"];
 
         //Blacklist all free plans
+        //Hide the promo plans - we will tell the user if they are eligible for a promo plan
         foreach ($products as $k => $p) {
-            Logging::info($p);
-            if ($p["paytype"] === "free")
+            if ($p["paytype"] === "free" || strpos($p["name"], "Awesome August 2015") !== false)
             {
                 unset($products[$k]);
             }
@@ -106,7 +109,7 @@ class Billing
         $result = self::makeRequest($credentials["url"], $query_string);
 
         //XXX: Debugging / local testing
-        if ($_SERVER['SERVER_NAME'] == "airtime.localhost") {
+        if ($_SERVER['SERVER_NAME'] == "localhost") {
             $_SERVER['SERVER_NAME'] = "bananas.airtime.pro";
         }
 

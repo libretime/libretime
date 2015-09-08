@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 require_once 'customfilters/ImageSize.php';
 
@@ -107,8 +107,7 @@ class Application_Form_GeneralPreferences extends Zend_Form_SubForm
                                         ));
         $third_party_api->setValue(Application_Model_Preference::GetAllow3rdPartyApi());
         $third_party_api->setDescription(_('Enabling this feature will allow Airtime to provide schedule data
-                                            to external widgets that can be embedded in your website. Enable this
-                                            feature to reveal the embeddable code.'));
+                                            to external widgets that can be embedded in your website.'));
         $third_party_api->setSeparator(' '); //No <br> between radio buttons
         //$third_party_api->addDecorator(new Zend_Form_Decorator_Label(array('tag' => 'dd', 'class' => 'radio-inline-list')));
         $third_party_api->addDecorator('HtmlTag', array('tag' => 'dd',

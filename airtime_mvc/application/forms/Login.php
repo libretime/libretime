@@ -37,19 +37,17 @@ class Application_Form_Login extends Zend_Form
         ));
 
         // Add username element
-        $this->addElement('text', 'username', array(
-            'label'      => _('Username:'),
-            'class'      => 'input_text',
-            'required'   => true,
-            'value'      => (isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1)?'admin':'',
-            'filters'    => array('StringTrim'),
-            'validators' => array(
-                'NotEmpty',
-            ),
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
+        $username = new Zend_Form_Element_Text("username");
+        $username->setLabel(_('Username:'))
+            ->setAttribs(array(
+                'autofocus' => 'true',
+                'class' => 'input_text',
+                'required' => 'true'))
+            ->setValue((isset($CC_CONFIG['demo']) && $CC_CONFIG['demo'] == 1)?'admin':'')
+            ->addFilter('StringTrim')
+            ->setDecorators(array('ViewHelper'))
+            ->setValidators(array('NotEmpty'));
+        $this->addElement($username);
 
         // Add password element
         $this->addElement('password', 'password', array(

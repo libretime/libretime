@@ -61,7 +61,7 @@ class PypoFile(Thread):
         media_item['file_ready'] = not do_copy
 
         if do_copy:
-            self.logger.debug("copying from %s to local cache %s" % (src, dst))
+            self.logger.info("copying from %s to local cache %s" % (src, dst))
             try:
                 CONFIG_SECTION = "general"
                 username = self._config.get(CONFIG_SECTION, 'api_key')

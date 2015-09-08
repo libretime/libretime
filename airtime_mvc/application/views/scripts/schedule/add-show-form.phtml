@@ -1,7 +1,7 @@
 <div id="schedule-add-show" class="tabs ui-widget ui-widget-content block-shadow alpha-block padded">
     <div class="button-bar">
-        <a href="#" id="add-show-close" class="icon-link add-show-close"><span class="ui-icon ui-icon-circle-close"></span><?php echo _("Close") ?></a>
-        <button data-action="<?php echo isset($this->action) ? $this->action : "add-show" ?>" aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary">
+        <a href="#" id="add-show-close" class="add-show-close"><i class="icon-remove-sign icon-white"></i><span><?php echo _("Close") ?></span></a>
+        <button data-action="<?php echo isset($this->action) ? $this->action : "add-show" ?>" aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary btn btn-small">
             <span class="ui-icon ui-icon-plusthick"></span>
             <span class="ui-button-text"><?php echo ($this->addNewShow ? _("Add this show") : _("Update show")); ?></span>
         </button>
@@ -38,7 +38,7 @@
         <?php echo $this->style; ?>
     </div>
     <div class="button-bar bottom">
-        <button data-action="<?php echo isset($this->action) ? $this->action : "add-show" ?>" aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary">
+        <button data-action="<?php echo isset($this->action) ? $this->action : "add-show" ?>" aria-disabled="false" role="button" class="add-show-submit right-floated ui-button ui-widget ui-state-default ui-button-text-icon-primary btn btn-small">
             <span class="ui-icon ui-icon-plusthick"></span>
             <span class="ui-button-text"><?php echo ($this->addNewShow ? _("Add this show") :  _("Update show")); ?></span>
         </button>

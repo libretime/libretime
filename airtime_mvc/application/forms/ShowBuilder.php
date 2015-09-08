@@ -69,7 +69,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
 
         // add a select to choose a show.
         $showSelect = new Zend_Form_Element_Select("sb_show_filter");
-        $showSelect->setLabel(_("Show:"));
+        $showSelect->setLabel(_("Filter by Show"));
         $showSelect->setMultiOptions($this->getShowNames());
         $showSelect->setValue(null);
         $showSelect->setDecorators(array('ViewHelper'));
@@ -85,7 +85,7 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
 
     private function getShowNames()
     {
-        $showNames = array("0" => "-------------------------");
+        $showNames = array("0" => _("Filter by Show"));
 
         $shows = CcShowQuery::create()
             ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)

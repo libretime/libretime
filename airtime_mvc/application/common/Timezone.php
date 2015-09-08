@@ -18,7 +18,7 @@ class Application_Common_Timezone
             'UTC' => DateTimeZone::UTC
         );
 
-        $tzlist = array();
+        $tzlist = array(NULL => "Use station default");
 
         foreach ($regions as $name => $mask) {
             $ids = DateTimeZone::listIdentifiers($mask);

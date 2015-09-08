@@ -55,7 +55,8 @@ function dayClick(date, allDay, jsEvent, view){
             //remove the +show button if it exists.
             if(addShow.length == 1){
                  var span = $(addShow).parent();
-                $(span).prev().remove();
+
+                $(span).next().remove();
                 $(span).remove();
             }
 
@@ -99,6 +100,11 @@ function dayClick(date, allDay, jsEvent, view){
             chosenDate = selected.getFullYear() + '-' + pad(selected.getMonth()+1,2) + '-' + pad(selected.getDate(),2);
             var endDateFormat = endDateTime.getFullYear() + '-' + pad(endDateTime.getMonth()+1,2) + '-' + pad(endDateTime.getDate(),2);
 
+
+            //TODO: This should all be refactored into a proper initialize() function for the show form.
+            $("#add_show_start_now-future").attr('checked', 'checked');
+            $("#add_show_start_now-now").removeProp('disabled');
+            setupStartTimeWidgets(); //add-show.js
             $("#add_show_start_date").val(chosenDate);
             $("#add_show_end_date_no_repeat").val(endDateFormat);
             $("#add_show_end_date").val(endDateFormat);
@@ -107,6 +113,7 @@ function dayClick(date, allDay, jsEvent, view){
                 $("#add_show_start_time").val(startTime_string)
                 $("#add_show_end_time").val(endTimeString)
             }
+            calculateShowColor();
             $("#schedule-show-when").show();
 
             openAddShowForm();
@@ -356,8 +363,12 @@ function getFullCalendarEvents(start, end, callback) {
         var d = new Date();
             $.post(url, {format: "json", start: start_date, end: end_date, cachep: d.getTime()}, function(json){
                 callback(json.events);
+                getUsabilityHint();
             });
     }
+
+    $(".fc-button").addClass("btn").addClass("btn-small");
+    //$("span.fc-button > :button").addClass("btn btn-small");
 }
 
 function checkSCUploadStatus(){

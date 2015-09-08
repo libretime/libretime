@@ -3,30 +3,44 @@ $(document).ready(function() {
 });
 
 function setSmartBlockEvents() {
-    var form = $('#smart-block-form');
-    
+    var activeTab = $('.active-tab'),
+        form = activeTab.find('.smart-block-form');
+
     /********** ADD CRITERIA ROW **********/
     form.find('#criteria_add').live('click', function(){
         
         var div = $('dd[id="sp_criteria-element"]').children('div:visible:last');
 
-        div.find('.db-logic-label').text('and').show();
-        div = div.next().show();
+        if (div.length == 0) {
+            div = $('dd[id="sp_criteria-element"]').children('div:first');
+            div.children().removeAttr('disabled');
+            div.show();
 
-        div.children().removeAttr('disabled');
-        div = div.next();
-        if (div.length === 0) {
-            $(this).hide();
+            appendAddButton();
+            appendModAddButton();
+            removeButtonCheck();
+
+        } else {
+
+            div.find('.db-logic-label').text('and').show();
+            div = div.next().show();
+
+            div.children().removeAttr('disabled');
+            div = div.next();
+            if (div.length === 0) {
+                $(this).hide();
+            }
+
+            appendAddButton();
+            appendModAddButton();
+            removeButtonCheck();
         }
-        
-        appendAddButton();
-        appendModAddButton();
-        removeButtonCheck();
     });
     
     /********** ADD MODIFIER ROW **********/
     form.find('a[id^="modifier_add"]').live('click', function(){
         var criteria_value = $(this).siblings('select[name^="sp_criteria_field"]').val();
+
 
         //make new modifier row
         var newRow = $(this).parent().clone(),
@@ -188,19 +202,21 @@ function setSmartBlockEvents() {
 	
     /********** SAVE ACTION **********/
     // moved to spl.js
-    
+
     /********** GENERATE ACTION **********/
-    $('button[id="generate_button"]').live("click", function(){
-        buttonClickAction('generate', 'Playlist/smart-block-generate');
+    activeTab.find('button[id="generate_button"]').live("click", function(){
+        buttonClickAction('generate', 'playlist/smart-block-generate');
     });
     
     /********** SHUFFLE ACTION **********/
-    $('button[id="shuffle_button"]').live("click", function(){
-        buttonClickAction('shuffle', 'Playlist/smart-block-shuffle');
+    activeTab.find('button[id="shuffle_button"]').live("click", function(){
+        buttonClickAction('shuffle', 'playlist/smart-block-shuffle');
     });
 	
     /********** CHANGE PLAYLIST TYPE **********/
     form.find('dd[id="sp_type-element"]').live("change", function(){
+        //buttonClickAction('generate', 'playlist/empty-content');
+        $(".active-tab").find('button[id="save_button"]').click();
         setupUI();
         AIRTIME.library.checkAddButton();
     });
@@ -262,7 +278,7 @@ function getRowIndex(ele) {
  * remains at the criteria row
  */
 function appendModAddButton() {
-    var divs = $('#smart-block-form').find('div select[name^="sp_criteria_modifier"]').parent(':visible');
+    var divs = $('.active-tab .smart-block-form').find('div select[name^="sp_criteria_modifier"]').parent(':visible');
     $.each(divs, function(i, div){
         if (i > 0) {
             /* If the criteria field is hidden we know it is a modifier row
@@ -286,7 +302,7 @@ function appendModAddButton() {
  * We need to do this everytime a row gets deleted
  */
 function reindexElements() {
-    var divs = $('#smart-block-form').find('div select[name^="sp_criteria_field"]').parent(),
+    var divs = $('.active-tab .smart-block-form').find('div select[name^="sp_criteria_field"]').parent(),
         index = 0,
         modIndex = 0;
     /* Hide all logic labels
@@ -330,28 +346,30 @@ function reindexElements() {
 }
 
 function buttonClickAction(clickType, url){
-    var data = $('#smart-block-form').serializeArray(),
-        obj_id = $('input[id="obj_id"]').val();
+    var data = $('.active-tab .smart-block-form').serializeArray(),
+        obj_id = $('.active-tab .obj_id').val();
     
     enableLoadingIcon();
-    $.post(url, {format: "json", data: data, obj_id: obj_id}, function(data){
+    $.post(url, {format: "json", data: data, obj_id: obj_id, obj_type: "block",
+                 modified: AIRTIME.playlist.getModified()
+    }, function(data){
         callback(data, clickType);
         disableLoadingIcon();
     });
 }
 
 function setupUI() {
-    var playlist_type = $('input:radio[name=sp_type]:checked').val();
-    var target_length = $('input[name="sp_limit_value"]').val();
-    if (target_length == '') {
-        target_length = '0.0';
-    }
-    
+    var activeTab = $('.active-tab'),
+        playlist_type = activeTab.find('input:radio[name=sp_type]:checked').val();
+
     /* Activate or Deactivate shuffle button
      * It is only active if playlist is not empty
      */
-    var plContents = $('#spl_sortable').children();
-    var shuffleButton = $('button[id="shuffle_button"], button[id="playlist_shuffle_button"], button[id="pl-bl-clear-content"]');
+    var sortable = activeTab.find('.spl_sortable'),
+        plContents = sortable.children(),
+        shuffleButton = activeTab.find('button[name="shuffle_button"], #pl-bl-clear-content'),
+        generateButton = activeTab.find('button[name="generate_button"], #pl-bl-clear-content'),
+        fadesButton = activeTab.find('#spl_crossfade, #pl-bl-clear-content');
 
     if (!plContents.hasClass('spl_empty')) {
         if (shuffleButton.hasClass('ui-state-disabled')) {
@@ -363,16 +381,17 @@ function setupUI() {
         shuffleButton.attr('disabled', 'disabled');
     }
     
-    var dynamic_length = target_length;
-    if ($('#obj_type').val() == 'block') {
+    if (activeTab.find('.obj_type').val() == 'block') {
         if (playlist_type == "0") {
-            $('button[id="generate_button"]').show();
-            $('button[id="shuffle_button"]').show();
-            $('#spl_sortable').show();
+            shuffleButton.removeAttr("disabled");
+            generateButton.removeAttr("disabled");
+            fadesButton.removeAttr("disabled");
+            //sortable.children().show();
         } else {
-            $('button[id="generate_button"]').hide();
-            $('button[id="shuffle_button"]').hide();
-            $('#spl_sortable').hide();
+            shuffleButton.attr("disabled", "disabled");
+            generateButton.attr("disabled", "disabled");
+            fadesButton.attr("disabled", "disabled");
+            //sortable.children().hide();
         }
     }
     
@@ -395,7 +414,7 @@ function setupUI() {
         position: {
             my: "left bottom",
             at: "right center"
-        },
+        }
     });
     
     $(".repeat_tracks_help_icon").qtip({
@@ -416,7 +435,7 @@ function setupUI() {
         position: {
             my: "left bottom",
             at: "right center"
-        },
+        }
     });
 }
 
@@ -481,45 +500,56 @@ function getCriteriaOptionType(e) {
 }
 
 function callback(json, type) {
-    var dt = $('table[id="library_display"]').dataTable();
+    var dt = $('table[id="library_display"]').dataTable(),
+        form = $('.active-tab .smart-block-form');
+
+    if (json.modified !== undefined) {
+        AIRTIME.playlist.setModified(json.modified);
+    }
 
     if (type == 'shuffle' || type == 'generate') {
         if (json.error !== undefined) {
             alert(json.error);
         }
-        AIRTIME.playlist.fnOpenPlaylist(json);
-        var form = $('#smart-block-form');
         if (json.result == "0") {
             if (type == 'shuffle') {
                 form.find('.success').text($.i18n._('Smart block shuffled'));
             } else if (type == 'generate') {
             	form.find('.success').text($.i18n._('Smart block generated and criteria saved'));
-            	//redraw library table so the length gets updated
+                //redraw library table so the length gets updated
                 dt.fnStandingRedraw();
             }
+
+            AIRTIME.playlist.playlistResponse(json);
+
             form.find('.success').show();
         }
-	    form.find('#smart_block_options').removeClass("closed");
+        removeButtonCheck();
+
+        form.find('.smart-block-form').removeClass("closed");
     } else {
-        AIRTIME.playlist.fnOpenPlaylist(json);
-        var form = $('#smart-block-form');
         if (json.result == "0") {
-            $('#sp-success-saved').text($.i18n._('Smart block saved'));
-            $('#sp-success-saved').show();
-        
+            $('.active-tab #sp-success-saved').text($.i18n._('Smart block saved')).show();
+
+            AIRTIME.playlist.playlistResponse(json);
+
             //redraw library table so the length gets updated
-            var dt = $('table[id="library_display"]').dataTable();
             dt.fnStandingRedraw();
         }
-        form.find('#smart_block_options').removeClass("closed");
+        else {
+            AIRTIME.playlist.playlistResponse(json);
+            removeButtonCheck();
+        }
+        form.find('.smart-block-form').removeClass("closed");
     }
     setTimeout(removeSuccessMsg, 5000);
 }
 
 function appendAddButton() {
+    /*
     var add_button = "<a class='btn btn-small' id='criteria_add'>" +
-                     "<i class='icon-white icon-plus'></i></a>";
-    var rows = $('#smart_block_options'),
+                     "<i class='icon-white icon-plus'></i>Add Criteria</a>";
+    var rows = $('.active-tab .smart-block-form'),
         enabled = rows.find('select[name^="sp_criteria_field"]:enabled');
 
     rows.find('#criteria_add').remove();
@@ -532,10 +562,12 @@ function appendAddButton() {
         enabled.siblings('span[id="extra_criteria"]')
                .after(add_button);
     }
+    */
 }
 
 function removeButtonCheck() {
-    var rows = $('dd[id="sp_criteria-element"]').children('div'),
+    /*
+    var rows = $('.active-tab dd[id="sp_criteria-element"]').children('div'),
         enabled = rows.find('select[name^="sp_criteria_field"]:enabled'),
         rmv_button = enabled.siblings('a[id^="criteria_remove"]');
     if (enabled.length == 1) {
@@ -544,12 +576,15 @@ function removeButtonCheck() {
     } else {
         rmv_button.removeAttr('disabled');
         rmv_button.show();
-    }
+    }*/
 }
 
 function enableLoadingIcon() {
-    $("#side_playlist").block({ 
-        message: $.i18n._("Processing..."),
+    // Disable the default overlay style
+    $.blockUI.defaults.overlayCSS = {};
+    $(".side_playlist.active-tab").block({
+        //message: $.i18n._("Processing..."),
+        message: $.i18n._(""),
         theme: true,
         allowBodyStretch: true,
         applyPlatformOpacityRules: false
@@ -557,7 +592,7 @@ function enableLoadingIcon() {
 }
 
 function disableLoadingIcon() {
-    $("#side_playlist").unblock()
+    $(".side_playlist.active-tab").unblock()
 }
 // We need to know if the criteria value will be a string
 // or numeric value in order to populate the modifier

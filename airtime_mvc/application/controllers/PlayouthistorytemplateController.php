@@ -17,6 +17,8 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
 	{
 		$CC_CONFIG = Config::getConfig();
 		$baseUrl = Application_Common_OsPath::getBaseDir();
+
+		Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 	
 		$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/template.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		$this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);
@@ -31,6 +33,8 @@ class PlayouthistorytemplateController extends Zend_Controller_Action
 	
 		$CC_CONFIG = Config::getConfig();
 		$baseUrl = Application_Common_OsPath::getBaseDir();
+
+		Zend_Layout::getMvcInstance()->assign('parent_page', 'Analytics');
 	
 		$this->view->headScript()->appendFile($baseUrl.'js/airtime/playouthistory/configuretemplate.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 		$this->view->headLink()->appendStylesheet($baseUrl.'css/history_styles.css?'.$CC_CONFIG['airtime_version']);

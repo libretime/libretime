@@ -11,15 +11,14 @@ class Application_Form_EditAudioMD extends Zend_Form
          // Set the method for the display form to POST
         $this->setMethod('post');
 
-        $this->addElement('hidden', 'file_id', array(
-            'value' => $p_id
-        ));
+        $file_id = new Zend_Form_Element_Hidden('file_id');
+        $file_id->setValue($p_id);
+        $file_id->addDecorator('HtmlTag', array('tag' => 'div', 'style' => 'display:none'));
+        $file_id->removeDecorator('Label');
+        $file_id->setAttrib('class', 'obj_id');
+        $this->addElement($file_id);
+
         // Add title field
-        /*$this->addElement('text', 'track_title', array(
-            'label'      => _('Title:'),
-            'class'      => 'input_text',
-            'filters'    => array('StringTrim'),
-        ));*/
         $track_title = new Zend_Form_Element_Text('track_title');
         $track_title->class = 'input_text';
         $track_title->setLabel(_('Title:'))
@@ -30,11 +29,6 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement($track_title);
 
         // Add artist field
-        /*$this->addElement('text', 'artist_name', array(
-            'label'      => _('Creator:'),
-            'class'      => 'input_text',
-            'filters'    => array('StringTrim'),
-        ));*/
         $artist_name = new Zend_Form_Element_Text('artist_name');
         $artist_name->class = 'input_text';
         $artist_name->setLabel(_('Creator:'))
@@ -51,7 +45,7 @@ class Application_Form_EditAudioMD extends Zend_Form
             ->setFilters(array('StringTrim'))
             ->setValidators(array(
                 new Zend_Validate_StringLength(array('max' => 512))
-            ));;
+            ));
         $this->addElement($album_title);
 
         // Add track number field
@@ -177,9 +171,9 @@ class Application_Form_EditAudioMD extends Zend_Form
 
         // Add the submit button
         $this->addElement('button', 'editmdsave', array(
-            'ignore'   => true,
-            'class'    => 'btn',
-            'label'    => _('Save'),
+            'ignore'     => true,
+            'class'      => 'btn md-save right-floated',
+            'label'      => _('OK'),
             'decorators' => array(
                 'ViewHelper'
             )
@@ -188,19 +182,32 @@ class Application_Form_EditAudioMD extends Zend_Form
         // Add the submit button
         $this->addElement('button', 'editmdcancel', array(
             'ignore'   => true,
-            'class'    => 'btn md-cancel',
+            'class'    => 'btn md-cancel right-floated',
             'label'    => _('Cancel'),
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
-        $this->addDisplayGroup(array('editmdsave', 'editmdcancel'), 'submitButtons', array(
-                'decorators' => array(
-                    'FormElements',
-                    'DtDdWrapper'
-                    )
+        $this->addDisplayGroup(array('editmdcancel', 'editmdsave'), 'submitButtons', array(
+            'decorators' => array(
+                'FormElements',
+                'DtDdWrapper'
+                )
         ));
+    }
+
+    public function makeReadOnly()
+    {
+        foreach ($this as $element) {
+            $element->setAttrib('readonly', 'readonly');
+        }
+    }
+
+    public function removeActionButtons()
+    {
+        $this->removeElement('editmdsave');
+        $this->removeElement('editmdcancel');
     }
 
 }

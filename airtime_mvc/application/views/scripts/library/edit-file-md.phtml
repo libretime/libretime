@@ -1,3 +1,12 @@
 <div class="ui-widget ui-widget-content block-shadow simple-formblock clearfix padded-strong" id="edit-md-dialog">
+    <div class="inner_editor_title">
+        <?php if ($this->permissionDenied) { ?> <h3>You do not have permission to edit this track.</h3> <?php } ?>
+        <H2><?php
+            if ($this->permissionDenied) {
+                echo(_("Viewing "));
+            } else {
+                echo(_("Editing "));
+            }?>"<span class="title_obj_name"><?php echo($this->title); ?></span>"</H2>
+    </div>
     <?php echo $this->form; ?>
 </div>

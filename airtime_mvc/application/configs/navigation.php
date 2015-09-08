@@ -9,49 +9,59 @@
 */
 $pages = array(
     array(
-        'label'      => _('Now Playing'),
-        'module'     => 'default',
-        'controller' => 'Showbuilder',
-        'action'     => 'index',
-        'resource'   =>    'showbuilder'
-    ),
-    array(
-        'label'      => _('Add Media'),
-        'module'     => 'default',
-        'controller' => 'Plupload',
-        'action'     => 'index',
-        'resource'   => 'plupload'
-    ),
-    array(
-        'label'      => _('Library'),
-        'module'     => 'default',
-        'controller' => 'Library',
-        'action'     => 'index',
-        'resource'   =>    'playlist'
-    ),
-    array(
-        'label'      => _('Calendar'),
-        'module'     => 'default',
-        'controller' => 'Schedule',
-        'action'     => 'index',
-        'resource'   =>    'schedule'
-    ),
-    array(
-        'label' => _('Radio Page'),
+        'label' => "<i class='icon-globe icon-white'></i>"._('Radio Page'),
         'uri' => '/',
         'resource' => '',
         'pages' => array(
         )
     ),
     array(
-        'label'      => _('System'),
-        'uri'        => '#',
-        'resource'   => 'preference',
-        'pages'      => array(
+        'label'      => "<i class='icon-calendar icon-white'></i>"._('Calendar'),
+        'module'     => 'default',
+        'controller' => 'schedule',
+        'action'     => 'index',
+        'resource'   => 'schedule'
+    ),
+    array(
+        'label'      =>  "<i class='icon-wrench icon-white'></i>"._('Widgets'),
+        'module'     => 'default',
+        'controller' => 'embeddablewidgets',
+        'action'     => 'player',
+        'resource'   => 'embeddablewidgets',
+        'title' => 'Widgets',
+        'pages' => array(
             array(
-                'label'      => _('Preferences'),
+                'label'      => _('Player'),
                 'module'     => 'default',
-                'controller' => 'Preference'
+                'controller' => 'embeddablewidgets',
+                'action'     => 'player',
+            ),
+            array(
+                'label'      => _('Weekly Schedule'),
+                'module'     => 'default',
+                'controller' => 'embeddablewidgets',
+                'action'     => 'schedule',
+            )
+        )
+    ),
+    array(
+        'label' => "<i class='icon-cog icon-white'></i>"._("Settings"),
+        'resource' => 'preference',
+        'action' => 'index',
+        'module' => 'default',
+        'controller' => 'preference',
+        'title' => 'Settings',
+        'pages' => array(
+            array(
+                'label'      => _('General'),
+                'module'     => 'default',
+                'controller' => 'preference'
+            ),
+            array(
+                'label' => _('My Profile'),
+                'controller' => 'user',
+                'action' => 'edit-user',
+                'resource' => 'user'
             ),
             array(
                 'label'      => _('Users'),
@@ -61,25 +71,21 @@ $pages = array(
                 'resource'   =>    'user'
             ),
             array(
-                'label'      => _('Media Folders'),
-                'module'     => 'default',
-                'controller' => 'Preference',
-                'action'     => 'directory-config',
-                'id'         => 'manage_folder'
-            ),
-            array(
                 'label'      => _('Streams'),
                 'module'     => 'default',
-                'controller' => 'Preference',
+                'controller' => 'preference',
                 'action'     => 'stream-setting'
-            ),
-            array(
-                'label'      => _('Status'),
-                'module'     => 'default',
-                'controller' => 'systemstatus',
-                'action'     => 'index',
-                'resource'   =>    'systemstatus'
-            ),
+            )
+        )
+    ),
+    array(
+        'label' =>  "<i class='icon-signal icon-white'></i>"._("Analytics"),
+        'module'     => 'default',
+        'controller' => 'listenerstat',
+        'action'     => 'index',
+        'resource'   => 'listenerstat',
+        'title' => 'Analytics',
+        'pages' => array(
             array(
                 'label'      => _('Listener Stats'),
                 'module'     => 'default',
@@ -88,44 +94,58 @@ $pages = array(
                 'resource'   => 'listenerstat'
             ),
             array(
-                'label'      => _('Embeddable Widgets'),
+                'label'      => _('Playout History'),
                 'module'     => 'default',
-                'controller' => 'embeddablewidgets',
-                'action'     => 'index'
+                'controller' => 'playouthistory',
+                'action'     => 'index',
+                'resource'   => 'playouthistory'
+            ),
+            array(
+                'label'      => _('History Templates'),
+                'module'     => 'default',
+                'controller' => 'playouthistorytemplate',
+                'action'     => 'index',
+                'resource'   => 'playouthistorytemplate'
             )
         )
     ),
-	array(
-		'label' => _('History'),
-		'uri' => '#',
-		'resource'   => 'playouthistory',
-		'pages'      => array(
-			array(
-				'label'      => _('Playout History'),
-				'module'     => 'default',
-				'controller' => 'playouthistory',
-				'action'     => 'index',
-				'resource'   => 'playouthistory'
-			),
-			array(
-				'label'      => _('History Templates'),
-				'module'     => 'default',
-				'controller' => 'playouthistorytemplate',
-				'action'     => 'index',
-				'resource'   => 'playouthistorytemplate'
-			),
-		)
-	),
     array(
-        'label'      => _('Help'),
-        'uri'     => '#',
-        'resource'    =>    'dashboard',
-        'pages'      => array(
+        'label' =>  "<i class='icon-briefcase icon-white'></i>"._('Billing'),
+        'controller' => 'billing',
+        'action' => 'upgrade',
+        'resource' => 'billing',
+        'title' => 'Billing',
+        'pages' => array(
             array(
-                'label'      => _('Help Center'),
-                'uri'        => HELP_URL,
-                'target'     => "_blank"
+                'label' => _('Account Plans'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'upgrade',
+                'resource' => 'billing'
             ),
+            array(
+                'label' => _('Account Details'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'client',
+                'resource' => 'billing'
+            ),
+            array(
+                'label' => _('View Invoices'),
+                'module' => 'default',
+                'controller' => 'billing',
+                'action' => 'invoices',
+                'resource' => 'billing'
+            )
+        )
+    ),
+    array(
+        'label'      =>  "<i class='icon-question-sign icon-white'></i>"._('Help'),
+        'controller' => 'dashboard',
+        'action'     => 'help',
+        'resource'    =>    'dashboard',
+        'title' => 'Help',
+        'pages'      => array(
             array(
                 'label'      => _('Getting Started'),
                 'module'     => 'default',
@@ -144,11 +164,9 @@ $pages = array(
                 'target'     => "_blank"
             ),
             array(
-                'label'      => _('About'),
-                'module'     => 'default',
-                'controller' => 'dashboard',
-                'action'     => 'about',
-                'resource'   =>    'dashboard'
+                'label'     => _('File a Support Ticket'),
+                'uri'       => SUPPORT_TICKET_URL,
+                'target'    => "_blank"
             ),
             array(
                 'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
@@ -157,34 +175,6 @@ $pages = array(
             )
         )
     ),
-    array(
-        'label' => _('Billing'),
-        'uri' => '#',
-        'resource' => 'billing',
-        'pages' => array(
-            array(
-                'label' => _('Account Details'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'client',
-                'resource' => 'billing'
-            ),
-            array(
-                'label' => _('Account Plans'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'upgrade',
-                'resource' => 'billing'
-            ),
-            array(
-                'label' => _('View Invoices'),
-                'module' => 'default',
-                'controller' => 'billing',
-                'action' => 'invoices',
-                'resource' => 'billing'
-            )
-        )
-    )
 );
 
 

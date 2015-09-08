@@ -274,6 +274,8 @@ var AIRTIME = (function(AIRTIME) {
     		animated: false,
     		create: function( event, ui ) {
     			var $div = $showList.find(".ui-accordion-content-active");
+				console.log(event);
+				//$div.css()
     			createShowTable($div);
     		},
 		    change: function( event, ui ) {
@@ -288,8 +290,16 @@ var AIRTIME = (function(AIRTIME) {
     
     function createToolbarButtons ($el) {
         var $menu = $("<div class='btn-toolbar' />");
-        
-        $menu.append("<div class='btn-group'>" +
+
+		$menu.append("<div class='btn-group'>" +
+				"<button class='btn btn-small btn-new' id='his_create'>" +
+				"<i class='icon-white icon-plus'></i>" +
+				$.i18n._("New Log Entry") +
+				"</button>" +
+			"</div>");
+
+
+		$menu.append("<div class='btn-group'>" +
             "<button class='btn btn-small dropdown-toggle' data-toggle='dropdown'>" +
                 $.i18n._("Select")+" <span class='caret'></span>" +
             "</button>" +
@@ -298,13 +308,6 @@ var AIRTIME = (function(AIRTIME) {
                 "<li class='his-dselect-page'><a href='#'>"+$.i18n._("Deselect this page")+"</a></li>" +
                 "<li class='his-dselect-all'><a href='#'>"+$.i18n._("Deselect all")+"</a></li>" +
             "</ul>" +
-        "</div>");
-        
-        $menu.append("<div class='btn-group'>" +
-            "<button class='btn btn-small' id='his_create'>" +
-                "<i class='icon-white icon-plus'></i>" +
-                $.i18n._("Create Entry") +
-            "</button>" +
         "</div>");
         
         $menu.append("<div class='btn-group'>" +
@@ -341,7 +344,13 @@ var AIRTIME = (function(AIRTIME) {
             "sAjaxDataProp": "history",
             "fnServerData": fnServerData,
             "fnRowCallback": fnRowCallback,
-            "oLanguage": datatables_dict,
+            "oLanguage": getDatatablesStrings({
+                "sEmptyTable": $.i18n._("No tracks were played during the selected time period."),
+                "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 tracks"),
+                "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ tracks"),
+                "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 tracks"),
+                "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total tracks)"),
+            }),
             "aLengthMenu": lengthMenu,
             "iDisplayLength": 25,
             "sPaginationType": "full_numbers",
@@ -398,18 +407,24 @@ var AIRTIME = (function(AIRTIME) {
             	$nRow.find(".his_"+b).html(text);
             }
         };
-        	
-        oTable = $historyTableDiv.dataTable( {
-            
-            "aoColumns": columns,             
+
+		oTable = $historyTableDiv.dataTable( {
+
+		"aoColumns": columns,
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": baseUrl+"playouthistory/item-history-feed",
             "sAjaxDataProp": "history",
             "fnServerData": fnServerData,
             "fnRowCallback": fnRowCallback,
-            "oLanguage": datatables_dict,
-            "aLengthMenu": lengthMenu,
+            "oLanguage": getDatatablesStrings({
+                "sEmptyTable": $.i18n._("No tracks were played during the selected time period."),
+                "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 tracks"),
+                "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ tracks"),
+                "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 tracks"),
+                "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total tracks)"),
+            }),
+			"aLengthMenu": lengthMenu,
             "iDisplayLength": 25,
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,

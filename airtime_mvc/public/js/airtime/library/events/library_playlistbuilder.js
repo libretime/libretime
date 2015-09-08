@@ -10,7 +10,7 @@ var AIRTIME = (function(AIRTIME) {
     mod.checkAddButton = function() {
 
         var selected = mod.getChosenItemsLength(),
-            sortable = $('#spl_sortable:visible'),
+            sortable = $('.spl_sortable:visible'),
             check = false,
             blockType = $('input[name=sp_type]:checked', '#smart-block-form').val();
 
@@ -27,7 +27,7 @@ var AIRTIME = (function(AIRTIME) {
             AIRTIME.button.disableButton("btn-group #library-plus", false);
         }
 
-        var objType = $('#obj_type').val(),
+        var objType = $('.obj_type').val(),
             btnText;
         if (objType === 'playlist') {
             btnText = ' '+$.i18n._('Add to current playlist');
@@ -75,7 +75,7 @@ var AIRTIME = (function(AIRTIME) {
                     helper : function() {
 
                         var $el = $(this), selected = mod
-                                .getChosenAudioFilesLength(), container, message, li = $("#side_playlist ul[id='spl_sortable'] li:first"),
+                                .getChosenAudioFilesLength(), container, message, li = $(".side_playlist ul[id='spl_sortable'] li:first"),
                                 width = li.width(), height = 55;
                         if (width > 798) width = 798;
 
@@ -106,7 +106,7 @@ var AIRTIME = (function(AIRTIME) {
                         top: 30,
                         left: 100
                     },
-                    connectToSortable : '#spl_sortable'
+                    connectToSortable : '.spl_sortable'
                 });
     };
 
@@ -148,7 +148,7 @@ var AIRTIME = (function(AIRTIME) {
                     if (temp.ftype === "audioclip"
                             || temp.ftype === "block"
                             || (temp.ftype === "stream" && $(
-                                    "#obj_type").val() === "playlist")) {
+                                    ".obj_type").val() === "playlist")) {
                         aMediaIds.push(new Array(temp.id,
                                 temp.ftype));
                     }
@@ -157,9 +157,9 @@ var AIRTIME = (function(AIRTIME) {
                     AIRTIME.playlist.fnAddItems(aMediaIds,
                             undefined, 'after');
                 } else {
-                    if ($('#obj_type').val() == 'block') {
+                    if ($('.obj_type').val() == 'block') {
                         alert($.i18n._('You can only add tracks to smart blocks.'));
-                    } else if ($('#obj_type').val() == 'playlist') {
+                    } else if ($('.obj_type').val() == 'playlist') {
                         alert($.i18n._('You can only add tracks, smart blocks, and webstreams to playlists.'));
                     }
                 }

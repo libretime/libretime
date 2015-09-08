@@ -58,6 +58,41 @@ var i18n_days_short = [
     $.i18n._("Sa")
 ];
 
+var dateStartId = "#sb_date_start",
+    timeStartId = "#sb_time_start",
+    dateEndId = "#sb_date_end",
+    timeEndId = "#sb_time_end";
+
+function getDatatablesStrings(overrideDict) {
+
+    var dict = {
+        "sEmptyTable":     $.i18n._("No data available in table"),
+        "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ entries"),
+        "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 entries"),
+        "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total entries)"),
+        "sInfoPostFix":    $.i18n._(""),
+        "sInfoThousands":  $.i18n._(","),
+        "sLengthMenu":     $.i18n._("Show _MENU_"),
+        "sLoadingRecords": $.i18n._("Loading..."),
+        //"sProcessing":     $.i18n._("Processing..."),
+        "sProcessing":     $.i18n._(""),
+        "sSearch":         $.i18n._(""),
+        "sZeroRecords":    $.i18n._("No matching records found"),
+        "oPaginate": {
+        "sFirst":    $.i18n._("First"),
+            "sLast":     $.i18n._("Last"),
+            "sNext":     $.i18n._("Next"),
+            "sPrevious": $.i18n._("Previous")
+        },
+        "oAria": {
+        "sSortAscending":  $.i18n._(": activate to sort column ascending"),
+            "sSortDescending": $.i18n._(": activate to sort column descending")
+        }
+    };
+
+    return $.extend({}, dict, overrideDict);
+}
+
 function adjustDateToServerDate(date, serverTimezoneOffset){
     //date object stores time in the browser's localtime. We need to artificially shift 
     //it to 
@@ -82,8 +117,8 @@ function openAudioPreview(p_event) {
     p_event.stopPropagation();
     
     var audioFileID = $(this).attr('audioFile');
-    var objId = $('#obj_id:first').attr('value');
-    var objType = $('#obj_type:first').attr('value');
+    var objId = $('.obj_id:first').attr('value');
+    var objType = $('.obj_type:first').attr('value');
     var playIndex = $(this).parent().parent().attr('id');
     playIndex = playIndex.substring(4); //remove the spl_
     
@@ -152,6 +187,66 @@ function openPreviewWindow(url, w, h) {
     return false;
 }
 
+function validateTimeRange() {
+    var oRange,
+        inputs = $('.sb-timerange > input'),
+        start, end;
+
+    oRange = AIRTIME.utilities.fnGetScheduleRange(dateStartId, timeStartId, dateEndId, timeEndId);
+
+    start = oRange.start;
+    end = oRange.end;
+
+    if (end >= start) {
+        inputs.removeClass('error');
+    } else {
+        if (!inputs.hasClass('error')) {
+            inputs.addClass('error');
+        }
+    }
+
+    return {
+        start: start,
+        end: end,
+        isValid: end >= start
+    };
+}
+
+// validate uploaded images
+function validateImage(img, el) {
+    // remove any existing error messages
+    if ($("#img-err")) { $("#img-err").remove(); }
+
+    if (img.size > 2048000) { // 2MB - pull this from somewhere instead?
+        // hack way of inserting an error message
+        var err = $.i18n._("Selected file is too large");
+        el.parent().after(
+            "<ul id='img-err' class='errors'>" +
+            "<li>" + err + "</li>" +
+            "</ul>");
+        return false;
+    } else if (validateMimeType(img.type) < 0) {
+        var err = $.i18n._("File format is not supported");
+        el.parent().after(
+            "<ul id='img-err' class='errors'>" +
+            "<li>" + err + "</li>" +
+            "</ul>");
+        return false;
+    }
+    return true;
+}
+
+// validate image mime type
+function validateMimeType(mime) {
+    var extensions = [
+        'image/jpeg',
+        'image/png',
+        'image/gif'
+        // BMP?
+    ];
+    return $.inArray(mime, extensions);
+}
+
 function pad(number, length) {
     return sprintf("%'0"+length+"d", number);
 }
@@ -161,3 +256,36 @@ function removeSuccessMsg() {
     
     $status.fadeOut("slow", function(){$status.empty()});
 }
+
+function hideHint(h) {
+    h.hide("slow").addClass("hidden");
+}
+
+function showHint(h) {
+    h.show("slow").removeClass("hidden");
+}
+
+function getUsabilityHint() {
+    var pathname = window.location.pathname;
+    $.getJSON(baseUrl + "api/get-usability-hint", {"format": "json", "userPath": pathname}, function(json) {
+        var $hint_div = $('.usability_hint');
+        var current_hint = $hint_div.html();
+        if (json === "") {
+            // there are no more hints to display to the user
+            hideHint($hint_div);
+        } else if (current_hint !== json) {
+            // we only change the message if it is new
+            if ($hint_div.is(":visible")) {
+                hideHint($hint_div);
+            }
+            $hint_div.html(json);
+            showHint($hint_div);
+        } else {
+            // hint is the same before we hid it so we just need to show it
+            if ($hint_div.is(":hidden")) {
+                showHint($hint_div);
+            }
+        }
+    });
+}
+
