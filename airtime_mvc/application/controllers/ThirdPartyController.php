@@ -49,7 +49,7 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     public function deauthorizeAction() {
         $function = $this->_SERVICE_TOKEN_ACCESSOR;
         Application_Model_Preference::$function("");
-        header('Location: ' . $this->_baseUrl . 'Preference');  // Redirect back to the Preference page
+        header('Location: ' . $this->_baseUrl . 'preference');  // Redirect back to the preference page
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     public function redirectAction() {
         $code = $_GET['code'];
         $this->_service->requestNewAccessToken($code);
-        header('Location: ' . $this->_baseUrl . 'Preference');  // Redirect back to the Preference page
+        header('Location: ' . $this->_baseUrl . 'preference');  // Redirect back to the preference page
     }
 
     /**
