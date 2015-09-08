@@ -38,6 +38,7 @@ def soundcloud_upload(data, token, file_path):
 @celery.task(name='soundcloud-download', acks_late=True)
 def soundcloud_download(token, callback_url, track_id=None):
     """
+    This is in stasis 
 
     :param token:       OAuth2 client access token
     :param track_id:    SoundCloud track identifier

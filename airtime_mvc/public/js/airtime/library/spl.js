@@ -406,7 +406,7 @@ var AIRTIME = (function(AIRTIME){
         var empty = $pl.find(".spl_empty");
 
         if (!show || empty.length > 0) {
-            $pl.find("#spl_crossfade").hide();
+            //$pl.find("#spl_crossfade").hide();
         } else {
             //get list of playlist contents
             var list = contents.children();
@@ -416,7 +416,7 @@ var AIRTIME = (function(AIRTIME){
             var last = list.last();
             if (first.find(':first-child').children().attr('blockid') !== undefined &&
                 last.find(':first-child').children().attr('blockid') !== undefined) {
-                $pl.find("#spl_crossfade").hide();
+                //$pl.find("#spl_crossfade").hide();
             } else {
                 $pl.find("#spl_crossfade").show();
             }
@@ -783,7 +783,7 @@ var AIRTIME = (function(AIRTIME){
                                 fadeIn.parent().prev().hide();
                                 fadeIn.hide();
                             } else {
-                                console.log(json.fadeIn);
+                                //console.log(json.fadeIn);
                                 //console.log(fadeIn.val());
                                 fadeIn.parent().prev().show();
                                 fadeIn.show();
@@ -1095,7 +1095,7 @@ var AIRTIME = (function(AIRTIME){
                 aSelected = AIRTIME.library.getSelectedData();
 
                 for (i = 0, length = aSelected.length; i < length; i++) {
-                    console.log(aSelected[i]);
+                    //console.log(aSelected[i]);
                     aItems.push(new Array(aSelected[i].id, aSelected[i].ftype));
                 }
 
