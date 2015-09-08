@@ -43,10 +43,10 @@ if (isset($this->obj)) {
         <div class='btn-group'>
             <button class="btn" title='<?php echo _("Shuffle playlist") ?>' type="button" id="playlist_shuffle_button"><?php echo _("Shuffle") ?></button>
         </div>
-        <div class='btn-group' style="display:<?php echo $count > 0 ?"inherit;":"none;"?>">
-            <a href="#" id="spl_crossfade" class="btn crossfade-main-button">
+        <div class='btn-group'>
+            <button id="spl_crossfade" class="btn crossfade-main-button" <?php if ($count <= 0) echo "disabled=disabled"; ?>>
                 <i class='crossfade-main-icon'></i><span class="ui-button-text"><?php echo _("Playlist crossfade") ?></span>
-            </a>
+            </button>
         </div>
         <div class='btn-group'>
             <button class="btn btn-danger" title='<?php echo _("Empty playlist content") ?>' type="button" id="pl-bl-clear-content"><?php echo _("Clear") ?></button>
