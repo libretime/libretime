@@ -764,7 +764,7 @@ SQL;
 
             // Delete show images
             $showId = $ccShowInstance->getDbShowId();
-            if (!Rest_ShowImageController::deleteShowImagesFromStor($showId)) {
+            if (!$singleInstance && !Rest_ShowImageController::deleteShowImagesFromStor($showId)) {
                 throw new Exception("Error deleting show images");
             }
             
