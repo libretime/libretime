@@ -65,11 +65,12 @@ if (isset($this->obj)) {
     <div id="crossfade_main" class="crossfade-main clearfix" style="display:none;">
         <span class="ui-icon ui-icon-closethick"></span>
         <dl id="spl_editor-main" class="inline-list">
-            <dt><?php echo _("Fade in: "); ?><span class='spl_cue_hint'><?php echo _("(ss.t)")?></span></dt>
-            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_in">00</span></dd>
+            <dt><?php echo _("Fade in: "); ?></dt>
+            <dd>
+                <input class="spl_main_fade_in playlist_main_fade_input" value="0" /><span class='spl_cue_hint'> seconds</span></dd>
             <dd class="edit-error"></dd>
-            <dt><?php echo _("Fade out: "); ?><span class='spl_cue_hint'><?php echo _("(ss.t)")?></span></dt>
-            <dd><span contenteditable="true" class="spl_text_input spl_main_fade_out">00</span></dd>
+            <dt><?php echo _("Fade out: "); ?></dt>
+            <dd><input class="spl_main_fade_out playlist_main_fade_input" value="0" /><span class='spl_cue_hint'> seconds</span></dd></dd>
             <dd class="edit-error"></dd>
         </dl>
     </div>
