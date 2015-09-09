@@ -3698,12 +3698,12 @@ button.btn-icon-text > i.icon-white {
     left: 152px;
     top: 102px;
     bottom: 0; /* Account for scrollbars */
-    min-width: 130px;
+    min-width: 150px;
     border-right: 1px solid #5b5b5b;
     background: #242424;
     font-size: 14px;
     color: #cecece;
-    padding: 10px;
+    padding: 10px 0;
     z-index: 1;
 
     -webkit-transition: top 0.2s linear;
@@ -3713,7 +3713,11 @@ button.btn-icon-text > i.icon-white {
 }
 
 #sub-menu h3 {
-    padding: 0;
+    padding: 0 10px 10px;
+}
+
+#sub-menu hr {
+    margin: 0 5px;
 }
 
 #sub-menu .navigation {
@@ -3721,12 +3725,17 @@ button.btn-icon-text > i.icon-white {
     padding-left: 0;
 }
 
-#sub-menu .navigation li {
-    padding-bottom: 10px;
+#sub-menu .navigation li.active {
+    color: #fff;
+    background-color: #333;
+    border-right: 1px solid #1ADEFF;
+    margin-right: -1px;
 }
 
 #sub-menu .navigation a {
+    display: block;
     color: #cecece;
+    padding: 10px;
     text-decoration: none;
 }
 
