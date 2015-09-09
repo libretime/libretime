@@ -98,13 +98,15 @@ span.login-img {
 }
 
 .about_us h1 {
-    font-size: 80px;
+    font-size: 80px; /** Fallback if vw is not suppoted */
+    font-size: 8vh;
     font-weight: 300;
     margin: 10px;
 }
 
 .about_us p {
-    font-size: 24px;
+    font-size: 24px; /** Fallback if vw is not suppoted */
+    font-size: 4vh;
     font-weight: 300;
     margin: 10px;
 }
