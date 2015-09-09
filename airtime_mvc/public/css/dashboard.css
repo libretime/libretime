@@ -673,6 +673,9 @@ th.library_checkbox {
     text-align: center !important;
 }
 
+.ui-draggable {
+    -ms-touch-action: none;
+}
 
 /* This is so dragged items show up above the layout */
 

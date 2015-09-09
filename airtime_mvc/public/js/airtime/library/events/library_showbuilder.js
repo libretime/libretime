@@ -103,7 +103,7 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if ($("#show_builder_table").is(":visible")) {
-            $('#library_display tr.lib-audio, tr.lib-pl, tr.lib-stream')
+            $('#library_display tr[class*="lib-"]')
                 .draggable(
                 {
                     helper: function () {
@@ -142,7 +142,7 @@ var AIRTIME = (function(AIRTIME) {
                     connectToSortable: '#show_builder_table'
                 });
         } else {
-            $('#library_display tr.lib-audio, tr.lib-stream, tr.lib-pl, tr.lib-block')
+            $('#library_display tr[class*="lib-"]')
                 .draggable(
                 {
                     helper: function () {

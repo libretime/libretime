@@ -1772,17 +1772,20 @@ button, input {
 }
 
 .user-management {
-    width:910px;
+    min-width: 910px;
     min-height: 410px;
 }
+
 .user-management-expanded {
-    width:910px;
+    width: 910px;
 }
+
 .user-data {
     float:right;
     width:420px;
     margin-left:10px;
 }
+
 .user-list-wrapper {
     float:left;
     width:480px;
@@ -1792,14 +1795,7 @@ button, input {
 }
 
 #users_datatable {
-    border: 0px;
-}
-
-#users_datatable_wrapper > div.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    border: 0;
 }
 
 #users_datatable_wrapper td {
@@ -1808,7 +1804,7 @@ button, input {
 
 .user-management div.user-list-wrapper .ui-widget-header:first-child {
     background: none repeat scroll 0 0 transparent;
-    border-width: 0 0 1px;
+    border-width: 0;
     color: #444444;
     font-weight: bold;
 }
@@ -3887,9 +3883,19 @@ li .ui-state-hover {
     flex: 1;
 }
 
+#user_list_inner_wrapper {
+    height: 272px;
+    overflow: auto;
+}
+
 #users_datatable_wrapper {
-    /*position: absolute;*/
-    min-height: 300px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column;
+    flex-flow: column;
 }
 
 #users_datatable {
