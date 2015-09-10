@@ -416,17 +416,26 @@ class ApiController extends Zend_Controller_Action
             }
             
             $path = $show->getDbImagePath();
-            $mime_type = mime_content_type($path);
-            if (empty($path)) {
-                throw new ZendActionHttpException($this, 400, "ERROR: Show does not have an associated image.");
+            try {
+                $mime_type = mime_content_type($path);
+                if (empty($path)) {
+                    throw new ZendActionHttpException($this, 400, "ERROR: Show does not have an associated image.");
+                }
+            } catch (Exception $e) {
+                //To avoid broken images on your site, we return the station logo if we can't find the show logo.
+                $this->_redirect('api/station-logo');
+                return;
             }
+
 
             try {
                 // Sometimes end users may be looking at stale data - if an image is removed
                 // but has been cached in a client's browser this will throw an exception
                 Application_Common_FileIO::smartReadFile($path, filesize($path), $mime_type);
             } catch(FileNotFoundException $e) {
-                throw new ZendActionHttpException($this, 404, "ERROR: No image found at $path");
+                //throw new ZendActionHttpException($this, 404, "ERROR: No image found at $path");
+                $this->_redirect('api/station-logo');
+                return;
             } catch(Exception $e) {
                 throw new ZendActionHttpException($this, 500, "ERROR: " . $e->getMessage());
             }
