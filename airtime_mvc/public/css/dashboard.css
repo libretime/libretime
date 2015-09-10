@@ -20,6 +20,14 @@
 
     background-color: #242424;
 }
+@media screen and (max-width: 1700px) {
+    #library_display_info {
+        display: none;
+    }
+    #library_display_length {
+        float: left;
+    }
+}
 
 @media screen and (max-width: 1600px) {
     #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > span,
@@ -31,6 +39,13 @@
     #show_builder_table_wrapper button:not(.dropdown-toggle):not(.btn-new) > i,
     #show_builder_table_wrapper #sb_submit > i {
         margin-right: 0 !important;
+    }
+}
+
+@media screen and (max-width: 1260px) {
+    #library_display_length > label {
+        /* Hacky, but datatables dumps the select inside the label for some reason... */
+        font-size: 0 !important;
     }
 }
 
@@ -84,11 +99,11 @@
     padding: 0;
 }
 
-#library_content .dataTables_length {
-    padding: 5px;
+#library_display_length {
+    padding: 6px;
 }
 
-#library_content .dataTables_length label {
+#library_display_length label {
     color: #efefef;
     line-height: 26px;
     font-weight: normal;
@@ -625,7 +640,7 @@ div.ColVis_collectionBackground {
 }
 
 .ColVis.TableTools {
-    margin: 5px 5px 0 0;
+    margin: 6px 6px 0 0;
 }
 
 .ColVis.TableTools > button {
@@ -648,7 +663,7 @@ div.ColVis_collectionBackground {
 
 .fg-toolbar .btn-toolbar {
     margin: 0;
-    padding: 5px;
+    padding: 6px;
 }
 /* ~~~~~~~~~~~~~~~~ */
 
@@ -684,11 +699,6 @@ th.library_checkbox {
     position: fixed !important;
 }
 
-/* Since the z-index gets applied dynamically */
-/*#ui-datepicker-div {*/
-    /*z-index: 1000 !important;*/
-/*}*/
-
 .datatable .ui-state-highlight, .spl_sortable .ui-state-highlight {
     background: rgba(255, 93, 26, .6);
     border: none;
@@ -696,8 +706,13 @@ th.library_checkbox {
 
 .dataTables_scrolling {
     position: absolute;
-    bottom: 37px; /* 36 px is the size of the header/footer + 1px because there's no internal border */
-    top: 37px;
+    bottom: 37px;
+    top: 38px;
     left: 0;
     right: 0;
+}
+
+.DTCR_pointer {
+    background-color: #FF5D1A !important;
+    height: 38px !important;
 }

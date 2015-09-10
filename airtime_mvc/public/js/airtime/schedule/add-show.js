@@ -690,7 +690,7 @@ function setAddShowEvents(form) {
                     data: '',
                     type: 'DELETE',
                     success: function() {
-                        $("#add_show_logo_current").prop("src", "")
+                        $("#add_show_logo_current").prop("src", "");
                         $("[id^=add_show_logo_current]").hide();
                     }
                 });

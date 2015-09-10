@@ -17,7 +17,7 @@ $(document).ready(function () {
     Dropzone.options.addMediaDropzone = {
         url: '/rest/media',
         //clickable: false,
-        acceptedFiles: acceptedMimeTypes.join() + ",.flac",
+        acceptedFiles: acceptedMimeTypes.join(),
         addRemoveLinks: true,
         dictRemoveFile: $.i18n._("Remove"),
         init: function () {
@@ -232,6 +232,23 @@ $(document).ready(function () {
                         getUsabilityHint();
                     }
                 });
+            },
+            "fnCreatedRow": function(nRow) {
+                $(nRow).find("td").hover(
+                    function () {
+                        var sw = $(this)[0].scrollWidth, iw = $(this).innerWidth();
+                        if (sw > iw) {
+                            $(this).stop().animate({
+                                textIndent: "-" + (sw + 2 - iw) + "px"
+                            }, sw * 8);
+                        }
+                    },
+                    function () {
+                        $(this).stop().animate({
+                            textIndent: "0"
+                        }, 500);
+                    }
+                );
             }
         });
 
@@ -256,15 +273,15 @@ $(document).ready(function () {
 
     $("#upload_status_all").click(function () {
         self.uploadFilter = "all";
-        self.recentUploadsTable.fnDraw();
+        self.recentUploadsTable.fnPageChange(0).fnDraw();
     });
     $("#upload_status_pending").click(function () {
         self.uploadFilter = "pending";
-        self.recentUploadsTable.fnDraw();
+        self.recentUploadsTable.fnPageChange(0).fnDraw();
     });
     $("#upload_status_failed").click(function () {
         self.uploadFilter = "failed";
-        self.recentUploadsTable.fnDraw();
+        self.recentUploadsTable.fnPageChange(0).fnDraw();
     });
 
     //Create the recent uploads table.

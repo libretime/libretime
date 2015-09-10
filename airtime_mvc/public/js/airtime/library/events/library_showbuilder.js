@@ -133,7 +133,7 @@ var AIRTIME = (function(AIRTIME) {
 
                         return container;
                     },
-                    cursor: 'pointer',
+                    cursor: 'move',
                     //cursorAt: {
                     //    top: 30,
                     //    right: 10
@@ -173,7 +173,7 @@ var AIRTIME = (function(AIRTIME) {
 
                         return container;
                     },
-                    cursor: 'pointer',
+                    cursor: 'move',
                     //cursorAt: {
                     //    top: 30,
                     //    right: 10

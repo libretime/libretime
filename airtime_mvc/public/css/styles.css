@@ -67,7 +67,8 @@ select {
     height: 7px;
 }
 
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
     background: transparent none;
 }
 
@@ -81,10 +82,6 @@ select {
     background-color: #ff5d1a;
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.75);
-}
-
-::-webkit-scrollbar-corner {
-    background-color: #000;
 }
 
 .wrapper_panel::-webkit-scrollbar-corner {
@@ -842,18 +839,17 @@ dl.inline-list dd {
     color: #ccc;
 }
 
-#recent_uploads_table_wrapper .datatable tr td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .datatable tr, .datatable td,
-.dataTable tr, .dataTable td
-{
+.dataTable tr, .dataTable td {
     border: none;
     border-spacing: 0;
 }
 
+#recent_uploads_table tr, #recent_uploads_table td {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 200px;
+}
 
 .odd {
     background-color: #282828;
@@ -923,7 +919,7 @@ dl.inline-list dd {
 }
 
 .dataTables_length {
-    float:right;
+    float:left;
     margin:0;
     
 }
@@ -3873,9 +3869,8 @@ li .ui-state-hover {
     -webkit-flex-flow: column;
     flex-flow: column;
 
-    /* Account for the left pane */
     flex: 6 auto;
-    min-width: 500px;
+    min-width: 505px;
 }
 
 .outer-datatable-wrapper {

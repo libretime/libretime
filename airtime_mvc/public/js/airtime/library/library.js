@@ -553,6 +553,12 @@ var AIRTIME = (function(AIRTIME) {
                     return getDatatablesStrings({
                         "sEmptyTable": $.i18n._(""),
                         "sZeroRecords": $.i18n._("No matching results found.")
+                        //"oPaginate": {
+                        //    "sFirst":    "<<",
+                        //    "sLast":     ">>",
+                        //    "sNext":     ">",
+                        //    "sPrevious": "<"
+                        //}
                     });
                     break;
             }
@@ -612,7 +618,7 @@ var AIRTIME = (function(AIRTIME) {
                 /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "bVisible"    : false                 , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },
                 /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
                 /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
-                /* Context Menu */    { "sTitle" : ""                             , "mDataProp" : "options"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px", "sClass" : "library_actions" }
+                /* Context Menu */    { "sTitle" : ""                             , "mDataProp" : "options"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "20px", "sClass" : "library_actions" }
             ],
 
             "bProcessing": true,
@@ -793,8 +799,8 @@ var AIRTIME = (function(AIRTIME) {
             "bAutoWidth": false,
             "oLanguage": getLibraryDatatableStrings(),
 
-            // R = ColReorder, C = ColVis
-            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"ilp>>',
+            // z = ColResize, R = ColReorder, C = ColVis
+            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
 
             "oColVis": {
                 "sAlign": "right",
