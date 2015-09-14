@@ -137,8 +137,24 @@ AIRTIME = (function(AIRTIME) {
         });
 
         $(window).on('hashchange', function() {
-            var selected = $("a[href$='"+location.hash+"']");
-            var dashboardLink = $(".media_type_selector:first");
+            var selected = $("a[href$='"+location.hash+"']"),
+                dashboardLink = $(".media_type_selector:first"),
+                t;
+
+            if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeEnum.PODCAST) {
+                $("#library_display_wrapper").hide();
+                $("#podcast_table").show();
+
+                t = AIRTIME.library.podcastDataTable;
+            } else {
+                if (typeof oTable === 'undefined') {
+                    oTable = AIRTIME.library.libraryDataTable;
+                }
+
+                $("#library_display_wrapper").show();
+                $("#podcast_table").hide();
+                t = oTable;
+            }
 
             dashboardLink.find("a").attr("href", selected.attr("href"));
             AIRTIME.library.selectNone();
@@ -146,7 +162,7 @@ AIRTIME = (function(AIRTIME) {
                 $(this).removeClass("selected");
             });
             selected.parent().addClass("selected");
-            oTable.fnDraw();
+            t.fnDraw();
             $("#library_filter").text(selected.text());
             // Highlight the dashboard link
             dashboardLink.addClass("highlight");

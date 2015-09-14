@@ -59,6 +59,67 @@ var AIRTIME = (function(AIRTIME) {
     }
     mod = AIRTIME.library;
 
+    /*  ############################################
+                       CONFIGURATION
+        ############################################ */
+
+    mod.MediaTypeEnum = Object.freeze({
+        DEFAULT: 1,
+        FILE: 1,
+        PLAYLIST: 2,
+        BLOCK: 3,
+        WEBSTREAM: 4,
+        PODCAST: 5
+    });
+
+    // TODO: once the new manual pages are added, change links!
+    mod.placeholder = function(mediaType) {
+        switch (mediaType) {
+            // TODO: remove duplication in a nice way?
+            case MediaTypeEnum.FILE:
+                return {
+                    "media": "tracks",
+                    "icon": "icon-music",
+                    "subtext": "Click 'Upload' to add some now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/"
+                };
+            case MediaTypeEnum.PLAYLIST:
+                return {
+                    "media": "playlists",
+                    "icon": "icon-list",
+                    "subtext": "Click 'New' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            case MediaTypeEnum.BLOCK:
+                return {
+                    "media": "smart blocks",
+                    "icon": "icon-time",
+                    "subtext": "Click 'New' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            case MediaTypeEnum.WEBSTREAM:
+                return {
+                    "media": "webstreams",
+                    "icon": "icon-random",
+                    "subtext": "Click 'New' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            case MediaTypeEnum.PODCAST:
+                return {
+                    "media": "podcasts",
+                    "icon": "icon-headphones",
+                    "subtext": "Click 'Add' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            default:
+                break;
+        }
+    };
+
+    /*  ############################################
+                     END CONFIGURATION
+        ############################################ */
+
     mod.getChosenItemsLength = function(){
         var cItem,
             selected,
@@ -199,10 +260,10 @@ var AIRTIME = (function(AIRTIME) {
     };
 
     mod.checkNewButton = function() {
-        var selected = $(".media_type_selector.selected").attr("data-selection-id"),
+        var selected = $(".media_type_selector.selected").data("selection-id"),
             check = false;
 
-        if (selected != 1) {
+        if (selected != AIRTIME.library.MediaTypeEnum.FILE) {
             check = true;
         }
 
@@ -455,131 +516,13 @@ var AIRTIME = (function(AIRTIME) {
 
         var colReorderMap = new Array();
 
-        $libTable = $libContent.find("table");
+        $libTable = $("#library_display");
 
-        function getTableHeight() {
-            return $libContent.height() - 175;
-        }
+        /*  ############################################
+                            DATATABLES
+            ############################################ */
 
-        function setColumnFilter(oTable){
-            // TODO : remove this dirty hack once js is refactored
-            if (!oTable.fnSettings()) { return ; }
-            var aoCols = oTable.fnSettings().aoColumns;
-            var colsForAdvancedSearch = new Array();
-            var advanceSearchDiv = $("div#advanced_search");
-            advanceSearchDiv.empty();
-            $.each(aoCols, function(i,ele){
-                if (ele.bSearchable) {
-                    var currentColId = ele._ColReorder_iOrigCol;
-
-                    var inputClass = 'filter_column filter_number_text';
-                    var labelStyle = "style='margin-right:35px;'";
-                    if (libraryColumnTypes[ele.mDataProp] != "s") {
-                        inputClass = 'filterColumn filter_number_range';
-                        labelStyle = "";
-                    }
-
-                    if (ele.bVisible) {
-                        advanceSearchDiv.append(
-                            "<div id='advanced_search_col_"+currentColId+"' class='control-group'>" +
-                            "<label class='control-label'"+labelStyle+">"+ele.sTitle+"</label>" +
-                            "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
-                            "</div>");
-                    } else {
-                        advanceSearchDiv.append(
-                            "<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'>" +
-                            "<label class='control-label'"+labelStyle+">"+ele.sTitle+"</label>" +
-                            "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
-                            "</div>");
-                    }
-
-                    if (libraryColumnTypes[ele.mDataProp] == "s") {
-                        var obj = { sSelector: "#"+ele.mDataProp }
-                    } else {
-                        var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
-                    }
-                    colsForAdvancedSearch.push(obj);
-                } else {
-                    colsForAdvancedSearch.push(null);
-                }
-            });
-
-            oTable.columnFilter({
-                    aoColumns: colsForAdvancedSearch,
-                    bUseColVis: true,
-                    sPlaceHolder: "head:before"
-                }
-            );
-        }
-
-        function setFilterElement(iColumn, bVisible){
-            var actualId = colReorderMap[iColumn];
-            var selector = "div#advanced_search_col_"+actualId;
-            var $el = $(selector);
-
-            if (bVisible) {
-                $el.show();
-            } else {
-                $el.hide();
-            }
-        }
-
-        function getLibraryDatatableStrings() {
-            //Set up the datatables string translation table with different strings depending on
-            //whether you're viewing files, playlists, smart blocks, etc.
-            var type = parseInt($(".media_type_selector.selected").attr("data-selection-id"));
-            type = (type === undefined) ? 1 : type;
-
-            //FIXME: The code that calls this function doesn't work as intended because you can't
-            //       change the oLanguage property of a datatable dynamically. :(
-
-            switch (type) {
-                /*
-                 case 0:
-                 return getDatatablesStrings({
-                 "sEmptyTable": $.i18n._("No files found"),
-                 });
-                 break;
-                 case 1:
-                 return getDatatablesStrings({
-                 "sEmptyTable": $.i18n._("No playlists found"),
-                 });
-                 break;
-                 case 2:
-                 return getDatatablesStrings({
-                 "sEmptyTable": $.i18n._("No smart blocks found"),
-                 });
-                 break;*/
-                default:
-                    return getDatatablesStrings({
-                        "sEmptyTable": $.i18n._(""),
-                        "sZeroRecords": $.i18n._("No matching results found.")
-                        //"oPaginate": {
-                        //    "sFirst":    "<<",
-                        //    "sLast":     ">>",
-                        //    "sNext":     ">",
-                        //    "sPrevious": "<"
-                        //}
-                    });
-                    break;
-            }
-
-        }
-
-        function handleAjaxError(r) {
-            // If the request was denied due to permissioning
-            if (r.status === 403) {
-                // Hide the processing div
-                $("#library_display_wrapper").find(".dt-process-rel").hide();
-                $.getJSON( "ajax/library_placeholders.json", function( data ) {
-                    $('#library_empty_text').text($.i18n._(data.unauthorized));
-                })  ;
-
-                $('#library_empty').show();
-            }
-        }
-
-        oTable = $libTable.dataTable( {
+        mod.libraryDataTable = $libTable.dataTable({
 
             // put hidden columns at the top to insure they can never be visible
             // on the table through column reordering.
@@ -688,10 +631,10 @@ var AIRTIME = (function(AIRTIME) {
                 oData.iCreate = parseInt(oData.iCreate, 10);
             },
 
-            "sAjaxSource": baseUrl+"Library/contents-feed",
+            "sAjaxSource": baseUrl + "Library/contents-feed",
             "sAjaxDataProp": "files",
 
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
+            "fnServerData": function (sSource, aoData, fnCallback) {
                 /*
                  * The real validation check is done in
                  * dataTables.columnFilter.js We also need to check it here
@@ -702,13 +645,13 @@ var AIRTIME = (function(AIRTIME) {
                 var advSearchFields = $("div#advanced_search").children(':visible');
                 var advSearchValid = validateAdvancedSearch(advSearchFields);
                 var type;
-                aoData.push( { name: "format", value: "json"} );
-                aoData.push( { name: "advSearch", value: advSearchValid} );
+                aoData.push({name: "format", value: "json"});
+                aoData.push({name: "advSearch", value: advSearchValid});
 
                 // push whether to search files/playlists or all.
-                type = $(".media_type_selector.selected").attr("data-selection-id");
-                type = (type === undefined) ? 1 : type;
-                aoData.push( { name: "type", value: type} );
+                type = $(".media_type_selector.selected").data("selection-id");
+                type = (type === undefined) ? AIRTIME.library.MediaTypeEnum.DEFAULT : type;
+                aoData.push({name: "type", value: type});
 
                 //getUsabilityHint();
 
@@ -719,7 +662,7 @@ var AIRTIME = (function(AIRTIME) {
                     "data": aoData,
                     "success": fnCallback,
                     "error": handleAjaxError
-                }).done(function(data) {
+                }).done(function (data) {
                     if (data.iTotalRecords > data.iTotalDisplayRecords) {
                         $('#filter_message').text(
                             $.i18n._("Filtering out ") + (data.iTotalRecords - data.iTotalDisplayRecords)
@@ -736,25 +679,25 @@ var AIRTIME = (function(AIRTIME) {
                 });
             },
             "fnRowCallback": AIRTIME.library.fnRowCallback,
-            "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+            "fnCreatedRow": function (nRow, aData, iDataIndex) {
                 // add checkbox
-                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
+                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_" + aData.id + "'>");
 
                 $(nRow).find('td.library_actions')
                     .text("...")
-                    .on('click', function(e) {
+                    .on('click', function (e) {
                         $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
                     }).html("<div class='library_actions_btn'>...</div>");
 
                 // add audio preview image/button
                 if (aData.ftype === "audioclip") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png">');
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Track preview") + '" src="' + baseUrl + 'css/images/icon_audioclip.png">');
                 } else if (aData.ftype === "playlist") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Playlist preview")+'" src="'+baseUrl+'css/images/icon_playlist.png">');
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Playlist preview") + '" src="' + baseUrl + 'css/images/icon_playlist.png">');
                 } else if (aData.ftype === "block") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Smart Block")+'" src="'+baseUrl+'css/images/icon_smart-block.png">');
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Smart Block") + '" src="' + baseUrl + 'css/images/icon_smart-block.png">');
                 } else if (aData.ftype === "stream") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Webstream preview")+'" src="'+baseUrl+'css/images/icon_webstream.png">');
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Webstream preview") + '" src="' + baseUrl + 'css/images/icon_webstream.png">');
                 }
 
                 if (aData.is_scheduled) {
@@ -769,8 +712,8 @@ var AIRTIME = (function(AIRTIME) {
                 }
 
                 // add the play function to the library_type td
-                $(nRow).find('td.library_type').click(function(){
-                    if (aData.ftype === 'playlist' && aData.length !== '0.0'){
+                $(nRow).find('td.library_type').click(function () {
+                    if (aData.ftype === 'playlist' && aData.length !== '0.0') {
                         open_playlist_preview(aData.audioFile, 0);
                     } else if (aData.ftype === 'audioclip') {
                         if (isAudioSupported(aData.mime)) {
@@ -787,7 +730,7 @@ var AIRTIME = (function(AIRTIME) {
                 });
             },
             // remove any selected nodes before the draw.
-            "fnPreDrawCallback": function( oSettings ) {
+            "fnPreDrawCallback": function (oSettings) {
 
                 // make sure any dragging helpers are removed or else they'll be
                 // stranded on the screen.
@@ -821,6 +764,143 @@ var AIRTIME = (function(AIRTIME) {
             "bScrollCollapse": false
 
         });
+
+        /* TODO: implement podcast datatable
+         * mod.podcastDataTable = $("#podcast_table").dataTable({});
+         */
+        mod.podcastDataTable = mod.libraryDataTable;
+
+        /*  ############################################
+                          END DATATABLES
+            ############################################ */
+
+        function getTableHeight() {
+            return $libContent.height() - 175;
+        }
+
+        function setColumnFilter(oTable){
+            // TODO : remove this dirty hack once js is refactored
+            if (!oTable.fnSettings()) { return ; }
+            var aoCols = oTable.fnSettings().aoColumns;
+            var colsForAdvancedSearch = new Array();
+            var advanceSearchDiv = $("div#advanced_search");
+            advanceSearchDiv.empty();
+            $.each(aoCols, function(i,ele){
+                if (ele.bSearchable) {
+                    var currentColId = ele._ColReorder_iOrigCol;
+
+                    var inputClass = 'filter_column filter_number_text';
+                    var labelStyle = "style='margin-right:35px;'";
+                    if (libraryColumnTypes[ele.mDataProp] != "s") {
+                        inputClass = 'filterColumn filter_number_range';
+                        labelStyle = "";
+                    }
+
+                    if (ele.bVisible) {
+                        advanceSearchDiv.append(
+                            "<div id='advanced_search_col_"+currentColId+"' class='control-group'>" +
+                            "<label class='control-label'"+labelStyle+">"+ele.sTitle+"</label>" +
+                            "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
+                            "</div>");
+                    } else {
+                        advanceSearchDiv.append(
+                            "<div id='advanced_search_col_"+currentColId+"' class='control-group' style='display:none;'>" +
+                            "<label class='control-label'"+labelStyle+">"+ele.sTitle+"</label>" +
+                            "<div id='"+ele.mDataProp+"' class='controls "+inputClass+"'></div>" +
+                            "</div>");
+                    }
+
+                    if (libraryColumnTypes[ele.mDataProp] == "s") {
+                        var obj = { sSelector: "#"+ele.mDataProp }
+                    } else {
+                        var obj = { sSelector: "#"+ele.mDataProp, type: "number-range" }
+                    }
+                    colsForAdvancedSearch.push(obj);
+                } else {
+                    colsForAdvancedSearch.push(null);
+                }
+            });
+
+            oTable.columnFilter({
+                    aoColumns: colsForAdvancedSearch,
+                    bUseColVis: true,
+                    sPlaceHolder: "head:before"
+                }
+            );
+        }
+
+        function setFilterElement(iColumn, bVisible){
+            var actualId = colReorderMap[iColumn];
+            var selector = "div#advanced_search_col_"+actualId;
+            var $el = $(selector);
+
+            if (bVisible) {
+                $el.show();
+            } else {
+                $el.hide();
+            }
+        }
+
+        function getLibraryDatatableStrings() {
+            //Set up the datatables string translation table with different strings depending on
+            //whether you're viewing files, playlists, smart blocks, etc.
+            var type = parseInt($(".media_type_selector.selected").data("selection-id"));
+            type = (type === undefined) ? AIRTIME.library.MediaTypeEnum.DEFAULT : type;
+
+            //FIXME: The code that calls this function doesn't work as intended because you can't
+            //       change the oLanguage property of a datatable dynamically. :(
+
+            switch (type) {
+                /*
+                 case 0:
+                 return getDatatablesStrings({
+                 "sEmptyTable": $.i18n._("No files found"),
+                 });
+                 break;
+                 case 1:
+                 return getDatatablesStrings({
+                 "sEmptyTable": $.i18n._("No playlists found"),
+                 });
+                 break;
+                 case 2:
+                 return getDatatablesStrings({
+                 "sEmptyTable": $.i18n._("No smart blocks found"),
+                 });
+                 break;*/
+                default:
+                    return getDatatablesStrings({
+                        "sEmptyTable": $.i18n._(""),
+                        "sZeroRecords": $.i18n._("No matching results found.")
+                        //"oPaginate": {
+                        //    "sFirst":    "<<",
+                        //    "sLast":     ">>",
+                        //    "sNext":     ">",
+                        //    "sPrevious": "<"
+                        //}
+                    });
+                    break;
+            }
+
+        }
+
+        function handleAjaxError(r) {
+            // If the request was denied due to permissioning
+            if (r.status === 403) {
+                // Hide the processing div
+                $("#library_display_wrapper").find(".dt-process-rel").hide();
+                $('#library_empty_text').text($.i18n._("You don't have permission to view the library."));
+
+                $('#library_empty').show();
+            }
+        }
+
+        var selected = $("a[href$='"+location.hash+"']");
+        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeEnum.PODCAST) {
+            $("#library_display_wrapper").hide();
+            oTable = mod.podcastDataTable.show();
+        } else {
+            oTable = mod.libraryDataTable;
+        }
 
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
