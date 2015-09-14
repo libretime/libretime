@@ -716,15 +716,3 @@ th.library_checkbox {
     background-color: #FF5D1A !important;
     height: 38px !important;
 }
-
-/*  ~~~~~~~~~~~~~~~~
-        Podcasts
-    ~~~~~~~~~~~~~~~~ */
-
-#podcast_table {
-    display: none;
-}
-
-/*  ~~~~~~~~~~~~~~~~
-      END Podcasts
-    ~~~~~~~~~~~~~~~~ */

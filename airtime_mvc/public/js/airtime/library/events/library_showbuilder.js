@@ -80,20 +80,22 @@ var AIRTIME = (function(AIRTIME) {
         var libEmpty = $('#library_empty');
         if (emptyRow.length > 0) {
             emptyRow.hide();
-            var mediaType = parseInt($('.media_type_selector.selected').data('selection-id')),
+            var mediaType = parseInt($('.media_type_selector.selected').attr('data-selection-id')),
                 img = $('#library_empty_image');
             // Remove all classes for when we change between empty media types
             img.removeClass(function() {
                 return $( this ).attr( "class" );
             });
-
-            var opts = AIRTIME.library.placeholder(mediaType);
-            img.addClass("icon-white " + opts.icon);
-            $('#library_empty_text').html(
-                $.i18n._("You haven't added any " + opts.media + ".")
-                + "<br/>" + $.i18n._(opts.subtext)
-                + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
-            );
+            // TODO: once the new manual pages are added, change links!
+            $.getJSON( "ajax/library_placeholders.json", function( data ) {
+                var opts = data[mediaType];
+                img.addClass("icon-white " + opts.icon);
+                $('#library_empty_text').html(
+                    $.i18n._("You haven't added any " + opts.media + ".")
+                    + "<br/>" + $.i18n._(opts.subtext)
+                    + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
+                );
+            });
 
             libEmpty.show();
         } else {
@@ -331,13 +333,13 @@ var AIRTIME = (function(AIRTIME) {
                     return;
                 }
 
-                var selection = $(".media_type_selector.selected").data("selection-id");
+                var selection = $(".media_type_selector.selected").attr("data-selection-id");
 
-                if (selection == AIRTIME.library.MediaTypeEnum.PLAYLIST) {
+                if (selection == 2) {
                     AIRTIME.playlist.fnNew();
-                } else if (selection == AIRTIME.library.MediaTypeEnum.BLOCK) {
+                } else if (selection == 3) {
                     AIRTIME.playlist.fnNewBlock();
-                } else if (selection == AIRTIME.library.MediaTypeEnum.WEBSTREAM) {
+                } else if (selection == 4) {
                     AIRTIME.playlist.fnWsNew();
                 }
             });

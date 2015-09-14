@@ -36,8 +36,6 @@ set_include_path(implode(PATH_SEPARATOR, array(
 )));
 
 set_include_path(APPLICATION_PATH . 'common' . PATH_SEPARATOR . get_include_path());
-set_include_path(APPLICATION_PATH . 'common/enum' . PATH_SEPARATOR . get_include_path());
-set_include_path(APPLICATION_PATH . 'common/interface' . PATH_SEPARATOR . get_include_path());
 
 //Propel classes.
 set_include_path(APPLICATION_PATH . 'models' . PATH_SEPARATOR . get_include_path());

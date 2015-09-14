@@ -3598,7 +3598,7 @@ button.btn-icon-text > i.icon-white {
 .media_type_selector a {
     text-decoration: none;
     color: #cecece;
-    padding: 10px 0 10px 10px;
+    padding: 10px 10px 10px 10px;
     display: block;
 }
 

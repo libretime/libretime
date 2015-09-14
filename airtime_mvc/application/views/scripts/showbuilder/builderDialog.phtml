@@ -1,7 +1,30 @@
 <div><!-- jQuery UI changes the styling on the outermost div; use a blank div so as not to break the .wrapper styling-->
     <div class="wrapper">
         <div id="media_selector_wrapper">
-            <?php $subnavPrefix = ""; require_once APPLICATION_PATH . "views/scripts/partialviews/dashboard-sub-nav.php"; ?>
+            <div class="media_type_selector dashboard_sub_nav" data-selection-id="1">
+                <a href="#tracks">
+                    <i class='icon-music icon-white'></i>
+                    <span class="selector-name"><?php echo _("Tracks") ?></span>
+                </a>
+            </div>
+            <div class="media_type_selector dashboard_sub_nav" data-selection-id="2">
+                <a href="#playlists">
+                    <i class='icon-list icon-white'></i>
+                    <span class="selector-name"><?php echo _("Playlists") ?></span>
+                </a>
+            </div>
+            <div class="media_type_selector dashboard_sub_nav" data-selection-id="3">
+                <a href="#smart-blocks">
+                    <i class='icon-time icon-white'></i>
+                    <span class="selector-name"><?php echo _("Smart Blocks") ?></span>
+                </a>
+            </div>
+            <div class="media_type_selector dashboard_sub_nav" data-selection-id="4">
+                <a href="#webstreams">
+                    <i class='icon-random icon-white'></i>
+                    <span class="selector-name"><?php echo _("Webstreams") ?></span>
+                </a>
+            </div>
         </div>
         <?php echo $this->csrf ?>
 

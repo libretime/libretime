@@ -805,17 +805,21 @@ SQL;
         $unionTable = "({$plTable} UNION {$blTable} UNION {$fileTable} UNION {$streamTable}) AS RESULTS";
 
         //choose which table we need to select data from.
+        // TODO : use constants instead of numbers -- RG
         switch ($type) {
-            case MediaType::FILE:
+            case 0:
+                $fromTable = $unionTable;
+                break;
+            case 1:
                 $fromTable = $fileTable." AS File"; //need an alias for the table if it's standalone.
                 break;
-            case MediaType::PLAYLIST:
+            case 2:
                 $fromTable = $plTable." AS Playlist"; //need an alias for the table if it's standalone.
                 break;
-            case MediaType::BLOCK:
+            case 3:
                 $fromTable = $blTable." AS Block"; //need an alias for the table if it's standalone.
                 break;
-            case MediaType::WEBSTREAM:
+            case 4:
                 $fromTable = $streamTable." AS StreamTable"; //need an alias for the table if it's standalone.
                 break;
             default:

@@ -37,12 +37,89 @@ $(document).ready(function () {
                 self.recentUploadsTable.fnDraw(); //Only works because we're using bServerSide
                 //In DataTables 1.10 and greater, we can use .fnAjaxReload()
             });
-
-            this.on("queuecomplete", function() {
+            this.on("complete", function() {
                 uploadProgress = false;
             });
         }
     };
+
+    /*
+     var uploader = new plupload.Uploader({
+     runtimes: 'html5, flash, html4',
+     browse_button: 'pickfiles',
+     container: $("#container"),
+     url :  baseUrl+'rest/media',
+     filters : [
+     {title: "Audio Files", extensions: "ogg,mp3,oga,flac,wav,m4a,mp4,opus,aac,oga,mp1,mp2,wma,au"}
+     ],
+     multipart_params : {
+     "csrf_token" : $("#csrf").attr('value')
+     },
+
+     init: {
+     PostInit: function() {
+     document.getElementById('filelist').innerHTML = '';
+
+     document.getElementById('uploadfiles').onclick = function() {
+     uploader.start();
+     return false;
+     };
+     },
+
+     FilesAdded: function(up, files) {
+     plupload.each(files, function(file) {
+     document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+     });
+     },
+
+     UploadProgress: function(up, file) {
+     document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+     },
+
+     Error: function(up, err) {
+     document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+     }
+     }
+     });
+
+     uploader.init();
+     */
+
+
+    /*
+     $("#plupload_files").pluploadQueue({
+     // General settings
+     runtimes        : 'gears, html5, html4',
+     url             :  baseUrl+'rest/media',
+     //chunk_size      : '5mb', //Disabling chunking since we're using the File Upload REST API now
+     unique_names    : 'true',
+     multiple_queues : 'true',
+     filters : [
+     {title: "Audio Files", extensions: "ogg,mp3,oga,flac,wav,m4a,mp4,opus,aac,oga,mp1,mp2,wma,au"}
+     ],
+     multipart_params : {
+     "csrf_token" : $("#csrf").attr('value'),
+     }
+     });
+
+     uploader = $("#plupload_files").pluploadQueue();
+
+     uploader.bind('FileUploaded', function(up, file, json)
+     {
+     //Refresh the upload table:
+     self.recentUploadsTable.fnDraw(); //Only works because we're using bServerSide
+     //In DataTables 1.10 and greater, we can use .fnAjaxReload()
+     });
+
+     var uploadProgress = false;
+
+     uploader.bind('QueueChanged', function(){
+     uploadProgress = (uploader.files.length > 0);
+     });
+
+     uploader.bind('UploadComplete', function(){
+     uploadProgress = false;
+     });*/
 
     $(window).bind('beforeunload', function () {
         if (uploadProgress) {
@@ -96,11 +173,11 @@ $(document).ready(function () {
     });
 
     self.setupRecentUploadsTable = function () {
-        return $("#recent_uploads_table").dataTable({
+        recentUploadsTable = $("#recent_uploads_table").dataTable({
             "bJQueryUI": true,
             "bProcessing": false,
             "bServerSide": true,
-            "sAjaxSource": '/plupload/recent-uploads/format/json',
+            "sAjaxSource": '/Plupload/recent-uploads/format/json',
             "sAjaxDataProp": 'files',
             "bSearchable": false,
             "bInfo": true,
@@ -144,13 +221,11 @@ $(document).ready(function () {
                                 areAnyFileImportsPending = true;
                             }
                         }
-
                         if (areAnyFileImportsPending) {
                             //alert("pending uploads, starting refresh on timer");
                             self.startRefreshingRecentUploads();
-                        } else if (self.isRecentUploadsRefreshTimerActive) {
+                        } else {
                             self.stopRefreshingRecentUploads();
-                            self.recentUploadsTable.fnDraw();
                         }
 
                         // Update usability hint - in common.js
@@ -164,7 +239,7 @@ $(document).ready(function () {
                         var sw = $(this)[0].scrollWidth, iw = $(this).innerWidth();
                         if (sw > iw) {
                             $(this).stop().animate({
-                                textIndent: "-" + (sw - iw) + "px"
+                                textIndent: "-" + (sw + 2 - iw) + "px"
                             }, sw * 8);
                         }
                     },
@@ -176,41 +251,37 @@ $(document).ready(function () {
                 );
             }
         });
+
+        return recentUploadsTable;
     };
 
-    self.isRecentUploadsRefreshTimerActive = false;
-
     self.startRefreshingRecentUploads = function () {
-        if (!self.isRecentUploadsRefreshTimerActive) { //Prevent multiple timers from running
-            self.recentUploadsRefreshTimer = setInterval(function() {
-                self.recentUploadsTable.fnDraw();
-            }, 3000);
-            self.isRecentUploadsRefreshTimerActive = true;
+        if (self.isRecentUploadsRefreshTimerActive()) { //Prevent multiple timers from running
+            return;
         }
+        self.recentUploadsRefreshTimer = setInterval("self.recentUploadsTable.fnDraw()", 3000);
+    };
+
+    self.isRecentUploadsRefreshTimerActive = function () {
+        return (self.recentUploadsRefreshTimer != null);
     };
 
     self.stopRefreshingRecentUploads = function () {
         clearInterval(self.recentUploadsRefreshTimer);
-        self.isRecentUploadsRefreshTimerActive = false;
+        self.recentUploadsRefreshTimer = null;
     };
 
     $("#upload_status_all").click(function () {
-        if (self.uploadFilter !== "all") {
-            self.uploadFilter = "all";
-            self.recentUploadsTable.fnPageChange(0).fnDraw();
-        }
+        self.uploadFilter = "all";
+        self.recentUploadsTable.fnPageChange(0).fnDraw();
     });
     $("#upload_status_pending").click(function () {
-        if (self.uploadFilter !== "pending") {
-            self.uploadFilter = "pending";
-            self.recentUploadsTable.fnPageChange(0).fnDraw();
-        }
+        self.uploadFilter = "pending";
+        self.recentUploadsTable.fnPageChange(0).fnDraw();
     });
     $("#upload_status_failed").click(function () {
-        if (self.uploadFilter !== "failed") {
-            self.uploadFilter = "failed";
-            self.recentUploadsTable.fnPageChange(0).fnDraw();
-        }
+        self.uploadFilter = "failed";
+        self.recentUploadsTable.fnPageChange(0).fnDraw();
     });
 
     //Create the recent uploads table.
