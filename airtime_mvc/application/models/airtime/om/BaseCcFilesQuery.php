@@ -77,6 +77,7 @@
  * @method CcFilesQuery orderByDbIsScheduled($order = Criteria::ASC) Order by the is_scheduled column
  * @method CcFilesQuery orderByDbIsPlaylist($order = Criteria::ASC) Order by the is_playlist column
  * @method CcFilesQuery orderByDbFilesize($order = Criteria::ASC) Order by the filesize column
+ * @method CcFilesQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  *
  * @method CcFilesQuery groupByDbId() Group by the id column
  * @method CcFilesQuery groupByDbName() Group by the name column
@@ -149,6 +150,7 @@
  * @method CcFilesQuery groupByDbIsScheduled() Group by the is_scheduled column
  * @method CcFilesQuery groupByDbIsPlaylist() Group by the is_playlist column
  * @method CcFilesQuery groupByDbFilesize() Group by the filesize column
+ * @method CcFilesQuery groupByDbDescription() Group by the description column
  *
  * @method CcFilesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method CcFilesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -193,6 +195,10 @@
  * @method CcFilesQuery leftJoinThirdPartyTrackReferences($relationAlias = null) Adds a LEFT JOIN clause to the query using the ThirdPartyTrackReferences relation
  * @method CcFilesQuery rightJoinThirdPartyTrackReferences($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ThirdPartyTrackReferences relation
  * @method CcFilesQuery innerJoinThirdPartyTrackReferences($relationAlias = null) Adds a INNER JOIN clause to the query using the ThirdPartyTrackReferences relation
+ *
+ * @method CcFilesQuery leftJoinPodcastContents($relationAlias = null) Adds a LEFT JOIN clause to the query using the PodcastContents relation
+ * @method CcFilesQuery rightJoinPodcastContents($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PodcastContents relation
+ * @method CcFilesQuery innerJoinPodcastContents($relationAlias = null) Adds a INNER JOIN clause to the query using the PodcastContents relation
  *
  * @method CcFiles findOne(PropelPDO $con = null) Return the first CcFiles matching the query
  * @method CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
@@ -267,6 +273,7 @@
  * @method CcFiles findOneByDbIsScheduled(boolean $is_scheduled) Return the first CcFiles filtered by the is_scheduled column
  * @method CcFiles findOneByDbIsPlaylist(boolean $is_playlist) Return the first CcFiles filtered by the is_playlist column
  * @method CcFiles findOneByDbFilesize(int $filesize) Return the first CcFiles filtered by the filesize column
+ * @method CcFiles findOneByDbDescription(string $description) Return the first CcFiles filtered by the description column
  *
  * @method array findByDbId(int $id) Return CcFiles objects filtered by the id column
  * @method array findByDbName(string $name) Return CcFiles objects filtered by the name column
@@ -339,6 +346,7 @@
  * @method array findByDbIsScheduled(boolean $is_scheduled) Return CcFiles objects filtered by the is_scheduled column
  * @method array findByDbIsPlaylist(boolean $is_playlist) Return CcFiles objects filtered by the is_playlist column
  * @method array findByDbFilesize(int $filesize) Return CcFiles objects filtered by the filesize column
+ * @method array findByDbDescription(string $description) Return CcFiles objects filtered by the description column
  *
  * @package    propel.generator.airtime.om
  */
@@ -446,7 +454,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize" FROM "cc_files" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "name", "mime", "ftype", "directory", "filepath", "import_status", "currentlyaccessing", "editedby", "mtime", "utime", "lptime", "md5", "track_title", "artist_name", "bit_rate", "sample_rate", "format", "length", "album_title", "genre", "comments", "year", "track_number", "channels", "url", "bpm", "rating", "encoded_by", "disc_number", "mood", "label", "composer", "encoder", "checksum", "lyrics", "orchestra", "conductor", "lyricist", "original_lyricist", "radio_station_name", "info_url", "artist_url", "audio_source_url", "radio_station_url", "buy_this_url", "isrc_number", "catalog_number", "original_artist", "copyright", "report_datetime", "report_location", "report_organization", "subject", "contributor", "language", "file_exists", "soundcloud_id", "soundcloud_error_code", "soundcloud_error_msg", "soundcloud_link_to_file", "soundcloud_upload_time", "replay_gain", "owner_id", "cuein", "cueout", "silan_check", "hidden", "is_scheduled", "is_playlist", "filesize", "description" FROM "cc_files" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -2842,6 +2850,35 @@ abstract class BaseCcFilesQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbDescription('fooValue');   // WHERE description = 'fooValue'
+     * $query->filterByDbDescription('%fooValue%'); // WHERE description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function filterByDbDescription($dbDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbDescription)) {
+                $dbDescription = str_replace('*', '%', $dbDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(CcFilesPeer::DESCRIPTION, $dbDescription, $comparison);
+    }
+
+    /**
      * Filter the query by a related CcSubjs object
      *
      * @param   CcSubjs|PropelObjectCollection $ccSubjs The related object(s) to use as filter
@@ -3585,6 +3622,80 @@ abstract class BaseCcFilesQuery extends ModelCriteria
         return $this
             ->joinThirdPartyTrackReferences($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'ThirdPartyTrackReferences', 'ThirdPartyTrackReferencesQuery');
+    }
+
+    /**
+     * Filter the query by a related PodcastContents object
+     *
+     * @param   PodcastContents|PropelObjectCollection $podcastContents  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcFilesQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPodcastContents($podcastContents, $comparison = null)
+    {
+        if ($podcastContents instanceof PodcastContents) {
+            return $this
+                ->addUsingAlias(CcFilesPeer::ID, $podcastContents->getDbFileId(), $comparison);
+        } elseif ($podcastContents instanceof PropelObjectCollection) {
+            return $this
+                ->usePodcastContentsQuery()
+                ->filterByPrimaryKeys($podcastContents->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPodcastContents() only accepts arguments of type PodcastContents or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the PodcastContents relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcFilesQuery The current query, for fluid interface
+     */
+    public function joinPodcastContents($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('PodcastContents');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'PodcastContents');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the PodcastContents relation PodcastContents object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   PodcastContentsQuery A secondary query class using the current class as primary query
+     */
+    public function usePodcastContentsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinPodcastContents($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PodcastContents', 'PodcastContentsQuery');
     }
 
     /**

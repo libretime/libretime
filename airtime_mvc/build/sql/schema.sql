@@ -95,6 +95,7 @@ CREATE TABLE "cc_files"
     "is_scheduled" BOOLEAN DEFAULT 'f',
     "is_playlist" BOOLEAN DEFAULT 'f',
     "filesize" INTEGER DEFAULT 0 NOT NULL,
+    "description" VARCHAR(512),
     PRIMARY KEY ("id")
 );
 
@@ -706,6 +707,39 @@ CREATE TABLE "celery_tasks"
     CONSTRAINT "id_unique" UNIQUE ("id")
 );
 
+-----------------------------------------------------------------------
+-- podcast
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "podcast" CASCADE;
+
+CREATE TABLE "podcast"
+(
+    "id" serial NOT NULL,
+    "url" VARCHAR(256) NOT NULL,
+    "title" VARCHAR(256) NOT NULL,
+    "creator" VARCHAR(256),
+    "description" VARCHAR(512),
+    "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
+    "owner" INTEGER,
+    PRIMARY KEY ("id")
+);
+
+-----------------------------------------------------------------------
+-- podcast_contents
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "podcast_contents" CASCADE;
+
+CREATE TABLE "podcast_contents"
+(
+    "id" serial NOT NULL,
+    "file_id" INTEGER NOT NULL,
+    "podcast_id" INTEGER NOT NULL,
+    "publication_date" TIMESTAMP NOT NULL,
+    PRIMARY KEY ("id")
+);
+
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
@@ -876,4 +910,19 @@ ALTER TABLE "third_party_track_references" ADD CONSTRAINT "track_reference_fkey"
 ALTER TABLE "celery_tasks" ADD CONSTRAINT "celery_service_fkey"
     FOREIGN KEY ("track_reference")
     REFERENCES "third_party_track_references" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "podcast" ADD CONSTRAINT "podcast_owner_fkey"
+    FOREIGN KEY ("owner")
+    REFERENCES "cc_subjs" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "podcast_contents" ADD CONSTRAINT "podcast_contents_cc_files_fkey"
+    FOREIGN KEY ("file_id")
+    REFERENCES "cc_files" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "podcast_contents" ADD CONSTRAINT "podcast_contents_podcast_id_fkey"
+    FOREIGN KEY ("podcast_id")
+    REFERENCES "podcast" ("id")
     ON DELETE CASCADE;

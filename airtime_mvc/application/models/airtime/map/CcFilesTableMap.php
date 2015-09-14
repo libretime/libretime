@@ -110,6 +110,7 @@ class CcFilesTableMap extends TableMap
         $this->addColumn('is_scheduled', 'DbIsScheduled', 'BOOLEAN', false, null, false);
         $this->addColumn('is_playlist', 'DbIsPlaylist', 'BOOLEAN', false, null, false);
         $this->addColumn('filesize', 'DbFilesize', 'INTEGER', true, null, 0);
+        $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, null);
         // validators
     } // initialize()
 
@@ -128,6 +129,7 @@ class CcFilesTableMap extends TableMap
         $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcSchedules');
         $this->addRelation('CcPlayoutHistory', 'CcPlayoutHistory', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcPlayoutHistorys');
         $this->addRelation('ThirdPartyTrackReferences', 'ThirdPartyTrackReferences', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'ThirdPartyTrackReferencess');
+        $this->addRelation('PodcastContents', 'PodcastContents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'PodcastContentss');
     } // buildRelations()
 
 } // CcFilesTableMap

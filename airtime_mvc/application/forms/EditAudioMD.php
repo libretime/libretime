@@ -48,6 +48,16 @@ class Application_Form_EditAudioMD extends Zend_Form
             ));
         $this->addElement($album_title);
 
+        // Description field
+        $description = new Zend_Form_Element_Text('description');
+        $description->class = 'input_text';
+        $description->setLabel(_('Description:'))
+            ->setFilters(array('StringTrim'))
+            ->setValidators(array(
+                new Zend_Validate_StringLength(array('max' => 512))
+            ));
+        $this->addElement($description);
+
         // Add track number field
         $track_number = new Zend_Form_Element('track_number');
         $track_number->class = 'input_text';
