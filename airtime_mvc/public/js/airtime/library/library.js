@@ -58,6 +58,67 @@ var AIRTIME = (function(AIRTIME) {
     }
     mod = AIRTIME.library;
 
+    /*  ############################################
+                       CONFIGURATION
+        ############################################ */
+
+    mod.MediaTypeEnum = Object.freeze({
+        DEFAULT: 1,
+        FILE: 1,
+        PLAYLIST: 2,
+        BLOCK: 3,
+        WEBSTREAM: 4,
+        PODCAST: 5
+    });
+
+    // TODO: once the new manual pages are added, change links!
+    mod.placeholder = function(mediaType) {
+        switch (mediaType) {
+            // TODO: remove duplication in a nice way?
+            case MediaTypeEnum.FILE:
+                return {
+                    "media": "tracks",
+                    "icon": "icon-music",
+                    "subtext": "Click 'Upload' to add some now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/"
+                };
+            case MediaTypeEnum.PLAYLIST:
+                return {
+                    "media": "playlists",
+                    "icon": "icon-list",
+                    "subtext": "Click 'New' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            case MediaTypeEnum.BLOCK:
+                return {
+                    "media": "smart blocks",
+                    "icon": "icon-time",
+                    "subtext": "Click 'New' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            case MediaTypeEnum.WEBSTREAM:
+                return {
+                    "media": "webstreams",
+                    "icon": "icon-random",
+                    "subtext": "Click 'New' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            case MediaTypeEnum.PODCAST:
+                return {
+                    "media": "podcasts",
+                    "icon": "icon-headphones",
+                    "subtext": "Click 'Add' to create one now.",
+                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                };
+            default:
+                break;
+        }
+    };
+
+    /*  ############################################
+                     END CONFIGURATION
+        ############################################ */
+
     mod.getChosenItemsLength = function(){
         var cItem,
             selected,
@@ -198,10 +259,10 @@ var AIRTIME = (function(AIRTIME) {
     };
 
     mod.checkNewButton = function() {
-        var selected = $(".media_type_selector.selected").attr("data-selection-id"),
+        var selected = $(".media_type_selector.selected").data("selection-id"),
             check = false;
 
-        if (selected != 1) {
+        if (selected != AIRTIME.library.MediaTypeEnum.FILE) {
             check = true;
         }
 
@@ -454,7 +515,262 @@ var AIRTIME = (function(AIRTIME) {
 
         var colReorderMap = new Array();
 
-        $libTable = $libContent.find("table");
+        $libTable = $("#library_display");
+
+        /*  ############################################
+                            DATATABLES
+            ############################################ */
+
+        mod.libraryDataTable = $libTable.dataTable({
+
+            // put hidden columns at the top to insure they can never be visible
+            // on the table through column reordering.
+
+            //IMPORTANT: WHEN ADDING A NEW COLUMN PLEASE CONSULT WITH THE WIKI
+            // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
+            "aoColumns": [
+                /* ftype */           {"sTitle": "", "mDataProp": "ftype", "bSearchable": false, "bVisible": false},
+                /* Checkbox */        {"sTitle": "", "mDataProp": "checkbox", "bSortable": false, "bSearchable": false, "sWidth": "16px", "sClass": "library_checkbox"},
+                /* Type */            {"sTitle": "", "mDataProp": "image", "bSortable": false, "bSearchable": false, "sWidth": "16px", "sClass": "library_type", "iDataSort": 0},
+                /* Is Scheduled */    {"sTitle": $.i18n._("Scheduled"), "mDataProp": "is_scheduled", "bVisible": false, "bSearchable": false, "sWidth": "90px", "sClass": "library_is_scheduled"},
+                ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
+                /* Title */           {"sTitle": $.i18n._("Title"), "mDataProp": "track_title", "sClass": "library_title", "sWidth": "170px"},
+                /* Creator */         {"sTitle": $.i18n._("Creator"), "mDataProp": "artist_name", "sClass": "library_creator", "sWidth": "160px"},
+                /* Album */           {"sTitle": $.i18n._("Album"), "mDataProp": "album_title", "sClass": "library_album", "sWidth": "150px"},
+                /* Bit Rate */        {"sTitle": $.i18n._("Bit Rate"), "mDataProp": "bit_rate", "bVisible": false, "sClass": "library_bitrate", "sWidth": "80px"},
+                /* BPM */             {"sTitle": $.i18n._("BPM"), "mDataProp": "bpm", "bVisible": false, "sClass": "library_bpm", "sWidth": "50px"},
+                /* Composer */        {"sTitle": $.i18n._("Composer"), "mDataProp": "composer", "bVisible": false, "sClass": "library_composer", "sWidth": "150px"},
+                /* Conductor */       {"sTitle": $.i18n._("Conductor"), "mDataProp": "conductor", "bVisible": false, "sClass": "library_conductor", "sWidth": "125px"},
+                /* Copyright */       {"sTitle": $.i18n._("Copyright"), "mDataProp": "copyright", "bVisible": false, "sClass": "library_copyright", "sWidth": "125px"},
+                /* Cue In */          {"sTitle": $.i18n._("Cue In"), "mDataProp": "cuein", "bVisible": false, "sClass": "library_length", "sWidth": "80px"},
+                /* Cue Out */         {"sTitle": $.i18n._("Cue Out"), "mDataProp": "cueout", "bVisible": false, "sClass": "library_length", "sWidth": "80px"},
+                /* Encoded */         {"sTitle": $.i18n._("Encoded By"), "mDataProp": "encoded_by", "bVisible": false, "sClass": "library_encoded", "sWidth": "150px"},
+                /* Genre */           {"sTitle": $.i18n._("Genre"), "mDataProp": "genre", "bVisible": false, "sClass": "library_genre", "sWidth": "100px"},
+                /* ISRC Number */     {"sTitle": $.i18n._("ISRC"), "mDataProp": "isrc_number", "bVisible": false, "sClass": "library_isrc", "sWidth": "150px"},
+                /* Label */           {"sTitle": $.i18n._("Label"), "mDataProp": "label", "bVisible": false, "sClass": "library_label", "sWidth": "125px"},
+                /* Language */        {"sTitle": $.i18n._("Language"), "mDataProp": "language", "bVisible": false, "sClass": "library_language", "sWidth": "125px"},
+                /* Last Modified */   {"sTitle": $.i18n._("Last Modified"), "mDataProp": "mtime", "bVisible": false, "sClass": "library_modified_time", "sWidth": "155px"},
+                /* Last Played */     {"sTitle": $.i18n._("Last Played"), "mDataProp": "lptime", "bVisible": false, "sClass": "library_modified_time", "sWidth": "155px"},
+                /* Length */          {"sTitle": $.i18n._("Length"), "mDataProp": "length", "sClass": "library_length", "sWidth": "80px"},
+                /* Mime */            {"sTitle": $.i18n._("Mime"), "mDataProp": "mime", "bVisible": false, "sClass": "library_mime", "sWidth": "80px"},
+                /* Mood */            {"sTitle": $.i18n._("Mood"), "mDataProp": "mood", "bVisible": false, "sClass": "library_mood", "sWidth": "70px"},
+                /* Owner */           {"sTitle": $.i18n._("Owner"), "mDataProp": "owner_id", "bVisible": false, "sClass": "library_language", "sWidth": "125px"},
+                /* Replay Gain */     {"sTitle": $.i18n._("Replay Gain"), "mDataProp": "replay_gain", "bVisible": false, "sClass": "library_replay_gain", "sWidth": "125px"},
+                /* Sample Rate */     {"sTitle": $.i18n._("Sample Rate"), "mDataProp": "sample_rate", "bVisible": false, "sClass": "library_sr", "sWidth": "125px"},
+                /* Track Number */    {"sTitle": $.i18n._("Track Number"), "mDataProp": "track_number", "bVisible": false, "sClass": "library_track", "sWidth": "125px"},
+                /* Upload Time */     {"sTitle": $.i18n._("Uploaded"), "mDataProp": "utime", "bVisible": false, "sClass": "library_upload_time", "sWidth": "155px"},
+                /* Website */         {"sTitle": $.i18n._("Website"), "mDataProp": "info_url", "bVisible": false, "sClass": "library_url", "sWidth": "150px"},
+                /* Year */            {"sTitle": $.i18n._("Year"), "mDataProp": "year", "bVisible": false, "sClass": "library_year", "sWidth": "60px"},
+                /* Context Menu */    {"sTitle": "", "mDataProp": "options", "bSortable": false, "bSearchable": false, "sWidth": "20px", "sClass": "library_actions"}
+            ],
+
+            "bProcessing": true,
+            "bServerSide": true,
+
+            "aLengthMenu": [25, 50, 100],
+
+            "bStateSave": true,
+            "fnStateSaveParams": function (oSettings, oData) {
+                // remove oData components we don't want to save.
+                delete oData.oSearch;
+                delete oData.aoSearchCols;
+            },
+            "fnStateSave": function (oSettings, oData) {
+                localStorage.setItem('datatables-library', JSON.stringify(oData));
+
+                // Sadly, this is necessary because we need to unscramble the colReorder map on the backend
+                $.ajax({
+                    url: baseUrl + "usersettings/set-library-datatable",
+                    type: "POST",
+                    data: {settings: oData, format: "json"},
+                    dataType: "json"
+                });
+
+                colReorderMap = oData.ColReorder;
+            },
+            "fnStateLoad": function fnLibStateLoad(oSettings) {
+                var settings = JSON.parse(localStorage.getItem('datatables-library'));
+                // Hacky; always set the visibility of the last column (actions buttons) to true
+                if (settings && settings.abVisCols) settings.abVisCols[settings.abVisCols.length - 1] = true;
+
+                try {
+                    return settings;
+                } catch (e) {
+                    return null;
+                }
+            },
+            "fnStateLoadParams": function (oSettings, oData) {
+                var i,
+                    length,
+                    a = oData.abVisCols;
+
+                if (a) {
+                    // putting serialized data back into the correct js type to make
+                    // sure everything works properly.
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = (a[i] === "true");
+                        }
+                    }
+                }
+
+                a = oData.ColReorder;
+                if (a) {
+                    for (i = 0, length = a.length; i < length; i++) {
+                        if (typeof(a[i]) === "string") {
+                            a[i] = parseInt(a[i], 10);
+                        }
+                    }
+                }
+
+                oData.iEnd = parseInt(oData.iEnd, 10);
+                oData.iLength = parseInt(oData.iLength, 10);
+                oData.iStart = parseInt(oData.iStart, 10);
+                oData.iCreate = parseInt(oData.iCreate, 10);
+            },
+
+            "sAjaxSource": baseUrl + "Library/contents-feed",
+            "sAjaxDataProp": "files",
+
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                /*
+                 * The real validation check is done in
+                 * dataTables.columnFilter.js We also need to check it here
+                 * because datatable is redrawn everytime an action is performed
+                 * in the Library page. In order for datatable to redraw the
+                 * advanced search fields MUST all be valid.
+                 */
+                var advSearchFields = $("div#advanced_search").children(':visible');
+                var advSearchValid = validateAdvancedSearch(advSearchFields);
+                var type;
+                aoData.push({name: "format", value: "json"});
+                aoData.push({name: "advSearch", value: advSearchValid});
+
+                // push whether to search files/playlists or all.
+                type = $(".media_type_selector.selected").data("selection-id");
+                type = (type === undefined) ? AIRTIME.library.MediaTypeEnum.DEFAULT : type;
+                aoData.push({name: "type", value: type});
+
+                //getUsabilityHint();
+
+                $.ajax({
+                    "dataType": 'json',
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback,
+                    "error": handleAjaxError
+                }).done(function (data) {
+                    if (data.iTotalRecords > data.iTotalDisplayRecords) {
+                        $('#filter_message').text(
+                            $.i18n._("Filtering out ") + (data.iTotalRecords - data.iTotalDisplayRecords)
+                            + $.i18n._(" of ") + data.iTotalRecords
+                            + $.i18n._(" records")
+                        );
+                        $('#library_empty').hide();
+                        $('#library_display').find('tr:has(td.dataTables_empty)').show();
+                    } else {
+                        $('#filter_message').text("");
+                    }
+                    $('#library_content').find('.dataTables_filter input[type="text"]')
+                        .css('padding-right', $('#advanced-options').find('button').outerWidth());
+                });
+            },
+            "fnRowCallback": AIRTIME.library.fnRowCallback,
+            "fnCreatedRow": function (nRow, aData, iDataIndex) {
+                // add checkbox
+                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_" + aData.id + "'>");
+
+                $(nRow).find('td.library_actions')
+                    .text("...")
+                    .on('click', function (e) {
+                        $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
+                    }).html("<div class='library_actions_btn'>...</div>");
+
+                // add audio preview image/button
+                if (aData.ftype === "audioclip") {
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Track preview") + '" src="' + baseUrl + 'css/images/icon_audioclip.png">');
+                } else if (aData.ftype === "playlist") {
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Playlist preview") + '" src="' + baseUrl + 'css/images/icon_playlist.png">');
+                } else if (aData.ftype === "block") {
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Smart Block") + '" src="' + baseUrl + 'css/images/icon_smart-block.png">');
+                } else if (aData.ftype === "stream") {
+                    $(nRow).find('td.library_type').html('<img title="' + $.i18n._("Webstream preview") + '" src="' + baseUrl + 'css/images/icon_webstream.png">');
+                }
+
+                if (aData.is_scheduled) {
+                    $(nRow).find("td.library_is_scheduled").html('<span class="small-icon is_scheduled"></span>');
+                } else if (!aData.is_scheduled) {
+                    $(nRow).find("td.library_is_scheduled").html('');
+                }
+                if (aData.is_playlist) {
+                    $(nRow).find("td.library_is_playlist").html('<span class="small-icon is_playlist"></span>');
+                } else if (!aData.is_playlist) {
+                    $(nRow).find("td.library_is_playlist").html('');
+                }
+
+                // add the play function to the library_type td
+                $(nRow).find('td.library_type').click(function () {
+                    if (aData.ftype === 'playlist' && aData.length !== '0.0') {
+                        open_playlist_preview(aData.audioFile, 0);
+                    } else if (aData.ftype === 'audioclip') {
+                        if (isAudioSupported(aData.mime)) {
+                            open_audio_preview(aData.ftype, aData.id);
+                        }
+                    } else if (aData.ftype == 'stream') {
+                        if (isAudioSupported(aData.mime)) {
+                            open_audio_preview(aData.ftype, aData.id);
+                        }
+                    } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
+                        open_block_preview(aData.audioFile, 0);
+                    }
+                    return false;
+                });
+            },
+            // remove any selected nodes before the draw.
+            "fnPreDrawCallback": function (oSettings) {
+
+                // make sure any dragging helpers are removed or else they'll be
+                // stranded on the screen.
+                $("#draggingContainer").remove();
+            },
+            "fnDrawCallback": AIRTIME.library.fnDrawCallback,
+
+            "aaSorting": [[5, 'asc']],
+            "sPaginationType": "full_numbers",
+            "bJQueryUI": true,
+            "bAutoWidth": false,
+            "oLanguage": getLibraryDatatableStrings(),
+
+            // z = ColResize, R = ColReorder, C = ColVis
+            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
+
+            "oColVis": {
+                "sAlign": "right",
+                "aiExclude": [0, 1, 2, 31],
+                "sSize": "css",
+                "fnStateChange": setFilterElement,
+                "buttonText": $.i18n._("Columns"),
+                "iOverlayFade": 0
+            },
+
+            "oColReorder": {
+                "iFixedColumnsRight": 1,
+                "iFixedColumns": 3
+            },
+
+            "bScrollCollapse": false
+
+        });
+
+        /* TODO: implement podcast datatable
+         * mod.podcastDataTable = $("#podcast_table").dataTable({});
+         */
+        mod.podcastDataTable = mod.libraryDataTable;
+
+        /*  ############################################
+                          END DATATABLES
+            ############################################ */
 
         function getTableHeight() {
             return $libContent.height() - 175;
@@ -526,8 +842,8 @@ var AIRTIME = (function(AIRTIME) {
         function getLibraryDatatableStrings() {
             //Set up the datatables string translation table with different strings depending on
             //whether you're viewing files, playlists, smart blocks, etc.
-            var type = parseInt($(".media_type_selector.selected").attr("data-selection-id"));
-            type = (type === undefined) ? 1 : type;
+            var type = parseInt($(".media_type_selector.selected").data("selection-id"));
+            type = (type === undefined) ? AIRTIME.library.MediaTypeEnum.DEFAULT : type;
 
             //FIXME: The code that calls this function doesn't work as intended because you can't
             //       change the oLanguage property of a datatable dynamically. :(
@@ -570,255 +886,19 @@ var AIRTIME = (function(AIRTIME) {
             if (r.status === 403) {
                 // Hide the processing div
                 $("#library_display_wrapper").find(".dt-process-rel").hide();
-                $.getJSON( "ajax/library_placeholders.json", function( data ) {
-                    $('#library_empty_text').text($.i18n._(data.unauthorized));
-                })  ;
+                $('#library_empty_text').text($.i18n._("You don't have permission to view the library."));
 
                 $('#library_empty').show();
             }
         }
 
-        oTable = $libTable.dataTable( {
-
-            // put hidden columns at the top to insure they can never be visible
-            // on the table through column reordering.
-
-            //IMPORTANT: WHEN ADDING A NEW COLUMN PLEASE CONSULT WITH THE WIKI
-            // https://wiki.sourcefabric.org/display/CC/Adding+a+new+library+datatable+column
-            "aoColumns": [
-                /* ftype */           { "sTitle" : ""                             , "mDataProp" : "ftype"        , "bSearchable" : false                 , "bVisible"    : false                   },
-                /* Checkbox */        { "sTitle" : ""                             , "mDataProp" : "checkbox"     , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass" : "library_checkbox" },
-                /* Type */            { "sTitle" : ""                             , "mDataProp" : "image"        , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"    , "sClass" : "library_type" , "iDataSort" : 0 },
-                /* Is Scheduled */    { "sTitle" : $.i18n._("Scheduled")          , "mDataProp" : "is_scheduled" , "bVisible"    : false                 , "bSearchable" : false                   , "sWidth" : "90px"    , "sClass" : "library_is_scheduled" },
-                ///* Is Playlist */     { "sTitle" : $.i18n._("Playlist / Block")   , "mDataProp" : "is_playlist"  , "bSearchable" : false                 , "sWidth"      : "110px"                  , "sClass" : "library_is_playlist"}  ,
-                /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 },
-                /* Creator */         { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 },
-                /* Album */           { "sTitle" : $.i18n._("Album")              , "mDataProp" : "album_title"  , "sClass"      : "library_album"       , "sWidth"      : "150px"                 },
-                /* Bit Rate */        { "sTitle" : $.i18n._("Bit Rate")           , "mDataProp" : "bit_rate"     , "bVisible"    : false                 , "sClass"      : "library_bitrate"       , "sWidth" : "80px"         },
-                /* BPM */             { "sTitle" : $.i18n._("BPM")                , "mDataProp" : "bpm"          , "bVisible"    : false                 , "sClass"      : "library_bpm"           , "sWidth" : "50px"         },
-                /* Composer */        { "sTitle" : $.i18n._("Composer")           , "mDataProp" : "composer"     , "bVisible"    : false                 , "sClass"      : "library_composer"      , "sWidth" : "150px"        },
-                /* Conductor */       { "sTitle" : $.i18n._("Conductor")          , "mDataProp" : "conductor"    , "bVisible"    : false                 , "sClass"      : "library_conductor"     , "sWidth" : "125px"        },
-                /* Copyright */       { "sTitle" : $.i18n._("Copyright")          , "mDataProp" : "copyright"    , "bVisible"    : false                 , "sClass"      : "library_copyright"     , "sWidth" : "125px"        },
-                /* Cue In */          { "sTitle" : $.i18n._("Cue In")             , "mDataProp" : "cuein"        , "bVisible"    : false                 , "sClass"      : "library_length"        , "sWidth" : "80px"         },
-                /* Cue Out */         { "sTitle" : $.i18n._("Cue Out")            , "mDataProp" : "cueout"       , "bVisible"    : false                 , "sClass"      : "library_length"        , "sWidth" : "80px"         },
-                /* Encoded */         { "sTitle" : $.i18n._("Encoded By")         , "mDataProp" : "encoded_by"   , "bVisible"    : false                 , "sClass"      : "library_encoded"       , "sWidth" : "150px"        },
-                /* Genre */           { "sTitle" : $.i18n._("Genre")              , "mDataProp" : "genre"        , "bVisible"    : false                 , "sClass"      : "library_genre"         , "sWidth" : "100px"        },
-                /* ISRC Number */     { "sTitle" : $.i18n._("ISRC")               , "mDataProp" : "isrc_number"  , "bVisible"    : false                 , "sClass"      : "library_isrc"          , "sWidth" : "150px"        },
-                /* Label */           { "sTitle" : $.i18n._("Label")              , "mDataProp" : "label"        , "bVisible"    : false                 , "sClass"      : "library_label"         , "sWidth" : "125px"        },
-                /* Language */        { "sTitle" : $.i18n._("Language")           , "mDataProp" : "language"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
-                /* Last Modified */   { "sTitle" : $.i18n._("Last Modified")      , "mDataProp" : "mtime"        , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "155px"        },
-                /* Last Played */     { "sTitle" : $.i18n._("Last Played")        , "mDataProp" : "lptime"       , "bVisible"    : false                 , "sClass"      : "library_modified_time" , "sWidth" : "155px"        },
-                /* Length */          { "sTitle" : $.i18n._("Length")             , "mDataProp" : "length"       , "sClass"      : "library_length"      , "sWidth"      : "80px"                  },
-                /* Mime */            { "sTitle" : $.i18n._("Mime")               , "mDataProp" : "mime"         , "bVisible"    : false                 , "sClass"      : "library_mime"          , "sWidth" : "80px"         },
-                /* Mood */            { "sTitle" : $.i18n._("Mood")               , "mDataProp" : "mood"         , "bVisible"    : false                 , "sClass"      : "library_mood"          , "sWidth" : "70px"         },
-                /* Owner */           { "sTitle" : $.i18n._("Owner")              , "mDataProp" : "owner_id"     , "bVisible"    : false                 , "sClass"      : "library_language"      , "sWidth" : "125px"        },
-                /* Replay Gain */     { "sTitle" : $.i18n._("Replay Gain")        , "mDataProp" : "replay_gain"  , "bVisible"    : false                 , "sClass"      : "library_replay_gain"   , "sWidth" : "125px"        },
-                /* Sample Rate */     { "sTitle" : $.i18n._("Sample Rate")        , "mDataProp" : "sample_rate"  , "bVisible"    : false                 , "sClass"      : "library_sr"            , "sWidth" : "125px"        },
-                /* Track Number */    { "sTitle" : $.i18n._("Track Number")       , "mDataProp" : "track_number" , "bVisible"    : false                 , "sClass"      : "library_track"         , "sWidth" : "125px"        },
-                /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "bVisible"    : false                 , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },
-                /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
-                /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
-                /* Context Menu */    { "sTitle" : ""                             , "mDataProp" : "options"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "20px", "sClass" : "library_actions" }
-            ],
-
-            "bProcessing": true,
-            "bServerSide": true,
-
-            "aLengthMenu": [25, 50, 100],
-
-            "bStateSave": true,
-            "fnStateSaveParams": function (oSettings, oData) {
-                // remove oData components we don't want to save.
-                delete oData.oSearch;
-                delete oData.aoSearchCols;
-            },
-            "fnStateSave": function (oSettings, oData) {
-                localStorage.setItem('datatables-library', JSON.stringify(oData));
-
-                // Sadly, this is necessary because we need to unscramble the colReorder map on the backend
-                $.ajax({
-                    url: baseUrl + "usersettings/set-library-datatable",
-                    type: "POST",
-                    data: {settings: oData, format: "json"},
-                    dataType: "json"
-                });
-
-                colReorderMap = oData.ColReorder;
-            },
-            "fnStateLoad": function fnLibStateLoad(oSettings) {
-                var settings = JSON.parse(localStorage.getItem('datatables-library'));
-                // Hacky; always set the visibility of the last column (actions buttons) to true
-                if (settings && settings.abVisCols) settings.abVisCols[settings.abVisCols.length - 1] = true;
-
-                try {
-                    return settings;
-                } catch (e) {
-                    return null;
-                }
-            },
-            "fnStateLoadParams": function (oSettings, oData) {
-                var i,
-                    length,
-                    a = oData.abVisCols;
-
-                if (a) {
-                    // putting serialized data back into the correct js type to make
-                    // sure everything works properly.
-                    for (i = 0, length = a.length; i < length; i++) {
-                        if (typeof(a[i]) === "string") {
-                            a[i] = (a[i] === "true");
-                        }
-                    }
-                }
-
-                a = oData.ColReorder;
-                if (a) {
-                    for (i = 0, length = a.length; i < length; i++) {
-                        if (typeof(a[i]) === "string") {
-                            a[i] = parseInt(a[i], 10);
-                        }
-                    }
-                }
-
-                oData.iEnd = parseInt(oData.iEnd, 10);
-                oData.iLength = parseInt(oData.iLength, 10);
-                oData.iStart = parseInt(oData.iStart, 10);
-                oData.iCreate = parseInt(oData.iCreate, 10);
-            },
-
-            "sAjaxSource": baseUrl+"Library/contents-feed",
-            "sAjaxDataProp": "files",
-
-            "fnServerData": function ( sSource, aoData, fnCallback ) {
-                /*
-                 * The real validation check is done in
-                 * dataTables.columnFilter.js We also need to check it here
-                 * because datatable is redrawn everytime an action is performed
-                 * in the Library page. In order for datatable to redraw the
-                 * advanced search fields MUST all be valid.
-                 */
-                var advSearchFields = $("div#advanced_search").children(':visible');
-                var advSearchValid = validateAdvancedSearch(advSearchFields);
-                var type;
-                aoData.push( { name: "format", value: "json"} );
-                aoData.push( { name: "advSearch", value: advSearchValid} );
-
-                // push whether to search files/playlists or all.
-                type = $(".media_type_selector.selected").attr("data-selection-id");
-                type = (type === undefined) ? 1 : type;
-                aoData.push( { name: "type", value: type} );
-
-                //getUsabilityHint();
-
-                $.ajax({
-                    "dataType": 'json',
-                    "type": "POST",
-                    "url": sSource,
-                    "data": aoData,
-                    "success": fnCallback,
-                    "error": handleAjaxError
-                }).done(function(data) {
-                    if (data.iTotalRecords > data.iTotalDisplayRecords) {
-                        $('#filter_message').text(
-                            $.i18n._("Filtering out ") + (data.iTotalRecords - data.iTotalDisplayRecords)
-                            + $.i18n._(" of ") + data.iTotalRecords
-                            + $.i18n._(" records")
-                        );
-                        $('#library_empty').hide();
-                        $('#library_display').find('tr:has(td.dataTables_empty)').show();
-                    } else {
-                        $('#filter_message').text("");
-                    }
-                    $('#library_content').find('.dataTables_filter input[type="text"]')
-                        .css('padding-right', $('#advanced-options').find('button').outerWidth());
-                });
-            },
-            "fnRowCallback": AIRTIME.library.fnRowCallback,
-            "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                // add checkbox
-                $(nRow).find('td.library_checkbox').html("<input type='checkbox' name='cb_"+aData.id+"'>");
-
-                $(nRow).find('td.library_actions')
-                    .text("...")
-                    .on('click', function(e) {
-                        $(this).contextMenu({x: $(e.target).offset().left, y: $(e.target).offset().top})
-                    }).html("<div class='library_actions_btn'>...</div>");
-
-                // add audio preview image/button
-                if (aData.ftype === "audioclip") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Track preview")+'" src="'+baseUrl+'css/images/icon_audioclip.png">');
-                } else if (aData.ftype === "playlist") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Playlist preview")+'" src="'+baseUrl+'css/images/icon_playlist.png">');
-                } else if (aData.ftype === "block") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Smart Block")+'" src="'+baseUrl+'css/images/icon_smart-block.png">');
-                } else if (aData.ftype === "stream") {
-                    $(nRow).find('td.library_type').html('<img title="'+$.i18n._("Webstream preview")+'" src="'+baseUrl+'css/images/icon_webstream.png">');
-                }
-
-                if (aData.is_scheduled) {
-                    $(nRow).find("td.library_is_scheduled").html('<span class="small-icon is_scheduled"></span>');
-                } else if (!aData.is_scheduled) {
-                    $(nRow).find("td.library_is_scheduled").html('');
-                }
-                if (aData.is_playlist) {
-                    $(nRow).find("td.library_is_playlist").html('<span class="small-icon is_playlist"></span>');
-                } else if (!aData.is_playlist) {
-                    $(nRow).find("td.library_is_playlist").html('');
-                }
-
-                // add the play function to the library_type td
-                $(nRow).find('td.library_type').click(function(){
-                    if (aData.ftype === 'playlist' && aData.length !== '0.0'){
-                        open_playlist_preview(aData.audioFile, 0);
-                    } else if (aData.ftype === 'audioclip') {
-                        if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.id);
-                        }
-                    } else if (aData.ftype == 'stream') {
-                        if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.id);
-                        }
-                    } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
-                        open_block_preview(aData.audioFile, 0);
-                    }
-                    return false;
-                });
-            },
-            // remove any selected nodes before the draw.
-            "fnPreDrawCallback": function( oSettings ) {
-
-                // make sure any dragging helpers are removed or else they'll be
-                // stranded on the screen.
-                $("#draggingContainer").remove();
-            },
-            "fnDrawCallback": AIRTIME.library.fnDrawCallback,
-
-            "aaSorting": [[5, 'asc']],
-            "sPaginationType": "full_numbers",
-            "bJQueryUI": true,
-            "bAutoWidth": false,
-            "oLanguage": getLibraryDatatableStrings(),
-
-            // z = ColResize, R = ColReorder, C = ColVis
-            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
-
-            "oColVis": {
-                "sAlign": "right",
-                "aiExclude": [0, 1, 2, 31],
-                "sSize": "css",
-                "fnStateChange": setFilterElement,
-                "buttonText": $.i18n._("Columns"),
-                "iOverlayFade": 0
-            },
-
-            "oColReorder": {
-                "iFixedColumnsRight": 1,
-                "iFixedColumns": 3
-            },
-
-            "bScrollCollapse": false
-
-        });
+        var selected = $("a[href$='"+location.hash+"']");
+        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeEnum.PODCAST) {
+            $("#library_display_wrapper").hide();
+            oTable = mod.podcastDataTable.show();
+        } else {
+            oTable = mod.libraryDataTable;
+        }
 
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
