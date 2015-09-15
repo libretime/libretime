@@ -73,6 +73,13 @@ abstract class BasePodcast extends BaseObject implements Persistent
     protected $owner;
 
     /**
+     * The value for the type field.
+     * Note: this column has a database default value of: 1
+     * @var        int
+     */
+    protected $type;
+
+    /**
      * @var        CcSubjs
      */
     protected $aCcSubjs;
@@ -118,6 +125,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
     public function applyDefaultValues()
     {
         $this->auto_ingest = false;
+        $this->type = 1;
     }
 
     /**
@@ -205,6 +213,17 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
 
         return $this->owner;
+    }
+
+    /**
+     * Get the [type] column value.
+     *
+     * @return int
+     */
+    public function getDbType()
+    {
+
+        return $this->type;
     }
 
     /**
@@ -367,6 +386,27 @@ abstract class BasePodcast extends BaseObject implements Persistent
     } // setDbOwner()
 
     /**
+     * Set the value of [type] column.
+     *
+     * @param  int $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbType($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->type !== $v) {
+            $this->type = $v;
+            $this->modifiedColumns[] = PodcastPeer::TYPE;
+        }
+
+
+        return $this;
+    } // setDbType()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -377,6 +417,10 @@ abstract class BasePodcast extends BaseObject implements Persistent
     public function hasOnlyDefaultValues()
     {
             if ($this->auto_ingest !== false) {
+                return false;
+            }
+
+            if ($this->type !== 1) {
                 return false;
             }
 
@@ -409,6 +453,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
             $this->auto_ingest = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
             $this->owner = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
+            $this->type = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -418,7 +463,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 7; // 7 = PodcastPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = PodcastPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Podcast object", $e);
@@ -696,6 +741,9 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastPeer::OWNER)) {
             $modifiedColumns[':p' . $index++]  = '"owner"';
         }
+        if ($this->isColumnModified(PodcastPeer::TYPE)) {
+            $modifiedColumns[':p' . $index++]  = '"type"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "podcast" (%s) VALUES (%s)',
@@ -727,6 +775,9 @@ abstract class BasePodcast extends BaseObject implements Persistent
                         break;
                     case '"owner"':
                         $stmt->bindValue($identifier, $this->owner, PDO::PARAM_INT);
+                        break;
+                    case '"type"':
+                        $stmt->bindValue($identifier, $this->type, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -896,6 +947,9 @@ abstract class BasePodcast extends BaseObject implements Persistent
             case 6:
                 return $this->getDbOwner();
                 break;
+            case 7:
+                return $this->getDbType();
+                break;
             default:
                 return null;
                 break;
@@ -932,6 +986,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $keys[4] => $this->getDbDescription(),
             $keys[5] => $this->getDbAutoIngest(),
             $keys[6] => $this->getDbOwner(),
+            $keys[7] => $this->getDbType(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1000,6 +1055,9 @@ abstract class BasePodcast extends BaseObject implements Persistent
             case 6:
                 $this->setDbOwner($value);
                 break;
+            case 7:
+                $this->setDbType($value);
+                break;
         } // switch()
     }
 
@@ -1031,6 +1089,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if (array_key_exists($keys[4], $arr)) $this->setDbDescription($arr[$keys[4]]);
         if (array_key_exists($keys[5], $arr)) $this->setDbAutoIngest($arr[$keys[5]]);
         if (array_key_exists($keys[6], $arr)) $this->setDbOwner($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setDbType($arr[$keys[7]]);
     }
 
     /**
@@ -1049,6 +1108,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastPeer::DESCRIPTION)) $criteria->add(PodcastPeer::DESCRIPTION, $this->description);
         if ($this->isColumnModified(PodcastPeer::AUTO_INGEST)) $criteria->add(PodcastPeer::AUTO_INGEST, $this->auto_ingest);
         if ($this->isColumnModified(PodcastPeer::OWNER)) $criteria->add(PodcastPeer::OWNER, $this->owner);
+        if ($this->isColumnModified(PodcastPeer::TYPE)) $criteria->add(PodcastPeer::TYPE, $this->type);
 
         return $criteria;
     }
@@ -1118,6 +1178,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $copyObj->setDbDescription($this->getDbDescription());
         $copyObj->setDbAutoIngest($this->getDbAutoIngest());
         $copyObj->setDbOwner($this->getDbOwner());
+        $copyObj->setDbType($this->getDbType());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1512,6 +1573,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $this->description = null;
         $this->auto_ingest = null;
         $this->owner = null;
+        $this->type = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;

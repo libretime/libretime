@@ -722,6 +722,7 @@ CREATE TABLE "podcast"
     "description" VARCHAR(512),
     "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
     "owner" INTEGER,
+    "type" INTEGER DEFAULT 1 NOT NULL,
     PRIMARY KEY ("id")
 );
 

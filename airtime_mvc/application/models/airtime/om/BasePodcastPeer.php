@@ -24,13 +24,13 @@ abstract class BasePodcastPeer
     const TM_CLASS = 'PodcastTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 7;
+    const NUM_COLUMNS = 8;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 7;
+    const NUM_HYDRATE_COLUMNS = 8;
 
     /** the column name for the id field */
     const ID = 'podcast.id';
@@ -53,6 +53,9 @@ abstract class BasePodcastPeer
     /** the column name for the owner field */
     const OWNER = 'podcast.owner';
 
+    /** the column name for the type field */
+    const TYPE = 'podcast.type';
+
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
@@ -72,12 +75,12 @@ abstract class BasePodcastPeer
      * e.g. PodcastPeer::$fieldNames[PodcastPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbUrl', 'DbTitle', 'DbCreator', 'DbDescription', 'DbAutoIngest', 'DbOwner', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbUrl', 'dbTitle', 'dbCreator', 'dbDescription', 'dbAutoIngest', 'dbOwner', ),
-        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID, PodcastPeer::URL, PodcastPeer::TITLE, PodcastPeer::CREATOR, PodcastPeer::DESCRIPTION, PodcastPeer::AUTO_INGEST, PodcastPeer::OWNER, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'URL', 'TITLE', 'CREATOR', 'DESCRIPTION', 'AUTO_INGEST', 'OWNER', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'url', 'title', 'creator', 'description', 'auto_ingest', 'owner', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbUrl', 'DbTitle', 'DbCreator', 'DbDescription', 'DbAutoIngest', 'DbOwner', 'DbType', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbUrl', 'dbTitle', 'dbCreator', 'dbDescription', 'dbAutoIngest', 'dbOwner', 'dbType', ),
+        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID, PodcastPeer::URL, PodcastPeer::TITLE, PodcastPeer::CREATOR, PodcastPeer::DESCRIPTION, PodcastPeer::AUTO_INGEST, PodcastPeer::OWNER, PodcastPeer::TYPE, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'URL', 'TITLE', 'CREATOR', 'DESCRIPTION', 'AUTO_INGEST', 'OWNER', 'TYPE', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'url', 'title', 'creator', 'description', 'auto_ingest', 'owner', 'type', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -87,12 +90,12 @@ abstract class BasePodcastPeer
      * e.g. PodcastPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbUrl' => 1, 'DbTitle' => 2, 'DbCreator' => 3, 'DbDescription' => 4, 'DbAutoIngest' => 5, 'DbOwner' => 6, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbUrl' => 1, 'dbTitle' => 2, 'dbCreator' => 3, 'dbDescription' => 4, 'dbAutoIngest' => 5, 'dbOwner' => 6, ),
-        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID => 0, PodcastPeer::URL => 1, PodcastPeer::TITLE => 2, PodcastPeer::CREATOR => 3, PodcastPeer::DESCRIPTION => 4, PodcastPeer::AUTO_INGEST => 5, PodcastPeer::OWNER => 6, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'URL' => 1, 'TITLE' => 2, 'CREATOR' => 3, 'DESCRIPTION' => 4, 'AUTO_INGEST' => 5, 'OWNER' => 6, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'url' => 1, 'title' => 2, 'creator' => 3, 'description' => 4, 'auto_ingest' => 5, 'owner' => 6, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbUrl' => 1, 'DbTitle' => 2, 'DbCreator' => 3, 'DbDescription' => 4, 'DbAutoIngest' => 5, 'DbOwner' => 6, 'DbType' => 7, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbUrl' => 1, 'dbTitle' => 2, 'dbCreator' => 3, 'dbDescription' => 4, 'dbAutoIngest' => 5, 'dbOwner' => 6, 'dbType' => 7, ),
+        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID => 0, PodcastPeer::URL => 1, PodcastPeer::TITLE => 2, PodcastPeer::CREATOR => 3, PodcastPeer::DESCRIPTION => 4, PodcastPeer::AUTO_INGEST => 5, PodcastPeer::OWNER => 6, PodcastPeer::TYPE => 7, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'URL' => 1, 'TITLE' => 2, 'CREATOR' => 3, 'DESCRIPTION' => 4, 'AUTO_INGEST' => 5, 'OWNER' => 6, 'TYPE' => 7, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'url' => 1, 'title' => 2, 'creator' => 3, 'description' => 4, 'auto_ingest' => 5, 'owner' => 6, 'type' => 7, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
     );
 
     /**
@@ -173,6 +176,7 @@ abstract class BasePodcastPeer
             $criteria->addSelectColumn(PodcastPeer::DESCRIPTION);
             $criteria->addSelectColumn(PodcastPeer::AUTO_INGEST);
             $criteria->addSelectColumn(PodcastPeer::OWNER);
+            $criteria->addSelectColumn(PodcastPeer::TYPE);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.url');
@@ -181,6 +185,7 @@ abstract class BasePodcastPeer
             $criteria->addSelectColumn($alias . '.description');
             $criteria->addSelectColumn($alias . '.auto_ingest');
             $criteria->addSelectColumn($alias . '.owner');
+            $criteria->addSelectColumn($alias . '.type');
         }
     }
 

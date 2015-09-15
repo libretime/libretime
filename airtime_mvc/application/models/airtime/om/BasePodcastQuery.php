@@ -13,6 +13,7 @@
  * @method PodcastQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method PodcastQuery orderByDbAutoIngest($order = Criteria::ASC) Order by the auto_ingest column
  * @method PodcastQuery orderByDbOwner($order = Criteria::ASC) Order by the owner column
+ * @method PodcastQuery orderByDbType($order = Criteria::ASC) Order by the type column
  *
  * @method PodcastQuery groupByDbId() Group by the id column
  * @method PodcastQuery groupByDbUrl() Group by the url column
@@ -21,6 +22,7 @@
  * @method PodcastQuery groupByDbDescription() Group by the description column
  * @method PodcastQuery groupByDbAutoIngest() Group by the auto_ingest column
  * @method PodcastQuery groupByDbOwner() Group by the owner column
+ * @method PodcastQuery groupByDbType() Group by the type column
  *
  * @method PodcastQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PodcastQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -43,6 +45,7 @@
  * @method Podcast findOneByDbDescription(string $description) Return the first Podcast filtered by the description column
  * @method Podcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first Podcast filtered by the auto_ingest column
  * @method Podcast findOneByDbOwner(int $owner) Return the first Podcast filtered by the owner column
+ * @method Podcast findOneByDbType(int $type) Return the first Podcast filtered by the type column
  *
  * @method array findByDbId(int $id) Return Podcast objects filtered by the id column
  * @method array findByDbUrl(string $url) Return Podcast objects filtered by the url column
@@ -51,6 +54,7 @@
  * @method array findByDbDescription(string $description) Return Podcast objects filtered by the description column
  * @method array findByDbAutoIngest(boolean $auto_ingest) Return Podcast objects filtered by the auto_ingest column
  * @method array findByDbOwner(int $owner) Return Podcast objects filtered by the owner column
+ * @method array findByDbType(int $type) Return Podcast objects filtered by the type column
  *
  * @package    propel.generator.airtime.om
  */
@@ -158,7 +162,7 @@ abstract class BasePodcastQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "url", "title", "creator", "description", "auto_ingest", "owner" FROM "podcast" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "url", "title", "creator", "description", "auto_ingest", "owner", "type" FROM "podcast" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -474,6 +478,48 @@ abstract class BasePodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PodcastPeer::OWNER, $dbOwner, $comparison);
+    }
+
+    /**
+     * Filter the query on the type column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbType(1234); // WHERE type = 1234
+     * $query->filterByDbType(array(12, 34)); // WHERE type IN (12, 34)
+     * $query->filterByDbType(array('min' => 12)); // WHERE type >= 12
+     * $query->filterByDbType(array('max' => 12)); // WHERE type <= 12
+     * </code>
+     *
+     * @param     mixed $dbType The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbType($dbType = null, $comparison = null)
+    {
+        if (is_array($dbType)) {
+            $useMinMax = false;
+            if (isset($dbType['min'])) {
+                $this->addUsingAlias(PodcastPeer::TYPE, $dbType['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbType['max'])) {
+                $this->addUsingAlias(PodcastPeer::TYPE, $dbType['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::TYPE, $dbType, $comparison);
     }
 
     /**
