@@ -21,13 +21,20 @@ class Rest_MediaController extends Zend_Rest_Controller
         $offset = $this->_getParam('offset', 0);
         $limit = $this->_getParam('limit', $totalFileCount);
 
+        //Sorting parameters
+        $sortColumn = $this->_getParam('sort', CcFilesPeer::ID);
+        $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
+
         $query = CcFilesQuery::create()
             ->filterByDbHidden(false)
             ->filterByDbFileExists(true)
             ->filterByDbImportStatus(0)
             ->setLimit($limit)
             ->setOffset($offset)
-            ->orderByDbId();
+            ->orderBy($sortColumn, $sortDir);
+            //->orderByDbId();
+
+
         $queryCount = $query->count();
         $queryResult = $query->find();
 
@@ -39,7 +46,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->setHeader('X-TOTAL-COUNT', $queryCount)
+            ->setHeader('X-TOTAL-COUNT', $totalFileCount)
             ->appendBody(json_encode($files_array));
         
         /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):

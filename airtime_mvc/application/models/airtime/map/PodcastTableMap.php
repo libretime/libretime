@@ -46,6 +46,7 @@ class PodcastTableMap extends TableMap
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 512, null);
         $this->addColumn('auto_ingest', 'DbAutoIngest', 'BOOLEAN', true, null, false);
         $this->addForeignKey('owner', 'DbOwner', 'INTEGER', 'cc_subjs', 'id', false, null, null);
+        $this->addColumn('type', 'DbType', 'INTEGER', true, null, 1);
         // validators
     } // initialize()
 
