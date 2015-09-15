@@ -25,6 +25,30 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     protected static $_CELERY_DELETE_TASK_NAME;
 
     /**
+     * Execute a Celery task with the given name and data parameters
+     *
+     * FIXME: Currently, downloads will not create task reference rows because they
+     * don't have a valid file identifier - this means that we will never know if there
+     * is an issue with the download before the callback to /rest/media is called!
+     *
+     * @param string $taskName the name of the celery task to execute
+     * @param array $data      the data array to send as task parameters
+     * @param int $fileId      the unique identifier for the file involved in the task
+     */
+    protected function _executeTask($taskName, $data, $fileId) {
+        try {
+            $brokerTaskId = CeleryManager::sendCeleryMessage($taskName,
+                                                             static::$_CELERY_EXCHANGE_NAME,
+                                                             $data);
+            if (!empty($fileId)) {
+                $this->_createTaskReference($fileId, $brokerTaskId, $taskName);
+            }
+        } catch (Exception $e) {
+            Logging::info("Invalid request: " . $e->getMessage());
+        }
+    }
+
+    /**
      * Upload the file with the given identifier to a third-party service
      *
      * @param int $fileId the local CcFiles identifier
@@ -36,20 +60,13 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
             'token' => $this->_accessToken,
             'file_path' => $file->getFilePaths()[0]
         );
-        try {
-            $brokerTaskId = CeleryService::sendCeleryMessage(static::$_CELERY_UPLOAD_TASK_NAME,
-                                                             static::$_CELERY_EXCHANGE_NAME,
-                                                             $data);
-            $this->_createTaskReference($fileId, $brokerTaskId, static::$_CELERY_UPLOAD_TASK_NAME);
-        } catch (Exception $e) {
-            Logging::info("Invalid request: " . $e->getMessage());
-        }
+        $this->_executeTask(static::$_CELERY_UPLOAD_TASK_NAME, $data, $fileId);
     }
 
     /**
      * Given a track identifier, download a track from a third-party service.
      *
-     * @param int|null $trackId a track identifier
+     * @param int $trackId a track identifier
      */
     public function download($trackId) {
         $namespace = new Zend_Session_Namespace('csrf_namespace');
@@ -59,13 +76,9 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
             'token' => $this->_accessToken,
             'track_id' => $trackId
         );
-        try {
-            CeleryService::sendCeleryMessage(static::$_CELERY_DOWNLOAD_TASK_NAME,
-                                             static::$_CELERY_EXCHANGE_NAME,
-                                             $data);
-        } catch (Exception $e) {
-            Logging::info("Invalid request: " . $e->getMessage());
-        }
+        // FIXME
+        Logging::warn("FIXME: we can't create a task reference without a valid file ID");
+        $this->_executeTask(static::$_CELERY_DOWNLOAD_TASK_NAME, $data, null);
     }
 
     /**
@@ -85,14 +98,7 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
             'token' => $this->_accessToken,
             'track_id' => $serviceId
         );
-        try {
-            $brokerTaskId = CeleryService::sendCeleryMessage(static::$_CELERY_DELETE_TASK_NAME,
-                                                             static::$_CELERY_EXCHANGE_NAME,
-                                                             $data);
-            $this->_createTaskReference($fileId, $brokerTaskId, static::$_CELERY_DELETE_TASK_NAME);
-        } catch (Exception $e) {
-            Logging::info("Invalid request: " . $e->getMessage());
-        }
+        $this->_executeTask(static::$_CELERY_DELETE_TASK_NAME, $data, $fileId);
     }
 
     /**
@@ -108,19 +114,19 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
      * @throws PropelException
      */
     protected function _createTaskReference($fileId, $brokerTaskId, $taskName) {
-        $trackId = $this->createTrackReference($fileId);
+        $trackReferenceId = $this->createTrackReference($fileId);
         $task = new CeleryTasks();
         $task->setDbTaskId($brokerTaskId);
         $task->setDbName($taskName);
         $utc = new DateTimeZone("UTC");
         $task->setDbDispatchTime(new DateTime("now", $utc));
         $task->setDbStatus(CELERY_PENDING_STATUS);
-        $task->setDbTrackReference($trackId);
+        $task->setDbTrackReference($trackReferenceId);
         $task->save();
     }
 
     /**
-     * Update a CeleryTasks object for a completed upload
+     * Update a CeleryTasks object for a completed task
      * TODO: should we have a database layer class to handle Propel operations?
      *
      * @param $trackId int    ThirdPartyTrackReferences identifier
