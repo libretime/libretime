@@ -157,26 +157,13 @@ $(document).ready(function () {
                         getUsabilityHint();
                     }
                 });
-            },
-            "fnCreatedRow": function(nRow) {
-                $(nRow).find("td").hover(
-                    function () {
-                        var sw = $(this)[0].scrollWidth, iw = $(this).innerWidth();
-                        if (sw > iw) {
-                            $(this).stop().animate({
-                                textIndent: "-" + (sw - iw) + "px"
-                            }, sw * 8);
-                        }
-                    },
-                    function () {
-                        $(this).stop().animate({
-                            textIndent: "0"
-                        }, 500);
-                    }
-                );
             }
         });
     };
+
+    var parent = $("#recent_uploads"),fn = getPanTextFunctions();
+    parent.on("mouseenter", "td", fn.mousein);
+    parent.on("mouseleave", "td", fn.mouseout);
 
     self.isRecentUploadsRefreshTimerActive = false;
 

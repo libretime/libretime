@@ -194,7 +194,7 @@ AIRTIME = (function(AIRTIME) {
 
         $("#schedule-tab").on("click", function() {
             if (!$(this).hasClass('active')) {
-                AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
+                AIRTIME.tabs.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
             }
         });
 

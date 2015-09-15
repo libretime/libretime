@@ -481,6 +481,14 @@ li.ui-state-default {
     overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
 }
 
+.tab-name {
+    float: left;
+    max-width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .inner_editor_wrapper {
     max-height: 60%;
     overflow-x: hidden;

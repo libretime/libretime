@@ -76,35 +76,35 @@ var AIRTIME = (function(AIRTIME) {
     mod.placeholder = function(mediaType) {
         switch (mediaType) {
             // TODO: remove duplication in a nice way?
-            case MediaTypeEnum.FILE:
+            case mod.MediaTypeEnum.FILE:
                 return {
                     "media": "tracks",
                     "icon": "icon-music",
                     "subtext": "Click 'Upload' to add some now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/"
                 };
-            case MediaTypeEnum.PLAYLIST:
+            case mod.MediaTypeEnum.PLAYLIST:
                 return {
                     "media": "playlists",
                     "icon": "icon-list",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case MediaTypeEnum.BLOCK:
+            case mod.MediaTypeEnum.BLOCK:
                 return {
                     "media": "smart blocks",
                     "icon": "icon-time",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case MediaTypeEnum.WEBSTREAM:
+            case mod.MediaTypeEnum.WEBSTREAM:
                 return {
                     "media": "webstreams",
                     "icon": "icon-random",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case MediaTypeEnum.PODCAST:
+            case mod.MediaTypeEnum.PODCAST:
                 return {
                     "media": "podcasts",
                     "icon": "icon-headphones",
@@ -448,7 +448,7 @@ var AIRTIME = (function(AIRTIME) {
         openTabObjectIds.each(function(i, el) {
             var v = parseInt($(el).val());
             if ($.inArray(v, mediaIds) > -1) {
-                AIRTIME.playlist.closeTab($(el).closest(".pl-content").attr("data-tab-id"));
+                AIRTIME.tabs.closeTab($(el).closest(".pl-content").attr("data-tab-id"));
             }
         });
 
