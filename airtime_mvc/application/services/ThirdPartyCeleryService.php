@@ -47,18 +47,15 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     }
 
     /**
-     * Given a SoundCloud track identifier, download a track from SoundCloud.
+     * Given a track identifier, download a track from a third-party service.
      *
-     * If no track identifier is given, download all tracks for the currently
-     * authenticated SoundCloud user.
-     *
-     * @param int|null $trackId a SoundCloud track identifier
+     * @param int|null $trackId a track identifier
      */
-    public function download($trackId = null) {
+    public function download($trackId) {
         $namespace = new Zend_Session_Namespace('csrf_namespace');
         $csrfToken = $namespace->authtoken;
         $data = array(
-            'callback_url' => 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/media/post>csrf_token=' . $csrfToken,
+            'callback_url' => 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/media/post?csrf_token=' . $csrfToken,
             'token' => $this->_accessToken,
             'track_id' => $trackId
         );

@@ -67,6 +67,18 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
     }
 
     /**
+     * Given a SoundCloud track identifier, download a track from SoundCloud.
+     *
+     * If no track identifier is given, download all tracks for the currently
+     * authenticated SoundCloud user.
+     *
+     * @param int|null $trackId a SoundCloud track identifier
+     */
+    public function download($trackId = null) {
+        parent::download($trackId);
+    }
+
+    /**
      * Build a parameter array for the track being uploaded to SoundCloud
      *
      * @param $file Application_Model_StoredFile the file being uploaded
