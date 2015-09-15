@@ -1174,25 +1174,6 @@ var AIRTIME = (function(AIRTIME) {
 
 }(AIRTIME || {}));
 
-function buildEditMetadataDialog (json){
-    var dialog = $(json.dialog);
-
-    dialog.dialog({
-        autoOpen: false,
-        title: $.i18n._("Edit Metadata"),
-        width: 460,
-        height: 660,
-        modal: true,
-        close: closeDialogLibrary
-    });
-
-    dialog.dialog('open');
-}
-
-function closeDialogLibrary(event, ui) {
-    $(this).remove();
-}
-
 /*
  * This function is called from dataTables.columnFilter.js
  */

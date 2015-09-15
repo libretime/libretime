@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__.'/../common/widgets/Table.php');
+
 class DashboardController extends Zend_Controller_Action
 {
 
@@ -117,4 +119,17 @@ class DashboardController extends Zend_Controller_Action
         $this->view->airtime_version = Application_Model_Preference::GetAirtimeVersion();
     }
 
+    public function tableTestAction()
+    {
+        Zend_Layout::getMvcInstance()->assign('parent_page', 'Help');
+
+        $CC_CONFIG = Config::getConfig();
+
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+
+        $headScript = $this->view->headScript();
+        AirtimeTableView::injectTableJavaScriptDependencies($headScript, $baseUrl, $CC_CONFIG['airtime_version']);
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/widgets/table-example.js?'.$CC_CONFIG['airtime_version']);
+
+    }
 }
