@@ -168,6 +168,12 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
     protected $collCcSubjsTokensPartial;
 
     /**
+     * @var        PropelObjectCollection|Podcast[] Collection to store aggregation of Podcast objects.
+     */
+    protected $collPodcasts;
+    protected $collPodcastsPartial;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      * @var        boolean
@@ -240,6 +246,12 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $ccSubjsTokensScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $podcastsScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -893,6 +905,8 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
             $this->collCcSubjsTokens = null;
 
+            $this->collPodcasts = null;
+
         } // if (deep)
     }
 
@@ -1166,6 +1180,23 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
 
             if ($this->collCcSubjsTokens !== null) {
                 foreach ($this->collCcSubjsTokens as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->podcastsScheduledForDeletion !== null) {
+                if (!$this->podcastsScheduledForDeletion->isEmpty()) {
+                    PodcastQuery::create()
+                        ->filterByPrimaryKeys($this->podcastsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->podcastsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPodcasts !== null) {
+                foreach ($this->collPodcasts as $referrerFK) {
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
@@ -1461,6 +1492,14 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                     }
                 }
 
+                if ($this->collPodcasts !== null) {
+                    foreach ($this->collPodcasts as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
 
             $this->alreadyInValidation = false;
         }
@@ -1610,6 +1649,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
             }
             if (null !== $this->collCcSubjsTokens) {
                 $result['CcSubjsTokens'] = $this->collCcSubjsTokens->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPodcasts) {
+                $result['Podcasts'] = $this->collPodcasts->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -1882,6 +1924,12 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                 }
             }
 
+            foreach ($this->getPodcasts() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPodcast($relObj->copy($deepCopy));
+                }
+            }
+
             //unflag object copy
             $this->startCopy = false;
         } // if ($deepCopy)
@@ -1969,6 +2017,9 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
         }
         if ('CcSubjsToken' == $relationName) {
             $this->initCcSubjsTokens();
+        }
+        if ('Podcast' == $relationName) {
+            $this->initPodcasts();
         }
     }
 
@@ -4073,6 +4124,231 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
     }
 
     /**
+     * Clears out the collPodcasts collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return CcSubjs The current object (for fluent API support)
+     * @see        addPodcasts()
+     */
+    public function clearPodcasts()
+    {
+        $this->collPodcasts = null; // important to set this to null since that means it is uninitialized
+        $this->collPodcastsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collPodcasts collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialPodcasts($v = true)
+    {
+        $this->collPodcastsPartial = $v;
+    }
+
+    /**
+     * Initializes the collPodcasts collection.
+     *
+     * By default this just sets the collPodcasts collection to an empty array (like clearcollPodcasts());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPodcasts($overrideExisting = true)
+    {
+        if (null !== $this->collPodcasts && !$overrideExisting) {
+            return;
+        }
+        $this->collPodcasts = new PropelObjectCollection();
+        $this->collPodcasts->setModel('Podcast');
+    }
+
+    /**
+     * Gets an array of Podcast objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcSubjs is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|Podcast[] List of Podcast objects
+     * @throws PropelException
+     */
+    public function getPodcasts($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collPodcastsPartial && !$this->isNew();
+        if (null === $this->collPodcasts || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPodcasts) {
+                // return empty collection
+                $this->initPodcasts();
+            } else {
+                $collPodcasts = PodcastQuery::create(null, $criteria)
+                    ->filterByCcSubjs($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collPodcastsPartial && count($collPodcasts)) {
+                      $this->initPodcasts(false);
+
+                      foreach ($collPodcasts as $obj) {
+                        if (false == $this->collPodcasts->contains($obj)) {
+                          $this->collPodcasts->append($obj);
+                        }
+                      }
+
+                      $this->collPodcastsPartial = true;
+                    }
+
+                    $collPodcasts->getInternalIterator()->rewind();
+
+                    return $collPodcasts;
+                }
+
+                if ($partial && $this->collPodcasts) {
+                    foreach ($this->collPodcasts as $obj) {
+                        if ($obj->isNew()) {
+                            $collPodcasts[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPodcasts = $collPodcasts;
+                $this->collPodcastsPartial = false;
+            }
+        }
+
+        return $this->collPodcasts;
+    }
+
+    /**
+     * Sets a collection of Podcast objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $podcasts A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return CcSubjs The current object (for fluent API support)
+     */
+    public function setPodcasts(PropelCollection $podcasts, PropelPDO $con = null)
+    {
+        $podcastsToDelete = $this->getPodcasts(new Criteria(), $con)->diff($podcasts);
+
+
+        $this->podcastsScheduledForDeletion = $podcastsToDelete;
+
+        foreach ($podcastsToDelete as $podcastRemoved) {
+            $podcastRemoved->setCcSubjs(null);
+        }
+
+        $this->collPodcasts = null;
+        foreach ($podcasts as $podcast) {
+            $this->addPodcast($podcast);
+        }
+
+        $this->collPodcasts = $podcasts;
+        $this->collPodcastsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related Podcast objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related Podcast objects.
+     * @throws PropelException
+     */
+    public function countPodcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collPodcastsPartial && !$this->isNew();
+        if (null === $this->collPodcasts || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPodcasts) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPodcasts());
+            }
+            $query = PodcastQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCcSubjs($this)
+                ->count($con);
+        }
+
+        return count($this->collPodcasts);
+    }
+
+    /**
+     * Method called to associate a Podcast object to this object
+     * through the Podcast foreign key attribute.
+     *
+     * @param    Podcast $l Podcast
+     * @return CcSubjs The current object (for fluent API support)
+     */
+    public function addPodcast(Podcast $l)
+    {
+        if ($this->collPodcasts === null) {
+            $this->initPodcasts();
+            $this->collPodcastsPartial = true;
+        }
+
+        if (!in_array($l, $this->collPodcasts->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPodcast($l);
+
+            if ($this->podcastsScheduledForDeletion and $this->podcastsScheduledForDeletion->contains($l)) {
+                $this->podcastsScheduledForDeletion->remove($this->podcastsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	Podcast $podcast The podcast object to add.
+     */
+    protected function doAddPodcast($podcast)
+    {
+        $this->collPodcasts[]= $podcast;
+        $podcast->setCcSubjs($this);
+    }
+
+    /**
+     * @param	Podcast $podcast The podcast object to remove.
+     * @return CcSubjs The current object (for fluent API support)
+     */
+    public function removePodcast($podcast)
+    {
+        if ($this->getPodcasts()->contains($podcast)) {
+            $this->collPodcasts->remove($this->collPodcasts->search($podcast));
+            if (null === $this->podcastsScheduledForDeletion) {
+                $this->podcastsScheduledForDeletion = clone $this->collPodcasts;
+                $this->podcastsScheduledForDeletion->clear();
+            }
+            $this->podcastsScheduledForDeletion[]= $podcast;
+            $podcast->setCcSubjs(null);
+        }
+
+        return $this;
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -4158,6 +4434,11 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collPodcasts) {
+                foreach ($this->collPodcasts as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
 
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
@@ -4198,6 +4479,10 @@ abstract class BaseCcSubjs extends BaseObject implements Persistent
             $this->collCcSubjsTokens->clearIterator();
         }
         $this->collCcSubjsTokens = null;
+        if ($this->collPodcasts instanceof PropelCollection) {
+            $this->collPodcasts->clearIterator();
+        }
+        $this->collPodcasts = null;
     }
 
     /**

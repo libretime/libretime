@@ -406,7 +406,7 @@ var AIRTIME = (function(AIRTIME){
         var empty = $pl.find(".spl_empty");
 
         if (!show || empty.length > 0) {
-            //$pl.find("#spl_crossfade").hide();
+            $pl.find("#spl_crossfade").attr("disabled", "disabled");
         } else {
             //get list of playlist contents
             var list = contents.children();
@@ -416,9 +416,9 @@ var AIRTIME = (function(AIRTIME){
             var last = list.last();
             if (first.find(':first-child').children().attr('blockid') !== undefined &&
                 last.find(':first-child').children().attr('blockid') !== undefined) {
-                //$pl.find("#spl_crossfade").hide();
+                $pl.find("#spl_crossfade").attr("disabled", "disabled");
             } else {
-                $pl.find("#spl_crossfade").show();
+                $pl.find("#spl_crossfade").removeAttr("disabled");
             }
         }
 
@@ -778,13 +778,11 @@ var AIRTIME = (function(AIRTIME){
                         }
                         else {
                             var fadeIn = $pl.find("input.spl_main_fade_in");
-                            var fadeOut = $pl.find("span.spl_main_fade_out");
+                            var fadeOut = $pl.find("input.spl_main_fade_out");
                             if (json.fadeIn == null) {
                                 fadeIn.parent().prev().hide();
                                 fadeIn.hide();
                             } else {
-                                //console.log(json.fadeIn);
-                                //console.log(fadeIn.val());
                                 fadeIn.parent().prev().show();
                                 fadeIn.show();
                                 fadeIn.val(json.fadeIn);
@@ -796,7 +794,8 @@ var AIRTIME = (function(AIRTIME){
                             } else {
                                 fadeOut.parent().prev().show();
                                 fadeOut.show();
-                                fadeOut.empty().append(json.fadeOut);
+                                fadeOut.val(json.fadeOut);
+                                fadeOut.text(json.fadeOut);
                             }
                             if (json.fadeIn != null || json.fadeOut != null) {
                                 $pl.find("#crossfade_main").show();

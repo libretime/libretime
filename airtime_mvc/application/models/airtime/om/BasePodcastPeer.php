@@ -2,83 +2,65 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'cc_subjs' table.
+ * Base static class for performing query and update operations on the 'podcast' table.
  *
  *
  *
  * @package propel.generator.airtime.om
  */
-abstract class BaseCcSubjsPeer
+abstract class BasePodcastPeer
 {
 
     /** the default database name for this class */
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'cc_subjs';
+    const TABLE_NAME = 'podcast';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'CcSubjs';
+    const OM_CLASS = 'Podcast';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'CcSubjsTableMap';
+    const TM_CLASS = 'PodcastTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 13;
+    const NUM_COLUMNS = 7;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 13;
+    const NUM_HYDRATE_COLUMNS = 7;
 
     /** the column name for the id field */
-    const ID = 'cc_subjs.id';
+    const ID = 'podcast.id';
 
-    /** the column name for the login field */
-    const LOGIN = 'cc_subjs.login';
+    /** the column name for the url field */
+    const URL = 'podcast.url';
 
-    /** the column name for the pass field */
-    const PASS = 'cc_subjs.pass';
+    /** the column name for the title field */
+    const TITLE = 'podcast.title';
 
-    /** the column name for the type field */
-    const TYPE = 'cc_subjs.type';
+    /** the column name for the creator field */
+    const CREATOR = 'podcast.creator';
 
-    /** the column name for the first_name field */
-    const FIRST_NAME = 'cc_subjs.first_name';
+    /** the column name for the description field */
+    const DESCRIPTION = 'podcast.description';
 
-    /** the column name for the last_name field */
-    const LAST_NAME = 'cc_subjs.last_name';
+    /** the column name for the auto_ingest field */
+    const AUTO_INGEST = 'podcast.auto_ingest';
 
-    /** the column name for the lastlogin field */
-    const LASTLOGIN = 'cc_subjs.lastlogin';
-
-    /** the column name for the lastfail field */
-    const LASTFAIL = 'cc_subjs.lastfail';
-
-    /** the column name for the skype_contact field */
-    const SKYPE_CONTACT = 'cc_subjs.skype_contact';
-
-    /** the column name for the jabber_contact field */
-    const JABBER_CONTACT = 'cc_subjs.jabber_contact';
-
-    /** the column name for the email field */
-    const EMAIL = 'cc_subjs.email';
-
-    /** the column name for the cell_phone field */
-    const CELL_PHONE = 'cc_subjs.cell_phone';
-
-    /** the column name for the login_attempts field */
-    const LOGIN_ATTEMPTS = 'cc_subjs.login_attempts';
+    /** the column name for the owner field */
+    const OWNER = 'podcast.owner';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identity map to hold any loaded instances of CcSubjs objects.
+     * An identity map to hold any loaded instances of Podcast objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
-     * @var        array CcSubjs[]
+     * @var        array Podcast[]
      */
     public static $instances = array();
 
@@ -87,30 +69,30 @@ abstract class BaseCcSubjsPeer
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
-     * e.g. CcSubjsPeer::$fieldNames[CcSubjsPeer::TYPE_PHPNAME][0] = 'Id'
+     * e.g. PodcastPeer::$fieldNames[PodcastPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbLogin', 'DbPass', 'DbType', 'DbFirstName', 'DbLastName', 'DbLastlogin', 'DbLastfail', 'DbSkypeContact', 'DbJabberContact', 'DbEmail', 'DbCellPhone', 'DbLoginAttempts', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbLogin', 'dbPass', 'dbType', 'dbFirstName', 'dbLastName', 'dbLastlogin', 'dbLastfail', 'dbSkypeContact', 'dbJabberContact', 'dbEmail', 'dbCellPhone', 'dbLoginAttempts', ),
-        BasePeer::TYPE_COLNAME => array (CcSubjsPeer::ID, CcSubjsPeer::LOGIN, CcSubjsPeer::PASS, CcSubjsPeer::TYPE, CcSubjsPeer::FIRST_NAME, CcSubjsPeer::LAST_NAME, CcSubjsPeer::LASTLOGIN, CcSubjsPeer::LASTFAIL, CcSubjsPeer::SKYPE_CONTACT, CcSubjsPeer::JABBER_CONTACT, CcSubjsPeer::EMAIL, CcSubjsPeer::CELL_PHONE, CcSubjsPeer::LOGIN_ATTEMPTS, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'LOGIN', 'PASS', 'TYPE', 'FIRST_NAME', 'LAST_NAME', 'LASTLOGIN', 'LASTFAIL', 'SKYPE_CONTACT', 'JABBER_CONTACT', 'EMAIL', 'CELL_PHONE', 'LOGIN_ATTEMPTS', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'login', 'pass', 'type', 'first_name', 'last_name', 'lastlogin', 'lastfail', 'skype_contact', 'jabber_contact', 'email', 'cell_phone', 'login_attempts', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbUrl', 'DbTitle', 'DbCreator', 'DbDescription', 'DbAutoIngest', 'DbOwner', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbUrl', 'dbTitle', 'dbCreator', 'dbDescription', 'dbAutoIngest', 'dbOwner', ),
+        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID, PodcastPeer::URL, PodcastPeer::TITLE, PodcastPeer::CREATOR, PodcastPeer::DESCRIPTION, PodcastPeer::AUTO_INGEST, PodcastPeer::OWNER, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'URL', 'TITLE', 'CREATOR', 'DESCRIPTION', 'AUTO_INGEST', 'OWNER', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'url', 'title', 'creator', 'description', 'auto_ingest', 'owner', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
-     * e.g. CcSubjsPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
+     * e.g. PodcastPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbLogin' => 1, 'DbPass' => 2, 'DbType' => 3, 'DbFirstName' => 4, 'DbLastName' => 5, 'DbLastlogin' => 6, 'DbLastfail' => 7, 'DbSkypeContact' => 8, 'DbJabberContact' => 9, 'DbEmail' => 10, 'DbCellPhone' => 11, 'DbLoginAttempts' => 12, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbLogin' => 1, 'dbPass' => 2, 'dbType' => 3, 'dbFirstName' => 4, 'dbLastName' => 5, 'dbLastlogin' => 6, 'dbLastfail' => 7, 'dbSkypeContact' => 8, 'dbJabberContact' => 9, 'dbEmail' => 10, 'dbCellPhone' => 11, 'dbLoginAttempts' => 12, ),
-        BasePeer::TYPE_COLNAME => array (CcSubjsPeer::ID => 0, CcSubjsPeer::LOGIN => 1, CcSubjsPeer::PASS => 2, CcSubjsPeer::TYPE => 3, CcSubjsPeer::FIRST_NAME => 4, CcSubjsPeer::LAST_NAME => 5, CcSubjsPeer::LASTLOGIN => 6, CcSubjsPeer::LASTFAIL => 7, CcSubjsPeer::SKYPE_CONTACT => 8, CcSubjsPeer::JABBER_CONTACT => 9, CcSubjsPeer::EMAIL => 10, CcSubjsPeer::CELL_PHONE => 11, CcSubjsPeer::LOGIN_ATTEMPTS => 12, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'LOGIN' => 1, 'PASS' => 2, 'TYPE' => 3, 'FIRST_NAME' => 4, 'LAST_NAME' => 5, 'LASTLOGIN' => 6, 'LASTFAIL' => 7, 'SKYPE_CONTACT' => 8, 'JABBER_CONTACT' => 9, 'EMAIL' => 10, 'CELL_PHONE' => 11, 'LOGIN_ATTEMPTS' => 12, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'login' => 1, 'pass' => 2, 'type' => 3, 'first_name' => 4, 'last_name' => 5, 'lastlogin' => 6, 'lastfail' => 7, 'skype_contact' => 8, 'jabber_contact' => 9, 'email' => 10, 'cell_phone' => 11, 'login_attempts' => 12, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbUrl' => 1, 'DbTitle' => 2, 'DbCreator' => 3, 'DbDescription' => 4, 'DbAutoIngest' => 5, 'DbOwner' => 6, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbUrl' => 1, 'dbTitle' => 2, 'dbCreator' => 3, 'dbDescription' => 4, 'dbAutoIngest' => 5, 'dbOwner' => 6, ),
+        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID => 0, PodcastPeer::URL => 1, PodcastPeer::TITLE => 2, PodcastPeer::CREATOR => 3, PodcastPeer::DESCRIPTION => 4, PodcastPeer::AUTO_INGEST => 5, PodcastPeer::OWNER => 6, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'URL' => 1, 'TITLE' => 2, 'CREATOR' => 3, 'DESCRIPTION' => 4, 'AUTO_INGEST' => 5, 'OWNER' => 6, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'url' => 1, 'title' => 2, 'creator' => 3, 'description' => 4, 'auto_ingest' => 5, 'owner' => 6, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, )
     );
 
     /**
@@ -125,10 +107,10 @@ abstract class BaseCcSubjsPeer
      */
     public static function translateFieldName($name, $fromType, $toType)
     {
-        $toNames = CcSubjsPeer::getFieldNames($toType);
-        $key = isset(CcSubjsPeer::$fieldKeys[$fromType][$name]) ? CcSubjsPeer::$fieldKeys[$fromType][$name] : null;
+        $toNames = PodcastPeer::getFieldNames($toType);
+        $key = isset(PodcastPeer::$fieldKeys[$fromType][$name]) ? PodcastPeer::$fieldKeys[$fromType][$name] : null;
         if ($key === null) {
-            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(CcSubjsPeer::$fieldKeys[$fromType], true));
+            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(PodcastPeer::$fieldKeys[$fromType], true));
         }
 
         return $toNames[$key];
@@ -145,11 +127,11 @@ abstract class BaseCcSubjsPeer
      */
     public static function getFieldNames($type = BasePeer::TYPE_PHPNAME)
     {
-        if (!array_key_exists($type, CcSubjsPeer::$fieldNames)) {
+        if (!array_key_exists($type, PodcastPeer::$fieldNames)) {
             throw new PropelException('Method getFieldNames() expects the parameter $type to be one of the class constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME, BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. ' . $type . ' was given.');
         }
 
-        return CcSubjsPeer::$fieldNames[$type];
+        return PodcastPeer::$fieldNames[$type];
     }
 
     /**
@@ -161,12 +143,12 @@ abstract class BaseCcSubjsPeer
      *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
      * </code>
      * @param      string $alias The alias for the current table.
-     * @param      string $column The column name for current table. (i.e. CcSubjsPeer::COLUMN_NAME).
+     * @param      string $column The column name for current table. (i.e. PodcastPeer::COLUMN_NAME).
      * @return string
      */
     public static function alias($alias, $column)
     {
-        return str_replace(CcSubjsPeer::TABLE_NAME.'.', $alias.'.', $column);
+        return str_replace(PodcastPeer::TABLE_NAME.'.', $alias.'.', $column);
     }
 
     /**
@@ -184,33 +166,21 @@ abstract class BaseCcSubjsPeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(CcSubjsPeer::ID);
-            $criteria->addSelectColumn(CcSubjsPeer::LOGIN);
-            $criteria->addSelectColumn(CcSubjsPeer::PASS);
-            $criteria->addSelectColumn(CcSubjsPeer::TYPE);
-            $criteria->addSelectColumn(CcSubjsPeer::FIRST_NAME);
-            $criteria->addSelectColumn(CcSubjsPeer::LAST_NAME);
-            $criteria->addSelectColumn(CcSubjsPeer::LASTLOGIN);
-            $criteria->addSelectColumn(CcSubjsPeer::LASTFAIL);
-            $criteria->addSelectColumn(CcSubjsPeer::SKYPE_CONTACT);
-            $criteria->addSelectColumn(CcSubjsPeer::JABBER_CONTACT);
-            $criteria->addSelectColumn(CcSubjsPeer::EMAIL);
-            $criteria->addSelectColumn(CcSubjsPeer::CELL_PHONE);
-            $criteria->addSelectColumn(CcSubjsPeer::LOGIN_ATTEMPTS);
+            $criteria->addSelectColumn(PodcastPeer::ID);
+            $criteria->addSelectColumn(PodcastPeer::URL);
+            $criteria->addSelectColumn(PodcastPeer::TITLE);
+            $criteria->addSelectColumn(PodcastPeer::CREATOR);
+            $criteria->addSelectColumn(PodcastPeer::DESCRIPTION);
+            $criteria->addSelectColumn(PodcastPeer::AUTO_INGEST);
+            $criteria->addSelectColumn(PodcastPeer::OWNER);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.login');
-            $criteria->addSelectColumn($alias . '.pass');
-            $criteria->addSelectColumn($alias . '.type');
-            $criteria->addSelectColumn($alias . '.first_name');
-            $criteria->addSelectColumn($alias . '.last_name');
-            $criteria->addSelectColumn($alias . '.lastlogin');
-            $criteria->addSelectColumn($alias . '.lastfail');
-            $criteria->addSelectColumn($alias . '.skype_contact');
-            $criteria->addSelectColumn($alias . '.jabber_contact');
-            $criteria->addSelectColumn($alias . '.email');
-            $criteria->addSelectColumn($alias . '.cell_phone');
-            $criteria->addSelectColumn($alias . '.login_attempts');
+            $criteria->addSelectColumn($alias . '.url');
+            $criteria->addSelectColumn($alias . '.title');
+            $criteria->addSelectColumn($alias . '.creator');
+            $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.auto_ingest');
+            $criteria->addSelectColumn($alias . '.owner');
         }
     }
 
@@ -230,21 +200,21 @@ abstract class BaseCcSubjsPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(CcSubjsPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(PodcastPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            CcSubjsPeer::addSelectColumns($criteria);
+            PodcastPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-        $criteria->setDbName(CcSubjsPeer::DATABASE_NAME); // Set the correct dbName
+        $criteria->setDbName(PodcastPeer::DATABASE_NAME); // Set the correct dbName
 
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
         // BasePeer returns a PDOStatement
         $stmt = BasePeer::doCount($criteria, $con);
@@ -263,7 +233,7 @@ abstract class BaseCcSubjsPeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return CcSubjs
+     * @return Podcast
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -271,7 +241,7 @@ abstract class BaseCcSubjsPeer
     {
         $critcopy = clone $criteria;
         $critcopy->setLimit(1);
-        $objects = CcSubjsPeer::doSelect($critcopy, $con);
+        $objects = PodcastPeer::doSelect($critcopy, $con);
         if ($objects) {
             return $objects[0];
         }
@@ -289,7 +259,7 @@ abstract class BaseCcSubjsPeer
      */
     public static function doSelect(Criteria $criteria, PropelPDO $con = null)
     {
-        return CcSubjsPeer::populateObjects(CcSubjsPeer::doSelectStmt($criteria, $con));
+        return PodcastPeer::populateObjects(PodcastPeer::doSelectStmt($criteria, $con));
     }
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -307,16 +277,16 @@ abstract class BaseCcSubjsPeer
     public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         if (!$criteria->hasSelectClause()) {
             $criteria = clone $criteria;
-            CcSubjsPeer::addSelectColumns($criteria);
+            PodcastPeer::addSelectColumns($criteria);
         }
 
         // Set the correct dbName
-        $criteria->setDbName(CcSubjsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastPeer::DATABASE_NAME);
 
         // BasePeer returns a PDOStatement
         return BasePeer::doSelect($criteria, $con);
@@ -330,7 +300,7 @@ abstract class BaseCcSubjsPeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param CcSubjs $obj A CcSubjs object.
+     * @param Podcast $obj A Podcast object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -339,7 +309,7 @@ abstract class BaseCcSubjsPeer
             if ($key === null) {
                 $key = (string) $obj->getDbId();
             } // if key === null
-            CcSubjsPeer::$instances[$key] = $obj;
+            PodcastPeer::$instances[$key] = $obj;
         }
     }
 
@@ -351,7 +321,7 @@ abstract class BaseCcSubjsPeer
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param      mixed $value A CcSubjs object or a primary key value.
+     * @param      mixed $value A Podcast object or a primary key value.
      *
      * @return void
      * @throws PropelException - if the value is invalid.
@@ -359,17 +329,17 @@ abstract class BaseCcSubjsPeer
     public static function removeInstanceFromPool($value)
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
-            if (is_object($value) && $value instanceof CcSubjs) {
+            if (is_object($value) && $value instanceof Podcast) {
                 $key = (string) $value->getDbId();
             } elseif (is_scalar($value)) {
                 // assume we've been passed a primary key
                 $key = (string) $value;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or CcSubjs object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or Podcast object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
                 throw $e;
             }
 
-            unset(CcSubjsPeer::$instances[$key]);
+            unset(PodcastPeer::$instances[$key]);
         }
     } // removeInstanceFromPool()
 
@@ -380,14 +350,14 @@ abstract class BaseCcSubjsPeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return CcSubjs Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return Podcast Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
     {
         if (Propel::isInstancePoolingEnabled()) {
-            if (isset(CcSubjsPeer::$instances[$key])) {
-                return CcSubjsPeer::$instances[$key];
+            if (isset(PodcastPeer::$instances[$key])) {
+                return PodcastPeer::$instances[$key];
             }
         }
 
@@ -402,43 +372,22 @@ abstract class BaseCcSubjsPeer
     public static function clearInstancePool($and_clear_all_references = false)
     {
       if ($and_clear_all_references) {
-        foreach (CcSubjsPeer::$instances as $instance) {
+        foreach (PodcastPeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
-        CcSubjsPeer::$instances = array();
+        PodcastPeer::$instances = array();
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to cc_subjs
+     * Method to invalidate the instance pool of all tables related to podcast
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
     {
-        // Invalidate objects in CcPermsPeer instance pool,
+        // Invalidate objects in PodcastContentsPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcPermsPeer::clearInstancePool();
-        // Invalidate objects in CcShowHostsPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcShowHostsPeer::clearInstancePool();
-        // Invalidate objects in CcPlaylistPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcPlaylistPeer::clearInstancePool();
-        // Invalidate objects in CcBlockPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcBlockPeer::clearInstancePool();
-        // Invalidate objects in CcPrefPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcPrefPeer::clearInstancePool();
-        // Invalidate objects in CcSessPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcSessPeer::clearInstancePool();
-        // Invalidate objects in CcSubjsTokenPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        CcSubjsTokenPeer::clearInstancePool();
-        // Invalidate objects in PodcastPeer instance pool,
-        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        PodcastPeer::clearInstancePool();
+        PodcastContentsPeer::clearInstancePool();
     }
 
     /**
@@ -488,11 +437,11 @@ abstract class BaseCcSubjsPeer
         $results = array();
 
         // set the class once to avoid overhead in the loop
-        $cls = CcSubjsPeer::getOMClass();
+        $cls = PodcastPeer::getOMClass();
         // populate the object(s)
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key = CcSubjsPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj = CcSubjsPeer::getInstanceFromPool($key))) {
+            $key = PodcastPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj = PodcastPeer::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
@@ -501,7 +450,7 @@ abstract class BaseCcSubjsPeer
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                CcSubjsPeer::addInstanceToPool($obj, $key);
+                PodcastPeer::addInstanceToPool($obj, $key);
             } // if key exists
         }
         $stmt->closeCursor();
@@ -515,24 +464,262 @@ abstract class BaseCcSubjsPeer
      * @param      int $startcol The 0-based offset for reading from the resultset row.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
-     * @return array (CcSubjs object, last column rank)
+     * @return array (Podcast object, last column rank)
      */
     public static function populateObject($row, $startcol = 0)
     {
-        $key = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol);
-        if (null !== ($obj = CcSubjsPeer::getInstanceFromPool($key))) {
+        $key = PodcastPeer::getPrimaryKeyHashFromRow($row, $startcol);
+        if (null !== ($obj = PodcastPeer::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $startcol, true); // rehydrate
-            $col = $startcol + CcSubjsPeer::NUM_HYDRATE_COLUMNS;
+            $col = $startcol + PodcastPeer::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = CcSubjsPeer::OM_CLASS;
+            $cls = PodcastPeer::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $startcol);
-            CcSubjsPeer::addInstanceToPool($obj, $key);
+            PodcastPeer::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related CcSubjs table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinCcSubjs(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(PodcastPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            PodcastPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(PodcastPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(PodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Selects a collection of Podcast objects pre-filled with their CcSubjs objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Podcast objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinCcSubjs(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(PodcastPeer::DATABASE_NAME);
+        }
+
+        PodcastPeer::addSelectColumns($criteria);
+        $startcol = PodcastPeer::NUM_HYDRATE_COLUMNS;
+        CcSubjsPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(PodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = PodcastPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PodcastPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = PodcastPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                PodcastPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = CcSubjsPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = CcSubjsPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    CcSubjsPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (Podcast) to $obj2 (CcSubjs)
+                $obj2->addPodcast($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining all related tables
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAll(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(PodcastPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            PodcastPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(PodcastPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(PodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+    /**
+     * Selects a collection of Podcast objects pre-filled with all related objects.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of Podcast objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAll(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(PodcastPeer::DATABASE_NAME);
+        }
+
+        PodcastPeer::addSelectColumns($criteria);
+        $startcol2 = PodcastPeer::NUM_HYDRATE_COLUMNS;
+
+        CcSubjsPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + CcSubjsPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(PodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = PodcastPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PodcastPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = PodcastPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                PodcastPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+            // Add objects for joined CcSubjs rows
+
+            $key2 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+            if ($key2 !== null) {
+                $obj2 = CcSubjsPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = CcSubjsPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    CcSubjsPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 loaded
+
+                // Add the $obj1 (Podcast) to the collection in $obj2 (CcSubjs)
+                $obj2->addPodcast($obj1);
+            } // if joined row not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
     }
 
     /**
@@ -544,7 +731,7 @@ abstract class BaseCcSubjsPeer
      */
     public static function getTableMap()
     {
-        return Propel::getDatabaseMap(CcSubjsPeer::DATABASE_NAME)->getTable(CcSubjsPeer::TABLE_NAME);
+        return Propel::getDatabaseMap(PodcastPeer::DATABASE_NAME)->getTable(PodcastPeer::TABLE_NAME);
     }
 
     /**
@@ -552,9 +739,9 @@ abstract class BaseCcSubjsPeer
      */
     public static function buildTableMap()
     {
-      $dbMap = Propel::getDatabaseMap(BaseCcSubjsPeer::DATABASE_NAME);
-      if (!$dbMap->hasTable(BaseCcSubjsPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new \CcSubjsTableMap());
+      $dbMap = Propel::getDatabaseMap(BasePodcastPeer::DATABASE_NAME);
+      if (!$dbMap->hasTable(BasePodcastPeer::TABLE_NAME)) {
+        $dbMap->addTableObject(new \PodcastTableMap());
       }
     }
 
@@ -566,13 +753,13 @@ abstract class BaseCcSubjsPeer
      */
     public static function getOMClass($row = 0, $colnum = 0)
     {
-        return CcSubjsPeer::OM_CLASS;
+        return PodcastPeer::OM_CLASS;
     }
 
     /**
-     * Performs an INSERT on the database, given a CcSubjs or Criteria object.
+     * Performs an INSERT on the database, given a Podcast or Criteria object.
      *
-     * @param      mixed $values Criteria or CcSubjs object containing data that is used to create the INSERT statement.
+     * @param      mixed $values Criteria or Podcast object containing data that is used to create the INSERT statement.
      * @param      PropelPDO $con the PropelPDO connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -581,22 +768,22 @@ abstract class BaseCcSubjsPeer
     public static function doInsert($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
         } else {
-            $criteria = $values->buildCriteria(); // build Criteria from CcSubjs object
+            $criteria = $values->buildCriteria(); // build Criteria from Podcast object
         }
 
-        if ($criteria->containsKey(CcSubjsPeer::ID) && $criteria->keyContainsValue(CcSubjsPeer::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.CcSubjsPeer::ID.')');
+        if ($criteria->containsKey(PodcastPeer::ID) && $criteria->keyContainsValue(PodcastPeer::ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PodcastPeer::ID.')');
         }
 
 
         // Set the correct dbName
-        $criteria->setDbName(CcSubjsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastPeer::DATABASE_NAME);
 
         try {
             // use transaction because $criteria could contain info
@@ -613,9 +800,9 @@ abstract class BaseCcSubjsPeer
     }
 
     /**
-     * Performs an UPDATE on the database, given a CcSubjs or Criteria object.
+     * Performs an UPDATE on the database, given a Podcast or Criteria object.
      *
-     * @param      mixed $values Criteria or CcSubjs object containing data that is used to create the UPDATE statement.
+     * @param      mixed $values Criteria or Podcast object containing data that is used to create the UPDATE statement.
      * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
      * @return int             The number of affected rows (if supported by underlying database driver).
      * @throws PropelException Any exceptions caught during processing will be
@@ -624,35 +811,35 @@ abstract class BaseCcSubjsPeer
     public static function doUpdate($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
-        $selectCriteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
+        $selectCriteria = new Criteria(PodcastPeer::DATABASE_NAME);
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
 
-            $comparison = $criteria->getComparison(CcSubjsPeer::ID);
-            $value = $criteria->remove(CcSubjsPeer::ID);
+            $comparison = $criteria->getComparison(PodcastPeer::ID);
+            $value = $criteria->remove(PodcastPeer::ID);
             if ($value) {
-                $selectCriteria->add(CcSubjsPeer::ID, $value, $comparison);
+                $selectCriteria->add(PodcastPeer::ID, $value, $comparison);
             } else {
-                $selectCriteria->setPrimaryTableName(CcSubjsPeer::TABLE_NAME);
+                $selectCriteria->setPrimaryTableName(PodcastPeer::TABLE_NAME);
             }
 
-        } else { // $values is CcSubjs object
+        } else { // $values is Podcast object
             $criteria = $values->buildCriteria(); // gets full criteria
             $selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
         }
 
         // set the correct dbName
-        $criteria->setDbName(CcSubjsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastPeer::DATABASE_NAME);
 
         return BasePeer::doUpdate($selectCriteria, $criteria, $con);
     }
 
     /**
-     * Deletes all rows from the cc_subjs table.
+     * Deletes all rows from the podcast table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).
@@ -661,19 +848,19 @@ abstract class BaseCcSubjsPeer
     public static function doDeleteAll(PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
         $affectedRows = 0; // initialize var to track total num of affected rows
         try {
             // use transaction because $criteria could contain info
             // for more than one table or we could emulating ON DELETE CASCADE, etc.
             $con->beginTransaction();
-            $affectedRows += BasePeer::doDeleteAll(CcSubjsPeer::TABLE_NAME, $con, CcSubjsPeer::DATABASE_NAME);
+            $affectedRows += BasePeer::doDeleteAll(PodcastPeer::TABLE_NAME, $con, PodcastPeer::DATABASE_NAME);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            CcSubjsPeer::clearInstancePool();
-            CcSubjsPeer::clearRelatedInstancePool();
+            PodcastPeer::clearInstancePool();
+            PodcastPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -684,9 +871,9 @@ abstract class BaseCcSubjsPeer
     }
 
     /**
-     * Performs a DELETE on the database, given a CcSubjs or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Podcast or Criteria object OR a primary key value.
      *
-     * @param      mixed $values Criteria or CcSubjs object or primary key or array of primary keys
+     * @param      mixed $values Criteria or Podcast object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param      PropelPDO $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -697,32 +884,32 @@ abstract class BaseCcSubjsPeer
      public static function doDelete($values, PropelPDO $con = null)
      {
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             // invalidate the cache for all objects of this type, since we have no
             // way of knowing (without running a query) what objects should be invalidated
             // from the cache based on this Criteria.
-            CcSubjsPeer::clearInstancePool();
+            PodcastPeer::clearInstancePool();
             // rename for clarity
             $criteria = clone $values;
-        } elseif ($values instanceof CcSubjs) { // it's a model object
+        } elseif ($values instanceof Podcast) { // it's a model object
             // invalidate the cache for this single object
-            CcSubjsPeer::removeInstanceFromPool($values);
+            PodcastPeer::removeInstanceFromPool($values);
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
-            $criteria->add(CcSubjsPeer::ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(PodcastPeer::DATABASE_NAME);
+            $criteria->add(PodcastPeer::ID, (array) $values, Criteria::IN);
             // invalidate the cache for this object(s)
             foreach ((array) $values as $singleval) {
-                CcSubjsPeer::removeInstanceFromPool($singleval);
+                PodcastPeer::removeInstanceFromPool($singleval);
             }
         }
 
         // Set the correct dbName
-        $criteria->setDbName(CcSubjsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastPeer::DATABASE_NAME);
 
         $affectedRows = 0; // initialize var to track total num of affected rows
 
@@ -732,7 +919,7 @@ abstract class BaseCcSubjsPeer
             $con->beginTransaction();
 
             $affectedRows += BasePeer::doDelete($criteria, $con);
-            CcSubjsPeer::clearRelatedInstancePool();
+            PodcastPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -743,13 +930,13 @@ abstract class BaseCcSubjsPeer
     }
 
     /**
-     * Validates all modified columns of given CcSubjs object.
+     * Validates all modified columns of given Podcast object.
      * If parameter $columns is either a single column name or an array of column names
      * than only those columns are validated.
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param CcSubjs $obj The object to validate.
+     * @param Podcast $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -759,8 +946,8 @@ abstract class BaseCcSubjsPeer
         $columns = array();
 
         if ($cols) {
-            $dbMap = Propel::getDatabaseMap(CcSubjsPeer::DATABASE_NAME);
-            $tableMap = $dbMap->getTable(CcSubjsPeer::TABLE_NAME);
+            $dbMap = Propel::getDatabaseMap(PodcastPeer::DATABASE_NAME);
+            $tableMap = $dbMap->getTable(PodcastPeer::TABLE_NAME);
 
             if (! is_array($cols)) {
                 $cols = array($cols);
@@ -776,7 +963,7 @@ abstract class BaseCcSubjsPeer
 
         }
 
-        return BasePeer::doValidate(CcSubjsPeer::DATABASE_NAME, CcSubjsPeer::TABLE_NAME, $columns);
+        return BasePeer::doValidate(PodcastPeer::DATABASE_NAME, PodcastPeer::TABLE_NAME, $columns);
     }
 
     /**
@@ -784,23 +971,23 @@ abstract class BaseCcSubjsPeer
      *
      * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
-     * @return CcSubjs
+     * @return Podcast
      */
     public static function retrieveByPK($pk, PropelPDO $con = null)
     {
 
-        if (null !== ($obj = CcSubjsPeer::getInstanceFromPool((string) $pk))) {
+        if (null !== ($obj = PodcastPeer::getInstanceFromPool((string) $pk))) {
             return $obj;
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
-        $criteria->add(CcSubjsPeer::ID, $pk);
+        $criteria = new Criteria(PodcastPeer::DATABASE_NAME);
+        $criteria->add(PodcastPeer::ID, $pk);
 
-        $v = CcSubjsPeer::doSelect($criteria, $con);
+        $v = PodcastPeer::doSelect($criteria, $con);
 
         return !empty($v) > 0 ? $v[0] : null;
     }
@@ -810,31 +997,31 @@ abstract class BaseCcSubjsPeer
      *
      * @param      array $pks List of primary keys
      * @param      PropelPDO $con the connection to use
-     * @return CcSubjs[]
+     * @return Podcast[]
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
     public static function retrieveByPKs($pks, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(CcSubjsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         $objs = null;
         if (empty($pks)) {
             $objs = array();
         } else {
-            $criteria = new Criteria(CcSubjsPeer::DATABASE_NAME);
-            $criteria->add(CcSubjsPeer::ID, $pks, Criteria::IN);
-            $objs = CcSubjsPeer::doSelect($criteria, $con);
+            $criteria = new Criteria(PodcastPeer::DATABASE_NAME);
+            $criteria->add(PodcastPeer::ID, $pks, Criteria::IN);
+            $objs = PodcastPeer::doSelect($criteria, $con);
         }
 
         return $objs;
     }
 
-} // BaseCcSubjsPeer
+} // BasePodcastPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BaseCcSubjsPeer::buildTableMap();
+BasePodcastPeer::buildTableMap();
 

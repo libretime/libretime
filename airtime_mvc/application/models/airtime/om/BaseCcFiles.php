@@ -471,6 +471,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     protected $filesize;
 
     /**
+     * The value for the description field.
+     * @var        string
+     */
+    protected $description;
+
+    /**
      * @var        CcSubjs
      */
     protected $aFkOwner;
@@ -526,6 +532,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      */
     protected $collThirdPartyTrackReferencess;
     protected $collThirdPartyTrackReferencessPartial;
+
+    /**
+     * @var        PropelObjectCollection|PodcastContents[] Collection to store aggregation of PodcastContents objects.
+     */
+    protected $collPodcastContentss;
+    protected $collPodcastContentssPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -588,6 +600,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
      * @var		PropelObjectCollection
      */
     protected $thirdPartyTrackReferencessScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $podcastContentssScheduledForDeletion = null;
 
     /**
      * Applies default values to this object.
@@ -1499,6 +1517,17 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     {
 
         return $this->filesize;
+    }
+
+    /**
+     * Get the [description] column value.
+     *
+     * @return string
+     */
+    public function getDbDescription()
+    {
+
+        return $this->description;
     }
 
     /**
@@ -3053,6 +3082,27 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     } // setDbFilesize()
 
     /**
+     * Set the value of [description] column.
+     *
+     * @param  string $v new value
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setDbDescription($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->description !== $v) {
+            $this->description = $v;
+            $this->modifiedColumns[] = CcFilesPeer::DESCRIPTION;
+        }
+
+
+        return $this;
+    } // setDbDescription()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -3215,6 +3265,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->is_scheduled = ($row[$startcol + 68] !== null) ? (boolean) $row[$startcol + 68] : null;
             $this->is_playlist = ($row[$startcol + 69] !== null) ? (boolean) $row[$startcol + 69] : null;
             $this->filesize = ($row[$startcol + 70] !== null) ? (int) $row[$startcol + 70] : null;
+            $this->description = ($row[$startcol + 71] !== null) ? (string) $row[$startcol + 71] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -3224,7 +3275,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 71; // 71 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 72; // 72 = CcFilesPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating CcFiles object", $e);
@@ -3311,6 +3362,8 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->collCcPlayoutHistorys = null;
 
             $this->collThirdPartyTrackReferencess = null;
+
+            $this->collPodcastContentss = null;
 
         } // if (deep)
     }
@@ -3581,6 +3634,23 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 }
             }
 
+            if ($this->podcastContentssScheduledForDeletion !== null) {
+                if (!$this->podcastContentssScheduledForDeletion->isEmpty()) {
+                    PodcastContentsQuery::create()
+                        ->filterByPrimaryKeys($this->podcastContentssScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->podcastContentssScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collPodcastContentss !== null) {
+                foreach ($this->collPodcastContentss as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -3830,6 +3900,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) {
             $modifiedColumns[':p' . $index++]  = '"filesize"';
         }
+        if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = '"description"';
+        }
 
         $sql = sprintf(
             'INSERT INTO "cc_files" (%s) VALUES (%s)',
@@ -4054,6 +4127,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     case '"filesize"':
                         $stmt->bindValue($identifier, $this->filesize, PDO::PARAM_INT);
                         break;
+                    case '"description"':
+                        $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
                 }
             }
             $stmt->execute();
@@ -4220,6 +4296,14 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
 
                 if ($this->collThirdPartyTrackReferencess !== null) {
                     foreach ($this->collThirdPartyTrackReferencess as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
+                    }
+                }
+
+                if ($this->collPodcastContentss !== null) {
+                    foreach ($this->collPodcastContentss as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
@@ -4474,6 +4558,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 70:
                 return $this->getDbFilesize();
                 break;
+            case 71:
+                return $this->getDbDescription();
+                break;
             default:
                 return null;
                 break;
@@ -4574,6 +4661,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $keys[68] => $this->getDbIsScheduled(),
             $keys[69] => $this->getDbIsPlaylist(),
             $keys[70] => $this->getDbFilesize(),
+            $keys[71] => $this->getDbDescription(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -4610,6 +4698,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             }
             if (null !== $this->collThirdPartyTrackReferencess) {
                 $result['ThirdPartyTrackReferencess'] = $this->collThirdPartyTrackReferencess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collPodcastContentss) {
+                $result['PodcastContentss'] = $this->collPodcastContentss->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
             }
         }
 
@@ -4858,6 +4949,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             case 70:
                 $this->setDbFilesize($value);
                 break;
+            case 71:
+                $this->setDbDescription($value);
+                break;
         } // switch()
     }
 
@@ -4953,6 +5047,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if (array_key_exists($keys[68], $arr)) $this->setDbIsScheduled($arr[$keys[68]]);
         if (array_key_exists($keys[69], $arr)) $this->setDbIsPlaylist($arr[$keys[69]]);
         if (array_key_exists($keys[70], $arr)) $this->setDbFilesize($arr[$keys[70]]);
+        if (array_key_exists($keys[71], $arr)) $this->setDbDescription($arr[$keys[71]]);
     }
 
     /**
@@ -5035,6 +5130,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         if ($this->isColumnModified(CcFilesPeer::IS_SCHEDULED)) $criteria->add(CcFilesPeer::IS_SCHEDULED, $this->is_scheduled);
         if ($this->isColumnModified(CcFilesPeer::IS_PLAYLIST)) $criteria->add(CcFilesPeer::IS_PLAYLIST, $this->is_playlist);
         if ($this->isColumnModified(CcFilesPeer::FILESIZE)) $criteria->add(CcFilesPeer::FILESIZE, $this->filesize);
+        if ($this->isColumnModified(CcFilesPeer::DESCRIPTION)) $criteria->add(CcFilesPeer::DESCRIPTION, $this->description);
 
         return $criteria;
     }
@@ -5168,6 +5264,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $copyObj->setDbIsScheduled($this->getDbIsScheduled());
         $copyObj->setDbIsPlaylist($this->getDbIsPlaylist());
         $copyObj->setDbFilesize($this->getDbFilesize());
+        $copyObj->setDbDescription($this->getDbDescription());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -5215,6 +5312,12 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             foreach ($this->getThirdPartyTrackReferencess() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addThirdPartyTrackReferences($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getPodcastContentss() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addPodcastContents($relObj->copy($deepCopy));
                 }
             }
 
@@ -5455,6 +5558,9 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         }
         if ('ThirdPartyTrackReferences' == $relationName) {
             $this->initThirdPartyTrackReferencess();
+        }
+        if ('PodcastContents' == $relationName) {
+            $this->initPodcastContentss();
         }
     }
 
@@ -7234,6 +7340,256 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
     }
 
     /**
+     * Clears out the collPodcastContentss collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return CcFiles The current object (for fluent API support)
+     * @see        addPodcastContentss()
+     */
+    public function clearPodcastContentss()
+    {
+        $this->collPodcastContentss = null; // important to set this to null since that means it is uninitialized
+        $this->collPodcastContentssPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collPodcastContentss collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialPodcastContentss($v = true)
+    {
+        $this->collPodcastContentssPartial = $v;
+    }
+
+    /**
+     * Initializes the collPodcastContentss collection.
+     *
+     * By default this just sets the collPodcastContentss collection to an empty array (like clearcollPodcastContentss());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initPodcastContentss($overrideExisting = true)
+    {
+        if (null !== $this->collPodcastContentss && !$overrideExisting) {
+            return;
+        }
+        $this->collPodcastContentss = new PropelObjectCollection();
+        $this->collPodcastContentss->setModel('PodcastContents');
+    }
+
+    /**
+     * Gets an array of PodcastContents objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this CcFiles is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|PodcastContents[] List of PodcastContents objects
+     * @throws PropelException
+     */
+    public function getPodcastContentss($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collPodcastContentssPartial && !$this->isNew();
+        if (null === $this->collPodcastContentss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collPodcastContentss) {
+                // return empty collection
+                $this->initPodcastContentss();
+            } else {
+                $collPodcastContentss = PodcastContentsQuery::create(null, $criteria)
+                    ->filterByCcFiles($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collPodcastContentssPartial && count($collPodcastContentss)) {
+                      $this->initPodcastContentss(false);
+
+                      foreach ($collPodcastContentss as $obj) {
+                        if (false == $this->collPodcastContentss->contains($obj)) {
+                          $this->collPodcastContentss->append($obj);
+                        }
+                      }
+
+                      $this->collPodcastContentssPartial = true;
+                    }
+
+                    $collPodcastContentss->getInternalIterator()->rewind();
+
+                    return $collPodcastContentss;
+                }
+
+                if ($partial && $this->collPodcastContentss) {
+                    foreach ($this->collPodcastContentss as $obj) {
+                        if ($obj->isNew()) {
+                            $collPodcastContentss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collPodcastContentss = $collPodcastContentss;
+                $this->collPodcastContentssPartial = false;
+            }
+        }
+
+        return $this->collPodcastContentss;
+    }
+
+    /**
+     * Sets a collection of PodcastContents objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $podcastContentss A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function setPodcastContentss(PropelCollection $podcastContentss, PropelPDO $con = null)
+    {
+        $podcastContentssToDelete = $this->getPodcastContentss(new Criteria(), $con)->diff($podcastContentss);
+
+
+        $this->podcastContentssScheduledForDeletion = $podcastContentssToDelete;
+
+        foreach ($podcastContentssToDelete as $podcastContentsRemoved) {
+            $podcastContentsRemoved->setCcFiles(null);
+        }
+
+        $this->collPodcastContentss = null;
+        foreach ($podcastContentss as $podcastContents) {
+            $this->addPodcastContents($podcastContents);
+        }
+
+        $this->collPodcastContentss = $podcastContentss;
+        $this->collPodcastContentssPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related PodcastContents objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related PodcastContents objects.
+     * @throws PropelException
+     */
+    public function countPodcastContentss(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collPodcastContentssPartial && !$this->isNew();
+        if (null === $this->collPodcastContentss || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collPodcastContentss) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getPodcastContentss());
+            }
+            $query = PodcastContentsQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByCcFiles($this)
+                ->count($con);
+        }
+
+        return count($this->collPodcastContentss);
+    }
+
+    /**
+     * Method called to associate a PodcastContents object to this object
+     * through the PodcastContents foreign key attribute.
+     *
+     * @param    PodcastContents $l PodcastContents
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function addPodcastContents(PodcastContents $l)
+    {
+        if ($this->collPodcastContentss === null) {
+            $this->initPodcastContentss();
+            $this->collPodcastContentssPartial = true;
+        }
+
+        if (!in_array($l, $this->collPodcastContentss->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddPodcastContents($l);
+
+            if ($this->podcastContentssScheduledForDeletion and $this->podcastContentssScheduledForDeletion->contains($l)) {
+                $this->podcastContentssScheduledForDeletion->remove($this->podcastContentssScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	PodcastContents $podcastContents The podcastContents object to add.
+     */
+    protected function doAddPodcastContents($podcastContents)
+    {
+        $this->collPodcastContentss[]= $podcastContents;
+        $podcastContents->setCcFiles($this);
+    }
+
+    /**
+     * @param	PodcastContents $podcastContents The podcastContents object to remove.
+     * @return CcFiles The current object (for fluent API support)
+     */
+    public function removePodcastContents($podcastContents)
+    {
+        if ($this->getPodcastContentss()->contains($podcastContents)) {
+            $this->collPodcastContentss->remove($this->collPodcastContentss->search($podcastContents));
+            if (null === $this->podcastContentssScheduledForDeletion) {
+                $this->podcastContentssScheduledForDeletion = clone $this->collPodcastContentss;
+                $this->podcastContentssScheduledForDeletion->clear();
+            }
+            $this->podcastContentssScheduledForDeletion[]= clone $podcastContents;
+            $podcastContents->setCcFiles(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this CcFiles is new, it will return
+     * an empty collection; or if this CcFiles has previously
+     * been saved, it will retrieve related PodcastContentss from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in CcFiles.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return PropelObjectCollection|PodcastContents[] List of PodcastContents objects
+     */
+    public function getPodcastContentssJoinPodcast($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $query = PodcastContentsQuery::create(null, $criteria);
+        $query->joinWith('Podcast', $join_behavior);
+
+        return $this->getPodcastContentss($query, $con);
+    }
+
+    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -7309,6 +7665,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
         $this->is_scheduled = null;
         $this->is_playlist = null;
         $this->filesize = null;
+        $this->description = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -7367,6 +7724,11 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                     $o->clearAllReferences($deep);
                 }
             }
+            if ($this->collPodcastContentss) {
+                foreach ($this->collPodcastContentss as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->aFkOwner instanceof Persistent) {
               $this->aFkOwner->clearAllReferences($deep);
             }
@@ -7408,6 +7770,10 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
             $this->collThirdPartyTrackReferencess->clearIterator();
         }
         $this->collThirdPartyTrackReferencess = null;
+        if ($this->collPodcastContentss instanceof PropelCollection) {
+            $this->collPodcastContentss->clearIterator();
+        }
+        $this->collPodcastContentss = null;
         $this->aFkOwner = null;
         $this->aCcSubjsRelatedByDbEditedby = null;
         $this->aCcMusicDirs = null;

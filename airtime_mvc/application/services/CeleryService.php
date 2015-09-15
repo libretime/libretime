@@ -77,8 +77,7 @@ class CeleryService {
         $c = self::_setupCeleryExchange($config, self::$_CELERY_RESULTS_EXCHANGE, $queue);
         $message = $c->getAsyncResultMessage($task->getDbName(), $task->getDbTaskId());
 
-        // If the message isn't ready yet (Celery hasn't finished the task),
-        // only throw an exception if the message has timed out.
+        // If the message isn't ready yet (Celery hasn't finished the task), throw an exception.
         if ($message == FALSE) {
             if (self::_checkMessageTimeout($task)) {
                 // If the task times out, mark it as failed. We don't want to remove the

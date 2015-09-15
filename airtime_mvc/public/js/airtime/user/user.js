@@ -85,7 +85,8 @@ function rowCallback( nRow, aData, iDisplayIndex ){
 }
 
 function populateUserTable() {
-    $('#users_datatable').dataTable( {
+    var dt = $('#users_datatable');
+    dt.dataTable( {
         "bProcessing": true,
         "bServerSide": true,
         "sAjaxSource": baseUrl+"User/get-user-data-table-info/format/json",
@@ -118,7 +119,7 @@ function populateUserTable() {
             "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 users"),
             "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total users)"),
         }),
-        "sDom": '<"H"lf<"dt-process-rel"r>>t<"F"ip>',
+        "sDom": '<"H"lf<"dt-process-rel"r>><"#user_list_inner_wrapper"t><"F"ip>'
     });
 }
 
@@ -187,7 +188,7 @@ function assignUserRightsToUserTypes() {
     });
 }
 
-function init() {
+function initUserData() {
     var type = $('#type');
 
     type.live("change", function(){
@@ -230,12 +231,12 @@ function init() {
 $(document).ready(function() {
     populateUserTable();
     assignUserRightsToUserTypes();
-    init();
+    initUserData();
 
     $('#save_user').live('click', function(){
         var data = $('#user_form').serialize();
         var url = baseUrl+'User/add-user';
-        
+
         $.post(url, {format: "json", data: data}, function(json){
             if (json.valid === "true") {
                 $('#content').empty().append(json.html);
@@ -254,5 +255,4 @@ $(document).ready(function() {
     });
 
     sizeFormElements();
-    
 });

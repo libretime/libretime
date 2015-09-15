@@ -67,7 +67,8 @@ select {
     height: 7px;
 }
 
-::-webkit-scrollbar-track {
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
     background: transparent none;
 }
 
@@ -81,10 +82,6 @@ select {
     background-color: #ff5d1a;
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.75);
-}
-
-::-webkit-scrollbar-corner {
-    background-color: #000;
 }
 
 .wrapper_panel::-webkit-scrollbar-corner {
@@ -842,18 +839,17 @@ dl.inline-list dd {
     color: #ccc;
 }
 
-#recent_uploads_table_wrapper .datatable tr td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .datatable tr, .datatable td,
-.dataTable tr, .dataTable td
-{
+.dataTable tr, .dataTable td {
     border: none;
     border-spacing: 0;
 }
 
+#recent_uploads_table tr, #recent_uploads_table td {
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 200px;
+}
 
 .odd {
     background-color: #282828;
@@ -923,7 +919,7 @@ dl.inline-list dd {
 }
 
 .dataTables_length {
-    float:right;
+    float:left;
     margin:0;
     
 }
@@ -1772,17 +1768,20 @@ button, input {
 }
 
 .user-management {
-    width:910px;
+    min-width: 910px;
     min-height: 410px;
 }
+
 .user-management-expanded {
-    width:910px;
+    width: 910px;
 }
+
 .user-data {
     float:right;
     width:420px;
     margin-left:10px;
 }
+
 .user-list-wrapper {
     float:left;
     width:480px;
@@ -1792,14 +1791,7 @@ button, input {
 }
 
 #users_datatable {
-    border: 0px;
-}
-
-#users_datatable_wrapper > div.fg-toolbar.ui-toolbar.ui-widget-header.ui-corner-bl.ui-corner-br.ui-helper-clearfix {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    border: 0;
 }
 
 #users_datatable_wrapper td {
@@ -1808,7 +1800,7 @@ button, input {
 
 .user-management div.user-list-wrapper .ui-widget-header:first-child {
     background: none repeat scroll 0 0 transparent;
-    border-width: 0 0 1px;
+    border-width: 0;
     color: #444444;
     font-weight: bold;
 }
@@ -3606,7 +3598,7 @@ button.btn-icon-text > i.icon-white {
 .media_type_selector a {
     text-decoration: none;
     color: #cecece;
-    padding: 10px 10px 10px 10px;
+    padding: 10px 0 10px 10px;
     display: block;
 }
 
@@ -3698,12 +3690,12 @@ button.btn-icon-text > i.icon-white {
     left: 152px;
     top: 102px;
     bottom: 0; /* Account for scrollbars */
-    min-width: 130px;
+    min-width: 150px;
     border-right: 1px solid #5b5b5b;
     background: #242424;
     font-size: 14px;
     color: #cecece;
-    padding: 10px;
+    padding: 10px 0;
     z-index: 1;
 
     -webkit-transition: top 0.2s linear;
@@ -3713,7 +3705,11 @@ button.btn-icon-text > i.icon-white {
 }
 
 #sub-menu h3 {
-    padding: 0;
+    padding: 0 10px 10px;
+}
+
+#sub-menu hr {
+    margin: 0 5px;
 }
 
 #sub-menu .navigation {
@@ -3721,12 +3717,17 @@ button.btn-icon-text > i.icon-white {
     padding-left: 0;
 }
 
-#sub-menu .navigation li {
-    padding-bottom: 10px;
+#sub-menu .navigation li.active {
+    color: #fff;
+    background-color: #333;
+    border-right: 1px solid #1ADEFF;
+    margin-right: -1px;
 }
 
 #sub-menu .navigation a {
+    display: block;
     color: #cecece;
+    padding: 10px;
     text-decoration: none;
 }
 
@@ -3868,9 +3869,8 @@ li .ui-state-hover {
     -webkit-flex-flow: column;
     flex-flow: column;
 
-    /* Account for the left pane */
     flex: 6 auto;
-    min-width: 500px;
+    min-width: 505px;
 }
 
 .outer-datatable-wrapper {
@@ -3878,9 +3878,19 @@ li .ui-state-hover {
     flex: 1;
 }
 
+#user_list_inner_wrapper {
+    height: 272px;
+    overflow: auto;
+}
+
 #users_datatable_wrapper {
-    /*position: absolute;*/
-    min-height: 300px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column;
+    flex-flow: column;
 }
 
 #users_datatable {

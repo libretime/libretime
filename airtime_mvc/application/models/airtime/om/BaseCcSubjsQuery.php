@@ -74,6 +74,10 @@
  * @method CcSubjsQuery rightJoinCcSubjsToken($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcSubjsToken relation
  * @method CcSubjsQuery innerJoinCcSubjsToken($relationAlias = null) Adds a INNER JOIN clause to the query using the CcSubjsToken relation
  *
+ * @method CcSubjsQuery leftJoinPodcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the Podcast relation
+ * @method CcSubjsQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
+ * @method CcSubjsQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
+ *
  * @method CcSubjs findOne(PropelPDO $con = null) Return the first CcSubjs matching the query
  * @method CcSubjs findOneOrCreate(PropelPDO $con = null) Return the first CcSubjs matching the query, or a new CcSubjs object populated from the query conditions when no match is found
  *
@@ -1394,6 +1398,80 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
         return $this
             ->joinCcSubjsToken($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'CcSubjsToken', 'CcSubjsTokenQuery');
+    }
+
+    /**
+     * Filter the query by a related Podcast object
+     *
+     * @param   Podcast|PropelObjectCollection $podcast  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcSubjsQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByPodcast($podcast, $comparison = null)
+    {
+        if ($podcast instanceof Podcast) {
+            return $this
+                ->addUsingAlias(CcSubjsPeer::ID, $podcast->getDbOwner(), $comparison);
+        } elseif ($podcast instanceof PropelObjectCollection) {
+            return $this
+                ->usePodcastQuery()
+                ->filterByPrimaryKeys($podcast->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByPodcast() only accepts arguments of type Podcast or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the Podcast relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcSubjsQuery The current query, for fluid interface
+     */
+    public function joinPodcast($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('Podcast');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'Podcast');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the Podcast relation Podcast object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   PodcastQuery A secondary query class using the current class as primary query
+     */
+    public function usePodcastQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinPodcast($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'Podcast', 'PodcastQuery');
     }
 
     /**

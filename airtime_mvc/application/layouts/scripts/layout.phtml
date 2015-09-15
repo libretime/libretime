@@ -66,22 +66,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <a href="#"><?php echo _("Webstream") ?></a>
             </li>
         </ul>
-        <a href="/Plupload">
+        <a href="/plupload">
             <button id="add_media_btn" class="btn btn-small dashboard-btn btn-new">
                 <span><?php echo _("Upload") ?></span>
             </button>
         </a>
     </div>
-    <div class="media_type_selector top-link" data-selection-id="1">
-        <a href="/showbuilder#"><i class='icon-home icon-white'></i><?php echo _("Dashboard") ?></a></div>
-    <div class="media_type_selector dashboard_sub_nav" data-selection-id="1">
-        <a href="/showbuilder#tracks"><i class='icon-music icon-white'></i><?php echo _("Tracks") ?></a></div>
-    <div class="media_type_selector dashboard_sub_nav" data-selection-id="2">
-        <a href="/showbuilder#playlists"><i class='icon-list icon-white'></i><?php echo _("Playlists") ?></a></div>
-    <div class="media_type_selector dashboard_sub_nav" data-selection-id="3">
-        <a href="/showbuilder#smart-blocks"><i class='icon-time icon-white'></i><?php echo _("Smart Blocks") ?></a></div>
-    <div class="media_type_selector dashboard_sub_nav" data-selection-id="4">
-        <a href="/showbuilder#webstreams"><i class='icon-random icon-white'></i><?php echo _("Webstreams") ?></a></div>
+
+    <div class="media_type_selector top-link" data-selection-id="<?php echo MediaType::getDefault(); ?>">
+        <a href="/showbuilder#">
+            <i class='icon-home icon-white'></i>
+            <?php echo _("Dashboard") ?>
+        </a>
+    </div>
+    <?php $subnavPrefix = "/showbuilder"; require_once APPLICATION_PATH . "views/scripts/partialviews/dashboard-sub-nav.php"; ?>
+
     <hr style="margin-left: 5px; margin-right: 5px">
     <div id="nav">
         <?php echo $this->navigation()->menu(); ?>
@@ -90,7 +89,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <?php
     $partitions = Application_Model_Systemstatus::GetDiskInfo();
     $status = new StdClass;
-    $partitions = $partitions;
     $disk = $partitions[0];
     $used = $disk->totalSpace-$disk->totalFreeSpace;
     $total = $disk->totalSpace;
