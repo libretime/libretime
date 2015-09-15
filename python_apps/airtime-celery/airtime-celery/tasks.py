@@ -1,6 +1,7 @@
 import os
 import json
 import urllib2
+import requests
 import soundcloud
 from celery import Celery
 from celery.utils.log import get_task_logger
@@ -33,12 +34,37 @@ def soundcloud_upload(data, token, file_path):
     data['asset_data'].close()
     return json.dumps(track.fields())
 
+
+@celery.task(name='soundcloud-download', acks_late=True)
+def soundcloud_download(token, callback_url, track_id=None):
+    """
+    This is in stasis 
+
+    :param token:       OAuth2 client access token
+    :param track_id:    SoundCloud track identifier
+    :rtype: None
+    """
+    client = soundcloud.Client(access_token=token)
+    try:
+        tracks = client.get('/me/tracks') if track_id is None else {client.get('/tracks/%s' % track_id)}
+        for track in tracks:
+            if track.downloadable:
+                track_file = client.get(track.download_url)
+                with track_file as f:
+                    requests.post(callback_url, data=f)
+    except Exception as e:
+        logger.info('Error during file download: {0}'.format(e.message))
+        logger.info(str(e))
+        raise e
+
+
 @celery.task(name='soundcloud-delete', acks_late=True)
 def soundcloud_delete(token, track_id):
     """
     Delete a file from SoundCloud
 
-    :param token: OAuth2 client access token
+    :param token:       OAuth2 client access token
+    :param track_id:    SoundCloud track identifier
 
     :return: the SoundCloud response object
     :rtype: dict

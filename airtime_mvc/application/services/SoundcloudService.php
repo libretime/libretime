@@ -19,6 +19,7 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
      */
     protected static $_SERVICE_NAME = SOUNDCLOUD_SERVICE_NAME;  // SoundCloud service name constant from constants.php
 
+    // TODO: Make these constants
     /**
      * @var string exchange name for SoundCloud tasks
      */
@@ -28,6 +29,11 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
      * @var string celery task name for third party uploads
      */
     protected static $_CELERY_UPLOAD_TASK_NAME = 'soundcloud-upload';
+
+    /**
+     * @var string celery task name for third party uploads
+     */
+    protected static $_CELERY_DOWNLOAD_TASK_NAME = 'soundcloud-download';
 
     /**
      * @var string celery task name for third party deletions

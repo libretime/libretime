@@ -125,6 +125,13 @@ abstract class ThirdPartyService {
     abstract function upload($fileId);
 
     /**
+     * Download the file with the given identifier from a third-party service
+     *
+     * @param int $trackId the third-party service track identifier
+     */
+    abstract function download($trackId);
+
+    /**
      * Delete the file with the given identifier from a third-party service
      *
      * @param int $fileId the cc_files identifier

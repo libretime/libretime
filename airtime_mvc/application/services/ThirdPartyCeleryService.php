@@ -15,6 +15,11 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     protected static $_CELERY_UPLOAD_TASK_NAME;
 
     /**
+     * @var string celery task name for third-party uploads
+     */
+    protected static $_CELERY_DOWNLOAD_TASK_NAME;
+
+    /**
      * @var string celery task name for third-party deletion
      */
     protected static $_CELERY_DELETE_TASK_NAME;
@@ -42,6 +47,31 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     }
 
     /**
+     * Given a SoundCloud track identifier, download a track from SoundCloud.
+     *
+     * If no track identifier is given, download all tracks for the currently
+     * authenticated SoundCloud user.
+     *
+     * @param int|null $trackId a SoundCloud track identifier
+     */
+    public function download($trackId = null) {
+        $namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrfToken = $namespace->authtoken;
+        $data = array(
+            'callback_url' => 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/media/post>csrf_token=' . $csrfToken,
+            'token' => $this->_accessToken,
+            'track_id' => $trackId
+        );
+        try {
+            CeleryService::sendCeleryMessage(static::$_CELERY_DOWNLOAD_TASK_NAME,
+                                             static::$_CELERY_EXCHANGE_NAME,
+                                             $data);
+        } catch (Exception $e) {
+            Logging::info("Invalid request: " . $e->getMessage());
+        }
+    }
+
+    /**
      * Delete the file with the given identifier from a third-party service
      *
      * @param int $fileId the local CcFiles identifier
@@ -52,7 +82,7 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     public function delete($fileId) {
         $serviceId = $this->getServiceId($fileId);
         if ($serviceId == 0) {
-            throw new ServiceNotFoundException("No service found for file with ID $fileId");
+            throw new ServiceNotFoundException("No service ID found for file with ID $fileId");
         }
         $data = array(
             'token' => $this->_accessToken,
