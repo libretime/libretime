@@ -550,6 +550,7 @@ var AIRTIME = (function(AIRTIME){
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
+        setFadeIcon();
     }
 
     function openPlaylistPanel() {
