@@ -19,6 +19,7 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
      */
     protected static $_SERVICE_NAME = SOUNDCLOUD_SERVICE_NAME;  // SoundCloud service name constant from constants.php
 
+    // TODO: Make these constants
     /**
      * @var string exchange name for SoundCloud tasks
      */
