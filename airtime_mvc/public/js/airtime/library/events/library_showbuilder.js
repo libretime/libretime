@@ -255,7 +255,10 @@ var AIRTIME = (function(AIRTIME) {
         var $toolbar = $(".lib-content .fg-toolbar:first");
 
         mod.createToolbarButtons();
-        mod.moveSearchBarToHeader();
+        //mod.moveSearchBarToHeader();
+        $("#advanced_search").click(function(e) {
+            e.stopPropagation();
+        });
 
         if (localStorage.getItem('user-type') != 'G') {
             $toolbar.append($menu);

@@ -214,13 +214,6 @@ var AIRTIME = (function(AIRTIME) {
             );
     };
 
-    mod.moveSearchBarToHeader = function() {
-        $("#library_display_filter").appendTo("#library_content > .panel-header");
-        $("#advanced_search").click(function(e) {
-            e.stopPropagation();
-        });
-    };
-
     mod.createToolbarDropDown = function() {
         $('#sb-select-page').click(function(){mod.selectCurrentPage();});
         $('#sb-dselect-page').click(function(){mod.deselectCurrentPage();});
@@ -491,18 +484,6 @@ var AIRTIME = (function(AIRTIME) {
             }
 
             AIRTIME.library.fnDeleteItems(aMedia);
-
-            // close the object (playlist/block/webstream)
-            // on the right side if it was just deleted
-            // from the library
-
-            //if (closeObj) {
-            //    $.post(baseUrl+"playlist/close-playlist",
-            //        {"format": "json", "type": currentObjType},
-            //        function(json) {
-            //            $("#editor_pane_wrapper").empty().append(json.html);
-            //        });
-            //}
         }
     };
 
@@ -731,7 +712,7 @@ var AIRTIME = (function(AIRTIME) {
 
             "oColVis": {
                 "sAlign": "right",
-                "aiExclude": [0, 1, 2, 31],
+                "aiExclude": [0, 1, 2, 32],
                 "sSize": "css",
                 "fnStateChange": setFilterElement,
                 "buttonText": $.i18n._("Columns"),
