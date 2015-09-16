@@ -87,8 +87,9 @@
 
 #library_content .dataTables_filter input[type="text"], #library_content .dataTables_filter select {
     height: 26px;
-    margin: 0;
-
+    /*margin: 0;*/
+    /* Quick fix, kind of ugly */
+    margin: -30px 0 0;
     border: 0;
     float: left;
     position: absolute;
