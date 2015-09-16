@@ -14,7 +14,7 @@ var AIRTIME = (function(AIRTIME){
                          Internal Functions
         ##################################################### */
 
-    function buildNewTab(json) {
+    function _buildNewTab(json) {
         AIRTIME.library.selectNone();
 
         var tabId = $openTabs[json.type + json.id];
@@ -28,13 +28,14 @@ var AIRTIME = (function(AIRTIME){
             t = $("#show_builder").append(wrapper).find("#pl-tab-content-" + $tabCount),
             pane = $(".editor_pane_wrapper:last"),
             name = json.type == "md" ?  // file
-            pane.append(json.html).find("#track_title").val() + $.i18n._(" - Metadata Editor")
-                : pane.append(json.html).find(".playlist_name_display").val(),
+                       pane.append(json.html).find("#track_title").val() + $.i18n._(" - Metadata Editor")
+                     : pane.append(json.html).find(".playlist_name_display").val(),
             tab =
                 "<li data-tab-id='" + $tabCount + "' data-tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
-                "<a href='javascript:void(0)'><span class='tab-name'></span>" +
-                "<span href='#' class='lib_pl_close icon-remove'></span>" +
-                "</a>" +
+                    "<a href='javascript:void(0)'>" +
+                        "<span class='tab-name'></span>" +
+                        "<span href='#' class='lib_pl_close icon-remove'></span>" +
+                    "</a>" +
                 "</li>",
             tabs = $(".nav.nav-tabs");
 
@@ -52,7 +53,7 @@ var AIRTIME = (function(AIRTIME){
         return {wrapper: pane, tab: newTab, pane: t};
     }
 
-    function initFileMdEvents(newTab) {
+    function _initFileMdEvents(newTab) {
         newTab.tab.on("click", function() {
             if (!$(this).hasClass('active')) {
                 mod.switchTab(newTab.pane, newTab.tab);
@@ -89,17 +90,17 @@ var AIRTIME = (function(AIRTIME){
         ##################################################### */
 
     mod.openFileMdEditorTab = function(json) {
-        var newTab = buildNewTab(json);
+        var newTab = _buildNewTab(json);
         if (newTab === undefined) {
             return;
         }
 
-        initFileMdEvents(newTab);
+        _initFileMdEvents(newTab);
         AIRTIME.playlist.setupEventListeners();
     };
 
     mod.openPlaylistTab = function(json) {
-        var newTab = buildNewTab(json);
+        var newTab = _buildNewTab(json);
         if (newTab === undefined) {
             return;
         }
@@ -129,18 +130,18 @@ var AIRTIME = (function(AIRTIME){
             toTab = tab.next().length > 0 ? tab.next() : tab.prev(),
             objId = pane.find(".obj_id").val(),
             contents = id ? pane : $activeTabPane;
-        delete $openTabs[tab.data("tab-type") + objId]; // Remove the closed tab from our open tabs array
+        delete $openTabs[tab.data("tab-type") + objId];  // Remove the closed tab from our open tabs array
 
-        // Remove the relevant DOM elements (the tab and the tab content)
+        // Remove the relevant DOM elements (the tab and its contents)
         tab.remove();
         contents.remove();
 
-        if (pane.get(0) == $activeTabPane.get(0)) { // Closing the current tab, otherwise we don't need to switch tabs
+        if (pane.get(0) == $activeTabPane.get(0)) {  // Closing the current tab, otherwise we don't need to switch tabs
             mod.switchTab(toPane, toTab);
         }
 
-        // If we close a tab that was causing tabs to wrap to the next row, we need to resize to change the
-        // margin for the tab nav
+        // If we close a tab that was causing tabs to wrap to the next row
+        // we need to resize to change the margin for the tab nav
         AIRTIME.playlist.onResize();
     };
 
@@ -188,9 +189,9 @@ var AIRTIME = (function(AIRTIME){
             allTabs.each(function() {
                 if ($(this).data("tab-id") == id) {
                     t = $(this);
+                    return false;  // Break out of the loop
                 }
             });
-            // An id was passed in, but no tab with that id exists
             return t;
         }
         return allTabs;

@@ -32,39 +32,6 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     }
 
     /**
-     * Send user to a third-party service to authorize before being redirected
-     *
-     * @return void
-     */
-    public function authorizeAction() {
-        $auth_url = $this->_service->getAuthorizeUrl();
-        header('Location: ' . $auth_url);
-    }
-
-    /**
-     * Clear the previously saved request token from the preferences
-     *
-     * @return void
-     */
-    public function deauthorizeAction() {
-        $function = $this->_SERVICE_TOKEN_ACCESSOR;
-        Application_Model_Preference::$function("");
-        header('Location: ' . $this->_baseUrl . 'preference');  // Redirect back to the preference page
-    }
-
-    /**
-     * Called when user successfully completes third-party authorization
-     * Store the returned request token for future requests
-     *
-     * @return void
-     */
-    public function redirectAction() {
-        $code = $_GET['code'];
-        $this->_service->requestNewAccessToken($code);
-        header('Location: ' . $this->_baseUrl . 'preference');  // Redirect back to the preference page
-    }
-
-    /**
      * Upload the file with the given id to a third-party service
      *
      * @return void

@@ -29,6 +29,7 @@ require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
 require_once "Auth.php";
 require_once "interface/OAuth2.php";
+require_once "interface/OAuth2Controller.php";
 require_once "TaskManager.php";
 require_once "UsabilityHints.php";
 require_once "MediaType.php";
@@ -180,6 +181,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             ->appendFile($baseUrl . 'js/libs/jquery-ui-1.8.24.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/bootstrap/bootstrap.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/libs/underscore-min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/libs/angular.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
 
             // ->appendFile($baseUrl . 'js/libs/jquery.stickyPanel.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/qtip/jquery.qtip.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
