@@ -41,8 +41,6 @@ class Podcast extends BasePodcast
             $podcast->setDbType(IMPORTED_PODCAST);
             $podcast->save();
 
-            //TODO: fetch podcast episodes and return with podcast object
-
             return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
         } catch(Exception $e) {
             $podcast->delete();

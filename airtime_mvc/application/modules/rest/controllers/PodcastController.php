@@ -44,7 +44,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
     public function getAction()
     {
-        Logging::info("podcasts get");
         $id = $this->getId();
         if (!$id) {
             return;
