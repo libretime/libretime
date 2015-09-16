@@ -730,7 +730,7 @@ th.library_checkbox {
         Podcasts
     ~~~~~~~~~~~~~~~~ */
 
-#podcast_table {
+#podcast_table_filter {
     display: none;
 }
 

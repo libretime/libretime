@@ -143,7 +143,7 @@ AIRTIME = (function(AIRTIME) {
 
             if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeEnum.PODCAST) {
                 $("#library_display_wrapper").hide();
-                $("#podcast_table").show();
+                $("#podcast_table_wrapper").show();
 
                 t = AIRTIME.library.podcastDataTable;
             } else {
@@ -152,7 +152,7 @@ AIRTIME = (function(AIRTIME) {
                 }
 
                 $("#library_display_wrapper").show();
-                $("#podcast_table").hide();
+                $("#podcast_table_wrapper").hide();
                 t = oTable;
             }
 

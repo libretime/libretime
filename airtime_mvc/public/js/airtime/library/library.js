@@ -728,10 +728,7 @@ var AIRTIME = (function(AIRTIME) {
 
         });
 
-        /* TODO: implement podcast datatable
-         * mod.podcastDataTable = $("#podcast_table").dataTable({});
-         */
-        mod.podcastDataTable = mod.libraryDataTable;
+
 
         /*  ############################################
                           END DATATABLES
@@ -860,8 +857,11 @@ var AIRTIME = (function(AIRTIME) {
         var selected = $("a[href$='"+location.hash+"']");
         if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeEnum.PODCAST) {
             $("#library_display_wrapper").hide();
-            oTable = mod.podcastDataTable.show();
+            $('#podcast_table_wrapper').show();
+            oTable = mod.podcastDataTable;
         } else {
+            $('#podcast_table_wrapper').hide();
+            $("#library_display_wrapper").show();
             oTable = mod.libraryDataTable;
         }
 
@@ -1231,7 +1231,32 @@ var AIRTIME = (function(AIRTIME) {
                 };
             }
         });
+
     };
+
+
+    /** Create the podcast datatable widget */
+    mod.initPodcastDatatable = function()
+    {
+        var aoColumns = [
+            /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "track_title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 },
+            /* Creator */         { "sTitle" : $.i18n._("Creator")            , "mDataProp" : "artist_name"  , "sClass"      : "library_creator"     , "sWidth"      : "160px"                 },
+            /* Upload Time */     { "sTitle" : $.i18n._("Uploaded")           , "mDataProp" : "utime"        , "bVisible"    : false                 , "sClass"      : "library_upload_time"   , "sWidth" : "155px"        },
+            /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
+            /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
+        ];
+        var ajaxSourceURL = baseUrl+"rest/media";
+
+        //Set up the div with id "podcast_table" as a datatable.
+        mod.podcastDataTable = AIRTIME.widgets.table.init(
+            $('#podcast_table'), //DOM node to create the table inside.
+            true,                //Enable item selection
+            {                    //Datatables overrides.
+                'aoColumns' : aoColumns,
+                'sAjaxSource' : ajaxSourceURL
+            });
+    }
+
 
     mod.libraryInit = libraryInit;
 
@@ -1400,6 +1425,9 @@ var validationTypes = {
 
 
 $(document).ready(function() {
+
+    AIRTIME.library.initPodcastDatatable();
+
     $("#advanced-options").on("click", function() {
         resizeAdvancedSearch();
     });

@@ -15,7 +15,8 @@ var AIRTIME = (function(AIRTIME) {
     var self;
     var self = AIRTIME.widgets.table;
 
-    //Constants
+
+    //Constants and enumerations
     self.SELECTION_MODE = {
         SINGLE : 0,
         MULTI_SHIFT : 1,
@@ -37,13 +38,11 @@ var AIRTIME = (function(AIRTIME) {
     self.init = function(wrapperDOMNode, bItemSelection, dataTablesOptions) {
         self._$wrapperDOMNode = $(wrapperDOMNode);
 
-        //TODO: If selection is enabled, add in the checkbox column.
+        // If selection is enabled, add in the checkbox column.
         if (bItemSelection) {
             dataTablesOptions["aoColumns"].unshift(
                 /* Checkbox */        { "sTitle" : "", "mData" : self._datatablesCheckboxDataDelegate, "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass" : "library_checkbox" }
             );
-
-            dataTablesOptions["fnRowCallback"] = self._rowCreatedCallback;
         }
 
         var options = {
@@ -69,10 +68,10 @@ var AIRTIME = (function(AIRTIME) {
                 "iOverlayFade": 0
             },
             // z = ColResize, R = ColReorder, C = ColVis
-            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
+            "sDom": 'Rf<"dt-process-rel"r><"H"<"table_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
 
             "fnServerData": self._fetchData,
-            "fnDrawCallback" : self._tableDrawCallback
+            //"fnDrawCallback" : self._tableDrawCallback
         };
 
         //Override any options with those passed in as arguments to this constructor.
@@ -83,6 +82,9 @@ var AIRTIME = (function(AIRTIME) {
 
         self._datatable = self._$wrapperDOMNode.dataTable(options);
 
+        self._setupEventHandlers(bItemSelection);
+
+        return self._datatable;
     };
 
     self._handleAjaxError = function(r) {
@@ -105,7 +107,6 @@ var AIRTIME = (function(AIRTIME) {
 
         var echo = aoData[0].value; //Datatables state tracking. Must be included.
 
-        //getUsabilityHint();
         var sortColName = "";
         var sortDir = "";
         if (oSettings.aaSorting.length > 0) {
@@ -129,7 +130,7 @@ var AIRTIME = (function(AIRTIME) {
                 json = [];
                 json.aaData = rawResponseJSON;
                 json.iTotalRecords = jqXHR.getResponseHeader('X-TOTAL-COUNT');
-                json.iTotalDisplayRecords = json.iTotalRecords;//rawResponseJSON.length;
+                json.iTotalDisplayRecords = json.iTotalRecords;
                 json.sEcho = echo;
 
                 //Pass it along to datatables.
@@ -178,36 +179,112 @@ var AIRTIME = (function(AIRTIME) {
         return "check";
     };
 
+    /*
     self._rowCreatedCallback = function(nRow, aData, iDisplayIndex) {
 
-        // Bind click event
-        $(nRow).click(function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            document.getSelection().removeAllRanges();
-            //alert( 'You clicked on '+aData.track_title+'\'s row' + iDisplayIndex);
-            var selectionMode = self.SELECTION_MODE.SINGLE;
-            if (e.shiftKey) {
-                selectionMode = self.SELECTION_MODE.MULTI_SHIFT;
-            } else if (e.ctrlKey) {
-                selectionMode = self.SELECTION_MODE.MULTI_CTRL;
-            }
-            self.selectRow(nRow, aData, selectionMode, iDisplayIndex);
-        });
-
         return nRow;
-    };
 
+    };*/
+
+    /*
     self._tableDrawCallback = function(oSettings) {
 
-        $('input.airtime_table_checkbox').click(function(e) {
-            $this = $(this);
 
-            var iVisualRowIdx = $this.parent().parent().index();
-            self.selectRow($this.parent().parent(), null, self.SELECTION_MODE.MULTI_CTRL, iVisualRowIdx); //Always multiselect for checkboxes
-            e.stopPropagation();
-            return true;
+    };*/
+
+
+    /* Set up global event handlers for the datatable.
+    *  @param bItemSelection Whether or not row selection behaviour should be enabled for this widget.
+    * */
+    self._setupEventHandlers = function(bItemSelection) {
+
+        /** This table row event handler is created once and catches events for any row. (It's less resource intensive
+         *  than having a per-row callback...)
+         */
+        if (bItemSelection) {
+            $(self._datatable, 'tbody tr').on('click contextmenu', 'tr', function (e) {
+                var aData = $(this).data(); //Neat trick - thanks DataTables!
+                var iDisplayIndex = $(this).index(); //The index of the row in the current page in the table.
+                var nRow = this;
+
+                e.stopPropagation();
+                e.preventDefault();
+                document.getSelection().removeAllRanges();
+
+                var selectionMode = self.SELECTION_MODE.SINGLE;
+                if (e.shiftKey) {
+                    selectionMode = self.SELECTION_MODE.MULTI_SHIFT;
+                } else if (e.ctrlKey) {
+                    selectionMode = self.SELECTION_MODE.MULTI_CTRL;
+                }
+
+                if (e.button == 2) {
+                    selectionMode = self.SELECTION_MODE.SINGLE;
+                }
+                self.selectRow(nRow, aData, selectionMode, iDisplayIndex);
+            });
+
+            $(self._datatable, 'tbody tr').on('click', 'input.airtime_table_checkbox', function(e) {
+                $this = $(this);
+
+                var iVisualRowIdx = $this.parent().parent().index();
+                var aData = $this.parent().parent().data();
+                var selectionMode = self.SELECTION_MODE.MULTI_CTRL; //Behaviour for checkboxes.
+                if (e.shiftKey) {
+                    selectionMode = self.SELECTION_MODE.MULTI_SHIFT;
+                }
+                self.selectRow($this.parent().parent(), aData, selectionMode, iVisualRowIdx); //Always multiselect for checkboxes
+                e.stopPropagation();
+                return true;
+            });
+        }
+
+        $(self._datatable).on('init', function(e) {
+            self._setupToolbarButtons(true, {});
         });
+    }
+
+    self._setupToolbarButtons = function(bIncludeDefaultActions, extraButtons) {
+        var $menu = self._$wrapperDOMNode.parent().parent().find("div.table_toolbar");
+        $menu.addClass("btn-toolbar");
+
+        if (bIncludeDefaultActions)
+        {
+            $menu
+                .append(
+                "<div class='btn-group' title=" + $.i18n._('New') + ">" +
+                "<button class='btn btn-small btn-new' id='sb-new'>" +
+                "<i class='icon-white icon-plus'></i>" +
+                "<span>" + $.i18n._('New') + "</span>" +
+                "</button>" +
+                "</div>"
+            ).append(
+                "<div class='btn-group' title=" + $.i18n._('Edit') + ">" +
+                "<button class='btn btn-small' id='sb-edit'>" +
+                "<i class='icon-white icon-pencil'></i>" +
+                "<span>" + $.i18n._('Edit') + "</span>" +
+                "</button>" +
+                "</div>"
+            );
+
+            $menu.append(
+                "<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
+                "<button class='btn btn-small btn-danger' id='sb-trash'>" +
+                "<i class='icon-white icon-trash'></i>" +
+                "<span>" + $.i18n._('Delete') + "</span>" +
+                "</button>" +
+                "</div>"
+            );
+        }
+    };
+
+    self._clearSelection = function() {
+        self._selectedRows = [];
+        //self._selectedRowVisualIdxMap = [];
+        self._selectedRowVisualIdxMin = self.HUGE_INT;
+        self._selectedRowVisualIdxMax = -1;
+        self._$wrapperDOMNode.find('.selected').removeClass('selected');
+        self._$wrapperDOMNode.find('input.airtime_table_checkbox').attr('checked', false);
     };
 
     /** @param nRow is a tr DOM node (non-jQuery)
@@ -225,94 +302,83 @@ var AIRTIME = (function(AIRTIME) {
 
         var $nRow = $(nRow);
 
-        /*
-                var foundAtIdx = $.inArray(aData, self._selectedRows)
+        //Regular single left-click mode
+        if (selectionMode == self.SELECTION_MODE.SINGLE) {
 
-                if (foundAtIdx >= 0 && self._selectedRows.length > 1) {
-                    self._selectedRows.splice(foundAtIdx, 1);
-                    $nRow.removeClass('selected');
-                    $nRow.find('input.airtime_table_checkbox').attr('checked', false);
-                    */
-        if (false) {
-        } else {
-            //Regular single left-click mode
-            if (selectionMode == self.SELECTION_MODE.SINGLE) {
+            self._clearSelection();
 
-                self._clearSelection();
+            self._selectedRows.push(aData);
+            self._selectedRowVisualIdxMin = iVisualRowIdx;
+            self._selectedRowVisualIdxMax = iVisualRowIdx;
+            //self._selectedRowVisualIdxMap[iVisualRowIdx] = aData;
 
+            $nRow.addClass('selected');
+            $nRow.find('input.airtime_table_checkbox').attr('checked', true);
+        }
+        //Ctrl-click multi row selection mode
+        else if (selectionMode == self.SELECTION_MODE.MULTI_CTRL) {
+
+            var foundAtIdx = $.inArray(aData, self._selectedRows)
+
+            console.log('checkbox mouse', iVisualRowIdx, foundAtIdx);
+            //XXX: Debugging -- Bug here-ish
+            if (foundAtIdx >= 0) {
+                console.log(aData, self._selectedRows[foundAtIdx]);
+            } else {
+                console.log("clicked row not detected as already selected");
+            }
+
+            if (foundAtIdx >= 0 && self._selectedRows.length > 1) {
+                self._selectedRows.splice(foundAtIdx, 1);
+                $nRow.removeClass('selected');
+                $nRow.find('input.airtime_table_checkbox').attr('checked', false);
+            }
+            else {
                 self._selectedRows.push(aData);
+
                 self._selectedRowVisualIdxMin = iVisualRowIdx;
                 self._selectedRowVisualIdxMax = iVisualRowIdx;
-                //self._selectedRowVisualIdxMap[iVisualRowIdx] = aData;
 
                 $nRow.addClass('selected');
                 $nRow.find('input.airtime_table_checkbox').attr('checked', true);
             }
-            //Ctrl-click multi row selection mode
-            else if (selectionMode == self.SELECTION_MODE.MULTI_CTRL) {
-
-
-                var foundAtIdx = $.inArray(aData, self._selectedRows)
-                if (foundAtIdx >= 0 && self._selectedRows.length > 1) {
-                    self._selectedRows.splice(foundAtIdx, 1);
-                    $nRow.removeClass('selected');
-                    $nRow.find('input.airtime_table_checkbox').attr('checked', false);
-                }
-                else {
-                    self._selectedRows.push(aData);
-
-                    self._selectedRowVisualIdxMin = iVisualRowIdx;
-                    self._selectedRowVisualIdxMax = iVisualRowIdx;
-
-                    $nRow.addClass('selected');
-                    $nRow.find('input.airtime_table_checkbox').attr('checked', true);
-                }
-            }
-            //Shift-click multi row selection mode
-            else if (selectionMode == self.SELECTION_MODE.MULTI_SHIFT) {
-
-                //If there's no rows selected, just behave like single selection.
-                if (self._selectedRows.length == 0) {
-                    return self.selectRow(nRow, aData, self.SELECTION_MODE.SINGLE, iVisualRowIdx);
-                }
-
-                if (iVisualRowIdx > self._selectedRowVisualIdxMax) {
-                    self._selectedRowVisualIdxMax = iVisualRowIdx;
-                }
-                if (iVisualRowIdx < self._selectedRowVisualIdxMin) {
-                    self._selectedRowVisualIdxMin = iVisualRowIdx;
-                }
-
-                var selectionStartRowIdx = Math.min(iVisualRowIdx, self._selectedRowVisualIdxMin);
-                var selectionEndRowIdx = Math.min(iVisualRowIdx, self._selectedRowVisualIdxMax);
-
-
-                //We can assume there's at least 1 row already selected now.
-                var allRows = self._datatable.fnGetData();
-
-                self._selectedRows = [];
-                for (var i = self._selectedRowVisualIdxMin; i <= self._selectedRowVisualIdxMax; i++)
-                {
-                    self._selectedRows.push(allRows[i]);
-                    $row = $($nRow.parent().children()[i]);
-                    $row.addClass('selected');
-                    $row.find('input.airtime_table_checkbox').attr('checked', true);
-                }
-
-            }
-            else {
-                console.log("Unimplemented selection mode");
-            }
         }
-    };
+        //Shift-click multi row selection mode
+        else if (selectionMode == self.SELECTION_MODE.MULTI_SHIFT) {
 
-    self._clearSelection = function() {
-        self._selectedRows = [];
-        //self._selectedRowVisualIdxMap = [];
-        self._selectedRowVisualIdxMin = self.HUGE_INT;
-        self._selectedRowVisualIdxMax = -1;
-        self._$wrapperDOMNode.find('.selected').removeClass('selected');
-        self._$wrapperDOMNode.find('input.airtime_table_checkbox').attr('checked', false);
+            //If there's no rows selected, just behave like single selection.
+            if (self._selectedRows.length == 0) {
+                return self.selectRow(nRow, aData, self.SELECTION_MODE.SINGLE, iVisualRowIdx);
+            }
+
+            if (iVisualRowIdx > self._selectedRowVisualIdxMax) {
+                self._selectedRowVisualIdxMax = iVisualRowIdx;
+            }
+            if (iVisualRowIdx < self._selectedRowVisualIdxMin) {
+                self._selectedRowVisualIdxMin = iVisualRowIdx;
+            }
+
+            var selectionStartRowIdx = Math.min(iVisualRowIdx, self._selectedRowVisualIdxMin);
+            var selectionEndRowIdx = Math.min(iVisualRowIdx, self._selectedRowVisualIdxMax);
+
+
+            //We can assume there's at least 1 row already selected now.
+            var allRows = self._datatable.fnGetData();
+
+            self._selectedRows = [];
+            for (var i = self._selectedRowVisualIdxMin; i <= self._selectedRowVisualIdxMax; i++)
+            {
+                self._selectedRows.push(allRows[i]);
+                $row = $($nRow.parent().children()[i]);
+                $row.addClass('selected');
+                $row.find('input.airtime_table_checkbox').attr('checked', true);
+            }
+
+        }
+        else {
+            console.log("Unimplemented selection mode");
+        }
+
     };
 
     self.getSelectedRows = function() {
