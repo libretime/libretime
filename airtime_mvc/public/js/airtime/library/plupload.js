@@ -161,9 +161,7 @@ $(document).ready(function () {
         });
     };
 
-    var parent = $("#recent_uploads"),fn = getPanTextFunctions();
-    parent.on("mouseenter", "td", fn.mousein);
-    parent.on("mouseleave", "td", fn.mouseout);
+    setupTextScrolling($("#recent_uploads"), "td");
 
     self.isRecentUploadsRefreshTimerActive = false;
 

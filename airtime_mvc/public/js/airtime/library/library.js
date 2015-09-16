@@ -710,24 +710,6 @@ var AIRTIME = (function(AIRTIME) {
                 } else if (!aData.is_playlist) {
                     $(nRow).find("td.library_is_playlist").html('');
                 }
-
-                // add the play function to the library_type td
-                $(nRow).find('td.library_type').click(function () {
-                    if (aData.ftype === 'playlist' && aData.length !== '0.0') {
-                        open_playlist_preview(aData.audioFile, 0);
-                    } else if (aData.ftype === 'audioclip') {
-                        if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.id);
-                        }
-                    } else if (aData.ftype == 'stream') {
-                        if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.id);
-                        }
-                    } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
-                        open_block_preview(aData.audioFile, 0);
-                    }
-                    return false;
-                });
             },
             // remove any selected nodes before the draw.
             "fnPreDrawCallback": function (oSettings) {
@@ -983,6 +965,26 @@ var AIRTIME = (function(AIRTIME) {
             } else {
                 flagForDeselection = true;
             }
+        });
+
+        // add the play function to the library_type td
+        $libTable.on("click", "td.library_type", function () {
+            var aData = $(this).parent().data().aData;
+
+            if (aData.ftype === 'playlist' && aData.length !== '0.0') {
+                open_playlist_preview(aData.audioFile, 0);
+            } else if (aData.ftype === 'audioclip') {
+                if (isAudioSupported(aData.mime)) {
+                    open_audio_preview(aData.ftype, aData.id);
+                }
+            } else if (aData.ftype == 'stream') {
+                if (isAudioSupported(aData.mime)) {
+                    open_audio_preview(aData.ftype, aData.id);
+                }
+            } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
+                open_block_preview(aData.audioFile, 0);
+            }
+            return false;
         });
 
         $libTable.find("tbody").on("mousedown", "tr[class*='lib'] > td:not(.library_checkbox, .dataTables_empty)", function(ev) {

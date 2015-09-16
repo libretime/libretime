@@ -201,7 +201,5 @@ var AIRTIME = (function(AIRTIME){
 }(AIRTIME || {}));
 
 $(document).ready(function() {
-    var parent = $("#show_builder"), fn = getPanTextFunctions();
-    parent.on("mouseenter", ".tab-name", fn.mousein);
-    parent.on("mouseleave", ".tab-name", fn.mouseout);
+    setupTextScrolling($("#show_builder"), ".tab-name");
 });
