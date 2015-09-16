@@ -33,7 +33,7 @@ require_once "TaskManager.php";
 require_once "UsabilityHints.php";
 require_once "MediaType.php";
 require_once __DIR__.'/models/formatters/LengthFormatter.php';
-require_once __DIR__.'/services/CeleryService.php';
+require_once __DIR__.'/services/CeleryManager.php';
 require_once __DIR__.'/services/SoundcloudService.php';
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';

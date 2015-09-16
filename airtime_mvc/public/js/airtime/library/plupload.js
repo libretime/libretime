@@ -157,26 +157,11 @@ $(document).ready(function () {
                         getUsabilityHint();
                     }
                 });
-            },
-            "fnCreatedRow": function(nRow) {
-                $(nRow).find("td").hover(
-                    function () {
-                        var sw = $(this)[0].scrollWidth, iw = $(this).innerWidth();
-                        if (sw > iw) {
-                            $(this).stop().animate({
-                                textIndent: "-" + (sw - iw) + "px"
-                            }, sw * 8);
-                        }
-                    },
-                    function () {
-                        $(this).stop().animate({
-                            textIndent: "0"
-                        }, 500);
-                    }
-                );
             }
         });
     };
+
+    setupTextScrolling($("#recent_uploads"), "td");
 
     self.isRecentUploadsRefreshTimerActive = false;
 

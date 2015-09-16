@@ -289,3 +289,18 @@ function getUsabilityHint() {
     });
 }
 
+function setupTextScrolling(parent, selector) {
+    parent.on("mouseenter", selector, function () {
+        var sw = $(this)[0].scrollWidth - parseFloat($(this).css("textIndent")), iw = $(this).innerWidth();
+        if (sw > iw) {
+            $(this).stop().animate({
+                textIndent: "-" + (sw + 1 - iw) + "px"
+            }, sw * 8);
+        }
+    });
+    parent.on("mouseleave", selector, function () {
+        $(this).stop().animate({
+            textIndent: "0"
+        }, 500);
+    });
+}

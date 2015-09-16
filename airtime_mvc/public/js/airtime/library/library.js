@@ -76,35 +76,35 @@ var AIRTIME = (function(AIRTIME) {
     mod.placeholder = function(mediaType) {
         switch (mediaType) {
             // TODO: remove duplication in a nice way?
-            case MediaTypeEnum.FILE:
+            case mod.MediaTypeEnum.FILE:
                 return {
                     "media": "tracks",
                     "icon": "icon-music",
                     "subtext": "Click 'Upload' to add some now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/"
                 };
-            case MediaTypeEnum.PLAYLIST:
+            case mod.MediaTypeEnum.PLAYLIST:
                 return {
                     "media": "playlists",
                     "icon": "icon-list",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case MediaTypeEnum.BLOCK:
+            case mod.MediaTypeEnum.BLOCK:
                 return {
                     "media": "smart blocks",
                     "icon": "icon-time",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case MediaTypeEnum.WEBSTREAM:
+            case mod.MediaTypeEnum.WEBSTREAM:
                 return {
                     "media": "webstreams",
                     "icon": "icon-random",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case MediaTypeEnum.PODCAST:
+            case mod.MediaTypeEnum.PODCAST:
                 return {
                     "media": "podcasts",
                     "icon": "icon-headphones",
@@ -448,7 +448,7 @@ var AIRTIME = (function(AIRTIME) {
         openTabObjectIds.each(function(i, el) {
             var v = parseInt($(el).val());
             if ($.inArray(v, mediaIds) > -1) {
-                AIRTIME.playlist.closeTab($(el).closest(".pl-content").attr("data-tab-id"));
+                AIRTIME.tabs.closeTab($(el).closest(".pl-content").attr("data-tab-id"));
             }
         });
 
@@ -710,24 +710,6 @@ var AIRTIME = (function(AIRTIME) {
                 } else if (!aData.is_playlist) {
                     $(nRow).find("td.library_is_playlist").html('');
                 }
-
-                // add the play function to the library_type td
-                $(nRow).find('td.library_type').click(function () {
-                    if (aData.ftype === 'playlist' && aData.length !== '0.0') {
-                        open_playlist_preview(aData.audioFile, 0);
-                    } else if (aData.ftype === 'audioclip') {
-                        if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.id);
-                        }
-                    } else if (aData.ftype == 'stream') {
-                        if (isAudioSupported(aData.mime)) {
-                            open_audio_preview(aData.ftype, aData.id);
-                        }
-                    } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
-                        open_block_preview(aData.audioFile, 0);
-                    }
-                    return false;
-                });
             },
             // remove any selected nodes before the draw.
             "fnPreDrawCallback": function (oSettings) {
@@ -983,6 +965,26 @@ var AIRTIME = (function(AIRTIME) {
             } else {
                 flagForDeselection = true;
             }
+        });
+
+        // add the play function to the library_type td
+        $libTable.on("click", "td.library_type", function () {
+            var aData = $(this).parent().data().aData;
+
+            if (aData.ftype === 'playlist' && aData.length !== '0.0') {
+                open_playlist_preview(aData.audioFile, 0);
+            } else if (aData.ftype === 'audioclip') {
+                if (isAudioSupported(aData.mime)) {
+                    open_audio_preview(aData.ftype, aData.id);
+                }
+            } else if (aData.ftype == 'stream') {
+                if (isAudioSupported(aData.mime)) {
+                    open_audio_preview(aData.ftype, aData.id);
+                }
+            } else if (aData.ftype == 'block' && aData.bl_type == 'static') {
+                open_block_preview(aData.audioFile, 0);
+            }
+            return false;
         });
 
         $libTable.find("tbody").on("mousedown", "tr[class*='lib'] > td:not(.library_checkbox, .dataTables_empty)", function(ev) {

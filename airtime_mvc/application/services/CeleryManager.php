@@ -2,7 +2,7 @@
 
 require_once "CeleryServiceFactory.php";
 
-class CeleryService {
+class CeleryManager {
 
     /**
      * @var int milliseconds (for compatibility with celery) until we consider a message to have timed out

@@ -108,21 +108,6 @@ var AIRTIME = (function(AIRTIME){
         }
     };
 
-    mod.switchTab = function(tab, el) {
-        $(".active-tab").hide().removeClass("active-tab");
-        tab.addClass("active-tab").show();
-
-        $(".nav.nav-tabs .active").removeClass("active");
-        el.addClass("active");
-
-        if (tab.hasClass("pl-content")) {
-            AIRTIME.playlist.setAsActive();
-        }
-        AIRTIME.playlist.onResize();
-        AIRTIME.library.fnRedraw();
-    };
-
-
     mod.checkSelectButton = function() {
         var $selectable = $sbTable.find("tr");
 

@@ -237,14 +237,14 @@ class CeleryTask implements AirtimeTask {
      * @return bool true if there are pending tasks in ThirdPartyTrackReferences
      */
     public function shouldBeRun() {
-        return !CeleryService::isBrokerTaskQueueEmpty();
+        return !CeleryManager::isBrokerTaskQueueEmpty();
     }
 
     /**
      * Poll the task queue for any completed Celery tasks
      */
     public function run() {
-        CeleryService::pollBrokerTaskQueue();
+        CeleryManager::pollBrokerTaskQueue();
     }
 
 }

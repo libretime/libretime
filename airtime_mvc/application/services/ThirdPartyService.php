@@ -54,7 +54,7 @@ abstract class ThirdPartyService {
     }
 
     /**
-     * Remove a ThirdPartyTrackReferences from the database.
+     * Remove a ThirdPartyTrackReferences row from the database.
      * This is necessary if the track was removed from the service
      * or the foreign id in our database is incorrect
      *
