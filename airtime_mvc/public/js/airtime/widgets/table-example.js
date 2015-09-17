@@ -13,10 +13,17 @@ $(document).ready(function() {
     ];
     var ajaxSourceURL = baseUrl+"rest/media";
 
+    var myToolbarButtons = AIRTIME.widgets.table.getStandardToolbarButtons();
+    myToolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) { alert('New!'); };
+    myToolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = function(e) { alert('Edit!'); };
+    myToolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) { alert('Delete!'); };
+
+
     //Set up the div with id "example-table" as a datatable.
     var table = AIRTIME.widgets.table.init(
         $('#example-table'), //DOM node to create the table inside.
         true,                //Enable item selection
+        myToolbarButtons,    //Toolbar buttons
         {                    //Datatables overrides.
             'aoColumns' : aoColumns,
             'sAjaxSource' : ajaxSourceURL

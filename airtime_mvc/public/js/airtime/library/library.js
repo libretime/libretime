@@ -1247,10 +1247,17 @@ var AIRTIME = (function(AIRTIME) {
         ];
         var ajaxSourceURL = baseUrl+"rest/media";
 
+
+        var podcastTolbarButtons = AIRTIME.widgets.table.getStandardToolbarButtons();
+        podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) { alert('New!'); };
+        podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = function(e) { alert('Edit!'); };
+        podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) { alert('Delete!'); };
+
         //Set up the div with id "podcast_table" as a datatable.
         mod.podcastDataTable = AIRTIME.widgets.table.init(
             $('#podcast_table'), //DOM node to create the table inside.
             true,                //Enable item selection
+            podcastTolbarButtons, //Toolbar buttons
             {                    //Datatables overrides.
                 'aoColumns' : aoColumns,
                 'sAjaxSource' : ajaxSourceURL

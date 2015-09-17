@@ -15,6 +15,8 @@ var AIRTIME = (function(AIRTIME) {
     var self;
     var self = AIRTIME.widgets.table;
 
+    //TODO: Wrap everything into the prototype
+
 
     //Constants and enumerations
     self.SELECTION_MODE = {
@@ -25,6 +27,21 @@ var AIRTIME = (function(AIRTIME) {
 
     self.HUGE_INT = Math.pow(2, 53) - 1;
 
+    /** Predefined toolbar buttons that you can add to the table. Use getStandardToolbarButtons(). */
+    self.TOOLBAR_BUTTON_ROLES = {
+        NEW :    0,
+        EDIT :   1,
+        DELETE : 2
+    };
+    Object.freeze(self.TOOLBAR_BUTTON_ROLES);
+
+    //Set of standard buttons. Use getStandardToolbarButtons() to grab these and pass them to the init() function.
+    self._STANDARD_TOOLBAR_BUTTONS = {};
+    self._STANDARD_TOOLBAR_BUTTONS[self.TOOLBAR_BUTTON_ROLES.NEW] = { 'title' : $.i18n._('New'), 'iconClass' : "icon-plus", extraBtnClass : "", elementId : 'sb-new', eventHandlers : {} };
+    self._STANDARD_TOOLBAR_BUTTONS[self.TOOLBAR_BUTTON_ROLES.EDIT] = { 'title' : $.i18n._('Edit'), 'iconClass' : "icon-pencil", extraBtnClass : "", elementId : 'sb-edit', eventHandlers : {} };
+    self._STANDARD_TOOLBAR_BUTTONS[self.TOOLBAR_BUTTON_ROLES.DELETE] = { 'title' : $.i18n._('Delete'), 'iconClass' : "icon-trash", extraBtnClass : "btn-danger", elementId : 'sb-trash', eventHandlers : {} };
+    Object.freeze(self._STANDARD_TOOLBAR_BUTTONS);
+
     //Member variables
     self._datatable = null;
     self._selectedRows = []; //An array containing the underlying objects for each selected row. (Easy to use!)
@@ -32,11 +49,14 @@ var AIRTIME = (function(AIRTIME) {
     self._selectedRowVisualIdxMin = self.HUGE_INT;
     self._selectedRowVisualIdxMax = -1;
     self._$wrapperDOMNode = null;
+    self._toolbarButtons = null;
 
 
     //Member functions
-    self.init = function(wrapperDOMNode, bItemSelection, dataTablesOptions) {
+    self.init = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
         self._$wrapperDOMNode = $(wrapperDOMNode);
+
+        self._toolbarButtons = toolbarButtons;
 
         // If selection is enabled, add in the checkbox column.
         if (bItemSelection) {
@@ -240,14 +260,41 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         $(self._datatable).on('init', function(e) {
-            self._setupToolbarButtons(true, {});
+            self._setupToolbarButtons(self._toolbarButtons);
         });
     }
 
-    self._setupToolbarButtons = function(bIncludeDefaultActions, extraButtons) {
+    self.getStandardToolbarButtons = function() {
+
+        //Return a deep copy
+        return jQuery.extend(true, {}, self._STANDARD_TOOLBAR_BUTTONS);
+    };
+
+    /** Populate the toolbar with buttons.
+     *
+     * @param buttons A list of objects which contain button definitions. See self.TOOLBAR_BUTTON_ROLES for an example, or use getStandardToolbarButtons() to get a list of them.
+     * @private
+     */
+    self._setupToolbarButtons = function(buttons) {
         var $menu = self._$wrapperDOMNode.parent().parent().find("div.table_toolbar");
         $menu.addClass("btn-toolbar");
 
+        $.each(buttons, function(idx, btn) {
+            console.log(btn.eventHandlers);
+
+            var buttonElement = self._createToolbarButton(btn.title, btn.iconClass, btn.extraBtnClass, btn.elementId);
+            $menu.append(buttonElement);
+            btn.element = buttonElement; //Save this guy in case you need it later.
+            $.each(btn.eventHandlers, function(eventName, eventCallback) {
+                console.log(eventName, eventCallback);
+                $(buttonElement).on(eventName, eventCallback);
+            });
+        });
+
+        //$menu.append(self._createToolbarButton($.i18n._('Delete'), "icon-trash", "btn-danger", 'sb-trash'));
+
+
+        /*
         if (bIncludeDefaultActions)
         {
             $menu
@@ -275,7 +322,40 @@ var AIRTIME = (function(AIRTIME) {
                 "</button>" +
                 "</div>"
             );
+        }*/
+    };
+
+    /** Create the DOM element for a toolbar button and return it. */
+    self._createToolbarButton = function(title, iconClass, extraBtnClass, elementId) {
+
+        if (!iconClass) {
+            iconClass = 'icon-plus';
         }
+
+       // var title = $.i18n._('Delete');
+        var outerDiv = document.createElement("div");
+        outerDiv.className = 'btn-group';
+        outerDiv.title = title;
+        var innerButton = document.createElement("button");
+        innerButton.className = 'btn btn-small ' + extraBtnClass;
+        innerButton.id = elementId;
+        var innerIcon = document.createElement("i");
+        innerIcon.className = 'icon-white ' + iconClass;
+        var innerTextSpan = document.createElement('span');
+        var innerText = document.createTextNode(title);
+        innerTextSpan.appendChild(innerText);
+        innerButton.appendChild(innerIcon);
+        innerButton.appendChild(innerTextSpan);
+        outerDiv.appendChild(innerButton);
+
+        /* Here's an example of what the button HTML should look like:
+        "<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
+        "<button class='btn btn-small btn-danger' id='sb-trash'>" +
+        "<i class='icon-white icon-trash'></i>" +
+        "<span>" + $.i18n._('Delete') + "</span>" +
+        "</button>" +
+        "</div>"*/
+        return outerDiv;
     };
 
     self._clearSelection = function() {
