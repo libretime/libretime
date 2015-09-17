@@ -20,7 +20,7 @@ $(document).ready(function() {
 
 
     //Set up the div with id "example-table" as a datatable.
-    var table = AIRTIME.widgets.table.init(
+    var table = new AIRTIME.widgets.table(
         $('#example-table'), //DOM node to create the table inside.
         true,                //Enable item selection
         myToolbarButtons,    //Toolbar buttons

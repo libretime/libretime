@@ -8,55 +8,40 @@ var AIRTIME = (function(AIRTIME) {
     if (AIRTIME.widgets === undefined) {
         AIRTIME.widgets = {};
     }
-    if (AIRTIME.widgets.table === undefined) {
+
+    /*if (AIRTIME.widgets.table === undefined) {
         AIRTIME.widgets.table = {};
-    }
+    }*/
 
-    var self;
-    var self = AIRTIME.widgets.table;
+    var HUGE_INT = Math.pow(2, 53) - 1;
 
-    //TODO: Wrap everything into the prototype
+    //Table widget constructor
+    var Table = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
 
+        var self = this;
 
-    //Constants and enumerations
-    self.SELECTION_MODE = {
-        SINGLE : 0,
-        MULTI_SHIFT : 1,
-        MULTI_CTRL : 2
-    }
+        //Constants and enumerations
+        self.SELECTION_MODE = {
+            SINGLE : 0,
+            MULTI_SHIFT : 1,
+            MULTI_CTRL : 2
+        }
 
-    self.HUGE_INT = Math.pow(2, 53) - 1;
+        //Member variables
+        self._datatable = null;
+        self._selectedRows = []; //An array containing the underlying objects for each selected row. (Easy to use!)
+        //self._selectedRowVisualIdxMap = []; //A map of the visual index of a selected rows onto the actual row data.
+        self._selectedRowVisualIdxMin = self.HUGE_INT;
+        self._selectedRowVisualIdxMax = -1;
+        self._$wrapperDOMNode = null;
+        self._toolbarButtons = null;
 
-    /** Predefined toolbar buttons that you can add to the table. Use getStandardToolbarButtons(). */
-    self.TOOLBAR_BUTTON_ROLES = {
-        NEW :    0,
-        EDIT :   1,
-        DELETE : 2
-    };
-    Object.freeze(self.TOOLBAR_BUTTON_ROLES);
-
-    //Set of standard buttons. Use getStandardToolbarButtons() to grab these and pass them to the init() function.
-    self._STANDARD_TOOLBAR_BUTTONS = {};
-    self._STANDARD_TOOLBAR_BUTTONS[self.TOOLBAR_BUTTON_ROLES.NEW] = { 'title' : $.i18n._('New'), 'iconClass' : "icon-plus", extraBtnClass : "", elementId : 'sb-new', eventHandlers : {} };
-    self._STANDARD_TOOLBAR_BUTTONS[self.TOOLBAR_BUTTON_ROLES.EDIT] = { 'title' : $.i18n._('Edit'), 'iconClass' : "icon-pencil", extraBtnClass : "", elementId : 'sb-edit', eventHandlers : {} };
-    self._STANDARD_TOOLBAR_BUTTONS[self.TOOLBAR_BUTTON_ROLES.DELETE] = { 'title' : $.i18n._('Delete'), 'iconClass' : "icon-trash", extraBtnClass : "btn-danger", elementId : 'sb-trash', eventHandlers : {} };
-    Object.freeze(self._STANDARD_TOOLBAR_BUTTONS);
-
-    //Member variables
-    self._datatable = null;
-    self._selectedRows = []; //An array containing the underlying objects for each selected row. (Easy to use!)
-    //self._selectedRowVisualIdxMap = []; //A map of the visual index of a selected rows onto the actual row data.
-    self._selectedRowVisualIdxMin = self.HUGE_INT;
-    self._selectedRowVisualIdxMax = -1;
-    self._$wrapperDOMNode = null;
-    self._toolbarButtons = null;
-
-
-    //Member functions
-    self.init = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
+        //Save some of the constructor parameters
         self._$wrapperDOMNode = $(wrapperDOMNode);
-
         self._toolbarButtons = toolbarButtons;
+
+
+        //Finish initialization of the datatable since everything is declared by now.
 
         // If selection is enabled, add in the checkbox column.
         if (bItemSelection) {
@@ -101,122 +86,20 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         self._datatable = self._$wrapperDOMNode.dataTable(options);
-
         self._setupEventHandlers(bItemSelection);
+
 
         return self._datatable;
     };
-
-    self._handleAjaxError = function(r) {
-        // If the request was denied due to permissioning
-        if (r.status === 403) {
-            // Hide the processing div
-            /*
-             $("#library_display_wrapper").find(".dt-process-rel").hide();
-             $.getJSON( "ajax/library_placeholders.json", function( data ) {
-             $('#library_empty_text').text($.i18n._(data.unauthorized));
-             })  ;
-
-             $('#library_empty').show();
-             */
-        }
-    };
-
-    //
-    self._fetchData = function ( sSource, aoData, fnCallback, oSettings ) {
-
-        var echo = aoData[0].value; //Datatables state tracking. Must be included.
-
-        var sortColName = "";
-        var sortDir = "";
-        if (oSettings.aaSorting.length > 0) {
-            var sortColIdx = oSettings.aaSorting[0][0];
-            sortColName = oSettings.aoColumns[sortColIdx].mDataProp;
-            sortDir = oSettings.aaSorting[0][1].toUpperCase();
-        }
-
-        $.ajax({
-            "dataType": 'json',
-            "type": "GET",
-            "url": sSource,
-            "data": {
-                "limit": oSettings._iDisplayLength,
-                "offset": oSettings._iDisplayStart,
-                "sort": sortColName,
-                'sort_dir': sortDir,
-            },
-            "success": function (json, textStatus, jqXHR) {
-                var rawResponseJSON = json;
-                json = [];
-                json.aaData = rawResponseJSON;
-                json.iTotalRecords = jqXHR.getResponseHeader('X-TOTAL-COUNT');
-                json.iTotalDisplayRecords = json.iTotalRecords;
-                json.sEcho = echo;
-
-                //Pass it along to datatables.
-                fnCallback(json);
-            },
-            "error": self._handleAjaxError
-        }).done(function (data) {
-            /*
-             if (data.iTotalRecords > data.iTotalDisplayRecords) {
-             $('#filter_message').text(
-             $.i18n._("Filtering out ") + (data.iTotalRecords - data.iTotalDisplayRecords)
-             + $.i18n._(" of ") + data.iTotalRecords
-             + $.i18n._(" records")
-             );
-             $('#library_empty').hide();
-             $('#library_display').find('tr:has(td.dataTables_empty)').show();
-             } else {
-             $('#filter_message').text("");
-             }
-             $('#library_content').find('.dataTables_filter input[type="text"]')
-             .css('padding-right', $('#advanced-options').find('button').outerWidth());
-             */
-        });
-    };
-
-    self._datatablesCheckboxDataDelegate = function(rowData, callType, dataToSave) {
-
-
-        if (callType == undefined) {
-            //Supposed to return the raw data for the type here.
-            return null;
-        } else if (callType == 'display') {
-            return "<input type='checkbox' class='airtime_table_checkbox'>";
-        } else if (callType == 'sort') {
-            return null;
-        } else if (callType == 'type') {
-            return "input";
-        } else if (callType == 'set') {
-            //The data to set is in dataToSave.
-            return;
-        } else if (callType == 'filter') {
-            return null;
-        }
-
-        //For all other calls, just return the data as this:
-        return "check";
-    };
-
-    /*
-    self._rowCreatedCallback = function(nRow, aData, iDisplayIndex) {
-
-        return nRow;
-
-    };*/
-
-    /*
-    self._tableDrawCallback = function(oSettings) {
-
-
-    };*/
+    //TODO: Wrap everything into the prototype
 
 
     /* Set up global event handlers for the datatable.
-    *  @param bItemSelection Whether or not row selection behaviour should be enabled for this widget.
-    * */
-    self._setupEventHandlers = function(bItemSelection) {
+     *  @param bItemSelection Whether or not row selection behaviour should be enabled for this widget.
+     * */
+    Table.prototype._setupEventHandlers = function(bItemSelection) {
+
+        var self = this;
 
         /** This table row event handler is created once and catches events for any row. (It's less resource intensive
          *  than having a per-row callback...)
@@ -264,75 +147,42 @@ var AIRTIME = (function(AIRTIME) {
         });
     }
 
-    self.getStandardToolbarButtons = function() {
 
-        //Return a deep copy
-        return jQuery.extend(true, {}, self._STANDARD_TOOLBAR_BUTTONS);
-    };
+    /**
+     * Member functions
+     *
+     */
 
     /** Populate the toolbar with buttons.
      *
      * @param buttons A list of objects which contain button definitions. See self.TOOLBAR_BUTTON_ROLES for an example, or use getStandardToolbarButtons() to get a list of them.
      * @private
      */
-    self._setupToolbarButtons = function(buttons) {
+    Table.prototype._setupToolbarButtons = function(buttons) {
+        var self = this;
         var $menu = self._$wrapperDOMNode.parent().parent().find("div.table_toolbar");
         $menu.addClass("btn-toolbar");
 
+        //Create the toolbar buttons.
         $.each(buttons, function(idx, btn) {
-            console.log(btn.eventHandlers);
-
             var buttonElement = self._createToolbarButton(btn.title, btn.iconClass, btn.extraBtnClass, btn.elementId);
             $menu.append(buttonElement);
             btn.element = buttonElement; //Save this guy in case you need it later.
+            //Bind event handlers to each button
             $.each(btn.eventHandlers, function(eventName, eventCallback) {
-                console.log(eventName, eventCallback);
                 $(buttonElement).on(eventName, eventCallback);
             });
         });
-
-        //$menu.append(self._createToolbarButton($.i18n._('Delete'), "icon-trash", "btn-danger", 'sb-trash'));
-
-
-        /*
-        if (bIncludeDefaultActions)
-        {
-            $menu
-                .append(
-                "<div class='btn-group' title=" + $.i18n._('New') + ">" +
-                "<button class='btn btn-small btn-new' id='sb-new'>" +
-                "<i class='icon-white icon-plus'></i>" +
-                "<span>" + $.i18n._('New') + "</span>" +
-                "</button>" +
-                "</div>"
-            ).append(
-                "<div class='btn-group' title=" + $.i18n._('Edit') + ">" +
-                "<button class='btn btn-small' id='sb-edit'>" +
-                "<i class='icon-white icon-pencil'></i>" +
-                "<span>" + $.i18n._('Edit') + "</span>" +
-                "</button>" +
-                "</div>"
-            );
-
-            $menu.append(
-                "<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
-                "<button class='btn btn-small btn-danger' id='sb-trash'>" +
-                "<i class='icon-white icon-trash'></i>" +
-                "<span>" + $.i18n._('Delete') + "</span>" +
-                "</button>" +
-                "</div>"
-            );
-        }*/
     };
 
     /** Create the DOM element for a toolbar button and return it. */
-    self._createToolbarButton = function(title, iconClass, extraBtnClass, elementId) {
+    Table.prototype._createToolbarButton = function(title, iconClass, extraBtnClass, elementId) {
 
         if (!iconClass) {
             iconClass = 'icon-plus';
         }
 
-       // var title = $.i18n._('Delete');
+        // var title = $.i18n._('Delete');
         var outerDiv = document.createElement("div");
         outerDiv.className = 'btn-group';
         outerDiv.title = title;
@@ -349,22 +199,22 @@ var AIRTIME = (function(AIRTIME) {
         outerDiv.appendChild(innerButton);
 
         /* Here's an example of what the button HTML should look like:
-        "<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
-        "<button class='btn btn-small btn-danger' id='sb-trash'>" +
-        "<i class='icon-white icon-trash'></i>" +
-        "<span>" + $.i18n._('Delete') + "</span>" +
-        "</button>" +
-        "</div>"*/
+         "<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
+         "<button class='btn btn-small btn-danger' id='sb-trash'>" +
+         "<i class='icon-white icon-trash'></i>" +
+         "<span>" + $.i18n._('Delete') + "</span>" +
+         "</button>" +
+         "</div>"*/
         return outerDiv;
     };
 
-    self._clearSelection = function() {
-        self._selectedRows = [];
+    Table.prototype._clearSelection = function() {
+        this._selectedRows = [];
         //self._selectedRowVisualIdxMap = [];
-        self._selectedRowVisualIdxMin = self.HUGE_INT;
-        self._selectedRowVisualIdxMax = -1;
-        self._$wrapperDOMNode.find('.selected').removeClass('selected');
-        self._$wrapperDOMNode.find('input.airtime_table_checkbox').attr('checked', false);
+        this._selectedRowVisualIdxMin = self.HUGE_INT;
+        this._selectedRowVisualIdxMax = -1;
+        this._$wrapperDOMNode.find('.selected').removeClass('selected');
+        this._$wrapperDOMNode.find('input.airtime_table_checkbox').attr('checked', false);
     };
 
     /** @param nRow is a tr DOM node (non-jQuery)
@@ -373,7 +223,9 @@ var AIRTIME = (function(AIRTIME) {
      * @param iVisualRowIdx is an integer which corresponds to the index of the clicked row, as it appears to the user.
      *             eg. The 5th row in the table will have an iVisualRowIdx of 4 (0-based).
      */
-    self.selectRow = function(nRow, aData, selectionMode, iVisualRowIdx) {
+    Table.prototype.selectRow = function(nRow, aData, selectionMode, iVisualRowIdx) {
+
+        var self = this;
 
         //Default to single item selection.
         if (selectionMode == undefined) {
@@ -461,9 +313,135 @@ var AIRTIME = (function(AIRTIME) {
 
     };
 
-    self.getSelectedRows = function() {
-        return self._selectedRows;
+    Table.prototype.getSelectedRows = function() {
+        return this._selectedRows;
     }
+
+    Table.prototype._handleAjaxError = function(r) {
+        // If the request was denied due to permissioning
+        if (r.status === 403) {
+            // Hide the processing div
+            /*
+             $("#library_display_wrapper").find(".dt-process-rel").hide();
+             $.getJSON( "ajax/library_placeholders.json", function( data ) {
+             $('#library_empty_text').text($.i18n._(data.unauthorized));
+             })  ;
+
+             $('#library_empty').show();
+             */
+        }
+    };
+
+    /** Grab data from a REST API and format so that DataTables can display it.
+     *  This is the DataTables REST adapter function, basically.
+     * */
+    Table.prototype._fetchData = function ( sSource, aoData, fnCallback, oSettings )
+    {
+        var self = this;
+        var echo = aoData[0].value; //Datatables state tracking. Must be included.
+
+        var sortColName = "";
+        var sortDir = "";
+        if (oSettings.aaSorting.length > 0) {
+            var sortColIdx = oSettings.aaSorting[0][0];
+            sortColName = oSettings.aoColumns[sortColIdx].mDataProp;
+            sortDir = oSettings.aaSorting[0][1].toUpperCase();
+        }
+
+        $.ajax({
+            "dataType": 'json',
+            "type": "GET",
+            "url": sSource,
+            "data": {
+                "limit": oSettings._iDisplayLength,
+                "offset": oSettings._iDisplayStart,
+                "sort": sortColName,
+                'sort_dir': sortDir,
+            },
+            "success": function (json, textStatus, jqXHR) {
+                var rawResponseJSON = json;
+                json = [];
+                json.aaData = rawResponseJSON;
+                json.iTotalRecords = jqXHR.getResponseHeader('X-TOTAL-COUNT');
+                json.iTotalDisplayRecords = json.iTotalRecords;
+                json.sEcho = echo;
+
+                //Pass it along to datatables.
+                fnCallback(json);
+            },
+            "error": self._handleAjaxError
+        }).done(function (data) {
+            /*
+             if (data.iTotalRecords > data.iTotalDisplayRecords) {
+             $('#filter_message').text(
+             $.i18n._("Filtering out ") + (data.iTotalRecords - data.iTotalDisplayRecords)
+             + $.i18n._(" of ") + data.iTotalRecords
+             + $.i18n._(" records")
+             );
+             $('#library_empty').hide();
+             $('#library_display').find('tr:has(td.dataTables_empty)').show();
+             } else {
+             $('#filter_message').text("");
+             }
+             $('#library_content').find('.dataTables_filter input[type="text"]')
+             .css('padding-right', $('#advanced-options').find('button').outerWidth());
+             */
+        });
+    };
+
+    Table.prototype._datatablesCheckboxDataDelegate = function(rowData, callType, dataToSave) {
+
+        if (callType == undefined) {
+            //Supposed to return the raw data for the type here.
+            return null;
+        } else if (callType == 'display') {
+            return "<input type='checkbox' class='airtime_table_checkbox'>";
+        } else if (callType == 'sort') {
+            return null;
+        } else if (callType == 'type') {
+            return "input";
+        } else if (callType == 'set') {
+            //The data to set is in dataToSave.
+            return;
+        } else if (callType == 'filter') {
+            return null;
+        }
+
+        //For all other calls, just return the data as this:
+        return "check";
+    };
+
+
+
+    //Static initializers / Class variables
+
+    /** Predefined toolbar buttons that you can add to the table. Use getStandardToolbarButtons(). */
+    Table.TOOLBAR_BUTTON_ROLES = {
+        NEW :    0,
+        EDIT :   1,
+        DELETE : 2
+    };
+    Object.freeze(Table.TOOLBAR_BUTTON_ROLES);
+
+
+    //Set of standard buttons. Use getStandardToolbarButtons() to grab these and pass them to the init() function.
+    Table._STANDARD_TOOLBAR_BUTTONS = {};
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.NEW] = { 'title' : $.i18n._('New'), 'iconClass' : "icon-plus", extraBtnClass : "btn-new", elementId : '', eventHandlers : {} };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.EDIT] = { 'title' : $.i18n._('Edit'), 'iconClass' : "icon-pencil", extraBtnClass : "", elementId : '', eventHandlers : {} };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.DELETE] = { 'title' : $.i18n._('Delete'), 'iconClass' : "icon-trash", extraBtnClass : "btn-danger", elementId : '', eventHandlers : {} };
+    Object.freeze(Table._STANDARD_TOOLBAR_BUTTONS);
+
+
+    //Static method
+    Table.getStandardToolbarButtons = function() {
+
+        //Return a deep copy
+        return jQuery.extend(true, {}, Table._STANDARD_TOOLBAR_BUTTONS);
+    };
+
+    //Add Table to the widgets namespace
+    AIRTIME.widgets.table = Table;
+
 
     return AIRTIME;
 

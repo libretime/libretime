@@ -1245,8 +1245,7 @@ var AIRTIME = (function(AIRTIME) {
             /* Website */         { "sTitle" : $.i18n._("Website")            , "mDataProp" : "info_url"     , "bVisible"    : false                 , "sClass"      : "library_url"           , "sWidth" : "150px"        },
             /* Year */            { "sTitle" : $.i18n._("Year")               , "mDataProp" : "year"         , "bVisible"    : false                 , "sClass"      : "library_year"          , "sWidth" : "60px"         },
         ];
-        var ajaxSourceURL = baseUrl+"rest/media";
-
+        var ajaxSourceURL = baseUrl+"rest/podcast";
 
         var podcastTolbarButtons = AIRTIME.widgets.table.getStandardToolbarButtons();
         podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) { alert('New!'); };
@@ -1254,7 +1253,7 @@ var AIRTIME = (function(AIRTIME) {
         podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) { alert('Delete!'); };
 
         //Set up the div with id "podcast_table" as a datatable.
-        mod.podcastDataTable = AIRTIME.widgets.table.init(
+        mod.podcastDataTable = new AIRTIME.widgets.table(
             $('#podcast_table'), //DOM node to create the table inside.
             true,                //Enable item selection
             podcastTolbarButtons, //Toolbar buttons
