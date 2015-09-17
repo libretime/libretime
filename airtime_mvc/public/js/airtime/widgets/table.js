@@ -9,10 +9,6 @@ var AIRTIME = (function(AIRTIME) {
         AIRTIME.widgets = {};
     }
 
-    /*if (AIRTIME.widgets.table === undefined) {
-        AIRTIME.widgets.table = {};
-    }*/
-
     var HUGE_INT = Math.pow(2, 53) - 1;
 
     //Table widget constructor
@@ -440,7 +436,7 @@ var AIRTIME = (function(AIRTIME) {
     };
 
     //Add Table to the widgets namespace
-    AIRTIME.widgets.table = Table;
+    AIRTIME.widgets.Table = Table;
 
 
     return AIRTIME;

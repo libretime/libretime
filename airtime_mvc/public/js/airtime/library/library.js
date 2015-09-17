@@ -1249,13 +1249,13 @@ var AIRTIME = (function(AIRTIME) {
         ];
         var ajaxSourceURL = baseUrl+"rest/podcast";
 
-        var podcastTolbarButtons = AIRTIME.widgets.table.getStandardToolbarButtons();
-        podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) { alert('New!'); };
-        podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = function(e) { alert('Edit!'); };
-        podcastTolbarButtons[AIRTIME.widgets.table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) { alert('Delete!'); };
+        var podcastTolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
+        podcastTolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) { alert('New!'); };
+        podcastTolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = function(e) { alert('Edit!'); };
+        podcastTolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) { alert('Delete!'); };
 
         //Set up the div with id "podcast_table" as a datatable.
-        mod.podcastDataTable = new AIRTIME.widgets.table(
+        mod.podcastDataTable = new AIRTIME.widgets.Table(
             $('#podcast_table'), //DOM node to create the table inside.
             true,                //Enable item selection
             podcastTolbarButtons, //Toolbar buttons
