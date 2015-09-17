@@ -28,6 +28,10 @@ function validatePlan()
 
 function validateVATNumber()
 {
+    if ($(vatFieldId).val() == '') {
+        return;
+    }
+    
 	$.post("/billing/vat-validator", { "vatnumber" : $(vatFieldId).val(), "country" : $("#country").val() })
 		.success(function(data, textStatus, jqXHR) {
     	if (data["result"]) {
