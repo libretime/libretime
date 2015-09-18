@@ -8,7 +8,7 @@ class InvalidPodcastException extends Exception
 {
 }
 
-class PodcastNotFoundException extends \Aws\CloudFront\Exception\Exception
+class PodcastNotFoundException extends Exception
 {
 }
 
