@@ -727,17 +727,19 @@ CREATE TABLE "podcast"
 );
 
 -----------------------------------------------------------------------
--- podcast_contents
+-- podcast_episodes
 -----------------------------------------------------------------------
 
-DROP TABLE IF EXISTS "podcast_contents" CASCADE;
+DROP TABLE IF EXISTS "podcast_episodes" CASCADE;
 
-CREATE TABLE "podcast_contents"
+CREATE TABLE "podcast_episodes"
 (
     "id" serial NOT NULL,
     "file_id" INTEGER NOT NULL,
     "podcast_id" INTEGER NOT NULL,
     "publication_date" TIMESTAMP NOT NULL,
+    "download_url" VARCHAR(512) NOT NULL,
+    "episode_guid" VARCHAR(512) NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -918,12 +920,12 @@ ALTER TABLE "podcast" ADD CONSTRAINT "podcast_owner_fkey"
     REFERENCES "cc_subjs" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "podcast_contents" ADD CONSTRAINT "podcast_contents_cc_files_fkey"
+ALTER TABLE "podcast_episodes" ADD CONSTRAINT "podcast_episodes_cc_files_fkey"
     FOREIGN KEY ("file_id")
     REFERENCES "cc_files" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "podcast_contents" ADD CONSTRAINT "podcast_contents_podcast_id_fkey"
+ALTER TABLE "podcast_episodes" ADD CONSTRAINT "podcast_episodes_podcast_id_fkey"
     FOREIGN KEY ("podcast_id")
     REFERENCES "podcast" ("id")
     ON DELETE CASCADE;

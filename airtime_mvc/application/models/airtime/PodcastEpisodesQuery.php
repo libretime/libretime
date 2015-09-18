@@ -3,7 +3,7 @@
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'podcast_contents' table.
+ * Skeleton subclass for performing query and update operations on the 'podcast_episodes' table.
  *
  *
  *
@@ -13,6 +13,6 @@
  *
  * @package    propel.generator.airtime
  */
-class PodcastContentsQuery extends BasePodcastContentsQuery
+class PodcastEpisodesQuery extends BasePodcastEpisodesQuery
 {
 }

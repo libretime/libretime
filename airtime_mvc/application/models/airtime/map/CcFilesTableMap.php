@@ -129,7 +129,7 @@ class CcFilesTableMap extends TableMap
         $this->addRelation('CcSchedule', 'CcSchedule', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcSchedules');
         $this->addRelation('CcPlayoutHistory', 'CcPlayoutHistory', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'CcPlayoutHistorys');
         $this->addRelation('ThirdPartyTrackReferences', 'ThirdPartyTrackReferences', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'ThirdPartyTrackReferencess');
-        $this->addRelation('PodcastContents', 'PodcastContents', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'PodcastContentss');
+        $this->addRelation('PodcastEpisodes', 'PodcastEpisodes', RelationMap::ONE_TO_MANY, array('id' => 'file_id', ), 'CASCADE', null, 'PodcastEpisodess');
     } // buildRelations()
 
 } // CcFilesTableMap

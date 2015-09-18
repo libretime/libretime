@@ -577,15 +577,17 @@
     </foreign-key>
   </table>
 
-  <table name="podcast_contents" phpName="PodcastContents">
+  <table name="podcast_episodes" phpName="PodcastEpisodes">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
     <column name="file_id" phpName="DbFileId" type="INTEGER" required="true" />
     <column name="podcast_id" phpName="DbPodcastId" type="INTEGER" required="true" />
     <column name="publication_date" phpName="DbPublicationDate" type="TIMESTAMP" required="true" />
-    <foreign-key foreignTable="cc_files" name="podcast_contents_cc_files_fkey" onDelete="CASCADE">
+    <column name="download_url" phpName="DbDownloadUrl" type="varchar" size="512" required="true" />
+    <column name="episode_guid" phpName="DbEpisodeGuid" type="varchar" size="512" required="true" />
+    <foreign-key foreignTable="cc_files" name="podcast_episodes_cc_files_fkey" onDelete="CASCADE">
       <reference local="file_id" foreign="id" />
     </foreign-key>
-    <foreign-key foreignTable="podcast" name="podcast_contents_podcast_id_fkey" onDelete="CASCADE">
+    <foreign-key foreignTable="podcast" name="podcast_episodes_podcast_id_fkey" onDelete="CASCADE">
       <reference local="podcast_id" foreign="id" />
     </foreign-key>
   </table>

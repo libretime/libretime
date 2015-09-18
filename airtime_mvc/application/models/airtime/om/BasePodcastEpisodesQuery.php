@@ -2,50 +2,58 @@
 
 
 /**
- * Base class that represents a query for the 'podcast_contents' table.
+ * Base class that represents a query for the 'podcast_episodes' table.
  *
  *
  *
- * @method PodcastContentsQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method PodcastContentsQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
- * @method PodcastContentsQuery orderByDbPodcastId($order = Criteria::ASC) Order by the podcast_id column
- * @method PodcastContentsQuery orderByDbPublicationDate($order = Criteria::ASC) Order by the publication_date column
+ * @method PodcastEpisodesQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method PodcastEpisodesQuery orderByDbFileId($order = Criteria::ASC) Order by the file_id column
+ * @method PodcastEpisodesQuery orderByDbPodcastId($order = Criteria::ASC) Order by the podcast_id column
+ * @method PodcastEpisodesQuery orderByDbPublicationDate($order = Criteria::ASC) Order by the publication_date column
+ * @method PodcastEpisodesQuery orderByDbDownloadUrl($order = Criteria::ASC) Order by the download_url column
+ * @method PodcastEpisodesQuery orderByDbEpisodeGuid($order = Criteria::ASC) Order by the episode_guid column
  *
- * @method PodcastContentsQuery groupByDbId() Group by the id column
- * @method PodcastContentsQuery groupByDbFileId() Group by the file_id column
- * @method PodcastContentsQuery groupByDbPodcastId() Group by the podcast_id column
- * @method PodcastContentsQuery groupByDbPublicationDate() Group by the publication_date column
+ * @method PodcastEpisodesQuery groupByDbId() Group by the id column
+ * @method PodcastEpisodesQuery groupByDbFileId() Group by the file_id column
+ * @method PodcastEpisodesQuery groupByDbPodcastId() Group by the podcast_id column
+ * @method PodcastEpisodesQuery groupByDbPublicationDate() Group by the publication_date column
+ * @method PodcastEpisodesQuery groupByDbDownloadUrl() Group by the download_url column
+ * @method PodcastEpisodesQuery groupByDbEpisodeGuid() Group by the episode_guid column
  *
- * @method PodcastContentsQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method PodcastContentsQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method PodcastContentsQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method PodcastEpisodesQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method PodcastEpisodesQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method PodcastEpisodesQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method PodcastContentsQuery leftJoinCcFiles($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFiles relation
- * @method PodcastContentsQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
- * @method PodcastContentsQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
+ * @method PodcastEpisodesQuery leftJoinCcFiles($relationAlias = null) Adds a LEFT JOIN clause to the query using the CcFiles relation
+ * @method PodcastEpisodesQuery rightJoinCcFiles($relationAlias = null) Adds a RIGHT JOIN clause to the query using the CcFiles relation
+ * @method PodcastEpisodesQuery innerJoinCcFiles($relationAlias = null) Adds a INNER JOIN clause to the query using the CcFiles relation
  *
- * @method PodcastContentsQuery leftJoinPodcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the Podcast relation
- * @method PodcastContentsQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
- * @method PodcastContentsQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
+ * @method PodcastEpisodesQuery leftJoinPodcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the Podcast relation
+ * @method PodcastEpisodesQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
+ * @method PodcastEpisodesQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
  *
- * @method PodcastContents findOne(PropelPDO $con = null) Return the first PodcastContents matching the query
- * @method PodcastContents findOneOrCreate(PropelPDO $con = null) Return the first PodcastContents matching the query, or a new PodcastContents object populated from the query conditions when no match is found
+ * @method PodcastEpisodes findOne(PropelPDO $con = null) Return the first PodcastEpisodes matching the query
+ * @method PodcastEpisodes findOneOrCreate(PropelPDO $con = null) Return the first PodcastEpisodes matching the query, or a new PodcastEpisodes object populated from the query conditions when no match is found
  *
- * @method PodcastContents findOneByDbFileId(int $file_id) Return the first PodcastContents filtered by the file_id column
- * @method PodcastContents findOneByDbPodcastId(int $podcast_id) Return the first PodcastContents filtered by the podcast_id column
- * @method PodcastContents findOneByDbPublicationDate(string $publication_date) Return the first PodcastContents filtered by the publication_date column
+ * @method PodcastEpisodes findOneByDbFileId(int $file_id) Return the first PodcastEpisodes filtered by the file_id column
+ * @method PodcastEpisodes findOneByDbPodcastId(int $podcast_id) Return the first PodcastEpisodes filtered by the podcast_id column
+ * @method PodcastEpisodes findOneByDbPublicationDate(string $publication_date) Return the first PodcastEpisodes filtered by the publication_date column
+ * @method PodcastEpisodes findOneByDbDownloadUrl(string $download_url) Return the first PodcastEpisodes filtered by the download_url column
+ * @method PodcastEpisodes findOneByDbEpisodeGuid(string $episode_guid) Return the first PodcastEpisodes filtered by the episode_guid column
  *
- * @method array findByDbId(int $id) Return PodcastContents objects filtered by the id column
- * @method array findByDbFileId(int $file_id) Return PodcastContents objects filtered by the file_id column
- * @method array findByDbPodcastId(int $podcast_id) Return PodcastContents objects filtered by the podcast_id column
- * @method array findByDbPublicationDate(string $publication_date) Return PodcastContents objects filtered by the publication_date column
+ * @method array findByDbId(int $id) Return PodcastEpisodes objects filtered by the id column
+ * @method array findByDbFileId(int $file_id) Return PodcastEpisodes objects filtered by the file_id column
+ * @method array findByDbPodcastId(int $podcast_id) Return PodcastEpisodes objects filtered by the podcast_id column
+ * @method array findByDbPublicationDate(string $publication_date) Return PodcastEpisodes objects filtered by the publication_date column
+ * @method array findByDbDownloadUrl(string $download_url) Return PodcastEpisodes objects filtered by the download_url column
+ * @method array findByDbEpisodeGuid(string $episode_guid) Return PodcastEpisodes objects filtered by the episode_guid column
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BasePodcastContentsQuery extends ModelCriteria
+abstract class BasePodcastEpisodesQuery extends ModelCriteria
 {
     /**
-     * Initializes internal state of BasePodcastContentsQuery object.
+     * Initializes internal state of BasePodcastEpisodesQuery object.
      *
      * @param     string $dbName The dabase name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
@@ -57,25 +65,25 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
             $dbName = 'airtime';
         }
         if (null === $modelName) {
-            $modelName = 'PodcastContents';
+            $modelName = 'PodcastEpisodes';
         }
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new PodcastContentsQuery object.
+     * Returns a new PodcastEpisodesQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
-     * @param   PodcastContentsQuery|Criteria $criteria Optional Criteria to build the query from
+     * @param   PodcastEpisodesQuery|Criteria $criteria Optional Criteria to build the query from
      *
-     * @return PodcastContentsQuery
+     * @return PodcastEpisodesQuery
      */
     public static function create($modelAlias = null, $criteria = null)
     {
-        if ($criteria instanceof PodcastContentsQuery) {
+        if ($criteria instanceof PodcastEpisodesQuery) {
             return $criteria;
         }
-        $query = new PodcastContentsQuery(null, null, $modelAlias);
+        $query = new PodcastEpisodesQuery(null, null, $modelAlias);
 
         if ($criteria instanceof Criteria) {
             $query->mergeWith($criteria);
@@ -96,19 +104,19 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param     PropelPDO $con an optional connection object
      *
-     * @return   PodcastContents|PodcastContents[]|mixed the result, formatted by the current formatter
+     * @return   PodcastEpisodes|PodcastEpisodes[]|mixed the result, formatted by the current formatter
      */
     public function findPk($key, $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = PodcastContentsPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = PodcastEpisodesPeer::getInstanceFromPool((string) $key))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
         $this->basePreSelect($con);
         if ($this->formatter || $this->modelAlias || $this->with || $this->select
@@ -126,7 +134,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     PropelPDO $con A connection object
      *
-     * @return                 PodcastContents A model object, or null if the key is not found
+     * @return                 PodcastEpisodes A model object, or null if the key is not found
      * @throws PropelException
      */
      public function findOneByDbId($key, $con = null)
@@ -141,12 +149,12 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     PropelPDO $con A connection object
      *
-     * @return                 PodcastContents A model object, or null if the key is not found
+     * @return                 PodcastEpisodes A model object, or null if the key is not found
      * @throws PropelException
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "file_id", "podcast_id", "publication_date" FROM "podcast_contents" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "file_id", "podcast_id", "publication_date", "download_url", "episode_guid" FROM "podcast_episodes" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -157,9 +165,9 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $obj = new PodcastContents();
+            $obj = new PodcastEpisodes();
             $obj->hydrate($row);
-            PodcastContentsPeer::addInstanceToPool($obj, (string) $key);
+            PodcastEpisodesPeer::addInstanceToPool($obj, (string) $key);
         }
         $stmt->closeCursor();
 
@@ -172,7 +180,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     PropelPDO $con A connection object
      *
-     * @return PodcastContents|PodcastContents[]|mixed the result, formatted by the current formatter
+     * @return PodcastEpisodes|PodcastEpisodes[]|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, $con)
     {
@@ -193,7 +201,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param     array $keys Primary keys to use for the query
      * @param     PropelPDO $con an optional connection object
      *
-     * @return PropelObjectCollection|PodcastContents[]|mixed the list of results, formatted by the current formatter
+     * @return PropelObjectCollection|PodcastEpisodes[]|mixed the list of results, formatted by the current formatter
      */
     public function findPks($keys, $con = null)
     {
@@ -214,12 +222,12 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(PodcastContentsPeer::ID, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(PodcastEpisodesPeer::ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -227,12 +235,12 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(PodcastContentsPeer::ID, $keys, Criteria::IN);
+        return $this->addUsingAlias(PodcastEpisodesPeer::ID, $keys, Criteria::IN);
     }
 
     /**
@@ -252,18 +260,18 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function filterByDbId($dbId = null, $comparison = null)
     {
         if (is_array($dbId)) {
             $useMinMax = false;
             if (isset($dbId['min'])) {
-                $this->addUsingAlias(PodcastContentsPeer::ID, $dbId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::ID, $dbId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($dbId['max'])) {
-                $this->addUsingAlias(PodcastContentsPeer::ID, $dbId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::ID, $dbId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -274,7 +282,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PodcastContentsPeer::ID, $dbId, $comparison);
+        return $this->addUsingAlias(PodcastEpisodesPeer::ID, $dbId, $comparison);
     }
 
     /**
@@ -296,18 +304,18 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function filterByDbFileId($dbFileId = null, $comparison = null)
     {
         if (is_array($dbFileId)) {
             $useMinMax = false;
             if (isset($dbFileId['min'])) {
-                $this->addUsingAlias(PodcastContentsPeer::FILE_ID, $dbFileId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::FILE_ID, $dbFileId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($dbFileId['max'])) {
-                $this->addUsingAlias(PodcastContentsPeer::FILE_ID, $dbFileId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::FILE_ID, $dbFileId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -318,7 +326,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PodcastContentsPeer::FILE_ID, $dbFileId, $comparison);
+        return $this->addUsingAlias(PodcastEpisodesPeer::FILE_ID, $dbFileId, $comparison);
     }
 
     /**
@@ -340,18 +348,18 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function filterByDbPodcastId($dbPodcastId = null, $comparison = null)
     {
         if (is_array($dbPodcastId)) {
             $useMinMax = false;
             if (isset($dbPodcastId['min'])) {
-                $this->addUsingAlias(PodcastContentsPeer::PODCAST_ID, $dbPodcastId['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::PODCAST_ID, $dbPodcastId['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($dbPodcastId['max'])) {
-                $this->addUsingAlias(PodcastContentsPeer::PODCAST_ID, $dbPodcastId['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::PODCAST_ID, $dbPodcastId['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -362,7 +370,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PodcastContentsPeer::PODCAST_ID, $dbPodcastId, $comparison);
+        return $this->addUsingAlias(PodcastEpisodesPeer::PODCAST_ID, $dbPodcastId, $comparison);
     }
 
     /**
@@ -383,18 +391,18 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function filterByDbPublicationDate($dbPublicationDate = null, $comparison = null)
     {
         if (is_array($dbPublicationDate)) {
             $useMinMax = false;
             if (isset($dbPublicationDate['min'])) {
-                $this->addUsingAlias(PodcastContentsPeer::PUBLICATION_DATE, $dbPublicationDate['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::PUBLICATION_DATE, $dbPublicationDate['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($dbPublicationDate['max'])) {
-                $this->addUsingAlias(PodcastContentsPeer::PUBLICATION_DATE, $dbPublicationDate['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(PodcastEpisodesPeer::PUBLICATION_DATE, $dbPublicationDate['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -405,7 +413,65 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PodcastContentsPeer::PUBLICATION_DATE, $dbPublicationDate, $comparison);
+        return $this->addUsingAlias(PodcastEpisodesPeer::PUBLICATION_DATE, $dbPublicationDate, $comparison);
+    }
+
+    /**
+     * Filter the query on the download_url column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbDownloadUrl('fooValue');   // WHERE download_url = 'fooValue'
+     * $query->filterByDbDownloadUrl('%fooValue%'); // WHERE download_url LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbDownloadUrl The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastEpisodesQuery The current query, for fluid interface
+     */
+    public function filterByDbDownloadUrl($dbDownloadUrl = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbDownloadUrl)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbDownloadUrl)) {
+                $dbDownloadUrl = str_replace('*', '%', $dbDownloadUrl);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastEpisodesPeer::DOWNLOAD_URL, $dbDownloadUrl, $comparison);
+    }
+
+    /**
+     * Filter the query on the episode_guid column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbEpisodeGuid('fooValue');   // WHERE episode_guid = 'fooValue'
+     * $query->filterByDbEpisodeGuid('%fooValue%'); // WHERE episode_guid LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbEpisodeGuid The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastEpisodesQuery The current query, for fluid interface
+     */
+    public function filterByDbEpisodeGuid($dbEpisodeGuid = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbEpisodeGuid)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbEpisodeGuid)) {
+                $dbEpisodeGuid = str_replace('*', '%', $dbEpisodeGuid);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastEpisodesPeer::EPISODE_GUID, $dbEpisodeGuid, $comparison);
     }
 
     /**
@@ -414,21 +480,21 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param   CcFiles|PropelObjectCollection $ccFiles The related object(s) to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return                 PodcastContentsQuery The current query, for fluid interface
+     * @return                 PodcastEpisodesQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
     public function filterByCcFiles($ccFiles, $comparison = null)
     {
         if ($ccFiles instanceof CcFiles) {
             return $this
-                ->addUsingAlias(PodcastContentsPeer::FILE_ID, $ccFiles->getDbId(), $comparison);
+                ->addUsingAlias(PodcastEpisodesPeer::FILE_ID, $ccFiles->getDbId(), $comparison);
         } elseif ($ccFiles instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(PodcastContentsPeer::FILE_ID, $ccFiles->toKeyValue('PrimaryKey', 'DbId'), $comparison);
+                ->addUsingAlias(PodcastEpisodesPeer::FILE_ID, $ccFiles->toKeyValue('PrimaryKey', 'DbId'), $comparison);
         } else {
             throw new PropelException('filterByCcFiles() only accepts arguments of type CcFiles or PropelCollection');
         }
@@ -440,7 +506,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function joinCcFiles($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
@@ -490,21 +556,21 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param   Podcast|PropelObjectCollection $podcast The related object(s) to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return                 PodcastContentsQuery The current query, for fluid interface
+     * @return                 PodcastEpisodesQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
     public function filterByPodcast($podcast, $comparison = null)
     {
         if ($podcast instanceof Podcast) {
             return $this
-                ->addUsingAlias(PodcastContentsPeer::PODCAST_ID, $podcast->getDbId(), $comparison);
+                ->addUsingAlias(PodcastEpisodesPeer::PODCAST_ID, $podcast->getDbId(), $comparison);
         } elseif ($podcast instanceof PropelObjectCollection) {
             if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
 
             return $this
-                ->addUsingAlias(PodcastContentsPeer::PODCAST_ID, $podcast->toKeyValue('PrimaryKey', 'DbId'), $comparison);
+                ->addUsingAlias(PodcastEpisodesPeer::PODCAST_ID, $podcast->toKeyValue('PrimaryKey', 'DbId'), $comparison);
         } else {
             throw new PropelException('filterByPodcast() only accepts arguments of type Podcast or PropelCollection');
         }
@@ -516,7 +582,7 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
     public function joinPodcast($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
@@ -563,14 +629,14 @@ abstract class BasePodcastContentsQuery extends ModelCriteria
     /**
      * Exclude object from result
      *
-     * @param   PodcastContents $podcastContents Object to remove from the list of results
+     * @param   PodcastEpisodes $podcastEpisodes Object to remove from the list of results
      *
-     * @return PodcastContentsQuery The current query, for fluid interface
+     * @return PodcastEpisodesQuery The current query, for fluid interface
      */
-    public function prune($podcastContents = null)
+    public function prune($podcastEpisodes = null)
     {
-        if ($podcastContents) {
-            $this->addUsingAlias(PodcastContentsPeer::ID, $podcastContents->getDbId(), Criteria::NOT_EQUAL);
+        if ($podcastEpisodes) {
+            $this->addUsingAlias(PodcastEpisodesPeer::ID, $podcastEpisodes->getDbId(), Criteria::NOT_EQUAL);
         }
 
         return $this;

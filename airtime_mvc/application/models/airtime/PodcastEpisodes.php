@@ -3,7 +3,7 @@
 
 
 /**
- * Skeleton subclass for representing a row from the 'podcast_contents' table.
+ * Skeleton subclass for representing a row from the 'podcast_episodes' table.
  *
  *
  *
@@ -13,6 +13,6 @@
  *
  * @package    propel.generator.airtime
  */
-class PodcastContents extends BasePodcastContents
+class PodcastEpisodes extends BasePodcastEpisodes
 {
 }

@@ -196,9 +196,9 @@
  * @method CcFilesQuery rightJoinThirdPartyTrackReferences($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ThirdPartyTrackReferences relation
  * @method CcFilesQuery innerJoinThirdPartyTrackReferences($relationAlias = null) Adds a INNER JOIN clause to the query using the ThirdPartyTrackReferences relation
  *
- * @method CcFilesQuery leftJoinPodcastContents($relationAlias = null) Adds a LEFT JOIN clause to the query using the PodcastContents relation
- * @method CcFilesQuery rightJoinPodcastContents($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PodcastContents relation
- * @method CcFilesQuery innerJoinPodcastContents($relationAlias = null) Adds a INNER JOIN clause to the query using the PodcastContents relation
+ * @method CcFilesQuery leftJoinPodcastEpisodes($relationAlias = null) Adds a LEFT JOIN clause to the query using the PodcastEpisodes relation
+ * @method CcFilesQuery rightJoinPodcastEpisodes($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PodcastEpisodes relation
+ * @method CcFilesQuery innerJoinPodcastEpisodes($relationAlias = null) Adds a INNER JOIN clause to the query using the PodcastEpisodes relation
  *
  * @method CcFiles findOne(PropelPDO $con = null) Return the first CcFiles matching the query
  * @method CcFiles findOneOrCreate(PropelPDO $con = null) Return the first CcFiles matching the query, or a new CcFiles object populated from the query conditions when no match is found
@@ -3625,41 +3625,41 @@ abstract class BaseCcFilesQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related PodcastContents object
+     * Filter the query by a related PodcastEpisodes object
      *
-     * @param   PodcastContents|PropelObjectCollection $podcastContents  the related object to use as filter
+     * @param   PodcastEpisodes|PropelObjectCollection $podcastEpisodes  the related object to use as filter
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return                 CcFilesQuery The current query, for fluid interface
      * @throws PropelException - if the provided filter is invalid.
      */
-    public function filterByPodcastContents($podcastContents, $comparison = null)
+    public function filterByPodcastEpisodes($podcastEpisodes, $comparison = null)
     {
-        if ($podcastContents instanceof PodcastContents) {
+        if ($podcastEpisodes instanceof PodcastEpisodes) {
             return $this
-                ->addUsingAlias(CcFilesPeer::ID, $podcastContents->getDbFileId(), $comparison);
-        } elseif ($podcastContents instanceof PropelObjectCollection) {
+                ->addUsingAlias(CcFilesPeer::ID, $podcastEpisodes->getDbFileId(), $comparison);
+        } elseif ($podcastEpisodes instanceof PropelObjectCollection) {
             return $this
-                ->usePodcastContentsQuery()
-                ->filterByPrimaryKeys($podcastContents->getPrimaryKeys())
+                ->usePodcastEpisodesQuery()
+                ->filterByPrimaryKeys($podcastEpisodes->getPrimaryKeys())
                 ->endUse();
         } else {
-            throw new PropelException('filterByPodcastContents() only accepts arguments of type PodcastContents or PropelCollection');
+            throw new PropelException('filterByPodcastEpisodes() only accepts arguments of type PodcastEpisodes or PropelCollection');
         }
     }
 
     /**
-     * Adds a JOIN clause to the query using the PodcastContents relation
+     * Adds a JOIN clause to the query using the PodcastEpisodes relation
      *
      * @param     string $relationAlias optional alias for the relation
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
      * @return CcFilesQuery The current query, for fluid interface
      */
-    public function joinPodcastContents($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinPodcastEpisodes($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         $tableMap = $this->getTableMap();
-        $relationMap = $tableMap->getRelation('PodcastContents');
+        $relationMap = $tableMap->getRelation('PodcastEpisodes');
 
         // create a ModelJoin object for this join
         $join = new ModelJoin();
@@ -3674,14 +3674,14 @@ abstract class BaseCcFilesQuery extends ModelCriteria
             $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
             $this->addJoinObject($join, $relationAlias);
         } else {
-            $this->addJoinObject($join, 'PodcastContents');
+            $this->addJoinObject($join, 'PodcastEpisodes');
         }
 
         return $this;
     }
 
     /**
-     * Use the PodcastContents relation PodcastContents object
+     * Use the PodcastEpisodes relation PodcastEpisodes object
      *
      * @see       useQuery()
      *
@@ -3689,13 +3689,13 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return   PodcastContentsQuery A secondary query class using the current class as primary query
+     * @return   PodcastEpisodesQuery A secondary query class using the current class as primary query
      */
-    public function usePodcastContentsQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function usePodcastEpisodesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
-            ->joinPodcastContents($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'PodcastContents', 'PodcastContentsQuery');
+            ->joinPodcastEpisodes($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'PodcastEpisodes', 'PodcastEpisodesQuery');
     }
 
     /**

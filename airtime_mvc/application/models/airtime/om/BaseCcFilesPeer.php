@@ -731,9 +731,9 @@ abstract class BaseCcFilesPeer
         // Invalidate objects in ThirdPartyTrackReferencesPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         ThirdPartyTrackReferencesPeer::clearInstancePool();
-        // Invalidate objects in PodcastContentsPeer instance pool,
+        // Invalidate objects in PodcastEpisodesPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
-        PodcastContentsPeer::clearInstancePool();
+        PodcastEpisodesPeer::clearInstancePool();
     }
 
     /**

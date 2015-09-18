@@ -2,56 +2,62 @@
 
 
 /**
- * Base static class for performing query and update operations on the 'podcast_contents' table.
+ * Base static class for performing query and update operations on the 'podcast_episodes' table.
  *
  *
  *
  * @package propel.generator.airtime.om
  */
-abstract class BasePodcastContentsPeer
+abstract class BasePodcastEpisodesPeer
 {
 
     /** the default database name for this class */
     const DATABASE_NAME = 'airtime';
 
     /** the table name for this class */
-    const TABLE_NAME = 'podcast_contents';
+    const TABLE_NAME = 'podcast_episodes';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'PodcastContents';
+    const OM_CLASS = 'PodcastEpisodes';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'PodcastContentsTableMap';
+    const TM_CLASS = 'PodcastEpisodesTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 4;
+    const NUM_COLUMNS = 6;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 4;
+    const NUM_HYDRATE_COLUMNS = 6;
 
     /** the column name for the id field */
-    const ID = 'podcast_contents.id';
+    const ID = 'podcast_episodes.id';
 
     /** the column name for the file_id field */
-    const FILE_ID = 'podcast_contents.file_id';
+    const FILE_ID = 'podcast_episodes.file_id';
 
     /** the column name for the podcast_id field */
-    const PODCAST_ID = 'podcast_contents.podcast_id';
+    const PODCAST_ID = 'podcast_episodes.podcast_id';
 
     /** the column name for the publication_date field */
-    const PUBLICATION_DATE = 'podcast_contents.publication_date';
+    const PUBLICATION_DATE = 'podcast_episodes.publication_date';
+
+    /** the column name for the download_url field */
+    const DOWNLOAD_URL = 'podcast_episodes.download_url';
+
+    /** the column name for the episode_guid field */
+    const EPISODE_GUID = 'podcast_episodes.episode_guid';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
-     * An identity map to hold any loaded instances of PodcastContents objects.
+     * An identity map to hold any loaded instances of PodcastEpisodes objects.
      * This must be public so that other peer classes can access this when hydrating from JOIN
      * queries.
-     * @var        array PodcastContents[]
+     * @var        array PodcastEpisodes[]
      */
     public static $instances = array();
 
@@ -60,30 +66,30 @@ abstract class BasePodcastContentsPeer
      * holds an array of fieldnames
      *
      * first dimension keys are the type constants
-     * e.g. PodcastContentsPeer::$fieldNames[PodcastContentsPeer::TYPE_PHPNAME][0] = 'Id'
+     * e.g. PodcastEpisodesPeer::$fieldNames[PodcastEpisodesPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFileId', 'DbPodcastId', 'DbPublicationDate', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFileId', 'dbPodcastId', 'dbPublicationDate', ),
-        BasePeer::TYPE_COLNAME => array (PodcastContentsPeer::ID, PodcastContentsPeer::FILE_ID, PodcastContentsPeer::PODCAST_ID, PodcastContentsPeer::PUBLICATION_DATE, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FILE_ID', 'PODCAST_ID', 'PUBLICATION_DATE', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'file_id', 'podcast_id', 'publication_date', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbFileId', 'DbPodcastId', 'DbPublicationDate', 'DbDownloadUrl', 'DbEpisodeGuid', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbFileId', 'dbPodcastId', 'dbPublicationDate', 'dbDownloadUrl', 'dbEpisodeGuid', ),
+        BasePeer::TYPE_COLNAME => array (PodcastEpisodesPeer::ID, PodcastEpisodesPeer::FILE_ID, PodcastEpisodesPeer::PODCAST_ID, PodcastEpisodesPeer::PUBLICATION_DATE, PodcastEpisodesPeer::DOWNLOAD_URL, PodcastEpisodesPeer::EPISODE_GUID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FILE_ID', 'PODCAST_ID', 'PUBLICATION_DATE', 'DOWNLOAD_URL', 'EPISODE_GUID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'file_id', 'podcast_id', 'publication_date', 'download_url', 'episode_guid', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
      * holds an array of keys for quick access to the fieldnames array
      *
      * first dimension keys are the type constants
-     * e.g. PodcastContentsPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
+     * e.g. PodcastEpisodesPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFileId' => 1, 'DbPodcastId' => 2, 'DbPublicationDate' => 3, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFileId' => 1, 'dbPodcastId' => 2, 'dbPublicationDate' => 3, ),
-        BasePeer::TYPE_COLNAME => array (PodcastContentsPeer::ID => 0, PodcastContentsPeer::FILE_ID => 1, PodcastContentsPeer::PODCAST_ID => 2, PodcastContentsPeer::PUBLICATION_DATE => 3, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FILE_ID' => 1, 'PODCAST_ID' => 2, 'PUBLICATION_DATE' => 3, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'file_id' => 1, 'podcast_id' => 2, 'publication_date' => 3, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbFileId' => 1, 'DbPodcastId' => 2, 'DbPublicationDate' => 3, 'DbDownloadUrl' => 4, 'DbEpisodeGuid' => 5, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbFileId' => 1, 'dbPodcastId' => 2, 'dbPublicationDate' => 3, 'dbDownloadUrl' => 4, 'dbEpisodeGuid' => 5, ),
+        BasePeer::TYPE_COLNAME => array (PodcastEpisodesPeer::ID => 0, PodcastEpisodesPeer::FILE_ID => 1, PodcastEpisodesPeer::PODCAST_ID => 2, PodcastEpisodesPeer::PUBLICATION_DATE => 3, PodcastEpisodesPeer::DOWNLOAD_URL => 4, PodcastEpisodesPeer::EPISODE_GUID => 5, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FILE_ID' => 1, 'PODCAST_ID' => 2, 'PUBLICATION_DATE' => 3, 'DOWNLOAD_URL' => 4, 'EPISODE_GUID' => 5, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'file_id' => 1, 'podcast_id' => 2, 'publication_date' => 3, 'download_url' => 4, 'episode_guid' => 5, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, )
     );
 
     /**
@@ -98,10 +104,10 @@ abstract class BasePodcastContentsPeer
      */
     public static function translateFieldName($name, $fromType, $toType)
     {
-        $toNames = PodcastContentsPeer::getFieldNames($toType);
-        $key = isset(PodcastContentsPeer::$fieldKeys[$fromType][$name]) ? PodcastContentsPeer::$fieldKeys[$fromType][$name] : null;
+        $toNames = PodcastEpisodesPeer::getFieldNames($toType);
+        $key = isset(PodcastEpisodesPeer::$fieldKeys[$fromType][$name]) ? PodcastEpisodesPeer::$fieldKeys[$fromType][$name] : null;
         if ($key === null) {
-            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(PodcastContentsPeer::$fieldKeys[$fromType], true));
+            throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(PodcastEpisodesPeer::$fieldKeys[$fromType], true));
         }
 
         return $toNames[$key];
@@ -118,11 +124,11 @@ abstract class BasePodcastContentsPeer
      */
     public static function getFieldNames($type = BasePeer::TYPE_PHPNAME)
     {
-        if (!array_key_exists($type, PodcastContentsPeer::$fieldNames)) {
+        if (!array_key_exists($type, PodcastEpisodesPeer::$fieldNames)) {
             throw new PropelException('Method getFieldNames() expects the parameter $type to be one of the class constants BasePeer::TYPE_PHPNAME, BasePeer::TYPE_STUDLYPHPNAME, BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM. ' . $type . ' was given.');
         }
 
-        return PodcastContentsPeer::$fieldNames[$type];
+        return PodcastEpisodesPeer::$fieldNames[$type];
     }
 
     /**
@@ -134,12 +140,12 @@ abstract class BasePodcastContentsPeer
      *		$c->addJoin(TablePeer::alias("alias1", TablePeer::PRIMARY_KEY_COLUMN), TablePeer::PRIMARY_KEY_COLUMN);
      * </code>
      * @param      string $alias The alias for the current table.
-     * @param      string $column The column name for current table. (i.e. PodcastContentsPeer::COLUMN_NAME).
+     * @param      string $column The column name for current table. (i.e. PodcastEpisodesPeer::COLUMN_NAME).
      * @return string
      */
     public static function alias($alias, $column)
     {
-        return str_replace(PodcastContentsPeer::TABLE_NAME.'.', $alias.'.', $column);
+        return str_replace(PodcastEpisodesPeer::TABLE_NAME.'.', $alias.'.', $column);
     }
 
     /**
@@ -157,15 +163,19 @@ abstract class BasePodcastContentsPeer
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PodcastContentsPeer::ID);
-            $criteria->addSelectColumn(PodcastContentsPeer::FILE_ID);
-            $criteria->addSelectColumn(PodcastContentsPeer::PODCAST_ID);
-            $criteria->addSelectColumn(PodcastContentsPeer::PUBLICATION_DATE);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::ID);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::FILE_ID);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::PODCAST_ID);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::PUBLICATION_DATE);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::DOWNLOAD_URL);
+            $criteria->addSelectColumn(PodcastEpisodesPeer::EPISODE_GUID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.file_id');
             $criteria->addSelectColumn($alias . '.podcast_id');
             $criteria->addSelectColumn($alias . '.publication_date');
+            $criteria->addSelectColumn($alias . '.download_url');
+            $criteria->addSelectColumn($alias . '.episode_guid');
         }
     }
 
@@ -185,21 +195,21 @@ abstract class BasePodcastContentsPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(PodcastContentsPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(PodcastEpisodesPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            PodcastContentsPeer::addSelectColumns($criteria);
+            PodcastEpisodesPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME); // Set the correct dbName
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME); // Set the correct dbName
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
         // BasePeer returns a PDOStatement
         $stmt = BasePeer::doCount($criteria, $con);
@@ -218,7 +228,7 @@ abstract class BasePodcastContentsPeer
      *
      * @param      Criteria $criteria object used to create the SELECT statement.
      * @param      PropelPDO $con
-     * @return PodcastContents
+     * @return PodcastEpisodes
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -226,7 +236,7 @@ abstract class BasePodcastContentsPeer
     {
         $critcopy = clone $criteria;
         $critcopy->setLimit(1);
-        $objects = PodcastContentsPeer::doSelect($critcopy, $con);
+        $objects = PodcastEpisodesPeer::doSelect($critcopy, $con);
         if ($objects) {
             return $objects[0];
         }
@@ -244,7 +254,7 @@ abstract class BasePodcastContentsPeer
      */
     public static function doSelect(Criteria $criteria, PropelPDO $con = null)
     {
-        return PodcastContentsPeer::populateObjects(PodcastContentsPeer::doSelectStmt($criteria, $con));
+        return PodcastEpisodesPeer::populateObjects(PodcastEpisodesPeer::doSelectStmt($criteria, $con));
     }
     /**
      * Prepares the Criteria object and uses the parent doSelect() method to execute a PDOStatement.
@@ -262,16 +272,16 @@ abstract class BasePodcastContentsPeer
     public static function doSelectStmt(Criteria $criteria, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         if (!$criteria->hasSelectClause()) {
             $criteria = clone $criteria;
-            PodcastContentsPeer::addSelectColumns($criteria);
+            PodcastEpisodesPeer::addSelectColumns($criteria);
         }
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         // BasePeer returns a PDOStatement
         return BasePeer::doSelect($criteria, $con);
@@ -285,7 +295,7 @@ abstract class BasePodcastContentsPeer
      * to the cache in order to ensure that the same objects are always returned by doSelect*()
      * and retrieveByPK*() calls.
      *
-     * @param PodcastContents $obj A PodcastContents object.
+     * @param PodcastEpisodes $obj A PodcastEpisodes object.
      * @param      string $key (optional) key to use for instance map (for performance boost if key was already calculated externally).
      */
     public static function addInstanceToPool($obj, $key = null)
@@ -294,7 +304,7 @@ abstract class BasePodcastContentsPeer
             if ($key === null) {
                 $key = (string) $obj->getDbId();
             } // if key === null
-            PodcastContentsPeer::$instances[$key] = $obj;
+            PodcastEpisodesPeer::$instances[$key] = $obj;
         }
     }
 
@@ -306,7 +316,7 @@ abstract class BasePodcastContentsPeer
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param      mixed $value A PodcastContents object or a primary key value.
+     * @param      mixed $value A PodcastEpisodes object or a primary key value.
      *
      * @return void
      * @throws PropelException - if the value is invalid.
@@ -314,17 +324,17 @@ abstract class BasePodcastContentsPeer
     public static function removeInstanceFromPool($value)
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
-            if (is_object($value) && $value instanceof PodcastContents) {
+            if (is_object($value) && $value instanceof PodcastEpisodes) {
                 $key = (string) $value->getDbId();
             } elseif (is_scalar($value)) {
                 // assume we've been passed a primary key
                 $key = (string) $value;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or PodcastContents object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or PodcastEpisodes object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
                 throw $e;
             }
 
-            unset(PodcastContentsPeer::$instances[$key]);
+            unset(PodcastEpisodesPeer::$instances[$key]);
         }
     } // removeInstanceFromPool()
 
@@ -335,14 +345,14 @@ abstract class BasePodcastContentsPeer
      * a multi-column primary key, a serialize()d version of the primary key will be returned.
      *
      * @param      string $key The key (@see getPrimaryKeyHash()) for this instance.
-     * @return PodcastContents Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
+     * @return PodcastEpisodes Found object or null if 1) no instance exists for specified key or 2) instance pooling has been disabled.
      * @see        getPrimaryKeyHash()
      */
     public static function getInstanceFromPool($key)
     {
         if (Propel::isInstancePoolingEnabled()) {
-            if (isset(PodcastContentsPeer::$instances[$key])) {
-                return PodcastContentsPeer::$instances[$key];
+            if (isset(PodcastEpisodesPeer::$instances[$key])) {
+                return PodcastEpisodesPeer::$instances[$key];
             }
         }
 
@@ -357,15 +367,15 @@ abstract class BasePodcastContentsPeer
     public static function clearInstancePool($and_clear_all_references = false)
     {
       if ($and_clear_all_references) {
-        foreach (PodcastContentsPeer::$instances as $instance) {
+        foreach (PodcastEpisodesPeer::$instances as $instance) {
           $instance->clearAllReferences(true);
         }
       }
-        PodcastContentsPeer::$instances = array();
+        PodcastEpisodesPeer::$instances = array();
     }
 
     /**
-     * Method to invalidate the instance pool of all tables related to podcast_contents
+     * Method to invalidate the instance pool of all tables related to podcast_episodes
      * by a foreign key with ON DELETE CASCADE
      */
     public static function clearRelatedInstancePool()
@@ -419,11 +429,11 @@ abstract class BasePodcastContentsPeer
         $results = array();
 
         // set the class once to avoid overhead in the loop
-        $cls = PodcastContentsPeer::getOMClass();
+        $cls = PodcastEpisodesPeer::getOMClass();
         // populate the object(s)
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key = PodcastContentsPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj = PodcastContentsPeer::getInstanceFromPool($key))) {
+            $key = PodcastEpisodesPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj = PodcastEpisodesPeer::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
@@ -432,7 +442,7 @@ abstract class BasePodcastContentsPeer
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                PodcastContentsPeer::addInstanceToPool($obj, $key);
+                PodcastEpisodesPeer::addInstanceToPool($obj, $key);
             } // if key exists
         }
         $stmt->closeCursor();
@@ -446,21 +456,21 @@ abstract class BasePodcastContentsPeer
      * @param      int $startcol The 0-based offset for reading from the resultset row.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
-     * @return array (PodcastContents object, last column rank)
+     * @return array (PodcastEpisodes object, last column rank)
      */
     public static function populateObject($row, $startcol = 0)
     {
-        $key = PodcastContentsPeer::getPrimaryKeyHashFromRow($row, $startcol);
-        if (null !== ($obj = PodcastContentsPeer::getInstanceFromPool($key))) {
+        $key = PodcastEpisodesPeer::getPrimaryKeyHashFromRow($row, $startcol);
+        if (null !== ($obj = PodcastEpisodesPeer::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $startcol, true); // rehydrate
-            $col = $startcol + PodcastContentsPeer::NUM_HYDRATE_COLUMNS;
+            $col = $startcol + PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = PodcastContentsPeer::OM_CLASS;
+            $cls = PodcastEpisodesPeer::OM_CLASS;
             $obj = new $cls();
             $col = $obj->hydrate($row, $startcol);
-            PodcastContentsPeer::addInstanceToPool($obj, $key);
+            PodcastEpisodesPeer::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -484,26 +494,26 @@ abstract class BasePodcastContentsPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(PodcastContentsPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(PodcastEpisodesPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            PodcastContentsPeer::addSelectColumns($criteria);
+            PodcastEpisodesPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(PodcastContentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -535,26 +545,26 @@ abstract class BasePodcastContentsPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(PodcastContentsPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(PodcastEpisodesPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            PodcastContentsPeer::addSelectColumns($criteria);
+            PodcastEpisodesPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(PodcastContentsPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -570,11 +580,11 @@ abstract class BasePodcastContentsPeer
 
 
     /**
-     * Selects a collection of PodcastContents objects pre-filled with their CcFiles objects.
+     * Selects a collection of PodcastEpisodes objects pre-filled with their CcFiles objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of PodcastContents objects.
+     * @return array           Array of PodcastEpisodes objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -584,31 +594,31 @@ abstract class BasePodcastContentsPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+            $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
         }
 
-        PodcastContentsPeer::addSelectColumns($criteria);
-        $startcol = PodcastContentsPeer::NUM_HYDRATE_COLUMNS;
+        PodcastEpisodesPeer::addSelectColumns($criteria);
+        $startcol = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS;
         CcFilesPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(PodcastContentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = PodcastContentsPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = PodcastContentsPeer::getInstanceFromPool($key1))) {
+            $key1 = PodcastEpisodesPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PodcastEpisodesPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = PodcastContentsPeer::getOMClass();
+                $cls = PodcastEpisodesPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                PodcastContentsPeer::addInstanceToPool($obj1, $key1);
+                PodcastEpisodesPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
             $key2 = CcFilesPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -623,8 +633,8 @@ abstract class BasePodcastContentsPeer
                     CcFilesPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (PodcastContents) to $obj2 (CcFiles)
-                $obj2->addPodcastContents($obj1);
+                // Add the $obj1 (PodcastEpisodes) to $obj2 (CcFiles)
+                $obj2->addPodcastEpisodes($obj1);
 
             } // if joined row was not null
 
@@ -637,11 +647,11 @@ abstract class BasePodcastContentsPeer
 
 
     /**
-     * Selects a collection of PodcastContents objects pre-filled with their Podcast objects.
+     * Selects a collection of PodcastEpisodes objects pre-filled with their Podcast objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of PodcastContents objects.
+     * @return array           Array of PodcastEpisodes objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -651,31 +661,31 @@ abstract class BasePodcastContentsPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+            $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
         }
 
-        PodcastContentsPeer::addSelectColumns($criteria);
-        $startcol = PodcastContentsPeer::NUM_HYDRATE_COLUMNS;
+        PodcastEpisodesPeer::addSelectColumns($criteria);
+        $startcol = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS;
         PodcastPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(PodcastContentsPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = PodcastContentsPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = PodcastContentsPeer::getInstanceFromPool($key1))) {
+            $key1 = PodcastEpisodesPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PodcastEpisodesPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
 
-                $cls = PodcastContentsPeer::getOMClass();
+                $cls = PodcastEpisodesPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                PodcastContentsPeer::addInstanceToPool($obj1, $key1);
+                PodcastEpisodesPeer::addInstanceToPool($obj1, $key1);
             } // if $obj1 already loaded
 
             $key2 = PodcastPeer::getPrimaryKeyHashFromRow($row, $startcol);
@@ -690,8 +700,8 @@ abstract class BasePodcastContentsPeer
                     PodcastPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 already loaded
 
-                // Add the $obj1 (PodcastContents) to $obj2 (Podcast)
-                $obj2->addPodcastContents($obj1);
+                // Add the $obj1 (PodcastEpisodes) to $obj2 (Podcast)
+                $obj2->addPodcastEpisodes($obj1);
 
             } // if joined row was not null
 
@@ -720,28 +730,28 @@ abstract class BasePodcastContentsPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(PodcastContentsPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(PodcastEpisodesPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            PodcastContentsPeer::addSelectColumns($criteria);
+            PodcastEpisodesPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(PodcastContentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
-        $criteria->addJoin(PodcastContentsPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -756,12 +766,12 @@ abstract class BasePodcastContentsPeer
     }
 
     /**
-     * Selects a collection of PodcastContents objects pre-filled with all related objects.
+     * Selects a collection of PodcastEpisodes objects pre-filled with all related objects.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of PodcastContents objects.
+     * @return array           Array of PodcastEpisodes objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -771,11 +781,11 @@ abstract class BasePodcastContentsPeer
 
         // Set the correct dbName if it has not been overridden
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+            $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
         }
 
-        PodcastContentsPeer::addSelectColumns($criteria);
-        $startcol2 = PodcastContentsPeer::NUM_HYDRATE_COLUMNS;
+        PodcastEpisodesPeer::addSelectColumns($criteria);
+        $startcol2 = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS;
 
         CcFilesPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + CcFilesPeer::NUM_HYDRATE_COLUMNS;
@@ -783,25 +793,25 @@ abstract class BasePodcastContentsPeer
         PodcastPeer::addSelectColumns($criteria);
         $startcol4 = $startcol3 + PodcastPeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(PodcastContentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
-        $criteria->addJoin(PodcastContentsPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = PodcastContentsPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = PodcastContentsPeer::getInstanceFromPool($key1))) {
+            $key1 = PodcastEpisodesPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PodcastEpisodesPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = PodcastContentsPeer::getOMClass();
+                $cls = PodcastEpisodesPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                PodcastContentsPeer::addInstanceToPool($obj1, $key1);
+                PodcastEpisodesPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
             // Add objects for joined CcFiles rows
@@ -818,8 +828,8 @@ abstract class BasePodcastContentsPeer
                     CcFilesPeer::addInstanceToPool($obj2, $key2);
                 } // if obj2 loaded
 
-                // Add the $obj1 (PodcastContents) to the collection in $obj2 (CcFiles)
-                $obj2->addPodcastContents($obj1);
+                // Add the $obj1 (PodcastEpisodes) to the collection in $obj2 (CcFiles)
+                $obj2->addPodcastEpisodes($obj1);
             } // if joined row not null
 
             // Add objects for joined Podcast rows
@@ -836,8 +846,8 @@ abstract class BasePodcastContentsPeer
                     PodcastPeer::addInstanceToPool($obj3, $key3);
                 } // if obj3 loaded
 
-                // Add the $obj1 (PodcastContents) to the collection in $obj3 (Podcast)
-                $obj3->addPodcastContents($obj1);
+                // Add the $obj1 (PodcastEpisodes) to the collection in $obj3 (Podcast)
+                $obj3->addPodcastEpisodes($obj1);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -865,26 +875,26 @@ abstract class BasePodcastContentsPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(PodcastContentsPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(PodcastEpisodesPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            PodcastContentsPeer::addSelectColumns($criteria);
+            PodcastEpisodesPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY should not affect count
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(PodcastContentsPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -916,26 +926,26 @@ abstract class BasePodcastContentsPeer
         // We need to set the primary table name, since in the case that there are no WHERE columns
         // it will be impossible for the BasePeer::createSelectSql() method to determine which
         // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(PodcastContentsPeer::TABLE_NAME);
+        $criteria->setPrimaryTableName(PodcastEpisodesPeer::TABLE_NAME);
 
         if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
             $criteria->setDistinct();
         }
 
         if (!$criteria->hasSelectClause()) {
-            PodcastContentsPeer::addSelectColumns($criteria);
+            PodcastEpisodesPeer::addSelectColumns($criteria);
         }
 
         $criteria->clearOrderByColumns(); // ORDER BY should not affect count
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(PodcastContentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -951,12 +961,12 @@ abstract class BasePodcastContentsPeer
 
 
     /**
-     * Selects a collection of PodcastContents objects pre-filled with all related objects except CcFiles.
+     * Selects a collection of PodcastEpisodes objects pre-filled with all related objects except CcFiles.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of PodcastContents objects.
+     * @return array           Array of PodcastEpisodes objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -968,33 +978,33 @@ abstract class BasePodcastContentsPeer
         // $criteria->getDbName() will return the same object if not set to another value
         // so == check is okay and faster
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+            $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
         }
 
-        PodcastContentsPeer::addSelectColumns($criteria);
-        $startcol2 = PodcastContentsPeer::NUM_HYDRATE_COLUMNS;
+        PodcastEpisodesPeer::addSelectColumns($criteria);
+        $startcol2 = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS;
 
         PodcastPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + PodcastPeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(PodcastContentsPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = PodcastContentsPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = PodcastContentsPeer::getInstanceFromPool($key1))) {
+            $key1 = PodcastEpisodesPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PodcastEpisodesPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = PodcastContentsPeer::getOMClass();
+                $cls = PodcastEpisodesPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                PodcastContentsPeer::addInstanceToPool($obj1, $key1);
+                PodcastEpisodesPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
                 // Add objects for joined Podcast rows
@@ -1011,8 +1021,8 @@ abstract class BasePodcastContentsPeer
                     PodcastPeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (PodcastContents) to the collection in $obj2 (Podcast)
-                $obj2->addPodcastContents($obj1);
+                // Add the $obj1 (PodcastEpisodes) to the collection in $obj2 (Podcast)
+                $obj2->addPodcastEpisodes($obj1);
 
             } // if joined row is not null
 
@@ -1025,12 +1035,12 @@ abstract class BasePodcastContentsPeer
 
 
     /**
-     * Selects a collection of PodcastContents objects pre-filled with all related objects except Podcast.
+     * Selects a collection of PodcastEpisodes objects pre-filled with all related objects except Podcast.
      *
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
      * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of PodcastContents objects.
+     * @return array           Array of PodcastEpisodes objects.
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
@@ -1042,33 +1052,33 @@ abstract class BasePodcastContentsPeer
         // $criteria->getDbName() will return the same object if not set to another value
         // so == check is okay and faster
         if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+            $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
         }
 
-        PodcastContentsPeer::addSelectColumns($criteria);
-        $startcol2 = PodcastContentsPeer::NUM_HYDRATE_COLUMNS;
+        PodcastEpisodesPeer::addSelectColumns($criteria);
+        $startcol2 = PodcastEpisodesPeer::NUM_HYDRATE_COLUMNS;
 
         CcFilesPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + CcFilesPeer::NUM_HYDRATE_COLUMNS;
 
-        $criteria->addJoin(PodcastContentsPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
+        $criteria->addJoin(PodcastEpisodesPeer::FILE_ID, CcFilesPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = PodcastContentsPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = PodcastContentsPeer::getInstanceFromPool($key1))) {
+            $key1 = PodcastEpisodesPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = PodcastEpisodesPeer::getInstanceFromPool($key1))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj1->hydrate($row, 0, true); // rehydrate
             } else {
-                $cls = PodcastContentsPeer::getOMClass();
+                $cls = PodcastEpisodesPeer::getOMClass();
 
                 $obj1 = new $cls();
                 $obj1->hydrate($row);
-                PodcastContentsPeer::addInstanceToPool($obj1, $key1);
+                PodcastEpisodesPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
                 // Add objects for joined CcFiles rows
@@ -1085,8 +1095,8 @@ abstract class BasePodcastContentsPeer
                     CcFilesPeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (PodcastContents) to the collection in $obj2 (CcFiles)
-                $obj2->addPodcastContents($obj1);
+                // Add the $obj1 (PodcastEpisodes) to the collection in $obj2 (CcFiles)
+                $obj2->addPodcastEpisodes($obj1);
 
             } // if joined row is not null
 
@@ -1106,7 +1116,7 @@ abstract class BasePodcastContentsPeer
      */
     public static function getTableMap()
     {
-        return Propel::getDatabaseMap(PodcastContentsPeer::DATABASE_NAME)->getTable(PodcastContentsPeer::TABLE_NAME);
+        return Propel::getDatabaseMap(PodcastEpisodesPeer::DATABASE_NAME)->getTable(PodcastEpisodesPeer::TABLE_NAME);
     }
 
     /**
@@ -1114,9 +1124,9 @@ abstract class BasePodcastContentsPeer
      */
     public static function buildTableMap()
     {
-      $dbMap = Propel::getDatabaseMap(BasePodcastContentsPeer::DATABASE_NAME);
-      if (!$dbMap->hasTable(BasePodcastContentsPeer::TABLE_NAME)) {
-        $dbMap->addTableObject(new \PodcastContentsTableMap());
+      $dbMap = Propel::getDatabaseMap(BasePodcastEpisodesPeer::DATABASE_NAME);
+      if (!$dbMap->hasTable(BasePodcastEpisodesPeer::TABLE_NAME)) {
+        $dbMap->addTableObject(new \PodcastEpisodesTableMap());
       }
     }
 
@@ -1128,13 +1138,13 @@ abstract class BasePodcastContentsPeer
      */
     public static function getOMClass($row = 0, $colnum = 0)
     {
-        return PodcastContentsPeer::OM_CLASS;
+        return PodcastEpisodesPeer::OM_CLASS;
     }
 
     /**
-     * Performs an INSERT on the database, given a PodcastContents or Criteria object.
+     * Performs an INSERT on the database, given a PodcastEpisodes or Criteria object.
      *
-     * @param      mixed $values Criteria or PodcastContents object containing data that is used to create the INSERT statement.
+     * @param      mixed $values Criteria or PodcastEpisodes object containing data that is used to create the INSERT statement.
      * @param      PropelPDO $con the PropelPDO connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -1143,22 +1153,22 @@ abstract class BasePodcastContentsPeer
     public static function doInsert($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
         } else {
-            $criteria = $values->buildCriteria(); // build Criteria from PodcastContents object
+            $criteria = $values->buildCriteria(); // build Criteria from PodcastEpisodes object
         }
 
-        if ($criteria->containsKey(PodcastContentsPeer::ID) && $criteria->keyContainsValue(PodcastContentsPeer::ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PodcastContentsPeer::ID.')');
+        if ($criteria->containsKey(PodcastEpisodesPeer::ID) && $criteria->keyContainsValue(PodcastEpisodesPeer::ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PodcastEpisodesPeer::ID.')');
         }
 
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         try {
             // use transaction because $criteria could contain info
@@ -1175,9 +1185,9 @@ abstract class BasePodcastContentsPeer
     }
 
     /**
-     * Performs an UPDATE on the database, given a PodcastContents or Criteria object.
+     * Performs an UPDATE on the database, given a PodcastEpisodes or Criteria object.
      *
-     * @param      mixed $values Criteria or PodcastContents object containing data that is used to create the UPDATE statement.
+     * @param      mixed $values Criteria or PodcastEpisodes object containing data that is used to create the UPDATE statement.
      * @param      PropelPDO $con The connection to use (specify PropelPDO connection object to exert more control over transactions).
      * @return int             The number of affected rows (if supported by underlying database driver).
      * @throws PropelException Any exceptions caught during processing will be
@@ -1186,35 +1196,35 @@ abstract class BasePodcastContentsPeer
     public static function doUpdate($values, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
-        $selectCriteria = new Criteria(PodcastContentsPeer::DATABASE_NAME);
+        $selectCriteria = new Criteria(PodcastEpisodesPeer::DATABASE_NAME);
 
         if ($values instanceof Criteria) {
             $criteria = clone $values; // rename for clarity
 
-            $comparison = $criteria->getComparison(PodcastContentsPeer::ID);
-            $value = $criteria->remove(PodcastContentsPeer::ID);
+            $comparison = $criteria->getComparison(PodcastEpisodesPeer::ID);
+            $value = $criteria->remove(PodcastEpisodesPeer::ID);
             if ($value) {
-                $selectCriteria->add(PodcastContentsPeer::ID, $value, $comparison);
+                $selectCriteria->add(PodcastEpisodesPeer::ID, $value, $comparison);
             } else {
-                $selectCriteria->setPrimaryTableName(PodcastContentsPeer::TABLE_NAME);
+                $selectCriteria->setPrimaryTableName(PodcastEpisodesPeer::TABLE_NAME);
             }
 
-        } else { // $values is PodcastContents object
+        } else { // $values is PodcastEpisodes object
             $criteria = $values->buildCriteria(); // gets full criteria
             $selectCriteria = $values->buildPkeyCriteria(); // gets criteria w/ primary key(s)
         }
 
         // set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         return BasePeer::doUpdate($selectCriteria, $criteria, $con);
     }
 
     /**
-     * Deletes all rows from the podcast_contents table.
+     * Deletes all rows from the podcast_episodes table.
      *
      * @param      PropelPDO $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).
@@ -1223,19 +1233,19 @@ abstract class BasePodcastContentsPeer
     public static function doDeleteAll(PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
         $affectedRows = 0; // initialize var to track total num of affected rows
         try {
             // use transaction because $criteria could contain info
             // for more than one table or we could emulating ON DELETE CASCADE, etc.
             $con->beginTransaction();
-            $affectedRows += BasePeer::doDeleteAll(PodcastContentsPeer::TABLE_NAME, $con, PodcastContentsPeer::DATABASE_NAME);
+            $affectedRows += BasePeer::doDeleteAll(PodcastEpisodesPeer::TABLE_NAME, $con, PodcastEpisodesPeer::DATABASE_NAME);
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            PodcastContentsPeer::clearInstancePool();
-            PodcastContentsPeer::clearRelatedInstancePool();
+            PodcastEpisodesPeer::clearInstancePool();
+            PodcastEpisodesPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -1246,9 +1256,9 @@ abstract class BasePodcastContentsPeer
     }
 
     /**
-     * Performs a DELETE on the database, given a PodcastContents or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a PodcastEpisodes or Criteria object OR a primary key value.
      *
-     * @param      mixed $values Criteria or PodcastContents object or primary key or array of primary keys
+     * @param      mixed $values Criteria or PodcastEpisodes object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param      PropelPDO $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -1259,32 +1269,32 @@ abstract class BasePodcastContentsPeer
      public static function doDelete($values, PropelPDO $con = null)
      {
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         if ($values instanceof Criteria) {
             // invalidate the cache for all objects of this type, since we have no
             // way of knowing (without running a query) what objects should be invalidated
             // from the cache based on this Criteria.
-            PodcastContentsPeer::clearInstancePool();
+            PodcastEpisodesPeer::clearInstancePool();
             // rename for clarity
             $criteria = clone $values;
-        } elseif ($values instanceof PodcastContents) { // it's a model object
+        } elseif ($values instanceof PodcastEpisodes) { // it's a model object
             // invalidate the cache for this single object
-            PodcastContentsPeer::removeInstanceFromPool($values);
+            PodcastEpisodesPeer::removeInstanceFromPool($values);
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(PodcastContentsPeer::DATABASE_NAME);
-            $criteria->add(PodcastContentsPeer::ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(PodcastEpisodesPeer::DATABASE_NAME);
+            $criteria->add(PodcastEpisodesPeer::ID, (array) $values, Criteria::IN);
             // invalidate the cache for this object(s)
             foreach ((array) $values as $singleval) {
-                PodcastContentsPeer::removeInstanceFromPool($singleval);
+                PodcastEpisodesPeer::removeInstanceFromPool($singleval);
             }
         }
 
         // Set the correct dbName
-        $criteria->setDbName(PodcastContentsPeer::DATABASE_NAME);
+        $criteria->setDbName(PodcastEpisodesPeer::DATABASE_NAME);
 
         $affectedRows = 0; // initialize var to track total num of affected rows
 
@@ -1294,7 +1304,7 @@ abstract class BasePodcastContentsPeer
             $con->beginTransaction();
 
             $affectedRows += BasePeer::doDelete($criteria, $con);
-            PodcastContentsPeer::clearRelatedInstancePool();
+            PodcastEpisodesPeer::clearRelatedInstancePool();
             $con->commit();
 
             return $affectedRows;
@@ -1305,13 +1315,13 @@ abstract class BasePodcastContentsPeer
     }
 
     /**
-     * Validates all modified columns of given PodcastContents object.
+     * Validates all modified columns of given PodcastEpisodes object.
      * If parameter $columns is either a single column name or an array of column names
      * than only those columns are validated.
      *
      * NOTICE: This does not apply to primary or foreign keys for now.
      *
-     * @param PodcastContents $obj The object to validate.
+     * @param PodcastEpisodes $obj The object to validate.
      * @param      mixed $cols Column name or array of column names.
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
@@ -1321,8 +1331,8 @@ abstract class BasePodcastContentsPeer
         $columns = array();
 
         if ($cols) {
-            $dbMap = Propel::getDatabaseMap(PodcastContentsPeer::DATABASE_NAME);
-            $tableMap = $dbMap->getTable(PodcastContentsPeer::TABLE_NAME);
+            $dbMap = Propel::getDatabaseMap(PodcastEpisodesPeer::DATABASE_NAME);
+            $tableMap = $dbMap->getTable(PodcastEpisodesPeer::TABLE_NAME);
 
             if (! is_array($cols)) {
                 $cols = array($cols);
@@ -1338,7 +1348,7 @@ abstract class BasePodcastContentsPeer
 
         }
 
-        return BasePeer::doValidate(PodcastContentsPeer::DATABASE_NAME, PodcastContentsPeer::TABLE_NAME, $columns);
+        return BasePeer::doValidate(PodcastEpisodesPeer::DATABASE_NAME, PodcastEpisodesPeer::TABLE_NAME, $columns);
     }
 
     /**
@@ -1346,23 +1356,23 @@ abstract class BasePodcastContentsPeer
      *
      * @param int $pk the primary key.
      * @param      PropelPDO $con the connection to use
-     * @return PodcastContents
+     * @return PodcastEpisodes
      */
     public static function retrieveByPK($pk, PropelPDO $con = null)
     {
 
-        if (null !== ($obj = PodcastContentsPeer::getInstanceFromPool((string) $pk))) {
+        if (null !== ($obj = PodcastEpisodesPeer::getInstanceFromPool((string) $pk))) {
             return $obj;
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria = new Criteria(PodcastContentsPeer::DATABASE_NAME);
-        $criteria->add(PodcastContentsPeer::ID, $pk);
+        $criteria = new Criteria(PodcastEpisodesPeer::DATABASE_NAME);
+        $criteria->add(PodcastEpisodesPeer::ID, $pk);
 
-        $v = PodcastContentsPeer::doSelect($criteria, $con);
+        $v = PodcastEpisodesPeer::doSelect($criteria, $con);
 
         return !empty($v) > 0 ? $v[0] : null;
     }
@@ -1372,31 +1382,31 @@ abstract class BasePodcastContentsPeer
      *
      * @param      array $pks List of primary keys
      * @param      PropelPDO $con the connection to use
-     * @return PodcastContents[]
+     * @return PodcastEpisodes[]
      * @throws PropelException Any exceptions caught during processing will be
      *		 rethrown wrapped into a PropelException.
      */
     public static function retrieveByPKs($pks, PropelPDO $con = null)
     {
         if ($con === null) {
-            $con = Propel::getConnection(PodcastContentsPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(PodcastEpisodesPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         $objs = null;
         if (empty($pks)) {
             $objs = array();
         } else {
-            $criteria = new Criteria(PodcastContentsPeer::DATABASE_NAME);
-            $criteria->add(PodcastContentsPeer::ID, $pks, Criteria::IN);
-            $objs = PodcastContentsPeer::doSelect($criteria, $con);
+            $criteria = new Criteria(PodcastEpisodesPeer::DATABASE_NAME);
+            $criteria->add(PodcastEpisodesPeer::ID, $pks, Criteria::IN);
+            $objs = PodcastEpisodesPeer::doSelect($criteria, $con);
         }
 
         return $objs;
     }
 
-} // BasePodcastContentsPeer
+} // BasePodcastEpisodesPeer
 
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-BasePodcastContentsPeer::buildTableMap();
+BasePodcastEpisodesPeer::buildTableMap();
 
