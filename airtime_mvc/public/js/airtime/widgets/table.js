@@ -257,7 +257,8 @@ var AIRTIME = (function(AIRTIME) {
                 console.log("clicked row not detected as already selected");
             }
 
-            if (foundAtIdx >= 0 && self._selectedRows.length > 1) {
+            //If the clicked row is already selected, deselect it.
+            if (foundAtIdx >= 0 && self._selectedRows.length >= 1) {
                 self._selectedRows.splice(foundAtIdx, 1);
                 $nRow.removeClass('selected');
                 $nRow.find('input.airtime_table_checkbox').attr('checked', false);
