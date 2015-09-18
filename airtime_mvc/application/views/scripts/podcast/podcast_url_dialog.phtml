@@ -1,0 +1,12 @@
+<div id="podcast_url_dialog">
+    <form>
+        <?php echo $this->csrf ?>
+        <label>
+            Podcast URL
+            <input type="text" name="url" />
+        </label>
+        <button class="btn btn-new right-floated" type="button" onclick="AIRTIME.podcast.addPodcast()">
+            Add
+        </button>
+    </form>
+</div>
