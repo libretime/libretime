@@ -8,6 +8,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
+        $this->view->setScriptPath(APPLICATION_PATH . 'views/scripts/');
     }
 
     public function indexAction()
@@ -73,12 +74,23 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
 
         try {
-            $requestData = json_decode($this->getRequest()->getRawBody(), true);
+            // $requestData = json_decode($this->getRequest()->getRawBody(), true);
+            $requestData = $this->getRequest()->getPost();
             $podcast = Podcast::create($requestData);
 
-            $this->getResponse()
-                ->setHttpResponseCode(201)
-                ->appendBody(json_encode($podcast));
+            $path = 'podcast/podcast.phtml';
+            $this->view->podcast = $podcast;
+            $this->_helper->json->sendJson(array(
+                                               "podcast"=>json_encode($podcast),
+                                               "html"=>$this->view->render($path),
+                                               "type"=>"podcast",  // TODO: get rid of these extraneous fields
+                                               "id"=>$podcast["id"]
+                                               // "id"=>$podcast->getDbId()
+                                           ));
+
+            // $this->getResponse()
+            //      ->setHttpResponseCode(201)
+            //      ->appendBody(json_encode($podcast));
         }
         catch (PodcastLimitReachedException $e) {
             $this->getResponse()
@@ -143,6 +155,46 @@ class Rest_PodcastController extends Zend_Rest_Controller
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
+    }
+
+    /**
+     * Endpoint for performing bulk actions (deleting multiple podcasts, opening multiple editors)
+     */
+    public function bulkAction() {
+        if ($this->_request->getMethod() != "POST") {
+            $this->getResponse()
+                ->setHttpResponseCode(405)
+                ->appendBody("ERROR: Method not accepted");
+            return;
+        }
+
+        $ids = $this->_getParam('ids', []);
+        $method = $this->_getParam('method', 'GET');
+        $path = 'podcast/podcast.phtml';
+        $responseBody = [];
+
+        switch($method) {
+            case "DELETE":
+                foreach($ids as $id) {
+                    Podcast::deleteById($id);
+                    $responseBody = "Success";  // TODO
+                }
+                break;
+            case "GET":
+                foreach($ids as $id) {
+                    $podcast = Podcast::getPodcastById($id);
+                    $responseBody[] = array(
+                        "podcast"=>json_encode($podcast),
+                        "html"=>$this->view->render($path),
+                        "type"=>"podcast",  // TODO: get rid of these extraneous fields
+                        "id"=>$podcast["id"]
+                        // "id"=>$podcast->getDbId()
+                    );
+                }
+                break;
+        }
+
+        $this->_helper->json->sendJson($responseBody);
     }
 
     private function getId()

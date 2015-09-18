@@ -13,6 +13,16 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
             'rest'=> array('media', 'show-image', 'podcast', 'podcast-episodes')));
         assert($router->addRoute('rest', $restRoute));
 
+        $podcastBulkRoute = new Zend_Controller_Router_Route(
+            'rest/podcast/bulk',
+            array(
+                'controller' => 'podcast',
+                'action' => 'bulk',
+                'module' => 'rest'
+            )
+        );
+        $router->addRoute('podcast-bulk', $podcastBulkRoute);
+
         $route = new Rest_RouteController($front,
             'rest/podcast/:id/episodes',
             array(
@@ -37,7 +47,6 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
             )
         );
         $router->addRoute('podcast-episodes', $route);
-
 
         /** MediaController Routes **/
         $downloadRoute = new Zend_Controller_Router_Route(

@@ -200,7 +200,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
             /** Check if the controller/action can be accessed by the current user */
             if (!$this->getAcl()->has($resourceName) 
-                || !$this->getAcl()->isAllowed($this->_roleName, 
+                || !$this->getAcl()->isAllowed($this->_roleName,
                         $resourceName, 
                         $request->getActionName())) {
                 /** Redirect to access denied page */
@@ -226,7 +226,6 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $current_namespace = new Zend_Session_Namespace('csrf_namespace');
         $observed_csrf_token = $token;
         $expected_csrf_token = $current_namespace->authtoken;
-
         return ($observed_csrf_token == $expected_csrf_token);
     }
     

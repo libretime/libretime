@@ -51,20 +51,28 @@ class Podcast extends BasePodcast
         }
 
         try {
+            // Kind of a pain; since the rss fields are SimpleXMLElements,
+            // we need to explicitly cast them to strings
             $podcast = new Podcast();
             $podcast->setDbUrl($podcastArray["url"]);
-            $podcast->setDbTitle($rss->title);
-            $podcast->setDbCreator($rss->author);
-            $podcast->setDbDescription($rss->description);
+            $podcast->setDbTitle((string)$rss->title);
+            $podcast->setDbCreator((string)$rss->author);
+            $podcast->setDbDescription((string)$rss->description);
             $podcast->setDbOwner(self::getOwnerId());
             $podcast->setDbType(IMPORTED_PODCAST);
             $podcast->save();
 
-            $podcastArray = array();
-            array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
+            // $podcastArray = array();
+            // array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
+
+            $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
 
             $podcastArray["episodes"] = array();
             foreach ($rss->item as $item) {
+                // Same as above, we need to explicitly cast the SimpleXMLElement 'array' into an actual array
+                foreach($item as $k => $v) {
+                    $array[$k] = (string)$v;
+                }
                 array_push($podcastArray["episodes"], $item);
             }
             return $podcastArray;
@@ -96,11 +104,15 @@ class Podcast extends BasePodcast
             throw new PodcastNotFoundException();
         }
 
-        $podcastArray = array();
-        array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
+        // FIXME: Get rid of this duplication and move into a new function (serializer/deserializer)
+        $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
 
         $podcastArray["episodes"] = array();
         foreach ($rss->item as $item) {
+            // Same as above, we need to explicitly cast the SimpleXMLElement 'array' into an actual array
+            foreach($item as $k => $v) {
+                $array[$k] = (string)$v;
+            }
             array_push($podcastArray["episodes"], $item);
         }
 
