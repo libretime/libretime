@@ -1249,20 +1249,28 @@ var AIRTIME = (function(AIRTIME) {
         ];
         var ajaxSourceURL = baseUrl+"rest/podcast";
 
-        var podcastTolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
-        podcastTolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) { alert('New!'); };
-        podcastTolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = function(e) { alert('Edit!'); };
-        podcastTolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) { alert('Delete!'); };
+        var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
+        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) {
+            AIRTIME.podcast.createUrlDialog();
+        };
+        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = function(e) {
+            AIRTIME.podcast.editSelectedPodcasts();
+        };
+        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) {
+            AIRTIME.podcast.deleteSelectedPodcasts();
+        };
 
         //Set up the div with id "podcast_table" as a datatable.
-        mod.podcastDataTable = new AIRTIME.widgets.Table(
+        mod.podcastTableWidget = new AIRTIME.widgets.Table(
             $('#podcast_table'), //DOM node to create the table inside.
             true,                //Enable item selection
-            podcastTolbarButtons, //Toolbar buttons
+            podcastToolbarButtons, //Toolbar buttons
             {                    //Datatables overrides.
                 'aoColumns' : aoColumns,
                 'sAjaxSource' : ajaxSourceURL
             });
+
+        mod.podcastDataTable = mod.podcastTableWidget.getDatatable();
     }
 
 

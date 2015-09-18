@@ -85,7 +85,8 @@ var AIRTIME = (function(AIRTIME) {
         self._setupEventHandlers(bItemSelection);
 
 
-        return self._datatable;
+        //return self._datatable;
+        return self;
     };
     //TODO: Wrap everything into the prototype
 
@@ -102,7 +103,7 @@ var AIRTIME = (function(AIRTIME) {
          */
         if (bItemSelection) {
             $(self._datatable, 'tbody tr').on('click contextmenu', 'tr', function (e) {
-                var aData = $(this).data(); //Neat trick - thanks DataTables!
+                var aData = self._datatable.fnGetData($(this).index()); // $(this).data(); //Neat trick - thanks DataTables!
                 var iDisplayIndex = $(this).index(); //The index of the row in the current page in the table.
                 var nRow = this;
 
@@ -127,7 +128,7 @@ var AIRTIME = (function(AIRTIME) {
                 $this = $(this);
 
                 var iVisualRowIdx = $this.parent().parent().index();
-                var aData = $this.parent().parent().data();
+                var aData = self._datatable.fnGetData(iVisualRowIdx);
                 var selectionMode = self.SELECTION_MODE.MULTI_CTRL; //Behaviour for checkboxes.
                 if (e.shiftKey) {
                     selectionMode = self.SELECTION_MODE.MULTI_SHIFT;
@@ -407,6 +408,12 @@ var AIRTIME = (function(AIRTIME) {
         return "check";
     };
 
+
+    //Accessors / Mutators
+
+    Table.prototype.getDatatable = function() {
+        return this._datatable;
+    };
 
 
     //Static initializers / Class variables

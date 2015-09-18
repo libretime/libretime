@@ -7,12 +7,12 @@ class CeleryServiceFactory {
      *
      * @param $serviceName string the name of the service to create
      *
-     * @return ThirdPartyCeleryService|null
+     * @return Application_Service_ThirdPartyCeleryService|null
      */
     public static function getService($serviceName) {
         switch($serviceName) {
             case SOUNDCLOUD_SERVICE_NAME:
-                return new SoundcloudService();
+                return new Application_Service_SoundcloudService();
         }
         return null;
     }

@@ -14,8 +14,7 @@ if (!isset($configRun) || !$configRun) {
 require_once 'autoload.php';
 
 require_once CONFIG_PATH . "constants.php";
-require_once 'Preference.php';
-require_once 'Locale.php';
+/* Common */
 require_once "DateHelper.php";
 require_once "LocaleHelper.php";
 require_once "FileDataHelper.php";
@@ -27,15 +26,20 @@ require_once "ProvisioningHelper.php";
 require_once "SecurityHelper.php";
 require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
-require_once "Auth.php";
-require_once "interface/OAuth2.php";
-require_once "interface/OAuth2Controller.php";
+require_once "CeleryManager.php";
 require_once "TaskManager.php";
 require_once "UsabilityHints.php";
-require_once "MediaType.php";
 require_once __DIR__.'/models/formatters/LengthFormatter.php';
-require_once __DIR__.'/services/CeleryManager.php';
-require_once __DIR__.'/services/SoundcloudService.php';
+/* Models */
+require_once "Auth.php";
+require_once 'Preference.php';
+require_once 'Locale.php';
+/* Enums */
+require_once "MediaType.php";
+/* Interfaces */
+require_once "OAuth2.php";
+require_once "OAuth2Controller.php";
+
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/RabbitMqPlugin.php';

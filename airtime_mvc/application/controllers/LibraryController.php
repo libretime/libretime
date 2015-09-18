@@ -133,7 +133,7 @@ class LibraryController extends Zend_Controller_Action
             // SOUNDCLOUD MENU OPTION
             $ownerId = empty($obj) ? $file->getFileOwnerId() : $obj->getCreatorId();
             if ($isAdminOrPM || $ownerId == $user->getId()) {
-                $soundcloudService = new SoundcloudService();
+                $soundcloudService = new Application_Service_SoundcloudService();
                 if ($type === "audioclip" && $soundcloudService->hasAccessToken()) {
 
                     //create a menu separator

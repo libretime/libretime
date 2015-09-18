@@ -8,7 +8,7 @@ class ServiceNotFoundException extends Exception {}
 /**
  * Class ThirdPartyService generic superclass for third-party services
  */
-abstract class ThirdPartyService {
+abstract class Application_Service_ThirdPartyService {
 
     /**
      * @var string service access token for accessing third-party API

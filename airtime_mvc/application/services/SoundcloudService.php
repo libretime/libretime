@@ -2,7 +2,7 @@
 
 require_once "ThirdPartyCeleryService.php";
 
-class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
+class Application_Service_SoundcloudService extends Application_Service_ThirdPartyCeleryService implements OAuth2 {
 
     /**
      * @var string service access token for accessing remote API

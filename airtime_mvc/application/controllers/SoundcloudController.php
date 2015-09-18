@@ -6,7 +6,7 @@ require_once "ise/php-soundcloud/src/Soundcloud/Service.php";
 class SoundcloudController extends ThirdPartyController implements OAuth2Controller {
 
     /**
-     * @var SoundcloudService
+     * @var Application_Service_SoundcloudService
      */
     protected $_service;
 
@@ -20,7 +20,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
      */
     public function init() {
         parent::init();
-        $this->_service = new SoundcloudService();
+        $this->_service = new Application_Service_SoundcloudService();
     }
 
     /**

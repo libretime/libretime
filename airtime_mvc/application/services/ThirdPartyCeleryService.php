@@ -2,7 +2,7 @@
 
 require_once "ThirdPartyService.php";
 
-abstract class ThirdPartyCeleryService extends ThirdPartyService {
+abstract class Application_Service_ThirdPartyCeleryService extends Application_Service_ThirdPartyService {
 
     /**
      * @var string broker exchange name for third-party tasks

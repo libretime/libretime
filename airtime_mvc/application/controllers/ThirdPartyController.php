@@ -11,7 +11,7 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     protected $_baseUrl;
 
     /**
-     * @var ThirdPartyService third party service object
+     * @var Application_Service_ThirdPartyService third party service object
      */
     protected $_service;
 
