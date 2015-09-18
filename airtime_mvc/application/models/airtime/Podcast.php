@@ -8,6 +8,10 @@ class InvalidPodcastException extends Exception
 {
 }
 
+class PodcastNotFoundException extends \Aws\CloudFront\Exception\Exception
+{
+}
+
 
 /**
  * Skeleton subclass for representing a row from the 'podcast' table.
@@ -16,37 +20,138 @@ class InvalidPodcastException extends Exception
  */
 class Podcast extends BasePodcast
 {
-    /** Creates a Podcast object from an array containing metadata.
+    // These fields should never be modified with POST/PUT data
+    private static $privateFields = array(
+        "id",
+        "url",
+        "type",
+        "owner"
+    );
+
+    /** Creates a Podcast object from the given podcast URL.
      *  This is used by our Podcast REST API
-     * @param $podcastArray An array containing metadata for a Podcast object.
      *
-     * @return Podcast Array
+     * @param $podcastArray An array containing the URL for a Podcast object.
+     *
+     * @return array - Podcast Array with a full list of episodes
      * @throws Exception
+     * @throws InvalidPodcastException
+     * @throws PodcastLimitReachedException
      */
+
     public static function create($podcastArray)
     {
         if (Application_Service_PodcastService::podcastLimitReached()) {
             throw new PodcastLimitReachedException();
         }
 
-        // TODO are we implementing this here??
-        if (!Application_Service_PodcastService::validatePodcastUrl($podcastArray["url"])) {
+        $rss = Application_Service_PodcastService::getPodcastFeed($podcastArray["url"]);
+        if (!$rss) {
             throw new InvalidPodcastException();
         }
 
         try {
             $podcast = new Podcast();
-            $podcast->fromArray($podcastArray, BasePeer::TYPE_FIELDNAME);
+            $podcast->setDbUrl($podcastArray["url"]);
+            $podcast->setDbTitle($rss->title);
+            $podcast->setDbCreator($rss->author);
+            $podcast->setDbDescription($rss->description);
             $podcast->setDbOwner(self::getOwnerId());
             $podcast->setDbType(IMPORTED_PODCAST);
             $podcast->save();
 
-            return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+            $podcastArray = array();
+            array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
+
+            $podcastArray["episodes"] = array();
+            foreach ($rss->item as $item) {
+                array_push($podcastArray["episodes"], $item);
+            }
+            return $podcastArray;
         } catch(Exception $e) {
             $podcast->delete();
             throw $e;
         }
 
+    }
+
+    /**
+     * Fetches a Podcast's rss feed and returns all its episodes with
+     * the Podcast object
+     *
+     * @param $podcastId
+     *
+     * @throws PodcastNotFoundException
+     * @return array - Podcast Array with a full list of episodes
+     */
+    public static function getPodcastById($podcastId)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if (!$podcast) {
+            throw new PodcastNotFoundException();
+        }
+
+        $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
+
+        $podcastArray = array();
+        array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
+
+        $podcastArray["episodes"] = array();
+        foreach ($rss->item as $item) {
+            array_push($podcastArray["episodes"], $item);
+        }
+
+        return $podcastArray;
+    }
+
+    /**
+     * Updates a Podcast object with the given metadata
+     *
+     * @param $podcastId
+     * @param $data
+     * @return array
+     * @throws Exception
+     * @throws PodcastNotFoundException
+     */
+    public static function updateFromArray($podcastId, $data)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if (!$podcast) {
+            throw new PodcastNotFoundException();
+        }
+
+        $data = self::removePrivateFields($data);
+
+        $podcast->fromArray($data, BasePeer::TYPE_FIELDNAME);
+        $podcast->save();
+
+        return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+    }
+
+    /**
+     * Deletes a Podcast and its podcast episodes
+     *
+     * @param $podcastId
+     * @throws Exception
+     * @throws PodcastNotFoundException
+     */
+    public static function deleteById($podcastId)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if ($podcast) {
+            $podcast->delete();
+        } else {
+            throw new PodcastNotFoundException();
+        }
+    }
+
+    private static function removePrivateFields($data)
+    {
+        foreach (self::$privateFields as $key) {
+            unset($data[$key]);
+        }
+
+        return $data;
     }
 
     //TODO move this somewhere where it makes sense

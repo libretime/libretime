@@ -50,8 +50,12 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
 
         try {
-            //https://github.com/aaronsnoswell/itunes-podcast-feed/blob/master/feed.php
-
+            $this->getResponse()
+                ->setHttpResponseCode(200)
+                ->appendBody(json_encode(Podcast::getPodcastById($id)));
+        } catch (PodcastNotFoundException $e) {
+            $this->podcastNotFoundResponse();
+            Logging::error($e->getMessage());
         } catch (Exception $e) {
 
         }
@@ -82,8 +86,9 @@ class Rest_PodcastController extends Zend_Rest_Controller
                 ->appendBody("ERROR: Podcast limit reached.");
         }
         catch (InvalidPodcastException $e) {
-            $this->invalidDataResponse();
-            Logging::error($e->getMessage());
+            $this->getResponse()
+                ->setHttpResponseCode(400)
+                ->appendBody("ERROR: Invalid Podcast.");
         }
         catch (Exception $e) {
             $this->unknownErrorResponse();
@@ -94,12 +99,50 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
     public function putAction()
     {
-        Logging::info("podcast put");
+        $id = $this->getId();
+        if (!$id) {
+            return;
+        }
+
+        try {
+            $requestData = json_decode($this->getRequest()->getRawBody(), true);
+
+            $podcast = Podcast::updateFromArray($id, $requestData);
+
+            $this->getResponse()
+                ->setHttpResponseCode(201)
+                ->appendBody(json_encode($podcast));
+        }
+        catch (PodcastNotFoundException $e) {
+            $this->podcastNotFoundResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
+        }
     }
 
     public function deleteAction()
     {
-        Logging::info("delete podcast");
+        $id = $this->getId();
+        if (!$id) {
+            return;
+        }
+
+        try {
+            Podcast::deleteById($id);
+            $this->getResponse()
+                ->setHttpResponseCode(204);
+        }
+        catch (PodcastNotFoundException $e) {
+            $this->podcastNotFoundResponse();
+            Logging::error($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
+        }
     }
 
     private function getId()
@@ -118,6 +161,13 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);
         $resp->appendBody("An unknown error occurred.");
+    }
+
+    private function podcastNotFoundResponse()
+    {
+        $resp = $this->getResponse();
+        $resp->setHttpResponseCode(404);
+        $resp->appendBody("ERROR: Podcast not found.");
     }
 
 }

@@ -19,16 +19,24 @@ class Application_Service_PodcastService
     }
 
     /**
-     * Returns true if the given podcast URL is valid.
+     * Returns parsed rss feed, or false if the given URL cannot be downloaded
      *
      * @param $podcastUrl String containing the podcast feed URL
      *
-     * @return bool
+     * @return mixed
      */
-    public static function validatePodcastUrl($podcastUrl)
+    public static function getPodcastFeed($podcastUrl)
     {
-        //TODO
-        return true;
+        try {
+            return Feed::loadRss($podcastUrl);
+        } catch (FeedException $e) {
+            return false;
+        }
+    }
+
+    public static function getPodcastEpisodeFeed($podcast)
+    {
+
     }
 
 }
