@@ -169,6 +169,12 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             // we need to check the CSRF token
             if ($_SERVER['REQUEST_METHOD'] != "GET" && $request->getModuleName() == "rest") {
                 $token = $request->getParam("csrf_token");
+                // PUT requests don't parameterize the data in the body, so we can't
+                // fetch it with getParam or getPost; instead we have to parse the body and
+                // check for the token in the JSON. (Hopefully we can find a better way to do this) -- Duncan
+                if (empty($token)) {
+                    $token = json_decode($this->getRequest()->getRawBody(), true)["csrf_token"];
+                }
                 $tokenValid = $this->verifyCSRFToken($token);
 
                 if (!$tokenValid) {
