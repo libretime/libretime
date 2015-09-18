@@ -33,19 +33,16 @@ var AIRTIME = (function(AIRTIME){
             tab =
                 "<li data-tab-id='" + $tabCount + "' data-tab-type='" + json.type + "' id='pl-tab-" + $tabCount + "' role='presentation' class='active'>" +
                     "<a href='javascript:void(0)'>" +
-                        "<span class='tab-name'></span>" +
+                        "<span class='tab-name'>" + name + "</span>" +
                         "<span href='#' class='lib_pl_close icon-remove'></span>" +
                     "</a>" +
                 "</li>",
             tabs = $(".nav.nav-tabs");
 
-        if (json.id) {
-            $openTabs[json.type + json.id] = $tabCount;
-        }
+        $openTabs[json.type + json.id] = $tabCount;
 
         $(".nav.nav-tabs li").removeClass("active");
         tabs.append(tab);
-        tabs.find("#pl-tab-" + $tabCount + " span.tab-name").text(name);
 
         var newTab = $("#pl-tab-" + $tabCount);
         mod.switchTab(t, newTab);
@@ -83,27 +80,11 @@ var AIRTIME = (function(AIRTIME){
                 newTab.wrapper.find('.md-save').click();
             }
         });
+
+        AIRTIME.playlist.setupEventListeners();
     }
 
-    /*  #####################################################
-                         External Functions
-        ##################################################### */
-
-    mod.openFileMdEditorTab = function(json) {
-        var newTab = _buildNewTab(json);
-        if (newTab === undefined) {
-            return;
-        }
-
-        _initFileMdEvents(newTab);
-        AIRTIME.playlist.setupEventListeners();
-    };
-
-    mod.openPlaylistTab = function(json) {
-        var newTab = _buildNewTab(json);
-        if (newTab === undefined) {
-            return;
-        }
+    function _initPlaylistEvents(newTab) {
         newTab.tab.on("click", function() {
             if (!$(this).hasClass('active')) {
                 mod.switchTab(newTab.pane, newTab.tab);
@@ -114,6 +95,7 @@ var AIRTIME = (function(AIRTIME){
                 });
             }
         });
+
         AIRTIME.playlist.init();
 
         // functions in smart_blockbuilder.js
@@ -121,6 +103,27 @@ var AIRTIME = (function(AIRTIME){
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
+    }
+
+    /*  #####################################################
+                         External Functions
+        ##################################################### */
+
+    mod.openFileMdEditorTab = function(json) {
+        mod.openTab(json, _initFileMdEvents);
+    };
+
+    mod.openPlaylistTab = function(json) {
+        mod.openTab(json, _initPlaylistEvents);
+    };
+
+    mod.openTab = function(json, callback) {
+        var newTab = _buildNewTab(json);
+        if (newTab === undefined) {
+            return;
+        }
+
+        callback(newTab);
     };
 
     mod.closeTab = function(id) {
