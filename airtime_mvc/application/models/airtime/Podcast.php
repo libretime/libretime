@@ -92,6 +92,9 @@ class Podcast extends BasePodcast
         }
 
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
+        if (!$rss) {
+            throw new PodcastNotFoundException();
+        }
 
         $podcastArray = array();
         array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
