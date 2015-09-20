@@ -43,8 +43,8 @@ class PodcastEpisodesTableMap extends TableMap
         $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', true, null, null);
         $this->addForeignKey('podcast_id', 'DbPodcastId', 'INTEGER', 'podcast', 'id', true, null, null);
         $this->addColumn('publication_date', 'DbPublicationDate', 'TIMESTAMP', true, null, null);
-        $this->addColumn('download_url', 'DbDownloadUrl', 'VARCHAR', true, 512, null);
-        $this->addColumn('episode_guid', 'DbEpisodeGuid', 'VARCHAR', true, 512, null);
+        $this->addColumn('download_url', 'DbDownloadUrl', 'VARCHAR', true, 4096, null);
+        $this->addColumn('episode_guid', 'DbEpisodeGuid', 'VARCHAR', true, 4096, null);
         // validators
     } // initialize()
 

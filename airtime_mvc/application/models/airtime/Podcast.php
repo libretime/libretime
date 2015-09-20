@@ -39,31 +39,35 @@ class Podcast extends BasePodcast
      * @throws PodcastLimitReachedException
      */
 
-    public static function create($podcastArray)
+    public static function create($data)
     {
         if (Application_Service_PodcastService::podcastLimitReached()) {
             throw new PodcastLimitReachedException();
         }
 
-        $rss = Application_Service_PodcastService::getPodcastFeed($podcastArray["url"]);
+        $rss = Application_Service_PodcastService::getPodcastFeed($data["url"]);
         if (!$rss) {
             throw new InvalidPodcastException();
         }
 
+        // Ensure we are only creating Podcast with the given URL, and excluding
+        // any extra data fields that may have been POSTED
+        $podcastArray = array();
+        $podcastArray["url"] = $data["url"];
+
+        // Kind of a pain; since the rss fields are SimpleXMLElements,
+        // we need to explicitly cast them to strings
+        $podcastArray["title"] = (string)$rss->title;
+        $podcastArray["creator"] = (string)$rss->author;
+        $podcastArray["description"] = (string)$rss->description;
+        self::validatePodcastMetadata($podcastArray);
+
         try {
-            // Kind of a pain; since the rss fields are SimpleXMLElements,
-            // we need to explicitly cast them to strings
             $podcast = new Podcast();
-            $podcast->setDbUrl($podcastArray["url"]);
-            $podcast->setDbTitle((string)$rss->title);
-            $podcast->setDbCreator((string)$rss->author);
-            $podcast->setDbDescription((string)$rss->description);
+            $podcast->fromArray($podcastArray, BasePeer::TYPE_FIELDNAME);
             $podcast->setDbOwner(self::getOwnerId());
             $podcast->setDbType(IMPORTED_PODCAST);
             $podcast->save();
-
-            // $podcastArray = array();
-            // array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
 
             $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
 
@@ -135,7 +139,8 @@ class Podcast extends BasePodcast
             throw new PodcastNotFoundException();
         }
 
-        $data = self::removePrivateFields($data);
+        self::removePrivateFields($data);
+        self::validatePodcastMetadata($data);
 
         $podcast->fromArray($data, BasePeer::TYPE_FIELDNAME);
         $podcast->save();
@@ -160,13 +165,35 @@ class Podcast extends BasePodcast
         }
     }
 
-    private static function removePrivateFields($data)
+    /**
+     * Trims the podcast metadata to fit the table's column max size
+     *
+     * @param $podcastArray
+     * @throws PropelException
+     */
+    private static function validatePodcastMetadata(&$podcastArray)
+    {
+        $podcastTable = PodcastPeer::getTableMap();
+
+        foreach ($podcastArray as $key => &$value) {
+            try {
+                // Make sure column exists in table
+                $columnMaxSize = $podcastTable->getColumn($key)->getSize();
+            } catch (PropelException $e) {
+                continue;
+            }
+
+            if (strlen($value) > $columnMaxSize) {
+                $value = substr($value, 0, $podcastTable->getColumn($key)->getSize());
+            }
+        }
+    }
+
+    private static function removePrivateFields(&$data)
     {
         foreach (self::$privateFields as $key) {
             unset($data[$key]);
         }
-
-        return $data;
     }
 
     //TODO move this somewhere where it makes sense

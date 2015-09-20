@@ -716,10 +716,10 @@ DROP TABLE IF EXISTS "podcast" CASCADE;
 CREATE TABLE "podcast"
 (
     "id" serial NOT NULL,
-    "url" VARCHAR(256) NOT NULL,
-    "title" VARCHAR(256) NOT NULL,
-    "creator" VARCHAR(256),
-    "description" VARCHAR(512),
+    "url" VARCHAR(4096) NOT NULL,
+    "title" VARCHAR(4096) NOT NULL,
+    "creator" VARCHAR(4096),
+    "description" VARCHAR(4096),
     "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
     "owner" INTEGER,
     "type" INTEGER DEFAULT 1 NOT NULL,
@@ -738,8 +738,8 @@ CREATE TABLE "podcast_episodes"
     "file_id" INTEGER NOT NULL,
     "podcast_id" INTEGER NOT NULL,
     "publication_date" TIMESTAMP NOT NULL,
-    "download_url" VARCHAR(512) NOT NULL,
-    "episode_guid" VARCHAR(512) NOT NULL,
+    "download_url" VARCHAR(4096) NOT NULL,
+    "episode_guid" VARCHAR(4096) NOT NULL,
     PRIMARY KEY ("id")
 );
 
