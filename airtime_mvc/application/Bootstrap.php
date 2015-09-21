@@ -103,10 +103,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
         // Check if the token exists
         if (!$csrf_namespace->authtoken) {
-            // If we don't have a token, regenerate it and set a 2 hour timeout
+            // If we don't have a token, regenerate it and set a 1 week timeout
             // Should we log the user out here if the token is expired?
             $csrf_namespace->authtoken = sha1(uniqid(rand(), 1));
-            $csrf_namespace->setExpirationSeconds(2 * 60 * 60);
+            $csrf_namespace->setExpirationSeconds(168 * 60 * 60);
         }
 
         //Here we are closing the session for writing because otherwise no requests
