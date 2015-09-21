@@ -6,7 +6,7 @@ var podcastApp = angular.module('podcast', [])
         console.log(podcast);
         AIRTIME.tabs.setActiveTabName($scope.podcast.title);
 
-        $scope.put = function() {
+        $scope.savePodcast = function() {
             $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: $scope.podcast })
                 .success(function() {
                     // TODO
