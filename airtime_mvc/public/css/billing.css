@@ -274,3 +274,25 @@
 	color: #ff611f;
 	font-weight: bold;
 }
+
+.billing-panel .educational-discount {
+	border: 1px solid #306999;
+	border-radius: 3px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	padding: 16px;
+	background-color: #b8d9f4;
+	color: #234f5d;
+
+}
+.billing-panel .educational-discount h4 {
+	color: #1e415d;
+	font-weight: bold;
+	margin: 0px;
+	padding: 0px;
+	margin-bottom: 5px;
+}
+.billing-panel .educational-discount p {
+	margin: 0px;
+}

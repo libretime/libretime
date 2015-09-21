@@ -28,6 +28,10 @@ function validatePlan()
 
 function validateVATNumber()
 {
+    if ($(vatFieldId).val() == '') {
+        return;
+    }
+    
 	$.post("/billing/vat-validator", { "vatnumber" : $(vatFieldId).val(), "country" : $("#country").val() })
 		.success(function(data, textStatus, jqXHR) {
     	if (data["result"]) {
@@ -261,6 +265,10 @@ echo($currentProduct["name"]);
 //echo Application_Model_Preference::GetPlanLevel();
 ?>
 </p>
+    <div class="educational-discount">
+        <h4>Are you a student or educator?</h4>
+        <p>Sign up on an annual plan before the end of October to receive a special educational discount. <a href="https://www.airtime.pro/educational-discount">Find out more</a>.</p>
+    </div>
 
 <h3><?php echo(_pro('Choose a plan: ')); ?></h3>
  <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
