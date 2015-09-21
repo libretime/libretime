@@ -161,7 +161,7 @@ $(document).ready(function () {
         });
     };
 
-    setupTextScrolling($("#recent_uploads"), "td");
+    $("#recent_uploads").textScroll("td");
 
     self.isRecentUploadsRefreshTimerActive = false;
 

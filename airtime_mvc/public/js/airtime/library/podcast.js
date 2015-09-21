@@ -42,7 +42,9 @@ var AIRTIME = (function (AIRTIME) {
 
     function _bootstrapAngularApp(podcast) {
         podcastApp.value('podcast', JSON.parse(podcast));
-        angular.bootstrap(AIRTIME.tabs.getActiveTab().find(".podcast-wrapper").get(0), ["podcast"]);
+        var wrapper = AIRTIME.tabs.getActiveTab().find(".editor_pane_wrapper");
+        wrapper.attr("ng-controller", "RestController");
+        angular.bootstrap(wrapper.get(0), ["podcast"]);
     }
 
     mod.createUrlDialog = function() {
@@ -112,15 +114,21 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     mod.initPodcastEpisodeDatatable = function(episodes) {
+        console.log(episodes);
         var aoColumns = [
-            /* Title */           { "sTitle" : $.i18n._("Title")              , "mDataProp" : "title"  , "sClass"      : "library_title"       , "sWidth"      : "170px"                 },
+            /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
+            /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
+            /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
+            /* Link */              { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
+            /* GUID */              { "sTitle" : $.i18n._("GUID")              , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "sWidth" : "170px" },
+            /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pubDate"        , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
         ];
 
         var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
 
         // Set up the div with id "podcast_table" as a datatable.
         mod.podcastEpisodesTableWidget = new AIRTIME.widgets.Table(
-            AIRTIME.tabs.getActiveTab().find('.podcast_episodes'), // DOM node to create the table inside.
+            AIRTIME.tabs.getActiveTab().find('#podcast_episodes'), // DOM node to create the table inside.
             true,                // Enable item selection
             podcastToolbarButtons, // Toolbar buttons
             {                    // Datatables overrides.
@@ -131,6 +139,7 @@ var AIRTIME = (function (AIRTIME) {
             });
 
         mod.podcastEpisodesDatatable = mod.podcastEpisodesTableWidget.getDatatable();
+        mod.podcastEpisodesDatatable.textScroll("td");
     };
 
     return AIRTIME;

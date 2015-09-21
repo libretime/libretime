@@ -100,11 +100,11 @@
     padding: 0;
 }
 
-#library_display_length {
+.dataTables_length {
     padding: 6px;
 }
 
-#library_display_length label {
+.dataTables_length label {
     color: #efefef;
     line-height: 26px;
     font-weight: normal;
@@ -149,7 +149,7 @@ div.btn > span {
     z-index: 1;
 }
 
-#library_display_wrapper, #show_builder_table_wrapper {
+.outer-datatable-wrapper .dataTables_wrapper {
     position: absolute;
     top: 34px;
     bottom: 4px;
@@ -157,12 +157,14 @@ div.btn > span {
     left: 4px;
 }
 
-#library_display, #show_builder_table {
+/*#library_display, #show_builder_table*/
+.datatable.dataTable {
     border: none;
 }
 
-#library_display_wrapper > .dataTables_scrolling,
-#show_builder_table_wrapper > .dataTables_scrolling {
+/*#library_display_wrapper > .dataTables_scrolling,
+#show_builder_table_wrapper > .dataTables_scrolling*/
+.dataTables_wrapper > .dataTables_scrolling {
     border: 1px solid #5b5b5b;
 }
 
@@ -451,7 +453,7 @@ li.ui-state-default {
      background-color: transparent;
 }
 
-.side_playlist label, .side_playlist h4, .side_playlist span {
+.side_playlist label/*, .side_playlist h4, .side_playlist span*/ {
     color: #efefef;
     font-size: 14px;
     line-height: 24px;
@@ -648,7 +650,7 @@ div.ColVis_collectionBackground {
     overflow: auto;
 }
 
-.ColVis.TableTools {
+:not(.table_toolbar) > .ColVis.TableTools {
     margin: 6px 6px 0 0;
 }
 
