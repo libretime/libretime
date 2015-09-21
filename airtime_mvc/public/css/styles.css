@@ -3934,3 +3934,7 @@ li .ui-state-hover {
     text-overflow: ellipsis;
     max-width: 300px;
 }
+
+.podcast-metadata input {
+    width: 100%;
+}

@@ -9,19 +9,24 @@ var AIRTIME = (function(AIRTIME) {
         AIRTIME.widgets = {};
     }
 
-    var HUGE_INT = Math.pow(2, 53) - 1;
-
     //Table widget constructor
     var Table = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
 
         var self = this;
+
+        self.HUGE_INT = Math.pow(2, 53) - 1;
 
         //Constants and enumerations
         self.SELECTION_MODE = {
             SINGLE : 0,
             MULTI_SHIFT : 1,
             MULTI_CTRL : 2
-        }
+        };
+
+        // Internal enum for repeated jQuery selectors
+        self._SELECTORS = Object.freeze({
+            SELECTION_CHECKBOX: ".airtime_table_checkbox"
+        });
 
         //Member variables
         self._datatable = null;
@@ -44,7 +49,7 @@ var AIRTIME = (function(AIRTIME) {
         // If selection is enabled, add in the checkbox column.
         if (bItemSelection) {
             dataTablesOptions["aoColumns"].unshift(
-                /* Checkbox */        { "sTitle" : "", "mData" : self._datatablesCheckboxDataDelegate, "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass" : "library_checkbox" }
+                /* Checkbox */        { "sTitle" : "", "mData" : self._datatablesCheckboxDataDelegate, "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass" : "airtime_table_checkbox" }
             );
         }
 
@@ -127,16 +132,16 @@ var AIRTIME = (function(AIRTIME) {
                 self.selectRow(nRow, aData, selectionMode, iDisplayIndex);
             });
 
-            $(self._datatable, 'tbody tr').on('click', 'input.airtime_table_checkbox', function(e) {
+            $(self._datatable, 'tbody tr').on('click', self._SELECTORS.SELECTION_CHECKBOX, function(e) {
                 $this = $(this);
 
-                var iVisualRowIdx = $this.parent().parent().index();
+                var iVisualRowIdx = $this.parent().index();
                 var aData = self._datatable.fnGetData(iVisualRowIdx);
                 var selectionMode = self.SELECTION_MODE.MULTI_CTRL; //Behaviour for checkboxes.
                 if (e.shiftKey) {
                     selectionMode = self.SELECTION_MODE.MULTI_SHIFT;
                 }
-                self.selectRow($this.parent().parent(), aData, selectionMode, iVisualRowIdx); //Always multiselect for checkboxes
+                self.selectRow($this.parent(), aData, selectionMode, iVisualRowIdx); //Always multiselect for checkboxes
                 e.stopPropagation();
                 return true;
             });
@@ -214,7 +219,7 @@ var AIRTIME = (function(AIRTIME) {
         this._selectedRowVisualIdxMin = self.HUGE_INT;
         this._selectedRowVisualIdxMax = -1;
         this._$wrapperDOMNode.find('.selected').removeClass('selected');
-        this._$wrapperDOMNode.find('input.airtime_table_checkbox').attr('checked', false);
+        this._$wrapperDOMNode.find(this._SELECTORS.SELECTION_CHECKBOX).find('input').attr('checked', false);
     };
 
     /** @param nRow is a tr DOM node (non-jQuery)
@@ -245,12 +250,12 @@ var AIRTIME = (function(AIRTIME) {
             //self._selectedRowVisualIdxMap[iVisualRowIdx] = aData;
 
             $nRow.addClass('selected');
-            $nRow.find('input.airtime_table_checkbox').attr('checked', true);
+            $nRow.find(self._SELECTORS.SELECTION_CHECKBOX).find('input').attr('checked', true);
         }
         //Ctrl-click multi row selection mode
         else if (selectionMode == self.SELECTION_MODE.MULTI_CTRL) {
 
-            var foundAtIdx = $.inArray(aData, self._selectedRows)
+            var foundAtIdx = $.inArray(aData, self._selectedRows);
 
             console.log('checkbox mouse', iVisualRowIdx, foundAtIdx);
             //XXX: Debugging -- Bug here-ish
@@ -264,7 +269,7 @@ var AIRTIME = (function(AIRTIME) {
             if (foundAtIdx >= 0 && self._selectedRows.length >= 1) {
                 self._selectedRows.splice(foundAtIdx, 1);
                 $nRow.removeClass('selected');
-                $nRow.find('input.airtime_table_checkbox').attr('checked', false);
+                $nRow.find(self._SELECTORS.SELECTION_CHECKBOX).find('input').attr('checked', false);
             }
             else {
                 self._selectedRows.push(aData);
@@ -273,7 +278,7 @@ var AIRTIME = (function(AIRTIME) {
                 self._selectedRowVisualIdxMax = iVisualRowIdx;
 
                 $nRow.addClass('selected');
-                $nRow.find('input.airtime_table_checkbox').attr('checked', true);
+                $nRow.find(self._SELECTORS.SELECTION_CHECKBOX).find('input').attr('checked', true);
             }
         }
         //Shift-click multi row selection mode
@@ -304,7 +309,7 @@ var AIRTIME = (function(AIRTIME) {
                 self._selectedRows.push(allRows[i]);
                 $row = $($nRow.parent().children()[i]);
                 $row.addClass('selected');
-                $row.find('input.airtime_table_checkbox').attr('checked', true);
+                $row.find(self._SELECTORS.SELECTION_CHECKBOX).find('input').attr('checked', true);
             }
 
         }
@@ -396,7 +401,7 @@ var AIRTIME = (function(AIRTIME) {
             //Supposed to return the raw data for the type here.
             return null;
         } else if (callType == 'display') {
-            return "<input type='checkbox' class='airtime_table_checkbox'>";
+            return "<input type='checkbox'>";
         } else if (callType == 'sort') {
             return null;
         } else if (callType == 'type') {

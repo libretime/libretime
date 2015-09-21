@@ -200,8 +200,12 @@ tr.lib-selected > td > div.library_actions_btn:hover {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	/*width:60%;*/
 	height: 26px;
-	width:60%;
+	border: 0;
+	float: left;
+	position: absolute;
+	width: 100%;
 	}
 .dataTables_filter label {
 	-webkit-box-sizing: border-box;
