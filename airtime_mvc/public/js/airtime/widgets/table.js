@@ -96,7 +96,6 @@ var AIRTIME = (function(AIRTIME) {
         //return self._datatable;
         return self;
     };
-    //TODO: Wrap everything into the prototype
 
 
     /* Set up global event handlers for the datatable.
