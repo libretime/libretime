@@ -121,6 +121,7 @@ class LibraryController extends Zend_Controller_Action
             if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
                 $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
+                $menu["publish"] = array("name"=> _("Publish..."), "icon" => "soundcloud", "url" => $baseUrl."library/publish/id/{$id}");
             }
 
             // It's important that we always return the parent id (cc_files id)

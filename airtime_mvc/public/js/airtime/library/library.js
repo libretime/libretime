@@ -1155,6 +1155,23 @@ var AIRTIME = (function(AIRTIME) {
                         oItems.del.callback = callback;
                     }
 
+                    // Publish.
+                    if (oItems.publish !== undefined) {
+                        if (data.ftype === "audioclip") {
+                            callback = function() {
+                                alert("TODO: Publish track with ID " + data.id);
+
+                                /*
+                                $.get(oItems.publish.url, {format: "json"}, function(json){
+                                    //AIRTIME.playlist.fileMdEdit(json);
+                                    alert("derp");
+                                });*/
+                            };
+                        }
+                        oItems.publish.callback = callback;
+                    }
+
+
                     // define a download callback.
                     if (oItems.download !== undefined) {
 
