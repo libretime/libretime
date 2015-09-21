@@ -182,12 +182,7 @@ class CeleryManager {
     protected static function _processTaskMessage($task, $message) {
         $ref = $task->getThirdPartyTrackReferences();  // ThirdPartyTrackReferences join
         $service = CeleryServiceFactory::getService($ref->getDbService());
-        if ($message->status == CELERY_SUCCESS_STATUS
-            && $task->getDbName() == $service->getCeleryDeleteTaskName()) {
-            $service->removeTrackReference($ref->getDbFileId());
-        } else {
-            $service->updateTrackReference($ref->getDbId(), json_decode($message->result), $message->status);
-        }
+        $service->updateTrackReference($task, $ref->getDbId(), json_decode($message->result), $message->status);
     }
 
     /**

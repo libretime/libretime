@@ -1199,8 +1199,11 @@ var AIRTIME = (function(AIRTIME) {
                         if (soundcloud.remove !== undefined) {
 
                             callback = function() {
-                                alert($.i18n._("Your track is being deleted from SoundCloud"));
-                                $.post(soundcloud.remove.url, function(){});
+                                if (confirm($.i18n._("Are you sure? SoundCloud stats and comments for this track will be permanently removed."))) {
+                                    alert($.i18n._("Your track is being deleted from SoundCloud"));
+                                    $.post(soundcloud.remove.url, function () {
+                                    });
+                                }
                             };
                             soundcloud.remove.callback = callback;
                         }

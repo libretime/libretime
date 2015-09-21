@@ -25,20 +25,11 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
      */
     protected static $_CELERY_EXCHANGE_NAME = 'soundcloud';
 
-    /**
-     * @var string celery task name for third party uploads
-     */
-    protected static $_CELERY_UPLOAD_TASK_NAME = 'soundcloud-upload';
-
-    /**
-     * @var string celery task name for third party uploads
-     */
-    protected static $_CELERY_DOWNLOAD_TASK_NAME = 'soundcloud-download';
-
-    /**
-     * @var string celery task name for third party deletions
-     */
-    protected static $_CELERY_DELETE_TASK_NAME = 'soundcloud-delete';
+    protected static $_CELERY_TASKS = [
+        UPLOAD      => 'soundcloud-upload',
+        DOWNLOAD    => 'soundcloud-download',
+        DELETE      => 'soundcloud-delete'
+    ];
 
     /**
      * @var array Application_Model_Preference functions for SoundCloud and their
@@ -64,18 +55,6 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
             $this->_accessToken = $accessToken;
             $this->_client->setAccessToken($accessToken);
         }
-    }
-
-    /**
-     * Given a SoundCloud track identifier, download a track from SoundCloud.
-     *
-     * If no track identifier is given, download all tracks for the currently
-     * authenticated SoundCloud user.
-     *
-     * @param int|null $trackId a SoundCloud track identifier
-     */
-    public function download($trackId = null) {
-        parent::download($trackId);
     }
 
     /**
@@ -127,19 +106,75 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
     }
 
     /**
+     * Upload the file with the given identifier to SoundCloud
+     *
+     * @param int $fileId the local CcFiles identifier
+     */
+    public function upload($fileId) {
+        $file = Application_Model_StoredFile::RecallById($fileId);
+        $data = array(
+            'data' => $this->_getUploadData($file),
+            'token' => $this->_accessToken,
+            'file_path' => $file->getFilePaths()[0]
+        );
+        $this->_executeTask(static::$_CELERY_TASKS[UPLOAD], $data, $fileId);
+    }
+
+    /**
+     * Given a track identifier, download a track from SoundCloud
+     *
+     * If no identifier is given, download all the user's tracks
+     *
+     * @param int $trackId a track identifier
+     */
+    public function download($trackId = null) {
+        $namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrfToken = $namespace->authtoken;
+        $data = array(
+            'callback_url' => 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/media/post?csrf_token=' . $csrfToken,
+            'token' => $this->_accessToken,
+            'track_id' => $trackId
+        );
+        // FIXME
+        Logging::warn("FIXME: we can't create a task reference without a valid file ID");
+        $this->_executeTask(static::$_CELERY_TASKS[DOWNLOAD], $data, null);
+    }
+
+    /**
+     * Delete the file with the given identifier from SoundCloud
+     *
+     * @param int $fileId the local CcFiles identifier
+     *
+     * @throws ServiceNotFoundException when a $fileId with no corresponding
+     *                                  service identifier is given
+     */
+    public function delete($fileId) {
+        $serviceId = $this->getServiceId($fileId);
+        if ($serviceId == 0) {
+            throw new ServiceNotFoundException("No service ID found for file with ID $fileId");
+        }
+        $data = array(
+            'token' => $this->_accessToken,
+            'track_id' => $serviceId
+        );
+        $this->_executeTask(static::$_CELERY_TASKS[DELETE], $data, $fileId);
+    }
+
+    /**
      * Update a ThirdPartyTrackReferences object for a completed upload
      *
      * TODO: should we have a database layer class to handle Propel operations?
      *
-     * @param $trackId int    ThirdPartyTrackReferences identifier
-     * @param $track  object  third-party service track object
-     * @param $status string  Celery task status
+     * @param $task     CeleryTasks the completed CeleryTasks object
+     * @param $trackId  int         ThirdPartyTrackReferences identifier
+     * @param $track    object      third-party service track object
+     * @param $status   string      Celery task status
      *
      * @throws Exception
      * @throws PropelException
      */
-    public function updateTrackReference($trackId, $track, $status) {
-        parent::updateTrackReference($trackId, $track, $status);
+    public function updateTrackReference($task, $trackId, $track, $status) {
+        parent::updateTask($task, $status);
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->findOneByDbId($trackId);
         if (is_null($ref)) {
@@ -148,6 +183,11 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
         $ref->setDbService(static::$_SERVICE_NAME);
         // Only set the SoundCloud fields if the task was successful
         if ($status == CELERY_SUCCESS_STATUS) {
+            // If the task was to delete the file from SoundCloud, remove the reference
+            if ($task->getDbName() == static::$_CELERY_TASKS[DELETE]) {
+                $this->removeTrackReference($ref->getDbFileId());
+                return;
+            }
             $utc = new DateTimeZone("UTC");
             $ref->setDbUploadTime(new DateTime("now", $utc));
             // TODO: fetch any additional SoundCloud parameters we want to store

@@ -108,6 +108,10 @@ class LocaleController extends Zend_Controller_Action
             "Are you sure you want to delete the selected item?" => _("Are you sure you want to delete the selected item?"),
             "Uploading in progress..." => _("Uploading in progress..."),
             "Retrieving data from the server..." => _("Retrieving data from the server..."),
+            // SOUNDCLOUD
+            "Are you sure? SoundCloud stats and comments for this track will be permanently removed." => "Are you sure? SoundCloud stats and comments for this track will be permanently removed.",
+            "Your track is being deleted from SoundCloud" => "Your track is being deleted from SoundCloud",
+            "Your track is being uploaded and will appear on SoundCloud in a couple of minutes" => "Your track is being uploaded and will appear on SoundCloud in a couple of minutes",
             "The soundcloud id for this file is: " => _("The soundcloud id for this file is: "),
             "There was an error while uploading to soundcloud." => _("There was an error while uploading to soundcloud."),
             "Error code: " => _("Error code: "),

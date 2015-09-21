@@ -10,19 +10,9 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
     protected static $_CELERY_EXCHANGE_NAME;
 
     /**
-     * @var string celery task name for third-party uploads
+     * @var array map of celery identifiers to their task names
      */
-    protected static $_CELERY_UPLOAD_TASK_NAME;
-
-    /**
-     * @var string celery task name for third-party uploads
-     */
-    protected static $_CELERY_DOWNLOAD_TASK_NAME;
-
-    /**
-     * @var string celery task name for third-party deletion
-     */
-    protected static $_CELERY_DELETE_TASK_NAME;
+    protected static $_CELERY_TASKS;
 
     /**
      * Execute a Celery task with the given name and data parameters
@@ -46,59 +36,6 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
         } catch (Exception $e) {
             Logging::info("Invalid request: " . $e->getMessage());
         }
-    }
-
-    /**
-     * Upload the file with the given identifier to a third-party service
-     *
-     * @param int $fileId the local CcFiles identifier
-     */
-    public function upload($fileId) {
-        $file = Application_Model_StoredFile::RecallById($fileId);
-        $data = array(
-            'data' => $this->_getUploadData($file),
-            'token' => $this->_accessToken,
-            'file_path' => $file->getFilePaths()[0]
-        );
-        $this->_executeTask(static::$_CELERY_UPLOAD_TASK_NAME, $data, $fileId);
-    }
-
-    /**
-     * Given a track identifier, download a track from a third-party service.
-     *
-     * @param int $trackId a track identifier
-     */
-    public function download($trackId) {
-        $namespace = new Zend_Session_Namespace('csrf_namespace');
-        $csrfToken = $namespace->authtoken;
-        $data = array(
-            'callback_url' => 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/media/post?csrf_token=' . $csrfToken,
-            'token' => $this->_accessToken,
-            'track_id' => $trackId
-        );
-        // FIXME
-        Logging::warn("FIXME: we can't create a task reference without a valid file ID");
-        $this->_executeTask(static::$_CELERY_DOWNLOAD_TASK_NAME, $data, null);
-    }
-
-    /**
-     * Delete the file with the given identifier from a third-party service
-     *
-     * @param int $fileId the local CcFiles identifier
-     *
-     * @throws ServiceNotFoundException when a $fileId with no corresponding
-     *                                  service identifier is given
-     */
-    public function delete($fileId) {
-        $serviceId = $this->getServiceId($fileId);
-        if ($serviceId == 0) {
-            throw new ServiceNotFoundException("No service ID found for file with ID $fileId");
-        }
-        $data = array(
-            'token' => $this->_accessToken,
-            'track_id' => $serviceId
-        );
-        $this->_executeTask(static::$_CELERY_DELETE_TASK_NAME, $data, $fileId);
     }
 
     /**
@@ -129,36 +66,28 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * Update a CeleryTasks object for a completed task
      * TODO: should we have a database layer class to handle Propel operations?
      *
-     * @param $trackId int    ThirdPartyTrackReferences identifier
-     * @param $track  object  third-party service track object
-     * @param $status string  Celery task status
+     * @param $task CeleryTasks the completed CeleryTasks object
+     * @param $status string    Celery task status
      *
      * @throws Exception
      * @throws PropelException
      */
-    public function updateTrackReference($trackId, $track, $status) {
-        $task = CeleryTasksQuery::create()
-            ->findOneByDbTrackReference($trackId);
+    public function updateTask($task, $status) {
         $task->setDbStatus($status);
         $task->save();
     }
 
     /**
-     * Field accessor for $_CELERY_DELETE_TASK_NAME
+     * Update a ThirdPartyTrackReferences object for a completed upload
      *
-     * @return string the Celery task name for deleting tracks from this service
+     * @param $task     CeleryTasks the completed CeleryTasks object
+     * @param $trackId  int         ThirdPartyTrackReferences identifier
+     * @param $track    object      third-party service track object
+     * @param $status   string      Celery task status
+     *
+     * @throws Exception
+     * @throws PropelException
      */
-    public function getCeleryDeleteTaskName() {
-        return static::$_CELERY_DELETE_TASK_NAME;
-    }
-
-    /**
-     * Build a parameter array for the file being uploaded to a third party service
-     *
-     * @param $file Application_Model_StoredFile the file being uploaded
-     *
-     * @return array the track array to send to the third party service
-     */
-    abstract protected function _getUploadData($file);
+    abstract function updateTrackReference($task, $trackId, $track, $status);
 
 }

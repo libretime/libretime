@@ -11,19 +11,9 @@ class ServiceNotFoundException extends Exception {}
 abstract class Application_Service_ThirdPartyService {
 
     /**
-     * @var string service access token for accessing third-party API
-     */
-    protected $_accessToken;
-
-    /**
      * @var string service name to store in ThirdPartyTrackReferences database
      */
     protected static $_SERVICE_NAME;
-
-    /**
-     * @var string base URI for third-party tracks
-     */
-    protected static $_THIRD_PARTY_TRACK_URI;
 
     /**
      * Create a ThirdPartyTrackReferences object for a track that's been uploaded
@@ -103,54 +93,5 @@ abstract class Application_Service_ThirdPartyService {
         }
         return false;
     }
-
-    /**
-     * Given a CcFiles identifier for a file that's been uploaded to a third-party service,
-     * return a link to the remote file
-     *
-     * @param int $fileId the cc_files identifier
-     *
-     * @return string the link to the remote file
-     */
-    public function getLinkToFile($fileId) {
-        $serviceId = $this->getServiceId($fileId);
-        return empty($serviceId) ? '' : static::$_THIRD_PARTY_TRACK_URI . $serviceId;
-    }
-
-    /**
-     * Upload the file with the given identifier to a third-party service
-     *
-     * @param int $fileId the cc_files identifier
-     */
-    abstract function upload($fileId);
-
-    /**
-     * Download the file with the given identifier from a third-party service
-     *
-     * @param int $trackId the third-party service track identifier
-     */
-    abstract function download($trackId);
-
-    /**
-     * Delete the file with the given identifier from a third-party service
-     *
-     * @param int $fileId the cc_files identifier
-     *
-     * @throws ServiceNotFoundException when a $fileId with no corresponding
-     *                                  service identifier is given
-     */
-    abstract function delete($fileId);
-
-    /**
-     * Update a ThirdPartyTrackReferences object for a completed task
-     *
-     * @param $trackId int    ThirdPartyTrackReferences identifier
-     * @param $track  object  third-party service track object
-     * @param $status string  Celery task status
-     *
-     * @throws Exception
-     * @throws PropelException
-     */
-    abstract function updateTrackReference($trackId, $track, $status);
 
 }
