@@ -387,7 +387,7 @@ var AIRTIME = (function(AIRTIME){
         redrawLib();
     }
 
-    function setFadeIcon(){
+    mod.setFadeIcon = function() {
         var contents = $pl.find(".spl_sortable");
         var show = contents.is(":visible");
         var empty = $pl.find(".spl_empty");
@@ -899,7 +899,7 @@ var AIRTIME = (function(AIRTIME){
                                 dt.fnStandingRedraw();
                             }
                         }
-                        setFadeIcon();
+                        mod.setFadeIcon();
                         disableLoadingIcon();
                     }
             );
@@ -1142,7 +1142,7 @@ var AIRTIME = (function(AIRTIME){
         }
         else {
             setPlaylistContent(json);
-            setFadeIcon();
+            mod.setFadeIcon();
             $pl.find('.errors').hide();
         }
 
@@ -1445,7 +1445,7 @@ var AIRTIME = (function(AIRTIME){
         setPlaylistEntryEvents();
         setCueEvents();
         setFadeEvents();
-        setFadeIcon();
+        mod.setFadeIcon();
 
         initialEvents();
         setUpPlaylist();

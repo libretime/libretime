@@ -550,7 +550,7 @@ var AIRTIME = (function(AIRTIME) {
             "bProcessing": true,
             "bServerSide": true,
 
-            "aLengthMenu": [5, 10, 15, 20, 25, 50, 100],
+            "aLengthMenu": [25, 50, 100],
 
             "bStateSave": true,
             "fnStateSaveParams": function (oSettings, oData) {

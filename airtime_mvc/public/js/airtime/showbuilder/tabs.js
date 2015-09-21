@@ -103,6 +103,7 @@ var AIRTIME = (function(AIRTIME){
         appendAddButton();
         appendModAddButton();
         removeButtonCheck();
+        AIRTIME.playlist.setFadeIcon();
     }
 
     /*  #####################################################
