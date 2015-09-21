@@ -735,7 +735,7 @@ DROP TABLE IF EXISTS "podcast_episodes" CASCADE;
 CREATE TABLE "podcast_episodes"
 (
     "id" serial NOT NULL,
-    "file_id" INTEGER NOT NULL,
+    "file_id" INTEGER,
     "podcast_id" INTEGER NOT NULL,
     "publication_date" TIMESTAMP NOT NULL,
     "download_url" VARCHAR(4096) NOT NULL,

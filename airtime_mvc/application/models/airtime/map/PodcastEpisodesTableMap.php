@@ -40,7 +40,7 @@ class PodcastEpisodesTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('podcast_episodes_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
-        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', true, null, null);
+        $this->addForeignKey('file_id', 'DbFileId', 'INTEGER', 'cc_files', 'id', false, null, null);
         $this->addForeignKey('podcast_id', 'DbPodcastId', 'INTEGER', 'podcast', 'id', true, null, null);
         $this->addColumn('publication_date', 'DbPublicationDate', 'TIMESTAMP', true, null, null);
         $this->addColumn('download_url', 'DbDownloadUrl', 'VARCHAR', true, 4096, null);

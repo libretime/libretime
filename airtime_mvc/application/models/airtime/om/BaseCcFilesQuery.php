@@ -3656,7 +3656,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      *
      * @return CcFilesQuery The current query, for fluid interface
      */
-    public function joinPodcastEpisodes($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function joinPodcastEpisodes($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         $tableMap = $this->getTableMap();
         $relationMap = $tableMap->getRelation('PodcastEpisodes');
@@ -3691,7 +3691,7 @@ abstract class BaseCcFilesQuery extends ModelCriteria
      *
      * @return   PodcastEpisodesQuery A secondary query class using the current class as primary query
      */
-    public function usePodcastEpisodesQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    public function usePodcastEpisodesQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinPodcastEpisodes($relationAlias, $joinType)

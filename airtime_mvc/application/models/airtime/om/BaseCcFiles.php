@@ -7557,7 +7557,7 @@ abstract class BaseCcFiles extends BaseObject implements Persistent
                 $this->podcastEpisodessScheduledForDeletion = clone $this->collPodcastEpisodess;
                 $this->podcastEpisodessScheduledForDeletion->clear();
             }
-            $this->podcastEpisodessScheduledForDeletion[]= clone $podcastEpisodes;
+            $this->podcastEpisodessScheduledForDeletion[]= $podcastEpisodes;
             $podcastEpisodes->setCcFiles(null);
         }
 
