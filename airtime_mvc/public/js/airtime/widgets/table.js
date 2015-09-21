@@ -36,6 +36,8 @@ var AIRTIME = (function(AIRTIME) {
         self._$wrapperDOMNode = $(wrapperDOMNode);
         self._toolbarButtons = toolbarButtons;
 
+        // Exclude the leftmost column if we're implementing item selection
+        self._colVisExcludeColumns = bItemSelection ? [0] : [];
 
         //Finish initialization of the datatable since everything is declared by now.
 
@@ -65,6 +67,7 @@ var AIRTIME = (function(AIRTIME) {
             }),
             "oColVis": {
                 "sAlign": "right",
+                "aiExclude": self.colVisExcludeColumns,
                 "buttonText": $.i18n._("Columns"),
                 "iOverlayFade": 0
             },

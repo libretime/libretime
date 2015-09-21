@@ -1271,7 +1271,7 @@ var AIRTIME = (function(AIRTIME) {
             });
 
         mod.podcastDataTable = mod.podcastTableWidget.getDatatable();
-    }
+    };
 
 
     mod.libraryInit = libraryInit;

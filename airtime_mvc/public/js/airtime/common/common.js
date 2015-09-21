@@ -289,18 +289,23 @@ function getUsabilityHint() {
     });
 }
 
-function setupTextScrolling(parent, selector) {
-    parent.on("mouseenter", selector, function () {
-        var sw = $(this)[0].scrollWidth - parseFloat($(this).css("textIndent")), iw = $(this).innerWidth();
-        if (sw > iw) {
+// Set up text scrolling for all tags matching selector within the calling element(s)
+jQuery.fn.textScroll = function(selector) {
+    this.each(function() {
+        $(this).on("mouseenter", selector, function () {
+            var sw = $(this)[0].scrollWidth - parseFloat($(this).css("textIndent")), iw = $(this).innerWidth();
+            if (sw > iw) {
+                $(this).stop().animate({
+                    textIndent: "-" + (sw + 1 - iw) + "px"
+                }, sw * 8);
+            }
+        });
+        $(this).on("mouseleave", selector, function () {
             $(this).stop().animate({
-                textIndent: "-" + (sw + 1 - iw) + "px"
-            }, sw * 8);
-        }
+                textIndent: "0"
+            }, 500);
+        });
     });
-    parent.on("mouseleave", selector, function () {
-        $(this).stop().animate({
-            textIndent: "0"
-        }, 500);
-    });
-}
+
+    return this;  // jQuery chaining
+};

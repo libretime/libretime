@@ -205,5 +205,5 @@ var AIRTIME = (function(AIRTIME){
 }(AIRTIME || {}));
 
 $(document).ready(function() {
-    setupTextScrolling($("#show_builder"), ".tab-name");
+    $("#show_builder").textScroll(".tab-name");
 });

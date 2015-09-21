@@ -3916,7 +3916,7 @@ li .ui-state-hover {
 
 /* Podcasts */
 
-.podcast-wrapper > .dataTables_wrapper {
+#podcast_episodes_wrapper {
     position: relative;
     height: 100%;
     float: left;
@@ -3926,4 +3926,11 @@ li .ui-state-hover {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+#podcast_episodes_wrapper td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
 }
