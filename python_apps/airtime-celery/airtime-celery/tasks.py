@@ -36,12 +36,14 @@ def soundcloud_upload(data, token, file_path):
 
 
 @celery.task(name='soundcloud-download', acks_late=True)
-def soundcloud_download(token, callback_url, track_id=None):
+def soundcloud_download(token, callback_url, api_key, track_id=None):
     """
     This is in stasis 
 
-    :param token:       OAuth2 client access token
-    :param track_id:    SoundCloud track identifier
+    :param token:        OAuth2 client access token
+    :param callback_url: callback URL to send the downloaded file to
+    :param api_key:      API key for callback authentication
+    :param track_id:     SoundCloud track identifier
     :rtype: None
     """
     client = soundcloud.Client(access_token=token)
@@ -51,7 +53,7 @@ def soundcloud_download(token, callback_url, track_id=None):
             if track.downloadable:
                 track_file = client.get(track.download_url)
                 with track_file as f:
-                    requests.post(callback_url, data=f)
+                    requests.post(callback_url, data=f, auth=requests.auth.HTTPBasicAuth(api_key, ''))
     except Exception as e:
         logger.info('Error during file download: {0}'.format(e.message))
         logger.info(str(e))
@@ -77,3 +79,25 @@ def soundcloud_delete(token, track_id):
         logger.info('Error deleting track!')
         raise e
     return json.dumps(track.fields())
+
+
+@celery.task(name='podcast-download', acks_late=True)
+def podcast_download(download_urls, callback_url, api_key):
+    """
+    Download a given podcast episode
+
+    :param download_urls:   array of download URLs for episodes to download
+    :param callback_url:    callback URL to send the downloaded file to
+    :param api_key:         API key for callback authentication
+    :rtype: None
+    """
+    try:
+        for url in download_urls:
+            r = requests.get(url, stream=True)
+            r.raise_for_status()
+            with r as f:
+                requests.post(callback_url, data=f, auth=requests.auth.HTTPBasicAuth(api_key, ''))
+    except Exception as e:
+        logger.info('Error during file download: {0}'.format(e.message))
+        logger.info(str(e))
+        raise e

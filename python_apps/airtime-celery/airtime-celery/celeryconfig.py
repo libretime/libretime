@@ -29,6 +29,7 @@ CELERY_TASK_RESULT_EXPIRES = 600          # Expire task results after 10 minutes
 CELERY_RESULT_EXCHANGE = 'celeryresults'  # Default exchange - needed due to php-celery
 CELERY_QUEUES = (
     Queue('soundcloud', exchange=Exchange('soundcloud'), routing_key='soundcloud'),
+    Queue('podcast', exchange=Exchange('podcast'), routing_key='podcast'),
     Queue(exchange=Exchange('celeryresults'), auto_delete=True),
 )
 CELERY_EVENT_QUEUE_EXPIRES = 600          # RabbitMQ x-expire after 10 minutes

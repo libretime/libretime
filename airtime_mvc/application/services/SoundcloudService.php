@@ -4,6 +4,10 @@ require_once "ThirdPartyCeleryService.php";
 
 class Application_Service_SoundcloudService extends Application_Service_ThirdPartyCeleryService implements OAuth2 {
 
+    const UPLOAD    = 'upload';
+    const DOWNLOAD  = 'download';
+    const DELETE    = 'delete';
+
     /**
      * @var string service access token for accessing remote API
      */
@@ -26,9 +30,9 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
     protected static $_CELERY_EXCHANGE_NAME = 'soundcloud';
 
     protected static $_CELERY_TASKS = [
-        UPLOAD      => 'soundcloud-upload',
-        DOWNLOAD    => 'soundcloud-download',
-        DELETE      => 'soundcloud-delete'
+        self::UPLOAD      => 'soundcloud-upload',
+        self::DOWNLOAD    => 'soundcloud-download',
+        self::DELETE      => 'soundcloud-delete'
     ];
 
     /**
@@ -117,7 +121,7 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
             'token' => $this->_accessToken,
             'file_path' => $file->getFilePaths()[0]
         );
-        $this->_executeTask(static::$_CELERY_TASKS[UPLOAD], $data, $fileId);
+        $this->_executeTask(static::$_CELERY_TASKS[self::UPLOAD], $data, $fileId);
     }
 
     /**
@@ -128,16 +132,16 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
      * @param int $trackId a track identifier
      */
     public function download($trackId = null) {
-        $namespace = new Zend_Session_Namespace('csrf_namespace');
-        $csrfToken = $namespace->authtoken;
+        $CC_CONFIG = Config::getConfig();
         $data = array(
-            'callback_url' => 'http' . (empty($_SERVER['HTTPS']) ? '' : 's') . '://' . $_SERVER['HTTP_HOST'] . '/media/post?csrf_token=' . $csrfToken,
-            'token' => $this->_accessToken,
-            'track_id' => $trackId
+            'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . '/rest/media',
+            'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
+            'token'         => $this->_accessToken,
+            'track_id'      => $trackId
         );
         // FIXME
         Logging::warn("FIXME: we can't create a task reference without a valid file ID");
-        $this->_executeTask(static::$_CELERY_TASKS[DOWNLOAD], $data, null);
+        $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data, null);
     }
 
     /**
@@ -157,7 +161,7 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
             'token' => $this->_accessToken,
             'track_id' => $serviceId
         );
-        $this->_executeTask(static::$_CELERY_TASKS[DELETE], $data, $fileId);
+        $this->_executeTask(static::$_CELERY_TASKS[self::DELETE], $data, $fileId);
     }
 
     /**
@@ -243,7 +247,7 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
         // Pass the current URL in the state parameter in order to preserve it
         // in the redirect. This allows us to create a singular script to redirect
         // back to any station the request comes from.
-        $url = urlencode('http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].'/soundcloud/redirect');
+        $url = urlencode(Application_Common_HTTPHelper::getStationUrl() . '/soundcloud/redirect');
         return $this->_client->getAuthorizeUrl(array("state" => $url, "scope" => "non-expiring"));
     }
 
