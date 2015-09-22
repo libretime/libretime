@@ -123,6 +123,11 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
     }
 
+    public function putAction()
+    {
+        
+    }
+
     private function getId()
     {
         if (!$id = $this->_getParam('id', false)) {
