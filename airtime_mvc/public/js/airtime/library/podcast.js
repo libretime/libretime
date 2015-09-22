@@ -13,13 +13,13 @@ var AIRTIME = (function (AIRTIME) {
     
     //AngularJS app
     var podcastApp = angular.module('podcast', [])
-        .controller('RestController', function($scope, $http, podcast) {
+        .controller('RestController', function($scope, $http, podcast, tab) {
 
             //We take a podcast object in as a parameter rather fetching the podcast by ID here because
             //when you're creating a new podcast, we already have the object from the result of the POST. We're saving
             //a roundtrip by not fetching it again here.
             $scope.podcast = podcast;
-            AIRTIME.tabs.setActiveTabName($scope.podcast.title);
+            tab.setName($scope.podcast.title);
 
             $scope.savePodcast = function() {
                 $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: $scope.podcast })
@@ -29,7 +29,7 @@ var AIRTIME = (function (AIRTIME) {
             };
 
             $scope.discard = function() {
-                AIRTIME.tabs.getActiveTab().close();
+                tab.close();
                 $scope.podcast = {};
             };
         });
@@ -46,9 +46,10 @@ var AIRTIME = (function (AIRTIME) {
         $.post(endpoint + "bulk", { csrf_token: $("#csrf").val(), method: method, ids: ids }, callback);
     }
 
-    function _bootstrapAngularApp(podcast) {
+    function _bootstrapAngularApp(podcast, tab) {
         podcastApp.value('podcast', JSON.parse(podcast));
-        var wrapper = AIRTIME.tabs.getActiveTab().contents.find(".editor_pane_wrapper");
+        podcastApp.value('tab', tab);
+        var wrapper = tab.contents.find(".editor_pane_wrapper");
         wrapper.attr("ng-controller", "RestController");
         angular.bootstrap(wrapper.get(0), ["podcast"]);
     }
@@ -68,11 +69,10 @@ var AIRTIME = (function (AIRTIME) {
 
     mod.addPodcast = function() {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
-            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+json.id;
-            AIRTIME.tabs.openTab(json, uid);
-            _bootstrapAngularApp(json.podcast);
+            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+json.id,
+                tab = AIRTIME.tabs.openTab(json, uid);
+            _bootstrapAngularApp(json.podcast, tab);
             $("#podcast_url_dialog").dialog("close");
-            console.log(json);
             mod.initPodcastEpisodeDatatable(JSON.parse(json.podcast).episodes);
         });
     };
@@ -80,9 +80,9 @@ var AIRTIME = (function (AIRTIME) {
     mod.editSelectedPodcasts = function() {
         _bulkAction("GET", function(json) {
             json.forEach(function(el) {
-                var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id;
-                AIRTIME.tabs.openTab(el, uid, AIRTIME.podcast.init);
-                _bootstrapAngularApp(el.podcast);
+                var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id,
+                    tab = AIRTIME.tabs.openTab(el, uid, AIRTIME.podcast.init);
+                _bootstrapAngularApp(el.podcast, tab);
                 mod.initPodcastEpisodeDatatable(JSON.parse(el.podcast).episodes);
             });
         });
@@ -97,7 +97,6 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     mod.initPodcastEpisodeDatatable = function(episodes) {
-        console.log(episodes);
         var aoColumns = [
             /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
             /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },

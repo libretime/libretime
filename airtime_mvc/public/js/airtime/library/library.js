@@ -456,7 +456,7 @@ var AIRTIME = (function(AIRTIME) {
         openTabObjectIds.each(function(i, el) {
             var v = parseInt($(el).val());
             if ($.inArray(v, mediaIds) > -1) {
-                AIRTIME.tabs.closeTab($(el).closest(".pl-content").attr("data-tab-id"));
+                AIRTIME.tabs.get($(el).closest(".pl-content").attr("data-tab-id")).close();
             }
         });
 

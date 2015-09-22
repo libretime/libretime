@@ -1,9 +1,40 @@
 var AIRTIME = (function(AIRTIME){
+        /**
+         * AIRTIME module namespace object
+         */
     var mod,
+        /**
+         * Tab counter to use as unique tab IDs that can be
+         * retrieved from the DOM
+         *
+         * @type {number}
+         */
         $tabCount = 0,
+        /**
+         * Map of Tab IDs (by tabCount) to object UIDs so
+         * Tabs can be referenced either by ID (from the DOM)
+         * or by UID (from object data)
+         *
+         * @type {{}}
+         */
         $tabMap = {},
+        /**
+         * Map of object UIDs to currently open Tab objects
+         *
+         * @type {{}}
+         */
         $openTabs = {},
+        /**
+         * The currently active (open) Tab object
+         *
+         * @type {Tab}
+         */
         $activeTab,
+        /**
+         * Singleton object used to reference the schedule tab
+         *
+         * @type {ScheduleTab}
+         */
         $scheduleTab;
 
     if (AIRTIME.tabs === undefined) {
@@ -12,9 +43,22 @@ var AIRTIME = (function(AIRTIME){
     mod = AIRTIME.tabs;
 
     /*  #####################################################
-                         Internal Functions
+                  Object Initialization and Functions
         ##################################################### */
 
+    /**
+     * Tab object constructor
+     *
+     * @param {{}} json     a javascript object of the form
+     *                      {
+     *                          'html': the HTML to render as the tab contents
+     *                      }
+     * @param {string} uid  the unique ID for the tab. Uses the values in
+     *                      AIRTIME.library.MediaTypeStringEnum and the object ID
+     *                      to create a string of the form TYPE_ID.
+     * @returns {Tab}       the created Tab object
+     * @constructor
+     */
     var Tab = function(json, uid) {
         var self = this;
 
@@ -28,17 +72,18 @@ var AIRTIME = (function(AIRTIME){
         self.id = ++$tabCount;
         self.uid = uid;
 
-        var wrapper = "<div data-tab-type='" + json.type + "' data-tab-id='" + self.id + "' id='pl-tab-content-" + self.id + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
+        // TODO: clean this up a bit and use js instead of strings to create elements
+        var wrapper = "<div data-tab-id='" + self.id + "' id='pl-tab-content-" + self.id + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
             t = $("#show_builder").append(wrapper).find("#pl-tab-content-" + self.id),
             pane = $(".editor_pane_wrapper:last").append(json.html),
             name = pane.find("#track_title").length > 0 ? pane.find("#track_title").val() + $.i18n._(" - Metadata Editor")
-                    : pane.find(".playlist_name_display").val(),
+                : pane.find(".playlist_name_display").val(),
             tab =
-                "<li data-tab-id='" + self.id + "' data-tab-type='" + json.type + "' id='pl-tab-" + self.id + "' role='presentation' class='active'>" +
-                "<a href='javascript:void(0)'>" +
-                "<span class='tab-name'>" + name + "</span>" +
-                "<span href='#' class='lib_pl_close icon-remove'></span>" +
-                "</a>" +
+                "<li data-tab-id='" + self.id + "' id='pl-tab-" + self.id + "' role='presentation' class='active'>" +
+                    "<a href='javascript:void(0)'>" +
+                        "<span class='tab-name'>" + name + "</span>" +
+                        "<span href='#' class='lib_pl_close icon-remove'></span>" +
+                    "</a>" +
                 "</li>",
             tabs = $(".nav.nav-tabs");
 
@@ -54,47 +99,18 @@ var AIRTIME = (function(AIRTIME){
         $openTabs[uid] = self;
         $tabMap[self.id] = uid;
 
+        self._init();
         self.switchTo();
         return self;
     };
 
-    Tab.prototype.switchTo = function() {
-        _switchTab(this.contents, this.tab);
-    };
-
-    Tab.prototype.close = function() {
-        var self = this;
-
-        var toPane = self.contents.next().length > 0 ? self.contents.next() : self.contents.prev(),
-            toTab = self.tab.next().length > 0 ? self.tab.next() : self.tab.prev();
-        delete $openTabs[self.uid];  // Remove this tab from the open tab array
-        delete $tabMap[self.id];  // Remove this tab from the internal tab mapping
-
-        // Remove the relevant DOM elements (the tab and its contents)
-        self.tab.remove();
-        self.contents.remove();
-
-        if (self.isActive()) {  // Closing the current tab, otherwise we don't need to switch tabs
-            _switchTab(toPane, toTab);
-        }
-
-        // If we close a tab that was causing tabs to wrap to the next row
-        // we need to resize to change the margin for the tab nav
-        AIRTIME.playlist.onResize();
-
-    };
-
-    Tab.prototype.isActive = function() {
-        return this.contents.get(0) == $activeTab.contents.get(0);
-    };
-
-    Tab.prototype.assignTabClickHandler = function(f) {
-        this.tab.unbind("click").on("click", f);
-    };
-    Tab.prototype.assignTabCloseClickHandler = function(f) {
-        this.tab.find(".lib_pl_close").unbind("click").click(f);
-    };
-
+    /**
+     * Private initialization function for Tab objects
+     *
+     * Assigns default action handlers to the tab DOM element
+     *
+     * @private
+     */
     Tab.prototype._init = function() {
         var self = this;
         self.assignTabClickHandler(function() {
@@ -116,6 +132,92 @@ var AIRTIME = (function(AIRTIME){
         });
     };
 
+    /**
+     * Assign the given function f as the click handler for the tab
+     *
+     * @param {function} f the function to call when the tab is clicked
+     */
+    Tab.prototype.assignTabClickHandler = function(f) {
+        this.tab.unbind("click").on("click", f);
+    };
+
+    /**
+     * Assign the given function f as the click handler for the tab close button
+     *
+     * @param {function} f the function to call when the tab's close button is clicked
+     */
+    Tab.prototype.assignTabCloseClickHandler = function(f) {
+        this.tab.find(".lib_pl_close").unbind("click").click(f);
+    };
+
+    /**
+     * Open this tab in the right-hand pane and set it as the currently active tab
+     */
+    Tab.prototype.switchTo = function() {
+        var self = this;
+        $activeTab.contents.hide().removeClass("active-tab");
+        self.contents.addClass("active-tab").show();
+
+        $activeTab.tab.removeClass("active");
+        self.tab.addClass("active");
+
+        mod.updateActiveTab();
+
+        // In case we're adding a tab that wraps to the next row
+        // It's better to call this here so we don't have to call it in multiple places
+        mod.onResize();
+        AIRTIME.library.fnRedraw();
+    };
+
+    /**
+     * Close the tab. Switches to the nearest open tab, prioritizing the
+     * more recent (rightmost) tabs
+     */
+    Tab.prototype.close = function() {
+        var self = this;
+
+        var ascTabs = Object.keys($openTabs).sort(function(a, b){return a-b}),
+            pos = ascTabs.indexOf(self.uid),
+            toTab = pos < ascTabs.length-1 ? $openTabs[ascTabs[++pos]] : $openTabs[ascTabs[--pos]];
+        delete $openTabs[self.uid];  // Remove this tab from the open tab array
+        delete $tabMap[self.id];  // Remove this tab from the internal tab mapping
+
+        // Remove the relevant DOM elements (the tab and its contents)
+        self.tab.remove();
+        self.contents.remove();
+
+        if (self.isActive()) {  // Closing the current tab, otherwise we don't need to switch tabs
+            toTab.switchTo();
+        }
+    };
+
+    /**
+     * Set the visible Tab name to the given string
+     *
+     * @param {string} name the name to set
+     */
+    Tab.prototype.setName = function(name) {
+        this.tab.find(".tab-name").text(name);
+    };
+
+    /**
+     * Check if the Tab object is the currently active (open) Tab
+     *
+     * @returns {boolean} true if the Tab is the currently active Tab
+     */
+    Tab.prototype.isActive = function() {
+        return this.contents.get(0) == $activeTab.contents.get(0);
+    };
+
+    /**
+     * ScheduledTab object constructor
+     *
+     * The schedule tab is present in the DOM already on load, and we
+     * need to be able to reference it in the same way as other tabs
+     * (to avoid duplication and confusion) so we define it statically
+     *
+     * @constructor
+     */
     var ScheduleTab = function() {
         var self = this, uid = 0,
             tab = $("#schedule-tab"),
@@ -124,141 +226,111 @@ var AIRTIME = (function(AIRTIME){
         self.id = 0;
 
         tab.data("tab-id", self.id);
-        tab.on("click", function() {
-            if (!$(this).hasClass('active')) {
-                _switchTab(contents, $(this));
-            }
-        });
 
         self.wrapper = pane;
         self.contents = contents;
         self.tab = tab;
 
+        tab.on("click", function() {
+            if (!$(this).hasClass('active')) {
+                self.switchTo();
+            }
+        });
+
         $openTabs[uid] = self;
         $tabMap[self.id] = uid;
     };
+    /**
+     * Subclass the Tab object
+     * @type {Tab}
+     */
     ScheduleTab.prototype = Object.create(Tab.prototype);
     ScheduleTab.prototype.constructor = ScheduleTab;
-
-    function _initFileMdEvents(newTab) {
-        newTab.contents.find(".md-cancel").on("click", function() {
-            newTab.close();
-        });
-
-        newTab.contents.find(".md-save").on("click", function() {
-            var file_id = newTab.wrapper.find('#file_id').val(),
-                data = newTab.wrapper.find("#edit-md-dialog form").serializeArray();
-            $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
-                // don't redraw the library table if we are on calendar page
-                // we would be on calendar if viewing recorded file metadata
-                if ($("#schedule_calendar").length === 0) {
-                    oTable.fnStandingRedraw();
-                }
-            });
-
-            newTab.close();
-        });
-
-        newTab.wrapper.find('#edit-md-dialog').on("keyup", function(event) {
-            if (event.keyCode === 13) {
-                newTab.wrapper.find('.md-save').click();
-            }
-        });
-
-        AIRTIME.playlist.setupEventListeners();
-    }
-
-    function _initPlaylistEvents(newTab) {
-        newTab.assignTabClickHandler(function() {
-            if (!$(this).hasClass('active')) {
-                newTab.switchTo();
-                $.post(baseUrl+'playlist/edit', {
-                    format: "json",
-                    id: newTab.pane.find(".obj_id").val(),
-                    type: newTab.pane.find(".obj_type").val()
-                });
-            }
-        });
-
-        AIRTIME.playlist.init();
-
-        // functions in smart_blockbuilder.js
-        setupUI();
-        appendAddButton();
-        appendModAddButton();
-        removeButtonCheck();
-        AIRTIME.playlist.setFadeIcon();
-    }
-
-    function _switchTab(tabPane, tab) {
-        $activeTab.contents.hide().removeClass("active-tab");
-        tabPane.addClass("active-tab").show();
-
-        $activeTab.tab.removeClass("active");
-        tab.addClass("active");
-
-        mod.updateActiveTab();
-
-        AIRTIME.playlist.onResize();
-        AIRTIME.library.fnRedraw();
-    }
 
     /*  #####################################################
                          External Functions
         ##################################################### */
 
+    /**
+     * Initialize the singleton ScheduleTab object on startup
+     */
     mod.init = function() {
-        $scheduleTab = new ScheduleTab();
+        $scheduleTab = Object.freeze(new ScheduleTab());
     };
 
-    mod.openFileMdEditorTab = function(json, uid) {
-        mod.openTab(json, uid, _initFileMdEvents);
-    };
-
-    mod.openPlaylistTab = function(json, uid) {
-        mod.openTab(json, uid, _initPlaylistEvents);
-    };
-
+    /**
+     * Create a new Tab object and open it in the ShowBuilder pane
+     *
+     * @param {{}} json             a javascript object of the form
+     *                              {
+     *                                  'html': the HTML to render as the tab contents
+     *                              }
+     * @param {string} uid          the unique ID for the tab. Uses the values in
+     *                              AIRTIME.library.MediaTypeStringEnum and the object ID
+     * @param {function} callback   an optional callback function to call once the
+     *                              Tab object is initialized
+     * @returns {Tab}               the created Tab object
+     */
     mod.openTab = function(json, uid, callback) {
         var newTab = new Tab(json, uid);
-        newTab._init();
         if (callback) callback(newTab);
+        return newTab;
     };
 
-    mod.closeTab = function(id) {
-        $openTabs[$tabMap[id]].close();
-    };
-
-    mod.setActiveTabName = function(name) {
-        $activeTab.tab.find(".tab-name").text(name);
-    };
-
+    /**
+     * Updates the currently active tab
+     *
+     * Called when the user switches tabs for any reason
+     *
+     * NOTE: this function updates the currently active playlist
+     *       as a side-effect, which is necessary for playlist tabs
+     *       but not for other types of tabs... would be good to
+     *       get rid of this dependency at some point
+     */
     mod.updateActiveTab = function() {
         var t = $(".nav.nav-tabs .active");
         $activeTab = mod.get(t.data("tab-id"));
         if ($activeTab.contents.hasClass("pl-content")) {
-            mod.updatePlaylist();
+            AIRTIME.playlist.setCurrent($activeTab.contents);
         }
     };
 
-    mod.updatePlaylist = function() {
-        AIRTIME.playlist.setCurrent($activeTab.contents);
-        $.post(baseUrl + "playlist/change-playlist", {
-            "id": AIRTIME.playlist.getId($activeTab.contents),
-            "type": $activeTab.contents.find('.obj_type').val()
-        });
-    };
-
+    /**
+     * Get the ScheduleTab object
+     *
+     * @returns {ScheduleTab}
+     */
     mod.getScheduleTab = function() {
         return $scheduleTab;
     };
 
+    /**
+     * Get the currently active (open) Tab object
+     *
+     * @returns {Tab} the currently active tab
+     */
     mod.getActiveTab = function() {
         return $activeTab;
     };
 
+    /**
+     * Given a tab id, get the corresponding Tab object
+     *
+     * @param {int}             id the tab id of the Tab to retrieve
+     * @returns {Tab|undefined} the Tab object with the given id, or undefined
+     *                          if no Tab with the given id exists
+     */
     mod.get = function(id) {
         return $openTabs[$tabMap[id]];
+    };
+
+    /**
+     * Adjust the margins on the right-hand pane when we have multiple rows of tabs
+     */
+    mod.onResize = function() {
+        var h = $(".panel-header .nav").height();
+        $(".pl-content").css("margin-top", h + 5); // 8px extra for padding
+        $("#show_builder_table_wrapper").css("top", h + 5);
     };
 
     return AIRTIME;
@@ -269,3 +341,4 @@ $(document).ready(function() {
     $("#show_builder").textScroll(".tab-name");
     AIRTIME.tabs.init();
 });
+$(window).resize(AIRTIME.tabs.onResize);
