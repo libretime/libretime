@@ -31,7 +31,7 @@ class Podcast extends BasePodcast
     /** Creates a Podcast object from the given podcast URL.
      *  This is used by our Podcast REST API
      *
-     * @param $podcastArray An array containing the URL for a Podcast object.
+     * @param $data An array containing the URL for a Podcast object.
      *
      * @return array - Podcast Array with a full list of episodes
      * @throws Exception
@@ -161,7 +161,6 @@ class Podcast extends BasePodcast
      * Trims the podcast metadata to fit the table's column max size
      *
      * @param $podcastArray
-     * @throws PropelException
      */
     private static function validatePodcastMetadata(&$podcastArray)
     {
