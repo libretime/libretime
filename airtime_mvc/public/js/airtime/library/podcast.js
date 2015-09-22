@@ -3,7 +3,6 @@ var endpoint = 'rest/podcast/';
 var podcastApp = angular.module('podcast', [])
     .controller('RestController', function($scope, $http, podcast) {
         $scope.podcast = podcast;
-        console.log(podcast);
         AIRTIME.tabs.setActiveTabName($scope.podcast.title);
 
         $scope.savePodcast = function() {
@@ -14,7 +13,7 @@ var podcastApp = angular.module('podcast', [])
         };
 
         $scope.discard = function() {
-            AIRTIME.tabs.closeTab();
+            AIRTIME.tabs.getActiveTab().close();
             $scope.podcast = {};
         };
     });
@@ -42,7 +41,7 @@ var AIRTIME = (function (AIRTIME) {
 
     function _bootstrapAngularApp(podcast) {
         podcastApp.value('podcast', JSON.parse(podcast));
-        var wrapper = AIRTIME.tabs.getActiveTab().find(".editor_pane_wrapper");
+        var wrapper = AIRTIME.tabs.getActiveTab().contents.find(".editor_pane_wrapper");
         wrapper.attr("ng-controller", "RestController");
         angular.bootstrap(wrapper.get(0), ["podcast"]);
     }
@@ -62,17 +61,20 @@ var AIRTIME = (function (AIRTIME) {
 
     mod.addPodcast = function() {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
-            AIRTIME.tabs.openTab(json, AIRTIME.podcast.init);
+            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+json.id;
+            AIRTIME.tabs.openTab(json, uid);
             _bootstrapAngularApp(json.podcast);
             $("#podcast_url_dialog").dialog("close");
-            mod.initPodcastEpisodeDatatable(JSON.parse(el.podcast).episodes);
+            console.log(json);
+            mod.initPodcastEpisodeDatatable(JSON.parse(json.podcast).episodes);
         });
     };
 
     mod.editSelectedPodcasts = function() {
         _bulkAction("GET", function(json) {
             json.forEach(function(el) {
-                AIRTIME.tabs.openTab(el, AIRTIME.podcast.init);
+                var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id;
+                AIRTIME.tabs.openTab(el, uid, AIRTIME.podcast.init);
                 _bootstrapAngularApp(el.podcast);
                 mod.initPodcastEpisodeDatatable(JSON.parse(el.podcast).episodes);
             });
@@ -85,32 +87,6 @@ var AIRTIME = (function (AIRTIME) {
                 AIRTIME.library.podcastDataTable.fnDraw();
             });
         }
-    };
-
-    /*
-     * Callback when creating podcast tabs to initialize bindings
-     */
-    mod.init = function(newTab) {
-        // FIXME: get rid of this duplication by abstracting out functionality in tabs
-        newTab.tab.on("click", function() {
-            if (!$(this).hasClass('active')) {
-                AIRTIME.tabs.switchTab(newTab.pane, newTab.tab);
-            }
-        });
-
-        $(".lib_pl_close").unbind().click(function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            $(this).unbind("click"); // Prevent repeated clicks in quick succession from closing multiple tabs
-
-            var tabId = $(this).closest("li").attr("data-tab-id");
-
-            // We need to update the text on the add button
-            AIRTIME.library.checkAddButton();
-            // We also need to run the draw callback to update how dragged items are drawn
-            AIRTIME.library.fnDrawCallback();
-            AIRTIME.tabs.closeTab(tabId);
-        });
     };
 
     mod.initPodcastEpisodeDatatable = function(episodes) {
@@ -128,7 +104,7 @@ var AIRTIME = (function (AIRTIME) {
 
         // Set up the div with id "podcast_table" as a datatable.
         mod.podcastEpisodesTableWidget = new AIRTIME.widgets.Table(
-            AIRTIME.tabs.getActiveTab().find('#podcast_episodes'), // DOM node to create the table inside.
+            AIRTIME.tabs.getActiveTab().contents.find('#podcast_episodes'), // DOM node to create the table inside.
             true,                // Enable item selection
             podcastToolbarButtons, // Toolbar buttons
             {                    // Datatables overrides.

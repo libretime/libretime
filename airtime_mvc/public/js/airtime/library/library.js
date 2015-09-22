@@ -63,7 +63,7 @@ var AIRTIME = (function(AIRTIME) {
                        CONFIGURATION
         ############################################ */
 
-    mod.MediaTypeEnum = Object.freeze({
+    mod.MediaTypeIntegerEnum = Object.freeze({
         DEFAULT: 1,
         FILE: 1,
         PLAYLIST: 2,
@@ -72,39 +72,54 @@ var AIRTIME = (function(AIRTIME) {
         PODCAST: 5
     });
 
+    mod.MediaTypeStringEnum = Object.freeze({
+        FILE: "au",
+        PLAYLIST: "pl",
+        BLOCK: "bl",
+        WEBSTREAM: "ws",
+        PODCAST: "pc"
+    });
+
+    mod.MediaTypeFullToStringEnum = Object.freeze({
+        //FILE: "au",
+        "playlist": "pl",
+        "block": "bl",
+        "stream": "ws"
+    });
+
     // TODO: once the new manual pages are added, change links!
     mod.placeholder = function(mediaType) {
         switch (mediaType) {
             // TODO: remove duplication in a nice way?
-            case mod.MediaTypeEnum.FILE:
+            case mod.MediaTypeIntegerEnum.FILE:
                 return {
                     "media": "tracks",
                     "icon": "icon-music",
                     "subtext": "Click 'Upload' to add some now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/add-media/"
                 };
-            case mod.MediaTypeEnum.PLAYLIST:
+            case mod.MediaTypeIntegerEnum.PLAYLIST:
                 return {
                     "media": "playlists",
                     "icon": "icon-list",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case mod.MediaTypeEnum.BLOCK:
+            case mod.MediaTypeIntegerEnum.BLOCK:
                 return {
                     "media": "smart blocks",
                     "icon": "icon-time",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case mod.MediaTypeEnum.WEBSTREAM:
+            case mod.MediaTypeIntegerEnum.WEBSTREAM:
                 return {
                     "media": "webstreams",
                     "icon": "icon-random",
                     "subtext": "Click 'New' to create one now.",
                     "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
                 };
-            case mod.MediaTypeEnum.PODCAST:
+            case mod.MediaTypeIntegerEnum.PODCAST:
                 return {
                     "media": "podcasts",
                     "icon": "icon-headphones",
@@ -256,7 +271,7 @@ var AIRTIME = (function(AIRTIME) {
         var selected = $(".media_type_selector.selected").data("selection-id"),
             check = false;
 
-        if (selected != AIRTIME.library.MediaTypeEnum.FILE) {
+        if (selected != AIRTIME.library.MediaTypeIntegerEnum.FILE) {
             check = true;
         }
 
@@ -631,7 +646,7 @@ var AIRTIME = (function(AIRTIME) {
 
                 // push whether to search files/playlists or all.
                 type = $(".media_type_selector.selected").data("selection-id");
-                type = (type === undefined) ? AIRTIME.library.MediaTypeEnum.DEFAULT : type;
+                type = (type === undefined) ? AIRTIME.library.MediaTypeIntegerEnum.DEFAULT : type;
                 aoData.push({name: "type", value: type});
 
                 //getUsabilityHint();
@@ -805,7 +820,7 @@ var AIRTIME = (function(AIRTIME) {
             //Set up the datatables string translation table with different strings depending on
             //whether you're viewing files, playlists, smart blocks, etc.
             var type = parseInt($(".media_type_selector.selected").data("selection-id"));
-            type = (type === undefined) ? AIRTIME.library.MediaTypeEnum.DEFAULT : type;
+            type = (type === undefined) ? AIRTIME.library.MediaTypeIntegerEnum.DEFAULT : type;
 
             //FIXME: The code that calls this function doesn't work as intended because you can't
             //       change the oLanguage property of a datatable dynamically. :(
@@ -855,7 +870,7 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         var selected = $("a[href$='"+location.hash+"']");
-        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeEnum.PODCAST) {
+        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
             $("#library_display_wrapper").hide();
             $('#podcast_table_wrapper').show();
             oTable = mod.podcastDataTable;

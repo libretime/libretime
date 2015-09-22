@@ -336,11 +336,11 @@ var AIRTIME = (function(AIRTIME) {
 
                 var selection = $(".media_type_selector.selected").data("selection-id");
 
-                if (selection == AIRTIME.library.MediaTypeEnum.PLAYLIST) {
+                if (selection == AIRTIME.library.MediaTypeIntegerEnum.PLAYLIST) {
                     AIRTIME.playlist.fnNew();
-                } else if (selection == AIRTIME.library.MediaTypeEnum.BLOCK) {
+                } else if (selection == AIRTIME.library.MediaTypeIntegerEnum.BLOCK) {
                     AIRTIME.playlist.fnNewBlock();
-                } else if (selection == AIRTIME.library.MediaTypeEnum.WEBSTREAM) {
+                } else if (selection == AIRTIME.library.MediaTypeIntegerEnum.WEBSTREAM) {
                     AIRTIME.playlist.fnWsNew();
                 }
             });
@@ -358,7 +358,7 @@ var AIRTIME = (function(AIRTIME) {
 
                     if (data.ftype === "audioclip") {
                         $.get(baseUrl + "library/edit-file-md/id/" + data.id, {format: "json"}, function (json) {
-                            AIRTIME.playlist.fileMdEdit(json);
+                            AIRTIME.playlist.fileMdEdit(json, data.tr_id);
                             //buildEditMetadataDialog(json);
                         });
                     } else if (data.ftype === "playlist" || data.ftype === "block") {

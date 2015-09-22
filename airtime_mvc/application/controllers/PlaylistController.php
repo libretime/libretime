@@ -102,7 +102,7 @@ class PlaylistController extends Zend_Controller_Action
 
                 $this->view->form = $form;
                 $this->view->obj = $obj;
-                $this->view->type = "sb";
+                //$this->view->type = "sb";
                 $this->view->id = $obj->getId();
 
                 if ($isJson) {
@@ -112,7 +112,7 @@ class PlaylistController extends Zend_Controller_Action
                 }
             } else {
                 $this->view->obj = $obj;
-                $this->view->type = "pl";
+                //$this->view->type = "pl";
                 $this->view->id = $obj->getId();
                 if ($isJson) {
                     return $this->view->html = $this->view->render($viewPath);
@@ -573,7 +573,7 @@ class PlaylistController extends Zend_Controller_Action
                 $this->view->result = 1;
             }
             $this->view->name = $bl->getName();
-            $this->view->type = "sb";
+            //$this->view->type = "sb";
             $this->view->id = $bl->getId();
             $this->view->modified = $bl->getLastModified("U");
         } else if ($params['type'] == 'playlist') {

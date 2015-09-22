@@ -141,7 +141,7 @@ AIRTIME = (function(AIRTIME) {
                 dashboardLink = $(".media_type_selector:first"),
                 t;
 
-            if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeEnum.PODCAST) {
+            if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
                 $("#library_display_wrapper").hide();
                 $("#podcast_table_wrapper").show();
                 t = AIRTIME.library.podcastDataTable;
@@ -186,12 +186,6 @@ AIRTIME = (function(AIRTIME) {
         $lib = $("#library_content");
         $builder = $("#show_builder");
         $fs = $builder.find('fieldset');
-
-        $("#schedule-tab").on("click", function() {
-            if (!$(this).hasClass('active')) {
-                AIRTIME.tabs.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
-            }
-        });
 
         //Highlight the media type selector we're currently on.
         highlightMediaTypeSelector();
