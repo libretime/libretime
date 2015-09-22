@@ -18,6 +18,7 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('get-file-metadata', 'html')
                     ->addActionContext('set-num-entries', 'json')
                     ->addActionContext('edit-file-md', 'json')
+                    ->addActionContext('publish-dialog', 'html')
                     ->initContext();
     }
 
@@ -120,7 +121,7 @@ class LibraryController extends Zend_Controller_Action
             }
             if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
-                $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
+                $menu["edit"] = array("name"=> _("Edit..."), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
                 $menu["publish"] = array("name"=> _("Publish..."), "icon" => "soundcloud", "url" => $baseUrl."library/publish/id/{$id}");
             }
 
@@ -182,7 +183,7 @@ class LibraryController extends Zend_Controller_Action
 
             if ($obj_sess->id !== $id && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit");
+                    $menu["edit"] = array("name"=> _("Edit..."), "icon" => "edit");
                 }
             }
 
@@ -204,7 +205,7 @@ class LibraryController extends Zend_Controller_Action
             }
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 if ($screen == "playlist") {
-                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
+                    $menu["edit"] = array("name"=> _("Edit..."), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
                 }
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
             }
@@ -450,5 +451,11 @@ class LibraryController extends Zend_Controller_Action
         } catch (Exception $e) {
             Logging::info($e->getMessage());
         }
+    }
+
+    public function publishDialogAction() {
+        $this->_helper->layout->disableLayout();
+
+        //This just spits out publish-dialog.phtml!
     }
 }

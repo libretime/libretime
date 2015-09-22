@@ -1174,13 +1174,7 @@ var AIRTIME = (function(AIRTIME) {
                     if (oItems.publish !== undefined) {
                         if (data.ftype === "audioclip") {
                             callback = function() {
-                                alert("TODO: Publish track with ID " + data.id);
-
-                                /*
-                                $.get(oItems.publish.url, {format: "json"}, function(json){
-                                    //AIRTIME.playlist.fileMdEdit(json);
-                                    alert("derp");
-                                });*/
+                                AIRTIME.publish.publishTrack(data.id);
                             };
                         }
                         oItems.publish.callback = callback;

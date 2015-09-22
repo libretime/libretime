@@ -66,6 +66,7 @@ class ShowbuilderController extends Zend_Controller_Action
         // MEDIA BUILDER
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/podcast.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
+        $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/publish.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
 

@@ -1,31 +1,38 @@
-var endpoint = 'rest/podcast/';
-
-var podcastApp = angular.module('podcast', [])
-    .controller('RestController', function($scope, $http, podcast) {
-        $scope.podcast = podcast;
-        AIRTIME.tabs.setActiveTabName($scope.podcast.title);
-
-        $scope.savePodcast = function() {
-            $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: $scope.podcast })
-                .success(function() {
-                    // TODO
-                });
-        };
-
-        $scope.discard = function() {
-            AIRTIME.tabs.getActiveTab().close();
-            $scope.podcast = {};
-        };
-    });
 
 var AIRTIME = (function (AIRTIME) {
     var mod;
+
 
     if (AIRTIME.podcast === undefined) {
         AIRTIME.podcast = {};
     }
 
     mod = AIRTIME.podcast;
+
+    var endpoint = 'rest/podcast/';
+    
+    //AngularJS app
+    var podcastApp = angular.module('podcast', [])
+        .controller('RestController', function($scope, $http, podcast) {
+
+            //We take a podcast object in as a parameter rather fetching the podcast by ID here because
+            //when you're creating a new podcast, we already have the object from the result of the POST. We're saving
+            //a roundtrip by not fetching it again here.
+            $scope.podcast = podcast;
+            AIRTIME.tabs.setActiveTabName($scope.podcast.title);
+
+            $scope.savePodcast = function() {
+                $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: $scope.podcast })
+                    .success(function() {
+                        // TODO
+                    });
+            };
+
+            $scope.discard = function() {
+                AIRTIME.tabs.getActiveTab().close();
+                $scope.podcast = {};
+            };
+        });
 
     function _bulkAction(method, callback) {
         var selected = $("#podcast_table").find(".selected"),
