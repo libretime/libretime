@@ -3,8 +3,8 @@
 /**
  * Class TaskManager
  *
- * When adding a new task, the new AirtimeTask class will need to be added to the internal task list,
- * as an ENUM value to the AirtimeTask interface, and as a case in the TaskFactory.
+ * When adding a new task, the new AirtimeTask class will also need to be added
+ * as a class constant and to the array in TaskFactory
  */
 final class TaskManager {
 
@@ -12,10 +12,7 @@ final class TaskManager {
      * @var array tasks to be run. Maps task names to a boolean value denoting
      *            whether the task has been checked/run
      */
-    protected $_taskList = [
-        AirtimeTask::UPGRADE    => false,
-        AirtimeTask::CELERY     => false,
-    ];
+    protected $_taskList;
 
     /**
      * @var TaskManager singleton instance object
@@ -25,7 +22,7 @@ final class TaskManager {
     /**
      * @var int TASK_INTERVAL_SECONDS how often, in seconds, to run the TaskManager tasks
      */
-    const TASK_INTERVAL_SECONDS = 30;
+    const TASK_INTERVAL_SECONDS = 300;  // 5 minutes - will be run on every pypo request
 
     /**
      * @var $con PDO Propel connection object
@@ -36,6 +33,9 @@ final class TaskManager {
      * Private constructor so class is uninstantiable
      */
     private function __construct() {
+        foreach (array_keys(TaskFactory::$tasks) as $v) {
+            $this->_taskList[$v] = false;
+        }
     }
 
     /**
@@ -77,7 +77,7 @@ final class TaskManager {
      */
     public function runTasks() {
         // If there is data in auth storage, this could be a user request
-        // so we should lock the TaskManager to avoid blocking
+        // so we should just return to avoid blocking
         if ($this->_isUserSessionRequest()) {
             return;
         }
@@ -85,7 +85,7 @@ final class TaskManager {
         $this->_con->beginTransaction();
         try {
             $lock = $this->_getLock();
-            if ($lock && microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS) {
+            if ($lock && (microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS)) {
                 // Propel caches the database connection and uses it persistently, so if we don't
                 // use commit() here, we end up blocking other queries made within this request
                 $this->_con->commit();
@@ -96,8 +96,7 @@ final class TaskManager {
         } catch (Exception $e) {
             // We get here if there are simultaneous requests trying to fetch the lock row
             $this->_con->rollBack();
-            // Logging::info($e->getMessage()); // We actually get here a lot, so it's
-                                                // better to be silent here to avoid log bloat
+            Logging::warn($e->getMessage());
             return;
         }
         foreach ($this->_taskList as $task => $hasTaskRun) {
@@ -155,14 +154,6 @@ final class TaskManager {
 interface AirtimeTask {
 
     /**
-     * PHP doesn't have ENUMs so declare them as interface constants
-     * Task types - values don't really matter as long as they're unique
-     */
-
-    const UPGRADE = "upgrade";
-    const CELERY = "celery";
-
-    /**
      * Check whether the task should be run
      *
      * @return bool true if the task needs to be run, otherwise false
@@ -175,31 +166,6 @@ interface AirtimeTask {
      * @return void
      */
     public function run();
-
-}
-
-/**
- * Class TaskFactory Factory class to abstract task instantiation
- */
-class TaskFactory {
-
-    /**
-     * Get an AirtimeTask based on a task type
-     *
-     * @param $task string the task type; uses AirtimeTask constants as an ENUM
-     *
-     * @return AirtimeTask|null return a task of the given type or null if no corresponding
-     *                          task exists or is implemented
-     */
-    public static function getTask($task) {
-        switch($task) {
-            case AirtimeTask::UPGRADE:
-                return new UpgradeTask();
-            case AirtimeTask::CELERY:
-                return new CeleryTask();
-        }
-        return null;
-    }
 
 }
 
@@ -245,6 +211,41 @@ class CeleryTask implements AirtimeTask {
      */
     public function run() {
         CeleryManager::pollBrokerTaskQueue();
+    }
+
+}
+
+/**
+ * Class TaskFactory Factory class to abstract task instantiation
+ */
+class TaskFactory {
+
+    /**
+     * PHP doesn't have ENUMs so declare them as interface constants
+     * Task types - values don't really matter as long as they're unique
+     */
+
+    const UPGRADE = "upgrade";
+    const CELERY = "celery";
+
+    /**
+     * @var array map of arbitrary identifiers to class names to be instantiated reflectively
+     */
+    public static $tasks = array(
+        "upgrade"   => "UpgradeTask",
+        "celery"    => "CeleryTask",
+    );
+
+    /**
+     * Get an AirtimeTask based on a task type
+     *
+     * @param $task string the task type; uses AirtimeTask constants as an ENUM
+     *
+     * @return AirtimeTask|null return a task of the given type or null if no corresponding
+     *                          task exists or is implemented
+     */
+    public static function getTask($task) {
+        return new self::$tasks[$task]();
     }
 
 }

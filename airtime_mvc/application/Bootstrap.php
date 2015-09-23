@@ -149,7 +149,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
          */
         if (getenv("AIRTIME_UNIT_TEST") != 1) {
             $taskManager = TaskManager::getInstance();
-            $taskManager->runTask(AirtimeTask::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
+            $taskManager->runTask(TaskFactory::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
             //This will do the upgrade too if it's needed...
             $taskManager->runTasks();
         }
