@@ -53,7 +53,7 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
         try {
             $feed = new SimplePie();
             $feed->set_feed_url($podcastUrl);
-            $feed->set_cache_location($_SERVER['DOCUMENT_ROOT'] . '/rss/cache_files');
+            $feed->enable_cache(false);
             $feed->init();
             return $feed;
         } catch (FeedException $e) {
