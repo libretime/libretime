@@ -62,7 +62,7 @@ class Podcast extends BasePodcast
         $podcastArray["link"] = $rss->get_link();
         $podcastArray["language"] = $rss->get_language();
         $podcastArray["copyright"] = $rss->get_copyright();
-        $podcastArray["author"] = $rss->get_author();
+        $podcastArray["creator"] = $rss->get_author();
         $podcastArray["category"] = $rss->get_categories();
 
         /*$podcastArray["title"] = (string)$rss->title;
@@ -89,12 +89,14 @@ class Podcast extends BasePodcast
             $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
 
             $podcastArray["episodes"] = array();
-            foreach ($rss->item as $item) {
-                // Same as above, we need to explicitly cast the SimpleXMLElement 'array' into an actual array
-                foreach($item as $k => $v) {
-                    $item[$k] = (string)$v;
-                }
-                array_push($podcastArray["episodes"], $item);
+            foreach ($rss->get_items() as $item) {
+                array_push($podcastArray["episodes"], array(
+                    "title" => $item->get_title(),
+                    "author" => $item->get_author()->get_name(),
+                    "description" => $item->get_description(),
+                    "pub_date" => $item->get_date("Y-m-d H:i:s"),
+                    "link" => $item->get_enclosure()->get_link()
+                ));
             }
             return $podcastArray;
         } catch(Exception $e) {
@@ -129,12 +131,14 @@ class Podcast extends BasePodcast
         $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
 
         $podcastArray["episodes"] = array();
-        foreach ($rss->item as $item) {
-            // Same as above, we need to explicitly cast the SimpleXMLElement 'array' into an actual array
-            foreach($item as $k => $v) {
-                $item[$k] = (string)$v;
-            }
-            array_push($podcastArray["episodes"], $item);
+        foreach ($rss->get_items() as $item) {
+            array_push($podcastArray["episodes"], array(
+                "title" => $item->get_title(),
+                "author" => $item->get_author()->get_name(),
+                "description" => $item->get_description(),
+                "pub_date" => $item->get_date("Y-m-d H:i:s"),
+                "link" => $item->get_enclosure()->get_link()
+            ));
         }
 
         return $podcastArray;
