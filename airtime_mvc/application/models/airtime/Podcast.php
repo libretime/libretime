@@ -62,7 +62,7 @@ class Podcast extends BasePodcast
         $podcastArray["link"] = $rss->get_link();
         $podcastArray["language"] = $rss->get_language();
         $podcastArray["copyright"] = $rss->get_copyright();
-        $podcastArray["creator"] = $rss->get_author();
+        $podcastArray["creator"] = $rss->get_author()->get_name();
         $podcastArray["category"] = $rss->get_categories();
 
         /*$podcastArray["title"] = (string)$rss->title;
@@ -94,7 +94,7 @@ class Podcast extends BasePodcast
                     "title" => $item->get_title(),
                     "author" => $item->get_author()->get_name(),
                     "description" => $item->get_description(),
-                    "pub_date" => $item->get_date("Y-m-d H:i:s"),
+                    "pubDate" => $item->get_date("Y-m-d H:i:s"),
                     "link" => $item->get_enclosure()->get_link()
                 ));
             }
