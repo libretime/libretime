@@ -248,13 +248,13 @@ var AIRTIME = (function(AIRTIME){
     ScheduleTab.prototype.constructor = ScheduleTab;
 
     /*  #####################################################
-                         External Functions
+                           Module Functions
         ##################################################### */
 
     /**
      * Initialize the singleton ScheduleTab object on startup
      */
-    mod.init = function() {
+    mod.initScheduleTab = function() {
         $scheduleTab = Object.freeze(new ScheduleTab());
     };
 
@@ -338,7 +338,9 @@ var AIRTIME = (function(AIRTIME){
 }(AIRTIME || {}));
 
 $(document).ready(function() {
+    // Add text scrolling to tab names
     $("#show_builder").textScroll(".tab-name");
-    AIRTIME.tabs.init();
+    // Initialize the ScheduleTab
+    AIRTIME.tabs.initScheduleTab();
 });
 $(window).resize(AIRTIME.tabs.onResize);

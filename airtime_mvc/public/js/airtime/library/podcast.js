@@ -1,7 +1,5 @@
-
 var AIRTIME = (function (AIRTIME) {
     var mod;
-
 
     if (AIRTIME.podcast === undefined) {
         AIRTIME.podcast = {};
@@ -102,7 +100,6 @@ var AIRTIME = (function (AIRTIME) {
             /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
             /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
             /* Link */              { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
-            /* GUID */              { "sTitle" : $.i18n._("GUID")              , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "sWidth" : "170px" },
             /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pubDate"        , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
         ];
 
