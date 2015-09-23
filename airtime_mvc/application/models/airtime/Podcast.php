@@ -57,9 +57,26 @@ class Podcast extends BasePodcast
 
         // Kind of a pain; since the rss fields are SimpleXMLElements,
         // we need to explicitly cast them to strings
-        $podcastArray["title"] = (string)$rss->title;
-        $podcastArray["creator"] = (string)$rss->author;
+        $podcastArray["title"] = $rss->get_title();
+        $podcastArray["description"] = $rss->get_description();
+        $podcastArray["link"] = $rss->get_link();
+        $podcastArray["language"] = $rss->get_language();
+        $podcastArray["copyright"] = $rss->get_copyright();
+        $podcastArray["author"] = $rss->get_author();
+        $podcastArray["category"] = $rss->get_categories();
+
+        /*$podcastArray["title"] = (string)$rss->title;
         $podcastArray["description"] = (string)$rss->description;
+        $podcastArray["link"] = (string)$rss->link;
+        $podcastArray["language"] = (string)$rss->language;
+        $podcastArray["copyright"] = (string)$rss->copyright;
+        $podcastArray["itunes_author"] = (string)$rss->{'itunes:author'};
+        $podcastArray["itunes_keywords"] = (string)$rss->{'itunes:keywords'};
+        $podcastArray["itunes_subtitle"] = (string)$rss->{'itunes:subtitle'};
+        $podcastArray["itunes_summary"] = (string)$rss->{'itunes:summary'};
+        //TODO: fix itunes_category
+        $podcastArray["itunes_category"] = (string)$rss->{'itunes:category'};
+        $podcastArray["itunes_explicit"] = (string)$rss->{'itunes:explicit'};*/
         self::validatePodcastMetadata($podcastArray);
 
         try {

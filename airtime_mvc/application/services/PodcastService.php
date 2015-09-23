@@ -51,7 +51,11 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
     public static function getPodcastFeed($podcastUrl)
     {
         try {
-            return Feed::loadRss($podcastUrl);
+            $feed = new SimplePie();
+            $feed->set_feed_url($podcastUrl);
+            $feed->set_cache_location($_SERVER['DOCUMENT_ROOT'] . '/rss/cache_files');
+            $feed->init();
+            return $feed;
         } catch (FeedException $e) {
             return false;
         }
@@ -61,7 +65,6 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
     {
 
     }
-
     /**
      * Given an array of track identifiers, download RSS feed tracks
      *
