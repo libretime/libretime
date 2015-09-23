@@ -80,14 +80,30 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
     /**
      * Update a ThirdPartyTrackReferences object for a completed upload
      *
+     * Manipulation and use of the track object is left up to child implementations
+     *
      * @param $task     CeleryTasks the completed CeleryTasks object
      * @param $trackId  int         ThirdPartyTrackReferences identifier
      * @param $track    object      third-party service track object
      * @param $status   string      Celery task status
      *
+     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
+     *
      * @throws Exception
      * @throws PropelException
      */
-    abstract function updateTrackReference($task, $trackId, $track, $status);
+    public function updateTrackReference($task, $trackId, $track, $status) {
+        static::updateTask($task, $status);
+        $ref = ThirdPartyTrackReferencesQuery::create()
+            ->findOneByDbId($trackId);
+        if (is_null($ref)) {
+            $ref = new ThirdPartyTrackReferences();
+        }
+        $ref->setDbService(static::$_SERVICE_NAME);
+        $utc = new DateTimeZone("UTC");
+        $ref->setDbUploadTime(new DateTime("now", $utc));
+        $ref->save();
+        return $ref;
+    }
 
 }

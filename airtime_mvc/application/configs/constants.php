@@ -121,6 +121,7 @@ define('CELERY_FAILED_STATUS', 'FAILED');
 
 // Celery Services
 define('SOUNDCLOUD_SERVICE_NAME', 'soundcloud');
+define('PODCAST_SERVICE_NAME', 'podcast');
 
 // Podcast Types
 define('STATION_PODCAST', 0);

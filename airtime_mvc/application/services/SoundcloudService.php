@@ -2,7 +2,16 @@
 
 require_once "ThirdPartyCeleryService.php";
 
+/**
+ * Service object for dealing with SoundCloud authorization and background tasks
+ *
+ * Class Application_Service_SoundcloudService
+ */
 class Application_Service_SoundcloudService extends Application_Service_ThirdPartyCeleryService implements OAuth2 {
+
+    /**
+     * Arbitrary constant identifiers for the internal tasks array
+     */
 
     const UPLOAD    = 'upload';
     const DOWNLOAD  = 'download';
@@ -23,12 +32,14 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
      */
     protected static $_SERVICE_NAME = SOUNDCLOUD_SERVICE_NAME;  // SoundCloud service name constant from constants.php
 
-    // TODO: Make these constants
     /**
      * @var string exchange name for SoundCloud tasks
      */
     protected static $_CELERY_EXCHANGE_NAME = 'soundcloud';
 
+    /**
+     * @var array map of constant identifiers to Celery task names
+     */
     protected static $_CELERY_TASKS = [
         self::UPLOAD      => 'soundcloud-upload',
         self::DOWNLOAD    => 'soundcloud-download',
@@ -174,32 +185,28 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
      * @param $track    object      third-party service track object
      * @param $status   string      Celery task status
      *
+     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
+     *                                   or null if the task was a DELETE
+     *
      * @throws Exception
      * @throws PropelException
      */
     public function updateTrackReference($task, $trackId, $track, $status) {
-        parent::updateTask($task, $status);
-        $ref = ThirdPartyTrackReferencesQuery::create()
-            ->findOneByDbId($trackId);
-        if (is_null($ref)) {
-            $ref = new ThirdPartyTrackReferences();
-        }
-        $ref->setDbService(static::$_SERVICE_NAME);
+        $ref = parent::updateTrackReference($task, $trackId, $track, $status);
+        // TODO: fetch any additional SoundCloud parameters we want to store
         // Only set the SoundCloud fields if the task was successful
         if ($status == CELERY_SUCCESS_STATUS) {
             // If the task was to delete the file from SoundCloud, remove the reference
-            if ($task->getDbName() == static::$_CELERY_TASKS[DELETE]) {
+            if ($task->getDbName() == static::$_CELERY_TASKS[self::DELETE]) {
                 $this->removeTrackReference($ref->getDbFileId());
-                return;
+                return null;
             }
-            $utc = new DateTimeZone("UTC");
-            $ref->setDbUploadTime(new DateTime("now", $utc));
-            // TODO: fetch any additional SoundCloud parameters we want to store
             $ref->setDbForeignId($track->id);  // SoundCloud identifier
         }
         // TODO: set SoundCloud upload status?
         // $ref->setDbStatus($status);
         $ref->save();
+        return $ref;
     }
 
     /**
