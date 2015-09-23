@@ -114,15 +114,18 @@ function setMsAuthenticationFieldsReadonly(ele) {
 }
 
 function removeLogo() {
-    $.post(baseUrl+'Preference/remove-logo', function(json){});
-    location.reload();
+    $.post(baseUrl+'preference/remove-logo', {'csrf_token' : $('#csrf').val()}, function(json){
+        // Reload without resubmitting the form
+        location.href = location.href.replace(location.hash,"");
+    });
 }
 
 function deleteAllFiles() {
     var resp = confirm($.i18n._("Are you sure you want to delete all the tracks in your library?"))
     if (resp) {
-        $.post(baseUrl+'Preference/delete-all-files', function(json){});
-        location.reload();
+        $.post(baseUrl+'preference/delete-all-files', {'csrf_token' : $('#csrf').val()}, function(json){
+            location.reload();
+        });
     }
 }
 

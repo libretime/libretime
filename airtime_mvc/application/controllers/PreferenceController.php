@@ -134,6 +134,12 @@ class PreferenceController extends Zend_Controller_Action
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
 
+        if (!SecurityHelper::verifyAjaxCSRFToken($this->_getParam('csrf_token'))) {
+            Logging::error(__FILE__ . ': Invalid CSRF token');
+            $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "valid" => false, "error" => "CSRF token did not match."));
+            return;
+        }
+
         Application_Model_Preference::SetStationLogo("");
     }
 
@@ -479,6 +485,12 @@ class PreferenceController extends Zend_Controller_Action
     {
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
+        
+        if (!SecurityHelper::verifyAjaxCSRFToken($this->_getParam('csrf_token'))) {
+            Logging::error(__FILE__ . ': Invalid CSRF token');
+            $this->_helper->json->sendJson(array("jsonrpc" => "2.0", "valid" => false, "error" => "CSRF token did not match."));
+            return;
+        }
 
         // Only admin users should get here through ACL permissioning
         // Only allow POST requests

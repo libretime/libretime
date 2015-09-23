@@ -12,4 +12,17 @@ class SecurityHelper {
         }
         return $arr;
     }
+
+    public static function verifyAjaxCSRFToken($observedToken) {
+        $current_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $observed_csrf_token = $observedToken;
+        $expected_csrf_token = $current_namespace->authtoken;
+
+        if ($observed_csrf_token == $expected_csrf_token){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
 }
