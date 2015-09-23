@@ -73,6 +73,10 @@ class Podcast extends BasePodcast
 
             $podcastArray["episodes"] = array();
             foreach ($rss->item as $item) {
+                // Same as above, we need to explicitly cast the SimpleXMLElement 'array' into an actual array
+                foreach($item as $k => $v) {
+                    $item[$k] = (string)$v;
+                }
                 array_push($podcastArray["episodes"], $item);
             }
             return $podcastArray;
@@ -109,6 +113,10 @@ class Podcast extends BasePodcast
 
         $podcastArray["episodes"] = array();
         foreach ($rss->item as $item) {
+            // Same as above, we need to explicitly cast the SimpleXMLElement 'array' into an actual array
+            foreach($item as $k => $v) {
+                $item[$k] = (string)$v;
+            }
             array_push($podcastArray["episodes"], $item);
         }
 

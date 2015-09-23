@@ -177,7 +177,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
             case "DELETE":
                 foreach($ids as $id) {
                     Podcast::deleteById($id);
-                    $responseBody = "Success";  // TODO
+                    $responseBody = "Success";  // TODO: make this more descriptive
                 }
                 break;
             case "GET":
@@ -186,9 +186,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
                     $responseBody[] = array(
                         "podcast"=>json_encode($podcast),
                         "html"=>$this->view->render($path),
-                        "type"=>"podcast",  // TODO: get rid of these extraneous fields
-                        "id"=>$podcast["id"]
-                        // "id"=>$podcast->getDbId()
                     );
                 }
                 break;
