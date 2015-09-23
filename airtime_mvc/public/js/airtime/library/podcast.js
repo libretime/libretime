@@ -45,7 +45,7 @@ var AIRTIME = (function (AIRTIME) {
     }
 
     function _bootstrapAngularApp(podcast, tab) {
-        podcastApp.value('podcast', JSON.parse(podcast));
+        podcastApp.value('podcast', podcast);
         podcastApp.value('tab', tab);
         var wrapper = tab.contents.find(".editor_pane_wrapper");
         wrapper.attr("ng-controller", "RestController");
@@ -67,21 +67,23 @@ var AIRTIME = (function (AIRTIME) {
 
     mod.addPodcast = function() {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
-            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+json.id,
-                tab = AIRTIME.tabs.openTab(json, uid);
-            _bootstrapAngularApp(json.podcast, tab);
+            var podcast = JSON.parse(json.podcast);
+            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
+                tab = AIRTIME.tabs.openTab(json, uid, null);
+            _bootstrapAngularApp(podcast, tab);
             $("#podcast_url_dialog").dialog("close");
-            mod.initPodcastEpisodeDatatable(JSON.parse(json.podcast).episodes);
+            mod.initPodcastEpisodeDatatable(podcast.episodes);
         });
     };
 
     mod.editSelectedPodcasts = function() {
         _bulkAction("GET", function(json) {
             json.forEach(function(el) {
-                var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id,
-                    tab = AIRTIME.tabs.openTab(el, uid, AIRTIME.podcast.init);
-                _bootstrapAngularApp(el.podcast, tab);
-                mod.initPodcastEpisodeDatatable(JSON.parse(el.podcast).episodes);
+                var podcast = JSON.parse(el.podcast);
+                var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
+                    tab = AIRTIME.tabs.openTab(el, uid, null);
+                _bootstrapAngularApp(podcast, tab);
+                mod.initPodcastEpisodeDatatable(podcast.episodes);
             });
         });
     };
