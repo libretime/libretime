@@ -21,10 +21,10 @@
     background-color: #242424;
 }
 @media screen and (max-width: 1700px) {
-    #library_display_info {
+    .dataTables_info {
         display: none;
     }
-    #library_display_length {
+    .dataTables_length {
         float: left;
     }
 }
@@ -42,8 +42,8 @@
     }
 }
 
-@media screen and (max-width: 1260px) {
-    #library_display_length > label {
+@media screen and (max-width: 1265px) {
+    .dataTables_length > label {
         /* Hacky, but datatables dumps the select inside the label for some reason... */
         font-size: 0 !important;
     }

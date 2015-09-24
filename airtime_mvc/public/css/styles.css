@@ -3935,6 +3935,11 @@ li .ui-state-hover {
     max-width: 300px;
 }
 
-.podcast-metadata input {
-    width: 100%;
+.podcast-metadata label {
+    display: inline-block;
+    width: 150px;
+}
+
+.podcast-metadata input[type="text"] {
+    width: 60%;
 }
