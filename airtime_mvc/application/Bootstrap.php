@@ -30,6 +30,7 @@ require_once "CeleryManager.php";
 require_once "TaskManager.php";
 require_once "UsabilityHints.php";
 require_once __DIR__.'/models/formatters/LengthFormatter.php';
+require_once __DIR__.'/common/widgets/Table.php';
 /* Models */
 require_once "Auth.php";
 require_once 'Preference.php';
