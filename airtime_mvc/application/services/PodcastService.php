@@ -56,7 +56,7 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
             $feed->enable_cache(false);
             $feed->init();
             return $feed;
-        } catch (FeedException $e) {
+        } catch (Exception $e) {
             return false;
         }
     }
@@ -66,15 +66,28 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
 
     }
     /**
-     * Given an array of track identifiers, download RSS feed tracks
+     * Given an array of episodes, extract the download URLs and send them to Celery
      *
-     * @param array $trackIds array of track identifiers to download
+     * @param array $episodes array of podcast episodes
+     */
+    public function downloadEpisodes($episodes) {
+        $episodeUrls = array();
+        foreach($episodes as $episode) {
+            array_push($episodeUrls, $episode["enclosure"]["link"]);
+        }
+        $this->_download($episodeUrls);
+    }
+
+    /**
+     * Given an array of download URLs, download RSS feed tracks
+     *
+     * @param array $downloadUrls array of download URLs to send to Celery
      * TODO: do we need other parameters here...?
      */
-    public function download($trackIds) {
+    private function _download($downloadUrls) {
         $CC_CONFIG = Config::getConfig();
         $data = array(
-            // 'download_urls' => , TODO: get download urls to send to Celery
+            'download_urls' => $downloadUrls,
             'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . '/rest/media',
             'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
         );
@@ -87,8 +100,8 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
      * Update a ThirdPartyTrackReferences object for a completed upload
      *
      * @param $task     CeleryTasks the completed CeleryTasks object
-     * @param $trackId  int         ThirdPartyTrackReferences identifier
-     * @param $track    object      third-party service track object
+     * @param $episodeId  int       PodcastEpisodes identifier
+     * @param $episode  object      object containing Podcast episode information
      * @param $status   string      Celery task status
      *
      * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
@@ -96,14 +109,14 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
      * @throws Exception
      * @throws PropelException
      */
-    function updateTrackReference($task, $trackId, $track, $status) {
-        $ref = parent::updateTrackReference($task, $trackId, $track, $status);
+    public function updateTrackReference($task, $episodeId, $episode, $status) {
+        $ref = parent::updateTrackReference($task, $episodeId, $episode, $status);
 
         if ($status == CELERY_SUCCESS_STATUS) {
             // TODO: handle successful download
             // $ref->setDbForeignId();
             // FIXME: we need the file ID here, but 'track' is too arbitrary...
-            $ref->setDbFileId($track->fileId);
+            $ref->setDbFileId($episode->fileId);
         }
 
         $ref->save();

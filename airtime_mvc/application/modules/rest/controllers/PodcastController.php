@@ -2,6 +2,12 @@
 
 class Rest_PodcastController extends Zend_Rest_Controller
 {
+
+    /**
+     * @var Application_Service_PodcastService
+     */
+    protected $_service;
+
     public function init()
     {
         $this->view->layout()->disableLayout();
@@ -9,6 +15,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
         $this->view->setScriptPath(APPLICATION_PATH . 'views/scripts/');
+        $this->_service = new Application_Service_PodcastService();
     }
 
     public function indexAction()
@@ -119,6 +126,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         try {
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
 
+            $this->_service->downloadEpisodes($requestData["podcast"]["episodes"]);
             $podcast = Podcast::updateFromArray($id, $requestData);
 
             $this->getResponse()

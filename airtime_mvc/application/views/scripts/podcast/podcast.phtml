@@ -6,14 +6,24 @@
 <div class="inner_editor_wrapper">
     <form class="podcast-metadata">
         <input ng-value="podcast.id" class="obj_id" type="hidden"/>
-        <label>
-            <?php echo _("Podcast Name") ?>
-            <input disabled ng-model="podcast.title" type="text"/>
-        </label>
-        <label>
-            <?php echo _("Podcast URL") ?>
-            <input disabled ng-model="podcast.url" type="text"/>
-        </label>
+        <p>
+            <label for="podcast_name">
+                <?php echo _("Podcast Name") ?>
+            </label>
+            <input disabled name="podcast_name" ng-model="podcast.title" type="text"/>
+        </p>
+        <p>
+            <label for="podcast_url">
+                <?php echo _("Podcast URL") ?>
+            </label>
+            <input disabled name="podcast_url" ng-model="podcast.url" type="text"/>
+        </p>
+        <p>
+            <label for="podcast_auto_ingest">
+                <?php echo _("Automatically download latest episodes?") ?>
+            </label>
+            <input name="podcast_auto_ingest" ng-model="podcast.auto_ingest" type="checkbox"/>
+        </p>
     </form>
 </div>
 

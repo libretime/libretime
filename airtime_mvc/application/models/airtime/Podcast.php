@@ -38,7 +38,6 @@ class Podcast extends BasePodcast
      * @throws InvalidPodcastException
      * @throws PodcastLimitReachedException
      */
-
     public static function create($data)
     {
         if (Application_Service_PodcastService::podcastLimitReached()) {
@@ -98,24 +97,11 @@ class Podcast extends BasePodcast
             $podcast->setDbType(IMPORTED_PODCAST);
             $podcast->save();
 
-            $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
-
-            $podcastArray["episodes"] = array();
-            foreach ($rss->get_items() as $item) {
-                array_push($podcastArray["episodes"], array(
-                    "title" => $item->get_title(),
-                    "author" => $item->get_author()->get_name(),
-                    "description" => $item->get_description(),
-                    "pubDate" => $item->get_date("Y-m-d H:i:s"),
-                    "link" => $item->get_enclosure()->get_link()
-                ));
-            }
-            return $podcastArray;
+            return self::_generatePodcastArray($podcast, $rss);
         } catch(Exception $e) {
             $podcast->delete();
             throw $e;
         }
-
     }
 
     /**
@@ -125,6 +111,7 @@ class Podcast extends BasePodcast
      * @param $podcastId
      *
      * @throws PodcastNotFoundException
+     * @throws InvalidPodcastException
      * @return array - Podcast Array with a full list of episodes
      */
     public static function getPodcastById($podcastId)
@@ -136,10 +123,22 @@ class Podcast extends BasePodcast
 
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
         if (!$rss) {
-            throw new PodcastNotFoundException();
+            throw new InvalidPodcastException();
         }
 
-        // FIXME: Get rid of this duplication and move into a new function (serializer/deserializer)
+        return self::_generatePodcastArray($podcast, $rss);
+    }
+
+    /**
+     * Given a podcast object and a SimplePie feed object,
+     * generate a data array to pass back to the front-end
+     *
+     * @param Podcast $podcast  Podcast model object
+     * @param SimplePie $rss    SimplePie feed object
+     *
+     * @return array
+     */
+    private static function _generatePodcastArray($podcast, $rss) {
         $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
 
         $podcastArray["episodes"] = array();
@@ -148,8 +147,9 @@ class Podcast extends BasePodcast
                 "title" => $item->get_title(),
                 "author" => $item->get_author()->get_name(),
                 "description" => $item->get_description(),
-                "pubDate" => $item->get_date("Y-m-d H:i:s"),
-                "link" => $item->get_enclosure()->get_link()
+                "pub_date" => $item->get_date("Y-m-d H:i:s"),
+                "link" => $item->get_link(),
+                "enclosure" => $item->get_enclosure()
             ));
         }
 

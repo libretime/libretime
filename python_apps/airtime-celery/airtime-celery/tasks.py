@@ -3,8 +3,12 @@ import json
 import urllib2
 import requests
 import soundcloud
+import cgi
+import urlparse
+import posixpath
 from celery import Celery
 from celery.utils.log import get_task_logger
+from contextlib import closing
 
 celery = Celery()
 logger = get_task_logger(__name__)
@@ -93,10 +97,18 @@ def podcast_download(download_urls, callback_url, api_key):
     """
     try:
         for url in download_urls:
-            r = requests.get(url, stream=True)
-            r.raise_for_status()
-            with r as f:
-                requests.post(callback_url, data=f, auth=requests.auth.HTTPBasicAuth(api_key, ''))
+            with closing(requests.get(url, stream=True)) as r:
+                # Try to get the filename from the content disposition
+                d = r.headers.get('Content-Disposition')
+                if d:
+                    _, params = cgi.parse_header(d)
+                    filename = params['filename']
+                else:
+                    # Since we don't necessarily get the filename back in the response headers,
+                    # parse the URL and get the filename and extension
+                    path = urlparse.urlsplit(r.url).path
+                    filename = posixpath.basename(path)
+                requests.post(callback_url, files={'file': (filename, r.content)}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
     except Exception as e:
         logger.info('Error during file download: {0}'.format(e.message))
         logger.info(str(e))
