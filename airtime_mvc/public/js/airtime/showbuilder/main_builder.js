@@ -151,6 +151,8 @@ AIRTIME = (function(AIRTIME) {
                 t = AIRTIME.library.libraryDataTable;
             }
 
+            AIRTIME.library.setCurrentTable();
+
             dashboardLink.find("a").attr("href", selected.attr("href"));
             AIRTIME.library.selectNone();
             $(".media_type_selector").each(function () {

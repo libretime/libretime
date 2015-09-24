@@ -869,17 +869,7 @@ var AIRTIME = (function(AIRTIME) {
             }
         }
 
-        var selected = $("a[href$='"+location.hash+"']");
-        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
-            $("#library_display_wrapper").hide();
-            $('#podcast_table_wrapper').show();
-            oTable = mod.podcastDataTable;
-        } else {
-            $('#podcast_table_wrapper').hide();
-            $("#library_display_wrapper").show();
-            oTable = mod.libraryDataTable;
-        }
-
+        AIRTIME.library.setCurrentTable();
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
 
@@ -1263,6 +1253,18 @@ var AIRTIME = (function(AIRTIME) {
 
     };
 
+    mod.setCurrentTable = function() {
+        var selected = $("a[href$='"+location.hash+"']");
+        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
+            $("#library_display_wrapper").hide();
+            $('#podcast_table_wrapper').show();
+            oTable = mod.podcastDataTable;
+        } else {
+            $('#podcast_table_wrapper').hide();
+            $("#library_display_wrapper").show();
+            oTable = mod.libraryDataTable;
+        }
+    };
 
     /** Create the podcast datatable widget */
     mod.initPodcastDatatable = function()
