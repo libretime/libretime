@@ -44,6 +44,14 @@ class PodcastTableMap extends TableMap
         $this->addColumn('title', 'DbTitle', 'VARCHAR', true, 4096, null);
         $this->addColumn('creator', 'DbCreator', 'VARCHAR', false, 4096, null);
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 4096, null);
+        $this->addColumn('language', 'DbLanguage', 'VARCHAR', false, 4096, null);
+        $this->addColumn('copyright', 'DbCopyright', 'VARCHAR', false, 4096, null);
+        $this->addColumn('itunes_author', 'DbItunesAuthor', 'VARCHAR', false, 4096, null);
+        $this->addColumn('itunes_keywords', 'DbItunesKeywords', 'VARCHAR', false, 4096, null);
+        $this->addColumn('itunes_summary', 'DbItunesSummary', 'VARCHAR', false, 4096, null);
+        $this->addColumn('itunes_subtitle', 'DbItunesSubtitle', 'VARCHAR', false, 4096, null);
+        $this->addColumn('itunes_category', 'DbItunesCategory', 'VARCHAR', false, 4096, null);
+        $this->addColumn('itunes_explicit', 'DbItunesExplicit', 'VARCHAR', false, 4096, null);
         $this->addColumn('auto_ingest', 'DbAutoIngest', 'BOOLEAN', true, null, false);
         $this->addForeignKey('owner', 'DbOwner', 'INTEGER', 'cc_subjs', 'id', false, null, null);
         $this->addColumn('type', 'DbType', 'INTEGER', true, null, 1);

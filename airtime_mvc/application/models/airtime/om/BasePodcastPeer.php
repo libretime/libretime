@@ -24,13 +24,13 @@ abstract class BasePodcastPeer
     const TM_CLASS = 'PodcastTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 8;
+    const NUM_COLUMNS = 16;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 8;
+    const NUM_HYDRATE_COLUMNS = 16;
 
     /** the column name for the id field */
     const ID = 'podcast.id';
@@ -46,6 +46,30 @@ abstract class BasePodcastPeer
 
     /** the column name for the description field */
     const DESCRIPTION = 'podcast.description';
+
+    /** the column name for the language field */
+    const LANGUAGE = 'podcast.language';
+
+    /** the column name for the copyright field */
+    const COPYRIGHT = 'podcast.copyright';
+
+    /** the column name for the itunes_author field */
+    const ITUNES_AUTHOR = 'podcast.itunes_author';
+
+    /** the column name for the itunes_keywords field */
+    const ITUNES_KEYWORDS = 'podcast.itunes_keywords';
+
+    /** the column name for the itunes_summary field */
+    const ITUNES_SUMMARY = 'podcast.itunes_summary';
+
+    /** the column name for the itunes_subtitle field */
+    const ITUNES_SUBTITLE = 'podcast.itunes_subtitle';
+
+    /** the column name for the itunes_category field */
+    const ITUNES_CATEGORY = 'podcast.itunes_category';
+
+    /** the column name for the itunes_explicit field */
+    const ITUNES_EXPLICIT = 'podcast.itunes_explicit';
 
     /** the column name for the auto_ingest field */
     const AUTO_INGEST = 'podcast.auto_ingest';
@@ -75,12 +99,12 @@ abstract class BasePodcastPeer
      * e.g. PodcastPeer::$fieldNames[PodcastPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbUrl', 'DbTitle', 'DbCreator', 'DbDescription', 'DbAutoIngest', 'DbOwner', 'DbType', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbUrl', 'dbTitle', 'dbCreator', 'dbDescription', 'dbAutoIngest', 'dbOwner', 'dbType', ),
-        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID, PodcastPeer::URL, PodcastPeer::TITLE, PodcastPeer::CREATOR, PodcastPeer::DESCRIPTION, PodcastPeer::AUTO_INGEST, PodcastPeer::OWNER, PodcastPeer::TYPE, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'URL', 'TITLE', 'CREATOR', 'DESCRIPTION', 'AUTO_INGEST', 'OWNER', 'TYPE', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'url', 'title', 'creator', 'description', 'auto_ingest', 'owner', 'type', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbUrl', 'DbTitle', 'DbCreator', 'DbDescription', 'DbLanguage', 'DbCopyright', 'DbItunesAuthor', 'DbItunesKeywords', 'DbItunesSummary', 'DbItunesSubtitle', 'DbItunesCategory', 'DbItunesExplicit', 'DbAutoIngest', 'DbOwner', 'DbType', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbUrl', 'dbTitle', 'dbCreator', 'dbDescription', 'dbLanguage', 'dbCopyright', 'dbItunesAuthor', 'dbItunesKeywords', 'dbItunesSummary', 'dbItunesSubtitle', 'dbItunesCategory', 'dbItunesExplicit', 'dbAutoIngest', 'dbOwner', 'dbType', ),
+        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID, PodcastPeer::URL, PodcastPeer::TITLE, PodcastPeer::CREATOR, PodcastPeer::DESCRIPTION, PodcastPeer::LANGUAGE, PodcastPeer::COPYRIGHT, PodcastPeer::ITUNES_AUTHOR, PodcastPeer::ITUNES_KEYWORDS, PodcastPeer::ITUNES_SUMMARY, PodcastPeer::ITUNES_SUBTITLE, PodcastPeer::ITUNES_CATEGORY, PodcastPeer::ITUNES_EXPLICIT, PodcastPeer::AUTO_INGEST, PodcastPeer::OWNER, PodcastPeer::TYPE, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'URL', 'TITLE', 'CREATOR', 'DESCRIPTION', 'LANGUAGE', 'COPYRIGHT', 'ITUNES_AUTHOR', 'ITUNES_KEYWORDS', 'ITUNES_SUMMARY', 'ITUNES_SUBTITLE', 'ITUNES_CATEGORY', 'ITUNES_EXPLICIT', 'AUTO_INGEST', 'OWNER', 'TYPE', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'url', 'title', 'creator', 'description', 'language', 'copyright', 'itunes_author', 'itunes_keywords', 'itunes_summary', 'itunes_subtitle', 'itunes_category', 'itunes_explicit', 'auto_ingest', 'owner', 'type', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -90,12 +114,12 @@ abstract class BasePodcastPeer
      * e.g. PodcastPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbUrl' => 1, 'DbTitle' => 2, 'DbCreator' => 3, 'DbDescription' => 4, 'DbAutoIngest' => 5, 'DbOwner' => 6, 'DbType' => 7, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbUrl' => 1, 'dbTitle' => 2, 'dbCreator' => 3, 'dbDescription' => 4, 'dbAutoIngest' => 5, 'dbOwner' => 6, 'dbType' => 7, ),
-        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID => 0, PodcastPeer::URL => 1, PodcastPeer::TITLE => 2, PodcastPeer::CREATOR => 3, PodcastPeer::DESCRIPTION => 4, PodcastPeer::AUTO_INGEST => 5, PodcastPeer::OWNER => 6, PodcastPeer::TYPE => 7, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'URL' => 1, 'TITLE' => 2, 'CREATOR' => 3, 'DESCRIPTION' => 4, 'AUTO_INGEST' => 5, 'OWNER' => 6, 'TYPE' => 7, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'url' => 1, 'title' => 2, 'creator' => 3, 'description' => 4, 'auto_ingest' => 5, 'owner' => 6, 'type' => 7, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbUrl' => 1, 'DbTitle' => 2, 'DbCreator' => 3, 'DbDescription' => 4, 'DbLanguage' => 5, 'DbCopyright' => 6, 'DbItunesAuthor' => 7, 'DbItunesKeywords' => 8, 'DbItunesSummary' => 9, 'DbItunesSubtitle' => 10, 'DbItunesCategory' => 11, 'DbItunesExplicit' => 12, 'DbAutoIngest' => 13, 'DbOwner' => 14, 'DbType' => 15, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbUrl' => 1, 'dbTitle' => 2, 'dbCreator' => 3, 'dbDescription' => 4, 'dbLanguage' => 5, 'dbCopyright' => 6, 'dbItunesAuthor' => 7, 'dbItunesKeywords' => 8, 'dbItunesSummary' => 9, 'dbItunesSubtitle' => 10, 'dbItunesCategory' => 11, 'dbItunesExplicit' => 12, 'dbAutoIngest' => 13, 'dbOwner' => 14, 'dbType' => 15, ),
+        BasePeer::TYPE_COLNAME => array (PodcastPeer::ID => 0, PodcastPeer::URL => 1, PodcastPeer::TITLE => 2, PodcastPeer::CREATOR => 3, PodcastPeer::DESCRIPTION => 4, PodcastPeer::LANGUAGE => 5, PodcastPeer::COPYRIGHT => 6, PodcastPeer::ITUNES_AUTHOR => 7, PodcastPeer::ITUNES_KEYWORDS => 8, PodcastPeer::ITUNES_SUMMARY => 9, PodcastPeer::ITUNES_SUBTITLE => 10, PodcastPeer::ITUNES_CATEGORY => 11, PodcastPeer::ITUNES_EXPLICIT => 12, PodcastPeer::AUTO_INGEST => 13, PodcastPeer::OWNER => 14, PodcastPeer::TYPE => 15, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'URL' => 1, 'TITLE' => 2, 'CREATOR' => 3, 'DESCRIPTION' => 4, 'LANGUAGE' => 5, 'COPYRIGHT' => 6, 'ITUNES_AUTHOR' => 7, 'ITUNES_KEYWORDS' => 8, 'ITUNES_SUMMARY' => 9, 'ITUNES_SUBTITLE' => 10, 'ITUNES_CATEGORY' => 11, 'ITUNES_EXPLICIT' => 12, 'AUTO_INGEST' => 13, 'OWNER' => 14, 'TYPE' => 15, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'url' => 1, 'title' => 2, 'creator' => 3, 'description' => 4, 'language' => 5, 'copyright' => 6, 'itunes_author' => 7, 'itunes_keywords' => 8, 'itunes_summary' => 9, 'itunes_subtitle' => 10, 'itunes_category' => 11, 'itunes_explicit' => 12, 'auto_ingest' => 13, 'owner' => 14, 'type' => 15, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, )
     );
 
     /**
@@ -174,6 +198,14 @@ abstract class BasePodcastPeer
             $criteria->addSelectColumn(PodcastPeer::TITLE);
             $criteria->addSelectColumn(PodcastPeer::CREATOR);
             $criteria->addSelectColumn(PodcastPeer::DESCRIPTION);
+            $criteria->addSelectColumn(PodcastPeer::LANGUAGE);
+            $criteria->addSelectColumn(PodcastPeer::COPYRIGHT);
+            $criteria->addSelectColumn(PodcastPeer::ITUNES_AUTHOR);
+            $criteria->addSelectColumn(PodcastPeer::ITUNES_KEYWORDS);
+            $criteria->addSelectColumn(PodcastPeer::ITUNES_SUMMARY);
+            $criteria->addSelectColumn(PodcastPeer::ITUNES_SUBTITLE);
+            $criteria->addSelectColumn(PodcastPeer::ITUNES_CATEGORY);
+            $criteria->addSelectColumn(PodcastPeer::ITUNES_EXPLICIT);
             $criteria->addSelectColumn(PodcastPeer::AUTO_INGEST);
             $criteria->addSelectColumn(PodcastPeer::OWNER);
             $criteria->addSelectColumn(PodcastPeer::TYPE);
@@ -183,6 +215,14 @@ abstract class BasePodcastPeer
             $criteria->addSelectColumn($alias . '.title');
             $criteria->addSelectColumn($alias . '.creator');
             $criteria->addSelectColumn($alias . '.description');
+            $criteria->addSelectColumn($alias . '.language');
+            $criteria->addSelectColumn($alias . '.copyright');
+            $criteria->addSelectColumn($alias . '.itunes_author');
+            $criteria->addSelectColumn($alias . '.itunes_keywords');
+            $criteria->addSelectColumn($alias . '.itunes_summary');
+            $criteria->addSelectColumn($alias . '.itunes_subtitle');
+            $criteria->addSelectColumn($alias . '.itunes_category');
+            $criteria->addSelectColumn($alias . '.itunes_explicit');
             $criteria->addSelectColumn($alias . '.auto_ingest');
             $criteria->addSelectColumn($alias . '.owner');
             $criteria->addSelectColumn($alias . '.type');

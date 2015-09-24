@@ -55,8 +55,6 @@ class Podcast extends BasePodcast
         $podcastArray = array();
         $podcastArray["url"] = $data["url"];
 
-        // Kind of a pain; since the rss fields are SimpleXMLElements,
-        // we need to explicitly cast them to strings
         $podcastArray["title"] = $rss->get_title();
         $podcastArray["description"] = $rss->get_description();
         $podcastArray["link"] = $rss->get_link();
@@ -65,18 +63,32 @@ class Podcast extends BasePodcast
         $podcastArray["creator"] = $rss->get_author()->get_name();
         $podcastArray["category"] = $rss->get_categories();
 
-        /*$podcastArray["title"] = (string)$rss->title;
-        $podcastArray["description"] = (string)$rss->description;
-        $podcastArray["link"] = (string)$rss->link;
-        $podcastArray["language"] = (string)$rss->language;
-        $podcastArray["copyright"] = (string)$rss->copyright;
-        $podcastArray["itunes_author"] = (string)$rss->{'itunes:author'};
-        $podcastArray["itunes_keywords"] = (string)$rss->{'itunes:keywords'};
-        $podcastArray["itunes_subtitle"] = (string)$rss->{'itunes:subtitle'};
-        $podcastArray["itunes_summary"] = (string)$rss->{'itunes:summary'};
-        //TODO: fix itunes_category
-        $podcastArray["itunes_category"] = (string)$rss->{'itunes:category'};
-        $podcastArray["itunes_explicit"] = (string)$rss->{'itunes:explicit'};*/
+        $itunesChannel = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+
+        $itunesSubtitle = $rss->get_channel_tags($itunesChannel, 'subtitle');
+        $podcastArray["itunes_subtitle"] = isset($itunesSubtitle[0]["data"]) ? $itunesSubtitle[0]["data"] : "";
+
+        $itunesCategory = $rss->get_channel_tags($itunesChannel, 'category');
+        $categoryArray = array();
+        foreach ($itunesCategory as $c => $data) {
+            foreach ($data["attribs"] as $attrib) {
+                array_push($categoryArray, $attrib["text"]);
+            }
+        }
+        $podcastArray["itunes_category"] = implode(",", $categoryArray);
+
+        $itunesAuthor = $rss->get_channel_tags($itunesChannel, 'author');
+        $podcastArray["itunes_author"] = isset($itunesAuthor[0]["data"]) ? $itunesAuthor[0]["data"] : "";
+
+        $itunesSummary = $rss->get_channel_tags($itunesChannel, 'summary');
+        $podcastArray["itunes_summary"] = isset($itunesSummary[0]["data"]) ? $itunesSummary[0]["data"] : "";
+
+        $itunesKeywords = $rss->get_channel_tags($itunesChannel, 'keywords');
+        $podcastArray["itunes_keywords"] = isset($itunesKeywords[0]["data"]) ? $itunesKeywords[0]["data"] : "";
+
+        $itunesExplicit = $rss->get_channel_tags($itunesChannel, 'explicit');
+        $podcastArray["itunes_explicit"] = isset($itunesExplicit[0]["data"]) ? $itunesExplicit[0]["data"] : "";
+
         self::validatePodcastMetadata($podcastArray);
 
         try {
@@ -136,7 +148,7 @@ class Podcast extends BasePodcast
                 "title" => $item->get_title(),
                 "author" => $item->get_author()->get_name(),
                 "description" => $item->get_description(),
-                "pub_date" => $item->get_date("Y-m-d H:i:s"),
+                "pubDate" => $item->get_date("Y-m-d H:i:s"),
                 "link" => $item->get_enclosure()->get_link()
             ));
         }

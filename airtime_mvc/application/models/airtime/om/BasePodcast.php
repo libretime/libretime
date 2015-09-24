@@ -60,6 +60,54 @@ abstract class BasePodcast extends BaseObject implements Persistent
     protected $description;
 
     /**
+     * The value for the language field.
+     * @var        string
+     */
+    protected $language;
+
+    /**
+     * The value for the copyright field.
+     * @var        string
+     */
+    protected $copyright;
+
+    /**
+     * The value for the itunes_author field.
+     * @var        string
+     */
+    protected $itunes_author;
+
+    /**
+     * The value for the itunes_keywords field.
+     * @var        string
+     */
+    protected $itunes_keywords;
+
+    /**
+     * The value for the itunes_summary field.
+     * @var        string
+     */
+    protected $itunes_summary;
+
+    /**
+     * The value for the itunes_subtitle field.
+     * @var        string
+     */
+    protected $itunes_subtitle;
+
+    /**
+     * The value for the itunes_category field.
+     * @var        string
+     */
+    protected $itunes_category;
+
+    /**
+     * The value for the itunes_explicit field.
+     * @var        string
+     */
+    protected $itunes_explicit;
+
+    /**
      * The value for the auto_ingest field.
      * Note: this column has a database default value of: false
      * @var        boolean
@@ -191,6 +239,94 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
 
         return $this->description;
+    }
+
+    /**
+     * Get the [language] column value.
+     *
+     * @return string
+     */
+    public function getDbLanguage()
+    {
+
+        return $this->language;
+    }
+
+    /**
+     * Get the [copyright] column value.
+     *
+     * @return string
+     */
+    public function getDbCopyright()
+    {
+
+        return $this->copyright;
+    }
+
+    /**
+     * Get the [itunes_author] column value.
+     *
+     * @return string
+     */
+    public function getDbItunesAuthor()
+    {
+
+        return $this->itunes_author;
+    }
+
+    /**
+     * Get the [itunes_keywords] column value.
+     *
+     * @return string
+     */
+    public function getDbItunesKeywords()
+    {
+
+        return $this->itunes_keywords;
+    }
+
+    /**
+     * Get the [itunes_summary] column value.
+     *
+     * @return string
+     */
+    public function getDbItunesSummary()
+    {
+
+        return $this->itunes_summary;
+    }
+
+    /**
+     * Get the [itunes_subtitle] column value.
+     *
+     * @return string
+     */
+    public function getDbItunesSubtitle()
+    {
+
+        return $this->itunes_subtitle;
+    }
+
+    /**
+     * Get the [itunes_category] column value.
+     *
+     * @return string
+     */
+    public function getDbItunesCategory()
+    {
+
+        return $this->itunes_category;
+    }
+
+    /**
+     * Get the [itunes_explicit] column value.
+     *
+     * @return string
+     */
+    public function getDbItunesExplicit()
+    {
+
+        return $this->itunes_explicit;
     }
 
     /**
@@ -332,6 +468,174 @@ abstract class BasePodcast extends BaseObject implements Persistent
     } // setDbDescription()
 
     /**
+     * Set the value of [language] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbLanguage($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->language !== $v) {
+            $this->language = $v;
+            $this->modifiedColumns[] = PodcastPeer::LANGUAGE;
+        }
+
+
+        return $this;
+    } // setDbLanguage()
+
+    /**
+     * Set the value of [copyright] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbCopyright($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->copyright !== $v) {
+            $this->copyright = $v;
+            $this->modifiedColumns[] = PodcastPeer::COPYRIGHT;
+        }
+
+
+        return $this;
+    } // setDbCopyright()
+
+    /**
+     * Set the value of [itunes_author] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbItunesAuthor($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->itunes_author !== $v) {
+            $this->itunes_author = $v;
+            $this->modifiedColumns[] = PodcastPeer::ITUNES_AUTHOR;
+        }
+
+
+        return $this;
+    } // setDbItunesAuthor()
+
+    /**
+     * Set the value of [itunes_keywords] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbItunesKeywords($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->itunes_keywords !== $v) {
+            $this->itunes_keywords = $v;
+            $this->modifiedColumns[] = PodcastPeer::ITUNES_KEYWORDS;
+        }
+
+
+        return $this;
+    } // setDbItunesKeywords()
+
+    /**
+     * Set the value of [itunes_summary] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbItunesSummary($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->itunes_summary !== $v) {
+            $this->itunes_summary = $v;
+            $this->modifiedColumns[] = PodcastPeer::ITUNES_SUMMARY;
+        }
+
+
+        return $this;
+    } // setDbItunesSummary()
+
+    /**
+     * Set the value of [itunes_subtitle] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbItunesSubtitle($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->itunes_subtitle !== $v) {
+            $this->itunes_subtitle = $v;
+            $this->modifiedColumns[] = PodcastPeer::ITUNES_SUBTITLE;
+        }
+
+
+        return $this;
+    } // setDbItunesSubtitle()
+
+    /**
+     * Set the value of [itunes_category] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbItunesCategory($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->itunes_category !== $v) {
+            $this->itunes_category = $v;
+            $this->modifiedColumns[] = PodcastPeer::ITUNES_CATEGORY;
+        }
+
+
+        return $this;
+    } // setDbItunesCategory()
+
+    /**
+     * Set the value of [itunes_explicit] column.
+     *
+     * @param  string $v new value
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setDbItunesExplicit($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
+
+        if ($this->itunes_explicit !== $v) {
+            $this->itunes_explicit = $v;
+            $this->modifiedColumns[] = PodcastPeer::ITUNES_EXPLICIT;
+        }
+
+
+        return $this;
+    } // setDbItunesExplicit()
+
+    /**
      * Sets the value of the [auto_ingest] column.
      * Non-boolean arguments are converted using the following rules:
      *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
@@ -451,9 +755,17 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $this->title = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
             $this->creator = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
             $this->description = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->auto_ingest = ($row[$startcol + 5] !== null) ? (boolean) $row[$startcol + 5] : null;
-            $this->owner = ($row[$startcol + 6] !== null) ? (int) $row[$startcol + 6] : null;
-            $this->type = ($row[$startcol + 7] !== null) ? (int) $row[$startcol + 7] : null;
+            $this->language = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->copyright = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->itunes_author = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->itunes_keywords = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->itunes_summary = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->itunes_subtitle = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->itunes_category = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->itunes_explicit = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+            $this->auto_ingest = ($row[$startcol + 13] !== null) ? (boolean) $row[$startcol + 13] : null;
+            $this->owner = ($row[$startcol + 14] !== null) ? (int) $row[$startcol + 14] : null;
+            $this->type = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -463,7 +775,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 8; // 8 = PodcastPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 16; // 16 = PodcastPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Podcast object", $e);
@@ -735,6 +1047,30 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastPeer::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '"description"';
         }
+        if ($this->isColumnModified(PodcastPeer::LANGUAGE)) {
+            $modifiedColumns[':p' . $index++]  = '"language"';
+        }
+        if ($this->isColumnModified(PodcastPeer::COPYRIGHT)) {
+            $modifiedColumns[':p' . $index++]  = '"copyright"';
+        }
+        if ($this->isColumnModified(PodcastPeer::ITUNES_AUTHOR)) {
+            $modifiedColumns[':p' . $index++]  = '"itunes_author"';
+        }
+        if ($this->isColumnModified(PodcastPeer::ITUNES_KEYWORDS)) {
+            $modifiedColumns[':p' . $index++]  = '"itunes_keywords"';
+        }
+        if ($this->isColumnModified(PodcastPeer::ITUNES_SUMMARY)) {
+            $modifiedColumns[':p' . $index++]  = '"itunes_summary"';
+        }
+        if ($this->isColumnModified(PodcastPeer::ITUNES_SUBTITLE)) {
+            $modifiedColumns[':p' . $index++]  = '"itunes_subtitle"';
+        }
+        if ($this->isColumnModified(PodcastPeer::ITUNES_CATEGORY)) {
+            $modifiedColumns[':p' . $index++]  = '"itunes_category"';
+        }
+        if ($this->isColumnModified(PodcastPeer::ITUNES_EXPLICIT)) {
+            $modifiedColumns[':p' . $index++]  = '"itunes_explicit"';
+        }
         if ($this->isColumnModified(PodcastPeer::AUTO_INGEST)) {
             $modifiedColumns[':p' . $index++]  = '"auto_ingest"';
         }
@@ -769,6 +1105,30 @@ abstract class BasePodcast extends BaseObject implements Persistent
                         break;
                     case '"description"':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
+                    case '"language"':
+                        $stmt->bindValue($identifier, $this->language, PDO::PARAM_STR);
+                        break;
+                    case '"copyright"':
+                        $stmt->bindValue($identifier, $this->copyright, PDO::PARAM_STR);
+                        break;
+                    case '"itunes_author"':
+                        $stmt->bindValue($identifier, $this->itunes_author, PDO::PARAM_STR);
+                        break;
+                    case '"itunes_keywords"':
+                        $stmt->bindValue($identifier, $this->itunes_keywords, PDO::PARAM_STR);
+                        break;
+                    case '"itunes_summary"':
+                        $stmt->bindValue($identifier, $this->itunes_summary, PDO::PARAM_STR);
+                        break;
+                    case '"itunes_subtitle"':
+                        $stmt->bindValue($identifier, $this->itunes_subtitle, PDO::PARAM_STR);
+                        break;
+                    case '"itunes_category"':
+                        $stmt->bindValue($identifier, $this->itunes_category, PDO::PARAM_STR);
+                        break;
+                    case '"itunes_explicit"':
+                        $stmt->bindValue($identifier, $this->itunes_explicit, PDO::PARAM_STR);
                         break;
                     case '"auto_ingest"':
                         $stmt->bindValue($identifier, $this->auto_ingest, PDO::PARAM_BOOL);
@@ -942,12 +1302,36 @@ abstract class BasePodcast extends BaseObject implements Persistent
                 return $this->getDbDescription();
                 break;
             case 5:
-                return $this->getDbAutoIngest();
+                return $this->getDbLanguage();
                 break;
             case 6:
-                return $this->getDbOwner();
+                return $this->getDbCopyright();
                 break;
             case 7:
+                return $this->getDbItunesAuthor();
+                break;
+            case 8:
+                return $this->getDbItunesKeywords();
+                break;
+            case 9:
+                return $this->getDbItunesSummary();
+                break;
+            case 10:
+                return $this->getDbItunesSubtitle();
+                break;
+            case 11:
+                return $this->getDbItunesCategory();
+                break;
+            case 12:
+                return $this->getDbItunesExplicit();
+                break;
+            case 13:
+                return $this->getDbAutoIngest();
+                break;
+            case 14:
+                return $this->getDbOwner();
+                break;
+            case 15:
                 return $this->getDbType();
                 break;
             default:
@@ -984,9 +1368,17 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $keys[2] => $this->getDbTitle(),
             $keys[3] => $this->getDbCreator(),
             $keys[4] => $this->getDbDescription(),
-            $keys[5] => $this->getDbAutoIngest(),
-            $keys[6] => $this->getDbOwner(),
-            $keys[7] => $this->getDbType(),
+            $keys[5] => $this->getDbLanguage(),
+            $keys[6] => $this->getDbCopyright(),
+            $keys[7] => $this->getDbItunesAuthor(),
+            $keys[8] => $this->getDbItunesKeywords(),
+            $keys[9] => $this->getDbItunesSummary(),
+            $keys[10] => $this->getDbItunesSubtitle(),
+            $keys[11] => $this->getDbItunesCategory(),
+            $keys[12] => $this->getDbItunesExplicit(),
+            $keys[13] => $this->getDbAutoIngest(),
+            $keys[14] => $this->getDbOwner(),
+            $keys[15] => $this->getDbType(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1050,12 +1442,36 @@ abstract class BasePodcast extends BaseObject implements Persistent
                 $this->setDbDescription($value);
                 break;
             case 5:
-                $this->setDbAutoIngest($value);
+                $this->setDbLanguage($value);
                 break;
             case 6:
-                $this->setDbOwner($value);
+                $this->setDbCopyright($value);
                 break;
             case 7:
+                $this->setDbItunesAuthor($value);
+                break;
+            case 8:
+                $this->setDbItunesKeywords($value);
+                break;
+            case 9:
+                $this->setDbItunesSummary($value);
+                break;
+            case 10:
+                $this->setDbItunesSubtitle($value);
+                break;
+            case 11:
+                $this->setDbItunesCategory($value);
+                break;
+            case 12:
+                $this->setDbItunesExplicit($value);
+                break;
+            case 13:
+                $this->setDbAutoIngest($value);
+                break;
+            case 14:
+                $this->setDbOwner($value);
+                break;
+            case 15:
                 $this->setDbType($value);
                 break;
         } // switch()
@@ -1087,9 +1503,17 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if (array_key_exists($keys[2], $arr)) $this->setDbTitle($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setDbCreator($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setDbDescription($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDbAutoIngest($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setDbOwner($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setDbType($arr[$keys[7]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbLanguage($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDbCopyright($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setDbItunesAuthor($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setDbItunesKeywords($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setDbItunesSummary($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDbItunesSubtitle($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setDbItunesCategory($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setDbItunesExplicit($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setDbAutoIngest($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setDbOwner($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setDbType($arr[$keys[15]]);
     }
 
     /**
@@ -1106,6 +1530,14 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastPeer::TITLE)) $criteria->add(PodcastPeer::TITLE, $this->title);
         if ($this->isColumnModified(PodcastPeer::CREATOR)) $criteria->add(PodcastPeer::CREATOR, $this->creator);
         if ($this->isColumnModified(PodcastPeer::DESCRIPTION)) $criteria->add(PodcastPeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(PodcastPeer::LANGUAGE)) $criteria->add(PodcastPeer::LANGUAGE, $this->language);
+        if ($this->isColumnModified(PodcastPeer::COPYRIGHT)) $criteria->add(PodcastPeer::COPYRIGHT, $this->copyright);
+        if ($this->isColumnModified(PodcastPeer::ITUNES_AUTHOR)) $criteria->add(PodcastPeer::ITUNES_AUTHOR, $this->itunes_author);
+        if ($this->isColumnModified(PodcastPeer::ITUNES_KEYWORDS)) $criteria->add(PodcastPeer::ITUNES_KEYWORDS, $this->itunes_keywords);
+        if ($this->isColumnModified(PodcastPeer::ITUNES_SUMMARY)) $criteria->add(PodcastPeer::ITUNES_SUMMARY, $this->itunes_summary);
+        if ($this->isColumnModified(PodcastPeer::ITUNES_SUBTITLE)) $criteria->add(PodcastPeer::ITUNES_SUBTITLE, $this->itunes_subtitle);
+        if ($this->isColumnModified(PodcastPeer::ITUNES_CATEGORY)) $criteria->add(PodcastPeer::ITUNES_CATEGORY, $this->itunes_category);
+        if ($this->isColumnModified(PodcastPeer::ITUNES_EXPLICIT)) $criteria->add(PodcastPeer::ITUNES_EXPLICIT, $this->itunes_explicit);
         if ($this->isColumnModified(PodcastPeer::AUTO_INGEST)) $criteria->add(PodcastPeer::AUTO_INGEST, $this->auto_ingest);
         if ($this->isColumnModified(PodcastPeer::OWNER)) $criteria->add(PodcastPeer::OWNER, $this->owner);
         if ($this->isColumnModified(PodcastPeer::TYPE)) $criteria->add(PodcastPeer::TYPE, $this->type);
@@ -1176,6 +1608,14 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $copyObj->setDbTitle($this->getDbTitle());
         $copyObj->setDbCreator($this->getDbCreator());
         $copyObj->setDbDescription($this->getDbDescription());
+        $copyObj->setDbLanguage($this->getDbLanguage());
+        $copyObj->setDbCopyright($this->getDbCopyright());
+        $copyObj->setDbItunesAuthor($this->getDbItunesAuthor());
+        $copyObj->setDbItunesKeywords($this->getDbItunesKeywords());
+        $copyObj->setDbItunesSummary($this->getDbItunesSummary());
+        $copyObj->setDbItunesSubtitle($this->getDbItunesSubtitle());
+        $copyObj->setDbItunesCategory($this->getDbItunesCategory());
+        $copyObj->setDbItunesExplicit($this->getDbItunesExplicit());
         $copyObj->setDbAutoIngest($this->getDbAutoIngest());
         $copyObj->setDbOwner($this->getDbOwner());
         $copyObj->setDbType($this->getDbType());
@@ -1571,6 +2011,14 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $this->title = null;
         $this->creator = null;
         $this->description = null;
+        $this->language = null;
+        $this->copyright = null;
+        $this->itunes_author = null;
+        $this->itunes_keywords = null;
+        $this->itunes_summary = null;
+        $this->itunes_subtitle = null;
+        $this->itunes_category = null;
+        $this->itunes_explicit = null;
         $this->auto_ingest = null;
         $this->owner = null;
         $this->type = null;

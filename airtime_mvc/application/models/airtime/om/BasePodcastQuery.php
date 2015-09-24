@@ -11,6 +11,14 @@
  * @method PodcastQuery orderByDbTitle($order = Criteria::ASC) Order by the title column
  * @method PodcastQuery orderByDbCreator($order = Criteria::ASC) Order by the creator column
  * @method PodcastQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
+ * @method PodcastQuery orderByDbLanguage($order = Criteria::ASC) Order by the language column
+ * @method PodcastQuery orderByDbCopyright($order = Criteria::ASC) Order by the copyright column
+ * @method PodcastQuery orderByDbItunesAuthor($order = Criteria::ASC) Order by the itunes_author column
+ * @method PodcastQuery orderByDbItunesKeywords($order = Criteria::ASC) Order by the itunes_keywords column
+ * @method PodcastQuery orderByDbItunesSummary($order = Criteria::ASC) Order by the itunes_summary column
+ * @method PodcastQuery orderByDbItunesSubtitle($order = Criteria::ASC) Order by the itunes_subtitle column
+ * @method PodcastQuery orderByDbItunesCategory($order = Criteria::ASC) Order by the itunes_category column
+ * @method PodcastQuery orderByDbItunesExplicit($order = Criteria::ASC) Order by the itunes_explicit column
  * @method PodcastQuery orderByDbAutoIngest($order = Criteria::ASC) Order by the auto_ingest column
  * @method PodcastQuery orderByDbOwner($order = Criteria::ASC) Order by the owner column
  * @method PodcastQuery orderByDbType($order = Criteria::ASC) Order by the type column
@@ -20,6 +28,14 @@
  * @method PodcastQuery groupByDbTitle() Group by the title column
  * @method PodcastQuery groupByDbCreator() Group by the creator column
  * @method PodcastQuery groupByDbDescription() Group by the description column
+ * @method PodcastQuery groupByDbLanguage() Group by the language column
+ * @method PodcastQuery groupByDbCopyright() Group by the copyright column
+ * @method PodcastQuery groupByDbItunesAuthor() Group by the itunes_author column
+ * @method PodcastQuery groupByDbItunesKeywords() Group by the itunes_keywords column
+ * @method PodcastQuery groupByDbItunesSummary() Group by the itunes_summary column
+ * @method PodcastQuery groupByDbItunesSubtitle() Group by the itunes_subtitle column
+ * @method PodcastQuery groupByDbItunesCategory() Group by the itunes_category column
+ * @method PodcastQuery groupByDbItunesExplicit() Group by the itunes_explicit column
  * @method PodcastQuery groupByDbAutoIngest() Group by the auto_ingest column
  * @method PodcastQuery groupByDbOwner() Group by the owner column
  * @method PodcastQuery groupByDbType() Group by the type column
@@ -43,6 +59,14 @@
  * @method Podcast findOneByDbTitle(string $title) Return the first Podcast filtered by the title column
  * @method Podcast findOneByDbCreator(string $creator) Return the first Podcast filtered by the creator column
  * @method Podcast findOneByDbDescription(string $description) Return the first Podcast filtered by the description column
+ * @method Podcast findOneByDbLanguage(string $language) Return the first Podcast filtered by the language column
+ * @method Podcast findOneByDbCopyright(string $copyright) Return the first Podcast filtered by the copyright column
+ * @method Podcast findOneByDbItunesAuthor(string $itunes_author) Return the first Podcast filtered by the itunes_author column
+ * @method Podcast findOneByDbItunesKeywords(string $itunes_keywords) Return the first Podcast filtered by the itunes_keywords column
+ * @method Podcast findOneByDbItunesSummary(string $itunes_summary) Return the first Podcast filtered by the itunes_summary column
+ * @method Podcast findOneByDbItunesSubtitle(string $itunes_subtitle) Return the first Podcast filtered by the itunes_subtitle column
+ * @method Podcast findOneByDbItunesCategory(string $itunes_category) Return the first Podcast filtered by the itunes_category column
+ * @method Podcast findOneByDbItunesExplicit(string $itunes_explicit) Return the first Podcast filtered by the itunes_explicit column
  * @method Podcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first Podcast filtered by the auto_ingest column
  * @method Podcast findOneByDbOwner(int $owner) Return the first Podcast filtered by the owner column
  * @method Podcast findOneByDbType(int $type) Return the first Podcast filtered by the type column
@@ -52,6 +76,14 @@
  * @method array findByDbTitle(string $title) Return Podcast objects filtered by the title column
  * @method array findByDbCreator(string $creator) Return Podcast objects filtered by the creator column
  * @method array findByDbDescription(string $description) Return Podcast objects filtered by the description column
+ * @method array findByDbLanguage(string $language) Return Podcast objects filtered by the language column
+ * @method array findByDbCopyright(string $copyright) Return Podcast objects filtered by the copyright column
+ * @method array findByDbItunesAuthor(string $itunes_author) Return Podcast objects filtered by the itunes_author column
+ * @method array findByDbItunesKeywords(string $itunes_keywords) Return Podcast objects filtered by the itunes_keywords column
+ * @method array findByDbItunesSummary(string $itunes_summary) Return Podcast objects filtered by the itunes_summary column
+ * @method array findByDbItunesSubtitle(string $itunes_subtitle) Return Podcast objects filtered by the itunes_subtitle column
+ * @method array findByDbItunesCategory(string $itunes_category) Return Podcast objects filtered by the itunes_category column
+ * @method array findByDbItunesExplicit(string $itunes_explicit) Return Podcast objects filtered by the itunes_explicit column
  * @method array findByDbAutoIngest(boolean $auto_ingest) Return Podcast objects filtered by the auto_ingest column
  * @method array findByDbOwner(int $owner) Return Podcast objects filtered by the owner column
  * @method array findByDbType(int $type) Return Podcast objects filtered by the type column
@@ -162,7 +194,7 @@ abstract class BasePodcastQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "url", "title", "creator", "description", "auto_ingest", "owner", "type" FROM "podcast" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "url", "title", "creator", "description", "language", "copyright", "itunes_author", "itunes_keywords", "itunes_summary", "itunes_subtitle", "itunes_category", "itunes_explicit", "auto_ingest", "owner", "type" FROM "podcast" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -407,6 +439,238 @@ abstract class BasePodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PodcastPeer::DESCRIPTION, $dbDescription, $comparison);
+    }
+
+    /**
+     * Filter the query on the language column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbLanguage('fooValue');   // WHERE language = 'fooValue'
+     * $query->filterByDbLanguage('%fooValue%'); // WHERE language LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbLanguage The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbLanguage($dbLanguage = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbLanguage)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbLanguage)) {
+                $dbLanguage = str_replace('*', '%', $dbLanguage);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::LANGUAGE, $dbLanguage, $comparison);
+    }
+
+    /**
+     * Filter the query on the copyright column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbCopyright('fooValue');   // WHERE copyright = 'fooValue'
+     * $query->filterByDbCopyright('%fooValue%'); // WHERE copyright LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbCopyright The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbCopyright($dbCopyright = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbCopyright)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbCopyright)) {
+                $dbCopyright = str_replace('*', '%', $dbCopyright);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::COPYRIGHT, $dbCopyright, $comparison);
+    }
+
+    /**
+     * Filter the query on the itunes_author column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbItunesAuthor('fooValue');   // WHERE itunes_author = 'fooValue'
+     * $query->filterByDbItunesAuthor('%fooValue%'); // WHERE itunes_author LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbItunesAuthor The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbItunesAuthor($dbItunesAuthor = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbItunesAuthor)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbItunesAuthor)) {
+                $dbItunesAuthor = str_replace('*', '%', $dbItunesAuthor);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::ITUNES_AUTHOR, $dbItunesAuthor, $comparison);
+    }
+
+    /**
+     * Filter the query on the itunes_keywords column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbItunesKeywords('fooValue');   // WHERE itunes_keywords = 'fooValue'
+     * $query->filterByDbItunesKeywords('%fooValue%'); // WHERE itunes_keywords LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbItunesKeywords The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbItunesKeywords($dbItunesKeywords = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbItunesKeywords)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbItunesKeywords)) {
+                $dbItunesKeywords = str_replace('*', '%', $dbItunesKeywords);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::ITUNES_KEYWORDS, $dbItunesKeywords, $comparison);
+    }
+
+    /**
+     * Filter the query on the itunes_summary column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbItunesSummary('fooValue');   // WHERE itunes_summary = 'fooValue'
+     * $query->filterByDbItunesSummary('%fooValue%'); // WHERE itunes_summary LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbItunesSummary The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbItunesSummary($dbItunesSummary = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbItunesSummary)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbItunesSummary)) {
+                $dbItunesSummary = str_replace('*', '%', $dbItunesSummary);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::ITUNES_SUMMARY, $dbItunesSummary, $comparison);
+    }
+
+    /**
+     * Filter the query on the itunes_subtitle column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbItunesSubtitle('fooValue');   // WHERE itunes_subtitle = 'fooValue'
+     * $query->filterByDbItunesSubtitle('%fooValue%'); // WHERE itunes_subtitle LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbItunesSubtitle The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbItunesSubtitle($dbItunesSubtitle = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbItunesSubtitle)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbItunesSubtitle)) {
+                $dbItunesSubtitle = str_replace('*', '%', $dbItunesSubtitle);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::ITUNES_SUBTITLE, $dbItunesSubtitle, $comparison);
+    }
+
+    /**
+     * Filter the query on the itunes_category column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbItunesCategory('fooValue');   // WHERE itunes_category = 'fooValue'
+     * $query->filterByDbItunesCategory('%fooValue%'); // WHERE itunes_category LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbItunesCategory The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbItunesCategory($dbItunesCategory = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbItunesCategory)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbItunesCategory)) {
+                $dbItunesCategory = str_replace('*', '%', $dbItunesCategory);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::ITUNES_CATEGORY, $dbItunesCategory, $comparison);
+    }
+
+    /**
+     * Filter the query on the itunes_explicit column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbItunesExplicit('fooValue');   // WHERE itunes_explicit = 'fooValue'
+     * $query->filterByDbItunesExplicit('%fooValue%'); // WHERE itunes_explicit LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbItunesExplicit The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbItunesExplicit($dbItunesExplicit = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbItunesExplicit)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbItunesExplicit)) {
+                $dbItunesExplicit = str_replace('*', '%', $dbItunesExplicit);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::ITUNES_EXPLICIT, $dbItunesExplicit, $comparison);
     }
 
     /**
