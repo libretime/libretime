@@ -17,22 +17,16 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
     /**
      * Execute a Celery task with the given name and data parameters
      *
-     * FIXME: Currently, downloads will not create task reference rows because they
-     * don't have a valid file identifier - this means that we will never know if there
-     * is an issue with the download before the callback to /rest/media is called!
-     *
      * @param string $taskName the name of the celery task to execute
      * @param array $data      the data array to send as task parameters
      * @param int $fileId      the unique identifier for the file involved in the task
      */
-    protected function _executeTask($taskName, $data, $fileId) {
+    protected function _executeTask($taskName, $data, $fileId = null) {
         try {
             $brokerTaskId = CeleryManager::sendCeleryMessage($taskName,
                                                              static::$_CELERY_EXCHANGE_NAME,
                                                              $data);
-            if (!empty($fileId)) {
-                $this->_createTaskReference($fileId, $brokerTaskId, $taskName);
-            }
+            $this->_createTaskReference($fileId, $brokerTaskId, $taskName);
         } catch (Exception $e) {
             Logging::info("Invalid request: " . $e->getMessage());
         }
@@ -84,7 +78,7 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      *
      * @param $task     CeleryTasks the completed CeleryTasks object
      * @param $trackId  int         ThirdPartyTrackReferences identifier
-     * @param $track    object      third-party service track object
+     * @param $result   mixed       Celery task result message
      * @param $status   string      Celery task status
      *
      * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
@@ -92,7 +86,7 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * @throws Exception
      * @throws PropelException
      */
-    public function updateTrackReference($task, $trackId, $track, $status) {
+    public function updateTrackReference($task, $trackId, $result, $status) {
         static::updateTask($task, $status);
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->findOneByDbId($trackId);

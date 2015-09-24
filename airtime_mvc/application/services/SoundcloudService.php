@@ -150,9 +150,7 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
             'token'         => $this->_accessToken,
             'track_id'      => $trackId
         );
-        // FIXME
-        Logging::warn("FIXME: we can't create a task reference without a valid file ID");
-        $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data, null);
+        $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
     }
 
     /**

@@ -125,8 +125,11 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         try {
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
-
-            $this->_service->downloadEpisodes($requestData["podcast"]["episodes"]);
+            // Create placeholders in PodcastEpisodes so we know these episodes are being downloaded
+            // to prevent the user from trying to download them again while Celery is running
+            $episodes = $this->_service->addPodcastEpisodePlaceholders($requestData["podcast"]["id"],
+                                                                       $requestData["podcast"]["episodes"]);
+            $this->_service->downloadEpisodes($episodes);
             $podcast = Podcast::updateFromArray($id, $requestData);
 
             $this->getResponse()

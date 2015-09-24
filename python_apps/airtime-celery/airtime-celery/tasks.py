@@ -86,30 +86,53 @@ def soundcloud_delete(token, track_id):
 
 
 @celery.task(name='podcast-download', acks_late=True)
-def podcast_download(download_urls, callback_url, api_key):
+def podcast_download(episodes, callback_url, api_key):
     """
-    Download a given podcast episode
+    Download a batch of podcast episodes
 
-    :param download_urls:   array of download URLs for episodes to download
+    :param episodes:        array of episodes containing download URLs and IDs
     :param callback_url:    callback URL to send the downloaded file to
     :param api_key:         API key for callback authentication
     :rtype: None
     """
-    try:
-        for url in download_urls:
-            with closing(requests.get(url, stream=True)) as r:
-                # Try to get the filename from the content disposition
-                d = r.headers.get('Content-Disposition')
-                if d:
-                    _, params = cgi.parse_header(d)
-                    filename = params['filename']
-                else:
-                    # Since we don't necessarily get the filename back in the response headers,
-                    # parse the URL and get the filename and extension
-                    path = urlparse.urlsplit(r.url).path
-                    filename = posixpath.basename(path)
-                requests.post(callback_url, files={'file': (filename, r.content)}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
-    except Exception as e:
-        logger.info('Error during file download: {0}'.format(e.message))
-        logger.info(str(e))
-        raise e
+    response = []
+    for episode in episodes:
+        logger.info(episode)
+        # Object to store file IDs, episode IDs, and download status
+        # (important if there's an error before the file is posted)
+        obj = { 'episodeid': episode['id'] }
+        try:
+            re = None
+            with closing(requests.get(episode['url'], stream=True)) as r:
+                filename = get_filename(r)
+                re = requests.post(callback_url, files={'file': (filename, r.content)}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
+            re.raise_for_status()
+            f = json.loads(re.content)  # Read the response from the media API to get the file id
+            obj['fileid'] = f['id']
+            obj['status'] = 1
+            response.append(obj)
+        except Exception as e:
+            logger.info('Error during file download: {0}'.format(e.message))
+            obj['status'] = 0
+    return json.dumps(response)
+
+
+def get_filename(r):
+    """
+    Given a request object to a file resource, get the name of the file to be downloaded
+    by parsing either the content disposition or the request URL
+
+    :param r: request object
+    :rtype: string
+    """
+    # Try to get the filename from the content disposition
+    d = r.headers.get('Content-Disposition')
+    if d:
+        _, params = cgi.parse_header(d)
+        filename = params['filename']
+    else:
+        # Since we don't necessarily get the filename back in the response headers,
+        # parse the URL and get the filename and extension
+        path = urlparse.urlsplit(r.url).path
+        filename = posixpath.basename(path)
+    return filename

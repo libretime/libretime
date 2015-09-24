@@ -473,3 +473,23 @@ class AirtimeUpgrader2514 extends AirtimeUpgrader
         return '2.5.14';
     }
 }
+
+/**
+ * Class AirtimeUpgrader2515
+ *
+ * SAAS-1071 - Remove not null constraint from file_id fk in third_party_track_references
+ *             so that we can create track references for downloads (which won't have a file
+ *             ID until the task is run and the file is POSTed back to Airtime)
+ */
+class AirtimeUpgrader2515 extends AirtimeUpgrader
+{
+    protected function getSupportedSchemaVersions() {
+        return array (
+            '2.5.14'
+        );
+    }
+
+    public function getNewVersion() {
+        return '2.5.15';
+    }
+}

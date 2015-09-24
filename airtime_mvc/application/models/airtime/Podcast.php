@@ -143,7 +143,9 @@ class Podcast extends BasePodcast
 
         $podcastArray["episodes"] = array();
         foreach ($rss->get_items() as $item) {
+            /** @var SimplePie_Item $item */
             array_push($podcastArray["episodes"], array(
+                "guid" => $item->get_id(),
                 "title" => $item->get_title(),
                 "author" => $item->get_author()->get_name(),
                 "description" => $item->get_description(),
