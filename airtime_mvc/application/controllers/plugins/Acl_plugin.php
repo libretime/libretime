@@ -227,7 +227,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     }
     
     private function verifyCSRFToken($token) {
-        SecurityHelper::verifyCSRFToken($token);
+        return SecurityHelper::verifyCSRFToken($token);
     }
     
     private function verifyAPIKey() {
