@@ -188,6 +188,10 @@ class Application_Form_BillingClient extends Zend_Form
         $passwordVerify->addValidator($notEmptyValidator);
         $this->addElement($passwordVerify);
 
+        $this->addElement('hash', 'csrf', array(
+            'salt' => 'unique'
+        ));
+
         $submit = new Zend_Form_Element_Submit("submit");
         $submit->setIgnore(true)
                 ->setLabel(_("Save"));

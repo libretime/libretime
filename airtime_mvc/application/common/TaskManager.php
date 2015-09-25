@@ -114,6 +114,9 @@ final class TaskManager {
      *              otherwise false
      */
     private function _isUserSessionRequest() {
+        if (!Zend_Session::isStarted()) {
+            return false;
+        }
         $auth = Zend_Auth::getInstance();
         $data = $auth->getStorage()->read();
         return !empty($data);
