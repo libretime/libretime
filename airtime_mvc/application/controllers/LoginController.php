@@ -33,8 +33,15 @@ class LoginController extends Zend_Controller_Action
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
 
         if (Zend_Session::isStarted()) {
+
+            ini_set('session.use_only_cookies', false);
+            ini_set('session.use_cookies', false);
+            ini_set('session.use_trans_sid', false);
+            ini_set('session.cache_limiter', null);
+            session_start(); // second session_start
+
             //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
-            session_start();
+            //session_start();
 
             $auth = Zend_Auth::getInstance();
             $auth->getStorage();
