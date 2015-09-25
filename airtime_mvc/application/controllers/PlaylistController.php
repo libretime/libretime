@@ -32,7 +32,7 @@ class PlaylistController extends Zend_Controller_Action
                     ->initContext();
 
         //This controller writes to the session all over the place, so we're going to reopen it for writing here.
-        session_start(); //Reopen the session for writing
+        SessionHelper::reopenSessionForWriting();
     }
 
     private function getPlaylist($p_type)

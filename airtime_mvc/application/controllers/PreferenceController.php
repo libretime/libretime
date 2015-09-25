@@ -32,7 +32,7 @@ class PreferenceController extends Zend_Controller_Action
         $form = new Application_Form_Preferences();
         $values = array();
 
-        session_start(); //Open session for writing.
+        SessionHelper::reopenSessionForWriting();
 
         if ($request->isPost()) {
             $values = $request->getPost();
@@ -92,7 +92,7 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/support-setting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
         $this->view->statusMsg = "";
 
-        session_start(); //Open session for writing.
+        SessionHelper::reopenSessionForWriting();
 
         $form = new Application_Form_SupportSettings();
         if ($request->isPost()) {
@@ -128,7 +128,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function removeLogoAction()
     {
-        session_start(); //Open session for writing.
+        SessionHelper::reopenSessionForWriting();
 
         $this->view->layout()->disableLayout();
         // Remove reliance on .phtml files to render requests
@@ -153,7 +153,7 @@ class PreferenceController extends Zend_Controller_Action
 
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/preferences/streamsetting.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
-        session_start(); //Open session for writing.
+        SessionHelper::reopenSessionForWriting();
 
         $name_map = array(
 				'ogg' => 'Ogg Vorbis',
@@ -447,7 +447,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function setSourceConnectionUrlAction()
     {
-        session_start(); //Open session for writing.
+        SessionHelper::reopenSessionForWriting();
 
         $request = $this->getRequest();
         $type = $request->getParam("type", null);
@@ -467,7 +467,7 @@ class PreferenceController extends Zend_Controller_Action
 
     public function getAdminPasswordStatusAction()
     {
-        session_start(); //Open session for writing.
+        SessionHelper::reopenSessionForWriting();
 
         $out = array();
         $num_of_stream = intval(Application_Model_Preference::GetNumOfStreams());

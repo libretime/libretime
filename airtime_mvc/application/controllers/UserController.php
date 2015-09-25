@@ -18,7 +18,7 @@ class UserController extends Zend_Controller_Action
     {
         // Start the session to re-open write permission to the session so we can
         // create the namespace for our csrf token verification
-        session_start();
+        SessionHelper::reopenSessionForWriting();
         $CC_CONFIG = Config::getConfig();
 
         $request = $this->getRequest();
@@ -121,7 +121,7 @@ class UserController extends Zend_Controller_Action
     
     public function editUserAction()
     {
-        session_start(); //Reopen session for writing.
+        SessionHelper::reopenSessionForWriting();
         $request = $this->getRequest();
         $form = new Application_Form_EditUser();
         if ($request->isPost()) {
