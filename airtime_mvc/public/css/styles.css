@@ -1371,7 +1371,7 @@ thead tr.fc-first
     height: 32px;
     line-height: 32px;
 }
-
+ful
 /** Extremely nasty workaround for a fullcalendar bug, where clicking "Add Show"
     would cause this large space under the table header. The CSS to get to that
     is ridiculously complicated and set in the HTML (!) dynamically with JS,
