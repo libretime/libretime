@@ -252,9 +252,17 @@ thead th.ui-state-default:focus {
     margin-top: 4px;
 }
 
-#filter_message {
+#lib-filter-message, .filter-message {
     border-top: none !important;
     text-shadow: none;
+}
+
+.filter-message {
+    position: relative;
+    font-size: 13px;
+    float: right;
+    line-height: 26px;
+    padding: 0 6px;
 }
 
 #advanced-options {

@@ -26,6 +26,7 @@ var AIRTIME = (function (AIRTIME) {
                 $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: podcastData })
                     .success(function() {
                         // TODO refresh the table here somehow..
+                        episodeTable.reload($scope.podcast.id);
                     });
             };
 
@@ -87,10 +88,10 @@ var AIRTIME = (function (AIRTIME) {
 
     mod.editSelectedPodcasts = function() {
         _bulkAction(HTTPMethods.GET, function(json) {
-            json.forEach(function(el) {
-                var podcast = JSON.parse(el.podcast);
+            json.forEach(function(data) {
+                var podcast = JSON.parse(data.podcast);
                 var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
-                    tab = AIRTIME.tabs.openTab(el, uid, null);
+                    tab = AIRTIME.tabs.openTab(data, uid, null);
                 var table = mod.initPodcastEpisodeDatatable(podcast.episodes);
                 _bootstrapAngularApp(podcast, tab, table);
             });
@@ -129,6 +130,15 @@ var AIRTIME = (function (AIRTIME) {
             if (rowData.ingested) return null;  // Don't create checkboxes for ingested items
             return AIRTIME.widgets.Table.prototype._datatablesCheckboxDataDelegate.call(this, rowData, callType, dataToSave);
         };
+        // Since we're using a static source, define a separate function to fetch and 'reload' the table data
+        // We use this when we save the Podcast because we need to flag rows the user is ingesting
+        PodcastTable.prototype.reload = function(id) {
+            var dt = this._datatable;
+            $.get(endpoint + id, function(json) {
+                dt.fnClearTable();
+                dt.fnAddData(JSON.parse(json).episodes);
+            });
+        };
 
         // This method is static, so use AIRTIME.widgets.Table
         var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
@@ -139,10 +149,14 @@ var AIRTIME = (function (AIRTIME) {
             true,                // Enable item selection
             podcastToolbarButtons, // Toolbar buttons
             {                    // Datatables overrides.
-                'aoColumns' : aoColumns,
-                'bServerSide': false,
+                'aoColumns'   : aoColumns,
+                'bServerSide' : false,
+                // We want to make as few round trips as possible, so we get
+                // the episode data alongside the Podcast data and pass it in
+                // as json. Doing this caches all the episode data on the front-end,
+                // which means we also don't need to go back to the server for pagination
                 'sAjaxSource' : null,
-                'aaData' : episodes,
+                'aaData'      : episodes,
                 "oColVis": {
                     "sAlign": "right",
                     "aiExclude": [0, 1],

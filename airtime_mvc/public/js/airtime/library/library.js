@@ -659,18 +659,19 @@ var AIRTIME = (function(AIRTIME) {
                     "success": fnCallback,
                     "error": handleAjaxError
                 }).done(function (data) {
+                    var filterMessage = $libContent.find('.filter-message');
                     if (data.iTotalRecords > data.iTotalDisplayRecords) {
-                        $('#filter_message').text(
+                        filterMessage.text(
                             $.i18n._("Filtering out ") + (data.iTotalRecords - data.iTotalDisplayRecords)
                             + $.i18n._(" of ") + data.iTotalRecords
                             + $.i18n._(" records")
                         );
                         $('#library_empty').hide();
-                        $('#library_display').find('tr:has(td.dataTables_empty)').show();
+                        $libTable.find('tr:has(td.dataTables_empty)').show();
                     } else {
-                        $('#filter_message').text("");
+                        filterMessage.text("");
                     }
-                    $('#library_content').find('.dataTables_filter input[type="text"]')
+                    $libContent.find('.dataTables_filter input[type="text"]')
                         .css('padding-right', $('#advanced-options').find('button').outerWidth());
                 });
             },
