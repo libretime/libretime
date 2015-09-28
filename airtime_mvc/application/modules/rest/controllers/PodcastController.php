@@ -90,9 +90,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
             $this->_helper->json->sendJson(array(
                                                "podcast"=>json_encode($podcast),
                                                "html"=>$this->view->render($path),
-                                               "type"=>"podcast",  // TODO: get rid of these extraneous fields
-                                               "id"=>$podcast["id"]
-                                               // "id"=>$podcast->getDbId()
                                            ));
 
             // $this->getResponse()

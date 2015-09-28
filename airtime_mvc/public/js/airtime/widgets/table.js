@@ -23,11 +23,6 @@ var AIRTIME = (function(AIRTIME) {
             MULTI_CTRL : 2
         };
 
-        // Internal enum for repeated jQuery selectors
-        self._SELECTORS = Object.freeze({
-            SELECTION_CHECKBOX: ".airtime_table_checkbox"
-        });
-
         //Member variables
         self._datatable = null;
         self._selectedRows = []; //An array containing the underlying objects for each selected row. (Easy to use!)
@@ -109,8 +104,8 @@ var AIRTIME = (function(AIRTIME) {
          *  than having a per-row callback...)
          */
         if (bItemSelection) {
-            $(self._datatable, 'tbody tr').on('click contextmenu', 'tr', function (e) {
-                var aData = self._datatable.fnGetData($(this).index()); // $(this).data(); //Neat trick - thanks DataTables!
+            $(self._datatable, 'tbody tr').on('click contextmenu', self._SELECTORS.SELECTION_TABLE_ROW, function (e) {
+                var aData = self._datatable.fnGetData($(this).index());
                 var iDisplayIndex = $(this).index(); //The index of the row in the current page in the table.
                 var nRow = this;
 
@@ -427,6 +422,12 @@ var AIRTIME = (function(AIRTIME) {
     //Static initializers / Class variables
 
     /** Predefined toolbar buttons that you can add to the table. Use getStandardToolbarButtons(). */
+    Table.prototype._SELECTORS = Object.freeze({
+        SELECTION_CHECKBOX: ".airtime_table_checkbox",
+        SELECTION_TABLE_ROW: "tr"
+    });
+
+
     Table.TOOLBAR_BUTTON_ROLES = {
         NEW :    0,
         EDIT :   1,

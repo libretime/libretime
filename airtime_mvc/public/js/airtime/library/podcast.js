@@ -25,7 +25,7 @@ var AIRTIME = (function (AIRTIME) {
                 podcastData.episodes = episodeTable.getSelectedRows();
                 $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: podcastData })
                     .success(function() {
-                        // TODO
+                        // TODO refresh the table here somehow..
                     });
             };
 
@@ -36,15 +36,20 @@ var AIRTIME = (function (AIRTIME) {
         });
 
     function _bulkAction(method, callback) {
-        var selected = $("#podcast_table").find(".selected"),
-            ids = [];
-        var selectedData = AIRTIME.library.podcastTableWidget.getSelectedRows();
+        var ids = [], selectedData = AIRTIME.library.podcastTableWidget.getSelectedRows();
         selectedData.forEach(function(el) {
-            ids.push(el.id);
+            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id;
+            var t = AIRTIME.tabs.get(uid);
+            if (t && method == HTTPMethods.DELETE) {
+                t.close();
+            }
+            if (!(t && method == HTTPMethods.GET)) ids.push(el.id);
         });
 
-        // Bulk methods should use post because we're sending data in the request body
-        $.post(endpoint + "bulk", { csrf_token: $("#csrf").val(), method: method, ids: ids }, callback);
+        if (ids.length > 0) {
+            // Bulk methods should use post because we're sending data in the request body
+            $.post(endpoint + "bulk", {csrf_token: $("#csrf").val(), method: method, ids: ids}, callback);
+        }
     }
 
     function _bootstrapAngularApp(podcast, tab, table) {
@@ -81,7 +86,7 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     mod.editSelectedPodcasts = function() {
-        _bulkAction("GET", function(json) {
+        _bulkAction(HTTPMethods.GET, function(json) {
             json.forEach(function(el) {
                 var podcast = JSON.parse(el.podcast);
                 var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
@@ -94,7 +99,7 @@ var AIRTIME = (function (AIRTIME) {
 
     mod.deleteSelectedPodcasts = function() {
         if (confirm($.i18n._("Are you sure you want to delete the selected podcasts from your library?"))) {
-            _bulkAction("DELETE", function () {
+            _bulkAction(HTTPMethods.DELETE, function () {
                 AIRTIME.library.podcastDataTable.fnDraw();
             });
         }
@@ -102,7 +107,7 @@ var AIRTIME = (function (AIRTIME) {
 
     mod.initPodcastEpisodeDatatable = function(episodes) {
         var aoColumns = [
-            /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"       , "bVisible" : false },
+            /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
             /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
             /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
             /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
@@ -110,10 +115,26 @@ var AIRTIME = (function (AIRTIME) {
             /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
         ];
 
+        var PodcastTable = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
+            // Just call the superconstructor. For clarity/extensibility
+            return AIRTIME.widgets.Table.call(this, wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions);
+        };  // Subclass AIRTIME.widgets.Table
+        PodcastTable.prototype = Object.create(AIRTIME.widgets.Table.prototype);
+        PodcastTable.prototype.constructor = PodcastTable;
+        PodcastTable.prototype._SELECTORS = Object.freeze({
+            SELECTION_CHECKBOX: ".airtime_table_checkbox:has(input)",
+            SELECTION_TABLE_ROW: "tr:has(td.airtime_table_checkbox > input)"
+        });
+        PodcastTable.prototype._datatablesCheckboxDataDelegate = function(rowData, callType, dataToSave) {
+            if (rowData.ingested) return null;  // Don't create checkboxes for ingested items
+            return AIRTIME.widgets.Table.prototype._datatablesCheckboxDataDelegate.call(this, rowData, callType, dataToSave);
+        };
+
+        // This method is static, so use AIRTIME.widgets.Table
         var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
 
         // Set up the div with id "podcast_table" as a datatable.
-        var podcastEpisodesTableWidget = new AIRTIME.widgets.Table(
+        var podcastEpisodesTableWidget = new PodcastTable(
             AIRTIME.tabs.getActiveTab().contents.find('#podcast_episodes'), // DOM node to create the table inside.
             true,                // Enable item selection
             podcastToolbarButtons, // Toolbar buttons

@@ -58,6 +58,15 @@ var i18n_days_short = [
     $.i18n._("Sa")
 ];
 
+var HTTPMethods = Object.freeze({
+    GET: "GET",
+    POST: "POST",
+    PUT: "PUT",
+    PATCH: "PATCH",
+    DELETE: "DELETE",
+    OPTIONS: "OPTIONS"
+});
+
 var dateStartId = "#sb_date_start",
     timeStartId = "#sb_time_start",
     dateEndId = "#sb_date_end",
@@ -69,7 +78,7 @@ function getDatatablesStrings(overrideDict) {
         "sEmptyTable":     $.i18n._("No data available in table"),
         "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ entries"),
         "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 entries"),
-        "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total entries)"),
+        "sInfoFiltered":   "", // $.i18n._("(filtered from _MAX_ total entries)"),
         "sInfoPostFix":    $.i18n._(""),
         "sInfoThousands":  $.i18n._(","),
         "sLengthMenu":     $.i18n._("Show _MENU_"),

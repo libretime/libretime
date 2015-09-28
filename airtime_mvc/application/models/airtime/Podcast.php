@@ -139,13 +139,20 @@ class Podcast extends BasePodcast
      * @return array
      */
     private static function _generatePodcastArray($podcast, $rss) {
-        $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+        $ingestedEpisodes = PodcastEpisodesQuery::create()
+            ->findByDbPodcastId($podcast->getDbId());
+        $episodeIds = array();
+        foreach ($ingestedEpisodes as $e) {
+            array_push($episodeIds, $e->getDbEpisodeGuid());
+        }
 
+        $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
         $podcastArray["episodes"] = array();
         foreach ($rss->get_items() as $item) {
             /** @var SimplePie_Item $item */
             array_push($podcastArray["episodes"], array(
                 "guid" => $item->get_id(),
+                "ingested" => in_array($item->get_id(), $episodeIds),
                 "title" => $item->get_title(),
                 "author" => $item->get_author()->get_name(),
                 "description" => $item->get_description(),
