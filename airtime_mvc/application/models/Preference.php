@@ -10,7 +10,7 @@ class Application_Model_Preference
     {
         //pass in true so the check is made with the autoloader
         //we need this check because saas calls this function from outside Zend
-        if (!Zend_Session::isStarted() || !class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
+        if (!class_exists("Zend_Session", true) || !Zend_Session::isStarted() || !class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
             $userId = null;
         } else {
             $auth = Zend_Auth::getInstance();
