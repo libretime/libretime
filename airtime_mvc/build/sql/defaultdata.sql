@@ -19,6 +19,8 @@ INSERT INTO cc_pref("keystr", "valstr") VALUES('stream_bitrate', '24, 32, 48, 64
 INSERT INTO cc_pref("keystr", "valstr") VALUES('num_of_streams', '3');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('max_bitrate', '320');
 INSERT INTO cc_pref("keystr", "valstr") VALUES('plan_level', 'disabled');
+-- For now, just needs to be truthy - to be updated later; we should find a better way to implement this...
+INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
 
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('output_sound_device', 'false', 'boolean');
 INSERT INTO cc_stream_setting ("keyname", "value", "type") VALUES ('output_sound_device_type', 'ALSA', 'string');

@@ -3914,5 +3914,36 @@ li .ui-state-hover {
     float: left;
 }
 
+/* UI Revamp Video */
+#whatsnew {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
+    max-width: 600px;
+    max-height: 460px;
 
+    padding: 10px 0;
+}
+
+#whatsnew > button {
+    margin-top: 10px;
+    align-self: flex-end;
+    flex: 1 0 auto;
+}
+
+#whatsnew > div {
+    text-align: center;
+    font-size: 16px;
+    overflow-x: hidden;
+}
+
+#whatsnew h2 {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#whatsnew li {
+    margin-top: 20px;
+}

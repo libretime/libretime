@@ -1478,4 +1478,15 @@ class Application_Model_Preference
     {
         self::setValue("lang_tz_setup_complete", $value);
     }
+
+    public static function getWhatsNewDialogViewed()
+    {
+        $val = self::getValue("whats_new_dialog_viewed", true);
+        return empty($val) ? false : $val;
+    }
+
+    public static function setWhatsNewDialogViewed($value)
+    {
+        self::setValue("whats_new_dialog_viewed", $value, true);
+    }
 }
