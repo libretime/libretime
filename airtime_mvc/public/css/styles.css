@@ -3540,7 +3540,7 @@ button.btn-icon-text > i.icon-white {
 }
 
 #media_selector_wrapper {
-    flex: 0 0 100%;
+    flex: 1 1 100%;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
