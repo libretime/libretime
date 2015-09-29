@@ -329,11 +329,19 @@ thead th.ui-state-default:focus {
 .sb-options-form label {
     color: #efefef;
     line-height: 26px;
+    display: inline-block;
+    padding: 0 0 0 4px;
+    vertical-align: middle;
 }
 
 #sb_show_filter {
     right: 0;
     position: absolute;
+}
+
+#sb_my_shows {
+    top: 1px;
+    left: 2px;
 }
 
 .nav-tabs {
