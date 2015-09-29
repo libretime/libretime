@@ -18,6 +18,7 @@ var AIRTIME = (function(AIRTIME) {
             check = true;
         }
 
+        var sortable = $(".spl_sortable");
         if ($("#show_builder_table").is(":visible")) {
             if (shows.length === 0) {
                 check = false;
@@ -28,13 +29,15 @@ var AIRTIME = (function(AIRTIME) {
             } else if (current.length !== 0) {
                 btnText = $.i18n._('Add to current show');
             }
-        } else {
+        } else if (sortable.length > 0 && sortable.is(":visible")) {
             var objType = $('.active-tab .obj_type').val();
             if (objType === 'block') {
                 btnText = $.i18n._('Add to current smart block');
             } else {
                 btnText = $.i18n._('Add to current playlist');
             }
+        } else {
+            check = false;
         }
 
         if (check) {
