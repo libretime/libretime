@@ -3869,7 +3869,7 @@ li .ui-state-hover {
     -webkit-flex-flow: column;
     flex-flow: column;
 
-    flex: 6 auto;
+    flex: 1 1;
     min-width: 505px;
 }
 
