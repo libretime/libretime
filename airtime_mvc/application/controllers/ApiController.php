@@ -11,6 +11,8 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
+
+        //Ignore API key and session authentication for these APIs:
         $ignoreAuth = array("live-info", 
             "live-info-v2", 
             "week-info", 
@@ -24,6 +26,11 @@ class ApiController extends Zend_Controller_Action
             "station-logo",
             "show-logo"
         );
+
+        if (Zend_Session::isStarted()) {
+            Logging::error("Session already started for an API request. Check your code because
+                            this will negatively impact performance.");
+        }
 
         $params = $this->getRequest()->getParams();
         if (!in_array($params['action'], $ignoreAuth)) {
@@ -73,13 +80,23 @@ class ApiController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
         $api_key = $this->_getParam('api_key');
 
-        if (!in_array($api_key, $CC_CONFIG["apiKey"]) &&
-            is_null(Zend_Auth::getInstance()->getStorage()->read())) {
-            header('HTTP/1.0 401 Unauthorized');
-            print _('You are not allowed to access this resource.');
-            exit;
+        if (in_array($api_key, $CC_CONFIG["apiKey"])) {
+            return true;
         }
-        return true;
+
+        //Start the session so the authentication is
+        //enforced by the ACL plugin.
+        Zend_Session::start();
+        $authAdapter = Zend_Auth::getInstance();
+        Application_Model_Auth::pinSessionToClient($authAdapter);
+
+        if ((Zend_Auth::getInstance()->hasIdentity())) {
+            return true;
+        }
+
+        header('HTTP/1.0 401 Unauthorized');
+        print _('You are not allowed to access this resource.');
+        exit();
     }
 
     public function versionAction()

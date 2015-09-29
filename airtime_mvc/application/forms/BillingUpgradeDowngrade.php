@@ -8,6 +8,10 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
         $this->addElement($csrf_element);
 
+        $this->addElement('hash', 'csrf', array(
+            'salt' => 'unique'
+        ));
+
         $productPrices = array();
         $productTypes = array();       
         list($productPrices, $productTypes) = Billing::getProductPricesAndTypes();
