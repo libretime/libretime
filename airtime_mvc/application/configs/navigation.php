@@ -174,7 +174,7 @@ $pages = array(
                 'target'     => "_blank"
             ),
             array(
-                'label'     => _('Get to know the new Airtime'),
+                'label'     => _('What\'s New?'),
                 'uri'       => UI_REVAMP_YOUTUBE_URL,
                 'target'    => "_blank"
             )
