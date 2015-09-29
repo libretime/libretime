@@ -2,24 +2,24 @@
 
 
 /**
- * Base class that represents a row from the 'podcast' table.
+ * Base class that represents a row from the 'imported_podcast' table.
  *
  *
  *
  * @package    propel.generator.airtime.om
  */
-abstract class BasePodcast extends BaseObject implements Persistent
+abstract class BaseImportedPodcast extends Podcast implements Persistent
 {
     /**
      * Peer class name
      */
-    const PEER = 'PodcastPeer';
+    const PEER = 'ImportedPodcastPeer';
 
     /**
      * The Peer class.
      * Instance provides a convenient way of calling static methods on a class
      * that calling code may not be able to identify.
-     * @var        PodcastPeer
+     * @var        ImportedPodcastPeer
      */
     protected static $peer;
 
@@ -28,6 +28,19 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @var       boolean
      */
     protected $startCopy = false;
+
+    /**
+     * The value for the url field.
+     * @var        string
+     */
+    protected $url;
+
+    /**
+     * The value for the auto_ingest field.
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $auto_ingest;
 
     /**
      * The value for the id field.
@@ -114,31 +127,14 @@ abstract class BasePodcast extends BaseObject implements Persistent
     protected $owner;
 
     /**
-     * The value for the descendant_class field.
-     * @var        string
+     * @var        Podcast
      */
-    protected $descendant_class;
+    protected $aPodcast;
 
     /**
      * @var        CcSubjs
      */
     protected $aCcSubjs;
-
-    /**
-     * @var        PropelObjectCollection|PodcastEpisodes[] Collection to store aggregation of PodcastEpisodes objects.
-     */
-    protected $collPodcastEpisodess;
-    protected $collPodcastEpisodessPartial;
-
-    /**
-     * @var        StationPodcast one-to-one related StationPodcast object
-     */
-    protected $singleStationPodcast;
-
-    /**
-     * @var        ImportedPodcast one-to-one related ImportedPodcast object
-     */
-    protected $singleImportedPodcast;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -161,10 +157,47 @@ abstract class BasePodcast extends BaseObject implements Persistent
     protected $alreadyInClearAllReferencesDeep = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var		PropelObjectCollection
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see        __construct()
      */
-    protected $podcastEpisodessScheduledForDeletion = null;
+    public function applyDefaultValues()
+    {
+        $this->auto_ingest = false;
+    }
+
+    /**
+     * Initializes internal state of BaseImportedPodcast object.
+     * @see        applyDefaults()
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->applyDefaultValues();
+    }
+
+    /**
+     * Get the [url] column value.
+     *
+     * @return string
+     */
+    public function getDbUrl()
+    {
+
+        return $this->url;
+    }
+
+    /**
+     * Get the [auto_ingest] column value.
+     *
+     * @return boolean
+     */
+    public function getDbAutoIngest()
+    {
+
+        return $this->auto_ingest;
+    }
 
     /**
      * Get the [id] column value.
@@ -321,21 +354,60 @@ abstract class BasePodcast extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [descendant_class] column value.
+     * Set the value of [url] column.
      *
-     * @return string
+     * @param  string $v new value
+     * @return ImportedPodcast The current object (for fluent API support)
      */
-    public function getDescendantClass()
+    public function setDbUrl($v)
     {
+        if ($v !== null && is_numeric($v)) {
+            $v = (string) $v;
+        }
 
-        return $this->descendant_class;
-    }
+        if ($this->url !== $v) {
+            $this->url = $v;
+            $this->modifiedColumns[] = ImportedPodcastPeer::URL;
+        }
+
+
+        return $this;
+    } // setDbUrl()
+
+    /**
+     * Sets the value of the [auto_ingest] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param boolean|integer|string $v The new value
+     * @return ImportedPodcast The current object (for fluent API support)
+     */
+    public function setDbAutoIngest($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->auto_ingest !== $v) {
+            $this->auto_ingest = $v;
+            $this->modifiedColumns[] = ImportedPodcastPeer::AUTO_INGEST;
+        }
+
+
+        return $this;
+    } // setDbAutoIngest()
 
     /**
      * Set the value of [id] column.
      *
      * @param  int $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbId($v)
     {
@@ -345,7 +417,11 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[] = PodcastPeer::ID;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ID;
+        }
+
+        if ($this->aPodcast !== null && $this->aPodcast->getDbId() !== $v) {
+            $this->aPodcast = null;
         }
 
 
@@ -356,7 +432,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [title] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbTitle($v)
     {
@@ -366,7 +442,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->title !== $v) {
             $this->title = $v;
-            $this->modifiedColumns[] = PodcastPeer::TITLE;
+            $this->modifiedColumns[] = ImportedPodcastPeer::TITLE;
         }
 
 
@@ -377,7 +453,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [creator] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbCreator($v)
     {
@@ -387,7 +463,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->creator !== $v) {
             $this->creator = $v;
-            $this->modifiedColumns[] = PodcastPeer::CREATOR;
+            $this->modifiedColumns[] = ImportedPodcastPeer::CREATOR;
         }
 
 
@@ -398,7 +474,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [description] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbDescription($v)
     {
@@ -408,7 +484,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->description !== $v) {
             $this->description = $v;
-            $this->modifiedColumns[] = PodcastPeer::DESCRIPTION;
+            $this->modifiedColumns[] = ImportedPodcastPeer::DESCRIPTION;
         }
 
 
@@ -419,7 +495,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [language] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbLanguage($v)
     {
@@ -429,7 +505,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->language !== $v) {
             $this->language = $v;
-            $this->modifiedColumns[] = PodcastPeer::LANGUAGE;
+            $this->modifiedColumns[] = ImportedPodcastPeer::LANGUAGE;
         }
 
 
@@ -440,7 +516,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [copyright] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbCopyright($v)
     {
@@ -450,7 +526,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->copyright !== $v) {
             $this->copyright = $v;
-            $this->modifiedColumns[] = PodcastPeer::COPYRIGHT;
+            $this->modifiedColumns[] = ImportedPodcastPeer::COPYRIGHT;
         }
 
 
@@ -461,7 +537,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [link] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbLink($v)
     {
@@ -471,7 +547,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->link !== $v) {
             $this->link = $v;
-            $this->modifiedColumns[] = PodcastPeer::LINK;
+            $this->modifiedColumns[] = ImportedPodcastPeer::LINK;
         }
 
 
@@ -482,7 +558,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [itunes_author] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbItunesAuthor($v)
     {
@@ -492,7 +568,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->itunes_author !== $v) {
             $this->itunes_author = $v;
-            $this->modifiedColumns[] = PodcastPeer::ITUNES_AUTHOR;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ITUNES_AUTHOR;
         }
 
 
@@ -503,7 +579,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [itunes_keywords] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbItunesKeywords($v)
     {
@@ -513,7 +589,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->itunes_keywords !== $v) {
             $this->itunes_keywords = $v;
-            $this->modifiedColumns[] = PodcastPeer::ITUNES_KEYWORDS;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ITUNES_KEYWORDS;
         }
 
 
@@ -524,7 +600,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [itunes_summary] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbItunesSummary($v)
     {
@@ -534,7 +610,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->itunes_summary !== $v) {
             $this->itunes_summary = $v;
-            $this->modifiedColumns[] = PodcastPeer::ITUNES_SUMMARY;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ITUNES_SUMMARY;
         }
 
 
@@ -545,7 +621,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [itunes_subtitle] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbItunesSubtitle($v)
     {
@@ -555,7 +631,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->itunes_subtitle !== $v) {
             $this->itunes_subtitle = $v;
-            $this->modifiedColumns[] = PodcastPeer::ITUNES_SUBTITLE;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ITUNES_SUBTITLE;
         }
 
 
@@ -566,7 +642,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [itunes_category] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbItunesCategory($v)
     {
@@ -576,7 +652,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->itunes_category !== $v) {
             $this->itunes_category = $v;
-            $this->modifiedColumns[] = PodcastPeer::ITUNES_CATEGORY;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ITUNES_CATEGORY;
         }
 
 
@@ -587,7 +663,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [itunes_explicit] column.
      *
      * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbItunesExplicit($v)
     {
@@ -597,7 +673,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->itunes_explicit !== $v) {
             $this->itunes_explicit = $v;
-            $this->modifiedColumns[] = PodcastPeer::ITUNES_EXPLICIT;
+            $this->modifiedColumns[] = ImportedPodcastPeer::ITUNES_EXPLICIT;
         }
 
 
@@ -608,7 +684,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * Set the value of [owner] column.
      *
      * @param  int $v new value
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      */
     public function setDbOwner($v)
     {
@@ -618,7 +694,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($this->owner !== $v) {
             $this->owner = $v;
-            $this->modifiedColumns[] = PodcastPeer::OWNER;
+            $this->modifiedColumns[] = ImportedPodcastPeer::OWNER;
         }
 
         if ($this->aCcSubjs !== null && $this->aCcSubjs->getDbId() !== $v) {
@@ -630,27 +706,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
     } // setDbOwner()
 
     /**
-     * Set the value of [descendant_class] column.
-     *
-     * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
-     */
-    public function setDescendantClass($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->descendant_class !== $v) {
-            $this->descendant_class = $v;
-            $this->modifiedColumns[] = PodcastPeer::DESCENDANT_CLASS;
-        }
-
-
-        return $this;
-    } // setDescendantClass()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -660,6 +715,10 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->auto_ingest !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return true
         return true;
     } // hasOnlyDefaultValues()
@@ -682,21 +741,22 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
         try {
 
-            $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->title = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->creator = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
-            $this->description = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
-            $this->language = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
-            $this->copyright = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
-            $this->link = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
-            $this->itunes_author = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
-            $this->itunes_keywords = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
-            $this->itunes_summary = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
-            $this->itunes_subtitle = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->itunes_category = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
-            $this->itunes_explicit = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
-            $this->owner = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
-            $this->descendant_class = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->url = ($row[$startcol + 0] !== null) ? (string) $row[$startcol + 0] : null;
+            $this->auto_ingest = ($row[$startcol + 1] !== null) ? (boolean) $row[$startcol + 1] : null;
+            $this->id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->title = ($row[$startcol + 3] !== null) ? (string) $row[$startcol + 3] : null;
+            $this->creator = ($row[$startcol + 4] !== null) ? (string) $row[$startcol + 4] : null;
+            $this->description = ($row[$startcol + 5] !== null) ? (string) $row[$startcol + 5] : null;
+            $this->language = ($row[$startcol + 6] !== null) ? (string) $row[$startcol + 6] : null;
+            $this->copyright = ($row[$startcol + 7] !== null) ? (string) $row[$startcol + 7] : null;
+            $this->link = ($row[$startcol + 8] !== null) ? (string) $row[$startcol + 8] : null;
+            $this->itunes_author = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
+            $this->itunes_keywords = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
+            $this->itunes_summary = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
+            $this->itunes_subtitle = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
+            $this->itunes_category = ($row[$startcol + 13] !== null) ? (string) $row[$startcol + 13] : null;
+            $this->itunes_explicit = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
+            $this->owner = ($row[$startcol + 15] !== null) ? (int) $row[$startcol + 15] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -706,10 +766,10 @@ abstract class BasePodcast extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 15; // 15 = PodcastPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 16; // 16 = ImportedPodcastPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException("Error populating Podcast object", $e);
+            throw new PropelException("Error populating ImportedPodcast object", $e);
         }
     }
 
@@ -729,6 +789,9 @@ abstract class BasePodcast extends BaseObject implements Persistent
     public function ensureConsistency()
     {
 
+        if ($this->aPodcast !== null && $this->id !== $this->aPodcast->getDbId()) {
+            $this->aPodcast = null;
+        }
         if ($this->aCcSubjs !== null && $this->owner !== $this->aCcSubjs->getDbId()) {
             $this->aCcSubjs = null;
         }
@@ -755,13 +818,13 @@ abstract class BasePodcast extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+            $con = Propel::getConnection(ImportedPodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $stmt = PodcastPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
+        $stmt = ImportedPodcastPeer::doSelectStmt($this->buildPkeyCriteria(), $con);
         $row = $stmt->fetch(PDO::FETCH_NUM);
         $stmt->closeCursor();
         if (!$row) {
@@ -771,13 +834,8 @@ abstract class BasePodcast extends BaseObject implements Persistent
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aPodcast = null;
             $this->aCcSubjs = null;
-            $this->collPodcastEpisodess = null;
-
-            $this->singleStationPodcast = null;
-
-            $this->singleImportedPodcast = null;
-
         } // if (deep)
     }
 
@@ -798,17 +856,20 @@ abstract class BasePodcast extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(ImportedPodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         try {
-            $deleteQuery = PodcastQuery::create()
+            $deleteQuery = ImportedPodcastQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
                 $deleteQuery->delete($con);
                 $this->postDelete($con);
+                // concrete_inheritance behavior
+                $this->getParentOrCreate($con)->delete($con);
+
                 $con->commit();
                 $this->setDeleted(true);
             } else {
@@ -841,13 +902,18 @@ abstract class BasePodcast extends BaseObject implements Persistent
         }
 
         if ($con === null) {
-            $con = Propel::getConnection(PodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
+            $con = Propel::getConnection(ImportedPodcastPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
         }
 
         $con->beginTransaction();
         $isInsert = $this->isNew();
         try {
             $ret = $this->preSave($con);
+            // concrete_inheritance behavior
+            $parent = $this->getSyncParent($con);
+            $parent->save($con);
+            $this->setPrimaryKey($parent->getPrimaryKey());
+
             if ($isInsert) {
                 $ret = $ret && $this->preInsert($con);
             } else {
@@ -861,7 +927,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                PodcastPeer::addInstanceToPool($this);
+                ImportedPodcastPeer::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -896,6 +962,13 @@ abstract class BasePodcast extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aPodcast !== null) {
+                if ($this->aPodcast->isModified() || $this->aPodcast->isNew()) {
+                    $affectedRows += $this->aPodcast->save($con);
+                }
+                $this->setPodcast($this->aPodcast);
+            }
+
             if ($this->aCcSubjs !== null) {
                 if ($this->aCcSubjs->isModified() || $this->aCcSubjs->isNew()) {
                     $affectedRows += $this->aCcSubjs->save($con);
@@ -912,35 +985,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
                 }
                 $affectedRows += 1;
                 $this->resetModified();
-            }
-
-            if ($this->podcastEpisodessScheduledForDeletion !== null) {
-                if (!$this->podcastEpisodessScheduledForDeletion->isEmpty()) {
-                    PodcastEpisodesQuery::create()
-                        ->filterByPrimaryKeys($this->podcastEpisodessScheduledForDeletion->getPrimaryKeys(false))
-                        ->delete($con);
-                    $this->podcastEpisodessScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collPodcastEpisodess !== null) {
-                foreach ($this->collPodcastEpisodess as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
-            if ($this->singleStationPodcast !== null) {
-                if (!$this->singleStationPodcast->isDeleted() && ($this->singleStationPodcast->isNew() || $this->singleStationPodcast->isModified())) {
-                        $affectedRows += $this->singleStationPodcast->save($con);
-                }
-            }
-
-            if ($this->singleImportedPodcast !== null) {
-                if (!$this->singleImportedPodcast->isDeleted() && ($this->singleImportedPodcast->isNew() || $this->singleImportedPodcast->isModified())) {
-                        $affectedRows += $this->singleImportedPodcast->save($con);
-                }
             }
 
             $this->alreadyInSave = false;
@@ -963,70 +1007,59 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[] = PodcastPeer::ID;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . PodcastPeer::ID . ')');
-        }
-        if (null === $this->id) {
-            try {
-                $stmt = $con->query("SELECT nextval('podcast_id_seq')");
-                $row = $stmt->fetch(PDO::FETCH_NUM);
-                $this->id = $row[0];
-            } catch (Exception $e) {
-                throw new PropelException('Unable to get sequence id.', $e);
-            }
-        }
-
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(PodcastPeer::ID)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::URL)) {
+            $modifiedColumns[':p' . $index++]  = '"url"';
+        }
+        if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST)) {
+            $modifiedColumns[':p' . $index++]  = '"auto_ingest"';
+        }
+        if ($this->isColumnModified(ImportedPodcastPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '"id"';
         }
-        if ($this->isColumnModified(PodcastPeer::TITLE)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::TITLE)) {
             $modifiedColumns[':p' . $index++]  = '"title"';
         }
-        if ($this->isColumnModified(PodcastPeer::CREATOR)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::CREATOR)) {
             $modifiedColumns[':p' . $index++]  = '"creator"';
         }
-        if ($this->isColumnModified(PodcastPeer::DESCRIPTION)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = '"description"';
         }
-        if ($this->isColumnModified(PodcastPeer::LANGUAGE)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::LANGUAGE)) {
             $modifiedColumns[':p' . $index++]  = '"language"';
         }
-        if ($this->isColumnModified(PodcastPeer::COPYRIGHT)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::COPYRIGHT)) {
             $modifiedColumns[':p' . $index++]  = '"copyright"';
         }
-        if ($this->isColumnModified(PodcastPeer::LINK)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::LINK)) {
             $modifiedColumns[':p' . $index++]  = '"link"';
         }
-        if ($this->isColumnModified(PodcastPeer::ITUNES_AUTHOR)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_AUTHOR)) {
             $modifiedColumns[':p' . $index++]  = '"itunes_author"';
         }
-        if ($this->isColumnModified(PodcastPeer::ITUNES_KEYWORDS)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_KEYWORDS)) {
             $modifiedColumns[':p' . $index++]  = '"itunes_keywords"';
         }
-        if ($this->isColumnModified(PodcastPeer::ITUNES_SUMMARY)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_SUMMARY)) {
             $modifiedColumns[':p' . $index++]  = '"itunes_summary"';
         }
-        if ($this->isColumnModified(PodcastPeer::ITUNES_SUBTITLE)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_SUBTITLE)) {
             $modifiedColumns[':p' . $index++]  = '"itunes_subtitle"';
         }
-        if ($this->isColumnModified(PodcastPeer::ITUNES_CATEGORY)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_CATEGORY)) {
             $modifiedColumns[':p' . $index++]  = '"itunes_category"';
         }
-        if ($this->isColumnModified(PodcastPeer::ITUNES_EXPLICIT)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_EXPLICIT)) {
             $modifiedColumns[':p' . $index++]  = '"itunes_explicit"';
         }
-        if ($this->isColumnModified(PodcastPeer::OWNER)) {
+        if ($this->isColumnModified(ImportedPodcastPeer::OWNER)) {
             $modifiedColumns[':p' . $index++]  = '"owner"';
-        }
-        if ($this->isColumnModified(PodcastPeer::DESCENDANT_CLASS)) {
-            $modifiedColumns[':p' . $index++]  = '"descendant_class"';
         }
 
         $sql = sprintf(
-            'INSERT INTO "podcast" (%s) VALUES (%s)',
+            'INSERT INTO "imported_podcast" (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -1035,6 +1068,12 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
+                    case '"url"':
+                        $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
+                        break;
+                    case '"auto_ingest"':
+                        $stmt->bindValue($identifier, $this->auto_ingest, PDO::PARAM_BOOL);
+                        break;
                     case '"id"':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
@@ -1076,9 +1115,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
                         break;
                     case '"owner"':
                         $stmt->bindValue($identifier, $this->owner, PDO::PARAM_INT);
-                        break;
-                    case '"descendant_class"':
-                        $stmt->bindValue($identifier, $this->descendant_class, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1172,6 +1208,12 @@ abstract class BasePodcast extends BaseObject implements Persistent
             // method.  This object relates to these object(s) by a
             // foreign key reference.
 
+            if ($this->aPodcast !== null) {
+                if (!$this->aPodcast->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aPodcast->getValidationFailures());
+                }
+            }
+
             if ($this->aCcSubjs !== null) {
                 if (!$this->aCcSubjs->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aCcSubjs->getValidationFailures());
@@ -1179,30 +1221,10 @@ abstract class BasePodcast extends BaseObject implements Persistent
             }
 
 
-            if (($retval = PodcastPeer::doValidate($this, $columns)) !== true) {
+            if (($retval = ImportedPodcastPeer::doValidate($this, $columns)) !== true) {
                 $failureMap = array_merge($failureMap, $retval);
             }
 
-
-                if ($this->collPodcastEpisodess !== null) {
-                    foreach ($this->collPodcastEpisodess as $referrerFK) {
-                        if (!$referrerFK->validate($columns)) {
-                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
-                        }
-                    }
-                }
-
-                if ($this->singleStationPodcast !== null) {
-                    if (!$this->singleStationPodcast->validate($columns)) {
-                        $failureMap = array_merge($failureMap, $this->singleStationPodcast->getValidationFailures());
-                    }
-                }
-
-                if ($this->singleImportedPodcast !== null) {
-                    if (!$this->singleImportedPodcast->validate($columns)) {
-                        $failureMap = array_merge($failureMap, $this->singleImportedPodcast->getValidationFailures());
-                    }
-                }
 
 
             $this->alreadyInValidation = false;
@@ -1223,7 +1245,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function getByName($name, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = PodcastPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = ImportedPodcastPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -1240,49 +1262,52 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
         switch ($pos) {
             case 0:
-                return $this->getDbId();
+                return $this->getDbUrl();
                 break;
             case 1:
-                return $this->getDbTitle();
+                return $this->getDbAutoIngest();
                 break;
             case 2:
-                return $this->getDbCreator();
+                return $this->getDbId();
                 break;
             case 3:
-                return $this->getDbDescription();
+                return $this->getDbTitle();
                 break;
             case 4:
-                return $this->getDbLanguage();
+                return $this->getDbCreator();
                 break;
             case 5:
-                return $this->getDbCopyright();
+                return $this->getDbDescription();
                 break;
             case 6:
-                return $this->getDbLink();
+                return $this->getDbLanguage();
                 break;
             case 7:
-                return $this->getDbItunesAuthor();
+                return $this->getDbCopyright();
                 break;
             case 8:
-                return $this->getDbItunesKeywords();
+                return $this->getDbLink();
                 break;
             case 9:
-                return $this->getDbItunesSummary();
+                return $this->getDbItunesAuthor();
                 break;
             case 10:
-                return $this->getDbItunesSubtitle();
+                return $this->getDbItunesKeywords();
                 break;
             case 11:
-                return $this->getDbItunesCategory();
+                return $this->getDbItunesSummary();
                 break;
             case 12:
-                return $this->getDbItunesExplicit();
+                return $this->getDbItunesSubtitle();
                 break;
             case 13:
-                return $this->getDbOwner();
+                return $this->getDbItunesCategory();
                 break;
             case 14:
-                return $this->getDescendantClass();
+                return $this->getDbItunesExplicit();
+                break;
+            case 15:
+                return $this->getDbOwner();
                 break;
             default:
                 return null;
@@ -1307,27 +1332,28 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        if (isset($alreadyDumpedObjects['Podcast'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['ImportedPodcast'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['Podcast'][$this->getPrimaryKey()] = true;
-        $keys = PodcastPeer::getFieldNames($keyType);
+        $alreadyDumpedObjects['ImportedPodcast'][$this->getPrimaryKey()] = true;
+        $keys = ImportedPodcastPeer::getFieldNames($keyType);
         $result = array(
-            $keys[0] => $this->getDbId(),
-            $keys[1] => $this->getDbTitle(),
-            $keys[2] => $this->getDbCreator(),
-            $keys[3] => $this->getDbDescription(),
-            $keys[4] => $this->getDbLanguage(),
-            $keys[5] => $this->getDbCopyright(),
-            $keys[6] => $this->getDbLink(),
-            $keys[7] => $this->getDbItunesAuthor(),
-            $keys[8] => $this->getDbItunesKeywords(),
-            $keys[9] => $this->getDbItunesSummary(),
-            $keys[10] => $this->getDbItunesSubtitle(),
-            $keys[11] => $this->getDbItunesCategory(),
-            $keys[12] => $this->getDbItunesExplicit(),
-            $keys[13] => $this->getDbOwner(),
-            $keys[14] => $this->getDescendantClass(),
+            $keys[0] => $this->getDbUrl(),
+            $keys[1] => $this->getDbAutoIngest(),
+            $keys[2] => $this->getDbId(),
+            $keys[3] => $this->getDbTitle(),
+            $keys[4] => $this->getDbCreator(),
+            $keys[5] => $this->getDbDescription(),
+            $keys[6] => $this->getDbLanguage(),
+            $keys[7] => $this->getDbCopyright(),
+            $keys[8] => $this->getDbLink(),
+            $keys[9] => $this->getDbItunesAuthor(),
+            $keys[10] => $this->getDbItunesKeywords(),
+            $keys[11] => $this->getDbItunesSummary(),
+            $keys[12] => $this->getDbItunesSubtitle(),
+            $keys[13] => $this->getDbItunesCategory(),
+            $keys[14] => $this->getDbItunesExplicit(),
+            $keys[15] => $this->getDbOwner(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1335,17 +1361,11 @@ abstract class BasePodcast extends BaseObject implements Persistent
         }
 
         if ($includeForeignObjects) {
+            if (null !== $this->aPodcast) {
+                $result['Podcast'] = $this->aPodcast->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
             if (null !== $this->aCcSubjs) {
                 $result['CcSubjs'] = $this->aCcSubjs->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->collPodcastEpisodess) {
-                $result['PodcastEpisodess'] = $this->collPodcastEpisodess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->singleStationPodcast) {
-                $result['StationPodcast'] = $this->singleStationPodcast->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleImportedPodcast) {
-                $result['ImportedPodcast'] = $this->singleImportedPodcast->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
         }
 
@@ -1365,7 +1385,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
     {
-        $pos = PodcastPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
+        $pos = ImportedPodcastPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
     }
@@ -1382,49 +1402,52 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
         switch ($pos) {
             case 0:
-                $this->setDbId($value);
+                $this->setDbUrl($value);
                 break;
             case 1:
-                $this->setDbTitle($value);
+                $this->setDbAutoIngest($value);
                 break;
             case 2:
-                $this->setDbCreator($value);
+                $this->setDbId($value);
                 break;
             case 3:
-                $this->setDbDescription($value);
+                $this->setDbTitle($value);
                 break;
             case 4:
-                $this->setDbLanguage($value);
+                $this->setDbCreator($value);
                 break;
             case 5:
-                $this->setDbCopyright($value);
+                $this->setDbDescription($value);
                 break;
             case 6:
-                $this->setDbLink($value);
+                $this->setDbLanguage($value);
                 break;
             case 7:
-                $this->setDbItunesAuthor($value);
+                $this->setDbCopyright($value);
                 break;
             case 8:
-                $this->setDbItunesKeywords($value);
+                $this->setDbLink($value);
                 break;
             case 9:
-                $this->setDbItunesSummary($value);
+                $this->setDbItunesAuthor($value);
                 break;
             case 10:
-                $this->setDbItunesSubtitle($value);
+                $this->setDbItunesKeywords($value);
                 break;
             case 11:
-                $this->setDbItunesCategory($value);
+                $this->setDbItunesSummary($value);
                 break;
             case 12:
-                $this->setDbItunesExplicit($value);
+                $this->setDbItunesSubtitle($value);
                 break;
             case 13:
-                $this->setDbOwner($value);
+                $this->setDbItunesCategory($value);
                 break;
             case 14:
-                $this->setDescendantClass($value);
+                $this->setDbItunesExplicit($value);
+                break;
+            case 15:
+                $this->setDbOwner($value);
                 break;
         } // switch()
     }
@@ -1448,23 +1471,24 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
     {
-        $keys = PodcastPeer::getFieldNames($keyType);
+        $keys = ImportedPodcastPeer::getFieldNames($keyType);
 
-        if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setDbTitle($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDbCreator($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDbDescription($arr[$keys[3]]);
-        if (array_key_exists($keys[4], $arr)) $this->setDbLanguage($arr[$keys[4]]);
-        if (array_key_exists($keys[5], $arr)) $this->setDbCopyright($arr[$keys[5]]);
-        if (array_key_exists($keys[6], $arr)) $this->setDbLink($arr[$keys[6]]);
-        if (array_key_exists($keys[7], $arr)) $this->setDbItunesAuthor($arr[$keys[7]]);
-        if (array_key_exists($keys[8], $arr)) $this->setDbItunesKeywords($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setDbItunesSummary($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setDbItunesSubtitle($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setDbItunesCategory($arr[$keys[11]]);
-        if (array_key_exists($keys[12], $arr)) $this->setDbItunesExplicit($arr[$keys[12]]);
-        if (array_key_exists($keys[13], $arr)) $this->setDbOwner($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setDescendantClass($arr[$keys[14]]);
+        if (array_key_exists($keys[0], $arr)) $this->setDbUrl($arr[$keys[0]]);
+        if (array_key_exists($keys[1], $arr)) $this->setDbAutoIngest($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDbId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbTitle($arr[$keys[3]]);
+        if (array_key_exists($keys[4], $arr)) $this->setDbCreator($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setDbDescription($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setDbLanguage($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setDbCopyright($arr[$keys[7]]);
+        if (array_key_exists($keys[8], $arr)) $this->setDbLink($arr[$keys[8]]);
+        if (array_key_exists($keys[9], $arr)) $this->setDbItunesAuthor($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setDbItunesKeywords($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setDbItunesSummary($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setDbItunesSubtitle($arr[$keys[12]]);
+        if (array_key_exists($keys[13], $arr)) $this->setDbItunesCategory($arr[$keys[13]]);
+        if (array_key_exists($keys[14], $arr)) $this->setDbItunesExplicit($arr[$keys[14]]);
+        if (array_key_exists($keys[15], $arr)) $this->setDbOwner($arr[$keys[15]]);
     }
 
     /**
@@ -1474,23 +1498,24 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(PodcastPeer::DATABASE_NAME);
+        $criteria = new Criteria(ImportedPodcastPeer::DATABASE_NAME);
 
-        if ($this->isColumnModified(PodcastPeer::ID)) $criteria->add(PodcastPeer::ID, $this->id);
-        if ($this->isColumnModified(PodcastPeer::TITLE)) $criteria->add(PodcastPeer::TITLE, $this->title);
-        if ($this->isColumnModified(PodcastPeer::CREATOR)) $criteria->add(PodcastPeer::CREATOR, $this->creator);
-        if ($this->isColumnModified(PodcastPeer::DESCRIPTION)) $criteria->add(PodcastPeer::DESCRIPTION, $this->description);
-        if ($this->isColumnModified(PodcastPeer::LANGUAGE)) $criteria->add(PodcastPeer::LANGUAGE, $this->language);
-        if ($this->isColumnModified(PodcastPeer::COPYRIGHT)) $criteria->add(PodcastPeer::COPYRIGHT, $this->copyright);
-        if ($this->isColumnModified(PodcastPeer::LINK)) $criteria->add(PodcastPeer::LINK, $this->link);
-        if ($this->isColumnModified(PodcastPeer::ITUNES_AUTHOR)) $criteria->add(PodcastPeer::ITUNES_AUTHOR, $this->itunes_author);
-        if ($this->isColumnModified(PodcastPeer::ITUNES_KEYWORDS)) $criteria->add(PodcastPeer::ITUNES_KEYWORDS, $this->itunes_keywords);
-        if ($this->isColumnModified(PodcastPeer::ITUNES_SUMMARY)) $criteria->add(PodcastPeer::ITUNES_SUMMARY, $this->itunes_summary);
-        if ($this->isColumnModified(PodcastPeer::ITUNES_SUBTITLE)) $criteria->add(PodcastPeer::ITUNES_SUBTITLE, $this->itunes_subtitle);
-        if ($this->isColumnModified(PodcastPeer::ITUNES_CATEGORY)) $criteria->add(PodcastPeer::ITUNES_CATEGORY, $this->itunes_category);
-        if ($this->isColumnModified(PodcastPeer::ITUNES_EXPLICIT)) $criteria->add(PodcastPeer::ITUNES_EXPLICIT, $this->itunes_explicit);
-        if ($this->isColumnModified(PodcastPeer::OWNER)) $criteria->add(PodcastPeer::OWNER, $this->owner);
-        if ($this->isColumnModified(PodcastPeer::DESCENDANT_CLASS)) $criteria->add(PodcastPeer::DESCENDANT_CLASS, $this->descendant_class);
+        if ($this->isColumnModified(ImportedPodcastPeer::URL)) $criteria->add(ImportedPodcastPeer::URL, $this->url);
+        if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST)) $criteria->add(ImportedPodcastPeer::AUTO_INGEST, $this->auto_ingest);
+        if ($this->isColumnModified(ImportedPodcastPeer::ID)) $criteria->add(ImportedPodcastPeer::ID, $this->id);
+        if ($this->isColumnModified(ImportedPodcastPeer::TITLE)) $criteria->add(ImportedPodcastPeer::TITLE, $this->title);
+        if ($this->isColumnModified(ImportedPodcastPeer::CREATOR)) $criteria->add(ImportedPodcastPeer::CREATOR, $this->creator);
+        if ($this->isColumnModified(ImportedPodcastPeer::DESCRIPTION)) $criteria->add(ImportedPodcastPeer::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(ImportedPodcastPeer::LANGUAGE)) $criteria->add(ImportedPodcastPeer::LANGUAGE, $this->language);
+        if ($this->isColumnModified(ImportedPodcastPeer::COPYRIGHT)) $criteria->add(ImportedPodcastPeer::COPYRIGHT, $this->copyright);
+        if ($this->isColumnModified(ImportedPodcastPeer::LINK)) $criteria->add(ImportedPodcastPeer::LINK, $this->link);
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_AUTHOR)) $criteria->add(ImportedPodcastPeer::ITUNES_AUTHOR, $this->itunes_author);
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_KEYWORDS)) $criteria->add(ImportedPodcastPeer::ITUNES_KEYWORDS, $this->itunes_keywords);
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_SUMMARY)) $criteria->add(ImportedPodcastPeer::ITUNES_SUMMARY, $this->itunes_summary);
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_SUBTITLE)) $criteria->add(ImportedPodcastPeer::ITUNES_SUBTITLE, $this->itunes_subtitle);
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_CATEGORY)) $criteria->add(ImportedPodcastPeer::ITUNES_CATEGORY, $this->itunes_category);
+        if ($this->isColumnModified(ImportedPodcastPeer::ITUNES_EXPLICIT)) $criteria->add(ImportedPodcastPeer::ITUNES_EXPLICIT, $this->itunes_explicit);
+        if ($this->isColumnModified(ImportedPodcastPeer::OWNER)) $criteria->add(ImportedPodcastPeer::OWNER, $this->owner);
 
         return $criteria;
     }
@@ -1505,8 +1530,8 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(PodcastPeer::DATABASE_NAME);
-        $criteria->add(PodcastPeer::ID, $this->id);
+        $criteria = new Criteria(ImportedPodcastPeer::DATABASE_NAME);
+        $criteria->add(ImportedPodcastPeer::ID, $this->id);
 
         return $criteria;
     }
@@ -1547,13 +1572,15 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of Podcast (or compatible) type.
+     * @param object $copyObj An object of ImportedPodcast (or compatible) type.
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
+        $copyObj->setDbUrl($this->getDbUrl());
+        $copyObj->setDbAutoIngest($this->getDbAutoIngest());
         $copyObj->setDbTitle($this->getDbTitle());
         $copyObj->setDbCreator($this->getDbCreator());
         $copyObj->setDbDescription($this->getDbDescription());
@@ -1567,7 +1594,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $copyObj->setDbItunesCategory($this->getDbItunesCategory());
         $copyObj->setDbItunesExplicit($this->getDbItunesExplicit());
         $copyObj->setDbOwner($this->getDbOwner());
-        $copyObj->setDescendantClass($this->getDescendantClass());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1576,20 +1602,9 @@ abstract class BasePodcast extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
-            foreach ($this->getPodcastEpisodess() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addPodcastEpisodes($relObj->copy($deepCopy));
-                }
-            }
-
-            $relObj = $this->getStationPodcast();
+            $relObj = $this->getPodcast();
             if ($relObj) {
-                $copyObj->setStationPodcast($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getImportedPodcast();
-            if ($relObj) {
-                $copyObj->setImportedPodcast($relObj->copy($deepCopy));
+                $copyObj->setPodcast($relObj->copy($deepCopy));
             }
 
             //unflag object copy
@@ -1611,7 +1626,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * objects.
      *
      * @param boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return Podcast Clone of current object.
+     * @return ImportedPodcast Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1631,22 +1646,68 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * same instance for all member of this class. The method could therefore
      * be static, but this would prevent one from overriding the behavior.
      *
-     * @return PodcastPeer
+     * @return ImportedPodcastPeer
      */
     public function getPeer()
     {
         if (self::$peer === null) {
-            self::$peer = new PodcastPeer();
+            self::$peer = new ImportedPodcastPeer();
         }
 
         return self::$peer;
     }
 
     /**
+     * Declares an association between this object and a Podcast object.
+     *
+     * @param                  Podcast $v
+     * @return ImportedPodcast The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setPodcast(Podcast $v = null)
+    {
+        if ($v === null) {
+            $this->setDbId(NULL);
+        } else {
+            $this->setDbId($v->getDbId());
+        }
+
+        $this->aPodcast = $v;
+
+        // Add binding for other direction of this 1:1 relationship.
+        if ($v !== null) {
+            $v->setImportedPodcast($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated Podcast object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return Podcast The associated Podcast object.
+     * @throws PropelException
+     */
+    public function getPodcast(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aPodcast === null && ($this->id !== null) && $doQuery) {
+            $this->aPodcast = PodcastQuery::create()->findPk($this->id, $con);
+            // Because this foreign key represents a one-to-one relationship, we will create a bi-directional association.
+            $this->aPodcast->setImportedPodcast($this);
+        }
+
+        return $this->aPodcast;
+    }
+
+    /**
      * Declares an association between this object and a CcSubjs object.
      *
      * @param                  CcSubjs $v
-     * @return Podcast The current object (for fluent API support)
+     * @return ImportedPodcast The current object (for fluent API support)
      * @throws PropelException
      */
     public function setCcSubjs(CcSubjs $v = null)
@@ -1662,7 +1723,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
         // Add binding for other direction of this n:n relationship.
         // If this object has already been added to the CcSubjs object, it will not be re-added.
         if ($v !== null) {
-            $v->addPodcast($this);
+            $v->addImportedPodcast($this);
         }
 
 
@@ -1687,349 +1748,11 @@ abstract class BasePodcast extends BaseObject implements Persistent
                 to this object.  This level of coupling may, however, be
                 undesirable since it could result in an only partially populated collection
                 in the referenced object.
-                $this->aCcSubjs->addPodcasts($this);
+                $this->aCcSubjs->addImportedPodcasts($this);
              */
         }
 
         return $this->aCcSubjs;
-    }
-
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName)
-    {
-        if ('PodcastEpisodes' == $relationName) {
-            $this->initPodcastEpisodess();
-        }
-    }
-
-    /**
-     * Clears out the collPodcastEpisodess collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return Podcast The current object (for fluent API support)
-     * @see        addPodcastEpisodess()
-     */
-    public function clearPodcastEpisodess()
-    {
-        $this->collPodcastEpisodess = null; // important to set this to null since that means it is uninitialized
-        $this->collPodcastEpisodessPartial = null;
-
-        return $this;
-    }
-
-    /**
-     * reset is the collPodcastEpisodess collection loaded partially
-     *
-     * @return void
-     */
-    public function resetPartialPodcastEpisodess($v = true)
-    {
-        $this->collPodcastEpisodessPartial = $v;
-    }
-
-    /**
-     * Initializes the collPodcastEpisodess collection.
-     *
-     * By default this just sets the collPodcastEpisodess collection to an empty array (like clearcollPodcastEpisodess());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param boolean $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initPodcastEpisodess($overrideExisting = true)
-    {
-        if (null !== $this->collPodcastEpisodess && !$overrideExisting) {
-            return;
-        }
-        $this->collPodcastEpisodess = new PropelObjectCollection();
-        $this->collPodcastEpisodess->setModel('PodcastEpisodes');
-    }
-
-    /**
-     * Gets an array of PodcastEpisodes objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this Podcast is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @return PropelObjectCollection|PodcastEpisodes[] List of PodcastEpisodes objects
-     * @throws PropelException
-     */
-    public function getPodcastEpisodess($criteria = null, PropelPDO $con = null)
-    {
-        $partial = $this->collPodcastEpisodessPartial && !$this->isNew();
-        if (null === $this->collPodcastEpisodess || null !== $criteria  || $partial) {
-            if ($this->isNew() && null === $this->collPodcastEpisodess) {
-                // return empty collection
-                $this->initPodcastEpisodess();
-            } else {
-                $collPodcastEpisodess = PodcastEpisodesQuery::create(null, $criteria)
-                    ->filterByPodcast($this)
-                    ->find($con);
-                if (null !== $criteria) {
-                    if (false !== $this->collPodcastEpisodessPartial && count($collPodcastEpisodess)) {
-                      $this->initPodcastEpisodess(false);
-
-                      foreach ($collPodcastEpisodess as $obj) {
-                        if (false == $this->collPodcastEpisodess->contains($obj)) {
-                          $this->collPodcastEpisodess->append($obj);
-                        }
-                      }
-
-                      $this->collPodcastEpisodessPartial = true;
-                    }
-
-                    $collPodcastEpisodess->getInternalIterator()->rewind();
-
-                    return $collPodcastEpisodess;
-                }
-
-                if ($partial && $this->collPodcastEpisodess) {
-                    foreach ($this->collPodcastEpisodess as $obj) {
-                        if ($obj->isNew()) {
-                            $collPodcastEpisodess[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collPodcastEpisodess = $collPodcastEpisodess;
-                $this->collPodcastEpisodessPartial = false;
-            }
-        }
-
-        return $this->collPodcastEpisodess;
-    }
-
-    /**
-     * Sets a collection of PodcastEpisodes objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param PropelCollection $podcastEpisodess A Propel collection.
-     * @param PropelPDO $con Optional connection object
-     * @return Podcast The current object (for fluent API support)
-     */
-    public function setPodcastEpisodess(PropelCollection $podcastEpisodess, PropelPDO $con = null)
-    {
-        $podcastEpisodessToDelete = $this->getPodcastEpisodess(new Criteria(), $con)->diff($podcastEpisodess);
-
-
-        $this->podcastEpisodessScheduledForDeletion = $podcastEpisodessToDelete;
-
-        foreach ($podcastEpisodessToDelete as $podcastEpisodesRemoved) {
-            $podcastEpisodesRemoved->setPodcast(null);
-        }
-
-        $this->collPodcastEpisodess = null;
-        foreach ($podcastEpisodess as $podcastEpisodes) {
-            $this->addPodcastEpisodes($podcastEpisodes);
-        }
-
-        $this->collPodcastEpisodess = $podcastEpisodess;
-        $this->collPodcastEpisodessPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related PodcastEpisodes objects.
-     *
-     * @param Criteria $criteria
-     * @param boolean $distinct
-     * @param PropelPDO $con
-     * @return int             Count of related PodcastEpisodes objects.
-     * @throws PropelException
-     */
-    public function countPodcastEpisodess(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
-    {
-        $partial = $this->collPodcastEpisodessPartial && !$this->isNew();
-        if (null === $this->collPodcastEpisodess || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collPodcastEpisodess) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getPodcastEpisodess());
-            }
-            $query = PodcastEpisodesQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByPodcast($this)
-                ->count($con);
-        }
-
-        return count($this->collPodcastEpisodess);
-    }
-
-    /**
-     * Method called to associate a PodcastEpisodes object to this object
-     * through the PodcastEpisodes foreign key attribute.
-     *
-     * @param    PodcastEpisodes $l PodcastEpisodes
-     * @return Podcast The current object (for fluent API support)
-     */
-    public function addPodcastEpisodes(PodcastEpisodes $l)
-    {
-        if ($this->collPodcastEpisodess === null) {
-            $this->initPodcastEpisodess();
-            $this->collPodcastEpisodessPartial = true;
-        }
-
-        if (!in_array($l, $this->collPodcastEpisodess->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
-            $this->doAddPodcastEpisodes($l);
-
-            if ($this->podcastEpisodessScheduledForDeletion and $this->podcastEpisodessScheduledForDeletion->contains($l)) {
-                $this->podcastEpisodessScheduledForDeletion->remove($this->podcastEpisodessScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param	PodcastEpisodes $podcastEpisodes The podcastEpisodes object to add.
-     */
-    protected function doAddPodcastEpisodes($podcastEpisodes)
-    {
-        $this->collPodcastEpisodess[]= $podcastEpisodes;
-        $podcastEpisodes->setPodcast($this);
-    }
-
-    /**
-     * @param	PodcastEpisodes $podcastEpisodes The podcastEpisodes object to remove.
-     * @return Podcast The current object (for fluent API support)
-     */
-    public function removePodcastEpisodes($podcastEpisodes)
-    {
-        if ($this->getPodcastEpisodess()->contains($podcastEpisodes)) {
-            $this->collPodcastEpisodess->remove($this->collPodcastEpisodess->search($podcastEpisodes));
-            if (null === $this->podcastEpisodessScheduledForDeletion) {
-                $this->podcastEpisodessScheduledForDeletion = clone $this->collPodcastEpisodess;
-                $this->podcastEpisodessScheduledForDeletion->clear();
-            }
-            $this->podcastEpisodessScheduledForDeletion[]= clone $podcastEpisodes;
-            $podcastEpisodes->setPodcast(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Podcast is new, it will return
-     * an empty collection; or if this Podcast has previously
-     * been saved, it will retrieve related PodcastEpisodess from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Podcast.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param PropelPDO $con optional connection object
-     * @param string $join_behavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return PropelObjectCollection|PodcastEpisodes[] List of PodcastEpisodes objects
-     */
-    public function getPodcastEpisodessJoinCcFiles($criteria = null, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $query = PodcastEpisodesQuery::create(null, $criteria);
-        $query->joinWith('CcFiles', $join_behavior);
-
-        return $this->getPodcastEpisodess($query, $con);
-    }
-
-    /**
-     * Gets a single StationPodcast object, which is related to this object by a one-to-one relationship.
-     *
-     * @param PropelPDO $con optional connection object
-     * @return StationPodcast
-     * @throws PropelException
-     */
-    public function getStationPodcast(PropelPDO $con = null)
-    {
-
-        if ($this->singleStationPodcast === null && !$this->isNew()) {
-            $this->singleStationPodcast = StationPodcastQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleStationPodcast;
-    }
-
-    /**
-     * Sets a single StationPodcast object as related to this object by a one-to-one relationship.
-     *
-     * @param                  StationPodcast $v StationPodcast
-     * @return Podcast The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setStationPodcast(StationPodcast $v = null)
-    {
-        $this->singleStationPodcast = $v;
-
-        // Make sure that that the passed-in StationPodcast isn't already associated with this object
-        if ($v !== null && $v->getPodcast(null, false) === null) {
-            $v->setPodcast($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ImportedPodcast object, which is related to this object by a one-to-one relationship.
-     *
-     * @param PropelPDO $con optional connection object
-     * @return ImportedPodcast
-     * @throws PropelException
-     */
-    public function getImportedPodcast(PropelPDO $con = null)
-    {
-
-        if ($this->singleImportedPodcast === null && !$this->isNew()) {
-            $this->singleImportedPodcast = ImportedPodcastQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleImportedPodcast;
-    }
-
-    /**
-     * Sets a single ImportedPodcast object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ImportedPodcast $v ImportedPodcast
-     * @return Podcast The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setImportedPodcast(ImportedPodcast $v = null)
-    {
-        $this->singleImportedPodcast = $v;
-
-        // Make sure that that the passed-in ImportedPodcast isn't already associated with this object
-        if ($v !== null && $v->getPodcast(null, false) === null) {
-            $v->setPodcast($this);
-        }
-
-        return $this;
     }
 
     /**
@@ -2037,6 +1760,8 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function clear()
     {
+        $this->url = null;
+        $this->auto_ingest = null;
         $this->id = null;
         $this->title = null;
         $this->creator = null;
@@ -2051,11 +1776,11 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $this->itunes_category = null;
         $this->itunes_explicit = null;
         $this->owner = null;
-        $this->descendant_class = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -2074,16 +1799,8 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
-            if ($this->collPodcastEpisodess) {
-                foreach ($this->collPodcastEpisodess as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
-            if ($this->singleStationPodcast) {
-                $this->singleStationPodcast->clearAllReferences($deep);
-            }
-            if ($this->singleImportedPodcast) {
-                $this->singleImportedPodcast->clearAllReferences($deep);
+            if ($this->aPodcast instanceof Persistent) {
+              $this->aPodcast->clearAllReferences($deep);
             }
             if ($this->aCcSubjs instanceof Persistent) {
               $this->aCcSubjs->clearAllReferences($deep);
@@ -2092,18 +1809,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
-        if ($this->collPodcastEpisodess instanceof PropelCollection) {
-            $this->collPodcastEpisodess->clearIterator();
-        }
-        $this->collPodcastEpisodess = null;
-        if ($this->singleStationPodcast instanceof PropelCollection) {
-            $this->singleStationPodcast->clearIterator();
-        }
-        $this->singleStationPodcast = null;
-        if ($this->singleImportedPodcast instanceof PropelCollection) {
-            $this->singleImportedPodcast->clearIterator();
-        }
-        $this->singleImportedPodcast = null;
+        $this->aPodcast = null;
         $this->aCcSubjs = null;
     }
 
@@ -2114,7 +1820,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function __toString()
     {
-        return (string) $this->exportTo(PodcastPeer::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(ImportedPodcastPeer::DEFAULT_STRING_FORMAT);
     }
 
     /**
@@ -2127,32 +1833,66 @@ abstract class BasePodcast extends BaseObject implements Persistent
         return $this->alreadyInSave;
     }
 
-    // concrete_inheritance_parent behavior
+    // concrete_inheritance behavior
 
     /**
-     * Whether or not this object is the parent of a child object
+     * Get or Create the parent Podcast object of the current object
      *
-     * @return    bool
+     * @return    Podcast The parent object
      */
-    public function hasChildObject()
+    public function getParentOrCreate($con = null)
     {
-        return $this->getDescendantClass() !== null;
+        if ($this->isNew()) {
+            if ($this->isPrimaryKeyNull()) {
+                //this prevent issue with deep copy & save parent object
+                if (null === ($parent = $this->getPodcast($con))) {
+                    $parent = new Podcast();
+                }
+                $parent->setDescendantClass('ImportedPodcast');
+
+                return $parent;
+            } else {
+                $parent = PodcastQuery::create()->findPk($this->getPrimaryKey(), $con);
+                if (null === $parent || null !== $parent->getDescendantClass()) {
+                    $parent = new Podcast();
+                    $parent->setPrimaryKey($this->getPrimaryKey());
+                    $parent->setDescendantClass('ImportedPodcast');
+                }
+
+                return $parent;
+            }
+        }
+
+        return PodcastQuery::create()->findPk($this->getPrimaryKey(), $con);
     }
 
     /**
-     * Get the child object of this object
+     * Create or Update the parent Podcast object
+     * And return its primary key
      *
-     * @return    mixed
+     * @return    int The primary key of the parent object
      */
-    public function getChildObject()
+    public function getSyncParent($con = null)
     {
-        if (!$this->hasChildObject()) {
-            return null;
+        $parent = $this->getParentOrCreate($con);
+        $parent->setDbTitle($this->getDbTitle());
+        $parent->setDbCreator($this->getDbCreator());
+        $parent->setDbDescription($this->getDbDescription());
+        $parent->setDbLanguage($this->getDbLanguage());
+        $parent->setDbCopyright($this->getDbCopyright());
+        $parent->setDbLink($this->getDbLink());
+        $parent->setDbItunesAuthor($this->getDbItunesAuthor());
+        $parent->setDbItunesKeywords($this->getDbItunesKeywords());
+        $parent->setDbItunesSummary($this->getDbItunesSummary());
+        $parent->setDbItunesSubtitle($this->getDbItunesSubtitle());
+        $parent->setDbItunesCategory($this->getDbItunesCategory());
+        $parent->setDbItunesExplicit($this->getDbItunesExplicit());
+        $parent->setDbOwner($this->getDbOwner());
+        if ($this->getCcSubjs() && $this->getCcSubjs()->isNew()) {
+            $parent->setCcSubjs($this->getCcSubjs());
         }
-        $childObjectClass = $this->getDescendantClass();
-        $childObject = PropelQuery::from($childObjectClass)->findPk($this->getPrimaryKey());
 
-        return $childObject->hasChildObject() ? $childObject->getChildObject() : $childObject;
+        return $parent;
     }
 
 }

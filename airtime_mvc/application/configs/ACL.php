@@ -44,7 +44,8 @@ $ccAcl->add(new Zend_Acl_Resource('library'))
       ->add(new Zend_Acl_Resource('render'))
       ->add(new Zend_Acl_Resource('soundcloud'))
       ->add(new Zend_Acl_Resource('embeddablewidgets'))
-      ->add(new Zend_Acl_Resource('setup'));
+      ->add(new Zend_Acl_Resource('setup'))
+      ->add(new Zend_Acl_Resource('feeds'));
 
 /** Creating permissions */
 $ccAcl->allow('G', 'index')
@@ -65,11 +66,11 @@ $ccAcl->allow('G', 'index')
       ->allow('G', 'downgrade')
       ->allow('G', 'rest:show-image', 'get')
       ->allow('G', 'rest:media', 'get')
-//      ->allow('G', 'rest:podcast', 'index')
       ->allow('G', 'rest:podcast', 'get')
       ->allow('G', 'rest:podcast-episodes', 'get')
       ->allow('G', 'setup')
       ->allow('G', 'embeddablewidgets')
+      ->allow('G', 'feeds')
       ->allow('H', 'soundcloud')
       ->allow('H', 'rest:show-image')
       ->allow('H', 'rest:media')

@@ -563,26 +563,38 @@
     </foreign-key>
   </table>
 
-  <table name="podcast" phpName="Podcast">
+  <table name="podcast" phpName="Podcast" abstract="true">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
-    <column name="url" phpName="DbUrl" type="VARCHAR" size="4096" required="true" />
     <column name="title" phpName="DbTitle" type="VARCHAR" size="4096" required="true" />
     <column name="creator" phpName="DbCreator" type="VARCHAR" size="4096" />
     <column name="description" phpName="DbDescription" type="VARCHAR" size="4096" />
     <column name="language" phpName="DbLanguage" type="VARCHAR" size="4096" />
     <column name="copyright" phpName="DbCopyright" type="VARCHAR" size="4096" />
+    <column name="link" phpName="DbLink" type="VARCHAR" size="4096" />
     <column name="itunes_author" phpName="DbItunesAuthor" type="VARCHAR" size="4096" />
     <column name="itunes_keywords" phpName="DbItunesKeywords" type="VARCHAR" size="4096" />
     <column name="itunes_summary" phpName="DbItunesSummary" type="VARCHAR" size="4096" />
     <column name="itunes_subtitle" phpName="DbItunesSubtitle" type="VARCHAR" size="4096" />
     <column name="itunes_category" phpName="DbItunesCategory" type="VARCHAR" size="4096" />
     <column name="itunes_explicit" phpName="DbItunesExplicit" type="VARCHAR" size="4096" />
-    <column name="auto_ingest" phpName="DbAutoIngest" type="BOOLEAN"  required="true" defaultValue="false"/>
     <column name="owner" phpName="DbOwner" type="INTEGER" />
-    <column name="type" phpName="DbType" type="INTEGER" required="true" defaultValue="1"/>
     <foreign-key foreignTable="cc_subjs" name="podcast_owner_fkey" onDelete="CASCADE">
       <reference local="owner" foreign="id" />
     </foreign-key>
+  </table>
+
+  <table name="station_podcast" phpName="StationPodcast">
+    <behavior name="concrete_inheritance">
+      <parameter name="extends" value="podcast" />
+    </behavior>
+  </table>
+
+  <table name="imported_podcast" phpName="ImportedPodcast">
+    <column name="url" phpName="DbUrl" type="VARCHAR" size="4096" required="true" />
+    <column name="auto_ingest" phpName="DbAutoIngest" type="BOOLEAN"  required="true" defaultValue="false"/>
+    <behavior name="concrete_inheritance">
+      <parameter name="extends" value="podcast" />
+    </behavior>
   </table>
 
   <table name="podcast_episodes" phpName="PodcastEpisodes">

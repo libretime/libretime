@@ -3,7 +3,7 @@
 
 
 /**
- * This class defines the structure of the 'podcast' table.
+ * This class defines the structure of the 'station_podcast' table.
  *
  *
  *
@@ -14,13 +14,13 @@
  *
  * @package    propel.generator.airtime.map
  */
-class PodcastTableMap extends TableMap
+class StationPodcastTableMap extends TableMap
 {
 
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'airtime.map.PodcastTableMap';
+    const CLASS_NAME = 'airtime.map.StationPodcastTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -32,14 +32,13 @@ class PodcastTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('podcast');
-        $this->setPhpName('Podcast');
-        $this->setClassname('Podcast');
+        $this->setName('station_podcast');
+        $this->setPhpName('StationPodcast');
+        $this->setClassname('StationPodcast');
         $this->setPackage('airtime');
-        $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('podcast_id_seq');
+        $this->setUseIdGenerator(false);
         // columns
-        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addForeignPrimaryKey('id', 'DbId', 'INTEGER' , 'podcast', 'id', true, null, null);
         $this->addColumn('title', 'DbTitle', 'VARCHAR', true, 4096, null);
         $this->addColumn('creator', 'DbCreator', 'VARCHAR', false, 4096, null);
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 4096, null);
@@ -53,7 +52,6 @@ class PodcastTableMap extends TableMap
         $this->addColumn('itunes_category', 'DbItunesCategory', 'VARCHAR', false, 4096, null);
         $this->addColumn('itunes_explicit', 'DbItunesExplicit', 'VARCHAR', false, 4096, null);
         $this->addForeignKey('owner', 'DbOwner', 'INTEGER', 'cc_subjs', 'id', false, null, null);
-        $this->addColumn('descendant_class', 'DescendantClass', 'VARCHAR', false, 100, null);
         // validators
     } // initialize()
 
@@ -62,10 +60,8 @@ class PodcastTableMap extends TableMap
      */
     public function buildRelations()
     {
+        $this->addRelation('Podcast', 'Podcast', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
         $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner' => 'id', ), 'CASCADE', null);
-        $this->addRelation('PodcastEpisodes', 'PodcastEpisodes', RelationMap::ONE_TO_MANY, array('id' => 'podcast_id', ), 'CASCADE', null, 'PodcastEpisodess');
-        $this->addRelation('StationPodcast', 'StationPodcast', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('ImportedPodcast', 'ImportedPodcast', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
@@ -77,10 +73,14 @@ class PodcastTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'concrete_inheritance_parent' =>  array (
+            'concrete_inheritance' =>  array (
+  'extends' => 'podcast',
   'descendant_column' => 'descendant_class',
+  'copy_data_to_parent' => 'true',
+  'schema' => '',
+  'excluded_parent_behavior' => 'nested_set',
 ),
         );
     } // getBehaviors()
 
-} // PodcastTableMap
+} // StationPodcastTableMap

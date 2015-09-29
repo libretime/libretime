@@ -61,9 +61,101 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
         }
     }
 
-    public static function getPodcastEpisodeFeed($podcast)
+    public static function createStationRssFeed()
     {
+        //TODO: get station feed podcast ID
 
+        //hack
+        $id = 1;
+        try {
+            $podcast = PodcastQuery::create()->findPk($id);
+            if (!$podcast) {
+                throw new PodcastNotFoundException();
+            }
+
+            $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"/>');
+
+            $channel = $xml->addChild("channel");
+            $channel->addChild("title", $podcast->getDbTitle());
+            $channel->addChild("link", $podcast->getDbLink());
+            $channel->addChild("description", $podcast->getDbDescription());
+            $channel->addChild("language", $podcast->getDbLanguage());
+            $channel->addChild("copyright", $podcast->getDbCopyright());
+
+            $imageUrl = Application_Common_HTTPHelper::getStationUrl()."images/airtime_logo.png";
+            $image = $channel->addChild("image");
+            $image->addChild("title", "image title");
+            $image->addChild("url", $imageUrl);
+            $image->addChild("link", Application_Common_HTTPHelper::getStationUrl());
+
+            $xml->addAttribute('xmlns:xmlns:itunes', ITUNES_XML_NAMESPACE_URL);
+            $channel->addChild("xmlns:itunes:author", $podcast->getDbItunesAuthor());
+            $channel->addChild("xmlns:itunes:keywords", $podcast->getDbItunesKeywords());
+            $channel->addChild("xmlns:itunes:summary", $podcast->getDbItunesSummary());
+            $channel->addChild("xmlns:itunes:subtitle", $podcast->getDbItunesSubtitle());
+            $channel->addChild("xmlns:itunes:explicit", $podcast->getDbItunesExplicit());
+
+            $itunesImage = $channel->addChild("xmlns:itunes:image");
+            $itunesImage->addAttribute("href", $imageUrl);
+
+            // Need to split categories into separate tags
+            $itunesCategories = explode(",", $podcast->getDbItunesCategory());
+            foreach ($itunesCategories as $c) {
+                $category = $channel->addChild("xmlns:itunes:category");
+                $category->addAttribute("text", $c);
+            }
+
+            $episodes = PodcastEpisodesQuery::create()->filterByDbPodcastId($id)->find();
+            foreach ($episodes as $episode) {
+                $item = $channel->addChild("item");
+                $publishedFile = CcFilesQuery::create()->findPk($episode->getDbFileId());
+
+                //title
+                $item->addChild("title", $publishedFile->getDbTrackTitle());
+
+                //link - do we need this?
+
+                //pubDate
+                $item->addChild("pubDate", $episode->getDbPublicationDate());
+
+                //category
+                foreach($itunesCategories as $c) {
+                    $item->addChild("category", $c);
+                }
+
+                //guid
+                $guid = $item->addChild("guid", $episode->getDbEpisodeGuid());
+                $guid->addAttribute("isPermaLink", "false");
+
+                //description
+                $item->addChild("description", $publishedFile->getDbDescription());
+
+                //encolsure - url, length, type attribs
+                $enclosure = $item->addChild("enclosure");
+                $enclosure->addAttribute("url", $episode->getDbDownloadUrl());
+                $enclosure->addAttribute("length", Application_Common_DateHelper::calculateLengthInSeconds($publishedFile->getDbLength()));
+                $enclosure->addAttribute("type", $publishedFile->getDbMime());
+
+                //itunes:subtitle
+                $item->addChild("xmlns:itunes:subtitle", $publishedFile->getDbTrackTitle());
+
+                //itunes:summary
+                $item->addChild("xmlns:itunes:summary", $publishedFile->getDbDescription());
+
+                //itunes:author
+                $item->addChild("xmlns:itunes:author", $publishedFile->getDbArtistName());
+
+                //itunes:explicit - skip this?
+
+                //itunes:duration
+                $item->addChild("xmlns:itunes:duration", $publishedFile->getDbLength());
+            }
+
+            return $xml->asXML();
+
+        } catch (FeedException $e) {
+            return false;
+        }
     }
 
     /**

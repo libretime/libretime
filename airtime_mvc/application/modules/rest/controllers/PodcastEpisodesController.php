@@ -79,8 +79,8 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
 
         try {
-            //$requestData = json_decode($this->getRequest()->getRawBody(), true);
-            $requestData = $this->getRequest()->getPost();
+            $requestData = json_decode($this->getRequest()->getRawBody(), true);
+            //$requestData = $this->getRequest()->getPost();
 
             $episode = PodcastEpisodes::create($id, $requestData);
 
@@ -125,7 +125,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
     public function putAction()
     {
-        
+
     }
 
     private function getId()

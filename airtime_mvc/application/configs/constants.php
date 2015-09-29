@@ -124,5 +124,7 @@ define('SOUNDCLOUD_SERVICE_NAME', 'soundcloud');
 define('PODCAST_SERVICE_NAME', 'podcast');
 
 // Podcast Types
-define('STATION_PODCAST', 0);
-define('IMPORTED_PODCAST', 1);
+//define('STATION_PODCAST', 0);
+//define('IMPORTED_PODCAST', 1);
+
+define('ITUNES_XML_NAMESPACE_URL', 'http://www.itunes.com/dtds/podcast-1.0.dtd');

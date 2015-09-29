@@ -81,7 +81,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
 
         try {
-            // $requestData = json_decode($this->getRequest()->getRawBody(), true);
+            //$requestData = json_decode($this->getRequest()->getRawBody(), true);
             $requestData = $this->getRequest()->getPost();
             $podcast = Podcast::create($requestData);
 

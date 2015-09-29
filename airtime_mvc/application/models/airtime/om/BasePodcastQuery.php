@@ -7,38 +7,36 @@
  *
  *
  * @method PodcastQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method PodcastQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
  * @method PodcastQuery orderByDbTitle($order = Criteria::ASC) Order by the title column
  * @method PodcastQuery orderByDbCreator($order = Criteria::ASC) Order by the creator column
  * @method PodcastQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
  * @method PodcastQuery orderByDbLanguage($order = Criteria::ASC) Order by the language column
  * @method PodcastQuery orderByDbCopyright($order = Criteria::ASC) Order by the copyright column
+ * @method PodcastQuery orderByDbLink($order = Criteria::ASC) Order by the link column
  * @method PodcastQuery orderByDbItunesAuthor($order = Criteria::ASC) Order by the itunes_author column
  * @method PodcastQuery orderByDbItunesKeywords($order = Criteria::ASC) Order by the itunes_keywords column
  * @method PodcastQuery orderByDbItunesSummary($order = Criteria::ASC) Order by the itunes_summary column
  * @method PodcastQuery orderByDbItunesSubtitle($order = Criteria::ASC) Order by the itunes_subtitle column
  * @method PodcastQuery orderByDbItunesCategory($order = Criteria::ASC) Order by the itunes_category column
  * @method PodcastQuery orderByDbItunesExplicit($order = Criteria::ASC) Order by the itunes_explicit column
- * @method PodcastQuery orderByDbAutoIngest($order = Criteria::ASC) Order by the auto_ingest column
  * @method PodcastQuery orderByDbOwner($order = Criteria::ASC) Order by the owner column
- * @method PodcastQuery orderByDbType($order = Criteria::ASC) Order by the type column
+ * @method PodcastQuery orderByDescendantClass($order = Criteria::ASC) Order by the descendant_class column
  *
  * @method PodcastQuery groupByDbId() Group by the id column
- * @method PodcastQuery groupByDbUrl() Group by the url column
  * @method PodcastQuery groupByDbTitle() Group by the title column
  * @method PodcastQuery groupByDbCreator() Group by the creator column
  * @method PodcastQuery groupByDbDescription() Group by the description column
  * @method PodcastQuery groupByDbLanguage() Group by the language column
  * @method PodcastQuery groupByDbCopyright() Group by the copyright column
+ * @method PodcastQuery groupByDbLink() Group by the link column
  * @method PodcastQuery groupByDbItunesAuthor() Group by the itunes_author column
  * @method PodcastQuery groupByDbItunesKeywords() Group by the itunes_keywords column
  * @method PodcastQuery groupByDbItunesSummary() Group by the itunes_summary column
  * @method PodcastQuery groupByDbItunesSubtitle() Group by the itunes_subtitle column
  * @method PodcastQuery groupByDbItunesCategory() Group by the itunes_category column
  * @method PodcastQuery groupByDbItunesExplicit() Group by the itunes_explicit column
- * @method PodcastQuery groupByDbAutoIngest() Group by the auto_ingest column
  * @method PodcastQuery groupByDbOwner() Group by the owner column
- * @method PodcastQuery groupByDbType() Group by the type column
+ * @method PodcastQuery groupByDescendantClass() Group by the descendant_class column
  *
  * @method PodcastQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method PodcastQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -52,41 +50,47 @@
  * @method PodcastQuery rightJoinPodcastEpisodes($relationAlias = null) Adds a RIGHT JOIN clause to the query using the PodcastEpisodes relation
  * @method PodcastQuery innerJoinPodcastEpisodes($relationAlias = null) Adds a INNER JOIN clause to the query using the PodcastEpisodes relation
  *
+ * @method PodcastQuery leftJoinStationPodcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the StationPodcast relation
+ * @method PodcastQuery rightJoinStationPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StationPodcast relation
+ * @method PodcastQuery innerJoinStationPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the StationPodcast relation
+ *
+ * @method PodcastQuery leftJoinImportedPodcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the ImportedPodcast relation
+ * @method PodcastQuery rightJoinImportedPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ImportedPodcast relation
+ * @method PodcastQuery innerJoinImportedPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the ImportedPodcast relation
+ *
  * @method Podcast findOne(PropelPDO $con = null) Return the first Podcast matching the query
  * @method Podcast findOneOrCreate(PropelPDO $con = null) Return the first Podcast matching the query, or a new Podcast object populated from the query conditions when no match is found
  *
- * @method Podcast findOneByDbUrl(string $url) Return the first Podcast filtered by the url column
  * @method Podcast findOneByDbTitle(string $title) Return the first Podcast filtered by the title column
  * @method Podcast findOneByDbCreator(string $creator) Return the first Podcast filtered by the creator column
  * @method Podcast findOneByDbDescription(string $description) Return the first Podcast filtered by the description column
  * @method Podcast findOneByDbLanguage(string $language) Return the first Podcast filtered by the language column
  * @method Podcast findOneByDbCopyright(string $copyright) Return the first Podcast filtered by the copyright column
+ * @method Podcast findOneByDbLink(string $link) Return the first Podcast filtered by the link column
  * @method Podcast findOneByDbItunesAuthor(string $itunes_author) Return the first Podcast filtered by the itunes_author column
  * @method Podcast findOneByDbItunesKeywords(string $itunes_keywords) Return the first Podcast filtered by the itunes_keywords column
  * @method Podcast findOneByDbItunesSummary(string $itunes_summary) Return the first Podcast filtered by the itunes_summary column
  * @method Podcast findOneByDbItunesSubtitle(string $itunes_subtitle) Return the first Podcast filtered by the itunes_subtitle column
  * @method Podcast findOneByDbItunesCategory(string $itunes_category) Return the first Podcast filtered by the itunes_category column
  * @method Podcast findOneByDbItunesExplicit(string $itunes_explicit) Return the first Podcast filtered by the itunes_explicit column
- * @method Podcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first Podcast filtered by the auto_ingest column
  * @method Podcast findOneByDbOwner(int $owner) Return the first Podcast filtered by the owner column
- * @method Podcast findOneByDbType(int $type) Return the first Podcast filtered by the type column
+ * @method Podcast findOneByDescendantClass(string $descendant_class) Return the first Podcast filtered by the descendant_class column
  *
  * @method array findByDbId(int $id) Return Podcast objects filtered by the id column
- * @method array findByDbUrl(string $url) Return Podcast objects filtered by the url column
  * @method array findByDbTitle(string $title) Return Podcast objects filtered by the title column
  * @method array findByDbCreator(string $creator) Return Podcast objects filtered by the creator column
  * @method array findByDbDescription(string $description) Return Podcast objects filtered by the description column
  * @method array findByDbLanguage(string $language) Return Podcast objects filtered by the language column
  * @method array findByDbCopyright(string $copyright) Return Podcast objects filtered by the copyright column
+ * @method array findByDbLink(string $link) Return Podcast objects filtered by the link column
  * @method array findByDbItunesAuthor(string $itunes_author) Return Podcast objects filtered by the itunes_author column
  * @method array findByDbItunesKeywords(string $itunes_keywords) Return Podcast objects filtered by the itunes_keywords column
  * @method array findByDbItunesSummary(string $itunes_summary) Return Podcast objects filtered by the itunes_summary column
  * @method array findByDbItunesSubtitle(string $itunes_subtitle) Return Podcast objects filtered by the itunes_subtitle column
  * @method array findByDbItunesCategory(string $itunes_category) Return Podcast objects filtered by the itunes_category column
  * @method array findByDbItunesExplicit(string $itunes_explicit) Return Podcast objects filtered by the itunes_explicit column
- * @method array findByDbAutoIngest(boolean $auto_ingest) Return Podcast objects filtered by the auto_ingest column
  * @method array findByDbOwner(int $owner) Return Podcast objects filtered by the owner column
- * @method array findByDbType(int $type) Return Podcast objects filtered by the type column
+ * @method array findByDescendantClass(string $descendant_class) Return Podcast objects filtered by the descendant_class column
  *
  * @package    propel.generator.airtime.om
  */
@@ -194,7 +198,7 @@ abstract class BasePodcastQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "url", "title", "creator", "description", "language", "copyright", "itunes_author", "itunes_keywords", "itunes_summary", "itunes_subtitle", "itunes_category", "itunes_explicit", "auto_ingest", "owner", "type" FROM "podcast" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "title", "creator", "description", "language", "copyright", "link", "itunes_author", "itunes_keywords", "itunes_summary", "itunes_subtitle", "itunes_category", "itunes_explicit", "owner", "descendant_class" FROM "podcast" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -323,35 +327,6 @@ abstract class BasePodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PodcastPeer::ID, $dbId, $comparison);
-    }
-
-    /**
-     * Filter the query on the url column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbUrl('fooValue');   // WHERE url = 'fooValue'
-     * $query->filterByDbUrl('%fooValue%'); // WHERE url LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbUrl The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return PodcastQuery The current query, for fluid interface
-     */
-    public function filterByDbUrl($dbUrl = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbUrl)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbUrl)) {
-                $dbUrl = str_replace('*', '%', $dbUrl);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(PodcastPeer::URL, $dbUrl, $comparison);
     }
 
     /**
@@ -497,6 +472,35 @@ abstract class BasePodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PodcastPeer::COPYRIGHT, $dbCopyright, $comparison);
+    }
+
+    /**
+     * Filter the query on the link column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbLink('fooValue');   // WHERE link = 'fooValue'
+     * $query->filterByDbLink('%fooValue%'); // WHERE link LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbLink The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbLink($dbLink = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbLink)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbLink)) {
+                $dbLink = str_replace('*', '%', $dbLink);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::LINK, $dbLink, $comparison);
     }
 
     /**
@@ -674,33 +678,6 @@ abstract class BasePodcastQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the auto_ingest column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbAutoIngest(true); // WHERE auto_ingest = true
-     * $query->filterByDbAutoIngest('yes'); // WHERE auto_ingest = true
-     * </code>
-     *
-     * @param     boolean|string $dbAutoIngest The value to use as filter.
-     *              Non-boolean arguments are converted using the following rules:
-     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return PodcastQuery The current query, for fluid interface
-     */
-    public function filterByDbAutoIngest($dbAutoIngest = null, $comparison = null)
-    {
-        if (is_string($dbAutoIngest)) {
-            $dbAutoIngest = in_array(strtolower($dbAutoIngest), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-        }
-
-        return $this->addUsingAlias(PodcastPeer::AUTO_INGEST, $dbAutoIngest, $comparison);
-    }
-
-    /**
      * Filter the query on the owner column
      *
      * Example usage:
@@ -745,45 +722,32 @@ abstract class BasePodcastQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query on the type column
+     * Filter the query on the descendant_class column
      *
      * Example usage:
      * <code>
-     * $query->filterByDbType(1234); // WHERE type = 1234
-     * $query->filterByDbType(array(12, 34)); // WHERE type IN (12, 34)
-     * $query->filterByDbType(array('min' => 12)); // WHERE type >= 12
-     * $query->filterByDbType(array('max' => 12)); // WHERE type <= 12
+     * $query->filterByDescendantClass('fooValue');   // WHERE descendant_class = 'fooValue'
+     * $query->filterByDescendantClass('%fooValue%'); // WHERE descendant_class LIKE '%fooValue%'
      * </code>
      *
-     * @param     mixed $dbType The value to use as filter.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $descendantClass The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return PodcastQuery The current query, for fluid interface
      */
-    public function filterByDbType($dbType = null, $comparison = null)
+    public function filterByDescendantClass($descendantClass = null, $comparison = null)
     {
-        if (is_array($dbType)) {
-            $useMinMax = false;
-            if (isset($dbType['min'])) {
-                $this->addUsingAlias(PodcastPeer::TYPE, $dbType['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($dbType['max'])) {
-                $this->addUsingAlias(PodcastPeer::TYPE, $dbType['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($descendantClass)) {
                 $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $descendantClass)) {
+                $descendantClass = str_replace('*', '%', $descendantClass);
+                $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(PodcastPeer::TYPE, $dbType, $comparison);
+        return $this->addUsingAlias(PodcastPeer::DESCENDANT_CLASS, $descendantClass, $comparison);
     }
 
     /**
@@ -934,6 +898,154 @@ abstract class BasePodcastQuery extends ModelCriteria
         return $this
             ->joinPodcastEpisodes($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'PodcastEpisodes', 'PodcastEpisodesQuery');
+    }
+
+    /**
+     * Filter the query by a related StationPodcast object
+     *
+     * @param   StationPodcast|PropelObjectCollection $stationPodcast  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PodcastQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByStationPodcast($stationPodcast, $comparison = null)
+    {
+        if ($stationPodcast instanceof StationPodcast) {
+            return $this
+                ->addUsingAlias(PodcastPeer::ID, $stationPodcast->getDbId(), $comparison);
+        } elseif ($stationPodcast instanceof PropelObjectCollection) {
+            return $this
+                ->useStationPodcastQuery()
+                ->filterByPrimaryKeys($stationPodcast->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByStationPodcast() only accepts arguments of type StationPodcast or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the StationPodcast relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function joinStationPodcast($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('StationPodcast');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'StationPodcast');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the StationPodcast relation StationPodcast object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   StationPodcastQuery A secondary query class using the current class as primary query
+     */
+    public function useStationPodcastQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinStationPodcast($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'StationPodcast', 'StationPodcastQuery');
+    }
+
+    /**
+     * Filter the query by a related ImportedPodcast object
+     *
+     * @param   ImportedPodcast|PropelObjectCollection $importedPodcast  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 PodcastQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByImportedPodcast($importedPodcast, $comparison = null)
+    {
+        if ($importedPodcast instanceof ImportedPodcast) {
+            return $this
+                ->addUsingAlias(PodcastPeer::ID, $importedPodcast->getDbId(), $comparison);
+        } elseif ($importedPodcast instanceof PropelObjectCollection) {
+            return $this
+                ->useImportedPodcastQuery()
+                ->filterByPrimaryKeys($importedPodcast->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByImportedPodcast() only accepts arguments of type ImportedPodcast or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ImportedPodcast relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function joinImportedPodcast($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ImportedPodcast');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ImportedPodcast');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ImportedPodcast relation ImportedPodcast object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   ImportedPodcastQuery A secondary query class using the current class as primary query
+     */
+    public function useImportedPodcastQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
+    {
+        return $this
+            ->joinImportedPodcast($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ImportedPodcast', 'ImportedPodcastQuery');
     }
 
     /**

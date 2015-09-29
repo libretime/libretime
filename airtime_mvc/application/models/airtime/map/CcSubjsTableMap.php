@@ -70,6 +70,8 @@ class CcSubjsTableMap extends TableMap
         $this->addRelation('CcSess', 'CcSess', RelationMap::ONE_TO_MANY, array('id' => 'userid', ), 'CASCADE', null, 'CcSesss');
         $this->addRelation('CcSubjsToken', 'CcSubjsToken', RelationMap::ONE_TO_MANY, array('id' => 'user_id', ), 'CASCADE', null, 'CcSubjsTokens');
         $this->addRelation('Podcast', 'Podcast', RelationMap::ONE_TO_MANY, array('id' => 'owner', ), 'CASCADE', null, 'Podcasts');
+        $this->addRelation('StationPodcast', 'StationPodcast', RelationMap::ONE_TO_MANY, array('id' => 'owner', ), 'CASCADE', null, 'StationPodcasts');
+        $this->addRelation('ImportedPodcast', 'ImportedPodcast', RelationMap::ONE_TO_MANY, array('id' => 'owner', ), 'CASCADE', null, 'ImportedPodcasts');
     } // buildRelations()
 
 } // CcSubjsTableMap

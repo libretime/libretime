@@ -119,7 +119,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 "upgrade",
                 'whmcs-login',
                 "provisioning",
-                "embed"
+                "embed",
+                "feeds"
             )))
         {
             $this->setRoleName("G");

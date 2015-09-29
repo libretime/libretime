@@ -78,6 +78,14 @@
  * @method CcSubjsQuery rightJoinPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the Podcast relation
  * @method CcSubjsQuery innerJoinPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the Podcast relation
  *
+ * @method CcSubjsQuery leftJoinStationPodcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the StationPodcast relation
+ * @method CcSubjsQuery rightJoinStationPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the StationPodcast relation
+ * @method CcSubjsQuery innerJoinStationPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the StationPodcast relation
+ *
+ * @method CcSubjsQuery leftJoinImportedPodcast($relationAlias = null) Adds a LEFT JOIN clause to the query using the ImportedPodcast relation
+ * @method CcSubjsQuery rightJoinImportedPodcast($relationAlias = null) Adds a RIGHT JOIN clause to the query using the ImportedPodcast relation
+ * @method CcSubjsQuery innerJoinImportedPodcast($relationAlias = null) Adds a INNER JOIN clause to the query using the ImportedPodcast relation
+ *
  * @method CcSubjs findOne(PropelPDO $con = null) Return the first CcSubjs matching the query
  * @method CcSubjs findOneOrCreate(PropelPDO $con = null) Return the first CcSubjs matching the query, or a new CcSubjs object populated from the query conditions when no match is found
  *
@@ -1472,6 +1480,154 @@ abstract class BaseCcSubjsQuery extends ModelCriteria
         return $this
             ->joinPodcast($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'Podcast', 'PodcastQuery');
+    }
+
+    /**
+     * Filter the query by a related StationPodcast object
+     *
+     * @param   StationPodcast|PropelObjectCollection $stationPodcast  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcSubjsQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByStationPodcast($stationPodcast, $comparison = null)
+    {
+        if ($stationPodcast instanceof StationPodcast) {
+            return $this
+                ->addUsingAlias(CcSubjsPeer::ID, $stationPodcast->getDbOwner(), $comparison);
+        } elseif ($stationPodcast instanceof PropelObjectCollection) {
+            return $this
+                ->useStationPodcastQuery()
+                ->filterByPrimaryKeys($stationPodcast->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByStationPodcast() only accepts arguments of type StationPodcast or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the StationPodcast relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcSubjsQuery The current query, for fluid interface
+     */
+    public function joinStationPodcast($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('StationPodcast');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'StationPodcast');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the StationPodcast relation StationPodcast object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   StationPodcastQuery A secondary query class using the current class as primary query
+     */
+    public function useStationPodcastQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinStationPodcast($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'StationPodcast', 'StationPodcastQuery');
+    }
+
+    /**
+     * Filter the query by a related ImportedPodcast object
+     *
+     * @param   ImportedPodcast|PropelObjectCollection $importedPodcast  the related object to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 CcSubjsQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByImportedPodcast($importedPodcast, $comparison = null)
+    {
+        if ($importedPodcast instanceof ImportedPodcast) {
+            return $this
+                ->addUsingAlias(CcSubjsPeer::ID, $importedPodcast->getDbOwner(), $comparison);
+        } elseif ($importedPodcast instanceof PropelObjectCollection) {
+            return $this
+                ->useImportedPodcastQuery()
+                ->filterByPrimaryKeys($importedPodcast->getPrimaryKeys())
+                ->endUse();
+        } else {
+            throw new PropelException('filterByImportedPodcast() only accepts arguments of type ImportedPodcast or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the ImportedPodcast relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return CcSubjsQuery The current query, for fluid interface
+     */
+    public function joinImportedPodcast($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('ImportedPodcast');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'ImportedPodcast');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the ImportedPodcast relation ImportedPodcast object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   ImportedPodcastQuery A secondary query class using the current class as primary query
+     */
+    public function useImportedPodcastQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinImportedPodcast($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'ImportedPodcast', 'ImportedPodcastQuery');
     }
 
     /**
