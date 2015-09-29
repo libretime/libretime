@@ -133,10 +133,12 @@ var AIRTIME = (function(AIRTIME) {
 
                         return container;
                     },
-                    cursor: 'move',
-                    cursorAt: {
-                        left: Math.floor($(this).outerWidth() / 2)
+                    create: function(event, ui) {
+                        $(this).draggable("option", "cursorAt", {
+                            left: Math.floor(this.clientWidth / 2)
+                        });
                     },
+                    cursor: 'move',
                     distance: 25, // min-distance for dragging
                     connectToSortable: '#show_builder_table'
                 });
@@ -172,10 +174,12 @@ var AIRTIME = (function(AIRTIME) {
 
                         return container;
                     },
-                    cursor: 'move',
-                    cursorAt: {
-                        left: Math.floor($(this).outerWidth() / 2)
+                    create: function(event, ui) {
+                        $(this).draggable("option", "cursorAt", {
+                            left: Math.floor(this.clientWidth / 2)
+                        });
                     },
+                    cursor: 'move',
                     distance: 25, // min-distance for dragging
                     connectToSortable: '.active-tab .spl_sortable'
                 });
