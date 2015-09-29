@@ -176,11 +176,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     if (!Application_Model_Preference::getWhatsNewDialogViewed()) {
         ?>
         <div id="whatsnew">
-            <div>
+            <div id="whatsnew_video">
                 <iframe width="560" height="315" src="<?php echo UI_REVAMP_EMBED_URL ?>" frameborder="0" allowfullscreen></iframe>
                 <h2><?php echo _("Airtime Pro has a new look!"); ?></h2>
-                <p><?php echo _("A lot of your favourite Airtime features are now even easier to use - and we've even
-                    added a few new ones! Check out the video above or read on to find out more."); ?></p
+                <p><?php echo _("Your favorite features are now even easier to use - and we've even
+                    added a few new ones! Check out the video above or read on to find out more."); ?></p>
                 <ul>
                     <li><?php echo _("Our new Dashboard view now has a powerful tabbed editing interface, so updating your tracks and playlists
                         is easier than ever."); ?></li>
@@ -191,7 +191,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         experience, no matter how you're connected."); ?></li>
                 </ul>
             </div>
-            <button id="whatsnew_close" class="btn btn-new">Got it!</button>
+            <button id="whatsnew_close" class="btn btn-new">OK, got it!</button>
         </div>
         <script>
             $(document).ready(function() {

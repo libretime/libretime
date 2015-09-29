@@ -3921,10 +3921,14 @@ li .ui-state-hover {
     justify-content: center;
     align-items: center;
 
-    max-width: 600px;
+    max-width: 640px;
     max-height: 460px;
 
-    padding: 10px 0;
+    padding: 10px 10px;
+}
+
+#whatsnew_video {
+    text-align: center;
 }
 
 #whatsnew > button {
@@ -3934,14 +3938,21 @@ li .ui-state-hover {
 }
 
 #whatsnew > div {
-    text-align: center;
+    text-align: left;
     font-size: 16px;
     overflow-x: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#whatsnew iframe {
+    text-align: center;
 }
 
 #whatsnew h2 {
     margin-top: 10px;
     font-weight: bold;
+    text-align: center;
 }
 
 #whatsnew li {
