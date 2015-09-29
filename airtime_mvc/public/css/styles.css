@@ -3870,12 +3870,14 @@ li .ui-state-hover {
     flex-flow: column;
 
     flex: 1 1;
+    -webkit-flex: 1 1;
     min-width: 505px;
 }
 
 .outer-datatable-wrapper {
     position: relative;
     flex: 1;
+    -webkit-flex: 1;
 }
 
 #user_list_inner_wrapper {
