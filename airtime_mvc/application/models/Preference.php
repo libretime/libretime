@@ -138,7 +138,13 @@ class Application_Model_Preference
         $st->execute();
     }
 
-    private static function getValue($key, $isUserValue = false)
+    /**
+     * @param string $key               the preference key string
+     * @param bool|false $isUserValue   select the preference for the current user
+     * @param bool|false $forceDefault  only look for default (no user ID) values
+     * @return mixed the preference value
+     */
+    private static function getValue($key, $isUserValue = false, $forceDefault = false)
     {
         $cache = new Cache();
         
@@ -164,6 +170,8 @@ class Application_Model_Preference
             if ($isUserValue) {
                 $sql .= " AND subjid = :id";
                 $paramMap[':id'] = $userId;
+            } else if ($forceDefault) {
+                $sql .= " AND subjid IS NULL";
             }
 
             $result = Application_Common_Database::prepareAndExecute($sql, $paramMap, Application_Common_Database::COLUMN);
@@ -1482,6 +1490,11 @@ class Application_Model_Preference
     public static function getWhatsNewDialogViewed()
     {
         $val = self::getValue("whats_new_dialog_viewed", true);
+        if (empty($val)) {
+            // Check the default (no user ID) value if the user value is empty
+            // This is so that new stations won't see the popup
+            $val = self::getValue("whats_new_dialog_viewed", false, true);
+        }
         return empty($val) ? false : $val;
     }
 
