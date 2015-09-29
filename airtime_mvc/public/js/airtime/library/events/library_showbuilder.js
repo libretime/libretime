@@ -134,10 +134,9 @@ var AIRTIME = (function(AIRTIME) {
                         return container;
                     },
                     cursor: 'move',
-                    //cursorAt: {
-                    //    top: 30,
-                    //    right: 10
-                    //},
+                    cursorAt: {
+                        left: Math.floor($(this).outerWidth() / 2)
+                    },
                     distance: 25, // min-distance for dragging
                     connectToSortable: '#show_builder_table'
                 });
@@ -174,10 +173,9 @@ var AIRTIME = (function(AIRTIME) {
                         return container;
                     },
                     cursor: 'move',
-                    //cursorAt: {
-                    //    top: 30,
-                    //    right: 10
-                    //},
+                    cursorAt: {
+                        left: Math.floor($(this).outerWidth() / 2)
+                    },
                     distance: 25, // min-distance for dragging
                     connectToSortable: '.active-tab .spl_sortable'
                 });
