@@ -118,6 +118,21 @@ label.wrapp-label input[type="checkbox"] {
     min-width: 150px;
 }
 
+#add_show_hosts-element > label {
+    margin: 0 0 6px 5px;
+    vertical-align: middle;
+    display: flex;
+    align-items: flex-end;
+}
+
+#add_show_hosts-element input {
+    margin-right: 6px;
+}
+
+#add_show_logo {
+    margin-top: 6px;
+}
+
 #add_show_start_time, #add_show_end_time {
     width: 54px;
     margin-left: 10px;
