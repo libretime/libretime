@@ -384,7 +384,7 @@ ALTER TABLE cc_pref ALTER COLUMN subjid SET DEFAULT NULL;
 CREATE UNIQUE INDEX cc_pref_key_idx ON cc_pref (keystr) WHERE subjid IS NULL;
 ANALYZE cc_pref; -- this validates the new partial index
 
--- end added in 2.5.14
+--end added in 2.5.14
 
 -- For now, just needs to be truthy - to be updated later; we should find a better way to implement this...
 INSERT INTO cc_pref("keystr", "valstr") VALUES('whats_new_dialog_viewed', 1);
