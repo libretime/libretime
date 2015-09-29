@@ -781,7 +781,7 @@ var AIRTIME = (function(AIRTIME){
             "bScrollCollapseY": false
         });
 
-        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td.sb-checkbox", function(ev) {
+        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-not-allowed, .sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td.sb-checkbox", function(ev) {
             var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -818,7 +818,7 @@ var AIRTIME = (function(AIRTIME){
             $previouslySelected = $tr;
         });
 
-        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td:not(.sb-checkbox)", function(ev) {
+        $sbTable.find("tbody").on("mousedown", "tr:not(.sb-not-allowed, .sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td:not(.sb-checkbox)", function(ev) {
             var $tr = $(this).parent(),
             // Get the ID of the selected row
                 $rowId = $tr.attr("id");
@@ -866,7 +866,7 @@ var AIRTIME = (function(AIRTIME){
             $previouslySelected = $tr;
         });
 
-        $sbTable.find("tbody").on("click", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td.sb-checkbox", function() {
+        $sbTable.find("tbody").on("click", "tr:not(.sb-not-allowed, .sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td.sb-checkbox", function() {
             var tr = $(this).parent();
             if (flagForDeselection) {
                 flagForDeselection = false;
@@ -882,7 +882,7 @@ var AIRTIME = (function(AIRTIME){
             selectedRows = $("." + SB_SELECTED_CLASS);
         });
 
-        $sbTable.find("tbody").on("click", "tr:not(.sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td:not(.sb-checkbox)", function(e) {
+        $sbTable.find("tbody").on("click", "tr:not(.sb-not-allowed, .sb-header, .sb-footer, .sb-past, .sb-empty, :has(td.dataTables_empty)) > td:not(.sb-checkbox)", function(e) {
             var tr = $(this).parent();
             if (flagForDeselection) {
                 flagForDeselection = false;
@@ -902,7 +902,7 @@ var AIRTIME = (function(AIRTIME){
 
         //begin context menu initialization.
         $.contextMenu({
-            selector: '#show_builder tr.lib-audio:not(.sb-past)',
+            selector: '#show_builder tr.lib-audio:not(.sb-not-allowed, .sb-past)',
             trigger: "right",
 
             build: function($el, e) {
