@@ -93,6 +93,8 @@ AIRTIME = (function(AIRTIME) {
             check;
                   
         check = validateTimeRange();
+
+        console.log(check);
         
         if (check.isValid) {
             //reset timestamp value since input values could have changed.
@@ -102,7 +104,7 @@ AIRTIME = (function(AIRTIME) {
             fn.start = check.start;
             fn.end = check.end;
 
-            op = $("div.sb-advanced-options");
+            op = $("div.sb-options-form");
             if (op.is(":visible")) {
 
                 if (fn.ops === undefined) {
