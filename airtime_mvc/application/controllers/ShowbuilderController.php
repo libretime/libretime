@@ -60,6 +60,7 @@ class ShowbuilderController extends Zend_Controller_Action
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/showbuilder/main_builder.js?'.$CC_CONFIG['airtime_version'],'text/javascript');
 
         // MEDIA BUILDER
+        $this->view->headScript()->appendFile($baseUrl.'js/js-timezone-detect/jstz-1.0.4.min.js','text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/library/spl.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headScript()->appendFile($baseUrl.'js/airtime/playlist/smart_blockbuilder.js?'.$CC_CONFIG['airtime_version'], 'text/javascript');
         $this->view->headLink()->appendStylesheet($baseUrl.'css/playlist_builder.css?'.$CC_CONFIG['airtime_version']);
@@ -86,6 +87,8 @@ class ShowbuilderController extends Zend_Controller_Action
         $start->setTimezone($displayTimeZone);
         $end = DateTime::createFromFormat("U", $to, $utcTimezone);
         $end->setTimezone($displayTimeZone);
+
+        $this->checkAndShowSetupPopup($request);
 
         $form = new Application_Form_ShowBuilder();
         $form->populate(array(

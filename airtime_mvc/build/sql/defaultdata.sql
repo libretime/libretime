@@ -387,3 +387,7 @@ CREATE UNIQUE INDEX cc_pref_key_idx ON cc_pref (keystr) WHERE subjid IS NULL;
 ANALYZE cc_pref; -- this validates the new partial index
 
 --end added in 2.5.14
+
+INSERT INTO cc_pref (keystr, valstr, subjid) VALUES ('whats_new_dialog_viewed', 'true', '0');
+INSERT INTO cc_pref (keystr, valstr, subjid) VALUES ('whats_new_dialog_viewed', 'true', '1');
+INSERT INTO cc_pref (keystr, valstr, subjid) VALUES ('whats_new_dialog_viewed', 'true', '2');

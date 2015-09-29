@@ -176,8 +176,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     if (!Application_Model_Preference::getWhatsNewDialogViewed()) {
         ?>
         <div id="whatsnew">
-            <div id="whatsnew_video">
-                <iframe width="560" height="315" src="<?php echo UI_REVAMP_EMBED_URL ?>" frameborder="0" allowfullscreen></iframe>
+            <div>
+                <div id="whatsnew_video">
+                    <iframe width="560" height="315" src="<?php echo UI_REVAMP_EMBED_URL ?>" frameborder="0" allowfullscreen></iframe>
+                </div>
                 <h2><?php echo _("Airtime Pro has a new look!"); ?></h2>
                 <p><?php echo _("Your favorite features are now even easier to use - and we've even
                     added a few new ones! Check out the video above or read on to find out more."); ?></p>
