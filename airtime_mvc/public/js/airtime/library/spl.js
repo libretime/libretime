@@ -1020,11 +1020,10 @@ var AIRTIME = (function(AIRTIME){
         newTab.assignTabClickHandler(function() {
             if (!$(this).hasClass('active')) {
                 newTab.switchTo();
-                $.post(baseUrl+'playlist/edit', {
-                    format: "json",
-                    id: newTab.pane.find(".obj_id").val(),
-                    type: newTab.pane.find(".obj_type").val()
-                });
+                var type = newTab.contents.find(".obj_type").val();
+                if (type == "playlist" || type == "block") {
+                    $.post(baseUrl + 'playlist/edit', { format: "json", id: newTab.contents.find(".obj_id").val(), type: type });
+                }
             }
         });
 
