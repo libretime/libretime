@@ -478,7 +478,7 @@ li.ui-state-default {
     display: flex;
     -webkit-flex-flow: column;
     flex-flow: column;
-    position: absolute;
+    /*position: absolute;*/
     right: 4px;
     bottom: 4px;
     top: 4px;
@@ -533,6 +533,7 @@ li.ui-state-default {
     height: 100%;
     overflow: auto;
     flex: 1 100%;
+    -webkit-flex: 1 100%;
 
     margin: 4px 0;
     min-height: 0;
