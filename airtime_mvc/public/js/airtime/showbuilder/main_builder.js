@@ -94,8 +94,6 @@ AIRTIME = (function(AIRTIME) {
                   
         check = validateTimeRange();
 
-        console.log(check);
-        
         if (check.isValid) {
             //reset timestamp value since input values could have changed.
             AIRTIME.showbuilder.resetTimestamp();
@@ -111,7 +109,8 @@ AIRTIME = (function(AIRTIME) {
                     fn.ops = {};
                 }
                 fn.ops.showFilter = op.find("#sb_show_filter").val();
-                fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+                // Hacky?
+                fn.ops.myShows = (fn.ops.showFilter == -1) ? 1 : 0;
             }
 
             oTable.fnDraw();
