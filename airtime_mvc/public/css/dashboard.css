@@ -529,7 +529,6 @@ li.ui-state-default {
 }
 
 .spl_sortable {
-    position: relative;
     height: 100%;
     overflow: auto;
     flex: 1 100%;
