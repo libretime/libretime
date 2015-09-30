@@ -93,7 +93,7 @@ AIRTIME = (function(AIRTIME) {
             check;
                   
         check = validateTimeRange();
-        
+
         if (check.isValid) {
             //reset timestamp value since input values could have changed.
             AIRTIME.showbuilder.resetTimestamp();
@@ -102,14 +102,15 @@ AIRTIME = (function(AIRTIME) {
             fn.start = check.start;
             fn.end = check.end;
 
-            op = $("div.sb-advanced-options");
+            op = $("div.sb-options-form");
             if (op.is(":visible")) {
 
                 if (fn.ops === undefined) {
                     fn.ops = {};
                 }
                 fn.ops.showFilter = op.find("#sb_show_filter").val();
-                fn.ops.myShows = op.find("#sb_my_shows").is(":checked") ? 1 : 0;
+                // Hacky?
+                fn.ops.myShows = (fn.ops.showFilter == -1) ? 1 : 0;
             }
 
             oTable.fnDraw();

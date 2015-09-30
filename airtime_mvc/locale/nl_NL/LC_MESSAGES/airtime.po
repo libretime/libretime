@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-04 11:17-0400\n"
-"PO-Revision-Date: 2015-09-05 08:33+0000\n"
-"Last-Translator: Daniel James <daniel@64studio.com>\n"
+"PO-Revision-Date: 2015-09-28 12:25+0000\n"
+"Last-Translator: dave van den berg <d.berg501@gmail.com>\n"
 "Language-Team: Dutch (Netherlands) (http://www.transifex.com/sourcefabric/airtime/language/nl_NL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
-msgstr "ecord bestand bestaat niet"
+msgstr "Record bestand bestaat niet"
 
 #: airtime_mvc/application/services/CalendarService.php:54
 msgid "View Recorded File Metadata"
@@ -31,25 +31,25 @@ msgstr "Weergave opgenomen bestand Metadata"
 #: airtime_mvc/application/services/CalendarService.php:61
 #: airtime_mvc/application/services/CalendarService.php:93
 msgid "View"
-msgstr ""
+msgstr "Weergeven"
 
 #: airtime_mvc/application/services/CalendarService.php:81
 msgid "Schedule Tracks"
-msgstr ""
+msgstr "Schema Tracks"
 
 #: airtime_mvc/application/services/CalendarService.php:106
 msgid "Clear Show"
-msgstr ""
+msgstr "Wissen show"
 
 #: airtime_mvc/application/services/CalendarService.php:120
 #: airtime_mvc/application/services/CalendarService.php:125
 msgid "Cancel Show"
-msgstr ""
+msgstr "Annuleren show"
 
 #: airtime_mvc/application/services/CalendarService.php:146
 #: airtime_mvc/application/services/CalendarService.php:165
 msgid "Edit Instance"
-msgstr ""
+msgstr "Aanleg bewerken"
 
 #: airtime_mvc/application/services/CalendarService.php:152
 #: airtime_mvc/application/controllers/LibraryController.php:184
@@ -74,11 +74,11 @@ msgstr "Verwijderen"
 
 #: airtime_mvc/application/services/CalendarService.php:194
 msgid "Delete Instance"
-msgstr ""
+msgstr "Exemplaar verwijderen"
 
 #: airtime_mvc/application/services/CalendarService.php:200
 msgid "Delete Instance and All Following"
-msgstr ""
+msgstr "Exemplaar verwijderen en alle volgende"
 
 #: airtime_mvc/application/services/CalendarService.php:254
 msgid "Permission denied"
@@ -275,16 +275,16 @@ msgstr "Download"
 
 #: airtime_mvc/application/controllers/LibraryController.php:147
 msgid "View track"
-msgstr ""
+msgstr "Weergave track"
 
 #: airtime_mvc/application/controllers/LibraryController.php:148
 msgid "Remove track"
-msgstr ""
+msgstr "Nummer verwijderen"
 
 #: airtime_mvc/application/controllers/LibraryController.php:154
 #: airtime_mvc/application/controllers/LibraryController.php:159
 msgid "Upload track"
-msgstr ""
+msgstr "Uploaden van track"
 
 #: airtime_mvc/application/controllers/LibraryController.php:169
 msgid "Duplicate Playlist"
@@ -300,11 +300,11 @@ msgstr "Je hebt geen toestemming om geselecteerde items te verwijderen"
 
 #: airtime_mvc/application/controllers/LibraryController.php:279
 msgid "Could not delete file because it is scheduled in the future."
-msgstr ""
+msgstr "Kan bestand niet verwijderen omdat het in de toekomst is gepland."
 
 #: airtime_mvc/application/controllers/LibraryController.php:282
 msgid "Could not delete file(s)."
-msgstr ""
+msgstr "Bestand(en) kan geen gegevens verwijderen."
 
 #: airtime_mvc/application/controllers/LibraryController.php:322
 #, php-format
@@ -329,13 +329,13 @@ msgid ""
 "To configure and use the embeddable player you must:<br><br>\n"
 "            1. Enable at least one MP3, AAC, or OGG stream under System -> Streams<br>\n"
 "            2. Enable the Public Airtime API under System -> Preferences"
-msgstr ""
+msgstr " Configureren en de integreerbare speler u moet gebruiken:<br><br>1. Inschakelen ten minste één MP3, AAC en OGG stream onder systeem->Streams<br>\n2. De openbare Airtime API inschakelen onder systeem->voorkeuren"
 
 #: airtime_mvc/application/controllers/EmbeddablewidgetsController.php:41
 msgid ""
 "To use the embeddable weekly schedule widget you must:<br><br>\n"
 "            Enable the Public Airtime API under System -> Preferences"
-msgstr ""
+msgstr "De integreerbare per schema widget u moet gebruiken:<br><br>\nde openbare Airtime API inschakelen onder systeem->voorkeuren"
 
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
 msgid ""
@@ -391,19 +391,19 @@ msgstr "Onbekende afspeellijst"
 
 #: airtime_mvc/application/controllers/ErrorController.php:78
 msgid "Page not found."
-msgstr ""
+msgstr "Pagina niet gevonden"
 
 #: airtime_mvc/application/controllers/ErrorController.php:87
 msgid "The requested action is not supported."
-msgstr ""
+msgstr "De gevraagde actie wordt niet ondersteund."
 
 #: airtime_mvc/application/controllers/ErrorController.php:98
 msgid "You do not have permission to access this resource."
-msgstr ""
+msgstr "U bent niet gemachtigd voor toegang tot deze bron."
 
 #: airtime_mvc/application/controllers/ErrorController.php:109
 msgid "An internal application error has occurred."
-msgstr ""
+msgstr "Een interne toepassingsfout opgetreden."
 
 #: airtime_mvc/application/controllers/Apiv2Controller.php:77
 #: airtime_mvc/application/controllers/ApiController.php:79
@@ -436,7 +436,7 @@ msgstr "Probleem met Liquidsoap..."
 
 #: airtime_mvc/application/controllers/PreferenceController.php:493
 msgid "Request method not accepted"
-msgstr ""
+msgstr "Verzoek methode niet geaccepteerd"
 
 #: airtime_mvc/application/controllers/DashboardController.php:35
 #: airtime_mvc/application/controllers/DashboardController.php:84
@@ -454,7 +454,7 @@ msgstr "Je hebt geen toestemming om over te schakelen van de bron."
 
 #: airtime_mvc/application/controllers/LoginController.php:43
 msgid "Please enter your username and password."
-msgstr ""
+msgstr "Voer uw gebruikersnaam en wachtwoord."
 
 #: airtime_mvc/application/controllers/LoginController.php:93
 msgid "Wrong username or password provided. Please try again."
@@ -468,7 +468,7 @@ msgstr "E-mail kan niet worden verzonden. Controleer de instellingen van uw e-ma
 
 #: airtime_mvc/application/controllers/LoginController.php:173
 msgid "There was a problem with the username or email address you entered."
-msgstr ""
+msgstr "Er was een probleem met de gebruikersnaam of email adres dat u hebt ingevoerd."
 
 #: airtime_mvc/application/controllers/ApiController.php:244
 #: airtime_mvc/application/controllers/ApiController.php:317
@@ -570,39 +570,39 @@ msgstr "Selecteer een cursorpositie op de tijdlijn."
 
 #: airtime_mvc/application/controllers/LocaleController.php:54
 msgid "You haven't added any tracks"
-msgstr ""
+msgstr "U hebt de nummers nog niet toegevoegd"
 
 #: airtime_mvc/application/controllers/LocaleController.php:55
 msgid "You haven't added any playlists"
-msgstr ""
+msgstr "U heb niet alle afspeellijsten toegevoegd"
 
 #: airtime_mvc/application/controllers/LocaleController.php:56
 msgid "You haven't added any smart blocks"
-msgstr ""
+msgstr "U nog niet toegevoegd een slimme blokken"
 
 #: airtime_mvc/application/controllers/LocaleController.php:57
 msgid "You haven't added any webstreams"
-msgstr ""
+msgstr "U hebt webstreams nog niet toegevoegd"
 
 #: airtime_mvc/application/controllers/LocaleController.php:58
 msgid "Learn about tracks"
-msgstr ""
+msgstr "Informatie over nummers"
 
 #: airtime_mvc/application/controllers/LocaleController.php:59
 msgid "Learn about playlists"
-msgstr ""
+msgstr "Meer informatie over afspeellijsten"
 
 #: airtime_mvc/application/controllers/LocaleController.php:60
 msgid "Learn about smart blocks"
-msgstr ""
+msgstr "Informatie over slimme blokken"
 
 #: airtime_mvc/application/controllers/LocaleController.php:61
 msgid "Learn about webstreams"
-msgstr ""
+msgstr "Meer informatie over webstreams"
 
 #: airtime_mvc/application/controllers/LocaleController.php:62
 msgid "Click 'New' to create one."
-msgstr ""
+msgstr "Klik op 'Nieuw' te maken."
 
 #: airtime_mvc/application/controllers/LocaleController.php:67
 msgid "Add to selected show"
@@ -636,12 +636,12 @@ msgstr "Gepland"
 #: airtime_mvc/application/layouts/scripts/layout.phtml:78
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:7
 msgid "Tracks"
-msgstr ""
+msgstr "track"
 
 #: airtime_mvc/application/controllers/LocaleController.php:75
 #: airtime_mvc/application/layouts/scripts/layout.phtml:60
 msgid "Playlist"
-msgstr ""
+msgstr "Afspeellijsten"
 
 #: airtime_mvc/application/controllers/LocaleController.php:79
 msgid "Bit Rate"
@@ -1068,7 +1068,7 @@ msgstr "Als je live streaming client niet om een gebruikersnaam vraagt, moet dit
 msgid ""
 "WARNING: This will restart your stream and may cause a short dropout for "
 "your listeners!"
-msgstr ""
+msgstr "Waarschuwing: Dit zal opnieuw opstarten van uw stream en een korte dropout kan veroorzaken voor uw luisteraars!"
 
 #: airtime_mvc/application/controllers/LocaleController.php:185
 msgid ""
@@ -1255,19 +1255,19 @@ msgstr "dec"
 
 #: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "Today"
-msgstr ""
+msgstr "vandaag"
 
 #: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "Day"
-msgstr ""
+msgstr "dag"
 
 #: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "Week"
-msgstr ""
+msgstr "week"
 
 #: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Month"
-msgstr ""
+msgstr "maand"
 
 #: airtime_mvc/application/controllers/LocaleController.php:249
 #: airtime_mvc/application/forms/GeneralPreferences.php:158
@@ -1384,15 +1384,15 @@ msgstr "Duur"
 
 #: airtime_mvc/application/controllers/LocaleController.php:276
 msgid "Filtering out "
-msgstr ""
+msgstr "Filteren op"
 
 #: airtime_mvc/application/controllers/LocaleController.php:277
 msgid " of "
-msgstr ""
+msgstr "of"
 
 #: airtime_mvc/application/controllers/LocaleController.php:278
 msgid " records"
-msgstr ""
+msgstr "records"
 
 #: airtime_mvc/application/controllers/LocaleController.php:284
 #: airtime_mvc/application/layouts/scripts/layout.phtml:140
@@ -1492,7 +1492,7 @@ msgstr "Niets selecteren"
 
 #: airtime_mvc/application/controllers/LocaleController.php:306
 msgid "Trim overbooked shows"
-msgstr ""
+msgstr "Trim overboekte shows"
 
 #: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "Remove selected scheduled items"
@@ -1840,11 +1840,11 @@ msgstr "%sPrint weergave%sA.u.b. gebruik printfunctie in uw browser wilt afdrukk
 
 #: airtime_mvc/application/controllers/LocaleController.php:407
 msgid "New Show"
-msgstr ""
+msgstr "Nieuw Show"
 
 #: airtime_mvc/application/controllers/LocaleController.php:408
 msgid "New Log Entry"
-msgstr ""
+msgstr "Nieuwe logboekvermelding"
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:138
 msgid "Select cursor"
@@ -1865,43 +1865,43 @@ msgstr "Rebroadcast van show %s van %s in %s"
 
 #: airtime_mvc/application/common/UsabilityHints.php:55
 msgid "Upload some tracks below to add them to your library!"
-msgstr ""
+msgstr "Uploaden sommige tracks hieronder toe te voegen aan uw bibliotheek!"
 
 #: airtime_mvc/application/common/UsabilityHints.php:57
 #, php-format
 msgid ""
 "It looks like you haven't uploaded any audio files yet. %sUpload a file "
 "now%s."
-msgstr ""
+msgstr "Het lijkt erop dat u alle audio bestanden nog niet hebt geüpload. %sUpload een bestand nu%s."
 
 #: airtime_mvc/application/common/UsabilityHints.php:63
 msgid "Click the 'New Show' button and fill out the required fields."
-msgstr ""
+msgstr "Klik op de knop 'Nieuwe Show' en vul de vereiste velden."
 
 #: airtime_mvc/application/common/UsabilityHints.php:65
 #, php-format
 msgid ""
 "It looks like you don't have any shows scheduled. %sCreate a show now%s."
-msgstr ""
+msgstr "Het lijkt erop dat u niet alle shows gepland. %sCreate een show nu%s."
 
 #: airtime_mvc/application/common/UsabilityHints.php:73
 msgid ""
 "To start broadcasting, cancel the current linked show by clicking on it and "
 "selecting 'Cancel Show'."
-msgstr ""
+msgstr "Om te beginnen omroep, de huidige gekoppelde show te annuleren door op te klikken en te selecteren 'Annuleren Show'."
 
 #: airtime_mvc/application/common/UsabilityHints.php:75
 #, php-format
 msgid ""
 "Linked shows need to be filled with tracks before it starts. To start broadcasting cancel the current linked show and schedule an unlinked show.\n"
 "                    %sCreate an unlinked show now%s."
-msgstr ""
+msgstr "Gekoppelde toont dienen te worden opgevuld met tracks voordat het begint. Om te beginnen met omroep annuleren de huidige gekoppeld Toon en plannen van een niet-gekoppelde show.\n%sCreate een niet-gekoppelde Toon nu%s."
 
 #: airtime_mvc/application/common/UsabilityHints.php:80
 msgid ""
 "To start broadcasting, click on the current show and select 'Schedule "
 "Tracks'"
-msgstr ""
+msgstr "Om te beginnen omroep, klik op de huidige show en selecteer 'Schema Tracks'"
 
 #: airtime_mvc/application/common/UsabilityHints.php:82
 #, php-format

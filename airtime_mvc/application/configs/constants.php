@@ -21,6 +21,8 @@ define('ABOUT_AIRTIME_URL'          , 'https://www.airtime.pro/support/');
 define('AIRTIME_TRANSIFEX_URL'      , 'https://www.transifex.com/projects/p/airtime/');
 define('WHMCS_PASSWORD_RESET_URL'   , 'https://account.sourcefabric.com/pwreset.php');
 define('SUPPORT_TICKET_URL'         , 'https://sourcefabricberlin.zendesk.com/hc/en-us/requests/new');
+define('UI_REVAMP_EMBED_URL'        , 'https://www.youtube.com/embed/nqpNnCKGluY');
+define('UI_REVAMP_YOUTUBE_URL'      , 'https://www.youtube.com/watch?v=nqpNnCKGluY&feature=youtu.be');
 
 define('LICENSE_VERSION'    , 'GNU AGPL v.3');
 define('LICENSE_URL'        , 'http://www.gnu.org/licenses/agpl-3.0-standalone.html');

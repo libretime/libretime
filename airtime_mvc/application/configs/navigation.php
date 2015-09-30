@@ -172,6 +172,11 @@ $pages = array(
                 'label'      => _(sprintf("Help Translate %s", PRODUCT_NAME)),
                 'uri'        => AIRTIME_TRANSIFEX_URL,
                 'target'     => "_blank"
+            ),
+            array(
+                'label'     => _('What\'s New?'),
+                'uri'       => UI_REVAMP_YOUTUBE_URL,
+                'target'    => "_blank"
             )
         )
     ),

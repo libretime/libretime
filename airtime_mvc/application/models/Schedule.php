@@ -1035,7 +1035,11 @@ SQL;
                 self::createStreamScheduleEvent($data, $item, $media_id, $uri);
             }
             else {
-                throw new Exception("Unknown schedule type: ".print_r($item, true));
+                //throw new Exception("Unknown schedule type: ".print_r($item, true));
+                //It's currently possible (and normal) to get cc_schedule rows without
+                //a file_id or stream_id. If you're using linked shows, placeholder rows can be put
+                //in the schedule when you cancel a track or delete stuff, so we should not throw an exception
+                //here and instead just ignore it.
             }
 
         }

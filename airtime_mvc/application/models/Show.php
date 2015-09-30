@@ -1044,16 +1044,30 @@ SQL;
                 $event["nowPlaying"] = false;
             }
 
-            //event colouring
-            if ($show["color"] != "") {
-                $event["textColor"] = "#".$show["color"];
-            }
-
             if (!empty($show["background_color"])) {
                 $event["color"] = "#" . $show["background_color"];
             } else {
                 $event["color"] = "#" . self::getDefaultBackgroundColor($startsDT);//DEFAULT_SHOW_COLOR;
             }
+
+
+            //event colouring
+            if ($show["color"] != "") {
+                $event["textColor"] = "#".$show["color"];
+            } else {
+                $bg = $event["color"];
+                //Calculate the text colour (black or white) based on the brightness of the background.
+                $r = intval(substr($bg, 1, 2), 16);
+                $g = intval(substr($bg, 3, 2), 16);
+                $b = intval(substr($bg, 5, 2), 16);
+                $brightness = 0.299*floatval($r) + 0.587*floatval($g) + 0.114*floatval($b);
+                if ($brightness > 130) {
+                    $event["textColor"] = "#000000";
+                } else {
+                    $event["textColor"] = "#fcfcfc";
+                }
+            }
+
 
             foreach ($options as $key => $value) {
                 $event[$key] = $value;
@@ -1067,12 +1081,33 @@ SQL;
     /** Get a palettized colour for the show. */
     private static function getDefaultBackgroundColor($date) {
 
+        $basePalette = ['A22BE8', '2FFF8D', 'FF743C', '2ED4FF', 'E8D82B'];
+        // 'B23F11', 'FF7E4A', 'FF6C31'
+
+        /*
         $palette = [['42d5a1', '56bd99', '65ab93', '7b938b'],
                     ['42a4d5', '569bbd', '6594ab', '7b8b93'],
                     ['4264d5', '566fbd', '6576ab', '7b8193']];
+        */
+        $palette = [];
+        for ($baseColorIdx = 0; $baseColorIdx < count($basePalette); $baseColorIdx++) {
+            $dayPalette = [];
+            for ($shade = 0.0; $shade < 0.8; $shade += 0.1) {
+                $origColour = $basePalette[$baseColorIdx];
+                $r = intval(substr($origColour, 0, 2), 16);
+                $g = intval(substr($origColour, 2, 2), 16);
+                $b = intval(substr($origColour, 4, 2), 16);
+                $r = floatval($r) * (1.0 - $shade);
+                $g = floatval($g) * (1.0 - $shade);
+                $b = floatval($b) * (1.0 - $shade);
+                $color = sprintf("%02x%02x%02x", $r, $g, $b);
+                array_push($dayPalette, $color);
+            }
+            array_push($palette, $dayPalette);
+        }
 
         //$hashValue = (md5($date->format('d'))[0] % $cols) + ((intval($date->format('h'))/24) % $rows);
-        $row = intval($date->format('d')) % sizeof($palette);
+        $row = intval($date->format('w')) % sizeof($palette);
         $foo = $date->format('H');
         $col = intval(intval($date->format('H'))/24.0 * sizeof($palette[0]));
         //$color = $palette[$hashValue % sizeof($palette)];

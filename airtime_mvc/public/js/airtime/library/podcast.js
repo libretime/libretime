@@ -18,6 +18,7 @@ var AIRTIME = (function (AIRTIME) {
             //when you're creating a new podcast, we already have the object from the result of the POST. We're saving
             //a roundtrip by not fetching it again here.
             $scope.podcast = podcast;
+            console.log(podcast);
             tab.setName($scope.podcast.title);
 
             $scope.savePodcast = function() {
@@ -25,7 +26,6 @@ var AIRTIME = (function (AIRTIME) {
                 podcastData.episodes = episodeTable.getSelectedRows();
                 $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: podcastData })
                     .success(function() {
-                        // TODO refresh the table here somehow..
                         episodeTable.reload($scope.podcast.id);
                     });
             };
@@ -39,12 +39,16 @@ var AIRTIME = (function (AIRTIME) {
     function _bulkAction(method, callback) {
         var ids = [], selectedData = AIRTIME.library.podcastTableWidget.getSelectedRows();
         selectedData.forEach(function(el) {
-            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id;
-            var t = AIRTIME.tabs.get(uid);
+            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id,
+                t = AIRTIME.tabs.get(uid);
             if (t && method == HTTPMethods.DELETE) {
                 t.close();
             }
-            if (!(t && method == HTTPMethods.GET)) ids.push(el.id);
+            if (!(t && method == HTTPMethods.GET)) {
+                ids.push(el.id);
+            } else if (t != AIRTIME.tabs.getActiveTab()) {
+                t.switchTo();
+            }
         });
 
         if (ids.length > 0) {
@@ -62,6 +66,14 @@ var AIRTIME = (function (AIRTIME) {
         angular.bootstrap(wrapper.get(0), ["podcast"]);
     }
 
+    function _initAppFromResponse(data) {
+        var podcast = JSON.parse(data.podcast),
+            uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
+            tab = AIRTIME.tabs.openTab(data, uid, null),
+            table = mod.initPodcastEpisodeDatatable(podcast.episodes);
+        _bootstrapAngularApp(podcast, tab, table);
+    }
+
     mod.createUrlDialog = function() {
         $.get('/render/podcast-url-dialog', function(json) {
             $(document.body).append(json.html);
@@ -77,11 +89,7 @@ var AIRTIME = (function (AIRTIME) {
 
     mod.addPodcast = function() {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
-            var podcast = JSON.parse(json.podcast);
-            var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
-                tab = AIRTIME.tabs.openTab(json, uid, null);
-            var table = mod.initPodcastEpisodeDatatable(podcast.episodes);
-            _bootstrapAngularApp(podcast, tab, table);
+            _initAppFromResponse(json);
             $("#podcast_url_dialog").dialog("close");
         });
     };
@@ -89,11 +97,7 @@ var AIRTIME = (function (AIRTIME) {
     mod.editSelectedPodcasts = function() {
         _bulkAction(HTTPMethods.GET, function(json) {
             json.forEach(function(data) {
-                var podcast = JSON.parse(data.podcast);
-                var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
-                    tab = AIRTIME.tabs.openTab(data, uid, null);
-                var table = mod.initPodcastEpisodeDatatable(podcast.episodes);
-                _bootstrapAngularApp(podcast, tab, table);
+                _initAppFromResponse(data);
             });
         });
     };
@@ -140,7 +144,6 @@ var AIRTIME = (function (AIRTIME) {
             });
         };
 
-        // This method is static, so use AIRTIME.widgets.Table
         var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
 
         // Set up the div with id "podcast_table" as a datatable.

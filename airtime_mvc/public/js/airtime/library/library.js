@@ -847,12 +847,6 @@ var AIRTIME = (function(AIRTIME) {
                     return getDatatablesStrings({
                         "sEmptyTable": $.i18n._(""),
                         "sZeroRecords": $.i18n._("No matching results found.")
-                        //"oPaginate": {
-                        //    "sFirst":    "<<",
-                        //    "sLast":     ">>",
-                        //    "sNext":     ">",
-                        //    "sPrevious": "<"
-                        //}
                     });
                     break;
             }

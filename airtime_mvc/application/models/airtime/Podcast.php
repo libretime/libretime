@@ -154,7 +154,9 @@ class Podcast extends BasePodcast
                 "guid" => $item->get_id(),
                 "ingested" => in_array($item->get_id(), $episodeIds),
                 "title" => $item->get_title(),
-                "author" => $item->get_author()->get_name(),
+                // From the RSS spec best practices:
+                // 'An item's author element provides the e-mail address of the person who wrote the item'
+                "author" => $item->get_author()->get_email(),
                 "description" => $item->get_description(),
                 "pub_date" => $item->get_date("Y-m-d H:i:s"),
                 "link" => $item->get_link(),

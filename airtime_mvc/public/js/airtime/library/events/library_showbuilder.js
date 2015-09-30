@@ -18,6 +18,7 @@ var AIRTIME = (function(AIRTIME) {
             check = true;
         }
 
+        var sortable = $(".spl_sortable");
         if ($("#show_builder_table").is(":visible")) {
             if (shows.length === 0) {
                 check = false;
@@ -28,13 +29,15 @@ var AIRTIME = (function(AIRTIME) {
             } else if (current.length !== 0) {
                 btnText = $.i18n._('Add to current show');
             }
-        } else {
+        } else if (sortable.length > 0 && sortable.is(":visible")) {
             var objType = $('.active-tab .obj_type').val();
             if (objType === 'block') {
                 btnText = $.i18n._('Add to current smart block');
             } else {
                 btnText = $.i18n._('Add to current playlist');
             }
+        } else {
+            check = false;
         }
 
         if (check) {
@@ -100,86 +103,95 @@ var AIRTIME = (function(AIRTIME) {
             libEmpty.hide();
         }
 
+        var sortable;
+
         if ($("#show_builder_table").is(":visible")) {
-            $('#library_display tr[class*="lib-"]')
-                .draggable(
-                {
-                    helper: function () {
-
-                        var $el = $(this), selected = mod
-                            .getChosenItemsLength(), container, thead = $("#show_builder_table thead"), colspan = thead
-                            .find("th").length, width = $el.width(), message;
-
-                        // dragging an element that has an unselected
-                        // checkbox.
-                        if (mod.isChosenItem($el) === false) {
-                            selected++;
-                        }
-
-                        if (selected === 1) {
-                            message = $.i18n._("Adding 1 Item");
-                        } else {
-                            message = sprintf($.i18n._("Adding %s Items"), selected);
-                        }
-
-                        container = $('<div/>').attr('id',
-                            'draggingContainer').append('<tr/>')
-                            .find("tr").append('<td/>').find("td")
-                            .attr("colspan", colspan).width(width)
-                            .addClass("ui-state-highlight").append(
-                            message).end().end();
-
-                        return container;
-                    },
-                    cursor: 'move',
-                    //cursorAt: {
-                    //    top: 30,
-                    //    right: 10
-                    //},
-                    distance: 25, // min-distance for dragging
-                    connectToSortable: '#show_builder_table'
-                });
+            sortable = "#show_builder_table";
         } else {
-            $('#library_display tr[class*="lib-"]')
-                .draggable(
-                {
-                    helper: function () {
-
-                        var $el = $(this), selected = mod
-                                .getChosenAudioFilesLength(), container, message,
-                            width = $(this).width(), height = 55;
-
-                        // dragging an element that has an unselected
-                        // checkbox.
-                        if (mod.isChosenItem($el) === false) {
-                            selected++;
-                        }
-
-                        if (selected === 1) {
-                            message = $.i18n._("Adding 1 Item");
-                        } else {
-                            message = sprintf($.i18n._("Adding %s Items"), selected);
-                        }
-
-                        container = $('<div class="helper"/>').append(
-                            "<li/>").find("li").addClass(
-                            "ui-state-default").append("<div/>")
-                            .find("div").addClass(
-                            "list-item-container").append(
-                            message).end().width(width)
-                            .height(height).end();
-
-                        return container;
-                    },
-                    cursor: 'move',
-                    //cursorAt: {
-                    //    top: 30,
-                    //    right: 10
-                    //},
-                    distance: 25, // min-distance for dragging
-                    connectToSortable: '.active-tab .spl_sortable'
-                });
+            sortable = ".active-tab .spl_sortable";
+            //$('#library_display tr[class*="lib-"]')
+            //    .draggable(
+            //    {
+            //        helper: function () {
+            //
+            //            var $el = $(this), selected = mod
+            //                    .getChosenAudioFilesLength(), container, message,
+            //                width = $(this).width(), height = 55;
+            //
+            //            // dragging an element that has an unselected
+            //            // checkbox.
+            //            if (mod.isChosenItem($el) === false) {
+            //                selected++;
+            //            }
+            //
+            //            if (selected === 1) {
+            //                message = $.i18n._("Adding 1 Item");
+            //            } else {
+            //                message = sprintf($.i18n._("Adding %s Items"), selected);
+            //            }
+            //
+            //            container = $('<div class="helper"/>').append(
+            //                "<li/>").find("li").addClass(
+            //                "ui-state-default").append("<div/>")
+            //                .find("div").addClass(
+            //                "list-item-container").append(
+            //                message).end().width(width)
+            //                .height(height).end();
+            //
+            //            return container;
+            //        },
+            //        create: function(event, ui) {
+            //            $(this).draggable("option", "cursorAt", {
+            //                left: Math.floor(this.clientWidth / 2)
+            //            });
+            //        },
+            //        cursor: 'move',
+            //        distance: 25, // min-distance for dragging
+            //        connectToSortable: '.active-tab .spl_sortable'
+            //    });
         }
+
+        $('#library_display tr[class*="lib-"]')
+            .draggable(
+            {
+                helper: function () {
+
+                    var $el = $(this), selected = mod
+                        .getChosenItemsLength(), container, thead = $("#show_builder_table thead"), colspan = thead
+                        .find("th").length, width = $el.width(), message;
+
+                    // dragging an element that has an unselected
+                    // checkbox.
+                    if (mod.isChosenItem($el) === false) {
+                        selected++;
+                    }
+
+                    if (selected === 1) {
+                        message = $.i18n._("Adding 1 Item");
+                    } else {
+                        message = sprintf($.i18n._("Adding %s Items"), selected);
+                    }
+
+                    container = $('<div/>').attr('id',
+                        'draggingContainer').append('<tr/>')
+                        .find("tr").append('<td/>').find("td")
+                        .attr("colspan", colspan).width(width)
+                        .addClass("ui-state-highlight").append(
+                        message).end().end();
+
+                    return container;
+                },
+                create: function(event, ui) {
+                    $(this).draggable("option", "cursorAt", {
+                        top: 20,
+                        left: Math.floor($(this).outerWidth() / 2)
+                    });
+                },
+                tolerance: 'pointer',
+                cursor: 'move',
+                distance: 25, // min-distance for dragging
+                connectToSortable: sortable
+            });
     };
 
     mod.dblClickAdd = function(data, type) {

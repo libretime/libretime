@@ -167,6 +167,56 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   </div>
 </div>
 </script>
+
+<?php
+    // Show users the What's New dialog if they haven't seen it yet
+    // TODO: If you're updating this, be sure to update defaultdata! (Suboptimal, is there a better way?)
+    if (!Application_Model_Preference::getWhatsNewDialogViewed()) {
+        ?>
+        <div id="whatsnew">
+            <div>
+                <div id="whatsnew_video">
+                    <iframe width="560" height="315" src="<?php echo UI_REVAMP_EMBED_URL ?>" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <h2><?php echo _("Airtime Pro has a new look!"); ?></h2>
+                <p><?php echo _("Your favorite features are now even easier to use - and we've even
+                    added a few new ones! Check out the video above or read on to find out more."); ?></p>
+                <ul>
+                    <li><?php echo _("Our new Dashboard view now has a powerful tabbed editing interface, so updating your tracks and playlists
+                        is easier than ever."); ?></li>
+                    <li><?php echo _("We've streamlined the Airtime interface to make navigation easier. With the most important tools
+                        just a click away, you'll be on air and hands-free in no time."); ?></li>
+                    <li><?php echo _("Got a huge music library? No problem! With the new Upload page, you can drag and drop whole folders to our private cloud."); ?></li>
+                    <li><?php echo _("The new Airtime is smoother, sleeker, and faster - on even more devices! We're committed to improving the Airtime
+                        experience, no matter how you're connected."); ?></li>
+                </ul>
+            </div>
+            <button id="whatsnew_close" class="btn btn-new">OK, got it!</button>
+        </div>
+        <script>
+            $(document).ready(function() {
+                var whatsnew = $("#whatsnew");
+                whatsnew.dialog({
+                    title: $.i18n._("Welcome to the new Airtime Pro!"),
+                    width: "auto",
+                    height: "auto",
+                    modal: true,
+                    resizable: false,
+                    close: function() {
+                        $(this).dialog('destroy').remove();
+                    }
+                });
+
+                $("#whatsnew_close").on("click", function() {
+                    whatsnew.dialog("close");
+                });
+            });
+        </script>
+        <?php
+        Application_Model_Preference::setWhatsNewDialogViewed(true);
+    }
+?>
+
 </body>
 </html>
 

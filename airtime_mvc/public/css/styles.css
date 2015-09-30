@@ -950,7 +950,7 @@ dl.inline-list dd {
     background: url("img/loading.gif") no-repeat 50% 50% rgba(0, 0, 0, .25);
 }
 div.blockOverlay {
-    background: url("img/loading.gif") no-repeat 50% 50% rgba(0, 0, 0, .45);
+    background: 50% 50% rgba(0, 0, 0, .45);
 }
 #library_display_wrapper .ui-widget-header:first-child {
     background:none;
@@ -981,7 +981,7 @@ div.blockOverlay {
     font-size:12px;
     font-weight:normal;
     padding: 0.2em 1em;
-    margin-right:3px;
+    margin-right:0;
 }
 .dataTables_filter input {
     background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;
@@ -1371,7 +1371,7 @@ thead tr.fc-first
     height: 32px;
     line-height: 32px;
 }
-
+ful
 /** Extremely nasty workaround for a fullcalendar bug, where clicking "Add Show"
     would cause this large space under the table header. The CSS to get to that
     is ridiculously complicated and set in the HTML (!) dynamically with JS,
@@ -3540,7 +3540,7 @@ button.btn-icon-text > i.icon-white {
 }
 
 #media_selector_wrapper {
-    flex: 0 0 100%;
+    flex: 1 1 100%;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -3869,13 +3869,15 @@ li .ui-state-hover {
     -webkit-flex-flow: column;
     flex-flow: column;
 
-    flex: 6 auto;
+    flex: 1 1;
+    -webkit-flex: 1 1;
     min-width: 505px;
 }
 
 .outer-datatable-wrapper {
     position: relative;
     flex: 1;
+    -webkit-flex: 1;
 }
 
 #user_list_inner_wrapper {
@@ -3942,4 +3944,49 @@ li .ui-state-hover {
 
 .podcast-metadata input[type="text"] {
     width: 60%;
+}
+
+/* UI Revamp Video */
+#whatsnew {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    max-width: 640px;
+    max-height: 470px;
+
+    padding: 10px 10px;
+}
+
+#whatsnew_video {
+    text-align: center;
+}
+
+#whatsnew > button {
+    margin-top: 10px;
+    align-self: flex-end;
+    flex: 1 0 auto;
+}
+
+#whatsnew > div {
+    text-align: left;
+    font-size: 16px;
+    overflow-x: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#whatsnew iframe {
+    text-align: center;
+}
+
+#whatsnew h2 {
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#whatsnew li {
+    margin-top: 20px;
 }
