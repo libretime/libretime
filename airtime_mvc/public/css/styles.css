@@ -981,7 +981,7 @@ div.blockOverlay {
     font-size:12px;
     font-weight:normal;
     padding: 0.2em 1em;
-    margin-right:3px;
+    margin-right:0;
 }
 .dataTables_filter input {
     background: url("images/search_auto_bg.png") no-repeat scroll 0 0 #DDDDDD;

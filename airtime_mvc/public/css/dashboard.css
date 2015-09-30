@@ -42,13 +42,6 @@
     }
 }
 
-@media screen and (max-width: 1260px) {
-    #library_display_length > label {
-        /* Hacky, but datatables dumps the select inside the label for some reason... */
-        font-size: 0 !important;
-    }
-}
-
 @media screen and (max-width: 1200px) {
     .wrapper {
         -webkit-flex-flow: column !important;
