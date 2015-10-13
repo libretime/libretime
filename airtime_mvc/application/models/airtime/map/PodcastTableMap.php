@@ -53,7 +53,6 @@ class PodcastTableMap extends TableMap
         $this->addColumn('itunes_category', 'DbItunesCategory', 'VARCHAR', false, 4096, null);
         $this->addColumn('itunes_explicit', 'DbItunesExplicit', 'VARCHAR', false, 4096, null);
         $this->addForeignKey('owner', 'DbOwner', 'INTEGER', 'cc_subjs', 'id', false, null, null);
-        $this->addColumn('descendant_class', 'DescendantClass', 'VARCHAR', false, 100, null);
         // validators
     } // initialize()
 
@@ -63,24 +62,9 @@ class PodcastTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner' => 'id', ), 'CASCADE', null);
+        $this->addRelation('StationPodcast', 'StationPodcast', RelationMap::ONE_TO_MANY, array('id' => 'podcast_id', ), 'CASCADE', null, 'StationPodcasts');
+        $this->addRelation('ImportedPodcast', 'ImportedPodcast', RelationMap::ONE_TO_MANY, array('id' => 'podcast_id', ), 'CASCADE', null, 'ImportedPodcasts');
         $this->addRelation('PodcastEpisodes', 'PodcastEpisodes', RelationMap::ONE_TO_MANY, array('id' => 'podcast_id', ), 'CASCADE', null, 'PodcastEpisodess');
-        $this->addRelation('StationPodcast', 'StationPodcast', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('ImportedPodcast', 'ImportedPodcast', RelationMap::ONE_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
-
-    /**
-     *
-     * Gets the list of behaviors registered for this table
-     *
-     * @return array Associative array (name => parameters) of behaviors
-     */
-    public function getBehaviors()
-    {
-        return array(
-            'concrete_inheritance_parent' =>  array (
-  'descendant_column' => 'descendant_class',
-),
-        );
-    } // getBehaviors()
 
 } // PodcastTableMap

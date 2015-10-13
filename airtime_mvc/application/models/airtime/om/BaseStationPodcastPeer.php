@@ -8,7 +8,7 @@
  *
  * @package propel.generator.airtime.om
  */
-abstract class BaseStationPodcastPeer extends PodcastPeer
+abstract class BaseStationPodcastPeer
 {
 
     /** the default database name for this class */
@@ -24,55 +24,19 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
     const TM_CLASS = 'StationPodcastTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 14;
+    const NUM_COLUMNS = 2;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 14;
+    const NUM_HYDRATE_COLUMNS = 2;
 
     /** the column name for the id field */
     const ID = 'station_podcast.id';
 
-    /** the column name for the title field */
-    const TITLE = 'station_podcast.title';
-
-    /** the column name for the creator field */
-    const CREATOR = 'station_podcast.creator';
-
-    /** the column name for the description field */
-    const DESCRIPTION = 'station_podcast.description';
-
-    /** the column name for the language field */
-    const LANGUAGE = 'station_podcast.language';
-
-    /** the column name for the copyright field */
-    const COPYRIGHT = 'station_podcast.copyright';
-
-    /** the column name for the link field */
-    const LINK = 'station_podcast.link';
-
-    /** the column name for the itunes_author field */
-    const ITUNES_AUTHOR = 'station_podcast.itunes_author';
-
-    /** the column name for the itunes_keywords field */
-    const ITUNES_KEYWORDS = 'station_podcast.itunes_keywords';
-
-    /** the column name for the itunes_summary field */
-    const ITUNES_SUMMARY = 'station_podcast.itunes_summary';
-
-    /** the column name for the itunes_subtitle field */
-    const ITUNES_SUBTITLE = 'station_podcast.itunes_subtitle';
-
-    /** the column name for the itunes_category field */
-    const ITUNES_CATEGORY = 'station_podcast.itunes_category';
-
-    /** the column name for the itunes_explicit field */
-    const ITUNES_EXPLICIT = 'station_podcast.itunes_explicit';
-
-    /** the column name for the owner field */
-    const OWNER = 'station_podcast.owner';
+    /** the column name for the podcast_id field */
+    const PODCAST_ID = 'station_podcast.podcast_id';
 
     /** The default string format for model objects of the related table **/
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -93,12 +57,12 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
      * e.g. StationPodcastPeer::$fieldNames[StationPodcastPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbTitle', 'DbCreator', 'DbDescription', 'DbLanguage', 'DbCopyright', 'DbLink', 'DbItunesAuthor', 'DbItunesKeywords', 'DbItunesSummary', 'DbItunesSubtitle', 'DbItunesCategory', 'DbItunesExplicit', 'DbOwner', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbTitle', 'dbCreator', 'dbDescription', 'dbLanguage', 'dbCopyright', 'dbLink', 'dbItunesAuthor', 'dbItunesKeywords', 'dbItunesSummary', 'dbItunesSubtitle', 'dbItunesCategory', 'dbItunesExplicit', 'dbOwner', ),
-        BasePeer::TYPE_COLNAME => array (StationPodcastPeer::ID, StationPodcastPeer::TITLE, StationPodcastPeer::CREATOR, StationPodcastPeer::DESCRIPTION, StationPodcastPeer::LANGUAGE, StationPodcastPeer::COPYRIGHT, StationPodcastPeer::LINK, StationPodcastPeer::ITUNES_AUTHOR, StationPodcastPeer::ITUNES_KEYWORDS, StationPodcastPeer::ITUNES_SUMMARY, StationPodcastPeer::ITUNES_SUBTITLE, StationPodcastPeer::ITUNES_CATEGORY, StationPodcastPeer::ITUNES_EXPLICIT, StationPodcastPeer::OWNER, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'TITLE', 'CREATOR', 'DESCRIPTION', 'LANGUAGE', 'COPYRIGHT', 'LINK', 'ITUNES_AUTHOR', 'ITUNES_KEYWORDS', 'ITUNES_SUMMARY', 'ITUNES_SUBTITLE', 'ITUNES_CATEGORY', 'ITUNES_EXPLICIT', 'OWNER', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'title', 'creator', 'description', 'language', 'copyright', 'link', 'itunes_author', 'itunes_keywords', 'itunes_summary', 'itunes_subtitle', 'itunes_category', 'itunes_explicit', 'owner', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbPodcastId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbPodcastId', ),
+        BasePeer::TYPE_COLNAME => array (StationPodcastPeer::ID, StationPodcastPeer::PODCAST_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'PODCAST_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'podcast_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, )
     );
 
     /**
@@ -108,12 +72,12 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
      * e.g. StationPodcastPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbTitle' => 1, 'DbCreator' => 2, 'DbDescription' => 3, 'DbLanguage' => 4, 'DbCopyright' => 5, 'DbLink' => 6, 'DbItunesAuthor' => 7, 'DbItunesKeywords' => 8, 'DbItunesSummary' => 9, 'DbItunesSubtitle' => 10, 'DbItunesCategory' => 11, 'DbItunesExplicit' => 12, 'DbOwner' => 13, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbTitle' => 1, 'dbCreator' => 2, 'dbDescription' => 3, 'dbLanguage' => 4, 'dbCopyright' => 5, 'dbLink' => 6, 'dbItunesAuthor' => 7, 'dbItunesKeywords' => 8, 'dbItunesSummary' => 9, 'dbItunesSubtitle' => 10, 'dbItunesCategory' => 11, 'dbItunesExplicit' => 12, 'dbOwner' => 13, ),
-        BasePeer::TYPE_COLNAME => array (StationPodcastPeer::ID => 0, StationPodcastPeer::TITLE => 1, StationPodcastPeer::CREATOR => 2, StationPodcastPeer::DESCRIPTION => 3, StationPodcastPeer::LANGUAGE => 4, StationPodcastPeer::COPYRIGHT => 5, StationPodcastPeer::LINK => 6, StationPodcastPeer::ITUNES_AUTHOR => 7, StationPodcastPeer::ITUNES_KEYWORDS => 8, StationPodcastPeer::ITUNES_SUMMARY => 9, StationPodcastPeer::ITUNES_SUBTITLE => 10, StationPodcastPeer::ITUNES_CATEGORY => 11, StationPodcastPeer::ITUNES_EXPLICIT => 12, StationPodcastPeer::OWNER => 13, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'TITLE' => 1, 'CREATOR' => 2, 'DESCRIPTION' => 3, 'LANGUAGE' => 4, 'COPYRIGHT' => 5, 'LINK' => 6, 'ITUNES_AUTHOR' => 7, 'ITUNES_KEYWORDS' => 8, 'ITUNES_SUMMARY' => 9, 'ITUNES_SUBTITLE' => 10, 'ITUNES_CATEGORY' => 11, 'ITUNES_EXPLICIT' => 12, 'OWNER' => 13, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'title' => 1, 'creator' => 2, 'description' => 3, 'language' => 4, 'copyright' => 5, 'link' => 6, 'itunes_author' => 7, 'itunes_keywords' => 8, 'itunes_summary' => 9, 'itunes_subtitle' => 10, 'itunes_category' => 11, 'itunes_explicit' => 12, 'owner' => 13, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbPodcastId' => 1, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbPodcastId' => 1, ),
+        BasePeer::TYPE_COLNAME => array (StationPodcastPeer::ID => 0, StationPodcastPeer::PODCAST_ID => 1, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'PODCAST_ID' => 1, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'podcast_id' => 1, ),
+        BasePeer::TYPE_NUM => array (0, 1, )
     );
 
     /**
@@ -188,34 +152,10 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
     {
         if (null === $alias) {
             $criteria->addSelectColumn(StationPodcastPeer::ID);
-            $criteria->addSelectColumn(StationPodcastPeer::TITLE);
-            $criteria->addSelectColumn(StationPodcastPeer::CREATOR);
-            $criteria->addSelectColumn(StationPodcastPeer::DESCRIPTION);
-            $criteria->addSelectColumn(StationPodcastPeer::LANGUAGE);
-            $criteria->addSelectColumn(StationPodcastPeer::COPYRIGHT);
-            $criteria->addSelectColumn(StationPodcastPeer::LINK);
-            $criteria->addSelectColumn(StationPodcastPeer::ITUNES_AUTHOR);
-            $criteria->addSelectColumn(StationPodcastPeer::ITUNES_KEYWORDS);
-            $criteria->addSelectColumn(StationPodcastPeer::ITUNES_SUMMARY);
-            $criteria->addSelectColumn(StationPodcastPeer::ITUNES_SUBTITLE);
-            $criteria->addSelectColumn(StationPodcastPeer::ITUNES_CATEGORY);
-            $criteria->addSelectColumn(StationPodcastPeer::ITUNES_EXPLICIT);
-            $criteria->addSelectColumn(StationPodcastPeer::OWNER);
+            $criteria->addSelectColumn(StationPodcastPeer::PODCAST_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.title');
-            $criteria->addSelectColumn($alias . '.creator');
-            $criteria->addSelectColumn($alias . '.description');
-            $criteria->addSelectColumn($alias . '.language');
-            $criteria->addSelectColumn($alias . '.copyright');
-            $criteria->addSelectColumn($alias . '.link');
-            $criteria->addSelectColumn($alias . '.itunes_author');
-            $criteria->addSelectColumn($alias . '.itunes_keywords');
-            $criteria->addSelectColumn($alias . '.itunes_summary');
-            $criteria->addSelectColumn($alias . '.itunes_subtitle');
-            $criteria->addSelectColumn($alias . '.itunes_category');
-            $criteria->addSelectColumn($alias . '.itunes_explicit');
-            $criteria->addSelectColumn($alias . '.owner');
+            $criteria->addSelectColumn($alias . '.podcast_id');
         }
     }
 
@@ -553,58 +493,7 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
             $con = Propel::getConnection(StationPodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(StationPodcastPeer::ID, PodcastPeer::ID, $join_behavior);
-
-        $stmt = BasePeer::doCount($criteria, $con);
-
-        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $count = (int) $row[0];
-        } else {
-            $count = 0; // no rows returned; we infer that means 0 matches.
-        }
-        $stmt->closeCursor();
-
-        return $count;
-    }
-
-
-    /**
-     * Returns the number of rows matching criteria, joining the related CcSubjs table
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return int Number of matching rows.
-     */
-    public static function doCountJoinCcSubjs(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        // we're going to modify criteria, so copy it first
-        $criteria = clone $criteria;
-
-        // We need to set the primary table name, since in the case that there are no WHERE columns
-        // it will be impossible for the BasePeer::createSelectSql() method to determine which
-        // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(StationPodcastPeer::TABLE_NAME);
-
-        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-            $criteria->setDistinct();
-        }
-
-        if (!$criteria->hasSelectClause()) {
-            StationPodcastPeer::addSelectColumns($criteria);
-        }
-
-        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
-
-        // Set the correct dbName
-        $criteria->setDbName(StationPodcastPeer::DATABASE_NAME);
-
-        if ($con === null) {
-            $con = Propel::getConnection(StationPodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-        }
-
-        $criteria->addJoin(StationPodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
+        $criteria->addJoin(StationPodcastPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -641,7 +530,7 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
         $startcol = StationPodcastPeer::NUM_HYDRATE_COLUMNS;
         PodcastPeer::addSelectColumns($criteria);
 
-        $criteria->addJoin(StationPodcastPeer::ID, PodcastPeer::ID, $join_behavior);
+        $criteria->addJoin(StationPodcastPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -674,74 +563,6 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
                 } // if obj2 already loaded
 
                 // Add the $obj1 (StationPodcast) to $obj2 (Podcast)
-                // one to one relationship
-                $obj1->setPodcast($obj2);
-
-            } // if joined row was not null
-
-            $results[] = $obj1;
-        }
-        $stmt->closeCursor();
-
-        return $results;
-    }
-
-
-    /**
-     * Selects a collection of StationPodcast objects pre-filled with their CcSubjs objects.
-     * @param      Criteria  $criteria
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of StationPodcast objects.
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function doSelectJoinCcSubjs(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $criteria = clone $criteria;
-
-        // Set the correct dbName if it has not been overridden
-        if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(StationPodcastPeer::DATABASE_NAME);
-        }
-
-        StationPodcastPeer::addSelectColumns($criteria);
-        $startcol = StationPodcastPeer::NUM_HYDRATE_COLUMNS;
-        CcSubjsPeer::addSelectColumns($criteria);
-
-        $criteria->addJoin(StationPodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
-
-        $stmt = BasePeer::doSelect($criteria, $con);
-        $results = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = StationPodcastPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = StationPodcastPeer::getInstanceFromPool($key1))) {
-                // We no longer rehydrate the object, since this can cause data loss.
-                // See http://www.propelorm.org/ticket/509
-                // $obj1->hydrate($row, 0, true); // rehydrate
-            } else {
-
-                $cls = StationPodcastPeer::getOMClass();
-
-                $obj1 = new $cls();
-                $obj1->hydrate($row);
-                StationPodcastPeer::addInstanceToPool($obj1, $key1);
-            } // if $obj1 already loaded
-
-            $key2 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol);
-            if ($key2 !== null) {
-                $obj2 = CcSubjsPeer::getInstanceFromPool($key2);
-                if (!$obj2) {
-
-                    $cls = CcSubjsPeer::getOMClass();
-
-                    $obj2 = new $cls();
-                    $obj2->hydrate($row, $startcol);
-                    CcSubjsPeer::addInstanceToPool($obj2, $key2);
-                } // if obj2 already loaded
-
-                // Add the $obj1 (StationPodcast) to $obj2 (CcSubjs)
                 $obj2->addStationPodcast($obj1);
 
             } // if joined row was not null
@@ -790,9 +611,7 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
             $con = Propel::getConnection(StationPodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
 
-        $criteria->addJoin(StationPodcastPeer::ID, PodcastPeer::ID, $join_behavior);
-
-        $criteria->addJoin(StationPodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
+        $criteria->addJoin(StationPodcastPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
 
@@ -831,12 +650,7 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
         PodcastPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + PodcastPeer::NUM_HYDRATE_COLUMNS;
 
-        CcSubjsPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + CcSubjsPeer::NUM_HYDRATE_COLUMNS;
-
-        $criteria->addJoin(StationPodcastPeer::ID, PodcastPeer::ID, $join_behavior);
-
-        $criteria->addJoin(StationPodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
+        $criteria->addJoin(StationPodcastPeer::PODCAST_ID, PodcastPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doSelect($criteria, $con);
         $results = array();
@@ -870,276 +684,8 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
                 } // if obj2 loaded
 
                 // Add the $obj1 (StationPodcast) to the collection in $obj2 (Podcast)
-                $obj1->setPodcast($obj2);
-            } // if joined row not null
-
-            // Add objects for joined CcSubjs rows
-
-            $key3 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol3);
-            if ($key3 !== null) {
-                $obj3 = CcSubjsPeer::getInstanceFromPool($key3);
-                if (!$obj3) {
-
-                    $cls = CcSubjsPeer::getOMClass();
-
-                    $obj3 = new $cls();
-                    $obj3->hydrate($row, $startcol3);
-                    CcSubjsPeer::addInstanceToPool($obj3, $key3);
-                } // if obj3 loaded
-
-                // Add the $obj1 (StationPodcast) to the collection in $obj3 (CcSubjs)
-                $obj3->addStationPodcast($obj1);
-            } // if joined row not null
-
-            $results[] = $obj1;
-        }
-        $stmt->closeCursor();
-
-        return $results;
-    }
-
-
-    /**
-     * Returns the number of rows matching criteria, joining the related Podcast table
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return int Number of matching rows.
-     */
-    public static function doCountJoinAllExceptPodcast(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        // we're going to modify criteria, so copy it first
-        $criteria = clone $criteria;
-
-        // We need to set the primary table name, since in the case that there are no WHERE columns
-        // it will be impossible for the BasePeer::createSelectSql() method to determine which
-        // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(StationPodcastPeer::TABLE_NAME);
-
-        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-            $criteria->setDistinct();
-        }
-
-        if (!$criteria->hasSelectClause()) {
-            StationPodcastPeer::addSelectColumns($criteria);
-        }
-
-        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
-
-        // Set the correct dbName
-        $criteria->setDbName(StationPodcastPeer::DATABASE_NAME);
-
-        if ($con === null) {
-            $con = Propel::getConnection(StationPodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-        }
-
-        $criteria->addJoin(StationPodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
-
-        $stmt = BasePeer::doCount($criteria, $con);
-
-        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $count = (int) $row[0];
-        } else {
-            $count = 0; // no rows returned; we infer that means 0 matches.
-        }
-        $stmt->closeCursor();
-
-        return $count;
-    }
-
-
-    /**
-     * Returns the number of rows matching criteria, joining the related CcSubjs table
-     *
-     * @param      Criteria $criteria
-     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return int Number of matching rows.
-     */
-    public static function doCountJoinAllExceptCcSubjs(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        // we're going to modify criteria, so copy it first
-        $criteria = clone $criteria;
-
-        // We need to set the primary table name, since in the case that there are no WHERE columns
-        // it will be impossible for the BasePeer::createSelectSql() method to determine which
-        // tables go into the FROM clause.
-        $criteria->setPrimaryTableName(StationPodcastPeer::TABLE_NAME);
-
-        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
-            $criteria->setDistinct();
-        }
-
-        if (!$criteria->hasSelectClause()) {
-            StationPodcastPeer::addSelectColumns($criteria);
-        }
-
-        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
-
-        // Set the correct dbName
-        $criteria->setDbName(StationPodcastPeer::DATABASE_NAME);
-
-        if ($con === null) {
-            $con = Propel::getConnection(StationPodcastPeer::DATABASE_NAME, Propel::CONNECTION_READ);
-        }
-
-        $criteria->addJoin(StationPodcastPeer::ID, PodcastPeer::ID, $join_behavior);
-
-        $stmt = BasePeer::doCount($criteria, $con);
-
-        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $count = (int) $row[0];
-        } else {
-            $count = 0; // no rows returned; we infer that means 0 matches.
-        }
-        $stmt->closeCursor();
-
-        return $count;
-    }
-
-
-    /**
-     * Selects a collection of StationPodcast objects pre-filled with all related objects except Podcast.
-     *
-     * @param      Criteria  $criteria
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of StationPodcast objects.
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function doSelectJoinAllExceptPodcast(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $criteria = clone $criteria;
-
-        // Set the correct dbName if it has not been overridden
-        // $criteria->getDbName() will return the same object if not set to another value
-        // so == check is okay and faster
-        if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(StationPodcastPeer::DATABASE_NAME);
-        }
-
-        StationPodcastPeer::addSelectColumns($criteria);
-        $startcol2 = StationPodcastPeer::NUM_HYDRATE_COLUMNS;
-
-        CcSubjsPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + CcSubjsPeer::NUM_HYDRATE_COLUMNS;
-
-        $criteria->addJoin(StationPodcastPeer::OWNER, CcSubjsPeer::ID, $join_behavior);
-
-
-        $stmt = BasePeer::doSelect($criteria, $con);
-        $results = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = StationPodcastPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = StationPodcastPeer::getInstanceFromPool($key1))) {
-                // We no longer rehydrate the object, since this can cause data loss.
-                // See http://www.propelorm.org/ticket/509
-                // $obj1->hydrate($row, 0, true); // rehydrate
-            } else {
-                $cls = StationPodcastPeer::getOMClass();
-
-                $obj1 = new $cls();
-                $obj1->hydrate($row);
-                StationPodcastPeer::addInstanceToPool($obj1, $key1);
-            } // if obj1 already loaded
-
-                // Add objects for joined CcSubjs rows
-
-                $key2 = CcSubjsPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-                if ($key2 !== null) {
-                    $obj2 = CcSubjsPeer::getInstanceFromPool($key2);
-                    if (!$obj2) {
-
-                        $cls = CcSubjsPeer::getOMClass();
-
-                    $obj2 = new $cls();
-                    $obj2->hydrate($row, $startcol2);
-                    CcSubjsPeer::addInstanceToPool($obj2, $key2);
-                } // if $obj2 already loaded
-
-                // Add the $obj1 (StationPodcast) to the collection in $obj2 (CcSubjs)
                 $obj2->addStationPodcast($obj1);
-
-            } // if joined row is not null
-
-            $results[] = $obj1;
-        }
-        $stmt->closeCursor();
-
-        return $results;
-    }
-
-
-    /**
-     * Selects a collection of StationPodcast objects pre-filled with all related objects except CcSubjs.
-     *
-     * @param      Criteria  $criteria
-     * @param      PropelPDO $con
-     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
-     * @return array           Array of StationPodcast objects.
-     * @throws PropelException Any exceptions caught during processing will be
-     *		 rethrown wrapped into a PropelException.
-     */
-    public static function doSelectJoinAllExceptCcSubjs(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
-    {
-        $criteria = clone $criteria;
-
-        // Set the correct dbName if it has not been overridden
-        // $criteria->getDbName() will return the same object if not set to another value
-        // so == check is okay and faster
-        if ($criteria->getDbName() == Propel::getDefaultDB()) {
-            $criteria->setDbName(StationPodcastPeer::DATABASE_NAME);
-        }
-
-        StationPodcastPeer::addSelectColumns($criteria);
-        $startcol2 = StationPodcastPeer::NUM_HYDRATE_COLUMNS;
-
-        PodcastPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + PodcastPeer::NUM_HYDRATE_COLUMNS;
-
-        $criteria->addJoin(StationPodcastPeer::ID, PodcastPeer::ID, $join_behavior);
-
-
-        $stmt = BasePeer::doSelect($criteria, $con);
-        $results = array();
-
-        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-            $key1 = StationPodcastPeer::getPrimaryKeyHashFromRow($row, 0);
-            if (null !== ($obj1 = StationPodcastPeer::getInstanceFromPool($key1))) {
-                // We no longer rehydrate the object, since this can cause data loss.
-                // See http://www.propelorm.org/ticket/509
-                // $obj1->hydrate($row, 0, true); // rehydrate
-            } else {
-                $cls = StationPodcastPeer::getOMClass();
-
-                $obj1 = new $cls();
-                $obj1->hydrate($row);
-                StationPodcastPeer::addInstanceToPool($obj1, $key1);
-            } // if obj1 already loaded
-
-                // Add objects for joined Podcast rows
-
-                $key2 = PodcastPeer::getPrimaryKeyHashFromRow($row, $startcol2);
-                if ($key2 !== null) {
-                    $obj2 = PodcastPeer::getInstanceFromPool($key2);
-                    if (!$obj2) {
-
-                        $cls = PodcastPeer::getOMClass();
-
-                    $obj2 = new $cls();
-                    $obj2->hydrate($row, $startcol2);
-                    PodcastPeer::addInstanceToPool($obj2, $key2);
-                } // if $obj2 already loaded
-
-                // Add the $obj1 (StationPodcast) to the collection in $obj2 (Podcast)
-                $obj1->setPodcast($obj2);
-
-            } // if joined row is not null
+            } // if joined row not null
 
             $results[] = $obj1;
         }
@@ -1201,6 +747,10 @@ abstract class BaseStationPodcastPeer extends PodcastPeer
             $criteria = clone $values; // rename for clarity
         } else {
             $criteria = $values->buildCriteria(); // build Criteria from StationPodcast object
+        }
+
+        if ($criteria->containsKey(StationPodcastPeer::ID) && $criteria->keyContainsValue(StationPodcastPeer::ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.StationPodcastPeer::ID.')');
         }
 
 

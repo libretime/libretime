@@ -1,6 +1,6 @@
 <?php
 
-class Application_Service_PodcastService extends Application_Service_ThirdPartyCeleryService
+class Application_Service_PodcastEpisodeService extends Application_Service_ThirdPartyCeleryService
 {
     /**
      * Arbitrary constant identifiers for the internal tasks array
@@ -24,42 +24,6 @@ class Application_Service_PodcastService extends Application_Service_ThirdPartyC
     protected static $_CELERY_TASKS = [
         self::DOWNLOAD => 'podcast-download'  // TODO: rename this to ingest?
     ];
-
-    /**
-     * There is maximum of 50 podcasts allowed in the library - to limit
-     * resource consumption. This function returns true if the podcast
-     * limit has been reached.
-     *
-     * @return bool
-     */
-    public static function podcastLimitReached()
-    {
-        if (PodcastQuery::create()->count() >= 50) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Returns parsed rss feed, or false if the given URL cannot be downloaded
-     *
-     * @param $podcastUrl String containing the podcast feed URL
-     *
-     * @return mixed
-     */
-    public static function getPodcastFeed($podcastUrl)
-    {
-        try {
-            $feed = new SimplePie();
-            $feed->set_feed_url($podcastUrl);
-            $feed->enable_cache(false);
-            $feed->init();
-            return $feed;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
 
     public static function createStationRssFeed()
     {

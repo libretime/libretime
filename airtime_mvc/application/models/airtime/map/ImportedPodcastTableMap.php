@@ -36,24 +36,13 @@ class ImportedPodcastTableMap extends TableMap
         $this->setPhpName('ImportedPodcast');
         $this->setClassname('ImportedPodcast');
         $this->setPackage('airtime');
-        $this->setUseIdGenerator(false);
+        $this->setUseIdGenerator(true);
+        $this->setPrimaryKeyMethodInfo('imported_podcast_id_seq');
         // columns
+        $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
         $this->addColumn('url', 'DbUrl', 'VARCHAR', true, 4096, null);
         $this->addColumn('auto_ingest', 'DbAutoIngest', 'BOOLEAN', true, null, false);
-        $this->addForeignPrimaryKey('id', 'DbId', 'INTEGER' , 'podcast', 'id', true, null, null);
-        $this->addColumn('title', 'DbTitle', 'VARCHAR', true, 4096, null);
-        $this->addColumn('creator', 'DbCreator', 'VARCHAR', false, 4096, null);
-        $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 4096, null);
-        $this->addColumn('language', 'DbLanguage', 'VARCHAR', false, 4096, null);
-        $this->addColumn('copyright', 'DbCopyright', 'VARCHAR', false, 4096, null);
-        $this->addColumn('link', 'DbLink', 'VARCHAR', false, 4096, null);
-        $this->addColumn('itunes_author', 'DbItunesAuthor', 'VARCHAR', false, 4096, null);
-        $this->addColumn('itunes_keywords', 'DbItunesKeywords', 'VARCHAR', false, 4096, null);
-        $this->addColumn('itunes_summary', 'DbItunesSummary', 'VARCHAR', false, 4096, null);
-        $this->addColumn('itunes_subtitle', 'DbItunesSubtitle', 'VARCHAR', false, 4096, null);
-        $this->addColumn('itunes_category', 'DbItunesCategory', 'VARCHAR', false, 4096, null);
-        $this->addColumn('itunes_explicit', 'DbItunesExplicit', 'VARCHAR', false, 4096, null);
-        $this->addForeignKey('owner', 'DbOwner', 'INTEGER', 'cc_subjs', 'id', false, null, null);
+        $this->addForeignKey('podcast_id', 'DbPodcastId', 'INTEGER', 'podcast', 'id', true, null, null);
         // validators
     } // initialize()
 
@@ -62,8 +51,7 @@ class ImportedPodcastTableMap extends TableMap
      */
     public function buildRelations()
     {
-        $this->addRelation('Podcast', 'Podcast', RelationMap::MANY_TO_ONE, array('id' => 'id', ), 'CASCADE', null);
-        $this->addRelation('CcSubjs', 'CcSubjs', RelationMap::MANY_TO_ONE, array('owner' => 'id', ), 'CASCADE', null);
+        $this->addRelation('Podcast', 'Podcast', RelationMap::MANY_TO_ONE, array('podcast_id' => 'id', ), 'CASCADE', null);
     } // buildRelations()
 
     /**
@@ -75,12 +63,8 @@ class ImportedPodcastTableMap extends TableMap
     public function getBehaviors()
     {
         return array(
-            'concrete_inheritance' =>  array (
-  'extends' => 'podcast',
-  'descendant_column' => 'descendant_class',
-  'copy_data_to_parent' => 'true',
-  'schema' => '',
-  'excluded_parent_behavior' => 'nested_set',
+            'delegate' =>  array (
+  'to' => 'podcast',
 ),
         );
     } // getBehaviors()

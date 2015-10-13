@@ -13,6 +13,24 @@
  *
  * @package    propel.generator.airtime
  */
-abstract class Podcast extends BasePodcast
+class Podcast extends BasePodcast
 {
+    /*public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    {
+
+        $podcastArray = parent::toArray(BasePeer::TYPE_FIELDNAME);
+        $podcastArray["url"] = $this->getDbUrl();
+
+        //$array = array_merge($podcastArray, $importedPodcastArray);
+
+        //unset podcast_id because we already have that value in $importedPodcastArray
+        //unset($array["podcast_id"]);
+
+        return $podcastArray;
+    }
+
+    public function getDbUrl()
+    {
+        return $this->getImportedPodcasts()->getFirst()->getDbUrl();
+    }*/
 }

@@ -729,7 +729,6 @@ CREATE TABLE "podcast"
     "itunes_category" VARCHAR(4096),
     "itunes_explicit" VARCHAR(4096),
     "owner" INTEGER,
-    "descendant_class" VARCHAR(100),
     PRIMARY KEY ("id")
 );
 
@@ -741,20 +740,8 @@ DROP TABLE IF EXISTS "station_podcast" CASCADE;
 
 CREATE TABLE "station_podcast"
 (
-    "id" INTEGER NOT NULL,
-    "title" VARCHAR(4096) NOT NULL,
-    "creator" VARCHAR(4096),
-    "description" VARCHAR(4096),
-    "language" VARCHAR(4096),
-    "copyright" VARCHAR(4096),
-    "link" VARCHAR(4096),
-    "itunes_author" VARCHAR(4096),
-    "itunes_keywords" VARCHAR(4096),
-    "itunes_summary" VARCHAR(4096),
-    "itunes_subtitle" VARCHAR(4096),
-    "itunes_category" VARCHAR(4096),
-    "itunes_explicit" VARCHAR(4096),
-    "owner" INTEGER,
+    "id" serial NOT NULL,
+    "podcast_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -766,22 +753,10 @@ DROP TABLE IF EXISTS "imported_podcast" CASCADE;
 
 CREATE TABLE "imported_podcast"
 (
+    "id" serial NOT NULL,
     "url" VARCHAR(4096) NOT NULL,
     "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
-    "id" INTEGER NOT NULL,
-    "title" VARCHAR(4096) NOT NULL,
-    "creator" VARCHAR(4096),
-    "description" VARCHAR(4096),
-    "language" VARCHAR(4096),
-    "copyright" VARCHAR(4096),
-    "link" VARCHAR(4096),
-    "itunes_author" VARCHAR(4096),
-    "itunes_keywords" VARCHAR(4096),
-    "itunes_summary" VARCHAR(4096),
-    "itunes_subtitle" VARCHAR(4096),
-    "itunes_category" VARCHAR(4096),
-    "itunes_explicit" VARCHAR(4096),
-    "owner" INTEGER,
+    "podcast_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -979,24 +954,14 @@ ALTER TABLE "podcast" ADD CONSTRAINT "podcast_owner_fkey"
     REFERENCES "cc_subjs" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "station_podcast" ADD CONSTRAINT "station_podcast_FK_1"
-    FOREIGN KEY ("id")
+ALTER TABLE "station_podcast" ADD CONSTRAINT "podcast_id_fkey"
+    FOREIGN KEY ("podcast_id")
     REFERENCES "podcast" ("id")
     ON DELETE CASCADE;
 
-ALTER TABLE "station_podcast" ADD CONSTRAINT "station_podcast_FK_2"
-    FOREIGN KEY ("owner")
-    REFERENCES "cc_subjs" ("id")
-    ON DELETE CASCADE;
-
-ALTER TABLE "imported_podcast" ADD CONSTRAINT "imported_podcast_FK_1"
-    FOREIGN KEY ("id")
+ALTER TABLE "imported_podcast" ADD CONSTRAINT "podcast_id_fkey"
+    FOREIGN KEY ("podcast_id")
     REFERENCES "podcast" ("id")
-    ON DELETE CASCADE;
-
-ALTER TABLE "imported_podcast" ADD CONSTRAINT "imported_podcast_FK_2"
-    FOREIGN KEY ("owner")
-    REFERENCES "cc_subjs" ("id")
     ON DELETE CASCADE;
 
 ALTER TABLE "podcast_episodes" ADD CONSTRAINT "podcast_episodes_cc_files_fkey"

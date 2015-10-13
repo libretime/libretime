@@ -1,5 +1,7 @@
 <?php
 
+require_once('PodcastFactory.php');
+
 class Rest_PodcastController extends Zend_Rest_Controller
 {
 
@@ -15,7 +17,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
         $this->view->setScriptPath(APPLICATION_PATH . 'views/scripts/');
-        $this->_service = new Application_Service_PodcastService();
+        $this->_service = new Application_Service_PodcastEpisodeService();
     }
 
     public function indexAction()
@@ -83,7 +85,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         try {
             //$requestData = json_decode($this->getRequest()->getRawBody(), true);
             $requestData = $this->getRequest()->getPost();
-            $podcast = Podcast::create($requestData);
+            $podcast = PodcastFactory::create($requestData["url"]);
 
             $path = 'podcast/podcast.phtml';
             $this->view->podcast = $podcast;
@@ -94,10 +96,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
                                                "id"=>$podcast["id"]
                                                // "id"=>$podcast->getDbId()
                                            ));
-
-            // $this->getResponse()
-            //      ->setHttpResponseCode(201)
-            //      ->appendBody(json_encode($podcast));
         }
         catch (PodcastLimitReachedException $e) {
             $this->getResponse()

@@ -114,31 +114,27 @@ abstract class BasePodcast extends BaseObject implements Persistent
     protected $owner;
 
     /**
-     * The value for the descendant_class field.
-     * @var        string
-     */
-    protected $descendant_class;
-
-    /**
      * @var        CcSubjs
      */
     protected $aCcSubjs;
+
+    /**
+     * @var        PropelObjectCollection|StationPodcast[] Collection to store aggregation of StationPodcast objects.
+     */
+    protected $collStationPodcasts;
+    protected $collStationPodcastsPartial;
+
+    /**
+     * @var        PropelObjectCollection|ImportedPodcast[] Collection to store aggregation of ImportedPodcast objects.
+     */
+    protected $collImportedPodcasts;
+    protected $collImportedPodcastsPartial;
 
     /**
      * @var        PropelObjectCollection|PodcastEpisodes[] Collection to store aggregation of PodcastEpisodes objects.
      */
     protected $collPodcastEpisodess;
     protected $collPodcastEpisodessPartial;
-
-    /**
-     * @var        StationPodcast one-to-one related StationPodcast object
-     */
-    protected $singleStationPodcast;
-
-    /**
-     * @var        ImportedPodcast one-to-one related ImportedPodcast object
-     */
-    protected $singleImportedPodcast;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -159,6 +155,18 @@ abstract class BasePodcast extends BaseObject implements Persistent
      * @var        boolean
      */
     protected $alreadyInClearAllReferencesDeep = false;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $stationPodcastsScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var		PropelObjectCollection
+     */
+    protected $importedPodcastsScheduledForDeletion = null;
 
     /**
      * An array of objects scheduled for deletion.
@@ -318,17 +326,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
 
         return $this->owner;
-    }
-
-    /**
-     * Get the [descendant_class] column value.
-     *
-     * @return string
-     */
-    public function getDescendantClass()
-    {
-
-        return $this->descendant_class;
     }
 
     /**
@@ -630,27 +627,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
     } // setDbOwner()
 
     /**
-     * Set the value of [descendant_class] column.
-     *
-     * @param  string $v new value
-     * @return Podcast The current object (for fluent API support)
-     */
-    public function setDescendantClass($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->descendant_class !== $v) {
-            $this->descendant_class = $v;
-            $this->modifiedColumns[] = PodcastPeer::DESCENDANT_CLASS;
-        }
-
-
-        return $this;
-    } // setDescendantClass()
-
-    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -696,7 +672,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $this->itunes_category = ($row[$startcol + 11] !== null) ? (string) $row[$startcol + 11] : null;
             $this->itunes_explicit = ($row[$startcol + 12] !== null) ? (string) $row[$startcol + 12] : null;
             $this->owner = ($row[$startcol + 13] !== null) ? (int) $row[$startcol + 13] : null;
-            $this->descendant_class = ($row[$startcol + 14] !== null) ? (string) $row[$startcol + 14] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -706,7 +681,7 @@ abstract class BasePodcast extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 15; // 15 = PodcastPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 14; // 14 = PodcastPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating Podcast object", $e);
@@ -772,11 +747,11 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aCcSubjs = null;
+            $this->collStationPodcasts = null;
+
+            $this->collImportedPodcasts = null;
+
             $this->collPodcastEpisodess = null;
-
-            $this->singleStationPodcast = null;
-
-            $this->singleImportedPodcast = null;
 
         } // if (deep)
     }
@@ -914,6 +889,40 @@ abstract class BasePodcast extends BaseObject implements Persistent
                 $this->resetModified();
             }
 
+            if ($this->stationPodcastsScheduledForDeletion !== null) {
+                if (!$this->stationPodcastsScheduledForDeletion->isEmpty()) {
+                    StationPodcastQuery::create()
+                        ->filterByPrimaryKeys($this->stationPodcastsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->stationPodcastsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collStationPodcasts !== null) {
+                foreach ($this->collStationPodcasts as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
+            if ($this->importedPodcastsScheduledForDeletion !== null) {
+                if (!$this->importedPodcastsScheduledForDeletion->isEmpty()) {
+                    ImportedPodcastQuery::create()
+                        ->filterByPrimaryKeys($this->importedPodcastsScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->importedPodcastsScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collImportedPodcasts !== null) {
+                foreach ($this->collImportedPodcasts as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             if ($this->podcastEpisodessScheduledForDeletion !== null) {
                 if (!$this->podcastEpisodessScheduledForDeletion->isEmpty()) {
                     PodcastEpisodesQuery::create()
@@ -928,18 +937,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
                     if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
                         $affectedRows += $referrerFK->save($con);
                     }
-                }
-            }
-
-            if ($this->singleStationPodcast !== null) {
-                if (!$this->singleStationPodcast->isDeleted() && ($this->singleStationPodcast->isNew() || $this->singleStationPodcast->isModified())) {
-                        $affectedRows += $this->singleStationPodcast->save($con);
-                }
-            }
-
-            if ($this->singleImportedPodcast !== null) {
-                if (!$this->singleImportedPodcast->isDeleted() && ($this->singleImportedPodcast->isNew() || $this->singleImportedPodcast->isModified())) {
-                        $affectedRows += $this->singleImportedPodcast->save($con);
                 }
             }
 
@@ -1021,9 +1018,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastPeer::OWNER)) {
             $modifiedColumns[':p' . $index++]  = '"owner"';
         }
-        if ($this->isColumnModified(PodcastPeer::DESCENDANT_CLASS)) {
-            $modifiedColumns[':p' . $index++]  = '"descendant_class"';
-        }
 
         $sql = sprintf(
             'INSERT INTO "podcast" (%s) VALUES (%s)',
@@ -1076,9 +1070,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
                         break;
                     case '"owner"':
                         $stmt->bindValue($identifier, $this->owner, PDO::PARAM_INT);
-                        break;
-                    case '"descendant_class"':
-                        $stmt->bindValue($identifier, $this->descendant_class, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -1184,23 +1175,27 @@ abstract class BasePodcast extends BaseObject implements Persistent
             }
 
 
-                if ($this->collPodcastEpisodess !== null) {
-                    foreach ($this->collPodcastEpisodess as $referrerFK) {
+                if ($this->collStationPodcasts !== null) {
+                    foreach ($this->collStationPodcasts as $referrerFK) {
                         if (!$referrerFK->validate($columns)) {
                             $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
                         }
                     }
                 }
 
-                if ($this->singleStationPodcast !== null) {
-                    if (!$this->singleStationPodcast->validate($columns)) {
-                        $failureMap = array_merge($failureMap, $this->singleStationPodcast->getValidationFailures());
+                if ($this->collImportedPodcasts !== null) {
+                    foreach ($this->collImportedPodcasts as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
                     }
                 }
 
-                if ($this->singleImportedPodcast !== null) {
-                    if (!$this->singleImportedPodcast->validate($columns)) {
-                        $failureMap = array_merge($failureMap, $this->singleImportedPodcast->getValidationFailures());
+                if ($this->collPodcastEpisodess !== null) {
+                    foreach ($this->collPodcastEpisodess as $referrerFK) {
+                        if (!$referrerFK->validate($columns)) {
+                            $failureMap = array_merge($failureMap, $referrerFK->getValidationFailures());
+                        }
                     }
                 }
 
@@ -1281,9 +1276,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
             case 13:
                 return $this->getDbOwner();
                 break;
-            case 14:
-                return $this->getDescendantClass();
-                break;
             default:
                 return null;
                 break;
@@ -1327,7 +1319,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $keys[11] => $this->getDbItunesCategory(),
             $keys[12] => $this->getDbItunesExplicit(),
             $keys[13] => $this->getDbOwner(),
-            $keys[14] => $this->getDescendantClass(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1338,14 +1329,14 @@ abstract class BasePodcast extends BaseObject implements Persistent
             if (null !== $this->aCcSubjs) {
                 $result['CcSubjs'] = $this->aCcSubjs->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
+            if (null !== $this->collStationPodcasts) {
+                $result['StationPodcasts'] = $this->collStationPodcasts->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+            if (null !== $this->collImportedPodcasts) {
+                $result['ImportedPodcasts'] = $this->collImportedPodcasts->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
             if (null !== $this->collPodcastEpisodess) {
                 $result['PodcastEpisodess'] = $this->collPodcastEpisodess->toArray(null, true, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-            if (null !== $this->singleStationPodcast) {
-                $result['StationPodcast'] = $this->singleStationPodcast->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
-            }
-            if (null !== $this->singleImportedPodcast) {
-                $result['ImportedPodcast'] = $this->singleImportedPodcast->toArray($keyType, $includeLazyLoadColumns, $alreadyDumpedObjects, true);
             }
         }
 
@@ -1423,9 +1414,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
             case 13:
                 $this->setDbOwner($value);
                 break;
-            case 14:
-                $this->setDescendantClass($value);
-                break;
         } // switch()
     }
 
@@ -1464,7 +1452,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if (array_key_exists($keys[11], $arr)) $this->setDbItunesCategory($arr[$keys[11]]);
         if (array_key_exists($keys[12], $arr)) $this->setDbItunesExplicit($arr[$keys[12]]);
         if (array_key_exists($keys[13], $arr)) $this->setDbOwner($arr[$keys[13]]);
-        if (array_key_exists($keys[14], $arr)) $this->setDescendantClass($arr[$keys[14]]);
     }
 
     /**
@@ -1490,7 +1477,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(PodcastPeer::ITUNES_CATEGORY)) $criteria->add(PodcastPeer::ITUNES_CATEGORY, $this->itunes_category);
         if ($this->isColumnModified(PodcastPeer::ITUNES_EXPLICIT)) $criteria->add(PodcastPeer::ITUNES_EXPLICIT, $this->itunes_explicit);
         if ($this->isColumnModified(PodcastPeer::OWNER)) $criteria->add(PodcastPeer::OWNER, $this->owner);
-        if ($this->isColumnModified(PodcastPeer::DESCENDANT_CLASS)) $criteria->add(PodcastPeer::DESCENDANT_CLASS, $this->descendant_class);
 
         return $criteria;
     }
@@ -1567,7 +1553,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $copyObj->setDbItunesCategory($this->getDbItunesCategory());
         $copyObj->setDbItunesExplicit($this->getDbItunesExplicit());
         $copyObj->setDbOwner($this->getDbOwner());
-        $copyObj->setDescendantClass($this->getDescendantClass());
 
         if ($deepCopy && !$this->startCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1576,20 +1561,22 @@ abstract class BasePodcast extends BaseObject implements Persistent
             // store object hash to prevent cycle
             $this->startCopy = true;
 
+            foreach ($this->getStationPodcasts() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addStationPodcast($relObj->copy($deepCopy));
+                }
+            }
+
+            foreach ($this->getImportedPodcasts() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addImportedPodcast($relObj->copy($deepCopy));
+                }
+            }
+
             foreach ($this->getPodcastEpisodess() as $relObj) {
                 if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
                     $copyObj->addPodcastEpisodes($relObj->copy($deepCopy));
                 }
-            }
-
-            $relObj = $this->getStationPodcast();
-            if ($relObj) {
-                $copyObj->setStationPodcast($relObj->copy($deepCopy));
-            }
-
-            $relObj = $this->getImportedPodcast();
-            if ($relObj) {
-                $copyObj->setImportedPodcast($relObj->copy($deepCopy));
             }
 
             //unflag object copy
@@ -1705,9 +1692,465 @@ abstract class BasePodcast extends BaseObject implements Persistent
      */
     public function initRelation($relationName)
     {
+        if ('StationPodcast' == $relationName) {
+            $this->initStationPodcasts();
+        }
+        if ('ImportedPodcast' == $relationName) {
+            $this->initImportedPodcasts();
+        }
         if ('PodcastEpisodes' == $relationName) {
             $this->initPodcastEpisodess();
         }
+    }
+
+    /**
+     * Clears out the collStationPodcasts collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Podcast The current object (for fluent API support)
+     * @see        addStationPodcasts()
+     */
+    public function clearStationPodcasts()
+    {
+        $this->collStationPodcasts = null; // important to set this to null since that means it is uninitialized
+        $this->collStationPodcastsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collStationPodcasts collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialStationPodcasts($v = true)
+    {
+        $this->collStationPodcastsPartial = $v;
+    }
+
+    /**
+     * Initializes the collStationPodcasts collection.
+     *
+     * By default this just sets the collStationPodcasts collection to an empty array (like clearcollStationPodcasts());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initStationPodcasts($overrideExisting = true)
+    {
+        if (null !== $this->collStationPodcasts && !$overrideExisting) {
+            return;
+        }
+        $this->collStationPodcasts = new PropelObjectCollection();
+        $this->collStationPodcasts->setModel('StationPodcast');
+    }
+
+    /**
+     * Gets an array of StationPodcast objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Podcast is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|StationPodcast[] List of StationPodcast objects
+     * @throws PropelException
+     */
+    public function getStationPodcasts($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collStationPodcastsPartial && !$this->isNew();
+        if (null === $this->collStationPodcasts || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collStationPodcasts) {
+                // return empty collection
+                $this->initStationPodcasts();
+            } else {
+                $collStationPodcasts = StationPodcastQuery::create(null, $criteria)
+                    ->filterByPodcast($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collStationPodcastsPartial && count($collStationPodcasts)) {
+                      $this->initStationPodcasts(false);
+
+                      foreach ($collStationPodcasts as $obj) {
+                        if (false == $this->collStationPodcasts->contains($obj)) {
+                          $this->collStationPodcasts->append($obj);
+                        }
+                      }
+
+                      $this->collStationPodcastsPartial = true;
+                    }
+
+                    $collStationPodcasts->getInternalIterator()->rewind();
+
+                    return $collStationPodcasts;
+                }
+
+                if ($partial && $this->collStationPodcasts) {
+                    foreach ($this->collStationPodcasts as $obj) {
+                        if ($obj->isNew()) {
+                            $collStationPodcasts[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collStationPodcasts = $collStationPodcasts;
+                $this->collStationPodcastsPartial = false;
+            }
+        }
+
+        return $this->collStationPodcasts;
+    }
+
+    /**
+     * Sets a collection of StationPodcast objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $stationPodcasts A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setStationPodcasts(PropelCollection $stationPodcasts, PropelPDO $con = null)
+    {
+        $stationPodcastsToDelete = $this->getStationPodcasts(new Criteria(), $con)->diff($stationPodcasts);
+
+
+        $this->stationPodcastsScheduledForDeletion = $stationPodcastsToDelete;
+
+        foreach ($stationPodcastsToDelete as $stationPodcastRemoved) {
+            $stationPodcastRemoved->setPodcast(null);
+        }
+
+        $this->collStationPodcasts = null;
+        foreach ($stationPodcasts as $stationPodcast) {
+            $this->addStationPodcast($stationPodcast);
+        }
+
+        $this->collStationPodcasts = $stationPodcasts;
+        $this->collStationPodcastsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related StationPodcast objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related StationPodcast objects.
+     * @throws PropelException
+     */
+    public function countStationPodcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collStationPodcastsPartial && !$this->isNew();
+        if (null === $this->collStationPodcasts || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collStationPodcasts) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getStationPodcasts());
+            }
+            $query = StationPodcastQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPodcast($this)
+                ->count($con);
+        }
+
+        return count($this->collStationPodcasts);
+    }
+
+    /**
+     * Method called to associate a StationPodcast object to this object
+     * through the StationPodcast foreign key attribute.
+     *
+     * @param    StationPodcast $l StationPodcast
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function addStationPodcast(StationPodcast $l)
+    {
+        if ($this->collStationPodcasts === null) {
+            $this->initStationPodcasts();
+            $this->collStationPodcastsPartial = true;
+        }
+
+        if (!in_array($l, $this->collStationPodcasts->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddStationPodcast($l);
+
+            if ($this->stationPodcastsScheduledForDeletion and $this->stationPodcastsScheduledForDeletion->contains($l)) {
+                $this->stationPodcastsScheduledForDeletion->remove($this->stationPodcastsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	StationPodcast $stationPodcast The stationPodcast object to add.
+     */
+    protected function doAddStationPodcast($stationPodcast)
+    {
+        $this->collStationPodcasts[]= $stationPodcast;
+        $stationPodcast->setPodcast($this);
+    }
+
+    /**
+     * @param	StationPodcast $stationPodcast The stationPodcast object to remove.
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function removeStationPodcast($stationPodcast)
+    {
+        if ($this->getStationPodcasts()->contains($stationPodcast)) {
+            $this->collStationPodcasts->remove($this->collStationPodcasts->search($stationPodcast));
+            if (null === $this->stationPodcastsScheduledForDeletion) {
+                $this->stationPodcastsScheduledForDeletion = clone $this->collStationPodcasts;
+                $this->stationPodcastsScheduledForDeletion->clear();
+            }
+            $this->stationPodcastsScheduledForDeletion[]= clone $stationPodcast;
+            $stationPodcast->setPodcast(null);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Clears out the collImportedPodcasts collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return Podcast The current object (for fluent API support)
+     * @see        addImportedPodcasts()
+     */
+    public function clearImportedPodcasts()
+    {
+        $this->collImportedPodcasts = null; // important to set this to null since that means it is uninitialized
+        $this->collImportedPodcastsPartial = null;
+
+        return $this;
+    }
+
+    /**
+     * reset is the collImportedPodcasts collection loaded partially
+     *
+     * @return void
+     */
+    public function resetPartialImportedPodcasts($v = true)
+    {
+        $this->collImportedPodcastsPartial = $v;
+    }
+
+    /**
+     * Initializes the collImportedPodcasts collection.
+     *
+     * By default this just sets the collImportedPodcasts collection to an empty array (like clearcollImportedPodcasts());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param boolean $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initImportedPodcasts($overrideExisting = true)
+    {
+        if (null !== $this->collImportedPodcasts && !$overrideExisting) {
+            return;
+        }
+        $this->collImportedPodcasts = new PropelObjectCollection();
+        $this->collImportedPodcasts->setModel('ImportedPodcast');
+    }
+
+    /**
+     * Gets an array of ImportedPodcast objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this Podcast is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param PropelPDO $con optional connection object
+     * @return PropelObjectCollection|ImportedPodcast[] List of ImportedPodcast objects
+     * @throws PropelException
+     */
+    public function getImportedPodcasts($criteria = null, PropelPDO $con = null)
+    {
+        $partial = $this->collImportedPodcastsPartial && !$this->isNew();
+        if (null === $this->collImportedPodcasts || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collImportedPodcasts) {
+                // return empty collection
+                $this->initImportedPodcasts();
+            } else {
+                $collImportedPodcasts = ImportedPodcastQuery::create(null, $criteria)
+                    ->filterByPodcast($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collImportedPodcastsPartial && count($collImportedPodcasts)) {
+                      $this->initImportedPodcasts(false);
+
+                      foreach ($collImportedPodcasts as $obj) {
+                        if (false == $this->collImportedPodcasts->contains($obj)) {
+                          $this->collImportedPodcasts->append($obj);
+                        }
+                      }
+
+                      $this->collImportedPodcastsPartial = true;
+                    }
+
+                    $collImportedPodcasts->getInternalIterator()->rewind();
+
+                    return $collImportedPodcasts;
+                }
+
+                if ($partial && $this->collImportedPodcasts) {
+                    foreach ($this->collImportedPodcasts as $obj) {
+                        if ($obj->isNew()) {
+                            $collImportedPodcasts[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collImportedPodcasts = $collImportedPodcasts;
+                $this->collImportedPodcastsPartial = false;
+            }
+        }
+
+        return $this->collImportedPodcasts;
+    }
+
+    /**
+     * Sets a collection of ImportedPodcast objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param PropelCollection $importedPodcasts A Propel collection.
+     * @param PropelPDO $con Optional connection object
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function setImportedPodcasts(PropelCollection $importedPodcasts, PropelPDO $con = null)
+    {
+        $importedPodcastsToDelete = $this->getImportedPodcasts(new Criteria(), $con)->diff($importedPodcasts);
+
+
+        $this->importedPodcastsScheduledForDeletion = $importedPodcastsToDelete;
+
+        foreach ($importedPodcastsToDelete as $importedPodcastRemoved) {
+            $importedPodcastRemoved->setPodcast(null);
+        }
+
+        $this->collImportedPodcasts = null;
+        foreach ($importedPodcasts as $importedPodcast) {
+            $this->addImportedPodcast($importedPodcast);
+        }
+
+        $this->collImportedPodcasts = $importedPodcasts;
+        $this->collImportedPodcastsPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related ImportedPodcast objects.
+     *
+     * @param Criteria $criteria
+     * @param boolean $distinct
+     * @param PropelPDO $con
+     * @return int             Count of related ImportedPodcast objects.
+     * @throws PropelException
+     */
+    public function countImportedPodcasts(Criteria $criteria = null, $distinct = false, PropelPDO $con = null)
+    {
+        $partial = $this->collImportedPodcastsPartial && !$this->isNew();
+        if (null === $this->collImportedPodcasts || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collImportedPodcasts) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getImportedPodcasts());
+            }
+            $query = ImportedPodcastQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByPodcast($this)
+                ->count($con);
+        }
+
+        return count($this->collImportedPodcasts);
+    }
+
+    /**
+     * Method called to associate a ImportedPodcast object to this object
+     * through the ImportedPodcast foreign key attribute.
+     *
+     * @param    ImportedPodcast $l ImportedPodcast
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function addImportedPodcast(ImportedPodcast $l)
+    {
+        if ($this->collImportedPodcasts === null) {
+            $this->initImportedPodcasts();
+            $this->collImportedPodcastsPartial = true;
+        }
+
+        if (!in_array($l, $this->collImportedPodcasts->getArrayCopy(), true)) { // only add it if the **same** object is not already associated
+            $this->doAddImportedPodcast($l);
+
+            if ($this->importedPodcastsScheduledForDeletion and $this->importedPodcastsScheduledForDeletion->contains($l)) {
+                $this->importedPodcastsScheduledForDeletion->remove($this->importedPodcastsScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param	ImportedPodcast $importedPodcast The importedPodcast object to add.
+     */
+    protected function doAddImportedPodcast($importedPodcast)
+    {
+        $this->collImportedPodcasts[]= $importedPodcast;
+        $importedPodcast->setPodcast($this);
+    }
+
+    /**
+     * @param	ImportedPodcast $importedPodcast The importedPodcast object to remove.
+     * @return Podcast The current object (for fluent API support)
+     */
+    public function removeImportedPodcast($importedPodcast)
+    {
+        if ($this->getImportedPodcasts()->contains($importedPodcast)) {
+            $this->collImportedPodcasts->remove($this->collImportedPodcasts->search($importedPodcast));
+            if (null === $this->importedPodcastsScheduledForDeletion) {
+                $this->importedPodcastsScheduledForDeletion = clone $this->collImportedPodcasts;
+                $this->importedPodcastsScheduledForDeletion->clear();
+            }
+            $this->importedPodcastsScheduledForDeletion[]= clone $importedPodcast;
+            $importedPodcast->setPodcast(null);
+        }
+
+        return $this;
     }
 
     /**
@@ -1961,78 +2404,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
     }
 
     /**
-     * Gets a single StationPodcast object, which is related to this object by a one-to-one relationship.
-     *
-     * @param PropelPDO $con optional connection object
-     * @return StationPodcast
-     * @throws PropelException
-     */
-    public function getStationPodcast(PropelPDO $con = null)
-    {
-
-        if ($this->singleStationPodcast === null && !$this->isNew()) {
-            $this->singleStationPodcast = StationPodcastQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleStationPodcast;
-    }
-
-    /**
-     * Sets a single StationPodcast object as related to this object by a one-to-one relationship.
-     *
-     * @param                  StationPodcast $v StationPodcast
-     * @return Podcast The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setStationPodcast(StationPodcast $v = null)
-    {
-        $this->singleStationPodcast = $v;
-
-        // Make sure that that the passed-in StationPodcast isn't already associated with this object
-        if ($v !== null && $v->getPodcast(null, false) === null) {
-            $v->setPodcast($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Gets a single ImportedPodcast object, which is related to this object by a one-to-one relationship.
-     *
-     * @param PropelPDO $con optional connection object
-     * @return ImportedPodcast
-     * @throws PropelException
-     */
-    public function getImportedPodcast(PropelPDO $con = null)
-    {
-
-        if ($this->singleImportedPodcast === null && !$this->isNew()) {
-            $this->singleImportedPodcast = ImportedPodcastQuery::create()->findPk($this->getPrimaryKey(), $con);
-        }
-
-        return $this->singleImportedPodcast;
-    }
-
-    /**
-     * Sets a single ImportedPodcast object as related to this object by a one-to-one relationship.
-     *
-     * @param                  ImportedPodcast $v ImportedPodcast
-     * @return Podcast The current object (for fluent API support)
-     * @throws PropelException
-     */
-    public function setImportedPodcast(ImportedPodcast $v = null)
-    {
-        $this->singleImportedPodcast = $v;
-
-        // Make sure that that the passed-in ImportedPodcast isn't already associated with this object
-        if ($v !== null && $v->getPodcast(null, false) === null) {
-            $v->setPodcast($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * Clears the current object and sets all attributes to their default values
      */
     public function clear()
@@ -2051,7 +2422,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
         $this->itunes_category = null;
         $this->itunes_explicit = null;
         $this->owner = null;
-        $this->descendant_class = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
         $this->alreadyInClearAllReferencesDeep = false;
@@ -2074,16 +2444,20 @@ abstract class BasePodcast extends BaseObject implements Persistent
     {
         if ($deep && !$this->alreadyInClearAllReferencesDeep) {
             $this->alreadyInClearAllReferencesDeep = true;
+            if ($this->collStationPodcasts) {
+                foreach ($this->collStationPodcasts as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collImportedPodcasts) {
+                foreach ($this->collImportedPodcasts as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
             if ($this->collPodcastEpisodess) {
                 foreach ($this->collPodcastEpisodess as $o) {
                     $o->clearAllReferences($deep);
                 }
-            }
-            if ($this->singleStationPodcast) {
-                $this->singleStationPodcast->clearAllReferences($deep);
-            }
-            if ($this->singleImportedPodcast) {
-                $this->singleImportedPodcast->clearAllReferences($deep);
             }
             if ($this->aCcSubjs instanceof Persistent) {
               $this->aCcSubjs->clearAllReferences($deep);
@@ -2092,18 +2466,18 @@ abstract class BasePodcast extends BaseObject implements Persistent
             $this->alreadyInClearAllReferencesDeep = false;
         } // if ($deep)
 
+        if ($this->collStationPodcasts instanceof PropelCollection) {
+            $this->collStationPodcasts->clearIterator();
+        }
+        $this->collStationPodcasts = null;
+        if ($this->collImportedPodcasts instanceof PropelCollection) {
+            $this->collImportedPodcasts->clearIterator();
+        }
+        $this->collImportedPodcasts = null;
         if ($this->collPodcastEpisodess instanceof PropelCollection) {
             $this->collPodcastEpisodess->clearIterator();
         }
         $this->collPodcastEpisodess = null;
-        if ($this->singleStationPodcast instanceof PropelCollection) {
-            $this->singleStationPodcast->clearIterator();
-        }
-        $this->singleStationPodcast = null;
-        if ($this->singleImportedPodcast instanceof PropelCollection) {
-            $this->singleImportedPodcast->clearIterator();
-        }
-        $this->singleImportedPodcast = null;
         $this->aCcSubjs = null;
     }
 
@@ -2125,34 +2499,6 @@ abstract class BasePodcast extends BaseObject implements Persistent
     public function isAlreadyInSave()
     {
         return $this->alreadyInSave;
-    }
-
-    // concrete_inheritance_parent behavior
-
-    /**
-     * Whether or not this object is the parent of a child object
-     *
-     * @return    bool
-     */
-    public function hasChildObject()
-    {
-        return $this->getDescendantClass() !== null;
-    }
-
-    /**
-     * Get the child object of this object
-     *
-     * @return    mixed
-     */
-    public function getChildObject()
-    {
-        if (!$this->hasChildObject()) {
-            return null;
-        }
-        $childObjectClass = $this->getDescendantClass();
-        $childObject = PropelQuery::from($childObjectClass)->findPk($this->getPrimaryKey());
-
-        return $childObject->hasChildObject() ? $childObject->getChildObject() : $childObject;
     }
 
 }
