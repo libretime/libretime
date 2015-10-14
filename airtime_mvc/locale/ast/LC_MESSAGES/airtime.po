@@ -3,31 +3,27 @@
 # This file is distributed under the same license as the Airtime package.
 # 
 # Translators:
-# Zsolt Magyar <picizse@gmail.com>, 2014
-# Zsolt Magyar <picizse@gmail.com>, 2014
-# Sourcefabric <contact@sourcefabric.org>, 2012
-# Zsolt Magyar <picizse@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Airtime\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-04 11:17-0400\n"
-"PO-Revision-Date: 2015-10-07 18:13+0000\n"
-"Last-Translator: Zsolt Magyar <picizse@gmail.com>\n"
-"Language-Team: Hungarian (Hungary) (http://www.transifex.com/sourcefabric/airtime/language/hu_HU/)\n"
+"PO-Revision-Date: 2014-01-27 10:20+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Asturian (http://www.transifex.com/sourcefabric/airtime/language/ast/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hu_HU\n"
+"Language: ast\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: airtime_mvc/application/services/CalendarService.php:50
 msgid "Record file doesn't exist"
-msgstr "Rögzített fájl nem létezik"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:54
 msgid "View Recorded File Metadata"
-msgstr "A Rögzített Fájl Metaadatai"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:61
 #: airtime_mvc/application/services/CalendarService.php:93
@@ -56,12 +52,12 @@ msgstr ""
 #: airtime_mvc/application/controllers/LibraryController.php:184
 #: airtime_mvc/application/controllers/LibraryController.php:206
 msgid "Edit"
-msgstr "Szerkeszt"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:158
 #: airtime_mvc/application/services/CalendarService.php:172
 msgid "Edit Show"
-msgstr "Műsor Szerkesztése"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:188
 #: airtime_mvc/application/services/CalendarService.php:205
@@ -71,7 +67,7 @@ msgstr "Műsor Szerkesztése"
 #: airtime_mvc/application/controllers/LibraryController.php:208
 #: airtime_mvc/application/controllers/ShowbuilderController.php:144
 msgid "Delete"
-msgstr "Törlés"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:194
 msgid "Delete Instance"
@@ -83,38 +79,38 @@ msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:254
 msgid "Permission denied"
-msgstr "Engedély megtagadva"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:258
 msgid "Can't drag and drop repeating shows"
-msgstr "Nem lehet megismételni a fogd és vidd típusú műsorokat"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:267
 msgid "Can't move a past show"
-msgstr "Az elhangzott műsort nem lehet áthelyezni"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:302
 msgid "Can't move show into past"
-msgstr "A műsort nem lehet a múltba áthelyezni"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:309
 #: airtime_mvc/application/forms/AddShowWhen.php:293
 #: airtime_mvc/application/forms/AddShowWhen.php:321
 #: airtime_mvc/application/forms/AddShowWhen.php:327
 msgid "Cannot schedule overlapping shows"
-msgstr "Nem fedhetik egymást a műsorok"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:322
 msgid "Can't move a recorded show less than 1 hour before its rebroadcasts."
-msgstr "A rögzített műsort, 1 óránál korábban nem lehet újra közvetíteni."
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:332
 msgid "Show was deleted because recorded show does not exist!"
-msgstr "A műsor törlésre került, mert a rögzített műsor nem létezik!"
+msgstr ""
 
 #: airtime_mvc/application/services/CalendarService.php:339
 msgid "Must wait 1 hour to rebroadcast."
-msgstr "Az adás újbóli közvetítésére 1 órát kell várni."
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1117
 #: airtime_mvc/application/services/HistoryService.php:1157
@@ -124,7 +120,7 @@ msgstr "Az adás újbóli közvetítésére 1 órát kell várni."
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:72
 #: airtime_mvc/application/models/Block.php:1375
 msgid "Title"
-msgstr "Cím"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1118
 #: airtime_mvc/application/services/HistoryService.php:1158
@@ -134,7 +130,7 @@ msgstr "Cím"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:58
 #: airtime_mvc/application/models/Block.php:1360
 msgid "Creator"
-msgstr "Előadó/Szerző"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1119
 #: airtime_mvc/application/controllers/LocaleController.php:78
@@ -142,7 +138,7 @@ msgstr "Előadó/Szerző"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:50
 #: airtime_mvc/application/models/Block.php:1352
 msgid "Album"
-msgstr "Album"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1120
 #: airtime_mvc/application/services/HistoryService.php:1177
@@ -151,7 +147,7 @@ msgstr "Album"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:66
 #: airtime_mvc/application/models/Block.php:1369
 msgid "Length"
-msgstr "Hossz"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1121
 #: airtime_mvc/application/controllers/LocaleController.php:85
@@ -160,21 +156,21 @@ msgstr "Hossz"
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:127
 #: airtime_mvc/application/models/Block.php:1362
 msgid "Genre"
-msgstr "Műfaj"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1122
 #: airtime_mvc/application/controllers/LocaleController.php:93
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:68
 #: airtime_mvc/application/models/Block.php:1371
 msgid "Mood"
-msgstr "Hangulat"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1123
 #: airtime_mvc/application/controllers/LocaleController.php:87
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:62
 #: airtime_mvc/application/models/Block.php:1364
 msgid "Label"
-msgstr "Címke"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1124
 #: airtime_mvc/application/services/HistoryService.php:1178
@@ -182,14 +178,14 @@ msgstr "Címke"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:53
 #: airtime_mvc/application/models/Block.php:1355
 msgid "Composer"
-msgstr "Zeneszerző"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1125
 #: airtime_mvc/application/controllers/LocaleController.php:86
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:61
 #: airtime_mvc/application/models/Block.php:1363
 msgid "ISRC"
-msgstr "ISRC"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1126
 #: airtime_mvc/application/services/HistoryService.php:1179
@@ -197,82 +193,82 @@ msgstr "ISRC"
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:55
 #: airtime_mvc/application/models/Block.php:1357
 msgid "Copyright"
-msgstr "Szerzői jog"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1127
 #: airtime_mvc/application/controllers/LocaleController.php:100
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:76
 #: airtime_mvc/application/models/Block.php:1379
 msgid "Year"
-msgstr "Év"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1128
 msgid "Track"
-msgstr "Dalszám"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1129
 #: airtime_mvc/application/controllers/LocaleController.php:82
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:54
 #: airtime_mvc/application/models/Block.php:1356
 msgid "Conductor"
-msgstr "Karmester"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1130
 #: airtime_mvc/application/controllers/LocaleController.php:88
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:63
 #: airtime_mvc/application/models/Block.php:1365
 msgid "Language"
-msgstr "Nyelv"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1155
 #: airtime_mvc/application/forms/EditHistoryItem.php:32
 msgid "Start Time"
-msgstr "Kezdési Idő"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1156
 #: airtime_mvc/application/forms/EditHistoryItem.php:44
 msgid "End Time"
-msgstr "Fejezési Idő"
+msgstr ""
 
 #: airtime_mvc/application/services/HistoryService.php:1176
 msgid "Played"
-msgstr "Lejátszva"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:31
 #: airtime_mvc/application/controllers/PlaylistController.php:147
 #, php-format
 msgid "%s not found"
-msgstr "%s nem található"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:40
 #: airtime_mvc/application/controllers/PlaylistController.php:168
 msgid "Something went wrong."
-msgstr "Valami hiba történt."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:95
 #: airtime_mvc/application/controllers/ShowbuilderController.php:136
 msgid "Preview"
-msgstr "Előnézet"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:115
 #: airtime_mvc/application/controllers/LibraryController.php:177
 #: airtime_mvc/application/controllers/LibraryController.php:200
 msgid "Add to Playlist"
-msgstr "Hozzáadás a Lejátszási listához"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:117
 msgid "Add to Smart Block"
-msgstr "Hozzáadás az Okos Táblához"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:123
 #: airtime_mvc/application/controllers/LocaleController.php:66
 msgid "Edit Metadata"
-msgstr "Metaadatok Szerkesztése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:131
 #: airtime_mvc/application/controllers/ScheduleController.php:712
 msgid "Download"
-msgstr "Letöltés"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:147
 msgid "View track"
@@ -289,15 +285,15 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:169
 msgid "Duplicate Playlist"
-msgstr "Lejátszási lista másolatának elkészítése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:213
 msgid "No action available"
-msgstr "Nincs elérhető művelet"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:233
 msgid "You don't have permission to delete selected items."
-msgstr "Nincs engedélye, hogy törölje a kiválasztott elemeket."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LibraryController.php:279
 msgid "Could not delete file because it is scheduled in the future."
@@ -310,20 +306,20 @@ msgstr ""
 #: airtime_mvc/application/controllers/LibraryController.php:322
 #, php-format
 msgid "Copy of %s"
-msgstr "Másolás %s"
+msgstr ""
 
 #: airtime_mvc/application/controllers/WebstreamController.php:28
 #: airtime_mvc/application/controllers/WebstreamController.php:32
 msgid "Untitled Webstream"
-msgstr "Névtelen Adásfolyam"
+msgstr ""
 
 #: airtime_mvc/application/controllers/WebstreamController.php:150
 msgid "Webstream saved."
-msgstr "Adásfolyam mentve."
+msgstr ""
 
 #: airtime_mvc/application/controllers/WebstreamController.php:158
 msgid "Invalid form values."
-msgstr "Érvénytelen érték forma."
+msgstr ""
 
 #: airtime_mvc/application/controllers/EmbeddablewidgetsController.php:28
 msgid ""
@@ -341,54 +337,54 @@ msgstr ""
 #: airtime_mvc/application/controllers/ListenerstatController.php:51
 msgid ""
 "Please make sure admin user/password is correct on System->Streams page."
-msgstr "Kérjük, győződjön meg arról, hogy az admin felhasználónév/jelszó helyes-e a Rendszer-> Adásfolyamok oldalon."
+msgstr ""
 
 #: airtime_mvc/application/controllers/UserController.php:86
 msgid "User added successfully!"
-msgstr "Felhasználó sikeresen hozzáadva!"
+msgstr ""
 
 #: airtime_mvc/application/controllers/UserController.php:88
 msgid "User updated successfully!"
-msgstr "Felhasználó sikeresen módosítva!"
+msgstr ""
 
 #: airtime_mvc/application/controllers/UserController.php:187
 msgid "Settings updated successfully!"
-msgstr "Beállítások sikeresen módosítva!"
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:53
 #, php-format
 msgid "You are viewing an older version of %s"
-msgstr "Ön egy régebbi verziót tekint meg %s"
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:140
 msgid "You cannot add tracks to dynamic blocks."
-msgstr "Nem adhat hozzá dalszámokat a dinamikus táblákhoz."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:161
 #, php-format
 msgid "You don't have permission to delete selected %s(s)."
-msgstr "Nincs engedélye, hogy törölje a kiválasztott %s."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:174
 msgid "You can only add tracks to smart block."
-msgstr "Csak dalszámokat lehet hozzáadni okos táblához."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:180
 #: airtime_mvc/application/controllers/LocaleController.php:50
 msgid "You can only add tracks, smart blocks, and webstreams to playlists."
-msgstr "Csak dalszámokat, okos táblákat és adásfolyamokat adhatunk a lejátszási listákhoz."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:192
 msgid "Untitled Playlist"
-msgstr "Névtelen Lejátszási Lista"
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:194
 msgid "Untitled Smart Block"
-msgstr "Névtelen Okos Tábla"
+msgstr ""
 
 #: airtime_mvc/application/controllers/PlaylistController.php:522
 msgid "Unknown Playlist"
-msgstr "Ismeretlen Lejátszási Lista"
+msgstr ""
 
 #: airtime_mvc/application/controllers/ErrorController.php:78
 msgid "Page not found."
@@ -409,31 +405,31 @@ msgstr ""
 #: airtime_mvc/application/controllers/Apiv2Controller.php:77
 #: airtime_mvc/application/controllers/ApiController.php:79
 msgid "You are not allowed to access this resource."
-msgstr "Az Ön számára nem érhető el az alábbi erőforrás."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PreferenceController.php:72
 msgid "Preferences updated."
-msgstr "Beállítások frissítve."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PreferenceController.php:115
 msgid "Support setting updated."
-msgstr "Támogatási beállítások frissítve."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PreferenceController.php:123
 msgid "Support Feedback"
-msgstr "Támogatási Visszajelzés"
+msgstr ""
 
 #: airtime_mvc/application/controllers/PreferenceController.php:251
 msgid "Stream Setting Updated."
-msgstr "Adásfolyam Beállítások Frissítve."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PreferenceController.php:342
 msgid "path should be specified"
-msgstr "az útvonalat meg kell határozni"
+msgstr ""
 
 #: airtime_mvc/application/controllers/PreferenceController.php:437
 msgid "Problem with Liquidsoap..."
-msgstr "Probléma lépett fel a Liquidsoap-al..."
+msgstr ""
 
 #: airtime_mvc/application/controllers/PreferenceController.php:493
 msgid "Request method not accepted"
@@ -442,30 +438,30 @@ msgstr ""
 #: airtime_mvc/application/controllers/DashboardController.php:35
 #: airtime_mvc/application/controllers/DashboardController.php:84
 msgid "You don't have permission to disconnect source."
-msgstr "Nincs jogosúltsága a forrás bontásához."
+msgstr ""
 
 #: airtime_mvc/application/controllers/DashboardController.php:37
 #: airtime_mvc/application/controllers/DashboardController.php:86
 msgid "There is no source connected to this input."
-msgstr "Nem csatlakozik forrás az alábbi bemenethez."
+msgstr ""
 
 #: airtime_mvc/application/controllers/DashboardController.php:81
 msgid "You don't have permission to switch source."
-msgstr "Nincs jogosúltsága a forrás megváltoztatásához."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LoginController.php:43
 msgid "Please enter your username and password."
-msgstr "Kérjük, adja meg felhasználónevét és jelszavát."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LoginController.php:93
 msgid "Wrong username or password provided. Please try again."
-msgstr "Hibás felhasználónév vagy jelszó. Kérjük, próbálja meg újra."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LoginController.php:167
 msgid ""
 "Email could not be sent. Check your mail server settings and ensure it has "
 "been configured properly."
-msgstr "Az e-mailt nem lehetett elküldeni. Ellenőrizze a levelező kiszolgáló beállításait."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LoginController.php:173
 msgid "There was a problem with the username or email address you entered."
@@ -478,96 +474,96 @@ msgstr ""
 #: airtime_mvc/application/controllers/ApiController.php:474
 #: airtime_mvc/application/controllers/ApiController.php:507
 msgid "You are not allowed to access this resource. "
-msgstr "Az Ön számára nem érhető el az alábbi erőforrás."
+msgstr ""
 
 #: airtime_mvc/application/controllers/ApiController.php:698
 #: airtime_mvc/application/controllers/ApiController.php:718
 #: airtime_mvc/application/controllers/ApiController.php:730
 #, php-format
 msgid "File does not exist in %s"
-msgstr "A fájl nem elérhető itt: %s"
+msgstr ""
 
 #: airtime_mvc/application/controllers/ApiController.php:781
 msgid "Bad request. no 'mode' parameter passed."
-msgstr "Helytelen kérés. nincs 'mód' paraméter lett átadva."
+msgstr ""
 
 #: airtime_mvc/application/controllers/ApiController.php:791
 msgid "Bad request. 'mode' parameter is invalid"
-msgstr "Helytelen kérés. 'mód' paraméter érvénytelen."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:30
 #: airtime_mvc/application/layouts/scripts/audio-player.phtml:5
 msgid "Audio Player"
-msgstr "Audió Lejátszó"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:32
 msgid "Recording:"
-msgstr "Felvétel:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:33
 msgid "Master Stream"
-msgstr "Mester Adás"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:34
 msgid "Live Stream"
-msgstr "Élő Adás"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:35
 msgid "Nothing Scheduled"
-msgstr "Nincs semmi ütemezve"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:36
 msgid "Current Show:"
-msgstr "Jelenlegi Műsor:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:37
 msgid "Current"
-msgstr "Jelenleg"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:39
 msgid "You are running the latest version"
-msgstr "Ön a legújabb verziót futtatja"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:40
 msgid "New version available: "
-msgstr "Új verzió érhető el:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:41
 msgid "This version will soon be obsolete."
-msgstr "Ez a verzió hamarosan elavul."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:42
 msgid "This version is no longer supported."
-msgstr "Ez a verzió már nem támogatott."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:43
 msgid "Please upgrade to "
-msgstr "Kérjük, frissítsen"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:45
 msgid "Add to current playlist"
-msgstr "Hozzáadás a jelenlegi lejátszási listához"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:46
 msgid "Add to current smart block"
-msgstr "Hozzáadás a jelenlegi okos táblához"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:47
 msgid "Adding 1 Item"
-msgstr "1 Elem Hozzáadása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:48
 #, php-format
 msgid "Adding %s Items"
-msgstr "%s Elem Hozzáadása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:49
 msgid "You can only add tracks to smart blocks."
-msgstr "Csak dalszámokat adhat hozzá az okos táblákhoz."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:53
 msgid "Please select a cursor position on timeline."
-msgstr "Kérjük, válasszon kurzor pozíciót az idővonalon."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:54
 msgid "You haven't added any tracks"
@@ -607,37 +603,37 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:67
 msgid "Add to selected show"
-msgstr "Adja hozzá a kiválasztott műsort"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:68
 msgid "Select"
-msgstr "Kijelölés"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:69
 msgid "Select this page"
-msgstr "Jelölje ki ezt az oldalt"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:70
 msgid "Deselect this page"
-msgstr "Az oldal kijelölésének megszüntetése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:71
 msgid "Deselect all"
-msgstr "Minden kijelölés törlése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:72
 msgid "Are you sure you want to delete the selected item(s)?"
-msgstr "Biztos benne, hogy törli a kijelölt eleme(ke)t?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:73
 msgid "Scheduled"
-msgstr "Ütemezett"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:74
 #: airtime_mvc/application/layouts/scripts/layout.phtml:78
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:7
 msgid "Tracks"
-msgstr "Zeneszámok"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:75
 #: airtime_mvc/application/layouts/scripts/layout.phtml:60
@@ -646,255 +642,255 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:79
 msgid "Bit Rate"
-msgstr "Bitráta"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:80
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:52
 #: airtime_mvc/application/models/Block.php:1354
 msgid "BPM"
-msgstr "BPM"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:84
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:59
 #: airtime_mvc/application/models/Block.php:1361
 msgid "Encoded By"
-msgstr "Kódolva"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:89
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:64
 #: airtime_mvc/application/models/Block.php:1367
 msgid "Last Modified"
-msgstr "Utoljára Módosítva"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:90
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:65
 #: airtime_mvc/application/models/Block.php:1368
 msgid "Last Played"
-msgstr "Utoljára Játszott"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:92
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:67
 #: airtime_mvc/application/models/Block.php:1370
 msgid "Mime"
-msgstr "Mimika"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:94
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:69
 #: airtime_mvc/application/models/Block.php:1372
 msgid "Owner"
-msgstr "Tulajdonos"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:95
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:70
 #: airtime_mvc/application/models/Block.php:1373
 msgid "Replay Gain"
-msgstr "Replay Gain"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:96
 msgid "Sample Rate"
-msgstr "Mintavétel"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:97
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:73
 #: airtime_mvc/application/models/Block.php:1376
 msgid "Track Number"
-msgstr "Dalsorszám"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:98
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:74
 #: airtime_mvc/application/models/Block.php:1377
 msgid "Uploaded"
-msgstr "Feltöltve"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:99
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:75
 #: airtime_mvc/application/models/Block.php:1378
 msgid "Website"
-msgstr "Honlap"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:101
 msgid "Loading..."
-msgstr "Betöltés..."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:102
 #: airtime_mvc/application/controllers/LocaleController.php:404
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:65
 msgid "All"
-msgstr "Összes"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:103
 msgid "Files"
-msgstr "Fájlok"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:104
 #: airtime_mvc/application/layouts/scripts/layout.phtml:80
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:13
 msgid "Playlists"
-msgstr "Lejátszási listák"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:105
 #: airtime_mvc/application/layouts/scripts/layout.phtml:82
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:19
 msgid "Smart Blocks"
-msgstr "Okos Táblák"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:106
 msgid "Web Streams"
-msgstr "Adásfolyamok"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:107
 msgid "Unknown type: "
-msgstr "Ismeretlen típus:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:108
 msgid "Are you sure you want to delete the selected item?"
-msgstr "Biztos benne, hogy törli a kijelölt elemet?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:109
 #: airtime_mvc/application/controllers/LocaleController.php:209
 msgid "Uploading in progress..."
-msgstr "Feltöltés folyamatban..."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:110
 msgid "Retrieving data from the server..."
-msgstr "Adatok lekérdezése a kiszolgálóról..."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:111
 msgid "The soundcloud id for this file is: "
-msgstr "A soundcloud azonosító erre a fájlra:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:112
 msgid "There was an error while uploading to soundcloud."
-msgstr "A soundcloud-ra feltöltés közben hiba jelentkezett."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:113
 msgid "Error code: "
-msgstr "Hibakód:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:114
 msgid "Error msg: "
-msgstr "Hibaüzenet:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:115
 msgid "Input must be a positive number"
-msgstr "A bemenetnek pozitív számnak kell lennie"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:116
 msgid "Input must be a number"
-msgstr "A bemenetnek számnak kell lennie"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:117
 msgid "Input must be in the format: yyyy-mm-dd"
-msgstr "A bemenet formája lehet: éééé-hh-nn"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:118
 msgid "Input must be in the format: hh:mm:ss.t"
-msgstr "A bemenet formája lehet: óó:pp:mm.t"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:121
 #, php-format
 msgid ""
 "You are currently uploading files. %sGoing to another screen will cancel the"
 " upload process. %sAre you sure you want to leave the page?"
-msgstr "Ön jelenleg fájlokat tölt fel. %sHa másik ablakot nyit meg, akkor a feltöltési folyamat megszakad. %sBiztos benne, hogy elhagyja az oldalt?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:123
 msgid "Open Media Builder"
-msgstr "Média Építő Megnyitása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:124
 msgid "please put in a time '00:00:00 (.0)'"
-msgstr "kérjük, tegye időbe '00:00:00 (.0)'"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:125
 msgid "please put in a time in seconds '00 (.0)'"
-msgstr "kérjük, tegye másodpercekbe '00 (.0)'"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:126
 msgid "Your browser does not support playing this file type: "
-msgstr "A böngészője nem támogatja az ilyen típusú fájlok lejátszását:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:127
 msgid "Dynamic block is not previewable"
-msgstr "A dinamikus tábla nem érhető el előnézetben"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:128
 msgid "Limit to: "
-msgstr "Korlátozva:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:129
 msgid "Playlist saved"
-msgstr "Lejátszási lista mentve"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:130
 msgid "Playlist shuffled"
-msgstr "Lejátszási lista megkeverve"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:132
 msgid ""
 "Airtime is unsure about the status of this file. This can happen when the "
 "file is on a remote drive that is unaccessible or the file is in a directory"
 " that isn't 'watched' anymore."
-msgstr "Az Airtime bizonytalan a fájl állapotával kapcsolatban. Lehetséges, hogy a tárhely már nem elérhető, vagy a 'figyelt' mappa útvonala megváltozott."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:134
 #, php-format
 msgid "Listener Count on %s: %s"
-msgstr "Hallgatók Száma %s: %s"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:136
 msgid "Remind me in 1 week"
-msgstr "Emlékeztessen 1 hét múlva"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:137
 msgid "Remind me never"
-msgstr "Soha ne emlékeztessen"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:138
 msgid "Yes, help Airtime"
-msgstr "Igen, segítek az Airtime-nak"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:139
 #: airtime_mvc/application/controllers/LocaleController.php:187
 msgid "Image must be one of jpg, jpeg, png, or gif"
-msgstr "A képek lehetnek: jpg, jpeg, png, vagy gif"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:142
 msgid ""
 "A static smart block will save the criteria and generate the block content "
 "immediately. This allows you to edit and view it in the Library before "
 "adding it to a show."
-msgstr "A statikus okos tábla elmenti a kritériumokat és azonnal létre is hozza a tábla tartalmát is. Ez lehetővé teszi, hogy módosítsuk és lássuk a könyvtár tartalmát még a műsor közvetítése előtt."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:144
 msgid ""
 "A dynamic smart block will only save the criteria. The block content will "
 "get generated upon adding it to a show. You will not be able to view and "
 "edit the content in the Library."
-msgstr "A dinamikus okos tábla csak elmenti a kritériumokat. A táblát szerkesztés után lehet hozzáadni a műsorhoz. Később a tartalmát sem megtekinteni, sem módosítani nem lehet."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:146
 msgid ""
 "The desired block length will not be reached if Airtime cannot find enough "
 "unique tracks to match your criteria. Enable this option if you wish to "
 "allow tracks to be added multiple times to the smart block."
-msgstr "A kívánt táblahosszúság nem elérhető, mert az Airtime nem talál elég egyedi dalszámot, ami megfelelne a kritériumoknak. Engedélyezze ezt az opciót, ha azt szeretné, hogy egyes dalszámok ismétlődjenek."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:147
 msgid "Smart block shuffled"
-msgstr "Okos tábla megkeverve"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:148
 msgid "Smart block generated and criteria saved"
-msgstr "Okos tábla létrehozva és kritériumok mentve"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:149
 msgid "Smart block saved"
-msgstr "Okos tábla elmentve"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:150
 msgid "Processing..."
-msgstr "Feldolgozás..."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:151
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:88
@@ -904,19 +900,19 @@ msgstr "Feldolgozás..."
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:430
 #: airtime_mvc/application/models/Block.php:1383
 msgid "Select modifier"
-msgstr "Módosítás választása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:152
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:89
 #: airtime_mvc/application/models/Block.php:1384
 msgid "contains"
-msgstr "tartalmaz"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:153
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:90
 #: airtime_mvc/application/models/Block.php:1385
 msgid "does not contain"
-msgstr "nem tartalmaz"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:154
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:91
@@ -924,7 +920,7 @@ msgstr "nem tartalmaz"
 #: airtime_mvc/application/models/Block.php:1386
 #: airtime_mvc/application/models/Block.php:1390
 msgid "is"
-msgstr "az"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:155
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:92
@@ -932,88 +928,88 @@ msgstr "az"
 #: airtime_mvc/application/models/Block.php:1387
 #: airtime_mvc/application/models/Block.php:1391
 msgid "is not"
-msgstr "nem az"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:156
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:93
 #: airtime_mvc/application/models/Block.php:1388
 msgid "starts with"
-msgstr "vele kezdődik"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:157
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:94
 #: airtime_mvc/application/models/Block.php:1389
 msgid "ends with"
-msgstr "vele végződik"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:158
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:107
 #: airtime_mvc/application/models/Block.php:1392
 msgid "is greater than"
-msgstr "több, mint"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:159
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:108
 #: airtime_mvc/application/models/Block.php:1393
 msgid "is less than"
-msgstr "kevesebb, mint"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:160
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:109
 #: airtime_mvc/application/models/Block.php:1394
 msgid "is in the range"
-msgstr "közötti tartományban"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:162
 msgid "Choose Storage Folder"
-msgstr "Válasszon Tároló Mappát"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:163
 msgid "Choose Folder to Watch"
-msgstr "Válasszon Figyelt Mappát"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:165
 msgid ""
 "Are you sure you want to change the storage folder?\n"
 "This will remove the files from your Airtime library!"
-msgstr "Biztos benne, hogy meg akarja változtatni a tároló mappát?\nEzzel eltávolítja a fájlokat az Airtime médiatárából!"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:166
 #: airtime_mvc/application/views/scripts/preference/directory-config.phtml:2
 msgid "Manage Media Folders"
-msgstr "Média Mappák Kezelése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:167
 msgid "Are you sure you want to remove the watched folder?"
-msgstr "Biztos benne, hogy el akarja távolítani a figyelt mappát?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:168
 msgid "This path is currently not accessible."
-msgstr "Ez az útvonal jelenleg nem elérhető."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:170
 #, php-format
 msgid ""
 "Some stream types require extra configuration. Details about enabling %sAAC+"
 " Support%s or %sOpus Support%s are provided."
-msgstr "Egyes patak típusokhoz extra beállítások szükségesek. További részletek: a %sAAC+ Támogatással%s vagy a %sOpus Támogatással%s kapcsolatban."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:171
 msgid "Connected to the streaming server"
-msgstr "Csatlakozva az adás kiszolgálóhoz"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:172
 msgid "The stream is disabled"
-msgstr "Az adásfolyam ki van kapcsolva"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:173
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:191
 msgid "Getting information from the server..."
-msgstr "Információk lekérdezése a kiszolgálóról..."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:174
 msgid "Can not connect to the streaming server"
-msgstr "Nem lehet kapcsolódni az adásfolyam kiszolgálójához"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:176
 msgid ""
@@ -1022,12 +1018,12 @@ msgid ""
 "will need to manually update this field so it shows the correct "
 "host/port/mount that your DJ's need to connect to. The allowed range is "
 "between 1024 and 49151."
-msgstr "Ha az Airtime mögött van egy router vagy egy tűzfal, akkor be kell állítani a továbbító porot, mert ezen a területen az információ helytelen lesz. Ebben az esetben manuálisan kell frissíteni ezen a területen, hogy mutassa a hosztot / portot / csatolási pontot, amelyre a DJ-k csatlakozhatnak. A megengedett tartomány 1024 és 49151 között van."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:177
 #, php-format
 msgid "For more details, please read the %sAirtime Manual%s"
-msgstr "A további részletekért, kérjük, olvassa el az %sAirtime Kézikönyvét%s"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:179
 msgid ""
@@ -1038,32 +1034,32 @@ msgid ""
 " every song. If you are using an OGG stream and your listeners do not "
 "require support for these audio players, then feel free to enable this "
 "option."
-msgstr "Jelölje be és ellenőrizze ezt az opciót: metaadatok engedélyezése OGG-os adásfolyamra (adatfolyam metaadatok: dalcím, előadó, műsornév, amely megjelenik egy audió lejátszóban). A VLC és mplayer lejátszóknál súlyos hibák előfordulhatnak, OGG/Vorbis adatfolyam játszásakor, amelynél a metaadatok küldése engedélyezett: ilyenkor akadozik az adatfolyam. Ha az OGG-os adatfolyam és a hallgatói nem igényelnek támogatást az ilyen jellegű audió lejátszókhoz, akkor nyugodtan engedélyezze ezt az opciót."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:180
 msgid ""
 "Check this box to automatically switch off Master/Show source upon source "
 "disconnection."
-msgstr "Jelölje be ezt a négyzetet, hogy automatikusan kikapcsol a Mester/Műsor a forrás megszakítása után."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:181
 msgid ""
 "Check this box to automatically switch on Master/Show source upon source "
 "connection."
-msgstr "Jelölje be ezt a négyzetet, hogy automatikusan bekapcsol a Mester/Műsor a forrás csatlakozását követően."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:182
 msgid ""
 "If your Icecast server expects a username of 'source', this field can be "
 "left blank."
-msgstr "Lehet, hogy az Ön Icecast kiszolgálója nem igényli a 'forrás' felhasználónevét, ez a mező üresen maradhat."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:183
 #: airtime_mvc/application/controllers/LocaleController.php:193
 msgid ""
 "If your live streaming client does not ask for a username, this field should"
 " be 'source'."
-msgstr "Ha az Ön élő adásfolyam kliense nem igényel felhasználónevet, akkor meg kell adnia a 'forrást'."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:184
 msgid ""
@@ -1075,313 +1071,313 @@ msgstr ""
 msgid ""
 "This is the admin username and password for Icecast/SHOUTcast to get "
 "listener statistics."
-msgstr "Ez az admin felhasználónév és jelszó az Icecast/SHOUTcast hallgató statisztikához szükségesek."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:189
 msgid ""
 "Warning: You cannot change this field while the show is currently playing"
-msgstr "Figyelmeztetés: Nem lehet megváltoztatni a mező tartalmát, míg a jelenlegi műsor tart"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:190
 msgid "No result found"
-msgstr "Nem volt találat"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:191
 msgid ""
 "This follows the same security pattern for the shows: only users assigned to"
 " the show can connect."
-msgstr "Ezt követi ugyanolyan biztonsági műsor-minta: csak a hozzárendelt felhasználók csatlakozhatnak a műsorhoz."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:192
 msgid "Specify custom authentication which will work only for this show."
-msgstr "Adjon meg egy egyéni hitelesítést, amely csak ennél a műsornál működik."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:194
 msgid "The show instance doesn't exist anymore!"
-msgstr "A műsor ez esetben nem létezik többé!"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:195
 msgid "Warning: Shows cannot be re-linked"
-msgstr "Figyelem: a Műsorokat nem lehet újra-linkelni"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:196
 msgid ""
 "By linking your repeating shows any media items scheduled in any repeat show"
 " will also get scheduled in the other repeat shows"
-msgstr "Az ismétlődő műsorok összekötésével, minden ütemezett médiai elem, az összes ismétlődő műsorban, ugyanazt a sorrendet kapja, mint a többi ismétlődő műsorban"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:197
 msgid ""
 "Timezone is set to the station timezone by default. Shows in the calendar "
 "will be displayed in your local time defined by the Interface Timezone in "
 "your user settings."
-msgstr "Az időzóna az Állomási Időzóna szerint van alapértelmezetten beállítva. A naptárban megjelenő helyi időt a Felületi Időzóna menüpontban módosíthatja, a felhasználói beállításoknál."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:201
 msgid "Show"
-msgstr "Műsor"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:202
 msgid "Show is empty"
-msgstr "A műsor üres"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:203
 msgid "1m"
-msgstr "1p"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:204
 msgid "5m"
-msgstr "5p"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:205
 msgid "10m"
-msgstr "10p"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:206
 msgid "15m"
-msgstr "15p"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:207
 msgid "30m"
-msgstr "30p"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:208
 msgid "60m"
-msgstr "60p"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:210
 msgid "Retreiving data from the server..."
-msgstr "Az adatok lekérdezése a szolgálóról..."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:216
 msgid "This show has no scheduled content."
-msgstr "Ez a műsor nem tartalmaz ütemezett tartalmat."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:217
 msgid "This show is not completely filled with content."
-msgstr "Ez a műsor nincs teljesen kitöltve tartalommal."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:221
 msgid "January"
-msgstr "Január"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:222
 msgid "February"
-msgstr "Február"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:223
 msgid "March"
-msgstr "Március"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:224
 msgid "April"
-msgstr "Április"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:225
 #: airtime_mvc/application/controllers/LocaleController.php:237
 msgid "May"
-msgstr "Május"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:226
 msgid "June"
-msgstr "Június"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:227
 msgid "July"
-msgstr "Július"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:228
 msgid "August"
-msgstr "Augusztus"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:229
 msgid "September"
-msgstr "Szeptember"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:230
 msgid "October"
-msgstr "Október"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:231
 msgid "November"
-msgstr "November"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:232
 msgid "December"
-msgstr "December"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:233
 msgid "Jan"
-msgstr "Jan"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:234
 msgid "Feb"
-msgstr "Feb"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:235
 msgid "Mar"
-msgstr "Már"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:236
 msgid "Apr"
-msgstr "Ápr"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:238
 msgid "Jun"
-msgstr "Jún"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:239
 msgid "Jul"
-msgstr "Júl"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:240
 msgid "Aug"
-msgstr "Aug"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:241
 msgid "Sep"
-msgstr "Sze"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:242
 msgid "Oct"
-msgstr "Okt"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:243
 msgid "Nov"
-msgstr "Nov"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:244
 msgid "Dec"
-msgstr "Dec"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:245
 msgid "Today"
-msgstr "Ma"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:246
 msgid "Day"
-msgstr "Nap"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:247
 msgid "Week"
-msgstr "Hét"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:248
 msgid "Month"
-msgstr "Hónap"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:249
 #: airtime_mvc/application/forms/GeneralPreferences.php:158
 msgid "Sunday"
-msgstr "Vasárnap"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:250
 #: airtime_mvc/application/forms/GeneralPreferences.php:159
 msgid "Monday"
-msgstr "Hétfő"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:251
 #: airtime_mvc/application/forms/GeneralPreferences.php:160
 msgid "Tuesday"
-msgstr "Kedd"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:252
 #: airtime_mvc/application/forms/GeneralPreferences.php:161
 msgid "Wednesday"
-msgstr "Szerda"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:253
 #: airtime_mvc/application/forms/GeneralPreferences.php:162
 msgid "Thursday"
-msgstr "Csütörtök"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:254
 #: airtime_mvc/application/forms/GeneralPreferences.php:163
 msgid "Friday"
-msgstr "Péntek"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:255
 #: airtime_mvc/application/forms/GeneralPreferences.php:164
 msgid "Saturday"
-msgstr "Szombat"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:256
 #: airtime_mvc/application/forms/AddShowRepeats.php:35
 msgid "Sun"
-msgstr "Va"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:257
 #: airtime_mvc/application/forms/AddShowRepeats.php:36
 msgid "Mon"
-msgstr "Hé"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:258
 #: airtime_mvc/application/forms/AddShowRepeats.php:37
 msgid "Tue"
-msgstr "Ke"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:259
 #: airtime_mvc/application/forms/AddShowRepeats.php:38
 msgid "Wed"
-msgstr "Sz"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:260
 #: airtime_mvc/application/forms/AddShowRepeats.php:39
 msgid "Thu"
-msgstr "Cs"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:261
 #: airtime_mvc/application/forms/AddShowRepeats.php:40
 msgid "Fri"
-msgstr "Pé"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:262
 #: airtime_mvc/application/forms/AddShowRepeats.php:41
 msgid "Sat"
-msgstr "Sz"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:263
 msgid ""
 "Shows longer than their scheduled time will be cut off by a following show."
-msgstr "Ha egy műsor hosszabb az ütemezett időnél, meg lesz vágva és követi azt a következő műsor."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:264
 msgid "Cancel Current Show?"
-msgstr "A Jelenlegi Műsor Megszakítása?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:265
 #: airtime_mvc/application/controllers/LocaleController.php:312
 msgid "Stop recording current show?"
-msgstr "A jelenlegi műsor rögzítésének félbeszakítása?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:266
 msgid "Ok"
-msgstr "Ok"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:267
 msgid "Contents of Show"
-msgstr "A Műsor Tartalmai"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:270
 msgid "Remove all content?"
-msgstr "Az összes tartalom eltávolítása?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:272
 msgid "Delete selected item(s)?"
-msgstr "Törli a kiválasztott elem(ek)et?"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:273
 #: airtime_mvc/application/views/scripts/schedule/show-content-dialog.phtml:5
 msgid "Start"
-msgstr "Kezdése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:274
 msgid "End"
-msgstr "Vége"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:275
 msgid "Duration"
-msgstr "Időtartam"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:276
 msgid "Filtering out "
@@ -1400,49 +1396,49 @@ msgstr ""
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:56
 #: airtime_mvc/application/models/Block.php:1358
 msgid "Cue In"
-msgstr "Felkeverés"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:285
 #: airtime_mvc/application/layouts/scripts/layout.phtml:147
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:57
 #: airtime_mvc/application/models/Block.php:1359
 msgid "Cue Out"
-msgstr "Lekeverés"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:286
 #: airtime_mvc/application/layouts/scripts/layout.phtml:167
 msgid "Fade In"
-msgstr "Felúsztatás"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:287
 #: airtime_mvc/application/layouts/scripts/layout.phtml:168
 msgid "Fade Out"
-msgstr "Leúsztatás"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:288
 msgid "Show Empty"
-msgstr "Üres Műsor"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:289
 msgid "Recording From Line In"
-msgstr "Rögzítés a Hangbemenetről"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:290
 msgid "Track preview"
-msgstr "Belehallgatás a számba"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:294
 msgid "Cannot schedule outside a show."
-msgstr "Nem lehet ütemezni a műsoron kívül."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:295
 msgid "Moving 1 Item"
-msgstr "1 Elem Áthelyezése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:296
 #, php-format
 msgid "Moving %s Items"
-msgstr "%s Elemek Áthelyezése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:297
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:78
@@ -1458,7 +1454,7 @@ msgstr "%s Elemek Áthelyezése"
 #: airtime_mvc/application/forms/PasswordChange.php:43
 #: airtime_mvc/application/forms/SupportSettings.php:131
 msgid "Save"
-msgstr "Mentés"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:298
 #: airtime_mvc/application/controllers/LocaleController.php:321
@@ -1468,28 +1464,28 @@ msgstr "Mentés"
 #: airtime_mvc/application/forms/EditHistory.php:141
 #: airtime_mvc/application/forms/EditAudioMD.php:186
 msgid "Cancel"
-msgstr "Mégse"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:299
 msgid "Fade Editor"
-msgstr "Úsztatási Szerkesztő"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:300
 msgid "Cue Editor"
-msgstr "Keverési Szerkesztő"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:301
 msgid ""
 "Waveform features are available in a browser supporting the Web Audio API"
-msgstr "Hullámalak funkciók állnak rendelkezésre a böngészőben, támogatja a Web Audio API-t"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:304
 msgid "Select all"
-msgstr "Az összes kijelölése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:305
 msgid "Select none"
-msgstr "Egyet sem jelöl ki"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:306
 msgid "Trim overbooked shows"
@@ -1497,351 +1493,351 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:307
 msgid "Remove selected scheduled items"
-msgstr "A kijelölt ütemezett elemek eltávolítása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:308
 msgid "Jump to the current playing track"
-msgstr "Ugrás a jelenleg hallható számra"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:309
 msgid "Cancel current show"
-msgstr "A jelenlegi műsor megszakítása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:314
 msgid "Open library to add or remove content"
-msgstr "A médiatár megnyitása az elemek hozzáadásához vagy eltávolításához"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:315
 msgid "Add / Remove Content"
-msgstr "Elemek Hozzáadása / Eltávolítása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:317
 #: airtime_mvc/application/views/scripts/plupload/index.phtml:49
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:203
 msgid "in use"
-msgstr "használatban van"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:318
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:189
 msgid "Disk"
-msgstr "Lemez"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:320
 msgid "Look in"
-msgstr "Nézze meg"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:322
 msgid "Open"
-msgstr "Megnyitás"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:324
 #: airtime_mvc/application/forms/AddUser.php:102
 msgid "Admin"
-msgstr "Admin"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:325
 #: airtime_mvc/application/forms/AddUser.php:100
 msgid "DJ"
-msgstr "DJ"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:326
 #: airtime_mvc/application/forms/AddUser.php:101
 msgid "Program Manager"
-msgstr "Programkezelő"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:327
 #: airtime_mvc/application/forms/AddUser.php:99
 msgid "Guest"
-msgstr "Vendég"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:328
 msgid "Guests can do the following:"
-msgstr "A vendégek a kővetkezőket tehetik:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:329
 msgid "View schedule"
-msgstr "Az ütemezés megtekintése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:330
 msgid "View show content"
-msgstr "A műsor tartalmának megtekintése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:331
 msgid "DJs can do the following:"
-msgstr "A DJ-k a következőket tehetik:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:332
 msgid "Manage assigned show content"
-msgstr "Minden kijelölt műsor tartalom kezelése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:333
 msgid "Import media files"
-msgstr "Médiafájlok hozzáadása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:334
 msgid "Create playlists, smart blocks, and webstreams"
-msgstr "Lejátszási listák, okos táblák és adatfolyamok létrehozása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:335
 msgid "Manage their own library content"
-msgstr "Saját médiatár tartalmának kezelése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:336
 msgid "Progam Managers can do the following:"
-msgstr "A Program Vezetők a következőket tehetik:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:337
 msgid "View and manage show content"
-msgstr "Minden tartalom megtekintése és kezelése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:338
 msgid "Schedule shows"
-msgstr "A műsorok ütemzései"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:339
 msgid "Manage all library content"
-msgstr "A teljes médiatár tartalmának kezelése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:340
 msgid "Admins can do the following:"
-msgstr "Az Adminok a következőket tehetik:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:341
 msgid "Manage preferences"
-msgstr "Beállítások kezelései"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:342
 msgid "Manage users"
-msgstr "A felhasználók kezelése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:343
 msgid "Manage watched folders"
-msgstr "A figyelt mappák kezelése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:344
 #: airtime_mvc/application/forms/RegisterAirtime.php:116
 #: airtime_mvc/application/forms/SupportSettings.php:98
 msgid "Send support feedback"
-msgstr "Támogatási Visszajelzés Küldése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:345
 msgid "View system status"
-msgstr "A rendszer állapot megtekitnése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:346
 msgid "Access playout history"
-msgstr "Hozzáférés lejátszási előzményekhez"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:347
 msgid "View listener stats"
-msgstr "A hallgatói statisztikák megtekintése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:349
 msgid "Show / hide columns"
-msgstr "Az oszlopok megjelenítése/elrejtése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:351
 msgid "From {from} to {to}"
-msgstr "{from} -tól/-től {to} -ig"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:352
 msgid "kbps"
-msgstr "kbps"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:353
 msgid "yyyy-mm-dd"
-msgstr "éééé-hh-nn"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:354
 msgid "hh:mm:ss.t"
-msgstr "óó:pp:mm.t"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:355
 msgid "kHz"
-msgstr "kHz"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:358
 msgid "Su"
-msgstr "Va"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:359
 msgid "Mo"
-msgstr "Hé"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:360
 msgid "Tu"
-msgstr "Ke"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:361
 msgid "We"
-msgstr "Sze"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:362
 msgid "Th"
-msgstr "Cs"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:363
 msgid "Fr"
-msgstr "Pé"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:364
 msgid "Sa"
-msgstr "Szo"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:365
 #: airtime_mvc/application/controllers/LocaleController.php:393
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:3
 msgid "Close"
-msgstr "Bezárás"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:367
 msgid "Hour"
-msgstr "Óra"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:368
 msgid "Minute"
-msgstr "Perc"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:369
 msgid "Done"
-msgstr "Kész"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:372
 msgid "Select files"
-msgstr "Fájlok kiválasztása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:373
 #: airtime_mvc/application/controllers/LocaleController.php:374
 msgid "Add files to the upload queue and click the start button."
-msgstr "Adja meg a fájlokat feltöltési sorrendben, majd kattintson a \"Feltöltés indítása\" gombra."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:375
 #: airtime_mvc/application/controllers/LocaleController.php:376
 msgid "Status"
-msgstr "Állapot"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:377
 msgid "Add Files"
-msgstr "Fájlok Hozzáadása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:378
 msgid "Stop Upload"
-msgstr "Feltöltés Megszakítása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:379
 msgid "Start upload"
-msgstr "Feltöltés indítása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:380
 msgid "Add files"
-msgstr "Fájlok hozzáadása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:381
 #, php-format
 msgid "Uploaded %d/%d files"
-msgstr "Feltöltve %d/%d fájl"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:382
 msgid "N/A"
-msgstr "N/A"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:383
 msgid "Drag files here."
-msgstr "Húzza a fájlokat ide."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:384
 msgid "File extension error."
-msgstr "Fájlkiterjesztési hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:385
 msgid "File size error."
-msgstr "Fájlméreti hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:386
 msgid "File count error."
-msgstr "Fájl számi hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:387
 msgid "Init error."
-msgstr "Init hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:388
 msgid "HTTP Error."
-msgstr "HTTP Hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:389
 msgid "Security error."
-msgstr "Biztonsági hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:390
 msgid "Generic error."
-msgstr "Általános hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:391
 msgid "IO error."
-msgstr "IO hiba."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:392
 #, php-format
 msgid "File: %s"
-msgstr "Fájl: %s"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:394
 #, php-format
 msgid "%d files queued"
-msgstr "%d várakozó fájl"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:395
 msgid "File: %f, size: %s, max file size: %m"
-msgstr "Fájl: %f,méret: %s, max fájl méret: %m"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:396
 msgid "Upload URL might be wrong or doesn't exist"
-msgstr "URL feltöltése esetén, felléphet hiba, esetleg nem létezik"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:397
 msgid "Error: File too large: "
-msgstr "Hiba: A fájl túl nagy:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:398
 msgid "Error: Invalid file extension: "
-msgstr "Hiba: Érvénytelen fájl kiterjesztés:"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:400
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:27
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:58
 msgid "Set Default"
-msgstr "Alapértelmezett"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:401
 msgid "Create Entry"
-msgstr "Napló Létrehozása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:402
 msgid "Edit History Record"
-msgstr "Előzmények Szerkesztése"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:403
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:53
 #: airtime_mvc/application/forms/EditHistoryItem.php:57
 msgid "No Show"
-msgstr "Nincs Műsor"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:405
 #, php-format
 msgid "Copied %s row%s to the clipboard"
-msgstr "%s sor%s van másolva a vágólapra"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:406
 #, php-format
 msgid ""
 "%sPrint view%sPlease use your browser's print function to print this table. "
 "Press escape when finished."
-msgstr "%sNyomtatási előnézet%sKérjük, használja böngészője nyomtatási beállításait. Nyomja meg az Esc-t ha végzett."
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:407
 msgid "New Show"
-msgstr "Új Műsor"
+msgstr ""
 
 #: airtime_mvc/application/controllers/LocaleController.php:408
 msgid "New Log Entry"
@@ -1849,20 +1845,20 @@ msgstr ""
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:138
 msgid "Select cursor"
-msgstr "Kurzor kiválasztása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:139
 msgid "Remove cursor"
-msgstr "Kurzor eltávolítása"
+msgstr ""
 
 #: airtime_mvc/application/controllers/ShowbuilderController.php:158
 msgid "show does not exist"
-msgstr "a műsor nem található"
+msgstr ""
 
 #: airtime_mvc/application/controllers/ScheduleController.php:389
 #, php-format
 msgid "Rebroadcast of show %s from %s at %s"
-msgstr "A műsor újraközvetítése %s -tól/-től %s a %s"
+msgstr ""
 
 #: airtime_mvc/application/common/UsabilityHints.php:55
 msgid "Upload some tracks below to add them to your library!"
@@ -1923,34 +1919,34 @@ msgstr ""
 #: airtime_mvc/application/common/DateHelper.php:213
 #, php-format
 msgid "The year %s must be within the range of 1753 - 9999"
-msgstr "Az évnek %s 1753 - 9999 közötti tartományban kell lennie"
+msgstr ""
 
 #: airtime_mvc/application/common/DateHelper.php:216
 #, php-format
 msgid "%s-%s-%s is not a valid date"
-msgstr "%s-%s-%s érvénytelen dátum"
+msgstr ""
 
 #: airtime_mvc/application/common/DateHelper.php:240
 #, php-format
 msgid "%s:%s:%s is not a valid time"
-msgstr "%s:%s:%s érvénytelen időpont"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/livestream.phtml:9
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:2
 msgid "Live stream"
-msgstr "Élő adásfolyam"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:63
 msgid "Smart Block"
-msgstr "Okos Tábla"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:66
 msgid "Webstream"
-msgstr "Adásfolyam"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:71
 msgid "Upload"
-msgstr "Feltöltés"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:76
 #: airtime_mvc/application/views/scripts/showbuilder/index.phtml:5
@@ -1961,29 +1957,29 @@ msgstr ""
 #: airtime_mvc/application/layouts/scripts/layout.phtml:84
 #: airtime_mvc/application/views/scripts/showbuilder/builderDialog.phtml:25
 msgid "Webstreams"
-msgstr "Adásfolyamok"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:135
 #: airtime_mvc/application/layouts/scripts/layout.phtml:161
 msgid "Play"
-msgstr "Lejátszás"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:136
 #: airtime_mvc/application/layouts/scripts/layout.phtml:162
 msgid "Stop"
-msgstr "Leállítás"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:142
 msgid "Set Cue In"
-msgstr "Felkeverés Beállítása"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:149
 msgid "Set Cue Out"
-msgstr "Lekeverés Beállítása"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/layout.phtml:166
 msgid "Cursor"
-msgstr "Kurzor"
+msgstr ""
 
 #: airtime_mvc/application/layouts/scripts/login.phtml:24
 #, php-format
@@ -2010,48 +2006,48 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:3
 msgid "Share"
-msgstr "Megosztás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:64
 msgid "Select stream:"
-msgstr "Adásfolyam:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:90
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:60
 msgid "mute"
-msgstr "elnémítás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/stream-player.phtml:91
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:63
 msgid "unmute"
-msgstr "elnémítás megszüntetése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:2
 msgid "About"
-msgstr "Rólunk"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:9
 #, php-format
 msgid ""
 "%1$s %2$s, the open radio software for scheduling and remote station "
 "management."
-msgstr "%1$s %2$s, a nyitott rádiós szoftver, az ütemezett és távoli állomás menedzsment."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/about.phtml:22
 #, php-format
 msgid "%1$s %2$s is distributed under the %3$s"
-msgstr "%1$s %2$s-ot %3$s mellett terjesztik"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:2
 #: airtime_mvc/application/views/scripts/form/setup-lang-timezone.phtml:1
 #, php-format
 msgid "Welcome to %s!"
-msgstr "Üdvözöljük az %s-nál!"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:3
 #, php-format
 msgid "Here's how you can get started using %s to automate your broadcasts: "
-msgstr "Itt van, hogyan tudod elindítani adásaid automatizálását használva az %s-t:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:6
 msgid "Upload audio tracks"
@@ -2090,7 +2086,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/dashboard/help.phtml:19
 #, php-format
 msgid "For more detailed help, read the %suser manual%s."
-msgstr "További segítségért, olvassa el a %shasználati útmutatót%s."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/embeddablewidgets/schedule.phtml:5
 #: airtime_mvc/application/configs/navigation.php:40
@@ -2105,32 +2101,32 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/embeddablewidgets/player.phtml:6
 #: airtime_mvc/application/configs/navigation.php:34
 msgid "Player"
-msgstr "Lejátszó"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:2
 #: airtime_mvc/application/configs/navigation.php:97
 msgid "Playout History"
-msgstr "Lejátszási Előzmények"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:8
 msgid "Log Sheet"
-msgstr "Napló"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:9
 msgid "File Summary"
-msgstr "Fájl Összegző"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistory/index.phtml:11
 msgid "Show Summary"
-msgstr "Műsor Összegző"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:56
 msgid "Expand Static Block"
-msgstr "Statikus Tábla Kibővítése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:61
 msgid "Expand Dynamic Block"
-msgstr "Dinamikus Tábla Kibővítése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/update.phtml:138
 msgid ""
@@ -2162,7 +2158,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:17
 #: airtime_mvc/application/forms/AddShowWhat.php:26
 msgid "Name:"
-msgstr "Név:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:25
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:28
@@ -2170,13 +2166,13 @@ msgstr "Név:"
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:149
 #: airtime_mvc/application/forms/AddShowWhat.php:54
 msgid "Description:"
-msgstr "Leírás:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:37
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:43
 #: airtime_mvc/application/forms/AddShowWhen.php:89
 msgid "Duration:"
-msgstr "Időtartam:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:40
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:46
@@ -2185,58 +2181,58 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:44
 msgid "Shuffle playlist"
-msgstr "Véletlenszerű lejátszási lista"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:44
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:356
 msgid "Shuffle"
-msgstr "Véletlenszerű"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:48
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:56
 msgid "Playlist crossfade"
-msgstr "Lejátszási lista átúsztatása"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:52
 msgid "Empty playlist content"
-msgstr "Üres lejátszási lista tartalom"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:52
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:60
 msgid "Clear"
-msgstr "Törlés"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:60
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:19
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:68
 msgid "Fade in: "
-msgstr "Felúsztatás:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:63
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:6
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:71
 msgid "Fade out: "
-msgstr "Leúsztatás:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:78
 msgid "Save playlist"
-msgstr "Lejátszási lista mentése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/playlist.phtml:86
 msgid "No open playlist"
-msgstr "Nincs megnyitott lejátszási lista"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:3
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:3
 msgid "Show Waveform"
-msgstr "Mutasd a Hullámalakot"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:6
 #: airtime_mvc/application/views/scripts/playlist/set-fade.phtml:19
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:68
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:71
 msgid "(ss.t)"
-msgstr "(mm.t)"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/smart-block.phtml:60
 msgid "Remove all content from this smart block"
@@ -2248,20 +2244,20 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:5
 msgid "Cue In: "
-msgstr "Felkeverés:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:5
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:12
 msgid "(hh:mm:ss.t)"
-msgstr "(óó:pp:mm.t)"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:12
 msgid "Cue Out: "
-msgstr "Lekeverés:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playlist/set-cue.phtml:19
 msgid "Original Length:"
-msgstr "Eredeti Hossz:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/preference/index.phtml:2
 #: airtime_mvc/application/configs/navigation.php:56
@@ -2270,7 +2266,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:2
 msgid "Stream Settings"
-msgstr "Adásfolyam/Patak Beállítások"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:11
 msgid "Global"
@@ -2278,7 +2274,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:88
 msgid "dB"
-msgstr "dB"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/preference/stream-setting.phtml:106
 msgid "Output Streams"
@@ -2287,14 +2283,14 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/login/index.phtml:3
 #: airtime_mvc/application/forms/Login.php:83
 msgid "Login"
-msgstr "Bejelentkezés"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/index.phtml:7
 #, php-format
 msgid ""
 "Welcome to the %s demo! You can log in using the username 'admin' and the "
 "password 'admin'."
-msgstr "Üdvözöljük az %s demó változatában! Jelentkezzen be 'admin' felhasználónévvel és 'admin' jelszóval."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-restore-after.phtml:3
 msgid "Email Sent!"
@@ -2310,7 +2306,7 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/login/password-restore-after.phtml:11
 #: airtime_mvc/application/views/scripts/form/password-restore.phtml:48
 msgid "Back"
-msgstr "Vissza"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-restore.phtml:3
 msgid "Password Reset"
@@ -2318,41 +2314,41 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:3
 msgid "New password"
-msgstr "Új jelszó"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/login/password-change.phtml:6
 msgid "Please enter and confirm your new password in the fields below."
-msgstr "Kérjük, adja meg és erősítse meg az új jelszavát az alábbi mezőkben."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:3
 msgid "Manage Users"
-msgstr "A Felhasználók Kezelése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:10
 msgid "New User"
-msgstr "Új Felhasználó"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:17
 msgid "id"
-msgstr "id"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:18
 #: airtime_mvc/application/forms/PasswordRestore.php:25
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:164
 msgid "Username"
-msgstr "Felhasználónév"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:19
 msgid "First Name"
-msgstr "Vezetéknév"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:20
 msgid "Last Name"
-msgstr "Keresztnév"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:21
 msgid "User Type"
-msgstr "Felhasználói Típus"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/user/add-user.phtml:30
 #, php-format
@@ -2363,20 +2359,20 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/showbuilder.phtml:7
 msgid "Find Shows"
-msgstr "Műsorok Keresése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:45
 msgid "Choose Show Instance"
-msgstr "Adjon hozzá több elemet"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-history-item.phtml:56
 msgid "Find"
-msgstr "Találat"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:1
 #: airtime_mvc/application/configs/navigation.php:61
 msgid "My Profile"
-msgstr "Profilom"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/edit-user.phtml:7
 #, php-format
@@ -2387,27 +2383,27 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:4
 msgid "Repeat Days:"
-msgstr "Ismétlések Napjai:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:18
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:18
 #: airtime_mvc/application/forms/GeneralPreferences.php:53
 #: airtime_mvc/application/forms/AddShowStyle.php:64
 msgid "Remove"
-msgstr "Eltávolítás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast.phtml:41
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:40
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:28
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:75
 msgid "Add"
-msgstr "Hozzáadás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/add-show-live-stream.phtml:10
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:25
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:39
 msgid "Show Source"
-msgstr "Műsor Forrás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/add-show-live-stream.phtml:12
 msgid ""
@@ -2417,7 +2413,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:1
 msgid "Register Airtime"
-msgstr "Airtime Regisztráció"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:6
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:5
@@ -2433,38 +2429,38 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:29
 #, php-format
 msgid "Click the box below to promote your station on %s."
-msgstr "Jelöld be a mezőt az állomásod közzétételéhez a %s-on."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:49
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:51
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:41
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:55
 msgid "(Required)"
-msgstr "(Kötelező)"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:67
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:81
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:66
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:81
 msgid "(for verification purposes only, will not be published)"
-msgstr "(csupán ellenőrzés céljából, nem kerül közzétételre)"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:152
 #: airtime_mvc/application/forms/GeneralPreferences.php:43
 msgid "Note: Anything larger than 600x600 will be resized."
-msgstr "Megjegyzés: Bármi, ami kisebb nagyobb, mint 600x600, átméretezésre kerül."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:166
 msgid "Show me what I am sending "
-msgstr "Mutasd meg, hogy mit küldök"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/register-dialog.phtml:180
 msgid "Terms and Conditions"
-msgstr "Felhasználási Feltételek"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/add-show-rebroadcast-absolute.phtml:4
 msgid "Choose Days:"
-msgstr "Válasszon Napot:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:66
 msgid "Search Criteria:"
@@ -2476,11 +2472,11 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:77
 msgid "or"
-msgstr "vagy"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:78
 msgid "and"
-msgstr "és"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:99
 msgid "New Modifier"
@@ -2488,12 +2484,12 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:102
 msgid " to "
-msgstr "-ig"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:130
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:143
 msgid "files meet the criteria"
-msgstr "fájl megfelel a kritériumoknak"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/smart-block-criteria.phtml:137
 msgid "file meets the criteria"
@@ -2502,74 +2498,74 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/form/daterange.phtml:6
 #: airtime_mvc/application/views/scripts/form/daterange.phtml:7
 msgid "Filter History"
-msgstr "Előzmények Szűrése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/login.phtml:41
 msgid "Forgot your password?"
-msgstr "Elfelejtett jelszó?"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/support-setting.phtml:46
 msgid ""
 "(In order to promote your station, 'Send support feedback' must be enabled)."
-msgstr "(Annak érdekében, hogy hírdetni tudja az állomását, a 'Támogatási Visszajelzés Küldését' engedélyeznie kell.)"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:4
 msgid "Stream "
-msgstr "Adásfolyam"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:84
 msgid "Additional Options"
-msgstr "További Lehetőségek"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:144
 msgid ""
 "The following info will be displayed to listeners in their media player:"
-msgstr "A következő információk megjelennek a hallgatók számára, a saját média lejátszóikban:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:177
 msgid "(Your radio station website)"
-msgstr "(A rádióállomás honlapja)"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/stream-setting-form.phtml:215
 msgid "Stream URL: "
-msgstr "Adásfolyam URL:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:9
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:27
 msgid "Choose folder"
-msgstr "Válasszon mappát"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:10
 msgid "Set"
-msgstr "Beállítás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:19
 msgid "Current Import Folder:"
-msgstr "Jelenlegi Tároló Mappa:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:43
 #, php-format
 msgid ""
 "Rescan watched directory (This is useful if it is network mount and may be "
 "out of sync with %s)"
-msgstr "A figyelt mappa újraellenőrzése (Ez akkor hasznos, ha a hálózati csatolás nincs szinkronban az %s-al)"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:44
 msgid "Remove watched directory"
-msgstr "A figyelt mappa eltávolítása"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_watched_dirs.phtml:49
 msgid "You are not watching any media folders."
-msgstr "Ön nem figyel minden média mappát."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:1
 msgid "Live Broadcasting"
-msgstr "Élő Közvetítés"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:11
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:30
 msgid "Master Source"
-msgstr "Mester Forrás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences_livestream.phtml:13
 msgid ""
@@ -2588,7 +2584,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences.phtml:11
 msgid "SoundCloud Settings"
-msgstr "SoundCloud Beállítások"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/form/preferences.phtml:17
 msgid "Dangerous Options"
@@ -2597,181 +2593,181 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:43
 msgid "Add this show"
-msgstr "Adja hozzá ezt a műsort"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:6
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:43
 msgid "Update show"
-msgstr "A műsor frissítése"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:10
 msgid "What"
-msgstr "Mi"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:14
 msgid "When"
-msgstr "Mikor"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:28
 msgid "Live Stream Input"
-msgstr "Élő Adásfolyam Bemenet"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:32
 msgid "Who"
-msgstr "Kicsoda"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/schedule/add-show-form.phtml:36
 msgid "Style"
-msgstr "Stílus"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/systemstatus/index.phtml:186
 msgid "Disk Space"
-msgstr "Lemezterület"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/library.phtml:3
 msgid "File import in progress..."
-msgstr "Fájl importálása folyamatban..."
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/library.phtml:10
 #: airtime_mvc/application/views/scripts/widgets/lib-table.phtml:4
 msgid "Advanced Search Options"
-msgstr "Speciális Keresési Beállítások"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:9
 #: airtime_mvc/application/forms/EditAudioMD.php:24
 #: airtime_mvc/application/forms/Player.php:15
 msgid "Title:"
-msgstr "Cím:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:10
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:34
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:148
 #: airtime_mvc/application/forms/EditAudioMD.php:34
 msgid "Creator:"
-msgstr "Előadó/Szerző:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:11
 #: airtime_mvc/application/forms/EditAudioMD.php:44
 msgid "Album:"
-msgstr "Album:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:12
 msgid "Track:"
-msgstr "Dalszám:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:13
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:36
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:38
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:147
 msgid "Length:"
-msgstr "Hossz:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:14
 msgid "Sample Rate:"
-msgstr "Mintavételi Ráta:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:15
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:74
 msgid "Bit Rate:"
-msgstr "Bitráta:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:16
 #: airtime_mvc/application/forms/EditAudioMD.php:115
 msgid "Mood:"
-msgstr "Hangulat:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:17
 #: airtime_mvc/application/forms/AddShowWhat.php:45
 #: airtime_mvc/application/forms/EditAudioMD.php:62
 msgid "Genre:"
-msgstr "Műfaj:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:18
 #: airtime_mvc/application/forms/EditAudioMD.php:72
 msgid "Year:"
-msgstr "Év:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:19
 #: airtime_mvc/application/forms/EditAudioMD.php:85
 msgid "Label:"
-msgstr "Kiadó:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:20
 #: airtime_mvc/application/forms/EditAudioMD.php:125
 msgid "BPM:"
-msgstr "BPM:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:21
 #: airtime_mvc/application/forms/EditAudioMD.php:95
 msgid "Composer:"
-msgstr "Zeneszerző:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:22
 #: airtime_mvc/application/forms/EditAudioMD.php:105
 msgid "Conductor:"
-msgstr "Vezénylő:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:23
 #: airtime_mvc/application/forms/EditAudioMD.php:135
 msgid "Copyright:"
-msgstr "Szerzői jog:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:24
 msgid "Isrc Number:"
-msgstr "Isrc Szám:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:25
 #: airtime_mvc/application/forms/EditAudioMD.php:155
 msgid "Website:"
-msgstr "Honlap:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:26
 #: airtime_mvc/application/forms/EditAudioMD.php:165
 #: airtime_mvc/application/forms/EditUser.php:119
 #: airtime_mvc/application/forms/Login.php:68
 msgid "Language:"
-msgstr "Nyelv:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:27
 msgid "File Path:"
-msgstr "Fájl Elérési Útvonal:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:45
 msgid "Web Stream"
-msgstr "Adásfolyam"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:46
 msgid "Dynamic Smart Block"
-msgstr "Dinamikus Okos Tábla"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:47
 msgid "Static Smart Block"
-msgstr "Statikus Okos Tábla"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:48
 msgid "Audio Track"
-msgstr "Audió Sáv"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:63
 msgid "Playlist Contents: "
-msgstr "Lejátszási Lista Tartalmak:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:65
 msgid "Static Smart Block Contents: "
-msgstr "Statikus Okos Tábla Tartalmak:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:104
 msgid "Dynamic Smart Block Criteria: "
-msgstr "Dinamikus Okos Tábla Kritériumok:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:137
 msgid "Limit to "
-msgstr "Korlátozva"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/get-file-metadata.ajax.phtml:150
 #: airtime_mvc/application/forms/AddShowWhat.php:36
 msgid "URL:"
-msgstr "URL:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/library/edit-file-md.phtml:6
 msgid "Viewing "
@@ -2779,7 +2775,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:2
 msgid "Listeners"
-msgstr "Hallgatók"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/listenerstat/index.phtml:10
 msgid "Stream Data Collection Status"
@@ -2787,36 +2783,36 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:3
 msgid "Your trial expires in"
-msgstr "Az Ön próba ideje lejár"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/trialBox.phtml:6
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:15
 msgid "days"
-msgstr "napok"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:4
 msgid "Previous:"
-msgstr "Előző:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:11
 msgid "Next:"
-msgstr "Következő:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:25
 msgid "Source Streams"
-msgstr "Az Adásfolyam Forrásai"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:49
 msgid "ON AIR"
-msgstr "ADÁSBAN"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:50
 msgid "Listen"
-msgstr "Hallgat"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/partialviews/header.phtml:61
 msgid "Logout"
-msgstr "Kijelentkezés"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:3
 msgid "Playout History Templates"
@@ -2824,69 +2820,69 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:5
 msgid "Log Sheet Templates"
-msgstr "Naplózási Sablonok"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:6
 msgid "New Log Sheet Template"
-msgstr "Új Naplózási Sablon"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:9
 msgid "No Log Sheet Templates"
-msgstr "Nincsenek Naplózási Sablonok"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:36
 msgid "File Summary Templates"
-msgstr "Összegzési Sablon Fájlok"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:37
 msgid "New File Summary Template"
-msgstr "Új Összegzési Sablon Fájl"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/index.phtml:40
 msgid "No File Summary Templates"
-msgstr "Nincsenek Összegzési Sablon Fájlok"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:2
 msgid "Creating File Summary Template"
-msgstr "Összegzési Sablon Fájl Létrehozása"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:4
 msgid "Creating Log Sheet Template"
-msgstr "Naplózási Sablon Létrehozása"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:9
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:142
 msgid "Name"
-msgstr "Név"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:46
 msgid "Add more elements"
-msgstr "Adjon hozzá több elemet"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:67
 msgid "Add New Field"
-msgstr "Új Mező Hozzáadása"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/playouthistorytemplate/template-contents.phtml:83
 msgid "Set Default Template"
-msgstr "Alapértelmezett Sablon"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:24
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:148
 msgid "Description"
-msgstr "Leírás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:30
 msgid "Stream URL:"
-msgstr "Adásfolyam URL:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:35
 msgid "Default Length:"
-msgstr "Alapértelmezett Hossz:"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/webstream/webstream.phtml:53
 msgid "No webstream"
-msgstr "Nincs adásfolyam"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/error/error-403.phtml:6
 #: airtime_mvc/application/views/scripts/error/error-500.phtml:6
@@ -2911,11 +2907,11 @@ msgstr ""
 #: airtime_mvc/application/views/scripts/error/error.phtml:14
 #: airtime_mvc/application/configs/navigation.php:143
 msgid "Help"
-msgstr "Segítség"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/error/error-500.phtml:11
 msgid "Oops!"
-msgstr "Hoppá!"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/error/error-500.phtml:12
 msgid "Something went wrong!"
@@ -2931,7 +2927,7 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/error/error-404.phtml:11
 msgid "Page not found!"
-msgstr "Az oldal nem található!"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/error/error-404.phtml:12
 msgid "We couldn't find the page you were looking for."
@@ -2939,42 +2935,42 @@ msgstr ""
 
 #: airtime_mvc/application/views/scripts/error/error.phtml:12
 msgid "Looks like the page you were looking for doesn't exist!"
-msgstr "Úgy néz ki, az oldal, amit keresett nem létezik!"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:23
 msgid "previous"
-msgstr "előző"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:28
 msgid "play"
-msgstr "lejátszás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:32
 msgid "pause"
-msgstr "szünet"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:37
 msgid "next"
-msgstr "következő"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:42
 msgid "stop"
-msgstr "leállítás"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:69
 msgid "max volume"
-msgstr "max hangerő"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:79
 msgid "Update Required"
-msgstr "Frissítés Szükséges"
+msgstr ""
 
 #: airtime_mvc/application/views/scripts/audiopreview/audio-preview.phtml:80
 #, php-format
 msgid ""
 "To play the media you will need to either update your browser to a recent "
 "version or update your %sFlash plugin%s."
-msgstr "A lejátszáshoz média szükséges, és frissítenie kell a böngészőjét egy újabb verzióra, vagy frissítse a %sFlash bővítményt%s."
+msgstr ""
 
 #: airtime_mvc/application/forms/BillingUpgradeDowngrade.php:20
 msgid "Plan type:"
@@ -2999,7 +2995,7 @@ msgstr ""
 #: airtime_mvc/application/forms/DateRange.php:16
 #: airtime_mvc/application/forms/ShowBuilder.php:18
 msgid "Date Start:"
-msgstr "Kezdés Ideje:"
+msgstr ""
 
 #: airtime_mvc/application/forms/DateRange.php:35
 #: airtime_mvc/application/forms/DateRange.php:63
@@ -3015,13 +3011,13 @@ msgstr "Kezdés Ideje:"
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:177
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:186
 msgid "Invalid character entered"
-msgstr "Érvénytelen bevitt karakterek"
+msgstr ""
 
 #: airtime_mvc/application/forms/DateRange.php:44
 #: airtime_mvc/application/forms/ShowBuilder.php:46
 #: airtime_mvc/application/forms/AddShowRepeats.php:56
 msgid "Date End:"
-msgstr "Végzés Ideje:"
+msgstr ""
 
 #: airtime_mvc/application/forms/ShowBuilder.php:72
 #: airtime_mvc/application/forms/ShowBuilder.php:88
@@ -3030,140 +3026,140 @@ msgstr ""
 
 #: airtime_mvc/application/forms/ShowBuilder.php:80
 msgid "All My Shows:"
-msgstr "Összes Műsorom:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWho.php:10
 msgid "Search Users:"
-msgstr "Felhasználók Keresése:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWho.php:24
 msgid "DJs:"
-msgstr "DJ-k:"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:30
 #: airtime_mvc/application/forms/GeneralPreferences.php:25
 #: airtime_mvc/application/forms/SupportSettings.php:18
 msgid "Station Name"
-msgstr "Állomás Név"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:39
 #: airtime_mvc/application/forms/SupportSettings.php:31
 msgid "Phone:"
-msgstr "Telefon:"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:51
 #: airtime_mvc/application/forms/AddUser.php:67
 #: airtime_mvc/application/forms/EditUser.php:83
 #: airtime_mvc/application/forms/SupportSettings.php:43
 msgid "Email:"
-msgstr "E-mail:"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:62
 #: airtime_mvc/application/forms/SupportSettings.php:54
 msgid "Station Web Site:"
-msgstr "Az Állomás Honlapja:"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:73
 #: airtime_mvc/application/forms/SupportSettings.php:65
 msgid "Country:"
-msgstr "Ország:"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:84
 #: airtime_mvc/application/forms/SupportSettings.php:76
 msgid "City:"
-msgstr "Város:"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:96
 #: airtime_mvc/application/forms/SupportSettings.php:88
 msgid "Station Description:"
-msgstr "Állomás Leírás: (lehetőség szerint angolul)"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:106
 #: airtime_mvc/application/forms/GeneralPreferences.php:42
 msgid "Station Logo:"
-msgstr "Állomás Logó:"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:126
 #: airtime_mvc/application/forms/SupportSettings.php:108
 #, php-format
 msgid "Promote my station on %s"
-msgstr "Az állomásom közzététele a %s-on"
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:151
 #: airtime_mvc/application/forms/SupportSettings.php:120
 #, php-format
 msgid "By checking this box, I agree to %s's %sprivacy policy%s."
-msgstr "A mező bejelölésével, elfogadom a %s %sadatvédelmi irányelveit%s."
+msgstr ""
 
 #: airtime_mvc/application/forms/RegisterAirtime.php:169
 #: airtime_mvc/application/forms/SupportSettings.php:143
 msgid "You have to agree to privacy policy."
-msgstr "El kell fogadnia az adatvédelmi irányelveket."
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRR.php:10
 msgid "Record from Line In?"
-msgstr "Felvétel a vonalbemenetről?"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRR.php:16
 msgid "Rebroadcast?"
-msgstr "Újraközvetítés?"
+msgstr ""
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:8
 #: airtime_mvc/application/forms/customvalidators/ConditionalNotEmpty.php:26
 msgid "Value is required and can't be empty"
-msgstr "Adjon meg egy értéket, nem lehet üres"
+msgstr ""
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:19
 msgid ""
 "'%value%' is no valid email address in the basic format local-part@hostname"
-msgstr "'%value%' érvénytelen formátum (név@hosztnév)"
+msgstr ""
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:33
 msgid "'%value%' does not fit the date format '%format%'"
-msgstr "'%value%' nem illeszkedik a dátum formához '%format%'"
+msgstr ""
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:59
 msgid "'%value%' is less than %min% characters long"
-msgstr "'%value%' rövidebb, mint %min% karakter"
+msgstr ""
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:64
 msgid "'%value%' is more than %max% characters long"
-msgstr "'% value%' több mint, a %max% karakter"
+msgstr ""
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:76
 msgid "'%value%' is not between '%min%' and '%max%', inclusively"
-msgstr "'%value%' nem szerepel '%min%' és '%max%', értékek között"
+msgstr ""
 
 #: airtime_mvc/application/forms/helpers/ValidationTypes.php:89
 msgid "Passwords do not match"
-msgstr "A jelszavak nem egyeznek meg"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:66
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:71
 msgid "Day must be specified"
-msgstr "A napot meg kell határoznia"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:71
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:76
 msgid "Time must be specified"
-msgstr "Az időt meg kell határoznia"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowAbsoluteRebroadcastDates.php:94
 #: airtime_mvc/application/forms/AddShowRebroadcastDates.php:103
 msgid "Must wait at least 1 hour to rebroadcast"
-msgstr "Az újraközvetítésre legalább 1 órát kell várni"
+msgstr ""
 
 #: airtime_mvc/application/forms/PasswordRestore.php:14
 msgid "Email"
-msgstr "E-mail"
+msgstr ""
 
 #: airtime_mvc/application/forms/PasswordRestore.php:36
 msgid "Reset password"
-msgstr "A jelszó visszaállítása"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhat.php:30
 msgid "Untitled Show"
-msgstr "Névtelen Műsor"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhat.php:69
 msgid "Instance Description:"
@@ -3175,11 +3171,11 @@ msgstr ""
 
 #: airtime_mvc/application/forms/EditAudioMD.php:145
 msgid "ISRC Number:"
-msgstr "ISRC Szám:"
+msgstr ""
 
 #: airtime_mvc/application/forms/EditAudioMD.php:176
 msgid "OK"
-msgstr "OK"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:33
 msgid "Station Description"
@@ -3187,7 +3183,7 @@ msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:62
 msgid "Default Crossfade Duration (s):"
-msgstr "Alapértelmezett Áttünési Időtartam (mp):"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:68
 #: airtime_mvc/application/forms/GeneralPreferences.php:82
@@ -3198,11 +3194,11 @@ msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:76
 msgid "Default Fade In (s):"
-msgstr "Alapértelmezett Felúsztatás (mp)"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:90
 msgid "Default Fade Out (s):"
-msgstr "Alapértelmezett Leúsztatás (mp)"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:102
 msgid "Public Airtime API"
@@ -3214,11 +3210,11 @@ msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:105
 msgid "Disabled"
-msgstr "Letiltva"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:106
 msgid "Enabled"
-msgstr "Engedélyezve"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:109
 msgid ""
@@ -3233,11 +3229,11 @@ msgstr ""
 #: airtime_mvc/application/forms/GeneralPreferences.php:127
 #: airtime_mvc/application/forms/SetupLanguageTimezone.php:23
 msgid "Station Timezone"
-msgstr "Állomási Időzóna:"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:134
 msgid "Week Starts On"
-msgstr "A Hét Indul"
+msgstr ""
 
 #: airtime_mvc/application/forms/GeneralPreferences.php:150
 msgid "Display login button on your Radio Page?"
@@ -3248,65 +3244,65 @@ msgstr ""
 #: airtime_mvc/application/forms/Login.php:41
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:42
 msgid "Username:"
-msgstr "Felhasználónév:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:38
 #: airtime_mvc/application/forms/EditUser.php:48
 #: airtime_mvc/application/forms/Login.php:54
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:58
 msgid "Password:"
-msgstr "Jelszó:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:46
 #: airtime_mvc/application/forms/EditUser.php:57
 msgid "Verify Password:"
-msgstr "Jelszó Ellenőrzés:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:55
 #: airtime_mvc/application/forms/EditUser.php:67
 msgid "Firstname:"
-msgstr "Vezetéknév:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:61
 #: airtime_mvc/application/forms/EditUser.php:75
 msgid "Lastname:"
-msgstr "Keresztnév:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:76
 #: airtime_mvc/application/forms/EditUser.php:94
 msgid "Mobile Phone:"
-msgstr "Mobiltelefon:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:82
 #: airtime_mvc/application/forms/EditUser.php:102
 msgid "Skype:"
-msgstr "Skype:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:88
 #: airtime_mvc/application/forms/EditUser.php:110
 msgid "Jabber:"
-msgstr "Jabber:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:95
 msgid "User Type:"
-msgstr "Felhasználói Típus:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddUser.php:120
 #: airtime_mvc/application/forms/EditUser.php:155
 msgid "Login name is not unique."
-msgstr "A login név nem egyedi."
+msgstr ""
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:14
 msgid "Import Folder:"
-msgstr "Tároló Mappa:"
+msgstr ""
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:25
 msgid "Watched Folders:"
-msgstr "Figyelt Mappák:"
+msgstr ""
 
 #: airtime_mvc/application/forms/WatchedDirPreferences.php:40
 msgid "Not a valid Directory"
-msgstr "Érvénytelen Könyvtár"
+msgstr ""
 
 #: airtime_mvc/application/forms/BillingClient.php:126
 msgid "What is the name of your favorite childhood friend?"
@@ -3334,39 +3330,39 @@ msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:14
 msgid "Default License:"
-msgstr "Alapértelmezett Liszensz:"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:17
 msgid "All rights are reserved"
-msgstr "Minden jog fenntartva"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:18
 msgid "The work is in the public domain"
-msgstr "A munka a nyilvános felületen folyik"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:19
 msgid "Creative Commons Attribution"
-msgstr "Creative Commons Tulajdonjog"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:20
 msgid "Creative Commons Attribution Noncommercial"
-msgstr "Creative Commons Nem Kereskedelmi Tulajdonjog"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:21
 msgid "Creative Commons Attribution No Derivative Works"
-msgstr "Creative Commons Nem Feldolgozható Tulajdonjog"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:22
 msgid "Creative Commons Attribution Share Alike"
-msgstr "Creative Commons Eredményeket Megosztó Tulajdonjog"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:23
 msgid "Creative Commons Attribution Noncommercial Non Derivate Works"
-msgstr "Creative Commons Nem Kereskedelmi Nem Feldolgozható Tulajdonjog"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:24
 msgid "Creative Commons Attribution Noncommercial Share Alike"
-msgstr "Creative Commons Nem Kereskedelmi Megosztó Tulajdonjog"
+msgstr ""
 
 #: airtime_mvc/application/forms/SoundCloudPreferences.php:31
 msgid "Default Sharing Type:"
@@ -3382,15 +3378,15 @@ msgstr ""
 
 #: airtime_mvc/application/forms/EditUser.php:129
 msgid "Interface Timezone:"
-msgstr "Felületi Időzóna:"
+msgstr ""
 
 #: airtime_mvc/application/forms/Player.php:14
 msgid "Now Playing"
-msgstr "Most Játszott"
+msgstr ""
 
 #: airtime_mvc/application/forms/Player.php:25
 msgid "Select Stream:"
-msgstr "Adásfolyam Kiválasztása:"
+msgstr ""
 
 #: airtime_mvc/application/forms/Player.php:28
 msgid "Auto detect the most appropriate stream to use."
@@ -3398,7 +3394,7 @@ msgstr ""
 
 #: airtime_mvc/application/forms/Player.php:29
 msgid "Select a stream:"
-msgstr "Egy adásfolyam kiválasztása:"
+msgstr ""
 
 #: airtime_mvc/application/forms/Player.php:41
 msgid " - Mobile friendly"
@@ -3421,54 +3417,54 @@ msgstr ""
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:49
 #: airtime_mvc/application/models/Block.php:1351
 msgid "Select criteria"
-msgstr "A feltételek megadása"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:51
 #: airtime_mvc/application/models/Block.php:1353
 msgid "Bit Rate (Kbps)"
-msgstr "Bitráta (Kbps)"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:71
 #: airtime_mvc/application/models/Block.php:1374
 msgid "Sample Rate (kHz)"
-msgstr "Mintavételi Ráta (kHz)"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:119
 msgid "hours"
-msgstr "órák"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:120
 msgid "minutes"
-msgstr "percek"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:121
 #: airtime_mvc/application/models/Block.php:333
 msgid "items"
-msgstr "elemek"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:130
 msgid "Randomly"
-msgstr "Véletlenszerűen"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:131
 msgid "Newest"
-msgstr "Újabb"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:132
 msgid "Oldest"
-msgstr "Régebbi"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:179
 msgid "Type:"
-msgstr "Típus:"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:182
 msgid "Static"
-msgstr "Statikus"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:183
 msgid "Dynamic"
-msgstr "Dinamikus"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:297
 msgid "Allow Repeated Tracks:"
@@ -3484,96 +3480,96 @@ msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:346
 msgid "Generate playlist content and save criteria"
-msgstr "Lejátszási lista tartalom létrehozása és kritériumok mentése"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:348
 msgid "Generate"
-msgstr "Létrehozás"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:354
 msgid "Shuffle playlist content"
-msgstr "Véletlenszerű lejátszási lista tartalom"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:526
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:538
 msgid "Limit cannot be empty or smaller than 0"
-msgstr "A határérték nem lehet üres vagy kisebb, mint 0"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:531
 msgid "Limit cannot be more than 24 hrs"
-msgstr "A határérték nem lehet hosszabb, mint 24 óra"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:541
 msgid "The value should be an integer"
-msgstr "Az érték csak egész szám lehet"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:544
 msgid "500 is the max item limit value you can set"
-msgstr "Maximum 500 elem állítható be"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:555
 msgid "You must select Criteria and Modifier"
-msgstr "Ki kell választania a Kritériumot és a Módosítót"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:562
 msgid "'Length' should be in '00:00:00' format"
-msgstr "'Hosszúság' '00:00:00' formában lehet"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:567
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:580
 msgid ""
 "The value should be in timestamp format (e.g. 0000-00-00 or 0000-00-00 "
 "00:00:00)"
-msgstr "Az értéknek az alábbi időbélyeg formátumban kell lennie (pl. 0000-00-00 vagy 0000-00-00 00:00:00)"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:594
 msgid "The value has to be numeric"
-msgstr "Az értéknek numerikusnak kell lennie"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:599
 msgid "The value should be less then 2147483648"
-msgstr "Az érték lehet kevesebb, mint 2147483648"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:604
 #, php-format
 msgid "The value should be less than %s characters"
-msgstr "Az értéknek rövidebb kell lennie, mint %s karakter"
+msgstr ""
 
 #: airtime_mvc/application/forms/SmartBlockCriteria.php:611
 msgid "Value cannot be empty"
-msgstr "Az érték nem lehet üres"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:26
 msgid "Icecast Vorbis Metadata"
-msgstr "Icecast Vorbis Metaadatok"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:36
 msgid "Stream Label:"
-msgstr "Adás Címke:"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:37
 msgid "Artist - Title"
-msgstr "Előadó - Cím"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:38
 msgid "Show - Artist - Title"
-msgstr "Műsor - Előadó - Cím"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:39
 msgid "Station name - Show name"
-msgstr "Állomásnév - Műsornév"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:45
 msgid "Off Air Metadata"
-msgstr "Adáson Kívüli - Metaadat"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:51
 msgid "Enable Replay Gain"
-msgstr "Replay Gain Engedélyezése"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:57
 msgid "Replay Gain Modifier"
-msgstr "Replay Gain Módosító"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSetting.php:65
 msgid "Streaming Server:"
@@ -3590,15 +3586,15 @@ msgstr ""
 #: airtime_mvc/application/forms/PasswordChange.php:17
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:117
 msgid "Password"
-msgstr "Jelszó"
+msgstr ""
 
 #: airtime_mvc/application/forms/PasswordChange.php:28
 msgid "Confirm new password"
-msgstr "Új jelszó megerősítése"
+msgstr ""
 
 #: airtime_mvc/application/forms/PasswordChange.php:36
 msgid "Password confirmation does not match your password."
-msgstr "A megadott jelszavak nem egyeznek meg."
+msgstr ""
 
 #: airtime_mvc/application/forms/SetupLanguageTimezone.php:18
 msgid "Station Language"
@@ -3606,7 +3602,7 @@ msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:52
 msgid "Enabled:"
-msgstr "Engedélyezett:"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:59
 msgid "Mobile:"
@@ -3614,67 +3610,67 @@ msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:66
 msgid "Stream Type:"
-msgstr "Adatfolyam Típus:"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:82
 msgid "Service Type:"
-msgstr "Kiszolgálói Típus:"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:90
 msgid "Channels:"
-msgstr "Csatornák:"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:91
 msgid "1 - Mono"
-msgstr "1 - Monó"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:91
 msgid "2 - Stereo"
-msgstr "2 - Sztereó"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:98
 msgid "Server"
-msgstr "Szerver"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:108
 msgid "Port"
-msgstr "Port"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:112
 msgid "Only numbers are allowed."
-msgstr "Csak számok adhatók meg."
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:133
 msgid "URL"
-msgstr "URL"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:154
 msgid "Mount Point"
-msgstr "Csatolási Pont"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:174
 msgid "Admin User"
-msgstr "Admin Felhasználó"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:183
 msgid "Admin Password"
-msgstr "Admin Jelszó"
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:211
 msgid "Server cannot be empty."
-msgstr "A szerver nem lehet üres."
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:216
 msgid "Port cannot be empty."
-msgstr "A port nem lehet üres."
+msgstr ""
 
 #: airtime_mvc/application/forms/StreamSettingSubForm.php:222
 msgid "Mount cannot be empty with Icecast server."
-msgstr "A csatolási pont nem lehet üres Icecast szerver esetében."
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:16
 msgid "'%value%' does not fit the time format 'HH:mm'"
-msgstr "'%value%' az időformátum nem illeszkedik 'ÓÓ:pp'"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:22
 msgid "Start Time:"
@@ -3690,36 +3686,36 @@ msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:98
 msgid "Timezone:"
-msgstr "Időzóna:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:107
 msgid "Repeats?"
-msgstr "Ismétlések?"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:139
 msgid "Cannot create show in the past"
-msgstr "Műsort nem lehet a múltban létrehozni"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:147
 msgid "Cannot modify start date/time of the show that is already started"
-msgstr "Nem lehet módosítani a műsor kezdési időpontját, ha a műsor már elindult"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:156
 #: airtime_mvc/application/models/Show.php:282
 msgid "End date/time cannot be in the past"
-msgstr "A befejezési dátum/idő nem lehet a múltban"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:164
 msgid "Cannot have duration < 0m"
-msgstr "Nem lehet <0p időtartam"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:168
 msgid "Cannot have duration 00h 00m"
-msgstr "Nem lehet 00ó 00p időtartam"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowWhen.php:175
 msgid "Cannot have duration greater than 24h"
-msgstr "Nem tarthat tovább, mint 24h"
+msgstr ""
 
 #: airtime_mvc/application/forms/TuneInPreferences.php:19
 msgid "Push metadata to your station on TuneIn?"
@@ -3747,19 +3743,19 @@ msgstr ""
 #: airtime_mvc/application/forms/AddShowLiveStream.php:10
 #, php-format
 msgid "Use %s Authentication:"
-msgstr "%s Hitelesítés Használata:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:16
 msgid "Use Custom Authentication:"
-msgstr "Egyéni Hitelesítés Használata:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:25
 msgid "Custom Username"
-msgstr "Egyéni Felhasználónév"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:37
 msgid "Custom Password"
-msgstr "Egyéni Jelszó"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:48
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:67
@@ -3781,23 +3777,23 @@ msgstr ""
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:77
 msgid "Username field cannot be empty."
-msgstr "A felhasználónév nem lehet üres."
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowLiveStream.php:82
 msgid "Password field cannot be empty."
-msgstr "A jelszó nem lehet üres."
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowStyle.php:12
 msgid "Background Colour:"
-msgstr "Háttérszín:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowStyle.php:31
 msgid "Text Colour:"
-msgstr "Szövegszín:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowStyle.php:49
 msgid "Current Logo:"
-msgstr "Jelenlegi Logó:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowStyle.php:72
 msgid "Show Logo:"
@@ -3809,7 +3805,7 @@ msgstr ""
 
 #: airtime_mvc/application/forms/Login.php:102
 msgid "Type the characters you see in the picture below."
-msgstr "Gépelje be a képen látható karaktereket."
+msgstr ""
 
 #: airtime_mvc/application/forms/LiveStreamingPreferences.php:19
 msgid "Auto Switch Off:"
@@ -3825,59 +3821,59 @@ msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:10
 msgid "Link:"
-msgstr "Hivatkozás:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:16
 msgid "Repeat Type:"
-msgstr "Ismétlés Típusa:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:19
 msgid "weekly"
-msgstr "hetente"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:20
 msgid "every 2 weeks"
-msgstr "minden második héten"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:21
 msgid "every 3 weeks"
-msgstr "minden harmadik héten"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:22
 msgid "every 4 weeks"
-msgstr "minden negyedik héten"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:23
 msgid "monthly"
-msgstr "havonta"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:32
 msgid "Select Days:"
-msgstr "Napok Kiválasztása:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:47
 msgid "Repeat By:"
-msgstr "Által Ismételt:"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the month"
-msgstr "a hónap napja"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:50
 msgid "day of the week"
-msgstr "a hét napja"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:69
 msgid "No End?"
-msgstr "Nincs Vége?"
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:106
 msgid "End date must be after start date"
-msgstr "A befejezési idő után kell, hogy legyen kezdési idő is."
+msgstr ""
 
 #: airtime_mvc/application/forms/AddShowRepeats.php:113
 msgid "Please select a repeat day"
-msgstr "Kérjük, válasszon egy ismétlési napot"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:12
 msgid "Radio Page"
@@ -3885,7 +3881,7 @@ msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:19
 msgid "Calendar"
-msgstr "Naptár"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:26
 msgid "Widgets"
@@ -3897,11 +3893,11 @@ msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:67
 msgid "Users"
-msgstr "Felhasználók"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:74
 msgid "Streams"
-msgstr "Adásfolyamok"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:82
 msgid "Analytics"
@@ -3909,11 +3905,11 @@ msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:90
 msgid "Listener Stats"
-msgstr "Hallgatói Statisztikák"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:104
 msgid "History Templates"
-msgstr "Naplózási Sablonok"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:113
 msgid "Billing"
@@ -3933,15 +3929,15 @@ msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:150
 msgid "Getting Started"
-msgstr "Első Lépések"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:157
 msgid "FAQ"
-msgstr "GYIK"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:162
 msgid "User Manual"
-msgstr "Felhasználói Kézikönyv"
+msgstr ""
 
 #: airtime_mvc/application/configs/navigation.php:167
 msgid "File a Support Ticket"
@@ -3950,26 +3946,26 @@ msgstr ""
 #: airtime_mvc/application/models/Block.php:833
 #: airtime_mvc/application/models/Playlist.php:812
 msgid "Cue in and cue out are null."
-msgstr "A fel- és a lekeverés értékei nullák."
+msgstr ""
 
 #: airtime_mvc/application/models/Block.php:868
 #: airtime_mvc/application/models/Block.php:924
 #: airtime_mvc/application/models/Playlist.php:851
 #: airtime_mvc/application/models/Playlist.php:895
 msgid "Can't set cue out to be greater than file length."
-msgstr "Nem lehet beállítani, mert a lekeverési idő nem lehet nagyobb a fájl hosszánál."
+msgstr ""
 
 #: airtime_mvc/application/models/Block.php:879
 #: airtime_mvc/application/models/Block.php:900
 #: airtime_mvc/application/models/Playlist.php:843
 #: airtime_mvc/application/models/Playlist.php:868
 msgid "Can't set cue in to be larger than cue out."
-msgstr "Nem lehet beállítani, hogy a felkeverés hosszabb legyen, mint a lekeverés."
+msgstr ""
 
 #: airtime_mvc/application/models/Block.php:935
 #: airtime_mvc/application/models/Playlist.php:887
 msgid "Can't set cue out to be smaller than cue in."
-msgstr "Nem lehet a lekeverés rövidebb, mint a felkeverés."
+msgstr ""
 
 #: airtime_mvc/application/models/Block.php:1366
 msgid "Upload Time"
@@ -3978,7 +3974,7 @@ msgstr ""
 #: airtime_mvc/application/models/ShowBuilder.php:212
 #, php-format
 msgid "Rebroadcast of %s from %s"
-msgstr "Úrjaközvetítés %s -tól/-től %s"
+msgstr ""
 
 #: airtime_mvc/application/models/Preference.php:460
 #, php-format
@@ -3987,45 +3983,45 @@ msgstr ""
 
 #: airtime_mvc/application/models/Preference.php:588
 msgid "Select Country"
-msgstr "Ország Kiválasztása"
+msgstr ""
 
 #: airtime_mvc/application/models/MusicDir.php:160
 #, php-format
 msgid "%s is already watched."
-msgstr "%s már figyelve van."
+msgstr ""
 
 #: airtime_mvc/application/models/MusicDir.php:164
 #, php-format
 msgid "%s contains nested watched directory: %s"
-msgstr "%s tartalmazza a beágyazott figyelt könyvtárat: %s"
+msgstr ""
 
 #: airtime_mvc/application/models/MusicDir.php:168
 #, php-format
 msgid "%s is nested within existing watched directory: %s"
-msgstr "%s beágyazva a létező figyelt mappán belül: %s"
+msgstr ""
 
 #: airtime_mvc/application/models/MusicDir.php:189
 #: airtime_mvc/application/models/MusicDir.php:370
 #, php-format
 msgid "%s is not a valid directory."
-msgstr "%s nem létező könyvtár."
+msgstr ""
 
 #: airtime_mvc/application/models/MusicDir.php:232
 #, php-format
 msgid ""
 "%s is already set as the current storage dir or in the watched folders list"
-msgstr "%s már be van állítva, mint a jelenlegi tároló elérési útvonala vagy a figyelt mappák listája"
+msgstr ""
 
 #: airtime_mvc/application/models/MusicDir.php:388
 #, php-format
 msgid ""
 "%s is already set as the current storage dir or in the watched folders list."
-msgstr "%s már be van állítva, mint jelenlegi tároló elérési útvonala vagy, a figyelt mappák listájában."
+msgstr ""
 
 #: airtime_mvc/application/models/MusicDir.php:431
 #, php-format
 msgid "%s doesn't exist in the watched list."
-msgstr "%s nem szerepel a figyeltek listáján."
+msgstr ""
 
 #: airtime_mvc/application/models/Auth.php:33
 #, php-format
@@ -4038,69 +4034,69 @@ msgstr ""
 #: airtime_mvc/application/models/Auth.php:38
 #, php-format
 msgid "%s Password Reset"
-msgstr "%s Jelszó Visszaállítás"
+msgstr ""
 
 #: airtime_mvc/application/models/Show.php:184
 msgid "Shows can have a max length of 24 hours."
-msgstr "A műsorok maximum 24 óra hosszúságúak lehetnek."
+msgstr ""
 
 #: airtime_mvc/application/models/Show.php:293
 msgid ""
 "Cannot schedule overlapping shows.\n"
 "Note: Resizing a repeating show affects all of its repeats."
-msgstr "Az ütemzés nem fedheti át a műsorokat.\nMegjegyzés: Az ismételt műsorok átméretezése kavarodást okozhat."
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:73
 msgid "Cannot move items out of linked shows"
-msgstr "Nem tud áthelyezni elemeket a kapcsolódó műsorokból"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:119
 msgid "The schedule you're viewing is out of date! (sched mismatch)"
-msgstr "A megtekintett ütemterv elavult! (ütem eltérés)"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:124
 msgid "The schedule you're viewing is out of date! (instance mismatch)"
-msgstr "A megtekintett ütemterv elavult! (például eltérés)"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:132
 #: airtime_mvc/application/models/Scheduler.php:458
 #: airtime_mvc/application/models/Scheduler.php:490
 msgid "The schedule you're viewing is out of date!"
-msgstr "A megtekintett ütemterv időpontja elavult!"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:142
 #, php-format
 msgid "You are not allowed to schedule show %s."
-msgstr "Nincs jogosultsága az ütemezett műsorhoz %s."
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:146
 msgid "You cannot add files to recording shows."
-msgstr "Nem adhat hozzá fájlokat a rögzített műsorokhoz."
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:152
 #, php-format
 msgid "The show %s is over and cannot be scheduled."
-msgstr "A műsor %s véget ért és nem lehet ütemezni."
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:159
 #, php-format
 msgid "The show %s has been previously updated!"
-msgstr "A műsor %s már korábban frissítve lett!"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:178
 msgid ""
 "Content in linked shows must be scheduled before or after any one is "
 "broadcasted"
-msgstr "A kapcsolódó műsorok tartalmait bármelyik adás előtt vagy után kell ütemezni"
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:195
 msgid "Cannot schedule a playlist that contains missing files."
-msgstr "Nem lehet ütemezni olyan lejátszási listát, amely tartalmaz hiányzó fájlokat."
+msgstr ""
 
 #: airtime_mvc/application/models/Scheduler.php:216
 #: airtime_mvc/application/models/Scheduler.php:305
 msgid "A selected File does not exist!"
-msgstr "A kiválasztott fájl nem létezik!"
+msgstr ""
 
 #: airtime_mvc/application/models/Schedule.php:206
 msgid "livestream"
@@ -4108,48 +4104,48 @@ msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:166
 msgid "Length needs to be greater than 0 minutes"
-msgstr "A hosszúság értékének nagyobb kell lennie, mint 0 perc"
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:171
 msgid "Length should be of form \"00h 00m\""
-msgstr "A hosszúság formája \"00ó 00p\""
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:184
 msgid "URL should be of form \"http://domain\""
-msgstr "Az URL-nek így kell kinéznie \"http://domain\""
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:187
 msgid "URL should be 512 characters or less"
-msgstr "Az URL-nek rövidebbnek kell lennie 512 karakternél"
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:193
 msgid "No MIME type found for webstream."
-msgstr "Nem található MIME típus az adásfolyamhoz."
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:209
 msgid "Webstream name cannot be empty"
-msgstr "Az adásfolyam neve maradhat üresen"
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:278
 msgid "Could not parse XSPF playlist"
-msgstr "Nem sikerült értelmezni a XSDF lejátszási listát"
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:298
 msgid "Could not parse PLS playlist"
-msgstr "Nem sikerült értelmezni a PLS lejátszási listát"
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:318
 msgid "Could not parse M3U playlist"
-msgstr "Nem sikerült értelmezni a M3U lejátszási listát"
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:332
 msgid "Invalid webstream - This appears to be a file download."
-msgstr "Érvénytelen adásfolyam - Úgy néz ki, hogy ez egy fájl letöltés."
+msgstr ""
 
 #: airtime_mvc/application/models/Webstream.php:336
 #, php-format
 msgid "Unrecognized stream type: %s"
-msgstr "Ismeretlen típusú adásfolyam: %s"
+msgstr ""
 
 #: airtime_mvc/public/setup/rabbitmq-setup.php:78
 msgid ""
