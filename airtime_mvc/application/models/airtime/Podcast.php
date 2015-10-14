@@ -15,22 +15,40 @@
  */
 class Podcast extends BasePodcast
 {
-    /*public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
+    /**
+     * Override this function so it returns its child class fields as well.
+     * Child class will either be ImportedPodcast or StationPodcast
+     *
+     * @param string $keyType
+     * @param bool $includeLazyLoadColumns
+     * @param array $alreadyDumpedObjects
+     * @param bool $includeForeignObjects
+     * @return array
+     */
+    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-
         $podcastArray = parent::toArray(BasePeer::TYPE_FIELDNAME);
-        $podcastArray["url"] = $this->getDbUrl();
 
-        //$array = array_merge($podcastArray, $importedPodcastArray);
+        $importedPodcast = ImportedPodcastQuery::create()->filterByDbPodcastId($this->getDbId())->findOne();
+        $stationPodcast = StationPodcastQuery::create()->filterByDbPodcastId($this->getDbId())->findOne();
+        if (!is_null($importedPodcast)) {
+            $importedPodcastArray = $importedPodcast->toArray(BasePeer::TYPE_FIELDNAME);
 
-        //unset podcast_id because we already have that value in $importedPodcastArray
-        //unset($array["podcast_id"]);
+            //unset these values because we already have the podcast id in $podcastArray
+            //and we don't need the imported podcast ID
+            unset($importedPodcastArray["id"]);
+            unset($importedPodcastArray["podcast_id"]);
 
-        return $podcastArray;
+            return array_merge($podcastArray, $importedPodcastArray);
+
+        } else if (!is_null($stationPodcast)) {
+            // For now just return $podcastArray because StationPodcast objects do not have any
+            // extra fields we want to return right now. This may change in the future.
+            return $podcastArray;
+        } else {
+            return $podcastArray;
+        }
+
     }
 
-    public function getDbUrl()
-    {
-        return $this->getImportedPodcasts()->getFirst()->getDbUrl();
-    }*/
 }

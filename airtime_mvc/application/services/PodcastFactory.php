@@ -6,6 +6,6 @@ class PodcastFactory
     {
         // check if station podcast exists and if not, create one
 
-        return Application_Service_ImportedPodcastService::createFromFeedUrl($feedUrl);
+        return Application_Service_PodcastService::createFromFeedUrl($feedUrl);
     }
 }

@@ -7,7 +7,7 @@ class InvalidPodcastException extends Exception {}
 class PodcastNotFoundException extends Exception {}
 
 
-class Application_Service_ImportedPodcastService
+class Application_Service_PodcastService
 {
 
     // These fields should never be modified with POST/PUT data
@@ -25,9 +25,9 @@ class Application_Service_ImportedPodcastService
      *
      * @return bool
      */
-    public static function importedPodcastLimitReached()
+    public static function PodcastLimitReached()
     {
-        if (ImportedPodcastQuery::create()->count() >= 50) {
+        if (PodcastQuery::create()->count() >= 50) {
             return true;
         } else {
             return false;
@@ -66,7 +66,7 @@ class Application_Service_ImportedPodcastService
      */
     public static function createFromFeedUrl($feedUrl)
     {
-        if (self::importedPodcastLimitReached()) {
+        if (self::PodcastLimitReached()) {
             throw new PodcastLimitReachedException();
         }
 
@@ -130,7 +130,7 @@ class Application_Service_ImportedPodcastService
             $importedPodcast->setPodcast($podcast);
             $importedPodcast->save();
 
-            return self::_generatePodcastArray($importedPodcast, $rss);
+            return self::_generatePodcastArray($podcast, $rss);
         } catch(Exception $e) {
             $podcast->delete();
             throw $e;
@@ -188,13 +188,13 @@ class Application_Service_ImportedPodcastService
      * Given a podcast object and a SimplePie feed object,
      * generate a data array to pass back to the front-end
      *
-     * @param $importedPodcast  ImportedPodcast model object
+     * @param $podcast  Podcast model object
      * @param SimplePie $rss    SimplePie feed object
      *
      * @return array
      */
-    private static function _generatePodcastArray($importedPodcast, $rss) {
-        $podcastArray = $importedPodcast->toArray(BasePeer::TYPE_FIELDNAME);
+    private static function _generatePodcastArray($podcast, $rss) {
+        $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
 
         $podcastArray["episodes"] = array();
         foreach ($rss->get_items() as $item) {
@@ -211,5 +211,94 @@ class Application_Service_ImportedPodcastService
         }
 
         return $podcastArray;
+    }
+
+    /**
+     * Fetches a Podcast's rss feed and returns all its episodes with
+     * the Podcast object
+     *
+     * @param $podcastId
+     *
+     * @throws PodcastNotFoundException
+     * @throws InvalidPodcastException
+     * @return array - Podcast Array with a full list of episodes
+     */
+    public static function getPodcastById($podcastId)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if (!$podcast) {
+            throw new PodcastNotFoundException();
+        }
+
+        // Is it an imported podcast?
+        $importedPodcast = ImportedPodcastQuery::create()->filterByDbPodcastId($podcast->getDbId())->findOne();
+        if (!is_null($importedPodcast)) {
+
+            $rss = self::getPodcastFeed($importedPodcast->getDbUrl());
+            if (!$rss) {
+                throw new InvalidPodcastException();
+            }
+        } else {
+            //TODO: get station podcast
+        }
+
+        return self::_generatePodcastArray($podcast, $rss);
+    }
+
+    /**
+     * Deletes a Podcast and its podcast episodes
+     *
+     * @param $podcastId
+     * @throws Exception
+     * @throws PodcastNotFoundException
+     */
+    public static function deletePodcastById($podcastId)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if ($podcast) {
+            $podcast->delete();
+        } else {
+            throw new PodcastNotFoundException();
+        }
+    }
+
+    /**
+     * Updates a Podcast object with the given metadata
+     *
+     * @param $podcastId
+     * @param $data
+     * @return array
+     * @throws Exception
+     * @throws PodcastNotFoundException
+     */
+    public static function updatePodcastFromArray($podcastId, $data)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if (!$podcast) {
+            throw new PodcastNotFoundException();
+        }
+
+        self::removePrivateFields($data);
+        self::validatePodcastMetadata($data);
+
+        $importedPodcast = ImportedPodcastQuery::create()->filterByDbPodcastId($podcast->getDbId())->findOne();
+        if (!is_null($importedPodcast)) {
+            $importedPodcast->fromArray($data, BasePeer::TYPE_FIELDNAME);
+            $importedPodcast->save();
+        } else {
+            //TODO: station podcast
+        }
+
+        //$podcast->fromArray($data, BasePeer::TYPE_FIELDNAME);
+        //$podcast->save();
+
+        return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+    }
+
+    private static function removePrivateFields(&$data)
+    {
+        foreach (self::$privateFields as $key) {
+            unset($data[$key]);
+        }
     }
 }

@@ -62,7 +62,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(200)
-                ->appendBody(json_encode(Podcast::getPodcastById($id)));
+                ->appendBody(json_encode(Application_Service_PodcastService::getPodcastById($id)));
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
@@ -127,8 +127,8 @@ class Rest_PodcastController extends Zend_Rest_Controller
             // to prevent the user from trying to download them again while Celery is running
             $episodes = $this->_service->addPodcastEpisodePlaceholders($requestData["podcast"]["id"],
                                                                        $requestData["podcast"]["episodes"]);
-            $this->_service->downloadEpisodes($episodes);
-            $podcast = Podcast::updateFromArray($id, $requestData);
+            //$this->_service->downloadEpisodes($episodes);
+            $podcast = Application_Service_PodcastService::updatePodcastFromArray($id, $requestData);
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
@@ -152,7 +152,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
 
         try {
-            Podcast::deleteById($id);
+            Application_Service_PodcastService::deletePodcastById($id);
             $this->getResponse()
                 ->setHttpResponseCode(204);
         }
@@ -185,13 +185,13 @@ class Rest_PodcastController extends Zend_Rest_Controller
         switch($method) {
             case "DELETE":
                 foreach($ids as $id) {
-                    Podcast::deleteById($id);
+                    Application_Service_PodcastService::deletePodcastById($id);
                     $responseBody = "Success";  // TODO: make this more descriptive
                 }
                 break;
             case "GET":
                 foreach($ids as $id) {
-                    $podcast = Podcast::getPodcastById($id);
+                    $podcast = Application_Service_PodcastService::getPodcastById($id);
                     $responseBody[] = array(
                         "podcast"=>json_encode($podcast),
                         "html"=>$this->view->render($path),
