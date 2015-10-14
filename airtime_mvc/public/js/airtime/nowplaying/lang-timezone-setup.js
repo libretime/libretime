@@ -7,8 +7,11 @@ $(document).ready(function() {
             width: 500,
             resizable: false,
             modal: true,
+            closeOnEscape: false,
             position:['center','center'],
+            dialogClass: 'no-close',
             buttons: [
+                /* Testing removing the Not Now button for higher engagement
                 {
                     id: "setup-later",
                     text: $.i18n._("Not Now"),
@@ -16,7 +19,7 @@ $(document).ready(function() {
                     click: function() {
                         $(this).dialog("close");
                     }
-                },
+                },*/
                 {
                     id: "help_airtime",
                     text: $.i18n._("OK"),

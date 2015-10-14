@@ -213,10 +213,6 @@ class PreferenceController extends Zend_Controller_Action
             $values["s4_data"] = $s4_data;
 
             if ($form->isValid($values)) {
-
-                $values['icecast_vorbis_metadata'] = $form->getValue('icecast_vorbis_metadata');
-                $values['streamFormat'] = $form->getValue('streamFormat');
-
                 Application_Model_StreamSetting::setStreamSetting($values);
 
                 /* If the admin password values are empty then we should not

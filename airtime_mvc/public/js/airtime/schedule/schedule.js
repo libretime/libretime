@@ -224,7 +224,7 @@ function buildScheduleDialog (json, instance_id) {
             }
         ]
     });
-        
+
     //set the start end times so the builder datatables knows its time range.
     fnServer.start = json.start;
     fnServer.end = json.end;

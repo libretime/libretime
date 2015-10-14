@@ -234,63 +234,65 @@ class Application_Service_SchedulerService
         //with content from $linkedShowSchedule.
         try {
             $con->beginTransaction();
-            foreach ($instanceIdsToFill as $id) 
-            {
-                //Start by clearing the show instance that needs to be filling. This ensure
-                //we're not going to get in trouble in case there's an programming error somewhere else.
-                self::clearShowInstanceContents($id);
-                    
-                // Now fill the show instance with the same content that $linkedShowSchedule has.
-                $instanceStart_sql = "SELECT starts FROM cc_show_instances " .
-                         "WHERE id = {$id} " . "ORDER BY starts";
-                
-                //What's tricky here is that when we copy the content, we have to adjust
-                //the start and end times of each track so they're inside the new show instance's time slot.
-                $nextStartDT = new DateTime(
-                        Application_Common_Database::prepareAndExecute(
-                                $instanceStart_sql, array(), 
-                                Application_Common_Database::COLUMN), 
-                        new DateTimeZone("UTC"));
-                
-                $defaultCrossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
-                unset($values);
-                $values = array();
-                foreach ($linkedShowSchedule as $item) {
-                    $endTimeDT = self::findEndTime($nextStartDT, 
-                            $item["clip_length"]);
-                    
-                    if (is_null($item["file_id"])) {
-                        $item["file_id"] = "null";
-                    }
-                    if (is_null($item["stream_id"])) {
-                        $item["stream_id"] = "null";
-                    }
-                    
-                    $values[] = "(" . "'{$nextStartDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
-                             "'{$endTimeDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
-                             "'{$item["clip_length"]}', " .
-                             "'{$item["fade_in"]}', " . "'{$item["fade_out"]}', " .
-                             "'{$item["cue_in"]}', " . "'{$item["cue_out"]}', " .
-                             "{$item["file_id"]}, " . "{$item["stream_id"]}, " .
-                             "{$id}, " . "{$item["position"]})";
-                    
-                    $nextStartDT = self::findTimeDifference($endTimeDT, 
-                            $defaultCrossfadeDuration);
-                } //foreach show item
 
-                if (!empty($values)) {
-                    $insert_sql = "INSERT INTO cc_schedule (starts, ends, ".
-                        "clip_length, fade_in, fade_out, cue_in, cue_out, ".
-                        "file_id, stream_id, instance_id, position)  VALUES ".
-                        implode($values, ",");
-                    Application_Common_Database::prepareAndExecute(
-                        $insert_sql, array(), Application_Common_Database::EXECUTE);
-                }
-               
-               //update cc_schedule status column
-               $instance = CcShowInstancesQuery::create()->findPk($id);
-               $instance->updateScheduleStatus($con);
-           } //foreach linked instance
+            if (!empty($linkedShowSchedule)) {
+                foreach ($instanceIdsToFill as $id) {
+                    //Start by clearing the show instance that needs to be filling. This ensure
+                    //we're not going to get in trouble in case there's an programming error somewhere else.
+                    self::clearShowInstanceContents($id);
+
+                    // Now fill the show instance with the same content that $linkedShowSchedule has.
+                    $instanceStart_sql = "SELECT starts FROM cc_show_instances " .
+                        "WHERE id = {$id} " . "ORDER BY starts";
+
+                    //What's tricky here is that when we copy the content, we have to adjust
+                    //the start and end times of each track so they're inside the new show instance's time slot.
+                    $nextStartDT = new DateTime(
+                        Application_Common_Database::prepareAndExecute(
+                            $instanceStart_sql, array(),
+                            Application_Common_Database::COLUMN),
+                        new DateTimeZone("UTC"));
+
+                    $defaultCrossfadeDuration = Application_Model_Preference::GetDefaultCrossfadeDuration();
+                    unset($values);
+                    $values = array();
+                    foreach ($linkedShowSchedule as $item) {
+                        $endTimeDT = self::findEndTime($nextStartDT,
+                            $item["clip_length"]);
+
+                        if (is_null($item["file_id"])) {
+                            $item["file_id"] = "null";
+                        }
+                        if (is_null($item["stream_id"])) {
+                            $item["stream_id"] = "null";
+                        }
+
+                        $values[] = "(" . "'{$nextStartDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
+                            "'{$endTimeDT->format(DEFAULT_TIMESTAMP_FORMAT)}', " .
+                            "'{$item["clip_length"]}', " .
+                            "'{$item["fade_in"]}', " . "'{$item["fade_out"]}', " .
+                            "'{$item["cue_in"]}', " . "'{$item["cue_out"]}', " .
+                            "{$item["file_id"]}, " . "{$item["stream_id"]}, " .
+                            "{$id}, " . "{$item["position"]})";
+
+                        $nextStartDT = self::findTimeDifference($endTimeDT,
+                            $defaultCrossfadeDuration);
+                    } //foreach show item
+
+                    if (!empty($values)) {
+                        $insert_sql = "INSERT INTO cc_schedule (starts, ends, " .
+                            "clip_length, fade_in, fade_out, cue_in, cue_out, " .
+                            "file_id, stream_id, instance_id, position)  VALUES " .
+                            implode($values, ",");
+                        Application_Common_Database::prepareAndExecute(
+                            $insert_sql, array(), Application_Common_Database::EXECUTE);
+                    }
+
+                    //update cc_schedule status column
+                    $instance = CcShowInstancesQuery::create()->findPk($id);
+                    $instance->updateScheduleStatus($con);
+                } //foreach linked instance
+            }
 
             //update time_filled and last_scheduled in cc_show_instances
             $now = gmdate(DEFAULT_TIMESTAMP_FORMAT);

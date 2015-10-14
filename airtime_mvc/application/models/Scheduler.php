@@ -80,7 +80,7 @@ class Application_Model_Scheduler
     *
     * @param array $items, an array containing pks of cc_schedule items.
     */
-    private function validateRequest($items, $addAction=false)
+    private function validateRequest($items, $addRemoveAction=false)
     {
         //$items is where tracks get inserted (they are schedule locations)
 
@@ -164,7 +164,7 @@ class Application_Model_Scheduler
              * currently playing?
              * If yes, throw an exception
              */
-            if ($addAction) {
+            if ($addRemoveAction) {
                 $ccShow = $instance->getCcShow();
                 if ($ccShow->isLinked()) {
                     //get all the linked shows instances and check if
@@ -175,7 +175,7 @@ class Application_Model_Scheduler
 
                         if ($ccShowInstance->getDbStarts() <= $timeNowUTC &&
                             $ccShowInstance->getDbEnds() > $timeNowUTC) {
-                            throw new Exception(_("Content in linked shows must be scheduled before or after any one is broadcasted"));
+                            throw new Exception(_("Content in linked shows cannot be changed while on air!"));
                         }
                     }
                 }
@@ -1091,7 +1091,7 @@ class Application_Model_Scheduler
 
         try {
 
-            $this->validateRequest($scheduledItems);
+            $this->validateRequest($scheduledItems, true);
 
             $scheduledIds = array();
             foreach ($scheduledItems as $item) {

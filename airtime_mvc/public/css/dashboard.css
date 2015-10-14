@@ -42,13 +42,6 @@
     }
 }
 
-@media screen and (max-width: 1260px) {
-    #library_display_length > label {
-        /* Hacky, but datatables dumps the select inside the label for some reason... */
-        font-size: 0 !important;
-    }
-}
-
 @media screen and (max-width: 1200px) {
     .wrapper {
         -webkit-flex-flow: column !important;
@@ -529,10 +522,10 @@ li.ui-state-default {
 }
 
 .spl_sortable {
-    position: relative;
     height: 100%;
     overflow: auto;
     flex: 1 100%;
+    -webkit-flex: 1 100%;
 
     margin: 4px 0;
     min-height: 0;

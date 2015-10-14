@@ -63,12 +63,16 @@ class WebstreamController extends Zend_Controller_Action
 
         if (!$isAdminOrPM && $webstream->getDbCreatorId() != $user->getId()) {
             $this->view->objType = "webstream";
+            $this->view->type = "webstream";
             $this->view->obj = $obj;
+            $this->view->id = $id;
             $this->view->html = $this->view->render('playlist/permission-denied.phtml');
             return;
         }
 
         $this->view->obj = $obj;
+        $this->view->type = "webstream";
+        $this->view->id = $id;
         $this->view->action = "edit";
         $this->view->html = $this->view->render('webstream/webstream.phtml');
     }

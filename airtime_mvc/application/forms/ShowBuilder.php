@@ -85,7 +85,11 @@ class Application_Form_ShowBuilder extends Zend_Form_SubForm
 
     private function getShowNames()
     {
-        $showNames = array("0" => _("Filter by Show"));
+        $user = Application_Model_User::getCurrentUser();
+        $showNames = array("0"  => _("Filter by Show"));
+        if ($user->getType() === 'H') {
+            $showNames["-1"] = _("My Shows");
+        }
 
         $shows = CcShowQuery::create()
             ->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)

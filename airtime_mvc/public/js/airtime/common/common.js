@@ -79,13 +79,19 @@ function getDatatablesStrings(overrideDict) {
         "sSearch":         $.i18n._(""),
         "sZeroRecords":    $.i18n._("No matching records found"),
         "oPaginate": {
-        "sFirst":    $.i18n._("First"),
-            "sLast":     $.i18n._("Last"),
-            "sNext":     $.i18n._("Next"),
-            "sPrevious": $.i18n._("Previous")
+            "sFirst":    "&laquo;",
+            "sLast":     "&raquo;",
+            "sNext":     "&rsaquo;",
+            "sPrevious": "&lsaquo;"
         },
+        //"oPaginate": {
+        //    "sFirst":    $.i18n._("First"),
+        //    "sLast":     $.i18n._("Last"),
+        //    "sNext":     $.i18n._("Next"),
+        //    "sPrevious": $.i18n._("Previous")
+        //},
         "oAria": {
-        "sSortAscending":  $.i18n._(": activate to sort column ascending"),
+            "sSortAscending":  $.i18n._(": activate to sort column ascending"),
             "sSortDescending": $.i18n._(": activate to sort column descending")
         }
     };

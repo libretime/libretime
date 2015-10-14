@@ -537,10 +537,11 @@ var AIRTIME = (function(AIRTIME){
             return;
         }
         newTab.tab.on("click", function() {
+            var type = newTab.pane.find(".obj_type").val(),
+                url = baseUrl + ((type === "playlist" || type === "block") ? 'playlist' : 'webstream') + '/edit';
             if (!$(this).hasClass('active')) {
                 AIRTIME.showbuilder.switchTab(newTab.pane, newTab.tab);
-                $.post(baseUrl+'playlist/edit',
-                    {format: "json", id: newTab.pane.find(".obj_id").val(), type: newTab.pane.find(".obj_type").val()});
+                $.post(url, {format: "json", id: newTab.pane.find(".obj_id").val(), type: type});
             }
         });
         AIRTIME.playlist.init();

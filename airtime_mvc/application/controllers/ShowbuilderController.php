@@ -107,10 +107,11 @@ class ShowbuilderController extends Zend_Controller_Action
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $setupComplete = Application_Model_Preference::getLangTimezoneSetupComplete();
-        $previousPage = $request->getHeader('Referer');
+        $previousPage = strtolower($request->getHeader('Referer'));
         $userService = new Application_Service_UserService();
         $currentUser = $userService->getCurrentUser();
-        $previousPageWasLoginScreen = strpos(strtolower($previousPage), 'login') !== false;
+        $previousPageWasLoginScreen = (strpos($previousPage, 'login') !== false) ||
+                                    (strpos($previousPage, SAAS_LOGIN_REFERRER) !== false);
 
         // If current user is Super Admin, and they came from the login page,
         // and they have not seen the setup popup before
