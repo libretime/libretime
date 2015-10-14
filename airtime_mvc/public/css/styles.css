@@ -3960,3 +3960,6 @@ li .ui-state-hover {
 #whatsnew li {
     margin-top: 20px;
 }
+
+/* jQuery dialog */
+.no-close .ui-dialog-titlebar-close {display: none }
