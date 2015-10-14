@@ -4,6 +4,7 @@ define('PRODUCT_NAME'       , 'Airtime');
 define('PRODUCT_SITE_URL'   , 'http://airtime.sourcefabric.org');
 
 define('SAAS_PRODUCT_BRANDING_NAME', 'Airtime Pro');
+define('SAAS_LOGIN_REFERRER', 'https://www.airtime.pro/');
 
 define('COMPANY_NAME'       , 'Sourcefabric');
 define('COMPANY_SUFFIX'     , 'z.ú.');
