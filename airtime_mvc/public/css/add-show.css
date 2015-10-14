@@ -113,9 +113,31 @@ label.wrapp-label input[type="checkbox"] {
     display: none;
 }
 
+#add_show_hosts-label {
+    width: 100%;
+    padding-bottom: 10px;
+}
+
 #add_show_hosts-element {
     max-height: 80px;
     min-width: 150px;
+}
+
+#add_show_hosts-element > label {
+    display: flex;
+    align-items: flex-end;
+}
+
+#add_show_hosts-element input {
+    margin-right: 6px;
+}
+
+#schedule-show-who {
+    overflow-x: hidden;
+}
+
+#add_show_logo {
+    margin-top: 6px;
 }
 
 #add_show_start_time, #add_show_end_time {

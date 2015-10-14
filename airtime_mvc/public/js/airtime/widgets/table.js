@@ -23,11 +23,6 @@ var AIRTIME = (function(AIRTIME) {
             MULTI_CTRL : 2
         };
 
-        // Internal enum for repeated jQuery selectors
-        self._SELECTORS = Object.freeze({
-            SELECTION_CHECKBOX: ".airtime_table_checkbox"
-        });
-
         //Member variables
         self._datatable = null;
         self._selectedRows = []; //An array containing the underlying objects for each selected row. (Easy to use!)
@@ -109,8 +104,8 @@ var AIRTIME = (function(AIRTIME) {
          *  than having a per-row callback...)
          */
         if (bItemSelection) {
-            $(self._datatable, 'tbody tr').on('click contextmenu', 'tr', function (e) {
-                var aData = self._datatable.fnGetData($(this).index()); // $(this).data(); //Neat trick - thanks DataTables!
+            $(self._datatable, 'tbody tr').on('click contextmenu', self._SELECTORS.SELECTION_TABLE_ROW, function (e) {
+                var aData = self._datatable.fnGetData($(this).index());
                 var iDisplayIndex = $(this).index(); //The index of the row in the current page in the table.
                 var nRow = this;
 
@@ -146,10 +141,32 @@ var AIRTIME = (function(AIRTIME) {
             });
         }
 
+        // On filter, display the number of total and filtered results in the search bar
+        $(self._datatable).on('filter', function() {
+            var dt = self._datatable, f = dt.closest(".dataTables_wrapper").find(".filter-message"),
+                totalRecords = dt.fnSettings().fnRecordsTotal(),
+                totalDisplayRecords = dt.fnSettings().fnRecordsDisplay();
+
+            if (f.length === 0) {
+                var el = document.createElement("span");
+                el.setAttribute("class", "filter-message");
+                f = dt.closest(".dataTables_wrapper").find(".dataTables_filter").append(el).find(".filter-message");
+            }
+
+            f.text(totalRecords > totalDisplayRecords ?
+                $.i18n._("Filtering out ") + (totalRecords - totalDisplayRecords)
+                + $.i18n._(" of ") + totalRecords
+                + $.i18n._(" records") : ""
+            );
+
+            dt.closest(".dataTables_wrapper").find('.dataTables_filter input[type="text"]')
+                .css('padding-right', f.outerWidth());
+        });
+
         $(self._datatable).on('init', function(e) {
             self._setupToolbarButtons(self._toolbarButtons);
         });
-    }
+    };
 
 
     /**
@@ -257,12 +274,6 @@ var AIRTIME = (function(AIRTIME) {
             var foundAtIdx = $.inArray(aData, self._selectedRows);
 
             console.log('checkbox mouse', iVisualRowIdx, foundAtIdx);
-            //XXX: Debugging -- Bug here-ish
-            if (foundAtIdx >= 0) {
-                console.log(aData, self._selectedRows[foundAtIdx]);
-            } else {
-                console.log("clicked row not detected as already selected");
-            }
 
             //If the clicked row is already selected, deselect it.
             if (foundAtIdx >= 0 && self._selectedRows.length >= 1) {
@@ -375,22 +386,6 @@ var AIRTIME = (function(AIRTIME) {
                 fnCallback(json);
             },
             "error": self._handleAjaxError
-        }).done(function (data) {
-            /*
-             if (data.iTotalRecords > data.iTotalDisplayRecords) {
-             $('#filter_message').text(
-             $.i18n._("Filtering out ") + (data.iTotalRecords - data.iTotalDisplayRecords)
-             + $.i18n._(" of ") + data.iTotalRecords
-             + $.i18n._(" records")
-             );
-             $('#library_empty').hide();
-             $('#library_display').find('tr:has(td.dataTables_empty)').show();
-             } else {
-             $('#filter_message').text("");
-             }
-             $('#library_content').find('.dataTables_filter input[type="text"]')
-             .css('padding-right', $('#advanced-options').find('button').outerWidth());
-             */
         });
     };
 
@@ -427,6 +422,12 @@ var AIRTIME = (function(AIRTIME) {
     //Static initializers / Class variables
 
     /** Predefined toolbar buttons that you can add to the table. Use getStandardToolbarButtons(). */
+    Table.prototype._SELECTORS = Object.freeze({
+        SELECTION_CHECKBOX: ".airtime_table_checkbox",
+        SELECTION_TABLE_ROW: "tr"
+    });
+
+
     Table.TOOLBAR_BUTTON_ROLES = {
         NEW :    0,
         EDIT :   1,

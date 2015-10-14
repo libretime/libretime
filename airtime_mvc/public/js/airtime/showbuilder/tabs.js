@@ -316,12 +316,12 @@ var AIRTIME = (function(AIRTIME){
     /**
      * Given a tab id, get the corresponding Tab object
      *
-     * @param {int}             id the tab id of the Tab to retrieve
-     * @returns {Tab|undefined} the Tab object with the given id, or undefined
-     *                          if no Tab with the given id exists
+     * @param {int|string}      id the tab or object ID of the Tab to retrieve
+     * @returns {Tab|undefined} the Tab object with the given ID, or undefined
+     *                          if no Tab with the given ID exists
      */
     mod.get = function(id) {
-        return $openTabs[$tabMap[id]];
+        return $.isNumeric(id) ? $openTabs[$tabMap[id]] : $openTabs[id];
     };
 
     /**

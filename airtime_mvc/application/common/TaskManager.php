@@ -22,7 +22,7 @@ final class TaskManager {
     /**
      * @var int TASK_INTERVAL_SECONDS how often, in seconds, to run the TaskManager tasks
      */
-    const TASK_INTERVAL_SECONDS = 300;  // 5 minutes - will be run on every pypo request
+    const TASK_INTERVAL_SECONDS = 30;
 
     /**
      * @var $con PDO Propel connection object

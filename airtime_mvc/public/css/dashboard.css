@@ -42,13 +42,6 @@
     }
 }
 
-@media screen and (max-width: 1265px) {
-    .dataTables_length > label {
-        /* Hacky, but datatables dumps the select inside the label for some reason... */
-        font-size: 0 !important;
-    }
-}
-
 @media screen and (max-width: 1200px) {
     .wrapper {
         -webkit-flex-flow: column !important;
@@ -252,9 +245,17 @@ thead th.ui-state-default:focus {
     margin-top: 4px;
 }
 
-#filter_message {
+#lib-filter-message, .filter-message {
     border-top: none !important;
     text-shadow: none;
+}
+
+.filter-message {
+    position: relative;
+    font-size: 13px;
+    float: right;
+    line-height: 26px;
+    padding: 0 6px;
 }
 
 #advanced-options {
@@ -331,11 +332,19 @@ thead th.ui-state-default:focus {
 .sb-options-form label {
     color: #efefef;
     line-height: 26px;
+    display: inline-block;
+    padding: 0 0 0 4px;
+    vertical-align: middle;
 }
 
 #sb_show_filter {
     right: 0;
     position: absolute;
+}
+
+#sb_my_shows {
+    top: 1px;
+    left: 2px;
 }
 
 .nav-tabs {
@@ -477,9 +486,6 @@ li.ui-state-default {
     bottom: 4px;
     top: 4px;
     left: 4px;
-}
-
-[data-tab-type='md'] > .editor_pane_wrapper {
     overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
 }
 
@@ -531,10 +537,10 @@ li.ui-state-default {
 }
 
 .spl_sortable {
-    position: relative;
     height: 100%;
     overflow: auto;
     flex: 1 100%;
+    -webkit-flex: 1 100%;
 
     margin: 4px 0;
     min-height: 0;
