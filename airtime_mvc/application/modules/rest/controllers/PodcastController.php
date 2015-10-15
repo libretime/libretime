@@ -124,7 +124,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
             // to prevent the user from trying to download them again while Celery is running
             $episodes = $this->_service->addPodcastEpisodePlaceholders($requestData["podcast"]["id"],
                                                                        $requestData["podcast"]["episodes"]);
-            //$this->_service->downloadEpisodes($episodes);
+            $this->_service->downloadEpisodes($episodes);
             $podcast = Application_Service_PodcastService::updatePodcastFromArray($id, $requestData);
 
             $this->getResponse()
