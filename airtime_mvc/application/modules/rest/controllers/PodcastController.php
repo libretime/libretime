@@ -6,7 +6,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
 {
 
     /**
-     * @var Application_Service_PodcastService
+     * @var Application_Service_PodcastEpisodeService
      */
     protected $_service;
 
