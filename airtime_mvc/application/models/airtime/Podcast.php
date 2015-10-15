@@ -27,12 +27,12 @@ class Podcast extends BasePodcast
      */
     public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array(), $includeForeignObjects = false)
     {
-        $podcastArray = parent::toArray(BasePeer::TYPE_FIELDNAME);
+        $podcastArray = parent::toArray($keyType);
 
         $importedPodcast = ImportedPodcastQuery::create()->filterByDbPodcastId($this->getDbId())->findOne();
         $stationPodcast = StationPodcastQuery::create()->filterByDbPodcastId($this->getDbId())->findOne();
         if (!is_null($importedPodcast)) {
-            $importedPodcastArray = $importedPodcast->toArray(BasePeer::TYPE_FIELDNAME);
+            $importedPodcastArray = $importedPodcast->toArray($keyType);
 
             //unset these values because we already have the podcast id in $podcastArray
             //and we don't need the imported podcast ID
@@ -43,12 +43,34 @@ class Podcast extends BasePodcast
 
         } else if (!is_null($stationPodcast)) {
             // For now just return $podcastArray because StationPodcast objects do not have any
-            // extra fields we want to return right now. This may change in the future.
+            // extra fields we want to return. This may change in the future.
             return $podcastArray;
         } else {
             return $podcastArray;
         }
 
+    }
+
+    /**
+     * Override this function so it updates the child class as well.
+     * Child class will either be ImportedPodcast or StationPodcast
+     *
+     * @param array $arr
+     * @param string $keyType
+     * @throws Exception
+     * @throws PropelException
+     */
+    public function fromArray($arr, $keyType = BasePeer::TYPE_PHPNAME)
+    {
+        parent::fromArray($arr, $keyType);
+
+        $importedPodcast = ImportedPodcastQuery::create()->filterByDbPodcastId($this->getDbId())->findOne();
+        if (!is_null($importedPodcast)) {
+            $importedPodcast->fromArray($arr, $keyType);
+            $importedPodcast->save();
+        } else {
+            //TODO: station podcast
+        }
     }
 
 }

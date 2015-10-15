@@ -278,19 +278,11 @@ class Application_Service_PodcastService
             throw new PodcastNotFoundException();
         }
 
-        self::removePrivateFields($data);
-        self::validatePodcastMetadata($data);
+        self::removePrivateFields($data["podcast"]);
+        self::validatePodcastMetadata($data["podcast"]);
 
-        $importedPodcast = ImportedPodcastQuery::create()->filterByDbPodcastId($podcast->getDbId())->findOne();
-        if (!is_null($importedPodcast)) {
-            $importedPodcast->fromArray($data, BasePeer::TYPE_FIELDNAME);
-            $importedPodcast->save();
-        } else {
-            //TODO: station podcast
-        }
-
-        //$podcast->fromArray($data, BasePeer::TYPE_FIELDNAME);
-        //$podcast->save();
+        $podcast->fromArray($data["podcast"], BasePeer::TYPE_FIELDNAME);
+        $podcast->save();
 
         return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
     }
