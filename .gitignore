@@ -4,7 +4,7 @@
 vendor/*
 composer.phar
 *~$
-*log.*
+*\.log.*
 **/*.egg-info/*
 **/build/*
 **/dist/*
