@@ -18,6 +18,11 @@ class CeleryManager {
     private static $_CELERY_RESULTS_EXCHANGE = 'celeryresults';
 
     /**
+     * @var PropelCollection cache of any pending CeleryTasks results for a service or task
+     */
+    private static $_pendingTasks;
+
+    /**
      * Connect to the Celery daemon via amqp
      *
      * @param $config   array  the airtime configuration array
@@ -79,7 +84,7 @@ class CeleryManager {
 
         // If the message isn't ready yet (Celery hasn't finished the task), throw an exception.
         if ($message == FALSE) {
-            if (self::_checkMessageTimeout($task)) {
+            if (static::_checkMessageTimeout($task)) {
                 // If the task times out, mark it as failed. We don't want to remove the
                 // track reference here in case it was a deletion that failed, for example.
                 $task->setDbStatus(CELERY_FAILED_STATUS)->save();
@@ -103,9 +108,9 @@ class CeleryManager {
      *
      * @return bool true if there are any pending tasks, otherwise false
      */
-    public static function isBrokerTaskQueueEmpty($taskName="", $serviceName = "") {
-        $pendingTasks = self::_getPendingTasks($taskName, $serviceName);
-        return empty($pendingTasks);
+    public static function isBrokerTaskQueueEmpty($taskName = "", $serviceName = "") {
+        self::$_pendingTasks = static::_getPendingTasks($taskName, $serviceName);
+        return empty(self::$_pendingTasks);
     }
 
     /**
@@ -119,11 +124,12 @@ class CeleryManager {
      * @param string $serviceName the name of the service to poll for
      */
     public static function pollBrokerTaskQueue($taskName = "", $serviceName = "") {
-        $pendingTasks = self::_getPendingTasks($taskName, $serviceName);
+        $pendingTasks = empty(self::$_pendingTasks) ? static::_getPendingTasks($taskName, $serviceName)
+                                                    : self::$_pendingTasks;
         foreach ($pendingTasks as $task) {
             try {
-                $message = self::_getTaskMessage($task);
-                self::_processTaskMessage($task, $message);
+                $message = static::_getTaskMessage($task);
+                static::_processTaskMessage($task, $message);
             } catch (CeleryTimeoutException $e) {
                 Logging::warn($e->getMessage());
             } catch (Exception $e) {

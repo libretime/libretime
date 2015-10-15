@@ -123,7 +123,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     }
 
     /**
-     * Given an array of episodes, extract the download URLs and send them to Celery
+     * Given an array of episodes, store them in the database as placeholder objects until
+     * they can be processed by Celery
      *
      * @param int $podcastId    Podcast object identifier
      * @param array $episodes   array of podcast episodes
@@ -133,15 +134,36 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function addPodcastEpisodePlaceholders($podcastId, $episodes) {
         $storedEpisodes = array();
         foreach ($episodes as $episode) {
-            $e = new PodcastEpisodes();
-            $e->setDbPodcastId($podcastId);
-            $e->setDbDownloadUrl($episode["enclosure"]["link"]);
-            $e->setDbEpisodeGuid($episode["guid"]);
-            $e->setDbPublicationDate($episode["pub_date"]);
-            $e->save();
+            $e = $this->addPodcastEpisodePlaceholder($podcastId, $episode);
             array_push($storedEpisodes, $e);
         }
         return $storedEpisodes;
+    }
+
+    /**
+     * Given an episode, store it in the database as a placeholder object until
+     * it can be processed by Celery
+     *
+     * @param int $podcastId  Podcast object identifier
+     * @param array $episode  array of podcast episode data
+     *
+     * @return PodcastEpisodes the stored PodcastEpisodes object
+     */
+    public function addPodcastEpisodePlaceholder($podcastId, $episode) {
+        // We need to check whether the array is parsed directly from the SimplePie
+        // feed object, or whether it's passed in as json
+        if ($episode["enclosure"] instanceof SimplePie_Enclosure) {
+            $url = $episode["enclosure"]->get_link();
+        } else {
+            $url = $episode["enclosure"]["link"];
+        }
+        $e = new PodcastEpisodes();
+        $e->setDbPodcastId($podcastId);
+        $e->setDbDownloadUrl($url);
+        $e->setDbEpisodeGuid($episode["guid"]);
+        $e->setDbPublicationDate($episode["pub_date"]);
+        $e->save();
+        return $e;
     }
 
     /**
@@ -156,6 +178,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             array_push($episodeUrls, array("id" => $episode->getDbId(),
                                            "url" => $episode->getDbDownloadUrl()));
         }
+        if (empty($episodeUrls)) return;
         $this->_download($episodeUrls);
     }
 

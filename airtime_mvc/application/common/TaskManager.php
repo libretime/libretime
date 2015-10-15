@@ -149,7 +149,7 @@ final class TaskManager {
 }
 
 /**
- * Interface AirtimeTask Interface for task operations - also acts as task type ENUM
+ * Interface AirtimeTask Interface for task operations
  */
 interface AirtimeTask {
 
@@ -216,6 +216,29 @@ class CeleryTask implements AirtimeTask {
 }
 
 /**
+ * Class PodcastTask
+ */
+class PodcastTask implements AirtimeTask {
+
+    /**
+     * Check whether or not the podcast polling interval has passed
+     *
+     * @return bool true if the podcast polling interval has passed
+     */
+    public function shouldBeRun() {
+        return PodcastManager::hasPodcastPollIntervalPassed();
+    }
+
+    /**
+     * Download the latest episode for all podcasts flagged for automatic ingest
+     */
+    public function run() {
+        PodcastManager::downloadNewestEpisodes();
+    }
+
+}
+
+/**
  * Class TaskFactory Factory class to abstract task instantiation
  */
 class TaskFactory {
@@ -225,8 +248,9 @@ class TaskFactory {
      * Task types - values don't really matter as long as they're unique
      */
 
-    const UPGRADE = "upgrade";
-    const CELERY = "celery";
+    const UPGRADE   = "upgrade";
+    const CELERY    = "celery";
+    const PODCAST   = "podcast";
 
     /**
      * @var array map of arbitrary identifiers to class names to be instantiated reflectively
@@ -234,6 +258,7 @@ class TaskFactory {
     public static $tasks = array(
         "upgrade"   => "UpgradeTask",
         "celery"    => "CeleryTask",
+        "podcast"   => "PodcastTask",
     );
 
     /**

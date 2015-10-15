@@ -37,7 +37,7 @@ class Application_Service_PodcastService
     /**
      * Returns parsed rss feed, or false if the given URL cannot be downloaded
      *
-     * @param $podcastUrl String containing the podcast feed URL
+     * @param string $feedUrl String containing the podcast feed URL
      *
      * @return mixed
      */
@@ -57,9 +57,9 @@ class Application_Service_PodcastService
     /** Creates a Podcast object from the given podcast URL.
      *  This is used by our Podcast REST API
      *
-     * @param $feedUrl Podcast RSS Feed Url
+     * @param string $feedUrl Podcast RSS Feed Url
      *
-     * @return array - Podcast Array with a full list of episodes
+     * @return array Podcast Array with a full list of episodes
      * @throws Exception
      * @throws InvalidPodcastException
      * @throws PodcastLimitReachedException

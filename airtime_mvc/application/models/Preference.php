@@ -1502,4 +1502,12 @@ class Application_Model_Preference
     {
         self::setValue("whats_new_dialog_viewed", $value, true);
     }
+
+    public static function getPodcastPollLock() {
+        return self::getValue("podcast_poll_lock");
+    }
+
+    public static function setPodcastPollLock($value) {
+        self::setValue("podcast_poll_lock", $value);
+    }
 }
