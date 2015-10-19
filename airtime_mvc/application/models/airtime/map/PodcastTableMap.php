@@ -40,6 +40,7 @@ class PodcastTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('podcast_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
+        $this->addColumn('url', 'DbUrl', 'VARCHAR', true, 4096, null);
         $this->addColumn('title', 'DbTitle', 'VARCHAR', true, 4096, null);
         $this->addColumn('creator', 'DbCreator', 'VARCHAR', false, 4096, null);
         $this->addColumn('description', 'DbDescription', 'VARCHAR', false, 4096, null);

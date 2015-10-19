@@ -1507,7 +1507,18 @@ class Application_Model_Preference
         return self::getValue("podcast_poll_lock");
     }
 
-    public static function setPodcastPollLock($value) {
+    public static function setPodcastPollLock($value)
+    {
         self::setValue("podcast_poll_lock", $value);
+    }
+
+    public static function getStationPodcastId()
+    {
+        return self::getValue("station_podcast_id");
+    }
+
+    public static function setStationPodcastId($value)
+    {
+        self::setValue("station_podcast_id", $value);
     }
 }

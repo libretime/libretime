@@ -7,12 +7,10 @@
  *
  *
  * @method ImportedPodcastQuery orderByDbId($order = Criteria::ASC) Order by the id column
- * @method ImportedPodcastQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
  * @method ImportedPodcastQuery orderByDbAutoIngest($order = Criteria::ASC) Order by the auto_ingest column
  * @method ImportedPodcastQuery orderByDbPodcastId($order = Criteria::ASC) Order by the podcast_id column
  *
  * @method ImportedPodcastQuery groupByDbId() Group by the id column
- * @method ImportedPodcastQuery groupByDbUrl() Group by the url column
  * @method ImportedPodcastQuery groupByDbAutoIngest() Group by the auto_ingest column
  * @method ImportedPodcastQuery groupByDbPodcastId() Group by the podcast_id column
  *
@@ -27,12 +25,10 @@
  * @method ImportedPodcast findOne(PropelPDO $con = null) Return the first ImportedPodcast matching the query
  * @method ImportedPodcast findOneOrCreate(PropelPDO $con = null) Return the first ImportedPodcast matching the query, or a new ImportedPodcast object populated from the query conditions when no match is found
  *
- * @method ImportedPodcast findOneByDbUrl(string $url) Return the first ImportedPodcast filtered by the url column
  * @method ImportedPodcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first ImportedPodcast filtered by the auto_ingest column
  * @method ImportedPodcast findOneByDbPodcastId(int $podcast_id) Return the first ImportedPodcast filtered by the podcast_id column
  *
  * @method array findByDbId(int $id) Return ImportedPodcast objects filtered by the id column
- * @method array findByDbUrl(string $url) Return ImportedPodcast objects filtered by the url column
  * @method array findByDbAutoIngest(boolean $auto_ingest) Return ImportedPodcast objects filtered by the auto_ingest column
  * @method array findByDbPodcastId(int $podcast_id) Return ImportedPodcast objects filtered by the podcast_id column
  *
@@ -142,7 +138,7 @@ abstract class BaseImportedPodcastQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "url", "auto_ingest", "podcast_id" FROM "imported_podcast" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "auto_ingest", "podcast_id" FROM "imported_podcast" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -271,35 +267,6 @@ abstract class BaseImportedPodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ImportedPodcastPeer::ID, $dbId, $comparison);
-    }
-
-    /**
-     * Filter the query on the url column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByDbUrl('fooValue');   // WHERE url = 'fooValue'
-     * $query->filterByDbUrl('%fooValue%'); // WHERE url LIKE '%fooValue%'
-     * </code>
-     *
-     * @param     string $dbUrl The value to use as filter.
-     *              Accepts wildcards (* and % trigger a LIKE)
-     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return ImportedPodcastQuery The current query, for fluid interface
-     */
-    public function filterByDbUrl($dbUrl = null, $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($dbUrl)) {
-                $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $dbUrl)) {
-                $dbUrl = str_replace('*', '%', $dbUrl);
-                $comparison = Criteria::LIKE;
-            }
-        }
-
-        return $this->addUsingAlias(ImportedPodcastPeer::URL, $dbUrl, $comparison);
     }
 
     /**

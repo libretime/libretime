@@ -565,6 +565,7 @@
 
   <table name="podcast" phpName="Podcast">
     <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="url" phpName="DbUrl" type="VARCHAR" size="4096" required="true" />
     <column name="title" phpName="DbTitle" type="VARCHAR" size="4096" required="true" />
     <column name="creator" phpName="DbCreator" type="VARCHAR" size="4096" />
     <column name="description" phpName="DbDescription" type="VARCHAR" size="4096" />
@@ -596,7 +597,6 @@
 
   <table name="imported_podcast" phpName="ImportedPodcast">
     <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
-    <column name="url" phpName="DbUrl" type="VARCHAR" size="4096" required="true" />
     <column name="auto_ingest" phpName="DbAutoIngest" type="BOOLEAN"  required="true" defaultValue="false"/>
     <column name="podcast_id" phpName="DbPodcastId" required="true" type="INTEGER"/>
     <foreign-key foreignTable="podcast" name="podcast_id_fkey" onDelete="CASCADE">

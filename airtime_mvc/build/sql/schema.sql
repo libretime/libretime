@@ -716,6 +716,7 @@ DROP TABLE IF EXISTS "podcast" CASCADE;
 CREATE TABLE "podcast"
 (
     "id" serial NOT NULL,
+    "url" VARCHAR(4096) NOT NULL,
     "title" VARCHAR(4096) NOT NULL,
     "creator" VARCHAR(4096),
     "description" VARCHAR(4096),
@@ -754,7 +755,6 @@ DROP TABLE IF EXISTS "imported_podcast" CASCADE;
 CREATE TABLE "imported_podcast"
 (
     "id" serial NOT NULL,
-    "url" VARCHAR(4096) NOT NULL,
     "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
     "podcast_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")

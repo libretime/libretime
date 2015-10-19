@@ -7,6 +7,7 @@
  *
  *
  * @method PodcastQuery orderByDbId($order = Criteria::ASC) Order by the id column
+ * @method PodcastQuery orderByDbUrl($order = Criteria::ASC) Order by the url column
  * @method PodcastQuery orderByDbTitle($order = Criteria::ASC) Order by the title column
  * @method PodcastQuery orderByDbCreator($order = Criteria::ASC) Order by the creator column
  * @method PodcastQuery orderByDbDescription($order = Criteria::ASC) Order by the description column
@@ -22,6 +23,7 @@
  * @method PodcastQuery orderByDbOwner($order = Criteria::ASC) Order by the owner column
  *
  * @method PodcastQuery groupByDbId() Group by the id column
+ * @method PodcastQuery groupByDbUrl() Group by the url column
  * @method PodcastQuery groupByDbTitle() Group by the title column
  * @method PodcastQuery groupByDbCreator() Group by the creator column
  * @method PodcastQuery groupByDbDescription() Group by the description column
@@ -59,6 +61,7 @@
  * @method Podcast findOne(PropelPDO $con = null) Return the first Podcast matching the query
  * @method Podcast findOneOrCreate(PropelPDO $con = null) Return the first Podcast matching the query, or a new Podcast object populated from the query conditions when no match is found
  *
+ * @method Podcast findOneByDbUrl(string $url) Return the first Podcast filtered by the url column
  * @method Podcast findOneByDbTitle(string $title) Return the first Podcast filtered by the title column
  * @method Podcast findOneByDbCreator(string $creator) Return the first Podcast filtered by the creator column
  * @method Podcast findOneByDbDescription(string $description) Return the first Podcast filtered by the description column
@@ -74,6 +77,7 @@
  * @method Podcast findOneByDbOwner(int $owner) Return the first Podcast filtered by the owner column
  *
  * @method array findByDbId(int $id) Return Podcast objects filtered by the id column
+ * @method array findByDbUrl(string $url) Return Podcast objects filtered by the url column
  * @method array findByDbTitle(string $title) Return Podcast objects filtered by the title column
  * @method array findByDbCreator(string $creator) Return Podcast objects filtered by the creator column
  * @method array findByDbDescription(string $description) Return Podcast objects filtered by the description column
@@ -194,7 +198,7 @@ abstract class BasePodcastQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "title", "creator", "description", "language", "copyright", "link", "itunes_author", "itunes_keywords", "itunes_summary", "itunes_subtitle", "itunes_category", "itunes_explicit", "owner" FROM "podcast" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "url", "title", "creator", "description", "language", "copyright", "link", "itunes_author", "itunes_keywords", "itunes_summary", "itunes_subtitle", "itunes_category", "itunes_explicit", "owner" FROM "podcast" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -323,6 +327,35 @@ abstract class BasePodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(PodcastPeer::ID, $dbId, $comparison);
+    }
+
+    /**
+     * Filter the query on the url column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbUrl('fooValue');   // WHERE url = 'fooValue'
+     * $query->filterByDbUrl('%fooValue%'); // WHERE url LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $dbUrl The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return PodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbUrl($dbUrl = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($dbUrl)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $dbUrl)) {
+                $dbUrl = str_replace('*', '%', $dbUrl);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(PodcastPeer::URL, $dbUrl, $comparison);
     }
 
     /**

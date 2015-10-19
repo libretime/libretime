@@ -40,7 +40,6 @@ class ImportedPodcastTableMap extends TableMap
         $this->setPrimaryKeyMethodInfo('imported_podcast_id_seq');
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
-        $this->addColumn('url', 'DbUrl', 'VARCHAR', true, 4096, null);
         $this->addColumn('auto_ingest', 'DbAutoIngest', 'BOOLEAN', true, null, false);
         $this->addForeignKey('podcast_id', 'DbPodcastId', 'INTEGER', 'podcast', 'id', true, null, null);
         // validators

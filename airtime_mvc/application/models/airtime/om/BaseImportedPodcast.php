@@ -36,12 +36,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     protected $id;
 
     /**
-     * The value for the url field.
-     * @var        string
-     */
-    protected $url;
-
-    /**
      * The value for the auto_ingest field.
      * Note: this column has a database default value of: false
      * @var        boolean
@@ -112,17 +106,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     }
 
     /**
-     * Get the [url] column value.
-     *
-     * @return string
-     */
-    public function getDbUrl()
-    {
-
-        return $this->url;
-    }
-
-    /**
      * Get the [auto_ingest] column value.
      *
      * @return boolean
@@ -164,27 +147,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
 
         return $this;
     } // setDbId()
-
-    /**
-     * Set the value of [url] column.
-     *
-     * @param  string $v new value
-     * @return ImportedPodcast The current object (for fluent API support)
-     */
-    public function setDbUrl($v)
-    {
-        if ($v !== null && is_numeric($v)) {
-            $v = (string) $v;
-        }
-
-        if ($this->url !== $v) {
-            $this->url = $v;
-            $this->modifiedColumns[] = ImportedPodcastPeer::URL;
-        }
-
-
-        return $this;
-    } // setDbUrl()
 
     /**
      * Sets the value of the [auto_ingest] column.
@@ -277,9 +239,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         try {
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
-            $this->url = ($row[$startcol + 1] !== null) ? (string) $row[$startcol + 1] : null;
-            $this->auto_ingest = ($row[$startcol + 2] !== null) ? (boolean) $row[$startcol + 2] : null;
-            $this->podcast_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
+            $this->auto_ingest = ($row[$startcol + 1] !== null) ? (boolean) $row[$startcol + 1] : null;
+            $this->podcast_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -289,7 +250,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 4; // 4 = ImportedPodcastPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = ImportedPodcastPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ImportedPodcast object", $e);
@@ -530,9 +491,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(ImportedPodcastPeer::ID)) {
             $modifiedColumns[':p' . $index++]  = '"id"';
         }
-        if ($this->isColumnModified(ImportedPodcastPeer::URL)) {
-            $modifiedColumns[':p' . $index++]  = '"url"';
-        }
         if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST)) {
             $modifiedColumns[':p' . $index++]  = '"auto_ingest"';
         }
@@ -552,9 +510,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 switch ($columnName) {
                     case '"id"':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
-                    case '"url"':
-                        $stmt->bindValue($identifier, $this->url, PDO::PARAM_STR);
                         break;
                     case '"auto_ingest"':
                         $stmt->bindValue($identifier, $this->auto_ingest, PDO::PARAM_BOOL);
@@ -705,12 +660,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 return $this->getDbId();
                 break;
             case 1:
-                return $this->getDbUrl();
-                break;
-            case 2:
                 return $this->getDbAutoIngest();
                 break;
-            case 3:
+            case 2:
                 return $this->getDbPodcastId();
                 break;
             default:
@@ -743,9 +695,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         $keys = ImportedPodcastPeer::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getDbId(),
-            $keys[1] => $this->getDbUrl(),
-            $keys[2] => $this->getDbAutoIngest(),
-            $keys[3] => $this->getDbPodcastId(),
+            $keys[1] => $this->getDbAutoIngest(),
+            $keys[2] => $this->getDbPodcastId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -794,12 +745,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 $this->setDbId($value);
                 break;
             case 1:
-                $this->setDbUrl($value);
-                break;
-            case 2:
                 $this->setDbAutoIngest($value);
                 break;
-            case 3:
+            case 2:
                 $this->setDbPodcastId($value);
                 break;
         } // switch()
@@ -827,9 +775,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         $keys = ImportedPodcastPeer::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setDbUrl($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDbAutoIngest($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setDbPodcastId($arr[$keys[3]]);
+        if (array_key_exists($keys[1], $arr)) $this->setDbAutoIngest($arr[$keys[1]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDbPodcastId($arr[$keys[2]]);
     }
 
     /**
@@ -842,7 +789,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         $criteria = new Criteria(ImportedPodcastPeer::DATABASE_NAME);
 
         if ($this->isColumnModified(ImportedPodcastPeer::ID)) $criteria->add(ImportedPodcastPeer::ID, $this->id);
-        if ($this->isColumnModified(ImportedPodcastPeer::URL)) $criteria->add(ImportedPodcastPeer::URL, $this->url);
         if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST)) $criteria->add(ImportedPodcastPeer::AUTO_INGEST, $this->auto_ingest);
         if ($this->isColumnModified(ImportedPodcastPeer::PODCAST_ID)) $criteria->add(ImportedPodcastPeer::PODCAST_ID, $this->podcast_id);
 
@@ -908,7 +854,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setDbUrl($this->getDbUrl());
         $copyObj->setDbAutoIngest($this->getDbAutoIngest());
         $copyObj->setDbPodcastId($this->getDbPodcastId());
 
@@ -1027,7 +972,6 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     public function clear()
     {
         $this->id = null;
-        $this->url = null;
         $this->auto_ingest = null;
         $this->podcast_id = null;
         $this->alreadyInSave = false;
