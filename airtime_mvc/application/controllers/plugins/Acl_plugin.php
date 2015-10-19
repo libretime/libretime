@@ -109,9 +109,10 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
         $controller = strtolower($request->getControllerName());
-        Application_Model_Auth::pinSessionToClient(Zend_Auth::getInstance());
 
         if (in_array($controller, array(
+                "index",
+                "login",
                 "api",
                 "auth",
                 "error",
@@ -124,7 +125,10 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             )))
         {
             $this->setRoleName("G");
-        } elseif (!Zend_Auth::getInstance()->hasIdentity()) {
+        }
+        elseif (Zend_Session::isStarted() && !Zend_Auth::getInstance()->hasIdentity()) {
+
+            //The controller uses sessions but we don't have an identity yet.
 
             // If we don't have an identity and we're making a RESTful request,
             // we need to do API key verification
@@ -166,6 +170,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 }
             }
         } else { //We have a session/identity.
+
             // If we have an identity and we're making a RESTful request,
             // we need to check the CSRF token
             if ($_SERVER['REQUEST_METHOD'] != "GET" && $request->getModuleName() == "rest") {
@@ -230,10 +235,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     }
     
     private function verifyCSRFToken($token) {
-        $current_namespace = new Zend_Session_Namespace('csrf_namespace');
-        $observed_csrf_token = $token;
-        $expected_csrf_token = $current_namespace->authtoken;
-        return ($observed_csrf_token == $expected_csrf_token);
+        return SecurityHelper::verifyCSRFToken($token);
     }
     
     private function verifyAPIKey() {

@@ -850,6 +850,9 @@ SQL;
         $con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
         try {
             $con->beginTransaction();
+            //It is extremely important that we increase the transaction isolation level, so that if two
+            //requests cause the show schedule to be generated at the same time, one will be rolled back.
+            $con->exec("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE");
 
             //UTC DateTime object
             $showsPopUntil = Application_Model_Preference::GetShowsPopulatedUntil();
@@ -862,7 +865,9 @@ SQL;
             $con->commit();
         } catch (Exception $e) {
             $con->rollBack();
-            throw $e;
+            //throw $e;
+            Logging::warn("Did not create show instances due to transaction error. This is usually safe
+                           and caused by two concurrent transactions. " . $e->getMessage());
         }
 
     }

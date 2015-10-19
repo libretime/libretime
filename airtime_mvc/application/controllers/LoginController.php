@@ -8,8 +8,14 @@ class LoginController extends Zend_Controller_Action
 
     public function init()
     {
-        //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
-        session_start();
+        $CC_CONFIG = Config::getConfig();
+        $baseUrl = Application_Common_OsPath::getBaseDir();
+
+        $this->view->headLink(array('rel' => 'icon', 'href' => $baseUrl . 'favicon.ico?' . $CC_CONFIG['airtime_version'], 'type' => 'image/x-icon'), 'PREPEND')
+            ->appendStylesheet($baseUrl . 'css/bootstrap.css?' . $CC_CONFIG['airtime_version'])
+            ->appendStylesheet($baseUrl . 'css/redmond/jquery-ui-1.8.8.custom.css?' . $CC_CONFIG['airtime_version'])
+            ->appendStylesheet($baseUrl . 'css/styles.css?' . $CC_CONFIG['airtime_version']);
+
     }
 
     public function indexAction()
@@ -22,13 +28,21 @@ class LoginController extends Zend_Controller_Action
         
         //Enable AJAX requests from www.airtime.pro for the sign-in process.
         CORSHelper::enableATProCrossOriginRequests($request, $response);
-                
+
         
         Application_Model_Locale::configureLocalization($request->getcookie('airtime_locale', $stationLocale));
-        $auth = Zend_Auth::getInstance();
-        
-        if ($auth->hasIdentity()) {
-            $this->_redirect('showbuilder');
+
+        if (Zend_Session::isStarted()) {
+
+            //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
+            SessionHelper::reopenSessionForWriting();
+
+            $auth = Zend_Auth::getInstance();
+            $auth->getStorage();
+
+            if ($auth->hasIdentity()) {
+                $this->_redirect('showbuilder');
+            }
         }
 
         //uses separate layout without a navigation.
@@ -43,6 +57,10 @@ class LoginController extends Zend_Controller_Action
         $message = _("Please enter your username and password.");
 
         if ($request->isPost()) {
+
+            //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
+            //session_start();
+
             // if the post contains recaptcha field, which means form had recaptcha field.
             // Hence add the element for validation.
             if (array_key_exists('recaptcha_response_field', $request->getPost())) {
@@ -117,6 +135,9 @@ class LoginController extends Zend_Controller_Action
 
     public function logoutAction()
     {
+        //Open the session for writing, because we close it for writing by default in Bootstrap.php as an optimization.
+        SessionHelper::reopenSessionForWriting();
+
         $auth = Zend_Auth::getInstance();
         $auth->clearIdentity();
         // Unset all session variables relating to CSRF prevention on logout

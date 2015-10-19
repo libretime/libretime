@@ -28,7 +28,10 @@ class BillingController extends Zend_Controller_Action {
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
         Billing::ensureClientIdIsValid();
-        
+
+        //Zend's CSRF token element requires the session to be open for writing
+        SessionHelper::reopenSessionForWriting();
+
         $request = $this->getRequest();
         $form = new Application_Form_BillingUpgradeDowngrade();
 
@@ -224,7 +227,10 @@ class BillingController extends Zend_Controller_Action {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
-        
+
+        //Zend's CSRF token element requires the session to be open for writing
+        SessionHelper::reopenSessionForWriting();
+
         $request = $this->getRequest();
         $form = new Application_Form_BillingClient();
         Billing::ensureClientIdIsValid();

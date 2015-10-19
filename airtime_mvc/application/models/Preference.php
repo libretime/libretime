@@ -10,7 +10,7 @@ class Application_Model_Preference
     {
         //pass in true so the check is made with the autoloader
         //we need this check because saas calls this function from outside Zend
-        if (!class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
+        if (!class_exists("Zend_Session", true) || !Zend_Session::isStarted() || !class_exists("Zend_Auth", true) || !Zend_Auth::getInstance()->hasIdentity()) {
             $userId = null;
         } else {
             $auth = Zend_Auth::getInstance();
@@ -150,10 +150,14 @@ class Application_Model_Preference
         
         try {
             
-            $userId = self::getUserId();
-            
-            if ($isUserValue && is_null($userId))
-                throw new Exception("User id can't be null for a user preference.");
+            $userId = null;
+            if ($isUserValue) {
+                //This is nested in here because so we can still use getValue() when the session hasn't started yet.
+                $userId = self::getUserId();
+                if (is_null($userId)) {
+                    throw new Exception("User id can't be null for a user preference.");
+                }
+            }
 
             // If the value is already cached, return it
             $res = $cache->fetch($key, $isUserValue, $userId);
@@ -202,7 +206,7 @@ class Application_Model_Preference
         } 
         catch (Exception $e) {
             header('HTTP/1.0 503 Service Unavailable');
-            Logging::info("Could not connect to database: ".$e->getMessage());
+            Logging::info("Could not connect to database: ".$e);
             exit;
         }
     }

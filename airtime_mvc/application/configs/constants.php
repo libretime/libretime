@@ -4,6 +4,7 @@ define('PRODUCT_NAME'       , 'Airtime');
 define('PRODUCT_SITE_URL'   , 'http://airtime.sourcefabric.org');
 
 define('SAAS_PRODUCT_BRANDING_NAME', 'Airtime Pro');
+define('SAAS_LOGIN_REFERRER', 'https://www.airtime.pro/');
 
 define('COMPANY_NAME'       , 'Sourcefabric');
 define('COMPANY_SUFFIX'     , 'z.ú.');
@@ -18,7 +19,7 @@ define('TERMS_AND_CONDITIONS_URL'   , 'http://www.sourcefabric.org/en/about/poli
 define('PRIVACY_POLICY_URL'         , 'http://www.sourcefabric.org/en/about/policy/');
 define('USER_MANUAL_URL'            , 'http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters');
 define('ABOUT_AIRTIME_URL'          , 'https://www.airtime.pro/support/');
-define('AIRTIME_TRANSIFEX_URL'      , 'https://www.transifex.com/projects/p/airtime/');
+define('AIRTIME_TRANSIFEX_URL'      , 'https://www.transifex.com/sourcefabric/airtime/');
 define('WHMCS_PASSWORD_RESET_URL'   , 'https://account.sourcefabric.com/pwreset.php');
 define('SUPPORT_TICKET_URL'         , 'https://sourcefabricberlin.zendesk.com/hc/en-us/requests/new');
 define('UI_REVAMP_EMBED_URL'        , 'https://www.youtube.com/embed/nqpNnCKGluY');

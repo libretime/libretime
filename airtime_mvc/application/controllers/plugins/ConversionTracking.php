@@ -4,6 +4,10 @@ class Zend_Controller_Plugin_ConversionTracking extends Zend_Controller_Plugin_A
 {
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
+        if (!Zend_Session::isStarted()) {
+            return;
+        }
+
         //If user is a super admin and old plan level is set to trial....
         if (Application_Common_GoogleAnalytics::didPaidConversionOccur($request))
         {

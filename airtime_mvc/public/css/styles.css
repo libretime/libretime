@@ -288,15 +288,13 @@ select {
     color:#ff5d1a;
 }
 .now-playing-block {
-    /*width:35%;*/
-    flex: 1 auto;
+    flex: 1 0;
     background: url(images/masterpanel_spacer.png) no-repeat 0 0;
     margin-left: 152px;
     padding-left: 14px;
 }
 .show-block {
-    /*width:30%;*/
-    flex: 1 auto;
+    flex: 1 0;
 }
 .text-row {
     height:30px;
@@ -3990,3 +3988,6 @@ li .ui-state-hover {
 #whatsnew li {
     margin-top: 20px;
 }
+
+/* jQuery dialog */
+.no-close .ui-dialog-titlebar-close {display: none }
