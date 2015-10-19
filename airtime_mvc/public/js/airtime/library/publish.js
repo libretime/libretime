@@ -15,13 +15,13 @@ var AIRTIME = (function (AIRTIME) {
 
     //AngularJS app
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
-        .controller('RestController', function($scope, $http, mediaId) {
+        .controller('RestController', function($scope, $http, mediaId, tab) {
 
             $http.get(endpoint + mediaId, { csrf_token: jQuery("#csrf").val() })
                 .success(function(json) {
                     console.log(json);
                     $scope.media = json;
-                    AIRTIME.tabs.setActiveTabName($scope.media.track_title);
+                    tab.setName($scope.media.track_title);
                 });
 
             $scope.save = function() {
@@ -46,8 +46,9 @@ var AIRTIME = (function (AIRTIME) {
         ids.push(el.id);
     });*/
 
-    function _bootstrapAngularApp(mediaId) {
+    function _bootstrapAngularApp(mediaId, tab) {
         publishApp.value('mediaId', mediaId);
+        publishApp.value('tab', tab);
         var wrapper = AIRTIME.tabs.getActiveTab().contents.find(".editor_pane_wrapper");
         wrapper.attr("ng-controller", "RestController");
         angular.bootstrap(wrapper.get(0), [PUBLISH_APP_NAME]);
@@ -75,10 +76,8 @@ var AIRTIME = (function (AIRTIME) {
 
         jQuery.get(dialogUrl, { csrf_token: jQuery("#csrf").val() })
             .success(function(html) {
-
-                var jsonWrapper = {'html' : html}; //Silly wrapper to make the openTab function happy
-                AIRTIME.tabs.openTab(jsonWrapper, mediaId);
-                _bootstrapAngularApp(mediaId);
+                var tab = AIRTIME.tabs.openTab(html, mediaId, null);
+                _bootstrapAngularApp(mediaId, tab);
             });
 
         /*

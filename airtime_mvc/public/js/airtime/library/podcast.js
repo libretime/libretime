@@ -68,7 +68,7 @@ var AIRTIME = (function (AIRTIME) {
     function _initAppFromResponse(data) {
         var podcast = JSON.parse(data.podcast),
             uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
-            tab = AIRTIME.tabs.openTab(data, uid, null),
+            tab = AIRTIME.tabs.openTab(data.html, uid, null),
             table = mod.initPodcastEpisodeDatatable(podcast.episodes);
         _bootstrapAngularApp(podcast, tab, table);
     }

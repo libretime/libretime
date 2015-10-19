@@ -49,17 +49,14 @@ var AIRTIME = (function(AIRTIME){
     /**
      * Tab object constructor
      *
-     * @param {{}} json     a javascript object of the form
-     *                      {
-     *                          'html': the HTML to render as the tab contents
-     *                      }
+     * @param {string} html the HTML to render as the tab contents
      * @param {string} uid  the unique ID for the tab. Uses the values in
      *                      AIRTIME.library.MediaTypeStringEnum and the object ID
      *                      to create a string of the form TYPE_ID.
      * @returns {Tab}       the created Tab object
      * @constructor
      */
-    var Tab = function(json, uid) {
+    var Tab = function(html, uid) {
         var self = this;
 
         AIRTIME.library.selectNone();
@@ -75,7 +72,7 @@ var AIRTIME = (function(AIRTIME){
         // TODO: clean this up a bit and use js instead of strings to create elements
         var wrapper = "<div data-tab-id='" + self.id + "' id='pl-tab-content-" + self.id + "' class='side_playlist pl-content'><div class='editor_pane_wrapper'></div></div>",
             t = $("#show_builder").append(wrapper).find("#pl-tab-content-" + self.id),
-            pane = $(".editor_pane_wrapper:last").append(json.html),
+            pane = $(".editor_pane_wrapper:last").append(html),
             name = pane.find("#track_title").length > 0 ? pane.find("#track_title").val() + $.i18n._(" - Metadata Editor")
                 : pane.find(".playlist_name_display").val(),
             tab =
@@ -261,18 +258,15 @@ var AIRTIME = (function(AIRTIME){
     /**
      * Create a new Tab object and open it in the ShowBuilder pane
      *
-     * @param {{}} json             a javascript object of the form
-     *                              {
-     *                                  'html': the HTML to render as the tab contents
-     *                              }
+     * @param {string} html         the HTML to render as the tab contents
      * @param {string} uid          the unique ID for the tab. Uses the values in
      *                              AIRTIME.library.MediaTypeStringEnum and the object ID
      * @param {function} callback   an optional callback function to call once the
      *                              Tab object is initialized
      * @returns {Tab}               the created Tab object
      */
-    mod.openTab = function(json, uid, callback) {
-        var newTab = new Tab(json, uid);
+    mod.openTab = function(html, uid, callback) {
+        var newTab = new Tab(html, uid);
         if (callback) callback(newTab);
         return newTab;
     };

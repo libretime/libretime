@@ -1074,7 +1074,7 @@ var AIRTIME = (function(AIRTIME){
             {format: "json", type: 'playlist'},
             function(json) {
                 var uid = AIRTIME.library.MediaTypeStringEnum.PLAYLIST+"_"+json.id;
-                AIRTIME.tabs.openTab(json, uid, AIRTIME.playlist._initPlaylistTabEvents);
+                AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
                 redrawLib();
             });
     };
@@ -1088,7 +1088,7 @@ var AIRTIME = (function(AIRTIME){
             {format: "json"},
             function(json) {
                 var uid = AIRTIME.library.MediaTypeStringEnum.WEBSTREAM+"_"+json.id;
-                AIRTIME.tabs.openTab(json, uid, AIRTIME.playlist._initPlaylistTabEvents);
+                AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
                 redrawLib();
             });
     };
@@ -1103,13 +1103,13 @@ var AIRTIME = (function(AIRTIME){
             {format: "json", type: 'block'},
             function(json){
                 var uid = AIRTIME.library.MediaTypeStringEnum.BLOCK+"_"+json.id;
-                AIRTIME.tabs.openTab(json, uid, AIRTIME.playlist._initPlaylistTabEvents);
+                AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
                 redrawLib();
             });
     };
 
     mod.fileMdEdit = function(json, uid) {
-        AIRTIME.tabs.openTab(json, uid, AIRTIME.playlist._initFileMdEvents);
+        AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initFileMdEvents);
     };
 
     mod.fnEdit = function(id, type, url) {
@@ -1120,7 +1120,7 @@ var AIRTIME = (function(AIRTIME){
             {format: "json", id: id, type: type},
             function(json) {
                 var uid = AIRTIME.library.MediaTypeFullToStringEnum.type+"_"+id;
-                AIRTIME.tabs.openTab(json, uid, AIRTIME.playlist._initPlaylistTabEvents);
+                AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
                 redrawLib();
             });
     };
@@ -1156,7 +1156,7 @@ var AIRTIME = (function(AIRTIME){
             {format: "json", ids: id, modified: lastMod, type: type},
             function(json){
                 var uid = AIRTIME.library.MediaTypeStringEnum.WEBSTREAM+"_"+id;
-                AIRTIME.tabs.openTab(json, uid, AIRTIME.playlist._initPlaylistTabEvents);
+                AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
                 redrawLib();
             });
     };
@@ -1204,7 +1204,7 @@ var AIRTIME = (function(AIRTIME){
     mod.replaceForm = function(json){
         $pl.find('.editor_pane_wrapper').html(json.html);
         var uid = AIRTIME.library.MediaTypeStringEnum.BLOCK+"_"+json.id;
-        AIRTIME.tabs.openTab(json, uid, AIRTIME.playlist._initPlaylistTabEvents);
+        AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
     };
 
 
