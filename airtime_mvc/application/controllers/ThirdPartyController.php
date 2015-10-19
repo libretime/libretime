@@ -16,12 +16,9 @@ abstract class ThirdPartyController extends Zend_Controller_Action {
     protected $_service;
 
     /**
-     * @var string Application_Model_Preference service request token accessor function name
-     */
-    protected $_SERVICE_TOKEN_ACCESSOR;
-
-    /**
      * Disable controller rendering and initialize
+     *
+     * @return void
      */
     public function init() {
         $this->_baseUrl = Application_Common_HTTPHelper::getStationUrl();

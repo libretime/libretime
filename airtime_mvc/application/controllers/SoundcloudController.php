@@ -11,12 +11,9 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
     protected $_service;
 
     /**
-     * @var string Application_Model_Preference service request token accessor function name
-     */
-    protected $_SERVICE_TOKEN_ACCESSOR = 'setSoundCloudRequestToken';
-
-    /**
      * Set up SoundCloud access variables.
+     *
+     * @return void
      */
     public function init() {
         parent::init();
@@ -78,8 +75,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
      * @return void
      */
     public function deauthorizeAction() {
-        $function = $this->_SERVICE_TOKEN_ACCESSOR;
-        Application_Model_Preference::$function("");
+        Application_Model_Preference::setSoundCloudRequestToken("");
         header('Location: ' . $this->_baseUrl . 'preference');  // Redirect back to the preference page
     }
 
@@ -97,6 +93,8 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
 
     /**
      * Fetch the permalink to a file on SoundCloud and redirect to it.
+     *
+     * @return void
      */
     public function viewOnSoundCloudAction() {
         $request = $this->getRequest();
