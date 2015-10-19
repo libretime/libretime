@@ -81,18 +81,11 @@ $pages = array(
     array(
         'label' =>  "<i class='icon-signal icon-white'></i>"._("Analytics"),
         'module'     => 'default',
-        'controller' => 'listenerstat',
+        'controller' => 'playouthistory',
         'action'     => 'index',
-        'resource'   => 'listenerstat',
+        'resource'   => 'playouthistory',
         'title' => 'Analytics',
         'pages' => array(
-            array(
-                'label'      => _('Listener Stats'),
-                'module'     => 'default',
-                'controller' => 'listenerstat',
-                'action'     => 'index',
-                'resource'   => 'listenerstat'
-            ),
             array(
                 'label'      => _('Playout History'),
                 'module'     => 'default',
@@ -106,7 +99,14 @@ $pages = array(
                 'controller' => 'playouthistorytemplate',
                 'action'     => 'index',
                 'resource'   => 'playouthistorytemplate'
-            )
+            ),
+            array(
+                'label'      => _('Listener Stats'),
+                'module'     => 'default',
+                'controller' => 'listenerstat',
+                'action'     => 'index',
+                'resource'   => 'listenerstat'
+            ),
         )
     ),
     array(
