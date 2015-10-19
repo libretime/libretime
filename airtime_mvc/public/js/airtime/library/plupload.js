@@ -162,7 +162,7 @@ $(document).ready(function () {
         });
     };
 
-    $("#recent_uploads").textScroll("td");
+    $("#recent_uploads").addTitles("td");
 
     self.isRecentUploadsRefreshTimerActive = false;
 

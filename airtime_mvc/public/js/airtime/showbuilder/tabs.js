@@ -339,7 +339,7 @@ var AIRTIME = (function(AIRTIME){
 
 $(document).ready(function() {
     // Add text scrolling to tab names
-    $("#show_builder").textScroll(".tab-name");
+    $("#show_builder").addTitles(".tab-name");
     // Initialize the ScheduleTab
     AIRTIME.tabs.initScheduleTab();
 });

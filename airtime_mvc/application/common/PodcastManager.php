@@ -31,14 +31,14 @@ class PodcastManager {
         $episodes = array();
         foreach ($autoIngestPodcasts as $podcast) {
             /** @var ImportedPodcast $podcast */
-            $podcastArray = Application_Service_PodcastService::getPodcastById($podcast->getDbId());
+            $podcastArray = Application_Service_PodcastService::getPodcastById($podcast->getDbPodcastId());
             // A bit hacky... sort the episodes by publication date to get the most recent
             usort($podcastArray["episodes"], array(static::class, "_sortByEpisodePubDate"));
             $episodeData = $podcastArray["episodes"][0];
             $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData["guid"]);
             // Make sure there's no existing episode placeholder or import, and that the data is non-empty
             if (empty($episode) && !empty($episodeData)) {
-                $placeholder = $service->addPodcastEpisodePlaceholder($podcast->getDbId(), $episodeData);
+                $placeholder = $service->addPodcastEpisodePlaceholder($podcast->getDbPodcastId(), $episodeData);
                 array_push($episodes, $placeholder);
             }
         }

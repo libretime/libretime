@@ -304,9 +304,27 @@ function getUsabilityHint() {
     });
 }
 
-// Set up text scrolling for all tags matching selector within the calling element(s)
-jQuery.fn.textScroll = function(selector) {
+/**
+ * Add title attributes (whose values are their inner text) to all elements in the calling parent matching selector
+ *
+ * @param selector jQuery selector to search descendants
+ * @returns {jQuery}
+ */
+jQuery.fn.addTitles = function(selector) {
     this.each(function() {
+        // Put this in a mouseenter event handler so it's dynamic
+        // (newly created elements will have the title applied on hover)
+        $(this).on("mouseenter", selector, function () {
+            $(this).attr("title", $(this).text());
+        });
+    });
+
+    return this;  // jQuery chaining
+};
+
+// XXX: Old code to pan selector text; keeping this around in case we want to use it later - Duncan
+jQuery.fn.scrollText = function(selector) {
+    this.each(function () {
         $(this).on("mouseenter", selector, function () {
             var sw = $(this)[0].scrollWidth - parseFloat($(this).css("textIndent")), iw = $(this).innerWidth();
             if (sw > iw) {
@@ -322,5 +340,5 @@ jQuery.fn.textScroll = function(selector) {
         });
     });
 
-    return this;  // jQuery chaining
+    return this;
 };

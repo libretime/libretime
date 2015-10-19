@@ -18,7 +18,6 @@ var AIRTIME = (function (AIRTIME) {
             //when you're creating a new podcast, we already have the object from the result of the POST. We're saving
             //a roundtrip by not fetching it again here.
             $scope.podcast = podcast;
-            console.log(podcast);
             tab.setName($scope.podcast.title);
 
             $scope.savePodcast = function() {
@@ -168,7 +167,7 @@ var AIRTIME = (function (AIRTIME) {
                 }
             });
 
-        podcastEpisodesTableWidget.getDatatable().textScroll("td");
+        podcastEpisodesTableWidget.getDatatable().addTitles("td");
         return podcastEpisodesTableWidget;
     };
 
