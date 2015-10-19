@@ -117,17 +117,21 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $ref = parent::updateTrackReference($task, $episodeId, $episodes, $status);
 
         if ($status == CELERY_SUCCESS_STATUS) {
-            foreach($episodes as $episode) {
+            foreach ($episodes as $episode) {
                 // Since we process episode downloads as a batch, individual downloads can fail
                 // even if the task itself succeeds
+                $dbEpisode = PodcastEpisodesQuery::create()
+                    ->findOneByDbId($episode->episodeid);
                 if ($episode->status) {
-                    $dbEpisode = PodcastEpisodesQuery::create()
-                        ->findOneByDbId($episode->episodeid);
                     $dbEpisode->setDbFileId($episode->fileid)
                         ->save();
+                } else {
+                    Logging::warn("Celery task $task episode $episode->episodeid unsuccessful with status $episode->status");
+                    $dbEpisode->delete();
                 }
             }
         }
+        // TODO: do we need a broader fail condition here?
 
         return $ref;
     }

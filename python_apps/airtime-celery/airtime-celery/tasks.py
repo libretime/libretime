@@ -110,10 +110,10 @@ def podcast_download(episodes, callback_url, api_key):
             f = json.loads(re.content)  # Read the response from the media API to get the file id
             obj['fileid'] = f['id']
             obj['status'] = 1
-            response.append(obj)
         except Exception as e:
             logger.info('Error during file download: {0}'.format(e.message))
             obj['status'] = 0
+        response.append(obj)
     return json.dumps(response)
 
 
@@ -127,10 +127,15 @@ def get_filename(r):
     """
     # Try to get the filename from the content disposition
     d = r.headers.get('Content-Disposition')
+    filename = ''
     if d:
-        _, params = cgi.parse_header(d)
-        filename = params['filename']
-    else:
+        try:
+            _, params = cgi.parse_header(d)
+            filename = params['filename']
+        except Exception as e:
+            # We end up here if we get a Content-Disposition header with no filename
+            logger.warn("Couldn't find file name in Content-Disposition header, using url")
+    if not filename:
         # Since we don't necessarily get the filename back in the response headers,
         # parse the URL and get the filename and extension
         path = urlparse.urlsplit(r.url).path
