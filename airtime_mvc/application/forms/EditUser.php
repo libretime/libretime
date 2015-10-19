@@ -118,12 +118,12 @@ class Application_Form_EditUser extends Zend_Form
         $locale = new Zend_Form_Element_Select("cu_locale");
         $locale->setLabel(_("Language:"));
         $locale->setMultiOptions(Application_Model_Locale::getLocales());
-        $locale->setValue(Application_Model_Preference::GetUserLocale($currentUserId));
+        $locale->setValue(Application_Model_Preference::GetUserLocale());
         $locale->setDecorators(array('ViewHelper'));
         $this->addElement($locale);
 
-        $stationTz = Application_Model_Preference::GetTimezone($currentUserId);
-        $userTz = Application_Model_Preference::GetUserTimezone($currentUserId);
+        $stationTz = Application_Model_Preference::GetDefaultTimezone();
+        $userTz = Application_Model_Preference::GetUserTimezone();
 
         $timezone = new Zend_Form_Element_Select("cu_timezone");
         $timezone->setLabel(_("Interface Timezone:"));
