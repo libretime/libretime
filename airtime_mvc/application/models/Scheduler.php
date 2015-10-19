@@ -955,6 +955,10 @@ class Application_Model_Scheduler
         $this->con->beginTransaction();
 
         try {
+            //Increase the transaction isolation level to prevent two concurrent requests from potentially resulting
+            //in tracks scheduled at the same time.
+            $this->con->exec("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+
             $this->validateMediaItems($mediaItems); //Check for missing files, etc.
             $this->validateRequest($scheduleItems, true);
 
@@ -1005,6 +1009,9 @@ class Application_Model_Scheduler
         //$this->con->useDebug(true);
 
         try {
+            //Increase the transaction isolation level to prevent two concurrent requests from potentially resulting
+            //in tracks scheduled at the same time.
+            $this->con->exec("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE");
 
             $this->validateItemMove($selectedItems, $afterItems[0]);
             $this->validateRequest($selectedItems);
