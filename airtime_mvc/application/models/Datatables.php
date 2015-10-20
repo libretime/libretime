@@ -12,10 +12,15 @@ class Application_Model_Datatables
             if (strstr($term, '~')) {
                 $info = explode('~', $term);
                 if ($dbname == 'utime' || $dbname == 'mtime' || $dbname == 'lptime') {
-                	
-                    $input1 = ($info[0] != "") ? Application_Common_DateHelper::UserTimezoneStringToUTCString($info[0]) : null;
-                    $input2 = ($info[1] != "") ? Application_Common_DateHelper::UserTimezoneStringToUTCString($info[1]) : null;
-                    
+
+                    try {
+                        $input1 = ($info[0] != "") ? Application_Common_DateHelper::UserTimezoneStringToUTCString($info[0]) : null;
+                        $input2 = ($info[1] != "") ? Application_Common_DateHelper::UserTimezoneStringToUTCString($info[1]) : null;
+                    } catch (Exception $e) {
+                        $input1 = null;
+                        $input2 = null;
+                    }
+
                 } else if($dbname == 'bit_rate' || $dbname == 'sample_rate') {
                     $input1 = isset($info[0])?doubleval($info[0]) * 1000:null;
                     $input2 = isset($info[1])?doubleval($info[1]) * 1000:null;
