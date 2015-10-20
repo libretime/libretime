@@ -3,6 +3,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
 {
     public function init()
     {
+        /*
         $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
         $csrf_element = new Zend_Form_Element_Hidden('csrf');
         $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
@@ -11,6 +12,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         $this->addElement('hash', 'csrf', array(
             'salt' => 'unique'
         ));
+        */
 
         $productPrices = array();
         $productTypes = array();       

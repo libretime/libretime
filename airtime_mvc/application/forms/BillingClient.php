@@ -188,9 +188,17 @@ class Application_Form_BillingClient extends Zend_Form
         $passwordVerify->addValidator($notEmptyValidator);
         $this->addElement($passwordVerify);
 
+                /*
+        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
+        $csrf_element = new Zend_Form_Element_Hidden('csrf');
+        $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
+        $this->addElement($csrf_element);
+
+
         $this->addElement('hash', 'csrf', array(
             'salt' => 'unique'
         ));
+                */
 
         $submit = new Zend_Form_Element_Submit("submit");
         $submit->setIgnore(true)
