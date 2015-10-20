@@ -158,7 +158,9 @@ class Application_Service_PodcastService
         $stationPodcast->save();
 
         Application_Model_Preference::setStationPodcastId($podcast->getDbId());
-
+        // Set the download key when we create the station podcast
+        // The value is randomly generated in the setter
+        Application_Model_Preference::setStationPodcastDownloadKey();
     }
 
     //TODO move this somewhere where it makes sense

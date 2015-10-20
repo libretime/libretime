@@ -1525,4 +1525,13 @@ class Application_Model_Preference
     {
         self::setValue("station_podcast_id", $value);
     }
+
+    public static function getStationPodcastDownloadKey() {
+        return self::getValue("station_podcast_download_key");
+    }
+
+    public static function setStationPodcastDownloadKey($value = null) {
+        $value = empty($value) ? (new Application_Model_Auth())->generateRandomString() : $value;
+        self::setValue("station_podcast_download_key", $value);
+    }
 }

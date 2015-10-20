@@ -86,35 +86,32 @@ def soundcloud_delete(token, track_id):
 
 
 @celery.task(name='podcast-download', acks_late=True)
-def podcast_download(episodes, callback_url, api_key):
+def podcast_download(id, url, callback_url, api_key):
     """
     Download a batch of podcast episodes
 
-    :param episodes:        array of episodes containing download URLs and IDs
+    :param id:              episode unique ID
+    :param url:             download url for the episode
     :param callback_url:    callback URL to send the downloaded file to
     :param api_key:         API key for callback authentication
     :rtype: None
     """
-    response = []
-    for episode in episodes:
-        logger.info(episode)
-        # Object to store file IDs, episode IDs, and download status
-        # (important if there's an error before the file is posted)
-        obj = { 'episodeid': episode['id'] }
-        try:
-            re = None
-            with closing(requests.get(episode['url'], stream=True)) as r:
-                filename = get_filename(r)
-                re = requests.post(callback_url, files={'file': (filename, r.content)}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
-            re.raise_for_status()
-            f = json.loads(re.content)  # Read the response from the media API to get the file id
-            obj['fileid'] = f['id']
-            obj['status'] = 1
-        except Exception as e:
-            logger.info('Error during file download: {0}'.format(e.message))
-            obj['status'] = 0
-        response.append(obj)
-    return json.dumps(response)
+    # Object to store file IDs, episode IDs, and download status
+    # (important if there's an error before the file is posted)
+    obj = { 'episodeid': id }
+    try:
+        re = None
+        with closing(requests.get(url, stream=True)) as r:
+            filename = get_filename(r)
+            re = requests.post(callback_url, files={'file': (filename, r.content)}, auth=requests.auth.HTTPBasicAuth(api_key, ''))
+        re.raise_for_status()
+        f = json.loads(re.content)  # Read the response from the media API to get the file id
+        obj['fileid'] = f['id']
+        obj['status'] = 1
+    except Exception as e:
+        logger.info('Error during file download: {0}'.format(e.message))
+        obj['status'] = 0
+    return json.dumps(obj)
 
 
 def get_filename(r):

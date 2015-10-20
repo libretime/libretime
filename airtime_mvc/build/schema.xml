@@ -598,6 +598,7 @@
   <table name="imported_podcast" phpName="ImportedPodcast">
     <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
     <column name="auto_ingest" phpName="DbAutoIngest" type="BOOLEAN"  required="true" defaultValue="false"/>
+    <column name="auto_ingest_timestamp" phpName="DbAutoIngestTimestamp" type="TIMESTAMP" required="false" />
     <column name="podcast_id" phpName="DbPodcastId" required="true" type="INTEGER"/>
     <foreign-key foreignTable="podcast" name="podcast_id_fkey" onDelete="CASCADE">
       <reference local="podcast_id" foreign="id" />

@@ -21,7 +21,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
     }
 
     /**
-     * Upload the file with the given id to a third-party service
+     * Upload the file with the given id to SoundCloud
      *
      * @return void
      *
@@ -34,7 +34,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
     }
 
     /**
-     * Download the file with the given id from a third-party service
+     * Download the file with the given id from SoundCloud
      *
      * @return void
      *
@@ -47,7 +47,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
     }
 
     /**
-     * Delete the file with the given id from a third-party service
+     * Delete the file with the given id from SoundCloud
      *
      * @return void
      *

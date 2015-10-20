@@ -28,23 +28,43 @@ class PodcastManager {
     public static function downloadNewestEpisodes() {
         $autoIngestPodcasts = static::_getAutoIngestPodcasts();
         $service = new Application_Service_PodcastEpisodeService();
-        $episodes = array();
         foreach ($autoIngestPodcasts as $podcast) {
-            /** @var ImportedPodcast $podcast */
-            $podcastArray = Application_Service_PodcastService::getPodcastById($podcast->getDbPodcastId());
-            // A bit hacky... sort the episodes by publication date to get the most recent
-            usort($podcastArray["episodes"], array(static::class, "_sortByEpisodePubDate"));
-            $episodeData = $podcastArray["episodes"][0];
+            $episodes = static::_findUningestedEpisodes($podcast, $service);
+            $podcast->setDbAutoIngestTimestamp(date('r'))->save();
+            $service->downloadEpisodes($episodes);
+        }
+
+        Application_Model_Preference::setPodcastPollLock(microtime(true));
+    }
+
+    /**
+     * Given an ImportedPodcast, find all uningested episodes since the last automatic ingest,
+     * and add them to a given episodes array
+     *
+     * @param ImportedPodcast $podcast                            the podcast to search
+     * @param Application_Service_PodcastEpisodeService $service  podcast episode service object
+     *
+     * @return array array of episodes to append be downloaded
+     */
+    protected static function _findUningestedEpisodes($podcast, $service) {
+        $podcastArray = Application_Service_PodcastService::getPodcastById($podcast->getDbPodcastId());
+        $episodeList = $podcastArray["episodes"];
+        $episodes = array();
+        // A bit hacky... sort the episodes by publication date to get the most recent
+        usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
+        for ($i = 0; $i < sizeof($episodeList); $i++) {
+            $episodeData = $episodeList[$i];
+            // If the publication date of this episode is before the ingest timestamp, we don't need to ingest it
+            // Since we're sorting by publication date, we can break
+            if ($episodeData["pub_date"] < $podcast->getDbAutoIngestTimestamp()) break;
             $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData["guid"]);
             // Make sure there's no existing episode placeholder or import, and that the data is non-empty
             if (empty($episode) && !empty($episodeData)) {
-                $placeholder = $service->addPodcastEpisodePlaceholder($podcast->getDbPodcastId(), $episodeData);
+                $placeholder = $service->addPlaceholder($podcast->getDbPodcastId(), $episodeData);
                 array_push($episodes, $placeholder);
             }
         }
-
-        $service->downloadEpisodes($episodes);
-        Application_Model_Preference::setPodcastPollLock(microtime(true));
+        return $episodes;
     }
 
     /**

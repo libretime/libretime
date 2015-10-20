@@ -15,4 +15,26 @@
  */
 class PodcastEpisodes extends BasePodcastEpisodes
 {
+
+    /**
+     * @override
+     * We need to override this function in order to provide the rotating
+     * download key for the station podcast.
+     *
+     * Get the [download_url] column value.
+     *
+     * @return string
+     */
+    public function getDbDownloadUrl() {
+        $podcastId = $this->getDbPodcastId();
+        // We may have more station podcasts later, so use this instead of checking the id stored in Preference
+        $podcast = StationPodcastQuery::create()->findOneByDbPodcastId($podcastId);
+        if ($podcast) {
+            $fileId = $this->getDbFileId();
+            $key = Application_Model_Preference::getStationPodcastDownloadKey();
+            return Application_Common_HTTPHelper::getStationUrl()."rest/media/$fileId/download?download_key=$key";
+        }
+        return parent::getDbDownloadUrl();
+    }
+
 }

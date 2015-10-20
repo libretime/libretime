@@ -43,6 +43,12 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     protected $auto_ingest;
 
     /**
+     * The value for the auto_ingest_timestamp field.
+     * @var        string
+     */
+    protected $auto_ingest_timestamp;
+
+    /**
      * The value for the podcast_id field.
      * @var        int
      */
@@ -117,6 +123,41 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     }
 
     /**
+     * Get the [optionally formatted] temporal [auto_ingest_timestamp] column value.
+     *
+     *
+     * @param string $format The date/time format string (either date()-style or strftime()-style).
+     *				 If format is null, then the raw DateTime object will be returned.
+     * @return mixed Formatted date/time value as string or DateTime object (if format is null), null if column is null
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getDbAutoIngestTimestamp($format = 'Y-m-d H:i:s')
+    {
+        if ($this->auto_ingest_timestamp === null) {
+            return null;
+        }
+
+
+        try {
+            $dt = new DateTime($this->auto_ingest_timestamp);
+        } catch (Exception $x) {
+            throw new PropelException("Internally stored date/time/timestamp value could not be converted to DateTime: " . var_export($this->auto_ingest_timestamp, true), $x);
+        }
+
+        if ($format === null) {
+            // Because propel.useDateTimeClass is true, we return a DateTime object.
+            return $dt;
+        }
+
+        if (strpos($format, '%') !== false) {
+            return strftime($format, $dt->format('U'));
+        }
+
+        return $dt->format($format);
+
+    }
+
+    /**
      * Get the [podcast_id] column value.
      *
      * @return int
@@ -176,6 +217,29 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
 
         return $this;
     } // setDbAutoIngest()
+
+    /**
+     * Sets the value of [auto_ingest_timestamp] column to a normalized version of the date/time value specified.
+     *
+     * @param mixed $v string, integer (timestamp), or DateTime value.
+     *               Empty strings are treated as null.
+     * @return ImportedPodcast The current object (for fluent API support)
+     */
+    public function setDbAutoIngestTimestamp($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->auto_ingest_timestamp !== null || $dt !== null) {
+            $currentDateAsString = ($this->auto_ingest_timestamp !== null && $tmpDt = new DateTime($this->auto_ingest_timestamp)) ? $tmpDt->format('Y-m-d H:i:s') : null;
+            $newDateAsString = $dt ? $dt->format('Y-m-d H:i:s') : null;
+            if ($currentDateAsString !== $newDateAsString) {
+                $this->auto_ingest_timestamp = $newDateAsString;
+                $this->modifiedColumns[] = ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setDbAutoIngestTimestamp()
 
     /**
      * Set the value of [podcast_id] column.
@@ -240,7 +304,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
 
             $this->id = ($row[$startcol + 0] !== null) ? (int) $row[$startcol + 0] : null;
             $this->auto_ingest = ($row[$startcol + 1] !== null) ? (boolean) $row[$startcol + 1] : null;
-            $this->podcast_id = ($row[$startcol + 2] !== null) ? (int) $row[$startcol + 2] : null;
+            $this->auto_ingest_timestamp = ($row[$startcol + 2] !== null) ? (string) $row[$startcol + 2] : null;
+            $this->podcast_id = ($row[$startcol + 3] !== null) ? (int) $row[$startcol + 3] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -250,7 +315,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 3; // 3 = ImportedPodcastPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = ImportedPodcastPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating ImportedPodcast object", $e);
@@ -494,6 +559,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST)) {
             $modifiedColumns[':p' . $index++]  = '"auto_ingest"';
         }
+        if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP)) {
+            $modifiedColumns[':p' . $index++]  = '"auto_ingest_timestamp"';
+        }
         if ($this->isColumnModified(ImportedPodcastPeer::PODCAST_ID)) {
             $modifiedColumns[':p' . $index++]  = '"podcast_id"';
         }
@@ -513,6 +581,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                         break;
                     case '"auto_ingest"':
                         $stmt->bindValue($identifier, $this->auto_ingest, PDO::PARAM_BOOL);
+                        break;
+                    case '"auto_ingest_timestamp"':
+                        $stmt->bindValue($identifier, $this->auto_ingest_timestamp, PDO::PARAM_STR);
                         break;
                     case '"podcast_id"':
                         $stmt->bindValue($identifier, $this->podcast_id, PDO::PARAM_INT);
@@ -663,6 +734,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 return $this->getDbAutoIngest();
                 break;
             case 2:
+                return $this->getDbAutoIngestTimestamp();
+                break;
+            case 3:
                 return $this->getDbPodcastId();
                 break;
             default:
@@ -696,7 +770,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
         $result = array(
             $keys[0] => $this->getDbId(),
             $keys[1] => $this->getDbAutoIngest(),
-            $keys[2] => $this->getDbPodcastId(),
+            $keys[2] => $this->getDbAutoIngestTimestamp(),
+            $keys[3] => $this->getDbPodcastId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -748,6 +823,9 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
                 $this->setDbAutoIngest($value);
                 break;
             case 2:
+                $this->setDbAutoIngestTimestamp($value);
+                break;
+            case 3:
                 $this->setDbPodcastId($value);
                 break;
         } // switch()
@@ -776,7 +854,8 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
 
         if (array_key_exists($keys[0], $arr)) $this->setDbId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setDbAutoIngest($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setDbPodcastId($arr[$keys[2]]);
+        if (array_key_exists($keys[2], $arr)) $this->setDbAutoIngestTimestamp($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setDbPodcastId($arr[$keys[3]]);
     }
 
     /**
@@ -790,6 +869,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
 
         if ($this->isColumnModified(ImportedPodcastPeer::ID)) $criteria->add(ImportedPodcastPeer::ID, $this->id);
         if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST)) $criteria->add(ImportedPodcastPeer::AUTO_INGEST, $this->auto_ingest);
+        if ($this->isColumnModified(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP)) $criteria->add(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, $this->auto_ingest_timestamp);
         if ($this->isColumnModified(ImportedPodcastPeer::PODCAST_ID)) $criteria->add(ImportedPodcastPeer::PODCAST_ID, $this->podcast_id);
 
         return $criteria;
@@ -855,6 +935,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
         $copyObj->setDbAutoIngest($this->getDbAutoIngest());
+        $copyObj->setDbAutoIngestTimestamp($this->getDbAutoIngestTimestamp());
         $copyObj->setDbPodcastId($this->getDbPodcastId());
 
         if ($deepCopy && !$this->startCopy) {
@@ -973,6 +1054,7 @@ abstract class BaseImportedPodcast extends BaseObject implements Persistent
     {
         $this->id = null;
         $this->auto_ingest = null;
+        $this->auto_ingest_timestamp = null;
         $this->podcast_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;

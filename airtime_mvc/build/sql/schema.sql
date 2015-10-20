@@ -756,6 +756,7 @@ CREATE TABLE "imported_podcast"
 (
     "id" serial NOT NULL,
     "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
+    "auto_ingest_timestamp" TIMESTAMP,
     "podcast_id" INTEGER NOT NULL,
     PRIMARY KEY ("id")
 );

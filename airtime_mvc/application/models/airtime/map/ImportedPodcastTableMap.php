@@ -41,6 +41,7 @@ class ImportedPodcastTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'DbId', 'INTEGER', true, null, null);
         $this->addColumn('auto_ingest', 'DbAutoIngest', 'BOOLEAN', true, null, false);
+        $this->addColumn('auto_ingest_timestamp', 'DbAutoIngestTimestamp', 'TIMESTAMP', false, null, null);
         $this->addForeignKey('podcast_id', 'DbPodcastId', 'INTEGER', 'podcast', 'id', true, null, null);
         // validators
     } // initialize()

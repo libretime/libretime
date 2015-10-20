@@ -126,6 +126,9 @@ define('CELERY_FAILED_STATUS', 'FAILED');
 define('SOUNDCLOUD_SERVICE_NAME', 'soundcloud');
 define('PODCAST_SERVICE_NAME', 'podcast');
 
+// Publish Services
+define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');
+
 // Podcast Types
 //define('STATION_PODCAST', 0);
 //define('IMPORTED_PODCAST', 1);

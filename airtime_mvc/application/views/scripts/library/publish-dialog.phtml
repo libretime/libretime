@@ -16,8 +16,10 @@
         </label>
         <fieldset>
             <legend><?php echo _("Publish to:"); ?></legend>
-            <input type="checkbox" name="publish_sources" id="station_podcast" value="station_podcast"><label for="station_podcast"><?php echo(_("My Station Podcast"));?></label><br/>
-            <input type="checkbox" name="publish_sources" id="soundcloud" value="soundcloud"><label for="soundcloud">SoundCloud</label>
+            <input ng-model="publishSources.station_podcast" type="checkbox" name="publish_sources" id="station_podcast" value="station_podcast">
+            <label for="station_podcast"><?php echo(_("My Station Podcast"));?></label><br/>
+            <input ng-model="publishSources.soundcloud" type="checkbox" name="publish_sources" id="soundcloud" value="soundcloud">
+            <label for="soundcloud">SoundCloud</label>
         </fieldset>
 
     </form>

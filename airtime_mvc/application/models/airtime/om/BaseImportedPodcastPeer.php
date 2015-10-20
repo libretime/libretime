@@ -24,19 +24,22 @@ abstract class BaseImportedPodcastPeer
     const TM_CLASS = 'ImportedPodcastTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /** the column name for the id field */
     const ID = 'imported_podcast.id';
 
     /** the column name for the auto_ingest field */
     const AUTO_INGEST = 'imported_podcast.auto_ingest';
+
+    /** the column name for the auto_ingest_timestamp field */
+    const AUTO_INGEST_TIMESTAMP = 'imported_podcast.auto_ingest_timestamp';
 
     /** the column name for the podcast_id field */
     const PODCAST_ID = 'imported_podcast.podcast_id';
@@ -60,12 +63,12 @@ abstract class BaseImportedPodcastPeer
      * e.g. ImportedPodcastPeer::$fieldNames[ImportedPodcastPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbAutoIngest', 'DbPodcastId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbAutoIngest', 'dbPodcastId', ),
-        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID, ImportedPodcastPeer::AUTO_INGEST, ImportedPodcastPeer::PODCAST_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'AUTO_INGEST', 'PODCAST_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'auto_ingest', 'podcast_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('DbId', 'DbAutoIngest', 'DbAutoIngestTimestamp', 'DbPodcastId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId', 'dbAutoIngest', 'dbAutoIngestTimestamp', 'dbPodcastId', ),
+        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID, ImportedPodcastPeer::AUTO_INGEST, ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, ImportedPodcastPeer::PODCAST_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'AUTO_INGEST', 'AUTO_INGEST_TIMESTAMP', 'PODCAST_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'auto_ingest', 'auto_ingest_timestamp', 'podcast_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -75,12 +78,12 @@ abstract class BaseImportedPodcastPeer
      * e.g. ImportedPodcastPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbAutoIngest' => 1, 'DbPodcastId' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbAutoIngest' => 1, 'dbPodcastId' => 2, ),
-        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID => 0, ImportedPodcastPeer::AUTO_INGEST => 1, ImportedPodcastPeer::PODCAST_ID => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'AUTO_INGEST' => 1, 'PODCAST_ID' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'auto_ingest' => 1, 'podcast_id' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
+        BasePeer::TYPE_PHPNAME => array ('DbId' => 0, 'DbAutoIngest' => 1, 'DbAutoIngestTimestamp' => 2, 'DbPodcastId' => 3, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('dbId' => 0, 'dbAutoIngest' => 1, 'dbAutoIngestTimestamp' => 2, 'dbPodcastId' => 3, ),
+        BasePeer::TYPE_COLNAME => array (ImportedPodcastPeer::ID => 0, ImportedPodcastPeer::AUTO_INGEST => 1, ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP => 2, ImportedPodcastPeer::PODCAST_ID => 3, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'AUTO_INGEST' => 1, 'AUTO_INGEST_TIMESTAMP' => 2, 'PODCAST_ID' => 3, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'auto_ingest' => 1, 'auto_ingest_timestamp' => 2, 'podcast_id' => 3, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, )
     );
 
     /**
@@ -156,10 +159,12 @@ abstract class BaseImportedPodcastPeer
         if (null === $alias) {
             $criteria->addSelectColumn(ImportedPodcastPeer::ID);
             $criteria->addSelectColumn(ImportedPodcastPeer::AUTO_INGEST);
+            $criteria->addSelectColumn(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP);
             $criteria->addSelectColumn(ImportedPodcastPeer::PODCAST_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.auto_ingest');
+            $criteria->addSelectColumn($alias . '.auto_ingest_timestamp');
             $criteria->addSelectColumn($alias . '.podcast_id');
         }
     }

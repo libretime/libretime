@@ -42,6 +42,10 @@ require_once "MediaType.php";
 /* Interfaces */
 require_once "OAuth2.php";
 require_once "OAuth2Controller.php";
+require_once "Publish.php";
+/* Factories */
+require_once __DIR__.'/services/CeleryServiceFactory.php';
+require_once __DIR__.'/services/PublishServiceFactory.php';
 
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';

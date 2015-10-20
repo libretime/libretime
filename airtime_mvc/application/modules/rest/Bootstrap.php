@@ -71,5 +71,18 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
             )
         );
         $router->addRoute('clear', $clearLibraryRoute);
+
+        $publishRoute = new Zend_Controller_Router_Route(
+            'rest/media/:id/publish',
+            array(
+                'controller' => 'media',
+                'action' => 'publish',
+                'module' => 'rest'
+            ),
+            array(
+                'id' => '\d+'
+            )
+        );
+        $router->addRoute('publish', $publishRoute);
     }
 }

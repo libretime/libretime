@@ -223,7 +223,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
     }
 
     private function verifyAuth() {
-        if ($this->verifyAPIKey()) {
+        if ($this->isVerifiedDownload() || $this->verifyAPIKey()) {
             return true;
         }
 
@@ -233,7 +233,32 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
         return false;
     }
-    
+
+    /**
+     * Check if the requested file can be downloaded.
+     * It should satisfy the following requirements:
+     *  * request path is /rest/media/:id/download
+     *  * download key is correct
+     *  * requested file belongs to the station podcast
+     *
+     * @return bool
+     */
+    private function isVerifiedDownload() {
+        $request = $this->getRequest();
+        $fileId = $request->getParam("id");
+        $key = $request->getParam("download_key");
+        $module = $request->getModuleName();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+        $stationPodcast = StationPodcastQuery::create()
+            ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
+        return $module == "rest"
+            && $controller == "media"
+            && $action == "download"
+            && $key === Application_Model_Preference::getStationPodcastDownloadKey()
+            && $stationPodcast->hasEpisodeForFile($fileId);
+    }
+
     private function verifyCSRFToken($token) {
         return SecurityHelper::verifyCSRFToken($token);
     }

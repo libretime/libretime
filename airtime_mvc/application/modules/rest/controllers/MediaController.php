@@ -185,6 +185,23 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
+    /**
+     * Publish endpoint for individual media items
+     */
+    public function publishAction() {
+        $id = $this->getId();
+        try {
+            // Is there a better way to do this?
+            $data = json_decode($this->getRequest()->getRawBody(), true)["sources"];
+            Application_Service_MediaService::publish($id, $data);
+            $this->getResponse()
+                ->setHttpResponseCode(200);
+        } catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
+        }
+    }
+
     private function getId()
     {
         if (!$id = $this->_getParam('id', false)) {

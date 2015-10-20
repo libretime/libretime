@@ -8,10 +8,12 @@
  *
  * @method ImportedPodcastQuery orderByDbId($order = Criteria::ASC) Order by the id column
  * @method ImportedPodcastQuery orderByDbAutoIngest($order = Criteria::ASC) Order by the auto_ingest column
+ * @method ImportedPodcastQuery orderByDbAutoIngestTimestamp($order = Criteria::ASC) Order by the auto_ingest_timestamp column
  * @method ImportedPodcastQuery orderByDbPodcastId($order = Criteria::ASC) Order by the podcast_id column
  *
  * @method ImportedPodcastQuery groupByDbId() Group by the id column
  * @method ImportedPodcastQuery groupByDbAutoIngest() Group by the auto_ingest column
+ * @method ImportedPodcastQuery groupByDbAutoIngestTimestamp() Group by the auto_ingest_timestamp column
  * @method ImportedPodcastQuery groupByDbPodcastId() Group by the podcast_id column
  *
  * @method ImportedPodcastQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -26,10 +28,12 @@
  * @method ImportedPodcast findOneOrCreate(PropelPDO $con = null) Return the first ImportedPodcast matching the query, or a new ImportedPodcast object populated from the query conditions when no match is found
  *
  * @method ImportedPodcast findOneByDbAutoIngest(boolean $auto_ingest) Return the first ImportedPodcast filtered by the auto_ingest column
+ * @method ImportedPodcast findOneByDbAutoIngestTimestamp(string $auto_ingest_timestamp) Return the first ImportedPodcast filtered by the auto_ingest_timestamp column
  * @method ImportedPodcast findOneByDbPodcastId(int $podcast_id) Return the first ImportedPodcast filtered by the podcast_id column
  *
  * @method array findByDbId(int $id) Return ImportedPodcast objects filtered by the id column
  * @method array findByDbAutoIngest(boolean $auto_ingest) Return ImportedPodcast objects filtered by the auto_ingest column
+ * @method array findByDbAutoIngestTimestamp(string $auto_ingest_timestamp) Return ImportedPodcast objects filtered by the auto_ingest_timestamp column
  * @method array findByDbPodcastId(int $podcast_id) Return ImportedPodcast objects filtered by the podcast_id column
  *
  * @package    propel.generator.airtime.om
@@ -138,7 +142,7 @@ abstract class BaseImportedPodcastQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT "id", "auto_ingest", "podcast_id" FROM "imported_podcast" WHERE "id" = :p0';
+        $sql = 'SELECT "id", "auto_ingest", "auto_ingest_timestamp", "podcast_id" FROM "imported_podcast" WHERE "id" = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -294,6 +298,49 @@ abstract class BaseImportedPodcastQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(ImportedPodcastPeer::AUTO_INGEST, $dbAutoIngest, $comparison);
+    }
+
+    /**
+     * Filter the query on the auto_ingest_timestamp column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDbAutoIngestTimestamp('2011-03-14'); // WHERE auto_ingest_timestamp = '2011-03-14'
+     * $query->filterByDbAutoIngestTimestamp('now'); // WHERE auto_ingest_timestamp = '2011-03-14'
+     * $query->filterByDbAutoIngestTimestamp(array('max' => 'yesterday')); // WHERE auto_ingest_timestamp < '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $dbAutoIngestTimestamp The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ImportedPodcastQuery The current query, for fluid interface
+     */
+    public function filterByDbAutoIngestTimestamp($dbAutoIngestTimestamp = null, $comparison = null)
+    {
+        if (is_array($dbAutoIngestTimestamp)) {
+            $useMinMax = false;
+            if (isset($dbAutoIngestTimestamp['min'])) {
+                $this->addUsingAlias(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, $dbAutoIngestTimestamp['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($dbAutoIngestTimestamp['max'])) {
+                $this->addUsingAlias(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, $dbAutoIngestTimestamp['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(ImportedPodcastPeer::AUTO_INGEST_TIMESTAMP, $dbAutoIngestTimestamp, $comparison);
     }
 
     /**

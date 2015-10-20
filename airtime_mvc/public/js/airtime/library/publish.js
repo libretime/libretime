@@ -17,6 +17,8 @@ var AIRTIME = (function (AIRTIME) {
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
         .controller('RestController', function($scope, $http, mediaId, tab) {
 
+            $scope.publishSources = {};
+
             $http.get(endpoint + mediaId, { csrf_token: jQuery("#csrf").val() })
                 .success(function(json) {
                     console.log(json);
@@ -24,8 +26,12 @@ var AIRTIME = (function (AIRTIME) {
                     tab.setName($scope.media.track_title);
                 });
 
-            $scope.save = function() {
-                $http.put(endpoint + $scope.media.id, { csrf_token: jQuery("#csrf").val(), media: $scope.media })
+            $scope.publish = function() {
+                var sources = {};
+                $.each($scope.publishSources, function(k, v) {
+                    if (v) sources[k] = 'publish';  // Tentative TODO: decide on a robust implementation
+                });
+                $http.put(endpoint + $scope.media.id + '/publish', { csrf_token: jQuery("#csrf").val(), sources: sources })
                     .success(function() {
                         // TODO
                     });

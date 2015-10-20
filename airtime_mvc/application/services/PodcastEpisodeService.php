@@ -1,6 +1,6 @@
 <?php
 
-class Application_Service_PodcastEpisodeService extends Application_Service_ThirdPartyCeleryService
+class Application_Service_PodcastEpisodeService extends Application_Service_ThirdPartyCeleryService implements Publish
 {
     /**
      * Arbitrary constant identifiers for the internal tasks array
@@ -22,7 +22,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @var array map of constant identifiers to Celery task names
      */
     protected static $_CELERY_TASKS = [
-        self::DOWNLOAD => 'podcast-download'  // TODO: rename this to ingest?
+        self::DOWNLOAD => 'podcast-download'
     ];
 
     /**
@@ -37,7 +37,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function addPodcastEpisodePlaceholders($podcastId, $episodes) {
         $storedEpisodes = array();
         foreach ($episodes as $episode) {
-            $e = $this->addPodcastEpisodePlaceholder($podcastId, $episode);
+            $e = $this->addPlaceholder($podcastId, $episode);
             array_push($storedEpisodes, $e);
         }
         return $storedEpisodes;
@@ -52,19 +52,33 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @return PodcastEpisodes the stored PodcastEpisodes object
      */
-    public function addPodcastEpisodePlaceholder($podcastId, $episode) {
+    public function addPlaceholder($podcastId, $episode) {
         // We need to check whether the array is parsed directly from the SimplePie
         // feed object, or whether it's passed in as json
-        if ($episode["enclosure"] instanceof SimplePie_Enclosure) {
-            $url = $episode["enclosure"]->get_link();
-        } else {
-            $url = $episode["enclosure"]["link"];
-        }
+        $enclosure = $episode["enclosure"];
+        $url = $enclosure instanceof SimplePie_Enclosure ? $enclosure->get_link() : $enclosure["link"];
+        return $this->_buildEpisode($podcastId, $url, $episode["guid"], $episode["pub_date"]);
+    }
+
+    /**
+     * Given episode parameters, construct and store a basic PodcastEpisodes object
+     *
+     * @param int $podcastId            the podcast the episode belongs to
+     * @param string $url               the download URL for the episode
+     * @param string $guid              the unique id for the episode. Often the same as the download URL
+     * @param string $publicationDate   the publication date of the episode
+     *
+     * @return PodcastEpisodes the newly created PodcastEpisodes object
+     *
+     * @throws Exception
+     * @throws PropelException
+     */
+    private function _buildEpisode($podcastId, $url, $guid, $publicationDate) {
         $e = new PodcastEpisodes();
         $e->setDbPodcastId($podcastId);
         $e->setDbDownloadUrl($url);
-        $e->setDbEpisodeGuid($episode["guid"]);
-        $e->setDbPublicationDate($episode["pub_date"]);
+        $e->setDbEpisodeGuid($guid);
+        $e->setDbPublicationDate($publicationDate);
         $e->save();
         return $e;
     }
@@ -75,25 +89,24 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param array $episodes array of podcast episodes
      */
     public function downloadEpisodes($episodes) {
-        $episodeUrls = array();
         /** @var PodcastEpisodes $episode */
         foreach($episodes as $episode) {
-            array_push($episodeUrls, array("id" => $episode->getDbId(),
-                                           "url" => $episode->getDbDownloadUrl()));
+            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl());
         }
-        if (empty($episodeUrls)) return;
-        $this->_download($episodeUrls);
     }
 
     /**
-     * Given an array of download URLs, download RSS feed tracks
+     * Given an episode ID and a download URL, send a Celery task
+     * to download an RSS feed track
      *
-     * @param array $episodes array of episodes containing download URLs and IDs to send to Celery
+     * @param int $id       episode unique ID
+     * @param string $url   download url for the episode
      */
-    private function _download($episodes) {
+    private function _download($id, $url) {
         $CC_CONFIG = Config::getConfig();
         $data = array(
-            'episodes'      => $episodes,
+            'id'            => $id,
+            'url'           => $url,
             'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . '/rest/media',
             'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
         );
@@ -105,7 +118,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @param $task         CeleryTasks the completed CeleryTasks object
      * @param $episodeId    int         PodcastEpisodes identifier
-     * @param $episodes     array       array containing Podcast episode information
+     * @param $episode      stdClass    simple object containing Podcast episode information
      * @param $status       string      Celery task status
      *
      * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
@@ -113,26 +126,44 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @throws Exception
      * @throws PropelException
      */
-    public function updateTrackReference($task, $episodeId, $episodes, $status) {
-        $ref = parent::updateTrackReference($task, $episodeId, $episodes, $status);
+    public function updateTrackReference($task, $episodeId, $episode, $status) {
+        $ref = parent::updateTrackReference($task, $episodeId, $episode, $status);
 
-        if ($status == CELERY_SUCCESS_STATUS) {
-            foreach ($episodes as $episode) {
-                // Since we process episode downloads as a batch, individual downloads can fail
-                // even if the task itself succeeds
-                $dbEpisode = PodcastEpisodesQuery::create()
-                    ->findOneByDbId($episode->episodeid);
-                if ($episode->status) {
-                    $dbEpisode->setDbFileId($episode->fileid)
-                        ->save();
-                } else {
-                    Logging::warn("Celery task $task episode $episode->episodeid unsuccessful with status $episode->status");
-                    $dbEpisode->delete();
-                }
-            }
+        $dbEpisode = PodcastEpisodesQuery::create()
+            ->findOneByDbId($episode->episodeid);
+        // Even if the task itself succeeds, the download could have failed, so check the status
+        if ($status == CELERY_SUCCESS_STATUS && $episode->status) {
+            $dbEpisode->setDbFileId($episode->fileid)->save();
+        } else {
+            Logging::warn("Celery task $task episode $episode->episodeid unsuccessful with status $episode->status");
+            $dbEpisode->delete();
         }
-        // TODO: do we need a broader fail condition here?
 
         return $ref;
+    }
+
+    /**
+     * Publish the file with the given file ID to the station podcast
+     *
+     * @param int $fileId ID of the file to be published
+     */
+    public function publish($fileId) {
+        $id = Application_Model_Preference::getStationPodcastId();
+        $url = $guid = Application_Common_HTTPHelper::getStationUrl()."rest/media/$fileId/download";
+        $e = $this->_buildEpisode($id, $url, $guid, date('r'));
+        $e->setDbFileId($fileId)->save();
+    }
+
+    /**
+     * Unpublish the file with the given file ID from the station podcast
+     *
+     * @param int $fileId ID of the file to be unpublished
+     */
+    public function unpublish($fileId) {
+        $id = Application_Model_Preference::getStationPodcastId();
+        PodcastEpisodesQuery::create()
+            ->filterByDbPodcastId($id)
+            ->findOneByDbFileId($fileId)
+            ->delete();
     }
 }

@@ -7,7 +7,7 @@ require_once "ThirdPartyCeleryService.php";
  *
  * Class Application_Service_SoundcloudService
  */
-class Application_Service_SoundcloudService extends Application_Service_ThirdPartyCeleryService implements OAuth2 {
+class Application_Service_SoundcloudService extends Application_Service_ThirdPartyCeleryService implements OAuth2, Publish {
 
     /**
      * Arbitrary constant identifiers for the internal tasks array
@@ -145,7 +145,7 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
     public function download($trackId = null) {
         $CC_CONFIG = Config::getConfig();
         $data = array(
-            'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . '/rest/media',
+            'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . 'rest/media',
             'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
             'token'         => $this->_accessToken,
             'track_id'      => $trackId
@@ -285,6 +285,27 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
             // Because we're using non-expiring tokens, we shouldn't get here (!)
             Application_Model_Preference::setSoundCloudRequestToken("");
         }
+    }
+
+    /**
+     * Publish the file with the given file ID to SoundCloud
+     *
+     * @param int $fileId ID of the file to be published
+     */
+    public function publish($fileId) {
+        $this->upload($fileId);
+    }
+
+    /**
+     * Unpublish the file with the given file ID from SoundCloud
+     *
+     * @param int $fileId ID of the file to be unpublished
+     *
+     * @throws ServiceNotFoundException when a $fileId with no corresponding
+     *                                  service identifier is given
+     */
+    public function unpublish($fileId) {
+        $this->delete($fileId);
     }
 
 }
