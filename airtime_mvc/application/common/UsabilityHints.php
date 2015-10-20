@@ -21,6 +21,8 @@ class Application_Common_UsabilityHints
 
         $userIsOnCalendarPage = false;
         $userIsOnAddMediaPage = false;
+        $userIsOnShowbuilderPage = false;
+        $userIsSuperAdmin = Application_Model_User::getCurrentUser()->isSuperAdmin();
 
         // If $userPath is set the request came from AJAX so the user's
         // current location inside Airtime gets passed in to this function.
@@ -36,6 +38,11 @@ class Application_Common_UsabilityHints
             if (strpos(strtolower($userPath), 'schedule') !== false) {
                 $userIsOnCalendarPage = true;
             }
+
+            if (strpos(strtolower($userPath), 'showbuilder') !== false) {
+                $userIsOnShowbuilderPage = true;
+            }
+
         } else {
             // If $userPath is not set the request came from inside Airtime so
             // we can use Zend's Front Controller to get the user's current location.
@@ -47,6 +54,10 @@ class Application_Common_UsabilityHints
 
             if ($currentController == "plupload") {
                 $userIsOnAddMediaPage = true;
+            }
+
+            if ($currentController == 'showbuilder') {
+                $userIsOnShowbuilderPage = true;
             }
         }
 
@@ -92,9 +103,15 @@ class Application_Common_UsabilityHints
                     "<a href=\"/schedule\">",
                     "</a>");
             }
-        } else {
-            return "";
+        } else if ($userIsOnShowbuilderPage && $userIsSuperAdmin) {
+            $unpaidInvoice = Billing::checkForUnpaidInvoice();
+            if ($unpaidInvoice != null) {
+                $invoiceUrl = "/billing/invoice?invoiceid=" . $unpaidInvoice['id'];
+                $amount = $unpaidInvoice['currencyprefix'] . $unpaidInvoice['total'];
+                return _pro(sprintf("You have an unpaid invoice for %s due soon. <a href='%s'>Please pay it to keep your station on the air.</a>", $amount, $invoiceUrl));;
+            }
         }
+        return "";
     }
 
     /**

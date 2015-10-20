@@ -329,4 +329,49 @@ class Billing
         $result = Billing::makeRequest($credentials["url"], $query_string);
     }
 
+    public static function getInvoices()
+    {
+        Billing::ensureClientIdIsValid();
+        $credentials = Billing::getAPICredentials();
+
+        $postfields = array();
+        $postfields["username"] = $credentials["username"];
+        $postfields["password"] = md5($credentials["password"]);
+        $postfields["action"] = "getinvoices";
+        $postfields["responsetype"] = "json";
+        $postfields["userid"] = Application_Model_Preference::GetClientId();
+
+        $query_string = "";
+        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
+
+        $result = Billing::makeRequest($credentials["url"], $query_string);
+
+        $invoices = array();
+        if ($result["invoices"]) {
+            $invoices = $result["invoices"]["invoice"];
+        }
+        return $invoices;
+    }
+
+    /**
+     *  Checks if the customer has any unpaid invoices and if so, returns
+     *  the ID of one of them. Returns 0 otherwise.
+     */
+    public static function checkForUnpaidInvoice() {
+        $invoices = self::getInvoices();
+        $unpaidInvoice = 0;
+        $unpaidInvoices = 0;
+        foreach ($invoices as $invoice)
+        {
+            if ($invoice['status'] == 'Unpaid') {
+                $unpaidInvoices += 1;
+                $unpaidInvoice = $invoice;
+            }
+        }
+        if ($unpaidInvoices > 0) {
+            return $unpaidInvoice;
+        } else {
+            return 0;
+        }
+    }
 }
