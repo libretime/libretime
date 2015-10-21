@@ -247,7 +247,7 @@ class PodcastTask implements AirtimeTask {
  */
 class StationPodcastTask implements AirtimeTask {
 
-    const STATION_PODCAST_RESET_TIMER_SECONDS = 2.628e+6;  // 1 month
+    const STATION_PODCAST_RESET_TIMER_SECONDS = 2.628e+6;  // 1 month XXX: should we use datetime roll for this instead?
 
     /**
      * Check whether or not the download counter for the station podcast should be reset

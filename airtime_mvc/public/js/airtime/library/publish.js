@@ -16,7 +16,6 @@ var AIRTIME = (function (AIRTIME) {
     //AngularJS app
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
         .controller('RestController', function($scope, $http, mediaId, tab) {
-
             $scope.publishSources = {};
 
             $http.get(endpoint + mediaId, { csrf_token: jQuery("#csrf").val() })

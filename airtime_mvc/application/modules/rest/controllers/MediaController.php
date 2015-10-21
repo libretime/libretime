@@ -69,7 +69,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             $this->getResponse()
                 ->setHttpResponseCode(200);
             $inline = false;
-            // SAAS-1081
+            // SAAS-1081 - download counter for station podcast downloads
             if ($key = $this->getRequest()->getParam("download_key", false)) {
                 Application_Model_Preference::incrementStationPodcastDownloadCounter();
                 $counterIncremented = true;

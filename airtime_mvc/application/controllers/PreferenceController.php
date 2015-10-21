@@ -51,6 +51,12 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values["radioPageLoginButton"]);
 
+                if (!Application_Model_Preference::getStationPodcastPrivacy() && $values["stationPodcastPrivacy"] == 1) {
+                    // Refresh the download key when enabling privacy
+                    Application_Model_Preference::setStationPodcastDownloadKey();
+                }
+                Application_Model_Preference::setStationPodcastPrivacy($values["stationPodcastPrivacy"]);
+
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();
                 $imagePath = $logoUploadElement->getFileName();

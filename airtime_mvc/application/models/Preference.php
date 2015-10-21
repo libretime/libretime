@@ -1564,4 +1564,12 @@ class Application_Model_Preference
         $c = self::getStationPodcastDownloadCounter();
         self::setValue("station_podcast_download_counter", empty($c) ? 0 : --$c);
     }
+
+    public static function getStationPodcastPrivacy() {
+        return self::getValue("station_podcast_privacy");
+    }
+
+    public static function setStationPodcastPrivacy($value) {
+        self::setValue("station_podcast_privacy", $value);
+    }
 }

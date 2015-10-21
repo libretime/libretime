@@ -26,6 +26,10 @@ class Application_Form_Preferences extends Zend_Form
 
         $this->addSubForm($general_pref, 'preferences_general');
 
+        // Station Podcast form
+        $podcastPreferences = new Application_Form_PodcastPreferences();
+        $this->addSubForm($podcastPreferences, 'preferences_podcast');
+
         //tunein form
         $tuneinPreferences = new Application_Form_TuneInPreferences();
         $this->addSubForm($tuneinPreferences, 'preferences_tunein');
