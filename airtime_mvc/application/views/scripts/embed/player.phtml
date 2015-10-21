@@ -5,8 +5,12 @@
     <link rel="stylesheet" href="<?php echo $this->css?>" type="text/css">
     <script src="<?php echo $this->mrp_js?>" type="text/javascript"></script>
     <script src="<?php echo $this->jquery?>" type="text/javascript"></script>
+
+    <script src="<?php echo $this->jquery_i18n?>" type="text/javascript"></script>
+    <script src="/locale/general-translation-table" type="text/javascript"></script>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
     <script type="text/javascript">
+        $.i18n.setDictionary(general_dict);
 
         var RETRY_DELAY_MSECS = 2000; //Delay before trying to reconnect to stream after an error.
         var MAX_MOBILE_SCREEN_WIDTH = 760;
@@ -280,9 +284,9 @@
                     if (data.current === null) {
                         if (data.currentShow != null && data.currentShow.length > 0) {
                             //Master/show source have no current track but they do have a current show.
-                            $("p.now_playing").html("On Air:" + "<span>" + data.currentShow[0].name + "</span>");
+                            $("p.now_playing").html($.i18n._("On Air") + "<span>" + data.currentShow[0].name + "</span>");
                         } else {
-                            $("p.now_playing").html("Off Air" + "<span>Offline</span>");
+                            $("p.now_playing").html($.i18n._("Off Air") + "<span>"+ $.i18n._("Offline") + "</span>");
                         }
                         time_to_next_track_starts = 20000;
                     } else {
@@ -311,7 +315,7 @@
                     }
 
                     if (data.next === null) {
-                        $("ul.schedule_list").find("li").html("Nothing scheduled");
+                        $("ul.schedule_list").find("li").html($.i18n._("Nothing scheduled"));
                     } else {
                         $("ul.schedule_list").find("li").html(data.next.name);
                     }
@@ -364,7 +368,7 @@
         <div style="clear:both"></div>
 
         <div class="airtime_schedule">
-            <p class="airtime_next">Next</p>
+            <p class="airtime_next"><?php echo _("Next") ?></p>
             <ul class="schedule_list">
                 <li></li>
             </ul>
