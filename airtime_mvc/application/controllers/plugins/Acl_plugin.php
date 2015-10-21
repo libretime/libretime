@@ -217,13 +217,13 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                         $request->getActionName())) {
                 /** Redirect to access denied page */
                 $this->setErrorPage('error403');
-                $this->denyAccess(); /* This results in a 404! */
+                $this->denyAccess();
             }
         }
     }
 
     private function verifyAuth() {
-        if ($this->isVerifiedDownload() || $this->verifyAPIKey()) {
+        if ($this->verifyAPIKey() || $this->isVerifiedDownload()) {
             return true;
         }
 
@@ -252,9 +252,7 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
         $action = $request->getActionName();
         $stationPodcast = StationPodcastQuery::create()
             ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
-        return $module == "rest"
-            && $controller == "media"
-            && $action == "download"
+        return $module == "rest" && $controller == "media" && $action == "download"
             && $key === Application_Model_Preference::getStationPodcastDownloadKey()
             && $stationPodcast->hasEpisodeForFile($fileId);
     }

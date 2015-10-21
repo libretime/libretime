@@ -137,18 +137,20 @@ class LibraryController extends Zend_Controller_Action
             if ($isAdminOrPM || $ownerId == $user->getId()) {
                 $soundcloudService = new Application_Service_SoundcloudService();
                 if ($type === "audioclip" && $soundcloudService->hasAccessToken()) {
-
-                    //create a menu separator
-                    $menu["sep1"] = "-----------";
-
-                    //create a sub menu for Soundcloud actions.
-                    $menu["soundcloud"] = array("name" => _(SOUNDCLOUD), "icon" => "soundcloud", "items" => array());
-
                     $serviceId = $soundcloudService->getServiceId($id);
                     if (!is_null($file) && $serviceId != 0) {
+                        //create a menu separator
+                        $menu["sep1"] = "-----------";
+
+                        //create a sub menu for Soundcloud actions.
+                        $menu["soundcloud"] = array("name" => _(SOUNDCLOUD), "icon" => "soundcloud", "items" => array());
                         $menu["soundcloud"]["items"]["view"] = array("name" => _("View track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/view-on-sound-cloud/id/{$id}");
-                        $menu["soundcloud"]["items"]["remove"] = array("name" => _("Remove track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/delete/id/{$id}");
-                    } else {
+                        // $menu["soundcloud"]["items"]["remove"] = array("name" => _("Remove track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/delete/id/{$id}");
+                    }
+                    /*
+                    Since we upload to SoundCloud from the Publish dialog now, this is unnecessary
+
+                    else {
                         // If a reference exists for this file ID, that means the user has uploaded the track
                         // but we haven't yet gotten a response from Celery, so disable the menu item
                         if ($soundcloudService->referenceExists($id)) {
@@ -163,6 +165,7 @@ class LibraryController extends Zend_Controller_Action
                             );
                         }
                     }
+                    */
                 }
             }
         } elseif ($type === "playlist" || $type === "block") {

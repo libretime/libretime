@@ -1526,6 +1526,9 @@ class Application_Model_Preference
         self::setValue("station_podcast_id", $value);
     }
 
+    // SAAS-1081 - Implement a universal download key for downloading episodes from the station podcast
+    //             Store and increment the download counter, resetting every month
+
     public static function getStationPodcastDownloadKey() {
         return self::getValue("station_podcast_download_key");
     }
@@ -1533,5 +1536,32 @@ class Application_Model_Preference
     public static function setStationPodcastDownloadKey($value = null) {
         $value = empty($value) ? (new Application_Model_Auth())->generateRandomString() : $value;
         self::setValue("station_podcast_download_key", $value);
+    }
+
+    public static function getStationPodcastDownloadResetTimer() {
+        return self::getValue("station_podcast_download_reset_timer");
+    }
+
+    public static function setStationPodcastDownloadResetTimer($value) {
+        self::setValue("station_podcast_download_reset_timer", $value);
+    }
+
+    public static function getStationPodcastDownloadCounter() {
+        return self::getValue("station_podcast_download_counter");
+    }
+
+    public static function resetStationPodcastDownloadCounter() {
+        self::setValue("station_podcast_download_counter", 0);
+    }
+
+    public static function incrementStationPodcastDownloadCounter() {
+        $c = self::getStationPodcastDownloadCounter();
+        self::setValue("station_podcast_download_counter", empty($c) ? 1 : ++$c);
+    }
+
+    // For fail cases, we may need to decrement the download counter
+    public static function decrementStationPodcastDownloadCounter() {
+        $c = self::getStationPodcastDownloadCounter();
+        self::setValue("station_podcast_download_counter", empty($c) ? 0 : --$c);
     }
 }

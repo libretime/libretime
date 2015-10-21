@@ -63,11 +63,17 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        try
-        {
+        // In case the download fails
+        $counterIncremented = false;
+        try {
             $this->getResponse()
                 ->setHttpResponseCode(200);
             $inline = false;
+            // SAAS-1081
+            if ($key = $this->getRequest()->getParam("download_key", false)) {
+                Application_Model_Preference::incrementStationPodcastDownloadCounter();
+                $counterIncremented = true;
+            }
             Application_Service_MediaService::streamFileDownload($id, $inline);
         }
         catch (FileNotFoundException $e) {
@@ -75,6 +81,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             Logging::error($e->getMessage());
         }
         catch (Exception $e) {
+            if ($counterIncremented) Application_Model_Preference::decrementStationPodcastDownloadCounter();
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }

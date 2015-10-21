@@ -25,6 +25,7 @@ final class TaskManager {
     const TASK_INTERVAL_SECONDS = 30;
 
     /**
+     *
      * @var $con PDO Propel connection object
      */
     private $_con;
@@ -242,6 +243,32 @@ class PodcastTask implements AirtimeTask {
 }
 
 /**
+ * Class StationPodcastTask
+ */
+class StationPodcastTask implements AirtimeTask {
+
+    const STATION_PODCAST_RESET_TIMER_SECONDS = 2.628e+6;  // 1 month
+
+    /**
+     * Check whether or not the download counter for the station podcast should be reset
+     *
+     * @return bool true if enough time has passed
+     */
+    public function shouldBeRun() {
+        $lastReset = Application_Model_Preference::getStationPodcastDownloadResetTimer();
+        return empty($lastReset) || (microtime(true) > $lastReset + self::STATION_PODCAST_RESET_TIMER_SECONDS);
+    }
+
+    /**
+     * Reset the station podcast download counter
+     */
+    public function run() {
+        Application_Model_Preference::resetStationPodcastDownloadCounter();
+    }
+
+}
+
+/**
  * Class TaskFactory Factory class to abstract task instantiation
  */
 class TaskFactory {
@@ -251,17 +278,19 @@ class TaskFactory {
      * Task types - values don't really matter as long as they're unique
      */
 
-    const UPGRADE   = "upgrade";
-    const CELERY    = "celery";
-    const PODCAST   = "podcast";
+    const UPGRADE           = "upgrade";
+    const CELERY            = "celery";
+    const PODCAST           = "podcast";
+    const STATION_PODCAST   = "station-podcast";
 
     /**
      * @var array map of arbitrary identifiers to class names to be instantiated reflectively
      */
     public static $tasks = array(
-        "upgrade"   => "UpgradeTask",
-        "celery"    => "CeleryTask",
-        "podcast"   => "PodcastTask",
+        "upgrade"           => "UpgradeTask",
+        "celery"            => "CeleryTask",
+        "podcast"           => "PodcastTask",
+        "station-podcast"   => "StationPodcastTask",
     );
 
     /**

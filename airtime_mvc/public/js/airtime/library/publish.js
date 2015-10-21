@@ -26,8 +26,12 @@ var AIRTIME = (function (AIRTIME) {
                     tab.setName($scope.media.track_title);
                 });
 
+            // TODO: implement GET request to endpoint that returns source information
+            //       ie. SoundCloud connection + publish status
+
             $scope.publish = function() {
                 var sources = {};
+                console.log($scope.publishSources);
                 $.each($scope.publishSources, function(k, v) {
                     if (v) sources[k] = 'publish';  // Tentative TODO: decide on a robust implementation
                 });
