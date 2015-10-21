@@ -26,6 +26,8 @@ var AIRTIME = (function (AIRTIME) {
                 $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: podcastData })
                     .success(function() {
                         episodeTable.reload($scope.podcast.id);
+                        AIRTIME.library.podcastDataTable.fnDraw();
+                        tab.setName($scope.podcast.title);
                     });
             };
 

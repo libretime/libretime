@@ -309,7 +309,9 @@ class Application_Service_PodcastService
 
         self::removePrivateFields($data["podcast"]);
         self::validatePodcastMetadata($data["podcast"]);
-        self::_updateAutoIngestTimestamp($podcast, $data);
+        if (array_key_exists("auto_ingest", $data["podcast"])) {
+            self::_updateAutoIngestTimestamp($podcast, $data);
+        }
 
         $podcast->fromArray($data["podcast"], BasePeer::TYPE_FIELDNAME);
         $podcast->save();

@@ -176,18 +176,22 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         $ids = $this->_getParam('ids', []);
         $method = $this->_getParam('method', 'GET');
-        $path = 'podcast/podcast.phtml';
         $responseBody = [];
 
         switch($method) {
             case "DELETE":
                 foreach($ids as $id) {
                     Application_Service_PodcastService::deletePodcastById($id);
-                    $responseBody = "Success";  // TODO: make this more descriptive
                 }
+                // XXX: do we need this to be more descriptive?
+                $responseBody = "Successfully deleted podcasts";
                 break;
             case "GET":
                 foreach($ids as $id) {
+                    // Check the StationPodcast table rather than checking
+                    // the station podcast ID key in preferences for extensibility
+                    $podcast = StationPodcastQuery::create()->findOneByDbPodcastId($id);
+                    $path = $podcast ? 'podcast/station_podcast.phtml' : 'podcast/podcast.phtml';
                     $podcast = Application_Service_PodcastService::getPodcastById($id);
                     $responseBody[] = array(
                         "podcast"=>json_encode($podcast),
