@@ -424,7 +424,12 @@ class LocaleController extends Zend_Controller_Action
             ": activate to sort column ascending",
             ": activate to sort column descending",
             //End of datatables
-            "Welcome to the new Airtime Pro!" => _("Welcome to the new Airtime Pro!")
+            "Welcome to the new Airtime Pro!" => _("Welcome to the new Airtime Pro!"),
+            //embed player
+            "On Air" => _("On Air"),
+            "Off Air" => _("Off Air"),
+            "Offline" => _("Offline"),
+            "Nothing scheduled" => _("Nothing scheduled")
         );
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
