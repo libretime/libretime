@@ -24,7 +24,8 @@ class ApiController extends Zend_Controller_Action
             "show-tracks",
             "show-schedules",
             "station-logo",
-            "show-logo"
+            "show-logo",
+            "stream-m3u"
         );
 
         if (Zend_Session::isStarted()) {
@@ -1501,5 +1502,23 @@ class ApiController extends Zend_Controller_Action
         $hint = Application_Common_UsabilityHints::getUsabilityHint($userPath);
         $this->_helper->json->sendJson($hint);
     }
-    
+
+    public function streamM3uAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        header('Content-Type: application/x-mpegurl');
+        header('Content-Disposition: attachment; filename=stream.m3u');
+        $m3uFile = "#EXTM3U\n\n";
+
+        $stationName = Application_Model_Preference::GetStationName();
+        $streamData = Application_Model_StreamSetting::getEnabledStreamData();
+
+        foreach ($streamData as $stream) {
+            $m3uFile .= "#EXTINF,".$stationName." - " . strtoupper($stream['codec']) . "\n";
+            $m3uFile .= $stream['url'] . "\n\n";
+        }
+        echo $m3uFile;
+    }
 }
