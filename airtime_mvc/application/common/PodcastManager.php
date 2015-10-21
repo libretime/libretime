@@ -30,7 +30,7 @@ class PodcastManager {
         $service = new Application_Service_PodcastEpisodeService();
         foreach ($autoIngestPodcasts as $podcast) {
             $episodes = static::_findUningestedEpisodes($podcast, $service);
-            $podcast->setDbAutoIngestTimestamp(date('r'))->save();
+            $podcast->setDbAutoIngestTimestamp(gmdate('r'))->save();
             $service->downloadEpisodes($episodes);
         }
 

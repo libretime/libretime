@@ -309,11 +309,27 @@ class Application_Service_PodcastService
 
         self::removePrivateFields($data["podcast"]);
         self::validatePodcastMetadata($data["podcast"]);
+        self::_updateAutoIngestTimestamp($podcast, $data);
 
         $podcast->fromArray($data["podcast"], BasePeer::TYPE_FIELDNAME);
         $podcast->save();
 
         return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+    }
+
+    /**
+     * Update the automatic ingestion timestamp for the given Podcast
+     *
+     * @param Podcast $podcast  Podcast object to update
+     * @param array $data       Podcast update data array
+     */
+    private static function _updateAutoIngestTimestamp($podcast, $data) {
+        // Get podcast data with lazy loaded columns since we can't directly call getDbAutoIngest()
+        $currData = $podcast->toArray(BasePeer::TYPE_FIELDNAME, true);
+        // Add an auto-ingest timestamp when turning auto-ingest on
+        if ($data["podcast"]["auto_ingest"] == 1 && $currData["auto_ingest"] != 1) {
+            $data["podcast"]["auto_ingest_timestamp"] = gmdate('r');
+        }
     }
 
     private static function removePrivateFields(&$data)
