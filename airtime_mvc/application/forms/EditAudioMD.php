@@ -169,6 +169,26 @@ class Application_Form_EditAudioMD extends Zend_Form
             ));
         $this->addElement($language);
 
+        $validCuePattern = '/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}(\.\d{1,6})?$/';
+
+        $cueIn = new Zend_Form_Element_Text('cuein');
+        $cueIn->class = 'input_text';
+        $cueIn->setLabel("Cue In:");
+        $cueInValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
+            $validCuePattern, _(sprintf("Specify cue in time in the format %s", "hh:mm:ss(.dddddd)"))
+        );
+        $cueIn->setValidators(array($cueInValidator));
+        $this->addElement($cueIn);
+
+        $cueOut = new Zend_Form_Element_Text('cueout');
+        $cueOut->class = 'input_text';
+        $cueOut->setLabel('Cue Out:');
+        $cueOutValidator = Application_Form_Helper_ValidationTypes::overrideRegexValidator(
+            $validCuePattern, _(sprintf("Specify cue out time in the format %s", "hh:mm:ss(.dddddd)"))
+        );
+        $cueOut->setValidators(array($cueOutValidator));
+        $this->addElement($cueOut);
+
         // Add the submit button
         $this->addElement('button', 'editmdsave', array(
             'ignore'     => true,

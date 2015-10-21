@@ -513,15 +513,24 @@ var AIRTIME = (function(AIRTIME){
         newTab.wrapper.find(".md-save").on("click", function() {
             var file_id = newTab.wrapper.find('#file_id').val(),
                 data = newTab.wrapper.find("#edit-md-dialog form").serializeArray();
-            $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
+            $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function(resp) {
+
+                newTab.wrapper.find("#edit-md-dialog").parent().html(resp.html);
+
                 // don't redraw the library table if we are on calendar page
                 // we would be on calendar if viewing recorded file metadata
                 if ($("#schedule_calendar").length === 0) {
                     oTable.fnStandingRedraw();
                 }
+
+                if (resp.status === true) {
+                    AIRTIME.playlist.closeTab();
+                }
+
+                //re-initialize events since we changed the html
+                initFileMdEvents(newTab);
             });
 
-            AIRTIME.playlist.closeTab();
         });
 
         newTab.wrapper.find('#edit-md-dialog').on("keyup", function(event) {
@@ -529,6 +538,7 @@ var AIRTIME = (function(AIRTIME){
                 newTab.wrapper.find('.md-save').click();
             }
         });
+
     }
 
     function openPlaylist(json) {
