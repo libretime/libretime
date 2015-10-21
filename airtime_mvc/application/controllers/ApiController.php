@@ -1510,14 +1510,14 @@ class ApiController extends Zend_Controller_Action
 
         header('Content-Type: application/x-mpegurl');
         header('Content-Disposition: attachment; filename=stream.m3u');
-        $m3uFile = "#EXTM3U\n\n";
+        $m3uFile = "#EXTM3U\r\n\r\n"; //Windows linebreaks eh
 
         $stationName = Application_Model_Preference::GetStationName();
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
 
         foreach ($streamData as $stream) {
-            $m3uFile .= "#EXTINF,".$stationName." - " . strtoupper($stream['codec']) . "\n";
-            $m3uFile .= $stream['url'] . "\n\n";
+            $m3uFile .= "#EXTINF,".$stationName." - " . strtoupper($stream['codec']) . "\r\n";
+            $m3uFile .= $stream['url'] . "\r\n\r\n";
         }
         echo $m3uFile;
     }
