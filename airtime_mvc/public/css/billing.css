@@ -225,6 +225,14 @@
 	color: #ff0000;
 }
 
+.invoice-status-good {
+	background: #e3ffc9 url(images/stream_status.png) no-repeat 10px 10px;
+	border-color: #54b300;
+	padding: 2px 12px 4px 32px;
+	margin: 2px 1px 10px 0px;
+	color: #330;
+}
+
 /** This form is the separate one on the Billing Account Details page (BillingClient.php) */
 #clientdetails_form {
 	width: 500px;

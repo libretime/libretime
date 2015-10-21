@@ -5,7 +5,7 @@ $topTextClass = "";
 if (array_key_exists("planupdated", $_GET))
 {
     $topText = _pro("<b>Thank you!</b> Your plan has been updated and you will be invoiced during your next billing cycle.");
-    $topTextClass = "status-good";
+    $topTextClass = "invoice-status-good";
 }
 else {
     $topText = _pro("Tip: To pay an invoice, click \"View Invoice\" and look for the \"Checkout\" button.");

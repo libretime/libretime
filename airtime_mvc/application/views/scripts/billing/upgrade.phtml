@@ -274,7 +274,7 @@ echo($currentProduct["name"]);
  <form id="<?php echo $form->getId(); ?>" method="<?php echo $form->getMethod() ?>" action="<?php echo
     $form->getAction()?>" enctype="<?php echo $form->getEncType();?>">
 
-     <?php echo $form->csrf ?>
+     <?php echo $form->csrf_upgrade ?>
     
     <div id="plantype">
         <?php echo $form->newproductid ?>
@@ -353,8 +353,9 @@ echo($currentProduct["name"]);
         <div id="vaterror"></div>
     </div>
     <div class="clearfix"></div>
-    
-    <div>
+     <?php echo $billingForm->csrf_client ?>
+
+     <div>
     <div class="billing_checkbox">
             <?=$billingForm->getElement("71")->renderViewHelper(); ?>
         </div>
@@ -379,7 +380,7 @@ echo($currentProduct["name"]);
         <b>Total:</b> <span id="total"></span>
     </div>
     
-    <input type="submit" class="btn right-floated" value="Submit Order" id="atpro_submitorder"></input>
+    <input type="submit" class="btn right-floated" value="Submit Order" id="atpro_submitorder">
     <div class="clearfix"></div>
 </form>
 </div>
