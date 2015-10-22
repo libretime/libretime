@@ -57,6 +57,7 @@ var AIRTIME = (function(AIRTIME) {
             "sAjaxSource": baseUrl+"rest/media", //Override me
             "sAjaxDataProp": "aaData",
             "bScrollCollapse": false,
+            "deferLoading" : 1, //0 tells it there's zero elements loaded and disables the automatic AJAX. We don't want to load until after we bind all our event handlers, to prevent a race condition with the "init" event callback.
             "sPaginationType": "full_numbers",
             "bJQueryUI": true,
             "bAutoWidth": false,
@@ -75,6 +76,7 @@ var AIRTIME = (function(AIRTIME) {
             "sDom": 'Rf<"dt-process-rel"r><"H"<"table_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
 
             "fnServerData": self._fetchData,
+            "fnInitComplete" : function() { self._setupEventHandlers(bItemSelection) }
             //"fnDrawCallback" : self._tableDrawCallback
         };
 
@@ -85,8 +87,7 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         self._datatable = self._$wrapperDOMNode.dataTable(options);
-        self._setupEventHandlers(bItemSelection);
-
+        self._datatable.fnDraw(); //Load the AJAX data now that our event handlers have been bound.
 
         //return self._datatable;
         return self;
@@ -163,9 +164,9 @@ var AIRTIME = (function(AIRTIME) {
                 .css('padding-right', f.outerWidth());
         });
 
-        $(self._datatable).on('init', function(e) {
-            self._setupToolbarButtons(self._toolbarButtons);
-        });
+        //Since this function is already called when the datatables initialization is complete, we know the DOM
+        //structure for the datatable exists and can just proceed to setup the toolbar DOM elements now.
+        self._setupToolbarButtons(self._toolbarButtons);
     };
 
 

@@ -2,12 +2,19 @@
 
 class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 {
+
+    /**
+     * @var Application_Service_PodcastEpisodeService
+     */
+    protected $_service;
+
     public function init()
     {
         $this->view->layout()->disableLayout();
 
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
+        $this->_service = new Application_Service_PodcastEpisodeService();
     }
 
     public function indexAction()
@@ -64,7 +71,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
     public function getAction()
     {
-        //TODO: can we delete this?
+        // podcast ID
         $id = $this->getId();
         if (!$id) {
             return;
@@ -78,7 +85,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode(Application_Service_PodcastEpisodeService::getPodcastEpisodeById($episodeId)));
+                ->appendBody(json_encode($this->_service->getPodcastEpisodeById($episodeId)));
 
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
@@ -99,7 +106,8 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         if ($episodeId = $this->_getParam('episode_id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: Episode ID should not be specified when using POST. POST is only used for importing podcast episodes, and an episode ID will be chosen by Airtime");
+            $resp->appendBody("ERROR: Episode ID should not be specified when using POST. POST is only used for "
+                            . "importing podcast episodes, and an episode ID will be chosen by Airtime");
             return;
         }
 
@@ -111,10 +119,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
         try {
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
-            //$requestData = $this->getRequest()->getPost();
-
-            $episode = Application_Service_PodcastEpisodeService::createPodcastEpisode($id, $requestData);
-
+            $episode = $this->_service->importEpisode($id, $requestData["episode"]);
             $this->getResponse()
                 ->setHttpResponseCode(201)
                 ->appendBody(json_encode($episode));
@@ -128,9 +133,6 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
     public function deleteAction()
     {
-        Logging::info("delete - episodes");
-
-        //TODO: can we delete this?
         $id = $this->getId();
         if (!$id) {
             return;
@@ -142,7 +144,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
 
         try {
-            Application_Service_PodcastEpisodeService::deletePodcastEpisodeById($episodeId);
+            $this->_service->deletePodcastEpisodeById($episodeId);
             $this->getResponse()
                 ->setHttpResponseCode(204);
         } catch (PodcastEpisodeNotFoundException $e) {

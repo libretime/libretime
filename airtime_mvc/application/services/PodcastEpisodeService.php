@@ -32,6 +32,20 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     );
 
     /**
+     * Utility function to import and download a single episode
+     *
+     * @param int $podcastId ID of the podcast the episode should belong to
+     * @param array $episode array of episode data to store
+     *
+     * @return PodcastEpisodes the stored PodcastEpisodes object
+     */
+    public function importEpisode($podcastId, $episode) {
+        $e = $this->addPlaceholder($podcastId, $episode);
+        $this->_download($e->getDbId(), $e->getDbDownloadUrl());
+        return $e;
+    }
+
+    /**
      * Given an array of episodes, store them in the database as placeholder objects until
      * they can be processed by Celery
      *
@@ -188,7 +202,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         return $episode->toArray(BasePeer::TYPE_FIELDNAME);
     }
 
-    public static function getPodcastEpisodes($podcastId)
+    public function getPodcastEpisodes($podcastId)
     {
         $podcast = PodcastQuery::create()->findPk($podcastId);
         if (!$podcast) {
@@ -204,25 +218,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         return $episodesArray;
     }
 
-    public static function createPodcastEpisode($podcastId, $data)
-    {
-        self::removePrivateFields($data);
-
-        try {
-            $episode = new PodcastEpisodes();
-            $episode->setDbPodcastId($podcastId);
-            $episode->fromArray($data, BasePeer::TYPE_FIELDNAME);
-            $episode->save();
-
-            return $episode->toArray(BasePeer::TYPE_FIELDNAME);
-        } catch (Exception $e) {
-            $episode->delete();
-            throw $e;
-        }
-
-    }
-
-    public static function deletePodcastEpisodeById($episodeId)
+    public function deletePodcastEpisodeById($episodeId)
     {
         $episode = PodcastEpisodesQuery::create()->findByDbId($episodeId);
 
@@ -233,7 +229,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         }
     }
 
-    private static function removePrivateFields(&$data)
+    private function removePrivateFields(&$data)
     {
         foreach (self::$privateFields as $key) {
             unset($data[$key]);

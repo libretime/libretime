@@ -1276,6 +1276,7 @@ var AIRTIME = (function(AIRTIME) {
         var ajaxSourceURL = baseUrl+"rest/podcast";
 
         var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
+        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].title = $.i18n._('Add'); //"New" Podcast is misleading
         podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) {
             AIRTIME.podcast.createUrlDialog();
         };

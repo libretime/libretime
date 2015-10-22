@@ -292,6 +292,28 @@ class Application_Service_PodcastService
     }
 
     /**
+     * Build a response with podcast data and embedded HTML to load on the frontend
+     *
+     * @param int $podcastId            ID of the podcast to build a response for
+     * @param Zend_View_Interface $view Zend view object to render the response HTML
+     *
+     * @return array the response array containing the podcast data and editor HTML
+     *
+     * @throws PodcastNotFoundException
+     */
+    public static function buildPodcastEditorResponse($podcastId, $view) {
+        // Check the StationPodcast table rather than checking
+        // the station podcast ID key in preferences for extensibility
+        $podcast = StationPodcastQuery::create()->findOneByDbPodcastId($podcastId);
+        $path = $podcast ? 'podcast/station_podcast.phtml' : 'podcast/podcast.phtml';
+        $podcast = Application_Service_PodcastService::getPodcastById($podcastId);
+        return array(
+            "podcast" => json_encode($podcast),
+            "html" => $view->render($path),
+        );
+    }
+
+    /**
      * Updates a Podcast object with the given metadata
      *
      * @param $podcastId

@@ -38,7 +38,9 @@ require_once "Auth.php";
 require_once 'Preference.php';
 require_once 'Locale.php';
 /* Enums */
+require_once "Enum.php";
 require_once "MediaType.php";
+require_once "HttpRequestType.php";
 /* Interfaces */
 require_once "OAuth2.php";
 require_once "OAuth2Controller.php";
