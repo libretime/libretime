@@ -21,9 +21,13 @@ var AIRTIME = (function (AIRTIME) {
             tab.setName($scope.podcast.title);
 
             $scope.savePodcast = function() {
-                var podcastData = $scope.podcast;  // Copy the podcast in scope so we can modify it
-                podcastData.episodes = episodeTable.getSelectedRows();
-                $http.put(endpoint + $scope.podcast.id, { csrf_token: jQuery("#csrf").val(), podcast: podcastData })
+                var episodes = episodeTable.getSelectedRows(),
+                    csrf = jQuery("#csrf").val();
+                // TODO: Should we implement a batch endpoint for this instead?
+                jQuery.each(episodes, function() {
+                    $http.post(endpoint + $scope.podcast.id + '/episodes', { csrf_token: csrf, episode: this });
+                });
+                $http.put(endpoint + $scope.podcast.id, { csrf_token: csrf, podcast: $scope.podcast })
                     .success(function() {
                         episodeTable.reload($scope.podcast.id);
                         AIRTIME.library.podcastDataTable.fnDraw();

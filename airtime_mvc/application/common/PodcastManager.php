@@ -5,7 +5,7 @@ class PodcastManager {
     /**
      * @var int how often, in seconds, to check for and ingest new podcast episodes
      */
-    private static $_PODCAST_POLL_INTERVAL_SECONDS = 3600;  // 1 hour
+    private static $_PODCAST_POLL_INTERVAL_SECONDS = 30;  // 1 hour
 
     /**
      * Check whether $_PODCAST_POLL_INTERVAL_SECONDS have passed since the last call to
@@ -50,13 +50,12 @@ class PodcastManager {
         $podcastArray = Application_Service_PodcastService::getPodcastById($podcast->getDbPodcastId());
         $episodeList = $podcastArray["episodes"];
         $episodes = array();
-        // A bit hacky... sort the episodes by publication date to get the most recent
-        usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
         for ($i = 0; $i < sizeof($episodeList); $i++) {
             $episodeData = $episodeList[$i];
+            $ingestTimestamp = $podcast->getDbAutoIngestTimestamp();
             // If the publication date of this episode is before the ingest timestamp, we don't need to ingest it
             // Since we're sorting by publication date, we can break
-            if ($episodeData["pub_date"] < $podcast->getDbAutoIngestTimestamp()) break;
+            if ($episodeData["pub_date"] < $ingestTimestamp) continue;
             $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData["guid"]);
             // Make sure there's no existing episode placeholder or import, and that the data is non-empty
             if (empty($episode) && !empty($episodeData)) {

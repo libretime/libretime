@@ -26,6 +26,20 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     ];
 
     /**
+     * Utility function to import and download a single episode
+     *
+     * @param int $podcastId ID of the podcast the episode should belong to
+     * @param array $episode array of episode data to store
+     *
+     * @return PodcastEpisodes the stored PodcastEpisodes object
+     */
+    public function importEpisode($podcastId, $episode) {
+        $e = $this->addPlaceholder($podcastId, $episode);
+        $this->_download($e->getDbId(), $e->getDbDownloadUrl());
+        return $e;
+    }
+
+    /**
      * Given an array of episodes, store them in the database as placeholder objects until
      * they can be processed by Celery
      *

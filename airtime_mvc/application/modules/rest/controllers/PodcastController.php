@@ -5,11 +5,6 @@ require_once('PodcastFactory.php');
 class Rest_PodcastController extends Zend_Rest_Controller
 {
 
-    /**
-     * @var Application_Service_PodcastEpisodeService
-     */
-    protected $_service;
-
     public function init()
     {
         $this->view->layout()->disableLayout();
@@ -17,7 +12,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
         $this->view->setScriptPath(APPLICATION_PATH . 'views/scripts/');
-        $this->_service = new Application_Service_PodcastEpisodeService();
     }
 
     public function indexAction()
@@ -120,11 +114,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
         try {
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
-            // Create placeholders in PodcastEpisodes so we know these episodes are being downloaded
-            // to prevent the user from trying to download them again while Celery is running
-            $episodes = $this->_service->addPodcastEpisodePlaceholders($requestData["podcast"]["id"],
-                                                                       $requestData["podcast"]["episodes"]);
-            $this->_service->downloadEpisodes($episodes);
             $podcast = Application_Service_PodcastService::updatePodcastFromArray($id, $requestData);
 
             $this->getResponse()
@@ -167,7 +156,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
      * Endpoint for performing bulk actions (deleting multiple podcasts, opening multiple editors)
      */
     public function bulkAction() {
-        if ($this->_request->getMethod() != "POST") {
+        if ($this->_request->getMethod() != HttpRequestType::POST) {
             $this->getResponse()
                 ->setHttpResponseCode(405)
                 ->appendBody("ERROR: Method not accepted");
@@ -175,28 +164,20 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
 
         $ids = $this->_getParam('ids', []);
-        $method = $this->_getParam('method', 'GET');
+        $method = $this->_getParam('method', HttpRequestType::GET);
         $responseBody = [];
 
         switch($method) {
-            case "DELETE":
+            case HttpRequestType::DELETE:
                 foreach($ids as $id) {
                     Application_Service_PodcastService::deletePodcastById($id);
                 }
                 // XXX: do we need this to be more descriptive?
                 $responseBody = "Successfully deleted podcasts";
                 break;
-            case "GET":
+            case HttpRequestType::GET:
                 foreach($ids as $id) {
-                    // Check the StationPodcast table rather than checking
-                    // the station podcast ID key in preferences for extensibility
-                    $podcast = StationPodcastQuery::create()->findOneByDbPodcastId($id);
-                    $path = $podcast ? 'podcast/station_podcast.phtml' : 'podcast/podcast.phtml';
-                    $podcast = Application_Service_PodcastService::getPodcastById($id);
-                    $responseBody[] = array(
-                        "podcast"=>json_encode($podcast),
-                        "html"=>$this->view->render($path),
-                    );
+                    $responseBody[] = Application_Service_PodcastService::buildPodcastEditorResponse($id, $this->view);
                 }
                 break;
         }

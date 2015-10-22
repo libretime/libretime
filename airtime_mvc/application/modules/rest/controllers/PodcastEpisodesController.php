@@ -2,12 +2,19 @@
 
 class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 {
+
+    /**
+     * @var Application_Service_PodcastEpisodeService
+     */
+    protected $_service;
+
     public function init()
     {
         $this->view->layout()->disableLayout();
 
         // Remove reliance on .phtml files to render requests
         $this->_helper->viewRenderer->setNoRender(true);
+        $this->_service = new Application_Service_PodcastEpisodeService();
     }
 
     public function indexAction()
@@ -62,13 +69,13 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
     public function postAction()
     {
-        Logging::info("episodes post");
         //If we do get an episode ID on a POST, then that doesn't make any sense
         //since POST is only for creating.
         if ($episodeId = $this->_getParam('episode_id', false)) {
             $resp = $this->getResponse();
             $resp->setHttpResponseCode(400);
-            $resp->appendBody("ERROR: Episode ID should not be specified when using POST. POST is only used for importing podcast episodes, and an episode ID will be chosen by Airtime");
+            $resp->appendBody("ERROR: Episode ID should not be specified when using POST. POST is only used for "
+                            . "importing podcast episodes, and an episode ID will be chosen by Airtime");
             return;
         }
 
@@ -80,10 +87,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
         try {
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
-            //$requestData = $this->getRequest()->getPost();
-
-            $episode = PodcastEpisodes::create($id, $requestData);
-
+            $episode = $this->_service->importEpisode($id, $requestData["episode"]);
             $this->getResponse()
                 ->setHttpResponseCode(201)
                 ->appendBody(json_encode($episode));
