@@ -2,11 +2,11 @@
     <form name="podcast_url_form">
         <?php echo $this->csrf ?>
         <label>
-            Podcast URL
+            <?php echo _("Podcast URL"); ?>
             <input type="text" name="url" />
         </label>
         <button class="btn btn-new right-floated" type="button" onclick="AIRTIME.podcast.addPodcast()">
-            Add
+            <?php echo _("Subscribe"); ?>
         </button>
     </form>
 </div>
