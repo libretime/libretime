@@ -30,7 +30,6 @@ var AIRTIME = (function (AIRTIME) {
 
             $scope.publish = function() {
                 var sources = {};
-                console.log($scope.publishSources);
                 $.each($scope.publishSources, function(k, v) {
                     if (v) sources[k] = 'publish';  // Tentative TODO: decide on a robust implementation
                 });
@@ -41,7 +40,7 @@ var AIRTIME = (function (AIRTIME) {
             };
 
             $scope.discard = function() {
-                AIRTIME.tabs.getActiveTab().close();
+                tab.close();
                 $scope.media = {};
             };
         });

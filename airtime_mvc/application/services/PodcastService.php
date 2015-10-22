@@ -220,11 +220,14 @@ class Application_Service_PodcastService
      * @return array
      */
     private static function _generatePodcastArray($podcast, $rss) {
+        $stationPodcast = StationPodcastQuery::create()->findOneByDbPodcastId($podcast->getDbId());
         $ingestedEpisodes = PodcastEpisodesQuery::create()
             ->findByDbPodcastId($podcast->getDbId());
         $episodeIds = array();
-        foreach ($ingestedEpisodes as $e) {
-            array_push($episodeIds, $e->getDbEpisodeGuid());
+        if (!$stationPodcast) {
+            foreach ($ingestedEpisodes as $e) {
+                array_push($episodeIds, $e->getDbEpisodeGuid());
+            }
         }
 
         $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
@@ -239,7 +242,7 @@ class Application_Service_PodcastService
                 // 'An item's author element provides the e-mail address of the person who wrote the item'
                 "author" => $item->get_author()->get_email(),
                 "description" => $item->get_description(),
-                "pub_date" => $item->get_date("Y-m-d H:i:s"),
+                "pub_date" => $item->get_gmdate(),
                 "link" => $item->get_link(),
                 "enclosure" => $item->get_enclosure()
             ));

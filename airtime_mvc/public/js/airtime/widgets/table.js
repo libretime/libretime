@@ -75,8 +75,8 @@ var AIRTIME = (function(AIRTIME) {
             // z = ColResize, R = ColReorder, C = ColVis
             "sDom": 'Rf<"dt-process-rel"r><"H"<"table_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
 
-            "fnServerData": self._fetchData,
-            "fnInitComplete" : function() { self._setupEventHandlers(bItemSelection) }
+            "fnServerData": self._fetchData
+            //"fnInitComplete" : function() { self._setupEventHandlers(bItemSelection) }
             //"fnDrawCallback" : self._tableDrawCallback
         };
 
@@ -88,6 +88,7 @@ var AIRTIME = (function(AIRTIME) {
 
         self._datatable = self._$wrapperDOMNode.dataTable(options);
         self._datatable.fnDraw(); //Load the AJAX data now that our event handlers have been bound.
+        self._setupEventHandlers(bItemSelection);
 
         //return self._datatable;
         return self;

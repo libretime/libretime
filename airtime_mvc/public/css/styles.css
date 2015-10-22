@@ -3916,7 +3916,7 @@ li .ui-state-hover {
 
 /* Podcasts */
 
-#podcast_episodes_wrapper {
+[id^="podcast_episodes"][id$="_wrapper"] {
     position: relative;
     height: 100%;
     float: left;
@@ -3928,7 +3928,7 @@ li .ui-state-hover {
     box-sizing: border-box;
 }
 
-#podcast_episodes_wrapper td {
+[id^="podcast_episodes"][id$="_wrapper"] td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
