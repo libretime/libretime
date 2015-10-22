@@ -5,7 +5,7 @@ class PodcastManager {
     /**
      * @var int how often, in seconds, to check for and ingest new podcast episodes
      */
-    private static $_PODCAST_POLL_INTERVAL_SECONDS = 30;  // 1 hour
+    private static $_PODCAST_POLL_INTERVAL_SECONDS = 3600;  // 1 hour
 
     /**
      * Check whether $_PODCAST_POLL_INTERVAL_SECONDS have passed since the last call to
