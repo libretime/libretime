@@ -57,7 +57,8 @@ var AIRTIME = (function (AIRTIME) {
         });
 
         if (ids.length > 0) {
-            // Bulk methods should use post because we're sending data in the request body
+            // Bulk methods should use post because we're sending data in the request body. There is no standard
+            // RESTful way to implement bulk actions, so this is how we do it:
             $.post(endpoint + "bulk", {csrf_token: $("#csrf").val(), method: method, ids: ids}, callback);
         }
     }
