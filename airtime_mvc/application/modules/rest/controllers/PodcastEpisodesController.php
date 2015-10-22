@@ -12,15 +12,47 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
     public function indexAction()
     {
+        // podcast ID
         $id = $this->getId();
         if (!$id) {
             return;
         }
-
         try {
+
+            $podcast = PodcastQuery::create()->findPk($id);
+            if (!$podcast) {
+                throw new PodcastNotFoundException();
+            }
+
+            $totalPodcastEpisodesCount = PodcastEpisodesQuery::create()
+                ->filterByDbPodcastId($id)
+                ->count();
+
+            // Check if offset and limit were sent with request.
+            // Default limit to zero and offset to $totalFileCount
+            $offset = $this->_getParam('offset', 0);
+            $limit = $this->_getParam('limit', $totalPodcastEpisodesCount);
+
+            //Sorting parameters
+            $sortColumn = $this->_getParam('sort', PodcastEpisodesPeer::ID);
+            $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
+
+            $episodes = PodcastEpisodesQuery::create()
+                ->filterByDbPodcastId($id)
+                ->setLimit($limit)
+                ->setOffset($offset)
+                ->orderBy($sortColumn, $sortDir)
+                ->find();
+
+            $episodesArray = array();
+            foreach ($episodes as $episode) {
+                array_push($episodesArray, $episode->toArray(BasePeer::TYPE_FIELDNAME));
+            }
+
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode(PodcastEpisodes::getPodcastEpisodes($id)));
+                ->appendBody(json_encode($episodesArray));
+
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
             Logging::error($e->getMessage());
@@ -46,7 +78,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         try {
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode(PodcastEpisodes::getPodcastEpisodeById($episodeId)));
+                ->appendBody(json_encode(Application_Service_PodcastEpisodeService::getPodcastEpisodeById($episodeId)));
 
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();
@@ -62,7 +94,6 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
     public function postAction()
     {
-        Logging::info("episodes post");
         //If we do get an episode ID on a POST, then that doesn't make any sense
         //since POST is only for creating.
         if ($episodeId = $this->_getParam('episode_id', false)) {
@@ -82,7 +113,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
             $requestData = json_decode($this->getRequest()->getRawBody(), true);
             //$requestData = $this->getRequest()->getPost();
 
-            $episode = PodcastEpisodes::create($id, $requestData);
+            $episode = Application_Service_PodcastEpisodeService::createPodcastEpisode($id, $requestData);
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
@@ -111,7 +142,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
         }
 
         try {
-            PodcastEpisodes::deleteById($episodeId);
+            Application_Service_PodcastEpisodeService::deletePodcastEpisodeById($episodeId);
             $this->getResponse()
                 ->setHttpResponseCode(204);
         } catch (PodcastEpisodeNotFoundException $e) {

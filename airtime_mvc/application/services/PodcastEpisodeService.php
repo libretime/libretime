@@ -1,5 +1,7 @@
 <?php
 
+class PodcastEpisodeNotFoundException extends Exception {}
+
 class Application_Service_PodcastEpisodeService extends Application_Service_ThirdPartyCeleryService implements Publish
 {
     /**
@@ -24,6 +26,10 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     protected static $_CELERY_TASKS = [
         self::DOWNLOAD => 'podcast-download'
     ];
+
+    private static $privateFields = array(
+        "id"
+    );
 
     /**
      * Given an array of episodes, store them in the database as placeholder objects until
@@ -166,4 +172,72 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             ->findOneByDbFileId($fileId)
             ->delete();
     }
+
+    /**
+     * @param $episodeId
+     * @return array
+     * @throws PodcastEpisodeNotFoundException
+     */
+    public static function getPodcastEpisodeById($episodeId)
+    {
+        $episode = PodcastEpisodesQuery::create()->findPk($episodeId);
+        if (!$episode) {
+            throw new PodcastEpisodeNotFoundException();
+        }
+
+        return $episode->toArray(BasePeer::TYPE_FIELDNAME);
+    }
+
+    public static function getPodcastEpisodes($podcastId)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if (!$podcast) {
+            throw new PodcastNotFoundException();
+        }
+
+        $episodes = PodcastEpisodesQuery::create()->findByDbPodcastId($podcastId);
+        $episodesArray = array();
+        foreach ($episodes as $episode) {
+            array_push($episodesArray, $episode->toArray(BasePeer::TYPE_FIELDNAME));
+        }
+
+        return $episodesArray;
+    }
+
+    public static function createPodcastEpisode($podcastId, $data)
+    {
+        self::removePrivateFields($data);
+
+        try {
+            $episode = new PodcastEpisodes();
+            $episode->setDbPodcastId($podcastId);
+            $episode->fromArray($data, BasePeer::TYPE_FIELDNAME);
+            $episode->save();
+
+            return $episode->toArray(BasePeer::TYPE_FIELDNAME);
+        } catch (Exception $e) {
+            $episode->delete();
+            throw $e;
+        }
+
+    }
+
+    public static function deletePodcastEpisodeById($episodeId)
+    {
+        $episode = PodcastEpisodesQuery::create()->findByDbId($episodeId);
+
+        if ($episode) {
+            $episode->delete();
+        } else {
+            throw new PodcastEpisodeNotFoundException();
+        }
+    }
+
+    private static function removePrivateFields(&$data)
+    {
+        foreach (self::$privateFields as $key) {
+            unset($data[$key]);
+        }
+    }
+
 }
