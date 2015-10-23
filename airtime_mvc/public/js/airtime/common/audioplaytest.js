@@ -2,6 +2,10 @@
 function isAudioSupported(mime){
     var audio = new Audio();
 
+    if ((typeof mime) !== "string" || (mime === null)) {
+        return false;
+    }
+
     var bMime = null;
     if (mime.indexOf("ogg") != -1 || mime.indexOf("vorbis") != -1) {
        bMime = 'audio/ogg; codecs="vorbis"'; 
