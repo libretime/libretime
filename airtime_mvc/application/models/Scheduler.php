@@ -120,7 +120,7 @@ class Application_Model_Scheduler
         }
 
         //a show has been deleted
-        if (count($instanceIds) !== count($showInstan0ces)) {
+        if (count($instanceIds) !== count($showInstances)) {
             throw new OutDatedScheduleException(_("The schedule you're viewing is out of date! (instance mismatch)"));
         }
 
