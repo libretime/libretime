@@ -40,6 +40,12 @@ class IndexController extends Zend_Controller_Action
         }
         $this->view->displayLoginButton = $displayRadioPageLoginButtonValue;
 
+        //station feed episodes
+        $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
+        $stationPodcastId = Application_Model_Preference::getStationPodcastId();
+        $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
+        $this->view->episodes = json_encode($episodes);
+
     }
 
     public function mainAction()

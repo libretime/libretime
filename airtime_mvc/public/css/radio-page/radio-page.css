@@ -116,6 +116,10 @@ span.login-img {
     font-weight: 300;
 }
 
+.station_rss {
+    background-color: #363636;
+}
+
 input[type="text"] {
     font-family: 'Roboto', sans-serif;
     color: #fff;

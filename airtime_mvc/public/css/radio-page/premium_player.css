@@ -39,7 +39,7 @@ body {
 .on_air {
     display: inline-block;
     margin-left: 40px;
-    width: 65%
+    width: 55%
 }
 
 .bottom_bar p.now_playing {
@@ -98,25 +98,25 @@ body {
 
 @media (max-width: 1230px) {
     .on_air {
-        width: 60%;
+        width: 50%;
     }
 }
 
 @media (max-width: 1075px) {
     .on_air {
-        width: 55%;
+        width: 40%;
     }
 }
 
 @media (max-width: 960px) {
     .on_air {
-        width: 50%;
+        width: 35%;
     }
 }
 
 @media (max-width: 850px) {
     .on_air {
-        width: 45%;
+        width: 30%;
     }
 }
 
