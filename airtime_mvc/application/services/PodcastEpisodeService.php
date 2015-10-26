@@ -213,7 +213,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param int $offset
      * @param int $limit
      * @param string $sortColumn
-     * @param string $sortDir
+     * @param string $sortDir "ASC" || "DESC"
      * @return array
      * @throws PodcastNotFoundException
      */
@@ -221,11 +221,18 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                                        $offset=0,
                                        $limit=10,
                                        $sortColumn=PodcastEpisodesPeer::ID,
-                                       $sortDir=Criteria::ASC)
+                                       $sortDir="ASC")
     {
         $podcast = PodcastQuery::create()->findPk($podcastId);
         if (!$podcast) {
             throw new PodcastNotFoundException();
+        }
+
+        //make sure valid $sortDir was passed in
+        if ($sortDir === "DESC") {
+            $sortDir = Criteria::DESC;
+        } else {
+            $sortDir = Criteria::ASC;
         }
 
         $episodes = PodcastEpisodesQuery::create()
@@ -237,7 +244,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
 
         $episodesArray = array();
         foreach ($episodes as $episode) {
-            array_push($episodesArray, $episode->toArray(BasePeer::TYPE_FIELDNAME));
+            $episodeArr = $episode->toArray(BasePeer::TYPE_FIELDNAME);
+            $episodeArr["track_metadata"] = CcFiles::getSanitizedFileById($episode->getDbFileId());
+            array_push($episodesArray, $episodeArr);
         }
 
         return $episodesArray;
