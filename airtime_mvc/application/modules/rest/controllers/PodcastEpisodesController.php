@@ -25,12 +25,6 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
             return;
         }
         try {
-
-            $podcast = PodcastQuery::create()->findPk($id);
-            if (!$podcast) {
-                throw new PodcastNotFoundException();
-            }
-
             $totalPodcastEpisodesCount = PodcastEpisodesQuery::create()
                 ->filterByDbPodcastId($id)
                 ->count();
@@ -44,21 +38,9 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
             $sortColumn = $this->_getParam('sort', PodcastEpisodesPeer::ID);
             $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
 
-            $episodes = PodcastEpisodesQuery::create()
-                ->filterByDbPodcastId($id)
-                ->setLimit($limit)
-                ->setOffset($offset)
-                ->orderBy($sortColumn, $sortDir)
-                ->find();
-
-            $episodesArray = array();
-            foreach ($episodes as $episode) {
-                array_push($episodesArray, $episode->toArray(BasePeer::TYPE_FIELDNAME));
-            }
-
             $this->getResponse()
                 ->setHttpResponseCode(201)
-                ->appendBody(json_encode($episodesArray));
+                ->appendBody(json_encode($this->_service->getPodcastEpisodes($id, $offset, $limit, $sortColumn, $sortDir)));
 
         } catch (PodcastNotFoundException $e) {
             $this->podcastNotFoundResponse();

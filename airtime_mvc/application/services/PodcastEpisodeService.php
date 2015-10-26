@@ -206,14 +206,35 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         return $episode->toArray(BasePeer::TYPE_FIELDNAME);
     }
 
-    public function getPodcastEpisodes($podcastId)
+    /**
+     * Returns an array of Podcast episodes, with the option to paginate the results.
+     *
+     * @param $podcastId
+     * @param int $offset
+     * @param int $limit
+     * @param string $sortColumn
+     * @param string $sortDir
+     * @return array
+     * @throws PodcastNotFoundException
+     */
+    public function getPodcastEpisodes($podcastId,
+                                       $offset=0,
+                                       $limit=10,
+                                       $sortColumn=PodcastEpisodesPeer::ID,
+                                       $sortDir=Criteria::ASC)
     {
         $podcast = PodcastQuery::create()->findPk($podcastId);
         if (!$podcast) {
             throw new PodcastNotFoundException();
         }
 
-        $episodes = PodcastEpisodesQuery::create()->findByDbPodcastId($podcastId);
+        $episodes = PodcastEpisodesQuery::create()
+            ->filterByDbPodcastId($podcastId)
+            ->setLimit($limit)
+            ->setOffset($offset)
+            ->orderBy($sortColumn, $sortDir)
+            ->find();
+
         $episodesArray = array();
         foreach ($episodes as $episode) {
             array_push($episodesArray, $episode->toArray(BasePeer::TYPE_FIELDNAME));
