@@ -54,6 +54,10 @@ class EmbedController extends Zend_Controller_Action
                     array_push($availableDesktopStreams, $s);
                 }
             }
+        } else if ($stream == "file") {
+            $this->view->playerMode = "file";
+            $this->view->streamURL = json_encode($request->getParam("file_url"));
+            $this->view->codec = $request->getParam("file_codec");
         } elseif (!empty($stream)) {
             $this->view->playerMode = "manual";
             $selectedStreamData = $streamData[$stream];

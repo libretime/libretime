@@ -57,7 +57,16 @@ document.getElementById(id).width= (newwidth) + "px";
             $.each(<?php echo $this->episodes ?>, function(index, value){
                 $("#tab-4").append("<div>"+value.track_metadata.artist_name+" - "+value.track_metadata.track_title+
                 " <a id='rss-download-link' href='"+value.download_url+"'>Download</a>" +
-                " <a id='rss-play-link' href='#'>Play</a></div>");
+                " <a id='rss-play-link' data-streamurl='"+value.download_url+"' data-streamcodec='mp3' href='#'>Play</a></div>");
+            });
+
+            $("a#rss-play-link").click(function() {
+                var file_url = $(this).attr("data-streamurl");
+                var file_codec = $(this).attr("data-streamcodec");
+
+                var new_src='<?php echo $this->stationUrl ?>'+"embed/player?stream=file&file_url="+file_url+"&file_codec="+file_codec+"&style=premium";
+
+                $("#player_iframe").attr("src", new_src);
             });
         </script>
     </div>
