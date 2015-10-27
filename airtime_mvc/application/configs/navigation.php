@@ -110,7 +110,7 @@ $pages = array(
         )
     ),
     array(
-        'label' =>  "<i class='icon-briefcase icon-white'></i>"._('Billing'),
+        'label' =>  (Application_Model_Preference::GetPlanLevel()=="trial") ? "<i class='icon-star icon-orange'></i><span style='color: #ff5d1a'>"._('Upgrade')."</span>" : "<i class='icon-briefcase icon-white'></i>"._('Billing'),
         'controller' => 'billing',
         'action' => 'upgrade',
         'resource' => 'billing',
