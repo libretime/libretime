@@ -52,6 +52,8 @@ document.getElementById(id).width= (newwidth) + "px";
         </form>
     </div>
 
+    <?php
+        if ($this->displayRssTab) {?>
     <div id="tab-4" class="station_rss tab_content">
         <script type="text/javascript">
             $.each(<?php echo $this->episodes ?>, function(index, value){
@@ -70,6 +72,9 @@ document.getElementById(id).width= (newwidth) + "px";
             });
         </script>
     </div>
+    <?php
+        }
+    ?>
 
     <iframe id="player_iframe" frameborder="0" width="100%" style="bottom:0px; left:0px; position:fixed; right:0px;" src=<?php echo $this->stationUrl."embed/player?stream=auto&style=premium";?>></iframe>
 
@@ -79,6 +84,7 @@ document.getElementById(id).width= (newwidth) + "px";
     $(document).ready(function(){
 
         $("#player_iframe").load(function () {
+            // FIXME: Should we hide this somehow when the station is set to private?
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='station_rss_btn button' data-tab='tab-4'></div>");
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='about_us_btn button' data-tab='tab-2'></div>");
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");

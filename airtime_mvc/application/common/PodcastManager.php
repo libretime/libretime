@@ -51,12 +51,11 @@ class PodcastManager {
         $episodeList = $podcastArray["episodes"];
         $episodes = array();
         // Sort the episodes by publication date to get the most recent
-        usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
+        // usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
         for ($i = 0; $i < sizeof($episodeList); $i++) {
             $episodeData = $episodeList[$i];
             // If the publication date of this episode is before the ingest timestamp, we don't need to ingest it
-            // Since we're sorting by publication date, we can break
-            if (strtotime($episodeData["pub_date"]) < strtotime($podcast->getDbAutoIngestTimestamp())) break;
+            if (strtotime($episodeData["pub_date"]) < strtotime($podcast->getDbAutoIngestTimestamp())) continue;
             $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData["guid"]);
             // Make sure there's no existing episode placeholder or import, and that the data is non-empty
             if (empty($episode) && !empty($episodeData)) {

@@ -46,6 +46,7 @@ class IndexController extends Zend_Controller_Action
         $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
         $this->view->episodes = json_encode($episodes);
 
+        $this->view->displayRssTab = (!Application_Model_Preference::getStationPodcastPrivacy());
     }
 
     public function mainAction()
