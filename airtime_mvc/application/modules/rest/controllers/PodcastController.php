@@ -180,7 +180,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
             case HttpRequestType::GET:
                 foreach($ids as $id) {
                     // TODO: This should use the same code path as the GET action.
-                    //       It essentially does, except for the randering of the tab layout.
+                    //       It essentially does, except for the rendering of the tab layout.
                     //       That said, not every GET is going to need the page rendered...
                     //       Where should the rendering code for the podcast tabs go? -- Duncan
                     $responseBody[] = Application_Service_PodcastService::buildPodcastEditorResponse($id, $this->view);

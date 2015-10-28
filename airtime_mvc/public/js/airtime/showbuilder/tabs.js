@@ -327,6 +327,13 @@ var AIRTIME = (function(AIRTIME){
         $("#show_builder_table_wrapper").css("top", h + 5);
     };
 
+    /**
+     * Expose the Tab object so it can be subclassed
+     *
+     * @type {Function}
+     */
+    mod.Tab = Tab;
+
     return AIRTIME;
 
 }(AIRTIME || {}));

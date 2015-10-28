@@ -23,6 +23,17 @@ var AIRTIME = (function (AIRTIME) {
             tab.contents.find("table").attr("id", "podcast_episodes_" + podcast.id);
             var episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(podcast.episodes, tab);
 
+            // Override the switchTo function to reload the table when the tab is focused.
+            // Should help to reduce the number of cases where the frontend doesn't match the state
+            // of the backend (due to automatic ingestion).
+            // Note that these cases should already be very few and far between.
+            // TODO: make sure this doesn't noticeably slow performance
+            // XXX: it's entirely possible that this (in the angular app) is not where we want this function...
+            tab.switchTo = function() {
+                AIRTIME.tabs.Tab.prototype.switchTo.call(this);
+                episodeTable.reload($scope.podcast.id);
+            };
+
             function updatePodcast() {
                 $http.put(endpoint + $scope.podcast.id, { csrf_token: $scope.csrf, podcast: $scope.podcast })
                     .success(function() {
@@ -193,7 +204,8 @@ var AIRTIME = (function (AIRTIME) {
                         'iFixedColumns': 1  // Checkbox
                     }
                 }
-            });
+            }
+        );
 
         podcastEpisodesTableWidget.getDatatable().addTitles("td");
         return podcastEpisodesTableWidget;
