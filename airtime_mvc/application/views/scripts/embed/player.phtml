@@ -175,8 +175,17 @@
         };
 
         MusesPlayer.prototype.setURL = function(url) {
-            MRP.setUrl(url);
+            this.flashDetect ? MRP.setUrl(url) : musesHTMLSetURL(url);
+
+            // update musesPlayer object
+            musesPlayer.settings.url = url;
         };
+
+        MusesPlayer.prototype.setCodec = function(codec) {
+            console.log(codec);
+            //this.flashDetect ? MRP.setCodec(codec) : musesHTMLSetCodec(codec);
+            musesPlayer.settings.codec = codec;
+        }
 
         /** Retry playback after a few seconds (used to throttle attempts to reconnect/play). */
         MusesPlayer.prototype.deferredPlay = function(streamUrl, delayMSec) {
@@ -195,6 +204,15 @@
                 }, delayMSec);
             }
         };
+
+        MusesPlayer.prototype.playPodcastTrack = function(url, codec) {
+            this.setCodec(codec);
+            this.setURL(url);
+            musesPlayer.play();
+            if ($('.play').hasClass("pause") === false) {
+                $('.play').addClass("pause");
+            }
+        }
 
         // detects errors in FLASH mode
         function musesCallback(event,value) {
@@ -233,12 +251,7 @@
 
         // Triggers the play function on the Muses player object in HTML5 mode
         function musesHTMLPlayClick() {
-            /*if (MRP.html === undefined) {
-                console.log("inserting player");
-                MRP.insert(musesPlayer.settings);
-            }*/
-            MRP.html.audio.src = MRP.html.src;
-
+            MRP.html.audio.src = musesPlayer.settings.url;
             MRP.html.audio.play();
         }
 
@@ -248,6 +261,18 @@
         function musesHTMLStopClick() {
             MRP.html.audio.pause();
             //delete MRP.html;
+        }
+
+        function musesHTMLSetURL(url)
+        {
+            MRP.html.audio.src = url;
+
+            //MRP.html.audio.play();
+            //musesPlayer.play();
+        }
+
+        function musesHTMLSetCodec(codec) {
+            MRP.html.audio.codec = codec;
         }
 
         function togglePlayStopButton() {
@@ -329,6 +354,17 @@
 
             // Add 3 seconds to the timeout so Airtime has time to update the metadata before we fetch it
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
+
+
+        }
+
+        function detachStreamMetadataFromPlayer() {
+            clearTimeout(metadataTimer);
+        }
+
+        function attachFileMetadataToPlayer(artist, title) {
+            //TODO escape strings
+            $("p.now_playing").html(artist+"<span>"+title+"</span>");
         }
 
 
