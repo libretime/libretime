@@ -3991,3 +3991,15 @@ li .ui-state-hover {
 
 /* jQuery dialog */
 .no-close .ui-dialog-titlebar-close {display: none }
+
+/* Publishing Dialog */
+.published-sources {
+    color: #efefef;
+    font-size: 14px;
+    line-height: 26px;
+}
+
+.published-sources > .checked-icon {
+    height: 26px;
+    padding-right: 8px;
+}

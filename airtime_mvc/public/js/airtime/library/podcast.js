@@ -21,7 +21,7 @@ var AIRTIME = (function (AIRTIME) {
             tab.setName($scope.podcast.title);
             $scope.csrf = jQuery("#csrf").val();
             tab.contents.find("table").attr("id", "podcast_episodes_" + podcast.id);
-            var episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(podcast.episodes, tab);
+            var episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(podcast, tab);
 
             // Override the switchTo function to reload the table when the tab is focused.
             // Should help to reduce the number of cases where the frontend doesn't match the state
@@ -162,7 +162,7 @@ var AIRTIME = (function (AIRTIME) {
         }
     };
 
-    mod.initPodcastEpisodeDatatable = function(episodes, tab) {
+    mod.initPodcastEpisodeDatatable = function(podcast, tab) {
         var aoColumns = [
             /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
             /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
@@ -194,7 +194,7 @@ var AIRTIME = (function (AIRTIME) {
                 // as json. Doing this caches all the episode data on the front-end,
                 // which means we also don't need to go back to the server for pagination
                 'sAjaxSource' : null,
-                'aaData'      : episodes,
+                'aaData'      : podcast.episodes,
                 "oColVis": {
                     "sAlign": "right",
                     "aiExclude": [0, 1],

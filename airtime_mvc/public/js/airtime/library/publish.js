@@ -15,34 +15,51 @@ var AIRTIME = (function (AIRTIME) {
 
     //AngularJS app
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
-        .controller('RestController', function($scope, $http, mediaId, tab) {
+        .controller('RestController', function ($scope, $http, mediaId, tab) {
             $scope.publishSources = {};
 
-            $http.get(endpoint + mediaId, { csrf_token: jQuery("#csrf").val() })
-                .success(function(json) {
-                    console.log(json);
-                    $scope.media = json;
-                    tab.setName($scope.media.track_title);
-                });
+            function init () {
+                $http.get(endpoint + mediaId, { csrf_token: jQuery("#csrf").val() })
+                    .success(function (json) {
+                        console.log(json);
+                        $scope.media = json;
+                        tab.setName($scope.media.track_title);
+                    });
 
-            // TODO: implement GET request to endpoint that returns source information
-            //       ie. SoundCloud connection + publish status
+                // Get an object containing all sources, their translated labels,
+                // and their publication state for the file with the given ID
+                $http.get(endpoint + mediaId + '/publish-sources', { csrf_token: jQuery("#csrf").val() })
+                    .success(function (json) {
+                        $scope.sources = json;
+                        // Store the data (whether each source should be published to when publish is clicked)
+                        // in a separate array so we don't overwrite the labels
+                        $scope.publishData = {};
+                        jQuery.each($scope.sources.toPublish, function (k, v) {
+                            $scope.publishData[k] = false;
+                        });
+                    });
+            }
 
-            $scope.publish = function() {
-                var sources = {};
-                $.each($scope.publishSources, function(k, v) {
-                    if (v) sources[k] = 'publish';  // Tentative TODO: decide on a robust implementation
-                });
-                $http.put(endpoint + $scope.media.id + '/publish', { csrf_token: jQuery("#csrf").val(), sources: sources })
-                    .success(function() {
-                        // TODO
+            $scope.publish = function () {
+                $http.put(endpoint + mediaId + '/publish',
+                    {
+                        csrf_token: jQuery("#csrf").val(),
+                        sources: $scope.publishData
+                    }).success(function () {
+                        init();
                     });
             };
 
-            $scope.discard = function() {
+            $scope.remove = function (source) {
+                // TODO
+            };
+
+            $scope.discard = function () {
                 tab.close();
                 $scope.media = {};
             };
+
+            init();
         });
 
 

@@ -84,5 +84,18 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
             )
         );
         $router->addRoute('publish', $publishRoute);
+
+        $publishSourcesRoute = new Zend_Controller_Router_Route(
+            'rest/media/:id/publish-sources',
+            array(
+                'controller' => 'media',
+                'action' => 'publish-sources',
+                'module' => 'rest'
+            ),
+            array(
+                'id' => '\d+'
+            )
+        );
+        $router->addRoute('publish-sources', $publishSourcesRoute);
     }
 }

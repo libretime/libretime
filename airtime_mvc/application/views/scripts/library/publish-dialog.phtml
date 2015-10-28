@@ -16,12 +16,27 @@
         </label>
         <fieldset>
             <legend><?php echo _("Publish to:"); ?></legend>
-            <input ng-model="publishSources.station_podcast" type="checkbox" name="publish_sources" id="station_podcast" value="station_podcast">
-            <label for="station_podcast"><?php echo(_("My Station Podcast"));?></label><br/>
-            <input ng-model="publishSources.soundcloud" type="checkbox" name="publish_sources" id="soundcloud" value="soundcloud">
-            <label for="soundcloud"><?php echo(_(SOUNDCLOUD));?></label>
+            <div ng-repeat="(source, label) in sources.toPublish">
+                <input ng-model="publishData[source]" type="checkbox" name="publish_sources" id="{{source}}">
+                <label for="{{source}}">{{label}}</label><br/>
+            </div>
+            <div ng-if="sources.toPublish.length == 0">
+                <?php echo _("You have already published this track to all available sources!<br/>"
+                           . "Published tracks can be removed or updated below.") ?>
+            </div>
         </fieldset>
-
+        <fieldset>
+            <legend><?php echo _("Published on:"); ?></legend>
+            <div class="published-sources" ng-repeat="(source, label) in sources.published">
+                <span class="sp-checked-icon checked-icon left-floated"></span>
+                <span class="source-name">{{label}}</span>
+                <button class="btn btn-small" ng-click="remove(source)"><?php echo _("Remove") ?></button>
+            </div>
+            <div ng-if="sources.published.length == 0">
+                <?php echo _("You haven't published this track to any sources!<br/>"
+                           . "Check the boxes above and hit 'Publish' to publish this track to the marked sources.") ?>
+            </div>
+        </fieldset>
     </form>
 </div>
 

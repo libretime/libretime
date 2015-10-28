@@ -200,13 +200,22 @@ class Rest_MediaController extends Zend_Rest_Controller
         try {
             // Is there a better way to do this?
             $data = json_decode($this->getRequest()->getRawBody(), true)["sources"];
-            Application_Service_MediaService::publish($id, $data);
+            Application_Service_PublishService::publish($id, $data);
             $this->getResponse()
                 ->setHttpResponseCode(200);
         } catch (Exception $e) {
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
+    }
+
+    public function publishSourcesAction() {
+        $id = $this->_getParam('id', false);
+        $sources = Application_Service_PublishService::getSourceLists($id);
+        $this->getResponse()
+            ->setHttpResponseCode(200)
+            ->appendBody(json_encode($sources));
+
     }
 
     private function getId()
