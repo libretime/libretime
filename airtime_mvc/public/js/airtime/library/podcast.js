@@ -188,7 +188,10 @@ var AIRTIME = (function (AIRTIME) {
                     "sAlign": "right",
                     "aiExclude": [0, 1],
                     "buttonText": $.i18n._("Columns"),
-                    "iOverlayFade": 0
+                    "iOverlayFade": 0,
+                    'oColReorder': {
+                        'iFixedColumns': 1  // Checkbox
+                    }
                 }
             });
 

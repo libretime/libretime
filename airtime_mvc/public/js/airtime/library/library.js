@@ -1294,7 +1294,10 @@ var AIRTIME = (function(AIRTIME) {
             podcastToolbarButtons, //Toolbar buttons
             {                    //Datatables overrides.
                 'aoColumns' : aoColumns,
-                'sAjaxSource' : ajaxSourceURL
+                'sAjaxSource' : ajaxSourceURL,
+                'oColReorder': {
+                    'iFixedColumns': 1  // Checkbox
+                }
             });
 
         mod.podcastDataTable = mod.podcastTableWidget.getDatatable();

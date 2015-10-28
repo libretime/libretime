@@ -167,16 +167,22 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $method = $this->_getParam('method', HttpRequestType::GET);
         $responseBody = [];
 
+        // XXX: Should this be a map of HttpRequestType => function call instead? Would be a bit cleaner
         switch($method) {
             case HttpRequestType::DELETE:
                 foreach($ids as $id) {
                     Application_Service_PodcastService::deletePodcastById($id);
                 }
                 // XXX: do we need this to be more descriptive?
+                //      Should we even bother passing back a response message here?
                 $responseBody = "Successfully deleted podcasts";
                 break;
             case HttpRequestType::GET:
                 foreach($ids as $id) {
+                    // TODO: This should use the same code path as the GET action.
+                    //       It essentially does, except for the randering of the tab layout.
+                    //       That said, not every GET is going to need the page rendered...
+                    //       Where should the rendering code for the podcast tabs go? -- Duncan
                     $responseBody[] = Application_Service_PodcastService::buildPodcastEditorResponse($id, $this->view);
                 }
                 break;
