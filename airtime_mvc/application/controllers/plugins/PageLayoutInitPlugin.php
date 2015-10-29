@@ -48,11 +48,26 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
             $this->_initGlobals();
             $this->_initCsrfNamespace();
+            $this->_initTasks();
             $this->_initHeadLink();
             $this->_initHeadScript();
             $this->_initTitle();
             $this->_initTranslationGlobals();
             $this->_initViewHelpers();
+        }
+    }
+
+    /**
+     * If we're not running unit tests, run the TaskManager tasks on each request
+     */
+    protected function _initTasks() {
+        /* We need to wrap this here so that we aren't checking when we're running the unit test suite
+         */
+        if (getenv("AIRTIME_UNIT_TEST") != 1) {
+            $taskManager = TaskManager::getInstance();
+            $taskManager->runTask(TaskFactory::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
+            //This will do the upgrade too if it's needed...
+            $taskManager->runTasks();
         }
     }
 

@@ -91,18 +91,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->doctype('XHTML1_STRICT');
     }
 
-    
-    protected function _initTasks() {
-        /* We need to wrap this here so that we aren't checking when we're running the unit test suite
-         */
-        if (getenv("AIRTIME_UNIT_TEST") != 1) {
-            $taskManager = TaskManager::getInstance();
-            $taskManager->runTask(TaskFactory::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
-            //This will do the upgrade too if it's needed...
-            $taskManager->runTasks();
-        }
-    }
-
     protected function _initZFDebug()
     {
 
