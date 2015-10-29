@@ -20,6 +20,7 @@
 
     background-color: #242424;
 }
+
 @media screen and (max-width: 1700px) {
     .dataTables_info {
         display: none;
@@ -679,7 +680,7 @@ div.ColVis_collectionBackground {
 
 .fg-toolbar .btn-toolbar {
     margin: 0;
-    padding: 6px;
+    padding: 6px 6px 5px;
 }
 /* ~~~~~~~~~~~~~~~~ */
 
