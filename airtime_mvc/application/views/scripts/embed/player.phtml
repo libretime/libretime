@@ -186,8 +186,8 @@
         };
 
         MusesPlayer.prototype.setCodec = function(codec) {
-            console.log(codec);
-            //this.flashDetect ? MRP.setCodec(codec) : musesHTMLSetCodec(codec);
+            //TODO: get rid of this? Doesn't seem to make a difference
+            this.flashDetect ? console.log("blah") : musesHTMLSetCodec(codec);
             musesPlayer.settings.codec = codec;
         }
 
@@ -367,7 +367,6 @@
         }
 
         function attachFileMetadataToPlayer(artist, title) {
-            //TODO escape strings
             $("p.now_playing").html(artist+"<span>"+title+"</span>");
         }
 

@@ -44,6 +44,10 @@ class IndexController extends Zend_Controller_Action
         $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
+        foreach ($episodes as $e => $v) {
+            $episodes[$e]["track_metadata"]["track_title"] = htmlspecialchars($v["track_metadata"]["track_title"], ENT_QUOTES);
+            $episodes[$e]["track_metadata"]["artist_name"] = htmlspecialchars($v["track_metadata"]["artist_name"], ENT_QUOTES);
+        }
         $this->view->episodes = json_encode($episodes);
 
         $this->view->displayRssTab = (!Application_Model_Preference::getStationPodcastPrivacy());
