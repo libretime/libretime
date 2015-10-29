@@ -29,7 +29,7 @@ class Application_Service_PublishService {
     public static function publish($fileId, $data) {
         foreach ($data as $k => $v) {
             $service = PublishServiceFactory::getService($k);
-            if ($v) $service->publish($fileId);
+            $service->$v($fileId);
         }
     }
 

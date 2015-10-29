@@ -41,17 +41,28 @@ var AIRTIME = (function (AIRTIME) {
             }
 
             $scope.publish = function () {
-                $http.put(endpoint + mediaId + '/publish',
-                    {
-                        csrf_token: jQuery("#csrf").val(),
-                        sources: $scope.publishData
-                    }).success(function () {
-                        init();
-                    });
+                var data = {};
+                jQuery.each($scope.publishData, function(k, v) {
+                    if (v) {
+                        data[k] = 'publish';  // FIXME: should be more robust
+                    }
+                });
+
+                if (Object.keys(data).length > 0) {
+                    $http.put(endpoint + mediaId + '/publish', { csrf_token: jQuery("#csrf").val(), sources: data})
+                        .success(function () {
+                            init();
+                        });
+                }
             };
 
             $scope.remove = function (source) {
-                // TODO
+                var data = {};
+                data[source] = 'unpublish';  // FIXME: should be more robust
+                $http.put(endpoint + mediaId + '/publish', { csrf_token: jQuery("#csrf").val(), sources: data })
+                    .success(function () {
+                        init();
+                    });
             };
 
             $scope.discard = function () {

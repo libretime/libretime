@@ -21,8 +21,8 @@
                 <label for="{{source}}">{{label}}</label><br/>
             </div>
             <div ng-if="sources.toPublish.length == 0">
-                <?php echo _("You have already published this track to all available sources!<br/>"
-                           . "Published tracks can be removed or updated below.") ?>
+                <?php echo _("You have already published this track to all available sources!") . "<br/>"
+                         . _("Published tracks can be removed or updated below.") ?>
             </div>
         </fieldset>
         <fieldset>
@@ -33,8 +33,8 @@
                 <button class="btn btn-small" ng-click="remove(source)"><?php echo _("Remove") ?></button>
             </div>
             <div ng-if="sources.published.length == 0">
-                <?php echo _("You haven't published this track to any sources!<br/>"
-                           . "Check the boxes above and hit 'Publish' to publish this track to the marked sources.") ?>
+                <?php echo _("You haven't published this track to any sources!") . "<br/>"
+                         . _("Check the boxes above and hit 'Publish' to publish this track to the marked sources.") ?>
             </div>
         </fieldset>
     </form>
