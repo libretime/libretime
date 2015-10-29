@@ -30,7 +30,12 @@ class PodcastManager {
         $service = new Application_Service_PodcastEpisodeService();
         foreach ($autoIngestPodcasts as $podcast) {
             $episodes = static::_findUningestedEpisodes($podcast, $service);
-            $podcast->setDbAutoIngestTimestamp(gmdate('r'))->save();
+            // Since episodes don't have to be uploaded with a time (H:i:s) component,
+            // store the timestamp of the most recent (first pushed to the array) episode
+            // that we're ingesting.
+            // Note that this folds to the failure case (Celery task timeout/download failure)
+            //  but will at least continue to ingest new episodes.
+            $podcast->setDbAutoIngestTimestamp(gmdate('r', strtotime($episodes[0]->getDbPublicationDate())))->save();
             $service->downloadEpisodes($episodes);
         }
 

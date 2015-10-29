@@ -55,23 +55,22 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $this->_initViewHelpers();
         }
 
-        // Piggyback the TaskManager onto API calls
-        if ($controller == "api") {
-            $this->_initTasks();
-        }
-    }
-
-    /**
-     * If we're not running unit tests, run the TaskManager tasks on each request
-     */
-    protected function _initTasks() {
-        /* We need to wrap this here so that we aren't checking when we're running the unit test suite
-         */
+        // Skip upgrades and task management when running unit tests
         if (getenv("AIRTIME_UNIT_TEST") != 1) {
             $taskManager = TaskManager::getInstance();
-            $taskManager->runTask(TaskFactory::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
-            //This will do the upgrade too if it's needed...
-            $taskManager->runTasks();
+
+            // Run the upgrade on each request (if it needs to be run)
+            // We can't afford to wait 7 minutes to run an upgrade: users could
+            // have several minutes of database errors while waiting for a
+            // schema change upgrade to happen after a deployment
+            $taskManager->runTask(TaskFactory::UPGRADE);
+
+            // Piggyback the TaskManager onto API calls. This provides guaranteed consistency
+            // (there is at least one API call made from pypo to Airtime every 7 minutes) and
+            // greatly reduces the chances of lock contention on cc_pref while the TaskManager runs
+            if ($controller == "api") {
+                $taskManager->runTasks();
+            }
         }
     }
 
