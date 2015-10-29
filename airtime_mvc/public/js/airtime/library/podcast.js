@@ -23,18 +23,29 @@ var AIRTIME = (function (AIRTIME) {
             tab.contents.find("table").attr("id", "podcast_episodes_" + podcast.id);
             var episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(podcast, tab);
 
-            // Override the switchTo function to reload the table when the tab is focused.
-            // Should help to reduce the number of cases where the frontend doesn't match the state
-            // of the backend (due to automatic ingestion).
-            // Note that these cases should already be very few and far between.
-            // TODO: make sure this doesn't noticeably slow performance
-            // XXX: it's entirely possible that this (in the angular app) is not where we want this function...
+            /**
+             * Override the switchTo function to reload the table when the tab is focused.
+             * Should help to reduce the number of cases where the frontend doesn't match the state
+             * of the backend (due to automatic ingestion).
+             *
+             * Note that these cases should already be very few and far between.
+             *
+             * TODO: make sure this doesn't noticeably slow performance
+             * XXX: it's entirely possible that this (in the angular app) is not where we want this function...
+             */
             tab.switchTo = function() {
                 AIRTIME.tabs.Tab.prototype.switchTo.call(this);
                 episodeTable.reload($scope.podcast.id);
             };
 
-            function updatePodcast() {
+            /**
+             * Internal function.
+             *
+             * Make a PUT request to the server to update the podcast object
+             *
+             * @private
+             */
+            function _updatePodcast() {
                 $http.put(endpoint + $scope.podcast.id, { csrf_token: $scope.csrf, podcast: $scope.podcast })
                     .success(function() {
                         episodeTable.reload($scope.podcast.id);
@@ -43,26 +54,49 @@ var AIRTIME = (function (AIRTIME) {
                     });
             }
 
+            /**
+             * For imported podcasts.
+             *
+             * Save each of the selected episodes and update the podcast object.
+             */
             $scope.savePodcast = function() {
                 var episodes = episodeTable.getSelectedRows();
                 // TODO: Should we implement a batch endpoint for this instead?
                 jQuery.each(episodes, function() {
                     $http.post(endpoint + $scope.podcast.id + '/episodes', { csrf_token: $scope.csrf, episode: this });
                 });
-                updatePodcast();
+                _updatePodcast();
             };
 
+            /**
+             * For the station podcast.
+             *
+             * Update the station podcast object.
+             */
             $scope.saveStationPodcast = function() {
                 // TODO: We still need a way to delete episodes from the station podcast
-                updatePodcast();
+                _updatePodcast();
             };
 
+            /**
+             * Close the tab and discard any changes made to the podcast data.
+             */
             $scope.discard = function() {
                 tab.close();
                 $scope.podcast = {};
             };
         });
 
+    /**
+     * Implement bulk editing of podcasts in order to accommodate the existing selection
+     * mechanisms on the frontend.
+     *
+     * Bulk methods use a POST request because we need to send data in the request body.
+     *
+     * @param method HTTP request method type
+     * @param callback function to run upon success
+     * @private
+     */
     function _bulkAction(method, callback) {
         var ids = [], selectedData = AIRTIME.library.podcastTableWidget.getSelectedRows();
         selectedData.forEach(function(el) {
@@ -79,12 +113,17 @@ var AIRTIME = (function (AIRTIME) {
         });
 
         if (ids.length > 0) {
-            // Bulk methods should use post because we're sending data in the request body. There is no standard
-            // RESTful way to implement bulk actions, so this is how we do it:
             $.post(endpoint + "bulk", {csrf_token: $("#csrf").val(), method: method, ids: ids}, callback);
         }
     }
 
+    /**
+     * Bootstrap and initialize the Angular app for the podcast being opened
+     *
+     * @param podcast podcast JSON object to pass to the angular app
+     * @param tab Tab object the angular app will be initialized in
+     * @private
+     */
     function _bootstrapAngularApp(podcast, tab) {
         podcastApp.value('podcast', podcast);
         podcastApp.value('tab', tab);
@@ -93,6 +132,21 @@ var AIRTIME = (function (AIRTIME) {
         angular.bootstrap(wrapper.get(0), ["podcast"]);
     }
 
+    /**
+     * Initialization function for a podcast tab.
+     * Called when editing one or more podcasts.
+     *
+     * @param data JSON data returned from the server.
+     *             Contains stringified podcast object JSON and tab
+     *             content HTML and has the following form:
+     *             {
+     *                 podcast: '{
+     *                              ...
+     *                          }'
+     *                 html:    '<...>'
+     *             }
+     * @private
+     */
     function _initAppFromResponse(data) {
         var podcast = JSON.parse(data.podcast),
             uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+podcast.id,
@@ -100,6 +154,13 @@ var AIRTIME = (function (AIRTIME) {
         _bootstrapAngularApp(podcast, tab);
     }
 
+    /**
+     * Initialize the PodcastTable subclass object (from Table).
+     *
+     * Do this in its own function to avoid unnecessary reinitialization of the object.
+     *
+     * @private
+     */
     function _initPodcastTable() {
         PodcastTable = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
             // Just call the superconstructor. For clarity/extensibility
@@ -126,6 +187,9 @@ var AIRTIME = (function (AIRTIME) {
         };
     }
 
+    /**
+     * Create and show the URL dialog for podcast creation.
+     */
     mod.createUrlDialog = function() {
         $.get('/render/podcast-url-dialog', function(json) {
             $(document.body).append(json.html);
@@ -139,6 +203,12 @@ var AIRTIME = (function (AIRTIME) {
         });
     };
 
+    /**
+     * Find the URL in the podcast creation dialog and POST it to the server
+     * to store the feed as a Podcast object.
+     *
+     * FIXME: we should probably be passing the serialized form into this function instead
+     */
     mod.addPodcast = function() {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
             _initAppFromResponse(json);
@@ -146,6 +216,9 @@ var AIRTIME = (function (AIRTIME) {
         });
     };
 
+    /**
+     * Create a bulk request to edit all currently selected podcasts.
+     */
     mod.editSelectedPodcasts = function() {
         _bulkAction(HTTPMethods.GET, function(json) {
             json.forEach(function(data) {
@@ -154,6 +227,9 @@ var AIRTIME = (function (AIRTIME) {
         });
     };
 
+    /**
+     * Create a bulk request to delete all currently selected podcasts.
+     */
     mod.deleteSelectedPodcasts = function() {
         if (confirm($.i18n._("Are you sure you want to delete the selected podcasts from your library?"))) {
             _bulkAction(HTTPMethods.DELETE, function () {
@@ -162,6 +238,19 @@ var AIRTIME = (function (AIRTIME) {
         }
     };
 
+    /**
+     * Initialize the internal datatable for the podcast editor view to hold episode data passed back from the server.
+     *
+     * The episode data is taken from the RSS feed XML and contains all episodes in the feed, including but not
+     * limited to episodes already ingested (downloaded) into Airtime.
+     *
+     * Selection for the internal table represents episodes marked for ingest and is disabled for ingested episodes.
+     *
+     * @param podcast the podcast data JSON object. Includes episode data
+     * @param tab Tab object the podcast will be opened in
+     *
+     * @returns {*} the created Table object
+     */
     mod.initPodcastEpisodeDatatable = function(podcast, tab) {
         var aoColumns = [
             /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
