@@ -57,10 +57,17 @@ document.getElementById(id).width= (newwidth) + "px";
     <div id="tab-4" class="station_rss tab_content">
         <script type="text/javascript">
             $.each(<?php echo $this->episodes ?>, function(index, value){
-                console.log(value.track_metadata.track_title);
+                // map mime to format muses recognizes
+                // TODO: this doesn't make a difference
+                if (value.track_metadata.mime == "audio/mp3") {
+                    value.track_metadata.mime = "mp3";
+                } else if (value.track_metadata.mime == "audio/vorbis") {
+                    value.track_metadata.mime = "ogg";
+                }
+
                 $("#tab-4").append("<div>"+value.track_metadata.artist_name+" - "+value.track_metadata.track_title+
                 " <a id='rss-download-link' href='"+value.download_url+"'>Download</a>" +
-                " <a id='rss-play-link' data-metaartist='"+value.track_metadata.artist_name+"' data-metatitle='"+value.track_metadata.track_title+"' data-streamurl='"+value.download_url+"' data-streamcodec='mp3' href='#'>Play</a></div>");
+                " <a id='rss-play-link' data-metaartist='"+value.track_metadata.artist_name+"' data-metatitle='"+value.track_metadata.track_title+"' data-streamurl='"+value.download_url+"' data-streamcodec='"+value.track_metadata.mime+"' href='#'>Play</a></div>");
             });
 
             $("a#rss-play-link").click(function() {
@@ -68,14 +75,11 @@ document.getElementById(id).width= (newwidth) + "px";
                 var file_codec = $(this).attr("data-streamcodec");
                 var artist_name = $(this).attr("data-metaartist");
                 var track_title = $(this).attr("data-metatitle");
-                console.log(track_title);
-
-                //var new_src='<?php echo $this->stationUrl ?>'+"embed/player?stream=file&file_url="+file_url+"&file_codec="+file_codec+"&style=premium";
+                //console.log(track_title);
 
                 document.getElementById("player_iframe").contentWindow.musesPlayer.playPodcastTrack(file_url, file_codec);
                 document.getElementById("player_iframe").contentWindow.detachStreamMetadataFromPlayer();
                 document.getElementById("player_iframe").contentWindow.attachFileMetadataToPlayer(artist_name, track_title);
-                //console.log(document.getElementById("player_iframe").contentWindow.musesPlayer);
             });
         </script>
     </div>
