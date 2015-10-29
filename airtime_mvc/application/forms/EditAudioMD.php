@@ -199,27 +199,37 @@ class Application_Form_EditAudioMD extends Zend_Form
         $cueOut->setValidators(array($cueOutValidator));
         $this->addElement($cueOut);
 
-        // Add the submit button
-        $this->addElement('button', 'editmdsave', array(
-            'ignore'     => true,
-            'class'      => 'btn md-save right-floated',
-            'label'      => _('OK'),
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
-
-        // Add the submit button
+        // Add the cancel button
         $this->addElement('button', 'editmdcancel', array(
             'ignore'   => true,
-            'class'    => 'btn md-cancel right-floated',
+            'class'    => 'btn md-cancel',
             'label'    => _('Cancel'),
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
-        $this->addDisplayGroup(array('editmdcancel', 'editmdsave'), 'submitButtons', array(
+        // Add the submit button
+        $this->addElement('button', 'editmdsave', array(
+            'ignore'     => true,
+            'class'      => 'btn md-save',
+            'label'      => _('Save'),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
+
+        // Button to open the publish dialog
+        $this->addElement('button', 'publishdialog', array(
+            'ignore'   => true,
+            'class'    => 'btn md-publish',
+            'label'    => _('Publish track'),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
+
+        $this->addDisplayGroup(array('editmdsave', 'editmdcancel', 'publishdialog'), 'submitButtons', array(
             'decorators' => array(
                 'FormElements',
                 'DtDdWrapper'

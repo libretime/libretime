@@ -8,12 +8,12 @@
     float: left;
 }
 
-#edit-md-dialog ul.errors {
+.edit-md-dialog ul.errors {
     clear: both;
     float: none;
 }
 
-#edit-md-dialog dd input.input_text {
+.edit-md-dialog dd input.input_text {
     width: auto;
 }
 

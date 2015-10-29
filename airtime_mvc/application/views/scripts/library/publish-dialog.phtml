@@ -6,13 +6,18 @@
 <div class="inner_editor_wrapper">
     <form class="media-metadata">
         <input ng-value="media.id" class="obj_id" type="hidden"/>
-        <label>
+        <button ng-click="openEditDialog()" class="btn publish-edit-md"><?php echo _("Edit Metadata") ?></button>
+        <label class="publish-md-field">
             <?php echo _("Title") ?>
             <input disabled ng-model="media.track_title" type="text"/>
         </label>
-        <label>
+        <label class="publish-md-field">
             <?php echo _("Creator") ?>
             <input disabled ng-model="media.artist_name" type="text"/>
+        </label>
+        <label class="publish-md-field">
+            <?php echo _("Description") ?>
+            <textarea disabled ng-model="media.description"></textarea>
         </label>
         <fieldset>
             <legend><?php echo _("Publish to:"); ?></legend>

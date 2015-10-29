@@ -2418,9 +2418,34 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
     line-height: 140%;
 }
 
+/* Metadata Editor styles */
+
 /* HACK, to be removed after 1.7.0 */
-button.ui-button.md-cancel {
-        padding: .4em 1em;
+/*button.ui-button.md-cancel {*/
+/*padding: .4em 1em;*/
+/*}*/
+
+.edit-md-dialog #submitButtons-element {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.md-publish {
+    width: 160px;
+    margin-top: 4px;
+}
+
+.md-save {
+    flex: 1 0 auto;
+    margin-right: 4px;
+}
+
+.md-cancel {
+    flex: 1 0 auto;
 }
 
 /*--//////////////////////// Changes/add-ons Jun 8th, 2011 ////////////////////////--*/
@@ -4005,4 +4030,21 @@ li .ui-state-hover {
 .published-sources > .checked-icon {
     height: 26px;
     padding-right: 8px;
+}
+
+.publish-edit-md {
+    float: right;
+}
+
+.publish-md-field {
+    text-align: left !important;
+    display: block;
+}
+
+.publish-md-field > textarea, .publish-md-field > input {
+    display: block;
+}
+
+form.media-metadata fieldset {
+    margin-top: 8px;
 }

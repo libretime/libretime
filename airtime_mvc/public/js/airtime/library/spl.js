@@ -1038,14 +1038,15 @@ var AIRTIME = (function(AIRTIME){
     };
 
     mod._initFileMdEvents = function(newTab) {
+        var fileId = newTab.wrapper.find('#file_id').val();
+
         newTab.contents.find(".md-cancel").on("click", function() {
             newTab.close();
         });
 
         newTab.contents.find(".md-save").on("click", function() {
-            var file_id = newTab.wrapper.find('#file_id').val(),
-                data = newTab.wrapper.find("#edit-md-dialog form").serializeArray();
-            $.post(baseUrl+'library/edit-file-md', {format: "json", id: file_id, data: data}, function() {
+            var data = newTab.wrapper.find(".edit-md-dialog form").serializeArray();
+            $.post(baseUrl+'library/edit-file-md', {format: "json", id: fileId, data: data}, function() {
                 // don't redraw the library table if we are on calendar page
                 // we would be on calendar if viewing recorded file metadata
                 if ($("#schedule_calendar").length === 0) {
@@ -1056,7 +1057,11 @@ var AIRTIME = (function(AIRTIME){
             newTab.close();
         });
 
-        newTab.wrapper.find('#edit-md-dialog').on("keyup", function(event) {
+        newTab.contents.find(".md-publish").on("click", function() {
+            AIRTIME.publish.publishTrack(fileId);
+        });
+
+        newTab.wrapper.find('.edit-md-dialog').on("keyup", function(event) {
             if (event.keyCode === 13) {
                 newTab.wrapper.find('.md-save').click();
             }

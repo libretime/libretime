@@ -19,16 +19,16 @@ var AIRTIME = (function (AIRTIME) {
             $scope.publishSources = {};
 
             function init () {
-                $http.get(endpoint + mediaId, { csrf_token: jQuery("#csrf").val() })
+                var csrfToken = jQuery("#csrf").val();
+                $http.get(endpoint + mediaId, { csrf_token: csrfToken })
                     .success(function (json) {
-                        console.log(json);
                         $scope.media = json;
                         tab.setName($scope.media.track_title);
                     });
 
                 // Get an object containing all sources, their translated labels,
                 // and their publication state for the file with the given ID
-                $http.get(endpoint + mediaId + '/publish-sources', { csrf_token: jQuery("#csrf").val() })
+                $http.get(endpoint + mediaId + '/publish-sources', { csrf_token: csrfToken })
                     .success(function (json) {
                         $scope.sources = json;
                         // Store the data (whether each source should be published to when publish is clicked)
@@ -39,6 +39,13 @@ var AIRTIME = (function (AIRTIME) {
                         });
                     });
             }
+
+            $scope.openEditDialog = function() {
+                var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + mediaId;
+                $.get(baseUrl + "library/edit-file-md/id/" + mediaId, {format: "json"}, function (json) {
+                    AIRTIME.playlist.fileMdEdit(json, uid);
+                });
+            };
 
             $scope.publish = function () {
                 var data = {};
@@ -130,7 +137,6 @@ var AIRTIME = (function (AIRTIME) {
             });
         });*/
     };
-
 
     return AIRTIME;
 }(AIRTIME || {}));

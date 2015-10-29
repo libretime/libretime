@@ -395,21 +395,21 @@ textarea {
 
 /* File Metadata Editor */
 
-#edit-md-dialog {
+.edit-md-dialog {
     width: 100%;
     background: none;
     border: none;
     box-shadow: none;
 }
 
-#edit-md-dialog label {
+.edit-md-dialog label {
     font-size: 14px;
     font-weight: normal;
 
     color: #efefef;
 }
 
-#edit-md-dialog .zend_form dt {
+.edit-md-dialog .zend_form dt {
     float: left;
     width: 40%;
 
@@ -420,7 +420,7 @@ textarea {
     padding-right: 4px;
 }
 
-#edit-md-dialog .zend_form dd {
+.edit-md-dialog .zend_form dd {
     float: left;
     width: auto;
 
@@ -553,6 +553,11 @@ li.ui-state-default {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     background-color: #111;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     flex-direction: column;
 }
@@ -571,6 +576,10 @@ li.ui-state-default {
 
     flex: 1 1 auto;
     /* Position the text label inside it centered*/
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -591,7 +600,7 @@ li.ui-state-default {
     outline-width: 0;
 }
 
-#edit-md-dialog .zend_form dd:last-child {
+.edit-md-dialog .zend_form dd:last-child {
     width: 160px;
 }
 
