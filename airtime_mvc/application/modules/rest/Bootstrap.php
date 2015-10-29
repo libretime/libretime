@@ -23,6 +23,16 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
         );
         $router->addRoute('podcast-bulk', $podcastBulkRoute);
 
+        $stationPodcastRoute = new Zend_Controller_Router_Route(
+            'rest/podcast/station',
+            array(
+                'controller' => 'podcast',
+                'action' => 'station',
+                'module' => 'rest'
+            )
+        );
+        $router->addRoute('station-podcast', $stationPodcastRoute);
+
         $route = new Rest_RouteController($front,
             'rest/podcast/:id/episodes',
             array(

@@ -217,6 +217,15 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     /**
+     * Open a tab to view and edit the station podcast
+     */
+    mod.openStationPodcast = function() {
+        $.get(endpoint + 'station', function(json) {
+            _initAppFromResponse(json);
+        })
+    };
+
+    /**
      * Create a bulk request to edit all currently selected podcasts.
      */
     mod.editSelectedPodcasts = function() {

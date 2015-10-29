@@ -27,7 +27,9 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $sortColumn = $this->_getParam('sort', PodcastPeer::ID);
         $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
 
+        // Don't return the Station podcast - we fetch it separately
         $query = PodcastQuery::create()
+            ->filterByDbId(Application_Model_Preference::getStationPodcastId(), Criteria::NOT_EQUAL)
             ->setLimit($limit)
             ->setOffset($offset)
             ->orderBy($sortColumn, $sortDir);
@@ -173,22 +175,29 @@ class Rest_PodcastController extends Zend_Rest_Controller
                 foreach($ids as $id) {
                     Application_Service_PodcastService::deletePodcastById($id);
                 }
-                // XXX: do we need this to be more descriptive?
-                //      Should we even bother passing back a response message here?
-                $responseBody = "Successfully deleted podcasts";
                 break;
             case HttpRequestType::GET:
                 foreach($ids as $id) {
-                    // TODO: This should use the same code path as the GET action.
-                    //       It essentially does, except for the rendering of the tab layout.
-                    //       That said, not every GET is going to need the page rendered...
-                    //       Where should the rendering code for the podcast tabs go? -- Duncan
-                    $responseBody[] = Application_Service_PodcastService::buildPodcastEditorResponse($id, $this->view);
+                    $responseBody[] = array(
+                        "podcast"   => Application_Service_PodcastService::getPodcastById($id),
+                        "html"      => $this->view->render('podcast/podcast.phtml')
+                    );
                 }
                 break;
         }
 
         $this->_helper->json->sendJson($responseBody);
+    }
+
+    public function stationAction() {
+        $stationPodcastId = Application_Model_Preference::getStationPodcastId();
+        $podcast = Application_Service_PodcastService::getPodcastById($stationPodcastId);
+        $path = 'podcast/station_podcast.phtml';
+        $this->view->podcast = $podcast;
+        $this->_helper->json->sendJson(array(
+                                           "podcast"    => json_encode($podcast),
+                                           "html"       => $this->view->render($path),
+                                       ));
     }
 
     private function getId()

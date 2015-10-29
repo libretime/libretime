@@ -1277,14 +1277,18 @@ var AIRTIME = (function(AIRTIME) {
 
         var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
         podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].title = $.i18n._('Add'); //"New" Podcast is misleading
-        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = function(e) {
-            AIRTIME.podcast.createUrlDialog();
-        };
-        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = function(e) {
-            AIRTIME.podcast.editSelectedPodcasts();
-        };
-        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = function(e) {
-            AIRTIME.podcast.deleteSelectedPodcasts();
+        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW].eventHandlers.click = AIRTIME.podcast.createUrlDialog;
+        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT].eventHandlers.click = AIRTIME.podcast.editSelectedPodcasts;
+        podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = AIRTIME.podcast.deleteSelectedPodcasts;
+        // Add a button to view the station podcast
+        podcastToolbarButtons["StationPodcast"] = {
+            'title' : $.i18n._("My Station Podcast"),
+            'iconClass' : "icon-music",
+            extraBtnClass : "",
+            elementId : "",
+            eventHandlers : {
+                click: AIRTIME.podcast.openStationPodcast
+            }
         };
 
         //Set up the div with id "podcast_table" as a datatable.
