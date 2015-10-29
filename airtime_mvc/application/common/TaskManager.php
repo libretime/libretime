@@ -175,6 +175,8 @@ interface AirtimeTask {
 
 /**
  * Class UpgradeTask
+ *
+ * Checks the current Airtime version and runs any outstanding upgrades
  */
 class UpgradeTask implements AirtimeTask {
 
@@ -198,6 +200,8 @@ class UpgradeTask implements AirtimeTask {
 
 /**
  * Class CeleryTask
+ *
+ * Checks the Celery broker task queue and runs callbacks for completed tasks
  */
 class CeleryTask implements AirtimeTask {
 
@@ -221,6 +225,9 @@ class CeleryTask implements AirtimeTask {
 
 /**
  * Class PodcastTask
+ *
+ * Checks podcasts marked for automatic ingest and downloads any new episodes
+ * since the task was last run
  */
 class PodcastTask implements AirtimeTask {
 
@@ -243,7 +250,35 @@ class PodcastTask implements AirtimeTask {
 }
 
 /**
+ * Class ImportTask
+ */
+class ImportCleanupTask implements AirtimeTask {
+
+    /**
+     * Check if there are any files that have been stuck
+     * in Pending status for over an hour
+     *
+     * @return bool true if there are any files stuck pending,
+     *              otherwise false
+     */
+    public function shouldBeRun() {
+        return Application_Service_MediaService::areFilesStuckInPending();
+    }
+
+    /**
+     * Clean up stuck imports by changing their import status to Failed
+     */
+    public function run() {
+        Application_Service_MediaService::clearStuckPendingImports();
+    }
+
+}
+
+/**
  * Class StationPodcastTask
+ *
+ * Checks the Station podcast rollover timer and resets monthly allotted
+ * downloads if enough time has passed (default: 1 month)
  */
 class StationPodcastTask implements AirtimeTask {
 
@@ -282,6 +317,7 @@ class TaskFactory {
     const UPGRADE           = "upgrade";
     const CELERY            = "celery";
     const PODCAST           = "podcast";
+    const IMPORT            = "import";
     const STATION_PODCAST   = "station-podcast";
 
     /**
@@ -291,6 +327,7 @@ class TaskFactory {
         "upgrade"           => "UpgradeTask",
         "celery"            => "CeleryTask",
         "podcast"           => "PodcastTask",
+        "import"            => "ImportCleanupTask",
         "station-podcast"   => "StationPodcastTask",
     );
 

@@ -5,6 +5,15 @@ require_once("FileIO.php");
 
 class Application_Service_MediaService
 {
+
+    const PENDING_FILE_TIMEOUT_SECONDS = 3600;
+
+    /**
+     * @var array store an internal array of the pending files so we don't have
+     *            to go to the database twice
+     */
+    private static $_pendingFiles;
+
     /** Move (or copy) a file to the stor/organize directory and send it off to the
     analyzer to be processed.
      * @param $callbackUrl
@@ -108,6 +117,32 @@ class Application_Service_MediaService
 
         } else {
             throw new FileNotFoundException($filePath);
+        }
+    }
+
+    /**
+     * Check if there are any files that have been stuck
+     * in Pending status for over an hour
+     *
+     * @return bool true if there are any files stuck pending,
+     *              otherwise false
+     */
+    public static function areFilesStuckInPending() {
+        $oneHourAgo = gmdate(DEFAULT_TIMESTAMP_FORMAT, (microtime(true) - self::PENDING_FILE_TIMEOUT_SECONDS));
+        self::$_pendingFiles = CcFilesQuery::create()
+            ->filterByDbImportStatus(CcFiles::IMPORT_STATUS_PENDING)
+            ->filterByDbUtime($oneHourAgo, Criteria::LESS_EQUAL)
+            ->find();
+        return !empty(self::$_pendingFiles);
+    }
+
+    /**
+     * Clean up stuck imports by changing their import status to Failed
+     */
+    public static function clearStuckPendingImports() {
+        foreach(self::$_pendingFiles as $file) {
+            /** @var $file CcFiles */
+            $file->setDbImportStatus(CcFiles::IMPORT_STATUS_FAILED)->save();
         }
     }
 
