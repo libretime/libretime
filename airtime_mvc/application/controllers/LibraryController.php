@@ -370,6 +370,9 @@ class LibraryController extends Zend_Controller_Action
 
             if ($form->isValid($serialized)) {
                 $file->setDbColMetadata($serialized);
+                $this->view->status = true;
+            } else {
+                $this->view->status = false;
             }
         }
 

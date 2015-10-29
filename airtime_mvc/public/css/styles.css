@@ -3781,6 +3781,11 @@ hr {
     margin-right: 4px;
 }
 
+.icon-orange {
+    margin-right: 4px;
+    background-image: url("img/glyphicons-halflings-orange.png");
+}
+
 .nav-ui-icon-formatter {
     width:16px !important;
     display:inline;

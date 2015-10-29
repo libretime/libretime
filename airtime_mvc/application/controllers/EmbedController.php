@@ -29,6 +29,7 @@ class EmbedController extends Zend_Controller_Action
         $this->view->muses_swf = Application_Common_HTTPHelper::getStationUrl() . "js/airtime/player/muses.swf";
         $this->view->metadata_api_url = Application_Common_HTTPHelper::getStationUrl() . "api/live-info";
         $this->view->player_title = json_encode($this->view->escape($request->getParam('title')));
+        $this->view->jquery_i18n = Application_Common_HTTPHelper::getStationUrl() . "js/i18n/jquery.i18n.js?";
 
         $styleParam = $request->getParam('style');
         $player_style = isset($styleParam) ? $styleParam : "basic";
