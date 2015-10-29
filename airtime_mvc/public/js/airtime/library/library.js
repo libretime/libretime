@@ -1075,7 +1075,7 @@ var AIRTIME = (function(AIRTIME) {
                         if (data.ftype === "audioclip") {
                             callback = function() {
                                 $.get(oItems.edit.url, {format: "json"}, function(json){
-                                    AIRTIME.playlist.fileMdEdit(json);
+                                    AIRTIME.playlist.fileMdEdit(json, data.tr_id);
                                 });
                             };
                         } else if (data.ftype === "playlist" || data.ftype === "block") {
