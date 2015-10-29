@@ -283,26 +283,7 @@ class BillingController extends Zend_Controller_Action {
         $baseUrl = Application_Common_OsPath::getBaseDir();
         $this->view->headLink()->appendStylesheet($baseUrl.'css/billing.css?'.$CC_CONFIG['airtime_version']);
 
-        Billing::ensureClientIdIsValid();
-        $credentials = Billing::getAPICredentials();
-        
-        $postfields = array();
-        $postfields["username"] = $credentials["username"];
-        $postfields["password"] = md5($credentials["password"]);
-        $postfields["action"] = "getinvoices";
-        $postfields["responsetype"] = "json";
-        $postfields["userid"] = Application_Model_Preference::GetClientId();
-        
-        $query_string = "";
-        foreach ($postfields AS $k=>$v) $query_string .= "$k=".urlencode($v)."&";
-        
-        $result = Billing::makeRequest($credentials["url"], $query_string);
-        
-        if ($result["invoices"]) {
-            $this->view->invoices = $result["invoices"]["invoice"];;
-        } else {
-            $this->view->invoices = array();
-        }
+        $this->view->invoices = Billing::getInvoices();
     }
     
     public function invoiceAction()
@@ -312,6 +293,4 @@ class BillingController extends Zend_Controller_Action {
         $invoice_id = $request->getParam('invoiceid');
         self::viewInvoice($invoice_id);
     }
-
-
 }

@@ -8,6 +8,15 @@
     float: left;
 }
 
+#edit-md-dialog ul.errors {
+    clear: both;
+    float: none;
+}
+
+#edit-md-dialog dd input.input_text {
+    width: auto;
+}
+
 .spl_sortable,.spl_sortable>li,.side_playlist>div,#spl_editor,.spl_artist,.spl_cue_in,.spl_fade_in,.spl_cue_out,.spl_fade_out
     {
     clear: left;

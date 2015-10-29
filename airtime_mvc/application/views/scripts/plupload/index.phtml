@@ -47,7 +47,7 @@
             <div style="padding-bottom: 2px;">Storage</div>
             <div class="disk_usage_progress_bar"></div>
             <div class="disk_usage_percent_in_use"><?php echo sprintf("%01.1f%% ", $used/$total*100) .  _("in use") ?></div>
-            <div class="disk_usage_used" style="width:<?php echo sprintf("%01.1f%%", $used/$total*100) ?>;"></div>
+            <div class="disk_usage_used" style="width:<?php echo sprintf("%01.1f%%", min(100, $used/$total*100)) ?>;"></div>
 
             <div style="margin-top: 17px; font-size: 12px;"><?php echo sprintf("%01.1fGB of %01.1fGB", $used/pow(2, 30), $total/pow(2, 30)); ?></div>
         </div>

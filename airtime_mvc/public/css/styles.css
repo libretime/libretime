@@ -3781,6 +3781,11 @@ hr {
     margin-right: 4px;
 }
 
+.icon-orange {
+    margin-right: 4px;
+    background-image: url("img/glyphicons-halflings-orange.png");
+}
+
 .nav-ui-icon-formatter {
     width:16px !important;
     display:inline;
@@ -3815,10 +3820,8 @@ hr {
 }
 
 .disk_usage_progress_bar {
-    position: absolute;
-    left: 4px;
-    right: 4px;
-    /* width: 118px; */
+    float: left;
+    width: 100%;
     height: 13px;
     background: #444444;
     background: -moz-linear-gradient(top, #464646 0, #3e3e3e 100%);
@@ -3844,7 +3847,7 @@ hr {
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff6f01), color-stop(100%, #bc5200));
     height:13px;
     z-index: 2;
-    position:absolute;
+    position: relative;
 }
 
 .dropdown-menu li > a:hover, .dropdown-menu li > a:focus, .dropdown-submenu:hover > a

@@ -3,12 +3,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
 {
     public function init()
     {
-        $csrf_namespace = new Zend_Session_Namespace('csrf_namespace');
-        $csrf_element = new Zend_Form_Element_Hidden('csrf');
-        $csrf_element->setValue($csrf_namespace->authtoken)->setRequired('true')->removeDecorator('HtmlTag')->removeDecorator('Label');
-        $this->addElement($csrf_element);
-
-        $this->addElement('hash', 'csrf', array(
+        $this->addElement('hash', 'csrf_upgrade', array( //Needs a unique ID (csrf_upgrade) so it doesn't conflict with other tokens in subforms
             'salt' => 'unique'
         ));
 
