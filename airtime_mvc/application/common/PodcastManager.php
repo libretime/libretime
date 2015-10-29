@@ -50,12 +50,17 @@ class PodcastManager {
         $podcastArray = Application_Service_PodcastService::getPodcastById($podcast->getDbPodcastId());
         $episodeList = $podcastArray["episodes"];
         $episodes = array();
-        // Sort the episodes by publication date to get the most recent
-        // usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
+        usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
         for ($i = 0; $i < sizeof($episodeList); $i++) {
             $episodeData = $episodeList[$i];
+            $ts = $podcast->getDbAutoIngestTimestamp();
+            // If the timestamp for this podcast is empty (no previous episodes have been ingested) and there are no
+            //  episodes in the list of episodes to ingest, don't skip this episode - we should try to ingest the
+            //  most recent episode when the user first sets the podcast to automatic ingest.
             // If the publication date of this episode is before the ingest timestamp, we don't need to ingest it
-            if (strtotime($episodeData["pub_date"]) < strtotime($podcast->getDbAutoIngestTimestamp())) continue;
+            if ((empty($ts) && !empty($episodes)) || strtotime($episodeData["pub_date"]) < strtotime($ts)) {
+                continue;
+            }
             $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData["guid"]);
             // Make sure there's no existing episode placeholder or import, and that the data is non-empty
             if (empty($episode) && !empty($episodeData)) {
@@ -87,7 +92,7 @@ class PodcastManager {
      */
     protected static function _sortByEpisodePubDate($a, $b) {
         if ($a["pub_date"] == $b["pub_date"]) return 0;
-        return ($a["pub_date"] < $b["pub_date"]) ? 1 : -1;  // Descending order
+        return (strtotime($a["pub_date"]) < strtotime($b["pub_date"])) ? 1 : -1;  // Descending order
     }
 
 }

@@ -1117,14 +1117,13 @@ var AIRTIME = (function(AIRTIME){
         AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initFileMdEvents);
     };
 
-    mod.fnEdit = function(id, type, url) {
+    mod.fnEdit = function(id, uid, url) {
         //openPlaylistPanel();
         stopAudioPreview();
 
         $.post(url,
             {format: "json", id: id, type: type},
             function(json) {
-                var uid = AIRTIME.library.MediaTypeFullToStringEnum.type+"_"+id;
                 AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
                 redrawLib();
             });

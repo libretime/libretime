@@ -137,7 +137,7 @@ var AIRTIME = (function (AIRTIME) {
      * Called when editing one or more podcasts.
      *
      * @param data JSON data returned from the server.
-     *             Contains stringified podcast object JSON and tab
+     *             Contains a JSON encoded podcast object and tab
      *             content HTML and has the following form:
      *             {
      *                 podcast: '{

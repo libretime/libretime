@@ -179,7 +179,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
             case HttpRequestType::GET:
                 foreach($ids as $id) {
                     $responseBody[] = array(
-                        "podcast"   => Application_Service_PodcastService::getPodcastById($id),
+                        "podcast"   => json_encode(Application_Service_PodcastService::getPodcastById($id)),
                         "html"      => $this->view->render('podcast/podcast.phtml')
                     );
                 }

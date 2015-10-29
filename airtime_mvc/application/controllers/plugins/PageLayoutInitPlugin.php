@@ -48,12 +48,16 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
             $this->_initGlobals();
             $this->_initCsrfNamespace();
-            $this->_initTasks();
             $this->_initHeadLink();
             $this->_initHeadScript();
             $this->_initTitle();
             $this->_initTranslationGlobals();
             $this->_initViewHelpers();
+        }
+
+        // Piggyback the TaskManager onto API calls
+        if ($controller == "api") {
+            $this->_initTasks();
         }
     }
 

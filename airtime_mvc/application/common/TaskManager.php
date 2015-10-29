@@ -82,6 +82,7 @@ final class TaskManager {
         if ($this->_isUserSessionRequest()) {
             return;
         }
+        Logging::info("Running the tasks!");
         $this->_con = Propel::getConnection(CcPrefPeer::DATABASE_NAME);
         $this->_con->beginTransaction();
         try {

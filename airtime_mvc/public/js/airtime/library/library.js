@@ -1080,12 +1080,12 @@ var AIRTIME = (function(AIRTIME) {
                             };
                         } else if (data.ftype === "playlist" || data.ftype === "block") {
                             callback = function() {
-                                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl+'playlist/edit');
+                                AIRTIME.playlist.fnEdit(data.id, data.tr_id, baseUrl+'playlist/edit');
                                 AIRTIME.playlist.validatePlaylistElements();
                             };
                         } else if (data.ftype === "stream") {
                             callback = function() {
-                                AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'webstream/edit');
+                                AIRTIME.playlist.fnEdit(data.id, data.tr_id, baseUrl + 'webstream/edit');
                             }
                         } else {
                             throw new Exception($.i18n._("Unknown type: ") + data.ftype);

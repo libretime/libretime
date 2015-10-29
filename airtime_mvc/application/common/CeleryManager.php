@@ -5,7 +5,7 @@ class CeleryManager {
     /**
      * @var int milliseconds (for compatibility with celery) until we consider a message to have timed out
      */
-    private static $_CELERY_MESSAGE_TIMEOUT = 600000;  // 10 minutes
+    private static $_CELERY_MESSAGE_TIMEOUT = 900000;  // 15 minutes
 
     /**
      * We have to use celeryresults (the default results exchange) because php-celery

@@ -119,7 +119,7 @@ var AIRTIME = (function (AIRTIME) {
 
         jQuery.get(dialogUrl, { csrf_token: jQuery("#csrf").val() })
             .success(function(html) {
-                var tab = AIRTIME.tabs.openTab(html, mediaId, null);
+                var tab = AIRTIME.tabs.openTab(html, PUBLISH_APP_NAME+"_"+mediaId, null);
                 _bootstrapAngularApp(mediaId, tab);
             });
 

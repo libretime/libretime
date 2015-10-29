@@ -109,6 +109,7 @@ def podcast_download(id, url, callback_url, api_key):
         obj['fileid'] = f['id']
         obj['status'] = 1
     except Exception as e:
+        obj['error'] = e.message
         logger.info('Error during file download: {0}'.format(e.message))
         obj['status'] = 0
     return json.dumps(obj)

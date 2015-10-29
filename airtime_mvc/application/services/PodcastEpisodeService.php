@@ -151,11 +151,18 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
 
         $dbEpisode = PodcastEpisodesQuery::create()
             ->findOneByDbId($episode->episodeid);
+
+        // If the placeholder for the episode is somehow removed, return with a warning
+        if (!$dbEpisode) {
+            Logging::warn("Celery task $task episode $episode->episodeid unsuccessful: episode placeholder removed");
+            return $ref;
+        }
+
         // Even if the task itself succeeds, the download could have failed, so check the status
-        if ($status == CELERY_SUCCESS_STATUS && $episode->status) {
+        if ($status == CELERY_SUCCESS_STATUS && $episode->status == 1) {
             $dbEpisode->setDbFileId($episode->fileid)->save();
         } else {
-            Logging::warn("Celery task $task episode $episode->episodeid unsuccessful with status $episode->status");
+            Logging::warn("Celery task $task episode $episode->episodeid unsuccessful with message $episode->error");
             $dbEpisode->delete();
         }
 
