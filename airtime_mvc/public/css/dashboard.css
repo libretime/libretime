@@ -92,8 +92,9 @@
     padding: 0;
 }
 
-#library_display_length {
-    padding: 6px;
+.dataTables_length {
+    /*padding: 6px;*/
+    padding: 5px 6px;
 }
 
 #library_display_length label {

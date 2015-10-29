@@ -30,6 +30,10 @@
 	overflow-x: hidden;
 }
 
+#recent_uploads_table_wrapper > .dataTables_scrolling {
+	border: 0;
+}
+
 #recent_uploads_table_wrapper > .fg-toolbar
 {
 	position: absolute;
@@ -55,10 +59,6 @@ table#recent_uploads_table td
 	float: right;
 	margin-top: 5px;
 	margin-right: 3px;
-}
-#recent_uploads_table_length
-{
-	margin: 5px;
 }
 
 /** Vertically align radio buttons with the labels */
