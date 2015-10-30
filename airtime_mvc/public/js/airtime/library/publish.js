@@ -20,7 +20,7 @@ var AIRTIME = (function (AIRTIME) {
 
             function init () {
                 var csrfToken = jQuery("#csrf").val();
-                $http.get(endpoint + mediaId, { csrf_token: csrfToken })
+                $http.get(endpoint + mediaId, {csrf_token: csrfToken})
                     .success(function (json) {
                         $scope.media = json;
                         tab.setName($scope.media.track_title);
@@ -28,7 +28,7 @@ var AIRTIME = (function (AIRTIME) {
 
                 // Get an object containing all sources, their translated labels,
                 // and their publication state for the file with the given ID
-                $http.get(endpoint + mediaId + '/publish-sources', { csrf_token: csrfToken })
+                $http.get(endpoint + mediaId + '/publish-sources', {csrf_token: csrfToken})
                     .success(function (json) {
                         $scope.sources = json;
                         // Store the data (whether each source should be published to when publish is clicked)
@@ -49,14 +49,18 @@ var AIRTIME = (function (AIRTIME) {
 
             $scope.publish = function () {
                 var data = {};
-                jQuery.each($scope.publishData, function(k, v) {
+                jQuery.each($scope.publishData, function (k, v) {
                     if (v) {
+                        if (k == "soundcloud") {
+                            alert($.i18n._("Your track is being uploaded and will "
+                                + "appear on SoundCloud in a couple of minutes"));
+                        }
                         data[k] = 'publish';  // FIXME: should be more robust
                     }
                 });
 
                 if (Object.keys(data).length > 0) {
-                    $http.put(endpoint + mediaId + '/publish', { csrf_token: jQuery("#csrf").val(), sources: data})
+                    $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
                         .success(function () {
                             init();
                         });
@@ -66,10 +70,13 @@ var AIRTIME = (function (AIRTIME) {
             $scope.remove = function (source) {
                 var data = {};
                 data[source] = 'unpublish';  // FIXME: should be more robust
-                $http.put(endpoint + mediaId + '/publish', { csrf_token: jQuery("#csrf").val(), sources: data })
-                    .success(function () {
-                        init();
-                    });
+                if (source != "soundcloud" || confirm($.i18n._("Are you sure? SoundCloud stats and comments "
+                        + "for this track will be permanently removed."))) {
+                    $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
+                        .success(function () {
+                            init();
+                        });
+                }
             };
 
             $scope.discard = function () {

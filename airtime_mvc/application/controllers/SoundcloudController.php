@@ -28,9 +28,20 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
      * @throws Zend_Controller_Response_Exception thrown if upload fails for any reason
      */
     public function uploadAction() {
-        $request = $this->getRequest();
-        $id = $request->getParam('id');
+        $id = $this->getRequest()->getParam('id');
         $this->_service->upload($id);
+    }
+
+    /**
+     * Update the file with the given id on SoundCloud
+     *
+     * @return void
+     *
+     * @throws Zend_Controller_Response_Exception thrown if upload fails for any reason
+     */
+    public function updateAction() {
+        $id = $this->getRequest()->getParam('id');
+        $this->_service->update($id);
     }
 
     /**
@@ -41,8 +52,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
      * @throws Zend_Controller_Response_Exception thrown if download fails for any reason
      */
     public function downloadAction() {
-        $request = $this->getRequest();
-        $id = $request->getParam('id');
+        $id = $this->getRequest()->getParam('id');
         $this->_service->download($id);
     }
 
@@ -54,8 +64,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
      * @throws Zend_Controller_Response_Exception thrown if deletion fails for any reason
      */
     public function deleteAction() {
-        $request = $this->getRequest();
-        $id = $request->getParam('id');
+        $id = $this->getRequest()->getParam('id');
         $this->_service->delete($id);
     }
 
@@ -97,8 +106,7 @@ class SoundcloudController extends ThirdPartyController implements OAuth2Control
      * @return void
      */
     public function viewOnSoundCloudAction() {
-        $request = $this->getRequest();
-        $id = $request->getParam('id');
+        $id = $this->getRequest()->getParam('id');
         try {
             $soundcloudLink = $this->_service->getLinkToFile($id);
             header('Location: ' . $soundcloudLink);

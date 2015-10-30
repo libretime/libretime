@@ -1178,33 +1178,15 @@ var AIRTIME = (function(AIRTIME) {
                     if (oItems.soundcloud !== undefined) {
                         var soundcloud = oItems.soundcloud.items;
 
-                        // define an upload to soundcloud callback.
-                        if (soundcloud.upload !== undefined) {
-
+                        if (soundcloud.update !== undefined) {
                             callback = function() {
-                                alert($.i18n._("Your track is being uploaded and will " +
-                                    "appear on SoundCloud in a couple of minutes"));
-                                $.post(soundcloud.upload.url, function(){});
+                                $.post(soundcloud.update.url, function () {});
                             };
-                            soundcloud.upload.callback = callback;
-                        }
-
-                        // define an upload to soundcloud callback.
-                        if (soundcloud.remove !== undefined) {
-
-                            callback = function() {
-                                if (confirm($.i18n._("Are you sure? SoundCloud stats and comments for this track will be permanently removed."))) {
-                                    alert($.i18n._("Your track is being deleted from SoundCloud"));
-                                    $.post(soundcloud.remove.url, function () {
-                                    });
-                                }
-                            };
-                            soundcloud.remove.callback = callback;
+                            soundcloud.update.callback = callback;
                         }
 
                         // define a view on soundcloud callback
                         if (soundcloud.view !== undefined) {
-
                             callback = function() {
                                 window.open(soundcloud.view.url);
                             };

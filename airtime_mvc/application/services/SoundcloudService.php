@@ -14,6 +14,7 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
      */
 
     const UPLOAD    = 'upload';
+    const UPDATE    = 'update';
     const DOWNLOAD  = 'download';
     const DELETE    = 'delete';
 
@@ -42,6 +43,7 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
      */
     protected static $_CELERY_TASKS = [
         self::UPLOAD      => 'soundcloud-upload',
+        self::UPDATE      => 'soundcloud-update',
         self::DOWNLOAD    => 'soundcloud-download',
         self::DELETE      => 'soundcloud-delete'
     ];
@@ -136,13 +138,28 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
     }
 
     /**
-     * Given a track identifier, download a track from SoundCloud
-     *
-     * If no identifier is given, download all the user's tracks
+     * Given a track identifier, update a track on SoundCloud
      *
      * @param int $trackId a track identifier
      */
-    public function download($trackId = null) {
+    public function update($trackId) {
+        $trackRef = ThirdPartyTrackReferencesQuery::create()
+            ->findOneByDbForeignId($trackId);
+        $file = Application_Model_StoredFile::RecallById($trackRef->getDbFileId());
+        $data = array(
+            'data' => $this->_getUploadData($file),
+            'token' => $this->_accessToken,
+            'track_id' => $trackId
+        );
+        $this->_executeTask(static::$_CELERY_TASKS[self::UPDATE], $data, $trackRef->getDbFileId());
+    }
+
+    /**
+     * Given a track identifier, download a track from SoundCloud
+     *
+     * @param int $trackId a track identifier
+     */
+    public function download($trackId) {
         $CC_CONFIG = Config::getConfig();
         $data = array(
             'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . 'rest/media',
@@ -200,6 +217,9 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
                 return null;
             }
             $ref->setDbForeignId($track->id);  // SoundCloud identifier
+            if (isset($track->fileid)) {
+                $ref->setDbFileId($track->fileid);  // For downloads, set the cc_files ID
+            }
         }
         // TODO: set SoundCloud upload status?
         // $ref->setDbStatus($status);
@@ -288,6 +308,8 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
     }
 
     /**
+     * Publishing interface proxy
+     *
      * Publish the file with the given file ID to SoundCloud
      *
      * @param int $fileId ID of the file to be published
@@ -297,6 +319,8 @@ class Application_Service_SoundcloudService extends Application_Service_ThirdPar
     }
 
     /**
+     * Publishing interface proxy
+     *
      * Unpublish the file with the given file ID from SoundCloud
      *
      * @param int $fileId ID of the file to be unpublished

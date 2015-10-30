@@ -25,14 +25,14 @@ def parse_rmq_config(rmq_config):
 BROKER_URL = get_rmq_broker()
 CELERY_RESULT_BACKEND = 'amqp'            # Use RabbitMQ as the celery backend
 CELERY_RESULT_PERSISTENT = True           # Persist through a broker restart
-CELERY_TASK_RESULT_EXPIRES = 600          # Expire task results after 10 minutes
+CELERY_TASK_RESULT_EXPIRES = 900          # Expire task results after 15 minutes
 CELERY_RESULT_EXCHANGE = 'celeryresults'  # Default exchange - needed due to php-celery
 CELERY_QUEUES = (
     Queue('soundcloud', exchange=Exchange('soundcloud'), routing_key='soundcloud'),
     Queue('podcast', exchange=Exchange('podcast'), routing_key='podcast'),
     Queue(exchange=Exchange('celeryresults'), auto_delete=True),
 )
-CELERY_EVENT_QUEUE_EXPIRES = 600          # RabbitMQ x-expire after 10 minutes
+CELERY_EVENT_QUEUE_EXPIRES = 900          # RabbitMQ x-expire after 15 minutes
 
 # Celery task settings
 CELERY_TASK_SERIALIZER = 'json'

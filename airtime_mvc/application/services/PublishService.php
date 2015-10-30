@@ -73,7 +73,7 @@ class Application_Service_PublishService {
         );
     }
 
-    /** @noinspection PhpUnusedPrivateMethodInspection
+    /**
      * Reflective accessor for SoundCloud publication status for the
      * file with the given ID
      *
@@ -84,10 +84,11 @@ class Application_Service_PublishService {
      */
     private static function getSoundCloudPublishStatus($fileId) {
         $soundcloudService = new Application_Service_SoundcloudService();
-        return ($soundcloudService->getServiceId($fileId) != 0);
+        return ($soundcloudService->referenceExists($fileId));
     }
 
-    /** @noinspection PhpUnusedPrivateMethodInspection
+    /**
+     *
      * Reflective accessor for Station podcast publication status for the
      * file with the given ID
      *
