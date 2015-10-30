@@ -21,6 +21,8 @@ var AIRTIME = (function (AIRTIME) {
             tab.setName($scope.podcast.title);
             $scope.csrf = jQuery("#csrf").val();
             tab.contents.find("table").attr("id", "podcast_episodes_" + podcast.id);
+            // TODO: this solves a race condition, but we should look for the root cause
+            AIRTIME.tabs.onResize();
             var episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(podcast, tab);
 
             /**

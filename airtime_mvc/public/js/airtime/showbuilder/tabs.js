@@ -185,6 +185,8 @@ var AIRTIME = (function(AIRTIME){
 
         if (self.isActive()) {  // Closing the current tab, otherwise we don't need to switch tabs
             toTab.switchTo();
+        } else {
+            mod.onResize();
         }
     };
 
