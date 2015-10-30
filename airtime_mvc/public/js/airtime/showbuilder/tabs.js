@@ -253,6 +253,7 @@ var AIRTIME = (function(AIRTIME){
      */
     mod.initScheduleTab = function() {
         $scheduleTab = Object.freeze(new ScheduleTab());
+        $activeTab = $scheduleTab;
     };
 
     /**

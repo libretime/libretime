@@ -374,10 +374,10 @@ var AIRTIME = (function(AIRTIME) {
                             //buildEditMetadataDialog(json);
                         });
                     } else if (data.ftype === "playlist" || data.ftype === "block") {
-                        AIRTIME.playlist.fnEdit(data.id, data.tr_id, baseUrl + 'playlist/edit');
+                        AIRTIME.playlist.fnEdit(data, baseUrl + 'playlist/edit');
                         AIRTIME.playlist.validatePlaylistElements();
                     } else if (data.ftype === "stream") {
-                        AIRTIME.playlist.fnEdit(data.id, data.tr_id, baseUrl + 'webstream/edit');
+                        AIRTIME.playlist.fnEdit(data, baseUrl + 'webstream/edit');
                     }
                 });
             });

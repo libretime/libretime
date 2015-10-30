@@ -849,11 +849,11 @@ var AIRTIME = (function(AIRTIME){
             // TODO: refactor - this code is pretty finicky...
             if ((name == $.i18n._("Untitled Playlist")
                 || name == $.i18n._("Untitled Smart Block"))
-                && $pl.find(".spl_sortable .spl_empty").length == 1) {
+                && tab.contents.find(".spl_sortable .spl_empty").length == 1) {
                 mod.fnDelete(undefined, tab);
-            } else {
-                tab.close();
             }
+
+            tab.close();
 
             $.ajax( {
                 url : baseUrl+"usersettings/set-library-screen-settings",
@@ -1117,14 +1117,13 @@ var AIRTIME = (function(AIRTIME){
         AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initFileMdEvents);
     };
 
-    mod.fnEdit = function(id, uid, url) {
-        //openPlaylistPanel();
+    mod.fnEdit = function(data, url) {
         stopAudioPreview();
 
         $.post(url,
-            {format: "json", id: id, type: type},
+            {format: "json", id: data.id, type: data.ftype},
             function(json) {
-                AIRTIME.tabs.openTab(json.html, uid, AIRTIME.playlist._initPlaylistTabEvents);
+                AIRTIME.tabs.openTab(json.html, data.tr_id, AIRTIME.playlist._initPlaylistTabEvents);
                 redrawLib();
             });
     };
@@ -1139,10 +1138,12 @@ var AIRTIME = (function(AIRTIME){
         type = pl.find('.obj_type').val();
         url = baseUrl+'playlist/delete';
 
+        console.log(id);
+        console.log(type);
+
         $.post(url,
             {format: "json", ids: id, modified: lastMod, type: type},
             function(json) {
-                tab.close();
                 redrawLib();
             });
     };
@@ -1485,14 +1486,17 @@ var AIRTIME = (function(AIRTIME){
 
     mod.setCurrent = function(pl) {
         $pl = pl;
-        $.post(baseUrl + "playlist/change-playlist", {
-            "id": mod.getId($pl),
-            "type": $pl.find('.obj_type').val()
-        });
+
+        var type = $pl.find('.obj_type').val();
+        if ($.inArray(type, Object.keys(AIRTIME.library.MediaTypeFullToStringEnum)) > -1) {
+            $.post(baseUrl + "playlist/change-playlist", {
+                id: mod.getId($pl),
+                type: type
+            });
+        }
     };
 
     mod.init = function() {
-        AIRTIME.tabs.updateActiveTab();
         if (!$pl) return;
 
         $pl.delegate(".pl-waveform-cues-btn", {"click": function(ev){

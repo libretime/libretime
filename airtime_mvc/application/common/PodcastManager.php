@@ -35,8 +35,10 @@ class PodcastManager {
             // that we're ingesting.
             // Note that this folds to the failure case (Celery task timeout/download failure)
             //  but will at least continue to ingest new episodes.
-            $podcast->setDbAutoIngestTimestamp(gmdate('r', strtotime($episodes[0]->getDbPublicationDate())))->save();
-            $service->downloadEpisodes($episodes);
+            if (!empty($episodes)) {
+                $podcast->setDbAutoIngestTimestamp(gmdate('r', strtotime($episodes[0]->getDbPublicationDate())))->save();
+                $service->downloadEpisodes($episodes);
+            }
         }
 
         Application_Model_Preference::setPodcastPollLock(microtime(true));
