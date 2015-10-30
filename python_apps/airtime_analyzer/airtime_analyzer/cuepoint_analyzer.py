@@ -39,7 +39,7 @@ class CuePointAnalyzer(Analyzer):
                 # Silan has a rare bug where it can massively overestimate the length or cue out time sometimes.
                 if (silan_length_seconds - metadata['length_seconds'] > 3) or (float(silan_cueout) - metadata['length_seconds'] > 2):
                     # Don't trust anything silan says then...
-                    raise Exception("Silan cue out {0} or length {1} differs too much from the mutagen length {2}."
+                    raise Exception("Silan cue out {0} or length {1} differs too much from the Mutagen length {2}. Ignoring Silan values."
                                     .format(silan_cueout, silan_length_seconds, metadata['length_seconds']))
                 # Don't allow silan to trim more than the greater of 3 seconds or 5% off the start of a track
                 if float(silan_cuein) > max(silan_length_seconds*0.05, 3):
