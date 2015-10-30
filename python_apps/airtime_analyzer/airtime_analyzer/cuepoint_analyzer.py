@@ -44,6 +44,13 @@ class CuePointAnalyzer(Analyzer):
                 # Don't allow silan to trim more than the greater of 3 seconds or 5% off the start of a track
                 if float(silan_cuein) > max(silan_length_seconds*0.05, 3):
                     raise Exception("Silan cue in time {0} too big, ignoring.".format(silan_cuein))
+            else:
+                # Only use the Silan track length in the worst case, where Mutagen didn't give us one for some reason.
+                # (This is mostly to make the unit tests still pass.)
+                # Convert the length into a formatted time string.
+                metadata['length_seconds'] = silan_length_seconds #
+                track_length = datetime.timedelta(seconds=metadata['length_seconds'])
+                metadata["length"] = str(track_length)
 
 
             ''' XXX: I've commented out the track_length stuff below because Mutagen seems more accurate than silan
@@ -51,10 +58,6 @@ class CuePointAnalyzer(Analyzer):
                      length can be off by a few seconds reasonably often.
             '''
 
-            # Conver the length into a formatted time string
-            #metadata['length_seconds'] = silan_length_seconds #
-            #track_length = datetime.timedelta(seconds=metadata['length_seconds'])
-            #metadata["length"] = str(track_length)
             metadata['cuein'] = silan_cuein
             metadata['cueout'] = silan_cueout
 
