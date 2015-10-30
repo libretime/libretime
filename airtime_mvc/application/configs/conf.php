@@ -96,6 +96,12 @@ class Config {
         $CC_CONFIG['soundcloud-client-id'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_id'];
         $CC_CONFIG['soundcloud-client-secret'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_client_secret'];
         $CC_CONFIG['soundcloud-redirect-uri'] = $globalAirtimeConfigValues['soundcloud']['soundcloud_redirect_uri'];
+        if (isset($globalAirtimeConfigValues['facebook']['facebook_app_id'])) {
+            $CC_CONFIG['facebook-app-id'] = $globalAirtimeConfigValues['facebook']['facebook_app_id'];
+            $CC_CONFIG['facebook-app-url'] = $globalAirtimeConfigValues['facebook']['facebook_app_url'];
+            $CC_CONFIG['facebook-app-api-key'] = $globalAirtimeConfigValues['facebook']['facebook_app_api_key'];
+        }
+
 
         if(isset($values['demo']['demo'])){
             $CC_CONFIG['demo'] = $values['demo']['demo'];

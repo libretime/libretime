@@ -1,0 +1,25 @@
+<div id="weekly-schedule-widget" class="prefpanel ui-widget simple-formblock clearfix padded-strong ">
+
+    <?php $baseUrl = Application_Common_OsPath::getBaseDir(); ?>
+
+    <h2 style="float:left"><?php echo _("Facebook Radio Player") ?></h2>
+    <div style="clear:both"></div>
+
+    <div id="weekly-schedule-widget-error">
+        <?php echo $this->facebook_error_msg; ?>
+    </div>
+    <div><p>Add your <?php echo(SAAS_PRODUCT_BRANDING_NAME); ?> station to your Facebook Page.</p>
+        <button id="facebook-login">Add to Facebook Page</button>
+    </div>
+
+
+    <div>
+        <h3>Preview:</h3>
+
+        <div>
+            <iframe width=800 height=800 src="<?php echo Application_Common_HTTPHelper::getStationUrl(); ?>/?facebook=1"></iframe>
+        </div>
+
+    </div>
+
+</div>
