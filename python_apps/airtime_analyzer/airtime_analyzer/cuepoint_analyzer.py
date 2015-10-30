@@ -28,12 +28,35 @@ class CuePointAnalyzer(Analyzer):
         try:
             results_json = subprocess.check_output(command, stderr=subprocess.STDOUT, close_fds=True)
             silan_results = json.loads(results_json)
-            metadata['length_seconds'] = float(silan_results['file duration'])
+
+            # Defensive coding against Silan wildly miscalculating the cue in and out times:
+            silan_length_seconds = float(silan_results['file duration'])
+            silan_cuein = format(silan_results['sound'][0][0], 'f')
+            silan_cueout = format(silan_results['sound'][0][1], 'f')
+
+            # Sanity check the results against any existing metadata passed to us (presumably extracted by Mutagen):
+            if 'length_seconds' in metadata:
+                # Silan has a rare bug where it can massively overestimate the length or cue out time sometimes.
+                if (silan_length_seconds - metadata['length_seconds'] > 3) or (float(silan_cueout) > metadata['length_seconds']):
+                    # Don't trust anything silan says then...
+                    raise Exception("Silan cue out {0} or length {1} differs too much from the mutagen length {2}."
+                                    .format(silan_cueout, silan_length_seconds, metadata['length_seconds']))
+                # Don't allow silan to trim more than the greater of 3 seconds or 5% off the start of a track
+                if float(silan_cuein) > max(silan_length_seconds*0.05, 3):
+                    raise Exception("Silan cue in time {0} too big, ignoring.".format(silan_cuein))
+
+
+            ''' XXX: I've commented out the track_length stuff below because Mutagen seems more accurate than silan
+                     as of Mutagen version 1.31. We are always going to use Mutagen's length now because Silan's
+                     length can be off by a few seconds reasonably often.
+            '''
+
             # Conver the length into a formatted time string
-            track_length = datetime.timedelta(seconds=metadata['length_seconds'])
-            metadata["length"] = str(track_length)
-            metadata['cuein'] = format(silan_results['sound'][0][0], 'f')
-            metadata['cueout'] = format(silan_results['sound'][0][1], 'f')
+            #metadata['length_seconds'] = silan_length_seconds #
+            #track_length = datetime.timedelta(seconds=metadata['length_seconds'])
+            #metadata["length"] = str(track_length)
+            metadata['cuein'] = silan_cuein
+            metadata['cueout'] = silan_cueout
 
         except OSError as e: # silan was not found
             logging.warn("Failed to run: %s - %s. %s" % (command[0], e.strerror, "Do you have silan installed?"))

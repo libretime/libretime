@@ -27,7 +27,7 @@ setup(name='airtime_analyzer',
       packages=['airtime_analyzer'],
       scripts=['bin/airtime_analyzer'],
       install_requires=[
-          'mutagen',
+          'mutagen=1.31', # The Mutagen guys change stuff all the time that break our unit tests. Watch out for this.
           'pika',
           'daemon',
           'python-magic',

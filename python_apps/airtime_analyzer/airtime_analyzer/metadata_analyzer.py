@@ -67,8 +67,11 @@ class MetadataAnalyzer(Analyzer):
             track_length = datetime.timedelta(seconds=info.length)
             metadata["length"] = str(track_length) #time.strftime("%H:%M:%S.%f", track_length)
             # Other fields for Airtime
-            metadata["cueout"] = metadata["length"] 
-      
+            metadata["cueout"] = metadata["length"]
+
+        # Set a default cue in time in seconds
+        metadata["cuein"] = 0.0;
+
         if hasattr(info, "bitrate"):
             metadata["bit_rate"] = info.bitrate
         
