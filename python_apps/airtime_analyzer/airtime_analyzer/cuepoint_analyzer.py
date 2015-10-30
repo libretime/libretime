@@ -37,7 +37,7 @@ class CuePointAnalyzer(Analyzer):
             # Sanity check the results against any existing metadata passed to us (presumably extracted by Mutagen):
             if 'length_seconds' in metadata:
                 # Silan has a rare bug where it can massively overestimate the length or cue out time sometimes.
-                if (silan_length_seconds - metadata['length_seconds'] > 3) or (float(silan_cueout) > metadata['length_seconds']):
+                if (silan_length_seconds - metadata['length_seconds'] > 3) or (float(silan_cueout) - metadata['length_seconds'] > 2):
                     # Don't trust anything silan says then...
                     raise Exception("Silan cue out {0} or length {1} differs too much from the mutagen length {2}."
                                     .format(silan_cueout, silan_length_seconds, metadata['length_seconds']))
