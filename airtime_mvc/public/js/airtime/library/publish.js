@@ -15,7 +15,7 @@ var AIRTIME = (function (AIRTIME) {
 
     //AngularJS app
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
-        .controller('RestController', function ($scope, $http, mediaId, tab) {
+        .controller('Publish', function ($scope, $http, mediaId, tab) {
             $scope.publishSources = {};
 
             function init () {
@@ -100,7 +100,7 @@ var AIRTIME = (function (AIRTIME) {
         publishApp.value('mediaId', mediaId);
         publishApp.value('tab', tab);
         var wrapper = AIRTIME.tabs.getActiveTab().contents.find(".editor_pane_wrapper");
-        wrapper.attr("ng-controller", "RestController");
+        wrapper.attr("ng-controller", "Publish");
         angular.bootstrap(wrapper.get(0), [PUBLISH_APP_NAME]);
     }
 

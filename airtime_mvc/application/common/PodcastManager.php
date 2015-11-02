@@ -54,8 +54,7 @@ class PodcastManager {
      * @return array array of episodes to append be downloaded
      */
     protected static function _findUningestedEpisodes($podcast, $service) {
-        $podcastArray = Application_Service_PodcastService::getPodcastById($podcast->getDbPodcastId());
-        $episodeList = $podcastArray["episodes"];
+        $episodeList = $service->getPodcastEpisodes($podcast->getDbPodcastId());
         $episodes = array();
         usort($episodeList, array(static::class, "_sortByEpisodePubDate"));
         for ($i = 0; $i < sizeof($episodeList); $i++) {

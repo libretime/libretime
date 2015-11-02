@@ -40,6 +40,7 @@ class Rest_PodcastEpisodesController extends Zend_Rest_Controller
 
             $this->getResponse()
                 ->setHttpResponseCode(201)
+                ->setHeader('X-TOTAL-COUNT', $totalPodcastEpisodesCount)
                 ->appendBody(json_encode($this->_service->getPodcastEpisodes($id, $offset, $limit, $sortColumn, $sortDir)));
 
         } catch (PodcastNotFoundException $e) {

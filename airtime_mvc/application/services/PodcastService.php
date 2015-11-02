@@ -130,7 +130,7 @@ class Application_Service_PodcastService
             $importedPodcast->setPodcast($podcast);
             $importedPodcast->save();
 
-            return self::_generatePodcastArray($podcast, $rss);
+            return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
         } catch(Exception $e) {
             $podcast->delete();
             throw $e;
@@ -211,47 +211,6 @@ class Application_Service_PodcastService
     }
 
     /**
-     * Given a podcast object and a SimplePie feed object,
-     * generate a data array to pass back to the front-end
-     *
-     * @param $podcast  Podcast model object
-     * @param SimplePie $rss    SimplePie feed object
-     *
-     * @return array
-     */
-    private static function _generatePodcastArray($podcast, $rss) {
-        $stationPodcast = StationPodcastQuery::create()->findOneByDbPodcastId($podcast->getDbId());
-        $ingestedEpisodes = PodcastEpisodesQuery::create()
-            ->findByDbPodcastId($podcast->getDbId());
-        $episodeIds = array();
-        if (!$stationPodcast) {
-            foreach ($ingestedEpisodes as $e) {
-                array_push($episodeIds, $e->getDbEpisodeGuid());
-            }
-        }
-
-        $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
-        $podcastArray["episodes"] = array();
-        foreach ($rss->get_items() as $item) {
-            /** @var SimplePie_Item $item */
-            array_push($podcastArray["episodes"], array(
-                "guid" => $item->get_id(),
-                "ingested" => in_array($item->get_id(), $episodeIds),
-                "title" => $item->get_title(),
-                // From the RSS spec best practices:
-                // 'An item's author element provides the e-mail address of the person who wrote the item'
-                "author" => $item->get_author()->get_email(),
-                "description" => $item->get_description(),
-                "pub_date" => $item->get_gmdate(),
-                "link" => $item->get_link(),
-                "enclosure" => $item->get_enclosure()
-            ));
-        }
-
-        return $podcastArray;
-    }
-
-    /**
      * Fetches a Podcast's rss feed and returns all its episodes with
      * the Podcast object
      *
@@ -268,9 +227,7 @@ class Application_Service_PodcastService
             throw new PodcastNotFoundException();
         }
 
-        $rss = self::getPodcastFeed($podcast->getDbUrl());
-
-        return self::_generatePodcastArray($podcast, $rss);
+        return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
     }
 
     /**

@@ -227,7 +227,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function getPodcastEpisodes($podcastId,
                                        $offset=0,
                                        $limit=10,
-                                       $sortColumn=PodcastEpisodesPeer::ID,
+                                       $sortColumn=PodcastEpisodesPeer::PUBLICATION_DATE,
                                        $sortDir="ASC")
     {
         $podcast = PodcastQuery::create()->findPk($podcastId);
@@ -235,25 +235,58 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             throw new PodcastNotFoundException();
         }
 
-        //make sure valid $sortDir was passed in
-        if ($sortDir === "DESC") {
-            $sortDir = Criteria::DESC;
-        } else {
-            $sortDir = Criteria::ASC;
-        }
+        $sortDir = ($sortDir === "DESC") ? $sortDir = Criteria::DESC : Criteria::ASC;
+        $isStationPodcast = $podcastId === Application_Model_Preference::getStationPodcastId();
 
         $episodes = PodcastEpisodesQuery::create()
-            ->filterByDbPodcastId($podcastId)
-            ->setLimit($limit)
-            ->setOffset($offset)
+            ->joinWith('PodcastEpisodes.CcFiles')
+            ->filterByDbPodcastId($podcastId);
+        // TODO: how should we limit the number of episodes for imported podcasts (since they include feed episodes?)
+        // FIXME
+        if ($isStationPodcast) {
+            $episodes = $episodes->setLimit($limit);
+        }
+        $episodes = $episodes->setOffset($offset)
             ->orderBy($sortColumn, $sortDir)
             ->find();
 
+        return $isStationPodcast ? $this->_getStationPodcastEpisodeArray($episodes)
+                                 : $this->_getImportedPodcastEpisodeArray($podcast, $episodes);
+    }
+
+    private function _getStationPodcastEpisodeArray($episodes) {
         $episodesArray = array();
         foreach ($episodes as $episode) {
-            $episodeArr = $episode->toArray(BasePeer::TYPE_FIELDNAME);
-            $episodeArr["track_metadata"] = CcFiles::getSanitizedFileById($episode->getDbFileId());
+            /** @var PodcastEpisodes $episode */
+            $episodeArr = $episode->toArray(BasePeer::TYPE_FIELDNAME, true, [], true);
+            // $episodeArr["cc_files"] = CcFiles::getSanitizedFileById($episode->getDbFileId());
             array_push($episodesArray, $episodeArr);
+        }
+        return $episodesArray;
+    }
+
+    public function _getImportedPodcastEpisodeArray($podcast, $episodes) {
+        $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
+        $episodeIds = array();
+        foreach ($episodes as $e) {
+            array_push($episodeIds, $e->getDbEpisodeGuid());
+        }
+
+        $episodesArray = array();
+        foreach ($rss->get_items() as $item) {
+            /** @var SimplePie_Item $item */
+            array_push($episodesArray, array(
+                "guid" => $item->get_id(),
+                "ingested" => in_array($item->get_id(), $episodeIds),
+                "title" => $item->get_title(),
+                // From the RSS spec best practices:
+                // 'An item's author element provides the e-mail address of the person who wrote the item'
+                "author" => $item->get_author()->get_email(),
+                "description" => $item->get_description(),
+                "pub_date" => $item->get_gmdate(),
+                "link" => $item->get_link(),
+                "enclosure" => $item->get_enclosure()
+            ));
         }
 
         return $episodesArray;

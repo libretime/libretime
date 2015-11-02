@@ -475,7 +475,7 @@ li.ui-state-default {
     font-size: 14px;
 }
 
-.editor_pane_wrapper, .podcast-wrapper {
+.editor_pane_wrapper, .angular_wrapper {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
