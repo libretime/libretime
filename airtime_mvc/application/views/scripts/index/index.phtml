@@ -92,10 +92,16 @@ document.getElementById(id).width= (newwidth) + "px";
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
         $("#player_iframe").load(function () {
-            // FIXME: Should we hide this somehow when the station is set to private?
+            <?php
+                // Is there a better way to do this?
+                if ($this->displayRssTab) {?>
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='station_rss_btn button' data-tab='tab-4'></div>");
+            <?php
+                }
+            ?>
+
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='about_us_btn button' data-tab='tab-2'></div>");
             $("#player_iframe").contents().find('.bottom_bar').append("<div class='schedule_btn button current' data-tab='tab-1'></div>");
 
