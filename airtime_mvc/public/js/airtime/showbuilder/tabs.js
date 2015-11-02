@@ -110,7 +110,11 @@ var AIRTIME = (function(AIRTIME){
      */
     Tab.prototype._init = function() {
         var self = this;
-        self.assignTabClickHandler(function() {
+        self.assignTabClickHandler(function(e) {
+            if (e.which == 2) {  // Middle mouse
+                self.close();
+                return;
+            }
             if (!$(this).hasClass('active')) {
                 self.switchTo();
             }
@@ -342,8 +346,13 @@ var AIRTIME = (function(AIRTIME){
 }(AIRTIME || {}));
 
 $(document).ready(function() {
+    var sb = $("#show_builder");
     // Add text scrolling to tab names
-    $("#show_builder").addTitles(".tab-name");
+    sb.addTitles(".tab-name");
+    sb.find(".nav.nav-tabs").sortable({
+        containment: "parent",
+        distance: 25
+    });
     // Initialize the ScheduleTab
     AIRTIME.tabs.initScheduleTab();
 });

@@ -4043,6 +4043,7 @@ li .ui-state-hover {
 
 .publish-md-field > textarea, .publish-md-field > input {
     display: block;
+    width: 50%;
 }
 
 form.media-metadata fieldset {
