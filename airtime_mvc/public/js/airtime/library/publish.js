@@ -121,7 +121,7 @@ var AIRTIME = (function (AIRTIME) {
 
     };
 
-    mod.publishTrack = function(mediaId) {
+    mod.openPublishDialog = function(mediaId) {
 
         jQuery.get(dialogUrl, { csrf_token: jQuery("#csrf").val() })
             .success(function(html) {

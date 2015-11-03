@@ -87,7 +87,7 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         self._datatable = self._$wrapperDOMNode.dataTable(options);
-        self._datatable.fnDraw(); //Load the AJAX data now that our event handlers have been bound.
+        // self._datatable.fnDraw(); //Load the AJAX data now that our event handlers have been bound.
         self._setupEventHandlers(bItemSelection);
 
         //return self._datatable;

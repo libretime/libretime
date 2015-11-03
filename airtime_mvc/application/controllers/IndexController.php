@@ -42,23 +42,14 @@ class IndexController extends Zend_Controller_Action
 
         //station feed episodes
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
-        if (!empty($stationPodcastId)) {
-
-            $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
-            $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
-            foreach ($episodes as $e => $v) {
-                $episodes[$e]["track_metadata"]["track_title"] = htmlspecialchars($v["track_metadata"]["track_title"], ENT_QUOTES);
-                $episodes[$e]["track_metadata"]["artist_name"] = htmlspecialchars($v["track_metadata"]["artist_name"], ENT_QUOTES);
-            }
-        } else {
-            // Station podcast does not exist yet
-            // (creation is implicitly done when a new podcast is created in the dashboard)
-            // return empty list of episodes
-            $episodes = [];
+        $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
+        $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
+        foreach ($episodes as $e => $v) {
+            $episodes[$e]["CcFiles"]["track_title"] = htmlspecialchars($v["CcFiles"]["track_title"], ENT_QUOTES);
+            $episodes[$e]["CcFiles"]["artist_name"] = htmlspecialchars($v["CcFiles"]["artist_name"], ENT_QUOTES);
         }
 
         $this->view->episodes = json_encode($episodes);
-
         $this->view->displayRssTab = (!Application_Model_Preference::getStationPodcastPrivacy());
     }
 

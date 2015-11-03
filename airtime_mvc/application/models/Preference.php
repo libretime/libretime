@@ -1518,7 +1518,12 @@ class Application_Model_Preference
 
     public static function getStationPodcastId()
     {
-        return self::getValue("station_podcast_id");
+        // Create the Station podcast if it doesn't exist.
+        $stationPodcastId = self::getValue("station_podcast_id");
+        if (empty($stationPodcastId)) {
+            $stationPodcastId = Application_Service_PodcastService::createStationPodcast();
+        }
+        return $stationPodcastId;
     }
 
     public static function setStationPodcastId($value)

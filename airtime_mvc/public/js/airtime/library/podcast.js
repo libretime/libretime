@@ -7,7 +7,7 @@ var AIRTIME = (function (AIRTIME) {
 
     mod = AIRTIME.podcast;
 
-    var endpoint = 'rest/podcast/', PodcastTable;
+    var endpoint = 'rest/podcast/', PodcastTable, $stationPodcastTab;
 
     /**
      * PodcastController constructor.
@@ -69,17 +69,17 @@ var AIRTIME = (function (AIRTIME) {
          *
          * Save each of the selected episodes and update the podcast object.
          */
-        $scope.savePodcast = $scope.savePodcast || function () {
-                var episodes = self.episodeTable.getSelectedRows();
-                // TODO: Should we implement a batch endpoint for this instead?
-                jQuery.each(episodes, function () {
-                    $http.post(endpoint + $scope.podcast.id + '/episodes', {
-                        csrf_token: $scope.csrf,
-                        episode: this
-                    });
+        $scope.savePodcast = function () {
+            var episodes = self.episodeTable.getSelectedRows();
+            // TODO: Should we implement a batch endpoint for this instead?
+            jQuery.each(episodes, function () {
+                $http.post(endpoint + $scope.podcast.id + '/episodes', {
+                    csrf_token: $scope.csrf,
+                    episode: this
                 });
-                _updatePodcast();
-            };
+            });
+            _updatePodcast();
+        };
 
         /**
          * Close the tab and discard any changes made to the podcast data.
@@ -92,6 +92,8 @@ var AIRTIME = (function (AIRTIME) {
         self.$scope = $scope;
         self.$http = $http;
         self.initialize();
+
+        return self;
     }
 
     /**
@@ -154,7 +156,8 @@ var AIRTIME = (function (AIRTIME) {
      */
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
-        PodcastController.call(this, $scope, $http, podcast, tab);
+        var self = PodcastController.call(this, $scope, $http, podcast, tab);
+        $stationPodcastTab = tab;
 
         /**
          * For the station podcast.
@@ -166,7 +169,23 @@ var AIRTIME = (function (AIRTIME) {
         };
 
         $scope.deleteSelectedEpisodes = function () {
-            // TODO
+            var episodes = self.episodeTable.getSelectedRows();
+            jQuery.each(episodes, function () {
+                $http.delete(endpoint + $scope.podcast.id + '/episodes/' + this.id + '?csrf_token=' + $scope.csrf)
+                    .success(function () {
+                        self.reloadEpisodeTable();
+                    });
+            });
+        };
+
+        $scope.openSelectedTabEditors = function () {
+            var episodes = self.episodeTable.getSelectedRows();
+            $.each(episodes, function () {
+                var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file_id;
+                $.get(baseUrl + "library/edit-file-md/id/" + this.file_id, {format: "json"}, function (json) {
+                    AIRTIME.playlist.fileMdEdit(json, uid);
+                });
+            });
         };
     }
 
@@ -185,15 +204,29 @@ var AIRTIME = (function (AIRTIME) {
     StationPodcastController.prototype._initTable = function() {
         var $scope = this.$scope,
             buttons = {
+                editBtn: {
+                    title           : $.i18n._('Edit'),
+                    iconClass       : 'icon-pencil',
+                    extraBtnClass   : '',
+                    elementId       : '',
+                    eventHandlers   : {
+                        click: function(e) {
+                            $scope.openSelectedTabEditors();
+                        }
+                    }
+                },
                 deleteBtn: {
                     title           : $.i18n._('Delete'),
                     iconClass       : 'icon-trash',
-                    extraBtnClass   : 'btn-small btn-danger',
+                    extraBtnClass   : 'btn-danger',
                     elementId       : '',
                     eventHandlers   : {
-                        click: $scope.deleteSelectedEpisodes
+                        click: function(e) {
+                            $scope.deleteSelectedEpisodes();
+                        }
                     }
                 }
+
             },
             params = {
                 sAjaxSource : endpoint + $scope.podcast.id + '/episodes',
@@ -231,12 +264,13 @@ var AIRTIME = (function (AIRTIME) {
      *
      * Bulk methods use a POST request because we need to send data in the request body.
      *
+     * @param selectedData the data to operate on
      * @param method HTTP request method type
      * @param callback function to run upon success
      * @private
      */
-    function _bulkAction(method, callback) {
-        var ids = [], selectedData = AIRTIME.library.podcastTableWidget.getSelectedRows();
+    function _bulkAction(selectedData, method, callback) {
+        var ids = [];
         selectedData.forEach(function(el) {
             var uid = AIRTIME.library.MediaTypeStringEnum.PODCAST+"_"+el.id,
                 t = AIRTIME.tabs.get(uid);
@@ -357,16 +391,20 @@ var AIRTIME = (function (AIRTIME) {
      * Open a tab to view and edit the station podcast.
      */
     mod.openStationPodcast = function() {
-        $.get(endpoint + 'station', function(json) {
-            _initAppFromResponse(json);
-        })
+        if (typeof $stationPodcastTab === 'undefined') {
+            $.get(endpoint + 'station', function(json) {
+                _initAppFromResponse(json);
+            });
+        } else if ($stationPodcastTab != AIRTIME.tabs.getActiveTab()) {
+            $stationPodcastTab.switchTo();
+        }
     };
 
     /**
      * Create a bulk request to edit all currently selected podcasts.
      */
     mod.editSelectedPodcasts = function() {
-        _bulkAction(HTTPMethods.GET, function(json) {
+        _bulkAction(AIRTIME.library.podcastTableWidget.getSelectedRows(), HTTPMethods.GET, function(json) {
             json.forEach(function(data) {
                 _initAppFromResponse(data);
             });
@@ -378,7 +416,7 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.deleteSelectedPodcasts = function() {
         if (confirm($.i18n._("Are you sure you want to delete the selected podcasts from your library?"))) {
-            _bulkAction(HTTPMethods.DELETE, function () {
+            _bulkAction(AIRTIME.library.podcastTableWidget.getSelectedRows(), HTTPMethods.DELETE, function () {
                 AIRTIME.library.podcastDataTable.fnDraw();
             });
         }

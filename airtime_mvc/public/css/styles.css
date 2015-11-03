@@ -3972,7 +3972,7 @@ li .ui-state-hover {
     margin: 5px 10px 0 0;
 }
 
-.angular_wrapper .inner_editor_wrapper {
+.angular_wrapper > .station_podcast_wrapper {
     flex: 1 100%;
 }
 

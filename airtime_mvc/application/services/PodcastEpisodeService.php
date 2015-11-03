@@ -236,15 +236,15 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         }
 
         $sortDir = ($sortDir === "DESC") ? $sortDir = Criteria::DESC : Criteria::ASC;
-        $isStationPodcast = $podcastId === Application_Model_Preference::getStationPodcastId();
+        $isStationPodcast = $podcastId == Application_Model_Preference::getStationPodcastId();
 
         $episodes = PodcastEpisodesQuery::create()
-            ->joinWithCcFiles('files')
             ->filterByDbPodcastId($podcastId);
         if ($isStationPodcast) {
             $episodes = $episodes->setLimit($limit);
         }
-        $episodes = $episodes->setOffset($offset)
+        $episodes = $episodes->joinWith('PodcastEpisodes.CcFiles')
+            ->setOffset($offset)
             ->orderBy($sortColumn, $sortDir)
             ->find();
 
@@ -257,7 +257,6 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         foreach ($episodes as $episode) {
             /** @var PodcastEpisodes $episode */
             $episodeArr = $episode->toArray(BasePeer::TYPE_FIELDNAME, true, [], true);
-            Logging::info($episodeArr);
             array_push($episodesArray, $episodeArr);
         }
         return $episodesArray;

@@ -1051,11 +1051,12 @@ var AIRTIME = (function(AIRTIME){
         });
 
         newTab.contents.find(".md-publish").on("click", function() {
-            AIRTIME.publish.publishTrack(fileId);
+            AIRTIME.publish.openPublishDialog(fileId);
         });
 
         newTab.wrapper.find('.edit-md-dialog').on("keyup", function(event) {
-            if (event.keyCode === 13) {
+            // Don't submit if the user hits enter in a textarea (description)
+            if ($(event.target).is('input') && event.keyCode === 13) {
                 newTab.wrapper.find('.md-save').click();
             }
         });

@@ -161,6 +161,7 @@ class Application_Service_PodcastService
         // Set the download key when we create the station podcast
         // The value is randomly generated in the setter
         Application_Model_Preference::setStationPodcastDownloadKey();
+        return $podcast->getDbId();
     }
 
     //TODO move this somewhere where it makes sense
@@ -243,6 +244,7 @@ class Application_Service_PodcastService
         if ($podcast) {
             $podcast->delete();
 
+            // FIXME: I don't think we should be able to delete the station podcast...
             if ($podcastId == Application_Model_Preference::getStationPodcastId()) {
                 Application_Model_Preference::setStationPodcastId(null);
             }

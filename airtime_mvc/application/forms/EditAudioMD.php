@@ -49,7 +49,7 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement($album_title);
 
         // Description field
-        $description = new Zend_Form_Element_Text('description');
+        $description = new Zend_Form_Element_Textarea('description');
         $description->class = 'input_text';
         $description->setLabel(_('Description:'))
             ->setFilters(array('StringTrim'))

@@ -59,15 +59,16 @@ document.getElementById(id).width= (newwidth) + "px";
             $.each(<?php echo $this->episodes ?>, function(index, value){
                 // map mime to format muses recognizes
                 // TODO: this doesn't make a difference
-                if (value.track_metadata.mime == "audio/mp3") {
-                    value.track_metadata.mime = "mp3";
-                } else if (value.track_metadata.mime == "audio/vorbis") {
-                    value.track_metadata.mime = "ogg";
+                var metadata = value.CcFiles;
+                if (metadata.mime == "audio/mp3") {
+                    metadata.mime = "mp3";
+                } else if (metadata.mime == "audio/vorbis") {
+                    metadata.mime = "ogg";
                 }
 
-                $("#tab-4").append("<div>"+value.track_metadata.artist_name+" - "+value.track_metadata.track_title+
+                $("#tab-4").append("<div>"+metadata.artist_name+" - "+metadata.track_title+
                 " <a id='rss-download-link' href='"+value.download_url+"'>Download</a>" +
-                " <a id='rss-play-link' data-metaartist='"+value.track_metadata.artist_name+"' data-metatitle='"+value.track_metadata.track_title+"' data-streamurl='"+value.download_url+"' data-streamcodec='"+value.track_metadata.mime+"' href='#'>Play</a></div>");
+                " <a id='rss-play-link' data-metaartist='"+metadata.artist_name+"' data-metatitle='"+metadata.track_title+"' data-streamurl='"+value.download_url+"' data-streamcodec='"+metadata.mime+"' href='#'>Play</a></div>");
             });
 
             $("a#rss-play-link").click(function() {

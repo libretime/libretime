@@ -1159,7 +1159,7 @@ var AIRTIME = (function(AIRTIME) {
                     if (oItems.publish !== undefined) {
                         if (data.ftype === "audioclip") {
                             callback = function() {
-                                AIRTIME.publish.publishTrack(data.id);
+                                AIRTIME.publish.openPublishDialog(data.id);
                             };
                         }
                         oItems.publish.callback = callback;
@@ -1264,7 +1264,7 @@ var AIRTIME = (function(AIRTIME) {
         podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = AIRTIME.podcast.deleteSelectedPodcasts;
         // Add a button to view the station podcast
         podcastToolbarButtons["StationPodcast"] = {
-            title : $.i18n._("My Station Podcast"),
+            title : $.i18n._("Station Podcast"),
             iconClass : "icon-music",
             extraBtnClass : "btn-small",
             elementId : "",
