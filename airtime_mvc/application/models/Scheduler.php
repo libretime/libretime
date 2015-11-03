@@ -553,6 +553,9 @@ class Application_Model_Scheduler
 
             //TODO: Copy the cue in, cue out, and track length from the cc_files table
             $file = $item->getCcFiles($this->con);
+            if (!$file) {
+                continue;
+            }
             $item->setDbCueIn($file->getDbCueIn());
             $item->setDbCueOut($file->getDbCueOut());
 
