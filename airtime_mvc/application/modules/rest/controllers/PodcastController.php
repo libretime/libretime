@@ -27,12 +27,20 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $sortColumn = $this->_getParam('sort', PodcastPeer::ID);
         $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
 
-        // Don't return the Station podcast - we fetch it separately
-        $query = PodcastQuery::create()
-            ->filterByDbId(Application_Model_Preference::getStationPodcastId(), Criteria::NOT_EQUAL)
-            ->setLimit($limit)
-            ->setOffset($offset)
-            ->orderBy($sortColumn, $sortDir);
+        $stationPodcastId = Application_Model_Preference::getStationPodcastId();
+        if (!empty($stationPodcastId)) {
+            $query = PodcastQuery::create()
+                // Don't return the Station podcast - we fetch it separately
+                ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL)
+                ->setLimit($limit)
+                ->setOffset($offset)
+                ->orderBy($sortColumn, $sortDir);
+        } else {
+            $query = PodcastQuery::create()
+                ->setLimit($limit)
+                ->setOffset($offset)
+                ->orderBy($sortColumn, $sortDir);
+        }
 
         $queryResult = $query->find();
 
