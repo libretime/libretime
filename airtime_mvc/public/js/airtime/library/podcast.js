@@ -9,6 +9,16 @@ var AIRTIME = (function (AIRTIME) {
 
     var endpoint = 'rest/podcast/', PodcastTable;
 
+    /**
+     * PodcastController constructor.
+     *
+     * @param {{}} $scope   angular scope service object
+     * @param {{}} $http    angular http service object
+     * @param {{}} podcast  podcast metadata object
+     * @param {Tab} tab     Tab object the controller is being bootstrapped in
+     * 
+     * @constructor
+     */
     function PodcastController($scope, $http, podcast, tab) {
         // We need to pass in the tab object and the episodes table object so we can reference them
         var self = this;
@@ -40,7 +50,7 @@ var AIRTIME = (function (AIRTIME) {
         /**
          * Internal function.
          *
-         * Make a PUT request to the server to update the podcast object
+         * Make a PUT request to the server to update the podcast object.
          *
          * @private
          */
@@ -84,6 +94,11 @@ var AIRTIME = (function (AIRTIME) {
         self.initialize();
     }
 
+    /**
+     * Initialize the podcast episode table.
+     *
+     * @private
+     */
     PodcastController.prototype._initTable = function() {
         var self = this,
             $scope = self.$scope;
@@ -109,17 +124,34 @@ var AIRTIME = (function (AIRTIME) {
         self.reloadEpisodeTable();
     };
 
+    /**
+     * Reload the podcast episode table.
+     */
     PodcastController.prototype.reloadEpisodeTable = function() {
         this.episodeTable.reload(this.$scope.podcast.id);
     };
 
+    /**
+     * Initialize the controller.
+     *
+     * Sets up the internal datatable.
+     */
     PodcastController.prototype.initialize = function() {
-        var self = this;
         // TODO: this solves a race condition, but we should look for the root cause
         AIRTIME.tabs.onResize();
-        self._initTable();
+        this._initTable();
     };
 
+    /**
+     * StationPodcastController constructor.
+     *
+     * @param {{}} $scope   angular scope service object
+     * @param {{}} $http    angular http service object
+     * @param {{}} podcast  podcast metadata object
+     * @param {Tab} tab     Tab object the controller is being bootstrapped in
+     *
+     * @constructor
+     */
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
         PodcastController.call(this, $scope, $http, podcast, tab);
@@ -130,30 +162,43 @@ var AIRTIME = (function (AIRTIME) {
          * Update the station podcast object.
          */
         $scope.savePodcast = function () {
-            console.log("Saving station podcast");
-            // TODO: We still need a way to delete episodes from the station podcast
             _updatePodcast();
         };
+
+        $scope.deleteSelectedEpisodes = function () {
+            // TODO
+        };
     }
+
+    /**
+     * Subclass the PodcastController object.
+     *
+     * @type {PodcastController}
+     */
     StationPodcastController.prototype = Object.create(PodcastController.prototype);
+
+    /**
+     * Initialize the Station podcast episode table.
+     *
+     * @private
+     */
     StationPodcastController.prototype._initTable = function() {
         var $scope = this.$scope,
             buttons = {
-                0: {
+                deleteBtn: {
                     'title'         : $.i18n._('Delete'),
                     'iconClass'     : "icon-trash",
                     extraBtnClass   : "btn-danger",
                     elementId       : '',
                     eventHandlers   : {
-                        click: function (e) {
-                            // TODO: delete function for station podcast episodes
-                        }
+                        click: $scope.deleteSelectedEpisodes
                     }
                 }
             },
             params = {
                 sAjaxSource : endpoint + $scope.podcast.id + '/episodes',
                 aoColumns: [
+                    // TODO: it might be dangerous to use CcFiles here? We should alias this instead
                     /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "CcFiles.track_title"    , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
                     /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "CcFiles.description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" }
                 ]
@@ -162,11 +207,20 @@ var AIRTIME = (function (AIRTIME) {
         this.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable($scope.podcast, $scope.tab, params, buttons);
     };
 
+    /**
+     * Reload the Station podcast episode table.
+     *
+     * @override
+     */
     StationPodcastController.prototype.reloadEpisodeTable = function() {
         self.episodeTable.getDatatable().fnDraw();
     };
 
-    //AngularJS app
+    /**
+     * AngularJS app for podcast functionality.
+     *
+     * Bootstrapped for each podcast or Station podcast tab.
+     */
     var podcastApp = angular.module('podcast', [])
         .controller('Podcast', ['$scope', '$http', 'podcast', 'tab', PodcastController])
         .controller('StationPodcast', ['$scope', '$http', 'podcast', 'tab', StationPodcastController]);
@@ -202,7 +256,7 @@ var AIRTIME = (function (AIRTIME) {
     }
 
     /**
-     * Bootstrap and initialize the Angular app for the podcast being opened
+     * Bootstrap and initialize the Angular app for the podcast being opened.
      *
      * @param podcast podcast JSON object to pass to the angular app
      * @param tab Tab object the angular app will be initialized in
@@ -300,7 +354,7 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     /**
-     * Open a tab to view and edit the station podcast
+     * Open a tab to view and edit the station podcast.
      */
     mod.openStationPodcast = function() {
         $.get(endpoint + 'station', function(json) {
