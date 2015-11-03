@@ -73,7 +73,8 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-replay-gain-value'      , 'json')
                 ->addActionContext('update-cue-values-by-silan'    , 'json')
                 ->addActionContext('get-usability-hint'            , 'json')
-                ->initContext();
+                ->addActionContext('recalculate-schedule'          , 'json') //RKTN-260
+            ->initContext();
     }
 
     public function checkAuth()
@@ -1520,5 +1521,27 @@ class ApiController extends Zend_Controller_Action
             $m3uFile .= $stream['url'] . "\r\n\r\n";
         }
         echo $m3uFile;
+    public function recalculateScheduleAction()
+    {
+        $scheduler = new Application_Model_Scheduler();
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+
+        $showInstances =  CcShowInstancesQuery::create()
+            ->filterByDbStarts($now, Criteria::GREATER_THAN)
+            //->filterByDbModifiedInstance(false)
+            ->orderByDbStarts()
+            ->find();
+            //->find($this->con);
+        $total = $showInstances->count();
+        $progress = 0;
+        foreach ($showInstances as $instance) {
+            echo(round(floatval($progress / $total)*100) . "% - " . $instance->getDbId() . "\n<br>");
+            flush();
+            ob_flush();
+            //while(@ob_end_clean());
+            $scheduler->removeGaps2($instance->getDbId());
+            $progress += 1;
+        }
+        echo("Recalculated $total shows.");
     }
 }
