@@ -1523,6 +1523,9 @@ class ApiController extends Zend_Controller_Action
         echo $m3uFile;
     public function recalculateScheduleAction()
     {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $scheduler = new Application_Model_Scheduler();
         $now = new DateTime("now", new DateTimeZone("UTC"));
 
