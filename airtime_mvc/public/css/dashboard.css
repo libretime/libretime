@@ -51,6 +51,7 @@
     .content-pane {
         height: auto !important;
         width: 100% !important;
+        min-height: 500px;
     }
     .spl_sortable {
         max-height: 50%;
@@ -303,10 +304,6 @@ thead th.ui-state-default:focus {
     float: right;
 }
 
-#show_builder .fg-toolbar.ui-corner-tl.ui-corner-tr {
-    border-top: none;
-}
-
 .sb-content .dataTables_wrapper {
     margin: 0;
 }
@@ -489,6 +486,11 @@ li.ui-state-default {
     top: 4px;
     left: 4px;
     overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
+    color: #efefef;
+}
+
+.editor_pane_wrapper a:visited, .angular_wrapper a:visited {
+    color: #cecece;
 }
 
 .tab-name {
@@ -512,7 +514,7 @@ li.ui-state-default {
 
 .inner_editor_title h2 {
     margin: 10px 0 0 10px;
-    width: 85%;
+    width: 70%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -639,23 +641,29 @@ li.ui-state-default {
     padding-top: 4px;
 }
 
-/* DataTables */
+/* Schedule tab DataTable */
 
-#show_builder .fg-toolbar > .btn-toolbar,
-#show_builder .ColVis.TableTools {
+#show_builder_table_wrapper .fg-toolbar.ui-corner-tl.ui-corner-tr {
+    border-top: none;
+}
+
+#show_builder_table_wrapper .fg-toolbar > .btn-toolbar,
+#show_builder_table_wrapper .ColVis.TableTools {
     position: absolute;
     top: 35px;
 }
 
-#show_builder .fg-toolbar > .btn-toolbar {
+#show_builder_table_wrapper .fg-toolbar > .btn-toolbar {
     left: 6px;
     padding: 0;
 }
 
-#show_builder .ColVis.TableTools {
+#show_builder_table_wrapper .ColVis.TableTools {
     right: 6px;
     margin: 0;
 }
+
+/* DataTables */
 
 div.ColVis_collectionBackground {
     background-color: transparent;
@@ -677,6 +685,10 @@ div.ColVis_collectionBackground {
 
 .ColVis_title {
     color: #000;
+}
+
+.ColVis {
+    margin-bottom: 0;
 }
 
 /* Hacky stuff here */

@@ -3949,7 +3949,7 @@ li .ui-state-hover {
     height: 100%;
     float: left;
     flex: 1 100%;
-    margin: 4px 0;
+    margin: 4px 0 !important;
     min-height: 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -3963,13 +3963,54 @@ li .ui-state-hover {
     max-width: 300px;
 }
 
-.podcast-metadata label {
-    display: inline-block;
-    width: 150px;
+.inner_editor_title > h2 {
+    float: left;
 }
 
-.podcast-metadata input[type="text"] {
+.inner_editor_title button {
+    float: right;
+    margin: 5px 10px 0 0;
+}
+
+.angular_wrapper .inner_editor_wrapper {
+    flex: 1 100%;
+}
+
+.angular_wrapper legend {
+    background-color: #242424;
+    color: #efefef;
+}
+
+.angular_wrapper .dataTables_scrolling {
+    /* Should find a better way to do this... */
+    top: 74px !important;
+}
+
+.podcast-metadata p {
+    text-align: center;
+    padding: 0 5%;
+}
+
+.podcast-metadata label,
+.podcast-metadata input,
+.podcast-metadata textarea {
+    margin: 4px 0;
+}
+
+.podcast-metadata input[type="checkbox"] {
+    margin: 8px 60% 0 0;
+}
+
+.podcast-metadata label {
+    display: block;
+    width: 20%;
+    float: left;
+}
+
+.podcast-metadata input[type="text"],
+.podcast-metadata textarea {
     width: 60%;
+    float: left;
 }
 
 /* UI Revamp Video */

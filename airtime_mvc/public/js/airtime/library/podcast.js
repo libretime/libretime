@@ -16,7 +16,7 @@ var AIRTIME = (function (AIRTIME) {
      * @param {{}} $http    angular http service object
      * @param {{}} podcast  podcast metadata object
      * @param {Tab} tab     Tab object the controller is being bootstrapped in
-     * 
+     *
      * @constructor
      */
     function PodcastController($scope, $http, podcast, tab) {
@@ -186,9 +186,9 @@ var AIRTIME = (function (AIRTIME) {
         var $scope = this.$scope,
             buttons = {
                 deleteBtn: {
-                    'title'         : $.i18n._('Delete'),
-                    'iconClass'     : "icon-trash",
-                    extraBtnClass   : "btn-danger",
+                    title           : $.i18n._('Delete'),
+                    iconClass       : 'icon-trash',
+                    extraBtnClass   : 'btn-small btn-danger',
                     elementId       : '',
                     eventHandlers   : {
                         click: $scope.deleteSelectedEpisodes
@@ -213,7 +213,7 @@ var AIRTIME = (function (AIRTIME) {
      * @override
      */
     StationPodcastController.prototype.reloadEpisodeTable = function() {
-        self.episodeTable.getDatatable().fnDraw();
+        this.episodeTable.getDatatable().fnDraw();
     };
 
     /**
@@ -397,14 +397,23 @@ var AIRTIME = (function (AIRTIME) {
      * @returns {*} the created Table object
      */
     mod.initPodcastEpisodeDatatable = function(podcast, tab, params, buttons) {
+        buttons = $.extend({
+            slideToggle: {
+                title           : '',
+                iconClass       : 'spl-no-r-margin icon-chevron-up',
+                extraBtnClass   : 'toggle-editor-form',
+                elementId       : '',
+                eventHandlers   : {}
+            }
+        }, buttons);
         params = $.extend(params,
             {
-                oColVis     : {
-                    sAlign: "right",
-                    aiExclude: [0, 1],
-                    buttonText: $.i18n._("Columns"),
+                oColVis: {
+                    sAlign      : 'right',
+                    aiExclude   : [0, 1],
+                    buttonText  : $.i18n._("Columns"),
                     iOverlayFade: 0,
-                    oColReorder: {
+                    oColReorder : {
                         iFixedColumns: 1  // Checkbox
                     }
                 }

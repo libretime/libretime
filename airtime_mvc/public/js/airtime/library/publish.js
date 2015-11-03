@@ -99,8 +99,7 @@ var AIRTIME = (function (AIRTIME) {
     function _bootstrapAngularApp(mediaId, tab) {
         publishApp.value('mediaId', mediaId);
         publishApp.value('tab', tab);
-        var wrapper = AIRTIME.tabs.getActiveTab().contents.find(".editor_pane_wrapper");
-        wrapper.attr("ng-controller", "Publish");
+        var wrapper = AIRTIME.tabs.getActiveTab().contents.find(".angular_wrapper");
         angular.bootstrap(wrapper.get(0), [PUBLISH_APP_NAME]);
     }
 

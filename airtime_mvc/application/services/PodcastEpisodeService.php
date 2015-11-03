@@ -239,10 +239,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $isStationPodcast = $podcastId === Application_Model_Preference::getStationPodcastId();
 
         $episodes = PodcastEpisodesQuery::create()
-            ->joinWith('PodcastEpisodes.CcFiles')
+            ->joinWithCcFiles('files')
             ->filterByDbPodcastId($podcastId);
-        // TODO: how should we limit the number of episodes for imported podcasts (since they include feed episodes?)
-        // FIXME
         if ($isStationPodcast) {
             $episodes = $episodes->setLimit($limit);
         }
@@ -259,7 +257,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         foreach ($episodes as $episode) {
             /** @var PodcastEpisodes $episode */
             $episodeArr = $episode->toArray(BasePeer::TYPE_FIELDNAME, true, [], true);
-            // $episodeArr["cc_files"] = CcFiles::getSanitizedFileById($episode->getDbFileId());
+            Logging::info($episodeArr);
             array_push($episodesArray, $episodeArr);
         }
         return $episodesArray;

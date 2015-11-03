@@ -1264,9 +1264,9 @@ var AIRTIME = (function(AIRTIME) {
         podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.DELETE].eventHandlers.click = AIRTIME.podcast.deleteSelectedPodcasts;
         // Add a button to view the station podcast
         podcastToolbarButtons["StationPodcast"] = {
-            'title' : $.i18n._("My Station Podcast"),
-            'iconClass' : "icon-music",
-            extraBtnClass : "",
+            title : $.i18n._("My Station Podcast"),
+            iconClass : "icon-music",
+            extraBtnClass : "btn-small",
             elementId : "",
             eventHandlers : {
                 click: AIRTIME.podcast.openStationPodcast
@@ -1279,10 +1279,10 @@ var AIRTIME = (function(AIRTIME) {
             true,                //Enable item selection
             podcastToolbarButtons, //Toolbar buttons
             {                    //Datatables overrides.
-                'aoColumns' : aoColumns,
-                'sAjaxSource' : ajaxSourceURL,
-                'oColReorder': {
-                    'iFixedColumns': 1  // Checkbox
+                aoColumns : aoColumns,
+                sAjaxSource : ajaxSourceURL,
+                oColReorder: {
+                    iFixedColumns: 1  // Checkbox
                 }
             });
 

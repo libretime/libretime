@@ -41,13 +41,14 @@
 }
 
 .sb-content fieldset legend {
-    font-size: 13px;
+    font-size: 16px;
     white-space: nowrap;
     width: 110px;
 }
 
 .sb-content fieldset label {
-    padding: 2px;
+    /*padding: 2px;*/
+    padding: 0 16px 0 0;
     font-size: 12px;
 }
 

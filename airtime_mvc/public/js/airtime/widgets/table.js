@@ -210,7 +210,8 @@ var AIRTIME = (function(AIRTIME) {
         outerDiv.className = 'btn-group';
         outerDiv.title = title;
         var innerButton = document.createElement("button");
-        innerButton.className = 'btn btn-small ' + extraBtnClass;
+        //innerButton.className = 'btn btn-small ' + extraBtnClass;
+        innerButton.className = 'btn ' + extraBtnClass;
         innerButton.id = elementId;
         var innerIcon = document.createElement("i");
         innerIcon.className = 'icon-white ' + iconClass;
@@ -440,9 +441,9 @@ var AIRTIME = (function(AIRTIME) {
 
     //Set of standard buttons. Use getStandardToolbarButtons() to grab these and pass them to the init() function.
     Table._STANDARD_TOOLBAR_BUTTONS = {};
-    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.NEW] = { 'title' : $.i18n._('New'), 'iconClass' : "icon-plus", extraBtnClass : "btn-new", elementId : '', eventHandlers : {} };
-    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.EDIT] = { 'title' : $.i18n._('Edit'), 'iconClass' : "icon-pencil", extraBtnClass : "", elementId : '', eventHandlers : {} };
-    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.DELETE] = { 'title' : $.i18n._('Delete'), 'iconClass' : "icon-trash", extraBtnClass : "btn-danger", elementId : '', eventHandlers : {} };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.NEW] = { 'title' : $.i18n._('New'), 'iconClass' : "icon-plus", extraBtnClass : "btn-small btn-new", elementId : '', eventHandlers : {} };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.EDIT] = { 'title' : $.i18n._('Edit'), 'iconClass' : "icon-pencil", extraBtnClass : "btn-small", elementId : '', eventHandlers : {} };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.DELETE] = { 'title' : $.i18n._('Delete'), 'iconClass' : "icon-trash", extraBtnClass : "btn-small btn-danger", elementId : '', eventHandlers : {} };
     Object.freeze(Table._STANDARD_TOOLBAR_BUTTONS);
 
 

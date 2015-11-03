@@ -1,30 +1,77 @@
 <div class="angular_wrapper" ng-controller="StationPodcast">
     <div class="inner_editor_title">
-    <h2>
-        <?php echo _("Editing ") ?>"<span ng-bind="podcast.title" class="title_obj_name"></span>"
-    </h2>
+        <h2>
+            <?php echo _("Editing ") ?>"<span ng-bind="podcast.title" class="title_obj_name"></span>"
+        </h2>
+        <a href="{{podcast.url}}" target="_blank">
+            <button class="btn"><?php echo _("View Feed") ?></button>
+        </a>
     </div>
     <div class="inner_editor_wrapper">
         <form class="podcast-metadata">
+            <p>
+                <?php echo _("Check out the ") ?><a target="_blank" href="http://cyber.law.harvard.edu/rss/rss.html#requiredChannelElements"><?php echo _("RSS specification") ?></a>
+                <?php echo _(" or the ") ?><a target="_blank" href="http://www.apple.com/ca/itunes/podcasts/specs.html"><?php echo _("Apple podcasting specification") ?></a>
+                <?php echo _(" for more information.") ?>
+            </p>
+
             <input ng-value="podcast.id" class="obj_id" type="hidden"/>
-            <p>
-                <label for="podcast_name">
-                    <?php echo _("Podcast Name") ?>
-                </label>
+
+            <div>
+                <label><?php echo _("Name") ?></label>
                 <input name="podcast_name" ng-model="podcast.title" type="text"/>
-            </p>
-            <p>
-                <label for="podcast_creator">
-                    <?php echo _("Podcast Creator") ?>
-                </label>
+            </div>
+
+            <div>
+                <label><?php echo _("Creator") ?></label>
                 <input name="podcast_creator" ng-model="podcast.creator" type="text"/>
-            </p>
-            <p>
-                <label for="podcast_url">
-                    <?php echo _("Podcast URL") ?>
-                </label>
+            </div>
+
+            <div>
+                <label><?php echo _("URL") ?></label>
                 <input disabled name="podcast_url" ng-model="podcast.url" type="text"/>
-            </p>
+            </div>
+
+            <div>
+                <label><?php echo _("Description") ?></label>
+                <textarea name="podcast_description" ng-model="podcast.description"></textarea>
+            </div>
+
+            <div>
+                <label><?php echo _("Language") ?></label>
+                <input name="podcast_language" ng-model="podcast.language" type="text"/>
+            </div>
+
+            <div>
+                <label><?php echo _("Copyright") ?></label>
+                <input name="podcast_copyright" ng-model="podcast.copyright" type="text"/>
+            </div>
+
+            <div>
+                <label><?php echo _("Link") ?></label>
+                <input name="podcast_link" ng-model="podcast.link" type="text"/>
+            </div>
+
+            <fieldset>
+                <legend><?php echo _("iTunes Fields") ?></legend>
+                <label><?php echo _("iTunes Author") ?></label>
+                <input name="podcast_itunes_author" ng-model="podcast.itunes_author" type="text"/>
+
+                <label><?php echo _("iTunes Keywords") ?></label>
+                <input name="podcast_itunes_keywords" ng-model="podcast.itunes_keywords" type="text"/>
+
+                <label><?php echo _("iTunes Summary") ?></label>
+                <textarea name="podcast_itunes_summary" ng-model="podcast.itunes_summary"></textarea>
+
+                <label><?php echo _("iTunes Subtitle") ?></label>
+                <textarea name="podcast_itunes_subtitle" ng-model="podcast.itunes_subtitle"></textarea>
+
+                <label><?php echo _("iTunes Category") ?></label>
+                <input name="podcast_itunes_category" ng-model="podcast.itunes_category" type="text"/>
+
+                <label><?php echo _("iTunes Explicit") ?></label>
+                <input name="podcast_itunes_explicit" ng-model="podcast.itunes_explicit" type="checkbox"/>
+            </fieldset>
         </form>
     </div>
 

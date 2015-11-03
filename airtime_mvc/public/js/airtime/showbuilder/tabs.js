@@ -131,6 +131,13 @@ var AIRTIME = (function(AIRTIME){
             AIRTIME.library.fnDrawCallback();
             self.close();
         });
+
+        self.contents.on("click", ".toggle-editor-form", function(event) {
+            self.contents.find(".inner_editor_wrapper").slideToggle(200);
+            var buttonIcon = $(this).find('.icon-white');
+            buttonIcon.toggleClass('icon-chevron-up');
+            buttonIcon.toggleClass('icon-chevron-down');
+        });
     };
 
     /**

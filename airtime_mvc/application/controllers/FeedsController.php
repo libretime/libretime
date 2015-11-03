@@ -7,8 +7,9 @@ class FeedsController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
-        if (Application_Model_Preference::getStationPodcastPrivacy()
-            && $this->getRequest()->getParam("sharing_token") != Application_Model_Preference::getStationPodcastDownloadKey()) {
+        if (!RestAuth::verifyAuth(true, true, $this)
+            && (Application_Model_Preference::getStationPodcastPrivacy()
+            && $this->getRequest()->getParam("sharing_token") != Application_Model_Preference::getStationPodcastDownloadKey())) {
             $this->getResponse()
                 ->setHttpResponseCode(401);
             return;

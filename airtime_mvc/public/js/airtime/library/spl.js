@@ -912,13 +912,6 @@ var AIRTIME = (function(AIRTIME){
                 oData = {};
             playlistRequest(sUrl, oData);
         });
-
-        $pl.find(".toggle-editor-form").unbind().on("click", function(event) {
-            $pl.find(".inner_editor_wrapper").slideToggle(200);
-            var buttonIcon = $(this).find('span.icon-white');
-            buttonIcon.toggleClass('icon-chevron-up');
-            buttonIcon.toggleClass('icon-chevron-down');
-        });
     }
 
     function setUpPlaylist() {
@@ -1137,9 +1130,6 @@ var AIRTIME = (function(AIRTIME){
         lastMod = mod.getModified(pl);
         type = pl.find('.obj_type').val();
         url = baseUrl+'playlist/delete';
-
-        console.log(id);
-        console.log(type);
 
         $.post(url,
             {format: "json", ids: id, modified: lastMod, type: type},
