@@ -41,13 +41,22 @@ class IndexController extends Zend_Controller_Action
         $this->view->displayLoginButton = $displayRadioPageLoginButtonValue;
 
         //station feed episodes
-        $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
-        $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
-        foreach ($episodes as $e => $v) {
-            $episodes[$e]["track_metadata"]["track_title"] = htmlspecialchars($v["track_metadata"]["track_title"], ENT_QUOTES);
-            $episodes[$e]["track_metadata"]["artist_name"] = htmlspecialchars($v["track_metadata"]["artist_name"], ENT_QUOTES);
+        if (!empty($stationPodcastId)) {
+
+            $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
+            $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
+            foreach ($episodes as $e => $v) {
+                $episodes[$e]["track_metadata"]["track_title"] = htmlspecialchars($v["track_metadata"]["track_title"], ENT_QUOTES);
+                $episodes[$e]["track_metadata"]["artist_name"] = htmlspecialchars($v["track_metadata"]["artist_name"], ENT_QUOTES);
+            }
+        } else {
+            // Station podcast does not exist yet
+            // (creation is implicitly done when a new podcast is created in the dashboard)
+            // return empty list of episodes
+            $episodes = [];
         }
+
         $this->view->episodes = json_encode($episodes);
 
         $this->view->displayRssTab = (!Application_Model_Preference::getStationPodcastPrivacy());
