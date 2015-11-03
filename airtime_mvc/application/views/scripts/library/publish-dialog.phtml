@@ -36,7 +36,7 @@
                 <div class="published-sources" ng-repeat="(source, label) in sources.published">
                     <span class="sp-checked-icon checked-icon left-floated"></span>
                     <span class="source-name">{{label}}</span>
-                    <button class="btn btn-small" ng-click="remove(source)"><?php echo _("Remove") ?></button>
+                    <button class="btn btn-small" ng-click="remove(source)"><?php echo _("Unpublish") ?></button>
                 </div>
                 <div ng-if="sources.published.length == 0">
                     <?php echo _("You haven't published this track to any sources!") . "<br/>"

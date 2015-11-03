@@ -243,6 +243,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         if ($isStationPodcast) {
             $episodes = $episodes->setLimit($limit);
         }
+        // XXX: We should maybe try to alias this so we don't pass CcFiles as an array key to the frontend.
+        //      It would require us to iterate over all the episodes and change the key for the response though...
         $episodes = $episodes->joinWith('PodcastEpisodes.CcFiles')
             ->setOffset($offset)
             ->orderBy($sortColumn, $sortDir)

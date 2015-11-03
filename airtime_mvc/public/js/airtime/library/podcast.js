@@ -205,7 +205,7 @@ var AIRTIME = (function (AIRTIME) {
         var $scope = this.$scope,
             buttons = {
                 editBtn: {
-                    title           : $.i18n._('Edit'),
+                    title           : $.i18n._('Edit Metadata'),
                     iconClass       : 'icon-pencil',
                     extraBtnClass   : '',
                     elementId       : '',
@@ -216,7 +216,7 @@ var AIRTIME = (function (AIRTIME) {
                     }
                 },
                 deleteBtn: {
-                    title           : $.i18n._('Delete'),
+                    title           : $.i18n._('Unpublish'),
                     iconClass       : 'icon-trash',
                     extraBtnClass   : 'btn-danger',
                     elementId       : '',
