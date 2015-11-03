@@ -228,7 +228,9 @@ class Application_Service_PodcastService
             throw new PodcastNotFoundException();
         }
 
-        return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+        $podcast = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+        $podcast["itunes_explicit"] = ($podcast["itunes_explicit"] == "yes") ? true : false;
+        return $podcast;
     }
 
     /**
@@ -297,6 +299,7 @@ class Application_Service_PodcastService
             self::_updateAutoIngestTimestamp($podcast, $data);
         }
 
+        $data["podcast"]["itunes_explicit"] = $data["podcast"]["itunes_explicit"] ? "yes" : "clean";
         $podcast->fromArray($data["podcast"], BasePeer::TYPE_FIELDNAME);
         $podcast->save();
 

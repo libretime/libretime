@@ -265,7 +265,7 @@ var AIRTIME = (function(AIRTIME){
      * Initialize the singleton ScheduleTab object on startup
      */
     mod.initScheduleTab = function() {
-        $scheduleTab = Object.freeze(new ScheduleTab());
+        $scheduleTab = new ScheduleTab();
         $activeTab = $scheduleTab;
     };
 
@@ -298,6 +298,7 @@ var AIRTIME = (function(AIRTIME){
     mod.updateActiveTab = function() {
         var t = $(".nav.nav-tabs .active");
         $activeTab = mod.get(t.data("tab-id"));
+        if (!$activeTab) $activeTab = $scheduleTab;
         if ($activeTab.contents.hasClass("pl-content")) {
             AIRTIME.playlist.setCurrent($activeTab.contents);
         }

@@ -54,7 +54,7 @@ var AIRTIME = (function (AIRTIME) {
          *
          * @private
          */
-        function _updatePodcast() {
+        self._updatePodcast = function () {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
                     // episodeTable.reload($scope.podcast.id);
@@ -62,7 +62,7 @@ var AIRTIME = (function (AIRTIME) {
                     AIRTIME.library.podcastDataTable.fnDraw();
                     tab.setName($scope.podcast.title);
                 });
-        }
+        };
 
         /**
          * For imported podcasts.
@@ -78,7 +78,7 @@ var AIRTIME = (function (AIRTIME) {
                     episode: this
                 });
             });
-            _updatePodcast();
+            self._updatePodcast();
         };
 
         /**
@@ -157,7 +157,20 @@ var AIRTIME = (function (AIRTIME) {
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
         var self = PodcastController.call(this, $scope, $http, podcast, tab);
+        // Store the station podcast tab in module scope so it can be checked if the user clicks the
+        // Station Podcast button again - this way we don't have to go back to the server to get the ID.
         $stationPodcastTab = tab;
+
+        /**
+         * Override the tab close function to 'unset' the module-scope $stationPodcastTab
+         *
+         * @override
+         */
+        tab.close = function () {
+            AIRTIME.tabs.Tab.prototype.close.call(this);
+            $stationPodcastTab = undefined;
+        };
+
 
         /**
          * For the station podcast.
@@ -165,7 +178,7 @@ var AIRTIME = (function (AIRTIME) {
          * Update the station podcast object.
          */
         $scope.savePodcast = function () {
-            _updatePodcast();
+            self._updatePodcast();
         };
 
         $scope.deleteSelectedEpisodes = function () {
