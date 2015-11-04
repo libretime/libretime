@@ -30,7 +30,6 @@ var AIRTIME = (function (AIRTIME) {
         //a roundtrip by not fetching it again here.
         $scope.podcast = podcast;
         $scope.tab = tab;
-        tab.setName($scope.podcast.title);
         $scope.csrf = jQuery("#csrf").val();
         tab.contents.find("table").attr("id", "podcast_episodes_" + podcast.id);
 
@@ -50,36 +49,28 @@ var AIRTIME = (function (AIRTIME) {
         };
 
         /**
-         * Internal function.
-         *
-         * Make a PUT request to the server to update the podcast object.
-         *
-         * @private
+         * Save and update the podcast object.
          */
-        self._updatePodcast = function () {
+        $scope.savePodcast = function () {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
-                    self.episodeTable.getDatatable().fnDraw();
                     AIRTIME.library.podcastDataTable.fnDraw();
                     tab.setName($scope.podcast.title);
                 });
         };
 
-        /**
-         * For imported podcasts.
-         *
-         * Save each of the selected episodes and update the podcast object.
-         */
-        $scope.savePodcast = function () {
+        $scope.importEpisodes = function () {
             var episodes = self.episodeTable.getSelectedRows();
             // TODO: Should we implement a batch endpoint for this instead?
             jQuery.each(episodes, function () {
                 $http.post(endpoint + $scope.podcast.id + '/episodes', {
                     csrf_token: $scope.csrf,
                     episode: this
+                }).success(function () {
+                    self.reloadEpisodeTable();
+                    self.episodeTable.getDatatable().fnDraw();
                 });
             });
-            self._updatePodcast();
         };
 
         /**
@@ -122,7 +113,19 @@ var AIRTIME = (function (AIRTIME) {
                 /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
             ]
         },
-            buttons = {};
+            buttons = {
+                importBtn: {
+                    title           : $.i18n._('Import Selected'),
+                    iconClass       : '',
+                    extraBtnClass   : 'btn-new',
+                    elementId       : '',
+                    eventHandlers   : {
+                        click: function () {
+                            $scope.importEpisodes();
+                        }
+                    }
+                }
+            };
         self.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable($scope.podcast, $scope.tab, params, buttons);
         self.reloadEpisodeTable();
     };
@@ -142,6 +145,7 @@ var AIRTIME = (function (AIRTIME) {
     PodcastController.prototype.initialize = function() {
         // TODO: this solves a race condition, but we should look for the root cause
         AIRTIME.tabs.onResize();
+        this.$scope.tab.setName(this.$scope.podcast.title);
         this._initTable();
     };
 
@@ -170,16 +174,6 @@ var AIRTIME = (function (AIRTIME) {
         tab.close = function () {
             AIRTIME.tabs.Tab.prototype.close.call(this);
             $stationPodcastTab = undefined;
-        };
-
-
-        /**
-         * For the station podcast.
-         *
-         * Update the station podcast object.
-         */
-        $scope.savePodcast = function () {
-            self._updatePodcast();
         };
 
         self.deleteSelectedEpisodes = function () {
@@ -252,6 +246,11 @@ var AIRTIME = (function (AIRTIME) {
             };
 
         this.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable($scope.podcast, $scope.tab, params, buttons);
+    };
+
+    StationPodcastController.prototype.initialize = function() {
+        PodcastController.prototype.initialize.call(this);
+        this.$scope.tab.setName(jQuery.i18n._("Station Podcast"));
     };
 
     /**
