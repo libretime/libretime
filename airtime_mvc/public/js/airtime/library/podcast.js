@@ -122,8 +122,12 @@ var AIRTIME = (function (AIRTIME) {
                 /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
             ]
         },
-            buttons = {};
-        self.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable($scope.podcast, $scope.tab, params, buttons);
+            buttons = { slideToggle: {} };
+        self.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(
+            $scope.tab.contents.find('.podcast_episodes'),
+            params,
+            buttons
+        );
         self.reloadEpisodeTable();
     };
 
@@ -171,7 +175,6 @@ var AIRTIME = (function (AIRTIME) {
             AIRTIME.tabs.Tab.prototype.close.call(this);
             $stationPodcastTab = undefined;
         };
-
 
         /**
          * For the station podcast.
@@ -239,8 +242,8 @@ var AIRTIME = (function (AIRTIME) {
                             self.deleteSelectedEpisodes();
                         }
                     }
-                }
-
+                },
+                slideToggle: {}
             },
             params = {
                 sAjaxSource : endpoint + $scope.podcast.id + '/episodes',
@@ -251,7 +254,11 @@ var AIRTIME = (function (AIRTIME) {
                 ]
             };
 
-        this.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable($scope.podcast, $scope.tab, params, buttons);
+        this.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(
+            $scope.tab.contents.find('.podcast_episodes'),
+            params,
+            buttons
+        );
     };
 
     /**
@@ -441,23 +448,23 @@ var AIRTIME = (function (AIRTIME) {
      *
      * Selection for the internal table represents episodes marked for ingest and is disabled for ingested episodes.
      *
-     * @param {Object}  podcast   the podcast data JSON object.
-     * @param {Tab}     tab       Tab object the podcast will be opened in
+     * @param {Object}  domNode   the jQuery DOM node to create the table inside.
      * @param {Object}  params    JSON object containing datatables parameters to override
      * @param {Object}  buttons   JSON object containing datatables button parameters
      *
      * @returns {*} the created Table object
      */
-    mod.initPodcastEpisodeDatatable = function(podcast, tab, params, buttons) {
-        buttons = $.extend({
-            slideToggle: {
-                title           : '',
-                iconClass       : 'spl-no-r-margin icon-chevron-up',
-                extraBtnClass   : 'toggle-editor-form',
-                elementId       : '',
-                eventHandlers   : {}
-            }
-        }, buttons);
+    mod.initPodcastEpisodeDatatable = function(domNode, params, buttons) {
+        if ('slideToggle' in buttons)
+            buttons = $.extend(true, {
+                slideToggle: {
+                    title           : '',
+                    iconClass       : 'spl-no-r-margin icon-chevron-up',
+                    extraBtnClass   : 'toggle-editor-form',
+                    elementId       : '',
+                    eventHandlers   : {}
+                }
+            }, buttons);
         params = $.extend(params,
             {
                 oColVis: {
@@ -476,12 +483,11 @@ var AIRTIME = (function (AIRTIME) {
             _initPodcastTable();
         }
 
-        // Set up the div with id "podcast_table" as a datatable.
         var podcastEpisodesTableWidget = new PodcastTable(
-            tab.contents.find('.podcast_episodes'), // DOM node to create the table inside.
-            true,                                   // Enable item selection
-            buttons,                                // Toolbar buttons
-            params                                  // Datatables overrides.
+            domNode, // DOM node to create the table inside.
+            true,    // Enable item selection
+            buttons, // Toolbar buttons
+            params   // Datatables overrides.
         );
 
         podcastEpisodesTableWidget.getDatatable().addTitles("td");

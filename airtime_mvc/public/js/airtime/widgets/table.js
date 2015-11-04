@@ -94,6 +94,10 @@ var AIRTIME = (function(AIRTIME) {
         return self;
     };
 
+    Table.prototype.assignDblClickHandler = function(fn) {
+        $(this._datatable, 'tbody tr').on('dblclick', this._SELECTORS.SELECTION_TABLE_ROW, fn);
+    };
+
 
     /* Set up global event handlers for the datatable.
      *  @param bItemSelection Whether or not row selection behaviour should be enabled for this widget.

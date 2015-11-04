@@ -8,7 +8,8 @@ var AIRTIME = (function(AIRTIME) {
         chosenItems = {},
         visibleChosenItems = {},
         $previouslySelected,
-        flagForDeselection = false;
+        flagForDeselection = false,
+        $datatables = {};
 
 
     // we need to know whether the criteria value is string or
@@ -85,6 +86,13 @@ var AIRTIME = (function(AIRTIME) {
         "playlist": "pl",
         "block": "bl",
         "stream": "ws"
+    });
+
+    mod.DataTableTypeEnum = Object.freeze({
+        //FILE: "au",
+        LIBRARY         : "library",
+        PODCAST         : "podcast",
+        PODCAST_EPISODES: "podcastEpisodes"
     });
 
     // TODO: once the new manual pages are added, change links!
@@ -744,7 +752,7 @@ var AIRTIME = (function(AIRTIME) {
 
         });
 
-
+        $datatables[mod.DataTableTypeEnum.LIBRARY] = mod.libraryDataTable;
 
         /*  ############################################
                           END DATATABLES
@@ -864,7 +872,14 @@ var AIRTIME = (function(AIRTIME) {
             }
         }
 
-        AIRTIME.library.setCurrentTable();
+        var selected = $("a[href$='"+location.hash+"']"), table;
+        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
+            table = mod.DataTableTypeEnum.PODCAST;
+        } else {
+            table = mod.DataTableTypeEnum.LIBRARY;
+        }
+
+        AIRTIME.library.setCurrentTable(table);
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
 
@@ -1230,20 +1245,20 @@ var AIRTIME = (function(AIRTIME) {
 
     };
 
-    mod.setCurrentTable = function() {
-        var selected = $("a[href$='"+location.hash+"']");
-        if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
-            $("#library_display_wrapper").hide();
-            $('#podcast_table_wrapper').show();
-            oTable = mod.podcastDataTable;
-        } else {
-            $('#podcast_table_wrapper').hide();
-            $("#library_display_wrapper").show();
-            oTable = mod.libraryDataTable;
-        }
+    mod.setCurrentTable = function (table) {
+        var dt = $datatables[table],
+            wrapper = $(dt).closest(".dataTables_wrapper");
+        $("#library_content").find(".dataTables_wrapper").hide();
+        wrapper.show();
+        oTable = dt;
+        oTable.fnDraw();
     };
 
-    /** Create the podcast datatable widget */
+    /**
+     * Create the podcast datatable widget
+     *
+     * XXX: should this be moved to podcast.js
+     */
     mod.initPodcastDatatable = function()
     {
         var aoColumns = [
@@ -1286,9 +1301,59 @@ var AIRTIME = (function(AIRTIME) {
                 }
             });
 
+        mod._initPodcastEpisodeDatatable();
+        mod.podcastTableWidget.assignDblClickHandler(function () {
+            var podcast = mod.podcastDataTable.fnGetData($(this).index());
+            mod.podcastEpisodeTableWidget.reload(podcast.id);
+            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
+        });
+
         mod.podcastDataTable = mod.podcastTableWidget.getDatatable();
+        $datatables[mod.DataTableTypeEnum.PODCAST] = mod.podcastDataTable;
     };
 
+    /**
+     * Initialize the podcast episode view for the left-hand pane
+     *
+     * @private
+     */
+    mod._initPodcastEpisodeDatatable = function () {
+        var buttons = {
+            addToScheduleBtn: {
+                // TODO: compatibility with checkAddButton function
+                title           : $.i18n._('Add to Schedule'),
+                iconClass       : '',
+                extraBtnClass   : 'btn-small',
+                elementId       : '',
+                eventHandlers   : {
+                    click: function (e) {
+                        console.log(mod.podcastEpisodeDataTable.fnGetData($(this).index()));
+                    }
+                }
+            }
+        };
+        mod.podcastEpisodeTableWidget = AIRTIME.podcast.initPodcastEpisodeDatatable(
+            $("#podcast_episodes_table"),
+            {
+                bServerSide : false,
+                sAjaxSource : null,
+                // Initialize the table with empty data so we can defer loading
+                // If we load sequentially there's a delay before the table appears
+                aaData      : {},
+                aoColumns : [
+                    /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
+                    /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
+                    /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
+                    /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
+                    /* Link */              { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
+                    /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
+                ]
+            },
+            buttons
+        );
+
+        mod.podcastEpisodeDataTable = $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES] = mod.podcastEpisodeTableWidget.getDatatable();
+    };
 
     mod.libraryInit = libraryInit;
 

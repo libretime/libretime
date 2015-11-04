@@ -140,19 +140,13 @@ AIRTIME = (function(AIRTIME) {
         $(window).on('hashchange', function() {
             var selected = $("a[href$='"+location.hash+"']"),
                 dashboardLink = $(".media_type_selector:first"),
-                t;
+                tableType;
 
             if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
-                $("#library_display_wrapper").hide();
-                $("#podcast_table_wrapper").show();
-                t = AIRTIME.library.podcastDataTable;
+                tableType = AIRTIME.library.DataTableTypeEnum.PODCAST;
             } else {
-                $("#library_display_wrapper").show();
-                $("#podcast_table_wrapper").hide();
-                t = AIRTIME.library.libraryDataTable;
+                tableType = AIRTIME.library.DataTableTypeEnum.LIBRARY;
             }
-
-            AIRTIME.library.setCurrentTable();
 
             dashboardLink.find("a").attr("href", selected.attr("href"));
             AIRTIME.library.selectNone();
@@ -160,7 +154,7 @@ AIRTIME = (function(AIRTIME) {
                 $(this).removeClass("selected");
             });
             selected.parent().addClass("selected");
-            t.fnDraw();
+            AIRTIME.library.setCurrentTable(tableType);
             $("#library_filter").text(selected.text());
             // Highlight the dashboard link
             dashboardLink.addClass("highlight");
