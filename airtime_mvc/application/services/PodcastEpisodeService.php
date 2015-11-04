@@ -245,7 +245,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         }
         // XXX: We should maybe try to alias this so we don't pass CcFiles as an array key to the frontend.
         //      It would require us to iterate over all the episodes and change the key for the response though...
-        $episodes = $episodes->joinWith('PodcastEpisodes.CcFiles')
+        $episodes = $episodes->joinWith('PodcastEpisodes.CcFiles', Criteria::LEFT_JOIN)
             ->setOffset($offset)
             ->orderBy($sortColumn, $sortDir)
             ->find();

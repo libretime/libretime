@@ -2444,7 +2444,7 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 }
 
 .md-publish {
-    width: 160px;
+    width: 100%;
     margin-top: 4px;
 }
 
@@ -4086,6 +4086,11 @@ li .ui-state-hover {
     text-align: left !important;
 }
 
+.publish-sources {
+    display: flex;
+    margin-bottom: 10px;
+}
+
 .publish-sources input[type="checkbox"] {
     float: left;
     margin: 8px 20px 0 7px;
@@ -4095,6 +4100,7 @@ li .ui-state-hover {
     color: #efefef;
     font-size: 14px;
     line-height: 26px;
+    margin-bottom: 10px;
 }
 
 .published-sources > .checked-icon {

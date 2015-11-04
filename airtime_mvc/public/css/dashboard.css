@@ -603,7 +603,7 @@ li.ui-state-default {
 }
 
 .edit-md-dialog .zend_form dd:last-child {
-    width: 160px;
+    width: 100%;
 }
 
 /* Smart Block Editor */
