@@ -8,23 +8,19 @@
     <div class="inner_editor_wrapper">
         <form class="media-metadata">
             <input ng-value="media.id" class="obj_id" type="hidden"/>
-            <label class="publish-md-field">
-                <?php echo _("Title") ?>
-                <input disabled ng-model="media.track_title" type="text"/>
-            </label>
-            <label class="publish-md-field">
-                <?php echo _("Creator") ?>
-                <input disabled ng-model="media.artist_name" type="text"/>
-            </label>
-            <label class="publish-md-field">
-                <?php echo _("Description") ?>
-                <textarea disabled ng-model="media.description"></textarea>
-            </label>
+            <label class="publish-md-field"><?php echo _("Title") ?></label>
+            <input disabled ng-model="media.track_title" type="text"/>
+
+            <label class="publish-md-field"><?php echo _("Creator") ?></label>
+            <input disabled ng-model="media.artist_name" type="text"/>
+
+            <label class="publish-md-field"><?php echo _("Description") ?></label>
+            <textarea disabled ng-model="media.description"></textarea>
             <fieldset>
                 <legend><?php echo _("Publish to:"); ?></legend>
-                <div ng-repeat="(source, label) in sources.toPublish">
+                <div class="publish-sources" ng-repeat="(source, label) in sources.toPublish">
                     <input ng-model="publishData[source]" type="checkbox" name="publish_sources" id="{{source}}">
-                    <label for="{{source}}">{{label}}</label><br/>
+                    <label class="source-name" for="{{source}}">{{label}}</label><br/>
                 </div>
                 <div ng-if="sources.toPublish.length == 0">
                     <?php echo _("You have already published this track to all available sources!") . "<br/>"
@@ -36,7 +32,7 @@
                 <div class="published-sources" ng-repeat="(source, label) in sources.published">
                     <span class="sp-checked-icon checked-icon left-floated"></span>
                     <span class="source-name">{{label}}</span>
-                    <button class="btn btn-small" ng-click="remove(source)"><?php echo _("Unpublish") ?></button>
+                    <button class="btn btn-small btn-danger" ng-click="remove(source)"><?php echo _("Unpublish") ?></button>
                 </div>
                 <div ng-if="sources.published.length == 0">
                     <?php echo _("You haven't published this track to any sources!") . "<br/>"

@@ -12,10 +12,12 @@ var AIRTIME = (function (AIRTIME) {
     /**
      * PodcastController constructor.
      *
-     * @param {{}} $scope   angular scope service object
-     * @param {{}} $http    angular http service object
-     * @param {{}} podcast  podcast metadata object
-     * @param {Tab} tab     Tab object the controller is being bootstrapped in
+     * @param {Object} $scope           angular scope service object
+     * @param {Object} $http            angular http service object
+     * @param {Object} podcast          podcast metadata object
+     * @param {int}    podcast.id       podcast unique identifier
+     * @param {string} podcast.title    podcast metadata title
+     * @param {Tab}    tab              Tab object the controller is being bootstrapped in
      *
      * @constructor
      */
@@ -57,7 +59,6 @@ var AIRTIME = (function (AIRTIME) {
         self._updatePodcast = function () {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
-                    // episodeTable.reload($scope.podcast.id);
                     self.episodeTable.getDatatable().fnDraw();
                     AIRTIME.library.podcastDataTable.fnDraw();
                     tab.setName($scope.podcast.title);
@@ -181,7 +182,7 @@ var AIRTIME = (function (AIRTIME) {
             self._updatePodcast();
         };
 
-        $scope.deleteSelectedEpisodes = function () {
+        self.deleteSelectedEpisodes = function () {
             var episodes = self.episodeTable.getSelectedRows();
             jQuery.each(episodes, function () {
                 $http.delete(endpoint + $scope.podcast.id + '/episodes/' + this.id + '?csrf_token=' + $scope.csrf)
@@ -191,7 +192,7 @@ var AIRTIME = (function (AIRTIME) {
             });
         };
 
-        $scope.openSelectedTabEditors = function () {
+        self.openSelectedTabEditors = function () {
             var episodes = self.episodeTable.getSelectedRows();
             $.each(episodes, function () {
                 var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file_id;
@@ -215,7 +216,7 @@ var AIRTIME = (function (AIRTIME) {
      * @private
      */
     StationPodcastController.prototype._initTable = function() {
-        var $scope = this.$scope,
+        var self = this, $scope = this.$scope,
             buttons = {
                 editBtn: {
                     title           : $.i18n._('Edit Metadata'),
@@ -223,8 +224,8 @@ var AIRTIME = (function (AIRTIME) {
                     extraBtnClass   : '',
                     elementId       : '',
                     eventHandlers   : {
-                        click: function(e) {
-                            $scope.openSelectedTabEditors();
+                        click: function () {
+                            self.openSelectedTabEditors();
                         }
                     }
                 },
@@ -234,8 +235,8 @@ var AIRTIME = (function (AIRTIME) {
                     extraBtnClass   : 'btn-danger',
                     elementId       : '',
                     eventHandlers   : {
-                        click: function(e) {
-                            $scope.deleteSelectedEpisodes();
+                        click: function () {
+                            self.deleteSelectedEpisodes();
                         }
                     }
                 }
@@ -440,10 +441,10 @@ var AIRTIME = (function (AIRTIME) {
      *
      * Selection for the internal table represents episodes marked for ingest and is disabled for ingested episodes.
      *
-     * @param podcast   the podcast data JSON object.
-     * @param tab       Tab object the podcast will be opened in
-     * @param params    JSON object containing datatables parameters to override
-     * @param buttons   JSON object containing datatables button parameters
+     * @param {Object}  podcast   the podcast data JSON object.
+     * @param {Tab}     tab       Tab object the podcast will be opened in
+     * @param {Object}  params    JSON object containing datatables parameters to override
+     * @param {Object}  buttons   JSON object containing datatables button parameters
      *
      * @returns {*} the created Table object
      */

@@ -55,7 +55,15 @@ class PreferenceController extends Zend_Controller_Action
                     // Refresh the download key when enabling privacy
                     Application_Model_Preference::setStationPodcastDownloadKey();
                 }
+
+                // Append sharing token (download key) to Station podcast URL
+                $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
+                $key = Application_Model_Preference::getStationPodcastDownloadKey();
+                $url = Application_Common_HTTPHelper::getStationUrl() .
+                    (((int) $values["stationPodcastPrivacy"]) ? "feeds/station-rss?sharing_token=$key" : "feeds/station-rss");
+                $stationPodcast->setDbUrl($url)->save();
                 Application_Model_Preference::setStationPodcastPrivacy($values["stationPodcastPrivacy"]);
+
 
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();

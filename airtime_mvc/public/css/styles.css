@@ -1180,8 +1180,11 @@ input[type="checkbox"] {
     width: 100%;
 }
 #pref_form textarea {
-    width: 98.5%;
+    width: 100%;
     padding-left: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 #pref_form select {
     width: 100%;
@@ -1703,7 +1706,14 @@ h2#scheduled_playlist_name span {
 }
 
 .simple-formblock dd .input_text {
-    width: 97.8%;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.simple-formblock dd textarea {
+    height: 70px;
 }
 
 .simple-formblock h2 {
@@ -1721,7 +1731,6 @@ h2#scheduled_playlist_name span {
     padding-right: 8px;
 }
 .ui-button-icon-only.crossfade-main-button .ui-button-text, .ui-button-icons-only.crossfade-main-button .ui-button-text {
-    padding: 0;
     text-indent: -1e+7px;
     padding: 0.1em 1em;
 }
@@ -3989,11 +3998,15 @@ li .ui-state-hover {
 .podcast-metadata p {
     text-align: center;
     padding: 0 5%;
+    margin-top: 0;
 }
 
 .podcast-metadata label,
 .podcast-metadata input,
-.podcast-metadata textarea {
+.podcast-metadata textarea,
+.media-metadata label,
+.media-metadata input,
+.media-metadata textarea{
     margin: 4px 0;
 }
 
@@ -4001,19 +4014,23 @@ li .ui-state-hover {
     margin: 8px 60% 0 0;
 }
 
-.podcast-metadata label {
+.podcast-metadata label,
+.media-metadata label {
     display: block;
     width: 20%;
     float: left;
 }
 
 .podcast-metadata input[type="text"],
-.podcast-metadata textarea {
+.podcast-metadata textarea,
+.media-metadata input[type="text"],
+.media-metadata textarea {
     width: 60%;
     float: left;
 }
 
 /* UI Revamp Video */
+
 #whatsnew {
     display: flex;
     flex-direction: column;
@@ -4059,9 +4076,21 @@ li .ui-state-hover {
 }
 
 /* jQuery dialog */
-.no-close .ui-dialog-titlebar-close {display: none }
+.no-close .ui-dialog-titlebar-close {
+    display: none
+}
 
 /* Publishing Dialog */
+
+.source-name {
+    text-align: left !important;
+}
+
+.publish-sources input[type="checkbox"] {
+    float: left;
+    margin: 8px 20px 0 7px;
+}
+
 .published-sources {
     color: #efefef;
     font-size: 14px;
@@ -4073,20 +4102,12 @@ li .ui-state-hover {
     padding-right: 8px;
 }
 
+.published-sources > .source-name {
+    display: inline-block;
+    width: 15%;
+    padding: 0 16px;
+}
+
 .publish-edit-md {
     float: right;
-}
-
-.publish-md-field {
-    text-align: left !important;
-    display: block;
-}
-
-.publish-md-field > textarea, .publish-md-field > input {
-    display: block;
-    width: 50%;
-}
-
-form.media-metadata fieldset {
-    margin-top: 8px;
 }

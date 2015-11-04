@@ -14,7 +14,7 @@
 }
 
 .edit-md-dialog dd input.input_text {
-    width: auto;
+    width: 100%;
 }
 
 .spl_sortable,.spl_sortable>li,.side_playlist>div,#spl_editor,.spl_artist,.spl_cue_in,.spl_fade_in,.spl_cue_out,.spl_fade_out
@@ -44,11 +44,13 @@
 
 .playlist_editor input, .playlist_editor textarea {
     width: 200px;
-    box-sizing: border-box;
-}
+    height: 70px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;}
 
 .side_playlist textarea {
-    height: 3.2em;
+    /*height: 70px;*/
 }
 
 .spl_sortable {
