@@ -209,15 +209,6 @@
             }
         };
 
-        MusesPlayer.prototype.playPodcastTrack = function(url, codec) {
-            this.setCodec(codec);
-            this.setURL(url);
-            musesPlayer.play();
-            if ($('.play').hasClass("pause") === false) {
-                $('.play').addClass("pause");
-            }
-        }
-
         // detects errors in FLASH mode
         function musesCallback(event,value) {
             switch (event) {
@@ -360,14 +351,6 @@
             metadataTimer = setTimeout(attachStreamMetadataToPlayer, time_to_next_track_starts+3000);
 
 
-        }
-
-        function detachStreamMetadataFromPlayer() {
-            clearTimeout(metadataTimer);
-        }
-
-        function attachFileMetadataToPlayer(artist, title) {
-            $("p.now_playing").html(artist+"<span>"+title+"</span>");
         }
 
 

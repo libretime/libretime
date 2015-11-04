@@ -1,17 +1,17 @@
 <script language="JavaScript">
-function autoResize(id){
-var newheight;
-var newwidth;
+    function autoResize(id){
+        var newheight;
+        var newwidth;
 
-if(document.getElementById){
-    newheight=document.getElementById(id).contentWindow.document.body.scrollHeight;
-    // Hack to get height in Firefox
-    if (newheight == 0) newheight = newheight = document.getElementById(id).contentWindow.document.documentElement.scrollHeight;
-    newwidth=document.getElementById(id).contentWindow.document.body.scrollWidth;
-}
-document.getElementById(id).height= (newheight) + "px";
-document.getElementById(id).width= (newwidth) + "px";
-}
+        if(document.getElementById){
+            newheight=document.getElementById(id).contentWindow.document.body.scrollHeight;
+            // Hack to get height in Firefox
+            if (newheight == 0) newheight = newheight = document.getElementById(id).contentWindow.document.documentElement.scrollHeight;
+            newwidth=document.getElementById(id).contentWindow.document.body.scrollWidth;
+        }
+        document.getElementById(id).height= (newheight) + "px";
+        document.getElementById(id).width= (newwidth) + "px";
+    }
 </script>
 
 <div class="wrapper">
@@ -31,13 +31,13 @@ document.getElementById(id).width= (newwidth) + "px";
         <span class='login-img'></span>
         </a>
     </div>";
-            }?>
+    }?>
 
     <div id="tab-1" class="schedule tab_content current">
         <iframe onLoad="autoResize('schedule_iframe');" id="schedule_iframe" height="300px" scrolling="yes" frameborder="0" src=<?php echo $this->stationUrl."embed/weekly-program?style=premium"?>></iframe>
     </div>
 
-    
+
     <div id="tab-2" class="about_us tab_content">
         <h1><?php echo $this->escape($this->stationName) ?></h1>
         <p><?php echo $this->escape($this->stationDescription) ?></p>
@@ -53,39 +53,135 @@ document.getElementById(id).width= (newwidth) + "px";
     </div>
 
     <?php
-        if ($this->displayRssTab) {?>
-    <div id="tab-4" class="station_rss tab_content">
-        <script type="text/javascript">
-            $.each(<?php echo $this->episodes ?>, function(index, value){
-                // map mime to format muses recognizes
-                // TODO: this doesn't make a difference
-                var metadata = value.CcFiles;
-                if (metadata.mime == "audio/mp3") {
-                    metadata.mime = "mp3";
-                } else if (metadata.mime == "audio/vorbis") {
-                    metadata.mime = "ogg";
-                }
+    if ($this->displayRssTab) {?>
+        <div id="tab-4" class="station_rss tab_content">
+            <div id="jquery_jplayer_1" class="jp-player">
+            </div>
+            <div id="jp_container_1" class="jp-audio">
+                <div class="jp-type-playlist">
+                    <div class="jp-gui jp-interface">
+                        <ul class="jp-controls">
+                            <li class="ui-state-default ui-corner-all jp-previous">
+                                <span class="ui-icon ui-icon-seek-prev" tabindex="1"><?php echo _("previous") ?></span>
+                            </li>
 
-                $("#tab-4").append("<div>"+metadata.artist_name+" - "+metadata.track_title+
-                " <a id='rss-download-link' href='"+value.download_url+"'>Download</a>" +
-                " <a id='rss-play-link' data-metaartist='"+metadata.artist_name+"' data-metatitle='"+metadata.track_title+"' data-streamurl='"+value.download_url+"' data-streamcodec='"+metadata.mime+"' href='#'>Play</a></div>");
-            });
+                            <li class="ui-state-default ui-corner-all jp-play">
+                                <span class="ui-icon ui-icon-play" tabindex="1"><?php echo _("play") ?></span>
+                            </li>
 
-            $("a#rss-play-link").click(function() {
-                var file_url = $(this).attr("data-streamurl");
-                var file_codec = $(this).attr("data-streamcodec");
-                var artist_name = $(this).attr("data-metaartist");
-                var track_title = $(this).attr("data-metatitle");
-                //console.log(track_title);
+                            <li class="ui-state-default ui-corner-all jp-pause">
+                                <span class="ui-icon ui-icon-pause" tabindex="1"><?php echo _("pause") ?></span>
+                            </li>
 
-                document.getElementById("player_iframe").contentWindow.musesPlayer.playPodcastTrack(file_url, file_codec);
-                document.getElementById("player_iframe").contentWindow.detachStreamMetadataFromPlayer();
-                document.getElementById("player_iframe").contentWindow.attachFileMetadataToPlayer(artist_name, track_title);
-            });
-        </script>
-    </div>
+                            <li class="ui-state-default ui-corner-all jp-next">
+                                <span class="ui-icon ui-icon-seek-next" tabindex="1"><?php echo _("next") ?></span>
+                            </li>
+
+                            <li class="ui-state-default ui-corner-all jp-stop">
+                                <span class="ui-icon ui-icon-stop" tabindex="1"><?php echo _("stop") ?></span>
+                            </li>
+                        </ul>
+                        <div class="jp-time-block">
+                            <div class="jp-progress">
+                                <div class="jp-seek-bar">
+                                    <div class="jp-play-bar"></div>
+                                </div>
+                            </div>
+                            <div class="jp-time-holder">
+                                <div class="jp-current-time"></div>
+                            </div>
+                        </div>
+                        <div class="jp-volume-block">
+                            <div class="jp-mute">
+                                <span class="ui-icon" tabindex="1" title="mute"><?php echo _("mute") ?></span>
+                            </div>
+                            <div class="jp-unmute">
+                                <span class="ui-icon" tabindex="1" title="unmute"><?php echo _("unmute") ?></span>
+                            </div>
+                            <div class="jp-volume-bar">
+                                <div class="jp-volume-bar-value"></div>
+                            </div>
+                            <div class="jp-volume-max">
+                                <span class="ui-icon" tabindex="1" title="max volume"><?php echo _("max volume") ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="jp-playlist">
+                        <ul>
+                            <li></li>
+                        </ul>
+                    </div>
+                    <div class="jp-no-solution">
+                        <span><?php echo _("Update Required") ?></span>
+                        <?php sprintf(_("To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."),
+                            "<a href='http://get.adobe.com/flashplayer/' target='_blank'>",
+                            "</a>") ?>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+
+                _playlist_jplayer = new jPlayerPlaylist({
+                        jPlayer: "#jquery_jplayer_1",
+                        cssSelectorAncestor: "#jp_container_1"
+                    },[], //array of songs will be filled with below's json call
+                    {
+                        swfPath: baseUrl + "js/jplayer",
+                        supplied: "oga, mp3, m4v, m4a, wav",
+                        size: {
+                            width: "0px",
+                            height: "0px",
+                            cssClass: "jp-video-270p"
+                        },
+                        playlistOptions: {
+                            autoPlay: false,
+                            loopOnPrevious: false,
+                            shuffleOnLoop: true,
+                            enableRemoveControls: false,
+                            displayTime: 0,
+                            addTime: 0,
+                            removeTime: 0,
+                            shuffleTime: 0
+                        },
+                        ready: function () {
+                            var playlist = new Array();
+                            var media;
+
+                            $.each(<?php echo $this->episodes ?>, function (index, value) {
+                                if (value.CcFiles.mime == "audio/mp3") {
+                                    media = {
+                                        title: value.CcFiles.track_title,
+                                        artist: value.CcFiles.artist_name,
+                                        mp3: value.download_url,
+                                        download_url: value.download_url
+                                    };
+                                } else if (value.CcFiles.mime == "audio/vorbis") {
+                                    media = {
+                                        title: value.CcFiles.track_title,
+                                        artist: value.CcFiles.artist_name,
+                                        oga: value.download_url,
+                                        download_url: value.download_url
+                                    };
+                                }
+                                playlist.push(media);
+                            });
+
+                            _playlist_jplayer.setPlaylist(playlist);
+
+                            // This is a big hack to attach the download and play buttons
+                            // to the jplayer playlist items.
+                            $(".jp-playlist").find("a.jp-playlist-item").each(function (i, obj) {
+                                $(obj).after(" - <a id='rss-download-link' href='"+playlist[i].download_url+"'>Download</a>");
+                            });
+                        }
+                    }
+                );
+
+            </script>
+        </div>
     <?php
-        }
+    }
     ?>
 
     <iframe id="player_iframe" frameborder="0" width="100%" style="bottom:0px; left:0px; position:fixed; right:0px;" src=<?php echo $this->stationUrl."embed/player?stream=auto&style=premium";?>></iframe>
@@ -130,5 +226,6 @@ document.getElementById(id).width= (newwidth) + "px";
             $("#"+tab_id).addClass('active');
         });
 
-    })
+    });
+
 </script>
