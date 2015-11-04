@@ -45,6 +45,7 @@
 
 .playlist_editor input, .playlist_editor textarea {
     width: 200px;
+    height: 70px;
     box-sizing: border-box;
 }
 

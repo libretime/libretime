@@ -181,7 +181,7 @@ var AIRTIME = (function (AIRTIME) {
             self._updatePodcast();
         };
 
-        $scope.deleteSelectedEpisodes = function () {
+        self.deleteSelectedEpisodes = function () {
             var episodes = self.episodeTable.getSelectedRows();
             jQuery.each(episodes, function () {
                 $http.delete(endpoint + $scope.podcast.id + '/episodes/' + this.id + '?csrf_token=' + $scope.csrf)
@@ -191,7 +191,7 @@ var AIRTIME = (function (AIRTIME) {
             });
         };
 
-        $scope.openSelectedTabEditors = function () {
+        self.openSelectedTabEditors = function () {
             var episodes = self.episodeTable.getSelectedRows();
             $.each(episodes, function () {
                 var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file_id;
@@ -215,7 +215,7 @@ var AIRTIME = (function (AIRTIME) {
      * @private
      */
     StationPodcastController.prototype._initTable = function() {
-        var $scope = this.$scope,
+        var self = this, $scope = this.$scope,
             buttons = {
                 editBtn: {
                     title           : $.i18n._('Edit Metadata'),
@@ -223,8 +223,8 @@ var AIRTIME = (function (AIRTIME) {
                     extraBtnClass   : '',
                     elementId       : '',
                     eventHandlers   : {
-                        click: function(e) {
-                            $scope.openSelectedTabEditors();
+                        click: function () {
+                            self.openSelectedTabEditors();
                         }
                     }
                 },
@@ -234,8 +234,8 @@ var AIRTIME = (function (AIRTIME) {
                     extraBtnClass   : 'btn-danger',
                     elementId       : '',
                     eventHandlers   : {
-                        click: function(e) {
-                            $scope.deleteSelectedEpisodes();
+                        click: function () {
+                            self.deleteSelectedEpisodes();
                         }
                     }
                 }

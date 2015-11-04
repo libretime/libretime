@@ -1709,6 +1709,7 @@ h2#scheduled_playlist_name span {
 
 .simple-formblock dd textarea {
     box-sizing: border-box;
+    height: 70px;
 }
 
 .simple-formblock h2 {
