@@ -111,10 +111,6 @@ var AIRTIME = (function(AIRTIME){
     Tab.prototype._init = function() {
         var self = this;
         self.assignTabClickHandler(function(e) {
-            if (e.which == 2) {  // Middle mouse
-                self.close();
-                return;
-            }
             if (!$(this).hasClass('active')) {
                 self.switchTo();
             }
@@ -146,7 +142,17 @@ var AIRTIME = (function(AIRTIME){
      * @param {function} f the function to call when the tab is clicked
      */
     Tab.prototype.assignTabClickHandler = function(f) {
-        this.tab.unbind("click").on("click", f);
+        var self = this;
+        self.tab.unbind("click").on("click", function (e) {
+            // Always close on middle mouse press
+            if (e.which == 2) {
+                // Simulate a click on the close tab button so any
+                // additional on-close behaviour is executed
+                self.tab.find(".lib_pl_close").click();
+                return;
+            }
+            f();
+        });
     };
 
     /**

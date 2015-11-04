@@ -14,7 +14,6 @@
 }
 
 .edit-md-dialog dd input.input_text {
-    /*width: auto;*/
     width: 100%;
 }
 
@@ -46,8 +45,9 @@
 .playlist_editor input, .playlist_editor textarea {
     width: 200px;
     height: 70px;
-    box-sizing: border-box;
-}
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;}
 
 .side_playlist textarea {
     /*height: 70px;*/

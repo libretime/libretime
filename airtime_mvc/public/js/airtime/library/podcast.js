@@ -12,10 +12,12 @@ var AIRTIME = (function (AIRTIME) {
     /**
      * PodcastController constructor.
      *
-     * @param {{}} $scope   angular scope service object
-     * @param {{}} $http    angular http service object
-     * @param {{}} podcast  podcast metadata object
-     * @param {Tab} tab     Tab object the controller is being bootstrapped in
+     * @param {Object} $scope           angular scope service object
+     * @param {Object} $http            angular http service object
+     * @param {Object} podcast          podcast metadata object
+     * @param {int}    podcast.id       podcast unique identifier
+     * @param {string} podcast.title    podcast metadata title
+     * @param {Tab}    tab              Tab object the controller is being bootstrapped in
      *
      * @constructor
      */
@@ -57,7 +59,6 @@ var AIRTIME = (function (AIRTIME) {
         self._updatePodcast = function () {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
-                    // episodeTable.reload($scope.podcast.id);
                     self.episodeTable.getDatatable().fnDraw();
                     AIRTIME.library.podcastDataTable.fnDraw();
                     tab.setName($scope.podcast.title);
@@ -440,10 +441,10 @@ var AIRTIME = (function (AIRTIME) {
      *
      * Selection for the internal table represents episodes marked for ingest and is disabled for ingested episodes.
      *
-     * @param podcast   the podcast data JSON object.
-     * @param tab       Tab object the podcast will be opened in
-     * @param params    JSON object containing datatables parameters to override
-     * @param buttons   JSON object containing datatables button parameters
+     * @param {Object}  podcast   the podcast data JSON object.
+     * @param {Tab}     tab       Tab object the podcast will be opened in
+     * @param {Object}  params    JSON object containing datatables parameters to override
+     * @param {Object}  buttons   JSON object containing datatables button parameters
      *
      * @returns {*} the created Table object
      */
