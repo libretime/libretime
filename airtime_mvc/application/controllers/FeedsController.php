@@ -15,7 +15,7 @@ class FeedsController extends Zend_Controller_Action
             return;
         }
 
-        header('Content-Type: text/xml');
+        header('Content-Type: text/xml; charset=UTF-8');
 
         echo Application_Service_PodcastService::createStationRssFeed();
     }
