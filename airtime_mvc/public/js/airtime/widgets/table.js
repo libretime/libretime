@@ -31,7 +31,6 @@ var AIRTIME = (function(AIRTIME) {
         self._selectedRowVisualIdxMax = -1;
         self._$wrapperDOMNode = null;
         self._toolbarButtons = null;
-
         //Save some of the constructor parameters
         self._$wrapperDOMNode = $(wrapperDOMNode);
         self._toolbarButtons = toolbarButtons;
@@ -44,7 +43,7 @@ var AIRTIME = (function(AIRTIME) {
         // If selection is enabled, add in the checkbox column.
         if (bItemSelection) {
             dataTablesOptions["aoColumns"].unshift(
-                /* Checkbox */        { "sTitle" : "", "mData" : self._datatablesCheckboxDataDelegate, "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "16px"         , "sClass" : "airtime_table_checkbox" }
+                /* Checkbox */        { "sTitle" : "", "mData" : self._datatablesCheckboxDataDelegate.bind(this), "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "24px"         , "sClass" : "airtime_table_checkbox" }
             );
         }
 
@@ -68,7 +67,7 @@ var AIRTIME = (function(AIRTIME) {
             }),
             "oColVis": {
                 "sAlign": "right",
-                "aiExclude": self.colVisExcludeColumns,
+                "aiExclude": self._colVisExcludeColumns,
                 "buttonText": $.i18n._("Columns"),
                 "iOverlayFade": 0
             },
@@ -428,7 +427,6 @@ var AIRTIME = (function(AIRTIME) {
 
     //Static initializers / Class variables
 
-    /** Predefined toolbar buttons that you can add to the table. Use getStandardToolbarButtons(). */
     Table.prototype._SELECTORS = Object.freeze({
         SELECTION_CHECKBOX: ".airtime_table_checkbox",
         SELECTION_TABLE_ROW: "tr"

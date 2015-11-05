@@ -200,7 +200,7 @@ thead th.ui-state-default {
     color: #ccc;
 }
 
-thead th.ui-state-default:not([class*='checkbox']):not([class*='type']):not([class*='image']) {
+thead th.ui-state-default:not([class*='checkbox']):not([class*='type']):not([class*='image']):not([class*='imported']) {
     cursor: move;
 }
 

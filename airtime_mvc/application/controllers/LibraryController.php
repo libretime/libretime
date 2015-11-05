@@ -222,6 +222,7 @@ class LibraryController extends Zend_Controller_Action
         $message = null;
         $noPermissionMsg = _("You don't have permission to delete selected items.");
 
+        Logging::info($mediaItems);
         foreach ($mediaItems as $media) {
 
             if ($media["type"] === "audioclip") {

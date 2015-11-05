@@ -64,7 +64,7 @@ class PodcastManager {
             //  episodes in the list of episodes to ingest, don't skip this episode - we should try to ingest the
             //  most recent episode when the user first sets the podcast to automatic ingest.
             // If the publication date of this episode is before the ingest timestamp, we don't need to ingest it
-            if ((empty($ts) && !empty($episodes)) || strtotime($episodeData["pub_date"]) < strtotime($ts)) {
+            if ((empty($ts) && ($i > 0)) || strtotime($episodeData["pub_date"]) < strtotime($ts)) {
                 continue;
             }
             $episode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episodeData["guid"]);

@@ -267,16 +267,23 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function _getImportedPodcastEpisodeArray($podcast, $episodes) {
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
         $episodeIds = array();
+        $episodeFiles = array();
         foreach ($episodes as $e) {
             array_push($episodeIds, $e->getDbEpisodeGuid());
+            $episodeFiles[$e->getDbEpisodeGuid()] = $e->getDbFileId();
         }
 
         $episodesArray = array();
         foreach ($rss->get_items() as $item) {
+            $itemId = $item->get_id();
+            $ingested = in_array($itemId, $episodeIds) ? (empty($episodeFiles[$itemId]) ? -1 : 1) : 0;
+            $file = $ingested > 0 && !empty($episodeFiles[$itemId]) ?
+                CcFiles::getSanitizedFileById($episodeFiles[$itemId]) : array();
             /** @var SimplePie_Item $item */
             array_push($episodesArray, array(
-                "guid" => $item->get_id(),
-                "ingested" => in_array($item->get_id(), $episodeIds),
+                "podcast_id" => $podcast->getDbId(),
+                "guid" => $itemId,
+                "ingested" => $ingested,
                 "title" => $item->get_title(),
                 // From the RSS spec best practices:
                 // 'An item's author element provides the e-mail address of the person who wrote the item'
@@ -284,7 +291,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 "description" => $item->get_description(),
                 "pub_date" => $item->get_gmdate(),
                 "link" => $item->get_link(),
-                "enclosure" => $item->get_enclosure()
+                "enclosure" => $item->get_enclosure(),
+                "file" => $file
             ));
         }
 

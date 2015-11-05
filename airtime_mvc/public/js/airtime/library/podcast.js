@@ -7,7 +7,7 @@ var AIRTIME = (function (AIRTIME) {
 
     mod = AIRTIME.podcast;
 
-    var endpoint = 'rest/podcast/', PodcastTable, $stationPodcastTab;
+    var endpoint = 'rest/podcast/', PodcastEpisodeTable, $stationPodcastTab;
 
     /**
      * PodcastController constructor.
@@ -59,20 +59,6 @@ var AIRTIME = (function (AIRTIME) {
                 });
         };
 
-        $scope.importEpisodes = function () {
-            var episodes = self.episodeTable.getSelectedRows();
-            // TODO: Should we implement a batch endpoint for this instead?
-            jQuery.each(episodes, function () {
-                $http.post(endpoint + $scope.podcast.id + '/episodes', {
-                    csrf_token: $scope.csrf,
-                    episode: this
-                }).success(function () {
-                    self.reloadEpisodeTable();
-                    self.episodeTable.getDatatable().fnDraw();
-                });
-            });
-        };
-
         /**
          * Close the tab and discard any changes made to the podcast data.
          */
@@ -122,7 +108,7 @@ var AIRTIME = (function (AIRTIME) {
                     elementId       : '',
                     eventHandlers   : {
                         click: function () {
-                            $scope.importEpisodes();
+                            mod.importSelectedEpisodes(self.episodeTable.getSelectedRows(), self.episodeTable);
                         }
                     }
                 }
@@ -130,7 +116,11 @@ var AIRTIME = (function (AIRTIME) {
         self.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(
             $scope.tab.contents.find('.podcast_episodes'),
             params,
-            buttons
+            buttons,
+            {
+                hideIngestCheckboxes: true,
+                podcastId: $scope.podcast.id
+            }
         );
         self.reloadEpisodeTable();
     };
@@ -139,7 +129,7 @@ var AIRTIME = (function (AIRTIME) {
      * Reload the podcast episode table.
      */
     PodcastController.prototype.reloadEpisodeTable = function() {
-        this.episodeTable.reload(this.$scope.podcast.id);
+        this.episodeTable.reload();
     };
 
     /**
@@ -166,13 +156,13 @@ var AIRTIME = (function (AIRTIME) {
      */
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
-        var self = PodcastController.call(this, $scope, $http, podcast, tab);
+        PodcastController.call(this, $scope, $http, podcast, tab);
         // Store the station podcast tab in module scope so it can be checked if the user clicks the
         // Station Podcast button again - this way we don't have to go back to the server to get the ID.
         $stationPodcastTab = tab;
 
         /**
-         * Override the tab close function to 'unset' the module-scope $stationPodcastTab
+         * Override the tab close function to 'unset' the module-scope $stationPodcastTab.
          *
          * @override
          */
@@ -181,25 +171,7 @@ var AIRTIME = (function (AIRTIME) {
             $stationPodcastTab = undefined;
         };
 
-        self.deleteSelectedEpisodes = function () {
-            var episodes = self.episodeTable.getSelectedRows();
-            jQuery.each(episodes, function () {
-                $http.delete(endpoint + $scope.podcast.id + '/episodes/' + this.id + '?csrf_token=' + $scope.csrf)
-                    .success(function () {
-                        self.reloadEpisodeTable();
-                    });
-            });
-        };
-
-        self.openSelectedTabEditors = function () {
-            var episodes = self.episodeTable.getSelectedRows();
-            $.each(episodes, function () {
-                var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file_id;
-                $.get(baseUrl + "library/edit-file-md/id/" + this.file_id, {format: "json"}, function (json) {
-                    AIRTIME.playlist.fileMdEdit(json, uid);
-                });
-            });
-        };
+        return this;
     }
 
     /**
@@ -208,6 +180,34 @@ var AIRTIME = (function (AIRTIME) {
      * @type {PodcastController}
      */
     StationPodcastController.prototype = Object.create(PodcastController.prototype);
+
+    /**
+     * Remove the selected episodes from the station podcast feed.
+     */
+    StationPodcastController.prototype.unpublishSelectedEpisodes = function () {
+        var self = this, $scope = self.$scope,
+            episodes = self.episodeTable.getSelectedRows();
+        jQuery.each(episodes, function () {
+            self.$http.delete(endpoint + $scope.podcast.id + '/episodes/' + this.id + '?csrf_token=' + $scope.csrf)
+                .success(function () {
+                    self.reloadEpisodeTable();
+                });
+        });
+    };
+
+    /**
+     * Open metadata editor tabs for each of the selected episodes.
+     */
+    StationPodcastController.prototype.openSelectedTabEditors = function () {
+        var self = this,
+            episodes = self.episodeTable.getSelectedRows();
+        jQuery.each(episodes, function () {
+            var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file_id;
+            jQuery.get(baseUrl + "library/edit-file-md/id/" + this.file_id, {format: "json"}, function (json) {
+                AIRTIME.playlist.fileMdEdit(json, uid);
+            });
+        });
+    };
 
     /**
      * Initialize the Station podcast episode table.
@@ -223,9 +223,7 @@ var AIRTIME = (function (AIRTIME) {
                     extraBtnClass   : '',
                     elementId       : '',
                     eventHandlers   : {
-                        click: function () {
-                            self.openSelectedTabEditors();
-                        }
+                        click: self.openSelectedTabEditors.bind(self)
                     }
                 },
                 deleteBtn: {
@@ -234,9 +232,7 @@ var AIRTIME = (function (AIRTIME) {
                     extraBtnClass   : 'btn-danger',
                     elementId       : '',
                     eventHandlers   : {
-                        click: function () {
-                            self.deleteSelectedEpisodes();
-                        }
+                        click: self.unpublishSelectedEpisodes.bind(self)
                     }
                 },
                 slideToggle: {}
@@ -253,12 +249,20 @@ var AIRTIME = (function (AIRTIME) {
         this.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(
             $scope.tab.contents.find('.podcast_episodes'),
             params,
-            buttons
+            buttons,
+            {
+                hideIngestCheckboxes: true,
+                podcastId: $scope.podcast.id
+            }
         );
     };
 
+    /**
+     * Initialize the Station podcast.
+     */
     StationPodcastController.prototype.initialize = function() {
         PodcastController.prototype.initialize.call(this);
+        // We want to override the default tab name behaviour and use "Station Podcast" for clarity
         this.$scope.tab.setName(jQuery.i18n._("Station Podcast"));
     };
 
@@ -354,36 +358,118 @@ var AIRTIME = (function (AIRTIME) {
      *
      * @private
      */
-    function _initPodcastTable() {
-        PodcastTable = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
-            // Just call the superconstructor. For clarity/extensibility
+    function _initPodcastEpisodeTable() {
+        PodcastEpisodeTable = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions, config) {
+            this.config = config;  // Internal configuration object
+            this._setupImportListener();
+            // Call the superconstructor
             return AIRTIME.widgets.Table.call(this, wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions);
         };  // Subclass AIRTIME.widgets.Table
-        PodcastTable.prototype = Object.create(AIRTIME.widgets.Table.prototype);
-        PodcastTable.prototype.constructor = PodcastTable;
-        PodcastTable.prototype._SELECTORS = Object.freeze({
+        PodcastEpisodeTable.prototype = Object.create(AIRTIME.widgets.Table.prototype);
+        PodcastEpisodeTable.prototype.constructor = PodcastEpisodeTable;
+        PodcastEpisodeTable.prototype._SELECTORS = Object.freeze({
             SELECTION_CHECKBOX: ".airtime_table_checkbox:has(input)",
             SELECTION_TABLE_ROW: "tr:has(td.airtime_table_checkbox > input)"
         });
-        PodcastTable.prototype._datatablesCheckboxDataDelegate = function(rowData, callType, dataToSave) {
-            if (rowData.ingested) return null;  // Don't create checkboxes for ingested items
+
+        /**
+         * @override
+         *
+         * Override the checkbox delegate function in the Table object to change
+         * the row's checkbox and import status columns depending on the status
+         * of the episode (unimported: 0, imported: 1, pending import: -1).
+         *
+         * @param rowData
+         * @param callType
+         * @param dataToSave
+         *
+         * @returns {string}
+         * @private
+         */
+        PodcastEpisodeTable.prototype._datatablesCheckboxDataDelegate = function(rowData, callType, dataToSave) {
+            var importIcon = "<span class='sp-checked-icon checked-icon imported-flag'></span>",
+                pendingIcon = "<span class='loading-icon'></span>";
+            if (this.config.hideIngestCheckboxes && rowData.ingested && rowData.ingested != 0) {
+                return rowData.ingested > 0 ? importIcon : pendingIcon;
+            }
+            rowData.importIcon = (rowData.ingested != 0) ? (rowData.ingested > 0 ? importIcon : pendingIcon) : null;
             return AIRTIME.widgets.Table.prototype._datatablesCheckboxDataDelegate.call(this, rowData, callType, dataToSave);
         };
-        // Since we're sometimes using a static source, define a separate function to fetch and 'reload' the table data
-        // We use this when we save the Podcast because we need to flag rows the user is ingesting
-        PodcastTable.prototype.reload = function (id) {
+
+        /**
+         * Reload the episode table.
+         * Since we're sometimes using a static source, define a separate function to fetch and reload the table data.
+         * We use this when we save the Podcast because we need to flag rows the user is ingesting.
+         *
+         * @param [id] optional podcast identifier
+         */
+        PodcastEpisodeTable.prototype.reload = function (id) {
+            // When using static source data, we instantiate an empty table
+            // and pass this function the ID of the podcast we want to display.
+            if (id) this.config.podcastId = id;
             var dt = this._datatable;
-            $.get(endpoint + id + '/episodes', function (json) {
+            dt.block({
+                message: "",
+                theme: true,
+                applyPlatformOpacityRules: false
+            });
+            $.get(endpoint + this.config.podcastId + '/episodes', function (json) {
                 dt.fnClearTable();
                 dt.fnAddData(JSON.parse(json));
+                dt.fnDraw();
+                dt.unblock();
             });
+        };
+
+        /**
+         * Setup an interval that checks for any pending imports and reloads
+         * the table once imports are finished.
+         *
+         * TODO: remember selection
+         *
+         * @private
+         */
+        PodcastEpisodeTable.prototype._setupImportListener = function () {
+            var self = this;
+            self.importListener = setInterval(function () {
+                var podcastId = self.config.podcastId, pendingRows = [];
+                if (!podcastId) return false;
+                var dt = self.getDatatable(), data = dt.fnGetData();
+                // Iterate over the table data to check for any rows pending import
+                $.each(data, function () {
+                    if (this.ingested == -1) {
+                        pendingRows.push(this.guid);
+                    }
+                });
+                console.log(pendingRows);
+                if (pendingRows.length > 0) {
+                    $.get(endpoint + podcastId + '/episodes', function (json) {
+                        data = JSON.parse(json);
+                        var delta = false;
+                        $.each(data, function () {
+                            var idx = pendingRows.indexOf(this.guid);
+                            console.log(idx);
+                            if (idx > -1 && this.ingested != -1) {
+                                delta = true;
+                                pendingRows.slice(idx, 0);
+                            }
+                        });
+                        if (delta) {  // Has there been a change?
+                            // We already have the data, so there's no reason to call
+                            // reload() here; this also provides a smoother transition
+                            dt.fnClearTable();
+                            dt.fnAddData(data);
+                        }
+                    });
+                }
+            }, 15000);  // Run every 15 seconds
         };
     }
 
     /**
      * Create and show the URL dialog for podcast creation.
      */
-    mod.createUrlDialog = function() {
+    mod.createUrlDialog = function () {
         $.get('/render/podcast-url-dialog', function(json) {
             $(document.body).append(json.html);
             $("#podcast_url_dialog").dialog({
@@ -402,7 +488,7 @@ var AIRTIME = (function (AIRTIME) {
      *
      * FIXME: we should probably be passing the serialized form into this function instead
      */
-    mod.addPodcast = function() {
+    mod.addPodcast = function () {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
             _initAppFromResponse(json);
             $("#podcast_url_dialog").dialog("close");
@@ -412,7 +498,7 @@ var AIRTIME = (function (AIRTIME) {
     /**
      * Open a tab to view and edit the station podcast.
      */
-    mod.openStationPodcast = function() {
+    mod.openStationPodcast = function () {
         if (typeof $stationPodcastTab === 'undefined') {
             $.get(endpoint + 'station', function(json) {
                 _initAppFromResponse(json);
@@ -425,7 +511,7 @@ var AIRTIME = (function (AIRTIME) {
     /**
      * Create a bulk request to edit all currently selected podcasts.
      */
-    mod.editSelectedPodcasts = function() {
+    mod.editSelectedPodcasts = function () {
         _bulkAction(AIRTIME.library.podcastTableWidget.getSelectedRows(), HTTPMethods.GET, function(json) {
             json.forEach(function(data) {
                 _initAppFromResponse(data);
@@ -436,7 +522,7 @@ var AIRTIME = (function (AIRTIME) {
     /**
      * Create a bulk request to delete all currently selected podcasts.
      */
-    mod.deleteSelectedPodcasts = function() {
+    mod.deleteSelectedPodcasts = function () {
         if (confirm($.i18n._("Are you sure you want to delete the selected podcasts from your library?"))) {
             _bulkAction(AIRTIME.library.podcastTableWidget.getSelectedRows(), HTTPMethods.DELETE, function () {
                 AIRTIME.library.podcastDataTable.fnDraw();
@@ -445,50 +531,72 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     /**
+     * Import one or more podcast episodes.
+     *
+     * @param {Array} episodes          array of episode data to be imported
+     * @param {PodcastEpisodeTable} dt  PodcastEpisode table containing the data
+     */
+    mod.importSelectedEpisodes = function (episodes, dt) {
+        $.each(episodes, function () {
+            var podcastId = this.podcast_id;
+            $.post(endpoint + podcastId + '/episodes', JSON.stringify({
+                csrf_token: $("#csrf").val(),
+                episode: this
+            }), function () {
+                dt.reload(podcastId);
+            });
+        });
+    };
+
+    /**
      * Initialize the internal datatable for the podcast editor view to hold episode data passed back from the server.
      *
      * Selection for the internal table represents episodes marked for ingest and is disabled for ingested episodes.
      *
-     * @param {Object}  domNode   the jQuery DOM node to create the table inside.
+     * @param {jQuery}  domNode   the jQuery DOM node to create the table inside.
      * @param {Object}  params    JSON object containing datatables parameters to override
      * @param {Object}  buttons   JSON object containing datatables button parameters
+     * @param {Object}  config    JSON object containing internal PodcastEpisodeTable parameters
+     * @param {boolean} config.hideIngestCheckboxes flag denoting whether or not to hide checkboxes for ingested items
      *
-     * @returns {*} the created Table object
+     * @returns {Table} the created Table object
      */
-    mod.initPodcastEpisodeDatatable = function(domNode, params, buttons) {
-        if ('slideToggle' in buttons)
+    mod.initPodcastEpisodeDatatable = function (domNode, params, buttons, config) {
+        if ('slideToggle' in buttons) {
             buttons = $.extend(true, {
                 slideToggle: {
-                    title           : '',
-                    iconClass       : 'spl-no-r-margin icon-chevron-up',
-                    extraBtnClass   : 'toggle-editor-form',
-                    elementId       : '',
-                    eventHandlers   : {}
+                    title: '',
+                    iconClass: 'spl-no-r-margin icon-chevron-up',
+                    extraBtnClass: 'toggle-editor-form',
+                    elementId: '',
+                    eventHandlers: {}
                 }
             }, buttons);
-        params = $.extend(params,
+        }
+        params = $.extend(true, params,
             {
                 oColVis: {
-                    sAlign      : 'right',
-                    aiExclude   : [0, 1],
-                    buttonText  : $.i18n._("Columns"),
+                    sAlign: 'right',
+                    aiExclude: [0, 1],
+                    buttonText: $.i18n._("Columns"),
                     iOverlayFade: 0,
-                    oColReorder : {
+                    oColReorder: {
                         iFixedColumns: 1  // Checkbox
                     }
                 }
             }
         );
 
-        if (typeof PodcastTable === 'undefined') {
-            _initPodcastTable();
+        if (typeof PodcastEpisodeTable === 'undefined') {
+            _initPodcastEpisodeTable();
         }
 
-        var podcastEpisodesTableWidget = new PodcastTable(
+        var podcastEpisodesTableWidget = new PodcastEpisodeTable(
             domNode, // DOM node to create the table inside.
             true,    // Enable item selection
             buttons, // Toolbar buttons
-            params   // Datatables overrides.
+            params,  // Datatables overrides.
+            config   // Internal config
         );
 
         podcastEpisodesTableWidget.getDatatable().addTitles("td");

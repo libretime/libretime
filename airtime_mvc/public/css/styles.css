@@ -908,7 +908,7 @@ dl.inline-list dd {
 .DataTables_sort_wrapper .ui-icon {
     display: block;
     float: right;
-    margin: 5px 0;
+    margin: 6px 0 0 5px;
 }
 .dataTables_type {
     float:right;
@@ -3953,12 +3953,20 @@ li .ui-state-hover {
 
 /* Podcasts */
 
+.DataTables_sort_wrapper {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+}
+
 [id^="podcast_episodes"][id$="_wrapper"] {
     position: relative;
-    height: 100%;
-    float: left;
     flex: 1 100%;
-    margin: 4px 0 !important;
+    /*margin: 4px 0 0 !important;*/
     min-height: 0;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -4029,9 +4037,29 @@ li .ui-state-hover {
     float: left;
 }
 
+.podcast_episodes_imported {
+    text-align: center !important;
+}
+
+.imported-flag {
+    margin-bottom: -2px;
+}
+
+.loading-icon {
+    background: url("img/loading.gif") no-repeat center center;
+    min-width: 24px;
+    width: 100%;
+    height: 16px;
+    display: block;
+}
+
 /* UI Revamp Video */
 
 #whatsnew {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -4087,6 +4115,10 @@ li .ui-state-hover {
 }
 
 .publish-sources {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     margin-bottom: 10px;
 }
