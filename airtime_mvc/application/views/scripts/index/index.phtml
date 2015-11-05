@@ -174,6 +174,13 @@
                             $(".jp-playlist").find("a.jp-playlist-item").each(function (i, obj) {
                                 $(obj).after(" - <a id='rss-download-link' href='"+playlist[i].download_url+"'>Download</a>");
                             });
+
+                            //turn off player bar when podcast track is played
+                            $("a.jp-playlist-item, .jp-play").click(function() {
+                                if ($("#player_iframe").contents().find('.play').hasClass('pause')) {
+                                    $("#player_iframe").contents().find('.play').click();
+                                }
+                            });
                         }
                     }
                 );
@@ -190,6 +197,9 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+
+
         $("#player_iframe").load(function () {
             <?php
                 // Is there a better way to do this?
@@ -212,6 +222,13 @@
                 window.scrollTo(0,0);
                 $(this).addClass('current');
                 $("#"+tab_id).addClass('current');
+            });
+
+            //turn off jplayer if it's playing and someone clicks to play the player bar
+            $("#player_iframe").contents().find('.play').click(function () {
+                if ($('.jp-play').is(':hidden')) {
+                    $('.jp-pause').click();
+                }
             });
         });
 
