@@ -71,6 +71,14 @@ body {
     float: right;
 }
 
+.bottom_bar .station_rss_btn {
+    background: url('img/podcast.png') no-repeat center 0px;
+}
+
+.bottom_bar .station_rss_btn.current {
+    background: url('img/podcast.png') no-repeat center -51px;
+}
+
 .bottom_bar .schedule_btn {
     background: url('img/schedule.png') no-repeat center 0px;
 }
