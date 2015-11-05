@@ -328,6 +328,12 @@ class Application_Service_PodcastService
         }
     }
 
+    private static function addEscapedChild($node, $name, $value = null, $namespace = null) {
+        $child = $node->addChild($name, null, $namespace);
+        $child->{0} = $value;
+        return $child;
+    }
+
     public static function createStationRssFeed()
     {
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
@@ -341,24 +347,24 @@ class Application_Service_PodcastService
             $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"/>');
 
             $channel = $xml->addChild("channel");
-            $channel->addChild("title", $podcast->getDbTitle());
-            $channel->addChild("link", $podcast->getDbLink());
-            $channel->addChild("description", $podcast->getDbDescription());
-            $channel->addChild("language", $podcast->getDbLanguage());
-            $channel->addChild("copyright", $podcast->getDbCopyright());
+            self::addEscapedChild($channel, "title", $podcast->getDbTitle());
+            self::addEscapedChild($channel, "link", $podcast->getDbLink());
+            self::addEscapedChild($channel, "description", $podcast->getDbDescription());
+            self::addEscapedChild($channel, "language", $podcast->getDbLanguage());
+            self::addEscapedChild($channel, "copyright", $podcast->getDbCopyright());
 
             $imageUrl = Application_Common_HTTPHelper::getStationUrl()."images/airtime_logo.png";
             $image = $channel->addChild("image");
             $image->addChild("title", "image title");
-            $image->addChild("url", $imageUrl);
-            $image->addChild("link", Application_Common_HTTPHelper::getStationUrl());
+            self::addEscapedChild($image, "url", $imageUrl);
+            self::addEscapedChild($image, "link", Application_Common_HTTPHelper::getStationUrl());
 
             $xml->addAttribute('xmlns:xmlns:itunes', ITUNES_XML_NAMESPACE_URL);
-            $channel->addChild("xmlns:itunes:author", $podcast->getDbItunesAuthor());
-            $channel->addChild("xmlns:itunes:keywords", $podcast->getDbItunesKeywords());
-            $channel->addChild("xmlns:itunes:summary", $podcast->getDbItunesSummary());
-            $channel->addChild("xmlns:itunes:subtitle", $podcast->getDbItunesSubtitle());
-            $channel->addChild("xmlns:itunes:explicit", $podcast->getDbItunesExplicit());
+            self::addEscapedChild($channel, "xmlns:itunes:author", $podcast->getDbItunesAuthor());
+            self::addEscapedChild($channel, "xmlns:itunes:keywords", $podcast->getDbItunesKeywords());
+            self::addEscapedChild($channel, "xmlns:itunes:summary", $podcast->getDbItunesSummary());
+            self::addEscapedChild($channel, "xmlns:itunes:subtitle", $podcast->getDbItunesSubtitle());
+            self::addEscapedChild($channel, "xmlns:itunes:explicit", $podcast->getDbItunesExplicit());
 
             $itunesImage = $channel->addChild("xmlns:itunes:image");
             $itunesImage->addAttribute("href", $imageUrl);
@@ -376,24 +382,24 @@ class Application_Service_PodcastService
                 $publishedFile = CcFilesQuery::create()->findPk($episode->getDbFileId());
 
                 //title
-                $item->addChild("title", $publishedFile->getDbTrackTitle());
+                self::addEscapedChild($item, "title", $publishedFile->getDbTrackTitle());
 
                 //link - do we need this?
 
                 //pubDate
-                $item->addChild("pubDate", $episode->getDbPublicationDate());
+                self::addEscapedChild($item, "pubDate", $episode->getDbPublicationDate());
 
                 //category
                 foreach($itunesCategories as $c) {
-                    $item->addChild("category", $c);
+                    self::addEscapedChild($item, "category", $c);
                 }
 
                 //guid
-                $guid = $item->addChild("guid", $episode->getDbEpisodeGuid());
+                $guid = self::addEscapedChild($item, "guid", $episode->getDbEpisodeGuid());
                 $guid->addAttribute("isPermaLink", "false");
 
                 //description
-                $item->addChild("description", $publishedFile->getDbDescription());
+                self::addEscapedChild($item, "description", $publishedFile->getDbDescription());
 
                 //encolsure - url, length, type attribs
                 $enclosure = $item->addChild("enclosure");
@@ -402,18 +408,21 @@ class Application_Service_PodcastService
                 $enclosure->addAttribute("type", $publishedFile->getDbMime());
 
                 //itunes:subtitle
-                $item->addChild("xmlns:itunes:subtitle", $publishedFile->getDbTrackTitle());
+                // From http://www.apple.com/ca/itunes/podcasts/specs.html#subtitle :
+                // 'The contents of the <itunes:subtitle> tag are displayed in the Description column in iTunes.'
+                // self::addEscapedChild($item, "xmlns:itunes:subtitle", $publishedFile->getDbTrackTitle());
+                self::addEscapedChild($item, "xmlns:itunes:subtitle", $publishedFile->getDbDescription());
 
                 //itunes:summary
-                $item->addChild("xmlns:itunes:summary", $publishedFile->getDbDescription());
+                self::addEscapedChild($item, "xmlns:itunes:summary", $publishedFile->getDbDescription());
 
                 //itunes:author
-                $item->addChild("xmlns:itunes:author", $publishedFile->getDbArtistName());
+                self::addEscapedChild($item, "xmlns:itunes:author", $publishedFile->getDbArtistName());
 
                 //itunes:explicit - skip this?
 
                 //itunes:duration
-                $item->addChild("xmlns:itunes:duration", $publishedFile->getDbLength());
+                self::addEscapedChild($item, "xmlns:itunes:duration", $publishedFile->getDbLength());
             }
 
             return $xml->asXML();
