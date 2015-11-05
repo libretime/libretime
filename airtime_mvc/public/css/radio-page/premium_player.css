@@ -76,7 +76,7 @@ body {
 }
 
 .bottom_bar .station_rss_btn.current {
-    background: url('img/podcast.png') no-repeat center -51px;
+    background: url('img/podcast.png') no-repeat center -50px;
 }
 
 .bottom_bar .schedule_btn {
