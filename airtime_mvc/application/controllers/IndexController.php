@@ -60,6 +60,10 @@ class IndexController extends Zend_Controller_Action
 
         $this->view->episodes = json_encode($episodes);
         $this->view->displayRssTab = (!Application_Model_Preference::getStationPodcastPrivacy());
+
+        $stationPodcast = PodcastQuery::create()->findOneByDbId($stationPodcastId);
+        $url = $stationPodcast->getDbUrl();
+        $this->view->stationPodcastRssUrl = $url;
     }
 
     public function mainAction()
