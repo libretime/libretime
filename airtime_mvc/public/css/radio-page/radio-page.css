@@ -80,14 +80,14 @@ span.login-img {
     transition-delay: 2s;
 }
 
-#schedule_iframe.schedule, .about_us, .login {
+#schedule_iframe.schedule, .about_us, .login, .podcast {
     /*	-webkit-transition-delay: 1s;
         transition-delay: 1s;*/
     transition: all 0.4s ease;
     opacity: 0;
 }
 
-.about_us.current, .login.current, .schedule.current {
+.about_us.current, .login.current, .schedule.current, .podcast.current {
     opacity: 1;
     -webkit-transition-delay: 0.4s;
     transition-delay: 0.4s;
@@ -111,13 +111,38 @@ span.login-img {
     margin: 10px;
 }
 
-.login h2 {
-    font-size: 28px;
-    font-weight: 300;
+.podcast .rss_icon {
+    width: 200px;
+    position: absolute;
+    right: 40px;
+    text-align: right;
+
 }
 
-.station_rss {
-    background-color: #363636;
+.podcast .rss_icon span {
+    color: #fff;
+}
+
+.podcast .rss_icon:hover {
+    opacity: 0.8;
+}
+
+.podcast .rss_icon {
+    font-size: 14px;
+    text-decoration: none;
+}
+
+
+.podcast .rss_icon img {
+    width: 40px;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+
+.login h2, .podcast h2 {
+    font-size: 28px;
+    font-weight: 300;
 }
 
 input[type="text"] {
