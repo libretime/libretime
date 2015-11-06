@@ -1264,6 +1264,10 @@ var AIRTIME = (function(AIRTIME) {
         oTable.fnDraw();
     };
 
+    mod.getCurrentTable = function () {
+        return oTable;
+    };
+
     mod.openPodcastEpisodeDialog = function () {
         var episode = mod.podcastEpisodeTableWidget.getSelectedRows()[0];
         $("body").append("<div id='podcast_episode_dialog'></div>");

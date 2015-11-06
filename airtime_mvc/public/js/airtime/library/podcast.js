@@ -420,6 +420,7 @@ var AIRTIME = (function (AIRTIME) {
                 dt.fnClearTable();
                 dt.fnAddData(JSON.parse(json));
                 dt.fnDraw();
+            }).done(function () {
                 dt.unblock();
             });
         };
@@ -597,13 +598,38 @@ var AIRTIME = (function (AIRTIME) {
         params = $.extend(true, params,
             {
                 oColVis: {
-                    sAlign: 'right',
                     aiExclude: [0, 1],
-                    buttonText: $.i18n._("Columns"),
-                    iOverlayFade: 0,
                     oColReorder: {
                         iFixedColumns: 1  // Checkbox
                     }
+                },
+                fnCreatedRow: function(nRow, aData, iDataIndex) {
+                    var self = this;
+                    $(nRow).draggable({
+                        helper: function () {
+                            var $row = $(this);
+                            $row.data("aData", self._datatable.fnGetData($(nRow).index()).file);
+                            self.selectRow(this, self._datatable.fnGetData($row.index()), self.SELECTION_MODE.SINGLE, $row.index());
+                            var selected = self.getSelectedRows().length, container,
+                                width = self._$wrapperDOMNode.closest(".dataTables_wrapper").outerWidth(), message;
+
+                            message = sprintf($.i18n._("Adding %s Item%s"), selected, selected > 1 ? "s" : "");
+                            container = $('<div/>').attr('id', 'draggingContainer').append('<tr/>')
+                                .find("tr").append('<td/>').find("td")
+                                .attr("colspan", 100).width(width).css("max-width", "none")
+                                .addClass("ui-state-highlight").append(message).end().end();
+
+                            return container;
+                        },
+                        tolerance: 'pointer',
+                        cursor: 'move',
+                        cursorAt: {
+                            top: 20,
+                            left: Math.floor(self._datatable.outerWidth() / 2)
+                        },
+                        distance: 25, // min-distance for dragging
+                        connectToSortable: $("#show_builder_table, .active-tab .spl_sortable")
+                    });
                 }
             }
         );

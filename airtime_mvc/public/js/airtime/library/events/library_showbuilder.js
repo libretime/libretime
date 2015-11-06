@@ -109,46 +109,6 @@ var AIRTIME = (function(AIRTIME) {
             sortable = "#show_builder_table";
         } else {
             sortable = ".active-tab .spl_sortable";
-            //$('#library_display tr[class*="lib-"]')
-            //    .draggable(
-            //    {
-            //        helper: function () {
-            //
-            //            var $el = $(this), selected = mod
-            //                    .getChosenAudioFilesLength(), container, message,
-            //                width = $(this).width(), height = 55;
-            //
-            //            // dragging an element that has an unselected
-            //            // checkbox.
-            //            if (mod.isChosenItem($el) === false) {
-            //                selected++;
-            //            }
-            //
-            //            if (selected === 1) {
-            //                message = $.i18n._("Adding 1 Item");
-            //            } else {
-            //                message = sprintf($.i18n._("Adding %s Items"), selected);
-            //            }
-            //
-            //            container = $('<div class="helper"/>').append(
-            //                "<li/>").find("li").addClass(
-            //                "ui-state-default").append("<div/>")
-            //                .find("div").addClass(
-            //                "list-item-container").append(
-            //                message).end().width(width)
-            //                .height(height).end();
-            //
-            //            return container;
-            //        },
-            //        create: function(event, ui) {
-            //            $(this).draggable("option", "cursorAt", {
-            //                left: Math.floor(this.clientWidth / 2)
-            //            });
-            //        },
-            //        cursor: 'move',
-            //        distance: 25, // min-distance for dragging
-            //        connectToSortable: '.active-tab .spl_sortable'
-            //    });
         }
 
         $('#library_display tr[class*="lib-"]')

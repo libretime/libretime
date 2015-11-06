@@ -85,6 +85,10 @@ var AIRTIME = (function(AIRTIME) {
             options[key] = dataTablesOptions[key];
         }
 
+        if (options.fnCreatedRow) {
+            options.fnCreatedRow = options.fnCreatedRow.bind(this);
+        }
+
         self._datatable = self._$wrapperDOMNode.dataTable(options);
         // self._datatable.fnDraw(); //Load the AJAX data now that our event handlers have been bound.
         self._setupEventHandlers(bItemSelection);

@@ -731,7 +731,7 @@ th.library_checkbox {
 
 /* This is so dragged items show up above the layout */
 
-#library_display .ui-draggable-dragging {
+#library_content .ui-draggable-dragging {
     z-index: 9999;
     position: fixed !important;
 }
