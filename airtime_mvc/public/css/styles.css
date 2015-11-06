@@ -4053,6 +4053,10 @@ li .ui-state-hover {
     display: block;
 }
 
+#podcast_episode_dialog {
+    max-height: 50%;
+}
+
 /* UI Revamp Video */
 
 #whatsnew {

@@ -2,6 +2,8 @@
 
 class PodcastEpisodeNotFoundException extends Exception {}
 
+class DuplicatePodcastEpisodeException extends Exception {}
+
 class Application_Service_PodcastEpisodeService extends Application_Service_ThirdPartyCeleryService implements Publish
 {
     /**
@@ -57,7 +59,12 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function addPodcastEpisodePlaceholders($podcastId, $episodes) {
         $storedEpisodes = array();
         foreach ($episodes as $episode) {
-            $e = $this->addPlaceholder($podcastId, $episode);
+            try {
+                $e = $this->addPlaceholder($podcastId, $episode);
+            } catch(DuplicatePodcastEpisodeException $ex) {
+                Logging::warn($ex->getMessage());
+                continue;
+            }
             array_push($storedEpisodes, $e);
         }
         return $storedEpisodes;
@@ -71,8 +78,14 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      * @param array $episode  array of podcast episode data
      *
      * @return PodcastEpisodes the stored PodcastEpisodes object
+     *
+     * @throws DuplicatePodcastEpisodeException
      */
     public function addPlaceholder($podcastId, $episode) {
+        $existingEpisode = PodcastEpisodesQuery::create()->findOneByDbEpisodeGuid($episode["guid"]);
+        if (!empty($existingEpisode)) {
+            throw new DuplicatePodcastEpisodeException("Episode already exists: \n" . var_export($episode, true));
+        }
         // We need to check whether the array is parsed directly from the SimplePie
         // feed object, or whether it's passed in as json
         $enclosure = $episode["enclosure"];
@@ -288,7 +301,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 // From the RSS spec best practices:
                 // 'An item's author element provides the e-mail address of the person who wrote the item'
                 "author" => $item->get_author()->get_email(),
-                "description" => $item->get_description(),
+                "description" => htmlspecialchars($item->get_description()),
                 "pub_date" => $item->get_gmdate(),
                 "link" => $item->get_link(),
                 "enclosure" => $item->get_enclosure(),

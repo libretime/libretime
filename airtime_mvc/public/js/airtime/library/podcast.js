@@ -110,6 +110,10 @@ var AIRTIME = (function (AIRTIME) {
                         click: function () {
                             mod.importSelectedEpisodes(self.episodeTable.getSelectedRows(), self.episodeTable);
                         }
+                    },
+                    validateConstraints: function () {
+                        // Only importable rows can be selected
+                        return this.getSelectedRows().length >= 1;
                     }
                 }
             };
@@ -199,14 +203,7 @@ var AIRTIME = (function (AIRTIME) {
      * Open metadata editor tabs for each of the selected episodes.
      */
     StationPodcastController.prototype.openSelectedTabEditors = function () {
-        var self = this,
-            episodes = self.episodeTable.getSelectedRows();
-        jQuery.each(episodes, function () {
-            var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file_id;
-            jQuery.get(baseUrl + "library/edit-file-md/id/" + this.file_id, {format: "json"}, function (json) {
-                AIRTIME.playlist.fileMdEdit(json, uid);
-            });
-        });
+        mod.editSelectedEpisodes(this.episodeTable.getSelectedRows());
     };
 
     /**
@@ -224,6 +221,9 @@ var AIRTIME = (function (AIRTIME) {
                     elementId       : '',
                     eventHandlers   : {
                         click: self.openSelectedTabEditors.bind(self)
+                    },
+                    validateConstraints: function () {
+                        return this.getSelectedRows().length >= 1;
                     }
                 },
                 deleteBtn: {
@@ -233,6 +233,9 @@ var AIRTIME = (function (AIRTIME) {
                     elementId       : '',
                     eventHandlers   : {
                         click: self.unpublishSelectedEpisodes.bind(self)
+                    },
+                    validateConstraints: function () {
+                        return this.getSelectedRows().length >= 1;
                     }
                 },
                 slideToggle: {}
@@ -425,7 +428,7 @@ var AIRTIME = (function (AIRTIME) {
          * Setup an interval that checks for any pending imports and reloads
          * the table once imports are finished.
          *
-         * TODO: remember selection
+         * TODO: remember selection; make this more elegant?
          *
          * @private
          */
@@ -441,14 +444,15 @@ var AIRTIME = (function (AIRTIME) {
                         pendingRows.push(this.guid);
                     }
                 });
-                console.log(pendingRows);
                 if (pendingRows.length > 0) {
+                    // Fetch the table data if there are pending rows,
+                    // then check if any of the pending rows have
+                    // succeeded or failed before reloading the table.
                     $.get(endpoint + podcastId + '/episodes', function (json) {
                         data = JSON.parse(json);
                         var delta = false;
                         $.each(data, function () {
                             var idx = pendingRows.indexOf(this.guid);
-                            console.log(idx);
                             if (idx > -1 && this.ingested != -1) {
                                 delta = true;
                                 pendingRows.slice(idx, 0);
@@ -462,7 +466,7 @@ var AIRTIME = (function (AIRTIME) {
                         }
                     });
                 }
-            }, 15000);  // Run every 15 seconds
+            }, 10000);  // Run every 10 seconds
         };
     }
 
@@ -531,6 +535,21 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     /**
+     * Open metadata editor tabs for each of the selected episodes.
+     *
+     * @param {Array} episodes the array of selected episodes
+     */
+    mod.editSelectedEpisodes = function (episodes) {
+        $.each(episodes, function () {
+            if (!Object.keys(this.file).length > 0) return false;
+            var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file.id;
+            $.get(baseUrl + "library/edit-file-md/id/" + this.file.id, {format: "json"}, function (json) {
+                AIRTIME.playlist.fileMdEdit(json, uid);
+            });
+        });
+    };
+
+    /**
      * Import one or more podcast episodes.
      *
      * @param {Array} episodes          array of episode data to be imported
@@ -538,6 +557,7 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.importSelectedEpisodes = function (episodes, dt) {
         $.each(episodes, function () {
+            if (Object.keys(this.file).length > 0) return false;
             var podcastId = this.podcast_id;
             $.post(endpoint + podcastId + '/episodes', JSON.stringify({
                 csrf_token: $("#csrf").val(),
@@ -569,7 +589,8 @@ var AIRTIME = (function (AIRTIME) {
                     iconClass: 'spl-no-r-margin icon-chevron-up',
                     extraBtnClass: 'toggle-editor-form',
                     elementId: '',
-                    eventHandlers: {}
+                    eventHandlers: {},
+                    validateConstraints: function () { return true; }
                 }
             }, buttons);
         }

@@ -199,6 +199,21 @@ var AIRTIME = (function(AIRTIME) {
                 $(buttonElement).on(eventName, eventCallback);
             });
         });
+
+        self._checkToolbarButtons();
+    };
+
+    /**
+     * Check each of the toolbar buttons for the table and disable them if their constraints are invalid.
+     *
+     * Passes current Table object context to function calls.
+     */
+    Table.prototype._checkToolbarButtons = function () {
+        var self = this;
+        $.each(self._toolbarButtons, function (idx, btn) {
+            var btnNode = $(btn.element).find("button").get(0);
+            btnNode.disabled = btn.disabled = !btn.validateConstraints.call(self);
+        });
     };
 
     /** Create the DOM element for a toolbar button and return it. */
@@ -242,6 +257,7 @@ var AIRTIME = (function(AIRTIME) {
         this._selectedRowVisualIdxMax = -1;
         this._$wrapperDOMNode.find('.selected').removeClass('selected');
         this._$wrapperDOMNode.find(this._SELECTORS.SELECTION_CHECKBOX).find('input').attr('checked', false);
+        this._checkToolbarButtons();
     };
 
     /** @param nRow is a tr DOM node (non-jQuery)
@@ -333,11 +349,12 @@ var AIRTIME = (function(AIRTIME) {
             console.log("Unimplemented selection mode");
         }
 
+        self._checkToolbarButtons();
     };
 
     Table.prototype.getSelectedRows = function() {
         return this._selectedRows;
-    }
+    };
 
     Table.prototype._handleAjaxError = function(r) {
         // If the request was denied due to permissioning
@@ -443,15 +460,35 @@ var AIRTIME = (function(AIRTIME) {
 
     //Set of standard buttons. Use getStandardToolbarButtons() to grab these and pass them to the init() function.
     Table._STANDARD_TOOLBAR_BUTTONS = {};
-    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.NEW] = { 'title' : $.i18n._('New'), 'iconClass' : "icon-plus", extraBtnClass : "btn-small btn-new", elementId : '', eventHandlers : {} };
-    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.EDIT] = { 'title' : $.i18n._('Edit'), 'iconClass' : "icon-pencil", extraBtnClass : "btn-small", elementId : '', eventHandlers : {} };
-    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.DELETE] = { 'title' : $.i18n._('Delete'), 'iconClass' : "icon-trash", extraBtnClass : "btn-small btn-danger", elementId : '', eventHandlers : {} };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.NEW] = {
+        title : $.i18n._('New'),
+        iconClass : "icon-plus",
+        extraBtnClass : "btn-small btn-new",
+        elementId : '',
+        eventHandlers : {},
+        validateConstraints: function () { return true; }
+    };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.EDIT] = {
+        title : $.i18n._('Edit'),
+        iconClass : "icon-pencil",
+        extraBtnClass : "btn-small",
+        elementId : '',
+        eventHandlers : {},
+        validateConstraints: function () { return true; }
+    };
+    Table._STANDARD_TOOLBAR_BUTTONS[Table.TOOLBAR_BUTTON_ROLES.DELETE] = {
+        title : $.i18n._('Delete'),
+        iconClass : "icon-trash",
+        extraBtnClass : "btn-small btn-danger",
+        elementId : '',
+        eventHandlers : {},
+        validateConstraints: function () { return true; }
+    };
     Object.freeze(Table._STANDARD_TOOLBAR_BUTTONS);
 
 
     //Static method
     Table.getStandardToolbarButtons = function() {
-
         //Return a deep copy
         return jQuery.extend(true, {}, Table._STANDARD_TOOLBAR_BUTTONS);
     };
