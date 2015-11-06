@@ -532,7 +532,6 @@ class Application_Model_Scheduler
      *  incorrect track lengths (RKTN-260)
      */
     public function removeGaps2($showInstance, $exclude = null) {
-        Logging::info("removing gaps from show instance #" . $showInstance);
 
         $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
         if (is_null($instance)) {

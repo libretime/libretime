@@ -1528,7 +1528,11 @@ class ApiController extends Zend_Controller_Action
         $this->view->layout()->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
 
+        Zend_Session::start();
+
         $scheduler = new Application_Model_Scheduler();
+        session_write_close();
+
         $now = new DateTime("now", new DateTimeZone("UTC"));
 
         $showInstances =  CcShowInstancesQuery::create()
