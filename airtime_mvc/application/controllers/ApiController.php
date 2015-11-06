@@ -1517,10 +1517,12 @@ class ApiController extends Zend_Controller_Action
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
 
         foreach ($streamData as $stream) {
-            $m3uFile .= "#EXTINF,".$stationName." - " . strtoupper($stream['codec']) . "\r\n";
+            $m3uFile .= "#EXTINF," . $stationName . " - " . strtoupper($stream['codec']) . "\r\n";
             $m3uFile .= $stream['url'] . "\r\n\r\n";
         }
         echo $m3uFile;
+    }
+
     public function recalculateScheduleAction()
     {
         $this->view->layout()->disableLayout();
