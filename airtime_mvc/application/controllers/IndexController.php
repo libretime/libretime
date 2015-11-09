@@ -56,6 +56,12 @@ class IndexController extends Zend_Controller_Action
         foreach ($episodes as $e => $v) {
             $episodes[$e]["CcFiles"]["track_title"] = htmlspecialchars($v["CcFiles"]["track_title"], ENT_QUOTES);
             $episodes[$e]["CcFiles"]["artist_name"] = htmlspecialchars($v["CcFiles"]["artist_name"], ENT_QUOTES);
+
+            $pubDate = explode(" ", $v["publication_date"]);
+            $episodes[$e]["publication_date"] = $pubDate[0];
+
+            $length = explode(".", $v["CcFiles"]["length"]);
+            $episodes[$e]["CcFiles"]["length"] = $length[0];
         }
 
         $this->view->episodes = json_encode($episodes);

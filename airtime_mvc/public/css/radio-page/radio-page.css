@@ -63,7 +63,7 @@ span.login-img {
     margin: 0 auto 0px -380px;
     padding: 10px;
     padding-left: 0px;
-    padding-bottom: 140px;
+    padding-bottom: 140px !important;
     position: absolute;
     left: 50%;
     /*	-webkit-transition-delay: 1s;
@@ -144,6 +144,7 @@ span.login-img {
     font-size: 28px;
     font-weight: 300;
 }
+
 
 input[type="text"] {
     font-family: 'Roboto', sans-serif;
