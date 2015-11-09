@@ -58,28 +58,29 @@
             <h2><?php echo _("Radio Archive") ?><a target="_blank" href="<?php echo $this->stationPodcastRssUrl ?>" class="rss_icon"><span>Subscribe </span><img src="css/radio-page/img/rss.png"></a></h2>
             <div id="jquery_jplayer_1" class="jp-player">
             </div>
+            <div class="podcast_bck">
             <div id="jp_container_1" class="jp-audio">
                 <div class="jp-type-playlist">
                     <div class="jp-gui jp-interface">
                         <ul class="jp-controls">
                             <li class="ui-state-default ui-corner-all jp-previous">
-                                <span class="ui-icon ui-icon-seek-prev" tabindex="1"><?php echo _("previous") ?></span>
+                                <span class="ui-icon ui-icon-seek-prev" tabindex="1"><?php /*echo _("previous") */?></span>
                             </li>
 
                             <li class="ui-state-default ui-corner-all jp-play">
-                                <span class="ui-icon ui-icon-play" tabindex="1"><?php echo _("play") ?></span>
+                                <span class="ui-icon ui-icon-play" tabindex="1"><?php /*echo _("play") */?></span>
                             </li>
 
                             <li class="ui-state-default ui-corner-all jp-pause">
-                                <span class="ui-icon ui-icon-pause" tabindex="1"><?php echo _("pause") ?></span>
+                                <span class="ui-icon ui-icon-pause" tabindex="1"><?php /*echo _("pause") */?></span>
                             </li>
 
                             <li class="ui-state-default ui-corner-all jp-next">
-                                <span class="ui-icon ui-icon-seek-next" tabindex="1"><?php echo _("next") ?></span>
+                                <span class="ui-icon ui-icon-seek-next" tabindex="1"><?php /*echo _("next") */?></span>
                             </li>
 
                             <li class="ui-state-default ui-corner-all jp-stop">
-                                <span class="ui-icon ui-icon-stop" tabindex="1"><?php echo _("stop") ?></span>
+                                <span class="ui-icon ui-icon-stop" tabindex="1"><?php /*echo _("stop") */?></span>
                             </li>
                         </ul>
                         <div class="jp-time-block">
@@ -94,34 +95,75 @@
                         </div>
                         <div class="jp-volume-block">
                             <div class="jp-mute">
-                                <span class="ui-icon" tabindex="1" title="mute"><?php echo _("mute") ?></span>
+                                <span class="ui-icon" tabindex="1" title="mute"><?php /*echo _("mute") */?></span>
                             </div>
                             <div class="jp-unmute">
-                                <span class="ui-icon" tabindex="1" title="unmute"><?php echo _("unmute") ?></span>
+                                <span class="ui-icon" tabindex="1" title="unmute"><?php /*echo _("unmute") */?></span>
                             </div>
                             <div class="jp-volume-bar">
                                 <div class="jp-volume-bar-value"></div>
                             </div>
                             <div class="jp-volume-max">
-                                <span class="ui-icon" tabindex="1" title="max volume"><?php echo _("max volume") ?></span>
+                                <span class="ui-icon" tabindex="1" title="max volume"><?php /*echo _("max volume") */?></span>
                             </div>
                         </div>
                     </div>
-                    <div class="jp-playlist podcast_bck">
+
+                    <div class="rss-tracks">
                         <ul>
-                            <li></li>
                         </ul>
                     </div>
-                    <div class="jp-no-solution">
-                        <span><?php echo _("Update Required") ?></span>
-                        <?php sprintf(_("To play the media you will need to either update your browser to a recent version or update your %sFlash plugin%s."),
-                            "<a href='http://get.adobe.com/flashplayer/' target='_blank'>",
-                            "</a>") ?>
-                    </div>
+
+                    <ul class="pagination">
+                    </ul>
                 </div>
+
+            </div>
             </div>
 
             <script type="text/javascript">
+
+                function buildJplayerPlaylist(page, data) {
+                    var playlist = new Array();
+                    var media;
+
+                    $('.rss-tracks ul').html('');
+                    $.each(data[Object.keys(data)[page]], function (index, value) {
+                        if (value.CcFiles.mime == "audio/mp3") {
+                            media = {
+                                title: value.CcFiles.track_title,
+                                artist: value.CcFiles.artist_name,
+                                mp3: value.download_url
+                            };
+                        } else if (value.CcFiles.mime == "audio/vorbis") {
+                            media = {
+                                title: value.CcFiles.track_title,
+                                artist: value.CcFiles.artist_name,
+                                oga: value.download_url
+                            };
+                        }
+                        $('.rss-tracks ul').append("<li><div class='podcast_info'>"+
+                            "<a href='#'>"+value.CcFiles.track_title+"</a>"+
+                        "<span class='podcast_date'>"+value.publication_date+"</span>" +
+                        "<span class='podcast_length'>"+value.CcFiles.length+"</span>" +
+                        "<span class='podcast_desc_btn'>Description</span>" +
+                        "<div class='podcast_desc'>"+value.CcFiles.description+"</div>" +
+                        "<div class='podcast_btn_group'>"+
+                        "<span class='podcast_play podcast_action_btn'><a href='#' id='rss-track' data-rss-playlist-id='"+index+"'><img src='css/radio-page/img/podcast_play.png'></a></span>" +
+                        "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+value.download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div></div></li>");
+
+                        playlist.push(media);
+                    });
+
+                    _playlist_jplayer.setPlaylist(playlist);
+
+                    $('.podcast_play').on('click', function() {
+                        _playlist_jplayer.play($(this).find('#rss-track').attr('data-rss-playlist-id'));
+                    });
+
+
+
+                } //buildPlaylist
 
                 _playlist_jplayer = new jPlayerPlaylist({
                         jPlayer: "#jquery_jplayer_1",
@@ -146,48 +188,26 @@
                             shuffleTime: 0
                         },
                         ready: function () {
-                            var playlist = new Array();
-                            var media;
 
-                            $.each(<?php echo $this->episodes ?>, function (index, value) {
-                                if (value.CcFiles.mime == "audio/mp3") {
-                                    media = {
-                                        title: value.CcFiles.track_title,
-                                        artist: value.CcFiles.artist_name,
-                                        mp3: value.download_url,
-                                        download_url: value.download_url,
-                                        pub_date: value.publication_date,
-                                        description: value.CcFiles.description,
-                                        length: value.CcFiles.length
-                                    };
-                                } else if (value.CcFiles.mime == "audio/vorbis") {
-                                    media = {
-                                        title: value.CcFiles.track_title,
-                                        artist: value.CcFiles.artist_name,
-                                        oga: value.download_url,
-                                        download_url: value.download_url,
-                                        pub_date: value.publication_date,
-                                        description: value.CcFiles.description,
-                                        length: value.CcFiles.length
-                                    };
-                                }
-                                playlist.push(media);
-                                //playlist[index] = media;
+                            var episodes = <?php echo $this->episodes ?>;
+                            buildJplayerPlaylist(0, episodes);
+
+                            // build pagination menu
+                            var pages = "<li><</li>";
+                            $.each(episodes, function(index, value) {
+                                var page_number = +index + 1;
+                                pages += "<li data-page-index='"+index+"'>"+page_number+"</li>";
                             });
+                            pages += "<li>></li>";
+                            $("ul.pagination").append(pages);
+                            $("ul.pagination").find("li:contains('1')").addClass('current');
 
-                            _playlist_jplayer.setPlaylist(playlist);
-
-                            // This is a big hack to attach the download and play buttons
-                            // to the jplayer playlist items.
-                            $(".jp-playlist").find("a.jp-playlist-item").each(function (i, obj) {
-                                $(obj).after("<span class='podcast_date'>"+playlist[i].pub_date+"</span>" +
-                                             "<span class='podcast_length'>"+playlist[i].length+"</span>" +
-                                             "<span class='podcast_desc_btn'>Description</span>" +
-                                             "<div class='podcast_desc'>"+playlist[i].description+"</div>" +
-                                             "<div class='podcast_btn_group'>"+
-                                             "<span class='podcast_play podcast_action_btn'><a href='#' id='rss-track' data-rss-playlist-id='"+i+"'><img src='css/radio-page/img/podcast_play.png'></a></span>" +
-                                             "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+playlist[i].download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div>");
-                            });
+                            // pagination click
+                            $("ul.pagination li").click(function() {
+                                buildJplayerPlaylist($(this).attr("data-page-index"), episodes);
+                                $(this).siblings().removeClass('current');
+                                $(this).addClass('current');
+                            })
 
                             //turn off player bar when podcast track is played
                             $("a.jp-playlist-item, .jp-play").click(function() {
@@ -204,6 +224,7 @@
                             $('.podcast_play').on('click', function() {
                                 _playlist_jplayer.play($(this).find('#rss-track').attr('data-rss-playlist-id'));
                             });
+
                         }
                     }
                 );

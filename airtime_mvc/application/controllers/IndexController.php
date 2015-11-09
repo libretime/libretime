@@ -52,7 +52,7 @@ class IndexController extends Zend_Controller_Action
         //station feed episodes
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $podcastEpisodesService = new Application_Service_PodcastEpisodeService();
-        $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId);
+        $episodes = $podcastEpisodesService->getPodcastEpisodes($stationPodcastId, 0, 0);
         foreach ($episodes as $e => $v) {
             $episodes[$e]["CcFiles"]["track_title"] = htmlspecialchars($v["CcFiles"]["track_title"], ENT_QUOTES);
             $episodes[$e]["CcFiles"]["artist_name"] = htmlspecialchars($v["CcFiles"]["artist_name"], ENT_QUOTES);
@@ -64,12 +64,15 @@ class IndexController extends Zend_Controller_Action
             $episodes[$e]["CcFiles"]["length"] = $length[0];
         }
 
-        $this->view->episodes = json_encode($episodes);
+        $episodePages = array_chunk($episodes, 10);
+
+        $this->view->episodes = json_encode($episodePages, JSON_FORCE_OBJECT);
         $this->view->displayRssTab = (!Application_Model_Preference::getStationPodcastPrivacy());
 
         $stationPodcast = PodcastQuery::create()->findOneByDbId($stationPodcastId);
         $url = $stationPodcast->getDbUrl();
         $this->view->stationPodcastRssUrl = $url;
+
     }
 
     public function mainAction()
