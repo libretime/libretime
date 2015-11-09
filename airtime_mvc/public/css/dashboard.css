@@ -559,6 +559,9 @@ li.ui-state-default {
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
 }
 
@@ -581,7 +584,13 @@ li.ui-state-default {
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
     justify-content: center;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
 }
 
