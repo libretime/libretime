@@ -1274,7 +1274,7 @@ var AIRTIME = (function(AIRTIME) {
         var dialog = $("#podcast_episode_dialog").html(episode.description);
         dialog.html(dialog.text());
         dialog.dialog({
-            title: $.i18n._(episode.title),
+            title: episode.title,
             width: "auto",
             height: "auto",
             modal: true,

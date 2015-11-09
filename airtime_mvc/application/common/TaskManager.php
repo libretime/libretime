@@ -310,7 +310,7 @@ class StationPodcastTask implements AirtimeTask {
 class TaskFactory {
 
     /**
-     * PHP doesn't have ENUMs so declare them as interface constants
+     * PHP doesn't have ENUMs so declare them as constants
      * Task types - values don't really matter as long as they're unique
      */
 

@@ -12,12 +12,12 @@ var AIRTIME = (function (AIRTIME) {
     /**
      * PodcastController constructor.
      *
-     * @param {Object} $scope           angular scope service object
-     * @param {Object} $http            angular http service object
-     * @param {Object} podcast          podcast metadata object
-     * @param {int}    podcast.id       podcast unique identifier
-     * @param {string} podcast.title    podcast metadata title
-     * @param {Tab}    tab              Tab object the controller is being bootstrapped in
+     * @param {angular.scope}   $scope           angular scope service object
+     * @param {angular.http}    $http            angular http service object
+     * @param {Object}          podcast          podcast metadata object
+     * @param {int}             podcast.id       podcast unique identifier
+     * @param {string}          podcast.title    podcast metadata title
+     * @param {Tab}             tab              Tab object the controller is being bootstrapped in
      *
      * @constructor
      */
@@ -80,6 +80,9 @@ var AIRTIME = (function (AIRTIME) {
      * @private
      */
     PodcastController.prototype._initTable = function() {
+        /*
+         * Remove the episode table for imported podcasts since its functionality is replicated in the left-hand pane
+         *
         var self = this,
             $scope = self.$scope;
         // We want to fetch the data statically for imported podcasts because we would need to implement sorting
@@ -91,12 +94,12 @@ var AIRTIME = (function (AIRTIME) {
             // If we load sequentially there's a delay before the table appears
             aaData      : {},
             aoColumns   : [
-                /* GUID */              { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
-                /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
-                /* Author */            { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
-                /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
-                /* Link */              { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
-                /* Publication Date */  { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
+                { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
+                { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
+                { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
+                { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
+                { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
+                { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
             ]
         },
             buttons = {
@@ -127,6 +130,7 @@ var AIRTIME = (function (AIRTIME) {
             }
         );
         self.reloadEpisodeTable();
+        */
     };
 
     /**
@@ -151,10 +155,12 @@ var AIRTIME = (function (AIRTIME) {
     /**
      * StationPodcastController constructor.
      *
-     * @param {{}} $scope   angular scope service object
-     * @param {{}} $http    angular http service object
-     * @param {{}} podcast  podcast metadata object
-     * @param {Tab} tab     Tab object the controller is being bootstrapped in
+     * @param {angular.scope}   $scope          angular scope service object
+     * @param {angular.http}    $http           angular http service object
+     * @param {Object}          podcast         podcast metadata object
+     * @param {int}             podcast.id      podcast unique identifier
+     * @param {string}          podcast.title   podcast metadata title
+     * @param {Tab}             tab             Tab object the controller is being bootstrapped in
      *
      * @constructor
      */
@@ -496,6 +502,10 @@ var AIRTIME = (function (AIRTIME) {
     mod.addPodcast = function () {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
             _initAppFromResponse(json);
+            // Open the episode view for the newly created podcast in the left-hand pane
+            AIRTIME.library.podcastEpisodeTableWidget.reload(JSON.parse(json.podcast).id);
+            AIRTIME.library.podcastTableWidget.clearSelection();
+            AIRTIME.library.setCurrentTable(AIRTIME.library.DataTableTypeEnum.PODCAST_EPISODES);
             $("#podcast_url_dialog").dialog("close");
         });
     };
@@ -613,7 +623,7 @@ var AIRTIME = (function (AIRTIME) {
                             var selected = self.getSelectedRows().length, container,
                                 width = self._$wrapperDOMNode.closest(".dataTables_wrapper").outerWidth(), message;
 
-                            message = sprintf($.i18n._("Adding %s Item%s"), selected, selected > 1 ? "s" : "");
+                            message = sprintf($.i18n._(selected > 1 ? "Adding %s Items" : "Adding %s Item"), selected);
                             container = $('<div/>').attr('id', 'draggingContainer').append('<tr/>')
                                 .find("tr").append('<td/>').find("td")
                                 .attr("colspan", 100).width(width).css("max-width", "none")

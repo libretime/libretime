@@ -86,8 +86,17 @@ class Application_Service_PodcastService
         $podcastArray["link"] = htmlspecialchars($rss->get_link());
         $podcastArray["language"] = htmlspecialchars($rss->get_language());
         $podcastArray["copyright"] = htmlspecialchars($rss->get_copyright());
-        $podcastArray["creator"] = htmlspecialchars($rss->get_author()->get_name());
-        $podcastArray["category"] = htmlspecialchars($rss->get_categories());
+
+        $name = empty($rss->get_author()) ? "" : $rss->get_author()->get_name();
+        $podcastArray["creator"] = htmlspecialchars($name);
+
+        $categories = array();
+        if (is_array($rss->get_categories())) {
+            foreach ($rss->get_categories() as $category) {
+                array_push($categories, $category->get_scheme() . ":" . $category->get_term());
+            }
+        }
+        $podcastArray["category"] = htmlspecialchars(implode($categories));
 
         //TODO: put in constants
         $itunesChannel = "http://www.itunes.com/dtds/podcast-1.0.dtd";
@@ -97,9 +106,11 @@ class Application_Service_PodcastService
 
         $itunesCategory = $rss->get_channel_tags($itunesChannel, 'category');
         $categoryArray = array();
-        foreach ($itunesCategory as $c => $data) {
-            foreach ($data["attribs"] as $attrib) {
-                array_push($categoryArray, $attrib["text"]);
+        if (is_array($itunesCategory)) {
+            foreach ($itunesCategory as $c => $data) {
+                foreach ($data["attribs"] as $attrib) {
+                    array_push($categoryArray, $attrib["text"]);
+                }
             }
         }
         $podcastArray["itunes_category"] = implode(",", $categoryArray);
@@ -128,6 +139,7 @@ class Application_Service_PodcastService
             $importedPodcast = new ImportedPodcast();
             $importedPodcast->fromArray($podcastArray, BasePeer::TYPE_FIELDNAME);
             $importedPodcast->setPodcast($podcast);
+            $importedPodcast->setDbAutoIngest(true);
             $importedPodcast->save();
 
             return $podcast->toArray(BasePeer::TYPE_FIELDNAME);

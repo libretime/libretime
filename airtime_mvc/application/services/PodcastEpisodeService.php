@@ -288,6 +288,12 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
 
         $episodesArray = array();
         foreach ($rss->get_items() as $item) {
+            // If the enclosure is empty, this isn't a podcast episode
+            $enclosure = $item->get_enclosure();
+            $url = $enclosure instanceof SimplePie_Enclosure ? $enclosure->get_link() : $enclosure["link"];
+            if (empty($url)) {
+                continue;
+            }
             $itemId = $item->get_id();
             $ingested = in_array($itemId, $episodeIds) ? (empty($episodeFiles[$itemId]) ? -1 : 1) : 0;
             $file = $ingested > 0 && !empty($episodeFiles[$itemId]) ?
