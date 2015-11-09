@@ -240,7 +240,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
 
         $episodes = PodcastEpisodesQuery::create()
             ->filterByDbPodcastId($podcastId);
-        if ($isStationPodcast) {
+        if ($isStationPodcast && $limit != 0) {
             $episodes = $episodes->setLimit($limit);
         }
         // XXX: We should maybe try to alias this so we don't pass CcFiles as an array key to the frontend.
