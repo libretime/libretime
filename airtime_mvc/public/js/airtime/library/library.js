@@ -1338,7 +1338,7 @@ var AIRTIME = (function(AIRTIME) {
                 click: function () {
                     var podcast = mod.podcastTableWidget.getSelectedRows()[0];
                     mod.podcastEpisodeTableWidget.reload(podcast.id);
-                    mod.podcastTableWidget._clearSelection();
+                    mod.podcastTableWidget.clearSelection();
                     mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
                 }
             },
@@ -1376,9 +1376,9 @@ var AIRTIME = (function(AIRTIME) {
         // On double click, open a table showing the selected podcast's episodes
         // in the left-hand pane.
         mod.podcastTableWidget.assignDblClickHandler(function () {
-            var podcast = mod.podcastDataTable.fnGetData($(this).index());
+            var podcast = mod.podcastDataTable.fnGetData(this);
             mod.podcastEpisodeTableWidget.reload(podcast.id);
-            mod.podcastTableWidget._clearSelection();
+            mod.podcastTableWidget.clearSelection();
             mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
         });
 
@@ -1494,6 +1494,7 @@ var AIRTIME = (function(AIRTIME) {
                     }
                 },
                 validateConstraints: function () {
+                    // TODO: change text + behaviour for playlists, smart blocks, etc.
                     return checkSelectedEpisodeImportStatus.call(this, true);
                 }
             },
@@ -1541,7 +1542,7 @@ var AIRTIME = (function(AIRTIME) {
 
         mod.podcastEpisodeDataTable = $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES] = mod.podcastEpisodeTableWidget.getDatatable();
         mod.podcastEpisodeTableWidget.assignDblClickHandler(function () {
-            var data = mod.podcastEpisodeDataTable.fnGetData($(this).index());
+            var data = mod.podcastEpisodeDataTable.fnGetData(this);
             if (!$.isEmptyObject(data.file)) {
                 mod.dblClickAdd(data.file, data.file.ftype);
             } else {

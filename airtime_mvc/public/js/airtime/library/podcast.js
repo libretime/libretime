@@ -607,9 +607,9 @@ var AIRTIME = (function (AIRTIME) {
                     var self = this;
                     $(nRow).draggable({
                         helper: function () {
-                            var $row = $(this);
-                            $row.data("aData", self._datatable.fnGetData($(nRow).index()).file);
-                            self.selectRow(this, self._datatable.fnGetData($row.index()), self.SELECTION_MODE.SINGLE, $row.index());
+                            var $row = $(this), data = self._datatable.fnGetData(nRow);
+                            $row.data("aData", data.file);
+                            self.selectRow(this, data, self.SELECTION_MODE.SINGLE, $row.index());
                             var selected = self.getSelectedRows().length, container,
                                 width = self._$wrapperDOMNode.closest(".dataTables_wrapper").outerWidth(), message;
 

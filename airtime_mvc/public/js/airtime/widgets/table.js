@@ -114,8 +114,8 @@ var AIRTIME = (function(AIRTIME) {
          */
         if (bItemSelection) {
             $(self._datatable, 'tbody tr').on('click contextmenu', self._SELECTORS.SELECTION_TABLE_ROW, function (e) {
-                var aData = self._datatable.fnGetData($(this).index());
-                var iDisplayIndex = $(this).index(); //The index of the row in the current page in the table.
+                var aData = self._datatable.fnGetData(this);
+                var iDisplayIndex = $(this).index();  // The index of the row in the current page in the table.
                 var nRow = this;
 
                 e.stopPropagation();
@@ -147,6 +147,11 @@ var AIRTIME = (function(AIRTIME) {
                 self.selectRow($this.parent(), aData, selectionMode, iVisualRowIdx); //Always multiselect for checkboxes
                 e.stopPropagation();
                 return true;
+            });
+
+            // Clear selection when switching pages
+            $(self._datatable).on('page', function () {
+                self.clearSelection();
             });
         }
 
@@ -254,7 +259,7 @@ var AIRTIME = (function(AIRTIME) {
         return outerDiv;
     };
 
-    Table.prototype._clearSelection = function() {
+    Table.prototype.clearSelection = function() {
         this._selectedRows = [];
         //self._selectedRowVisualIdxMap = [];
         this._selectedRowVisualIdxMin = self.HUGE_INT;
@@ -283,8 +288,7 @@ var AIRTIME = (function(AIRTIME) {
 
         //Regular single left-click mode
         if (selectionMode == self.SELECTION_MODE.SINGLE) {
-
-            self._clearSelection();
+            self.clearSelection();
 
             self._selectedRows.push(aData);
             self._selectedRowVisualIdxMin = iVisualRowIdx;
