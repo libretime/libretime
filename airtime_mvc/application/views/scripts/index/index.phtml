@@ -107,7 +107,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="jp-playlist">
+                    <div class="jp-playlist podcast_bck">
                         <ul>
                             <li></li>
                         </ul>
@@ -155,17 +155,24 @@
                                         title: value.CcFiles.track_title,
                                         artist: value.CcFiles.artist_name,
                                         mp3: value.download_url,
-                                        download_url: value.download_url
+                                        download_url: value.download_url,
+                                        pub_date: value.publication_date,
+                                        description: value.CcFiles.description,
+                                        length: value.CcFiles.length
                                     };
                                 } else if (value.CcFiles.mime == "audio/vorbis") {
                                     media = {
                                         title: value.CcFiles.track_title,
                                         artist: value.CcFiles.artist_name,
                                         oga: value.download_url,
-                                        download_url: value.download_url
+                                        download_url: value.download_url,
+                                        pub_date: value.publication_date,
+                                        description: value.CcFiles.description,
+                                        length: value.CcFiles.length
                                     };
                                 }
                                 playlist.push(media);
+                                //playlist[index] = media;
                             });
 
                             _playlist_jplayer.setPlaylist(playlist);
@@ -173,7 +180,13 @@
                             // This is a big hack to attach the download and play buttons
                             // to the jplayer playlist items.
                             $(".jp-playlist").find("a.jp-playlist-item").each(function (i, obj) {
-                                $(obj).after(" - <a id='rss-download-link' href='"+playlist[i].download_url+"'>Download</a>");
+                                $(obj).after("<span class='podcast_date'>"+playlist[i].pub_date+"</span>" +
+                                             "<span class='podcast_length'>"+playlist[i].length+"</span>" +
+                                             "<span class='podcast_desc_btn'>Description</span>" +
+                                             "<div class='podcast_desc'>"+playlist[i].description+"</div>" +
+                                             "<div class='podcast_btn_group'>"+
+                                             "<span class='podcast_play podcast_action_btn'><a href='#' id='rss-track' data-rss-playlist-id='"+i+"'><img src='css/radio-page/img/podcast_play.png'></a></span>" +
+                                             "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+playlist[i].download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div>");
                             });
 
                             //turn off player bar when podcast track is played
@@ -181,6 +194,15 @@
                                 if ($("#player_iframe").contents().find('.play').hasClass('pause')) {
                                     $("#player_iframe").contents().find('.play').click();
                                 }
+                            });
+
+                            $('.podcast_desc_btn').click(function(){
+                                $(this).toggleClass('current');
+                                $(this).next('.podcast_desc').slideToggle();
+                            });
+
+                            $('.podcast_play').on('click', function() {
+                                _playlist_jplayer.play($(this).find('#rss-track').attr('data-rss-playlist-id'));
                             });
                         }
                     }

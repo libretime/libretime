@@ -38,9 +38,9 @@ div.jp-video {
 	line-height:1.6;
 	color: #9B9B9B;
 	position:relative;
-	border-color: #262526 #262526 #5E5E5E;
+	/*border-color: #262526 #262526 #5E5E5E;
     border-style: solid;
-    border-width: 1px;
+    border-width: 1px;*/
 }
 
 div.jp-audio {
@@ -260,38 +260,127 @@ div.jp-title {
 }
 
 div.jp-title,
-div.jp-playlist {
+/*div.jp-playlist {
 	width:100%;
 	background-color: #D8D8D8;
+}*/
+.podcast_bck {
+	background: rgba(0, 0, 0, 0.3);
+	max-height: 0px;
+	transition: max-height 2s ease;
+	padding: 30px 40px;
 }
+
+.podcast.current .podcast_bck {
+	max-height: 2000px;
+}
+
+.podcast .jp-playlist ul {
+	list-style: none;
+	padding-left: 0px;
+	text-align: left;
+}
+
+.podcast .jp-playlist ul li {
+	padding: 15px 0px 15px 20px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	transition: border-bottom 0.4s ease;
+	padding-right: 100px;
+	position: relative;
+}
+
+.podcast .jp-playlist ul li:hover {
+	border-bottom: 1px solid rgba(253,137,19,0.4);
+}
+
+.podcast .jp-playlist ul li a {
+	text-decoration: none;
+	font-size: 17px;
+	color: #fff;
+	font-weight: 400;
+	display: block;
+	text-transform: uppercase;
+	clear: both;
+}
+
+.podcast .jp-playlist ul li .podcast_info {
+	display: inline-block;
+}
+
+.podcast .jp-playlist ul li span {
+	margin: 5px 20px 2px 0px;
+	display: inline-block;
+	color: #888;
+}
+
+
+.podcast_btn_group {
+	display: inline-block;
+	top: 20px;
+	right: 0px;
+	position: absolute;
+	text-align: right;
+}
+
+.podcast .podcast_action_btn {
+	opacity: 0.4;
+	cursor: pointer;
+	margin-right: 15px;
+}
+
+.podcast .podcast_action_btn:hover {
+	opacity: 1;
+}
+
+.podcast .podcast_desc_btn {
+	cursor: pointer;
+	background: url('img/arrow.png') no-repeat center right;
+	padding-right: 15px;
+	transition: color 0.4s ease;
+}
+
+.podcast .podcast_desc_btn:hover {
+	color: #fff;
+}
+
+.podcast .podcast_desc_btn.current {
+	color: #fff;
+}
+
+.podcast .podcast_desc {
+	display: none;
+	font-size: 15px;
+}
+
 div.jp-type-single div.jp-title,
 div.jp-type-playlist div.jp-title,
-div.jp-type-single div.jp-playlist {
+/*div.jp-type-single div.jp-playlist {
 	border-top:none;
-}
+}*/
 div.jp-title ul,
-div.jp-playlist ul {
+/*div.jp-playlist ul {
 	list-style-type:none;
 	margin:0;
 	padding:0 20px;
-}
+}*/
 
 div.jp-title li {
 	padding:5px 0;
 	font-weight:bold;
 }
-div.jp-playlist li {
+
+/*div.jp-playlist li {
 	padding:5px 0 4px 20px;
 	border-bottom:1px solid #eee;
 }
 
 div.jp-playlist li div {
 	display:inline;
-}
+}*/
 
 /* Note that the first-child (IE6) and last-child (IE6/7/8) selectors do not work on IE */
 
-div.jp-type-playlist div.jp-playlist li:last-child {
+/*div.jp-type-playlist div.jp-playlist li:last-child {
 	padding:5px 0 5px 20px;
 	border-bottom:none;
 }
@@ -307,7 +396,7 @@ div.jp-type-playlist div.jp-playlist a:hover {
 }
 div.jp-type-playlist div.jp-playlist a.jp-playlist-current {
 	color: #FF6F01;
-}
+}*/
 span.jp-artist {
 	font-size: 90%;
 	color:#9B9B9B;
