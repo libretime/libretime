@@ -64,12 +64,15 @@ class IndexController extends Zend_Controller_Action
             $episodes[$e]["CcFiles"]["length"] = $length[0];
         }
 
-        $this->view->episodes = json_encode($episodes);
+        $episodePages = array_chunk($episodes, 10);
+
+        $this->view->episodes = json_encode($episodePages, JSON_FORCE_OBJECT);
         $this->view->displayRssTab = (!Application_Model_Preference::getStationPodcastPrivacy());
 
         $stationPodcast = PodcastQuery::create()->findOneByDbId($stationPodcastId);
         $url = $stationPodcast->getDbUrl();
         $this->view->stationPodcastRssUrl = $url;
+
     }
 
     public function mainAction()

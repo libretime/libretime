@@ -350,7 +350,26 @@ div.jp-title,
 .podcast .podcast_desc {
 	display: none;
 	font-size: 15px;
+}.pagination {
+	 list-style: none;
+	 padding-left: 0px;
+	 margin-top: 10px;
+ }
+
+ul.pagination li {
+	display: inline-block;
+	cursor: pointer;
+	text-align: center;
+	padding: 10px;
+	border-bottom: none;
+	transition: none;
 }
+
+ul.pagination li.current {
+	border-bottom: 1px solid #FD8913;
+}
+
+
 
 div.jp-type-single div.jp-title,
 div.jp-type-playlist div.jp-title,
