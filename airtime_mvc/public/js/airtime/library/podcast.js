@@ -487,8 +487,8 @@ var AIRTIME = (function (AIRTIME) {
                 title: $.i18n._("Add New Podcast"),
                 resizable: false,
                 modal: true,
-                width: 'auto',
-                height: 'auto'
+                width: '450px',
+                height: 129
             });
         });
     };
