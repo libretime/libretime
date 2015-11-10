@@ -56,21 +56,19 @@ class Application_Service_PublishService {
      *               ]
      */
     public static function getSourceLists($fileId) {
-        $publishSources = $publishedSources = array();
+        $sources = array();
         foreach (self::$SOURCES as $source => $label) {
             $fn = self::$SOURCE_FUNCTIONS[$source];
             // Should be in a ternary but PHP doesn't play nice
-            if (self::$fn($fileId)) {
-                $publishedSources[$source] = _($label);
-            } else {
-                $publishSources[$source] = _($label);
-            }
+            $status = self::$fn($fileId);
+            array_push($sources, array(
+                "source" => $source,
+                "label"  => _($label),
+                "status" => $status
+            ));
         }
 
-        return array(
-            "toPublish" => $publishSources,
-            "published" => $publishedSources
-        );
+        return $sources;
     }
 
     /**
@@ -79,8 +77,9 @@ class Application_Service_PublishService {
      *
      * @param int $fileId the ID of the file to check
      *
-     * @return bool true if the file has been published to SoundCloud,
-     *              otherwise false
+     * @return int 1 if the file has been published to SoundCloud,
+     *             0 if the file has yet to be published, or -1 if the
+     *             file is in a pending state
      */
     private static function getSoundCloudPublishStatus($fileId) {
         $soundcloudService = new Application_Service_SoundcloudService();
@@ -94,13 +93,14 @@ class Application_Service_PublishService {
      *
      * @param int $fileId the ID of the file to check
      *
-     * @return bool true if the file has been published to the Station podcast,
-     *              otherwise false
+     * @return int 1 if the file has been published to SoundCloud,
+     *             0 if the file has yet to be published, or -1 if the
+     *             file is in a pending state
      */
     private static function getStationPodcastPublishStatus($fileId) {
         $stationPodcast = StationPodcastQuery::create()
             ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
-        return $stationPodcast->hasEpisodeForFile($fileId);
+        return (int) $stationPodcast->hasEpisodeForFile($fileId);
     }
 
 }

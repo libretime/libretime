@@ -18,9 +18,9 @@
             <textarea disabled ng-model="media.description"></textarea>
             <fieldset>
                 <legend><?php echo _("Publish to:"); ?></legend>
-                <div class="publish-sources" ng-repeat="(source, label) in sources.toPublish">
-                    <input ng-model="publishData[source]" type="checkbox" name="publish_sources" id="{{source}}">
-                    <label class="source-name" for="{{source}}">{{label}}</label><br/>
+                <div class="publish-sources" ng-repeat="source in sources.toPublish">
+                    <input ng-model="publishData[source.source]" type="checkbox" name="publish_sources" id="{{source.source}}">
+                    <label class="source-name" for="{{source.source}}">{{source.label}}</label><br/>
                 </div>
                 <div ng-if="sources.toPublish.length == 0">
                     <?php echo _("You have already published this track to all available sources!") . "<br/>"
@@ -29,10 +29,10 @@
             </fieldset>
             <fieldset>
                 <legend><?php echo _("Published on:"); ?></legend>
-                <div class="published-sources" ng-repeat="(source, label) in sources.published">
+                <div class="published-sources" ng-repeat="source in sources.published">
                     <span class="sp-checked-icon checked-icon left-floated"></span>
-                    <span class="source-name">{{label}}</span>
-                    <button class="btn btn-small btn-danger" ng-click="remove(source)"><?php echo _("Unpublish") ?></button>
+                    <span class="source-name">{{source.label}}</span>
+                    <button ng-disabled="{{source.status == -1}}" class="btn btn-small btn-danger" ng-click="remove(source.source)"><?php echo _("Unpublish") ?></button>
                 </div>
                 <div ng-if="sources.published.length == 0">
                     <?php echo _("You haven't published this track to any sources!") . "<br/>"

@@ -157,7 +157,6 @@ var AIRTIME = (function (AIRTIME) {
             self.$scope.tab.assignOnCloseHandler(function () {
                 self.episodeTable.destroy();
                 self.episodeTable = null;
-                self.$scope.tab = null;
                 self.$scope.$destroy();
             });
         }
@@ -455,7 +454,6 @@ var AIRTIME = (function (AIRTIME) {
             self.importListener = setInterval(function () {
                 var podcastId = self.config.podcastId, pendingRows = [];
                 if (!podcastId) return false;
-                console.log(self);
                 var dt = self.getDatatable(), data = dt.fnGetData();
                 // Iterate over the table data to check for any rows pending import
                 $.each(data, function () {

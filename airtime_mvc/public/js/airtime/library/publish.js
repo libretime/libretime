@@ -17,8 +17,10 @@ var AIRTIME = (function (AIRTIME) {
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
         .controller('Publish', function ($scope, $http, mediaId, tab) {
             $scope.publishSources = {};
+            $scope.publishData = {};
+            var sourceInterval;
 
-            function init () {
+            function fetchSourceData() {
                 var csrfToken = jQuery("#csrf").val();
                 $http.get(endpoint + mediaId, {csrf_token: csrfToken})
                     .success(function (json) {
@@ -30,15 +32,29 @@ var AIRTIME = (function (AIRTIME) {
                 // and their publication state for the file with the given ID
                 $http.get(endpoint + mediaId + '/publish-sources', {csrf_token: csrfToken})
                     .success(function (json) {
-                        $scope.sources = json;
-                        // Store the data (whether each source should be published to when publish is clicked)
-                        // in a separate array so we don't overwrite the labels
-                        $scope.publishData = {};
-                        jQuery.each($scope.sources.toPublish, function (k, v) {
-                            $scope.publishData[k] = false;
+                        $scope.sources = { toPublish: [], published: []};
+                        $.each(json, function () {
+                            if (this.status != 0) {
+                                $scope.sources.published.push(this);
+                            } else {
+                                $scope.sources.toPublish.push(this);
+                            }
                         });
                     });
             }
+
+            function init() {
+                fetchSourceData();
+                sourceInterval = setInterval(function() {
+                    fetchSourceData();
+                }, 5000);
+
+                tab.assignOnCloseHandler(function () {
+                    clearInterval(sourceInterval);
+                    $scope.$destroy();
+                });
+            }
+
 
             $scope.openEditDialog = function() {
                 var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + mediaId;
@@ -62,7 +78,9 @@ var AIRTIME = (function (AIRTIME) {
                 if (data && Object.keys(data).length > 0) {
                     $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
                         .success(function () {
-                            init();
+                            fetchSourceData();
+                            $scope.publishData = {};  // Reset the publishData in case the user publishes
+                                                      // and unpublishes without closing the tab
                         });
                 }
             };
@@ -74,7 +92,7 @@ var AIRTIME = (function (AIRTIME) {
                         + "for this track will be permanently removed."))) {
                     $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
                         .success(function () {
-                            init();
+                            fetchSourceData();
                         });
                 }
             };

@@ -79,18 +79,22 @@ abstract class Application_Service_ThirdPartyService {
      *
      * @param int $fileId the cc_files identifier
      *
-     * @return string the service foreign identifier
+     * @return int 1 if the file has been published,
+     *             0 if the file has yet to be published,
+     *             or -1 if the file is in a pending state
      */
     public function referenceExists($fileId) {
         $ref = ThirdPartyTrackReferencesQuery::create()
             ->filterByDbService(static::$_SERVICE_NAME)
-            ->findOneByDbFileId($fileId);  // There shouldn't be duplicates!
+            ->findOneByDbFileId($fileId);
         if (!empty($ref)) {
             $task = CeleryTasksQuery::create()
+                ->orderByDbDispatchTime(Criteria::DESC)
                 ->findOneByDbTrackReference($ref->getDbId());
-            return $task->getDbStatus() != CELERY_FAILED_STATUS;
+            return $task->getDbStatus() == CELERY_PENDING_STATUS ? -1
+                    : ($task->getDbStatus() == CELERY_FAILED_STATUS ? 0 : 1);
         }
-        return false;
+        return 0;
     }
 
 }
