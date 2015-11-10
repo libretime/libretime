@@ -1331,8 +1331,8 @@ var AIRTIME = (function(AIRTIME) {
                     return this.getSelectedRows().length >= 1;
                 }
             });
-        podcastToolbarButtons["ViewPodcast"] = {
-            title : $.i18n._("View Podcast"),
+        podcastToolbarButtons["ViewEpisodes"] = {
+            title : $.i18n._("View Episodes"),
             iconClass : "icon-chevron-right",
             extraBtnClass : "btn-small",
             elementId : "",

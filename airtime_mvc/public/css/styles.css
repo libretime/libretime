@@ -4164,3 +4164,7 @@ li .ui-state-hover {
 .publish-edit-md {
     float: right;
 }
+
+#podcast_url_dialog table tr td {
+    padding: 0px;
+}
