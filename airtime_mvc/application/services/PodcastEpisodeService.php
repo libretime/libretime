@@ -267,6 +267,13 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                                  : $this->_getImportedPodcastEpisodeArray($podcast, $episodes);
     }
 
+    /**
+     * Given an array of PodcastEpisodes objects from the Station Podcast,
+     * convert the episode data into array form
+     *
+     * @param array $episodes array of PodcastEpisodes to convert
+     * @return array
+     */
     private function _getStationPodcastEpisodeArray($episodes) {
         $episodesArray = array();
         foreach ($episodes as $episode) {
@@ -277,28 +284,42 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         return $episodesArray;
     }
 
+    /**
+     * Given an ImportedPodcast object and an array of stored PodcastEpisodes objects,
+     * fetch all episodes from the podcast RSS feed, and serialize them in a readable form
+     *
+     * TODO: there's definitely a better approach than this... we should be trying to create
+     *       PodcastEpisdoes objects instead of our own arrays
+     *
+     * @param ImportedPodcast   $podcast    Podcast object to fetch the episodes for
+     * @param array             $episodes   array of PodcastEpisodes objects to
+     *
+     * @return array array of episode data
+     *
+     * @throws CcFiles/FileNotFoundException
+     */
     public function _getImportedPodcastEpisodeArray($podcast, $episodes) {
         $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
         $episodeIds = array();
         $episodeFiles = array();
         foreach ($episodes as $e) {
+            /** @var PodcastEpisodes $e */
             array_push($episodeIds, $e->getDbEpisodeGuid());
             $episodeFiles[$e->getDbEpisodeGuid()] = $e->getDbFileId();
         }
 
         $episodesArray = array();
         foreach ($rss->get_items() as $item) {
-            // If the enclosure is empty, this isn't a podcast episode
+            /** @var SimplePie_Item $item */
+            // If the enclosure is empty or has not URL, this isn't a podcast episode (there's no audio data)
             $enclosure = $item->get_enclosure();
             $url = $enclosure instanceof SimplePie_Enclosure ? $enclosure->get_link() : $enclosure["link"];
-            if (empty($url)) {
-                continue;
-            }
+            if (empty($url)) { continue; }
             $itemId = $item->get_id();
             $ingested = in_array($itemId, $episodeIds) ? (empty($episodeFiles[$itemId]) ? -1 : 1) : 0;
             $file = $ingested > 0 && !empty($episodeFiles[$itemId]) ?
                 CcFiles::getSanitizedFileById($episodeFiles[$itemId]) : array();
-            /** @var SimplePie_Item $item */
+
             array_push($episodesArray, array(
                 "podcast_id" => $podcast->getDbId(),
                 "guid" => $itemId,
@@ -306,7 +327,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
                 "title" => $item->get_title(),
                 // From the RSS spec best practices:
                 // 'An item's author element provides the e-mail address of the person who wrote the item'
-                "author" => $item->get_author()->get_email(),
+                "author" => $this->_buildAuthorString($item),
                 "description" => htmlspecialchars($item->get_description()),
                 "pub_date" => $item->get_gmdate(),
                 "link" => $item->get_link(),
@@ -316,6 +337,23 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         }
 
         return $episodesArray;
+    }
+
+    /**
+     * Construct a string representation of the author fields of a SimplePie_Item object
+     *
+     * @param SimplePie_Item $item the SimplePie_Item to extract the author data from
+     *
+     * @return string the string representation of the author data
+     */
+    private function _buildAuthorString(SimplePie_Item $item) {
+        $authorString = $author = $item->get_author();
+        if (!empty($author)) {
+            $authorString = $author->get_email();
+            $authorString = empty($authorString) ? $author->get_name() : $authorString;
+        }
+
+        return $authorString;
     }
 
     public function deletePodcastEpisodeById($episodeId)

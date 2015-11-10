@@ -59,7 +59,7 @@ var AIRTIME = (function (AIRTIME) {
                     }
                 });
 
-                if (Object.keys(data).length > 0) {
+                if (data && Object.keys(data).length > 0) {
                     $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
                         .success(function () {
                             init();

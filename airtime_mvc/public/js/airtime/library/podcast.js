@@ -146,10 +146,21 @@ var AIRTIME = (function (AIRTIME) {
      * Sets up the internal datatable.
      */
     PodcastController.prototype.initialize = function() {
+        var self = this;
         // TODO: this solves a race condition, but we should look for the root cause
         AIRTIME.tabs.onResize();
-        this.$scope.tab.setName(this.$scope.podcast.title);
-        this._initTable();
+        self.$scope.tab.setName(self.$scope.podcast.title);
+        self._initTable();
+        // Add an onclose hook to the tab to remove the table object and the
+        // import listener so we don't cause memory leaks.
+        if (self.episodeTable) {
+            self.$scope.tab.assignOnCloseHandler(function () {
+                self.episodeTable.destroy();
+                self.episodeTable = null;
+                self.$scope.tab = null;
+                self.$scope.$destroy();
+            });
+        }
     };
 
     /**
@@ -444,6 +455,7 @@ var AIRTIME = (function (AIRTIME) {
             self.importListener = setInterval(function () {
                 var podcastId = self.config.podcastId, pendingRows = [];
                 if (!podcastId) return false;
+                console.log(self);
                 var dt = self.getDatatable(), data = dt.fnGetData();
                 // Iterate over the table data to check for any rows pending import
                 $.each(data, function () {
@@ -475,6 +487,13 @@ var AIRTIME = (function (AIRTIME) {
                 }
             }, 10000);  // Run every 10 seconds
         };
+
+        /**
+         * Explicit destructor
+         */
+        PodcastEpisodeTable.prototype.destroy = function () {
+            clearInterval(this.importListener);
+        }
     }
 
     /**
@@ -552,9 +571,9 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.editSelectedEpisodes = function (episodes) {
         $.each(episodes, function () {
-            if (!Object.keys(this.file).length > 0) return false;
-            var uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + this.file.id;
-            $.get(baseUrl + "library/edit-file-md/id/" + this.file.id, {format: "json"}, function (json) {
+            if (this.file && !Object.keys(this.file).length > 0) return false;
+            var fileId = this.file_id || this.file.id, uid = AIRTIME.library.MediaTypeStringEnum.FILE + "_" + fileId;
+            $.get(baseUrl + "library/edit-file-md/id/" + fileId, {format: "json"}, function (json) {
                 AIRTIME.playlist.fileMdEdit(json, uid);
             });
         });
@@ -568,7 +587,7 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.importSelectedEpisodes = function (episodes, dt) {
         $.each(episodes, function () {
-            if (Object.keys(this.file).length > 0) return false;
+            if (this.file && Object.keys(this.file).length > 0) return false;
             var podcastId = this.podcast_id;
             $.post(endpoint + podcastId + '/episodes', JSON.stringify({
                 csrf_token: $("#csrf").val(),

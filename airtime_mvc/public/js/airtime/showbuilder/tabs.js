@@ -137,6 +137,13 @@ var AIRTIME = (function(AIRTIME){
     };
 
     /**
+     * Internal destructor. Can be assigned via assignOnCloseHandler
+     *
+     * @private
+     */
+    Tab.prototype._destroy = function () {}
+
+    /**
      * Assign the given function f as the click handler for the tab
      *
      * @param {function} f the function to call when the tab is clicked
@@ -162,6 +169,15 @@ var AIRTIME = (function(AIRTIME){
      */
     Tab.prototype.assignTabCloseClickHandler = function(f) {
         this.tab.find(".lib_pl_close").unbind("click").click(f);
+    };
+
+    /**
+     * Assign an implicit destructor
+     *
+     * @param {function} fn function to run when this Tab is destroyed
+     */
+    Tab.prototype.assignOnCloseHandler = function (fn) {
+        this._destroy = fn;
     };
 
     /**
@@ -205,6 +221,8 @@ var AIRTIME = (function(AIRTIME){
         } else {
             mod.onResize();
         }
+
+        self._destroy();
     };
 
     /**

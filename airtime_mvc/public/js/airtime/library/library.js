@@ -1255,7 +1255,9 @@ var AIRTIME = (function(AIRTIME) {
      * @param table the table to show
      */
     mod.setCurrentTable = function (table) {
-        if (oTable) oTable.fnClearTable();
+        if (oTable && oTable === $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES]) {
+            oTable.fnClearTable();
+        }
         var dt = $datatables[table],
             wrapper = $(dt).closest(".dataTables_wrapper");
         $("#library_content").find(".dataTables_wrapper").hide();
@@ -1718,8 +1720,9 @@ var validationTypes = {
 
 
 $(document).ready(function() {
-
-    AIRTIME.library.initPodcastDatatable();
+    if (window.location.href.indexOf("showbuilder") > -1) {
+        AIRTIME.library.initPodcastDatatable();
+    }
 
     $("#advanced-options").on("click", function() {
         resizeAdvancedSearch();

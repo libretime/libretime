@@ -22,9 +22,3 @@
         <span class="selector-name"><?php echo _("Webstreams") ?></span>
     </a>
 </div>
-<div class="media_type_selector dashboard_sub_nav" data-selection-id="<?php echo MediaType::PODCAST ?>">
-    <a href="<?php echo $subnavPrefix; ?>#podcasts">
-        <i class='icon-headphones icon-white'></i>
-        <span class="selector-name"><?php echo _("Podcasts") ?></span>
-    </a>
-</div>
