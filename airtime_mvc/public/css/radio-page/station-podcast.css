@@ -55,12 +55,12 @@ div.jp-video-360p {
 
 div.jp-interface {
 	position: relative;
-    background-color: #3D3D3D;
+    /*background-color: #3D3D3D;
     background: -moz-linear-gradient(top, #6E6E6E 0, #3a3a3a 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #6E6E6E), color-stop(100%, #3a3a3a));
-    width: 100%;
-    border-top: 1px solid #5a5a5a;
-    border-bottom: 1px solid #1a1a1a;
+    */width: 100%;
+    /*border-top: 1px solid #5a5a5a;*/
+    border-bottom: 1px solid #5a5a5a;
 }
 
 div.jp-audio div.jp-type-single div.jp-interface {
@@ -78,7 +78,6 @@ div.jp-interface ul.jp-controls {
     margin: 0;
     cursor: pointer;
     position: relative;
-    top: 30px;
     left: 10px;
 }
 
@@ -87,6 +86,7 @@ div.jp-interface ul.jp-controls li {
     float: left;
     padding: 1px 2px;
     margin-right: 5px;
+	border: none;
 }
 
 div.jp-interface ul.jp-controls li.jp-play,
@@ -122,9 +122,17 @@ div.jp-volume-max span:hover {
 /* @group progress bar */
 
 div.jp-time-block {
-	position: absolute;
-    top: 32px;
-    left: 230px;
+	position: relative;
+    top: 8px;
+	display: inline;
+	left: 0;
+    /*left: 230px;*/
+}
+
+div.jp-time-holder {
+	position: relative;
+	display: inline;
+	top: -3px;
 }
 
 div.jp-progress {
@@ -132,8 +140,8 @@ div.jp-progress {
 	background-color: #393939;
 }
 div.jp-audio div.jp-progress {
-	height: 10px;
-	border-color: #262526 #262526 #5E5E5E;
+	height: 15px;
+	border-color: #262526 #262526 #262526;
     border-style: solid;
     border-width: 1px;
 }
@@ -145,6 +153,7 @@ div.jp-audio div.jp-type-single div.jp-progress {
 */
 div.jp-audio div.jp-type-playlist div.jp-progress {
 	width: 170px;
+	display:inline-block;
 }
 
 div.jp-seek-bar {
@@ -239,8 +248,9 @@ div.jp-duration {
 	font-size: 1em;
 }
 div.jp-current-time {
-	float: left;
+	/*float: left;*/
 	display: inline;
+	padding-top: 3px;
 	color: #FF6F01;
 }
 div.jp-duration {
@@ -370,6 +380,11 @@ div.jp-title,
 	opacity: 1;
 }
 
+.podcast .podcast_no_play {
+	margin-right: 15px;
+	opacity: 0.4;
+}
+
 .podcast .podcast_desc_btn {
 	cursor: pointer;
 	background: url('img/arrow.png') no-repeat center right;
@@ -408,6 +423,9 @@ ul.pagination li.current {
 	border-bottom: 1px solid #FD8913;
 }
 
+.current-track {
+	text-align: left;
+}
 
 
 div.jp-type-single div.jp-title,

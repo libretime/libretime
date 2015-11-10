@@ -27,6 +27,7 @@ class IndexController extends Zend_Controller_Action
         $this->view->headLink()->setStylesheet($baseUrl.'css/radio-page/radio-page.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/embed/weekly-schedule-widget.css?'.$CC_CONFIG['airtime_version']);
         $this->view->headLink()->appendStylesheet($baseUrl.'css/radio-page/station-podcast.css?'.$CC_CONFIG['airtime_version']);
+        $this->view->headLink()->appendStylesheet($baseUrl.'css/bootstrap.css?'.$CC_CONFIG['airtime_version']);
 
         //jplayer control buttons
         $this->view->headLink()->appendStylesheet($baseUrl.'css/redmond/jquery-ui-1.8.8.custom.css?'.$CC_CONFIG['airtime_version']);
@@ -62,6 +63,8 @@ class IndexController extends Zend_Controller_Action
 
             $length = explode(".", $v["CcFiles"]["length"]);
             $episodes[$e]["CcFiles"]["length"] = $length[0];
+
+            $episodes[$e]["mime"] = FileDataHelper::getAudioMimeTypeArray()[$v["CcFiles"]["mime"]];
         }
 
         $episodePages = array_chunk($episodes, 10);
