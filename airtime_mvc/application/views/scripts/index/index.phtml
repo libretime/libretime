@@ -62,10 +62,10 @@
             <div id="jp_container_1" class="jp-audio">
                 <div class="jp-type-playlist">
 
-                    <div class="current-track"></div>
+                    <div class="current-track">Now Playing: <span></span></div>
                     <div class="jp-gui jp-interface">
                         <ul class="jp-controls">
-                            <li class=ui-corner-all jp-previous">
+                            <li class="ui-corner-all jp-previous">
                                 <span class="icon-fast-backward icon-white" tabindex="1"><?php /*echo _("previous") */?></span>
                             </li>
 
@@ -96,7 +96,7 @@
                             </div>
                         </div>
 
-                        <!--<div class="jp-volume-block">
+                        <div class="jp-volume-block">
                             <div class="jp-mute">
                                 <span class="ui-icon" tabindex="1" title="mute"><?php /*echo _("mute") */?></span>
                             </div>
@@ -109,12 +109,12 @@
                             <div class="jp-volume-max">
                                 <span class="ui-icon" tabindex="1" title="max volume"><?php /*echo _("max volume") */?></span>
                             </div>
-                        </div>-->
+                        </div>
 
                     </div>
 
                     <div class="rss-tracks">
-                        <ul>
+                        <ul class="jp-playlist">
                         </ul>
                     </div>
 
@@ -126,9 +126,9 @@
             </div>
 
             <script type="text/javascript">
-
+                var playlist;
                 function buildJplayerPlaylist(page, data) {
-                    var playlist = new Array();
+                    playlist = new Array();
                     var media;
 
                     $('.rss-tracks ul').html('');
@@ -151,18 +151,25 @@
                             media_mime_supported = false;
                         }
 
-                        var playlist_item = "<li><div class='podcast_info'>"+
-                            "<a class='podcast_title' href='#'>"+value.CcFiles.track_title+"</a>"+
-                        "<span class='podcast_date'>"+value.publication_date+"</span>" +
+                        var playlist_item = "<li><div class='podcast_info'>";
+                        var podcast_title_link = "<a class='podcast_title jp-playlist-item' tabindex='0' href='#'>"+value.CcFiles.track_title+"</a>";
+                        var podcast_title_no_link = "<div class='podcast_title jp-playlist-item' tabindex='0' href='#'>"+value.CcFiles.track_title+"</div>";
+                        var playlist_metadata = "<span class='podcast_date'>"+value.publication_date+"</span>" +
                         "<span class='podcast_length'>"+value.CcFiles.length+"</span>" +
                         "<span class='podcast_desc_btn'>Description</span>" +
                         "<div class='podcast_desc'>"+value.CcFiles.description+"</div>";
 
                         if (media_mime_supported) {
+                            // we only add the track to the jPlayer playlist if it can be played by jPlayer
+                            playlist.push(media);
+
+                            playlist_item += podcast_title_link + playlist_metadata;
+
                             playlist_item += "<div class='podcast_btn_group'>"+
                             "<span class='podcast_play podcast_action_btn'><a href='#' id='rss-track' data-rss-playlist-id='"+index+"'><img src='css/radio-page/img/podcast_play.png'></a></span>" +
                             "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+value.download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div></div></li>";
                         } else {
+                            playlist_item += podcast_title_no_link + playlist_metadata;
                             playlist_item += "<div class='podcast_btn_group'>"+
                             "<span class='podcast_no_play'><img src='css/radio-page/img/podcast_no_play.png'></span>" +
                             "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+value.download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div></div></li>";
@@ -170,14 +177,31 @@
 
                         $('.rss-tracks ul').append(playlist_item);
 
-                        playlist.push(media);
                     });
 
                     _playlist_jplayer.setPlaylist(playlist);
 
-                    $('.podcast_play').on('click', function() {
+                    // we have to set the player to play the first track on page load
+                    // or else the play button won't work at first. make sure nothing
+                    // is playing first
+                    if($("#jquery_jplayer_1").data().jPlayer.status.paused == true){
+                        // jPlayer is not currently playing
+                        _playlist_jplayer.play(0);
+                        $("#jquery_jplayer_1").jPlayer("stop");
+                        $(".current-track").find("span").html('');
+                    }
+
+                    //$(".podcast_info>a.jp-playlist-current").removeClass('jp-playlist-current');
+                    //$(".jp-playlist>li.jp-playlist-current").removeClass('jp-playlist-current');
+
+                    /*$('.podcast_play').on('click', function() {
                         _playlist_jplayer.play($(this).find('#rss-track').attr('data-rss-playlist-id'));
-                    });
+
+                        // we need to manually highlight the track that play was clicked on
+                        $(this).parents('li').addClass('jp-playlist-current');
+
+                        return false;
+                    });*/
 
                     $('.podcast_desc_btn').click(function(){
                         $(this).toggleClass('current');
@@ -212,6 +236,18 @@
 
                             var episodes = <?php echo $this->episodes ?>;
                             buildJplayerPlaylist(0, episodes);
+
+                            // update current track metadata on player bar
+                            $("#jquery_jplayer_1").bind(jQuery.jPlayer.event.play, function (event)
+                            {
+                                var current = _playlist_jplayer.current;
+                                $('.current-track span').text(playlist[current].title);
+                            });
+
+                            // remove current track metadata on player bar
+                            $(".jp-stop").click(function() {
+                                $('.current-track span').empty();
+                            });
 
                             // build pagination menu
                             var pages = "<li data-page-index='0'><</li>";
