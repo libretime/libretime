@@ -169,6 +169,8 @@
                             "<span class='podcast_play podcast_action_btn'><a href='#' id='rss-track' data-rss-playlist-id='"+index+"'><img src='css/radio-page/img/podcast_play.png'></a></span>" +
                             "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+value.download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div></div></li>";
                         } else {
+                            //TODO fix this
+                            playlist.push({});
                             playlist_item += podcast_title_no_link + playlist_metadata;
                             playlist_item += "<div class='podcast_btn_group'>"+
                             "<span class='podcast_no_play'><img src='css/radio-page/img/podcast_no_play.png'></span>" +
@@ -188,7 +190,8 @@
                         // jPlayer is not currently playing
                         _playlist_jplayer.play(0);
                         $("#jquery_jplayer_1").jPlayer("stop");
-                        $(".current-track").find("span").html('');
+                        //TODO why doesn't this work??
+                        $(".current-track span").empty();
                     }
 
                     //$(".podcast_info>a.jp-playlist-current").removeClass('jp-playlist-current');
