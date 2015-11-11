@@ -9,12 +9,7 @@
     </div>
     <div class="inner_editor_wrapper station_podcast_wrapper">
         <form class="podcast-metadata">
-            <p>
-                <?php echo _("Check out the ") ?><a target="_blank" href="http://cyber.law.harvard.edu/rss/rss.html#requiredChannelElements"><?php echo _("RSS specification") ?></a>
-                <?php echo _(" or the ") ?><a target="_blank" href="http://www.apple.com/ca/itunes/podcasts/specs.html"><?php echo _("Apple podcasting specification") ?></a>
-                <?php echo _(" for more information.") ?>
-            </p>
-
+            <H4>About your Podcast</H4>
             <input ng-value="podcast.id" class="obj_id" type="hidden"/>
 
             <div>
@@ -78,6 +73,12 @@
                 <label><?php echo _("Explicit") ?></label>
                 <input name="podcast_itunes_explicit" ng-model="podcast.itunes_explicit" type="checkbox"/>
             </fieldset>
+            <p>
+                <?php echo(sprintf(_("For detailed information on what these metadata fields mean, please see the %sRSS specification%s
+                or %sApple's podcasting documentation%s."),
+                    '<a href="http://cyber.law.harvard.edu/rss/rss.html#requiredChannelElements">', '</a>',
+                    '<a target="_blank" href="http://www.apple.com/ca/itunes/podcasts/specs.html">', "</a>")); ?>
+            </p>
         </form>
     </div>
 

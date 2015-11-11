@@ -2451,8 +2451,7 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 }
 
 .md-publish {
-    width: 100%;
-    margin-top: 4px;
+    margin-right: 4px;
 }
 
 .md-save {
@@ -4014,7 +4013,7 @@ li .ui-state-hover {
 
 .podcast-metadata p {
     text-align: center;
-    padding: 0 5%;
+    padding: 0 10px;
     margin-top: 0;
 }
 

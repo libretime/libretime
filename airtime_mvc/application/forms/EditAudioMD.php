@@ -223,13 +223,13 @@ class Application_Form_EditAudioMD extends Zend_Form
         $this->addElement('button', 'publishdialog', array(
             'ignore'   => true,
             'class'    => 'btn md-publish',
-            'label'    => _('Publish track'),
+            'label'    => _('Publish...'),
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
-        $this->addDisplayGroup(array('editmdsave', 'editmdcancel', 'publishdialog'), 'submitButtons', array(
+        $this->addDisplayGroup(array('publishdialog', 'editmdsave', 'editmdcancel'), 'submitButtons', array(
             'decorators' => array(
                 'FormElements',
                 'DtDdWrapper'
