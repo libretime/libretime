@@ -426,16 +426,17 @@ var AIRTIME = (function (AIRTIME) {
             // When using static source data, we instantiate an empty table
             // and pass this function the ID of the podcast we want to display.
             if (id) this.config.podcastId = id;
-            var dt = this._datatable;
+            var self = this, dt = self._datatable;
             dt.block({
                 message: "",
                 theme: true,
                 applyPlatformOpacityRules: false
             });
-            $.get(endpoint + this.config.podcastId + '/episodes', function (json) {
+            $.get(endpoint + self.config.podcastId + '/episodes', function (json) {
                 dt.fnClearTable();
+                self.clearSelection();
                 dt.fnAddData(JSON.parse(json));
-                dt.fnDraw();
+                // dt.fnDraw();
             }).done(function () {
                 dt.unblock();
             });
@@ -638,31 +639,33 @@ var AIRTIME = (function (AIRTIME) {
                 },
                 fnCreatedRow: function(nRow, aData, iDataIndex) {
                     var self = this;
-                    $(nRow).draggable({
-                        helper: function () {
-                            var $row = $(this), data = self._datatable.fnGetData(nRow);
-                            $row.data("aData", data.file);
-                            self.selectRow(this, data, self.SELECTION_MODE.SINGLE, $row.index());
-                            var selected = self.getSelectedRows().length, container,
-                                width = self._$wrapperDOMNode.closest(".dataTables_wrapper").outerWidth(), message;
+                    if (aData.file && Object.keys(aData.file).length > 0) {
+                        $(nRow).draggable({
+                            helper: function () {
+                                var $row = $(this), data = self._datatable.fnGetData(nRow);
+                                $row.data("aData", data.file);
+                                self.selectRow(this, data, self.SELECTION_MODE.SINGLE, $row.index());
+                                var selected = self.getSelectedRows().length, container,
+                                    width = self._$wrapperDOMNode.closest(".dataTables_wrapper").outerWidth(), message;
 
-                            message = sprintf($.i18n._(selected > 1 ? "Adding %s Items" : "Adding %s Item"), selected);
-                            container = $('<div/>').attr('id', 'draggingContainer').append('<tr/>')
-                                .find("tr").append('<td/>').find("td")
-                                .attr("colspan", 100).width(width).css("max-width", "none")
-                                .addClass("ui-state-highlight").append(message).end().end();
+                                message = sprintf($.i18n._(selected > 1 ? "Adding %s Items" : "Adding %s Item"), selected);
+                                container = $('<div/>').attr('id', 'draggingContainer').append('<tr/>')
+                                    .find("tr").append('<td/>').find("td")
+                                    .attr("colspan", 100).width(width).css("max-width", "none")
+                                    .addClass("ui-state-highlight").append(message).end().end();
 
-                            return container;
-                        },
-                        tolerance: 'pointer',
-                        cursor: 'move',
-                        cursorAt: {
-                            top: 20,
-                            left: Math.floor(self._datatable.outerWidth() / 2)
-                        },
-                        distance: 25, // min-distance for dragging
-                        connectToSortable: $("#show_builder_table, .active-tab .spl_sortable")
-                    });
+                                return container;
+                            },
+                            tolerance: 'pointer',
+                            cursor: 'move',
+                            cursorAt: {
+                                top: 20,
+                                left: Math.floor(self._datatable.outerWidth() / 2)
+                            },
+                            distance: 25, // min-distance for dragging
+                            connectToSortable: $("#show_builder_table, .active-tab .spl_sortable")
+                        });
+                    }
                 }
             }
         );
