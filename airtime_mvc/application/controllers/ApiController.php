@@ -73,6 +73,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-replay-gain-value'      , 'json')
                 ->addActionContext('update-cue-values-by-silan'    , 'json')
                 ->addActionContext('get-usability-hint'            , 'json')
+                ->addActionContext('poll-celery'                   , 'json')
                 ->initContext();
     }
 
@@ -98,6 +99,14 @@ class ApiController extends Zend_Controller_Action
         header('HTTP/1.0 401 Unauthorized');
         print _('You are not allowed to access this resource.');
         exit();
+    }
+
+    public function pollCeleryAction() {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $taskManager = TaskManager::getInstance();
+        $taskManager->runTask(TaskFactory::CELERY);
     }
 
     public function versionAction()

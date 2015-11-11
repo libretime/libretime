@@ -1272,10 +1272,10 @@ var AIRTIME = (function(AIRTIME) {
         var dt = $datatables[table],
             wrapper = $(dt).closest(".dataTables_wrapper");
         if (oTable && typeof oTable.fnClearTable === 'function') {
-            oTable.fnClearTable();
+            oTable.fnClearTable(false);
         }
         // Don't redraw if we're switching to another hash for the library table
-        $.when(redraw && oTable != dt ? dt.fnDraw() : function () {}).done(function () {
+        $.when(redraw ? dt.fnDraw() : function () {}).done(function () {
             $("#library_content").find(".dataTables_wrapper").hide();
             wrapper.show();
         });

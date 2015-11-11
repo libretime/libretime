@@ -463,6 +463,9 @@ var AIRTIME = (function (AIRTIME) {
                     }
                 });
                 if (pendingRows.length > 0) {
+                    // Manually trigger the Celery task to update the internal
+                    // task reference because the upload will often finish quickly
+                    $.get('/api/poll-celery');
                     // Fetch the table data if there are pending rows,
                     // then check if any of the pending rows have
                     // succeeded or failed before reloading the table.
@@ -484,7 +487,7 @@ var AIRTIME = (function (AIRTIME) {
                         }
                     });
                 }
-            }, 10000);  // Run every 10 seconds
+            }, 5000);  // Run every 5 seconds
         };
 
         /**
