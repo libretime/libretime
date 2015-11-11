@@ -25,6 +25,14 @@ span.showIndex {
 
 /* End of non-ui fields **/
 
+/*.jp-playlist-current .podcast_title {
+	color: #FF6F01;
+}*/
+
+.current-track {
+	color: #FF6F01;
+}
+
 div.jp-audio,
 div.jp-video {
 
@@ -58,7 +66,9 @@ div.jp-interface {
     /*background-color: #3D3D3D;
     background: -moz-linear-gradient(top, #6E6E6E 0, #3a3a3a 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #6E6E6E), color-stop(100%, #3a3a3a));
-    */width: 100%;
+    width: 100%;*/
+	max-width: 600px;
+	text-align:center;
     /*border-top: 1px solid #5a5a5a;*/
     border-bottom: 1px solid #5a5a5a;
 }
@@ -67,7 +77,7 @@ div.jp-audio div.jp-type-single div.jp-interface {
 	height:80px;
 }
 div.jp-audio div.jp-type-playlist div.jp-interface {
-	height:80px;
+	height:60px;
 }
 
 /* @group CONTROLS */
@@ -341,7 +351,7 @@ div.jp-title,
 	border-bottom: 1px solid rgba(253,137,19,0.4);
 }
 
-.podcast ul li a {
+.podcast ul li a, .podcast_title, .current-track span {
 	text-decoration: none;
 	font-size: 17px;
 	color: #fff;
@@ -349,6 +359,11 @@ div.jp-title,
 	display: block;
 	text-transform: uppercase;
 	clear: both;
+}
+
+.current-track span {
+	display: inline-block;
+	margin-left:10px;
 }
 
 .podcast ul li .podcast_info {
