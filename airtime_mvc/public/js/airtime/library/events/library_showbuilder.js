@@ -69,30 +69,27 @@ var AIRTIME = (function(AIRTIME) {
             "timeline");
     };
 
-    mod.fnDrawCallback = function fnLibDrawCallback() {
+    /**
+     *
+     * @param {jQuery} table
+     */
+    mod.drawEmptyPlaceholder = function (table) {
+        var emptyRow = table.find('tr:has(td.dataTables_empty)'),
+            wrapper = table.closest(".dataTables_wrapper");
 
-        mod.redrawChosen();
-        mod.checkToolBarIcons();
-
-        var cb = $('th.library_checkbox'),
-            emptyRow = $('#library_display').find('tr:has(td.dataTables_empty)');
-        if (cb.find("input").length == 0) {
-            cb.append("<input id='super-checkbox' type='checkbox'>");
-        }
-
-        var libEmpty = $('#library_empty');
+        var libEmpty = wrapper.find('.empty_placeholder');
         if (emptyRow.length > 0) {
             emptyRow.hide();
             var mediaType = parseInt($('.media_type_selector.selected').data('selection-id')),
-                img = $('#library_empty_image');
+                img = wrapper.find('.empty_placeholder_image');
             // Remove all classes for when we change between empty media types
             img.removeClass(function() {
-                return $( this ).attr( "class" );
+                return $(this).attr("class");
             });
 
             var opts = AIRTIME.library.placeholder(mediaType);
-            img.addClass("icon-white " + opts.icon);
-            $('#library_empty_text').html(
+            img.addClass("empty_placeholder_image icon-white " + opts.icon);
+            wrapper.find('.empty_placeholder_text').html(
                 $.i18n._("You haven't added any " + opts.media + ".")
                 + "<br/>" + $.i18n._(opts.subtext)
                 + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
@@ -102,6 +99,19 @@ var AIRTIME = (function(AIRTIME) {
         } else {
             libEmpty.hide();
         }
+    };
+
+    mod.fnDrawCallback = function fnLibDrawCallback() {
+        var table = $('#library_display'),
+            cb = table.find('th[class*="checkbox"]');
+        if (cb.find("input").length == 0) {
+            cb.append("<input id='super-checkbox' type='checkbox'>");
+        }
+
+        mod.redrawChosen();
+        mod.checkToolBarIcons();
+
+        mod.drawEmptyPlaceholder(table);
 
         var sortable;
 

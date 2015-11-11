@@ -89,7 +89,6 @@ var AIRTIME = (function(AIRTIME) {
     });
 
     mod.DataTableTypeEnum = Object.freeze({
-        //FILE: "au",
         LIBRARY         : "library",
         PODCAST         : "podcast",
         PODCAST_EPISODES: "podcastEpisodes"
@@ -661,8 +660,6 @@ var AIRTIME = (function(AIRTIME) {
                 type = (type === undefined) ? AIRTIME.library.MediaTypeIntegerEnum.DEFAULT : type;
                 aoData.push({name: "type", value: type});
 
-                //getUsabilityHint();
-
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
@@ -678,7 +675,7 @@ var AIRTIME = (function(AIRTIME) {
                             + $.i18n._(" of ") + data.iTotalRecords
                             + $.i18n._(" records")
                         );
-                        $('#library_empty').hide();
+                        $('.empty_placeholder').hide();
                         $libTable.find('tr:has(td.dataTables_empty)').show();
                     } else {
                         filterMessage.text("");
@@ -736,7 +733,7 @@ var AIRTIME = (function(AIRTIME) {
             "oLanguage": getLibraryDatatableStrings(),
 
             // z = ColResize, R = ColReorder, C = ColVis
-            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
+            "sDom": 'Rf<"dt-process-rel"r><"H"<"library_toolbar"C>><"dataTables_scrolling"t<".empty_placeholder"<".empty_placeholder_image"><".empty_placeholder_text">>><"F"lip>>',
 
             "oColVis": {
                 "sAlign": "right",
@@ -870,9 +867,9 @@ var AIRTIME = (function(AIRTIME) {
             if (r.status === 403) {
                 // Hide the processing div
                 $("#library_display_wrapper").find(".dt-process-rel").hide();
-                $('#library_empty_text').text($.i18n._("You don't have permission to view the library."));
+                $('.empty_placeholder_text').text($.i18n._("You don't have permission to view the library."));
 
-                $('#library_empty').show();
+                $('.empty_placeholder').show();
             }
         }
 
@@ -883,7 +880,8 @@ var AIRTIME = (function(AIRTIME) {
             table = mod.DataTableTypeEnum.LIBRARY;
         }
 
-        AIRTIME.library.setCurrentTable(table);
+        AIRTIME.library.setCurrentTable(table, false);
+        oTable = $datatables[table];
         setColumnFilter(oTable);
         oTable.fnSetFilteringDelay(350);
 
@@ -1252,18 +1250,24 @@ var AIRTIME = (function(AIRTIME) {
     /**
      * Show the given table in the left-hand pane of the dashboard and give it internal focus
      *
-     * @param table the table to show
+     * @param {string} table        the string name of the table to show
+     * @param {boolean} [redraw]    whether or not to redraw the table
      */
-    mod.setCurrentTable = function (table) {
-        if (oTable && oTable === $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES]) {
-            oTable.fnClearTable();
+    mod.setCurrentTable = function (table, redraw) {
+        if (typeof redraw === 'undefined') {
+            redraw = true;
         }
         var dt = $datatables[table],
             wrapper = $(dt).closest(".dataTables_wrapper");
-        $("#library_content").find(".dataTables_wrapper").hide();
-        wrapper.show();
+        if (oTable && typeof oTable.fnClearTable === 'function') {
+            oTable.fnClearTable();
+        }
+        // Don't redraw if we're switching to another hash for the library table
+        $.when(redraw && oTable != dt ? dt.fnDraw() : function () {}).done(function () {
+            $("#library_content").find(".dataTables_wrapper").hide();
+            wrapper.show();
+        });
         oTable = dt;
-        oTable.fnDraw();
     };
 
     mod.getCurrentTable = function () {
@@ -1371,6 +1375,9 @@ var AIRTIME = (function(AIRTIME) {
                 sAjaxSource : ajaxSourceURL,
                 oColReorder: {
                     iFixedColumns: 1  // Checkbox
+                },
+                fnDrawCallback: function () {
+                    AIRTIME.library.drawEmptyPlaceholder($(this));
                 }
             });
 

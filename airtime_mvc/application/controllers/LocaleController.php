@@ -58,6 +58,7 @@ class LocaleController extends Zend_Controller_Action
             "You haven't added any webstreams" => _("You haven't added any webstreams"),
             "Learn about tracks" => _("Learn about tracks"),
             "Learn about playlists" => _("Learn about playlists"),
+            "Learn about podcasts" => _("Learn about podcasts"),
             "Learn about smart blocks" => _("Learn about smart blocks"),
             "Learn about webstreams" => _("Learn about webstreams"),
             "Click 'New' to create one." => _("Click 'New' to create one."),

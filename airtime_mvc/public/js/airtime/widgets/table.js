@@ -61,6 +61,8 @@ var AIRTIME = (function(AIRTIME) {
             "bJQueryUI": true,
             "bAutoWidth": false,
             "aaSorting": [],
+            "iDisplayLength": 25,
+            "aLengthMenu": [25, 50, 100],
             "oLanguage" : getDatatablesStrings({
                 "sEmptyTable": $.i18n._(""),
                 "sZeroRecords": $.i18n._("No matching results found.")
@@ -72,8 +74,11 @@ var AIRTIME = (function(AIRTIME) {
                 "iOverlayFade": 0
             },
             // z = ColResize, R = ColReorder, C = ColVis
-            "sDom": 'Rf<"dt-process-rel"r><"H"<"table_toolbar"C>><"dataTables_scrolling"t<"#library_empty"<"#library_empty_image"><"#library_empty_text">>><"F"lip>>',
+            "sDom": 'Rf<"dt-process-rel"r><"H"<"table_toolbar"C>><"dataTables_scrolling"t<".empty_placeholder"<".empty_placeholder_image"><".empty_placeholder_text">>><"F"lip>>',
 
+            "fnPreDrawCallback": function () {
+                $("#draggingContainer").remove();
+            },
             "fnServerData": self._fetchData
             //"fnInitComplete" : function() { self._setupEventHandlers(bItemSelection) }
             //"fnDrawCallback" : self._tableDrawCallback
@@ -371,10 +376,10 @@ var AIRTIME = (function(AIRTIME) {
             /*
              $("#library_display_wrapper").find(".dt-process-rel").hide();
              $.getJSON( "ajax/library_placeholders.json", function( data ) {
-             $('#library_empty_text').text($.i18n._(data.unauthorized));
+             $('.empty_placeholder_text').text($.i18n._(data.unauthorized));
              })  ;
 
-             $('#library_empty').show();
+             $('.empty_placeholder').show();
              */
         }
     };

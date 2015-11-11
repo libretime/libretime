@@ -196,7 +196,7 @@ var AIRTIME = (function(AIRTIME){
         // In case we're adding a tab that wraps to the next row
         // It's better to call this here so we don't have to call it in multiple places
         mod.onResize();
-        AIRTIME.library.fnRedraw();
+        // AIRTIME.library.fnRedraw();
     };
 
     /**

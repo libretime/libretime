@@ -341,6 +341,9 @@ class Application_Service_PodcastService
     }
 
     private static function addEscapedChild($node, $name, $value = null, $namespace = null) {
+        if (empty($value)) {
+            return null;
+        }
         $child = $node->addChild($name, null, $namespace);
         $child->{0} = $value;
         return $child;
@@ -399,7 +402,7 @@ class Application_Service_PodcastService
                 //link - do we need this?
 
                 //pubDate
-                self::addEscapedChild($item, "pubDate", $episode->getDbPublicationDate());
+                self::addEscapedChild($item, "pubDate", gmdate(DATE_RFC2822, strtotime($episode->getDbPublicationDate())));
 
                 //category
                 foreach($itunesCategories as $c) {
@@ -416,7 +419,7 @@ class Application_Service_PodcastService
                 //encolsure - url, length, type attribs
                 $enclosure = $item->addChild("enclosure");
                 $enclosure->addAttribute("url", $episode->getDbDownloadUrl());
-                $enclosure->addAttribute("length", Application_Common_DateHelper::calculateLengthInSeconds($publishedFile->getDbLength()));
+                $enclosure->addAttribute("length", $publishedFile->getDbFilesize());
                 $enclosure->addAttribute("type", $publishedFile->getDbMime());
 
                 //itunes:subtitle

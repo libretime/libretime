@@ -160,7 +160,7 @@ div.btn > span {
     border: 1px solid #5b5b5b;
 }
 
-#library_empty_image {
+.empty_placeholder_image {
     opacity: .3;
 
     width: 16px;
@@ -171,7 +171,7 @@ div.btn > span {
     padding-right: 2px; /* For the webstream icon */
 }
 
-#library_empty {
+.empty_placeholder {
     display: none;
     font-size: 16px;
     position: absolute;
@@ -181,14 +181,14 @@ div.btn > span {
     color: #efefef;
 }
 
-#library_empty a {
+.empty_placeholder a {
     font-size: 0.9em;
     line-height: 37px;
     text-decoration: none;
     color: #FF5D1A;
 }
 
-#library_empty a:visited {
+.empty_placeholder a:visited {
     color: #CE3C01;
 }
 

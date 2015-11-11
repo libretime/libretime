@@ -39,7 +39,13 @@
 
             <div>
                 <label><?php echo _("Language") ?></label>
-                <input name="podcast_language" ng-model="podcast.language" type="text"/>
+                <select name="podcast_language" ng-model="podcast.language">
+                    <?php
+                        foreach(Application_Common_LocaleHelper::getISO6391LanguageCodes() as $code=>$lang) {
+                            echo "<option value='$code'>$lang</option>";
+                        }
+                    ?>
+                </select>
             </div>
 
             <div>
@@ -49,7 +55,7 @@
 
             <div>
                 <label><?php echo _("Link") ?></label>
-                <input name="podcast_link" ng-model="podcast.link" type="text"/>
+                <input name="podcast_link" ng-model="podcast.link" type="url"/>
             </div>
 
             <fieldset>

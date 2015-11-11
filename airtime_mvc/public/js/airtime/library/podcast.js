@@ -592,6 +592,10 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.importSelectedEpisodes = function (episodes, dt) {
         $.each(episodes, function () {
+            if (this.enclosure.length > remainingDiskSpace) {
+                alert("You don't have enough disk space to import " + this.title);
+                return false;
+            }
             if (this.file && Object.keys(this.file).length > 0) return false;
             var podcastId = this.podcast_id;
             $.post(endpoint + podcastId + '/episodes', JSON.stringify({
@@ -600,6 +604,8 @@ var AIRTIME = (function (AIRTIME) {
             }), function () {
                 dt.reload(podcastId);
             });
+
+            remainingDiskSpace -= this.enclosure.length;
         });
     };
 
@@ -631,6 +637,7 @@ var AIRTIME = (function (AIRTIME) {
         }
         params = $.extend(true, params,
             {
+                bDeferRender: true,
                 oColVis: {
                     aiExclude: [0, 1],
                     oColReorder: {

@@ -92,13 +92,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <?php echo $this->navigation()->menu(); ?>
     </div>
 
+    <script>
     <?php
     $partitions = Application_Model_Systemstatus::GetDiskInfo();
     $status = new StdClass;
     $disk = $partitions[0];
     $used = $disk->totalSpace-$disk->totalFreeSpace;
     $total = $disk->totalSpace;
+    echo "var remainingDiskSpace = ".$disk->totalFreeSpace;
     ?>
+    </script>
     <div id="disk_usage" style="height: 13px; position:fixed; bottom: 5px; left: 10px;">
         <!--<div style="padding-bottom: 2px;">Disk Usage</div>-->
         <div class="disk_usage_progress_bar"></div>

@@ -4019,11 +4019,13 @@ li .ui-state-hover {
 }
 
 .podcast-metadata label,
-.podcast-metadata input,
+.podcast-metadata input:not([type="checkbox"]),
+.podcast-metadata select,
 .podcast-metadata textarea,
 .media-metadata label,
-.media-metadata input,
-.media-metadata textarea{
+.media-metadata input:not([type="checkbox"]),
+.media-metadata select,
+.media-metadata textarea {
     margin: 4px 0;
 }
 
@@ -4038,9 +4040,11 @@ li .ui-state-hover {
     float: left;
 }
 
-.podcast-metadata input[type="text"],
+.podcast-metadata input:not([type="checkbox"]),
+.podcast-metadata select,
 .podcast-metadata textarea,
-.media-metadata input[type="text"],
+.media-metadata input:not([type="checkbox"]),
+.media-metadata select,
 .media-metadata textarea {
     width: 60%;
     float: left;
