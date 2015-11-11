@@ -28,6 +28,7 @@ class LocaleController extends Zend_Controller_Action
         $translations = array (
             //common/common.js
             "Audio Player" => _("Audio Player"),
+            "Something went wrong!" => _("Something went wrong!"),
             //dashboard/dashboard.js
             "Recording:" => _("Recording:"),
             "Master Stream" => _("Master Stream"),

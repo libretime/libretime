@@ -80,7 +80,6 @@ class Rest_PodcastController extends Zend_Rest_Controller
         }
 
         try {
-            //$requestData = json_decode($this->getRequest()->getRawBody(), true);
             $requestData = $this->getRequest()->getPost();
             $podcast = Application_Service_PodcastService::createFromFeedUrl($requestData["url"]);
 
@@ -94,17 +93,16 @@ class Rest_PodcastController extends Zend_Rest_Controller
         catch (PodcastLimitReachedException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody("ERROR: Podcast limit reached.");
+                ->appendBody("Podcast limit reached.");
         }
         catch (InvalidPodcastException $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)
-                ->appendBody("ERROR: Invalid Podcast.");
+                ->appendBody("Invalid podcast!");
         }
         catch (Exception $e) {
-            $this->unknownErrorResponse();
             Logging::error($e->getMessage());
-            throw $e;
+            $this->unknownErrorResponse();
         }
     }
 
@@ -215,7 +213,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
     private function unknownErrorResponse()
     {
         $resp = $this->getResponse();
-        $resp->setHttpResponseCode(400);
+        $resp->setHttpResponseCode(500);
         $resp->appendBody("An unknown error occurred.");
     }
 

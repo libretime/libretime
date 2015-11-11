@@ -217,7 +217,6 @@ class PlaylistController extends Zend_Controller_Action
         $id = $this->_getParam('id', null);
         $type = $this->_getParam('type');
         $objInfo = Application_Model_Library::getObjInfo($type);
-        Logging::info("editing {$type} {$id}");
 
 //        if (!is_null($id)) {
         Application_Model_Library::changePlaylist($id, $type);

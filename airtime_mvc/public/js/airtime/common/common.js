@@ -304,6 +304,20 @@ function getUsabilityHint() {
     });
 }
 
+// TODO: build this out so we can use it as a fallback in fail cases
+function buildErrorDialog(message) {
+    var el = $("<div id='error_dialog'></div>");
+    el.text(message);
+    $(document.body).append(el);
+    $("#error_dialog").dialog({
+        title: $.i18n._("Something went wrong!"),
+        resizable: false,
+        modal: true,
+        width: "auto",
+        height: "auto"
+    });
+}
+
 /**
  * Add title attributes (whose values are their inner text) to all elements in the calling parent matching selector
  *

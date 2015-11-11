@@ -4168,3 +4168,9 @@ li .ui-state-hover {
 #podcast_url_dialog table tr td {
     padding: 0px;
 }
+
+#podcast_url_dialog .errors {
+    display: inline-block;
+    float: right;
+    width: 50%;
+}

@@ -188,8 +188,6 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      */
     public function getContents($filterFiles=false)
     {
-        Logging::info("Getting contents for block {$this->id}");
-        
         $sql = <<<SQL
 SELECT pc.id AS id,
        pc.position,

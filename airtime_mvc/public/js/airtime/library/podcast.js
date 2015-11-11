@@ -524,6 +524,12 @@ var AIRTIME = (function (AIRTIME) {
             AIRTIME.library.podcastTableWidget.clearSelection();
             AIRTIME.library.setCurrentTable(AIRTIME.library.DataTableTypeEnum.PODCAST_EPISODES);
             $("#podcast_url_dialog").dialog("close");
+        }).fail(function (e) {
+            var errors = $("#podcast_url_dialog").find(".errors");
+            errors.show(200).text(e.responseText);
+            setTimeout(function () {
+                errors.hide(200);
+            }, 3000);
         });
     };
 
@@ -679,3 +685,10 @@ var AIRTIME = (function (AIRTIME) {
 
     return AIRTIME;
 }(AIRTIME || {}));
+
+$(document).ready(function() {
+    $(document).on("submit", "#podcast_url_form", function (e) {
+        e.preventDefault();
+        AIRTIME.podcast.addPodcast();
+    });
+});

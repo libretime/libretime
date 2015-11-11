@@ -303,7 +303,7 @@ var AIRTIME = (function(AIRTIME) {
 
             var foundAtIdx = $.inArray(aData, self._selectedRows);
 
-            console.log('checkbox mouse', iVisualRowIdx, foundAtIdx);
+            //console.log('checkbox mouse', iVisualRowIdx, foundAtIdx);
 
             //If the clicked row is already selected, deselect it.
             if (foundAtIdx >= 0 && self._selectedRows.length >= 1) {

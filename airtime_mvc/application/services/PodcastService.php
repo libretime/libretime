@@ -72,7 +72,7 @@ class Application_Service_PodcastService
 
         //TODO: why is this so slow?
         $rss = self::getPodcastFeed($feedUrl);
-        if (!$rss) {
+        if (!$rss || !empty($rss->error())) {
             throw new InvalidPodcastException();
         }
 

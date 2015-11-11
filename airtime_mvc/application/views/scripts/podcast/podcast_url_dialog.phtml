@@ -1,5 +1,5 @@
 <div id="podcast_url_dialog">
-    <form name="podcast_url_form" style="margin-top: 10px;">
+    <form id="podcast_url_form" name="podcast_url_form" style="margin-top: 10px;">
         <?php echo $this->csrf ?>
         <table style="padding: 0;">
             <tr>
@@ -9,13 +9,14 @@
                     </label>
                 </td>
                 <td style="text-align: right">
-                    <input type="text" name="podcast_url_field" name="url" size="40" style="margin-left: 10px; margin-bottom: 10px;" placeholder="http://example.com/podcast.xml"/>
+                    <input id="podcast_url_field" type="url" name="url" size="40" style="margin-left: 10px; margin-bottom: 10px;" placeholder="http://example.com/podcast.xml"/>
                 </td>
             </tr>
         </table>
-        <button class="btn btn-new right-floated" type="button" onclick="AIRTIME.podcast.addPodcast()">
+        <button class="btn btn-new right-floated" type="submit">
             <?php echo _("Subscribe"); ?>
         </button>
+        <span class="errors" style="display:none"></span>
     </form>
     <!-- <p style="clear: both; text-align: center; opacity: 0.7; margin-top: 20px;">Paste the URL of a podcast RSS feed above.</p> -->
 </div>
