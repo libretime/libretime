@@ -210,7 +210,10 @@ var AIRTIME = (function(AIRTIME) {
             btn.element = buttonElement; //Save this guy in case you need it later.
             //Bind event handlers to each button
             $.each(btn.eventHandlers, function(eventName, eventCallback) {
-                $(buttonElement).on(eventName, eventCallback);
+                $(buttonElement).on(eventName, function () {
+                    if ($(buttonElement).find("button").is(':disabled')) { return; }
+                    eventCallback();
+                });
             });
         });
 

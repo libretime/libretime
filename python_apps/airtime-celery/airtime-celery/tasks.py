@@ -125,7 +125,7 @@ def soundcloud_delete(token, track_id):
 @celery.task(name='podcast-download', acks_late=True)
 def podcast_download(id, url, callback_url, api_key):
     """
-    Download a batch of podcast episodes
+    Download a podcast episode
 
     :param id:              episode unique ID
     :param url:             download url for the episode

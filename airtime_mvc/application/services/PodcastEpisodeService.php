@@ -161,22 +161,26 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     public function updateTrackReference($task, $episodeId, $episode, $status) {
         $ref = parent::updateTrackReference($task, $episodeId, $episode, $status);
+        $dbEpisode = PodcastEpisodesQuery::create()->findOneByDbId($episode->episodeid);
 
-        $dbEpisode = PodcastEpisodesQuery::create()
-            ->findOneByDbId($episode->episodeid);
+        try {
+            // If the placeholder for the episode is somehow removed, return with a warning
+            if (!$dbEpisode) {
+                Logging::warn("Celery task $task episode $episode->episodeid unsuccessful: episode placeholder removed");
+                return $ref;
+            }
 
-        // If the placeholder for the episode is somehow removed, return with a warning
-        if (!$dbEpisode) {
-            Logging::warn("Celery task $task episode $episode->episodeid unsuccessful: episode placeholder removed");
-            return $ref;
-        }
-
-        // Even if the task itself succeeds, the download could have failed, so check the status
-        if ($status == CELERY_SUCCESS_STATUS && $episode->status == 1) {
-            $dbEpisode->setDbFileId($episode->fileid)->save();
-        } else {
-            Logging::warn("Celery task $task episode $episode->episodeid unsuccessful with message $episode->error");
+            // Even if the task itself succeeds, the download could have failed, so check the status
+            if ($status == CELERY_SUCCESS_STATUS && $episode->status == 1) {
+                $dbEpisode->setDbFileId($episode->fileid)->save();
+            } else {
+                Logging::warn("Celery task $task episode $episode->episodeid unsuccessful with message $episode->error");
+                $dbEpisode->delete();
+            }
+        } catch (Exception $e) {
             $dbEpisode->delete();
+            Logging::warn("Catastrophic failure updating from task $task, recovering by deleting episode row.\n
+                           This can occur if the episode's corresponding CcFile is deleted before being processed.");
         }
 
         return $ref;

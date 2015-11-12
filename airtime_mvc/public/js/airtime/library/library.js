@@ -1443,6 +1443,7 @@ var AIRTIME = (function(AIRTIME) {
             var selected = this.getSelectedRows(), isValid = true;
             if (selected.length == 0) return false;
             $.each(selected, function () {
+                if (this.ingested < 0) isValid = false;
                 var isImported  = !$.isEmptyObject(this.file);
                 if ((!shouldBeImported && isImported) || (shouldBeImported && !isImported)) {
                     isValid = false;
@@ -1483,6 +1484,7 @@ var AIRTIME = (function(AIRTIME) {
                     click: function () {
                         var data = [], episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
                         $.each(episodes, function () {
+                            if (this.file.ftype === "") { this.file.ftype = "audioclip"; }
                             data.push({id: this.file.id, type: this.file.ftype});
                         });
                         mod.fnDeleteItems(data);
