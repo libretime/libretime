@@ -19,8 +19,9 @@
             <fieldset>
                 <legend><?php echo _("Publish to:"); ?></legend>
                 <div class="publish-sources" ng-repeat="source in sources.toPublish">
-                    <input ng-model="publishData[source.source]" type="checkbox" name="publish_sources" id="{{source.source}}">
-                    <label class="source-name" for="{{source.source}}">{{source.label}}</label><br/>
+                    <input ng-disabled="{{source.status == 2}}" ng-model="publishData[source.source]" type="checkbox" name="publish_sources" id="{{source.source}}">
+                    <label class="source-name" for="{{source.source}}">{{source.label}}</label>
+                    <span ng-if="source.status == 2" style="margin: auto"><?php echo _("You aren't connected to this source.") ?></span>
                 </div>
                 <div ng-if="sources.toPublish.length == 0">
                     <?php echo _("You have already published this track to all available sources!") . "<br/>"

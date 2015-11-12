@@ -16,7 +16,6 @@ var AIRTIME = (function (AIRTIME) {
     //AngularJS app
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
         .controller('Publish', function ($scope, $http, mediaId, tab) {
-            $scope.publishSources = {};
             $scope.publishData = {};
             var sourceInterval;
 
@@ -34,7 +33,7 @@ var AIRTIME = (function (AIRTIME) {
                     .success(function (json) {
                         $scope.sources = { toPublish: [], published: []};
                         $.each(json, function () {
-                            if (this.status != 0) {
+                            if (Math.abs(this.status) == 1) {
                                 $scope.sources.published.push(this);
                             } else {
                                 $scope.sources.toPublish.push(this);
