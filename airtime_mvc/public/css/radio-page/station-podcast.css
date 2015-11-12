@@ -25,13 +25,13 @@ span.showIndex {
 
 /* End of non-ui fields **/
 
-/*.jp-playlist-current .podcast_title {
-	color: #FF6F01;
-}*/
-
-.current-track {
+.jp-playlist-current .podcast_title {
 	color: #FF6F01;
 }
+
+/*.current-track {
+	color: #FF6F01;
+}*/
 
 div.jp-audio,
 div.jp-video {
@@ -62,7 +62,7 @@ div.jp-video-360p {
 }
 
 div.jp-interface {
-	position: relative;
+	/*position: relative;*/
     /*background-color: #3D3D3D;
     background: -moz-linear-gradient(top, #6E6E6E 0, #3a3a3a 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #6E6E6E), color-stop(100%, #3a3a3a));
@@ -78,6 +78,12 @@ div.jp-audio div.jp-type-single div.jp-interface {
 }
 div.jp-audio div.jp-type-playlist div.jp-interface {
 	height:60px;
+	margin-top: 10px;
+}
+
+.rss-buttons {
+	width: 100px;
+	height: 40px;
 }
 
 /* @group CONTROLS */
@@ -339,7 +345,7 @@ div.jp-title,
 	text-align: left;
 }
 
-.podcast ul li {
+.podcast ul li, .playlist-item-no-preview {
 	padding: 15px 0px 15px 20px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 	transition: border-bottom 0.4s ease;
@@ -347,7 +353,7 @@ div.jp-title,
 	position: relative;
 }
 
-.podcast ul li:hover {
+.podcast ul li:hover, .playlist-item-no-preview:hover {
 	border-bottom: 1px solid rgba(253,137,19,0.4);
 }
 
@@ -364,13 +370,14 @@ div.jp-title,
 .current-track span {
 	display: inline-block;
 	margin-left:10px;
+	color: #FF6F01;
 }
 
 .podcast ul li .podcast_info {
 	display: inline-block;
 }
 
-.podcast ul li span {
+.podcast ul li span, .playlist-item-no-preview span {
 	margin: 5px 20px 2px 0px;
 	display: inline-block;
 	color: #888;
