@@ -335,6 +335,7 @@ thead th.ui-state-default:focus {
 
 #sb_show_filter {
     right: 0;
+    max-width: 125px;
     position: absolute;
 }
 

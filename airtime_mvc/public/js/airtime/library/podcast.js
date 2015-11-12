@@ -34,21 +34,6 @@ var AIRTIME = (function (AIRTIME) {
         tab.contents.find("table").attr("id", "podcast_episodes_" + podcast.id);
 
         /**
-         * Override the switchTo function to reload the table when the tab is focused.
-         * Should help to reduce the number of cases where the frontend doesn't match the state
-         * of the backend (due to automatic ingestion).
-         *
-         * Note that these cases should already be very few and far between.
-         *
-         * TODO: make sure this doesn't noticeably slow performance
-         * XXX: it's entirely possible that this (in the angular app) is not where we want this function...
-         */
-        tab.switchTo = function () {
-            AIRTIME.tabs.Tab.prototype.switchTo.call(this);
-            self.reloadEpisodeTable();
-        };
-
-        /**
          * Save and update the podcast object.
          */
         $scope.savePodcast = function () {
@@ -75,72 +60,6 @@ var AIRTIME = (function (AIRTIME) {
     }
 
     /**
-     * Initialize the podcast episode table.
-     *
-     * @private
-     */
-    PodcastController.prototype._initTable = function() {
-        /*
-         * Remove the episode table for imported podcasts since its functionality is replicated in the left-hand pane
-         *
-        var self = this,
-            $scope = self.$scope;
-        // We want to fetch the data statically for imported podcasts because we would need to implement sorting
-        // in a very convoluted way on the backend to accommodate the nonexistent rows for uningested episodes
-        var params = {
-            bServerSide : false,
-            sAjaxSource : null,
-            // Initialize the table with empty data so we can defer loading
-            // If we load sequentially there's a delay before the table appears
-            aaData      : {},
-            aoColumns   : [
-                { "sTitle" : ""                            , "mDataProp" : "guid"           , "sClass" : "podcast_episodes_guid"        , "bVisible" : false },
-                { "sTitle" : $.i18n._("Title")             , "mDataProp" : "title"          , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
-                { "sTitle" : $.i18n._("Author")            , "mDataProp" : "author"         , "sClass" : "podcast_episodes_author"      , "sWidth" : "170px" },
-                { "sTitle" : $.i18n._("Description")       , "mDataProp" : "description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" },
-                { "sTitle" : $.i18n._("Link")              , "mDataProp" : "link"           , "sClass" : "podcast_episodes_link"        , "sWidth" : "170px" },
-                { "sTitle" : $.i18n._("Publication Date")  , "mDataProp" : "pub_date"       , "sClass" : "podcast_episodes_pub_date"    , "sWidth" : "170px" }
-            ]
-        },
-            buttons = {
-                slideToggle: {},
-                importBtn: {
-                    title           : $.i18n._('Import Selected'),
-                    iconClass       : '',
-                    extraBtnClass   : 'btn-new',
-                    elementId       : '',
-                    eventHandlers   : {
-                        click: function () {
-                            mod.importSelectedEpisodes(self.episodeTable.getSelectedRows(), self.episodeTable);
-                        }
-                    },
-                    validateConstraints: function () {
-                        // Only importable rows can be selected
-                        return this.getSelectedRows().length >= 1;
-                    }
-                }
-            };
-        self.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(
-            $scope.tab.contents.find('.podcast_episodes'),
-            params,
-            buttons,
-            {
-                hideIngestCheckboxes: true,
-                podcastId: $scope.podcast.id
-            }
-        );
-        self.reloadEpisodeTable();
-        */
-    };
-
-    /**
-     * Reload the podcast episode table.
-     */
-    PodcastController.prototype.reloadEpisodeTable = function() {
-        this.episodeTable.reload();
-    };
-
-    /**
      * Initialize the controller.
      *
      * Sets up the internal datatable.
@@ -150,7 +69,6 @@ var AIRTIME = (function (AIRTIME) {
         // TODO: this solves a race condition, but we should look for the root cause
         AIRTIME.tabs.onResize();
         self.$scope.tab.setName(self.$scope.podcast.title);
-        self._initTable();
         // Add an onclose hook to the tab to remove the table object and the
         // import listener so we don't cause memory leaks.
         if (self.episodeTable) {
@@ -182,13 +100,29 @@ var AIRTIME = (function (AIRTIME) {
         $stationPodcastTab = tab;
 
         /**
-         * Override the tab close function to 'unset' the module-scope $stationPodcastTab.
-         *
          * @override
+         *
+         * Override the tab close function to 'unset' the module-scope $stationPodcastTab.
          */
         tab.close = function () {
             AIRTIME.tabs.Tab.prototype.close.call(this);
             $stationPodcastTab = undefined;
+        };
+
+        /**
+         * @override
+         *
+         * Override the switchTo function to reload the table when the tab is focused.
+         * Should help to reduce the number of cases where the frontend doesn't match the state
+         * of the backend (due to automatic ingestion).
+         *
+         * Note that these cases should already be very few and far between.
+         *
+         * XXX: it's entirely possible that this (in the angular module) is not where we want this function...
+         */
+        tab.switchTo = function () {
+            AIRTIME.tabs.Tab.prototype.switchTo.call(this);
+            self.reloadEpisodeTable();
         };
 
         return this;
@@ -259,7 +193,7 @@ var AIRTIME = (function (AIRTIME) {
             params = {
                 sAjaxSource : endpoint + $scope.podcast.id + '/episodes',
                 aoColumns: [
-                    // TODO: it might be dangerous to use CcFiles here? We should alias this instead
+                    // TODO: it might be wrong to use CcFiles here? We should alias this instead
                     /* Title */             { "sTitle" : $.i18n._("Title")             , "mDataProp" : "CcFiles.track_title"    , "sClass" : "podcast_episodes_title"       , "sWidth" : "170px" },
                     /* Description */       { "sTitle" : $.i18n._("Description")       , "mDataProp" : "CcFiles.description"    , "sClass" : "podcast_episodes_description" , "sWidth" : "300px" }
                 ]
@@ -283,12 +217,13 @@ var AIRTIME = (function (AIRTIME) {
         PodcastController.prototype.initialize.call(this);
         // We want to override the default tab name behaviour and use "Station Podcast" for clarity
         this.$scope.tab.setName(jQuery.i18n._("Station Podcast"));
+        self._initTable();
     };
 
     /**
-     * Reload the Station podcast episode table.
-     *
      * @override
+     *
+     * Reload the Station podcast episode table.
      */
     StationPodcastController.prototype.reloadEpisodeTable = function() {
         this.episodeTable.getDatatable().fnDraw();

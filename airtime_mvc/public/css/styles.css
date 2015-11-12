@@ -4011,6 +4011,10 @@ li .ui-state-hover {
     top: 74px !important;
 }
 
+.angular_wrapper > .btn-toolbar {
+    padding: 5px 0 0 5px;
+}
+
 .podcast-metadata p {
     text-align: center;
     padding: 0 10px;
