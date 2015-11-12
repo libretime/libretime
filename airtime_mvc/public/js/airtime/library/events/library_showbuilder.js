@@ -314,9 +314,22 @@ var AIRTIME = (function(AIRTIME) {
                     }
                 });
 
+            $toolbar.find('#publish-btn').click(function () {
+                if (AIRTIME.button.isDisabled('btn-group #publish-btn') === true) {
+                    return;
+                }
+
+                var selected = $(".lib-selected");
+
+                selected.each(function (i, el) {
+                    var data = $(el).data("aData");
+                    AIRTIME.publish.openPublishDialog(data.id);
+                });
+            });
+
             // delete from library.
-            $toolbar.find('.icon-trash').parent().click(function () {
-                if (AIRTIME.button.isDisabled('icon-trash') === true) {
+            $toolbar.find('#sb-delete').click(function () {
+                if (AIRTIME.button.isDisabled('btn-group #sb-delete') === true) {
                     return;
                 }
 

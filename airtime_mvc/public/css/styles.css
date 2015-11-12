@@ -4139,6 +4139,11 @@ li .ui-state-hover {
 
 /* Publishing Dialog */
 
+.icon-soundcloud-white {
+    background: url(images/icon_soundcloud_cm_white.png) 0 0 no-repeat;
+    width: 24px;
+}
+
 .source-name {
     text-align: left !important;
 }
