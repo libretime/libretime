@@ -78,11 +78,12 @@ class Application_Service_PublishService {
      * @param int $fileId the ID of the file to check
      *
      * @return int 1 if the file has been published to SoundCloud,
-     *             0 if the file has yet to be published, or -1 if the
-     *             file is in a pending state
+     *             0 if the file has yet to be published,
+     *             -1 if the file is in a pending state
      */
     private static function getSoundCloudPublishStatus($fileId) {
         $soundcloudService = new Application_Service_SoundcloudService();
+        if (!$soundcloudService->hasAccessToken()) { return 2; }
         return ($soundcloudService->referenceExists($fileId));
     }
 

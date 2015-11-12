@@ -229,12 +229,23 @@ var AIRTIME = (function(AIRTIME) {
                 "</div>"
             ).append(
                 "<div class='btn-group' title=" + $.i18n._('Delete') + ">" +
-                    "<button class='btn btn-small btn-danger' id='sb-trash'>" +
+                    "<button class='btn btn-small btn-danger' id='sb-delete'>" +
                         "<i class='icon-white icon-trash'></i>" +
                         "<span>" + $.i18n._('Delete') + "</span>" +
                     "</button>" +
                 "</div>"
             );
+
+        if (onDashboard) {
+            $menu.append(
+                "<div class='btn-group' title=" + $.i18n._('Publish') + ">" +
+                "<button class='btn btn-small' id='publish-btn'>" +
+                "<i class='icon-soundcloud-white'></i>" +
+                "<span>" + $.i18n._('Publish') + "</span>" +
+                "</button>" +
+                "</div>"
+            );
+        }
     };
 
     mod.createToolbarDropDown = function() {
@@ -252,10 +263,10 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (check === true) {
-            AIRTIME.button.enableButton("btn-group #sb-trash", false);
+            AIRTIME.button.enableButton("btn-group #sb-delete", false);
         }
         else {
-            AIRTIME.button.disableButton("btn-group #sb-trash", false);
+            AIRTIME.button.disableButton("btn-group #sb-delete", false);
         }
     };
 
@@ -291,11 +302,28 @@ var AIRTIME = (function(AIRTIME) {
         }
     };
 
+    mod.checkPublishButton = function() {
+        var selected = mod.getChosenItemsLength(),
+            mediaType = $(".media_type_selector.selected").data("selection-id"),
+            check = false;
+
+        if (mediaType == AIRTIME.library.MediaTypeIntegerEnum.FILE && selected > 0) {
+            check = true;
+        }
+
+        if (check === true) {
+            AIRTIME.button.enableButton("btn-group #publish-btn", false);
+        } else {
+            AIRTIME.button.disableButton("btn-group #publish-btn", false);
+        }
+    };
+
     mod.checkToolBarIcons = function() {
         AIRTIME.library.checkAddButton();
         AIRTIME.library.checkDeleteButton();
         AIRTIME.library.checkEditButton();
         AIRTIME.library.checkNewButton();
+        AIRTIME.library.checkPublishButton();
     };
 
     mod.getSelectedData = function() {
@@ -454,7 +482,7 @@ var AIRTIME = (function(AIRTIME) {
 
     mod.fnDeleteItems = function(aMedia) {
         //Prevent the user from spamming the delete button while the AJAX request is in progress
-        AIRTIME.button.disableButton("btn-group #sb-trash", false);
+        AIRTIME.button.disableButton("btn-group #sb-delete", false);
         var openTabObjectIds = $(".obj_id"),
             mediaIds = [];
         for (var i in aMedia) {
@@ -483,7 +511,7 @@ var AIRTIME = (function(AIRTIME) {
                 }
 
                 //Re-enable the delete button
-                AIRTIME.button.enableButton("btn-group #sb-trash", false);
+                AIRTIME.button.enableButton("btn-group #sb-delete", false);
             });
         mod.selectNone();
     };
@@ -572,6 +600,8 @@ var AIRTIME = (function(AIRTIME) {
             /* Context Menu */    { "sTitle" : ""                             , "mDataProp" : "options"      , "bSortable"   : false                 , "bSearchable" : false                   , "sWidth" : "20px", "sClass" : "library_actions" }
             );
         }
+
+        var colExclude = onDashboard ? [0, 1, 2, 32] : [0, 1, 2];
 
         /*  ############################################
                             DATATABLES
@@ -749,7 +779,7 @@ var AIRTIME = (function(AIRTIME) {
 
             "oColVis": {
                 "sAlign": "right",
-                "aiExclude": [0, 1, 2, 32],
+                "aiExclude": colExclude,
                 "sSize": "css",
                 "fnStateChange": setFilterElement,
                 "buttonText": $.i18n._("Columns"),
@@ -1484,7 +1514,6 @@ var AIRTIME = (function(AIRTIME) {
                     click: function () {
                         var data = [], episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
                         $.each(episodes, function () {
-                            if (this.file.ftype === "") { this.file.ftype = "audioclip"; }
                             data.push({id: this.file.id, type: this.file.ftype});
                         });
                         mod.fnDeleteItems(data);
@@ -1557,6 +1586,9 @@ var AIRTIME = (function(AIRTIME) {
                 },
                 oColReorder: {
                     iFixedColumns: 3  // Checkbox + imported
+                },
+                fnDrawCallback: function () {
+                    AIRTIME.library.drawEmptyPlaceholder($(this));
                 }
             },
             buttons,

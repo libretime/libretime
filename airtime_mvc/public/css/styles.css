@@ -4011,6 +4011,10 @@ li .ui-state-hover {
     top: 74px !important;
 }
 
+.angular_wrapper > .btn-toolbar {
+    padding: 5px 0 0 5px;
+}
+
 .podcast-metadata p {
     text-align: center;
     padding: 0 10px;
@@ -4134,6 +4138,11 @@ li .ui-state-hover {
 }
 
 /* Publishing Dialog */
+
+.icon-soundcloud-white {
+    background: url(images/icon_soundcloud_cm_white.png) 0 0 no-repeat;
+    width: 24px;
+}
 
 .source-name {
     text-align: left !important;
