@@ -217,7 +217,7 @@ var AIRTIME = (function (AIRTIME) {
         PodcastController.prototype.initialize.call(this);
         // We want to override the default tab name behaviour and use "Station Podcast" for clarity
         this.$scope.tab.setName(jQuery.i18n._("Station Podcast"));
-        self._initTable();
+        this._initTable();
     };
 
     /**
