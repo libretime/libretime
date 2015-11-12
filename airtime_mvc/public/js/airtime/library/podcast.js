@@ -341,12 +341,13 @@ var AIRTIME = (function (AIRTIME) {
          * @private
          */
         PodcastEpisodeTable.prototype._datatablesCheckboxDataDelegate = function(rowData, callType, dataToSave) {
-            var importIcon = "<span class='sp-checked-icon checked-icon imported-flag'></span>",
+            var defaultIcon = "<span class='icon-white icon-import'></span>",
+                importIcon = "<span class='sp-checked-icon checked-icon imported-flag'></span>",
                 pendingIcon = "<span class='loading-icon'></span>";
             if (this.config.hideIngestCheckboxes && rowData.ingested && rowData.ingested != 0) {
                 return rowData.ingested > 0 ? importIcon : pendingIcon;
             }
-            rowData.importIcon = (rowData.ingested != 0) ? (rowData.ingested > 0 ? importIcon : pendingIcon) : null;
+            rowData.importIcon = (rowData.ingested != 0) ? (rowData.ingested > 0 ? importIcon : pendingIcon) : defaultIcon;
             return AIRTIME.widgets.Table.prototype._datatablesCheckboxDataDelegate.call(this, rowData, callType, dataToSave);
         };
 
@@ -368,10 +369,8 @@ var AIRTIME = (function (AIRTIME) {
                 applyPlatformOpacityRules: false
             });
             $.get(endpoint + self.config.podcastId + '/episodes', function (json) {
-                dt.fnClearTable();
-                self.clearSelection();
+                dt.fnClearTable(false);
                 dt.fnAddData(JSON.parse(json));
-                // dt.fnDraw();
             }).done(function () {
                 dt.unblock();
             });
@@ -417,7 +416,7 @@ var AIRTIME = (function (AIRTIME) {
                         if (delta) {  // Has there been a change?
                             // We already have the data, so there's no reason to call
                             // reload() here; this also provides a smoother transition
-                            dt.fnClearTable();
+                            dt.fnClearTable(false);
                             dt.fnAddData(data);
                         }
                     });

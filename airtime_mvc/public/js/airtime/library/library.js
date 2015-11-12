@@ -1558,6 +1558,9 @@ var AIRTIME = (function(AIRTIME) {
                 },
                 oColReorder: {
                     iFixedColumns: 3  // Checkbox + imported
+                },
+                fnDrawCallback: function () {
+                    AIRTIME.library.drawEmptyPlaceholder($(this));
                 }
             },
             buttons,

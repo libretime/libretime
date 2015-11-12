@@ -70,8 +70,9 @@ var AIRTIME = (function(AIRTIME) {
     };
 
     /**
+     * Draw a placeholder for the given table to show if it has no data.
      *
-     * @param {jQuery} table
+     * @param {jQuery} table jQuery object containing the table DOM node
      */
     mod.drawEmptyPlaceholder = function (table) {
         var emptyRow = table.find('tr:has(td.dataTables_empty)'),
@@ -82,18 +83,26 @@ var AIRTIME = (function(AIRTIME) {
             emptyRow.hide();
             var mediaType = parseInt($('.media_type_selector.selected').data('selection-id')),
                 img = wrapper.find('.empty_placeholder_image');
+            if (isNaN(mediaType)) { return; }
             // Remove all classes for when we change between empty media types
-            img.removeClass(function() {
-                return $(this).attr("class");
-            });
+            img.removeClass(function() { return $(this).attr("class"); });
 
-            var opts = AIRTIME.library.placeholder(mediaType);
-            img.addClass("empty_placeholder_image icon-white " + opts.icon);
-            wrapper.find('.empty_placeholder_text').html(
-                $.i18n._("You haven't added any " + opts.media + ".")
-                + "<br/>" + $.i18n._(opts.subtext)
-                + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
-            );
+            if (table[0] == AIRTIME.library.podcastEpisodeDataTable[0]) {
+                img.addClass("empty_placeholder_image icon-white icon-th-list");
+                wrapper.find('.empty_placeholder_text').html(
+                    $.i18n._("This podcast doesn't have any episodes!")
+                    + "<br/>" + $.i18n._("Make sure the RSS feed contains audio items (with enclosure tags).")
+                    + "<br/><a target='_blank' href='http://www.apple.com/ca/itunes/podcasts/specs.html'>" + $.i18n._("Learn about podcasts") + "</a>"
+                );
+            } else {
+                var opts = AIRTIME.library.placeholder(mediaType);
+                img.addClass("empty_placeholder_image icon-white " + opts.icon);
+                wrapper.find('.empty_placeholder_text').html(
+                    $.i18n._("You haven't added any " + opts.media + ".")
+                    + "<br/>" + $.i18n._(opts.subtext)
+                    + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
+                );
+            }
 
             libEmpty.show();
         } else {
