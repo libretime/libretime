@@ -443,7 +443,10 @@ var AIRTIME = (function (AIRTIME) {
                 resizable: false,
                 modal: true,
                 width: '450px',
-                height: 129
+                height: 129,
+                close: function () {
+                    $(this).remove();
+                }
             });
         });
     };

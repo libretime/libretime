@@ -1361,6 +1361,8 @@ var AIRTIME = (function(AIRTIME) {
             });
         $.extend(true, podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.EDIT],
             {
+                title: $.i18n._('Settings'),
+                iconClass : "icon-cog",
                 eventHandlers: {
                     click: AIRTIME.podcast.editSelectedPodcasts
                 },
