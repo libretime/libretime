@@ -573,6 +573,8 @@ var AIRTIME = (function(AIRTIME) {
             );
         }
 
+        var colExclude = onDashboard ? [0, 1, 2, 32] : [0, 1, 2];
+
         /*  ############################################
                             DATATABLES
             ############################################ */
@@ -749,7 +751,7 @@ var AIRTIME = (function(AIRTIME) {
 
             "oColVis": {
                 "sAlign": "right",
-                "aiExclude": [0, 1, 2, 32],
+                "aiExclude": colExclude,
                 "sSize": "css",
                 "fnStateChange": setFilterElement,
                 "buttonText": $.i18n._("Columns"),
@@ -1484,6 +1486,12 @@ var AIRTIME = (function(AIRTIME) {
                     click: function () {
                         var data = [], episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
                         $.each(episodes, function () {
+                            // If the file exists but the ftype is empty, the file hasn't finished being
+                            //  analyzed. This forces the deletion, but causes the analyzer to throw an error...
+                            // I'm opting for more consistent behaviour (if it looks like a file is imported,
+                            //  the user should be able to delete it, rather than it seeming like the delete
+                            //  button did nothing), but maybe the answer is to add an additional state that
+                            //  checks if the file is finished being analyzed? -- Duncan FIXME
                             if (this.file.ftype === "") { this.file.ftype = "audioclip"; }
                             data.push({id: this.file.id, type: this.file.ftype});
                         });
