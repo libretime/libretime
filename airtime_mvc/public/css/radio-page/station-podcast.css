@@ -29,9 +29,10 @@ span.showIndex {
 	color: #FF6F01;
 }
 
-/*.current-track {
-	color: #FF6F01;
-}*/
+.current-track {
+	padding-left: 5px;
+	margin-bottom: 5px;
+}
 
 div.jp-audio,
 div.jp-video {
@@ -67,18 +68,19 @@ div.jp-interface {
     background: -moz-linear-gradient(top, #6E6E6E 0, #3a3a3a 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #6E6E6E), color-stop(100%, #3a3a3a));
     width: 100%;*/
-	max-width: 600px;
+	/*max-width: 600px;*/
 	text-align:center;
-    /*border-top: 1px solid #5a5a5a;*/
-    border-bottom: 1px solid #5a5a5a;
+	background: rgba(0, 0, 0, 0.3);
 }
 
 div.jp-audio div.jp-type-single div.jp-interface {
 	height:80px;
 }
 div.jp-audio div.jp-type-playlist div.jp-interface {
-	height:60px;
-	margin-top: 10px;
+	height:45px;
+	padding-top: 10px;
+	display: inline-block;
+	width: 100%;
 }
 
 .rss-buttons {
@@ -143,6 +145,7 @@ div.jp-time-block {
 	display: inline;
 	left: 0;
     /*left: 230px;*/
+	/*margin-left: -150px;*/
 }
 
 div.jp-time-holder {
@@ -215,8 +218,9 @@ div.jp-audio div.jp-type-single a.jp-unmute {
 
 div.jp-volume-block {
 	position: absolute;
-	top: 33px;
-    left: 500px;
+	top: 53px;
+    /*left: 500px;*/
+	right: 0;
     width: 120px;
 }
 
@@ -552,4 +556,40 @@ div.jp-jplayer {
 	font-weight:bold;
 }
 
+.playbar {
+	display: block;
+	width: 33%;
+	float: left;
+}
+
 /* @end */
+
+@media (max-width: 780px) {
+	div.jp-audio div.jp-type-playlist div.jp-interface {
+		height: 60px;
+	}
+}
+
+@media (max-width: 590px) {
+	.jp-time-block {
+		display:block !important;
+	}
+	.playbar {
+		width: 50%;
+		clear:both;
+	}
+	.playbar-progress {
+
+		margin-left: 10px;
+	}
+	div.jp-audio div.jp-type-playlist div.jp-interface {
+		height: 100px;
+	}
+}
+
+@media (max-width: 430px) {
+
+	.jp-volume-block {
+		display:none;
+	}
+}

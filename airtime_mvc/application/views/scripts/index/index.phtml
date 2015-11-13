@@ -56,6 +56,8 @@
     if ($this->displayRssTab) {?>
         <div id="tab-4" class="podcast tab_content">
             <h2><?php echo _("Radio Podcast") ?><a target="_blank" href="<?php echo $this->stationPodcastRssUrl ?>" class="rss_icon"><span>Subscribe </span><img src="css/radio-page/img/rss.png"></a></h2>
+
+
             <div id="jquery_jplayer_1" class="jp-player">
             </div>
             <div class="podcast_bck">
@@ -64,11 +66,8 @@
 
                     <div class="current-track">Now Playing: <span></span></div>
                     <div class="jp-gui jp-interface">
+                        <div class="playbar playbar-buttons">
                         <ul class="jp-controls rss-buttons">
-                            <!--<li class="ui-corner-all jp-previous">
-                                <span class="icon-fast-backward icon-white" tabindex="1"><?php /*echo _("previous") */?></span>
-                            </li>-->
-
                             <li class="ui-corner-all jp-play">
                                 <span class="icon-play icon-white" tabindex="1"><?php /*echo _("play") */?></span>
                             </li>
@@ -76,15 +75,12 @@
                             <li class="ui-corner-all jp-pause">
                                 <span class="icon-pause icon-white" tabindex="1"><?php /*echo _("pause") */?></span>
                             </li>
-
-                            <!--<li class="ui-corner-all jp-next">
-                                <span class="icon-fast-forward icon-white" tabindex="1"><?php /*echo _("next") */?></span>
-                            </li>-->
-
                             <li class="ui-corner-all jp-stop">
                                 <span class="icon-stop icon-white" tabindex="1"><?php /*echo _("stop") */?></span>
                             </li>
                         </ul>
+                        </div>
+                        <div class="playbar playbar-progress">
                         <div class="jp-time-block">
                             <div class="jp-progress">
                                 <div class="jp-seek-bar">
@@ -95,7 +91,9 @@
                                 <div class="jp-current-time"></div>
                             </div>
                         </div>
+                        </div>
 
+                        <div class="playbar playbar-progress">
                         <div class="jp-volume-block">
                             <div class="jp-mute">
                                 <span class="ui-icon" tabindex="1" title="mute"><?php /*echo _("mute") */?></span>
@@ -110,6 +108,8 @@
                                 <span class="ui-icon" tabindex="1" title="max volume"><?php /*echo _("max volume") */?></span>
                             </div>
                         </div>
+                        </div>
+                        </ul>
 
                     </div>
 
@@ -159,7 +159,6 @@
                         "<div class='podcast_desc'>"+value.CcFiles.description+"</div>";
 
                         if (media_mime_supported) {
-                            // we only add the track to the jPlayer playlist if it can be played by jPlayer
                             playlist.push(media);
 
                             var playlist_item = "<li class='jp-playlist-item'><div class='podcast_info'>";
@@ -171,7 +170,10 @@
                             "<span class='podcast_download podcast_action_btn'><a id='rss-download-link' href='"+value.download_url+"'><img src='css/radio-page/img/podcast_download.png'></a></span> </div></div></li>";
 
                         } else {
+                            // add empty media item to playlist so indexes stay inline with the corret
+                            // audio and metadata
                             playlist.push({});
+
                             var playlist_item = "<div class='playlist-item-no-preview podcast_info'>";
                             playlist_item += podcast_title_no_link + playlist_metadata;
                             playlist_item += "<div class='podcast_btn_group'>"+
@@ -192,12 +194,7 @@
                         // jPlayer is not currently playing
                         _playlist_jplayer.play(0);
                         $("#jquery_jplayer_1").jPlayer("stop");
-                        //TODO why doesn't this work??
-                        $(".current-track span").empty();
                     }
-
-                    //$(".podcast_info>a.jp-playlist-current").removeClass('jp-playlist-current');
-                    //$(".jp-playlist>li.jp-playlist-current").removeClass('jp-playlist-current');
 
                     $('.podcast_play').on('click', function() {
                         _playlist_jplayer.play($(this).find('#rss-track').attr('data-rss-playlist-id'));
