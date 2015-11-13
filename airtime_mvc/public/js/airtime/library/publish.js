@@ -19,6 +19,16 @@ var AIRTIME = (function (AIRTIME) {
             $scope.publishData = {};
             var sourceInterval;
 
+            tab.contents.on("click", "input[type='checkbox']", function () {
+                var noSourcesChecked = true;
+                $.each(tab.contents.find("input[type='checkbox']"), function () {
+                    if ($(this).is(":checked")) {
+                        noSourcesChecked = false;
+                    }
+                });
+                tab.contents.find(".publish-btn").prop("disabled", noSourcesChecked);
+            });
+
             function fetchSourceData() {
                 var csrfToken = jQuery("#csrf").val();
                 $http.get(endpoint + mediaId, {csrf_token: csrfToken})
