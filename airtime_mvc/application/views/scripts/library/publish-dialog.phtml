@@ -45,12 +45,12 @@
 
     <div class="btn-toolbar clearfix">
         <div class="btn-group pull-right">
-            <button ng-click="discard()" class="btn" type="button" name="cancel">
+            <button ng-click="discard()" class="btn" type="button" name="close">
                 <?php echo _("Close") ?>
             </button>
         </div>
         <div class='btn-group pull-right'>
-            <button ng-click="publish()" class="btn" title='<?php echo _("Publish") ?>' type="button">
+            <button disabled="disabled" ng-click="publish()" class="btn publish-btn" title='<?php echo _("Publish") ?>' type="button">
                 <?php echo _("Publish") ?>
             </button>
         </div>
