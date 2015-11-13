@@ -243,7 +243,7 @@
                             $("#jquery_jplayer_1").bind(jQuery.jPlayer.event.play, function (event)
                             {
                                 var current = _playlist_jplayer.current;
-                                $('.current-track span').text(playlist[current].title);
+                                $('.current-track span').html(playlist[current].title);
                             });
 
                             // build pagination menu
