@@ -1399,7 +1399,7 @@ var AIRTIME = (function(AIRTIME) {
 
         // Add a button to view the station podcast
         podcastToolbarButtons["StationPodcast"] = {
-            title : $.i18n._("Station Podcast"),
+            title : $.i18n._("My Podcast"),
             iconClass : "icon-music",
             extraBtnClass : "btn-small",
             elementId : "",
@@ -1419,9 +1419,6 @@ var AIRTIME = (function(AIRTIME) {
                 sAjaxSource : ajaxSourceURL,
                 oColReorder: {
                     iFixedColumns: 1  // Checkbox
-                },
-                fnDrawCallback: function () {
-                    AIRTIME.library.drawEmptyPlaceholder($(this));
                 }
             });
 
@@ -1588,13 +1585,18 @@ var AIRTIME = (function(AIRTIME) {
                 },
                 oColReorder: {
                     iFixedColumns: 3  // Checkbox + imported
-                },
-                fnDrawCallback: function () {
-                    AIRTIME.library.drawEmptyPlaceholder($(this));
                 }
             },
             buttons,
-            { hideIngestCheckboxes: false }
+            {
+                hideIngestCheckboxes: false,
+                emptyPlaceholder: {
+                    iconClass: "icon-white icon-th-list",
+                    html: $.i18n._("This podcast doesn't have any episodes!")
+                    + "<br/>" + $.i18n._("Make sure the RSS feed contains audio items (with enclosure tags).")
+                    + "<br/><a target='_blank' href='http://www.apple.com/ca/itunes/podcasts/specs.html'>" + $.i18n._("Learn about podcasts") + "</a>"
+                }
+            }
         );
 
         mod.podcastEpisodeDataTable = $datatables[mod.DataTableTypeEnum.PODCAST_EPISODES] = mod.podcastEpisodeTableWidget.getDatatable();

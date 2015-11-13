@@ -9,7 +9,7 @@ class Application_Form_PodcastPreferences extends Zend_Form_SubForm {
 
         $isPrivate = Application_Model_Preference::getStationPodcastPrivacy();
         $stationPodcastPrivacy = new Zend_Form_Element_Radio('stationPodcastPrivacy');
-        $stationPodcastPrivacy->setLabel(_('Station Podcast Feed Privacy'));
+        $stationPodcastPrivacy->setLabel(_('My Podcast Feed Privacy'));
         $stationPodcastPrivacy->setMultiOptions(array(
                                                     _("Public"),
                                                     _("Private"),
@@ -23,7 +23,7 @@ class Application_Form_PodcastPreferences extends Zend_Form_SubForm {
         $feedUrl->setAttrib('class', 'input_text')
             ->setAttrib('disabled', 'disabled')
             ->setRequired(false)
-            ->setLabel(_("Station Podcast Feed URL"))
+            ->setLabel(_("My Podcast Feed URL"))
             ->setValue($url);
         $this->addElement($feedUrl);
     }

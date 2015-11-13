@@ -488,8 +488,14 @@ li.ui-state-default {
     color: #efefef;
 }
 
-.editor_pane_wrapper a:visited, .angular_wrapper a:visited {
-    color: #cecece;
+.editor_pane_wrapper a,
+.angular_wrapper a {
+    color: #FF5D1A;
+}
+
+.editor_pane_wrapper a:visited,
+.angular_wrapper a:visited {
+    color: #CE3C01;
 }
 
 .tab-name {

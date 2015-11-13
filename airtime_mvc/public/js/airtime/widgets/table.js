@@ -10,7 +10,21 @@ var AIRTIME = (function(AIRTIME) {
     }
 
     //Table widget constructor
-    var Table = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions) {
+    /**
+     *
+     *
+     * @param wrapperDOMNode
+     * @param {boolean} bItemSelection
+     * @param {Object} toolbarButtons
+     * @param {Object} dataTablesOptions
+     * @param {Object} [emptyPlaceholder]
+     * @param {string} emptyPlaceholder.html
+     * @param {string} emptyPlaceholder.iconClass
+     *
+     * @returns {Table}
+     * @constructor
+     */
+    var Table = function(wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions, emptyPlaceholder) {
 
         var self = this;
 
@@ -34,6 +48,7 @@ var AIRTIME = (function(AIRTIME) {
         //Save some of the constructor parameters
         self._$wrapperDOMNode = $(wrapperDOMNode);
         self._toolbarButtons = toolbarButtons;
+        self._emptyPlaceholder = emptyPlaceholder;
 
         // Exclude the leftmost column if we're implementing item selection
         self._colVisExcludeColumns = bItemSelection ? [0] : [];
@@ -92,6 +107,9 @@ var AIRTIME = (function(AIRTIME) {
 
         if (options.fnCreatedRow) {
             options.fnCreatedRow = options.fnCreatedRow.bind(this);
+        }
+        if (options.fnDrawCallback) {
+            options.fnDrawCallback = options.fnDrawCallback.bind(this);
         }
 
         self._datatable = self._$wrapperDOMNode.dataTable(options);
@@ -370,6 +388,10 @@ var AIRTIME = (function(AIRTIME) {
 
     Table.prototype.getSelectedRows = function() {
         return this._selectedRows;
+    };
+
+    Table.prototype.getEmptyPlaceholder = function () {
+        return this._emptyPlaceholder;
     };
 
     Table.prototype._handleAjaxError = function(r) {

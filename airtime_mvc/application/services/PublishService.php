@@ -7,7 +7,7 @@ class Application_Service_PublishService {
      */
     private static $SOURCES = array(
         "soundcloud"        => SOUNDCLOUD,
-        "station_podcast"   => "Station Podcast"
+        "station_podcast"   => "My Podcast"
     );
 
     /**

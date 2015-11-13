@@ -40,7 +40,7 @@ var AIRTIME = (function (AIRTIME) {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
                     AIRTIME.library.podcastDataTable.fnDraw();
-                    tab.setName($scope.podcast.title);
+                    tab.close();
                 });
         };
 
@@ -205,9 +205,17 @@ var AIRTIME = (function (AIRTIME) {
             buttons,
             {
                 hideIngestCheckboxes: true,
-                podcastId: $scope.podcast.id
+                podcastId: $scope.podcast.id,
+                emptyPlaceholder: {
+                    iconClass: "icon-white icon-th-list",
+                    html: $.i18n._("You haven't published any episodes!")
+                    + "<br/>" + $.i18n._("You can publish your uploaded content from the 'Tracks' view.")
+                    + "<br/><a target='_parent' href='showbuilder#tracks'>" + $.i18n._("Try it now") + "</a>"
+                }
             }
         );
+
+        mod.stationPodcastTable = this.episodeTable.getDatatable();
     };
 
     /**
@@ -215,8 +223,8 @@ var AIRTIME = (function (AIRTIME) {
      */
     StationPodcastController.prototype.initialize = function() {
         PodcastController.prototype.initialize.call(this);
-        // We want to override the default tab name behaviour and use "Station Podcast" for clarity
-        this.$scope.tab.setName(jQuery.i18n._("Station Podcast"));
+        // We want to override the default tab name behaviour and use "My Podcast" for clarity
+        this.$scope.tab.setName(jQuery.i18n._("My Podcast"));
         this._initTable();
     };
 
@@ -317,7 +325,7 @@ var AIRTIME = (function (AIRTIME) {
             this.config = config;  // Internal configuration object
             this._setupImportListener();
             // Call the superconstructor
-            return AIRTIME.widgets.Table.call(this, wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions);
+            return AIRTIME.widgets.Table.call(this, wrapperDOMNode, bItemSelection, toolbarButtons, dataTablesOptions, config.emptyPlaceholder);
         };  // Subclass AIRTIME.widgets.Table
         PodcastEpisodeTable.prototype = Object.create(AIRTIME.widgets.Table.prototype);
         PodcastEpisodeTable.prototype.constructor = PodcastEpisodeTable;
@@ -459,7 +467,6 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.addPodcast = function () {
         $.post(endpoint, $("#podcast_url_dialog").find("form").serialize(), function(json) {
-            _initAppFromResponse(json);
             // Open the episode view for the newly created podcast in the left-hand pane
             AIRTIME.library.podcastEpisodeTableWidget.reload(JSON.parse(json.podcast).id);
             AIRTIME.library.podcastTableWidget.clearSelection();
@@ -613,6 +620,9 @@ var AIRTIME = (function (AIRTIME) {
                             connectToSortable: $("#show_builder_table, .active-tab .spl_sortable")
                         });
                     }
+                },
+                fnDrawCallback: function () {
+                    AIRTIME.library.drawEmptyPlaceholder(this);
                 }
             }
         );

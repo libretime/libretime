@@ -122,7 +122,7 @@ class LocaleController extends Zend_Controller_Action
             "Input must be a number" => _("Input must be a number"),
             "Input must be in the format: yyyy-mm-dd" => _("Input must be in the format: yyyy-mm-dd"),
             "Input must be in the format: hh:mm:ss.t" => _("Input must be in the format: hh:mm:ss.t"),
-            "Station Podcast" => _("Station Podcast"),
+            "My Podcast" => _("My Podcast"),
             //library/plupload.js
             "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
                 => _("You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"),
