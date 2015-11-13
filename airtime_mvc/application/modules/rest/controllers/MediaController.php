@@ -122,9 +122,8 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->appendBody("ERROR: Disk Quota reached.");
         }
         catch (Exception $e) {
-            $this->unknownErrorResponse();
-            Logging::error($e->getMessage());
-            throw $e;
+            $this->serviceUnavailableResponse();
+            Logging::error($e->getMessage() . "\n" . $e->getTraceAsString());
         }
     }
 
@@ -208,6 +207,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);
         $resp->appendBody("An unknown error occurred.");
+    }
+
+    private function serviceUnavailableResponse()
+    {
+        $resp = $this->getResponse();
+        $resp->setHttpResponseCode(400);
+        $resp->appendBody("An error occurred while processing your upload. Please try again in a few minutes.");
     }
 }
 
