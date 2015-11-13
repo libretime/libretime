@@ -246,11 +246,6 @@
                                 $('.current-track span').text(playlist[current].title);
                             });
 
-                            // remove current track metadata on player bar
-                            $(".jp-stop").click(function() {
-                                $('.current-track span').empty();
-                            });
-
                             // build pagination menu
                             var pages = "<li data-page-index='0'><</li>";
                             $.each(episodes, function(index, value) {
