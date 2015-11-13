@@ -788,7 +788,7 @@ var AIRTIME = (function(AIRTIME){
                         setTimeout(function(){$status.fadeOut("slow", function(){$status.empty()})}, 5000);
 
                         $pl.find(".title_obj_name").val(name);
-                        AIRTIME.tabs.getActiveTab().setName(json.name);
+                        AIRTIME.tabs.getActiveTab().setName(json.name).close();
 
                         var $ws_id = $(".active-tab .obj_id");
                         $ws_id.attr("value", json.streamId);

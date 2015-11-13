@@ -141,7 +141,7 @@ var AIRTIME = (function(AIRTIME){
      *
      * @private
      */
-    Tab.prototype._destroy = function () {}
+    Tab.prototype._destroy = function () {};
 
     /**
      * Assign the given function f as the click handler for the tab
@@ -196,7 +196,7 @@ var AIRTIME = (function(AIRTIME){
         // In case we're adding a tab that wraps to the next row
         // It's better to call this here so we don't have to call it in multiple places
         mod.onResize();
-        // AIRTIME.library.fnRedraw();
+        return this;  // For chaining
     };
 
     /**
@@ -232,6 +232,7 @@ var AIRTIME = (function(AIRTIME){
      */
     Tab.prototype.setName = function(name) {
         this.tab.find(".tab-name").text(name);
+        return this;  // For chaining
     };
 
     /**

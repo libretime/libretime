@@ -349,7 +349,7 @@ var AIRTIME = (function (AIRTIME) {
          * @private
          */
         PodcastEpisodeTable.prototype._datatablesCheckboxDataDelegate = function(rowData, callType, dataToSave) {
-            var defaultIcon = "<span class='icon-white icon-import'></span>",
+            var defaultIcon = "<span class='icon icon-circle-arrow-down'></span>",
                 importIcon = "<span class='sp-checked-icon checked-icon imported-flag'></span>",
                 pendingIcon = "<span class='loading-icon'></span>";
             if (this.config.hideIngestCheckboxes && rowData.ingested && rowData.ingested != 0) {
