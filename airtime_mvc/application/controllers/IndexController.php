@@ -65,6 +65,10 @@ class IndexController extends Zend_Controller_Action
             $episodes[$e]["CcFiles"]["length"] = $length[0];
 
             $episodes[$e]["mime"] = FileDataHelper::getAudioMimeTypeArray()[$v["CcFiles"]["mime"]];
+
+            if (is_null($v["CcFiles"]["description"])) {
+                $episodes[$e]["CcFiles"]["description"] = "";
+            }
         }
 
         $episodePages = array_chunk($episodes, 10);
