@@ -1398,6 +1398,7 @@ var AIRTIME = (function(AIRTIME) {
         };
 
         // Add a button to view the station podcast
+        /* Moved to a separate top-level menu item
         podcastToolbarButtons["StationPodcast"] = {
             title : $.i18n._("My Podcast"),
             iconClass : "icon-music",
@@ -1408,6 +1409,7 @@ var AIRTIME = (function(AIRTIME) {
             },
             validateConstraints: function () { return true; }
         };
+        */
 
         //Set up the div with id "podcast_table" as a datatable.
         mod.podcastTableWidget = new AIRTIME.widgets.Table(
@@ -1581,6 +1583,8 @@ var AIRTIME = (function(AIRTIME) {
                 // If we load sequentially there's a delay before the table appears
                 aaData      : {},
                 oColVis     : {
+                    buttonText: $.i18n._("Columns"),
+                    iOverlayFade: 0,
                     aiExclude: [0, 1, 2]
                 },
                 oColReorder: {

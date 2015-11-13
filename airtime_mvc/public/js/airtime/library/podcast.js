@@ -7,7 +7,7 @@ var AIRTIME = (function (AIRTIME) {
 
     mod = AIRTIME.podcast;
 
-    var endpoint = 'rest/podcast/', PodcastEpisodeTable, $stationPodcastTab;
+    var endpoint = '/rest/podcast/', PodcastEpisodeTable;
 
     /**
      * PodcastController constructor.
@@ -23,7 +23,8 @@ var AIRTIME = (function (AIRTIME) {
      */
     function PodcastController($scope, $http, podcast, tab) {
         // We need to pass in the tab object and the episodes table object so we can reference them
-        var self = this;
+        var self = this,
+            view = tab ? tab.contents : $(document);
 
         //We take a podcast object in as a parameter rather fetching the podcast by ID here because
         //when you're creating a new podcast, we already have the object from the result of the POST. We're saving
@@ -31,7 +32,7 @@ var AIRTIME = (function (AIRTIME) {
         $scope.podcast = podcast;
         $scope.tab = tab;
         $scope.csrf = jQuery("#csrf").val();
-        tab.contents.find("table").attr("id", "podcast_episodes_" + podcast.id);
+        view.find("table").attr("id", "podcast_episodes_" + podcast.id);
 
         /**
          * Save and update the podcast object.
@@ -40,7 +41,7 @@ var AIRTIME = (function (AIRTIME) {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
                     AIRTIME.library.podcastDataTable.fnDraw();
-                    tab.close();
+                    tab || tab.close();
                 });
         };
 
@@ -48,7 +49,7 @@ var AIRTIME = (function (AIRTIME) {
          * Close the tab and discard any changes made to the podcast data.
          */
         $scope.discard = function () {
-            tab.close();
+            tab || tab.close();
             $scope.podcast = {};
         };
 
@@ -95,35 +96,6 @@ var AIRTIME = (function (AIRTIME) {
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
         PodcastController.call(this, $scope, $http, podcast, tab);
-        // Store the station podcast tab in module scope so it can be checked if the user clicks the
-        // Station Podcast button again - this way we don't have to go back to the server to get the ID.
-        $stationPodcastTab = tab;
-
-        /**
-         * @override
-         *
-         * Override the tab close function to 'unset' the module-scope $stationPodcastTab.
-         */
-        tab.close = function () {
-            AIRTIME.tabs.Tab.prototype.close.call(this);
-            $stationPodcastTab = undefined;
-        };
-
-        /**
-         * @override
-         *
-         * Override the switchTo function to reload the table when the tab is focused.
-         * Should help to reduce the number of cases where the frontend doesn't match the state
-         * of the backend (due to automatic ingestion).
-         *
-         * Note that these cases should already be very few and far between.
-         *
-         * XXX: it's entirely possible that this (in the angular module) is not where we want this function...
-         */
-        tab.switchTo = function () {
-            AIRTIME.tabs.Tab.prototype.switchTo.call(this);
-            self.reloadEpisodeTable();
-        };
 
         return this;
     }
@@ -164,18 +136,6 @@ var AIRTIME = (function (AIRTIME) {
     StationPodcastController.prototype._initTable = function() {
         var self = this, $scope = this.$scope,
             buttons = {
-                editBtn: {
-                    title           : $.i18n._('Edit Metadata'),
-                    iconClass       : 'icon-pencil',
-                    extraBtnClass   : '',
-                    elementId       : '',
-                    eventHandlers   : {
-                        click: self.openSelectedTabEditors.bind(self)
-                    },
-                    validateConstraints: function () {
-                        return this.getSelectedRows().length >= 1;
-                    }
-                },
                 deleteBtn: {
                     title           : $.i18n._('Unpublish'),
                     iconClass       : 'icon-trash',
@@ -187,8 +147,7 @@ var AIRTIME = (function (AIRTIME) {
                     validateConstraints: function () {
                         return this.getSelectedRows().length >= 1;
                     }
-                },
-                slideToggle: {}
+                }
             },
             params = {
                 sAjaxSource : endpoint + $scope.podcast.id + '/episodes',
@@ -200,7 +159,7 @@ var AIRTIME = (function (AIRTIME) {
             };
 
         this.episodeTable = AIRTIME.podcast.initPodcastEpisodeDatatable(
-            $scope.tab.contents.find('.podcast_episodes'),
+            $('.podcast_episodes'),
             params,
             buttons,
             {
@@ -222,9 +181,7 @@ var AIRTIME = (function (AIRTIME) {
      * Initialize the Station podcast.
      */
     StationPodcastController.prototype.initialize = function() {
-        PodcastController.prototype.initialize.call(this);
         // We want to override the default tab name behaviour and use "My Podcast" for clarity
-        this.$scope.tab.setName(jQuery.i18n._("My Podcast"));
         this._initTable();
     };
 
@@ -242,7 +199,7 @@ var AIRTIME = (function (AIRTIME) {
      *
      * Bootstrapped for each podcast or Station podcast tab.
      */
-    var podcastApp = angular.module('podcast', [])
+    mod.podcastApp = angular.module('podcast', [])
         .controller('Podcast', ['$scope', '$http', 'podcast', 'tab', PodcastController])
         .controller('StationPodcast', ['$scope', '$http', 'podcast', 'tab', StationPodcastController]);
 
@@ -285,8 +242,8 @@ var AIRTIME = (function (AIRTIME) {
      * @private
      */
     function _bootstrapAngularApp(podcast, tab) {
-        podcastApp.value('podcast', podcast);
-        podcastApp.value('tab', tab);
+        mod.podcastApp.value('podcast', podcast);
+        mod.podcastApp.value('tab', tab);
         var wrapper = tab.contents.find(".angular_wrapper");
         angular.bootstrap(wrapper.get(0), ["podcast"]);
     }
@@ -482,19 +439,6 @@ var AIRTIME = (function (AIRTIME) {
     };
 
     /**
-     * Open a tab to view and edit the station podcast.
-     */
-    mod.openStationPodcast = function () {
-        if (typeof $stationPodcastTab === 'undefined') {
-            $.get(endpoint + 'station', function(json) {
-                _initAppFromResponse(json);
-            });
-        } else if ($stationPodcastTab != AIRTIME.tabs.getActiveTab()) {
-            $stationPodcastTab.switchTo();
-        }
-    };
-
-    /**
      * Create a bulk request to edit all currently selected podcasts.
      */
     mod.editSelectedPodcasts = function () {
@@ -586,10 +530,12 @@ var AIRTIME = (function (AIRTIME) {
             {
                 bDeferRender: true,
                 oColVis: {
+                    buttonText: $.i18n._("Columns"),
+                    iOverlayFade: 0,
                     aiExclude: [0, 1],
-                    oColReorder: {
-                        iFixedColumns: 1  // Checkbox
-                    }
+                },
+                oColReorder: {
+                    iFixedColumns: 1  // Checkbox
                 },
                 fnCreatedRow: function(nRow, aData, iDataIndex) {
                     var self = this;

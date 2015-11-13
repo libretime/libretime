@@ -4053,6 +4053,13 @@ li .ui-state-hover {
     float: left;
 }
 
+.podcast-metadata-field {
+    display: inline-block;
+    width: 60%;
+    margin: 4px 0;
+    line-height: 24px;
+}
+
 .podcast_episodes_imported {
     text-align: center !important;
 }

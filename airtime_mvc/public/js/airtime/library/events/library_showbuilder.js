@@ -90,7 +90,7 @@ var AIRTIME = (function(AIRTIME) {
             emptyRow.hide();
             var mediaType = parseInt($('.media_type_selector.selected').data('selection-id')),
                 img = wrapper.find('.empty_placeholder_image');
-            if (isNaN(mediaType)) {
+            if (!opts && isNaN(mediaType)) {
                 return;
             }
             // Remove all classes for when we change between empty media types

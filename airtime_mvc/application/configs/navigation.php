@@ -9,6 +9,13 @@
 */
 $pages = array(
     array(
+        'label' => "<i class='icon-music icon-white'></i>"._('My Podcast'),
+        'module'     => 'default',
+        'controller' => 'podcast',
+        'action'     => 'station',
+        'resource'   => 'podcast'
+    ),
+    array(
         'label' => "<i class='icon-globe icon-white'></i>"._('Radio Page'),
         'uri' => '/',
         'resource' => '',

@@ -188,14 +188,19 @@ class Rest_PodcastController extends Zend_Rest_Controller
         $this->_helper->json->sendJson($responseBody);
     }
 
+    /**
+     * @throws PodcastNotFoundException
+     *
+     * @deprecated
+     */
     public function stationAction() {
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $podcast = Application_Service_PodcastService::getPodcastById($stationPodcastId);
-        $path = 'podcast/station_podcast.phtml';
+        $path = 'podcast/station.phtml';
         $this->view->podcast = $podcast;
         $this->_helper->json->sendJson(array(
                                            "podcast"    => json_encode($podcast),
-                                           "html"       => $this->view->render($path),
+                                           "html"       => $this->view->render($path)
                                        ));
     }
 
