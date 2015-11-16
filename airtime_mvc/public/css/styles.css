@@ -4033,7 +4033,8 @@ li .ui-state-hover {
 }
 
 .podcast-metadata input[type="checkbox"] {
-    margin: 8px 60% 0 0;
+    float: left;
+    margin: 8px 0 0;
 }
 
 .podcast-metadata label,
@@ -4056,6 +4057,11 @@ li .ui-state-hover {
 .podcast-metadata-field {
     display: inline-block;
     width: 60%;
+    min-width: 60%;
+    max-width: 60%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     margin: 4px 0;
     line-height: 24px;
 }
@@ -4192,7 +4198,7 @@ li .ui-state-hover {
 }
 
 #podcast_url_dialog table tr td {
-    padding: 0px;
+    padding: 0;
 }
 
 #podcast_url_dialog .errors {

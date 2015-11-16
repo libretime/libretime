@@ -41,7 +41,7 @@ var AIRTIME = (function (AIRTIME) {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
                     AIRTIME.library.podcastDataTable.fnDraw();
-                    tab || tab.close();
+                    !tab || tab.close();
                 });
         };
 
@@ -49,7 +49,7 @@ var AIRTIME = (function (AIRTIME) {
          * Close the tab and discard any changes made to the podcast data.
          */
         $scope.discard = function () {
-            tab || tab.close();
+            !tab || tab.close();
             $scope.podcast = {};
         };
 
