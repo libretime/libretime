@@ -111,13 +111,6 @@ span.login-img {
     margin: 10px;
 }
 
-.podcast .rss_icon {
-    width: 200px;
-    position: absolute;
-    right: 40px;
-    text-align: right;
-
-}
 
 .podcast .rss_icon span {
     color: #fff;
@@ -134,7 +127,6 @@ span.login-img {
 
 
 .podcast .rss_icon img {
-    width: 40px;
     vertical-align: middle;
     margin-left: 10px;
 }
@@ -144,6 +136,42 @@ span.login-img {
     font-size: 28px;
     font-weight: 300;
 }
+
+
+
+.rss-title-wrapper {
+    overflow:hidden;
+}
+
+.rss-title-wrapper div {
+    padding: 10px;
+}
+#rss-title {
+    float:left;
+    width:60%;
+    text-align:right;
+    font-size: 28px;
+    font-weight: 300;
+}
+#rss-subscribe {
+    overflow:hidden;
+    text-align: right;
+}
+
+@media screen and (max-width: 490px) {
+    #rss-title {
+        float: none;
+        margin-right:0;
+        width:auto;
+        border:0;
+    }
+    #rss-title, #rss-subscribe {
+        text-align: center;
+    }
+}
+
+
+
 
 
 input[type="text"] {
