@@ -281,7 +281,7 @@ class Application_Service_PodcastService
         // Check the StationPodcast table rather than checking
         // the station podcast ID key in preferences for extensibility
         $podcast = StationPodcastQuery::create()->findOneByDbPodcastId($podcastId);
-        $path = $podcast ? 'podcast/station_podcast.phtml' : 'podcast/podcast.phtml';
+        $path = $podcast ? 'podcast/station.phtml' : 'podcast/podcast.phtml';
         $podcast = Application_Service_PodcastService::getPodcastById($podcastId);
         return array(
             "podcast" => json_encode($podcast),
