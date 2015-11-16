@@ -288,12 +288,20 @@ select {
     color:#ff5d1a;
 }
 .now-playing-block {
+    -webkit-flex: 1 0;
+    -moz-flex: 1 0;
+    -ms-flex: 1 0;
+    -o-flex: 1 0;
     flex: 1 0;
     background: url(images/masterpanel_spacer.png) no-repeat 0 0;
     margin-left: 152px;
     padding-left: 14px;
 }
 .show-block {
+    -webkit-flex: 1 0;
+    -moz-flex: 1 0;
+    -ms-flex: 1 0;
+    -o-flex: 1 0;
     flex: 1 0;
 }
 .text-row {
@@ -373,6 +381,10 @@ select {
     background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
 .time-info-block  {
+    -webkit-flex: 0 150px;
+    -moz-flex: 0 150px;
+    -ms-flex: 0 150px;
+    -o-flex: 0 150px;
     flex: 0 150px;
     /*position: absolute;*/
     /*top: 0;*/
@@ -395,6 +407,10 @@ select {
         margin-left: 152px;
     }
     .time-info-block {
+        -webkit-flex: 1 150px;
+        -moz-flex: 1 150px;
+        -ms-flex: 1 150px;
+        -o-flex: 1 150px;
         flex: 1 150px;
     }
 }
@@ -2455,11 +2471,19 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
 }
 
 .md-save {
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
     flex: 1 0 auto;
     margin-right: 4px;
 }
 
 .md-cancel {
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
     flex: 1 0 auto;
 }
 
@@ -3525,6 +3549,15 @@ button.btn-icon-text > i.icon-white {
 /* Media type selector */
 
 #media_type_nav {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column;
+    flex-flow: column;
+
+
     position: absolute;
     top: 102px;
     bottom: 0;
@@ -3535,6 +3568,10 @@ button.btn-icon-text > i.icon-white {
 
     width: 152px;
 
+    -webkit-flex: 1 auto;
+    -moz-flex: 1 auto;
+    -ms-flex: 1 auto;
+    -o-flex: 1 auto;
     flex: 1 auto;
     padding: 0;
 
@@ -3548,6 +3585,8 @@ button.btn-icon-text > i.icon-white {
 
     z-index: 100;
     text-align: left;
+
+    overflow: auto;
 }
 
 #media_type_nav .icon-white {
@@ -3578,6 +3617,10 @@ button.btn-icon-text > i.icon-white {
 }
 
 #media_selector_wrapper {
+    -webkit-flex: 1 1 100%;
+    -moz-flex: 1 1 100%;
+    -ms-flex: 1 1 100%;
+    -o-flex: 1 1 100%;
     flex: 1 1 100%;
     display: -webkit-box;
     display: -moz-box;
@@ -3594,6 +3637,10 @@ button.btn-icon-text > i.icon-white {
 
 .ui-dialog-content .media_type_selector {
     padding-left: 0;
+    -webkit-flex: 1 auto;
+    -moz-flex: 1 auto;
+    -ms-flex: 1 auto;
+    -o-flex: 1 auto;
     flex: 1 auto;
 }
 
@@ -3689,6 +3736,10 @@ button.btn-icon-text > i.icon-white {
     left: 152px;
 
     width: 100%;
+    -webkit-flex: 0 100%;
+    -moz-flex: 0 100%;
+    -ms-flex: 0 100%;
+    -o-flex: 0 100%;
     flex: 0 100%;
 
     -webkit-box-sizing: border-box;
@@ -3719,6 +3770,10 @@ button.btn-icon-text > i.icon-white {
 }
 
 #sub-menu-wrapper {
+    -webkit-flex: 0 140px;
+    -moz-flex: 0 140px;
+    -ms-flex: 0 140px;
+    -o-flex: 0 140px;
     flex: 0 140px;
     min-width: 140px;
 }
@@ -3842,15 +3897,16 @@ hr {
     background-color: #242424;
     border: 1px solid #5b5b5b;
     color: #ccc;
+    -webkit-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    -o-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 
 #disk_usage {
     border-radius: 1px;
-    /*position: fixed;
-    bottom: 5px;
-    left: 10px;*/
-    width: 118px;
+    margin: 7px;
     font-size: 14px;
     text-align: center;
     padding: 5px 5px;
@@ -3910,15 +3966,21 @@ li .ui-state-hover {
     -webkit-flex-flow: column;
     flex-flow: column;
 
-    flex: 1 1;
     -webkit-flex: 1 1;
+    -moz-flex: 1 1;
+    -ms-flex: 1 1;
+    -o-flex: 1 1;
+    flex: 1 1;
     min-width: 505px;
 }
 
 .outer-datatable-wrapper {
     position: relative;
+    -webkit-flex: 1 1;
+    -moz-flex: 1 1;
+    -ms-flex: 1 1;
+    -o-flex: 1 1;
     flex: 1;
-    -webkit-flex: 1;
 }
 
 #user_list_inner_wrapper {
@@ -3973,6 +4035,10 @@ li .ui-state-hover {
 
 [id^="podcast_episodes"][id$="_wrapper"] {
     position: relative;
+    -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
     flex: 1 100%;
     /*margin: 4px 0 0 !important;*/
     min-height: 0;
@@ -3998,6 +4064,10 @@ li .ui-state-hover {
 }
 
 .angular_wrapper > .station_podcast_wrapper {
+    -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
     flex: 1 100%;
 }
 
@@ -4124,6 +4194,10 @@ li .ui-state-hover {
 #whatsnew > button {
     margin-top: 10px;
     align-self: flex-end;
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
     flex: 1 0 auto;
 }
 
