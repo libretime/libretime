@@ -550,7 +550,7 @@ var AIRTIME = (function (AIRTIME) {
                 oColVis: {
                     buttonText: $.i18n._("Columns"),
                     iOverlayFade: 0,
-                    aiExclude: [0, 1],
+                    aiExclude: [0]
                 },
                 oColReorder: {
                     iFixedColumns: 1  // Checkbox
