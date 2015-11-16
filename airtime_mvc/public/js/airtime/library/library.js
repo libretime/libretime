@@ -1379,6 +1379,15 @@ var AIRTIME = (function(AIRTIME) {
                     return this.getSelectedRows().length >= 1;
                 }
             });
+
+        var openPodcastEpisodeTable = function (podcast) {
+            mod.podcastEpisodeTableWidget.reload(podcast.id);
+            mod.podcastTableWidget.clearSelection();
+            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
+            mod.podcastEpisodeDataTable.closest(".dataTables_wrapper").find(".dataTables_processing")
+                .addClass("block-overlay").css("visibility", "visible");
+        };
+
         podcastToolbarButtons["ViewEpisodes"] = {
             title : $.i18n._("View Episodes"),
             iconClass : "icon-chevron-right",
@@ -1387,9 +1396,7 @@ var AIRTIME = (function(AIRTIME) {
             eventHandlers : {
                 click: function () {
                     var podcast = mod.podcastTableWidget.getSelectedRows()[0];
-                    mod.podcastEpisodeTableWidget.reload(podcast.id);
-                    mod.podcastTableWidget.clearSelection();
-                    mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
+                    openPodcastEpisodeTable(podcast);
                 }
             },
             validateConstraints: function () {
@@ -1427,9 +1434,7 @@ var AIRTIME = (function(AIRTIME) {
         // in the left-hand pane.
         mod.podcastTableWidget.assignDblClickHandler(function () {
             var podcast = mod.podcastDataTable.fnGetData(this);
-            mod.podcastEpisodeTableWidget.reload(podcast.id);
-            mod.podcastTableWidget.clearSelection();
-            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
+            openPodcastEpisodeTable(podcast);
         });
 
         mod.podcastDataTable = mod.podcastTableWidget.getDatatable();
