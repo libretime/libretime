@@ -186,7 +186,7 @@ var AIRTIME = (function (AIRTIME) {
                     iconClass: "icon-white icon-th-list",
                     html: $.i18n._("You haven't published any episodes!")
                     + "<br/>" + $.i18n._("You can publish your uploaded content from the 'Tracks' view.")
-                    + "<br/><a target='_parent' href='showbuilder#tracks'>" + $.i18n._("Try it now") + "</a>"
+                    + "<br/><a target='_parent' href='/showbuilder#tracks'>" + $.i18n._("Try it now") + "</a>"
                 }
             }
         );
