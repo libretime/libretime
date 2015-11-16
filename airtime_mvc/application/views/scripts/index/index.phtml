@@ -243,46 +243,52 @@
                         ready: function () {
 
                             var episodes = <?php echo $this->episodes ?>;
-                            buildJplayerPlaylist(0, episodes);
+                            var empty_podcast_message = "<?php echo $this->emptyPodcastMessage ?>";
 
-                            // update current track metadata on player bar
-                            $("#jquery_jplayer_1").bind(jQuery.jPlayer.event.play, function (event)
-                            {
-                                var current = _playlist_jplayer.current;
-                                $('.current-track span').html(playlist[current].title);
-                            });
+                            if (Object.keys(episodes).length <= 0) {
+                                $(".jp-playlist").append(empty_podcast_message);
+                            } else {
+                                buildJplayerPlaylist(0, episodes);
 
-                            // build pagination menu
-                            var pages = "<li data-page-index='0'><</li>";
-                            $.each(episodes, function(index, value) {
-                                var page_number = +index + 1;
-                                pages += "<li data-page-index='"+index+"'>"+page_number+"</li>";
-                            });
-                            var last_index = Object.keys(episodes).length -1;
-                            pages += "<li data-page-index='"+last_index+"'>></li>";
-                            $("ul.pagination").append(pages);
-                            $("ul.pagination").find("li:contains('1')").addClass('current');
 
-                            // pagination click
-                            $("ul.pagination li").click(function() {
-                                buildJplayerPlaylist($(this).attr("data-page-index"), episodes);
-                                $(this).siblings().removeClass('current');
-                                if ($(this).text() === "<") {
-                                    $(this).next().addClass("current");
-                                } else if ($(this).text() ===">") {
-                                    $(this).prev().addClass("current");
-                                } else {
-                                    $(this).addClass('current');
-                                }
+                                // update current track metadata on player bar
+                                $("#jquery_jplayer_1").bind(jQuery.jPlayer.event.play, function (event) {
+                                    var current = _playlist_jplayer.current;
+                                    $('.current-track span').html(playlist[current].title);
+                                });
 
-                            });
+                                // build pagination menu
+                                var pages = "<li data-page-index='0'><</li>";
+                                $.each(episodes, function (index, value) {
+                                    var page_number = +index + 1;
+                                    pages += "<li data-page-index='" + index + "'>" + page_number + "</li>";
+                                });
+                                var last_index = Object.keys(episodes).length - 1;
+                                pages += "<li data-page-index='" + last_index + "'>></li>";
+                                $("ul.pagination").append(pages);
+                                $("ul.pagination").find("li:contains('1')").addClass('current');
 
-                            //turn off player bar when podcast track is played
-                            $("a.jp-playlist-item, .jp-play, .podcast_play").click(function() {
-                                if ($("#player_iframe").contents().find('.play').hasClass('pause')) {
-                                    $("#player_iframe").contents().find('.play').click();
-                                }
-                            });
+                                // pagination click
+                                $("ul.pagination li").click(function () {
+                                    buildJplayerPlaylist($(this).attr("data-page-index"), episodes);
+                                    $(this).siblings().removeClass('current');
+                                    if ($(this).text() === "<") {
+                                        $(this).next().addClass("current");
+                                    } else if ($(this).text() === ">") {
+                                        $(this).prev().addClass("current");
+                                    } else {
+                                        $(this).addClass('current');
+                                    }
+
+                                });
+
+                                //turn off player bar when podcast track is played
+                                $("a.jp-playlist-item, .jp-play, .podcast_play").click(function () {
+                                    if ($("#player_iframe").contents().find('.play').hasClass('pause')) {
+                                        $("#player_iframe").contents().find('.play').click();
+                                    }
+                                });
+                            }
                         }
                     }
                 );
