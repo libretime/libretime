@@ -278,7 +278,7 @@
                             });
 
                             //turn off player bar when podcast track is played
-                            $("a.jp-playlist-item, .jp-play").click(function() {
+                            $("a.jp-playlist-item, .jp-play, .podcast_play").click(function() {
                                 if ($("#player_iframe").contents().find('.play').hasClass('pause')) {
                                     $("#player_iframe").contents().find('.play').click();
                                 }
