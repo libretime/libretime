@@ -20,4 +20,17 @@ interface Publish {
      */
     public function unpublish($fileId);
 
+
+    /**
+     * Fetch the publication status for the file with the given ID
+     *
+     * @param int $fileId the ID of the file to check
+     *
+     * @return int 1 if the file has been published,
+     *             0 if the file has yet to be published,
+     *             -1 if the file is in a pending state,
+     *             2 if the source is unreachable (disconnected)
+     */
+    public function getPublishStatus($fileId);
+
 }

@@ -11,15 +11,6 @@ class Application_Service_PublishService {
     );
 
     /**
-     * @var array map of arbitrary source names to functions that return
-     *            their publication state (true = published)
-     */
-    private static $SOURCE_FUNCTIONS = array(
-        "soundcloud"        => "getSoundCloudPublishStatus",
-        "station_podcast"   => "getStationPodcastPublishStatus"
-    );
-
-    /**
      * Publish or remove the file with the given file ID from the services
      * specified in the request data (ie. SoundCloud, the station podcast)
      *
@@ -58,9 +49,8 @@ class Application_Service_PublishService {
     public static function getSourceLists($fileId) {
         $sources = array();
         foreach (self::$SOURCES as $source => $label) {
-            $fn = self::$SOURCE_FUNCTIONS[$source];
-            // Should be in a ternary but PHP doesn't play nice
-            $status = self::$fn($fileId);
+            $service = PublishServiceFactory::getService($source);
+            $status = $service->getPublishStatus($fileId);
             array_push($sources, array(
                 "source" => $source,
                 "label"  => _($label),
@@ -72,36 +62,23 @@ class Application_Service_PublishService {
     }
 
     /**
-     * Reflective accessor for SoundCloud publication status for the
-     * file with the given ID
+     * Given a cc_file identifier, check if the associated file has
+     * been published to any sources.
      *
-     * @param int $fileId the ID of the file to check
+     * @param int $fileId the cc_files identifier of the file to check
      *
-     * @return int 1 if the file has been published to SoundCloud,
-     *             0 if the file has yet to be published,
-     *             -1 if the file is in a pending state
+     * @return bool true if the file has been published to any source,
+     *              otherwise false
      */
-    private static function getSoundCloudPublishStatus($fileId) {
-        $soundcloudService = new Application_Service_SoundcloudService();
-        if (!$soundcloudService->hasAccessToken()) { return 2; }
-        return ($soundcloudService->referenceExists($fileId));
-    }
-
-    /**
-     *
-     * Reflective accessor for Station podcast publication status for the
-     * file with the given ID
-     *
-     * @param int $fileId the ID of the file to check
-     *
-     * @return int 1 if the file has been published to SoundCloud,
-     *             0 if the file has yet to be published, or -1 if the
-     *             file is in a pending state
-     */
-    private static function getStationPodcastPublishStatus($fileId) {
-        $stationPodcast = StationPodcastQuery::create()
-            ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
-        return (int) $stationPodcast->hasEpisodeForFile($fileId);
+    public static function isPublished($fileId) {
+        foreach (self::$SOURCES as $source => $label) {
+            $service = PublishServiceFactory::getService($source);
+            // 1: published or -1: pending
+            if (abs($service->getPublishStatus($fileId)) == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
