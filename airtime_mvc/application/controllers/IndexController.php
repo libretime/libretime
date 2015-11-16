@@ -80,6 +80,9 @@ class IndexController extends Zend_Controller_Action
         $url = $stationPodcast->getDbUrl();
         $this->view->stationPodcastRssUrl = $url;
 
+        $stationName = Application_Model_Preference::GetStationName();
+        $this->view->podcastTitle = sprintf(_("%s Podcast"), !empty($stationName) ? $stationName : $CC_CONFIG["stationId"]);
+
     }
 
     public function mainAction()
