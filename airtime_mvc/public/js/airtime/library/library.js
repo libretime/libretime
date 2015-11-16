@@ -1292,8 +1292,8 @@ var AIRTIME = (function(AIRTIME) {
     /**
      * Show the given table in the left-hand pane of the dashboard and give it internal focus
      *
-     * @param {string} table        the string name of the table to show
-     * @param {boolean} [redraw]    whether or not to redraw the table
+     * @param {string} table            the string name of the table to show
+     * @param {boolean} [redraw=true]   whether or not to redraw the table
      */
     mod.setCurrentTable = function (table, redraw) {
         if (typeof redraw === 'undefined') {
@@ -1346,11 +1346,10 @@ var AIRTIME = (function(AIRTIME) {
             /* Website */        { "sTitle" : $.i18n._("Description")        , "mDataProp" : "description"  , "bVisible"    : false                 , "sWidth"  : "150px" },
             /* Year */           { "sTitle" : $.i18n._("Owner")              , "mDataProp" : "owner"        , "bVisible"    : false                 , "sWidth"  : "60px"  },
             /* URL */            { "sTitle" : $.i18n._("Feed URL")           , "mDataProp" : "url"          , "bVisible"    : false                 , "sWidth"  : "60px"  }
+            ],
+            ajaxSourceURL = baseUrl+"rest/podcast",
+            podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
 
-        ];
-        var ajaxSourceURL = baseUrl+"rest/podcast";
-
-        var podcastToolbarButtons = AIRTIME.widgets.Table.getStandardToolbarButtons();
         $.extend(true, podcastToolbarButtons[AIRTIME.widgets.Table.TOOLBAR_BUTTON_ROLES.NEW],
             {
                 title: $.i18n._('Add'),  //"New" Podcast is misleading
@@ -1404,20 +1403,6 @@ var AIRTIME = (function(AIRTIME) {
             }
         };
 
-        // Add a button to view the station podcast
-        /* Moved to a separate top-level menu item
-        podcastToolbarButtons["StationPodcast"] = {
-            title : $.i18n._("My Podcast"),
-            iconClass : "icon-music",
-            extraBtnClass : "btn-small",
-            elementId : "",
-            eventHandlers : {
-                click: AIRTIME.podcast.openStationPodcast
-            },
-            validateConstraints: function () { return true; }
-        };
-        */
-
         //Set up the div with id "podcast_table" as a datatable.
         mod.podcastTableWidget = new AIRTIME.widgets.Table(
             $('#podcast_table'), //DOM node to create the table inside.
@@ -1450,19 +1435,19 @@ var AIRTIME = (function(AIRTIME) {
      */
     mod._initPodcastEpisodeDatatable = function () {
         var buttons = {
-            backBtn: {
-                title           : $.i18n._('Back to Podcasts'),
-                iconClass       : 'icon-chevron-left',
-                extraBtnClass   : 'btn-small',
-                elementId       : '',
-                eventHandlers   : {
-                    click: function () {
-                        mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST);
-                    }
-                },
-                validateConstraints: function () { return true; }
-            }
-        },
+                backBtn: {
+                    title           : $.i18n._('Back to Podcasts'),
+                    iconClass       : 'icon-chevron-left',
+                    extraBtnClass   : 'btn-small',
+                    elementId       : '',
+                    eventHandlers   : {
+                        click: function () {
+                            mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST);
+                        }
+                    },
+                    validateConstraints: function () { return true; }
+                }
+            },
             defaults = AIRTIME.widgets.Table.getStandardToolbarButtons();
 
         /**
@@ -1481,7 +1466,7 @@ var AIRTIME = (function(AIRTIME) {
             $.each(selected, function () {
                 if (this.ingested < 0) isValid = false;
                 var isImported  = !$.isEmptyObject(this.file);
-                if ((!shouldBeImported && isImported) || (shouldBeImported && !isImported)) {
+                if (shouldBeImported ? isImported : !isImported) {
                     isValid = false;
                 }
             });

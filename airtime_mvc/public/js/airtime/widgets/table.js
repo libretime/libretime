@@ -94,9 +94,11 @@ var AIRTIME = (function(AIRTIME) {
             "fnPreDrawCallback": function () {
                 $("#draggingContainer").remove();
             },
-            "fnServerData": self._fetchData
+            "fnServerData": self._fetchData,
             //"fnInitComplete" : function() { self._setupEventHandlers(bItemSelection) }
-            //"fnDrawCallback" : self._tableDrawCallback
+            "fnDrawCallback": function () {
+                self.clearSelection();
+            }
         };
 
         //Override any options with those passed in as arguments to this constructor.
@@ -106,10 +108,10 @@ var AIRTIME = (function(AIRTIME) {
         }
 
         if (options.fnCreatedRow) {
-            options.fnCreatedRow = options.fnCreatedRow.bind(this);
+            options.fnCreatedRow = options.fnCreatedRow.bind(self);
         }
         if (options.fnDrawCallback) {
-            options.fnDrawCallback = options.fnDrawCallback.bind(this);
+            options.fnDrawCallback = options.fnDrawCallback.bind(self);
         }
 
         self._datatable = self._$wrapperDOMNode.dataTable(options);
