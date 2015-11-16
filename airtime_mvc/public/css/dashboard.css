@@ -505,7 +505,6 @@ li.ui-state-default {
 }
 
 .inner_editor_wrapper {
-    max-height: 60%;
     overflow-x: hidden;
     width: 100%;
     flex: 1 0 auto;
@@ -513,6 +512,10 @@ li.ui-state-default {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.angular_wrapper > .inner_editor_wrapper {
+    max-height: none;
 }
 
 .inner_editor_title h2 {

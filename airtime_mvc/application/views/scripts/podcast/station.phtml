@@ -10,6 +10,7 @@
                 </a>
             </div>
             <form class="podcast-metadata">
+                <?php echo $this->form->getElement('csrf') ?>
                 <input ng-value="podcast.id" class="obj_id" type="hidden"/>
 
                 <h3 class="collapsible-header"><span class="arrow-icon"></span><?php echo _("General Fields") ?></h3>
