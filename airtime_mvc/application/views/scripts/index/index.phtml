@@ -261,8 +261,15 @@
                             $("ul.pagination li").click(function() {
                                 buildJplayerPlaylist($(this).attr("data-page-index"), episodes);
                                 $(this).siblings().removeClass('current');
-                                $(this).addClass('current');
-                            })
+                                if ($(this).text() === "<") {
+                                    $(this).next().addClass("current");
+                                } else if ($(this).text() ===">") {
+                                    $(this).prev().addClass("current");
+                                } else {
+                                    $(this).addClass('current');
+                                }
+
+                            });
 
                             //turn off player bar when podcast track is played
                             $("a.jp-playlist-item, .jp-play").click(function() {
