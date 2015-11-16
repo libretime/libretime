@@ -1327,6 +1327,12 @@ var AIRTIME = (function(AIRTIME) {
             height: "auto",
             modal: true,
             resizable: false,
+            dialogClass: "podcast-episode-dialog",
+            open: function () {
+                // Sometimes the dialog scrolls down partway if there are elements that need to render,
+                // like images or video, so scroll it back up on open.
+                $(this).parent().scrollTop(0);
+            },
             close: function() {
                 $(this).dialog('destroy').remove();
             }

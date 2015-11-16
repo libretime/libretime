@@ -4156,8 +4156,10 @@ li .ui-state-hover {
     display: block;
 }
 
-#podcast_episode_dialog {
+.podcast-episode-dialog {
+    max-width: 50%;
     max-height: 50%;
+    overflow: auto;
 }
 
 /* UI Revamp Video */
