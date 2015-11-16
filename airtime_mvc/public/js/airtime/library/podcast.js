@@ -483,6 +483,7 @@ var AIRTIME = (function (AIRTIME) {
      */
     mod.importSelectedEpisodes = function (episodes, dt) {
         $.each(episodes, function () {
+            // remainingDiskSpace is defined in layout.phtml
             if (this.enclosure.length > remainingDiskSpace) {
                 alert("You don't have enough disk space to import " + this.title);
                 return false;
@@ -569,6 +570,9 @@ var AIRTIME = (function (AIRTIME) {
                 },
                 fnDrawCallback: function () {
                     AIRTIME.library.drawEmptyPlaceholder(this);
+                    // Hide the processing div
+                    var dt = this.getDatatable();
+                    !dt || dt.closest(".dataTables_wrapper").find(".dataTables_processing").css("visibility", "hidden");
                 }
             }
         );
