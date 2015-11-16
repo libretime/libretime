@@ -87,6 +87,7 @@ var AIRTIME = (function (AIRTIME) {
                 if (data && Object.keys(data).length > 0) {
                     $http.put(endpoint + mediaId + '/publish', {csrf_token: jQuery("#csrf").val(), sources: data})
                         .success(function () {
+                            tab.contents.find(".publish-btn").prop("disabled", true);
                             fetchSourceData();
                             $scope.publishData = {};  // Reset the publishData in case the user publishes
                                                       // and unpublishes without closing the tab
