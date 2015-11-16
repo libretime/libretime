@@ -51,20 +51,6 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::SetWeekStartDay($values["weekStartDay"]);
                 Application_Model_Preference::setRadioPageDisplayLoginButton($values["radioPageLoginButton"]);
 
-                if (!Application_Model_Preference::getStationPodcastPrivacy() && $values["stationPodcastPrivacy"] == 1) {
-                    // Refresh the download key when enabling privacy
-                    Application_Model_Preference::setStationPodcastDownloadKey();
-                }
-
-                // Append sharing token (download key) to Station podcast URL
-                $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
-                $key = Application_Model_Preference::getStationPodcastDownloadKey();
-                $url = Application_Common_HTTPHelper::getStationUrl() .
-                    (((int) $values["stationPodcastPrivacy"]) ? "feeds/station-rss?sharing_token=$key" : "feeds/station-rss");
-                $stationPodcast->setDbUrl($url)->save();
-                Application_Model_Preference::setStationPodcastPrivacy($values["stationPodcastPrivacy"]);
-
-
                 $logoUploadElement = $form->getSubForm('preferences_general')->getElement('stationLogo');
                 $logoUploadElement->receive();
                 $imagePath = $logoUploadElement->getFileName();
@@ -95,6 +81,28 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->logoImg = Application_Model_Preference::GetStationLogo();
 
         $this->view->form = $form;
+    }
+
+    public function stationPodcastSettingsAction() {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $values = json_decode($this->getRequest()->getRawBody());
+
+        if (!Application_Model_Preference::getStationPodcastPrivacy() && $values->stationPodcastPrivacy == 1) {
+            // Refresh the download key when enabling privacy
+            Application_Model_Preference::setStationPodcastDownloadKey();
+        }
+
+        // Append sharing token (download key) to Station podcast URL
+        $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
+        $key = Application_Model_Preference::getStationPodcastDownloadKey();
+        $url = Application_Common_HTTPHelper::getStationUrl() .
+            (((int) $values->stationPodcastPrivacy) ? "feeds/station-rss?sharing_token=$key" : "feeds/station-rss");
+        $stationPodcast->setDbUrl($url)->save();
+        Application_Model_Preference::setStationPodcastPrivacy($values->stationPodcastPrivacy);
+
+        $this->_helper->json->sendJson(array("url" => $url));
     }
 
     public function supportSettingAction()
