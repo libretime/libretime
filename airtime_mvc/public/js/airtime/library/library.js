@@ -1466,7 +1466,7 @@ var AIRTIME = (function(AIRTIME) {
             $.each(selected, function () {
                 if (this.ingested < 0) isValid = false;
                 var isImported  = !$.isEmptyObject(this.file);
-                if (shouldBeImported ? isImported : !isImported) {
+                if (shouldBeImported ? !isImported : isImported) {
                     isValid = false;
                 }
             });
