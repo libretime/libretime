@@ -82,6 +82,7 @@ class IndexController extends Zend_Controller_Action
 
         $stationName = Application_Model_Preference::GetStationName();
         $this->view->podcastTitle = sprintf(_("%s Podcast"), !empty($stationName) ? $stationName : $CC_CONFIG["stationId"]);
+        $this->view->emptyPodcastMessage = _("No tracks have been published yet.");
 
     }
 
