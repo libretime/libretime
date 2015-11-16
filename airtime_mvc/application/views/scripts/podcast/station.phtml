@@ -5,9 +5,13 @@
                 <h2>
                     <span class="title_obj_name"><?php echo _("My Podcast") ?></span>
                 </h2>
+                <button ng-click="savePodcast()" class="btn" title='<?php echo _("Save station podcast") ?>' type="button">
+                    <?php echo _("Save") ?>
+                </button>
                 <a href="{{podcast.url}}" target="_blank">
                     <button class="btn"><?php echo _("View Feed") ?></button>
                 </a>
+                <div class='success' style='display:none'></div>
             </div>
             <form class="podcast-metadata">
                 <?php echo $this->form->getElement('csrf') ?>
@@ -87,7 +91,7 @@
                         <?php echo _("Save") ?>
                     </button>
                 </div>
-                <div class='success' style='display:none'></span></div>
+                <div class='success' style='display:none'></div>
             </div>
         </div>
 

@@ -34,14 +34,18 @@ var AIRTIME = (function (AIRTIME) {
         $scope.csrf = jQuery("#csrf").val();
         view.find("table").attr("id", "podcast_episodes_" + podcast.id);
 
+        self.onSaveCallback = function () {
+            AIRTIME.library.podcastDataTable.fnDraw();
+            tab.close();
+        };
+
         /**
          * Save and update the podcast object.
          */
         $scope.savePodcast = function () {
             $http.put(endpoint + $scope.podcast.id, {csrf_token: $scope.csrf, podcast: $scope.podcast})
                 .success(function () {
-                    AIRTIME.library.podcastDataTable.fnDraw();
-                    !tab || tab.close();
+                    self.onSaveCallback();
                 });
         };
 
@@ -96,7 +100,20 @@ var AIRTIME = (function (AIRTIME) {
     function StationPodcastController($scope, $http, podcast, tab) {
         // Super call to parent controller
         PodcastController.call(this, $scope, $http, podcast, tab);
-
+        this.onSaveCallback = function () {
+            $http({
+                method: 'POST',
+                url: '/preference/station-podcast-settings',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
+            }).success(function (data) {
+                $("#preferences_podcast-stationPodcastFeedUrl").val(data.url);
+                $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
+                setTimeout(function () {
+                    $(".success").slideUp("fast");
+                }, 2000);
+            });
+        };
         return this;
     }
 

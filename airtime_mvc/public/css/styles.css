@@ -4001,6 +4001,10 @@ li .ui-state-hover {
     flex: 1 100%;
 }
 
+.station_podcast_wrapper {
+    min-width: 50%;
+}
+
 .angular_wrapper legend {
     background-color: #242424;
     color: #efefef;
