@@ -13,7 +13,7 @@ way to fit your requirements.
 	/*padding:7px 0 0 6px;*/
 	margin:0;
 	list-style:none;
-	height:28px;
+	/*height:28px;*/
 	background:#353535;
 	position:relative;
 	z-index:500;
@@ -23,6 +23,11 @@ way to fit your requirements.
     -moz-box-shadow: 0 2px 5px rgba(0,0,0,.35);
     -webkit-box-shadow: 0 2px 5px rgba(0,0,0,.35);
     box-shadow: 0 2px 5px rgba(0,0,0,.35);*/
+	-webkit-flex: 1 0 auto;
+	-moz-flex: 1 0 auto;
+	-ms-flex: 1 0 auto;
+	-o-flex: 1 0 auto;
+	flex: 1 0 auto;
 }
 #nav li.top {
 	/*margin:0 5px 0 0;*/

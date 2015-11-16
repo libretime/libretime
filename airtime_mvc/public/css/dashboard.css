@@ -293,6 +293,10 @@ thead th.ui-state-default:focus {
     left: 4px;
     z-index: 1; /* Display above the content wrapper */
 
+    -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
     flex: 1 100%;
 }
 
@@ -447,6 +451,10 @@ li.ui-state-default {
 
     overflow: hidden;
 
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -o-flex: 1;
     flex: 1;
 }
 
@@ -507,6 +515,10 @@ li.ui-state-default {
 .inner_editor_wrapper {
     overflow-x: hidden;
     width: 100%;
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
     flex: 1 0 auto;
     padding: 10px;
     -webkit-box-sizing: border-box;
@@ -543,14 +555,17 @@ li.ui-state-default {
 }
 
 .spl-no-r-margin {
-    margin-right: 0px;
+    margin-right: 0;
 }
 
 .spl_sortable {
     height: 100%;
     overflow: auto;
-    flex: 1 100%;
     -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
+    flex: 1 100%;
 
     margin: 4px 0;
     min-height: 0;
@@ -585,6 +600,10 @@ li.ui-state-default {
 
     font-size: 20px;
 
+    -webkit-flex: 1 1 auto;
+    -moz-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    -o-flex: 1 1 auto;
     flex: 1 1 auto;
     /* Position the text label inside it centered*/
     display: -webkit-box;
