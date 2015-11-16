@@ -25,7 +25,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <?php if ($this->suspended && $this->isTrial()) : ?>
         <?php echo $this->partial('partialviews/suspendedtrial.phtml'); ?>
     <?php elseif ($this->suspended && !$this->isTrial()) : ?>
-        <?php echo $this->partial('partialviews/trial.phtml'); ?>
+        <?php echo $this->partial('partialviews/suspended.phtml'); ?>
     <?php else : ?>
 
     <?php echo $this->versionNotify();
