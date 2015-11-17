@@ -437,7 +437,7 @@ class Application_Service_PodcastService
                 //itunes:explicit - skip this?
 
                 //itunes:duration
-                self::addEscapedChild($item, "xmlns:itunes:duration", $publishedFile->getDbLength());
+                self::addEscapedChild($item, "xmlns:itunes:duration", explode('.', $publishedFile->getDbLength())[0]);
             }
 
             return $xml->asXML();
