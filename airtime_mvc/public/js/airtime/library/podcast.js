@@ -516,6 +516,8 @@ var AIRTIME = (function (AIRTIME) {
 
             remainingDiskSpace -= this.enclosure.length;
         });
+
+        dt.clearSelection();
     };
 
     /**

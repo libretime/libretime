@@ -1386,6 +1386,7 @@ var AIRTIME = (function(AIRTIME) {
             });
 
         var openPodcastEpisodeTable = function (podcast) {
+            $("#library_filter").append(" - " + podcast.title);
             mod.podcastEpisodeTableWidget.reload(podcast.id);
             mod.podcastTableWidget.clearSelection();
             mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
@@ -1427,7 +1428,6 @@ var AIRTIME = (function(AIRTIME) {
         // in the left-hand pane.
         mod.podcastTableWidget.assignDblClickHandler(function () {
             var podcast = mod.podcastDataTable.fnGetData(this);
-            $("#library_filter").append(" - " + $(this).find(".library_title").text());
             openPodcastEpisodeTable(podcast);
         });
 
@@ -1489,7 +1489,6 @@ var AIRTIME = (function(AIRTIME) {
                     click: function () {
                         var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
                         AIRTIME.podcast.importSelectedEpisodes(episodes, mod.podcastEpisodeTableWidget);
-                        mod.podcastEpisodeTableWidget.clearSelection();
                     }
                 },
                 validateConstraints: function () {

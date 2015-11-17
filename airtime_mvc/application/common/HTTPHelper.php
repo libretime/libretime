@@ -18,7 +18,14 @@ class Application_Common_HTTPHelper
         );
     }
 
-    public static function getStationUrl()
+    /**
+     * Construct the base station URL
+     *
+     * @param boolean $secured whether or not to use HTTPS
+     *
+     * @return string the station URL
+     */
+    public static function getStationUrl($secured = true)
     {
         $CC_CONFIG = Config::getConfig();
         $baseUrl = $CC_CONFIG['baseUrl'];
@@ -32,7 +39,7 @@ class Application_Common_HTTPHelper
         }
 
         $scheme = "http";
-        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+        if ($secured && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
             $scheme = "https";
             $basePort = "443"; //Airtime Pro compatibility hack
         }
