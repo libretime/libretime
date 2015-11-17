@@ -387,8 +387,10 @@ class Application_Service_PodcastService
             // Need to split categories into separate tags
             $itunesCategories = explode(",", $podcast->getDbItunesCategory());
             foreach ($itunesCategories as $c) {
-                $category = $channel->addChild("xmlns:itunes:category");
-                $category->addAttribute("text", $c);
+                if (!empty($c)) {
+                    $category = $channel->addChild("xmlns:itunes:category");
+                    $category->addAttribute("text", $c);
+                }
             }
 
             $episodes = PodcastEpisodesQuery::create()->filterByDbPodcastId($stationPodcastId)->find();
