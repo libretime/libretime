@@ -15,6 +15,7 @@ body {
     bottom: 0px;
     height: 120px;
     background: #fff;
+    display: flex;
 }
 
 .bottom_bar .cont_btn {
@@ -37,9 +38,8 @@ body {
 }
 
 .on_air {
-    display: inline-block;
     margin-left: 40px;
-    width: 55%
+    flex-grow: 1;
 }
 
 .bottom_bar p.now_playing {
@@ -75,6 +75,7 @@ body {
     background: url('img/podcast.png') no-repeat center 0px;
 }
 
+
 .bottom_bar .station_rss_btn.current {
     background: url('img/podcast.png') no-repeat center -50px;
 }
@@ -104,6 +105,10 @@ body {
     float: right;
 }
 
+.bottom_bar .radio_tab_label {
+    margin-top: 60px;
+}
+
 @media (max-width: 1230px) {
     .on_air {
         width: 50%;
@@ -131,6 +136,10 @@ body {
 @media (max-width: 780px) {
     .bottom_bar {
         height: 80px;
+    }
+
+    .bottom_bar .flex_spacer {
+        flex-grow: 1;
     }
 
     .bottom_bar .play {
