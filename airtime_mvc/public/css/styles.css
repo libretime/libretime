@@ -2870,14 +2870,14 @@ dt.block-display.info-block {
     padding:350px 0 10px 0;
     font-size:36px;
     font-weight:bold;
-    color:#3e3e3e;
+    color: #8e8e8e;
     text-align:center;
     letter-spacing:-.3px;
     text-shadow: rgba(248,248,248,.3) 0 1px 0, rgba(0,0,0,.8) 0 -1px 0;
     rgba(51,51,51,.9)
 }
 .error-content p {
-    color: #272727;
+    color: #acacac;
     font-size: 16px;
     text-align:center;
     margin: 0;
@@ -4286,4 +4286,51 @@ li .ui-state-hover {
     display: inline-block;
     float: right;
     width: 50%;
+}
+
+#upgrade-feature-locked {
+    margin: 0 auto;
+    width: 50%;
+    padding: 50px;
+    z-index: 99999;
+}
+#upgrade-feature-locked h2 {
+    font-size: 26px;
+}
+#upgrade-feature-locked h3 {
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 10px;
+}
+
+/** Override overzealous CSS rules :-( */
+#upgrade-feature-locked ul, #upgrade-feature-locked li {
+    float: initial;
+    list-style-type: disc;
+}
+#upgrade-feature-locked li {
+    display: list-item;
+}
+#upgrade-feature-locked p, #upgrade-feature-locked li {
+    color: #f0f0f0;
+    font-size: 14px;
+    margin-top: 10px;
+    list-style-type: disc;
+}
+
+.upgrade-cta-button {
+    background-color:#e76400;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 3px;
+    width: 140px;
+    font-size: 18px;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color: #f0f0f0;
+}
+.upgrade-cta-button a {
+    text-decoration: none;
+    color: #f0f0f0;
 }

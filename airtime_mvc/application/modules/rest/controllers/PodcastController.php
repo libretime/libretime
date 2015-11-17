@@ -84,6 +84,7 @@ class Rest_PodcastController extends Zend_Rest_Controller
             $podcast = Application_Service_PodcastService::createFromFeedUrl($requestData["url"]);
 
             $path = 'podcast/podcast.phtml';
+
             $this->view->podcast = $podcast;
             $this->_helper->json->sendJson(array(
                                                "podcast"=>json_encode($podcast),
@@ -176,10 +177,11 @@ class Rest_PodcastController extends Zend_Rest_Controller
                 }
                 break;
             case HttpRequestType::GET:
+                $path = 'podcast/podcast.phtml';
                 foreach($ids as $id) {
                     $responseBody[] = array(
                         "podcast"   => json_encode(Application_Service_PodcastService::getPodcastById($id)),
-                        "html"      => $this->view->render('podcast/podcast.phtml')
+                        "html"      => $this->view->render($path)
                     );
                 }
                 break;

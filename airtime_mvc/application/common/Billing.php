@@ -374,4 +374,13 @@ class Billing
             return 0;
         }
     }
+
+    public static function isStationPodcastAllowed() {
+        $planLevel = Application_Model_Preference::GetPlanLevel();
+        if ($planLevel == "hobbyist") {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
