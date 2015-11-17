@@ -160,7 +160,7 @@ class Application_Service_PodcastService
 
         $podcast->setDbDescription(Application_Model_Preference::GetStationDescription());
         $podcast->setDbLink(Application_Common_HTTPHelper::getStationUrl());
-        $podcast->setDbLanguage(Application_Model_Preference::GetLocale());
+        $podcast->setDbLanguage(explode('_', Application_Model_Preference::GetLocale())[0]);
         $podcast->setDbCreator(Application_Model_Preference::GetStationName());
         $podcast->setDbOwner(self::getOwnerId());
         $podcast->save();
@@ -406,7 +406,9 @@ class Application_Service_PodcastService
 
                 //category
                 foreach($itunesCategories as $c) {
-                    self::addEscapedChild($item, "category", $c);
+                    if (!empty($c)) {
+                        self::addEscapedChild($item, "category", $c);
+                    }
                 }
 
                 //guid

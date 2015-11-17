@@ -1427,6 +1427,7 @@ var AIRTIME = (function(AIRTIME) {
         // in the left-hand pane.
         mod.podcastTableWidget.assignDblClickHandler(function () {
             var podcast = mod.podcastDataTable.fnGetData(this);
+            $("#library_filter").append(" - " + $(this).find(".library_title").text());
             openPodcastEpisodeTable(podcast);
         });
 
@@ -1448,6 +1449,7 @@ var AIRTIME = (function(AIRTIME) {
                     elementId       : '',
                     eventHandlers   : {
                         click: function () {
+                            $("#library_filter").text($.i18n._("Podcasts"));
                             mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST);
                         }
                     },
