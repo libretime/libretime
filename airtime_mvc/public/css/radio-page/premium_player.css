@@ -64,6 +64,7 @@ body {
 
 .bottom_bar .button {
     width: 50px;
+    min-width: 50px;
     height: 50px;
     display: inline-block;
     margin: 35px 40px;

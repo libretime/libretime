@@ -369,16 +369,27 @@ div.jp-title,
 	display: block;
 	text-transform: uppercase;
 	clear: both;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	word-wrap: break-word;
 }
 
 .current-track span {
-	display: inline-block;
+	display: inline;
 	margin-left:10px;
 	color: #FF6F01;
+	width: 90%;
+}
+
+.track-overflow {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .podcast ul li .podcast_info {
 	display: inline-block;
+	width: 99%;
 }
 
 .podcast ul li span, .playlist-item-no-preview span {
@@ -569,6 +580,7 @@ div.jp-jplayer {
 		height: 60px;
 	}
 }
+
 
 @media (max-width: 590px) {
 	.jp-time-block {
