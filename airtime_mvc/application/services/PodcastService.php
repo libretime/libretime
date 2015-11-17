@@ -440,7 +440,13 @@ class Application_Service_PodcastService
                 self::addEscapedChild($item, "xmlns:itunes:duration", $publishedFile->getDbLength());
             }
 
-            return $xml->asXML();
+            //Format it nicely with newlines...
+            $dom = new DOMDocument();
+            $dom->loadXML($xml->asXML());
+            $dom->formatOutput = true;
+            $formattedXML = $dom->saveXML();
+
+            return $formattedXML;
 
         } catch (FeedException $e) {
             return false;
