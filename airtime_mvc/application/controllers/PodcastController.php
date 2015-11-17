@@ -26,6 +26,12 @@ class PodcastController extends Zend_Controller_Action {
      * Renders the Station podcast view
      */
     public function stationAction() {
+
+        if (!Billing::isStationPodcastAllowed()) {
+            $this->render("featureupgrade-page");
+            return;
+        }
+
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
         $podcast = Application_Service_PodcastService::getPodcastById($stationPodcastId);
         $this->view->podcast = json_encode($podcast);
