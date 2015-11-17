@@ -36,7 +36,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             "upgrade",
             'whmcs-login',
             "provisioning",
-            "embed"
+            "embed",
+            "feeds"
         ))
         ) {
             //Start the session
