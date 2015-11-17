@@ -237,7 +237,8 @@ class PodcastTask implements AirtimeTask {
      * @return bool true if the podcast polling interval has passed
      */
     public function shouldBeRun() {
-        return PodcastManager::hasPodcastPollIntervalPassed();
+        $overQuota = Application_Model_Systemstatus::isDiskOverQuota();
+        return !$overQuota && PodcastManager::hasPodcastPollIntervalPassed();
     }
 
     /**

@@ -67,6 +67,9 @@
 
 #library_title {
     padding: 5px 5px 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 #library_content {

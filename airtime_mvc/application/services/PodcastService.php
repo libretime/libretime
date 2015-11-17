@@ -160,7 +160,7 @@ class Application_Service_PodcastService
 
         $podcast->setDbDescription(Application_Model_Preference::GetStationDescription());
         $podcast->setDbLink(Application_Common_HTTPHelper::getStationUrl());
-        $podcast->setDbLanguage(Application_Model_Preference::GetLocale());
+        $podcast->setDbLanguage(explode('_', Application_Model_Preference::GetLocale())[0]);
         $podcast->setDbCreator(Application_Model_Preference::GetStationName());
         $podcast->setDbOwner(self::getOwnerId());
         $podcast->save();
@@ -387,8 +387,10 @@ class Application_Service_PodcastService
             // Need to split categories into separate tags
             $itunesCategories = explode(",", $podcast->getDbItunesCategory());
             foreach ($itunesCategories as $c) {
-                $category = $channel->addChild("xmlns:itunes:category");
-                $category->addAttribute("text", $c);
+                if (!empty($c)) {
+                    $category = $channel->addChild("xmlns:itunes:category");
+                    $category->addAttribute("text", $c);
+                }
             }
 
             $episodes = PodcastEpisodesQuery::create()->filterByDbPodcastId($stationPodcastId)->find();
@@ -406,7 +408,9 @@ class Application_Service_PodcastService
 
                 //category
                 foreach($itunesCategories as $c) {
-                    self::addEscapedChild($item, "category", $c);
+                    if (!empty($c)) {
+                        self::addEscapedChild($item, "category", $c);
+                    }
                 }
 
                 //guid
@@ -437,7 +441,7 @@ class Application_Service_PodcastService
                 //itunes:explicit - skip this?
 
                 //itunes:duration
-                self::addEscapedChild($item, "xmlns:itunes:duration", $publishedFile->getDbLength());
+                self::addEscapedChild($item, "xmlns:itunes:duration", explode('.', $publishedFile->getDbLength())[0]);
             }
 
             return $xml->asXML();
