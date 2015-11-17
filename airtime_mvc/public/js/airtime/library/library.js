@@ -1301,8 +1301,8 @@ var AIRTIME = (function(AIRTIME) {
         }
         var dt = $datatables[table],
             wrapper = $(dt).closest(".dataTables_wrapper");
-        if (oTable && typeof oTable.fnClearTable === 'function') {
-            oTable.fnClearTable(false);
+        if (dt && typeof dt.fnClearTable === 'function') {
+            dt.fnClearTable(false);
         }
         // Don't redraw if we're switching to another hash for the library table
         $.when(redraw ? dt.fnDraw() : function () {}).done(function () {
@@ -1386,6 +1386,7 @@ var AIRTIME = (function(AIRTIME) {
             });
 
         var openPodcastEpisodeTable = function (podcast) {
+            $("#library_filter").append(" - " + podcast.title);
             mod.podcastEpisodeTableWidget.reload(podcast.id);
             mod.podcastTableWidget.clearSelection();
             mod.setCurrentTable(mod.DataTableTypeEnum.PODCAST_EPISODES);
@@ -1427,7 +1428,6 @@ var AIRTIME = (function(AIRTIME) {
         // in the left-hand pane.
         mod.podcastTableWidget.assignDblClickHandler(function () {
             var podcast = mod.podcastDataTable.fnGetData(this);
-            $("#library_filter").append(" - " + $(this).find(".library_title").text());
             openPodcastEpisodeTable(podcast);
         });
 

@@ -40,7 +40,6 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
         $this->addElement('image', 'SoundCloudConnect', array(
             'src'        => 'http://connect.soundcloud.com/2/btn-connect-sc-l.png',
-            'target'     => '_blank',
             'decorators' => array(
                 'ViewHelper'
             )
@@ -48,7 +47,6 @@ class Application_Form_SoundcloudPreferences extends Zend_Form_SubForm
 
         $this->addElement('image', 'SoundCloudDisconnect', array(
             'src'        => 'http://connect.soundcloud.com/2/btn-disconnect-l.png',
-            'target'     => '_blank',
             'decorators' => array(
                 'ViewHelper'
             )

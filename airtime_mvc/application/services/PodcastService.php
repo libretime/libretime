@@ -152,14 +152,14 @@ class Application_Service_PodcastService
     public static function createStationPodcast()
     {
         $podcast = new Podcast();
-        $podcast->setDbUrl(Application_Common_HTTPHelper::getStationUrl() . "feeds/station-rss");
+        $podcast->setDbUrl(Application_Common_HTTPHelper::getStationUrl(false) . "feeds/station-rss");
 
         $title = Application_Model_Preference::GetStationName();
         $title = empty($title) ? "My Station's Podcast" : $title;
         $podcast->setDbTitle($title);
 
         $podcast->setDbDescription(Application_Model_Preference::GetStationDescription());
-        $podcast->setDbLink(Application_Common_HTTPHelper::getStationUrl());
+        $podcast->setDbLink(Application_Common_HTTPHelper::getStationUrl(false));
         $podcast->setDbLanguage(explode('_', Application_Model_Preference::GetLocale())[0]);
         $podcast->setDbCreator(Application_Model_Preference::GetStationName());
         $podcast->setDbOwner(self::getOwnerId());
@@ -368,11 +368,11 @@ class Application_Service_PodcastService
             self::addEscapedChild($channel, "language", $podcast->getDbLanguage());
             self::addEscapedChild($channel, "copyright", $podcast->getDbCopyright());
 
-            $imageUrl = Application_Common_HTTPHelper::getStationUrl()."images/airtime_logo.png";
+            $imageUrl = Application_Common_HTTPHelper::getStationUrl(false)."images/airtime_logo.png";
             $image = $channel->addChild("image");
             $image->addChild("title", "image title");
             self::addEscapedChild($image, "url", $imageUrl);
-            self::addEscapedChild($image, "link", Application_Common_HTTPHelper::getStationUrl());
+            self::addEscapedChild($image, "link", Application_Common_HTTPHelper::getStationUrl(false));
 
             $xml->addAttribute('xmlns:xmlns:itunes', ITUNES_XML_NAMESPACE_URL);
             self::addEscapedChild($channel, "xmlns:itunes:author", $podcast->getDbItunesAuthor());
