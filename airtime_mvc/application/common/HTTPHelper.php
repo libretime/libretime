@@ -44,7 +44,12 @@ class Application_Common_HTTPHelper
             $basePort = "443"; //Airtime Pro compatibility hack
         }
 
-        $stationUrl = "$scheme://${baseUrl}:${basePort}${baseDir}";
+        $portStr = "";
+        if (!(($scheme == "http" && $basePort == "80")
+            || ($scheme == "https" && $basePort == "443"))) {
+            $portStr = ":${basePort}";
+        }
+        $stationUrl = "$scheme://${baseUrl}${portStr}${baseDir}";
 
         return $stationUrl;
     }

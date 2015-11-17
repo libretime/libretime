@@ -32,7 +32,7 @@ class PodcastEpisodes extends BasePodcastEpisodes
         if ($podcast) {
             $fileId = $this->getDbFileId();
             $key = Application_Model_Preference::getStationPodcastDownloadKey();
-            return Application_Common_HTTPHelper::getStationUrl()."rest/media/$fileId/download?download_key=$key";
+            return Application_Common_HTTPHelper::getStationUrl(false)."rest/media/$fileId/download?download_key=$key";
         }
         return parent::getDbDownloadUrl();
     }
