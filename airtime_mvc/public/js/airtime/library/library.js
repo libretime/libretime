@@ -1301,8 +1301,8 @@ var AIRTIME = (function(AIRTIME) {
         }
         var dt = $datatables[table],
             wrapper = $(dt).closest(".dataTables_wrapper");
-        if (oTable && typeof oTable.fnClearTable === 'function') {
-            oTable.fnClearTable(false);
+        if (dt && typeof dt.fnClearTable === 'function') {
+            dt.fnClearTable(false);
         }
         // Don't redraw if we're switching to another hash for the library table
         $.when(redraw ? dt.fnDraw() : function () {}).done(function () {
@@ -1489,6 +1489,7 @@ var AIRTIME = (function(AIRTIME) {
                     click: function () {
                         var episodes = mod.podcastEpisodeTableWidget.getSelectedRows();
                         AIRTIME.podcast.importSelectedEpisodes(episodes, mod.podcastEpisodeTableWidget);
+                        mod.podcastEpisodeTableWidget.clearSelection();
                     }
                 },
                 validateConstraints: function () {
