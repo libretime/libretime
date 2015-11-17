@@ -1195,7 +1195,8 @@ input[type="checkbox"] {
 }
 
 #pref_form dt, #pref_form dd,
-#pref_form textarea, #clientdetails_form dd {
+#pref_form textarea, #clientdetails_form dd,
+.podcast-metadata dt, .podcast-metadata dd {
     display:block;
     float:none;
     margin-left:0;

@@ -74,7 +74,17 @@
 
                 <h3 class="collapsible-header" id="podcast-heading"><span class="arrow-icon"></span><?php echo _("Privacy Settings"); ?></h3>
                 <div class="collapsible-content" id="podcast-settings">
-                    <?php echo $this->form->getSubform('preferences_podcast') ?>
+                    <fieldset class="padded">
+                        <dl>
+                            <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderLabel() ?>
+                            <div id="podcast-privacy-options">
+                                <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderViewHelper() ?>
+                            </div>
+                            <div style="clear:both"></div>
+                            <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastFeedUrl") ?>
+
+                        </dl>
+                    </fieldset>
                 </div>
 
                 <p id="station_podcast_help_text">
