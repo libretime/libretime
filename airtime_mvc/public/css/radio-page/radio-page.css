@@ -147,13 +147,12 @@ span.login-img {
     padding: 10px;
 }
 #rss-title {
-    float:left;
-    width:60%;
-    text-align:right;
+    text-align:left;
     font-size: 28px;
     font-weight: 300;
 }
 #rss-subscribe {
+    float: right;
     overflow:hidden;
     text-align: right;
 }
