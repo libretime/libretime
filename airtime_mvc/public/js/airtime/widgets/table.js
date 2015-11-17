@@ -94,7 +94,7 @@ var AIRTIME = (function(AIRTIME) {
             "fnPreDrawCallback": function () {
                 $("#draggingContainer").remove();
             },
-            "fnServerData": self._fetchData,
+            "fnServerData": self._fetchData.bind(self),
             //"fnInitComplete" : function() { self._setupEventHandlers(bItemSelection) }
             "fnDrawCallback": function () {
                 self.clearSelection();
@@ -421,12 +421,14 @@ var AIRTIME = (function(AIRTIME) {
 
         var sortColName = "";
         var sortDir = "";
+        var search = self._$wrapperDOMNode.closest(".dataTables_wrapper").find(".dataTables_filter").find("input").val();
         if (oSettings.aaSorting.length > 0) {
             var sortColIdx = oSettings.aaSorting[0][0];
             sortColName = oSettings.aoColumns[sortColIdx].mDataProp;
             sortDir = oSettings.aaSorting[0][1].toUpperCase();
         }
 
+        // FIXME: We should probably just be sending aoData back here..?
         $.ajax({
             "dataType": 'json',
             "type": "GET",
@@ -435,7 +437,8 @@ var AIRTIME = (function(AIRTIME) {
                 "limit": oSettings._iDisplayLength,
                 "offset": oSettings._iDisplayStart,
                 "sort": sortColName,
-                'sort_dir': sortDir,
+                "sort_dir": sortDir,
+                "search": search
             },
             "success": function (json, textStatus, jqXHR) {
                 var rawResponseJSON = json;

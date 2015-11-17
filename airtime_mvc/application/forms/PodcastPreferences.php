@@ -10,8 +10,12 @@ class Application_Form_PodcastPreferences extends Zend_Form_SubForm {
                                                     _("Public"),
                                                     _("Private"),
                                                 ));
+        $stationPodcastPrivacy->setSeparator(' ');
+        $stationPodcastPrivacy->addDecorator('HtmlTag', array('tag' => 'dd',
+            'id'=>"stationPodcastPrivacy-element",
+            'class' => 'radio-inline-list',
+        ));
         $stationPodcastPrivacy->setValue($isPrivate);
-        $stationPodcastPrivacy->setDecorators(array('ViewHelper', 'Label'));
         $this->addElement($stationPodcastPrivacy);
 
         $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
@@ -22,7 +26,6 @@ class Application_Form_PodcastPreferences extends Zend_Form_SubForm {
             ->setRequired(false)
             ->setLabel(_("Feed URL"))
             ->setValue($url);
-        $feedUrl->setDecorators(array('ViewHelper', 'Label'));
         $this->addElement($feedUrl);
     }
 
