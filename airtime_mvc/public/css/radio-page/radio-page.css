@@ -80,22 +80,20 @@ span.login-img {
     transition-delay: 2s;
 }
 
-#schedule_iframe.schedule, .about_us, .login, .podcast {
+.tab_content {
     /*	-webkit-transition-delay: 1s;
         transition-delay: 1s;*/
-    transition: all 0.4s ease;
+    transition: opacity 0.4s ease 0.4s;
     opacity: 0;
 }
 
-.about_us.current, .login.current, .schedule.current, .podcast.current {
+.current {
     opacity: 1;
-    -webkit-transition-delay: 0.4s;
-    transition-delay: 0.4s;
+    -webkit-transition: opacity 0.4s ease 0.0s;
+    transition: opacity 0.4s ease 0.0s;
 }
 
-#schedule_iframe.schedule.current {
-    opacity: 1;
-}
+
 
 .about_us h1 {
     font-size: 80px; /** Fallback if vw is not suppoted */
@@ -163,9 +161,6 @@ span.login-img {
         margin-right:0;
         width:auto;
         border:0;
-    }
-    #rss-title, #rss-subscribe {
-        text-align: center;
     }
 }
 
