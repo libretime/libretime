@@ -368,7 +368,7 @@ class Application_Service_PodcastService
             self::addEscapedChild($channel, "language", $podcast->getDbLanguage());
             self::addEscapedChild($channel, "copyright", $podcast->getDbCopyright());
 
-            $imageUrl = Application_Common_HTTPHelper::getStationUrl(false)."images/airtime_logo.png";
+            $imageUrl = Application_Common_HTTPHelper::getStationUrl(false)."api/station-logo";
             $image = $channel->addChild("image");
             $image->addChild("title", "image title");
             self::addEscapedChild($image, "url", $imageUrl);
