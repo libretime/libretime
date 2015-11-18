@@ -536,13 +536,13 @@ class ApiController extends Zend_Controller_Action
             $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
             finfo_close($f);
             
-            header("Content-type: " . $mime_type);
+            header("Content-Type: " . $mime_type);
             echo $blob;
         } else {
             header('HTTP/1.0 401 Unauthorized');
-            print _('You are not allowed to access this resource. ');
+            print _('You are not allowed to access this resource.');
             exit;
-        }    
+        }
     }
     
     public function scheduleAction()

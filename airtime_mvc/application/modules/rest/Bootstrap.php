@@ -60,18 +60,32 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
 
         /** MediaController Routes **/
         $downloadRoute = new Zend_Controller_Router_Route(
-            'rest/media/:id/download/:download_key',
+            'rest/media/:id/download',
             array(
                 'controller' => 'media',
                 'action' => 'download',
                 'module' => 'rest'
             ),
             array(
-                'id' => '\d+',
-                'download_key' => '\w*'
+                'id' => '\d+'
             )
         );
         $router->addRoute('download', $downloadRoute);
+
+        $podcastEpisodeDownloadRoute = new Zend_Controller_Router_Route_Regex(
+            'rest/media/(?<id>\d+)/download/(?<download_key>.+)\.(?<file_ext>\w+)',
+            array(
+                'controller' => 'media',
+                'action' => 'download',
+                'module' => 'rest'
+            ),
+            array(
+                1 => "id",
+                2 => "download_key",
+                3 => "file_ext"
+            )
+        );
+        $router->addRoute('podcast-episode-download', $podcastEpisodeDownloadRoute);
 
         $clearLibraryRoute = new Zend_Controller_Router_Route(
             'rest/media/clear',

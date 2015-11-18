@@ -16,7 +16,7 @@
             $logoImg = $this->element->getView()->logoImg;
             $src = "data:image/png;base64,".$logoImg;
             ?>
-            <img onError="this.onerror = '';this.style.visibility='hidden';$('#logo-remove-btn').hide();$('[id^=stationLogoRemove]').each(function(i,v){v.style.width=v.style.height=v.style.margin=v.style.padding='0px';});" id="logo-img" onload='resizeImg(this, 450, 450);' src="<?php echo $src ?>" />
+            <img onError="this.onerror = '';this.style.visibility='hidden';$('#logo-remove-btn').hide();$('[id^=stationLogoRemove]').each(function(i,v){v.style.width=v.style.height=v.style.margin=v.style.padding='0px';});" id="logo-img" onload='/*resizeImg(this, 450, 450);*/' src="<?php echo $src ?>" />
         </div>
 
         <?php echo $this->element->getElement('locale')->render() ?>

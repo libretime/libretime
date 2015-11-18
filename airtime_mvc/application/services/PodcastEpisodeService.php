@@ -193,7 +193,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     public function publish($fileId) {
         $id = Application_Model_Preference::getStationPodcastId();
-        $url = $guid = Application_Common_HTTPHelper::getStationUrl(false)."rest/media/$fileId/download";
+        $url = $guid = Application_Common_HTTPHelper::getStationUrl()."rest/media/$fileId/download";
         if (!PodcastEpisodesQuery::create()
             ->filterByDbPodcastId($id)
             ->findOneByDbFileId($fileId)) {  // Don't allow duplicate episodes
