@@ -126,7 +126,8 @@ class Billing
             }
             else
             {
-                if ($product["status"] === "Active") {
+                if ($product["status"] === "Active" ||
+                    $product["status"] === "Suspended") {
                     $airtimeProduct = $product;
                     $subdomain = '';
 

@@ -21,6 +21,12 @@ class BillingController extends Zend_Controller_Action {
 
     public function upgradeAction()
     {
+        //If you're not on a trial and you're suspended, we don't let you access the plans page and redirect you to the invoices
+        //page to force you to pay your bills first.
+        $isTrial = (Application_Model_Preference::GetPlanLevel() == 'trial');
+        if (!$isTrial && (Application_Model_Preference::getProvisioningStatus() == PROVISIONING_STATUS_SUSPENDED)) {
+            $this->_redirect('billing/invoices');
+        }
 
         Zend_Layout::getMvcInstance()->assign('parent_page', 'Billing');
 

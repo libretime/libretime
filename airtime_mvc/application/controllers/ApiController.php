@@ -73,6 +73,7 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-cue-values-by-silan'    , 'json')
                 ->addActionContext('get-usability-hint'            , 'json')
                 ->addActionContext('poll-celery'                   , 'json')
+                ->addActionContext('recalculate-schedule'          , 'json') //RKTN-260
                 ->initContext();
     }
 
@@ -1524,9 +1525,40 @@ class ApiController extends Zend_Controller_Action
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
 
         foreach ($streamData as $stream) {
-            $m3uFile .= "#EXTINF,".$stationName." - " . strtoupper($stream['codec']) . "\r\n";
+            $m3uFile .= "#EXTINF," . $stationName . " - " . strtoupper($stream['codec']) . "\r\n";
             $m3uFile .= $stream['url'] . "\r\n\r\n";
         }
         echo $m3uFile;
+    }
+
+    public function recalculateScheduleAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        Zend_Session::start();
+
+        $scheduler = new Application_Model_Scheduler();
+        session_write_close();
+
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+
+        $showInstances =  CcShowInstancesQuery::create()
+            ->filterByDbStarts($now, Criteria::GREATER_THAN)
+            //->filterByDbModifiedInstance(false)
+            ->orderByDbStarts()
+            ->find();
+            //->find($this->con);
+        $total = $showInstances->count();
+        $progress = 0;
+        foreach ($showInstances as $instance) {
+            echo(round(floatval($progress / $total)*100) . "% - " . $instance->getDbId() . "\n<br>");
+            flush();
+            ob_flush();
+            //while(@ob_end_clean());
+            $scheduler->removeGaps2($instance->getDbId());
+            $progress += 1;
+        }
+        echo("Recalculated $total shows.");
     }
 }

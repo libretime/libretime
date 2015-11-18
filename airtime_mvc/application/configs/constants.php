@@ -42,6 +42,7 @@ define('DEFAULT_MICROTIME_FORMAT', 'Y-m-d H:i:s.u');
 define('DEFAULT_ICECAST_PORT', 8000);
 define('DEFAULT_ICECAST_PASS', 'hackme');
 define('DEFAULT_SHOW_COLOR', '76aca5');
+define('DEFAULT_INTERVAL_FORMAT', 'H:i:s.u');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');
