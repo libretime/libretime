@@ -370,7 +370,7 @@ class Application_Service_PodcastService
 
             $imageUrl = Application_Common_HTTPHelper::getStationUrl(false)."api/station-logo";
             $image = $channel->addChild("image");
-            $image->addChild("title", "image title");
+            $image->addChild("title", $podcast->getDbTitle());
             self::addEscapedChild($image, "url", $imageUrl);
             self::addEscapedChild($image, "link", Application_Common_HTTPHelper::getStationUrl(false));
 
