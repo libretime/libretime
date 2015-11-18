@@ -387,6 +387,9 @@ class Application_Service_PodcastService
             self::addEscapedChild($channel, "xmlns:itunes:summary", $podcast->getDbItunesSummary());
             self::addEscapedChild($channel, "xmlns:itunes:subtitle", $podcast->getDbItunesSubtitle());
             self::addEscapedChild($channel, "xmlns:itunes:explicit", $podcast->getDbItunesExplicit());
+            $owner = $channel->addChild("xmlns:itunes:owner");
+            self::addEscapedChild($owner, "xmlns:itunes:name", Application_Model_Preference::GetStationName());
+            self::addEscapedChild($owner, "xmlns:itunes:email", Application_Model_Preference::GetEmail());
 
             $itunesImage = $channel->addChild("xmlns:itunes:image");
             $itunesImage->addAttribute("href", $imageUrl);
