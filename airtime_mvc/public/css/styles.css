@@ -3590,6 +3590,14 @@ button.btn-icon-text > i.icon-white {
     overflow: auto;
 }
 
+#media_type_nav > div:not(#nav) {
+    -webkit-flex: 0 1 auto;
+    -moz-flex: 0 1 auto;
+    -ms-flex: 0 1 auto;
+    -o-flex: 0 1 auto;
+    flex: 0 1 auto;
+}
+
 #media_type_nav .icon-white {
     opacity: 0.8;
 }
