@@ -12,6 +12,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
 
     const DOWNLOAD = 'download';
 
+    const PENDING_EPISODE_TIMEOUT_SECONDS = 3600;
+
     /**
      * @var string service name to store in ThirdPartyTrackReferences database
      */
@@ -143,7 +145,11 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . '/rest/media',
             'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
         );
-        $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
+        $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
+        // Get the created ThirdPartyTaskReference and set the episode ID so
+        // we can remove the placeholder if the import ends up stuck in a pending state
+        $ref = ThirdPartyTrackReferencesQuery::create()->findPk($task->getDbTrackReference());
+        $ref->setDbForeignId($id)->save();
     }
 
     /**
@@ -161,6 +167,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     public function updateTrackReference($task, $episodeId, $episode, $status) {
         $ref = parent::updateTrackReference($task, $episodeId, $episode, $status);
+        $ref->setDbForeignId($episode->episodeid)->save();
         $dbEpisode = PodcastEpisodesQuery::create()->findOneByDbId($episode->episodeid);
 
         try {
@@ -229,6 +236,32 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
         $stationPodcast = StationPodcastQuery::create()
             ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
         return (int) $stationPodcast->hasEpisodeForFile($fileId);
+    }
+
+    /**
+     * Find any episode placeholders that have been stuck pending (empty file ID) for over an hour
+     *
+     * @return array the episode imports stuck in pending
+     */
+    public static function getStuckPendingImports() {
+        $oneHourAgo = gmdate(DEFAULT_TIMESTAMP_FORMAT, (microtime(true) - self::PENDING_EPISODE_TIMEOUT_SECONDS));
+        $episodes = PodcastEpisodesQuery::create()
+            ->filterByDbFileId()
+            ->find();
+        $stuckImports = array();
+        foreach ($episodes as $episode) {
+            $ref = ThirdPartyTrackReferencesQuery::create()
+                ->findOneByDbForeignId(strval($episode->getDbId()));
+            if (!empty($ref)) {
+                $task = CeleryTasksQuery::create()
+                    ->filterByDbDispatchTime($oneHourAgo, Criteria::LESS_EQUAL)
+                    ->findOneByDbTrackReference($ref->getDbId());
+                if (!empty($task)) {
+                    array_push($stuckImports, $episode);
+                }
+            }
+        }
+        return $stuckImports;
     }
 
     /**
