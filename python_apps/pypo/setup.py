@@ -58,7 +58,8 @@ setup(name='airtime-playout',
           'pyinotify',
           'pytz',
           'requests',
-          'wsgiref'
+          'wsgiref',
+          'defusedxml'
       ],
       zip_safe=False,
       data_files=data_files)
