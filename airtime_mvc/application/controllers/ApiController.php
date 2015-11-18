@@ -23,7 +23,6 @@ class ApiController extends Zend_Controller_Action
             "shows",
             "show-tracks",
             "show-schedules",
-            "station-logo",
             "show-logo",
             "stream-m3u"
         );

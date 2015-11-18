@@ -375,9 +375,9 @@ class Application_Service_PodcastService
             $atomLink->addAttribute("rel", "self");
             $atomLink->addAttribute("type", "application/rss+xml");
 
-            $imageUrl = Application_Common_HTTPHelper::getStationUrl(false)."images/airtime_logo.png";
+            $imageUrl = Application_Common_HTTPHelper::getStationUrl(false)."api/station-logo";
             $image = $channel->addChild("image");
-            $image->addChild("title", "image title");
+            $image->addChild("title", $podcast->getDbTitle());
             self::addEscapedChild($image, "url", $imageUrl);
             self::addEscapedChild($image, "link", Application_Common_HTTPHelper::getStationUrl(false));
 
