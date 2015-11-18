@@ -368,6 +368,13 @@ class Application_Service_PodcastService
             self::addEscapedChild($channel, "language", $podcast->getDbLanguage());
             self::addEscapedChild($channel, "copyright", $podcast->getDbCopyright());
 
+            $xml->addAttribute('xmlns:xmlns:atom', "http://www.w3.org/2005/Atom");
+
+            $atomLink = $channel->addChild("xmlns:atom:link");
+            $atomLink->addAttribute("href", Application_Common_HTTPHelper::getStationUrl(false) . "feeds/station-rss");
+            $atomLink->addAttribute("rel", "self");
+            $atomLink->addAttribute("type", "application/rss+xml");
+
             $imageUrl = Application_Common_HTTPHelper::getStationUrl(false)."api/station-logo";
             $image = $channel->addChild("image");
             $image->addChild("title", $podcast->getDbTitle());
