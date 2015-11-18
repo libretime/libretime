@@ -60,14 +60,15 @@ class Rest_Bootstrap extends Zend_Application_Module_Bootstrap
 
         /** MediaController Routes **/
         $downloadRoute = new Zend_Controller_Router_Route(
-            'rest/media/:id/download',
+            'rest/media/:id/download/:download_key',
             array(
                 'controller' => 'media',
                 'action' => 'download',
                 'module' => 'rest'
             ),
             array(
-                'id' => '\d+'
+                'id' => '\d+',
+                'download_key' => '\w*'
             )
         );
         $router->addRoute('download', $downloadRoute);
