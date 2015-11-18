@@ -82,8 +82,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <?php $subnavPrefix = "/showbuilder"; require_once APPLICATION_PATH . "views/scripts/partialviews/dashboard-sub-nav.php"; ?>
     <div class="media_type_selector dashboard_sub_nav" data-selection-id="<?php echo MediaType::PODCAST ?>">
         <a href="<?php echo $subnavPrefix; ?>#podcasts">
-            <i class='icon-headphones icon-white'></i>
-            <span class="selector-name"><?php echo _("Podcasts") ?></span>
+            <span class="selector-name"><i class='icon-headphones icon-white'></i><?php echo _("Podcasts") ?></span>
         </a>
     </div>
 

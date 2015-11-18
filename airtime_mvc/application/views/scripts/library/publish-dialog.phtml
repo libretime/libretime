@@ -21,7 +21,7 @@
                 <div class="publish-sources" ng-repeat="source in sources.toPublish">
                     <input ng-disabled="{{source.status == 2}}" ng-model="publishData[source.source]" type="checkbox" name="publish_sources" id="{{source.source}}">
                     <label class="source-name" for="{{source.source}}">{{source.label}}</label>
-                    <span ng-if="source.status == 2" style="margin: auto"><a href="<?php echo Application_Common_OsPath::getBaseDir() . 'preference#{{source.source}}-heading' ?>"><?php echo _("You aren't connected to this source.") ?></a></span>
+                    <span ng-if="source.status == 2" style="margin: auto" ng-bind-html="sourceConnectEnum[source.source]"></span>
                 </div>
                 <div ng-if="sources.toPublish.length == 0">
                     <?php echo _("You have already published this track to all available sources!") . "<br/>"

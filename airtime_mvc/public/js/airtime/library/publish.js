@@ -12,11 +12,19 @@ var AIRTIME = (function (AIRTIME) {
     var dialogUrl = 'library/publish-dialog';
     var PUBLISH_APP_NAME = 'publish';
 
-
     //AngularJS app
     var publishApp = angular.module(PUBLISH_APP_NAME, [])
-        .controller('Publish', function ($scope, $http, mediaId, tab) {
+        .controller('Publish', function ($sce, $scope, $http, mediaId, tab) {
             $scope.publishData = {};
+            var isAdmin = userType == 'A' || userType == 'S';
+            // Javascript enum containing source connection HTML strings (ie. Connect with SoundCloud button)
+            $scope.sourceConnectEnum = Object.freeze({
+                soundcloud: isAdmin ? $sce.trustAsHtml(
+                    "<a href='" + baseUrl + "soundcloud/authorize' target='_blank'>" +
+                        "<img src='http://connect.soundcloud.com/2/btn-connect-sc-l.png'>" +
+                    "</a>"
+                ) : $sce.trustAsHtml($.i18n._("Ask your station administrator to connect to SoundCloud."))
+            });
             var sourceInterval;
 
             tab.contents.on("click", "input[type='checkbox']", function () {
