@@ -31,8 +31,11 @@ class PodcastEpisodes extends BasePodcastEpisodes
         $podcast = StationPodcastQuery::create()->findOneByDbPodcastId($podcastId);
         if ($podcast) {
             $fileId = $this->getDbFileId();
+            // FIXME: this is an interim solution until we can do better...
+            $file = CcFilesQuery::create()->findPk($fileId);
+            $ext = FileDataHelper::getAudioMimeTypeArray()[$file->getDbMime()];
             $key = Application_Model_Preference::getStationPodcastDownloadKey();
-            return Application_Common_HTTPHelper::getStationUrl(false)."rest/media/$fileId/download/$key";
+            return Application_Common_HTTPHelper::getStationUrl(false)."rest/media/$fileId/download/$key.$ext";
         }
         return parent::getDbDownloadUrl();
     }
