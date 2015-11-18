@@ -1573,6 +1573,11 @@ class Application_Model_Preference
     }
 
     public static function getStationPodcastPrivacy() {
+        if (!Billing::isStationPodcastAllowed()) {
+            // return private setting
+            return 1;
+        }
+
         return self::getValue("station_podcast_privacy");
     }
 
