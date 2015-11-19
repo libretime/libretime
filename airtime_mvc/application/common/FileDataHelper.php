@@ -14,6 +14,7 @@ class FileDataHelper {
             "audio/aac"         => "aac",
             "audio/aacp"        => "aac",
             "audio/mp4"         => "m4a",
+            "video/mp4"         => "mp4",
             "audio/x-flac"      => "flac",
             "audio/wav"         => "wav",
             "audio/x-wav"       => "wav",

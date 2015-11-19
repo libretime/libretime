@@ -95,6 +95,7 @@ CREATE TABLE "cc_files"
     "is_scheduled" BOOLEAN DEFAULT 'f',
     "is_playlist" BOOLEAN DEFAULT 'f',
     "filesize" INTEGER DEFAULT 0 NOT NULL,
+    "description" VARCHAR(512),
     PRIMARY KEY ("id")
 );
 
@@ -706,6 +707,77 @@ CREATE TABLE "celery_tasks"
     CONSTRAINT "id_unique" UNIQUE ("id")
 );
 
+-----------------------------------------------------------------------
+-- podcast
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "podcast" CASCADE;
+
+CREATE TABLE "podcast"
+(
+    "id" serial NOT NULL,
+    "url" VARCHAR(4096) NOT NULL,
+    "title" VARCHAR(4096) NOT NULL,
+    "creator" VARCHAR(4096),
+    "description" VARCHAR(4096),
+    "language" VARCHAR(4096),
+    "copyright" VARCHAR(4096),
+    "link" VARCHAR(4096),
+    "itunes_author" VARCHAR(4096),
+    "itunes_keywords" VARCHAR(4096),
+    "itunes_summary" VARCHAR(4096),
+    "itunes_subtitle" VARCHAR(4096),
+    "itunes_category" VARCHAR(4096),
+    "itunes_explicit" VARCHAR(4096),
+    "owner" INTEGER,
+    PRIMARY KEY ("id")
+);
+
+-----------------------------------------------------------------------
+-- station_podcast
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "station_podcast" CASCADE;
+
+CREATE TABLE "station_podcast"
+(
+    "id" serial NOT NULL,
+    "podcast_id" INTEGER NOT NULL,
+    PRIMARY KEY ("id")
+);
+
+-----------------------------------------------------------------------
+-- imported_podcast
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "imported_podcast" CASCADE;
+
+CREATE TABLE "imported_podcast"
+(
+    "id" serial NOT NULL,
+    "auto_ingest" BOOLEAN DEFAULT 'f' NOT NULL,
+    "auto_ingest_timestamp" TIMESTAMP,
+    "podcast_id" INTEGER NOT NULL,
+    PRIMARY KEY ("id")
+);
+
+-----------------------------------------------------------------------
+-- podcast_episodes
+-----------------------------------------------------------------------
+
+DROP TABLE IF EXISTS "podcast_episodes" CASCADE;
+
+CREATE TABLE "podcast_episodes"
+(
+    "id" serial NOT NULL,
+    "file_id" INTEGER,
+    "podcast_id" INTEGER NOT NULL,
+    "publication_date" TIMESTAMP NOT NULL,
+    "download_url" VARCHAR(4096) NOT NULL,
+    "episode_guid" VARCHAR(4096) NOT NULL,
+    PRIMARY KEY ("id")
+);
+
 ALTER TABLE "cc_files" ADD CONSTRAINT "cc_files_owner_fkey"
     FOREIGN KEY ("owner_id")
     REFERENCES "cc_subjs" ("id");
@@ -876,4 +948,29 @@ ALTER TABLE "third_party_track_references" ADD CONSTRAINT "track_reference_fkey"
 ALTER TABLE "celery_tasks" ADD CONSTRAINT "celery_service_fkey"
     FOREIGN KEY ("track_reference")
     REFERENCES "third_party_track_references" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "podcast" ADD CONSTRAINT "podcast_owner_fkey"
+    FOREIGN KEY ("owner")
+    REFERENCES "cc_subjs" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "station_podcast" ADD CONSTRAINT "podcast_id_fkey"
+    FOREIGN KEY ("podcast_id")
+    REFERENCES "podcast" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "imported_podcast" ADD CONSTRAINT "podcast_id_fkey"
+    FOREIGN KEY ("podcast_id")
+    REFERENCES "podcast" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "podcast_episodes" ADD CONSTRAINT "podcast_episodes_cc_files_fkey"
+    FOREIGN KEY ("file_id")
+    REFERENCES "cc_files" ("id")
+    ON DELETE CASCADE;
+
+ALTER TABLE "podcast_episodes" ADD CONSTRAINT "podcast_episodes_podcast_id_fkey"
+    FOREIGN KEY ("podcast_id")
+    REFERENCES "podcast" ("id")
     ON DELETE CASCADE;

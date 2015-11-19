@@ -36,7 +36,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             "upgrade",
             'whmcs-login',
             "provisioning",
-            "embed"
+            "embed",
+            "feeds"
         ))
         ) {
             //Start the session
@@ -53,6 +54,24 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             $this->_initTitle();
             $this->_initTranslationGlobals();
             $this->_initViewHelpers();
+        }
+
+        // Skip upgrades and task management when running unit tests
+        if (getenv("AIRTIME_UNIT_TEST") != 1) {
+            $taskManager = TaskManager::getInstance();
+
+            // Run the upgrade on each request (if it needs to be run)
+            // We can't afford to wait 7 minutes to run an upgrade: users could
+            // have several minutes of database errors while waiting for a
+            // schema change upgrade to happen after a deployment
+            $taskManager->runTask(TaskFactory::UPGRADE);
+
+            // Piggyback the TaskManager onto API calls. This provides guaranteed consistency
+            // (there is at least one API call made from pypo to Airtime every 7 minutes) and
+            // greatly reduces the chances of lock contention on cc_pref while the TaskManager runs
+            if ($controller == "api") {
+                $taskManager->runTasks();
+            }
         }
     }
 
@@ -157,6 +176,7 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
 
         $view->headScript()->appendFile($baseUrl . 'js/libs/jquery-1.8.3.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/libs/jquery-ui-1.8.24.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
+            ->appendFile($baseUrl . 'js/libs/angular.min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/bootstrap/bootstrap.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
             ->appendFile($baseUrl . 'js/libs/underscore-min.js?' . $CC_CONFIG['airtime_version'], 'text/javascript')
 

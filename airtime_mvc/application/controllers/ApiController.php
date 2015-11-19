@@ -23,7 +23,6 @@ class ApiController extends Zend_Controller_Action
             "shows",
             "show-tracks",
             "show-schedules",
-            "station-logo",
             "show-logo",
             "stream-m3u"
         );
@@ -73,6 +72,8 @@ class ApiController extends Zend_Controller_Action
                 ->addActionContext('update-replay-gain-value'      , 'json')
                 ->addActionContext('update-cue-values-by-silan'    , 'json')
                 ->addActionContext('get-usability-hint'            , 'json')
+                ->addActionContext('poll-celery'                   , 'json')
+                ->addActionContext('recalculate-schedule'          , 'json') //RKTN-260
                 ->initContext();
     }
 
@@ -98,6 +99,14 @@ class ApiController extends Zend_Controller_Action
         header('HTTP/1.0 401 Unauthorized');
         print _('You are not allowed to access this resource.');
         exit();
+    }
+
+    public function pollCeleryAction() {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $taskManager = TaskManager::getInstance();
+        $taskManager->runTask(TaskFactory::CELERY);
     }
 
     public function versionAction()
@@ -527,13 +536,13 @@ class ApiController extends Zend_Controller_Action
             $mime_type = finfo_buffer($f, $blob, FILEINFO_MIME_TYPE);
             finfo_close($f);
             
-            header("Content-type: " . $mime_type);
+            header("Content-Type: " . $mime_type);
             echo $blob;
         } else {
             header('HTTP/1.0 401 Unauthorized');
-            print _('You are not allowed to access this resource. ');
+            print _('You are not allowed to access this resource.');
             exit;
-        }    
+        }
     }
     
     public function scheduleAction()
@@ -1516,9 +1525,40 @@ class ApiController extends Zend_Controller_Action
         $streamData = Application_Model_StreamSetting::getEnabledStreamData();
 
         foreach ($streamData as $stream) {
-            $m3uFile .= "#EXTINF,".$stationName." - " . strtoupper($stream['codec']) . "\r\n";
+            $m3uFile .= "#EXTINF," . $stationName . " - " . strtoupper($stream['codec']) . "\r\n";
             $m3uFile .= $stream['url'] . "\r\n\r\n";
         }
         echo $m3uFile;
+    }
+
+    public function recalculateScheduleAction()
+    {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        Zend_Session::start();
+
+        $scheduler = new Application_Model_Scheduler();
+        session_write_close();
+
+        $now = new DateTime("now", new DateTimeZone("UTC"));
+
+        $showInstances =  CcShowInstancesQuery::create()
+            ->filterByDbStarts($now, Criteria::GREATER_THAN)
+            //->filterByDbModifiedInstance(false)
+            ->orderByDbStarts()
+            ->find();
+            //->find($this->con);
+        $total = $showInstances->count();
+        $progress = 0;
+        foreach ($showInstances as $instance) {
+            echo(round(floatval($progress / $total)*100) . "% - " . $instance->getDbId() . "\n<br>");
+            flush();
+            ob_flush();
+            //while(@ob_end_clean());
+            $scheduler->removeGaps2($instance->getDbId());
+            $progress += 1;
+        }
+        echo("Recalculated $total shows.");
     }
 }

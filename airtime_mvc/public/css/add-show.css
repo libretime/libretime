@@ -28,8 +28,6 @@
 }
 
 #schedule-add-show dl {
-    padding: 8px;
-    margin-bottom: 8px;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -51,7 +49,6 @@
     text-align: left;
     min-width: 103px;
     padding-top: 4px;
-    clear: left;
 }
 
 #schedule-add-show dt.big {
@@ -124,7 +121,14 @@ label.wrapp-label input[type="checkbox"] {
 }
 
 #add_show_hosts-element > label {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+    -webkit-align-items: flex-end;
+    -moz-align-items: flex-end;
+    -ms-align-items: flex-end;
     align-items: flex-end;
 }
 

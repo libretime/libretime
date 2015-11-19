@@ -126,7 +126,8 @@ class Billing
             }
             else
             {
-                if ($product["status"] === "Active") {
+                if ($product["status"] === "Active" ||
+                    $product["status"] === "Suspended") {
                     $airtimeProduct = $product;
                     $subdomain = '';
 
@@ -372,6 +373,15 @@ class Billing
             return $unpaidInvoice;
         } else {
             return 0;
+        }
+    }
+
+    public static function isStationPodcastAllowed() {
+        $planLevel = Application_Model_Preference::GetPlanLevel();
+        if ($planLevel == "hobbyist") {
+            return false;
+        } else {
+            return true;
         }
     }
 }

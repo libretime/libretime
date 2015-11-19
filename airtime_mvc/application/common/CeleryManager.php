@@ -1,13 +1,11 @@
 <?php
 
-require_once "CeleryServiceFactory.php";
-
-class CeleryService {
+class CeleryManager {
 
     /**
      * @var int milliseconds (for compatibility with celery) until we consider a message to have timed out
      */
-    private static $_CELERY_MESSAGE_TIMEOUT = 600000;  // 10 minutes
+    private static $_CELERY_MESSAGE_TIMEOUT = 900000;  // 15 minutes
 
     /**
      * We have to use celeryresults (the default results exchange) because php-celery
@@ -16,6 +14,11 @@ class CeleryService {
      * @var string exchange for celery task results
      */
     private static $_CELERY_RESULTS_EXCHANGE = 'celeryresults';
+
+    /**
+     * @var PropelCollection cache of any pending CeleryTasks results for a service or task
+     */
+    private static $_pendingTasks;
 
     /**
      * Connect to the Celery daemon via amqp
@@ -77,10 +80,9 @@ class CeleryService {
         $c = self::_setupCeleryExchange($config, self::$_CELERY_RESULTS_EXCHANGE, $queue);
         $message = $c->getAsyncResultMessage($task->getDbName(), $task->getDbTaskId());
 
-        // If the message isn't ready yet (Celery hasn't finished the task),
-        // only throw an exception if the message has timed out.
+        // If the message isn't ready yet (Celery hasn't finished the task), throw an exception.
         if ($message == FALSE) {
-            if (self::_checkMessageTimeout($task)) {
+            if (static::_checkMessageTimeout($task)) {
                 // If the task times out, mark it as failed. We don't want to remove the
                 // track reference here in case it was a deletion that failed, for example.
                 $task->setDbStatus(CELERY_FAILED_STATUS)->save();
@@ -104,9 +106,9 @@ class CeleryService {
      *
      * @return bool true if there are any pending tasks, otherwise false
      */
-    public static function isBrokerTaskQueueEmpty($taskName="", $serviceName = "") {
-        $pendingTasks = self::_getPendingTasks($taskName, $serviceName);
-        return empty($pendingTasks);
+    public static function isBrokerTaskQueueEmpty($taskName = "", $serviceName = "") {
+        self::$_pendingTasks = static::_getPendingTasks($taskName, $serviceName);
+        return empty(self::$_pendingTasks);
     }
 
     /**
@@ -120,11 +122,12 @@ class CeleryService {
      * @param string $serviceName the name of the service to poll for
      */
     public static function pollBrokerTaskQueue($taskName = "", $serviceName = "") {
-        $pendingTasks = self::_getPendingTasks($taskName, $serviceName);
+        $pendingTasks = empty(self::$_pendingTasks) ? static::_getPendingTasks($taskName, $serviceName)
+                                                    : self::$_pendingTasks;
         foreach ($pendingTasks as $task) {
             try {
-                $message = self::_getTaskMessage($task);
-                self::_processTaskMessage($task, $message);
+                $message = static::_getTaskMessage($task);
+                static::_processTaskMessage($task, $message);
             } catch (CeleryTimeoutException $e) {
                 Logging::warn($e->getMessage());
             } catch (Exception $e) {
@@ -183,12 +186,7 @@ class CeleryService {
     protected static function _processTaskMessage($task, $message) {
         $ref = $task->getThirdPartyTrackReferences();  // ThirdPartyTrackReferences join
         $service = CeleryServiceFactory::getService($ref->getDbService());
-        if ($message->status == CELERY_SUCCESS_STATUS
-            && $task->getDbName() == $service->getCeleryDeleteTaskName()) {
-            $service->removeTrackReference($ref->getDbFileId());
-        } else {
-            $service->updateTrackReference($ref->getDbId(), json_decode($message->result), $message->status);
-        }
+        $service->updateTrackReference($task, $ref->getDbId(), json_decode($message->result), $message->status);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 require_once "ThirdPartyService.php";
 
-abstract class ThirdPartyCeleryService extends ThirdPartyService {
+abstract class Application_Service_ThirdPartyCeleryService extends Application_Service_ThirdPartyService {
 
     /**
      * @var string broker exchange name for third-party tasks
@@ -10,59 +10,23 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
     protected static $_CELERY_EXCHANGE_NAME;
 
     /**
-     * @var string celery task name for third-party uploads
+     * @var array map of celery identifiers to their task names
      */
-    protected static $_CELERY_UPLOAD_TASK_NAME;
+    protected static $_CELERY_TASKS;
 
     /**
-     * @var string celery task name for third-party deletion
-     */
-    protected static $_CELERY_DELETE_TASK_NAME;
-
-    /**
-     * Upload the file with the given identifier to a third-party service
+     * Execute a Celery task with the given name and data parameters
      *
-     * @param int $fileId the local CcFiles identifier
+     * @param string $taskName the name of the celery task to execute
+     * @param array $data      the data array to send as task parameters
+     * @param int $fileId      the unique identifier for the file involved in the task
      */
-    public function upload($fileId) {
-        $file = Application_Model_StoredFile::RecallById($fileId);
-        $data = array(
-            'data' => $this->_getUploadData($file),
-            'token' => $this->_accessToken,
-            'file_path' => $file->getFilePaths()[0]
-        );
+    protected function _executeTask($taskName, $data, $fileId = null) {
         try {
-            $brokerTaskId = CeleryService::sendCeleryMessage(static::$_CELERY_UPLOAD_TASK_NAME,
+            $brokerTaskId = CeleryManager::sendCeleryMessage($taskName,
                                                              static::$_CELERY_EXCHANGE_NAME,
                                                              $data);
-            $this->_createTaskReference($fileId, $brokerTaskId, static::$_CELERY_UPLOAD_TASK_NAME);
-        } catch (Exception $e) {
-            Logging::info("Invalid request: " . $e->getMessage());
-        }
-    }
-
-    /**
-     * Delete the file with the given identifier from a third-party service
-     *
-     * @param int $fileId the local CcFiles identifier
-     *
-     * @throws ServiceNotFoundException when a $fileId with no corresponding
-     *                                  service identifier is given
-     */
-    public function delete($fileId) {
-        $serviceId = $this->getServiceId($fileId);
-        if ($serviceId == 0) {
-            throw new ServiceNotFoundException("No service found for file with ID $fileId");
-        }
-        $data = array(
-            'token' => $this->_accessToken,
-            'track_id' => $serviceId
-        );
-        try {
-            $brokerTaskId = CeleryService::sendCeleryMessage(static::$_CELERY_DELETE_TASK_NAME,
-                                                             static::$_CELERY_EXCHANGE_NAME,
-                                                             $data);
-            $this->_createTaskReference($fileId, $brokerTaskId, static::$_CELERY_DELETE_TASK_NAME);
+            $this->_createTaskReference($fileId, $brokerTaskId, $taskName);
         } catch (Exception $e) {
             Logging::info("Invalid request: " . $e->getMessage());
         }
@@ -81,51 +45,59 @@ abstract class ThirdPartyCeleryService extends ThirdPartyService {
      * @throws PropelException
      */
     protected function _createTaskReference($fileId, $brokerTaskId, $taskName) {
-        $trackId = $this->createTrackReference($fileId);
+        $trackReferenceId = $this->createTrackReference($fileId);
         $task = new CeleryTasks();
         $task->setDbTaskId($brokerTaskId);
         $task->setDbName($taskName);
         $utc = new DateTimeZone("UTC");
         $task->setDbDispatchTime(new DateTime("now", $utc));
         $task->setDbStatus(CELERY_PENDING_STATUS);
-        $task->setDbTrackReference($trackId);
+        $task->setDbTrackReference($trackReferenceId);
         $task->save();
     }
 
     /**
-     * Update a CeleryTasks object for a completed upload
+     * Update a CeleryTasks object for a completed task
      * TODO: should we have a database layer class to handle Propel operations?
      *
-     * @param $trackId int    ThirdPartyTrackReferences identifier
-     * @param $track  object  third-party service track object
-     * @param $status string  Celery task status
+     * @param $task CeleryTasks the completed CeleryTasks object
+     * @param $status string    Celery task status
      *
      * @throws Exception
      * @throws PropelException
      */
-    public function updateTrackReference($trackId, $track, $status) {
-        $task = CeleryTasksQuery::create()
-            ->findOneByDbTrackReference($trackId);
+    public function updateTask($task, $status) {
         $task->setDbStatus($status);
         $task->save();
     }
 
     /**
-     * Field accessor for $_CELERY_DELETE_TASK_NAME
+     * Update a ThirdPartyTrackReferences object for a completed upload
      *
-     * @return string the Celery task name for deleting tracks from this service
+     * Manipulation and use of the track object is left up to child implementations
+     *
+     * @param $task     CeleryTasks the completed CeleryTasks object
+     * @param $trackId  int         ThirdPartyTrackReferences identifier
+     * @param $result   mixed       Celery task result message
+     * @param $status   string      Celery task status
+     *
+     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
+     *
+     * @throws Exception
+     * @throws PropelException
      */
-    public function getCeleryDeleteTaskName() {
-        return static::$_CELERY_DELETE_TASK_NAME;
+    public function updateTrackReference($task, $trackId, $result, $status) {
+        static::updateTask($task, $status);
+        $ref = ThirdPartyTrackReferencesQuery::create()
+            ->findOneByDbId($trackId);
+        if (is_null($ref)) {
+            $ref = new ThirdPartyTrackReferences();
+        }
+        $ref->setDbService(static::$_SERVICE_NAME);
+        $utc = new DateTimeZone("UTC");
+        $ref->setDbUploadTime(new DateTime("now", $utc));
+        $ref->save();
+        return $ref;
     }
-
-    /**
-     * Build a parameter array for the file being uploaded to a third party service
-     *
-     * @param $file Application_Model_StoredFile the file being uploaded
-     *
-     * @return array the track array to send to the third party service
-     */
-    abstract protected function _getUploadData($file);
 
 }

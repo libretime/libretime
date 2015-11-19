@@ -22,11 +22,8 @@ $(document).ready(function() {
         var ifr = document.getElementById('livechat-compact-container');
         if (ifr) {
             LC_API.on_chat_state_changed = function(data) {
-                if (data.state == 'offline') {
-                    $('body > .wrapper').css('padding-bottom', 10);
-                } else {
-                    $('body > .wrapper').css('padding-bottom', 40);
-                }
+                // Hacky... select elements on pages that have different layouts separately
+                $('body > .wrapper, #stream_form > div, #his-tabs').css('padding-bottom', (data.state == 'offline') ? 10 : 40);
             };
             clearInterval(lcLoadListener);
         }

@@ -288,12 +288,20 @@ select {
     color:#ff5d1a;
 }
 .now-playing-block {
+    -webkit-flex: 1 0;
+    -moz-flex: 1 0;
+    -ms-flex: 1 0;
+    -o-flex: 1 0;
     flex: 1 0;
     background: url(images/masterpanel_spacer.png) no-repeat 0 0;
     margin-left: 152px;
     padding-left: 14px;
 }
 .show-block {
+    -webkit-flex: 1 0;
+    -moz-flex: 1 0;
+    -ms-flex: 1 0;
+    -o-flex: 1 0;
     flex: 1 0;
 }
 .text-row {
@@ -373,6 +381,10 @@ select {
     background:url(images/masterpanel_spacer.png) no-repeat right 0;
 }
 .time-info-block  {
+    -webkit-flex: 0 150px;
+    -moz-flex: 0 150px;
+    -ms-flex: 0 150px;
+    -o-flex: 0 150px;
     flex: 0 150px;
     /*position: absolute;*/
     /*top: 0;*/
@@ -395,6 +407,10 @@ select {
         margin-left: 152px;
     }
     .time-info-block {
+        -webkit-flex: 1 150px;
+        -moz-flex: 1 150px;
+        -ms-flex: 1 150px;
+        -o-flex: 1 150px;
         flex: 1 150px;
     }
 }
@@ -908,7 +924,7 @@ dl.inline-list dd {
 .DataTables_sort_wrapper .ui-icon {
     display: block;
     float: right;
-    margin: 5px 0;
+    margin: 6px 0 0 5px;
 }
 .dataTables_type {
     float:right;
@@ -1004,6 +1020,13 @@ div.blockOverlay {
 table.dataTable tbody tr, 
 table.dataTable span.DataTables_sort_icon {
     cursor: pointer;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 table.dataTable th.ui-state-default {
@@ -1172,7 +1195,8 @@ input[type="checkbox"] {
 }
 
 #pref_form dt, #pref_form dd,
-#pref_form textarea, #clientdetails_form dd {
+#pref_form textarea, #clientdetails_form dd,
+.podcast-metadata dt, .podcast-metadata dd {
     display:block;
     float:none;
     margin-left:0;
@@ -1180,8 +1204,11 @@ input[type="checkbox"] {
     width: 100%;
 }
 #pref_form textarea {
-    width: 98.5%;
+    width: 100%;
     padding-left: 5px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 #pref_form select {
     width: 100%;
@@ -1703,7 +1730,14 @@ h2#scheduled_playlist_name span {
 }
 
 .simple-formblock dd .input_text {
-    width: 97.8%;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.simple-formblock dd textarea {
+    height: 70px;
 }
 
 .simple-formblock h2 {
@@ -1721,7 +1755,6 @@ h2#scheduled_playlist_name span {
     padding-right: 8px;
 }
 .ui-button-icon-only.crossfade-main-button .ui-button-text, .ui-button-icons-only.crossfade-main-button .ui-button-text {
-    padding: 0;
     text-indent: -1e+7px;
     padding: 0.1em 1em;
 }
@@ -2313,7 +2346,7 @@ span.errors.sp-errors{
     background:url(images/icon_finishedplaying_m.png) no-repeat 0 0;
 }
 .preferences {
-    width: 500px;
+    /*width: 500px;*/
     margin-bottom: 40px;
 }
 #preferences_header {
@@ -2418,9 +2451,41 @@ dd.radio-inline-list, .preferences dd.radio-inline-list, .stream-config dd.radio
     line-height: 140%;
 }
 
+/* Metadata Editor styles */
+
 /* HACK, to be removed after 1.7.0 */
-button.ui-button.md-cancel {
-        padding: .4em 1em;
+/*button.ui-button.md-cancel {*/
+/*padding: .4em 1em;*/
+/*}*/
+
+.edit-md-dialog #submitButtons-element {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.md-publish {
+    margin-right: 4px;
+}
+
+.md-save {
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
+    flex: 1 0 auto;
+    margin-right: 4px;
+}
+
+.md-cancel {
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
+    flex: 1 0 auto;
 }
 
 /*--//////////////////////// Changes/add-ons Jun 8th, 2011 ////////////////////////--*/
@@ -2805,14 +2870,14 @@ dt.block-display.info-block {
     padding:350px 0 10px 0;
     font-size:36px;
     font-weight:bold;
-    color:#3e3e3e;
+    color: #8e8e8e;
     text-align:center;
     letter-spacing:-.3px;
     text-shadow: rgba(248,248,248,.3) 0 1px 0, rgba(0,0,0,.8) 0 -1px 0;
     rgba(51,51,51,.9)
 }
 .error-content p {
-    color: #272727;
+    color: #acacac;
     font-size: 16px;
     text-align:center;
     margin: 0;
@@ -3485,6 +3550,15 @@ button.btn-icon-text > i.icon-white {
 /* Media type selector */
 
 #media_type_nav {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: column;
+    flex-flow: column;
+
+
     position: absolute;
     top: 102px;
     bottom: 0;
@@ -3495,6 +3569,10 @@ button.btn-icon-text > i.icon-white {
 
     width: 152px;
 
+    -webkit-flex: 1 auto;
+    -moz-flex: 1 auto;
+    -ms-flex: 1 auto;
+    -o-flex: 1 auto;
     flex: 1 auto;
     padding: 0;
 
@@ -3508,6 +3586,17 @@ button.btn-icon-text > i.icon-white {
 
     z-index: 100;
     text-align: left;
+
+    overflow: auto;
+}
+
+#media_type_nav > div:not(#nav),
+#media_type_nav > hr {
+    -webkit-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    -o-flex: 0 0 auto;
+    flex: 0 0 auto;
 }
 
 #media_type_nav .icon-white {
@@ -3538,6 +3627,10 @@ button.btn-icon-text > i.icon-white {
 }
 
 #media_selector_wrapper {
+    -webkit-flex: 1 1 100%;
+    -moz-flex: 1 1 100%;
+    -ms-flex: 1 1 100%;
+    -o-flex: 1 1 100%;
     flex: 1 1 100%;
     display: -webkit-box;
     display: -moz-box;
@@ -3554,6 +3647,10 @@ button.btn-icon-text > i.icon-white {
 
 .ui-dialog-content .media_type_selector {
     padding-left: 0;
+    -webkit-flex: 1 auto;
+    -moz-flex: 1 auto;
+    -ms-flex: 1 auto;
+    -o-flex: 1 auto;
     flex: 1 auto;
 }
 
@@ -3596,7 +3693,7 @@ button.btn-icon-text > i.icon-white {
 .media_type_selector a {
     text-decoration: none;
     color: #cecece;
-    padding: 10px 10px 10px 10px;
+    padding: 10px 0 10px 10px;
     display: block;
 }
 
@@ -3649,6 +3746,10 @@ button.btn-icon-text > i.icon-white {
     left: 152px;
 
     width: 100%;
+    -webkit-flex: 0 100%;
+    -moz-flex: 0 100%;
+    -ms-flex: 0 100%;
+    -o-flex: 0 100%;
     flex: 0 100%;
 
     -webkit-box-sizing: border-box;
@@ -3679,6 +3780,10 @@ button.btn-icon-text > i.icon-white {
 }
 
 #sub-menu-wrapper {
+    -webkit-flex: 0 140px;
+    -moz-flex: 0 140px;
+    -ms-flex: 0 140px;
+    -o-flex: 0 140px;
     flex: 0 140px;
     min-width: 140px;
 }
@@ -3802,15 +3907,16 @@ hr {
     background-color: #242424;
     border: 1px solid #5b5b5b;
     color: #ccc;
+    -webkit-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    -ms-flex: 0 0 auto;
+    -o-flex: 0 0 auto;
     flex: 0 0 auto;
 }
 
 #disk_usage {
     border-radius: 1px;
-    /*position: fixed;
-    bottom: 5px;
-    left: 10px;*/
-    width: 118px;
+    margin: 7px;
     font-size: 14px;
     text-align: center;
     padding: 5px 5px;
@@ -3870,15 +3976,21 @@ li .ui-state-hover {
     -webkit-flex-flow: column;
     flex-flow: column;
 
-    flex: 1 1;
     -webkit-flex: 1 1;
+    -moz-flex: 1 1;
+    -ms-flex: 1 1;
+    -o-flex: 1 1;
+    flex: 1 1;
     min-width: 505px;
 }
 
 .outer-datatable-wrapper {
     position: relative;
+    -webkit-flex: 1 1;
+    -moz-flex: 1 1;
+    -ms-flex: 1 1;
+    -o-flex: 1 1;
     flex: 1;
-    -webkit-flex: 1;
 }
 
 #user_list_inner_wrapper {
@@ -3917,11 +4029,168 @@ li .ui-state-hover {
     float: left;
 }
 
-/* UI Revamp Video */
-#whatsnew {
+/* Podcasts */
+
+.DataTables_sort_wrapper {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+    -webkit-justify-content: flex-start;
+    -moz-justify-content: flex-start;
+    -ms-justify-content: flex-start;
+    justify-content: flex-start;
+}
+
+[id^="podcast_episodes"][id$="_wrapper"] {
+    position: relative;
+    -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
+    flex: 1 100%;
+    /*margin: 4px 0 0 !important;*/
+    min-height: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+[id^="podcast_episodes"][id$="_wrapper"] td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+.inner_editor_title > h2 {
+    float: left;
+}
+
+.inner_editor_title button {
+    float: right;
+    margin: 5px 10px 0 0;
+}
+
+.angular_wrapper > .station_podcast_wrapper {
+    -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
+    flex: 1 100%;
+}
+
+.station_podcast_wrapper {
+    min-width: 50%;
+}
+
+.angular_wrapper legend {
+    background-color: #242424;
+    color: #efefef;
+}
+
+.angular_wrapper .dataTables_scrolling {
+    /* Should find a better way to do this... */
+    top: 74px !important;
+}
+
+.angular_wrapper > .btn-toolbar {
+    padding: 5px 0 0 5px;
+}
+
+.podcast-metadata p {
+    text-align: center;
+    padding: 0 10px;
+    margin-top: 0;
+}
+
+.podcast-metadata label,
+.podcast-metadata input:not([type="checkbox"]),
+.podcast-metadata select,
+.podcast-metadata textarea,
+.media-metadata label,
+.media-metadata input:not([type="checkbox"]),
+.media-metadata select,
+.media-metadata textarea {
+    margin: 4px 0;
+}
+
+.podcast-metadata input[type="checkbox"] {
+    float: left;
+    margin: 8px 0 0;
+}
+
+.podcast-metadata label,
+.media-metadata label {
+    display: block;
+    width: 20%;
+    float: left;
+}
+
+.podcast-metadata input:not([type="checkbox"]),
+.podcast-metadata select,
+.podcast-metadata textarea,
+.media-metadata input:not([type="checkbox"]),
+.media-metadata select,
+.media-metadata textarea {
+    width: 60%;
+    float: left;
+}
+
+.podcast-metadata-field {
+    display: inline-block;
+    width: 60%;
+    min-width: 60%;
+    max-width: 60%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 4px 0;
+    line-height: 24px;
+}
+
+.podcast_episodes_imported {
+    text-align: center !important;
+}
+
+.imported-flag {
+    margin-bottom: -2px;
+}
+
+.loading-icon {
+    background: url("img/loading.gif") no-repeat center center;
+    min-width: 24px;
+    width: 100%;
+    height: 16px;
+    display: block;
+}
+
+.podcast-episode-dialog {
+    max-width: 50%;
+    max-height: 50%;
+    overflow: auto;
+}
+
+/* UI Revamp Video */
+
+#whatsnew {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
     justify-content: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    -ms-align-items: center;
     align-items: center;
 
     max-width: 640px;
@@ -3937,6 +4206,10 @@ li .ui-state-hover {
 #whatsnew > button {
     margin-top: 10px;
     align-self: flex-end;
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
     flex: 1 0 auto;
 }
 
@@ -3963,4 +4236,110 @@ li .ui-state-hover {
 }
 
 /* jQuery dialog */
-.no-close .ui-dialog-titlebar-close {display: none }
+.no-close .ui-dialog-titlebar-close {
+    display: none
+}
+
+/* Publishing Dialog */
+
+.icon-soundcloud-white {
+    background: url(images/icon_soundcloud_cm_white.png) 0 0 no-repeat;
+    width: 24px;
+}
+
+.source-name {
+    text-align: left !important;
+}
+
+.publish-sources {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.publish-sources input[type="checkbox"] {
+    float: left;
+    margin: 8px 20px 0 7px;
+}
+
+.published-sources {
+    color: #efefef;
+    font-size: 14px;
+    line-height: 26px;
+    margin-bottom: 10px;
+}
+
+.published-sources > .checked-icon {
+    height: 26px;
+    padding-right: 8px;
+}
+
+.published-sources > .source-name {
+    display: inline-block;
+    width: 15%;
+    padding: 0 16px;
+}
+
+.publish-edit-md {
+    float: right;
+}
+
+#podcast_url_dialog table tr td {
+    padding: 0;
+}
+
+#podcast_url_dialog .errors {
+    display: inline-block;
+    float: right;
+    width: 50%;
+}
+
+#upgrade-feature-locked {
+    margin: 0 auto;
+    width: 50%;
+    padding: 50px;
+    z-index: 99999;
+}
+#upgrade-feature-locked h2 {
+    font-size: 26px;
+}
+#upgrade-feature-locked h3 {
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 10px;
+}
+
+/** Override overzealous CSS rules :-( */
+#upgrade-feature-locked ul, #upgrade-feature-locked li {
+    float: initial;
+    list-style-type: disc;
+}
+#upgrade-feature-locked li {
+    display: list-item;
+}
+#upgrade-feature-locked p, #upgrade-feature-locked li {
+    color: #f0f0f0;
+    font-size: 14px;
+    margin-top: 10px;
+    list-style-type: disc;
+}
+
+.upgrade-cta-button {
+    background-color:#e76400;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 3px;
+    width: 140px;
+    font-size: 18px;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color: #f0f0f0;
+}
+.upgrade-cta-button a {
+    text-decoration: none;
+    color: #f0f0f0;
+}

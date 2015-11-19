@@ -29,10 +29,14 @@ define('SETUP_PATH', BUILD_PATH . 'airtime-setup/');
 define('APPLICATION_PATH', ROOT_PATH . 'application/');
 define('CONFIG_PATH', APPLICATION_PATH . 'configs/');
 define('VENDOR_PATH', ROOT_PATH . '../vendor/');
+define('REST_MODULE_CONTROLLER_PATH', APPLICATION_PATH . 'modules/rest/controllers/');
 
 define("AIRTIME_CONFIG_STOR", "/etc/airtime/");
 
 define('AIRTIME_CONFIG', 'airtime.conf');
+
+//Rest Module Controllers - for custom Rest_RouteController.php
+set_include_path(REST_MODULE_CONTROLLER_PATH . PATH_SEPARATOR . get_include_path());
 
 //Vendors (Composer)
 set_include_path(VENDOR_PATH . PATH_SEPARATOR . get_include_path());

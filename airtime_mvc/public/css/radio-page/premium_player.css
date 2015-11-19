@@ -15,6 +15,7 @@ body {
     bottom: 0px;
     height: 120px;
     background: #fff;
+    display: flex;
 }
 
 .bottom_bar .cont_btn {
@@ -37,9 +38,8 @@ body {
 }
 
 .on_air {
-    display: inline-block;
     margin-left: 40px;
-    width: 65%
+    flex-grow: 1;
 }
 
 .bottom_bar p.now_playing {
@@ -64,11 +64,21 @@ body {
 
 .bottom_bar .button {
     width: 50px;
+    min-width: 50px;
     height: 50px;
     display: inline-block;
     margin: 35px 40px;
     cursor: pointer;
     float: right;
+}
+
+.bottom_bar .station_rss_btn {
+    background: url('img/podcast.png') no-repeat center 0px;
+}
+
+
+.bottom_bar .station_rss_btn.current {
+    background: url('img/podcast.png') no-repeat center -50px;
 }
 
 .bottom_bar .schedule_btn {
@@ -96,33 +106,41 @@ body {
     float: right;
 }
 
+.bottom_bar .radio_tab_label {
+    margin-top: 60px;
+}
+
 @media (max-width: 1230px) {
-    .on_air {
-        width: 60%;
-    }
-}
-
-@media (max-width: 1075px) {
-    .on_air {
-        width: 55%;
-    }
-}
-
-@media (max-width: 960px) {
     .on_air {
         width: 50%;
     }
 }
 
+@media (max-width: 1075px) {
+    .on_air {
+        width: 40%;
+    }
+}
+
+@media (max-width: 960px) {
+    .on_air {
+        width: 35%;
+    }
+}
+
 @media (max-width: 850px) {
     .on_air {
-        width: 45%;
+        width: 30%;
     }
 }
 
 @media (max-width: 780px) {
     .bottom_bar {
         height: 80px;
+    }
+
+    .bottom_bar .flex_spacer {
+        flex-grow: 1;
     }
 
     .bottom_bar .play {

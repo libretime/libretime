@@ -135,6 +135,13 @@ class CcFiles extends BaseCcFiles {
 
         try
         {
+            //Only accept files with a file extension that we support.
+            // Let the analyzer do the heavy lifting in terms of mime verification and playability
+            $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
+            if (!in_array(strtolower($fileExtension), array_values(FileDataHelper::getAudioMimeTypeArray()))) {
+                throw new Exception("Bad file extension.");
+            }
+
             $fileArray = self::removeBlacklistedFields($fileArray);
 
             self::validateFileArray($fileArray);
@@ -146,12 +153,6 @@ class CcFiles extends BaseCcFiles {
             $file->setDbUtime($now);
             $file->setDbHidden(true);
             $file->save();
-
-            //Only accept files with a file extension that we support.
-            $fileExtension = pathinfo($originalFilename, PATHINFO_EXTENSION);
-            if (!in_array(strtolower($fileExtension), array_values(FileDataHelper::getAudioMimeTypeArray()))) {
-                throw new Exception("Bad file extension.");
-            }
 
             $callbackUrl = Application_Common_HTTPHelper::getStationUrl() . "/rest/media/" . $file->getPrimaryKey();
 

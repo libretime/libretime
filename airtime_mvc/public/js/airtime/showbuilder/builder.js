@@ -108,21 +108,6 @@ var AIRTIME = (function(AIRTIME){
         }
     };
 
-    mod.switchTab = function(tab, el) {
-        $(".active-tab").hide().removeClass("active-tab");
-        tab.addClass("active-tab").show();
-
-        $(".nav.nav-tabs .active").removeClass("active");
-        el.addClass("active");
-
-        if (tab.hasClass("pl-content")) {
-            AIRTIME.playlist.setAsActive();
-        }
-        AIRTIME.playlist.onResize();
-        AIRTIME.library.fnRedraw();
-    };
-
-
     mod.checkSelectButton = function() {
         var $selectable = $sbTable.find("tr");
 
@@ -1039,13 +1024,16 @@ var AIRTIME = (function(AIRTIME){
             fnReceive = function(event, ui) {
                 var aItems = [];
 
-                AIRTIME.library.addToChosen(ui.item);
-
-                aItems = AIRTIME.library.getSelectedData();
-                origTrs = aItems;
-                html = ui.helper.html();
-
-                AIRTIME.library.removeFromChosen(ui.item);
+                if (AIRTIME.library.getCurrentTable() == AIRTIME.library.libraryDataTable) {
+                    AIRTIME.library.addToChosen(ui.item);
+                    aItems = AIRTIME.library.getSelectedData();
+                    origTrs = aItems;
+                    html = ui.helper.html();
+                    AIRTIME.library.removeFromChosen(ui.item);
+                } else if (AIRTIME.library.getCurrentTable() == AIRTIME.library.podcastEpisodeDataTable) {
+                    origTrs = [$(ui.item).data("aData")];
+                    html = ui.helper.html();
+                }
             };
 
             fnUpdate = function(event, ui) {

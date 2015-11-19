@@ -216,7 +216,7 @@ function buildScheduleDialog (json, instance_id) {
         buttons: [
             {
                 text: $.i18n._("Ok"),
-                "class": "btn",
+                class: "btn",
                 click: function() {
                     $(this).dialog("close");
                     //getUsabilityHint();

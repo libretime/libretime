@@ -120,7 +120,8 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
                 "upgrade",
                 'whmcs-login',
                 "provisioning",
-                "embed"
+                "embed",
+                "feeds"
             )))
         {
             $this->setRoleName("G");
@@ -174,6 +175,12 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             // we need to check the CSRF token
             if ($_SERVER['REQUEST_METHOD'] != "GET" && $request->getModuleName() == "rest") {
                 $token = $request->getParam("csrf_token");
+                // PUT requests don't parameterize the data in the body, so we can't
+                // fetch it with getParam or getPost; instead we have to parse the body and
+                // check for the token in the JSON. (Hopefully we can find a better way to do this) -- Duncan
+                if (empty($token)) {
+                    $token = json_decode($this->getRequest()->getRawBody(), true)["csrf_token"];
+                }
                 $tokenValid = $this->verifyCSRFToken($token);
 
                 if (!$tokenValid) {
@@ -205,18 +212,18 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
             /** Check if the controller/action can be accessed by the current user */
             if (!$this->getAcl()->has($resourceName) 
-                || !$this->getAcl()->isAllowed($this->_roleName, 
+                || !$this->getAcl()->isAllowed($this->_roleName,
                         $resourceName, 
                         $request->getActionName())) {
                 /** Redirect to access denied page */
                 $this->setErrorPage('error403');
-                $this->denyAccess(); /* This results in a 404! */
+                $this->denyAccess();
             }
         }
     }
 
     private function verifyAuth() {
-        if ($this->verifyAPIKey()) {
+        if ($this->verifyAPIKey() || $this->isVerifiedDownload()) {
             return true;
         }
 
@@ -226,7 +233,30 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
 
         return false;
     }
-    
+
+    /**
+     * Check if the requested file can be downloaded.
+     * It should satisfy the following requirements:
+     *  * request path is /rest/media/:id/download
+     *  * download key is correct
+     *  * requested file belongs to the station podcast
+     *
+     * @return bool
+     */
+    private function isVerifiedDownload() {
+        $request = $this->getRequest();
+        $fileId = $request->getParam("id");
+        $key = $request->getParam("download_key");
+        $module = $request->getModuleName();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+        $stationPodcast = StationPodcastQuery::create()
+            ->findOneByDbPodcastId(Application_Model_Preference::getStationPodcastId());
+        return $module == "rest" && $controller == "media" && $action == "download"
+            && $key === Application_Model_Preference::getStationPodcastDownloadKey()
+            && $stationPodcast->hasEpisodeForFile($fileId);
+    }
+
     private function verifyCSRFToken($token) {
         return SecurityHelper::verifyCSRFToken($token);
     }

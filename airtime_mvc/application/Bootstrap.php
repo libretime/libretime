@@ -14,8 +14,7 @@ if (!isset($configRun) || !$configRun) {
 require_once 'autoload.php';
 
 require_once CONFIG_PATH . "constants.php";
-require_once 'Preference.php';
-require_once 'Locale.php';
+/* Common */
 require_once "DateHelper.php";
 require_once "LocaleHelper.php";
 require_once "FileDataHelper.php";
@@ -28,13 +27,28 @@ require_once "SecurityHelper.php";
 require_once "SessionHelper.php";
 require_once "GoogleAnalytics.php";
 require_once "Timezone.php";
-require_once "Auth.php";
-require_once "interface/OAuth2.php";
+require_once "CeleryManager.php";
 require_once "TaskManager.php";
+require_once "PodcastManager.php";
 require_once "UsabilityHints.php";
 require_once __DIR__.'/models/formatters/LengthFormatter.php';
-require_once __DIR__.'/services/CeleryService.php';
-require_once __DIR__.'/services/SoundcloudService.php';
+require_once __DIR__.'/common/widgets/Table.php';
+/* Models */
+require_once "Auth.php";
+require_once 'Preference.php';
+require_once 'Locale.php';
+/* Enums */
+require_once "Enum.php";
+require_once "MediaType.php";
+require_once "HttpRequestType.php";
+/* Interfaces */
+require_once "OAuth2.php";
+require_once "OAuth2Controller.php";
+require_once "Publish.php";
+/* Factories */
+require_once __DIR__.'/services/CeleryServiceFactory.php';
+require_once __DIR__.'/services/PublishServiceFactory.php';
+
 require_once __DIR__.'/forms/helpers/ValidationTypes.php';
 require_once __DIR__.'/forms/helpers/CustomDecorators.php';
 require_once __DIR__.'/controllers/plugins/PageLayoutInitPlugin.php';
@@ -56,8 +70,6 @@ if (array_key_exists("REQUEST_URI", $_SERVER) && (stripos($_SERVER["REQUEST_URI"
 }
 
 Zend_Session::setOptions(array('strict' => true));
-
-
 Config::setAirtimeVersion();
 require_once (CONFIG_PATH . 'navigation.php');
 
@@ -67,9 +79,6 @@ $front = Zend_Controller_Front::getInstance();
 $front->registerPlugin(new RabbitMqPlugin());
 $front->registerPlugin(new Zend_Controller_Plugin_ConversionTracking());
 $front->throwExceptions(false);
-
-
-
 
 /* The bootstrap class should only be used to initialize actions that return a view.
    Actions that return JSON will not use the bootstrap class! */
@@ -81,20 +90,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
         $view->doctype('XHTML1_STRICT');
     }
-
-    
-    protected function _initTasks() {
-        /* We need to wrap this here so that we aren't checking when we're running the unit test suite
-         */
-        if (getenv("AIRTIME_UNIT_TEST") != 1) {
-            $taskManager = TaskManager::getInstance();
-            $taskManager->runTask(AirtimeTask::UPGRADE);  // Run the upgrade on each request (if it needs to be run)
-            //This will do the upgrade too if it's needed...
-            $taskManager->runTasks();
-        }
-    }
-
-
 
     protected function _initZFDebug()
     {

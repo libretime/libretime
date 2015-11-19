@@ -28,6 +28,7 @@ class LocaleController extends Zend_Controller_Action
         $translations = array (
             //common/common.js
             "Audio Player" => _("Audio Player"),
+            "Something went wrong!" => _("Something went wrong!"),
             //dashboard/dashboard.js
             "Recording:" => _("Recording:"),
             "Master Stream" => _("Master Stream"),
@@ -57,6 +58,7 @@ class LocaleController extends Zend_Controller_Action
             "You haven't added any webstreams" => _("You haven't added any webstreams"),
             "Learn about tracks" => _("Learn about tracks"),
             "Learn about playlists" => _("Learn about playlists"),
+            "Learn about podcasts" => _("Learn about podcasts"),
             "Learn about smart blocks" => _("Learn about smart blocks"),
             "Learn about webstreams" => _("Learn about webstreams"),
             "Click 'New' to create one." => _("Click 'New' to create one."),
@@ -108,6 +110,10 @@ class LocaleController extends Zend_Controller_Action
             "Are you sure you want to delete the selected item?" => _("Are you sure you want to delete the selected item?"),
             "Uploading in progress..." => _("Uploading in progress..."),
             "Retrieving data from the server..." => _("Retrieving data from the server..."),
+            // SOUNDCLOUD
+            "Are you sure? SoundCloud stats and comments for this track will be permanently removed." => "Are you sure? SoundCloud stats and comments for this track will be permanently removed.",
+            "Your track is being deleted from SoundCloud" => "Your track is being deleted from SoundCloud",
+            "Your track is being uploaded and will appear on SoundCloud in a couple of minutes" => "Your track is being uploaded and will appear on SoundCloud in a couple of minutes",
             "The soundcloud id for this file is: " => _("The soundcloud id for this file is: "),
             "There was an error while uploading to soundcloud." => _("There was an error while uploading to soundcloud."),
             "Error code: " => _("Error code: "),
@@ -116,6 +122,7 @@ class LocaleController extends Zend_Controller_Action
             "Input must be a number" => _("Input must be a number"),
             "Input must be in the format: yyyy-mm-dd" => _("Input must be in the format: yyyy-mm-dd"),
             "Input must be in the format: hh:mm:ss.t" => _("Input must be in the format: hh:mm:ss.t"),
+            "My Podcast" => _("My Podcast"),
             //library/plupload.js
             "You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"
                 => _("You are currently uploading files. %sGoing to another screen will cancel the upload process. %sAre you sure you want to leave the page?"),

@@ -83,6 +83,7 @@
     <column name="is_scheduled" phpName="DbIsScheduled" type="BOOLEAN" defaultValue="false"/>
     <column name="is_playlist" phpName="DbIsPlaylist" type="BOOLEAN" defaultValue="false"/>
     <column name="filesize" phpName="DbFilesize" type="Integer" required="true" defaultValue="0"/>
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="512" />
     <foreign-key foreignTable="cc_subjs" phpName="FkOwner" name="cc_files_owner_fkey">
       <reference local="owner_id" foreign="id"/>
     </foreign-key>
@@ -559,6 +560,66 @@
     </unique>
     <foreign-key foreignTable="third_party_track_references" name="celery_service_fkey" onDelete="CASCADE">
       <reference local="track_reference" foreign="id"/>
+    </foreign-key>
+  </table>
+
+  <table name="podcast" phpName="Podcast">
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="url" phpName="DbUrl" type="VARCHAR" size="4096" required="true" />
+    <column name="title" phpName="DbTitle" type="VARCHAR" size="4096" required="true" />
+    <column name="creator" phpName="DbCreator" type="VARCHAR" size="4096" />
+    <column name="description" phpName="DbDescription" type="VARCHAR" size="4096" />
+    <column name="language" phpName="DbLanguage" type="VARCHAR" size="4096" />
+    <column name="copyright" phpName="DbCopyright" type="VARCHAR" size="4096" />
+    <column name="link" phpName="DbLink" type="VARCHAR" size="4096" />
+    <column name="itunes_author" phpName="DbItunesAuthor" type="VARCHAR" size="4096" />
+    <column name="itunes_keywords" phpName="DbItunesKeywords" type="VARCHAR" size="4096" />
+    <column name="itunes_summary" phpName="DbItunesSummary" type="VARCHAR" size="4096" />
+    <column name="itunes_subtitle" phpName="DbItunesSubtitle" type="VARCHAR" size="4096" />
+    <column name="itunes_category" phpName="DbItunesCategory" type="VARCHAR" size="4096" />
+    <column name="itunes_explicit" phpName="DbItunesExplicit" type="VARCHAR" size="4096" />
+    <column name="owner" phpName="DbOwner" type="INTEGER" />
+    <foreign-key foreignTable="cc_subjs" name="podcast_owner_fkey" onDelete="CASCADE">
+      <reference local="owner" foreign="id" />
+    </foreign-key>
+  </table>
+
+  <table name="station_podcast" phpName="StationPodcast">
+    <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
+    <column name="podcast_id" phpName="DbPodcastId" required="true" type="INTEGER"/>
+    <foreign-key foreignTable="podcast" name="podcast_id_fkey" onDelete="CASCADE">
+      <reference local="podcast_id" foreign="id" />
+    </foreign-key>
+    <behavior name="delegate">
+      <parameter name="to" value="podcast" />
+    </behavior>
+  </table>
+
+  <table name="imported_podcast" phpName="ImportedPodcast">
+    <column name="id" phpName="DbId" required="true" primaryKey="true" autoIncrement="true" type="INTEGER"/>
+    <column name="auto_ingest" phpName="DbAutoIngest" type="BOOLEAN"  required="true" defaultValue="false"/>
+    <column name="auto_ingest_timestamp" phpName="DbAutoIngestTimestamp" type="TIMESTAMP" required="false" />
+    <column name="podcast_id" phpName="DbPodcastId" required="true" type="INTEGER"/>
+    <foreign-key foreignTable="podcast" name="podcast_id_fkey" onDelete="CASCADE">
+      <reference local="podcast_id" foreign="id" />
+    </foreign-key>
+    <behavior name="delegate">
+      <parameter name="to" value="podcast" />
+    </behavior>
+  </table>
+
+  <table name="podcast_episodes" phpName="PodcastEpisodes">
+    <column name="id" phpName="DbId" primaryKey="true" type="INTEGER" autoIncrement="true" required="true" />
+    <column name="file_id" phpName="DbFileId" type="INTEGER" />
+    <column name="podcast_id" phpName="DbPodcastId" type="INTEGER" required="true" />
+    <column name="publication_date" phpName="DbPublicationDate" type="TIMESTAMP" required="true" />
+    <column name="download_url" phpName="DbDownloadUrl" type="varchar" size="4096" required="true" />
+    <column name="episode_guid" phpName="DbEpisodeGuid" type="varchar" size="4096" required="true" />
+    <foreign-key foreignTable="cc_files" name="podcast_episodes_cc_files_fkey" onDelete="CASCADE">
+      <reference local="file_id" foreign="id" />
+    </foreign-key>
+    <foreign-key foreignTable="podcast" name="podcast_episodes_podcast_id_fkey" onDelete="CASCADE">
+      <reference local="podcast_id" foreign="id" />
     </foreign-key>
   </table>
 </database>

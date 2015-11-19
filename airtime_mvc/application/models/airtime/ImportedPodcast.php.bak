@@ -1,0 +1,251 @@
+<?php
+
+
+
+/**
+ * Skeleton subclass for representing a row from the 'imported_podcast' table.
+ *
+ *
+ *
+ * You should add additional methods to this class to meet the
+ * application requirements.  This class will only be generated as
+ * long as it does not already exist in the output directory.
+ *
+ * @package    propel.generator.airtime
+ */
+class ImportedPodcast extends BaseImportedPodcast
+{
+    // These fields should never be modified with POST/PUT data
+    private static $privateFields = array(
+        "id",
+        "url",
+        "type",
+        "owner"
+    );
+
+    /** Creates a Podcast object from the given podcast URL.
+     *  This is used by our Podcast REST API
+     *
+     * @param $data An array containing the URL for a Podcast object.
+     *
+     * @return array - Podcast Array with a full list of episodes
+     * @throws Exception
+     * @throws InvalidPodcastException
+     * @throws PodcastLimitReachedException
+     */
+    public static function create($data)
+    {
+        if (Application_Service_PodcastService::podcastLimitReached()) {
+            throw new PodcastLimitReachedException();
+        }
+
+        $rss = Application_Service_PodcastService::getPodcastFeed($data["url"]);
+        if (!$rss) {
+            throw new InvalidPodcastException();
+        }
+
+        // Ensure we are only creating Podcast with the given URL, and excluding
+        // any extra data fields that may have been POSTED
+        $podcastArray = array();
+        $podcastArray["url"] = $data["url"];
+
+        $podcastArray["title"] = $rss->get_title();
+        $podcastArray["description"] = $rss->get_description();
+        $podcastArray["link"] = $rss->get_link();
+        $podcastArray["language"] = $rss->get_language();
+        $podcastArray["copyright"] = $rss->get_copyright();
+        $podcastArray["creator"] = $rss->get_author()->get_name();
+        $podcastArray["category"] = $rss->get_categories();
+
+        $itunesChannel = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+
+        $itunesSubtitle = $rss->get_channel_tags($itunesChannel, 'subtitle');
+        $podcastArray["itunes_subtitle"] = isset($itunesSubtitle[0]["data"]) ? $itunesSubtitle[0]["data"] : "";
+
+        $itunesCategory = $rss->get_channel_tags($itunesChannel, 'category');
+        $categoryArray = array();
+        foreach ($itunesCategory as $c => $data) {
+            foreach ($data["attribs"] as $attrib) {
+                array_push($categoryArray, $attrib["text"]);
+            }
+        }
+        $podcastArray["itunes_category"] = implode(",", $categoryArray);
+
+        $itunesAuthor = $rss->get_channel_tags($itunesChannel, 'author');
+        $podcastArray["itunes_author"] = isset($itunesAuthor[0]["data"]) ? $itunesAuthor[0]["data"] : "";
+
+        $itunesSummary = $rss->get_channel_tags($itunesChannel, 'summary');
+        $podcastArray["itunes_summary"] = isset($itunesSummary[0]["data"]) ? $itunesSummary[0]["data"] : "";
+
+        $itunesKeywords = $rss->get_channel_tags($itunesChannel, 'keywords');
+        $podcastArray["itunes_keywords"] = isset($itunesKeywords[0]["data"]) ? $itunesKeywords[0]["data"] : "";
+
+        $itunesExplicit = $rss->get_channel_tags($itunesChannel, 'explicit');
+        $podcastArray["itunes_explicit"] = isset($itunesExplicit[0]["data"]) ? $itunesExplicit[0]["data"] : "";
+
+        self::validatePodcastMetadata($podcastArray);
+
+        try {
+            $podcast = new ImportedPodcast();
+            $podcast->fromArray($podcastArray, BasePeer::TYPE_FIELDNAME);
+            $podcast->setDbOwner(self::getOwnerId());
+            $podcast->setDbType(IMPORTED_PODCAST);
+            $podcast->save();
+
+            return self::_generatePodcastArray($podcast, $rss);
+        } catch(Exception $e) {
+            $podcast->delete();
+            throw $e;
+        }
+    }
+
+    /**
+     * Fetches a Podcast's rss feed and returns all its episodes with
+     * the Podcast object
+     *
+     * @param $podcastId
+     *
+     * @throws PodcastNotFoundException
+     * @throws InvalidPodcastException
+     * @return array - Podcast Array with a full list of episodes
+     */
+    public static function getPodcastById($podcastId)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if (!$podcast) {
+            throw new PodcastNotFoundException();
+        }
+
+        $rss = Application_Service_PodcastService::getPodcastFeed($podcast->getDbUrl());
+        if (!$rss) {
+            throw new InvalidPodcastException();
+        }
+
+        return self::_generatePodcastArray($podcast, $rss);
+    }
+
+    /**
+     * Given a podcast object and a SimplePie feed object,
+     * generate a data array to pass back to the front-end
+     *
+     * @param Podcast $podcast  Podcast model object
+     * @param SimplePie $rss    SimplePie feed object
+     *
+     * @return array
+     */
+    private static function _generatePodcastArray($podcast, $rss) {
+        $podcastArray = $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+
+        $podcastArray["episodes"] = array();
+        foreach ($rss->get_items() as $item) {
+            /** @var SimplePie_Item $item */
+            array_push($podcastArray["episodes"], array(
+                "guid" => $item->get_id(),
+                "title" => $item->get_title(),
+                "author" => $item->get_author()->get_name(),
+                "description" => $item->get_description(),
+                "pub_date" => $item->get_date("Y-m-d H:i:s"),
+                "link" => $item->get_link(),
+                "enclosure" => $item->get_enclosure()
+            ));
+        }
+
+        return $podcastArray;
+    }
+
+    /**
+     * Updates a Podcast object with the given metadata
+     *
+     * @param $podcastId
+     * @param $data
+     * @return array
+     * @throws Exception
+     * @throws PodcastNotFoundException
+     */
+    public static function updateFromArray($podcastId, $data)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if (!$podcast) {
+            throw new PodcastNotFoundException();
+        }
+
+        self::removePrivateFields($data);
+        self::validatePodcastMetadata($data);
+
+        $podcast->fromArray($data, BasePeer::TYPE_FIELDNAME);
+        $podcast->save();
+
+        return $podcast->toArray(BasePeer::TYPE_FIELDNAME);
+    }
+
+    /**
+     * Deletes a Podcast and its podcast episodes
+     *
+     * @param $podcastId
+     * @throws Exception
+     * @throws PodcastNotFoundException
+     */
+    public static function deleteById($podcastId)
+    {
+        $podcast = PodcastQuery::create()->findPk($podcastId);
+        if ($podcast) {
+            $podcast->delete();
+        } else {
+            throw new PodcastNotFoundException();
+        }
+    }
+
+    /**
+     * Trims the podcast metadata to fit the table's column max size
+     *
+     * @param $podcastArray
+     */
+    private static function validatePodcastMetadata(&$podcastArray)
+    {
+        $podcastTable = PodcastPeer::getTableMap();
+
+        foreach ($podcastArray as $key => &$value) {
+            try {
+                // Make sure column exists in table
+                $columnMaxSize = $podcastTable->getColumn($key)->getSize();
+            } catch (PropelException $e) {
+                continue;
+            }
+
+            if (strlen($value) > $columnMaxSize) {
+                $value = substr($value, 0, $podcastTable->getColumn($key)->getSize());
+            }
+        }
+    }
+
+    private static function removePrivateFields(&$data)
+    {
+        foreach (self::$privateFields as $key) {
+            unset($data[$key]);
+        }
+    }
+
+    //TODO move this somewhere where it makes sense
+    private static function getOwnerId()
+    {
+        try {
+            if (Zend_Auth::getInstance()->hasIdentity()) {
+                $service_user = new Application_Service_UserService();
+                return $service_user->getCurrentUser()->getDbId();
+            } else {
+                $defaultOwner = CcSubjsQuery::create()
+                    ->filterByDbType('A')
+                    ->orderByDbId()
+                    ->findOne();
+                if (!$defaultOwner) {
+                    // what to do if there is no admin user?
+                    // should we handle this case?
+                    return null;
+                }
+                return $defaultOwner->getDbId();
+            }
+        } catch(Exception $e) {
+            Logging::info($e->getMessage());
+        }
+    }
+}

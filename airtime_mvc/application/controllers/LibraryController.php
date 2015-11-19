@@ -18,6 +18,7 @@ class LibraryController extends Zend_Controller_Action
                     ->addActionContext('get-file-metadata', 'html')
                     ->addActionContext('set-num-entries', 'json')
                     ->addActionContext('edit-file-md', 'json')
+                    ->addActionContext('publish-dialog', 'html')
                     ->initContext();
     }
 
@@ -120,7 +121,8 @@ class LibraryController extends Zend_Controller_Action
             }
             if ($isAdminOrPM || $file->getFileOwnerId() == $user->getId()) {
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
-                $menu["edit"] = array("name"=> _("Edit Metadata"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
+                $menu["edit"] = array("name"=> _("Edit..."), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
+                $menu["publish"] = array("name"=> _("Publish..."), "icon" => "soundcloud", "url" => $baseUrl."library/publish/id/{$id}");
             }
 
             // It's important that we always return the parent id (cc_files id)
@@ -133,33 +135,21 @@ class LibraryController extends Zend_Controller_Action
             // SOUNDCLOUD MENU OPTION
             $ownerId = empty($obj) ? $file->getFileOwnerId() : $obj->getCreatorId();
             if ($isAdminOrPM || $ownerId == $user->getId()) {
-                $soundcloudService = new SoundcloudService();
+                $soundcloudService = new Application_Service_SoundcloudService();
                 if ($type === "audioclip" && $soundcloudService->hasAccessToken()) {
-
-                    //create a menu separator
-                    $menu["sep1"] = "-----------";
-
-                    //create a sub menu for Soundcloud actions.
-                    $menu["soundcloud"] = array("name" => _(SOUNDCLOUD), "icon" => "soundcloud", "items" => array());
-
                     $serviceId = $soundcloudService->getServiceId($id);
                     if (!is_null($file) && $serviceId != 0) {
+                        $trackRef = ThirdPartyTrackReferencesQuery::create()
+                            ->filterByDbService(SOUNDCLOUD_SERVICE_NAME)
+                            ->findOneByDbFileId($id);
+
+                        //create a menu separator
+                        $menu["sep1"] = "-----------";
+
+                        //create a sub menu for Soundcloud actions.
+                        $menu["soundcloud"] = array("name" => _(SOUNDCLOUD), "icon" => "soundcloud", "items" => array());
                         $menu["soundcloud"]["items"]["view"] = array("name" => _("View track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/view-on-sound-cloud/id/{$id}");
-                        $menu["soundcloud"]["items"]["remove"] = array("name" => _("Remove track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/delete/id/{$id}");
-                    } else {
-                        // If a reference exists for this file ID, that means the user has uploaded the track
-                        // but we haven't yet gotten a response from Celery, so disable the menu item
-                        if ($soundcloudService->referenceExists($id)) {
-                            $menu["soundcloud"]["items"]["upload"] = array(
-                                "name" => _("Upload track"), "icon" => "soundcloud",
-                                "url" => $baseUrl . "soundcloud/upload/id/{$id}", "disabled" => true
-                            );
-                        } else {
-                            $menu["soundcloud"]["items"]["upload"] = array(
-                                "name" => _("Upload track"), "icon" => "soundcloud",
-                                "url" => $baseUrl . "soundcloud/upload/id/{$id}"
-                            );
-                        }
+                        $menu["soundcloud"]["items"]["update"] = array("name" => _("Update track"), "icon" => "soundcloud", "url" => $baseUrl . "soundcloud/update/id/{$trackRef->getDbForeignId()}");
                     }
                 }
             }
@@ -181,7 +171,7 @@ class LibraryController extends Zend_Controller_Action
 
             if ($obj_sess->id !== $id && $screen == "playlist") {
                 if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
-                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit");
+                    $menu["edit"] = array("name"=> _("Edit..."), "icon" => "edit");
                 }
             }
 
@@ -203,7 +193,7 @@ class LibraryController extends Zend_Controller_Action
             }
             if ($isAdminOrPM || $obj->getCreatorId() == $user->getId()) {
                 if ($screen == "playlist") {
-                    $menu["edit"] = array("name"=> _("Edit"), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
+                    $menu["edit"] = array("name"=> _("Edit..."), "icon" => "edit", "url" => $baseUrl."library/edit-file-md/id/{$id}");
                 }
                 $menu["del"] = array("name"=> _("Delete"), "icon" => "delete", "url" => $baseUrl."library/delete");
             }
@@ -379,7 +369,6 @@ class LibraryController extends Zend_Controller_Action
         $this->view->form = $form;
         $this->view->id = $file_id;
         $this->view->title = $file->getPropelOrm()->getDbTrackTitle();
-        $this->view->type = "md";
         $this->view->html = $this->view->render('library/edit-file-md.phtml');
     }
 
@@ -452,5 +441,17 @@ class LibraryController extends Zend_Controller_Action
         } catch (Exception $e) {
             Logging::info($e->getMessage());
         }
+    }
+
+    public function publishDialogAction() {
+        $this->_helper->layout->disableLayout();
+
+
+        if (!Billing::isStationPodcastAllowed()) {
+            $this->renderScript("podcast/featureupgrade-pane.phtml");
+        }
+
+
+        //This just spits out publish-dialog.phtml!
     }
 }

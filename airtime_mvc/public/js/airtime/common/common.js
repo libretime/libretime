@@ -58,6 +58,15 @@ var i18n_days_short = [
     $.i18n._("Sa")
 ];
 
+var HTTPMethods = Object.freeze({
+    GET: "GET",
+    POST: "POST",
+    PUT: "PUT",
+    PATCH: "PATCH",
+    DELETE: "DELETE",
+    OPTIONS: "OPTIONS"
+});
+
 var dateStartId = "#sb_date_start",
     timeStartId = "#sb_time_start",
     dateEndId = "#sb_date_end",
@@ -69,7 +78,7 @@ function getDatatablesStrings(overrideDict) {
         "sEmptyTable":     $.i18n._("No data available in table"),
         "sInfo":           $.i18n._("Showing _START_ to _END_ of _TOTAL_ entries"),
         "sInfoEmpty":      $.i18n._("Showing 0 to 0 of 0 entries"),
-        "sInfoFiltered":   $.i18n._("(filtered from _MAX_ total entries)"),
+        "sInfoFiltered":   "", // $.i18n._("(filtered from _MAX_ total entries)"),
         "sInfoPostFix":    $.i18n._(""),
         "sInfoThousands":  $.i18n._(","),
         "sLengthMenu":     $.i18n._("Show _MENU_"),
@@ -295,3 +304,55 @@ function getUsabilityHint() {
     });
 }
 
+// TODO: build this out so we can use it as a fallback in fail cases
+function buildErrorDialog(message) {
+    var el = $("<div id='error_dialog'></div>");
+    el.text(message);
+    $(document.body).append(el);
+    $("#error_dialog").dialog({
+        title: $.i18n._("Something went wrong!"),
+        resizable: false,
+        modal: true,
+        width: "auto",
+        height: "auto"
+    });
+}
+
+/**
+ * Add title attributes (whose values are their inner text) to all elements in the calling parent matching selector
+ *
+ * @param selector jQuery selector to search descendants
+ * @returns {jQuery}
+ */
+jQuery.fn.addTitles = function(selector) {
+    this.each(function() {
+        // Put this in a mouseenter event handler so it's dynamic
+        // (newly created elements will have the title applied on hover)
+        $(this).on("mouseenter", selector, function () {
+            $(this).attr("title", $(this).text());
+        });
+    });
+
+    return this;  // jQuery chaining
+};
+
+// XXX: Old code to pan selector text; keeping this around in case we want to use it later - Duncan
+jQuery.fn.scrollText = function(selector) {
+    this.each(function () {
+        $(this).on("mouseenter", selector, function () {
+            var sw = $(this)[0].scrollWidth - parseFloat($(this).css("textIndent")), iw = $(this).innerWidth();
+            if (sw > iw) {
+                $(this).stop().animate({
+                    textIndent: "-" + (sw + 1 - iw) + "px"
+                }, sw * 8);
+            }
+        });
+        $(this).on("mouseleave", selector, function () {
+            $(this).stop().animate({
+                textIndent: "0"
+            }, 500);
+        });
+    });
+
+    return this;
+};

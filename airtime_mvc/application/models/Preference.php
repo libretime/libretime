@@ -576,7 +576,9 @@ class Application_Model_Preference
         } else {
             // We return the Airtime logo if no logo is set in the database.
             // airtime_logo.png is stored under the public directory
-            return DEFAULT_LOGO_PLACEHOLDER;
+            $image = @file_get_contents(Application_Common_HTTPHelper::getStationUrl() . DEFAULT_LOGO_FILE);
+            $image = base64_encode($image);
+            return $image;
         }
     }
     
@@ -1505,5 +1507,81 @@ class Application_Model_Preference
     public static function setWhatsNewDialogViewed($value)
     {
         self::setValue("whats_new_dialog_viewed", $value, true);
+    }
+
+    public static function getPodcastPollLock() {
+        return self::getValue("podcast_poll_lock");
+    }
+
+    public static function setPodcastPollLock($value)
+    {
+        self::setValue("podcast_poll_lock", $value);
+    }
+
+    public static function getStationPodcastId()
+    {
+        // Create the Station podcast if it doesn't exist.
+        $stationPodcastId = self::getValue("station_podcast_id");
+        if (empty($stationPodcastId)) {
+            $stationPodcastId = Application_Service_PodcastService::createStationPodcast();
+        }
+        return $stationPodcastId;
+    }
+
+    public static function setStationPodcastId($value)
+    {
+        self::setValue("station_podcast_id", $value);
+    }
+
+    // SAAS-1081 - Implement a universal download key for downloading episodes from the station podcast
+    //             Store and increment the download counter, resetting every month
+
+    public static function getStationPodcastDownloadKey() {
+        return self::getValue("station_podcast_download_key");
+    }
+
+    public static function setStationPodcastDownloadKey($value = null) {
+        $value = empty($value) ? (new Application_Model_Auth())->generateRandomString() : $value;
+        self::setValue("station_podcast_download_key", $value);
+    }
+
+    public static function getStationPodcastDownloadResetTimer() {
+        return self::getValue("station_podcast_download_reset_timer");
+    }
+
+    public static function setStationPodcastDownloadResetTimer($value) {
+        self::setValue("station_podcast_download_reset_timer", $value);
+    }
+
+    public static function getStationPodcastDownloadCounter() {
+        return self::getValue("station_podcast_download_counter");
+    }
+
+    public static function resetStationPodcastDownloadCounter() {
+        self::setValue("station_podcast_download_counter", 0);
+    }
+
+    public static function incrementStationPodcastDownloadCounter() {
+        $c = self::getStationPodcastDownloadCounter();
+        self::setValue("station_podcast_download_counter", empty($c) ? 1 : ++$c);
+    }
+
+    // For fail cases, we may need to decrement the download counter
+    public static function decrementStationPodcastDownloadCounter() {
+        $c = self::getStationPodcastDownloadCounter();
+        self::setValue("station_podcast_download_counter", empty($c) ? 0 : --$c);
+    }
+
+    public static function getStationPodcastPrivacy() {
+        if (!Billing::isStationPodcastAllowed()) {
+            // return private setting
+            return 1;
+        }
+
+        return self::getValue("station_podcast_privacy");
+    }
+
+    public static function setStationPodcastPrivacy($value) {
+        self::setValue("station_podcast_privacy", $value);
     }
 }

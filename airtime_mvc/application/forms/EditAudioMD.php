@@ -48,6 +48,16 @@ class Application_Form_EditAudioMD extends Zend_Form
             ));
         $this->addElement($album_title);
 
+        // Description field
+        $description = new Zend_Form_Element_Textarea('description');
+        $description->class = 'input_text';
+        $description->setLabel(_('Description:'))
+            ->setFilters(array('StringTrim'))
+            ->setValidators(array(
+                new Zend_Validate_StringLength(array('max' => 512))
+            ));
+        $this->addElement($description);
+
         // Add track number field
         $track_number = new Zend_Form_Element('track_number');
         $track_number->class = 'input_text';
@@ -189,27 +199,37 @@ class Application_Form_EditAudioMD extends Zend_Form
         $cueOut->setValidators(array($cueOutValidator));
         $this->addElement($cueOut);
 
-        // Add the submit button
-        $this->addElement('button', 'editmdsave', array(
-            'ignore'     => true,
-            'class'      => 'btn md-save right-floated',
-            'label'      => _('OK'),
-            'decorators' => array(
-                'ViewHelper'
-            )
-        ));
-
-        // Add the submit button
+        // Add the cancel button
         $this->addElement('button', 'editmdcancel', array(
             'ignore'   => true,
-            'class'    => 'btn md-cancel right-floated',
+            'class'    => 'btn md-cancel',
             'label'    => _('Cancel'),
             'decorators' => array(
                 'ViewHelper'
             )
         ));
 
-        $this->addDisplayGroup(array('editmdcancel', 'editmdsave'), 'submitButtons', array(
+        // Add the submit button
+        $this->addElement('button', 'editmdsave', array(
+            'ignore'     => true,
+            'class'      => 'btn md-save',
+            'label'      => _('Save'),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
+
+        // Button to open the publish dialog
+        $this->addElement('button', 'publishdialog', array(
+            'ignore'   => true,
+            'class'    => 'btn md-publish',
+            'label'    => _('Publish...'),
+            'decorators' => array(
+                'ViewHelper'
+            )
+        ));
+
+        $this->addDisplayGroup(array('publishdialog', 'editmdsave', 'editmdcancel'), 'submitButtons', array(
             'decorators' => array(
                 'FormElements',
                 'DtDdWrapper'

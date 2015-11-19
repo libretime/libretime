@@ -66,8 +66,10 @@ class PreferenceController extends Zend_Controller_Action
                 Application_Model_Preference::setTuneinPartnerId($values["tunein_partner_id"]);
 
                 // SoundCloud Preferences
-                Application_Model_Preference::setDefaultSoundCloudLicenseType($values["SoundCloudLicense"]);
-                Application_Model_Preference::setDefaultSoundCloudSharingType($values["SoundCloudSharing"]);
+                if (Billing::isStationPodcastAllowed()) {
+                    Application_Model_Preference::setDefaultSoundCloudLicenseType($values["SoundCloudLicense"]);
+                    Application_Model_Preference::setDefaultSoundCloudSharingType($values["SoundCloudSharing"]);
+                }
 
                 $this->view->statusMsg = "<div class='success'>". _("Preferences updated.")."</div>";
                 $form = new Application_Form_Preferences();
@@ -81,6 +83,28 @@ class PreferenceController extends Zend_Controller_Action
         $this->view->logoImg = Application_Model_Preference::GetStationLogo();
 
         $this->view->form = $form;
+    }
+
+    public function stationPodcastSettingsAction() {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $values = json_decode($this->getRequest()->getRawBody());
+
+        if (!Application_Model_Preference::getStationPodcastPrivacy() && $values->stationPodcastPrivacy == 1) {
+            // Refresh the download key when enabling privacy
+            Application_Model_Preference::setStationPodcastDownloadKey();
+        }
+
+        // Append sharing token (download key) to Station podcast URL
+        $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
+        $key = Application_Model_Preference::getStationPodcastDownloadKey();
+        $url = Application_Common_HTTPHelper::getStationUrl() .
+            (((int) $values->stationPodcastPrivacy) ? "feeds/station-rss?sharing_token=$key" : "feeds/station-rss");
+        $stationPodcast->setDbUrl($url)->save();
+        Application_Model_Preference::setStationPodcastPrivacy($values->stationPodcastPrivacy);
+
+        $this->_helper->json->sendJson(array("url" => $url));
     }
 
     public function supportSettingAction()

@@ -607,6 +607,7 @@ var criteriaTypes = {
     "copyright"    : "s",
     "cuein"        : "n",
     "cueout"       : "n",
+    "description"  : "s",
     "artist_name"  : "s",
     "encoded_by"   : "s",
     "utime"        : "n",

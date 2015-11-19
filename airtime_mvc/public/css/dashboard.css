@@ -20,23 +20,22 @@
 
     background-color: #242424;
 }
+
 @media screen and (max-width: 1700px) {
-    #library_display_info {
+    .dataTables_info {
         display: none;
     }
-    #library_display_length {
+    .dataTables_length {
         float: left;
     }
 }
 
 @media screen and (max-width: 1600px) {
-    #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > span,
-    #show_builder_table_wrapper button:not(.dropdown-toggle):not(.btn-new) > span,
+    .content-pane button:not(.dropdown-toggle):not(.btn-new) > span,
     #show_builder_table_wrapper #sb_submit > span {
         display: none;
     }
-    #library_display_wrapper button:not(.dropdown-toggle):not(.btn-new) > i,
-    #show_builder_table_wrapper button:not(.dropdown-toggle):not(.btn-new) > i,
+    .content-pane button:not(.dropdown-toggle):not(.btn-new) > i,
     #show_builder_table_wrapper #sb_submit > i {
         margin-right: 0 !important;
     }
@@ -50,6 +49,7 @@
     .content-pane {
         height: auto !important;
         width: 100% !important;
+        min-height: 500px;
     }
     .spl_sortable {
         max-height: 50%;
@@ -67,6 +67,9 @@
 
 #library_title {
     padding: 5px 5px 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 #library_content {
@@ -79,24 +82,24 @@
 }
 
 #library_content .dataTables_filter input[type="text"], #library_content .dataTables_filter select {
-    height: 26px;
-    margin: 0;
-
-    border: 0;
-    float: left;
-    position: absolute;
-    width: 100%;
+    /*margin: 0;*/
+    /* Quick fix, kind of ugly */
+    margin: -30px 0 0;
+    /*border: 0;*/
+    /*float: left;*/
+    /*position: absolute;*/
+    /*width: 100%;*/
 }
 
 #library_content label {
     padding: 0;
 }
 
-#library_display_length {
-    padding: 6px;
+.dataTables_length {
+    padding: 5px 6px;
 }
 
-#library_display_length label {
+.dataTables_length label {
     color: #efefef;
     line-height: 26px;
     font-weight: normal;
@@ -141,7 +144,7 @@ div.btn > span {
     z-index: 1;
 }
 
-#library_display_wrapper, #show_builder_table_wrapper {
+.outer-datatable-wrapper .dataTables_wrapper {
     position: absolute;
     top: 34px;
     bottom: 4px;
@@ -149,16 +152,18 @@ div.btn > span {
     left: 4px;
 }
 
-#library_display, #show_builder_table {
+/*#library_display, #show_builder_table*/
+.datatable.dataTable {
     border: none;
 }
 
-#library_display_wrapper > .dataTables_scrolling,
-#show_builder_table_wrapper > .dataTables_scrolling {
+/*#library_display_wrapper > .dataTables_scrolling,
+#show_builder_table_wrapper > .dataTables_scrolling*/
+.dataTables_wrapper > .dataTables_scrolling {
     border: 1px solid #5b5b5b;
 }
 
-#library_empty_image {
+.empty_placeholder_image {
     opacity: .3;
 
     width: 16px;
@@ -169,7 +174,7 @@ div.btn > span {
     padding-right: 2px; /* For the webstream icon */
 }
 
-#library_empty {
+.empty_placeholder {
     display: none;
     font-size: 16px;
     position: absolute;
@@ -179,14 +184,14 @@ div.btn > span {
     color: #efefef;
 }
 
-#library_empty a {
+.empty_placeholder a {
     font-size: 0.9em;
     line-height: 37px;
     text-decoration: none;
     color: #FF5D1A;
 }
 
-#library_empty a:visited {
+.empty_placeholder a:visited {
     color: #CE3C01;
 }
 
@@ -196,7 +201,7 @@ thead th.ui-state-default {
     color: #ccc;
 }
 
-thead th.ui-state-default:not([class*='checkbox']):not([class*='type']):not([class*='image']) {
+thead th.ui-state-default:not([class*='checkbox']):not([class*='type']):not([class*='image']):not([class*='imported']) {
     cursor: move;
 }
 
@@ -243,9 +248,17 @@ thead th.ui-state-default:focus {
     margin-top: 4px;
 }
 
-#filter_message {
+#lib-filter-message, .filter-message {
     border-top: none !important;
     text-shadow: none;
+}
+
+.filter-message {
+    position: relative;
+    font-size: 13px;
+    float: right;
+    line-height: 26px;
+    padding: 0 6px;
 }
 
 #advanced-options {
@@ -283,6 +296,10 @@ thead th.ui-state-default:focus {
     left: 4px;
     z-index: 1; /* Display above the content wrapper */
 
+    -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
     flex: 1 100%;
 }
 
@@ -290,10 +307,6 @@ thead th.ui-state-default:focus {
 
 #show_builder {
     float: right;
-}
-
-#show_builder .fg-toolbar.ui-corner-tl.ui-corner-tr {
-    border-top: none;
 }
 
 .sb-content .dataTables_wrapper {
@@ -329,6 +342,7 @@ thead th.ui-state-default:focus {
 
 #sb_show_filter {
     right: 0;
+    max-width: 125px;
     position: absolute;
 }
 
@@ -384,23 +398,23 @@ textarea {
 
 /* File Metadata Editor */
 
-#edit-md-dialog {
+.edit-md-dialog {
     width: 100%;
     background: none;
     border: none;
     box-shadow: none;
 }
 
-#edit-md-dialog label {
+.edit-md-dialog label {
     font-size: 14px;
     font-weight: normal;
 
     color: #efefef;
 }
 
-#edit-md-dialog .zend_form dt {
+.edit-md-dialog .zend_form dt {
     float: left;
-    width: 40%;
+    width: 35%;
 
     text-align: right;
 
@@ -409,9 +423,9 @@ textarea {
     padding-right: 4px;
 }
 
-#edit-md-dialog .zend_form dd {
+.edit-md-dialog .zend_form dd {
     float: left;
-    width: auto;
+    width: 60%;
 
     font-size: 14px;
     margin: 0 0 10px;
@@ -440,6 +454,10 @@ li.ui-state-default {
 
     overflow: hidden;
 
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -ms-flex: 1;
+    -o-flex: 1;
     flex: 1;
 }
 
@@ -452,7 +470,7 @@ li.ui-state-default {
      background-color: transparent;
 }
 
-.side_playlist label, .side_playlist h4, .side_playlist span {
+.side_playlist label/*, .side_playlist h4, .side_playlist span*/ {
     color: #efefef;
     font-size: 14px;
     line-height: 24px;
@@ -464,7 +482,7 @@ li.ui-state-default {
     font-size: 14px;
 }
 
-.editor_pane_wrapper {
+.editor_pane_wrapper, .angular_wrapper {
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -477,16 +495,33 @@ li.ui-state-default {
     bottom: 4px;
     top: 4px;
     left: 4px;
+    overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
+    color: #efefef;
 }
 
-[data-tab-type='md'] > .editor_pane_wrapper {
-    overflow-x: hidden; /* Show the y-direction scrollbar (magic!) */
+.angular_wrapper a {
+    color: #FF5D1A;
+}
+
+.angular_wrapper a:visited {
+    color: #CE3C01;
+}
+
+.tab-name {
+    float: left;
+    max-width: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .inner_editor_wrapper {
-    max-height: 60%;
     overflow-x: hidden;
     width: 100%;
+    -webkit-flex: 1 0 auto;
+    -moz-flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    -o-flex: 1 0 auto;
     flex: 1 0 auto;
     padding: 10px;
     -webkit-box-sizing: border-box;
@@ -494,9 +529,13 @@ li.ui-state-default {
     box-sizing: border-box;
 }
 
+.angular_wrapper > .inner_editor_wrapper {
+    max-height: none;
+}
+
 .inner_editor_title h2 {
     margin: 10px 0 0 10px;
-    width: 85%;
+    width: 70%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -519,14 +558,17 @@ li.ui-state-default {
 }
 
 .spl-no-r-margin {
-    margin-right: 0px;
+    margin-right: 0;
 }
 
 .spl_sortable {
     height: 100%;
     overflow: auto;
-    flex: 1 100%;
     -webkit-flex: 1 100%;
+    -moz-flex: 1 100%;
+    -ms-flex: 1 100%;
+    -o-flex: 1 100%;
+    flex: 1 100%;
 
     margin: 4px 0;
     min-height: 0;
@@ -537,7 +579,15 @@ li.ui-state-default {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     background-color: #111;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
 }
 
@@ -553,10 +603,24 @@ li.ui-state-default {
 
     font-size: 20px;
 
+    -webkit-flex: 1 1 auto;
+    -moz-flex: 1 1 auto;
+    -ms-flex: 1 1 auto;
+    -o-flex: 1 1 auto;
     flex: 1 1 auto;
     /* Position the text label inside it centered*/
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
+    -ms-justify-content: center;
     justify-content: center;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    -ms-flex-direction: column;
     flex-direction: column;
 }
 
@@ -575,8 +639,8 @@ li.ui-state-default {
     outline-width: 0;
 }
 
-#edit-md-dialog .zend_form dd:last-child {
-    width: 160px;
+.edit-md-dialog .zend_form dd:last-child {
+    width: 100%;
 }
 
 /* Smart Block Editor */
@@ -614,23 +678,29 @@ li.ui-state-default {
     padding-top: 4px;
 }
 
-/* DataTables */
+/* Schedule tab DataTable */
 
-#show_builder .fg-toolbar > .btn-toolbar,
-#show_builder .ColVis.TableTools {
+#show_builder_table_wrapper .fg-toolbar.ui-corner-tl.ui-corner-tr {
+    border-top: none;
+}
+
+#show_builder_table_wrapper .fg-toolbar > .btn-toolbar,
+#show_builder_table_wrapper .ColVis.TableTools {
     position: absolute;
     top: 35px;
 }
 
-#show_builder .fg-toolbar > .btn-toolbar {
+#show_builder_table_wrapper .fg-toolbar > .btn-toolbar {
     left: 6px;
     padding: 0;
 }
 
-#show_builder .ColVis.TableTools {
+#show_builder_table_wrapper .ColVis.TableTools {
     right: 6px;
     margin: 0;
 }
+
+/* DataTables */
 
 div.ColVis_collectionBackground {
     background-color: transparent;
@@ -641,7 +711,7 @@ div.ColVis_collectionBackground {
     overflow: auto;
 }
 
-.ColVis.TableTools {
+:not(.table_toolbar) > .ColVis.TableTools {
     margin: 6px 6px 0 0;
 }
 
@@ -652,6 +722,10 @@ div.ColVis_collectionBackground {
 
 .ColVis_title {
     color: #000;
+}
+
+.ColVis {
+    margin-bottom: 0;
 }
 
 /* Hacky stuff here */
@@ -665,7 +739,7 @@ div.ColVis_collectionBackground {
 
 .fg-toolbar .btn-toolbar {
     margin: 0;
-    padding: 6px;
+    padding: 6px 6px 5px;
 }
 /* ~~~~~~~~~~~~~~~~ */
 
@@ -696,7 +770,7 @@ th.library_checkbox {
 
 /* This is so dragged items show up above the layout */
 
-#library_display .ui-draggable-dragging {
+#library_content .ui-draggable-dragging {
     z-index: 9999;
     position: fixed !important;
 }
@@ -718,3 +792,15 @@ th.library_checkbox {
     background-color: #FF5D1A !important;
     height: 38px !important;
 }
+
+/*  ~~~~~~~~~~~~~~~~
+        Podcasts
+    ~~~~~~~~~~~~~~~~ */
+
+#podcast_table_filter {
+    display: none;
+}
+
+/*  ~~~~~~~~~~~~~~~~
+      END Podcasts
+    ~~~~~~~~~~~~~~~~ */

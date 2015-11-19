@@ -141,7 +141,7 @@ class Application_Model_RabbitMq
         $channel->exchange_declare($exchange, $exchangeType, false, true, $autoDeleteExchange);
         
         $msg = new AMQPMessage($jsonData, array('content_type' => 'text/plain'));
-        
+
         $channel->basic_publish($msg, $exchange);
         $channel->close();
         $conn->close();

@@ -1,0 +1,59 @@
+<div class="angular_wrapper" ng-controller="Publish">
+    <div class="inner_editor_title">
+        <h2>
+            <?php echo _("Publishing") ?> "<span ng-bind="media.track_title" class="title_obj_name"></span>"
+        </h2>
+        <button ng-click="openEditDialog()" class="btn publish-edit-md"><?php echo _("Edit Metadata...") ?></button>
+    </div>
+    <div class="inner_editor_wrapper">
+        <form class="media-metadata">
+            <input ng-value="media.id" class="obj_id" type="hidden"/>
+            <label class="publish-md-field"><?php echo _("Title:") ?></label>
+            <input disabled ng-model="media.track_title" type="text"/>
+
+            <label class="publish-md-field"><?php echo _("Creator:") ?></label>
+            <input disabled ng-model="media.artist_name" type="text"/>
+
+            <label class="publish-md-field"><?php echo _("Description:") ?></label>
+            <textarea disabled ng-model="media.description"></textarea>
+            <fieldset>
+                <legend><?php echo _("Publish to:"); ?></legend>
+                <div class="publish-sources" ng-repeat="source in sources.toPublish">
+                    <input ng-disabled="{{source.status == 2}}" ng-model="publishData[source.source]" type="checkbox" name="publish_sources" id="{{source.source}}">
+                    <label class="source-name" for="{{source.source}}">{{source.label}}</label>
+                    <span ng-if="source.status == 2" style="margin: auto" ng-bind-html="sourceConnectEnum[source.source]"></span>
+                </div>
+                <div ng-if="sources.toPublish.length == 0">
+                    <?php echo _("You have already published this track to all available sources!") . "<br/>"
+                        . _("Published tracks can be removed or updated below.") ?>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend><?php echo _("Published on:"); ?></legend>
+                <div class="published-sources" ng-repeat="source in sources.published">
+                    <span class="sp-checked-icon checked-icon left-floated"></span>
+                    <span class="source-name">{{source.label}}</span>
+                    <button ng-disabled="{{source.status == -1}}" class="btn btn-small btn-danger" ng-click="remove(source.source)"><?php echo _("Unpublish") ?></button>
+                </div>
+                <div ng-if="sources.published.length == 0">
+                    <?php echo _("You haven't published this track to any sources!") . "<br/>"
+                        . _("Check the boxes above and hit 'Publish' to publish this track to the marked sources.") ?>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+
+    <div class="btn-toolbar clearfix">
+        <div class="btn-group pull-right">
+            <button ng-click="discard()" class="btn" type="button" name="close">
+                <?php echo _("Close") ?>
+            </button>
+        </div>
+        <div class='btn-group pull-right'>
+            <button disabled="disabled" ng-click="publish()" class="btn publish-btn" title='<?php echo _("Publish") ?>' type="button">
+                <?php echo _("Publish") ?>
+            </button>
+        </div>
+        <div class='success' style='display:none'></span></div>
+    </div>
+</div>

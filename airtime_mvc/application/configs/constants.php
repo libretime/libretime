@@ -32,7 +32,7 @@ define('AIRTIME_COPYRIGHT_DATE' , '2010-2015');
 define('AIRTIME_REST_VERSION'   , '1.1');
 define('AIRTIME_API_VERSION'    , '1.1');
 // XXX: it's important that we upgrade this every time we add an upgrade!
-define('AIRTIME_CODE_VERSION'   , '2.5.14');
+define('AIRTIME_CODE_VERSION'   , '2.5.16');
 
 // Defaults
 define('DEFAULT_LOGO_PLACEHOLDER', 1);
@@ -42,6 +42,7 @@ define('DEFAULT_MICROTIME_FORMAT', 'Y-m-d H:i:s.u');
 define('DEFAULT_ICECAST_PORT', 8000);
 define('DEFAULT_ICECAST_PASS', 'hackme');
 define('DEFAULT_SHOW_COLOR', '76aca5');
+define('DEFAULT_INTERVAL_FORMAT', 'H:i:s.u');
 
 // Metadata Keys for files
 define('MDATA_KEY_FILEPATH'    , 'filepath');
@@ -124,3 +125,13 @@ define('CELERY_FAILED_STATUS', 'FAILED');
 
 // Celery Services
 define('SOUNDCLOUD_SERVICE_NAME', 'soundcloud');
+define('PODCAST_SERVICE_NAME', 'podcast');
+
+// Publish Services
+define('STATION_PODCAST_SERVICE_NAME', 'station_podcast');
+
+// Podcast Types
+//define('STATION_PODCAST', 0);
+//define('IMPORTED_PODCAST', 1);
+
+define('ITUNES_XML_NAMESPACE_URL', 'http://www.itunes.com/dtds/podcast-1.0.dtd');

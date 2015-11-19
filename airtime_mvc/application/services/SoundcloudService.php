@@ -2,7 +2,21 @@
 
 require_once "ThirdPartyCeleryService.php";
 
-class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
+/**
+ * Service object for dealing with SoundCloud authorization and background tasks
+ *
+ * Class Application_Service_SoundcloudService
+ */
+class Application_Service_SoundcloudService extends Application_Service_ThirdPartyCeleryService implements OAuth2, Publish {
+
+    /**
+     * Arbitrary constant identifiers for the internal tasks array
+     */
+
+    const UPLOAD    = 'upload';
+    const UPDATE    = 'update';
+    const DOWNLOAD  = 'download';
+    const DELETE    = 'delete';
 
     /**
      * @var string service access token for accessing remote API
@@ -25,14 +39,14 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
     protected static $_CELERY_EXCHANGE_NAME = 'soundcloud';
 
     /**
-     * @var string celery task name for third party uploads
+     * @var array map of constant identifiers to Celery task names
      */
-    protected static $_CELERY_UPLOAD_TASK_NAME = 'soundcloud-upload';
-
-    /**
-     * @var string celery task name for third party deletions
-     */
-    protected static $_CELERY_DELETE_TASK_NAME = 'soundcloud-delete';
+    protected static $_CELERY_TASKS = [
+        self::UPLOAD      => 'soundcloud-upload',
+        self::UPDATE      => 'soundcloud-update',
+        self::DOWNLOAD    => 'soundcloud-download',
+        self::DELETE      => 'soundcloud-delete'
+    ];
 
     /**
      * @var array Application_Model_Preference functions for SoundCloud and their
@@ -109,35 +123,108 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
     }
 
     /**
+     * Upload the file with the given identifier to SoundCloud
+     *
+     * @param int $fileId the local CcFiles identifier
+     */
+    public function upload($fileId) {
+        $file = Application_Model_StoredFile::RecallById($fileId);
+        $data = array(
+            'data' => $this->_getUploadData($file),
+            'token' => $this->_accessToken,
+            'file_path' => $file->getFilePaths()[0]
+        );
+        $this->_executeTask(static::$_CELERY_TASKS[self::UPLOAD], $data, $fileId);
+    }
+
+    /**
+     * Given a track identifier, update a track on SoundCloud
+     *
+     * @param int $trackId a track identifier
+     */
+    public function update($trackId) {
+        $trackRef = ThirdPartyTrackReferencesQuery::create()
+            ->findOneByDbForeignId($trackId);
+        $file = Application_Model_StoredFile::RecallById($trackRef->getDbFileId());
+        $data = array(
+            'data' => $this->_getUploadData($file),
+            'token' => $this->_accessToken,
+            'track_id' => $trackId
+        );
+        $this->_executeTask(static::$_CELERY_TASKS[self::UPDATE], $data, $trackRef->getDbFileId());
+    }
+
+    /**
+     * Given a track identifier, download a track from SoundCloud
+     *
+     * @param int $trackId a track identifier
+     */
+    public function download($trackId) {
+        $CC_CONFIG = Config::getConfig();
+        $data = array(
+            'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . 'rest/media',
+            'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
+            'token'         => $this->_accessToken,
+            'track_id'      => $trackId
+        );
+        $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
+    }
+
+    /**
+     * Delete the file with the given identifier from SoundCloud
+     *
+     * @param int $fileId the local CcFiles identifier
+     *
+     * @throws ServiceNotFoundException when a $fileId with no corresponding
+     *                                  service identifier is given
+     */
+    public function delete($fileId) {
+        $serviceId = $this->getServiceId($fileId);
+        if ($serviceId == 0) {
+            throw new ServiceNotFoundException("No service ID found for file with ID $fileId");
+        }
+        $data = array(
+            'token' => $this->_accessToken,
+            'track_id' => $serviceId
+        );
+        $this->_executeTask(static::$_CELERY_TASKS[self::DELETE], $data, $fileId);
+    }
+
+    /**
      * Update a ThirdPartyTrackReferences object for a completed upload
      *
      * TODO: should we have a database layer class to handle Propel operations?
      *
-     * @param $trackId int    ThirdPartyTrackReferences identifier
-     * @param $track  object  third-party service track object
-     * @param $status string  Celery task status
+     * @param $task     CeleryTasks the completed CeleryTasks object
+     * @param $trackId  int         ThirdPartyTrackReferences identifier
+     * @param $track    object      third-party service track object
+     * @param $status   string      Celery task status
+     *
+     * @return ThirdPartyTrackReferences the updated ThirdPartyTrackReferences object
+     *                                   or null if the task was a DELETE
      *
      * @throws Exception
      * @throws PropelException
      */
-    public function updateTrackReference($trackId, $track, $status) {
-        parent::updateTrackReference($trackId, $track, $status);
-        $ref = ThirdPartyTrackReferencesQuery::create()
-            ->findOneByDbId($trackId);
-        if (is_null($ref)) {
-            $ref = new ThirdPartyTrackReferences();
-        }
-        $ref->setDbService(static::$_SERVICE_NAME);
+    public function updateTrackReference($task, $trackId, $track, $status) {
+        $ref = parent::updateTrackReference($task, $trackId, $track, $status);
+        // TODO: fetch any additional SoundCloud parameters we want to store
         // Only set the SoundCloud fields if the task was successful
         if ($status == CELERY_SUCCESS_STATUS) {
-            $utc = new DateTimeZone("UTC");
-            $ref->setDbUploadTime(new DateTime("now", $utc));
-            // TODO: fetch any additional SoundCloud parameters we want to store
+            // If the task was to delete the file from SoundCloud, remove the reference
+            if ($task->getDbName() == static::$_CELERY_TASKS[self::DELETE]) {
+                $this->removeTrackReference($ref->getDbFileId());
+                return null;
+            }
             $ref->setDbForeignId($track->id);  // SoundCloud identifier
+            if (isset($track->fileid)) {
+                $ref->setDbFileId($track->fileid);  // For downloads, set the cc_files ID
+            }
         }
         // TODO: set SoundCloud upload status?
         // $ref->setDbStatus($status);
         $ref->save();
+        return $ref;
     }
 
     /**
@@ -185,7 +272,7 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
         // Pass the current URL in the state parameter in order to preserve it
         // in the redirect. This allows us to create a singular script to redirect
         // back to any station the request comes from.
-        $url = urlencode('http'.(empty($_SERVER['HTTPS'])?'':'s').'://'.$_SERVER['HTTP_HOST'].'/soundcloud/redirect');
+        $url = urlencode(Application_Common_HTTPHelper::getStationUrl() . '/soundcloud/redirect');
         return $this->_client->getAuthorizeUrl(array("state" => $url, "scope" => "non-expiring"));
     }
 
@@ -220,4 +307,43 @@ class SoundcloudService extends ThirdPartyCeleryService implements OAuth2 {
         }
     }
 
+    /**
+     * Publishing interface proxy
+     *
+     * Publish the file with the given file ID to SoundCloud
+     *
+     * @param int $fileId ID of the file to be published
+     */
+    public function publish($fileId) {
+        $this->upload($fileId);
+    }
+
+    /**
+     * Publishing interface proxy
+     *
+     * Unpublish the file with the given file ID from SoundCloud
+     *
+     * @param int $fileId ID of the file to be unpublished
+     *
+     * @throws ServiceNotFoundException when a $fileId with no corresponding
+     *                                  service identifier is given
+     */
+    public function unpublish($fileId) {
+        $this->delete($fileId);
+    }
+
+    /**
+     * Fetch the publication status for the file with the given ID
+     *
+     * @param int $fileId the ID of the file to check
+     *
+     * @return int 1 if the file has been published,
+     *             0 if the file has yet to be published,
+     *             -1 if the file is in a pending state,
+     *             2 if the source is unreachable (disconnected)
+     */
+    public function getPublishStatus($fileId) {
+        if (!$this->hasAccessToken()) { return 2; }
+        return ($this->referenceExists($fileId));
+    }
 }

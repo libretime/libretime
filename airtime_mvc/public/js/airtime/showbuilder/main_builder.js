@@ -138,8 +138,15 @@ AIRTIME = (function(AIRTIME) {
         });
 
         $(window).on('hashchange', function() {
-            var selected = $("a[href$='"+location.hash+"']");
-            var dashboardLink = $(".media_type_selector:first");
+            var selected = $("a[href$='"+location.hash+"']"),
+                dashboardLink = $(".media_type_selector:first"),
+                tableType;
+
+            if (selected.parent().data("selection-id") == AIRTIME.library.MediaTypeIntegerEnum.PODCAST) {
+                tableType = AIRTIME.library.DataTableTypeEnum.PODCAST;
+            } else {
+                tableType = AIRTIME.library.DataTableTypeEnum.LIBRARY;
+            }
 
             dashboardLink.find("a").attr("href", selected.attr("href"));
             AIRTIME.library.selectNone();
@@ -147,7 +154,7 @@ AIRTIME = (function(AIRTIME) {
                 $(this).removeClass("selected");
             });
             selected.parent().addClass("selected");
-            oTable.fnDraw();
+            AIRTIME.library.setCurrentTable(tableType);
             $("#library_filter").text(selected.text());
             // Highlight the dashboard link
             dashboardLink.addClass("highlight");
@@ -176,12 +183,6 @@ AIRTIME = (function(AIRTIME) {
         $lib = $("#library_content");
         $builder = $("#show_builder");
         $fs = $builder.find('fieldset');
-
-        $("#schedule-tab").on("click", function() {
-            if (!$(this).hasClass('active')) {
-                AIRTIME.showbuilder.switchTab($("#show_builder .outer-datatable-wrapper"), $(this));
-            }
-        });
 
         //Highlight the media type selector we're currently on.
         highlightMediaTypeSelector();

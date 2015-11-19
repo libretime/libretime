@@ -1,7 +1,7 @@
 <fieldset class="padded">
     <dl class="zend_form">
         <?php
-            $soundcloudService = new SoundcloudService();
+            $soundcloudService = new Application_Service_SoundcloudService();
             if ($soundcloudService->hasAccessToken()) {
                 echo $this->element->getElement('SoundCloudDisconnect')->render();
             } else {

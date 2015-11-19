@@ -66,6 +66,7 @@ class Application_Model_Block implements Application_Model_LibraryEditable
             "copyright"    => "DbCopyright",
             "cuein"        => "DbCuein",
             "cueout"       => "DbCueout",
+            "description"  => "DbDescription",
             "encoded_by"   => "DbEncodedBy",
             "utime"        => "DbUtime",
             "mtime"        => "DbMtime",
@@ -187,8 +188,6 @@ class Application_Model_Block implements Application_Model_LibraryEditable
      */
     public function getContents($filterFiles=false)
     {
-        Logging::info("Getting contents for block {$this->id}");
-        
         $sql = <<<SQL
 SELECT pc.id AS id,
        pc.position,
@@ -1357,6 +1356,7 @@ SQL;
             "copyright"    => _("Copyright"),
             "cuein"        => _("Cue In"),
             "cueout"       => _("Cue Out"),
+            "description"  => _("Description"),
             "artist_name"  => _("Creator"),
             "encoded_by"   => _("Encoded By"),
             "genre"        => _("Genre"),

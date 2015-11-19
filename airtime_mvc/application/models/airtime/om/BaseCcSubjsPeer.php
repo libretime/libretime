@@ -436,6 +436,9 @@ abstract class BaseCcSubjsPeer
         // Invalidate objects in CcSubjsTokenPeer instance pool,
         // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
         CcSubjsTokenPeer::clearInstancePool();
+        // Invalidate objects in PodcastPeer instance pool,
+        // since one or more of them may be deleted by ON DELETE CASCADE/SETNULL rule.
+        PodcastPeer::clearInstancePool();
     }
 
     /**

@@ -69,41 +69,63 @@ var AIRTIME = (function(AIRTIME) {
             "timeline");
     };
 
-    mod.fnDrawCallback = function fnLibDrawCallback() {
-
-        mod.redrawChosen();
-        mod.checkToolBarIcons();
-
-        var cb = $('th.library_checkbox'),
-            emptyRow = $('#library_display').find('tr:has(td.dataTables_empty)');
-        if (cb.find("input").length == 0) {
-            cb.append("<input id='super-checkbox' type='checkbox'>");
+    /**
+     * Draw a placeholder for the given table to show if it has no data.
+     *
+     * @param {Object} table jQuery object containing the table DOM node
+     */
+    mod.drawEmptyPlaceholder = function (table) {
+        var opts;
+        if (table instanceof AIRTIME.widgets.Table) {
+            opts = table.getEmptyPlaceholder();
+            table = table.getDatatable();
+            if (!table) {
+                return;
+            }
         }
-
-        var libEmpty = $('#library_empty');
+        var emptyRow = table.find('tr:has(td.dataTables_empty)'),
+            wrapper = table.closest(".dataTables_wrapper"),
+            libEmpty = wrapper.find('.empty_placeholder');
         if (emptyRow.length > 0) {
             emptyRow.hide();
-            var mediaType = parseInt($('.media_type_selector.selected').attr('data-selection-id')),
-                img = $('#library_empty_image');
+            var mediaType = parseInt($('.media_type_selector.selected').data('selection-id')),
+                img = wrapper.find('.empty_placeholder_image');
+            if (!opts && isNaN(mediaType)) {
+                return;
+            }
             // Remove all classes for when we change between empty media types
-            img.removeClass(function() {
-                return $( this ).attr( "class" );
-            });
-            // TODO: once the new manual pages are added, change links!
-            $.getJSON( "ajax/library_placeholders.json", function( data ) {
-                var opts = data[mediaType];
-                img.addClass("icon-white " + opts.icon);
-                $('#library_empty_text').html(
+            img.removeClass(function() { return $(this).attr("class"); });
+
+            if (opts) {
+                img.addClass("empty_placeholder_image " + opts.iconClass);
+                wrapper.find('.empty_placeholder_text').html(opts.html);
+            } else {
+                opts = AIRTIME.library.placeholder(mediaType);
+                img.addClass("empty_placeholder_image icon-white " + opts.icon);
+                wrapper.find('.empty_placeholder_text').html(
                     $.i18n._("You haven't added any " + opts.media + ".")
                     + "<br/>" + $.i18n._(opts.subtext)
                     + "<br/><a target='_blank' href='" + opts.href + "'>" + $.i18n._("Learn about " + opts.media) + "</a>"
                 );
-            });
+            }
 
             libEmpty.show();
         } else {
             libEmpty.hide();
         }
+    };
+
+    mod.fnDrawCallback = function fnLibDrawCallback() {
+        var table = $('#library_display'),
+            cb = table.find('th[class*="checkbox"]');
+        if (cb.find("input").length == 0) {
+            cb.append("<input id='super-checkbox' type='checkbox'>");
+        }
+
+        mod.redrawChosen();
+        mod.checkToolBarIcons();
+
+        mod.drawEmptyPlaceholder(table);
 
         var sortable;
 
@@ -111,46 +133,6 @@ var AIRTIME = (function(AIRTIME) {
             sortable = "#show_builder_table";
         } else {
             sortable = ".active-tab .spl_sortable";
-            //$('#library_display tr[class*="lib-"]')
-            //    .draggable(
-            //    {
-            //        helper: function () {
-            //
-            //            var $el = $(this), selected = mod
-            //                    .getChosenAudioFilesLength(), container, message,
-            //                width = $(this).width(), height = 55;
-            //
-            //            // dragging an element that has an unselected
-            //            // checkbox.
-            //            if (mod.isChosenItem($el) === false) {
-            //                selected++;
-            //            }
-            //
-            //            if (selected === 1) {
-            //                message = $.i18n._("Adding 1 Item");
-            //            } else {
-            //                message = sprintf($.i18n._("Adding %s Items"), selected);
-            //            }
-            //
-            //            container = $('<div class="helper"/>').append(
-            //                "<li/>").find("li").addClass(
-            //                "ui-state-default").append("<div/>")
-            //                .find("div").addClass(
-            //                "list-item-container").append(
-            //                message).end().width(width)
-            //                .height(height).end();
-            //
-            //            return container;
-            //        },
-            //        create: function(event, ui) {
-            //            $(this).draggable("option", "cursorAt", {
-            //                left: Math.floor(this.clientWidth / 2)
-            //            });
-            //        },
-            //        cursor: 'move',
-            //        distance: 25, // min-distance for dragging
-            //        connectToSortable: '.active-tab .spl_sortable'
-            //    });
         }
 
         $('#library_display tr[class*="lib-"]')
@@ -265,11 +247,48 @@ var AIRTIME = (function(AIRTIME) {
         return true;
     }
 
+    mod.addToSchedule = function (selected) {
+        console.log(selected);
+        var aMediaIds = [], aSchedIds = [], aData = [];
+
+        $.each(selected, function () {
+            aMediaIds.push({
+                "id": this.id,
+                "type": this.ftype
+            });
+        });
+
+        // process selected files/playlists.
+        $("#show_builder_table").find("tr.sb-selected").each(function (i, el) {
+            aData.push($(el).data("aData"));
+        });
+
+        // process selected schedule rows to add media after.
+        $.each(aData, function () {
+            aSchedIds.push({
+                "id": this.id,
+                "instance": this.instance,
+                "timestamp": this.timestamp
+            });
+        });
+
+        if (aSchedIds.length == 0) {
+            if (!addToCurrentOrNext(aSchedIds)) {
+                return;
+            }
+        }
+
+        AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
+    };
+
     mod.setupLibraryToolbar = function() {
         var $toolbar = $(".lib-content .fg-toolbar:first");
 
         mod.createToolbarButtons();
-        mod.moveSearchBarToHeader();
+        //mod.moveSearchBarToHeader();
+        $("#advanced_search").click(function(e) {
+            e.stopPropagation();
+        });
 
         if (localStorage.getItem('user-type') != 'G') {
             $toolbar.append($menu);
@@ -283,45 +302,14 @@ var AIRTIME = (function(AIRTIME) {
                         return;
                     }
 
-                    var selected = AIRTIME.library.getSelectedData(), data, i, length, temp, aMediaIds = [], aSchedIds = [], aData = [];
+                    var selected = AIRTIME.library.getSelectedData(), aMediaIds = [];
 
                     if ($("#show_builder_table").is(":visible")) {
-                        for (i = 0, length = selected.length; i < length; i++) {
-                            data = selected[i];
-                            aMediaIds.push({
-                                "id": data.id,
-                                "type": data.ftype
-                            });
-                        }
-
-                        // process selected files/playlists.
-                        $("#show_builder_table tr.sb-selected").each(function (i, el) {
-                            aData.push($(el).data("aData"));
-                        });
-
-                        // process selected schedule rows to add media
-                        // after.
-                        for (i = 0, length = aData.length; i < length; i++) {
-                            temp = aData[i];
-                            aSchedIds.push({
-                                "id": temp.id,
-                                "instance": temp.instance,
-                                "timestamp": temp.timestamp
-                            });
-                        }
-
-                        if (aSchedIds.length == 0) {
-                            if (!addToCurrentOrNext(aSchedIds)) {
-                                return;
-                            }
-                        }
-
-                        AIRTIME.showbuilder.fnAdd(aMediaIds, aSchedIds);
+                        mod.addToSchedule(selected);
                     } else {
-                        for (i = 0, length = selected.length; i < length; i++) {
-                            data = selected[i];
-                            aMediaIds.push([data.id, data.ftype]);
-                        }
+                        $.each(selected, function () {
+                            aMediaIds.push([this.id, this.ftype]);
+                        });
 
                         // check if a playlist/block is open before adding items
                         if ($('.active-tab .obj_type').val() == 'playlist'
@@ -331,9 +319,22 @@ var AIRTIME = (function(AIRTIME) {
                     }
                 });
 
+            $toolbar.find('#publish-btn').click(function () {
+                if (AIRTIME.button.isDisabled('btn-group #publish-btn') === true) {
+                    return;
+                }
+
+                var selected = $(".lib-selected");
+
+                selected.each(function (i, el) {
+                    var data = $(el).data("aData");
+                    AIRTIME.publish.openPublishDialog(data.id);
+                });
+            });
+
             // delete from library.
-            $toolbar.find('.icon-trash').parent().click(function () {
-                if (AIRTIME.button.isDisabled('icon-trash') === true) {
+            $toolbar.find('#sb-delete').click(function () {
+                if (AIRTIME.button.isDisabled('btn-group #sb-delete') === true) {
                     return;
                 }
 
@@ -345,13 +346,13 @@ var AIRTIME = (function(AIRTIME) {
                     return;
                 }
 
-                var selection = $(".media_type_selector.selected").attr("data-selection-id");
+                var selection = $(".media_type_selector.selected").data("selection-id");
 
-                if (selection == 2) {
+                if (selection == AIRTIME.library.MediaTypeIntegerEnum.PLAYLIST) {
                     AIRTIME.playlist.fnNew();
-                } else if (selection == 3) {
+                } else if (selection == AIRTIME.library.MediaTypeIntegerEnum.BLOCK) {
                     AIRTIME.playlist.fnNewBlock();
-                } else if (selection == 4) {
+                } else if (selection == AIRTIME.library.MediaTypeIntegerEnum.WEBSTREAM) {
                     AIRTIME.playlist.fnWsNew();
                 }
             });
@@ -369,14 +370,14 @@ var AIRTIME = (function(AIRTIME) {
 
                     if (data.ftype === "audioclip") {
                         $.get(baseUrl + "library/edit-file-md/id/" + data.id, {format: "json"}, function (json) {
-                            AIRTIME.playlist.fileMdEdit(json);
+                            AIRTIME.playlist.fileMdEdit(json, data.tr_id);
                             //buildEditMetadataDialog(json);
                         });
                     } else if (data.ftype === "playlist" || data.ftype === "block") {
-                        AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'playlist/edit');
+                        AIRTIME.playlist.fnEdit(data, baseUrl + 'playlist/edit');
                         AIRTIME.playlist.validatePlaylistElements();
                     } else if (data.ftype === "stream") {
-                        AIRTIME.playlist.fnEdit(data.id, data.ftype, baseUrl + 'webstream/edit');
+                        AIRTIME.playlist.fnEdit(data, baseUrl + 'webstream/edit');
                     }
                 });
             });

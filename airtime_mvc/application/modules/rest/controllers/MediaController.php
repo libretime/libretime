@@ -21,13 +21,20 @@ class Rest_MediaController extends Zend_Rest_Controller
         $offset = $this->_getParam('offset', 0);
         $limit = $this->_getParam('limit', $totalFileCount);
 
+        //Sorting parameters
+        $sortColumn = $this->_getParam('sort', CcFilesPeer::ID);
+        $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
+
         $query = CcFilesQuery::create()
             ->filterByDbHidden(false)
             ->filterByDbFileExists(true)
             ->filterByDbImportStatus(0)
             ->setLimit($limit)
             ->setOffset($offset)
-            ->orderByDbId();
+            ->orderBy($sortColumn, $sortDir);
+            //->orderByDbId();
+
+
         $queryCount = $query->count();
         $queryResult = $query->find();
 
@@ -39,7 +46,7 @@ class Rest_MediaController extends Zend_Rest_Controller
 
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->setHeader('X-TOTAL-COUNT', $queryCount)
+            ->setHeader('X-TOTAL-COUNT', $totalFileCount)
             ->appendBody(json_encode($files_array));
         
         /** TODO: Use this simpler code instead after we upgrade to Propel 1.7 (Airtime 2.6.x branch):
@@ -56,11 +63,17 @@ class Rest_MediaController extends Zend_Rest_Controller
             return;
         }
 
-        try
-        {
+        // In case the download fails
+        $counterIncremented = false;
+        try {
             $this->getResponse()
                 ->setHttpResponseCode(200);
             $inline = false;
+            // SAAS-1081 - download counter for station podcast downloads
+            if ($key = $this->getRequest()->getParam("download_key", false)) {
+                Application_Model_Preference::incrementStationPodcastDownloadCounter();
+                $counterIncremented = true;
+            }
             Application_Service_MediaService::streamFileDownload($id, $inline);
         }
         catch (FileNotFoundException $e) {
@@ -68,6 +81,7 @@ class Rest_MediaController extends Zend_Rest_Controller
             Logging::error($e->getMessage());
         }
         catch (Exception $e) {
+            if ($counterIncremented) Application_Model_Preference::decrementStationPodcastDownloadCounter();
             $this->unknownErrorResponse();
             Logging::error($e->getMessage());
         }
@@ -122,9 +136,8 @@ class Rest_MediaController extends Zend_Rest_Controller
                 ->appendBody("ERROR: Disk Quota reached.");
         }
         catch (Exception $e) {
-            $this->unknownErrorResponse();
-            Logging::error($e->getMessage());
-            throw $e;
+            $this->serviceUnavailableResponse();
+            Logging::error($e->getMessage() . "\n" . $e->getTraceAsString());
         }
     }
 
@@ -178,6 +191,32 @@ class Rest_MediaController extends Zend_Rest_Controller
         }
     }
 
+    /**
+     * Publish endpoint for individual media items
+     */
+    public function publishAction() {
+        $id = $this->getId();
+        try {
+            // Is there a better way to do this?
+            $data = json_decode($this->getRequest()->getRawBody(), true)["sources"];
+            Application_Service_PublishService::publish($id, $data);
+            $this->getResponse()
+                ->setHttpResponseCode(200);
+        } catch (Exception $e) {
+            $this->unknownErrorResponse();
+            Logging::error($e->getMessage());
+        }
+    }
+
+    public function publishSourcesAction() {
+        $id = $this->_getParam('id', false);
+        $sources = Application_Service_PublishService::getSourceLists($id);
+        $this->getResponse()
+            ->setHttpResponseCode(200)
+            ->appendBody(json_encode($sources));
+
+    }
+
     private function getId()
     {
         if (!$id = $this->_getParam('id', false)) {
@@ -208,6 +247,13 @@ class Rest_MediaController extends Zend_Rest_Controller
         $resp = $this->getResponse();
         $resp->setHttpResponseCode(400);
         $resp->appendBody("An unknown error occurred.");
+    }
+
+    private function serviceUnavailableResponse()
+    {
+        $resp = $this->getResponse();
+        $resp->setHttpResponseCode(400);
+        $resp->appendBody("An error occurred while processing your upload. Please try again in a few minutes.");
     }
 }
 

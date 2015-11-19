@@ -133,6 +133,7 @@ class Application_Model_Scheduler
             }
         }
 
+
         foreach ($showInstances as $instance) {
 
             $id = $instance->getDbId();
@@ -384,6 +385,24 @@ class Application_Model_Scheduler
     	return $dt;
     }
 
+    private function findTimeDifference2($p_startDT, $p_endDT) {
+        $startEpoch = $p_startDT->format("U.u");
+        $endEpoch = $p_endDT->format("U.u");
+
+        //add two float numbers to 6 subsecond precision
+        //DateTime::createFromFormat("U.u") will have a problem if there is no decimal in the resulting number.
+        $newEpoch = bcsub($endEpoch, (string)$startEpoch, 6);
+
+        $dt = DateTime::createFromFormat("U.u", $newEpoch, new DateTimeZone("UTC"));
+
+        if ($dt === false) {
+            //PHP 5.3.2 problem
+            $dt = DateTime::createFromFormat("U", intval($newEpoch), new DateTimeZone("UTC"));
+        }
+
+        return $dt;
+    }
+
     /*
      * @param DateTime startDT in UTC
      * @param string duration
@@ -498,12 +517,70 @@ class Application_Model_Scheduler
 
         $itemStartDT = $instance->getDbStarts(null);
         foreach ($schedule as $item) {
+
+            $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+
+            $item->setDbStarts($itemStartDT)
+                ->setDbEnds($itemEndDT);
+
+            $itemStartDT = $itemEndDT;
+        }
+
+        $schedule->save($this->con);
+    }
+
+    /** Temporary hack to copy the track cue in, out, and length from the cc_files table to fix
+     *  incorrect track lengths (RKTN-260)
+     */
+    public function removeGaps2($showInstance, $exclude = null) {
+
+        $instance = CcShowInstancesQuery::create()->findPK($showInstance, $this->con);
+        if (is_null($instance)) {
+            throw new OutDatedScheduleException(_("The schedule you're viewing is out of date!"));
+        }
+
+        $itemStartDT = $instance->getDbStarts(null);
+
+        $schedule = CcScheduleQuery::create()
+            ->filterByDbInstanceId($showInstance)
+            ->filterByDbId($exclude, Criteria::NOT_IN)
+            ->orderByDbStarts()
+            ->find($this->con);
+
+        foreach ($schedule as $item) {
+
+            //START OF TIME RECALC HACK
+
+            //TODO: Copy the cue in, cue out, and track length from the cc_files table
+            $file = $item->getCcFiles($this->con);
+            if (!$file) {
+                continue;
+            }
+            $item->setDbCueIn($file->getDbCueIn());
+            $item->setDbCueOut($file->getDbCueOut());
+
+            $cueOut = new DateTime($file->getDbCueOut());
+            $cueIn = new DateTime($file->getDbCueIn());
+            $clipLength = $this->findTimeDifference2($cueIn, $cueOut);
+
+            //The clip length is supposed to be cue out - cue in:
+            //FIXME: How do we correctly do time arithmetic in PHP without losing the millseconds?
+            $item->setDbClipLength($clipLength->format(DEFAULT_INTERVAL_FORMAT));
+            $item->save($this->con);
+            //Ensure we don't get cached results
+            CcSchedulePeer::clearInstancePool();
+            //END OF TIME RECALC HACK
+
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
             $item->setDbStarts($itemStartDT)
                 ->setDbEnds($itemEndDT)
                 ->save($this->con);
             $itemStartDT = $this->findTimeDifference($itemEndDT, $this->crossfadeDuration);
         }
+
+        $instance->updateDbTimeFilled($this->con); //FIXME: TIME RECALC HACK (Albert)
+
+        $schedule->save($this->con);
     }
 
     /**

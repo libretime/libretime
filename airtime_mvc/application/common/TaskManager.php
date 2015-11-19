@@ -3,8 +3,8 @@
 /**
  * Class TaskManager
  *
- * When adding a new task, the new AirtimeTask class will need to be added to the internal task list,
- * as an ENUM value to the AirtimeTask interface, and as a case in the TaskFactory.
+ * When adding a new task, the new AirtimeTask class will also need to be added
+ * as a class constant and to the array in TaskFactory
  */
 final class TaskManager {
 
@@ -12,10 +12,7 @@ final class TaskManager {
      * @var array tasks to be run. Maps task names to a boolean value denoting
      *            whether the task has been checked/run
      */
-    protected $_taskList = [
-        AirtimeTask::UPGRADE    => false,
-        AirtimeTask::CELERY     => false,
-    ];
+    protected $_taskList;
 
     /**
      * @var TaskManager singleton instance object
@@ -28,6 +25,7 @@ final class TaskManager {
     const TASK_INTERVAL_SECONDS = 30;
 
     /**
+     *
      * @var $con PDO Propel connection object
      */
     private $_con;
@@ -36,6 +34,9 @@ final class TaskManager {
      * Private constructor so class is uninstantiable
      */
     private function __construct() {
+        foreach (array_keys(TaskFactory::$tasks) as $v) {
+            $this->_taskList[$v] = false;
+        }
     }
 
     /**
@@ -77,7 +78,7 @@ final class TaskManager {
      */
     public function runTasks() {
         // If there is data in auth storage, this could be a user request
-        // so we should lock the TaskManager to avoid blocking
+        // so we should just return to avoid blocking
         if ($this->_isUserSessionRequest()) {
             return;
         }
@@ -85,7 +86,7 @@ final class TaskManager {
         $this->_con->beginTransaction();
         try {
             $lock = $this->_getLock();
-            if ($lock && microtime(true) < $lock['valstr'] + self::TASK_INTERVAL_SECONDS) {
+            if ($lock && (microtime(true) < ($lock['valstr'] + self::TASK_INTERVAL_SECONDS))) {
                 // Propel caches the database connection and uses it persistently, so if we don't
                 // use commit() here, we end up blocking other queries made within this request
                 $this->_con->commit();
@@ -96,8 +97,7 @@ final class TaskManager {
         } catch (Exception $e) {
             // We get here if there are simultaneous requests trying to fetch the lock row
             $this->_con->rollBack();
-            // Logging::info($e->getMessage()); // We actually get here a lot, so it's
-                                                // better to be silent here to avoid log bloat
+            Logging::warn($e->getMessage());
             return;
         }
         foreach ($this->_taskList as $task => $hasTaskRun) {
@@ -153,17 +153,9 @@ final class TaskManager {
 }
 
 /**
- * Interface AirtimeTask Interface for task operations - also acts as task type ENUM
+ * Interface AirtimeTask Interface for task operations
  */
 interface AirtimeTask {
-
-    /**
-     * PHP doesn't have ENUMs so declare them as interface constants
-     * Task types - values don't really matter as long as they're unique
-     */
-
-    const UPGRADE = "upgrade";
-    const CELERY = "celery";
 
     /**
      * Check whether the task should be run
@@ -182,32 +174,9 @@ interface AirtimeTask {
 }
 
 /**
- * Class TaskFactory Factory class to abstract task instantiation
- */
-class TaskFactory {
-
-    /**
-     * Get an AirtimeTask based on a task type
-     *
-     * @param $task string the task type; uses AirtimeTask constants as an ENUM
-     *
-     * @return AirtimeTask|null return a task of the given type or null if no corresponding
-     *                          task exists or is implemented
-     */
-    public static function getTask($task) {
-        switch($task) {
-            case AirtimeTask::UPGRADE:
-                return new UpgradeTask();
-            case AirtimeTask::CELERY:
-                return new CeleryTask();
-        }
-        return null;
-    }
-
-}
-
-/**
  * Class UpgradeTask
+ *
+ * Checks the current Airtime version and runs any outstanding upgrades
  */
 class UpgradeTask implements AirtimeTask {
 
@@ -231,6 +200,8 @@ class UpgradeTask implements AirtimeTask {
 
 /**
  * Class CeleryTask
+ *
+ * Checks the Celery broker task queue and runs callbacks for completed tasks
  */
 class CeleryTask implements AirtimeTask {
 
@@ -240,14 +211,137 @@ class CeleryTask implements AirtimeTask {
      * @return bool true if there are pending tasks in ThirdPartyTrackReferences
      */
     public function shouldBeRun() {
-        return !CeleryService::isBrokerTaskQueueEmpty();
+        return !CeleryManager::isBrokerTaskQueueEmpty();
     }
 
     /**
      * Poll the task queue for any completed Celery tasks
      */
     public function run() {
-        CeleryService::pollBrokerTaskQueue();
+        CeleryManager::pollBrokerTaskQueue();
+    }
+
+}
+
+/**
+ * Class PodcastTask
+ *
+ * Checks podcasts marked for automatic ingest and downloads any new episodes
+ * since the task was last run
+ */
+class PodcastTask implements AirtimeTask {
+
+    /**
+     * Check whether or not the podcast polling interval has passed
+     *
+     * @return bool true if the podcast polling interval has passed
+     */
+    public function shouldBeRun() {
+        $overQuota = Application_Model_Systemstatus::isDiskOverQuota();
+        return !$overQuota && PodcastManager::hasPodcastPollIntervalPassed();
+    }
+
+    /**
+     * Download the latest episode for all podcasts flagged for automatic ingest
+     */
+    public function run() {
+        PodcastManager::downloadNewestEpisodes();
+    }
+
+}
+
+/**
+ * Class ImportTask
+ */
+class ImportCleanupTask implements AirtimeTask {
+
+    /**
+     * Check if there are any files that have been stuck
+     * in Pending status for over an hour
+     *
+     * @return bool true if there are any files stuck pending,
+     *              otherwise false
+     */
+    public function shouldBeRun() {
+        return Application_Service_MediaService::areFilesStuckInPending();
+    }
+
+    /**
+     * Clean up stuck imports by changing their import status to Failed
+     */
+    public function run() {
+        Application_Service_MediaService::clearStuckPendingImports();
+    }
+
+}
+
+/**
+ * Class StationPodcastTask
+ *
+ * Checks the Station podcast rollover timer and resets monthly allotted
+ * downloads if enough time has passed (default: 1 month)
+ */
+class StationPodcastTask implements AirtimeTask {
+
+    const STATION_PODCAST_RESET_TIMER_SECONDS = 2.628e+6;  // 1 month XXX: should we use datetime roll for this instead?
+
+    /**
+     * Check whether or not the download counter for the station podcast should be reset
+     *
+     * @return bool true if enough time has passed
+     */
+    public function shouldBeRun() {
+        $lastReset = Application_Model_Preference::getStationPodcastDownloadResetTimer();
+        return empty($lastReset) || (microtime(true) > ($lastReset + self::STATION_PODCAST_RESET_TIMER_SECONDS));
+    }
+
+    /**
+     * Reset the station podcast download counter
+     */
+    public function run() {
+        Application_Model_Preference::resetStationPodcastDownloadCounter();
+        Application_Model_Preference::setStationPodcastDownloadResetTimer(microtime(true));
+    }
+
+}
+
+/**
+ * Class TaskFactory Factory class to abstract task instantiation
+ */
+class TaskFactory {
+
+    /**
+     * PHP doesn't have ENUMs so declare them as constants
+     * Task types - values don't really matter as long as they're unique
+     */
+
+    const UPGRADE           = "upgrade";
+    const CELERY            = "celery";
+    const PODCAST           = "podcast";
+    const IMPORT            = "import";
+    const STATION_PODCAST   = "station-podcast";
+
+    /**
+     * @var array map of arbitrary identifiers to class names to be instantiated reflectively
+     */
+    public static $tasks = array(
+        "upgrade"           => "UpgradeTask",
+        "celery"            => "CeleryTask",
+        "podcast"           => "PodcastTask",
+        "import"            => "ImportCleanupTask",
+        "station-podcast"   => "StationPodcastTask",
+    );
+
+    /**
+     * Get an AirtimeTask based on a task type
+     *
+     * @param $task string the task type; uses AirtimeTask constants as an ENUM
+     *
+     * @return AirtimeTask|null return a task of the given type or null if no corresponding
+     *                          task exists or is implemented
+     */
+    public static function getTask($task) {
+        return new self::$tasks[$task]();
     }
 
 }

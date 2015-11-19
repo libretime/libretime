@@ -229,7 +229,7 @@ a.badge:hover {
   line-height: 18px;
 }
 .btn-small [class^="icon-"] {
-  margin-top: 0;
+  margin-top: -1px;
 }
 #pl_edit.btn.btn-small {
   margin-left: 10px;

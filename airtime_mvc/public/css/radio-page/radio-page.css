@@ -63,7 +63,7 @@ span.login-img {
     margin: 0 auto 0px -380px;
     padding: 10px;
     padding-left: 0px;
-    padding-bottom: 140px;
+    padding-bottom: 140px !important;
     position: absolute;
     left: 50%;
     /*	-webkit-transition-delay: 1s;
@@ -80,22 +80,20 @@ span.login-img {
     transition-delay: 2s;
 }
 
-#schedule_iframe.schedule, .about_us, .login {
+.tab_content {
     /*	-webkit-transition-delay: 1s;
         transition-delay: 1s;*/
-    transition: all 0.4s ease;
+    transition: opacity 0.4s ease 0.4s;
     opacity: 0;
 }
 
-.about_us.current, .login.current, .schedule.current {
+.current {
     opacity: 1;
-    -webkit-transition-delay: 0.4s;
-    transition-delay: 0.4s;
+    -webkit-transition: opacity 0.4s ease 0.0s;
+    transition: opacity 0.4s ease 0.0s;
 }
 
-#schedule_iframe.schedule.current {
-    opacity: 1;
-}
+
 
 .about_us h1 {
     font-size: 80px; /** Fallback if vw is not suppoted */
@@ -111,10 +109,64 @@ span.login-img {
     margin: 10px;
 }
 
-.login h2 {
+
+.podcast .rss_icon span {
+    color: #fff;
+}
+
+.podcast .rss_icon:hover {
+    opacity: 0.8;
+}
+
+.podcast .rss_icon {
+    font-size: 14px;
+    text-decoration: none;
+}
+
+
+.podcast .rss_icon img {
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+
+.login h2, .podcast h2 {
     font-size: 28px;
     font-weight: 300;
 }
+
+
+
+.rss-title-wrapper {
+    overflow:hidden;
+}
+
+.rss-title-wrapper div {
+    padding: 10px;
+}
+#rss-title {
+    text-align:left;
+    font-size: 28px;
+    font-weight: 300;
+}
+#rss-subscribe {
+    float: right;
+    overflow:hidden;
+    text-align: right;
+}
+
+@media screen and (max-width: 490px) {
+    #rss-title {
+        float: none;
+        margin-right:0;
+        width:auto;
+        border:0;
+    }
+}
+
+
+
+
 
 input[type="text"] {
     font-family: 'Roboto', sans-serif;
