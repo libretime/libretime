@@ -64,7 +64,8 @@ class PageLayoutInitPlugin extends Zend_Controller_Plugin_Abstract
             // We can't afford to wait 7 minutes to run an upgrade: users could
             // have several minutes of database errors while waiting for a
             // schema change upgrade to happen after a deployment
-            $taskManager->runTask(TaskFactory::UPGRADE);
+            $clazz = version_compare(phpversion(), '5.5.0', '<') ? get_class(new UpgradeTask) : UpgradeTask::class;
+            $taskManager->runTask($clazz);
 
             // Piggyback the TaskManager onto API calls. This provides guaranteed consistency
             // (there is at least one API call made from pypo to Airtime every 7 minutes) and

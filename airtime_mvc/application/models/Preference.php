@@ -1584,4 +1584,33 @@ class Application_Model_Preference
     public static function setStationPodcastPrivacy($value) {
         self::setValue("station_podcast_privacy", $value);
     }
+
+    public static function getBandwidthLimitCounter() {
+        return self::getValue("bandwidth_limit_counter");
+    }
+
+    public static function incrementBandwidthLimitCounter($value) {
+        $counter = intval(self::getValue("bandwidth_limit_counter"));
+        self::setValue("bandwidth_limit_counter", $counter + intval($value));
+    }
+
+    public static function resetBandwidthLimitCounter() {
+        self::setValue("bandwidth_limit_counter", 0);
+    }
+
+    public static function getBandwidthLimitResetTimer() {
+        return self::getValue("bandwidth_limit_reset_timer");
+    }
+
+    public static function setBandwidthLimitResetTimer($value) {
+        self::setValue("bandwidth_limit_reset_timer", $value);
+    }
+
+    public static function getBandwidthLimitUpdateTimer() {
+        return self::getValue("bandwidth_limit_reset_timer");
+    }
+
+    public static function setBandwidthLimitUpdateTimer() {
+        self::setValue("bandwidth_limit_reset_timer", microtime(true));
+    }
 }

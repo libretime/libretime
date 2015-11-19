@@ -11,6 +11,8 @@ class ApiController extends Zend_Controller_Action
 
     public function init()
     {
+        $this->view->layout()->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
 
         //Ignore API key and session authentication for these APIs:
         $ignoreAuth = array("live-info", 
@@ -101,14 +103,6 @@ class ApiController extends Zend_Controller_Action
         exit();
     }
 
-    public function pollCeleryAction() {
-        $this->view->layout()->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $taskManager = TaskManager::getInstance();
-        $taskManager->runTask(TaskFactory::CELERY);
-    }
-
     public function versionAction()
     {
         $this->_helper->json->sendJson( array(
@@ -134,6 +128,35 @@ class ApiController extends Zend_Controller_Action
         Application_Service_MediaService::streamFileDownload($fileId, $inline);
 
         $this->_helper->json->sendJson(array());
+    }
+
+    /**
+     * Manually trigger the TaskManager task to poll for completed Celery tasks
+     */
+    public function pollCeleryAction() {
+        $taskManager = TaskManager::getInstance();
+        $clazz = version_compare(phpversion(), '5.5.0', '<') ? get_class(new CeleryTask) : CeleryTask::class;
+        $taskManager->runTask($clazz);
+    }
+
+    /**
+     * TODO: move this function into a more generic analytics REST controller
+     *
+     * Update station bandwidth usage based on icecast log data
+     */
+    public function bandwidthUsageAction() {
+        // FIXME: this function is using placeholder names
+        $bandwidthUsage = json_decode($this->getRequest()->getParam("bandwidth_usage"));
+        $usageBytes = 0;
+        foreach ($bandwidthUsage as $entry) {
+            Logging::info($entry);
+            // TODO: store the IP address for future use
+            $ts = strtotime($entry->timestamp);
+            if ($ts > Application_Model_Preference::getBandwidthLimitUpdateTimer()) {
+                $usageBytes += $entry->bytes;
+            }
+        }
+        Application_Model_Preference::incrementBandwidthLimitCounter($usageBytes);
     }
 
     //Used by the SaaS monitoring

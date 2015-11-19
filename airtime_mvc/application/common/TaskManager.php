@@ -3,8 +3,7 @@
 /**
  * Class TaskManager
  *
- * When adding a new task, the new AirtimeTask class will also need to be added
- * as a class constant and to the array in TaskFactory
+ * Background class for 'asynchronous' task management for Airtime stations
  */
 final class TaskManager {
 
@@ -34,8 +33,8 @@ final class TaskManager {
      * Private constructor so class is uninstantiable
      */
     private function __construct() {
-        foreach (array_keys(TaskFactory::$tasks) as $v) {
-            $this->_taskList[$v] = false;
+        foreach (TaskFactory::getTasks() as $k => $task) {
+            $this->_taskList[$task] = false;
         }
     }
 
@@ -278,12 +277,12 @@ class ImportCleanupTask implements AirtimeTask {
 /**
  * Class StationPodcastTask
  *
- * Checks the Station podcast rollover timer and resets monthly allotted
+ * Checks the Station podcast rollover timer and resets allotted
  * downloads if enough time has passed (default: 1 month)
  */
 class StationPodcastTask implements AirtimeTask {
 
-    const STATION_PODCAST_RESET_TIMER_SECONDS = 2.628e+6;  // 1 month XXX: should we use datetime roll for this instead?
+    const STATION_PODCAST_RESET_TIMER_SECONDS = 2.628e+6;  // 1 month
 
     /**
      * Check whether or not the download counter for the station podcast should be reset
@@ -306,31 +305,73 @@ class StationPodcastTask implements AirtimeTask {
 }
 
 /**
+ * TODO: this and the above StationPodcastTask should probably be unified since the
+ *       behaviour is essentially identical
+ *
+ * Class BandwidthLimitTask
+ *
+ * Checks the bandwidth limit rollover timer and resets the allotted
+ * limit if enough time has passed (default: 1 month)
+ */
+class BandwidthLimitTask implements AirtimeTask {
+
+    const BANDWIDTH_LIMIT_RESET_TIMER_SECONDS = 2.628e+6;
+
+    /**
+     * Check whether the task should be run
+     *
+     * @return bool true if the task needs to be run, otherwise false
+     */
+    public function shouldBeRun() {
+        $lastReset = Application_Model_Preference::getBandwidthLimitResetTimer();
+        return empty($lastReset) || (microtime(true) > ($lastReset + self::BANDWIDTH_LIMIT_RESET_TIMER_SECONDS));
+    }
+
+    /**
+     * Run the task
+     *
+     * @return void
+     */
+    public function run() {
+        Application_Model_Preference::resetStationPodcastDownloadCounter();
+        Application_Model_Preference::setBandwidthLimitResetTimer(microtime(true));
+    }
+
+}
+
+/**
  * Class TaskFactory Factory class to abstract task instantiation
  */
 class TaskFactory {
 
     /**
-     * PHP doesn't have ENUMs so declare them as constants
-     * Task types - values don't really matter as long as they're unique
+     * Check if the class with the given name implements AirtimeTask
+     *
+     * @param $c string class name
+     *
+     * @return bool true if the class $c implements AirtimeTask
      */
-
-    const UPGRADE           = "upgrade";
-    const CELERY            = "celery";
-    const PODCAST           = "podcast";
-    const IMPORT            = "import";
-    const STATION_PODCAST   = "station-podcast";
+    private static function _isTask($c) {
+        $reflect = new ReflectionClass($c);
+        $clazz = version_compare(phpversion(), '5.5.0', '<') ? "AirtimeTask" : AirtimeTask::class;
+        return $reflect->implementsInterface($clazz);
+    }
 
     /**
-     * @var array map of arbitrary identifiers to class names to be instantiated reflectively
+     * Filter all declared classes to get all classes implementing the AirtimeTask interface
+     *
+     * @return array all classes implementing the AirtimeTask interface
      */
-    public static $tasks = array(
-        "upgrade"           => "UpgradeTask",
-        "celery"            => "CeleryTask",
-        "podcast"           => "PodcastTask",
-        "import"            => "ImportCleanupTask",
-        "station-podcast"   => "StationPodcastTask",
-    );
+    private static function _getTaskClasses() {
+        return array_filter(get_declared_classes(), array(__CLASS__, "_isTask"));
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTasks() {
+        return self::_getTaskClasses();
+    }
 
     /**
      * Get an AirtimeTask based on a task type
@@ -341,7 +382,7 @@ class TaskFactory {
      *                          task exists or is implemented
      */
     public static function getTask($task) {
-        return new self::$tasks[$task]();
+        return new $task();
     }
 
 }
