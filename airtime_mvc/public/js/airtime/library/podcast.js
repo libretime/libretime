@@ -107,7 +107,7 @@ var AIRTIME = (function (AIRTIME) {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 data: { stationPodcastPrivacy: $("#podcast-settings").find("input:checked").val() }
             }).success(function (data) {
-                $("#preferences_podcast-stationPodcastFeedUrl").val(data.url);
+                jQuery.extend($scope.podcast, data);
                 $(".success").text($.i18n._("Podcast settings saved")).slideDown("fast");
                 setTimeout(function () {
                     $(".success").slideUp("fast");
@@ -136,13 +136,6 @@ var AIRTIME = (function (AIRTIME) {
                     self.reloadEpisodeTable();
                 });
         });
-    };
-
-    /**
-     * Open metadata editor tabs for each of the selected episodes.
-     */
-    StationPodcastController.prototype.openSelectedTabEditors = function () {
-        mod.editSelectedEpisodes(this.episodeTable.getSelectedRows());
     };
 
     /**
