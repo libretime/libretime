@@ -17,16 +17,6 @@ class Application_Form_PodcastPreferences extends Zend_Form_SubForm {
         ));
         $stationPodcastPrivacy->setValue($isPrivate);
         $this->addElement($stationPodcastPrivacy);
-
-        $stationPodcast = PodcastQuery::create()->findOneByDbId(Application_Model_Preference::getStationPodcastId());
-        $url = $stationPodcast->getDbUrl();
-        $feedUrl = new Zend_Form_Element_Text("stationPodcastFeedUrl");
-        $feedUrl->setAttrib('class', 'input_text')
-            ->setAttrib('disabled', 'disabled')
-            ->setRequired(false)
-            ->setLabel(_("Feed URL"))
-            ->setValue($url);
-        $this->addElement($feedUrl);
     }
 
 }

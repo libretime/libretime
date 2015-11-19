@@ -9,6 +9,10 @@
     overflow: hidden;
 }
 
+#station_podcast .inner_editor_title h2 {
+    width: 40%;
+}
+
 #station_podcast .inner_editor_title * {
     margin: 0;
 }
