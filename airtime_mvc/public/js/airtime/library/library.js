@@ -132,7 +132,7 @@ var AIRTIME = (function(AIRTIME) {
                     "media": "podcasts",
                     "icon": "icon-headphones",
                     "subtext": "Click 'Add' to create one now.",
-                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                    "href": "http://www.apple.com/ca/itunes/podcasts/fanfaq.html"
                 };
             default:
                 break;
