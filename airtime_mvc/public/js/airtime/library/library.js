@@ -1420,6 +1420,9 @@ var AIRTIME = (function(AIRTIME) {
                 sAjaxSource : ajaxSourceURL,
                 oColReorder: {
                     iFixedColumns: 1  // Checkbox
+                },
+                fnDrawCallback: function () {
+                    AIRTIME.library.drawEmptyPlaceholder(this);
                 }
             });
 
