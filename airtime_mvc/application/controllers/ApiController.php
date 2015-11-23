@@ -157,6 +157,7 @@ class ApiController extends Zend_Controller_Action
             }
         }
         Application_Model_Preference::incrementBandwidthLimitCounter($usageBytes);
+        Application_Model_Preference::setBandwidthLimitUpdateTimer();
     }
 
     //Used by the SaaS monitoring

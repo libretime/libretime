@@ -1585,6 +1585,14 @@ class Application_Model_Preference
         self::setValue("station_podcast_privacy", $value);
     }
 
+    /**
+     * Accessors for bandwidth limit counter.
+     * Tracks bandwidth usage.
+     *
+     * @see ApiController::bandwidthUsageAction()
+     * @see BandwidthLimitTask
+     */
+
     public static function getBandwidthLimitCounter() {
         return self::getValue("bandwidth_limit_counter");
     }
@@ -1598,6 +1606,13 @@ class Application_Model_Preference
         self::setValue("bandwidth_limit_counter", 0);
     }
 
+    /**
+     * Accessors for bandwidth limit reset timer.
+     * Used to determine when to reset the bandwidth counter for the station.
+     *
+     * @see BandwidthLimitTask
+     */
+
     public static function getBandwidthLimitResetTimer() {
         return self::getValue("bandwidth_limit_reset_timer");
     }
@@ -1605,6 +1620,13 @@ class Application_Model_Preference
     public static function setBandwidthLimitResetTimer($value) {
         self::setValue("bandwidth_limit_reset_timer", $value);
     }
+
+    /**
+     * Accessors for bandwidth limit update timer.
+     * Used to determine when the bandwidth was last updated for this station.
+     *
+     * @see ApiController::bandwidthUsageAction()
+     */
 
     public static function getBandwidthLimitUpdateTimer() {
         return self::getValue("bandwidth_limit_reset_timer");
