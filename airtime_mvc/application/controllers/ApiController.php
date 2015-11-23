@@ -145,11 +145,9 @@ class ApiController extends Zend_Controller_Action
      * Update station bandwidth usage based on icecast log data
      */
     public function bandwidthUsageAction() {
-        // FIXME: this function is using placeholder names
-        $bandwidthUsage = json_decode($this->getRequest()->getParam("bandwidth_usage"));
+        $bandwidthUsage = json_decode($this->getRequest()->getParam("bandwidth_data"));
         $usageBytes = 0;
         foreach ($bandwidthUsage as $entry) {
-            Logging::info($entry);
             // TODO: store the IP address for future use
             $ts = strtotime($entry->timestamp);
             if ($ts > Application_Model_Preference::getBandwidthLimitUpdateTimer()) {
