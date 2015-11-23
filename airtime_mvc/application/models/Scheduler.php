@@ -482,10 +482,15 @@ class Application_Model_Scheduler
             ->orderByDbStarts()
             ->find($this->con);
 
+        $now = new DateTime("now", new DateTimeZone("UTC"));
         $itemStartDT = $instance->getDbStarts(null);
         foreach ($schedule as $item) {
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
-            Logging::info($itemEndDT);
+            // If the track has already ended, don't change it.
+            if ($itemEndDT < $now) {
+                $itemStartDT = $itemEndDT;
+                continue;
+            }
             $item->setDbStarts($itemStartDT)
                 ->setDbEnds($itemEndDT)
                 ->save($this->con);
@@ -515,10 +520,15 @@ class Application_Model_Scheduler
             ->orderByDbStarts()
             ->find($this->con);
 
+        $now = new DateTime("now", new DateTimeZone("UTC"));
         $itemStartDT = $instance->getDbStarts(null);
         foreach ($schedule as $item) {
-
             $itemEndDT = $this->findEndTime($itemStartDT, $item->getDbClipLength());
+            // If the track has already ended, don't change it.
+            if ($itemEndDT < $now) {
+                $itemStartDT = $itemEndDT;
+                continue;
+            }
 
             $item->setDbStarts($itemStartDT)
                 ->setDbEnds($itemEndDT);
@@ -1191,7 +1201,7 @@ class Application_Model_Scheduler
 
             foreach ($removedItems as $removedItem) {
                 $instance = $removedItem->getCcShowInstances($this->con);
-                $effectedInstanceIds[] = $instance->getDbId();
+                $effectedInstanceIds[$instance->getDbId()] = $instance->getDbId();
 
                 //check if instance is linked and if so get the schedule items
                 //for all linked instances so we can delete them too
