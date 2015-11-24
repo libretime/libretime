@@ -156,6 +156,19 @@ class ApiController extends Zend_Controller_Action
         }
         Application_Model_Preference::incrementBandwidthLimitCounter($usageBytes);
         Application_Model_Preference::setBandwidthLimitUpdateTimer();
+
+        $usage = Application_Model_Preference::getBandwidthLimitCounter();
+        if ($usage > Application_Model_Preference::getBandwidthLimit()) {
+            $CC_CONFIG = Config::getConfig();
+            $user = array('', $CC_CONFIG['apiKey'][0]);
+            $data = array('reason' => "Bandwidth limit exceeded");
+            try {
+                $result = Application_Common_HTTPHelper::doPost(AIRTIMEPRO_API_URL, $user, $data);
+                Logging::info($result);
+            } catch (Exception $e) {
+                throw $e;
+            }
+        }
     }
 
     //Used by the SaaS monitoring

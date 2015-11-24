@@ -1586,6 +1586,19 @@ class Application_Model_Preference
     }
 
     /**
+     * Accessors for station bandwidth limit.
+     */
+
+    public static function getBandwidthLimit() {
+        $val = self::getValue("bandwidth_limit");
+        return empty($val) ? 0 : $val;
+    }
+
+    public static function setBandwidthLimit($value) {
+        self::setValue("bandwidth_limit", $value);
+    }
+
+    /**
      * Accessors for bandwidth limit counter.
      * Tracks bandwidth usage.
      *

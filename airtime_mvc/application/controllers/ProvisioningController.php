@@ -44,6 +44,9 @@ class ProvisioningController extends Zend_Controller_Action
             if (isset($_POST['icecast_pass'])) {
                 Application_Model_Preference::setDefaultIcecastPassword($_POST['icecast_pass']);
             }
+            if (isset($_POST['bandwidth_limit'])) {
+                Application_Model_Preference::setBandwidthLimit($_POST['bandwidth_limit']);
+            }
         } catch (Exception $e) {
             $this->getResponse()
                 ->setHttpResponseCode(400)

@@ -12,6 +12,7 @@ class ProvisioningHelper
     private $instanceId;
     private $stationName, $description;
     private $defaultIcecastPassword;
+    private $bandwidthLimit;
 
     public function __construct($apikey)
     {
@@ -126,6 +127,9 @@ class ProvisioningHelper
         if (isset($_POST['icecast_pass'])) {
             $this->defaultIcecastPassword = $_POST['icecast_pass'];
         }
+        if (isset($_POST['bandwidth_limit'])) {
+            $this->bandwidthLimit = $_POST['bandwidth_limit'];
+        }
     }
 
     /**
@@ -218,6 +222,9 @@ class ProvisioningHelper
         }
         if (isset($this->defaultIcecastPassword)) {
             Application_Model_Preference::setDefaultIcecastPassword($this->defaultIcecastPassword);
+        }
+        if (isset($this->bandwidthLimit)) {
+            Application_Model_Preference::setBandwidthLimit($this->bandwidthLimit);
         }
     }
 

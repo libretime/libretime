@@ -53,6 +53,32 @@ class Application_Common_HTTPHelper
 
         return $stationUrl;
     }
+
+    /**
+     * Execute a cURL POST
+     *
+     * @param string $url       the URL to POST to
+     * @param string[] $userPwd array of user args of the form ['user', 'pwd']
+     * @param array $formData   array of form data kwargs
+     *
+     * @return mixed the cURL result
+     */
+    public static function doPost($url, $userPwd, $formData) {
+        $params = "";
+        foreach($formData as $key=>$value) {
+            $params .= $key.'='.$value.'&';
+        }
+        rtrim($params, '&');
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+        curl_setopt($ch, CURLOPT_USERPWD, implode(':', $userPwd));
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
 }
 
 class ZendActionHttpException extends Exception {
