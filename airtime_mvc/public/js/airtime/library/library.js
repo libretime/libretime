@@ -132,7 +132,7 @@ var AIRTIME = (function(AIRTIME) {
                     "media": "podcasts",
                     "icon": "icon-headphones",
                     "subtext": "Click 'Add' to create one now.",
-                    "href": "http://sourcefabric.booktype.pro/airtime-pro-for-broadcasters/library/"
+                    "href": "http://www.apple.com/ca/itunes/podcasts/fanfaq.html"
                 };
             default:
                 break;
@@ -542,6 +542,18 @@ var AIRTIME = (function(AIRTIME) {
         }
     };
 
+    mod.handleAjaxError = function (r) {
+        // If the request was denied due to permissioning
+        if (r.status === 403) {
+            // Hide the processing div
+            var wrapper = $("#library_display_wrapper");
+            wrapper.find(".dt-process-rel").hide();
+            wrapper.find('.empty_placeholder_text').text($.i18n._("You don't have permission to view the library."));
+            wrapper.find('.empty_placeholder').show();
+        }
+    };
+
+
     libraryInit = function() {
 
         $libContent = $("#library_content");
@@ -706,7 +718,7 @@ var AIRTIME = (function(AIRTIME) {
                     "url": sSource,
                     "data": aoData,
                     "success": fnCallback,
-                    "error": handleAjaxError
+                    "error": mod.handleAjaxError
                 }).done(function (data) {
                     var filterMessage = $libContent.find('.filter-message');
                     if (data.iTotalRecords > data.iTotalDisplayRecords) {
@@ -902,17 +914,6 @@ var AIRTIME = (function(AIRTIME) {
                     break;
             }
 
-        }
-
-        function handleAjaxError(r) {
-            // If the request was denied due to permissioning
-            if (r.status === 403) {
-                // Hide the processing div
-                $("#library_display_wrapper").find(".dt-process-rel").hide();
-                $('.empty_placeholder_text').text($.i18n._("You don't have permission to view the library."));
-
-                $('.empty_placeholder').show();
-            }
         }
 
         var selected = $("a[href$='"+location.hash+"']"), table;
@@ -1420,6 +1421,9 @@ var AIRTIME = (function(AIRTIME) {
                 sAjaxSource : ajaxSourceURL,
                 oColReorder: {
                     iFixedColumns: 1  // Checkbox
+                },
+                fnDrawCallback: function () {
+                    AIRTIME.library.drawEmptyPlaceholder(this);
                 }
             });
 

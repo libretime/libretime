@@ -7,6 +7,15 @@ class ErrorController extends Zend_Controller_Action {
         //We cannot show that.
         $this->view->layout()->disableLayout();
         $this->setupCSS();
+
+        // TODO: set Help button URL based on whether or not user is logged in
+        try {
+            $service_user = new Application_Service_UserService();
+            $service_user->getCurrentUser();
+            $this->view->helpUrl = Application_Common_OsPath::getBaseDir() . 'dashboard/help';
+        } catch (Exception $e) {
+            $this->view->helpUrl = HELP_URL;
+        }
     }
 
     public function errorAction() {

@@ -1,6 +1,6 @@
 <div id="station_podcast">
     <div class="angular_wrapper" ng-controller="StationPodcast">
-        <div class="station_podcast_wrapper">
+        <div class="station_podcast_wrapper content-pane">
             <div class="inner_editor_title">
                 <h2>
                     <span class="title_obj_name"><?php echo _("My Podcast") ?></span>
@@ -25,9 +25,6 @@
 
                         <label><?php echo _("Creator") ?></label>
                         <input name="podcast_creator" ng-model="podcast.creator" type="text"/>
-
-                        <label><?php echo _("URL") ?></label>
-                        <input disabled name="podcast_url" ng-model="podcast.url" type="text"/>
 
                         <label><?php echo _("Description") ?></label>
                         <textarea name="podcast_description" ng-model="podcast.description"></textarea>
@@ -81,8 +78,12 @@
                                 <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastPrivacy")->renderViewHelper() ?>
                             </div>
                             <div style="clear:both"></div>
-                            <?php echo $this->form->getSubform('preferences_podcast')->getElement("stationPodcastFeedUrl") ?>
-
+                            <dt>
+                                <label for="stationPodcastFeedUrl" class="optional">Feed URL</label>
+                            </dt>
+                            <dd>
+                                <input type="url" ng-model="podcast.url" disabled="disabled" class="input_text" />
+                            </dd>
                         </dl>
                     </fieldset>
                 </div>
@@ -122,5 +123,4 @@
         $(this).toggleClass("closed");
         return false;
     });
-
 </script>

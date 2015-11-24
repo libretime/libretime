@@ -20,15 +20,20 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * @param string $taskName the name of the celery task to execute
      * @param array $data      the data array to send as task parameters
      * @param int $fileId      the unique identifier for the file involved in the task
+     *
+     * @return CeleryTasks the created task
+     *
+     * @throws Exception
      */
     protected function _executeTask($taskName, $data, $fileId = null) {
         try {
             $brokerTaskId = CeleryManager::sendCeleryMessage($taskName,
                                                              static::$_CELERY_EXCHANGE_NAME,
                                                              $data);
-            $this->_createTaskReference($fileId, $brokerTaskId, $taskName);
+            return $this->_createTaskReference($fileId, $brokerTaskId, $taskName);
         } catch (Exception $e) {
-            Logging::info("Invalid request: " . $e->getMessage());
+            Logging::error("Invalid request: " . $e->getMessage());
+            throw $e;
         }
     }
 
@@ -40,6 +45,8 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
      * @param $brokerTaskId int    broker task identifier to so we can asynchronously
      *                             receive completed task messages
      * @param $taskName     string broker task name
+     *
+     * @return CeleryTasks the created task
      *
      * @throws Exception
      * @throws PropelException
@@ -54,6 +61,7 @@ abstract class Application_Service_ThirdPartyCeleryService extends Application_S
         $task->setDbStatus(CELERY_PENDING_STATUS);
         $task->setDbTrackReference($trackReferenceId);
         $task->save();
+        return $task;
     }
 
     /**

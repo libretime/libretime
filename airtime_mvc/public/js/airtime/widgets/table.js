@@ -399,15 +399,9 @@ var AIRTIME = (function(AIRTIME) {
     Table.prototype._handleAjaxError = function(r) {
         // If the request was denied due to permissioning
         if (r.status === 403) {
-            // Hide the processing div
-            /*
-             $("#library_display_wrapper").find(".dt-process-rel").hide();
-             $.getJSON( "ajax/library_placeholders.json", function( data ) {
-             $('.empty_placeholder_text').text($.i18n._(data.unauthorized));
-             })  ;
-
-             $('.empty_placeholder').show();
-             */
+            $(".dt-process-rel").hide();
+            $('.empty_placeholder_text').text($.i18n._("You don't have permission to view this resource."));
+            $('.empty_placeholder').show();
         }
     };
 

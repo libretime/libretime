@@ -739,7 +739,11 @@ div.ColVis_collectionBackground {
 
 .fg-toolbar .btn-toolbar {
     margin: 0;
-    padding: 6px 6px 5px;
+    padding: 5px;
+}
+
+.fg-toolbar .btn-toolbar .ColVis_MasterButton {
+    margin: 0;
 }
 /* ~~~~~~~~~~~~~~~~ */
 

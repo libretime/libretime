@@ -211,8 +211,10 @@ class Zend_Controller_Plugin_Acl extends Zend_Controller_Plugin_Abstract
             $resourceName .= $controller;
 
             /** Check if the controller/action can be accessed by the current user */
-            if (!$this->getAcl()->has($resourceName) 
-                || !$this->getAcl()->isAllowed($this->_roleName,
+            if (!$this->getAcl()->has($resourceName)) {
+                $this->setErrorPage('error404');
+                $this->denyAccess();
+            } else if (!$this->getAcl()->isAllowed($this->_roleName,
                         $resourceName, 
                         $request->getActionName())) {
                 /** Redirect to access denied page */

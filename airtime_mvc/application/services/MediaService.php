@@ -133,16 +133,22 @@ class Application_Service_MediaService
             ->filterByDbImportStatus(CcFiles::IMPORT_STATUS_PENDING)
             ->filterByDbUtime($oneHourAgo, Criteria::LESS_EQUAL)
             ->find();
-        return !empty(self::$_pendingFiles);
+        $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
+        return !empty(self::$_pendingFiles) && !empty($pendingEpisodes);
     }
 
     /**
      * Clean up stuck imports by changing their import status to Failed
      */
     public static function clearStuckPendingImports() {
-        foreach(self::$_pendingFiles as $file) {
+        $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
+        foreach (self::$_pendingFiles as $file) {
             /** @var $file CcFiles */
             $file->setDbImportStatus(CcFiles::IMPORT_STATUS_FAILED)->save();
+        }
+        foreach ($pendingEpisodes as $episode) {
+            /** @var $episode PodcastEpisodes */
+            $episode->delete();
         }
     }
 

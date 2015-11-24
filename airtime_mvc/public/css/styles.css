@@ -2858,12 +2858,12 @@ dt.block-display.info-block {
 /*---////////////////////    ERROR PAGE    ////////////////////---*/
 
 .error-content {
-    background:url(images/maintenance.png) no-repeat 0 0;
-    width:360px;
-    height:350px;
-    margin:auto;
-    margin-top:25px;
-    padding:auto;
+    position: relative;
+    background: url(images/maintenance.png) no-repeat 0 0;
+    width: 360px;
+    height: 350px;
+    margin: auto;
+    top: 25px;
 }
 .error-content h2 {
     margin:0;
