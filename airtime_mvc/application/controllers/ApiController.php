@@ -147,11 +147,13 @@ class ApiController extends Zend_Controller_Action
     public function bandwidthUsageAction() {
         $bandwidthUsage = json_decode($this->getRequest()->getParam("bandwidth_data"));
         $usageBytes = 0;
-        foreach ($bandwidthUsage as $entry) {
-            // TODO: store the IP address for future use
-            $ts = strtotime($entry->timestamp);
-            if ($ts > Application_Model_Preference::getBandwidthLimitUpdateTimer()) {
-                $usageBytes += $entry->bytes;
+        if (!empty($bandwidthUsage)) {
+            foreach ($bandwidthUsage as $entry) {
+                // TODO: store the IP address for future use
+                $ts = strtotime($entry->timestamp);
+                if ($ts > Application_Model_Preference::getBandwidthLimitUpdateTimer()) {
+                    $usageBytes += $entry->bytes;
+                }
             }
         }
         Application_Model_Preference::incrementBandwidthLimitCounter($usageBytes);
@@ -160,10 +162,11 @@ class ApiController extends Zend_Controller_Action
         $usage = Application_Model_Preference::getBandwidthLimitCounter();
         if ($usage > Application_Model_Preference::getBandwidthLimit()) {
             $CC_CONFIG = Config::getConfig();
+            $url = AIRTIMEPRO_API_URL . "/station/" . $CC_CONFIG['stationId'] . "/suspend";
             $user = array('', $CC_CONFIG['apiKey'][0]);
             $data = array('reason' => "Bandwidth limit exceeded");
             try {
-                $result = Application_Common_HTTPHelper::doPost(AIRTIMEPRO_API_URL, $user, $data);
+                $result = Application_Common_HTTPHelper::doPost($url, $user, $data);
                 Logging::info($result);
             } catch (Exception $e) {
                 throw $e;

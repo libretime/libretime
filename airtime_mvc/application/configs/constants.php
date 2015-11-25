@@ -12,7 +12,7 @@ define('COMPANY_SITE'       , 'Sourcefabric.org');
 define('COMPANY_SITE_URL'   , 'http://sourcefabric.org/');
 define('SUPPORT_EMAIL_ADDRESS', "help@sourcefabric.org");
 
-define("AIRTIMEPRO_API_URL", "https://account.sourcefabric.com/api/");
+define("AIRTIMEPRO_API_URL", "https://account.sourcefabric.com:5001/api/");
 
 define('HELP_URL'                   , 'http://help.sourcefabric.org/');
 define('FAQ_URL'                    , 'https://sourcefabricberlin.zendesk.com/hc/en-us/sections/200994309-Airtime-FAQ');
