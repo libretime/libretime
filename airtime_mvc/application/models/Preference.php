@@ -1649,10 +1649,10 @@ class Application_Model_Preference
      */
 
     public static function getBandwidthLimitUpdateTimer() {
-        return self::getValue("bandwidth_limit_reset_timer");
+        return self::getValue("bandwidth_limit_update_timer");
     }
 
     public static function setBandwidthLimitUpdateTimer() {
-        self::setValue("bandwidth_limit_reset_timer", microtime(true));
+        self::setValue("bandwidth_limit_update_timer", microtime(true));
     }
 }
