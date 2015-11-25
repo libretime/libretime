@@ -162,12 +162,12 @@ class ApiController extends Zend_Controller_Action
         $usage = Application_Model_Preference::getBandwidthLimitCounter();
         if ($usage > Application_Model_Preference::getBandwidthLimit()) {
             $CC_CONFIG = Config::getConfig();
-            $url = AIRTIMEPRO_API_URL . "/station/" . $CC_CONFIG['stationId'] . "/suspend";
+            // Hacky way to get the user ID...
+            $url = AIRTIMEPRO_API_URL . "/station/" . $CC_CONFIG['rabbitmq']['user'] . "/suspend";
             $user = array('', $CC_CONFIG['apiKey'][0]);
             $data = array('reason' => "Bandwidth limit exceeded");
             try {
-                $result = Application_Common_HTTPHelper::doPost($url, $user, $data);
-                Logging::info($result);
+                Application_Common_HTTPHelper::doPost($url, $user, $data);
             } catch (Exception $e) {
                 throw $e;
             }
