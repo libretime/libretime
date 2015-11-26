@@ -3914,7 +3914,7 @@ hr {
     flex: 0 0 auto;
 }
 
-#disk_usage {
+#disk_usage, #bandwidth_usage {
     border-radius: 1px;
     margin: 7px;
     font-size: 14px;
@@ -3925,7 +3925,7 @@ hr {
     color: #ccc;
 }
 
-.disk_usage_progress_bar {
+.disk_usage_progress_bar, .bandwidth_usage_progress_bar {
     float: left;
     width: 100%;
     height: 13px;
@@ -3936,7 +3936,7 @@ hr {
     z-index: 1;
 }
 
-.disk_usage_percent_in_use {
+.disk_usage_percent_in_use, .bandwidth_usage_percent_in_use {
     position: absolute;
     left: 0;
     right: 0;
@@ -3951,6 +3951,15 @@ hr {
     background-color:#e76400;
     background: -moz-linear-gradient(top, #ff6f01 0, #bc5200 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ff6f01), color-stop(100%, #bc5200));
+    height:13px;
+    z-index: 2;
+    position: relative;
+}
+
+.bandwidth_usage_used {
+    background-color: #128DFE;
+    /*background: -moz-linear-gradient(bottom, #128DFE 0%, #1ADDFF 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #128DFE), color-stop(100%, #1ADDFF));*/
     height:13px;
     z-index: 2;
     position: relative;
