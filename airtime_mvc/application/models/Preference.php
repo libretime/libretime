@@ -1572,6 +1572,9 @@ class Application_Model_Preference
         self::setValue("station_podcast_download_counter", empty($c) ? 0 : --$c);
     }
 
+    /**
+     * @return int either 0 (public) or 1 (private)
+     */
     public static function getStationPodcastPrivacy() {
         if (!Billing::isStationPodcastAllowed()) {
             // return private setting

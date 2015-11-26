@@ -48,6 +48,12 @@ $pages = array(
                 'module'     => 'default',
                 'controller' => 'embeddablewidgets',
                 'action'     => 'schedule',
+            ),
+            array(
+                'label'      => _('Facebook'),
+                'module'     => 'default',
+                'controller' => 'embeddablewidgets',
+                'action'     => 'facebook',
             )
         )
     ),
