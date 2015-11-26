@@ -30,10 +30,12 @@ abstract class Application_Service_ThirdPartyService {
     public function createTrackReference($fileId) {
         // First, check if the track already has an entry in the database
         // If the file ID given is null, create a new reference
-        $ref = is_null($fileId) ? new ThirdPartyTrackReferences()
-                                : ThirdPartyTrackReferencesQuery::create()
-                                    ->filterByDbService(static::$_SERVICE_NAME)
-                                    ->findOneByDbFileId($fileId);
+        $ref = is_null($fileId) ? null : ThirdPartyTrackReferencesQuery::create()
+            ->filterByDbService(static::$_SERVICE_NAME)
+            ->findOneByDbFileId($fileId);
+        if (is_null($ref)) {
+            $ref = new ThirdPartyTrackReferences();
+        }
         $ref->setDbService(static::$_SERVICE_NAME);
         $ref->setDbFileId($fileId);
         $ref->save();
