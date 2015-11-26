@@ -7,6 +7,9 @@ class Billing
 {
     // TODO: remove this once all existing customers have bandwidth limits set
     public static $PLAN_TYPE_DEFAULTS = array(
+        "trial" => array(
+            "bandwidth_limit" => 3298534883328
+        ),
         "hobbyist" => array(
             "bandwidth_limit" => 1099511627776
         ),
