@@ -40,6 +40,18 @@ class Billing
         "custom" => array(
             "bandwidth_limit" => 10995116277760
         ),
+        "awesome-hobbyist-2015" => array(
+            "bandwidth_limit" => 1099511627776
+        ),
+        "awesome-starter-2015" => array(
+            "bandwidth_limit" => 3298534883328
+        ),
+        "awesome-plus-2015" => array(
+            "bandwidth_limit" => 10995116277760
+        ),
+        "awesome-premium-2015" => array(
+            "bandwidth_limit" => 43980465111040
+        ),
     );
 
     public static function getAPICredentials()
