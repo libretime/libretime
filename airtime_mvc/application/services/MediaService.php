@@ -134,7 +134,7 @@ class Application_Service_MediaService
             ->filterByDbUtime($oneHourAgo, Criteria::LESS_EQUAL)
             ->find();
         $pendingEpisodes = Application_Service_PodcastEpisodeService::getStuckPendingImports();
-        return !empty(self::$_pendingFiles) && !empty($pendingEpisodes);
+        return !self::$_pendingFiles->isEmpty() || !empty($pendingEpisodes);
     }
 
     /**

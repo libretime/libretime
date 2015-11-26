@@ -183,7 +183,8 @@ class Application_Model_StoredFile
                 // first admin user we find
                 if (!array_key_exists('owner_id', $p_md)) {
                     //$admins = Application_Model_User::getUsers(array('A'));
-                    $admins = Application_Model_User::getUsersOfType('A');
+                    $admins = array_merge(Application_Model_User::getUsersOfType('A')->getData(),
+                                          Application_Model_User::getUsersOfType('S')->getData());
                     if (count($admins) > 0) { // found admin => pick first one
                         $owner = $admins[0];
                     }

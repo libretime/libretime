@@ -1611,7 +1611,9 @@ var AIRTIME = (function(AIRTIME) {
             if (!$.isEmptyObject(data.file)) {
                 mod.dblClickAdd(data.file, data.file.ftype);
             } else {
-                AIRTIME.podcast.importSelectedEpisodes([data], mod.podcastEpisodeTableWidget);
+                if (data.ingested >= 0) {  // Only import if the file isn't pending
+                    AIRTIME.podcast.importSelectedEpisodes([data], mod.podcastEpisodeTableWidget);
+                }
             }
         });
     };
