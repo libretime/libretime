@@ -139,10 +139,12 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     private function _download($id, $url) {
         $CC_CONFIG = Config::getConfig();
+        $stationUrl = Application_Common_HTTPHelper::getStationUrl();
+        $stationUrl .= substr($stationUrl, -1) == '/' ? '' : '/';
         $data = array(
             'id'            => $id,
             'url'           => $url,
-            'callback_url'  => Application_Common_HTTPHelper::getStationUrl() . '/rest/media',
+            'callback_url'  => $stationUrl . 'rest/media',
             'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
         );
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
