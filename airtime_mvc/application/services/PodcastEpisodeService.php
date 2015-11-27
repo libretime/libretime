@@ -145,7 +145,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             'id'            => $id,
             'url'           => $url,
             'callback_url'  => $stationUrl . 'rest/media',
-            'api_key'       => $apiKey = $CC_CONFIG["apiKey"][0],
+            'api_key'       => $CC_CONFIG["apiKey"][0],
         );
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
         // Get the created ThirdPartyTaskReference and set the episode ID so
@@ -251,7 +251,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public static function getStuckPendingImports() {
         $timeout = gmdate(DEFAULT_TIMESTAMP_FORMAT, (microtime(true) - self::PENDING_EPISODE_TIMEOUT_SECONDS));
         $episodes = PodcastEpisodesQuery::create()
-            ->filterByDbFileId(null, Criteria::ISNULL)
+            ->filterByDbFileId()
             ->find();
         $stuckImports = array();
         foreach ($episodes as $episode) {

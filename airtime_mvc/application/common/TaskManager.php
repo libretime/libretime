@@ -329,8 +329,6 @@ class BandwidthLimitTask implements AirtimeTask {
 
     /**
      * Run the task
-     *
-     * @return void
      */
     public function run() {
         Application_Model_Preference::resetStationPodcastDownloadCounter();
@@ -362,27 +360,21 @@ class TaskFactory {
      *
      * @return array all classes implementing the AirtimeTask interface
      */
-    private static function _getTaskClasses() {
+    public static function getTasks() {
         return array_filter(get_declared_classes(), array(__CLASS__, "_isTask"));
     }
 
     /**
-     * @return array
-     */
-    public static function getTasks() {
-        return self::_getTaskClasses();
-    }
-
-    /**
-     * Get an AirtimeTask based on a task type
+     * Get an AirtimeTask based on class name
      *
-     * @param $task string the task type; uses AirtimeTask constants as an ENUM
+     * @param $task string name of the class implementing AirtimeTask to construct
      *
-     * @return AirtimeTask|null return a task of the given type or null if no corresponding
-     *                          task exists or is implemented
+     * @return AirtimeTask|null return a task of the given type or null if no corresponding task exists
      */
     public static function getTask($task) {
-        return new $task();
+        // Try to get a valid class name from the given string
+        if (!class_exists($task)) $task = str_replace(' ', '', ucwords($task)) . "Task";
+        return class_exists($task) ? new $task() : null;
     }
 
 }
