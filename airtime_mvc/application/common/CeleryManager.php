@@ -130,6 +130,8 @@ class CeleryManager {
                 static::_processTaskMessage($task, $message);
             } catch (CeleryTimeoutException $e) {
                 Logging::warn($e->getMessage());
+            } catch (CeleryException $e) {
+                // Don't log these - they end up clogging up the logs
             } catch (Exception $e) {
                 // Because $message->result can be either an object or a string, sometimes
                 // we get a json_decode error and end up here
