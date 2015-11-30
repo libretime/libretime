@@ -176,7 +176,8 @@
     font-size: 15px;
     margin: 3px 8px 0px 0;
     padding: 0;
-    color: #4f4f4f;
+    /*color: #4f4f4f;*/
+    color: #efefef;
     font-weight: normal;
     float: right;
 }
