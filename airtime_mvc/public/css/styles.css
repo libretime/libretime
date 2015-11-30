@@ -3436,6 +3436,11 @@ dd .stream-status {
     width: 320px;
 }
 .quota-reached {
+    -webkit-flex: 0 0 100%;
+    -moz-flex: 0 0 100%;
+    -ms-flex: 0 0 100%;
+    -o-flex: 0 0 100%;
+    flex: 0 0 100%;
     font-size: 14px !important;
 }
 
