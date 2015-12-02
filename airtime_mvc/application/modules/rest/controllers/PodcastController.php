@@ -16,36 +16,29 @@ class Rest_PodcastController extends Zend_Rest_Controller
 
     public function indexAction()
     {
-        $totalPodcastCount = PodcastQuery::create()->count();
-
         // Check if offset and limit were sent with request.
         // Default limit to zero and offset to $totalFileCount
         $offset = $this->_getParam('offset', 0);
-        $limit = $this->_getParam('limit', $totalPodcastCount);
+        $limit = $this->_getParam('limit', 0);
 
         //Sorting parameters
         $sortColumn = $this->_getParam('sort', PodcastPeer::ID);
         $sortDir = $this->_getParam('sort_dir', Criteria::ASC);
 
         $stationPodcastId = Application_Model_Preference::getStationPodcastId();
-        $query = PodcastQuery::create()
+        $result = PodcastQuery::create()
             // Don't return the Station podcast - we fetch it separately
-            ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL)
-            ->setLimit($limit)
-            ->setOffset($offset)
+            ->filterByDbId($stationPodcastId, Criteria::NOT_EQUAL);
+        if ($limit > 0) { $result->setLimit($limit); }
+        $result->setOffset($offset)
             ->orderBy($sortColumn, $sortDir);
+        $result = $result->find();
 
-        $queryResult = $query->find();
-
-        $podcastArray = array();
-        foreach ($queryResult as $podcast)
-        {
-            array_push($podcastArray, $podcast->toArray(BasePeer::TYPE_FIELDNAME));
-        }
+        $podcastArray = $result->toArray(null, false, BasePeer::TYPE_FIELDNAME);
 
         $this->getResponse()
             ->setHttpResponseCode(200)
-            ->setHeader('X-TOTAL-COUNT', $totalPodcastCount)
+            ->setHeader('X-TOTAL-COUNT', $result->count())
             ->appendBody(json_encode($podcastArray));
     }
 
