@@ -230,7 +230,7 @@ SQL;
                     ->filterByDbId($currentMediaStreamId)
                     ->findOne();
                 $currentWebstreamMetadata = CcWebstreamMetadataQuery::create()
-                    ->filterByDbInstanceId($currentMedia["instance_id"])
+                    ->filterByDbInstanceId($currentMedia["id"])
                     ->orderByDbStartTime(Criteria::DESC)
                     ->findOne();
                 $currentMediaName = $currentWebstream->getDbName();
