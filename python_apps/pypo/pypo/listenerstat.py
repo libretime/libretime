@@ -87,7 +87,7 @@ class ListenerStat(Thread):
     def get_shoutcast_stats(self, ip):
         url = 'http://%(host)s:%(port)s/admin.cgi?sid=1&mode=viewxml' % ip
         document = self.get_stream_server_xml(ip, url, is_shoutcast=True)
-        dom = defusedxml.parseString(document)
+        dom = defusedxml.minidom.parseString(document)
         current_listeners = dom.getElementsByTagName("CURRENTLISTENERS")
 
         timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
