@@ -5,6 +5,10 @@ start on runlevel [2345]
 stop on runlevel [!2345]
 
 respawn
+# Respawn it indefinitely
+respawn limit unlimited
+# Wait 3 seconds before spawning it again though, to throttle CPU.
+post-stop exec sleep 3
 
 setuid WEB_USER
 setgid WEB_USER
