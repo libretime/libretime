@@ -172,8 +172,14 @@ $(document).ready(function() {
 </script>
 
 <div class="ui-widget prefpanel clearfix padded-strong billing-panel">
-<H2><?=_pro("Account Plans")?></H2>
-<H4><?=_pro("Upgrade today to get more listeners and storage space!")?></H4>
+
+    <!--
+    <H2><?=_pro("Account Plans")?></H2>
+    <H4><?=_pro("Upgrade today to get more listeners and storage space!")?></H4>
+    -->
+
+<div class="ui-widget prefpanel clearfix padded-strong billing-panel">
+<H2><?=_pro("Monthly Plans")?></H2>
 <div class="pricing-grid">
     <table>
         <tr>
@@ -211,7 +217,13 @@ $(document).ready(function() {
             </td>
             <td class="last-column">500 Listeners per stream
             </td>
-        </tr> 
+        </tr>
+        <tr>
+            <td>1 TB Bandwidth</td>
+            <td><span>3 TB Bandwidth</span></td>
+            <td><span>10 TB Bandwidth</span></td>
+            <td><span>40 TB Bandwidth</span></td>
+        </tr>
         <tr>
             <td>2GB Storage
             </td>
@@ -263,7 +275,41 @@ $(document).ready(function() {
             </td>
             <td class="last-column" id="premium_grid_price">
             </td>
-        </tr> 
+        </tr>
+    </table>
+</div>
+<div class="pricing-grid">
+    <h2 style="margin-top: 20px">Annual Plans - Special Holiday Promo</h2>
+    <h4>Sign up for an annual plan before December 21st to get a plan above plus a holiday bonus:</h4>
+    <table class="pricing-grid">
+        <tr>
+            <th></th>
+            <th>Starter</th>
+            <th>Plus</th>
+            <th>Premium</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td><span class="promo-text-highlight">800 Listeners per stream</span>
+
+            </td>
+            <td style="padding: 6px"><span class="promo-text-highlight">2000 Listeners per stream</span>
+
+            </td>
+            <td class="last-column"><span class="promo-text-highlight">Unlimited listeners</span>
+            </td>
+        </tr>
+        <tr class="price last-row">
+            <td></td>
+            <td id="">$33.95 / month<br>Billed Annually
+            </td>
+            <td id="">$54.95 / month<br>Billed Annually
+            </td>
+            <td class="last-column" id="">$83.95 / month<br>Billed Annually
+            </td>
+        </tr>
+
+
     </table>
 </div>
 <!-- 
@@ -276,12 +322,6 @@ echo($currentProduct["name"]);
 //echo Application_Model_Preference::GetPlanLevel();
 ?>
 </p>
-
-    <div class="educational-discount">
-        <h4>Special Holiday Offer!</h4>
-        <p>Upgrade to an annual plan before December 21st and get bonus listener slots.<br> <a href="https://www.airtime.pro/pricing">Find out more</a>.</p>
-    </div>
-
     <!--
     <div class="educational-discount">
         <h4>Are you a student or educator?</h4>

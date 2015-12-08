@@ -24,7 +24,7 @@ class Application_Form_BillingUpgradeDowngrade extends Zend_Form
         
         //Logging::info(BillingController::getClientCurrentAirtimeProduct());
         $billingcycle = new Zend_Form_Element_Radio('newproductbillingcycle');
-        $billingCycleOptionMap = array('monthly' => 'Monthly', 'annually' => 'Annually');
+        $billingCycleOptionMap = array('monthly' => 'Monthly', 'annually' => 'Annually (Holiday Promo)');
         if (!array_key_exists($currentPlanProductBillingCycle, $billingCycleOptionMap)) {
             $currentPlanProductBillingCycle = 'monthly';
         }

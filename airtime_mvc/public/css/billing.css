@@ -283,6 +283,16 @@
 	font-weight: bold;
 }
 
+.promo-text-highlight {
+	background-color: #ff611f;
+	padding: 3px;
+	line-height: 20px;
+	color: #fff;
+	text-shadow: 0px 1px #444;
+	border-radius: 3px;
+	font-weight: bold;
+}
+
 .billing-panel .educational-discount {
 	border: 1px solid #306999;
 	border-radius: 3px;
