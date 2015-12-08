@@ -163,7 +163,7 @@ class WidgetHelper
             if (is_array($a)) {
                 if (array_key_exists("image_path", $a)) {
                     $a["image_path"] = $a["image_path"] && $a["image_path"] !== '' ?
-                        "http://".$_SERVER['HTTP_HOST'].$baseDir."api/show-logo?id=".$a["id"] : '';
+                        Application_Common_HTTPHelper::getStationUrl()."api/show-logo?id=".$a["id"] : '';
                 } else {
                     self::findAndConvertPaths($a);
                 }
