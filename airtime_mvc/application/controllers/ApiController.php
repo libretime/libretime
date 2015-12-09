@@ -160,7 +160,8 @@ class ApiController extends Zend_Controller_Action
         Application_Model_Preference::setBandwidthLimitUpdateTimer();
 
         $usage = Application_Model_Preference::getBandwidthLimitCounter();
-        if ($usage > Application_Model_Preference::getBandwidthLimit()) {
+        if (($usage > Application_Model_Preference::getBandwidthLimit()) &&
+            (Application_Model_Preference::getProvisioningStatus() == PROVISIONING_STATUS_ACTIVE)) {
             $CC_CONFIG = Config::getConfig();
             // Hacky way to get the user ID...
             $url = AIRTIMEPRO_API_URL . "/station/" . $CC_CONFIG['rabbitmq']['user'] . "/suspend";
