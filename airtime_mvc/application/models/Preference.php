@@ -1598,7 +1598,10 @@ class Application_Model_Preference
             // Set and return the plan defaults
             // TODO: remove this once all existing customers have this pref set
             $planType = self::GetPlanLevel();
-            $val = Billing::$PLAN_TYPE_DEFAULTS[$planType]["bandwidth_limit"];
+            $val = "starter";
+            if (isset(Billing::$PLAN_TYPE_DEFAULTS[$planType])) {
+                $val = Billing::$PLAN_TYPE_DEFAULTS[$planType]["bandwidth_limit"];
+            }
             self::setBandwidthLimit($val);
         }
         return $val;
