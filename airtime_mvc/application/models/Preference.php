@@ -1593,18 +1593,18 @@ class Application_Model_Preference
      */
 
     public static function getBandwidthLimit() {
-        $val = self::getValue("bandwidth_limit");
-        if (empty($val)) {
+        $bandwidthLimit = self::getValue("bandwidth_limit");
+        if (empty($bandwidthLimit)) {
             // Set and return the plan defaults
             // TODO: remove this once all existing customers have this pref set
             $planType = self::GetPlanLevel();
-            $val = "starter";
+            $bandwidthLimit = Billing::$PLAN_TYPE_DEFAULTS["starter"]["bandwidth_limit"];
             if (isset(Billing::$PLAN_TYPE_DEFAULTS[$planType])) {
-                $val = Billing::$PLAN_TYPE_DEFAULTS[$planType]["bandwidth_limit"];
+                $bandwidthLimit = Billing::$PLAN_TYPE_DEFAULTS[$planType]["bandwidth_limit"];
             }
-            self::setBandwidthLimit($val);
+            self::setBandwidthLimit($bandwidthLimit);
         }
-        return $val;
+        return $bandwidthLimit;
     }
 
     public static function setBandwidthLimit($value) {
