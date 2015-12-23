@@ -288,6 +288,7 @@ echo -e "        \/            \/                       \/        \/    \n"
 
 if [ "$ignore_dependencies" = "f" ]; then
     set +e
+    loudCmd "apt-get update"
     if [ -z "${dist}" ]; then
         loudCmd "apt-get -y --force-yes install lsb-release"
         dist=`lsb_release -ds | awk '{print tolower($1);}'`
@@ -299,7 +300,6 @@ if [ "$ignore_dependencies" = "f" ]; then
     loud "-----------------------------------------------------"
 
     verbose "\n * Reading requirements-${dist,,}-${code,,}.apt..."
-    loudCmd "apt-get update"
     if [ -f ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt ]; then
         loudCmd "DEBIAN_FRONTEND=noninteractive apt-get -y -m --force-yes install $(grep -vE '^\s*#' ${SCRIPT_DIR}/installer/lib/requirements-${dist,,}-${code,,}.apt | tr '\n' ' ')"
     else
