@@ -22,8 +22,8 @@
   <Directory WEB_ROOT>
       DirectoryIndex index.php
       AllowOverride all
-      Order allow,deny
       <IfVersion < 2.4>
+          Order allow,deny
           Allow from all
       </IfVersion>
       <IfVersion >= 2.4>
