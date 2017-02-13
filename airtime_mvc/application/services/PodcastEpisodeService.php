@@ -45,7 +45,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      */
     public function importEpisode($podcastId, $episode) {
         $e = $this->addPlaceholder($podcastId, $episode);
-        $this->_download($e->getDbId(), $e->getDbDownloadUrl());
+        $p = $e->getPodcast();
+        $this->_download($e->getDbId(), $e->getDbDownloadUrl(), $p->getDbTitle());
         return $e;
     }
 
@@ -126,7 +127,8 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
     public function downloadEpisodes($episodes) {
         /** @var PodcastEpisodes $episode */
         foreach($episodes as $episode) {
-            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl());
+            $podcast = $episode->getPodcast();
+            $this->_download($episode->getDbId(), $episode->getDbDownloadUrl(), $podcast->getDbTitle());
         }
     }
 
@@ -136,8 +138,9 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
      *
      * @param int $id       episode unique ID
      * @param string $url   download url for the episode
+     * @param string $title title of podcast to be downloaded - added as album to track metadata
      */
-    private function _download($id, $url) {
+    private function _download($id, $url, $title) {
         $CC_CONFIG = Config::getConfig();
         $stationUrl = Application_Common_HTTPHelper::getStationUrl();
         $stationUrl .= substr($stationUrl, -1) == '/' ? '' : '/';
@@ -146,7 +149,7 @@ class Application_Service_PodcastEpisodeService extends Application_Service_Thir
             'url'           => $url,
             'callback_url'  => $stationUrl . 'rest/media',
             'api_key'       => $CC_CONFIG["apiKey"][0],
-            'podcast_name'  => "best podcast",
+            'podcast_name'  => $title,
         );
         $task = $this->_executeTask(static::$_CELERY_TASKS[self::DOWNLOAD], $data);
         // Get the created ThirdPartyTaskReference and set the episode ID so
